@@ -1,0 +1,65 @@
+# Copyright (c) 2018-2020, NVIDIA CORPORATION. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#  * Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#  * Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+#  * Neither the name of NVIDIA CORPORATION nor the names of its
+#    contributors may be used to endorse or promote products derived
+#    from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS'' AND ANY
+# EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+# PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+# PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+# OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+ARG BASE_IMAGE=nvcr.io/nvidian/nvidia-l4t-base:r32.4
+FROM ${BASE_IMAGE}
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+
+#
+# install prerequisites - https://docs.nvidia.com/deeplearning/frameworks/install-tf-jetson-platform/index.html#prereqs
+#
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+            python3-pip \
+		  python3-dev \
+		  gfortran \
+		  libopenblas-dev \
+		  libhdf5-serial-dev \
+		  hdf5-tools \
+		  libhdf5-dev \
+		  zlib1g-dev \
+		  zip \
+		  libjpeg8-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+
+RUN pip3 install setuptools Cython wheel
+
+
+#
+# TensorFlow
+#
+ARG TENSORFLOW_URL=https://nvidia.box.com/shared/static/fzr7ebcefy4363owz3f7sxnoj7dzn9rc.whl
+ARG TENSORFLOW_WHL=tensorflow-1.15.0+nv-cp36-cp36m-linux_aarch64.whl
+
+RUN wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${TENSORFLOW_URL} -O ${TENSORFLOW_WHL} && \
+    pip3 install ${TENSORFLOW_WHL} --verbose && \
+    rm ${TENSORFLOW_WHL}
+
+
+

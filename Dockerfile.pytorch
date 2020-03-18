@@ -1,0 +1,88 @@
+# Copyright (c) 2018-2020, NVIDIA CORPORATION. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#  * Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#  * Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+#  * Neither the name of NVIDIA CORPORATION nor the names of its
+#    contributors may be used to endorse or promote products derived
+#    from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS'' AND ANY
+# EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+# PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+# PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+# OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+ARG BASE_IMAGE=nvcr.io/nvidian/nvidia-l4t-base:r32.4
+FROM ${BASE_IMAGE}
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+
+#
+# install prerequisites (many of these are for numpy)
+#
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+            python3-pip \
+		  python3-dev \
+		  libopenblas-dev \
+		  libopenmpi2 \
+            openmpi-bin \
+            openmpi-common \
+		  gfortran \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install setuptools Cython wheel
+
+
+#
+# PyTorch (default is for JetPack 4.4 b86+)
+#
+#  for JetPack 4.4 b86: https://nvidia.box.com/shared/static/tu5ue9djmx1h4y8pic55el2io2bbpuwh.whl
+#  for JetPack 4.4 b50: https://nvidia.box.com/shared/static/x5mhttzion79yxa1tz8hf4h6dhbys8xx.whl
+#
+ARG PYTORCH_URL=https://nvidia.box.com/shared/static/tu5ue9djmx1h4y8pic55el2io2bbpuwh.whl	
+ARG PYTORCH_WHL=torch-1.2.0-cp36-cp36m-linux_aarch64.whl
+
+RUN wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${PYTORCH_URL} -O ${PYTORCH_WHL} && \
+    pip3 install ${PYTORCH_WHL} --verbose && \
+    rm ${PYTORCH_WHL}
+
+
+#
+# torchvision 0.4
+#
+COPY packages/usr /usr
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+		  git \
+		  build-essential \
+            libjpeg-dev \
+		  zlib1g-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN ls -ll /usr/include/cublas* && \
+    ls -ll /usr/include/aarch64-linux-gnu && \
+    git clone -b v0.4.0 https://github.com/pytorch/vision torchvision && \
+    cd torchvision && \
+    python3 setup.py install && \
+    cd ../ && \
+    rm -rf torchvision && \
+    pip3 install 'pillow<7'
+
+
+
+
