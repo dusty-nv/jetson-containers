@@ -25,62 +25,79 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ARG BASE_IMAGE=nvcr.io/nvidian/nvidia-l4t-base:r32.4
+ARG PYTORCH_IMAGE=l4t-pytorch:r32.4-pth1.2-py3
+ARG TENSORFLOW_IMAGE=l4t-tensorflow:r32.4-tf1.15-py3
+
+FROM ${PYTORCH_IMAGE} as pytorch
+FROM ${TENSORFLOW_IMAGE} as tensorflow
 FROM ${BASE_IMAGE}
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 
 #
-# install prerequisites (many of these are for numpy)
+# apt packages
 #
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-            python3-pip \
+          python3-pip \
 		  python3-dev \
-		  libopenblas-dev \
-		  libopenmpi2 \
-            openmpi-bin \
-            openmpi-common \
+          python3-matplotlib \
+		  build-essential \
 		  gfortran \
+		  git \
+		  cmake \
+		  libopenblas-dev \
+		  libhdf5-serial-dev \
+		  hdf5-tools \
+		  libhdf5-dev \
+		  zlib1g-dev \
+		  zip \
+		  libjpeg8-dev \
+		  libopenmpi2 \
+          openmpi-bin \
+          openmpi-common \
+		  nodejs \
+		  npm \
+		  protobuf-compiler \
+          libprotoc-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install setuptools Cython wheel
-
-
-#
-# PyTorch (default is for JetPack 4.4 b86+)
-#
-#  for JetPack 4.4 b86: https://nvidia.box.com/shared/static/tu5ue9djmx1h4y8pic55el2io2bbpuwh.whl
-#  for JetPack 4.4 b50: https://nvidia.box.com/shared/static/x5mhttzion79yxa1tz8hf4h6dhbys8xx.whl
-#
-ARG PYTORCH_URL=https://nvidia.box.com/shared/static/tu5ue9djmx1h4y8pic55el2io2bbpuwh.whl	
-ARG PYTORCH_WHL=torch-1.2.0-cp36-cp36m-linux_aarch64.whl
-
-RUN wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${PYTORCH_URL} -O ${PYTORCH_WHL} && \
-    pip3 install ${PYTORCH_WHL} --verbose && \
-    rm ${PYTORCH_WHL}
-
-
-#
-# torchvision 0.4
-#
 COPY packages/usr /usr
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-		  git \
-		  build-essential \
-            libjpeg-dev \
-		  zlib1g-dev \
-    && rm -rf /var/lib/apt/lists/*
 
-RUN git clone -b v0.4.0 https://github.com/pytorch/vision torchvision && \
-    cd torchvision && \
-    python3 setup.py install && \
-    cd ../ && \
-    rm -rf torchvision && \
-    pip3 install 'pillow<7'
+#
+# python packages from TF/PyTorch containers
+#
+COPY --from=tensorflow /usr/local/lib/python2.7/dist-packages/ /usr/local/lib/python2.7/dist-packages/
+COPY --from=tensorflow /usr/local/lib/python3.6/dist-packages/ /usr/local/lib/python3.6/dist-packages/
+
+COPY --from=pytorch /usr/local/lib/python2.7/dist-packages/ /usr/local/lib/python2.7/dist-packages/
+COPY --from=pytorch /usr/local/lib/python3.6/dist-packages/ /usr/local/lib/python3.6/dist-packages/
 
 
+#
+# python pip packages
+#
+RUN pip3 install pybind11 --ignore-installed 
+RUN pip3 install onnx --verbose
+RUN pip3 install scipy --verbose
+RUN pip3 install scikit-learn --verbose
+RUN pip3 install pandas --verbose
+RUN pip3 install 'pillow<7'
 
+
+#
+# JupyterLab
+#
+RUN pip3 install jupyter jupyterlab --verbose
+#RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager@2
+
+RUN jupyter lab --generate-config
+RUN python3 -c "from notebook.auth.security import set_password; set_password('nvidia', '/root/.jupyter/jupyter_notebook_config.json')" 
+
+CMD /bin/bash -c "jupyter lab --ip 0.0.0.0 --port 8888 --allow-root &> /var/log/jupyter.log" & \
+	echo "allow 10 sec for JupyterLab to start @ http://localhost:8888 (password nvidia)" && \
+	echo "JupterLab logging location:  /var/log/jupyter.log  (inside the container)" && \
+	/bin/bash
 

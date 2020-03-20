@@ -12,5 +12,8 @@ push()
 }
 
 push "l4t-pytorch:r32.4-pth1.2-py3"
+push "l4t-tensorflow:r32.4-tf1.15-py3"
+push "l4t-ml:r32.4-py3"
+
 
 

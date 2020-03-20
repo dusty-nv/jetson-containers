@@ -35,9 +35,10 @@ ENV DEBIAN_FRONTEND=noninteractive
 #
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-            python3-pip \
+          python3-pip \
 		  python3-dev \
 		  gfortran \
+		  build-essential \
 		  libopenblas-dev \
 		  libhdf5-serial-dev \
 		  hdf5-tools \
@@ -47,9 +48,10 @@ RUN apt-get update && \
 		  libjpeg8-dev \
     && rm -rf /var/lib/apt/lists/*
 
-
 RUN pip3 install setuptools Cython wheel
-
+RUN pip3 install numpy --verbose
+RUN HDF5_DIR=/usr/lib/aarch64-linux-gnu/hdf5/serial/ pip3 install h5py==2.9.0 --verbose
+RUN pip3 install future==0.17.1 mock==3.0.5 keras_preprocessing==1.0.5 keras_applications==1.0.8 gast==0.2.2 futures protobuf pybind11 --verbose
 
 #
 # TensorFlow
@@ -61,5 +63,8 @@ RUN wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certif
     pip3 install ${TENSORFLOW_WHL} --verbose && \
     rm ${TENSORFLOW_WHL}
 
+
+# user apps might want these dev files
+COPY packages/usr /usr
 
 
