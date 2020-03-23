@@ -12,5 +12,7 @@ cp /usr/include/cublas*.h packages/usr/include
 cp /usr/include/cudnn*.h packages/usr/include
 
 cp /usr/include/aarch64-linux-gnu/Nv*.h packages/usr/include/aarch64-linux-gnu
-cp -r /usr/lib/python3.6/dist-packages/tensorrt packages/usr/lib/python3.6/dist-packages/tensorrt
 
+cp -r /usr/lib/python3.6/dist-packages/tensorrt* packages/usr/lib/python3.6/dist-packages
+cp -r /usr/lib/python3.6/dist-packages/graphsurgeon* packages/usr/lib/python3.6/dist-packages
+cp -r /usr/lib/python3.6/dist-packages/uff* packages/usr/lib/python3.6/dist-packages

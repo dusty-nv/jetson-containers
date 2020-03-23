@@ -87,6 +87,16 @@ RUN pip3 install pandas --verbose
 RUN pip3 install 'pillow<7'
 
 
+# 
+# PyCUDA
+#
+ENV PATH="/usr/local/cuda/bin:${PATH}"
+ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
+RUN echo "$PATH" && echo "$LD_LIBRARY_PATH"
+
+RUN pip3 install pycuda --verbose
+
+
 #
 # JupyterLab
 #

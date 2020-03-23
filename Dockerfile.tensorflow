@@ -53,6 +53,7 @@ RUN pip3 install numpy --verbose
 RUN HDF5_DIR=/usr/lib/aarch64-linux-gnu/hdf5/serial/ pip3 install h5py==2.9.0 --verbose
 RUN pip3 install future==0.17.1 mock==3.0.5 keras_preprocessing==1.0.5 keras_applications==1.0.8 gast==0.2.2 futures protobuf pybind11 --verbose
 
+
 #
 # TensorFlow
 #
@@ -62,6 +63,16 @@ ARG TENSORFLOW_WHL=tensorflow-1.15.0+nv-cp36-cp36m-linux_aarch64.whl
 RUN wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${TENSORFLOW_URL} -O ${TENSORFLOW_WHL} && \
     pip3 install ${TENSORFLOW_WHL} --verbose && \
     rm ${TENSORFLOW_WHL}
+
+
+# 
+# PyCUDA
+#
+ENV PATH="/usr/local/cuda/bin:${PATH}"
+ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
+RUN echo "$PATH" && echo "$LD_LIBRARY_PATH"
+
+RUN pip3 install pycuda --verbose
 
 
 # user apps might want these dev files

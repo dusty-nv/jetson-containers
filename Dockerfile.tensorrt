@@ -30,61 +30,24 @@ FROM ${BASE_IMAGE}
 ENV DEBIAN_FRONTEND=noninteractive
 
 
-#
-# install prerequisites (many of these are for numpy)
-#
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-            python3-pip \
-		  python3-dev \
-		  libopenblas-dev \
-		  libopenmpi2 \
-            openmpi-bin \
-            openmpi-common \
-		  gfortran \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN pip3 install setuptools Cython wheel
-
-
-#
-# PyTorch (default is for JetPack 4.4 b86+)
-#
-#  for JetPack 4.4 b86: https://nvidia.box.com/shared/static/tu5ue9djmx1h4y8pic55el2io2bbpuwh.whl
-#  for JetPack 4.4 b50: https://nvidia.box.com/shared/static/x5mhttzion79yxa1tz8hf4h6dhbys8xx.whl
-#
-ARG PYTORCH_URL=https://nvidia.box.com/shared/static/tu5ue9djmx1h4y8pic55el2io2bbpuwh.whl	
-ARG PYTORCH_WHL=torch-1.2.0-cp36-cp36m-linux_aarch64.whl
-
-RUN wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${PYTORCH_URL} -O ${PYTORCH_WHL} && \
-    pip3 install ${PYTORCH_WHL} --verbose && \
-    rm ${PYTORCH_WHL}
-
-
-#
-# torchvision 0.4
-#
+# cuDNN+TensorRT dev files
 COPY packages/usr /usr
 
+# apt packages
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-		  git \
-		  build-essential \
-            libjpeg-dev \
-		  zlib1g-dev \
+          python3-pip \
+		python3-dev \
+		build-essential \
+		cmake \
+		libopenblas-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN git clone -b v0.4.0 https://github.com/pytorch/vision torchvision && \
-    cd torchvision && \
-    python3 setup.py install && \
-    cd ../ && \
-    rm -rf torchvision && \
-    pip3 install 'pillow<7'
+# pip packages
+RUN pip3 install setuptools Cython wheel
+RUN pip3 install numpy --verbose
 
-
-# 
 # PyCUDA
-#
 ENV PATH="/usr/local/cuda/bin:${PATH}"
 ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
 RUN echo "$PATH" && echo "$LD_LIBRARY_PATH"
