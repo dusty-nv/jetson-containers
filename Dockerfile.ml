@@ -24,7 +24,7 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-ARG BASE_IMAGE=nvcr.io/nvidian/nvidia-l4t-base:r32.4
+ARG BASE_IMAGE=nvcr.io/nvidian/nvidia-l4t-base:r32.4.2
 ARG PYTORCH_IMAGE=l4t-pytorch:r32.4-pth1.2-py3
 ARG TENSORFLOW_IMAGE=l4t-tensorflow:r32.4-tf1.15-py3
 
@@ -63,7 +63,7 @@ RUN apt-get update && \
           libprotoc-dev \
     && rm -rf /var/lib/apt/lists/*
 
-COPY packages/usr /usr
+#COPY packages/usr /usr
 
 
 #

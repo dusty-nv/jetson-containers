@@ -103,11 +103,11 @@ test_numpy $TENSORFLOW_CONTAINER
 #
 # TensorRT container
 #
-TENSORRT_CONTAINER="l4t-tensorrt:r32.4-py3"
+#TENSORRT_CONTAINER="l4t-tensorrt:r32.4-py3"
 
-test_tensorrt $TENSORRT_CONTAINER
-test_cuda $TENSORRT_CONTAINER
-test_numpy $TENSORRT_CONTAINER
+#test_tensorrt $TENSORRT_CONTAINER
+#test_cuda $TENSORRT_CONTAINER
+#test_numpy $TENSORRT_CONTAINER
 
 #
 # ML container
