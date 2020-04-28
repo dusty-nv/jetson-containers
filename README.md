@@ -6,7 +6,7 @@ Hosted on [NVIDIA GPU Cloud](https://ngc.nvidia.com/catalog/containers?orderBy=m
 * [`l4t-pytorch`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-pytorch)
 * [`l4t-tensorflow`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-tensorflow)
 
-Included in this repo are the Dockerfiles and scripts used to build the containers above.
+Included in this repo are the Dockerfiles and scripts used to build the above containers.
 
 ## Building the Containers
 
@@ -18,7 +18,7 @@ $ cd jetson-containers
 $ ./scripts/docker_build_all.sh
 ```
 
-Note that the TensorFlow and PyTorch pip wheel installers for aarch64 are automatically downloaded by the Dockerfiles from the [Jetson Zoo](https://elinux.org/Jetson_Zoo).
+Note that the TensorFlow and PyTorch pip wheel installers for aarch64 are automatically downloaded in the Dockerfiles from the [Jetson Zoo](https://elinux.org/Jetson_Zoo).
 
 ## Testing the Containers
 
