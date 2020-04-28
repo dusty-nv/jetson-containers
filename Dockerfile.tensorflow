@@ -1,4 +1,3 @@
-#
 # Copyright (c) 2020, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -18,7 +17,6 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
-#
 
 ARG BASE_IMAGE=nvcr.io/nvidian/nvidia-l4t-base:r32.4.2
 FROM ${BASE_IMAGE}
