@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
+set -e
+
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 TEST_MOUNT="$ROOT/../test:/test"
-
 
 # cuda tests
 test_cuda()
@@ -79,26 +80,39 @@ test_sklearn()
 	echo -e "done testing container $1 => sklearn\n"
 }
 
-	
+# PyTorch tests (all)
+test_pytorch_all()
+{
+	test_pytorch $1
+	test_tensorrt $1
+	test_cuda $1
+	test_numpy $1
+}
+
+# TensorFlow tests (all)
+test_tensorflow_all()
+{
+	test_tensorflow $1
+	test_tensorrt $1
+	test_cuda $1
+	test_numpy $1
+}
+
+
 #
 # PyTorch container
 #
-PYTORCH_CONTAINER="l4t-pytorch:r32.4-pth1.2-py3"
+test_pytorch_all "l4t-pytorch:r32.4.2-pth1.2-py3"
+test_pytorch_all "l4t-pytorch:r32.4.2-pth1.3-py3"
+test_pytorch_all "l4t-pytorch:r32.4.2-pth1.4-py3"
+test_pytorch_all "l4t-pytorch:r32.4.2-pth1.5-py3"
 
-test_pytorch $PYTORCH_CONTAINER
-test_tensorrt $PYTORCH_CONTAINER
-test_cuda $PYTORCH_CONTAINER
-test_numpy $PYTORCH_CONTAINER
 
 #
 # TensorFlow container
 #
-TENSORFLOW_CONTAINER="l4t-tensorflow:r32.4-tf1.15-py3"
+test_tensorflow_all "l4t-tensorflow:r32.4.2-tf1.15-py3"
 
-test_tensorflow $TENSORFLOW_CONTAINER
-test_tensorrt $TENSORFLOW_CONTAINER
-test_cuda $TENSORFLOW_CONTAINER
-test_numpy $TENSORFLOW_CONTAINER
 
 #
 # TensorRT container
@@ -112,7 +126,7 @@ test_numpy $TENSORFLOW_CONTAINER
 #
 # ML container
 #
-ML_CONTAINER="l4t-ml:r32.4-py3"
+ML_CONTAINER="l4t-ml:r32.4.2-py3"
 
 test_pytorch $ML_CONTAINER
 test_tensorflow $ML_CONTAINER

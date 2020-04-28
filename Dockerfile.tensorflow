@@ -55,12 +55,9 @@ RUN pip3 install future==0.17.1 mock==3.0.5 keras_preprocessing==1.0.5 keras_app
 
 
 #
-# TensorFlow (default is for JetPack 4.4 b144 - DP)
+# TensorFlow (for JetPack 4.4 DP)
 #
-#  for JetPack 4.4 b144: https://nvidia.box.com/shared/static/rummpy6q1km1wivomalpkwt2jy28mndf.whl (tensorflow-1.15.2+nv-cp36-cp36m-linux_aarch64.whl)
-#  for JetPack 4.4 b136: https://nvidia.box.com/shared/static/7vcijqz6uokbbkfi4063sriq703w6ocl.whl (tensorflow-1.15.2+nv-cp36-cp36m-linux_aarch64.whl)
-#  for JetPack 4.4 b86:  https://nvidia.box.com/shared/static/fzr7ebcefy4363owz3f7sxnoj7dzn9rc.whl (tensorflow-1.15.0+nv-cp36-cp36m-linux_aarch64.whl)
-#  for JetPack 4.4 b50:  https://nvidia.box.com/shared/static/4eoysh4kc759og7hhonhc9c9b52vndv1.whl (tensorflow-1.15.0+nv-cp36-cp36m-linux_aarch64.whl)
+#  TensorFlow 1.15 https://nvidia.box.com/shared/static/rummpy6q1km1wivomalpkwt2jy28mndf.whl (tensorflow-1.15.2+nv-cp36-cp36m-linux_aarch64.whl)
 #
 ARG TENSORFLOW_URL=https://nvidia.box.com/shared/static/rummpy6q1km1wivomalpkwt2jy28mndf.whl 
 ARG TENSORFLOW_WHL=tensorflow-1.15.2+nv-cp36-cp36m-linux_aarch64.whl
