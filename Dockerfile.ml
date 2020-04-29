@@ -18,7 +18,7 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-ARG BASE_IMAGE=nvcr.io/nvidian/nvidia-l4t-base:r32.4.2
+ARG BASE_IMAGE=nvcr.io/nvidia/l4t-base:r32.4.2
 ARG PYTORCH_IMAGE=l4t-pytorch:r32.4-pth1.2-py3
 ARG TENSORFLOW_IMAGE=l4t-tensorflow:r32.4-tf1.15-py3
 
