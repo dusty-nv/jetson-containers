@@ -71,7 +71,4 @@ RUN echo "$PATH" && echo "$LD_LIBRARY_PATH"
 RUN pip3 install pycuda --verbose
 
 
-# user apps might want these dev files
-#COPY packages/usr /usr
-
 

@@ -57,8 +57,6 @@ RUN apt-get update && \
           libprotoc-dev \
     && rm -rf /var/lib/apt/lists/*
 
-#COPY packages/usr /usr
-
 
 #
 # python packages from TF/PyTorch containers
