@@ -8,6 +8,25 @@ Hosted on [NVIDIA GPU Cloud](https://ngc.nvidia.com/catalog/containers?orderBy=m
 
 Included in this repo are the Dockerfiles and scripts used to build the above containers.
 
+## Docker Default Runtime
+
+To enable access to the CUDA compiler (nvcc) during `docker build` operations, before attempting to build the containers set `"default-runtime": "nvidia"` in your `/etc/docker/daemon.json` configuration file:
+
+``` json
+{
+    "runtimes": {
+        "nvidia": {
+            "path": "nvidia-container-runtime",
+            "runtimeArgs": []
+        }
+    },
+
+    "default-runtime": "nvidia",
+}
+```
+
+You will then want to restart the Docker service or reboot your system before proceeding.
+
 ## Building the Containers
 
 To rebuild the containers from a Jetson device running [JetPack 4.4 Developer Preview](https://developer.nvidia.com/embedded/jetpack), clone this repo and run `./scripts/docker_build_all.sh`:
