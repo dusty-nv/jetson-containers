@@ -10,7 +10,7 @@ Included in this repo are the Dockerfiles and scripts used to build the above co
 
 ## Docker Default Runtime
 
-To enable access to the CUDA compiler (nvcc) during `docker build` operations, before attempting to build the containers set `"default-runtime": "nvidia"` in your `/etc/docker/daemon.json` configuration file:
+To enable access to the CUDA compiler (nvcc) during `docker build` operations, add `"default-runtime": "nvidia"` to your `/etc/docker/daemon.json` configuration file before attempting to build the containers:
 
 ``` json
 {
@@ -21,7 +21,7 @@ To enable access to the CUDA compiler (nvcc) during `docker build` operations, b
         }
     },
 
-    "default-runtime": "nvidia",
+    "default-runtime": "nvidia"
 }
 ```
 
