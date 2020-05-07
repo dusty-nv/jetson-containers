@@ -21,6 +21,14 @@ test_numpy()
 	echo -e "done testing container $1 => numpy\n"
 }
 
+# numpa tests
+test_numba()
+{
+	echo "testing container $1 => numba"
+	sh ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_numba.py
+	echo -e "done testing container $1 => numba\n"
+}
+
 # onnx tests
 test_onnx()
 {
@@ -133,6 +141,7 @@ test_tensorflow $ML_CONTAINER
 test_tensorrt $ML_CONTAINER
 test_cuda $ML_CONTAINER
 test_numpy $ML_CONTAINER
+test_numba $ML_CONTAINER
 test_onnx $ML_CONTAINER
 test_pandas $ML_CONTAINER
 test_scipy $ML_CONTAINER

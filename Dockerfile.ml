@@ -103,3 +103,18 @@ CMD /bin/bash -c "jupyter lab --ip 0.0.0.0 --port 8888 --allow-root &> /var/log/
 	echo "JupterLab logging location:  /var/log/jupyter.log  (inside the container)" && \
 	/bin/bash
 
+#
+# numba
+#
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+          llvm-7 \
+          llvm-7-dev \
+    && rm -rf /var/lib/apt/lists/*
+	
+ENV LLVM_CONFIG /usr/bin/llvm-config-7
+ENV CUDA_HOME /usr/local/cuda
+#ENV NUMBAPRO_NVVM ${CUDA_HOME}/nvvm/lib64/libnvvm.so
+#ENV NUMBAPRO_LIBDEVICE ${CUDA_HOME}/nvvm/libdevice
+
+RUN pip3 install numba --verbose
