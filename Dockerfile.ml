@@ -26,7 +26,17 @@ FROM ${PYTORCH_IMAGE} as pytorch
 FROM ${TENSORFLOW_IMAGE} as tensorflow
 FROM ${BASE_IMAGE}
 
+
+# 
+# setup environment
+#
 ENV DEBIAN_FRONTEND=noninteractive
+ENV CUDA_HOME="/usr/local/cuda"
+ENV PATH="/usr/local/cuda/bin:${PATH}"
+ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
+ENV LLVM_CONFIG="/usr/bin/llvm-config-7"
+
+RUN echo "PATH = $PATH" && echo "LD_LIBRARY_PATH = $LD_LIBRARY_PATH"
 
 
 #
@@ -55,6 +65,8 @@ RUN apt-get update && \
 		  npm \
 		  protobuf-compiler \
           libprotoc-dev \
+		llvm-7 \
+          llvm-7-dev \
     && rm -rf /var/lib/apt/lists/*
 
 
@@ -76,17 +88,10 @@ RUN pip3 install onnx --verbose
 RUN pip3 install scipy --verbose
 RUN pip3 install scikit-learn --verbose
 RUN pip3 install pandas --verbose
-#RUN pip3 install 'pillow<7'
-
-
-# 
-# PyCUDA
-#
-ENV PATH="/usr/local/cuda/bin:${PATH}"
-ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
-RUN echo "$PATH" && echo "$LD_LIBRARY_PATH"
-
 RUN pip3 install pycuda --verbose
+RUN pip3 install numba --verbose
+
+#RUN pip3 install 'pillow<7'
 
 
 #
@@ -103,18 +108,4 @@ CMD /bin/bash -c "jupyter lab --ip 0.0.0.0 --port 8888 --allow-root &> /var/log/
 	echo "JupterLab logging location:  /var/log/jupyter.log  (inside the container)" && \
 	/bin/bash
 
-#
-# numba
-#
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-          llvm-7 \
-          llvm-7-dev \
-    && rm -rf /var/lib/apt/lists/*
-	
-ENV LLVM_CONFIG /usr/bin/llvm-config-7
-ENV CUDA_HOME /usr/local/cuda
-#ENV NUMBAPRO_NVVM ${CUDA_HOME}/nvvm/lib64/libnvvm.so
-#ENV NUMBAPRO_LIBDEVICE ${CUDA_HOME}/nvvm/libdevice
 
-RUN pip3 install numba --verbose
