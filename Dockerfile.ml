@@ -18,9 +18,9 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-ARG BASE_IMAGE=nvcr.io/nvidia/l4t-base:r32.4.2
-ARG PYTORCH_IMAGE=l4t-pytorch:r32.4-pth1.2-py3
-ARG TENSORFLOW_IMAGE=l4t-tensorflow:r32.4-tf1.15-py3
+ARG BASE_IMAGE
+ARG PYTORCH_IMAGE
+ARG TENSORFLOW_IMAGE
 
 FROM ${PYTORCH_IMAGE} as pytorch
 FROM ${TENSORFLOW_IMAGE} as tensorflow
@@ -35,8 +35,9 @@ ENV CUDA_HOME="/usr/local/cuda"
 ENV PATH="/usr/local/cuda/bin:${PATH}"
 ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
 ENV LLVM_CONFIG="/usr/bin/llvm-config-7"
+ARG MAKEFLAGS=-j6
 
-RUN echo "PATH = $PATH" && echo "LD_LIBRARY_PATH = $LD_LIBRARY_PATH"
+RUN printenv
 
 
 #
@@ -52,6 +53,8 @@ RUN apt-get update && \
 		  git \
 		  cmake \
 		  libopenblas-dev \
+		  liblapack-dev \
+		  libblas-dev \
 		  libhdf5-serial-dev \
 		  hdf5-tools \
 		  libhdf5-dev \
@@ -89,9 +92,53 @@ RUN pip3 install scipy --verbose
 RUN pip3 install scikit-learn --verbose
 RUN pip3 install pandas --verbose
 RUN pip3 install pycuda --verbose
+
+
+#
+# numba
+#
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+		llvm-9 \
+          llvm-9-dev \
+    && rm -rf /var/lib/apt/lists/*
+    
+ENV LLVM_CONFIG="/usr/bin/llvm-config-9"
 RUN pip3 install numba --verbose
 
-#RUN pip3 install 'pillow<7'
+
+#
+# restore missing cuDNN headers
+#
+RUN ln -s /usr/include/aarch64-linux-gnu/cudnn_v8.h /usr/include/cudnn.h && \
+    ln -s /usr/include/aarch64-linux-gnu/cudnn_version_v8.h /usr/include/cudnn_version.h && \
+    ln -s /usr/include/aarch64-linux-gnu/cudnn_backend_v8.h /usr/include/cudnn_backend.h && \
+    ln -s /usr/include/aarch64-linux-gnu/cudnn_adv_infer_v8.h /usr/include/cudnn_adv_infer.h && \
+    ln -s /usr/include/aarch64-linux-gnu/cudnn_adv_train_v8.h /usr/include/cudnn_adv_train.h && \
+    ln -s /usr/include/aarch64-linux-gnu/cudnn_cnn_infer_v8.h /usr/include/cudnn_cnn_infer.h && \
+    ln -s /usr/include/aarch64-linux-gnu/cudnn_cnn_train_v8.h /usr/include/cudnn_cnn_train.h && \
+    ln -s /usr/include/aarch64-linux-gnu/cudnn_ops_infer_v8.h /usr/include/cudnn_ops_infer.h && \
+    ln -s /usr/include/aarch64-linux-gnu/cudnn_ops_train_v8.h /usr/include/cudnn_ops_train.h && \
+    ls -ll /usr/include/cudnn*
+
+ 
+#
+# CuPy
+#
+ARG CUPY_NVCC_GENERATE_CODE="arch=compute_53,code=sm_53;arch=compute_62,code=sm_62;arch=compute_72,code=sm_72"
+ENV CUB_PATH="/opt/cub"
+#ARG CFLAGS="-I/opt/cub"
+#ARG LDFLAGS="-L/usr/lib/aarch64-linux-gnu"
+
+RUN git clone https://github.com/NVlabs/cub opt/cub && \
+    git clone -b v8.0.0b4 https://github.com/cupy/cupy cupy && \
+    cd cupy && \
+    pip3 install fastrlock && \
+    python3 setup.py install --verbose && \
+    cd ../ && \
+    rm -rf cupy
+
+#RUN pip3 install cupy --verbose
 
 
 #

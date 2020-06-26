@@ -18,10 +18,18 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-ARG BASE_IMAGE=nvcr.io/nvidia/l4t-base:r32.4.2
+ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
+
+#
+# setup environment
+#
 ENV DEBIAN_FRONTEND=noninteractive
+ARG HDF5_DIR="/usr/lib/aarch64-linux-gnu/hdf5/serial/"
+ARG MAKEFLAGS=-j6
+
+RUN printenv
 
 
 #
@@ -33,7 +41,8 @@ RUN apt-get update && \
 		  python3-dev \
 		  gfortran \
 		  build-essential \
-		  libopenblas-dev \
+		  liblapack-dev \ 
+		  libblas-dev \
 		  libhdf5-serial-dev \
 		  hdf5-tools \
 		  libhdf5-dev \
@@ -42,9 +51,10 @@ RUN apt-get update && \
 		  libjpeg8-dev \
     && rm -rf /var/lib/apt/lists/*
 
+
 RUN pip3 install setuptools Cython wheel
 RUN pip3 install numpy --verbose
-RUN HDF5_DIR=/usr/lib/aarch64-linux-gnu/hdf5/serial/ pip3 install h5py==2.9.0 --verbose
+RUN pip3 install h5py==2.10.0 --verbose
 RUN pip3 install future==0.17.1 mock==3.0.5 keras_preprocessing==1.0.5 keras_applications==1.0.8 gast==0.2.2 futures protobuf pybind11 --verbose
 
 

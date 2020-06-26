@@ -13,6 +13,14 @@ test_cuda()
 	echo -e "done testing container $1 => PyCUDA\n"
 }
 
+# cupy tests
+test_cupy()
+{
+	echo "testing container $1 => CuPy"
+	sh ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_cupy.py
+	echo -e "done testing container $1 => CuPy\n"
+}
+
 # numpy tests
 test_numpy()
 {
@@ -52,7 +60,8 @@ test_pytorch()
 
 	sh ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_pytorch.py
 	sh ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_torchvision.py
-	
+	sh ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_torchaudio.py
+
 	echo -e "done testing container $1 => PyTorch\n"
 }
 
@@ -106,44 +115,42 @@ test_tensorflow_all()
 	test_numpy $1
 }
 
+# ML tests (all)
+test_all()
+{
+	test_pytorch $1
+	test_tensorflow $1
+	test_tensorrt $1
+	test_cuda $1
+	test_numpy $1
+	test_cupy $1
+	test_numba $1
+	test_onnx $1
+	test_pandas $1
+	test_scipy $1
+	test_sklearn $1
+}
+
 
 #
 # PyTorch container
 #
-test_pytorch_all "l4t-pytorch:r32.4.2-pth1.2-py3"
-test_pytorch_all "l4t-pytorch:r32.4.2-pth1.3-py3"
-test_pytorch_all "l4t-pytorch:r32.4.2-pth1.4-py3"
-test_pytorch_all "l4t-pytorch:r32.4.2-pth1.5-py3"
-
+#test_pytorch_all "l4t-pytorch:r32.4.3-pth1.2-py3"
+#test_pytorch_all "l4t-pytorch:r32.4.3-pth1.3-py3"
+#test_pytorch_all "l4t-pytorch:r32.4.3-pth1.4-py3"
+#test_pytorch_all "l4t-pytorch:r32.4.3-pth1.5-py3"
+test_pytorch_all "l4t-pytorch:r32.4.3-pth1.6-py3"
 
 #
 # TensorFlow container
 #
-test_tensorflow_all "l4t-tensorflow:r32.4.2-tf1.15-py3"
-
-
-#
-# TensorRT container
-#
-#TENSORRT_CONTAINER="l4t-tensorrt:r32.4-py3"
-
-#test_tensorrt $TENSORRT_CONTAINER
-#test_cuda $TENSORRT_CONTAINER
-#test_numpy $TENSORRT_CONTAINER
+test_tensorflow_all "l4t-tensorflow:r32.4.3-tf1.15-py3"
+test_tensorflow_all "l4t-tensorflow:r32.4.3-tf2.2-py3"
 
 #
 # ML container
 #
-ML_CONTAINER="l4t-ml:r32.4.2-py3"
+test_all "l4t-ml:r32.4.3-py3"
 
-test_pytorch $ML_CONTAINER
-test_tensorflow $ML_CONTAINER
-test_tensorrt $ML_CONTAINER
-test_cuda $ML_CONTAINER
-test_numpy $ML_CONTAINER
-test_numba $ML_CONTAINER
-test_onnx $ML_CONTAINER
-test_pandas $ML_CONTAINER
-test_scipy $ML_CONTAINER
-test_sklearn $ML_CONTAINER
+
 
