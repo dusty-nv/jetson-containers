@@ -5,3 +5,4 @@ __pycache__
 *.deb
 packages/usr
 build_log.txt
+logs
