@@ -29,7 +29,7 @@ You will then want to restart the Docker service or reboot your system before pr
 
 ## Building the Containers
 
-To rebuild the containers from a Jetson device running [JetPack 4.4 Developer Preview](https://developer.nvidia.com/embedded/jetpack), clone this repo and run `./scripts/docker_build_all.sh`:
+To rebuild the containers from a Jetson device running [JetPack 4.4](https://developer.nvidia.com/embedded/jetpack), clone this repo and run `./scripts/docker_build_all.sh`:
 
 ``` bash
 $ git clone https://github.com/dusty-nv/jetson-containers
