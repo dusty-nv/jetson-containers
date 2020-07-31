@@ -63,13 +63,13 @@ build_pytorch()
 #			  "v0.6.0" \
 #			  "pillow" 
 
-# PyTorch v1.6.0-rc1
-build_pytorch "https://nvidia.box.com/shared/static/yr6sjswn25z7oankw8zy1roow9cy5ur1.whl" \
-			  "torch-1.6.0rc2-cp36-cp36m-linux_aarch64.whl" \
+# PyTorch v1.6.0
+build_pytorch "https://nvidia.box.com/shared/static/9eptse6jyly1ggt9axbja2yrmj6pbarc.whl" \
+			  "torch-1.6.0-cp36-cp36m-linux_aarch64.whl" \
 			  "l4t-pytorch:r32.4.3-pth1.6-py3" \
-			  "v0.7.0-rc2" \
+			  "v0.7.0" \
 			  "pillow" \
-			  "v0.6.0-rc1"
+			  "v0.6.0"
 
 #			  
 # TensorFlow (for JetPack 4.4)
