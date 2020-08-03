@@ -2,7 +2,7 @@
 # this dockerfile roughly follows the 'Install ROS2 Via Debian Packages' from:
 #   https://index.ros.org/doc/ros2/Installation/Eloquent/Linux-Install-Debians/
 #
-ARG BASE_IMAGE
+ARG BASE_IMAGE=nvcr.io/nvidia/l4t-base:r32.4.3
 FROM ${BASE_IMAGE}
 
 ARG ROS_PKG=ros_base

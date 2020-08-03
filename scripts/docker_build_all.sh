@@ -2,7 +2,7 @@
 
 set -e
 
-BASE_IMAGE="nvcr.io/nvidian/nvidia-l4t-base:r32.4.3"
+BASE_IMAGE="nvcr.io/nvidia/l4t-base:r32.4.3"
 
 #
 # PyTorch (for JetPack 4.4)
