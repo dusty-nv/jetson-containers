@@ -6,14 +6,14 @@ Hosted on [NVIDIA GPU Cloud](https://ngc.nvidia.com/catalog/containers?orderBy=m
 * [`l4t-pytorch`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-pytorch)
 * [`l4t-tensorflow`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-tensorflow)
 
-Dockerfiles are also included for the following containers, which can be built for JetPack 4.4:
+Dockerfiles are also provided for the following containers, which can be built for JetPack 4.4:
 
 * ROS Melodic (`ros:melodic-ros-base-l4t-r32.4.3`)
 * ROS Noetic (`ros:noetic-ros-base-l4t-r32.4.3`)
 * ROS2 Eloquent (`ros:eloquent-ros-base-l4t-r32.4.3`)
 * ROS2 Foxy (`ros:foxy-ros-base-l4t-r32.4.3`)
 
-Below are the instructions to build and test the containers using these Dockerfiles.
+Below are the instructions to build and test the containers using the included Dockerfiles.
 
 ## Docker Default Runtime
 
