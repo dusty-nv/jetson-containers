@@ -4,6 +4,7 @@ set -e
 
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 TEST_MOUNT="$ROOT/../test:/test"
+CONTAINERS=${1:-"all"}
 
 # cuda tests
 test_cuda()
@@ -135,22 +136,27 @@ test_all()
 #
 # PyTorch container
 #
-#test_pytorch_all "l4t-pytorch:r32.4.3-pth1.2-py3"
-#test_pytorch_all "l4t-pytorch:r32.4.3-pth1.3-py3"
-#test_pytorch_all "l4t-pytorch:r32.4.3-pth1.4-py3"
-#test_pytorch_all "l4t-pytorch:r32.4.3-pth1.5-py3"
-test_pytorch_all "l4t-pytorch:r32.4.3-pth1.6-py3"
+if [[ "$CONTAINERS" == "pytorch" || "$CONTAINERS" == "all" ]]; then
+	#test_pytorch_all "l4t-pytorch:r32.4.3-pth1.2-py3"
+	#test_pytorch_all "l4t-pytorch:r32.4.3-pth1.3-py3"
+	#test_pytorch_all "l4t-pytorch:r32.4.3-pth1.4-py3"
+	#test_pytorch_all "l4t-pytorch:r32.4.3-pth1.5-py3"
+	test_pytorch_all "l4t-pytorch:r32.4.3-pth1.6-py3"
+fi
 
 #
 # TensorFlow container
 #
-test_tensorflow_all "l4t-tensorflow:r32.4.3-tf1.15-py3"
-test_tensorflow_all "l4t-tensorflow:r32.4.3-tf2.2-py3"
+if [[ "$CONTAINERS" == "tensorflow" || "$CONTAINERS" == "all" ]]; then
+	test_tensorflow_all "l4t-tensorflow:r32.4.3-tf1.15-py3"
+	test_tensorflow_all "l4t-tensorflow:r32.4.3-tf2.2-py3"
+fi
 
 #
 # ML container
 #
-test_all "l4t-ml:r32.4.3-py3"
-
+if [[ "$CONTAINERS" == "ml" || "$CONTAINERS" == "all" ]]; then
+	test_all "l4t-ml:r32.4.3-py3"
+fi
 
 
