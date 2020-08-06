@@ -45,7 +45,7 @@ $ cd jetson-containers
 
 ### ML Containers
 
-To build the ML containers (`l4t-pytorch`, `l4t-tensorflow`, `l4t-ml`), use [`scripts/docker_build_ml.sh`](scripts/docker_build_ml.sh) - which optionally accepts an argument if you 
+To build the ML containers (`l4t-pytorch`, `l4t-tensorflow`, `l4t-ml`), use [`scripts/docker_build_ml.sh`](scripts/docker_build_ml.sh) - with an optional argument of which container(s) to build. 
 
 ``` bash
 $ ./scripts/docker_build_ml.sh all        # build all: l4t-pytorch, l4t-tensorflow, and l4t-ml
@@ -59,7 +59,7 @@ Note that the TensorFlow and PyTorch pip wheel installers for aarch64 are automa
 
 ### ROS Containers
 
-To build the ROS containers, use [`scripts/docker_build_ml.sh`](scripts/docker_build_ml.sh) along with the name of the ROS distro that you want to build:
+To build the ROS containers, use [`scripts/docker_build_ml.sh`](scripts/docker_build_ml.sh) with the name of the ROS distro to build:
 
 ``` bash
 $ ./scripts/docker_build_ros.sh all       # build all: melodic, noetic, eloquent, foxy
