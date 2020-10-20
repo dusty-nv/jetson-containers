@@ -1,0 +1,115 @@
+#
+# this dockerfile roughly follows the 'Install ROS From Source' procedures from:
+#   https://index.ros.org/doc/ros2/Installation/Foxy/Linux-Development-Setup/
+#
+ARG BASE_IMAGE=nvcr.io/nvidia/l4t-base:r32.4.3
+FROM ${BASE_IMAGE}
+
+ARG ROS_PKG=ros_base
+ENV ROS_DISTRO=foxy
+ENV ROS_ROOT=/opt/ros/${ROS_DISTRO}
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+WORKDIR /workspace
+
+# change the locale from POSIX to UTF-8
+RUN locale-gen en_US en_US.UTF-8 && update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+ENV LANG=en_US.UTF-8
+
+# add the ROS deb repo to the apt sources list
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+		curl \
+		wget \ 
+		gnupg2 \
+		lsb-release \
+    && rm -rf /var/lib/apt/lists/*
+    
+RUN wget --no-check-certificate https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc && apt-key add ros.asc
+RUN sh -c 'echo "deb [arch=$(dpkg --print-architecture)] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros2-latest.list'
+
+# install development packages
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+		build-essential \
+		cmake \
+		git \
+		libbullet-dev \
+		libpython3-dev \
+		python3-colcon-common-extensions \
+		python3-flake8 \
+		python3-pip \
+		python3-pytest-cov \
+		python3-rosdep \
+		python3-setuptools \
+		python3-vcstool \
+		python3-rosinstall-generator \
+		libasio-dev \
+		libtinyxml2-dev \
+		libcunit1-dev \
+    && rm -rf /var/lib/apt/lists/*
+  
+# install some pip packages needed for testing
+RUN python3 -m pip install -U \
+		argcomplete \
+		flake8-blind-except \
+		flake8-builtins \
+		flake8-class-newline \
+		flake8-comprehensions \
+		flake8-deprecated \
+		flake8-docstrings \
+		flake8-import-order \
+		flake8-quotes \
+		pytest-repeat \
+		pytest-rerunfailures \
+		pytest
+
+# compile yaml-cpp-0.6, which some ROS packages may use (but is not in the 18.04 apt repo)
+RUN git clone --branch yaml-cpp-0.6.0 https://github.com/jbeder/yaml-cpp yaml-cpp-0.6 && \
+    cd yaml-cpp-0.6 && \
+    mkdir build && \
+    cd build && \
+    cmake -DBUILD_SHARED_LIBS=ON .. && \
+    make -j$(nproc) && \
+    cp libyaml-cpp.so.0.6.0 /usr/lib/aarch64-linux-gnu/ && \
+    ln -s /usr/lib/aarch64-linux-gnu/libyaml-cpp.so.0.6.0 /usr/lib/aarch64-linux-gnu/libyaml-cpp.so.0.6
+
+# https://answers.ros.org/question/325245/minimal-ros2-installation/?answer=325249#post-id-325249
+RUN mkdir -p ${ROS_ROOT}/src && \
+    cd ${ROS_ROOT} && \
+    rosinstall_generator --deps --rosdistro ${ROS_DISTRO} ${ROS_PKG} launch_xml launch_yaml example_interfaces > ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall && \
+    cat ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall && \
+    vcs import src < ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall
+
+# download unreleased packages     
+RUN git clone --branch ros2 https://github.com/Kukanani/vision_msgs ${ROS_ROOT}/src/vision_msgs && \
+    git clone --branch ${ROS_DISTRO} https://github.com/ros2/demos demos && \
+    cp -r demos/demo_nodes_cpp ${ROS_ROOT}/src && \
+    cp -r demos/demo_nodes_py ${ROS_ROOT}/src && \
+    rm -r -f demos
+    
+# install dependencies using rosdep
+RUN apt-get update && \
+    cd ${ROS_ROOT} && \
+    rosdep init && \
+    rosdep update && \
+    rosdep install --from-paths src --ignore-src --rosdistro ${ROS_DISTRO} -y --skip-keys "console_bridge fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers qt_gui" && \
+    rm -rf /var/lib/apt/lists/*
+    
+# build it!
+RUN cd ${ROS_ROOT} && colcon build --symlink-install
+
+# setup entrypoint
+COPY ./packages/ros_entrypoint.sh /ros_entrypoint.sh
+
+RUN sed -i \
+    's/source "\/opt\/ros\/$ROS_DISTRO\/setup.bash"/source "${ROS_ROOT}\/install\/setup.bash"/g' \
+    /ros_entrypoint.sh && \
+    cat /ros_entrypoint.sh
+
+RUN echo 'source ${ROS_ROOT}/install/setup.bash' >> /root/.bashrc 
+
+ENTRYPOINT ["/ros_entrypoint.sh"]
+CMD ["bash"]
+WORKDIR /

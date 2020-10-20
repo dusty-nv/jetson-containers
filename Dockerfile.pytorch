@@ -18,7 +18,7 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-ARG BASE_IMAGE=nvcr.io/nvidia/l4t-base:r32.4.2
+ARG BASE_IMAGE=nvcr.io/nvidia/l4t-base:r32.4.3
 FROM ${BASE_IMAGE}
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -62,6 +62,9 @@ RUN wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certif
 #
 ARG TORCHVISION_VERSION=v0.4.0
 ARG PILLOW_VERSION=pillow<7
+ARG TORCH_CUDA_ARCH_LIST="5.3;6.2;7.2"
+
+RUN printenv && echo "torchvision version = $TORCHVISION_VERSION" && echo "pillow version = $PILLOW_VERSION" && echo "TORCH_CUDA_ARCH_LIST = $TORCH_CUDA_ARCH_LIST"
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -77,6 +80,25 @@ RUN git clone -b ${TORCHVISION_VERSION} https://github.com/pytorch/vision torchv
     cd ../ && \
     rm -rf torchvision && \
     pip3 install "${PILLOW_VERSION}"
+
+
+#
+# torchaudio
+#
+ARG TORCHAUDIO_VERSION
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+		  sox \
+		  libsox-dev \
+		  libsox-fmt-all \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN git clone -b ${TORCHAUDIO_VERSION} https://github.com/pytorch/audio torchaudio && \
+    cd torchaudio && \
+    python3 setup.py install && \
+    cd ../ && \
+    rm -rf torchaudio
 
 
 # 

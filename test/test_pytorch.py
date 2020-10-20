@@ -24,4 +24,20 @@ b = torch.randn(2, 3, 1, 4, 6)
 
 x, lu = torch.solve(b, a)
 
+print('done testing LAPACK (OpenBLAS)')
+
+# torch.nn test
+print('testing torch.nn (cuDNN)...')
+
+import torch.nn
+
+model = torch.nn.Conv2d(3,3,3)
+data = torch.zeros(1,3,10,10)
+model = model.cuda()
+data = data.cuda()
+out = model(data)
+
+#print(out)
+
+print('done testing torch.nn (cuDNN)')
 print('PyTorch OK\n')
