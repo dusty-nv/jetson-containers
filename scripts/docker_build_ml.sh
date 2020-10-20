@@ -97,7 +97,7 @@ build_tensorflow()
 	echo "done building TensorFlow $tensorflow_whl, $tensorflow_tag"
 }
 
-if [[ "$CONTAINERS" == "pytorch" || "$CONTAINERS" == "all" ]]; then
+if [[ "$CONTAINERS" == "tensorflow" || "$CONTAINERS" == "all" ]]; then
 
 	# TensorFlow 1.15.2
 	build_tensorflow "https://nvidia.box.com/shared/static/8a3q3dz6juk0xg2e2kwwng9teosyohad.whl" \

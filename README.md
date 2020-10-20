@@ -53,7 +53,9 @@ $ ./scripts/docker_build_ml.sh pytorch    # build only l4t-pytorch
 $ ./scripts/docker_build_ml.sh tensorflow # build only l4t-tensorflow
 ```
 
-> You have to build `l4t-pytorch` and `l4t-tensorflow` to build `l4t-ml`, because it uses those base containers in the multi-stage build.
+> You have to build `l4t-pytorch` and `l4t-tensorflow` to build `l4t-ml`, because it uses those base containers in the
+multi-stage build. If you build `l4t-tensorflow`, two images are built with different tags, one with TensorFlow 1.15
+and one with TensorFlow 2.2.
 
 Note that the TensorFlow and PyTorch pip wheel installers for aarch64 are automatically downloaded in the Dockerfiles from the [Jetson Zoo](https://elinux.org/Jetson_Zoo).
 
