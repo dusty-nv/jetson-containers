@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -e
+source scripts/l4t_version.sh
 
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 TEST_MOUNT="$ROOT/../test:/test"
@@ -137,26 +138,26 @@ test_all()
 # PyTorch container
 #
 if [[ "$CONTAINERS" == "pytorch" || "$CONTAINERS" == "all" ]]; then
-	#test_pytorch_all "l4t-pytorch:r32.4.3-pth1.2-py3"
-	#test_pytorch_all "l4t-pytorch:r32.4.3-pth1.3-py3"
-	#test_pytorch_all "l4t-pytorch:r32.4.3-pth1.4-py3"
-	#test_pytorch_all "l4t-pytorch:r32.4.3-pth1.5-py3"
-	test_pytorch_all "l4t-pytorch:r32.4.3-pth1.6-py3"
+	#test_pytorch_all "l4t-pytorch:r$L4T_VERSION-pth1.2-py3"
+	#test_pytorch_all "l4t-pytorch:r$L4T_VERSION-pth1.3-py3"
+	#test_pytorch_all "l4t-pytorch:r$L4T_VERSION-pth1.4-py3"
+	#test_pytorch_all "l4t-pytorch:r$L4T_VERSION-pth1.5-py3"
+	test_pytorch_all "l4t-pytorch:r$L4T_VERSION-pth1.6-py3"
 fi
 
 #
 # TensorFlow container
 #
 if [[ "$CONTAINERS" == "tensorflow" || "$CONTAINERS" == "all" ]]; then
-	test_tensorflow_all "l4t-tensorflow:r32.4.3-tf1.15-py3"
-	test_tensorflow_all "l4t-tensorflow:r32.4.3-tf2.2-py3"
+	test_tensorflow_all "l4t-tensorflow:r$L4T_VERSION-tf1.15-py3"
+	test_tensorflow_all "l4t-tensorflow:r$L4T_VERSION-tf2.3-py3"
 fi
 
 #
 # ML container
 #
 if [[ "$CONTAINERS" == "ml" || "$CONTAINERS" == "all" ]]; then
-	test_all "l4t-ml:r32.4.3-py3"
+	test_all "l4t-ml:r$L4T_VERSION-py3"
 fi
 
 
