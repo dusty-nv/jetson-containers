@@ -1,4 +1,4 @@
-# Machine Learning Containers for Jetson and JetPack 4.4
+# Machine Learning Containers for Jetson and JetPack
 
 Hosted on [NVIDIA GPU Cloud](https://ngc.nvidia.com/catalog/containers?orderBy=modifiedDESC&query=L4T&quickFilter=containers&filters=) (NGC) are the following Docker container images for machine learning on Jetson:
 
@@ -6,12 +6,12 @@ Hosted on [NVIDIA GPU Cloud](https://ngc.nvidia.com/catalog/containers?orderBy=m
 * [`l4t-pytorch`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-pytorch)
 * [`l4t-tensorflow`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-tensorflow)
 
-Dockerfiles are also provided for the following containers, which can be built for JetPack 4.4:
+Dockerfiles are also provided for the following containers, which can be built for JetPack 4.4 or newer:
 
-* ROS Melodic (`ros:melodic-ros-base-l4t-r32.4.3`)
-* ROS Noetic (`ros:noetic-ros-base-l4t-r32.4.3`)
-* ROS2 Eloquent (`ros:eloquent-ros-base-l4t-r32.4.3`)
-* ROS2 Foxy (`ros:foxy-ros-base-l4t-r32.4.3`)
+* ROS Melodic (`ros:melodic-ros-base-l4t-r32.4.4`)
+* ROS Noetic (`ros:noetic-ros-base-l4t-r32.4.4`)
+* ROS2 Eloquent (`ros:eloquent-ros-base-l4t-r32.4.4`)
+* ROS2 Foxy (`ros:foxy-ros-base-l4t-r32.4.4`)
 
 Below are the instructions to build and test the containers using the included Dockerfiles.
 
@@ -36,7 +36,7 @@ You will then want to restart the Docker service or reboot your system before pr
 
 ## Building the Containers
 
-To rebuild the containers from a Jetson device running [JetPack 4.4](https://developer.nvidia.com/embedded/jetpack), first clone this repo:
+To rebuild the containers from a Jetson device running [JetPack 4.4](https://developer.nvidia.com/embedded/jetpack) or newer, first clone this repo:
 
 ``` bash
 $ git clone https://github.com/dusty-nv/jetson-containers
