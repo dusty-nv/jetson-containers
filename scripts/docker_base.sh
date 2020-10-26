@@ -7,7 +7,7 @@ BASE_DEVEL="nvcr.io/nvidian/nvidia-l4t-base:r$L4T_VERSION"
 
 if [ $L4T_RELEASE -eq 32 ]; then
 	if [ $L4T_REVISION_MAJOR -eq 4 ]; then
-		if [ $L4T_REVISION_MINOR -gt 3 ]; then
+		if [ $L4T_REVISION_MINOR -gt 4 ]; then
 			BASE_IMAGE=$BASE_DEVEL
 		fi
 	elif [ $L4T_REVISION_MAJOR -gt 4 ]; then
