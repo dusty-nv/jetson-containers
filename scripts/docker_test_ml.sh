@@ -158,6 +158,8 @@ fi
 #
 if [[ "$CONTAINERS" == "ml" || "$CONTAINERS" == "all" ]]; then
 	test_all "l4t-ml:r$L4T_VERSION-py3"
+	test_all "l4t-ml:r$L4T_VERSION-tf1.15-py3"
+	test_all "l4t-ml:r$L4T_VERSION-tf2.3-py3"
 fi
 
 
