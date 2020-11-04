@@ -111,6 +111,16 @@ if [[ "$CONTAINERS" == "all" ]]; then
 			--build-arg BASE_IMAGE=$BASE_IMAGE \
 			--build-arg PYTORCH_IMAGE=l4t-pytorch:r$L4T_VERSION-pth1.6-py3 \
 			--build-arg TENSORFLOW_IMAGE=l4t-tensorflow:r$L4T_VERSION-tf1.15-py3
+
+	sh ./scripts/docker_build.sh l4t-ml:r$L4T_VERSION-tf1.15-py3 Dockerfile.ml \
+			--build-arg BASE_IMAGE=$BASE_IMAGE \
+			--build-arg PYTORCH_IMAGE=l4t-pytorch:r$L4T_VERSION-pth1.6-py3 \
+			--build-arg TENSORFLOW_IMAGE=l4t-tensorflow:r$L4T_VERSION-tf1.15-py3
+
+	sh ./scripts/docker_build.sh l4t-ml:r$L4T_VERSION-tf2.3-py3 Dockerfile.ml \
+			--build-arg BASE_IMAGE=$BASE_IMAGE \
+			--build-arg PYTORCH_IMAGE=l4t-pytorch:r$L4T_VERSION-pth1.6-py3 \
+			--build-arg TENSORFLOW_IMAGE=l4t-tensorflow:r$L4T_VERSION-tf2.3-py3
 fi
 
 
