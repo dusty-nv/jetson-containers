@@ -2,7 +2,7 @@
 
 source scripts/l4t_version.sh
 
-NGC_GROUP="nvcr.io/ea-linux4tegra"
+REPOSITORY=${2:-"docker.io/edgyr"}
 CONTAINERS=${1:-"all"}
 
 push_retag() 
@@ -10,12 +10,12 @@ push_retag()
 	local src_tag=$1
 	local dst_tag=$2
 	
-	sudo docker rmi $NGC_GROUP/$dst_tag
-	sudo docker tag $src_tag $NGC_GROUP/$dst_tag
+	sudo docker rmi $REPOSITORY/$dst_tag
+	sudo docker tag $src_tag $REPOSITORY/$dst_tag
 	
-	echo "pushing container $src_tag => $NGC_GROUP/$dst_tag"
-	sudo docker push $NGC_GROUP/$dst_tag
-	echo "done pushing $NGC_GROUP/$dst_tag"
+	echo "pushing container $src_tag => $REPOSITORY/$dst_tag"
+	sudo docker push $REPOSITORY/$dst_tag
+	echo "done pushing $REPOSITORY/$dst_tag"
 }
 
 push() 
@@ -38,4 +38,6 @@ fi
 
 if [[ "$CONTAINERS" == "ml" || "$CONTAINERS" == "all" ]]; then
 	push "l4t-ml:r$L4T_VERSION-py3"
+	push "l4t-ml:r$L4T_VERSION-tf1.15-py3"
+	push "l4t-ml:r$L4T_VERSION-tf2.3-py3"
 fi
