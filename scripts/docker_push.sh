@@ -1,47 +1,22 @@
 #!/usr/bin/env bash
 
-set -e
-
-# check what to push
-if [ "$1" == "" ]
-then
-  echo "You need to specify two arguments: the first argument is what"
-  echo "to push and the second argument is the destination image"
-  echo "registry where you are authenticated for pushing."
-  echo ""
-  echo "Valid values for what to push are 'pytorch', 'tensorflow'"
-  echo "'ml', or 'all'."
-  exit -1
-fi
-
-# check the destination
-if [ "$2" == "" ]
-then
-  echo "You need to specify two arguments: the first argument is what"
-  echo "to push and the second argument is the destination image"
-  echo "registry where you are authenticated for pushing."
-  echo ""
-  echo "Valid values for what to push are 'pytorch', 'tensorflow'"
-  echo "'ml', or 'all'."
-  exit -2
-fi
-
 source scripts/l4t_version.sh
 
-REGISTRY=${2:-"docker.io/edgyr"}
+NGC_GROUP="nvcr.io/ea-linux4tegra"
 CONTAINERS=${1:-"all"}
+
 
 push_retag() 
 {
 	local src_tag=$1
 	local dst_tag=$2
 	
-	sudo docker rmi $REGISTRY/$dst_tag
-	sudo docker tag $src_tag $REGISTRY/$dst_tag
+	sudo docker rmi $NGC_GROUP/$dst_tag
+	sudo docker tag $src_tag $NGC_GROUP/$dst_tag
 	
-	echo "pushing container $src_tag => $REGISTRY/$dst_tag"
-	sudo docker push $REGISTRY/$dst_tag
-	echo "done pushing $REGISTRY/$dst_tag"
+	echo "pushing container $src_tag => $NGC_GROUP/$dst_tag"
+	sudo docker push $NGC_GROUP/$dst_tag
+	echo "done pushing $NGC_GROUP/$dst_tag"
 }
 
 push() 
