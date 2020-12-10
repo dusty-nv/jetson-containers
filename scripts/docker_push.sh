@@ -29,6 +29,7 @@ if [[ "$CONTAINERS" == "pytorch" || "$CONTAINERS" == "all" ]]; then
 	#push "l4t-pytorch:r$L4T_VERSION-pth1.4-py3"
 	#push "l4t-pytorch:r$L4T_VERSION-pth1.5-py3"
 	push "l4t-pytorch:r$L4T_VERSION-pth1.6-py3"
+	push "l4t-pytorch:r$L4T_VERSION-pth1.7-py3"
 fi
 
 if [[ "$CONTAINERS" == "tensorflow" || "$CONTAINERS" == "all" ]]; then

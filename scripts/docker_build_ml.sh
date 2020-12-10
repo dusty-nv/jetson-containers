@@ -68,6 +68,14 @@ if [[ "$CONTAINERS" == "pytorch" || "$CONTAINERS" == "all" ]]; then
 				  "v0.7.0" \
 				  "pillow" \
 				  "v0.6.0"
+				  
+	# PyTorch v1.7.0
+	build_pytorch "https://nvidia.box.com/shared/static/wa34qwrwtk9njtyarwt5nvo6imenfy26.whl" \
+				  "torch-1.7.0-cp36-cp36m-linux_aarch64.whl" \
+				  "l4t-pytorch:r$L4T_VERSION-pth1.7-py3" \
+				  "v0.8.1" \
+				  "pillow" \
+				  "v0.7.0"
 fi
 
 #			  
@@ -91,14 +99,14 @@ build_tensorflow()
 
 if [[ "$CONTAINERS" == "tensorflow" || "$CONTAINERS" == "all" ]]; then
 
-	# TensorFlow 1.15.2
-	build_tensorflow "https://developer.download.nvidia.com/compute/redist/jp/v44/tensorflow/tensorflow-1.15.3+nv20.9-cp36-cp36m-linux_aarch64.whl" \
-				  "tensorflow-1.15.3+nv20.9-cp36-cp36m-linux_aarch64.whl" \
+	# TensorFlow 1.15.4
+	build_tensorflow "https://developer.download.nvidia.com/compute/redist/jp/v44/tensorflow/tensorflow-1.15.4+nv20.11-cp36-cp36m-linux_aarch64.whl" \
+				  "tensorflow-1.15.4+nv20.11-cp36-cp36m-linux_aarch64.whl" \
 				  "l4t-tensorflow:r$L4T_VERSION-tf1.15-py3"
 
-	# TensorFlow 2.3.0
-	build_tensorflow "https://developer.download.nvidia.com/compute/redist/jp/v44/tensorflow/tensorflow-2.3.0+nv20.9-cp36-cp36m-linux_aarch64.whl" \
-				  "tensorflow-2.3.0+nv20.9-cp36-cp36m-linux_aarch64.whl" \
+	# TensorFlow 2.3.1
+	build_tensorflow "https://developer.download.nvidia.com/compute/redist/jp/v44/tensorflow/tensorflow-2.3.1+nv20.11-cp36-cp36m-linux_aarch64.whl" \
+				  "tensorflow-2.3.1+nv20.11-cp36-cp36m-linux_aarch64.whl" \
 				  "l4t-tensorflow:r$L4T_VERSION-tf2.3-py3"
 fi
 
@@ -107,10 +115,17 @@ fi
 #
 if [[ "$CONTAINERS" == "all" ]]; then
 
+	# alternate source:  http://repo.download.nvidia.com/jetson/jetson-ota-public.asc
+	cp /etc/apt/trusted.gpg.d/jetson-ota-public.asc .
+	
 	sh ./scripts/docker_build.sh l4t-ml:r$L4T_VERSION-py3 Dockerfile.ml \
 			--build-arg BASE_IMAGE=$BASE_IMAGE \
-			--build-arg PYTORCH_IMAGE=l4t-pytorch:r$L4T_VERSION-pth1.6-py3 \
-			--build-arg TENSORFLOW_IMAGE=l4t-tensorflow:r$L4T_VERSION-tf1.15-py3
+			--build-arg PYTORCH_IMAGE=l4t-pytorch:r$L4T_VERSION-pth1.7-py3 \
+			--build-arg TENSORFLOW_IMAGE=l4t-tensorflow:r$L4T_VERSION-tf1.15-py3 \
+			--build-arg L4T_APT_SOURCE="deb https://repo.download.nvidia.com/jetson/common r32.4 main"
+
+			#--build-arg L4T_APT_KEY=$L4T_APT_KEY \
+			#--build-arg L4T_APT_SOURCE="$(head -1 /etc/apt/sources.list.d/nvidia-l4t-apt-source.list | sed 's/'"$L4T_APT_SERVER_PUBLIC"'/'"$L4T_APT_SERVER"'/g')"
 fi
 
 
