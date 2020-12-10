@@ -74,6 +74,24 @@ RUN apt-get update && \
 
 
 #
+# OpenCV
+#
+ARG L4T_APT_KEY
+ARG L4T_APT_SOURCE
+
+COPY jetson-ota-public.asc /etc/apt/trusted.gpg.d/jetson-ota-public.asc
+
+RUN echo "$L4T_APT_SOURCE" > /etc/apt/sources.list.d/nvidia-l4t-apt-source.list && \
+    cat /etc/apt/sources.list.d/nvidia-l4t-apt-source.list && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+            libopencv-dev \
+		  libopencv-python \
+    && rm /etc/apt/sources.list.d/nvidia-l4t-apt-source.list \
+    && rm -rf /var/lib/apt/lists/*
+    
+    
+#
 # python packages from TF/PyTorch containers
 #
 COPY --from=tensorflow /usr/local/lib/python2.7/dist-packages/ /usr/local/lib/python2.7/dist-packages/
