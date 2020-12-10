@@ -4,5 +4,7 @@ __pycache__
 *.so
 *.deb
 packages/usr
+test/data
 build_log.txt
 logs
+jetson-ota-public.asc
