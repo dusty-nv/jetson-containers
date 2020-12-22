@@ -70,7 +70,7 @@ if [[ "$CONTAINERS" == "pytorch" || "$CONTAINERS" == "all" ]]; then
 				  "v0.6.0"
 				  
 	# PyTorch v1.7.0
-	build_pytorch "https://nvidia.box.com/shared/static/wa34qwrwtk9njtyarwt5nvo6imenfy26.whl" \
+	build_pytorch "https://nvidia.box.com/shared/static/cs3xn3td6sfgtene6jdvsxlr366m2dhq.whl" \
 				  "torch-1.7.0-cp36-cp36m-linux_aarch64.whl" \
 				  "l4t-pytorch:r$L4T_VERSION-pth1.7-py3" \
 				  "v0.8.1" \
