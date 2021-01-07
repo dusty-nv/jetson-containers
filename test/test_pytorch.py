@@ -40,4 +40,18 @@ out = model(data)
 #print(out)
 
 print('done testing torch.nn (cuDNN)')
-print('PyTorch OK\n')
+
+# CPU test (https://github.com/pytorch/pytorch/issues/47098)
+print('testing CPU tensors...')
+
+import torch.nn.functional as F
+cpu_x = torch.tensor([12.345])
+cpu_y = F.softmax(cpu_x)
+
+print('Tensor cpu_x = ' + str(cpu_x))
+print('Tensor softmax = ' + str(cpu_y))
+
+if cpu_y != 1.0:
+    print('PyTorch CPU tensor test failed!\n')
+else:
+    print('PyTorch OK\n')

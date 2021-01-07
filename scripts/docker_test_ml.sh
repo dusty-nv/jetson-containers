@@ -76,12 +76,15 @@ test_pytorch()
 	DATA_PATH="test/data/$DATA_NAME"
 
 	if [ ! -d "$DATA_PATH" ]; then
-		echo '\ndownloading data for testing torchvision...'
+		echo 'downloading data for testing torchvision...'
+		if [ ! -d "test/data" ]; then
+			mkdir test/data
+		fi
 		wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate $DATA_URL -O test/data/$DATA_NAME.tar.gz
 		tar -xzf test/data/$DATA_NAME.tar.gz -C test/data/
 	fi
 
-	sh ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_torchvision.py --data=$DATA_PATH
+	sh ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_torchvision.py --data=$DATA_PATH --use-cuda
 	sh ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_torchaudio.py
 
 	echo -e "done testing container $1 => PyTorch\n"

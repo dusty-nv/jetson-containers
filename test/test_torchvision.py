@@ -30,7 +30,8 @@ parser.add_argument('-p', '--print-freq', default=25, type=int,
                     metavar='N', help='print frequency (default: 10)')                    
 parser.add_argument('-t', '--test-threshold', default=-10.0, type=float,
                     metavar='N', help='maximum passing delta between trained model top-1 accuracy  (default is -10%)')
-                    
+parser.add_argument("--use-cuda", action="store_true", help='use CUDA (otherwise CPU-only)')  
+                  
 args = parser.parse_args()
     
 print('torchvision classification models: ' + ' | '.join(model_names) + '\n')
@@ -59,7 +60,11 @@ def test_model(model_info, data_loader):
     print("---------------------------------------------")
     
     print("loading model '{:s}'".format(model_name))
-    model = models.__dict__[model_name](pretrained=True, progress=False).eval().cuda()
+    model = models.__dict__[model_name](pretrained=True, progress=False).eval()
+    
+    if args.use_cuda:
+        model = model.cuda()
+        
     print("loaded model '{:s}'\n".format(model_name))
     
     batch_time = AverageMeter('Time', ':6.3f')
@@ -74,8 +79,9 @@ def test_model(model_info, data_loader):
         end = time.time()
         
         for i, (images, target) in enumerate(data_loader):
-            images = images.cuda(non_blocking=True)
-            target = target.cuda(non_blocking=True)
+            if args.use_cuda:
+                images = images.cuda(non_blocking=True)
+                target = target.cuda(non_blocking=True)
             
             # compute output
             output = model(images)
@@ -170,7 +176,8 @@ class ProgressMeter(object):
         
         
 if __name__ == '__main__':  
-      
+    
+    print('using {:s}'.format("CUDA" if args.use_cuda else "CPU"))     
     print('loading dataset from {:s}\n'.format(args.data))
     data_loader = load_data(args.data)
     print('dataset classes: {:d}'.format(len(data_loader.dataset.classes)))
