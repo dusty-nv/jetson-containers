@@ -18,7 +18,7 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-ARG BASE_IMAGE=nvcr.io/nvidia/l4t-base:r32.4.3
+ARG BASE_IMAGE=nvcr.io/nvidia/l4t-base:r32.4.4
 ARG PYTORCH_IMAGE
 ARG TENSORFLOW_IMAGE
 
@@ -27,7 +27,7 @@ FROM ${TENSORFLOW_IMAGE} as tensorflow
 FROM ${BASE_IMAGE}
 
 
-# 
+#
 # setup environment
 #
 ENV DEBIAN_FRONTEND=noninteractive
@@ -89,8 +89,8 @@ RUN echo "$L4T_APT_SOURCE" > /etc/apt/sources.list.d/nvidia-l4t-apt-source.list 
 		  libopencv-python \
     && rm /etc/apt/sources.list.d/nvidia-l4t-apt-source.list \
     && rm -rf /var/lib/apt/lists/*
-    
-    
+
+
 #
 # python packages from TF/PyTorch containers
 #
@@ -104,7 +104,7 @@ COPY --from=pytorch /usr/local/lib/python3.6/dist-packages/ /usr/local/lib/pytho
 #
 # python pip packages
 #
-RUN pip3 install pybind11 --ignore-installed 
+RUN pip3 install pybind11 --ignore-installed
 RUN pip3 install onnx --verbose
 RUN pip3 install scipy --verbose
 RUN pip3 install scikit-learn --verbose
@@ -127,7 +127,7 @@ RUN pip3 install numba --verbose
 #    ln -s /usr/include/aarch64-linux-gnu/cudnn_ops_train_v8.h /usr/include/cudnn_ops_train.h && \
 #    ls -ll /usr/include/cudnn*
 
- 
+
 #
 # CuPy
 #
@@ -154,7 +154,7 @@ RUN pip3 install jupyter jupyterlab --verbose
 #RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager@2
 
 RUN jupyter lab --generate-config
-RUN python3 -c "from notebook.auth.security import set_password; set_password('nvidia', '/root/.jupyter/jupyter_notebook_config.json')" 
+RUN python3 -c "from notebook.auth.security import set_password; set_password('nvidia', '/root/.jupyter/jupyter_notebook_config.json')"
 
 CMD /bin/bash -c "jupyter lab --ip 0.0.0.0 --port 8888 --allow-root &> /var/log/jupyter.log" & \
 	echo "allow 10 sec for JupyterLab to start @ http://localhost:8888 (password nvidia)" && \

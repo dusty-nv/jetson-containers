@@ -5,6 +5,7 @@ set -e
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 TEST_MOUNT="$ROOT/../test:/test"
 ROS_DISTRO=${1:-"all"}
+L4T_VERSION="r32.4.4"
 
 test_ros_version()
 {
@@ -22,20 +23,20 @@ test_ros2_version()
 
 # Melodic
 if [[ "$ROS_DISTRO" == "melodic" || "$ROS_DISTRO" == "all" ]]; then
-	test_ros_version "ros:melodic-ros-base-l4t-r32.4.3"
+	test_ros_version "ros:melodic-ros-base-l4t-$L4T_VERSION"
 fi
 
 # Noetic
 if [[ "$ROS_DISTRO" == "noetic" || "$ROS_DISTRO" == "all" ]]; then
-	test_ros_version "ros:noetic-ros-base-l4t-r32.4.3"
+	test_ros_version "ros:noetic-ros-base-l4t-$L4T_VERSION"
 fi
 
 # Eloquent
 if [[ "$ROS_DISTRO" == "eloquent" || "$ROS_DISTRO" == "all" ]]; then
-	test_ros2_version "ros:eloquent-ros-base-l4t-r32.4.3"
+	test_ros2_version "ros:eloquent-ros-base-l4t-$L4T_VERSION"
 fi
 
 # Foxy
 if [[ "$ROS_DISTRO" == "foxy" || "$ROS_DISTRO" == "all" ]]; then
-	test_ros2_version "ros:foxy-ros-base-l4t-r32.4.3"
+	test_ros2_version "ros:foxy-ros-base-l4t-$L4T_VERSION"
 fi
