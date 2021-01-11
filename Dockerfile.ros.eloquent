@@ -2,7 +2,7 @@
 # this dockerfile roughly follows the 'Install ROS2 Via Debian Packages' from:
 #   https://index.ros.org/doc/ros2/Installation/Eloquent/Linux-Install-Debians/
 #
-ARG BASE_IMAGE=nvcr.io/nvidia/l4t-base:r32.4.3
+ARG BASE_IMAGE=nvcr.io/nvidia/l4t-base:r32.4.4
 FROM ${BASE_IMAGE}
 
 ARG ROS_PKG=ros_base
@@ -24,11 +24,11 @@ RUN apt-get update && \
 		cmake \
 		build-essential \
 		curl \
-		wget \ 
+		wget \
 		gnupg2 \
 		lsb-release \
     && rm -rf /var/lib/apt/lists/*
-    
+
 RUN wget --no-check-certificate https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc && apt-key add ros.asc
 RUN sh -c 'echo "deb [arch=$(dpkg --print-architecture)] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros2-latest.list'
 
@@ -43,14 +43,14 @@ RUN apt-get update && \
 		python3-colcon-common-extensions \
 		python3-rosdep \
     && rm -rf /var/lib/apt/lists/*
-  
+
 # init/update rosdep
 RUN apt-get update && \
     cd ${ROS_ROOT} && \
     rosdep init && \
     rosdep update && \
     rm -rf /var/lib/apt/lists/*
-    
+
 # compile yaml-cpp-0.6, which some ROS packages may use (but is not in the 18.04 apt repo)
 RUN git clone --branch yaml-cpp-0.6.0 https://github.com/jbeder/yaml-cpp yaml-cpp-0.6 && \
     cd yaml-cpp-0.6 && \
@@ -63,7 +63,7 @@ RUN git clone --branch yaml-cpp-0.6.0 https://github.com/jbeder/yaml-cpp yaml-cp
 
 # setup entrypoint
 COPY ./packages/ros_entrypoint.sh /ros_entrypoint.sh
-RUN echo 'source ${ROS_ROOT}/setup.bash' >> /root/.bashrc 
+RUN echo 'source ${ROS_ROOT}/setup.bash' >> /root/.bashrc
 ENTRYPOINT ["/ros_entrypoint.sh"]
 CMD ["bash"]
 WORKDIR /
