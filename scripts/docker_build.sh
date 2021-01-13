@@ -3,7 +3,7 @@
 CONTAINER=$1
 DOCKERFILE=$2
 
-shift 
+shift
 shift
 
 #sudo cp cuda-devel.csv /etc/nvidia-container-runtime/host-files-for-container.d/
@@ -11,4 +11,3 @@ shift
 echo "Building $CONTAINER container..."
 
 sudo docker build -t $CONTAINER -f $DOCKERFILE "$@" .
-
