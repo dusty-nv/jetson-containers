@@ -10,7 +10,11 @@ if [ $L4T_RELEASE -eq 32 ]; then
 		if [ $L4T_REVISION_MINOR -gt 4 ]; then
 			BASE_IMAGE=$BASE_DEVEL
 		fi
-	elif [ $L4T_REVISION_MAJOR -gt 4 ]; then
+	elif [ $L4T_REVISION_MAJOR -eq 5 ]; then
+		if [ $L4T_REVISION_MINOR -gt 0 ]; then
+			BASE_IMAGE=$BASE_DEVEL
+		fi
+	elif [ $L4T_REVISION_MAJOR -gt 5 ]; then
 		BASE_IMAGE=$BASE_DEVEL
 	fi
 fi
