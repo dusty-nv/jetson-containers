@@ -84,10 +84,10 @@ $ ./scripts/docker_test_ml.sh tensorflow # test only l4t-tensorflow
 To test ROS:
 
 ``` bash
-$ ./scripts/docker_test_ros.sh all       # build all: melodic, noetic, eloquent, foxy
-$ ./scripts/docker_test_ros.sh melodic   # build only melodic
-$ ./scripts/docker_test_ros.sh noetic    # build only noetic
-$ ./scripts/docker_test_ros.sh eloquent  # build only eloquent
-$ ./scripts/docker_test_ros.sh foxy      # build only foxy
+$ ./scripts/docker_test_ros.sh all       # test if the build of ROS all was successful: 'melodic', 'noetic', 'eloquent', 'foxy'
+$ ./scripts/docker_test_ros.sh melodic   # test if the build of 'ROS melodic' was successful
+$ ./scripts/docker_test_ros.sh noetic    # test if the build of 'ROS noetic' was successful
+$ ./scripts/docker_test_ros.sh eloquent  # test if the build of 'ROS eloquent' was successful
+$ ./scripts/docker_test_ros.sh foxy      # test if the build of 'ROS foxy' was successful
 ```
 
