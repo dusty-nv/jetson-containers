@@ -52,6 +52,7 @@ RUN apt-get update && \
 		  gfortran \
 		  git \
 		  cmake \
+		  curl \
 		  libopenblas-dev \
 		  liblapack-dev \
 		  libblas-dev \
@@ -64,13 +65,12 @@ RUN apt-get update && \
 		  libopenmpi2 \
           openmpi-bin \
           openmpi-common \
-		  nodejs \
-		  npm \
 		  protobuf-compiler \
           libprotoc-dev \
 		llvm-9 \
           llvm-9-dev \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
 
 #
@@ -150,14 +150,19 @@ RUN git clone https://github.com/NVlabs/cub opt/cub && \
 #
 # JupyterLab
 #
-RUN pip3 install jupyter jupyterlab --verbose
-#RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager@2
-
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
+    apt-get update && \
+    apt-get install -y nodejs && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get clean && \
+    pip3 install jupyter jupyterlab==2.2.9 --verbose && \
+    jupyter labextension install @jupyter-widgets/jupyterlab-manager
+    
 RUN jupyter lab --generate-config
 RUN python3 -c "from notebook.auth.security import set_password; set_password('nvidia', '/root/.jupyter/jupyter_notebook_config.json')"
 
 CMD /bin/bash -c "jupyter lab --ip 0.0.0.0 --port 8888 --allow-root &> /var/log/jupyter.log" & \
-	echo "allow 10 sec for JupyterLab to start @ http://localhost:8888 (password nvidia)" && \
+	echo "allow 10 sec for JupyterLab to start @ http://$(hostname -I | cut -d' ' -f1):8888 (password nvidia)" && \
 	echo "JupterLab logging location:  /var/log/jupyter.log  (inside the container)" && \
 	/bin/bash
 
