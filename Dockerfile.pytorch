@@ -89,12 +89,16 @@ ARG TORCHAUDIO_VERSION
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
+		  cmake \
 		  sox \
 		  libsox-dev \
 		  libsox-fmt-all \
     && rm -rf /var/lib/apt/lists/*
 
-RUN git clone -b ${TORCHAUDIO_VERSION} https://github.com/pytorch/audio torchaudio && \
+RUN pip3 install scikit-build && \
+    pip3 install ninja
+    
+RUN git clone --recursive -b ${TORCHAUDIO_VERSION} https://github.com/pytorch/audio torchaudio && \
     cd torchaudio && \
     python3 setup.py install && \
     cd ../ && \
