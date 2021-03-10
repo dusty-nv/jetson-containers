@@ -111,6 +111,7 @@ RUN pip3 install scikit-learn --verbose
 RUN pip3 install pandas --verbose
 RUN pip3 install pycuda --verbose
 RUN pip3 install numba --verbose
+RUN pip3 install seaborn --verbose
 
 
 #
