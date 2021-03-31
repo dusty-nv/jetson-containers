@@ -62,20 +62,28 @@ if [[ "$CONTAINERS" == "pytorch" || "$CONTAINERS" == "all" ]]; then
 	#			  "pillow" 
 
 	# PyTorch v1.6.0
-	build_pytorch "https://nvidia.box.com/shared/static/9eptse6jyly1ggt9axbja2yrmj6pbarc.whl" \
-				  "torch-1.6.0-cp36-cp36m-linux_aarch64.whl" \
-				  "l4t-pytorch:r$L4T_VERSION-pth1.6-py3" \
-				  "v0.7.0" \
-				  "pillow" \
-				  "v0.6.0"
+	#build_pytorch "https://nvidia.box.com/shared/static/9eptse6jyly1ggt9axbja2yrmj6pbarc.whl" \
+	#			  "torch-1.6.0-cp36-cp36m-linux_aarch64.whl" \
+	#			  "l4t-pytorch:r$L4T_VERSION-pth1.6-py3" \
+	#			  "v0.7.0" \
+	#			  "pillow" \
+	#			  "v0.6.0"
 				  
 	# PyTorch v1.7.0
-	build_pytorch "https://nvidia.box.com/shared/static/cs3xn3td6sfgtene6jdvsxlr366m2dhq.whl" \
-				  "torch-1.7.0-cp36-cp36m-linux_aarch64.whl" \
-				  "l4t-pytorch:r$L4T_VERSION-pth1.7-py3" \
-				  "v0.8.1" \
-				  "pillow" \
-				  "v0.7.0"
+	#build_pytorch "https://nvidia.box.com/shared/static/cs3xn3td6sfgtene6jdvsxlr366m2dhq.whl" \
+	#			  "torch-1.7.0-cp36-cp36m-linux_aarch64.whl" \
+	#			  "l4t-pytorch:r$L4T_VERSION-pth1.7-py3" \
+	#			  "v0.8.1" \
+	#			  "pillow" \
+	#			  "v0.7.0"
+	
+	# PyTorch v1.8.0
+	build_pytorch "https://nvidia.box.com/shared/static/p57jwntv436lfrd78inwl7iml6p13fzh.whl" \
+				"torch-1.8.0-cp36-cp36m-linux_aarch64.whl" \
+				"l4t-pytorch:r$L4T_VERSION-pth1.8-py3" \
+				"v0.9.0" \
+				"pillow" \
+				"v0.8.0"
 fi
 
 #			  
