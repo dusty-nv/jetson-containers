@@ -13,19 +13,17 @@ The following ROS containers are also provided, which can be pulled from DockerH
 * ROS2 Eloquent (`ros:eloquent-ros-base-l4t-r32.5.0`)
 * ROS2 Foxy (`ros:foxy-ros-base-l4t-r32.5.0`)
 
-Below are the instructions to build and test the containers using the included Dockerfiles.
-
 ## Pre-built Container Images
 
 The following images can be pulled from NGC or DockerHub without needing to build the containers yourself:
 
-### [`l4t-pytorch`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-pytorch)
+#### [l4t-pytorch](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-pytorch)
 
 * JetPack 4.5 (L4T R32.5.0) / JetPack 4.5.1 (L4T R32.5.1)
-	* `nvcr.io/nvidia/l4t-pytorch:r32.5.0-pth1.7-py3`
 	* `nvcr.io/nvidia/l4t-pytorch:r32.5.0-pth1.6-py3`
+	* `nvcr.io/nvidia/l4t-pytorch:r32.5.0-pth1.7-py3`
 
-
+For other configurations, below are the instructions to build and test the containers using the included Dockerfiles.
 
 ## Docker Default Runtime
 
