@@ -46,7 +46,7 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 To download and run one of these images, you can use the included run script from the repo:
 
 ``` bash
-scripts/docker_run.sh -c nvcr.io/nvidia/l4t-pytorch:r32.5.0-pth1.7-py3
+$ scripts/docker_run.sh -c nvcr.io/nvidia/l4t-pytorch:r32.5.0-pth1.7-py3
 ```
 
 For other configurations, below are the instructions to build and test the containers using the included Dockerfiles.
