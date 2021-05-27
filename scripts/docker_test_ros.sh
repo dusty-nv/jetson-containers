@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 set -e
+source scripts/docker_base.sh
 
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 TEST_MOUNT="$ROOT/../test:/test"
-L4T_VERSION="r32.4.4"
 SUPPORTED_ROS_DISTROS=("melodic" "noetic" "eloquent" "foxy")
 ROS_DISTRO=${1:-"all"}
 
@@ -27,5 +27,5 @@ else
 fi
 
 for DISTRO in ${TO_TEST[@]}; do
-	test_ros_version "ros:$DISTRO-ros-base-l4t-$L4T_VERSION"
+	test_ros_version "ros:$DISTRO-ros-base-l4t-r$L4T_VERSION"
 done

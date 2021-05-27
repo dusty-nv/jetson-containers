@@ -2,8 +2,8 @@
 
 set -e
 
-BASE_IMAGE="nvcr.io/nvidia/l4t-base"
-L4T_VERSION="r32.4.4"
+source scripts/docker_base.sh
+
 SUPPORTED_ROS_DISTROS=("melodic" "noetic" "eloquent" "foxy")
 ROS_DISTRO=${1:-"all"}
 
@@ -16,5 +16,5 @@ else
 fi
 
 for DISTRO in ${TO_BUILD[@]}; do
-	sh ./scripts/docker_build.sh ros:$DISTRO-ros-base-l4t-$L4T_VERSION Dockerfile.ros.$DISTRO --build-arg BASE_IMAGE=$BASE_IMAGE:$L4T_VERSION
+	sh ./scripts/docker_build.sh ros:$DISTRO-ros-base-l4t-r$L4T_VERSION Dockerfile.ros.$DISTRO --build-arg BASE_IMAGE=$BASE_IMAGE
 done

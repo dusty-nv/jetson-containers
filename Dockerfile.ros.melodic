@@ -49,7 +49,7 @@ RUN apt-get update && \
 
 # setup entrypoint
 COPY ./packages/ros_entrypoint.sh /ros_entrypoint.sh
-RUN echo 'source ${ROS_ROOT}/setup.bash' >> /root/.bashrc
+RUN echo 'source /opt/ros/${ROS_DISTRO}/setup.bash' >> /root/.bashrc
 ENTRYPOINT ["/ros_entrypoint.sh"]
 CMD ["bash"]
 WORKDIR /

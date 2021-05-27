@@ -63,7 +63,7 @@ RUN git clone --branch yaml-cpp-0.6.0 https://github.com/jbeder/yaml-cpp yaml-cp
 
 # setup entrypoint
 COPY ./packages/ros_entrypoint.sh /ros_entrypoint.sh
-RUN echo 'source ${ROS_ROOT}/setup.bash' >> /root/.bashrc
+RUN echo 'source /opt/ros/${ROS_DISTRO}/setup.bash' >> /root/.bashrc
 ENTRYPOINT ["/ros_entrypoint.sh"]
 CMD ["bash"]
 WORKDIR /
