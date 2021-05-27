@@ -109,7 +109,7 @@ RUN cd ${ROS_ROOT} && colcon build --symlink-install
 COPY ./packages/ros_entrypoint.sh /ros_entrypoint.sh
 
 RUN sed -i \
-    's/source "\/opt\/ros\/$ROS_DISTRO\/setup.bash"/source "${ROS_ROOT}\/install\/setup.bash"/g' \
+    's/ros_env_setup="\/opt\/ros\/$ROS_DISTRO\/setup.bash"/ros_env_setup="${ROS_ROOT}\/install\/setup.bash"/g' \
     /ros_entrypoint.sh && \
     cat /ros_entrypoint.sh
 
