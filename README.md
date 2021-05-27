@@ -17,11 +17,37 @@ The following ROS containers are also provided, which can be pulled from DockerH
 
 The following images can be pulled from NGC or DockerHub without needing to build the containers yourself:
 
-#### [l4t-pytorch](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-pytorch)
+|                                                                                     | L4T Version | Container Tag                                      |
+|-------------------------------------------------------------------------------------|:-----------:|----------------------------------------------------|
+| [`l4t-ml`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-ml)                 |   R32.5.0*  | `nvcr.io/nvidia/l4t-ml:r32.5.0-py3`                |
+|                                                                                     |   R32.4.4   | `nvcr.io/nvidia/l4t-ml:r32.4.4-py3`                |
+|                                                                                     |   R32.4.3   | `nvcr.io/nvidia/l4t-ml:r32.4.3-py3`                |
+| [`l4t-pytorch`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-pytorch)       |   R32.5.0*  | `nvcr.io/nvidia/l4t-pytorch:r32.5.0-pth1.7-py3`    |
+|                                                                                     |   R32.5.0*  | `nvcr.io/nvidia/l4t-pytorch:r32.5.0-pth1.6-py3`    |
+|                                                                                     |   R32.4.4   | `nvcr.io/nvidia/l4t-pytorch:r32.4.4-pth1.6-py3`    |
+|                                                                                     |   R32.4.3   | `nvcr.io/nvidia/l4t-pytorch:r32.4.3-pth1.6-py3`    |
+| [`l4t-tensorflow`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-tensorflow) |   R32.5.0*  | `nvcr.io/nvidia/l4t-tensorflow:r32.5.0-tf1.15-py3` |
+|                                                                                     |   R32.5.0*  | `nvcr.io/nvidia/l4t-tensorflow:r32.5.0-tf2.3-py3`  |
+|                                                                                     |   R32.4.4   | `nvcr.io/nvidia/l4t-tensorflow:r32.4.4-tf1.15-py3` |
+|                                                                                     |   R32.4.4   | `nvcr.io/nvidia/l4t-tensorflow:r32.4.4-tf2.3-py3`  |
+|                                                                                     |   R32.4.3   | `nvcr.io/nvidia/l4t-tensorflow:r32.4.3-tf1.15-py3` |
+|                                                                                     |   R32.4.3   | `nvcr.io/nvidia/l4t-tensorflow:r32.4.3-tf2.2-py3`  |
+| [`ROS Melodic`](https://hub.docker.com/repository/docker/dustynv/ros)               |   R32.5.0*  | `dustynv/ros:melodic-ros-base-l4t-r32.5.0`         |
+|                                                                                     |   R32.4.4   | `dustynv/ros:melodic-ros-base-l4t-r32.4.4`         |
+| [`ROS Noetic`](https://hub.docker.com/repository/docker/dustynv/ros)                |   R32.5.0*  | `dustynv/ros:noetic-ros-base-l4t-r32.5.0`          |
+|                                                                                     |   R32.4.4   | `dustynv/ros:noetic-ros-base-l4t-r32.4.4`          |
+| [`ROS2 Eloquent`](https://hub.docker.com/repository/docker/dustynv/ros)             |   R32.5.0*  | `dustynv/ros:eloquent-ros-base-l4t-r32.5.0`        |
+|                                                                                     |   R32.4.4   | `dustynv/ros:eloquent-ros-base-l4t-r32.4.4`        |
+| [`ROS2 Foxy`](https://hub.docker.com/repository/docker/dustynv/ros)                 |   R32.5.0*  | `dustynv/ros:foxy-ros-base-l4t-r32.5.0`            |
+|                                                                                     |   R32.4.4   | `dustynv/ros:foxy-ros-base-l4t-r32.4.4`            |
 
-* JetPack 4.5 (L4T R32.5.0) / JetPack 4.5.1 (L4T R32.5.1)
-	* `nvcr.io/nvidia/l4t-pytorch:r32.5.0-pth1.6-py3`
-	* `nvcr.io/nvidia/l4t-pytorch:r32.5.0-pth1.7-py3`
+> * the L4T R32.5.0 containers can be run on both JetPack 4.5 (L4T R32.5.0) and JetPack 4.5.1 (L4T R32.5.1)
+
+To download and run one of these images, you can use the included run script from the repo:
+
+``` bash
+scripts/docker_run.sh -c nvcr.io/nvidia/l4t-pytorch:r32.5.0-pth1.7-py3
+```
 
 For other configurations, below are the instructions to build and test the containers using the included Dockerfiles.
 
