@@ -79,7 +79,7 @@ $ git clone https://github.com/dusty-nv/jetson-containers
 $ cd jetson-containers
 ```
 
-Make sure you have set your [Default Docker Runtime](#default-docker-runtime) to `nvidia` as shown above.
+Before proceeding, make sure you have set your [Docker Default Runtime](#docker-default-runtime) to `nvidia` as shown above.
 
 ### ML Containers
 
