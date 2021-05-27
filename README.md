@@ -41,7 +41,7 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 | [`ROS2 Foxy`](https://hub.docker.com/repository/docker/dustynv/ros)                 |   R32.5.0*  | `dustynv/ros:foxy-ros-base-l4t-r32.5.0`            |
 |                                                                                     |   R32.4.4   | `dustynv/ros:foxy-ros-base-l4t-r32.4.4`            |
 
-> * the L4T R32.5.0 containers can be run on both JetPack 4.5 (L4T R32.5.0) and JetPack 4.5.1 (L4T R32.5.1)
+> &ast; the L4T R32.5.0 containers can be run on both JetPack 4.5 (L4T R32.5.0) and JetPack 4.5.1 (L4T R32.5.1)
 
 To download and run one of these images, you can use the included run script from the repo:
 
