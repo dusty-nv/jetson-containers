@@ -4,7 +4,7 @@ set -e
 
 source scripts/docker_base.sh
 
-SUPPORTED_ROS_DISTROS=("melodic" "noetic" "eloquent" "foxy")
+SUPPORTED_ROS_DISTROS=("melodic" "noetic" "eloquent" "foxy" "galactic")
 SUPPORTED_ROS_PACKAGES=("ros_base" "ros_core" "desktop")
 
 ROS_DISTRO=${1:-"all"}
