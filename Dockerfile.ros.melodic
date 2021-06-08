@@ -2,7 +2,7 @@
 # this dockerfile roughly follows the 'Ubuntu install of ROS Melodic' from:
 #   http://wiki.ros.org/melodic/Installation/Ubuntu
 #
-ARG BASE_IMAGE=nvcr.io/nvidia/l4t-base:r32.4.4
+ARG BASE_IMAGE=nvcr.io/nvidia/l4t-base:r32.5.0
 FROM ${BASE_IMAGE}
 
 ARG ROS_PKG=ros_base
@@ -23,15 +23,16 @@ RUN apt-get update && \
 		wget \
 		gnupg2 \
 		lsb-release \
+		ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add -
 
 # install ROS packages
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-		ros-melodic-ros-base \
+		ros-melodic-`echo "${ROS_PKG}" | tr '_' '-'` \
 		ros-melodic-image-transport \
 		ros-melodic-vision-msgs \
           python-rosdep \
