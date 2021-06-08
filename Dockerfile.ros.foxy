@@ -2,7 +2,7 @@
 # this dockerfile roughly follows the 'Install ROS From Source' procedures from:
 #   https://index.ros.org/doc/ros2/Installation/Foxy/Linux-Development-Setup/
 #
-ARG BASE_IMAGE=nvcr.io/nvidia/l4t-base:r32.4.4
+ARG BASE_IMAGE=nvcr.io/nvidia/l4t-base:r32.5.0
 FROM ${BASE_IMAGE}
 
 ARG ROS_PKG=ros_base

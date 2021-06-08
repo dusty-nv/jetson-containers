@@ -2,7 +2,7 @@
 # this dockerfile roughly follows the 'Installing from source' from:
 #   http://wiki.ros.org/noetic/Installation/Source
 #
-ARG BASE_IMAGE=nvcr.io/nvidia/l4t-base:r32.4.4
+ARG BASE_IMAGE=nvcr.io/nvidia/l4t-base:r32.5.0
 FROM ${BASE_IMAGE}
 
 ARG ROS_PKG=ros_base
@@ -49,7 +49,7 @@ RUN mkdir ros_catkin_ws && \
     mkdir src && \
     vcs import --input ${ROS_DISTRO}-${ROS_PKG}.rosinstall ./src && \
     apt-get update && \
-    rosdep install --from-paths ./src --ignore-packages-from-source --rosdistro ${ROS_DISTRO} -y && \
+    rosdep install --from-paths ./src --ignore-packages-from-source --rosdistro ${ROS_DISTRO} --skip-keys python3-pykdl -y && \
     python3 ./src/catkin/bin/catkin_make_isolated --install --install-space ${ROS_ROOT} -DCMAKE_BUILD_TYPE=Release && \
     rm -rf /var/lib/apt/lists/*
 

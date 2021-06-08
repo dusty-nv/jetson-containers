@@ -2,7 +2,7 @@
 # this dockerfile roughly follows the 'Install ROS2 Via Debian Packages' from:
 #   https://index.ros.org/doc/ros2/Installation/Eloquent/Linux-Install-Debians/
 #
-ARG BASE_IMAGE=nvcr.io/nvidia/l4t-base:r32.4.4
+ARG BASE_IMAGE=nvcr.io/nvidia/l4t-base:r32.5.0
 FROM ${BASE_IMAGE}
 
 ARG ROS_PKG=ros_base
@@ -36,7 +36,7 @@ RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/r
 # install ROS packages
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-		ros-eloquent-ros-base \
+		ros-eloquent-`echo "${ROS_PKG}" | tr '_' '-'` \
 		ros-eloquent-launch-xml \
 		ros-eloquent-launch-yaml \
 		ros-eloquent-vision-msgs \
