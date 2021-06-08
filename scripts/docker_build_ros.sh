@@ -8,7 +8,7 @@ SUPPORTED_ROS_DISTROS=("melodic" "noetic" "eloquent" "foxy" "galactic")
 SUPPORTED_ROS_PACKAGES=("ros_base" "ros_core" "desktop")
 
 ROS_DISTRO=${1:-"all"}
-ROS_PACKAGE=${2:-"base"}
+ROS_PACKAGE=${2:-"ros_base"}
 
 echo "Building containers for $ROS_DISTRO..."
 

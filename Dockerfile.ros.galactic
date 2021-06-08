@@ -1,8 +1,8 @@
 #
 # this dockerfile roughly follows the 'Install ROS From Source' procedures from:
-#   https://index.ros.org/doc/ros2/Installation/Foxy/Linux-Development-Setup/
+#   https://docs.ros.org/en/galactic/Installation/Ubuntu-Development-Setup.html
 #
-ARG BASE_IMAGE=nvcr.io/nvidia/l4t-base:r32.4.4
+ARG BASE_IMAGE=nvcr.io/nvidia/l4t-base:r32.5.0
 FROM ${BASE_IMAGE}
 
 ARG ROS_PKG=ros_base
@@ -24,10 +24,11 @@ RUN apt-get update && \
 		wget \
 		gnupg2 \
 		lsb-release \
+		ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-RUN wget --no-check-certificate https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc && apt-key add ros.asc
-RUN sh -c 'echo "deb [arch=$(dpkg --print-architecture)] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros2-latest.list'
+RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null
 
 # install development packages
 RUN apt-get update && \
