@@ -4,7 +4,7 @@ set -e
 
 source scripts/docker_base.sh
 
-SUPPORTED_ROS_DISTROS=("melodic" "noetic" "eloquent" "foxy")
+SUPPORTED_ROS_DISTROS=("melodic" "noetic" "eloquent" "foxy" "galactic")
 ROS_DISTRO=${1:-"all"}
 
 echo "building containers for $ROS_DISTRO..."
