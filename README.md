@@ -12,6 +12,7 @@ The following ROS containers are also provided, which can be pulled from DockerH
 * ROS Noetic (`ros:noetic-ros-base-l4t-r32.5.0`)
 * ROS2 Eloquent (`ros:eloquent-ros-base-l4t-r32.5.0`)
 * ROS2 Foxy (`ros:foxy-ros-base-l4t-r32.5.0`)
+* ROS2 Galactic (`ros:galactic-ros-base-l4t-r32.5.0`)
 
 ## Pre-built Container Images
 
@@ -40,6 +41,8 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 |                                                                                     |   R32.4.4   | `dustynv/ros:eloquent-ros-base-l4t-r32.4.4`        |
 | [`ROS2 Foxy`](https://hub.docker.com/repository/docker/dustynv/ros)                 |   R32.5.0*  | `dustynv/ros:foxy-ros-base-l4t-r32.5.0`            |
 |                                                                                     |   R32.4.4   | `dustynv/ros:foxy-ros-base-l4t-r32.4.4`            |
+| [`ROS2 Galactic`](https://hub.docker.com/repository/docker/dustynv/ros)             |   R32.5.0*  | `dustynv/ros:galactic-ros-base-l4t-r32.5.0`        |
+|                                                                                     |   R32.4.4   | `dustynv/ros:galactic-ros-base-l4t-r32.4.4`        |
 
 > **note:** the L4T R32.5.0 containers can be run on both JetPack 4.5 (L4T R32.5.0) and JetPack 4.5.1 (L4T R32.5.1)
 
