@@ -51,7 +51,7 @@ fi
 #
 # ROS containers
 #
-SUPPORTED_ROS_DISTROS=("melodic" "noetic" "eloquent" "foxy")
+SUPPORTED_ROS_DISTROS=("melodic" "noetic" "eloquent" "foxy" "galactic")
 
 if [[ "$CONTAINERS" == "ros" ]]; then
 	ROS_CONTAINERS=${SUPPORTED_ROS_DISTROS[@]}
