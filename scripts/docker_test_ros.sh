@@ -5,7 +5,7 @@ source scripts/docker_base.sh
 
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 TEST_MOUNT="$ROOT/../test:/test"
-SUPPORTED_ROS_DISTROS=("melodic" "noetic" "eloquent" "foxy")
+SUPPORTED_ROS_DISTROS=("melodic" "noetic" "eloquent" "foxy" "galactic")
 ROS_DISTRO=${1:-"all"}
 
 test_ros_version()
