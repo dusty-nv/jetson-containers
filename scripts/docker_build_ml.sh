@@ -78,12 +78,20 @@ if [[ "$CONTAINERS" == "pytorch" || "$CONTAINERS" == "all" ]]; then
 	#			  "v0.7.0"
 	
 	# PyTorch v1.8.0
-	build_pytorch "https://nvidia.box.com/shared/static/p57jwntv436lfrd78inwl7iml6p13fzh.whl" \
-				"torch-1.8.0-cp36-cp36m-linux_aarch64.whl" \
-				"l4t-pytorch:r$L4T_VERSION-pth1.8-py3" \
-				"v0.9.0" \
+	#build_pytorch "https://nvidia.box.com/shared/static/p57jwntv436lfrd78inwl7iml6p13fzh.whl" \
+	#			"torch-1.8.0-cp36-cp36m-linux_aarch64.whl" \
+	#			"l4t-pytorch:r$L4T_VERSION-pth1.8-py3" \
+	#			"v0.9.0" \
+	#			"pillow" \
+	#			"v0.8.0"
+		
+	# PyTorch v1.9.0
+	build_pytorch "https://nvidia.box.com/shared/static/2cqb9jwnncv9iii4u60vgd362x4rnkik.whl" \
+				"torch-1.9.0-cp36-cp36m-linux_aarch64.whl" \
+				"l4t-pytorch:r$L4T_VERSION-pth1.9-py3" \
+				"v0.10.0" \
 				"pillow" \
-				"v0.8.0"
+				"v0.9.0"
 fi
 
 #			  
