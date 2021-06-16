@@ -74,7 +74,7 @@ RUN mkdir -p ${ROS_ROOT}/src && \
     vcs import src < ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall
     
 # download unreleased packages
-RUN git clone --branch ros2 https://github.com/dusty-nv/vision_msgs ${ROS_ROOT}/src/vision_msgs && \
+RUN git clone --branch ros2 https://github.com/ros-perception/vision_msgs ${ROS_ROOT}/src/vision_msgs && \
     git clone --branch ${ROS_DISTRO} https://github.com/ros2/demos demos && \
     cp -r demos/demo_nodes_cpp ${ROS_ROOT}/src && \
     cp -r demos/demo_nodes_py ${ROS_ROOT}/src && \
