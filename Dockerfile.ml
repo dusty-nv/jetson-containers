@@ -35,7 +35,7 @@ ENV CUDA_HOME="/usr/local/cuda"
 ENV PATH="/usr/local/cuda/bin:${PATH}"
 ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
 ENV LLVM_CONFIG="/usr/bin/llvm-config-9"
-ARG MAKEFLAGS=-j6
+ARG MAKEFLAGS=-j$(nproc) 
 
 RUN printenv
 
@@ -74,24 +74,6 @@ RUN apt-get update && \
 
 
 #
-# OpenCV
-#
-ARG L4T_APT_KEY
-ARG L4T_APT_SOURCE
-
-COPY jetson-ota-public.asc /etc/apt/trusted.gpg.d/jetson-ota-public.asc
-
-RUN echo "$L4T_APT_SOURCE" > /etc/apt/sources.list.d/nvidia-l4t-apt-source.list && \
-    cat /etc/apt/sources.list.d/nvidia-l4t-apt-source.list && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends \
-            libopencv-dev \
-		  libopencv-python \
-    && rm /etc/apt/sources.list.d/nvidia-l4t-apt-source.list \
-    && rm -rf /var/lib/apt/lists/*
-
-
-#
 # python packages from TF/PyTorch containers
 #
 COPY --from=tensorflow /usr/local/lib/python2.7/dist-packages/ /usr/local/lib/python2.7/dist-packages/
@@ -114,18 +96,91 @@ RUN pip3 install numba --verbose
 
 
 #
-# restore missing cuDNN headers
+# OpenCV - https://github.com/mdegans/nano_build_opencv/blob/master/build_opencv.sh
+# note:  do this after numba, because this installs TBB and numba complains about old TBB
 #
-#RUN ln -s /usr/include/aarch64-linux-gnu/cudnn_v8.h /usr/include/cudnn.h && \
-#    ln -s /usr/include/aarch64-linux-gnu/cudnn_version_v8.h /usr/include/cudnn_version.h && \
-#    ln -s /usr/include/aarch64-linux-gnu/cudnn_backend_v8.h /usr/include/cudnn_backend.h && \
-#    ln -s /usr/include/aarch64-linux-gnu/cudnn_adv_infer_v8.h /usr/include/cudnn_adv_infer.h && \
-#    ln -s /usr/include/aarch64-linux-gnu/cudnn_adv_train_v8.h /usr/include/cudnn_adv_train.h && \
-#    ln -s /usr/include/aarch64-linux-gnu/cudnn_cnn_infer_v8.h /usr/include/cudnn_cnn_infer.h && \
-#    ln -s /usr/include/aarch64-linux-gnu/cudnn_cnn_train_v8.h /usr/include/cudnn_cnn_train.h && \
-#    ln -s /usr/include/aarch64-linux-gnu/cudnn_ops_infer_v8.h /usr/include/cudnn_ops_infer.h && \
-#    ln -s /usr/include/aarch64-linux-gnu/cudnn_ops_train_v8.h /usr/include/cudnn_ops_train.h && \
-#    ls -ll /usr/include/cudnn*
+ARG OPENCV_VERSION="4.4.0"
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        build-essential \
+        cmake \
+        git \
+        gfortran \
+        libatlas-base-dev \
+        libavcodec-dev \
+        libavformat-dev \
+        libavresample-dev \
+        libcanberra-gtk3-module \
+        libdc1394-22-dev \
+        libeigen3-dev \
+        libglew-dev \
+        libgstreamer-plugins-base1.0-dev \
+        libgstreamer-plugins-good1.0-dev \
+        libgstreamer1.0-dev \
+        libgtk-3-dev \
+        libjpeg-dev \
+        libjpeg8-dev \
+        libjpeg-turbo8-dev \
+        liblapack-dev \
+        liblapacke-dev \
+        libopenblas-dev \
+        libpng-dev \
+        libpostproc-dev \
+        libswscale-dev \
+        libtbb-dev \
+        libtbb2 \
+        libtesseract-dev \
+        libtiff-dev \
+        libv4l-dev \
+        libxine2-dev \
+        libxvidcore-dev \
+        libx264-dev \
+        pkg-config \
+        qv4l2 \
+        v4l-utils \
+        v4l2ucp \
+        zlib1g-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
+# OpenCV looks for the cuDNN version in cudnn_version.h, but it's been renamed to cudnn_version_v8.h
+RUN ln -s /usr/include/aarch64-linux-gnu/cudnn_version_v8.h /usr/include/aarch64-linux-gnu/cudnn_version.h
+
+RUN mkdir -p /tmp/opencv && \
+    cd /tmp/opencv && \
+    git clone --depth 1 --branch ${OPENCV_VERSION} https://github.com/opencv/opencv.git && \
+    git clone --depth 1 --branch ${OPENCV_VERSION} https://github.com/opencv/opencv_contrib.git && \
+    cd opencv && \
+    mkdir build && \
+    cd build && \
+    cmake \
+	   -D BUILD_EXAMPLES=OFF \
+        -D BUILD_opencv_python2=OFF \
+        -D BUILD_opencv_python3=ON \
+        -D CMAKE_BUILD_TYPE=RELEASE \
+        -D CMAKE_INSTALL_PREFIX=/usr/local \
+        -D CUDA_ARCH_BIN=5.3,6.2,7.2 \
+        -D CUDA_ARCH_PTX= \
+        -D CUDA_FAST_MATH=ON \
+        -D CUDNN_INCLUDE_DIR=/usr/include/aarch64-linux-gnu \
+        -D EIGEN_INCLUDE_PATH=/usr/include/eigen3 \
+        -D ENABLE_NEON=ON \
+        -D OPENCV_DNN_CUDA=ON \
+        -D OPENCV_ENABLE_NONFREE=ON \
+        -D OPENCV_EXTRA_MODULES_PATH=/tmp/opencv/opencv_contrib/modules \
+        -D OPENCV_GENERATE_PKGCONFIG=ON \
+        -D WITH_CUBLAS=ON \
+        -D WITH_CUDA=ON \
+        -D WITH_CUDNN=ON \
+        -D WITH_GSTREAMER=ON \
+        -D WITH_LIBV4L=ON \
+        -D WITH_OPENGL=ON \
+	   -D BUILD_PERF_TESTS=OFF \
+	   -D BUILD_TESTS=OFF \
+	   ../ && \
+	make -j$(nproc) && \
+	make install
 
 
 #
