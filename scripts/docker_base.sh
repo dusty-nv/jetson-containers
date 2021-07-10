@@ -16,7 +16,9 @@ if [ $L4T_RELEASE -eq 32 ]; then
 		elif [ $L4T_REVISION_MINOR -gt 1 ]; then
 			BASE_IMAGE=$BASE_DEVEL
 		fi
-	elif [ $L4T_REVISION_MAJOR -gt 5 ]; then
+	elif [ $L4T_REVISION_MAJOR -eq 6 ]; then
+		BASE_IMAGE="nvcr.io/nvidian/nvidia-l4t-base:r32.6"
+	elif [ $L4T_REVISION_MAJOR -gt 6 ]; then
 		BASE_IMAGE=$BASE_DEVEL
 	fi
 fi
