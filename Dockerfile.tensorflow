@@ -27,7 +27,7 @@ FROM ${BASE_IMAGE}
 #
 ENV DEBIAN_FRONTEND=noninteractive
 ARG HDF5_DIR="/usr/lib/aarch64-linux-gnu/hdf5/serial/"
-ARG MAKEFLAGS=-j6
+ARG MAKEFLAGS=-j$(nproc)
 
 RUN printenv
 
