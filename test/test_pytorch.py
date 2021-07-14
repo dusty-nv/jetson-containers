@@ -54,6 +54,7 @@ print('Tensor softmax = ' + str(cpu_y))
 if cpu_y != 1.0:
     raise ValueError('PyTorch CPU tensor vector test failed (softmax)\n')
 
+# https://github.com/pytorch/pytorch/issues/61110
 t_32 = torch.ones((3,3), dtype=torch.float32).exp()
 t_64 = torch.ones((3,3), dtype=torch.float64).exp()
 diff = (t_32 - t_64).abs().sum().item()
