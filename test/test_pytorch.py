@@ -42,7 +42,7 @@ out = model(data)
 print('done testing torch.nn (cuDNN)')
 
 # CPU test (https://github.com/pytorch/pytorch/issues/47098)
-print('testing CPU tensors...')
+print('testing CPU tensor vector operations...')
 
 import torch.nn.functional as F
 cpu_x = torch.tensor([12.345])
@@ -52,6 +52,17 @@ print('Tensor cpu_x = ' + str(cpu_x))
 print('Tensor softmax = ' + str(cpu_y))
 
 if cpu_y != 1.0:
-    print('PyTorch CPU tensor test failed!\n')
-else:
-    print('PyTorch OK\n')
+    raise ValueError('PyTorch CPU tensor vector test failed (softmax)\n')
+
+t_32 = torch.ones((3,3), dtype=torch.float32).exp()
+t_64 = torch.ones((3,3), dtype=torch.float64).exp()
+diff = (t_32 - t_64).abs().sum().item()
+
+print('Tensor exp (float32) = ' + str(t_32))
+print('Tensor exp (float64) = ' + str(t_64))
+print('Tensor exp (diff) = ' + str(diff))
+
+if diff > 0.1:
+    raise ValueError(f'PyTorch CPU tensor vector test failed (exp, diff={diff})')
+    
+print('PyTorch OK\n')
