@@ -79,7 +79,23 @@ RUN git clone --branch yaml-cpp-0.6.0 https://github.com/jbeder/yaml-cpp yaml-cp
 # https://answers.ros.org/question/325245/minimal-ros2-installation/?answer=325249#post-id-325249
 RUN mkdir -p ${ROS_ROOT}/src && \
     cd ${ROS_ROOT} && \
-    rosinstall_generator --deps --rosdistro ${ROS_DISTRO} ${ROS_PKG} launch_xml launch_yaml example_interfaces > ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall && \
+    rosinstall_generator --deps --rosdistro ${ROS_DISTRO} ${ROS_PKG} \
+		launch_xml \
+		launch_yaml \
+		example_interfaces \
+		cv_bridge \
+		vision_opencv \
+		image_transport \
+		image_geometry \
+		image_proc \
+		image_pipeline \
+		image_publisher \
+		image_view \
+		image_rotate \
+		depth_image_proc \
+		stereo_image_proc \
+		camera_calibration \
+		> ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall && \
     cat ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall && \
     vcs import src < ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall
 
@@ -88,7 +104,7 @@ RUN rm ${ROS_ROOT}/src/libyaml_vendor/CMakeLists.txt && \
     wget --no-check-certificate https://raw.githubusercontent.com/ros2/libyaml_vendor/master/CMakeLists.txt -P ${ROS_ROOT}/src/libyaml_vendor/
     
 # download unreleased packages
-RUN git clone --branch ros2 https://github.com/Kukanani/vision_msgs ${ROS_ROOT}/src/vision_msgs && \
+RUN git clone --branch ros2 https://github.com/ros-perception/vision_msgs ${ROS_ROOT}/src/vision_msgs && \
     git clone --branch ${ROS_DISTRO} https://github.com/ros2/demos demos && \
     cp -r demos/demo_nodes_cpp ${ROS_ROOT}/src && \
     cp -r demos/demo_nodes_py ${ROS_ROOT}/src && \
@@ -99,7 +115,6 @@ RUN apt-get update && \
     cd ${ROS_ROOT} && \
     rosdep init && \
     rosdep update && \
-    # rosdep install --from-paths src --ignore-src --rosdistro ${ROS_DISTRO} -y --skip-keys "console_bridge fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers qt_gui" && \
     rosdep install --from-paths src --ignore-src --rosdistro ${ROS_DISTRO} -y --skip-keys "" && \
     rm -rf /var/lib/apt/lists/*
 

@@ -69,7 +69,23 @@ RUN python3 -m pip install -U \
 # https://answers.ros.org/question/325245/minimal-ros2-installation/?answer=325249#post-id-325249
 RUN mkdir -p ${ROS_ROOT}/src && \
     cd ${ROS_ROOT} && \
-    rosinstall_generator --deps --rosdistro ${ROS_DISTRO} ${ROS_PKG} launch_xml launch_yaml example_interfaces > ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall && \
+    rosinstall_generator --deps --rosdistro ${ROS_DISTRO} ${ROS_PKG} \
+		launch_xml \
+		launch_yaml \
+		example_interfaces \
+		cv_bridge \
+		vision_opencv \
+		image_transport \
+		image_geometry \
+		image_proc \
+		image_pipeline \
+		image_publisher \
+		image_view \
+		image_rotate \
+		depth_image_proc \
+		stereo_image_proc \
+		camera_calibration \
+		> ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall && \
     cat ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall && \
     vcs import src < ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall
     
@@ -85,7 +101,6 @@ RUN apt-get update && \
     cd ${ROS_ROOT} && \
     rosdep init && \
     rosdep update && \
-    # rosdep install --from-paths src --ignore-src --rosdistro ${ROS_DISTRO} -y --skip-keys "console_bridge fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers qt_gui" && \
     rosdep install --from-paths src --ignore-src --rosdistro ${ROS_DISTRO} -y --skip-keys "" && \
     rm -rf /var/lib/apt/lists/*
 
