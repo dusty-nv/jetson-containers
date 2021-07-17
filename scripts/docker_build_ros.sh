@@ -37,9 +37,22 @@ build_ros()
 	local package_name=`echo $package | tr '_' '-'`
 	local container_tag="ros:$distro-$package_name-l4t-r$L4T_VERSION"
 	
+	# opencv.csv mounts files that preclude us installing different version of opencv
+	# temporarily disable the opencv.csv mounts while we build the container
+	CV_CSV="/etc/nvidia-container-runtime/host-files-for-container.d/opencv.csv"
+
+	if [ -f "$CV_CSV" ]; then
+		sudo mv $CV_CSV $CV_CSV.backup
+	fi
+	
 	sh ./scripts/docker_build.sh $container_tag Dockerfile.ros.$distro \
 			--build-arg ROS_PKG=$package \
 			--build-arg BASE_IMAGE=$BASE_IMAGE
+			
+	# restore opencv.csv mounts
+	if [ -f "$CV_CSV.backup" ]; then
+		sudo mv $CV_CSV.backup $CV_CSV
+	fi
 }
 
 for DISTRO in ${BUILD_DISTRO[@]}; do

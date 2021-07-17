@@ -34,13 +34,15 @@ if [[ "$CONTAINERS" == "pytorch" || "$CONTAINERS" == "all" ]]; then
 	#push "l4t-pytorch:r$L4T_VERSION-pth1.3-py3"
 	#push "l4t-pytorch:r$L4T_VERSION-pth1.4-py3"
 	#push "l4t-pytorch:r$L4T_VERSION-pth1.5-py3"
-	push $NGC_GROUP "l4t-pytorch:r$L4T_VERSION-pth1.6-py3"
-	push $NGC_GROUP "l4t-pytorch:r$L4T_VERSION-pth1.7-py3"
+	#push $NGC_GROUP "l4t-pytorch:r$L4T_VERSION-pth1.6-py3"
+	#push $NGC_GROUP "l4t-pytorch:r$L4T_VERSION-pth1.7-py3"
+	push $NGC_GROUP "l4t-pytorch:r$L4T_VERSION-pth1.8-py3"
+	push $NGC_GROUP "l4t-pytorch:r$L4T_VERSION-pth1.9-py3"
 fi
 
 if [[ "$CONTAINERS" == "tensorflow" || "$CONTAINERS" == "all" ]]; then
 	push $NGC_GROUP "l4t-tensorflow:r$L4T_VERSION-tf1.15-py3"
-	push $NGC_GROUP "l4t-tensorflow:r$L4T_VERSION-tf2.3-py3"
+	push $NGC_GROUP "l4t-tensorflow:r$L4T_VERSION-tf2.5-py3"
 fi
 
 if [[ "$CONTAINERS" == "ml" || "$CONTAINERS" == "all" ]]; then
