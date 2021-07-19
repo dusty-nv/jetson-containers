@@ -43,8 +43,13 @@ RUN apt-get update && \
 		ros-eloquent-`echo "${ROS_PKG}" | tr '_' '-'` \
 		ros-eloquent-launch-xml \
 		ros-eloquent-launch-yaml \
-		ros-eloquent-vision-msgs \
+		ros-eloquent-launch-testing \
+		ros-eloquent-launch-testing-ament-cmake \
+		ros-eloquent-camera-calibration-parsers \
+		ros-eloquent-camera-info-manager \
 		ros-eloquent-cv-bridge \
+		ros-eloquent-v4l2-camera \
+		ros-eloquent-vision-msgs \
 		ros-eloquent-vision-opencv \
 		ros-eloquent-image-transport \
 		ros-eloquent-image-tools \

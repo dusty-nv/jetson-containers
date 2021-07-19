@@ -91,19 +91,20 @@ RUN mkdir -p ${ROS_ROOT}/src && \
     rosinstall_generator --deps --rosdistro ${ROS_DISTRO} ${ROS_PKG} \
 		launch_xml \
 		launch_yaml \
+		launch_testing \
+		launch_testing_ament_cmake \
+		demo_nodes_cpp \
+		demo_nodes_py \
 		example_interfaces \
+		camera_calibration_parsers \
+		camera_info_manager \
 		cv_bridge \
+		v4l2_camera \
 		vision_opencv \
+		vision_msgs \
 		image_transport \
 		image_geometry \
-		image_proc \
 		image_pipeline \
-		image_publisher \
-		image_view \
-		image_rotate \
-		depth_image_proc \
-		stereo_image_proc \
-		camera_calibration \
 		> ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall && \
     cat ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall && \
     vcs import src < ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall
@@ -113,11 +114,11 @@ RUN rm ${ROS_ROOT}/src/libyaml_vendor/CMakeLists.txt && \
     wget --no-check-certificate https://raw.githubusercontent.com/ros2/libyaml_vendor/master/CMakeLists.txt -P ${ROS_ROOT}/src/libyaml_vendor/
     
 # download unreleased packages
-RUN git clone --branch ros2 https://github.com/ros-perception/vision_msgs ${ROS_ROOT}/src/vision_msgs && \
-    git clone --branch ${ROS_DISTRO} https://github.com/ros2/demos demos && \
-    cp -r demos/demo_nodes_cpp ${ROS_ROOT}/src && \
-    cp -r demos/demo_nodes_py ${ROS_ROOT}/src && \
-    rm -r -f demos
+#RUN git clone --branch ros2 https://github.com/ros-perception/vision_msgs ${ROS_ROOT}/src/vision_msgs && \
+#    git clone --branch ${ROS_DISTRO} https://github.com/ros2/demos demos && \
+#    cp -r demos/demo_nodes_cpp ${ROS_ROOT}/src && \
+#    cp -r demos/demo_nodes_py ${ROS_ROOT}/src && \
+#    rm -r -f demos
 
 # install dependencies using rosdep
 RUN apt-get update && \
