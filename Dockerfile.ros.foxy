@@ -10,12 +10,15 @@ ENV ROS_DISTRO=foxy
 ENV ROS_ROOT=/opt/ros/${ROS_DISTRO}
 
 ENV DEBIAN_FRONTEND=noninteractive
+ENV SHELL /bin/bash
+SHELL ["/bin/bash", "-c"] 
 
-WORKDIR /workspace
+WORKDIR /tmp
 
 # change the locale from POSIX to UTF-8
 RUN locale-gen en_US en_US.UTF-8 && update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 ENV LANG=en_US.UTF-8
+ENV PYTHONIOENCODING=utf-8
 
 # add the ROS deb repo to the apt sources list
 RUN apt-get update && \
@@ -25,7 +28,8 @@ RUN apt-get update && \
 		gnupg2 \
 		lsb-release \
 		ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
 RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
 RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null
@@ -49,7 +53,12 @@ RUN apt-get update && \
 		libasio-dev \
 		libtinyxml2-dev \
 		libcunit1-dev \
-    && rm -rf /var/lib/apt/lists/*
+		libgazebo9-dev \
+		gazebo9 \
+		gazebo9-common \
+		gazebo9-plugin-base \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
 # install some pip packages needed for testing
 RUN python3 -m pip install -U \
