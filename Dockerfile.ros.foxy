@@ -45,6 +45,7 @@ RUN apt-get update && \
 		python3-colcon-common-extensions \
 		python3-flake8 \
 		python3-pip \
+		python3-numpy \
 		python3-pytest-cov \
 		python3-rosdep \
 		python3-setuptools \
@@ -75,6 +76,23 @@ RUN python3 -m pip install -U \
 		pytest-rerunfailures \
 		pytest
 
+# install OpenCV (with CUDA)
+ARG OPENCV_URL=https://nvidia.box.com/shared/static/5v89u6g5rb62fpz4lh0rz531ajo2t5ef.gz
+ARG OPENCV_DEB=OpenCV-4.5.0-aarch64.tar.gz
+
+RUN mkdir opencv && \
+    cd opencv && \
+    wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${OPENCV_URL} -O ${OPENCV_DEB} && \
+    tar -xzvf ${OPENCV_DEB} && \
+    dpkg -i --force-depends *.deb && \
+    apt-get update && \
+    apt-get install -y -f --no-install-recommends && \
+    dpkg -i *.deb && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get clean && \
+    cd ../ && \
+    rm -rf opencv
+	
 # compile yaml-cpp-0.6, which some ROS packages may use (but is not in the 18.04 apt repo)
 RUN git clone --branch yaml-cpp-0.6.0 https://github.com/jbeder/yaml-cpp yaml-cpp-0.6 && \
     cd yaml-cpp-0.6 && \

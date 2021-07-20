@@ -48,7 +48,7 @@ build_ros()
 	local base_image=$3
 	local extra_tag=$4
 	local package_name=`echo $package | tr '_' '-'`
-	local container_tag="ros:$distro-${package_name}${extra_tag}-l4t-r$L4T_VERSION"
+	local container_tag="ros:${distro}-${package_name}-${extra_tag}l4t-r${L4T_VERSION}"
 	
 	# opencv.csv mounts files that preclude us installing different version of opencv
 	# temporarily disable the opencv.csv mounts while we build the container
@@ -77,8 +77,8 @@ for DISTRO in ${BUILD_DISTRO[@]}; do
 	for PACKAGE in ${BUILD_PACKAGES[@]}; do
 		build_ros $DISTRO $PACKAGE $BASE_IMAGE
 		
-		if [[ "$ROS_PYTORCH" == "yes" ]]; then
-			build_ros $DISTRO $PACKAGE "dustynv/jetson-inference:r$L4T_VERSION" "-pytorch-"
+		if [[ "$ROS_PYTORCH" == "yes" ]] && [[ "$DISTRO" != "melodic" ]] ; then
+			build_ros $DISTRO $PACKAGE "dustynv/jetson-inference:r$L4T_VERSION" "pytorch-"
 		fi
 	done
 done
