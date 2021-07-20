@@ -41,6 +41,14 @@ else
      fi
 fi
 
+# check for local version of PyTorch base container
+BASE_IMAGE_PYTORCH="jetson-inference:r$L4T_VERSION"
+
+if [[ "$(sudo docker images -q $BASE_IMAGE_PYTORCH 2> /dev/null)" == "" ]]; then
+	BASE_IMAGE_PYTORCH="dustynv/$BASE_IMAGE_PYTORCH"
+fi
+
+
 build_ros()
 {
 	local distro=$1
@@ -73,12 +81,13 @@ build_ros()
 	fi
 }
 
+
 for DISTRO in ${BUILD_DISTRO[@]}; do
 	for PACKAGE in ${BUILD_PACKAGES[@]}; do
 		build_ros $DISTRO $PACKAGE $BASE_IMAGE
 		
 		if [[ "$ROS_PYTORCH" == "yes" ]] && [[ "$DISTRO" != "melodic" ]] ; then
-			build_ros $DISTRO $PACKAGE "dustynv/jetson-inference:r$L4T_VERSION" "pytorch-"
+			build_ros $DISTRO $PACKAGE $BASE_IMAGE_PYTORCH "pytorch-"
 		fi
 	done
 done
