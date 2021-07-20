@@ -2,10 +2,18 @@
 print('testing OpenCV...')
 
 import cv2
+import sys
 
-print('OpenCV version:      ' + str(cv2.__version__))
+print('OpenCV version:', str(cv2.__version__))
 print(cv2.getBuildInformation())
 
+try:
+    print('\nGPU devices:', str(cv2.cuda.getCudaEnabledDeviceCount()))
+except Exception as ex:
+    print(ex)
+    print('OpenCV was not built with CUDA')
+    sys.exit()
+    
 img_path = '/test/data/test_0.jpg'
 img_cpu = cv2.imread(img_path)
 print(f'loaded test image from {img_path}  {img_cpu.shape}  {img_cpu.dtype}')
