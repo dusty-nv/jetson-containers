@@ -86,7 +86,7 @@ for DISTRO in ${BUILD_DISTRO[@]}; do
 	for PACKAGE in ${BUILD_PACKAGES[@]}; do
 		build_ros $DISTRO $PACKAGE $BASE_IMAGE
 		
-		if [[ "$ROS_PYTORCH" == "yes" ]] && [[ "$DISTRO" != "melodic" ]] ; then
+		if [[ "$ROS_PYTORCH" == "yes" ]] && [[ "$DISTRO" != "melodic" ]] && [[ "$DISTRO" != "eloquent" ]]; then
 			build_ros $DISTRO $PACKAGE $BASE_IMAGE_PYTORCH "pytorch-"
 		fi
 	done
