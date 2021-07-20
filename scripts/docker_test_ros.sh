@@ -5,8 +5,11 @@ source scripts/docker_base.sh
 
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 TEST_MOUNT="$ROOT/../test:/test"
+
 SUPPORTED_ROS_DISTROS=("melodic" "noetic" "eloquent" "foxy" "galactic")
+
 ROS_DISTRO=${1:-"all"}
+ROS_PYTORCH=${2:-"yes"}
 
 test_ros_version()
 {
@@ -20,6 +23,27 @@ test_ros_version()
 	echo -e "done testing container $1 => ros_version\n"
 }
 
+test_opencv()
+{
+	echo "testing container $1 => OpenCV"
+	sh ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_opencv.py
+	echo -e "done testing container $1 => OpenCV\n"
+}
+
+test_pytorch()
+{
+	echo "testing container $1 => PyTorch"
+	sh ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_pytorch.py
+	echo -e "done testing container $1 => PyTorch\n"
+}
+
+test_numpy()
+{
+	echo "testing container $1 => numpy"
+	sh ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_numpy.py
+	echo -e "done testing container $1 => numpy\n"
+}
+
 if [[ "$ROS_DISTRO" == "all" ]]; then
 	TO_TEST=${SUPPORTED_ROS_DISTROS[@]}
 else
@@ -27,5 +51,22 @@ else
 fi
 
 for DISTRO in ${TO_TEST[@]}; do
-	test_ros_version "ros:$DISTRO-ros-base-l4t-r$L4T_VERSION"
+	container_tag="ros:$DISTRO-ros-base-l4t-r$L4T_VERSION"
+	test_ros_version $container_tag
+	
+	if [[ "$DISTRO" != "melodic" ]] && [[ "$DISTRO" != "noetic" ]] && [[ "$DISTRO" != "eloquent" ]]; then
+		test_opencv $container_tag
+		test_numpy $container_tag
+	fi
+	
+	if [[ "$ROS_PYTORCH" == "yes" ]] && [[ "$DISTRO" != "melodic" ]]; then
+		container_tag="ros:$DISTRO-ros-base-pytorch-l4t-r$L4T_VERSION"
+		test_ros_version $container_tag
+		test_pytorch $container_tag
+		test_numpy $container_tag
+		
+		if [[ "$DISTRO" != "eloquent" ]]; then
+			test_opencv $container_tag
+		fi
+	fi
 done
