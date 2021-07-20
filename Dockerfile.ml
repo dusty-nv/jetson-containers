@@ -158,6 +158,7 @@ RUN mkdir -p /tmp/opencv && \
 	   -D BUILD_EXAMPLES=OFF \
         -D BUILD_opencv_python2=OFF \
         -D BUILD_opencv_python3=ON \
+	   -D BUILD_opencv_java=OFF \
         -D CMAKE_BUILD_TYPE=RELEASE \
         -D CMAKE_INSTALL_PREFIX=/usr/local \
         -D CUDA_ARCH_BIN=5.3,6.2,7.2 \
@@ -165,6 +166,7 @@ RUN mkdir -p /tmp/opencv && \
         -D CUDA_FAST_MATH=ON \
         -D CUDNN_INCLUDE_DIR=/usr/include/aarch64-linux-gnu \
         -D EIGEN_INCLUDE_PATH=/usr/include/eigen3 \
+	   -D WITH_EIGEN=ON \
         -D ENABLE_NEON=ON \
         -D OPENCV_DNN_CUDA=ON \
         -D OPENCV_ENABLE_NONFREE=ON \
@@ -176,6 +178,10 @@ RUN mkdir -p /tmp/opencv && \
         -D WITH_GSTREAMER=ON \
         -D WITH_LIBV4L=ON \
         -D WITH_OPENGL=ON \
+	   -D WITH_OPENCL=OFF \
+	   -D WITH_IPP=OFF \
+        -D WITH_TBB=ON \
+	   -D BUILD_TIFF=ON \
 	   -D BUILD_PERF_TESTS=OFF \
 	   -D BUILD_TESTS=OFF \
 	   ../ && \
