@@ -14,7 +14,10 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /workspace
 
+
+#
 # add the ROS deb repo to the apt sources list
+#
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
           git \
@@ -30,7 +33,10 @@ RUN apt-get update && \
 RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add -
 
+
+#
 # install bootstrap dependencies
+#
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
           libpython3-dev \
@@ -42,7 +48,10 @@ RUN apt-get update && \
     rosdep update && \
     rm -rf /var/lib/apt/lists/*
 
+
+#
 # download/build the ROS source
+#
 RUN mkdir ros_catkin_ws && \
     cd ros_catkin_ws && \
     rosinstall_generator ${ROS_PKG} vision_msgs --rosdistro ${ROS_DISTRO} --deps --tar > ${ROS_DISTRO}-${ROS_PKG}.rosinstall && \
@@ -53,7 +62,10 @@ RUN mkdir ros_catkin_ws && \
     python3 ./src/catkin/bin/catkin_make_isolated --install --install-space ${ROS_ROOT} -DCMAKE_BUILD_TYPE=Release && \
     rm -rf /var/lib/apt/lists/*
 
+
+#
 # setup entrypoint
+#
 COPY ./packages/ros_entrypoint.sh /ros_entrypoint.sh
 RUN echo 'source /opt/ros/${ROS_DISTRO}/setup.bash' >> /root/.bashrc
 ENTRYPOINT ["/ros_entrypoint.sh"]
