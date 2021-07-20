@@ -100,11 +100,8 @@ RUN pip3 install numba --verbose
 #
 ARG CUPY_VERSION=v9.2.0
 ARG CUPY_NVCC_GENERATE_CODE="arch=compute_53,code=sm_53;arch=compute_62,code=sm_62;arch=compute_72,code=sm_72"
-ARG CUB_VERSION=1.13.0
-ENV CUB_PATH="/opt/cub"
 
-RUN git clone -b ${CUB_VERSION} https://github.com/nvidia/cub ${CUB_PATH} && \
-    git clone -b ${CUPY_VERSION} https://github.com/cupy/cupy cupy && \
+RUN git clone -b ${CUPY_VERSION} --recursive https://github.com/cupy/cupy cupy && \
     cd cupy && \
     pip3 install fastrlock && \
     python3 setup.py install --verbose && \
