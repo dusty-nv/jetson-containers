@@ -62,5 +62,12 @@ elif (echo "${SUPPORTED_ROS_DISTROS[@]}" | fgrep -q "$CONTAINERS"); then
 fi
 
 for ROS_DISTRO in ${ROS_CONTAINERS[@]}; do
-	push $DOCKERHUB "ros:$ROS_DISTRO-ros-base-l4t-r$L4T_VERSION"
+	ros_image="ros:$ROS_DISTRO-ros-base-l4t-r$L4T_VERSION"
+	ros_pytorch_image="ros:$ROS_DISTRO-ros-base-pytorch-l4t-r$L4T_VERSION"
+	
+	push $DOCKERHUB $ros_image
+	
+	if [[ "$(sudo docker images -q $ros_pytorch_image 2> /dev/null)" != "" ]]; then
+		push $DOCKERHUB $ros_pytorch_image
+	fi
 done
