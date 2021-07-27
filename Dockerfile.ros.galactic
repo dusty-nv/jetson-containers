@@ -125,7 +125,9 @@ RUN mkdir -p ${ROS_ROOT}/src && \
 		vision_msgs \
 		image_transport \
 		image_geometry \
-		image_pipeline \
+    image_pipeline \
+    bondcpp \
+    bond \
 		> ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall && \
     cat ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall && \
     vcs import src < ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall
