@@ -49,13 +49,14 @@ RUN apt-get update && \
 		  zlib1g-dev \
 		  zip \
 		  libjpeg8-dev \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
 
-RUN pip3 install setuptools Cython wheel
-RUN pip3 install numpy --verbose
-RUN pip3 install h5py==2.10.0 --verbose
-RUN pip3 install future==0.18.2 mock==3.0.5 h5py==2.10.0 keras_preprocessing==1.1.1 keras_applications==1.0.8 gast==0.2.2 futures protobuf pybind11 --verbose
+RUN pip3 install --no-cache-dir setuptools Cython wheel
+RUN pip3 install --no-cache-dir --verbose numpy
+RUN pip3 install --no-cache-dir --verbose h5py==2.10.0
+RUN pip3 install --no-cache-dir --verbose future==0.18.2 mock==3.0.5 h5py==2.10.0 keras_preprocessing==1.1.1 keras_applications==1.0.8 gast==0.2.2 futures protobuf pybind11
 
 
 #
@@ -65,7 +66,7 @@ ARG TENSORFLOW_URL=https://developer.download.nvidia.com/compute/redist/jp/v44/t
 ARG TENSORFLOW_WHL=tensorflow-1.15.3+nv20.9-cp36-cp36m-linux_aarch64.whl
 
 RUN wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${TENSORFLOW_URL} -O ${TENSORFLOW_WHL} && \
-    pip3 install ${TENSORFLOW_WHL} --verbose && \
+    pip3 install --no-cache-dir --verbose ${TENSORFLOW_WHL} && \
     rm ${TENSORFLOW_WHL}
 
 
@@ -76,7 +77,7 @@ ENV PATH="/usr/local/cuda/bin:${PATH}"
 ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
 RUN echo "$PATH" && echo "$LD_LIBRARY_PATH"
 
-RUN pip3 install pycuda six --verbose
+RUN pip3 install --no-cache-dir --verbose pycuda six
 
 
 

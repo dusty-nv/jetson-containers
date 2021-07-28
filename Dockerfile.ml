@@ -86,13 +86,13 @@ COPY --from=pytorch /usr/local/lib/python3.6/dist-packages/ /usr/local/lib/pytho
 #
 # python pip packages
 #
-RUN pip3 install pybind11 --ignore-installed
-RUN pip3 install onnx --verbose
-RUN pip3 install scipy --verbose
-RUN pip3 install scikit-learn --verbose
-RUN pip3 install pandas --verbose
-RUN pip3 install pycuda --verbose
-RUN pip3 install numba --verbose
+RUN pip3 install --no-cache-dir --ignore-installed pybind11 
+RUN pip3 install --no-cache-dir --verbose onnx
+RUN pip3 install --no-cache-dir --verbose scipy
+RUN pip3 install --no-cache-dir --verbose scikit-learn
+RUN pip3 install --no-cache-dir --verbose pandas
+RUN pip3 install --no-cache-dir --verbose pycuda
+RUN pip3 install --no-cache-dir --verbose numba
 
 
 #
@@ -103,7 +103,7 @@ ARG CUPY_NVCC_GENERATE_CODE="arch=compute_53,code=sm_53;arch=compute_62,code=sm_
 
 RUN git clone -b ${CUPY_VERSION} --recursive https://github.com/cupy/cupy cupy && \
     cd cupy && \
-    pip3 install fastrlock && \
+    pip3 install --no-cache-dir fastrlock && \
     python3 setup.py install --verbose && \
     cd ../ && \
     rm -rf cupy
@@ -127,7 +127,9 @@ RUN mkdir opencv && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean && \
     cd ../ && \
-    rm -rf opencv
+    rm -rf opencv && \
+    cp -r /usr/include/opencv4 /usr/local/include/opencv4 && \
+    cp -r /usr/lib/python3.6/dist-packages/cv2 /usr/local/lib/python3.6/dist-packages/cv2
 
 
 #
@@ -138,7 +140,7 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
     apt-get install -y nodejs && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean && \
-    pip3 install jupyter jupyterlab==2.2.9 --verbose && \
+    pip3 install --no-cache-dir --verbose jupyter jupyterlab==2.2.9 && \
     jupyter labextension install @jupyter-widgets/jupyterlab-manager
     
 RUN jupyter lab --generate-config

@@ -36,10 +36,11 @@ RUN apt-get update && \
             openmpi-bin \
             openmpi-common \
 		  gfortran \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
-RUN pip3 install setuptools Cython wheel
-RUN pip3 install numpy --verbose
+RUN pip3 install --no-cache-dir setuptools Cython wheel
+RUN pip3 install --no-cache-dir --verbose numpy
 
 #
 # PyTorch (for JetPack 4.4 DP)
@@ -53,7 +54,7 @@ ARG PYTORCH_URL=https://nvidia.box.com/shared/static/lufbgr3xu2uha40cs9ryq1zn4kx
 ARG PYTORCH_WHL=torch-1.2.0-cp36-cp36m-linux_aarch64.whl
 
 RUN wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${PYTORCH_URL} -O ${PYTORCH_WHL} && \
-    pip3 install ${PYTORCH_WHL} --verbose && \
+    pip3 install --no-cache-dir --verbose ${PYTORCH_WHL} && \
     rm ${PYTORCH_WHL}
 
 
@@ -72,14 +73,15 @@ RUN apt-get update && \
 		  build-essential \
             libjpeg-dev \
 		  zlib1g-dev \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
 RUN git clone -b ${TORCHVISION_VERSION} https://github.com/pytorch/vision torchvision && \
     cd torchvision && \
     python3 setup.py install && \
     cd ../ && \
     rm -rf torchvision && \
-    pip3 install "${PILLOW_VERSION}"
+    pip3 install --no-cache-dir "${PILLOW_VERSION}"
 
 
 #
@@ -93,10 +95,11 @@ RUN apt-get update && \
 		  sox \
 		  libsox-dev \
 		  libsox-fmt-all \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
-RUN pip3 install scikit-build && \
-    pip3 install ninja
+RUN pip3 install --no-cache-dir scikit-build && \
+    pip3 install --no-cache-dir ninja
     
 RUN git clone --recursive -b ${TORCHAUDIO_VERSION} https://github.com/pytorch/audio torchaudio && \
     cd torchaudio && \
@@ -112,7 +115,7 @@ ENV PATH="/usr/local/cuda/bin:${PATH}"
 ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
 RUN echo "$PATH" && echo "$LD_LIBRARY_PATH"
 
-RUN pip3 install pycuda six --verbose
+RUN pip3 install --no-cache-dir --verbose pycuda six
 
 
 
