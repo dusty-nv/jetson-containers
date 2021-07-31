@@ -174,6 +174,19 @@ RUN apt-get update && \
 RUN cd ${ROS_ROOT} && colcon build --symlink-install
 
 
+#
+# fix broken package.xml in test_pluginlib that crops up if/when rosdep is run again
+#
+#   Error(s) in package '/opt/ros/foxy/build/pluginlib/prefix/share/test_pluginlib/package.xml':
+#   Package 'test_pluginlib' must declare at least one maintainer
+#   The package node must contain at least one "license" tag
+#
+RUN TEST_PLUGINLIB_PACKAGE="${ROS_ROOT}/build/pluginlib/prefix/share/test_pluginlib/package.xml" && \
+    sed -i '/<\/description>/a <license>BSD<\/license>' $TEST_PLUGINLIB_PACKAGE && \
+    sed -i '/<\/description>/a <maintainer email="michael@openrobotics.org">Michael Carroll<\/maintainer>' $TEST_PLUGINLIB_PACKAGE && \
+    cat $TEST_PLUGINLIB_PACKAGE
+    
+    
 # 
 # setup entrypoint
 #
