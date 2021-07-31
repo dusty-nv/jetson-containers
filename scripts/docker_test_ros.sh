@@ -60,7 +60,7 @@ for DISTRO in ${TO_TEST[@]}; do
 	fi
 	
 	if [[ "$ROS_PYTORCH" == "yes" ]] && [[ "$DISTRO" != "melodic" ]]; then
-		container_tag="ros:$DISTRO-ros-base-pytorch-l4t-r$L4T_VERSION"
+		container_tag="ros:$DISTRO-pytorch-l4t-r$L4T_VERSION"
 		test_ros_version $container_tag
 		test_pytorch $container_tag
 		test_numpy $container_tag

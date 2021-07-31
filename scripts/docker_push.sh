@@ -63,7 +63,8 @@ fi
 
 for ROS_DISTRO in ${ROS_CONTAINERS[@]}; do
 	ros_image="ros:$ROS_DISTRO-ros-base-l4t-r$L4T_VERSION"
-	ros_pytorch_image="ros:$ROS_DISTRO-ros-base-pytorch-l4t-r$L4T_VERSION"
+	ros_pytorch_image="ros:$ROS_DISTRO-pytorch-l4t-r$L4T_VERSION"
+	ros_slam_image="ros:$ROS_DISTRO-slam-l4t-r$L4T_VERSION"
 	
 	push $DOCKERHUB $ros_image
 	

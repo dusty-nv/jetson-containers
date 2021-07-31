@@ -58,8 +58,7 @@ build_ros()
 	local base_image=$3
 	local extra_tag=$4
 	local dockerfile=${5:-"Dockerfile.ros.$distro"}
-	local package_name=`echo $package | tr '_' '-'`
-	local container_tag="ros:${distro}-${package_name}-${extra_tag}l4t-r${L4T_VERSION}"
+	local container_tag="ros:${distro}-${extra_tag}l4t-r${L4T_VERSION}"
 	
 	# opencv.csv mounts files that preclude us installing different version of opencv
 	# temporarily disable the opencv.csv mounts while we build the container
@@ -87,13 +86,13 @@ build_ros()
 
 for DISTRO in ${BUILD_DISTRO[@]}; do
 	for PACKAGE in ${BUILD_PACKAGES[@]}; do
-		build_ros $DISTRO $PACKAGE $BASE_IMAGE
+		build_ros $DISTRO $PACKAGE $BASE_IMAGE "`echo $PACKAGE | tr '_' '-'`-"
 		
 		if [[ "$ROS_PYTORCH" == "on" ]] && [[ "$DISTRO" != "melodic" ]] && [[ "$DISTRO" != "eloquent" ]]; then
 			build_ros $DISTRO $PACKAGE $BASE_IMAGE_PYTORCH "pytorch-"
 			
 			if [[ "$ROS_SLAM" == "on" ]]; then
-				BASE_IMAGE_SLAM="ros:$DISTRO-`echo $PACKAGE | tr '_' '-'`-pytorch-l4t-r$L4T_VERSION"
+				BASE_IMAGE_SLAM="ros:$DISTRO-pytorch-l4t-r$L4T_VERSION"
 				build_ros $DISTRO $PACKAGE $BASE_IMAGE_SLAM "slam-" "Dockerfile.ros.slam"
 			fi
 		fi
