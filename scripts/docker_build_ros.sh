@@ -4,11 +4,12 @@
 #
 # Arguments:
 #
-#    scripts/docker_build_ros.sh <DISTRO> <PACKAGE> <PYTORCH>
+#    scripts/docker_build_ros.sh <DISTRO> <PACKAGE> <PYTORCH> <SLAM>
 #
 #    DISTRO - 'melodic', 'noetic', 'eloquent', 'foxy', 'galactic', or 'all' (default is 'all')
 #    PACKAGE - 'ros_base', 'ros_core', 'desktop' (default is 'ros_base' - 'desktop' may have issues on some distros)
-#    PYTORCH - 'yes' to build the version of the containers with PyTorch support, otherwise 'no' (default is 'yes')
+#    PYTORCH - 'on' to build the version of the containers with PyTorch support, otherwise 'off' (default is 'on')
+#    SLAM - 'on' to build the version of the containers with ORBSLAM2+RTABMAP, otherwise 'off' (default is 'on')
 #
 set -e
 
@@ -19,7 +20,8 @@ SUPPORTED_ROS_PACKAGES=("ros_base" "ros_core" "desktop")
 
 ROS_DISTRO=${1:-"all"}
 ROS_PACKAGE=${2:-"ros_base"}
-ROS_PYTORCH=${3:-"yes"}
+ROS_PYTORCH=${3:-"on"}
+ROS_SLAM=${4:-"on"}
 
 echo "Building containers for $ROS_DISTRO..."
 
@@ -55,6 +57,7 @@ build_ros()
 	local package=$2
 	local base_image=$3
 	local extra_tag=$4
+	local dockerfile=${5:-"Dockerfile.ros.$distro"}
 	local package_name=`echo $package | tr '_' '-'`
 	local container_tag="ros:${distro}-${package_name}-${extra_tag}l4t-r${L4T_VERSION}"
 	
@@ -71,7 +74,7 @@ build_ros()
 	echo "BASE_IMAGE=$base_image"
 	echo ""
 	
-	sh ./scripts/docker_build.sh $container_tag Dockerfile.ros.$distro \
+	sh ./scripts/docker_build.sh $container_tag $dockerfile \
 			--build-arg ROS_PKG=$package \
 			--build-arg BASE_IMAGE=$base_image
 			
@@ -86,8 +89,13 @@ for DISTRO in ${BUILD_DISTRO[@]}; do
 	for PACKAGE in ${BUILD_PACKAGES[@]}; do
 		build_ros $DISTRO $PACKAGE $BASE_IMAGE
 		
-		if [[ "$ROS_PYTORCH" == "yes" ]] && [[ "$DISTRO" != "melodic" ]] && [[ "$DISTRO" != "eloquent" ]]; then
+		if [[ "$ROS_PYTORCH" == "on" ]] && [[ "$DISTRO" != "melodic" ]] && [[ "$DISTRO" != "eloquent" ]]; then
 			build_ros $DISTRO $PACKAGE $BASE_IMAGE_PYTORCH "pytorch-"
+			
+			if [[ "$ROS_SLAM" == "on" ]]; then
+				BASE_IMAGE_SLAM="ros:$DISTRO-`echo $PACKAGE | tr '_' '-'`-pytorch-l4t-r$L4T_VERSION"
+				build_ros $DISTRO $PACKAGE $BASE_IMAGE_SLAM "slam-" "Dockerfile.ros.slam"
+			fi
 		fi
 	done
 done
