@@ -84,9 +84,10 @@ RUN git clone https://github.com/dusty-nv/ORB_SLAM2_CUDA ${ORB_SLAM2_ROOT_DIR} &
 # ros2_orbslam
 RUN source ${ROS_ENVIRONMENT} && \
     cd ${ROS_ROOT} && \
-    git clone https://github.com/alsora/ros2-ORB_SLAM2 src/ros2-ORB_SLAM2 && \
+    mkdir src/slam && \
+    git clone https://github.com/alsora/ros2-ORB_SLAM2 src/slam/ros2-ORB_SLAM2 && \
     colcon build \
-	  --packages-select ros2_orbslam \
+	  --base-paths src/slam \
 	  --cmake-args -DCMAKE_CXX_FLAGS=-isystem\ /usr/local/cuda/include \
 	  --event-handlers console_direct+ \
 	  --symlink-install
@@ -167,18 +168,18 @@ RUN source ${ROS_ENVIRONMENT} && \
 		rviz_default_plugins \
 	> ros2.${ROS_DISTRO}.rtabmap.rosinstall && \
     cat ros2.${ROS_DISTRO}.rtabmap.rosinstall && \
-    vcs import src < ros2.${ROS_DISTRO}.rtabmap.rosinstall && \
+    vcs import src/slam < ros2.${ROS_DISTRO}.rtabmap.rosinstall && \
     apt-get update && \
-    rosdep install --from-paths src --ignore-src --rosdistro ${ROS_DISTRO} -y --skip-keys "Pangolin libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv" && \
+    rosdep install --from-paths src/slam --ignore-src --rosdistro ${ROS_DISTRO} -y --skip-keys "Pangolin libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv" && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean && \
-    colcon build --symlink-install
+    colcon build --symlink-install --base-paths src/slam
 
 # build rtabmap_ros, but first patch it to import tf2_geometry_msgs correctly
 RUN source ${ROS_ENVIRONMENT} && \
+    printenv && \
     cd ${ROS_ROOT} && \
-    git clone --branch ros2 https://github.com/introlab/rtabmap_ros.git src/rtabmap_ros && \
-    sed -i '/find_package(tf2_ros REQUIRED)/a find_package(tf2_geometry_msgs REQUIRED)' src/rtabmap_ros/CMakeLists.txt && \
-    sed -i '/   tf2_ros/a tf2_geometry_msgs' src/rtabmap_ros/CMakeLists.txt && \
-    cat src/rtabmap_ros/CMakeLists.txt && \
-    colcon build --symlink-install --packages-select rtabmap_ros --event-handlers console_direct+
+    git clone --branch ros2 https://github.com/introlab/rtabmap_ros.git src/slam/rtabmap_ros && \
+    sed -i '/find_package(tf2_ros REQUIRED)/a find_package(tf2_geometry_msgs REQUIRED)' src/slam/rtabmap_ros/CMakeLists.txt && \
+    sed -i '/   tf2_ros/a tf2_geometry_msgs' src/slam/rtabmap_ros/CMakeLists.txt && \
+    colcon build --symlink-install --base-paths src/slam --event-handlers console_direct+
