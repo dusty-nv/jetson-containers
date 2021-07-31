@@ -169,7 +169,7 @@ RUN source ${ROS_ENVIRONMENT} && \
     cat ros2.${ROS_DISTRO}.rtabmap.rosinstall && \
     vcs import src < ros2.${ROS_DISTRO}.rtabmap.rosinstall && \
     apt-get update && \
-    rosdep install --from-paths src --ignore-src --rosdistro ${ROS_DISTRO} -y --skip-keys "libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv" && \
+    rosdep install --from-paths src --ignore-src --rosdistro ${ROS_DISTRO} -y --skip-keys "Pangolin libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv" && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean && \
     colcon build --symlink-install
