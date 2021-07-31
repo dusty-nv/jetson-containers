@@ -71,4 +71,8 @@ for ROS_DISTRO in ${ROS_CONTAINERS[@]}; do
 	if [[ "$(sudo docker images -q $ros_pytorch_image 2> /dev/null)" != "" ]]; then
 		push $DOCKERHUB $ros_pytorch_image
 	fi
+	
+	if [[ "$(sudo docker images -q $ros_slam_image 2> /dev/null)" != "" ]]; then
+		push $DOCKERHUB $ros_slam_image
+	fi
 done
