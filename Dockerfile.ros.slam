@@ -1,5 +1,5 @@
 #
-# ROS2 with ORBSLAM2 and RTABMap
+# ROS2 with ORBSLAM2, RTABMap, ZED, and Realsense2
 #
 ARG BASE_IMAGE=dustynv/ros:foxy-ros-base-pytorch-l4t-r32.5.0
 FROM ${BASE_IMAGE}
@@ -161,11 +161,18 @@ RUN git clone https://github.com/introlab/rtabmap.git /opt/rtabmap && \
 RUN source ${ROS_ENVIRONMENT} && \
     cd ${ROS_ROOT} && \
     rosinstall_generator --deps --exclude-path ${ROS_ROOT}/src --rosdistro ${ROS_DISTRO} \
+          octomap \
+		nav2_common \
 		laser_geometry \
 		pcl_conversions \
 		rviz_common \
 		rviz_rendering \
 		rviz_default_plugins \
+		realsense2_camera \
+		realsense2_description \
+		diagnostic_updater \
+		compressed_image_transport \
+		compressed_depth_image_transport \
 	> ros2.${ROS_DISTRO}.rtabmap.rosinstall && \
     cat ros2.${ROS_DISTRO}.rtabmap.rosinstall && \
     vcs import src/slam < ros2.${ROS_DISTRO}.rtabmap.rosinstall && \
@@ -177,9 +184,37 @@ RUN source ${ROS_ENVIRONMENT} && \
 
 # build rtabmap_ros, but first patch it to import tf2_geometry_msgs correctly
 RUN source ${ROS_ENVIRONMENT} && \
-    printenv && \
     cd ${ROS_ROOT} && \
     git clone --branch ros2 https://github.com/introlab/rtabmap_ros.git src/slam/rtabmap_ros && \
     sed -i '/find_package(tf2_ros REQUIRED)/a find_package(tf2_geometry_msgs REQUIRED)' src/slam/rtabmap_ros/CMakeLists.txt && \
     sed -i '/   tf2_ros/a tf2_geometry_msgs' src/slam/rtabmap_ros/CMakeLists.txt && \
-    colcon build --symlink-install --base-paths src/slam --event-handlers console_direct+
+    apt-get update && \
+    rosdep install --from-paths src/slam --ignore-src --rosdistro ${ROS_DISTRO} -y --skip-keys "rtabmap find_object_2d Pangolin libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv" && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get clean && \
+    colcon build --symlink-install --base-paths src/slam/rtabmap_ros --event-handlers console_direct+
+
+#
+# ZED SDK / zed-ros2-wrapper
+# https://github.com/stereolabs/zed-docker/blob/master/3.X/jetpack_4.X/devel/Dockerfile
+#
+ARG ZED_SDK_URL="https://download.stereolabs.com/zedsdk/3.5/jp45/jetsons"
+ARG ZED_SDK_RUN="ZED_SDK_Linux_JP.run"
+
+RUN cd /tmp && \
+    wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${ZED_SDK_URL} -O ${ZED_SDK_RUN} && \
+    chmod +x ${ZED_SDK_RUN} && \
+    ./${ZED_SDK_RUN} silent skip_tools && \
+    rm -rf /usr/local/zed/resources/* && \
+    rm -rf ${ZED_SDK_RUN} && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get clean
+    
+RUN source ${ROS_ENVIRONMENT} && \
+    cd ${ROS_ROOT} && \
+    git clone https://github.com/stereolabs/zed-ros2-wrapper src/slam/zed-ros2-wrapper && \
+    apt-get update && \
+    rosdep install --from-paths src/slam --ignore-src --rosdistro ${ROS_DISTRO} -y --skip-keys "rtabmap find_object_2d Pangolin libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv" && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get clean && \
+    colcon build --symlink-install --base-paths src/slam/zed-ros2-wrapper --cmake-args=-DCMAKE_BUILD_TYPE=Release
