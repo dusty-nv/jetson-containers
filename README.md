@@ -111,7 +111,7 @@ $ ./scripts/docker_build_ros.sh --distro foxy      # build only foxy
 $ ./scripts/docker_build_ros.sh --distro galactic  # build only galactic
 ```
 
-Note that Noetic, Foxy, and Galactic are built from source for Ubuntu 18.04, while Melodic and Eloquent are installed from Debian packages into the containers.
+You can also specify `--with-pytorch` and `--with-slam` to build variants with support for PyTorch and GPU-accelerated SLAM nodes (including ORBSLAM2 and RTABMAP).  Note that Noetic, Foxy, and Galactic are built from source for Ubuntu 18.04, while Melodic and Eloquent are installed from Debian packages into the containers.
 
 ## Testing the Containers
 
