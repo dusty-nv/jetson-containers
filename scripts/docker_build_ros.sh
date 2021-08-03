@@ -1,29 +1,122 @@
 #!/usr/bin/env bash
 #
 # Builds ROS container(s) by installing packages or from source (when needed)
+# See help text below or run './scripts/docker_build_ros.sh --help' for options
 #
-# Arguments:
-#
-#    scripts/docker_build_ros.sh <DISTRO> <PACKAGE> <PYTORCH> <SLAM>
-#
-#    DISTRO - 'melodic', 'noetic', 'eloquent', 'foxy', 'galactic', or 'all' (default is 'all')
-#    PACKAGE - 'ros_base', 'ros_core', 'desktop' (default is 'ros_base' - 'desktop' may have issues on some distros)
-#    PYTORCH - 'on' to build the version of the containers with PyTorch support, otherwise 'off' (default is 'on')
-#    SLAM - 'on' to build the version of the containers with ORBSLAM2+RTABMAP, otherwise 'off' (default is 'on')
-#
+
 set -e
 
+show_help() {
+    echo " "
+    echo "usage: Builds various ROS Docker containers for Jetson / JetPack-L4T"
+    echo " "
+    echo "   ./scripts/docker_build_ros.sh --distro DISTRO"
+    echo "                                 --package PACKAGE"
+    echo "                                 --with-pytorch"
+    echo "                                 --with-slam"
+    echo " "
+    echo "args:"
+    echo " "
+    echo "   --help                       Show this help text and quit"
+    echo " "
+    echo "   --distro DISTRO Specifies the ROS distro to build, one of:"
+    echo "                   'melodic', 'noetic', 'eloquent', 'foxy', 'galactic'"
+    echo "                   Or the default of 'all' will build all distros."
+    echo " "
+    echo "   --package PKG   Specifies the ROS meta-package to install, one of:"
+    echo "                   'ros_base', 'ros_core', 'desktop', 'all'"
+    echo "                   The default is 'ros_base'.  Note that 'desktop' may"
+    echo "                   have issues on some distros that are built from source."
+    echo " "
+    echo "   --with-pytorch  Builds additional container with PyTorch support."
+    echo "                   This only applies to noetic, foxy, and galactic."
+    echo " "
+    echo "   --with-slam     Builds additional container with VSLAM packages,"
+    echo "                   including ORBSLAM2, RTABMAP, ZED, and Realsense."
+    echo "                   This only applies to foxy and galactic and implies"
+    echo "                   --with-pytorch as these containers use PyTorch."
+    echo " "
+}
+
+die() {
+    printf '%s\n' "$1"
+    show_help
+    exit 1
+}
+
+# determine the L4T version
 source scripts/docker_base.sh
 
+# define default options
 SUPPORTED_ROS_DISTROS=("melodic" "noetic" "eloquent" "foxy" "galactic")
 SUPPORTED_ROS_PACKAGES=("ros_base" "ros_core" "desktop")
 
-ROS_DISTRO=${1:-"all"}
-ROS_PACKAGE=${2:-"ros_base"}
-ROS_PYTORCH=${3:-"on"}
-ROS_SLAM=${4:-"on"}
+ROS_DISTRO="all"
+ROS_PACKAGE="ros_base"
 
-echo "Building containers for $ROS_DISTRO..."
+WITH_PYTORCH="off"
+WITH_SLAM="off"
+
+# parse options
+while :; do
+    case $1 in
+        -h|-\?|--help)
+            show_help
+            exit
+            ;;
+        --distro)    # Takes an option argument; ensure it has been specified.
+            if [ "$2" ]; then
+                ROS_DISTRO=$2
+                shift
+            else
+                die 'ERROR: "--distro" requires a non-empty option argument.'
+            fi
+            ;;
+        --distro=?*)
+            ROS_DISTRO=${1#*=} # Delete everything up to "=" and assign the remainder.
+            ;;
+        --distror=)         # Handle the case of an empty --distro=
+            die 'ERROR: "--distro" requires a non-empty option argument.'
+            ;;
+	   --package)
+            if [ "$2" ]; then
+                ROS_PACKAGE=$2
+                shift
+            else
+                die 'ERROR: "--package" requires a non-empty option argument.'
+            fi
+            ;;
+        --package=?*)
+            ROS_PACKAGE=${1#*=}
+            ;;
+        --package=)         # Handle the case of an empty --distro=
+            die 'ERROR: "--package" requires a non-empty option argument.'
+            ;;
+	   --with-pytorch)
+            WITH_PYTORCH="on"
+            ;;
+	   --with-slam)
+		  WITH_PYTORCH="on"
+            WITH_SLAM="on"
+            ;;
+        --)              # End of all options.
+            shift
+            break
+            ;;
+        -?*)
+            printf 'WARN: Unknown option (ignored): %s\n' "$1" >&2
+            ;;
+        *)               # Default case: No more options, so break out of the loop.
+            break
+    esac
+
+    shift
+done
+
+echo "ROS_DISTRO:   $ROS_DISTRO"
+echo "ROS_PACKAGE:  $ROS_PACKAGE"
+echo "WITH_PYTORCH: $WITH_PYTORCH"
+echo "WITH_SLAM:    $WITH_SLAM"
 
 if [[ "$ROS_DISTRO" == "all" ]]; then
 	BUILD_DISTRO=${SUPPORTED_ROS_DISTROS[@]}
@@ -88,13 +181,13 @@ for DISTRO in ${BUILD_DISTRO[@]}; do
 	for PACKAGE in ${BUILD_PACKAGES[@]}; do
 		build_ros $DISTRO $PACKAGE $BASE_IMAGE "`echo $PACKAGE | tr '_' '-'`-"
 		
-		if [[ "$ROS_PYTORCH" == "on" ]] && [[ "$DISTRO" != "melodic" ]] && [[ "$DISTRO" != "eloquent" ]]; then
+		if [[ "$WITH_PYTORCH" == "on" ]] && [[ "$DISTRO" != "melodic" ]] && [[ "$DISTRO" != "eloquent" ]]; then
 			build_ros $DISTRO $PACKAGE $BASE_IMAGE_PYTORCH "pytorch-"
-			
-			if [[ "$ROS_SLAM" == "on" ]] && [[ "$DISTRO" == "foxy" ]] || [[ "$DISTRO" != "galactic" ]]; then
-				BASE_IMAGE_SLAM="ros:$DISTRO-pytorch-l4t-r$L4T_VERSION"
-				build_ros $DISTRO $PACKAGE $BASE_IMAGE_SLAM "slam-" "Dockerfile.ros.slam"
-			fi
+		fi
+		
+		if [[ "$WITH_SLAM" == "on" ]] && [[ "$DISTRO" == "foxy" ]] || [[ "$DISTRO" == "galactic" ]]; then
+			BASE_IMAGE_SLAM="ros:$DISTRO-pytorch-l4t-r$L4T_VERSION"
+			build_ros $DISTRO $PACKAGE $BASE_IMAGE_SLAM "slam-" "Dockerfile.ros.slam"
 		fi
 	done
 done
