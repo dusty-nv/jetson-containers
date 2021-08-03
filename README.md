@@ -100,17 +100,18 @@ Note that the TensorFlow and PyTorch pip wheel installers for aarch64 are automa
 
 ### ROS Containers
 
-To build the ROS containers, use [`scripts/docker_build_ros.sh`](scripts/docker_build_ros.sh) with the name of the ROS distro to build:
+To build the ROS containers, use [`scripts/docker_build_ros.sh`](scripts/docker_build_ros.sh) with the `--distro` option to specify the name of the ROS distro to build:
 
 ``` bash
-$ ./scripts/docker_build_ros.sh all       # build all: melodic, noetic, eloquent, foxy
-$ ./scripts/docker_build_ros.sh melodic   # build only melodic
-$ ./scripts/docker_build_ros.sh noetic    # build only noetic
-$ ./scripts/docker_build_ros.sh eloquent  # build only eloquent
-$ ./scripts/docker_build_ros.sh foxy      # build only foxy
+$ ./scripts/docker_build_ros.sh --distro all       # build all of the below (default)
+$ ./scripts/docker_build_ros.sh --distro melodic   # build only melodic
+$ ./scripts/docker_build_ros.sh --distro noetic    # build only noetic
+$ ./scripts/docker_build_ros.sh --distro eloquent  # build only eloquent
+$ ./scripts/docker_build_ros.sh --distro foxy      # build only foxy
+$ ./scripts/docker_build_ros.sh --distro galactic  # build only galactic
 ```
 
-Note that ROS Noetic and ROS2 Foxy are built from source for Ubuntu 18.04, while ROS Melodic and ROS2 Eloquent are installed from Debian packages into the containers.
+Note that Noetic, Foxy, and Galactic are built from source for Ubuntu 18.04, while Melodic and Eloquent are installed from Debian packages into the containers.
 
 ## Testing the Containers
 
