@@ -84,14 +84,17 @@ RUN git clone https://github.com/dusty-nv/ORB_SLAM2_CUDA ${ORB_SLAM2_ROOT_DIR} &
 # ros2_orbslam
 RUN source ${ROS_ENVIRONMENT} && \
     cd ${ROS_ROOT} && \
-    mkdir src/slam && \
+    mkdir -p src/slam && \
     git clone https://github.com/alsora/ros2-ORB_SLAM2 src/slam/ros2-ORB_SLAM2 && \
     colcon build \
 	  --base-paths src/slam \
 	  --cmake-args -DCMAKE_CXX_FLAGS=-isystem\ /usr/local/cuda/include \
 	  --event-handlers console_direct+ \
-	  --symlink-install
-
+	  --merge-install \
+    && rm -rf ${ROS_ROOT}/src \
+    && rm -rf ${ROS_ROOT}/logs \
+    && rm -rf ${ROS_ROOT}/build 
+    
     
 #
 # rtabmap - https://github.com/introlab/rtabmap_ros/tree/ros2
@@ -159,8 +162,12 @@ RUN git clone https://github.com/introlab/rtabmap.git /opt/rtabmap && \
 # since rtabmap_ros is an 'unreleased' package for ros2, manually pull it's dependencies from
 # https://github.com/introlab/rtabmap_ros/blob/dfdbe1f68314e851e017c8af3788b17518a5000b/package.xml#L24
 RUN source ${ROS_ENVIRONMENT} && \
+    export ROS_PACKAGE_PATH=${AMENT_PREFIX_PATH} && \
     cd ${ROS_ROOT} && \
-    rosinstall_generator --deps --exclude-path ${ROS_ROOT}/src --rosdistro ${ROS_DISTRO} \
+    mkdir -p src/slam && \
+    
+    # download sources for dependency packages
+    rosinstall_generator --deps --exclude RPP --rosdistro ${ROS_DISTRO} \
           octomap \
 		nav2_common \
 		laser_geometry \
@@ -176,23 +183,57 @@ RUN source ${ROS_ENVIRONMENT} && \
 	> ros2.${ROS_DISTRO}.rtabmap.rosinstall && \
     cat ros2.${ROS_DISTRO}.rtabmap.rosinstall && \
     vcs import src/slam < ros2.${ROS_DISTRO}.rtabmap.rosinstall && \
+    
+    # install apt/deb dependencies using rosdep
     apt-get update && \
-    rosdep install --from-paths src/slam --ignore-src --rosdistro ${ROS_DISTRO} -y --skip-keys "Pangolin libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv" && \
+    rosdep install -y \
+       --ignore-src \
+       --from-paths src/slam \
+	  --rosdistro ${ROS_DISTRO} \
+	  --skip-keys "rtabmap find_object_2d Pangolin libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv" && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean && \
-    colcon build --symlink-install --base-paths src/slam
-
+    
+    # build the dependency packages
+    colcon build --merge-install --base-paths src/slam && \
+	  
+    # clean-up build files
+    rm -rf ${ROS_ROOT}/src && \
+    rm -rf ${ROS_ROOT}/logs && \
+    rm -rf ${ROS_ROOT}/build && \
+    rm ${ROS_ROOT}/*.rosinstall
+    
 # build rtabmap_ros, but first patch it to import tf2_geometry_msgs correctly
 RUN source ${ROS_ENVIRONMENT} && \
     cd ${ROS_ROOT} && \
+    mkdir -p src/slam && \
+    
+    # download and patch source
     git clone --branch ros2 https://github.com/introlab/rtabmap_ros.git src/slam/rtabmap_ros && \
     sed -i '/find_package(tf2_ros REQUIRED)/a find_package(tf2_geometry_msgs REQUIRED)' src/slam/rtabmap_ros/CMakeLists.txt && \
     sed -i '/   tf2_ros/a tf2_geometry_msgs' src/slam/rtabmap_ros/CMakeLists.txt && \
+    
+    # install apt/deb dependencies using rosdep
     apt-get update && \
-    rosdep install --from-paths src/slam --ignore-src --rosdistro ${ROS_DISTRO} -y --skip-keys "rtabmap find_object_2d Pangolin libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv" && \
+    rosdep install -y \
+    	  --ignore-src \
+       --from-paths src/slam \
+	  --rosdistro ${ROS_DISTRO} \
+	  --skip-keys "rtabmap find_object_2d Pangolin libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv" && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean && \
-    colcon build --symlink-install --base-paths src/slam/rtabmap_ros --event-handlers console_direct+
+    
+    # build the node
+    colcon build \
+       --merge-install \
+	  --base-paths src/slam/rtabmap_ros \
+	  --event-handlers console_direct+ && \
+
+    # clean-up build files
+    rm -rf ${ROS_ROOT}/src && \
+    rm -rf ${ROS_ROOT}/logs && \
+    rm -rf ${ROS_ROOT}/build 
+	  
 
 #
 # ZED SDK / zed-ros2-wrapper
@@ -212,9 +253,26 @@ RUN cd /tmp && \
     
 RUN source ${ROS_ENVIRONMENT} && \
     cd ${ROS_ROOT} && \
-    git clone https://github.com/stereolabs/zed-ros2-wrapper src/slam/zed-ros2-wrapper && \
+    mkdir -p src/slam && \
+    git clone https://github.com/dusty-nv/zed-ros2-wrapper src/slam/zed-ros2-wrapper && \
+    
+    # install apt/deb dependencies using rosdep
     apt-get update && \
-    rosdep install --from-paths src/slam --ignore-src --rosdistro ${ROS_DISTRO} -y --skip-keys "rtabmap find_object_2d Pangolin libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv" && \
+    rosdep install -y \
+    	  --ignore-src \
+       --from-paths src/slam \
+	  --rosdistro ${ROS_DISTRO} \
+	  --skip-keys "rtabmap find_object_2d Pangolin libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv" && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean && \
-    colcon build --symlink-install --base-paths src/slam/zed-ros2-wrapper --cmake-args=-DCMAKE_BUILD_TYPE=Release
+    
+    # build the node
+    colcon build \
+       --merge-install \
+	  --base-paths src/slam/zed-ros2-wrapper \
+	  --cmake-args=-DCMAKE_BUILD_TYPE=Release && \
+	  
+    # clean-up build files
+    rm -rf ${ROS_ROOT}/src && \
+    rm -rf ${ROS_ROOT}/logs && \
+    rm -rf ${ROS_ROOT}/build
