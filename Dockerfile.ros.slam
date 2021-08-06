@@ -254,7 +254,7 @@ RUN cd /tmp && \
 RUN source ${ROS_ENVIRONMENT} && \
     cd ${ROS_ROOT} && \
     mkdir -p src/slam && \
-    git clone https://github.com/dusty-nv/zed-ros2-wrapper src/slam/zed-ros2-wrapper && \
+    git clone https://github.com/stereolabs/zed-ros2-wrapper src/slam/zed-ros2-wrapper && \
     
     # install apt/deb dependencies using rosdep
     apt-get update && \
