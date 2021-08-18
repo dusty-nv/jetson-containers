@@ -86,13 +86,14 @@ COPY --from=pytorch /usr/local/lib/python3.6/dist-packages/ /usr/local/lib/pytho
 #
 # python pip packages
 #
-RUN pip3 install --no-cache-dir --ignore-installed pybind11 
-RUN pip3 install --no-cache-dir --verbose onnx
-RUN pip3 install --no-cache-dir --verbose scipy
-RUN pip3 install --no-cache-dir --verbose scikit-learn
-RUN pip3 install --no-cache-dir --verbose pandas
-RUN pip3 install --no-cache-dir --verbose pycuda
-RUN pip3 install --no-cache-dir --verbose numba
+RUN pip3 install --no-cache-dir --ignore-installed pybind11 && \
+    pip3 install --no-cache-dir --verbose onnx && \
+    pip3 install --no-cache-dir --verbose scipy && \
+    pip3 install --no-cache-dir --verbose scikit-learn && \
+    pip3 install --no-cache-dir --verbose pandas && \
+    pip3 install --no-cache-dir --verbose pycuda && \
+    pip3 install --no-cache-dir --verbose colorama && \
+    pip3 install --no-cache-dir --verbose numba
 
 
 #
