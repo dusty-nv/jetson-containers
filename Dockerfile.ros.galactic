@@ -64,6 +64,7 @@ RUN apt-get update && \
 		gazebo9 \
 		gazebo9-common \
 		gazebo9-plugin-base \
+		autoconf \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
@@ -110,8 +111,19 @@ RUN apt-get purge -y '*opencv*' || echo "previous OpenCV installation not found"
 #
 RUN mkdir -p ${ROS_ROOT}/src && \
     cd ${ROS_ROOT} && \
+
+    # install sdl2_vendor dependencies
+    wget https://www.libsdl.org/release/SDL2-2.0.14.tar.gz && \
+    tar xf SDL2-2.0.14.tar.gz && \
+    cd SDL2-2.0.14  && \
+    ./autogen.sh && \
+    ./configure && \
+    make -j$(nproc) && \
+    make install && \
+    ldconfig && \
     
     # https://answers.ros.org/question/325245/minimal-ros2-installation/?answer=325249#post-id-325249
+    cd ${ROS_ROOT} && \
     rosinstall_generator --deps --rosdistro ${ROS_DISTRO} ${ROS_PKG} \
 		launch_xml \
 		launch_yaml \
