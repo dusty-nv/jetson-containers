@@ -36,6 +36,7 @@ RUN apt-get update && \
             openmpi-bin \
             openmpi-common \
 		  gfortran \
+		  libomp-dev \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
@@ -80,10 +81,49 @@ RUN git clone -b ${TORCHVISION_VERSION} https://github.com/pytorch/vision torchv
     cd torchvision && \
     python3 setup.py install && \
     cd ../ && \
-    rm -rf torchvision && \
-    pip3 install --no-cache-dir "${PILLOW_VERSION}"
+    rm -rf torchvision
+
+# note:  this was used on older torchvision versions (~0.4) to workaround a bug,
+#        but has since started causing another bug as of torchvision 0.11.1    
+# pip3 install --no-cache-dir "${PILLOW_VERSION}"
 
 
+# 
+# upgrade cmake - https://stackoverflow.com/a/56690743
+# this is needed for newer versions of torchaudio (>= v0.10)
+#
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+		  software-properties-common \
+		  apt-transport-https \
+		  ca-certificates \
+		  gnupg \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+		  
+# typically --only-upgrade is used in the apt install command below,
+# but cmake wasn't previously installed in this container		  
+RUN wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | apt-key add - && \
+    apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main' && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+            cmake \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+    
+RUN cmake --version
+
+# patch for https://github.com/pytorch/pytorch/issues/45323
+ARG TORCH_CMAKE_CONFIG=/usr/local/lib/python3.6/dist-packages/torch/share/cmake/Torch/TorchConfig.cmake
+
+RUN echo "patching _GLIBCXX_USE_CXX11_ABI in ${TORCH_CMAKE_CONFIG}" && \
+    echo "contents of ${TORCH_CMAKE_CONFIG} before patching..." && \
+    cat ${TORCH_CMAKE_CONFIG} && \
+    sed -i 's/  set(TORCH_CXX_FLAGS "-D_GLIBCXX_USE_CXX11_ABI=")/  set(TORCH_CXX_FLAGS "-D_GLIBCXX_USE_CXX11_ABI=0")/g' ${TORCH_CMAKE_CONFIG} && \
+    echo "contents of ${TORCH_CMAKE_CONFIG} after patching..." && \
+    cat ${TORCH_CMAKE_CONFIG}
+
+    
 #
 # torchaudio
 #
@@ -92,18 +132,19 @@ ARG TORCHAUDIO_VERSION
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
 		  cmake \
-		  sox \
-		  libsox-dev \
-		  libsox-fmt-all \
+		  pkg-config \
+		  libffi-dev \
+		  libsndfile1 \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
 RUN pip3 install --no-cache-dir scikit-build && \
-    pip3 install --no-cache-dir ninja
+    pip3 install --no-cache-dir ninja && \
+    pip3 install --no-cache-dir --verbose pysoundfile
     
 RUN git clone --recursive -b ${TORCHAUDIO_VERSION} https://github.com/pytorch/audio torchaudio && \
     cd torchaudio && \
-    python3 setup.py install && \
+    BUILD_SOX=1 python3 setup.py install && \
     cd ../ && \
     rm -rf torchaudio
 

@@ -46,29 +46,31 @@ RUN printenv
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
           python3-pip \
-		  python3-dev \
-          python3-matplotlib \
-		  build-essential \
-		  gfortran \
-		  git \
-		  cmake \
-		  curl \
-		  libopenblas-dev \
-		  liblapack-dev \
-		  libblas-dev \
-		  libhdf5-serial-dev \
-		  hdf5-tools \
-		  libhdf5-dev \
-		  zlib1g-dev \
-		  zip \
-		  libjpeg8-dev \
-		  libopenmpi2 \
-          openmpi-bin \
-          openmpi-common \
-		  protobuf-compiler \
-          libprotoc-dev \
+		python3-dev \
+		python3-matplotlib \
+		build-essential \
+		gfortran \
+		git \
+		cmake \
+		curl \
+		libopenblas-dev \
+		liblapack-dev \
+		libblas-dev \
+		libhdf5-serial-dev \
+		hdf5-tools \
+		libhdf5-dev \
+		zlib1g-dev \
+		zip \
+		libjpeg8-dev \
+		libopenmpi2 \
+		openmpi-bin \
+		openmpi-common \
+		protobuf-compiler \
+		libprotoc-dev \
 		llvm-9 \
-          llvm-9-dev \
+		llvm-9-dev \
+		libffi-dev \
+		libsndfile1 \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
