@@ -181,11 +181,11 @@ for DISTRO in ${BUILD_DISTRO[@]}; do
 	for PACKAGE in ${BUILD_PACKAGES[@]}; do
 		build_ros $DISTRO $PACKAGE $BASE_IMAGE "`echo $PACKAGE | tr '_' '-'`-"
 		
-		if [[ "$WITH_PYTORCH" == "on" ]] && [[ "$DISTRO" != "melodic" ]] && [[ "$DISTRO" != "eloquent" ]]; then
+		if [[ "$WITH_PYTORCH" == "on" && "$DISTRO" != "melodic" && "$DISTRO" != "eloquent" ]]; then
 			build_ros $DISTRO $PACKAGE $BASE_IMAGE_PYTORCH "pytorch-"
 		fi
 		
-		if [[ "$WITH_SLAM" == "on" ]] && [[ "$DISTRO" == "foxy" ]] || [[ "$DISTRO" == "galactic" ]]; then
+		if [[ "$WITH_SLAM" == "on" && ("$DISTRO" == "foxy" || "$DISTRO" == "galactic") ]]; then
 			BASE_IMAGE_SLAM="ros:$DISTRO-pytorch-l4t-r$L4T_VERSION"
 			build_ros $DISTRO $PACKAGE $BASE_IMAGE_SLAM "slam-" "Dockerfile.ros.slam"
 		fi
