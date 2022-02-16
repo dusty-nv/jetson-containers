@@ -104,7 +104,31 @@ RUN apt-get purge -y '*opencv*' || echo "previous OpenCV installation not found"
     cp -r /usr/include/opencv4 /usr/local/include/opencv4 && \
     cp -r /usr/lib/python3.6/dist-packages/cv2 /usr/local/lib/python3.6/dist-packages/cv2
 	
-	
+
+# 
+# upgrade cmake - https://stackoverflow.com/a/56690743
+# this is needed to build some of the ROS2 packages
+#
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+		  software-properties-common \
+		  apt-transport-https \
+		  ca-certificates \
+		  gnupg \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+		  	  
+RUN wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | apt-key add - && \
+    apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main' && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends --only-upgrade \
+            cmake \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+    
+RUN cmake --version
+
+
 # 
 # compile yaml-cpp-0.6, which some ROS packages may use (but is not in the 18.04 apt repo)
 #
@@ -166,7 +190,9 @@ RUN mkdir -p ${ROS_ROOT}/src && \
     apt-get clean && \
 
     # build it!
-    colcon build --merge-install && \
+    colcon build \
+        --merge-install \
+        --cmake-args -DCMAKE_BUILD_TYPE=Release && \
     
     # remove build files
     rm -rf ${ROS_ROOT}/src && \
