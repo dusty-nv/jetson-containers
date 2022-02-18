@@ -76,6 +76,16 @@ RUN apt-get update && \
 
 
 #
+# pull protobuf-cpp from TF container
+#
+ENV PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=cpp
+
+COPY --from=tensorflow /usr/local/bin/protoc /usr/local/bin
+COPY --from=tensorflow /usr/local/lib/libproto* /usr/local/lib/
+COPY --from=tensorflow /usr/local/include/google /usr/local/include/google
+
+
+#
 # python packages from TF/PyTorch containers
 #
 COPY --from=tensorflow /usr/local/lib/python2.7/dist-packages/ /usr/local/lib/python2.7/dist-packages/

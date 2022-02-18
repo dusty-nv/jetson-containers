@@ -118,13 +118,15 @@ build_tensorflow()
 	local tensorflow_url=$1
 	local tensorflow_whl=$2
 	local tensorflow_tag=$3
+	local protobuf_version=$4
 	
 	echo "building TensorFlow $tensorflow_whl, $tensorflow_tag"
 	
 	sh ./scripts/docker_build.sh $tensorflow_tag Dockerfile.tensorflow \
 		--build-arg BASE_IMAGE=$BASE_IMAGE \
 		--build-arg TENSORFLOW_URL=$tensorflow_url \
-		--build-arg TENSORFLOW_WHL=$tensorflow_whl
+		--build-arg TENSORFLOW_WHL=$tensorflow_whl \
+		--build-arg PROTOBUF_VERSION=$protobuf_version
 
 	echo "done building TensorFlow $tensorflow_whl, $tensorflow_tag"
 }
@@ -136,35 +138,41 @@ if [[ "$CONTAINERS" == "tensorflow" || "$CONTAINERS" == "all" ]]; then
 		# TensorFlow 1.15.5 for JetPack 4.6.1
 		build_tensorflow "https://developer.download.nvidia.com/compute/redist/jp/v461/tensorflow/tensorflow-1.15.5+nv22.1-cp36-cp36m-linux_aarch64.whl" \
 					  "tensorflow-1.15.5+nv22.1-cp36-cp36m-linux_aarch64.whl" \
-					  "l4t-tensorflow:r$L4T_VERSION-tf1.15-py3"
+					  "l4t-tensorflow:r$L4T_VERSION-tf1.15-py3" \
+					  "3.19.4"
 
 		# TensorFlow 2.7.0 for JetPack 4.6.1
 		build_tensorflow "https://developer.download.nvidia.com/compute/redist/jp/v461/tensorflow/tensorflow-2.7.0+nv22.1-cp36-cp36m-linux_aarch64.whl" \
 					  "tensorflow-2.7.0+nv22.1-cp36-cp36m-linux_aarch64.whl" \
-					  "l4t-tensorflow:r$L4T_VERSION-tf2.7-py3"
+					  "l4t-tensorflow:r$L4T_VERSION-tf2.7-py3" \
+					  "3.19.4"
 					  
 	elif [[ $L4T_RELEASE -eq 32 ]] && [[ $L4T_REVISION_MAJOR -eq 6 ]]; then
 	
 		# TensorFlow 1.15.5 for JetPack 4.6
 		build_tensorflow "https://nvidia.box.com/shared/static/0e4otnp1pvbo7exwrkermahfrlfe9exo.whl" \
 					  "tensorflow-1.15.5+nv21.7-cp36-cp36m-linux_aarch64.whl" \
-					  "l4t-tensorflow:r$L4T_VERSION-tf1.15-py3"
+					  "l4t-tensorflow:r$L4T_VERSION-tf1.15-py3" \
+					  "3.19.4"
 
 		# TensorFlow 2.5.0 for JetPack 4.6
 		build_tensorflow "https://nvidia.box.com/shared/static/jfbpcioxcb3d3d3wrm1dbtom5aqq5azq.whl" \
 					  "tensorflow-2.5.0+nv21.7-cp36-cp36m-linux_aarch64.whl" \
-					  "l4t-tensorflow:r$L4T_VERSION-tf2.5-py3"
+					  "l4t-tensorflow:r$L4T_VERSION-tf2.5-py3" \
+					  "3.19.4"
 					  
 	else
 		# TensorFlow 1.15.5 for JetPack 4.4/4.5
 		build_tensorflow "https://developer.download.nvidia.com/compute/redist/jp/v45/tensorflow/tensorflow-1.15.5+nv21.6-cp36-cp36m-linux_aarch64.whl" \
 					  "tensorflow-2.5.0+nv21.6-cp36-cp36m-linux_aarch64.whl" \
-					  "l4t-tensorflow:r$L4T_VERSION-tf1.15-py3"
+					  "l4t-tensorflow:r$L4T_VERSION-tf1.15-py3" \
+					  "3.19.4"
 
 		# TensorFlow 2.5.0 for JetPack 4.4/4.5
 		build_tensorflow "https://developer.download.nvidia.com/compute/redist/jp/v45/tensorflow/tensorflow-2.5.0+nv21.6-cp36-cp36m-linux_aarch64.whl" \
 					  "tensorflow-2.5.0+nv21.6-cp36-cp36m-linux_aarch64.whl" \
-					  "l4t-tensorflow:r$L4T_VERSION-tf2.5-py3"
+					  "l4t-tensorflow:r$L4T_VERSION-tf2.5-py3" \
+					  "3.19.4"
 	fi
 fi
 

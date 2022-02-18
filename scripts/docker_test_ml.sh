@@ -90,6 +90,17 @@ test_pytorch()
 	echo -e "done testing container $1 => PyTorch\n"
 }
 
+
+# protobuf tests
+test_protobuf()
+{
+	echo "testing container $1 => protobuf"
+	sh ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r bash test/test_protobuf.sh
+	sh ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_protobuf.py
+	echo -e "done testing container $1 => protobuf\n"
+}
+
+
 # TensorFlow tests
 test_tensorflow()
 {
@@ -134,6 +145,7 @@ test_pytorch_all()
 # TensorFlow tests (all)
 test_tensorflow_all()
 {
+	test_protobuf $1
 	test_tensorflow $1
 	test_tensorrt $1
 	test_cuda $1
@@ -144,6 +156,7 @@ test_tensorflow_all()
 test_all()
 {
 	test_pytorch $1
+	test_protobuf $1
 	test_tensorflow $1
 	test_tensorrt $1
 	test_cuda $1

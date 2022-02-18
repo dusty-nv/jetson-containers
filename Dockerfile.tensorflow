@@ -48,15 +48,68 @@ RUN apt-get update && \
 		  libhdf5-dev \
 		  zlib1g-dev \
 		  zip \
+		  unzip \
 		  libjpeg8-dev \
+		  autoconf \ 
+		  automake \
+		  libtool \
+		  curl \
+		  make \
+		  g++ \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
-
 RUN pip3 install --no-cache-dir setuptools Cython wheel
+
+
+#
+# build protobuf using cpp implementation
+# https://jkjung-avt.github.io/tf-trt-revisited/
+#
+ARG PROTOBUF_VERSION=3.19.4
+ARG PROTOBUF_URL=https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOBUF_VERSION}
+ARG PROTOBUF_DIR=protobuf-python-${PROTOBUF_VERSION}
+ARG PROTOC_DIR=protoc-${PROTOBUF_VERSION}-linux-aarch_64
+ENV PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=cpp
+
+RUN cd /tmp && \
+    wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${PROTOBUF_URL}/$PROTOBUF_DIR.zip && \
+    wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${PROTOBUF_URL}/$PROTOC_DIR.zip && \
+    unzip ${PROTOBUF_DIR}.zip -d ${PROTOBUF_DIR} && \
+    unzip ${PROTOC_DIR}.zip -d ${PROTOC_DIR} && \
+    cp ${PROTOC_DIR}/bin/protoc /usr/local/bin/protoc && \
+    cd ${PROTOBUF_DIR}/protobuf-${PROTOBUF_VERSION} && \
+    ./autogen.sh && \
+    ./configure --prefix=/usr/local && \
+    make -j$(nproc) && \
+    make check -j4 && \
+    make install && \
+    ldconfig && \
+    cd python && \
+    python3 setup.py build --cpp_implementation && \
+    python3 setup.py test --cpp_implementation && \
+    python3 setup.py bdist_wheel --cpp_implementation && \
+    cp dist/*.whl /opt && \
+    pip3 install dist/*.whl && \
+    cd ../../../ && \
+    rm ${PROTOBUF_DIR}.zip && \
+    rm ${PROTOC_DIR}.zip && \
+    rm -rf ${PROTOBUF_DIR} && \
+    rm -rf ${PROTOC_DIR}
+
+#RUN python3 setup.py install --cpp_implementation && \
+#RUN pip3 install protobuf==${PROTOBUF_VERSION} --install-option="--cpp_implementation" --no-cache-dir --verbose 
+    
+RUN pip3 show protobuf && \
+    protoc --version
+
+    
+#
+# install Python TF dependencies
+#
 RUN pip3 install --no-cache-dir --verbose numpy
 RUN H5PY_SETUP_REQUIRES=0 pip3 install --no-cache-dir --verbose h5py==3.1.0
-RUN pip3 install --no-cache-dir --verbose future==0.18.2 mock==3.0.5 keras_preprocessing==1.1.2 keras_applications==1.0.8 gast==0.4.0 futures protobuf pybind11
+RUN pip3 install --no-cache-dir --verbose future==0.18.2 mock==3.0.5 keras_preprocessing==1.1.2 keras_applications==1.0.8 gast==0.4.0 futures pybind11
 
 
 #
@@ -78,6 +131,4 @@ ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
 RUN echo "$PATH" && echo "$LD_LIBRARY_PATH"
 
 RUN pip3 install --no-cache-dir --verbose pycuda six
-
-
 
