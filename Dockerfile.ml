@@ -35,7 +35,9 @@ ENV CUDA_HOME="/usr/local/cuda"
 ENV PATH="/usr/local/cuda/bin:${PATH}"
 ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
 ENV LLVM_CONFIG="/usr/bin/llvm-config-9"
+
 ARG MAKEFLAGS=-j$(nproc) 
+ARG PYTHON3_VERSION=3.8
 
 RUN printenv
 
@@ -89,10 +91,10 @@ COPY --from=tensorflow /usr/local/include/google /usr/local/include/google
 # python packages from TF/PyTorch containers
 #
 COPY --from=tensorflow /usr/local/lib/python2.7/dist-packages/ /usr/local/lib/python2.7/dist-packages/
-COPY --from=tensorflow /usr/local/lib/python3.6/dist-packages/ /usr/local/lib/python3.6/dist-packages/
+COPY --from=tensorflow /usr/local/lib/${PYTHON3_VERSION}/dist-packages/ /usr/local/lib/${PYTHON3_VERSION}/dist-packages/
 
 COPY --from=pytorch /usr/local/lib/python2.7/dist-packages/ /usr/local/lib/python2.7/dist-packages/
-COPY --from=pytorch /usr/local/lib/python3.6/dist-packages/ /usr/local/lib/python3.6/dist-packages/
+COPY --from=pytorch /usr/local/lib/${PYTHON3_VERSION}/dist-packages/ /usr/local/lib/${PYTHON3_VERSION}/dist-packages/
 
 
 #
@@ -110,8 +112,8 @@ RUN pip3 install --no-cache-dir --verbose numba
 #
 # CuPy
 #
-ARG CUPY_VERSION=v9.2.0
-ARG CUPY_NVCC_GENERATE_CODE="arch=compute_53,code=sm_53;arch=compute_62,code=sm_62;arch=compute_72,code=sm_72"
+ARG CUPY_VERSION=v10.2.0
+ARG CUPY_NVCC_GENERATE_CODE="arch=compute_72,code=sm_72;arch=compute_87,code=sm_87"
 
 RUN git clone -b ${CUPY_VERSION} --recursive https://github.com/cupy/cupy cupy && \
     cd cupy && \
@@ -125,10 +127,11 @@ RUN git clone -b ${CUPY_VERSION} --recursive https://github.com/cupy/cupy cupy &
 # install OpenCV (with CUDA)
 # note:  do this after numba, because this installs TBB and numba complains about old TBB
 #
-ARG OPENCV_URL=https://nvidia.box.com/shared/static/5v89u6g5rb62fpz4lh0rz531ajo2t5ef.gz
+ARG OPENCV_URL=https://nvidia.box.com/shared/static/2hssa5g3v28ozvo3tc3qwxmn78yerca9.gz
 ARG OPENCV_DEB=OpenCV-4.5.0-aarch64.tar.gz
 
-RUN mkdir opencv && \
+RUN apt-get purge -y '*opencv*' || echo "previous OpenCV installation not found" && \
+    mkdir opencv && \
     cd opencv && \
     wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${OPENCV_URL} -O ${OPENCV_DEB} && \
     tar -xzvf ${OPENCV_DEB} && \
@@ -141,7 +144,7 @@ RUN mkdir opencv && \
     cd ../ && \
     rm -rf opencv && \
     cp -r /usr/include/opencv4 /usr/local/include/opencv4 && \
-    cp -r /usr/lib/python3.6/dist-packages/cv2 /usr/local/lib/python3.6/dist-packages/cv2
+    cp -r /usr/lib/${PYTHON3_VERSION}/dist-packages/cv2 /usr/local/lib/${PYTHON3_VERSION}/dist-packages/cv2
 
 
 #

@@ -19,6 +19,7 @@ WORKDIR /tmp
 RUN locale-gen en_US en_US.UTF-8 && update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 ENV LANG=en_US.UTF-8
 ENV PYTHONIOENCODING=utf-8
+ARG PYTHON3_VERSION=3.8
 
 
 # 
@@ -85,7 +86,7 @@ RUN python3 -m pip install -U \
 # 
 # install OpenCV (with CUDA)
 #
-ARG OPENCV_URL=https://nvidia.box.com/shared/static/5v89u6g5rb62fpz4lh0rz531ajo2t5ef.gz
+ARG OPENCV_URL=https://nvidia.box.com/shared/static/2hssa5g3v28ozvo3tc3qwxmn78yerca9.gz
 ARG OPENCV_DEB=OpenCV-4.5.0-aarch64.tar.gz
 
 RUN apt-get purge -y '*opencv*' || echo "previous OpenCV installation not found" && \
@@ -102,7 +103,7 @@ RUN apt-get purge -y '*opencv*' || echo "previous OpenCV installation not found"
     cd ../ && \
     rm -rf opencv && \
     cp -r /usr/include/opencv4 /usr/local/include/opencv4 && \
-    cp -r /usr/lib/python3.6/dist-packages/cv2 /usr/local/lib/python3.6/dist-packages/cv2
+    cp -r /usr/lib/${PYTHON3_VERSION}/dist-packages/cv2 /usr/local/lib/${PYTHON3_VERSION}/dist-packages/cv2
     
     
 # 
@@ -119,7 +120,7 @@ RUN apt-get update && \
     && apt-get clean
 		  	  
 RUN wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | apt-key add - && \
-    apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main' && \
+    apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" && \
     apt-get update && \
     apt-get install -y --no-install-recommends --only-upgrade \
             cmake \

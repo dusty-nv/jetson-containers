@@ -32,7 +32,7 @@ RUN apt-get update && \
             python3-pip \
 		  python3-dev \
 		  libopenblas-dev \
-		  libopenmpi2 \
+		  libopenmpi3 \
             openmpi-bin \
             openmpi-common \
 		  gfortran \
@@ -64,7 +64,7 @@ RUN wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certif
 #
 ARG TORCHVISION_VERSION=v0.4.0
 ARG PILLOW_VERSION=pillow<7
-ARG TORCH_CUDA_ARCH_LIST="5.3;6.2;7.2"
+ARG TORCH_CUDA_ARCH_LIST="7.2;8.7"
 
 RUN printenv && echo "torchvision version = $TORCHVISION_VERSION" && echo "pillow version = $PILLOW_VERSION" && echo "TORCH_CUDA_ARCH_LIST = $TORCH_CUDA_ARCH_LIST"
 
@@ -98,13 +98,14 @@ RUN apt-get update && \
 		  apt-transport-https \
 		  ca-certificates \
 		  gnupg \
+		  lsb-release \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 		  
 # typically --only-upgrade is used in the apt install command below,
 # but cmake wasn't previously installed in this container		  
 RUN wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | apt-key add - && \
-    apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main' && \
+    apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
             cmake \
@@ -114,9 +115,9 @@ RUN wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | apt-key
 RUN cmake --version
 
 # patch for https://github.com/pytorch/pytorch/issues/45323
-ARG TORCH_CMAKE_CONFIG=/usr/local/lib/python3.6/dist-packages/torch/share/cmake/Torch/TorchConfig.cmake
-
-RUN echo "patching _GLIBCXX_USE_CXX11_ABI in ${TORCH_CMAKE_CONFIG}" && \
+RUN PYTHON_ROOT=`pip3 show torch | grep Location: | cut -d' ' -f2` && \
+    TORCH_CMAKE_CONFIG=$PYTHON_ROOT/torch/share/cmake/Torch/TorchConfig.cmake && \
+    echo "patching _GLIBCXX_USE_CXX11_ABI in ${TORCH_CMAKE_CONFIG}" && \
     echo "contents of ${TORCH_CMAKE_CONFIG} before patching..." && \
     cat ${TORCH_CMAKE_CONFIG} && \
     sed -i 's/  set(TORCH_CXX_FLAGS "-D_GLIBCXX_USE_CXX11_ABI=")/  set(TORCH_CXX_FLAGS "-D_GLIBCXX_USE_CXX11_ABI=0")/g' ${TORCH_CMAKE_CONFIG} && \
@@ -131,7 +132,6 @@ ARG TORCHAUDIO_VERSION
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-		  cmake \
 		  pkg-config \
 		  libffi-dev \
 		  libsndfile1 \

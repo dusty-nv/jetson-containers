@@ -72,7 +72,6 @@ RUN apt-get update && \
         pkg-config \
         qv4l2 \
         v4l-utils \
-        v4l2ucp \
         zlib1g-dev \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
@@ -93,7 +92,7 @@ RUN git clone --depth 1 --branch ${OPENCV_VERSION} https://github.com/opencv/ope
 	   -D BUILD_opencv_java=OFF \
         -D CMAKE_BUILD_TYPE=RELEASE \
         -D CMAKE_INSTALL_PREFIX=/usr/local \
-        -D CUDA_ARCH_BIN=5.3,6.2,7.2 \
+        -D CUDA_ARCH_BIN=7.2,8.7 \
         -D CUDA_ARCH_PTX= \
         -D CUDA_FAST_MATH=ON \
         -D CUDNN_INCLUDE_DIR=/usr/include/aarch64-linux-gnu \
