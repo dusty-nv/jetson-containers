@@ -33,81 +33,97 @@ build_pytorch()
 
 if [[ "$CONTAINERS" == "pytorch" || "$CONTAINERS" == "all" ]]; then
 
-	# PyTorch v1.2.0
-	#build_pytorch "https://nvidia.box.com/shared/static/lufbgr3xu2uha40cs9ryq1zn4kxsnogl.whl" \
-	#			  "torch-1.2.0-cp36-cp36m-linux_aarch64.whl" \
-	#			  "l4t-pytorch:r$L4T_VERSION-pth1.2-py3" \
-	#			  "v0.4.0" \
-	#			  "pillow<7"
+	if [[ $L4T_RELEASE -eq 32 ]]; then   # JetPack 4.x
 
-	# PyTorch v1.3.0
-	#build_pytorch "https://nvidia.box.com/shared/static/017sci9z4a0xhtwrb4ps52frdfti9iw0.whl" \
-	#			  "torch-1.3.0-cp36-cp36m-linux_aarch64.whl" \
-	#			  "l4t-pytorch:r$L4T_VERSION-pth1.3-py3" \
-	#			  "v0.4.2" \
-	#			  "pillow<7"  
+		# PyTorch v1.2.0
+		#build_pytorch "https://nvidia.box.com/shared/static/lufbgr3xu2uha40cs9ryq1zn4kxsnogl.whl" \
+		#			  "torch-1.2.0-cp36-cp36m-linux_aarch64.whl" \
+		#			  "l4t-pytorch:r$L4T_VERSION-pth1.2-py3" \
+		#			  "v0.4.0" \
+		#			  "pillow<7"
 
-	# PyTorch v1.4.0
-	#build_pytorch "https://nvidia.box.com/shared/static/c3d7vm4gcs9m728j6o5vjay2jdedqb55.whl" \
-	#			  "torch-1.4.0-cp36-cp36m-linux_aarch64.whl" \
-	#			  "l4t-pytorch:r$L4T_VERSION-pth1.4-py3" \
-	#			  "v0.5.0" \
-	#			  "pillow" 
+		# PyTorch v1.3.0
+		#build_pytorch "https://nvidia.box.com/shared/static/017sci9z4a0xhtwrb4ps52frdfti9iw0.whl" \
+		#			  "torch-1.3.0-cp36-cp36m-linux_aarch64.whl" \
+		#			  "l4t-pytorch:r$L4T_VERSION-pth1.3-py3" \
+		#			  "v0.4.2" \
+		#			  "pillow<7"  
 
-	# PyTorch v1.5.0
-	#build_pytorch "https://nvidia.box.com/shared/static/3ibazbiwtkl181n95n9em3wtrca7tdzp.whl" \
-	#			  "torch-1.5.0-cp36-cp36m-linux_aarch64.whl" \
-	#			  "l4t-pytorch:r$L4T_VERSION-pth1.5-py3" \
-	#			  "v0.6.0" \
-	#			  "pillow" 
+		# PyTorch v1.4.0
+		#build_pytorch "https://nvidia.box.com/shared/static/c3d7vm4gcs9m728j6o5vjay2jdedqb55.whl" \
+		#			  "torch-1.4.0-cp36-cp36m-linux_aarch64.whl" \
+		#			  "l4t-pytorch:r$L4T_VERSION-pth1.4-py3" \
+		#			  "v0.5.0" \
+		#			  "pillow" 
 
-	# PyTorch v1.6.0
-	#build_pytorch "https://nvidia.box.com/shared/static/9eptse6jyly1ggt9axbja2yrmj6pbarc.whl" \
-	#			  "torch-1.6.0-cp36-cp36m-linux_aarch64.whl" \
-	#			  "l4t-pytorch:r$L4T_VERSION-pth1.6-py3" \
-	#			  "v0.7.0" \
-	#			  "pillow" \
-	#			  "v0.6.0"
-				  
-	# PyTorch v1.7.0
-	#build_pytorch "https://nvidia.box.com/shared/static/cs3xn3td6sfgtene6jdvsxlr366m2dhq.whl" \
-	#			  "torch-1.7.0-cp36-cp36m-linux_aarch64.whl" \
-	#			  "l4t-pytorch:r$L4T_VERSION-pth1.7-py3" \
-	#			  "v0.8.1" \
-	#			  "pillow" \
-	#			  "v0.7.0"
-	
-	# PyTorch v1.8.0
-	#build_pytorch "https://nvidia.box.com/shared/static/p57jwntv436lfrd78inwl7iml6p13fzh.whl" \
-	#			"torch-1.8.0-cp36-cp36m-linux_aarch64.whl" \
-	#			"l4t-pytorch:r$L4T_VERSION-pth1.8-py3" \
-	#			"v0.9.0" \
-	#			"pillow" \
-	#			"v0.8.0"
+		# PyTorch v1.5.0
+		#build_pytorch "https://nvidia.box.com/shared/static/3ibazbiwtkl181n95n9em3wtrca7tdzp.whl" \
+		#			  "torch-1.5.0-cp36-cp36m-linux_aarch64.whl" \
+		#			  "l4t-pytorch:r$L4T_VERSION-pth1.5-py3" \
+		#			  "v0.6.0" \
+		#			  "pillow" 
+
+		# PyTorch v1.6.0
+		#build_pytorch "https://nvidia.box.com/shared/static/9eptse6jyly1ggt9axbja2yrmj6pbarc.whl" \
+		#			  "torch-1.6.0-cp36-cp36m-linux_aarch64.whl" \
+		#			  "l4t-pytorch:r$L4T_VERSION-pth1.6-py3" \
+		#			  "v0.7.0" \
+		#			  "pillow" \
+		#			  "v0.6.0"
+					  
+		# PyTorch v1.7.0
+		#build_pytorch "https://nvidia.box.com/shared/static/cs3xn3td6sfgtene6jdvsxlr366m2dhq.whl" \
+		#			  "torch-1.7.0-cp36-cp36m-linux_aarch64.whl" \
+		#			  "l4t-pytorch:r$L4T_VERSION-pth1.7-py3" \
+		#			  "v0.8.1" \
+		#			  "pillow" \
+		#			  "v0.7.0"
 		
-	# PyTorch v1.9.0
-	build_pytorch "https://nvidia.box.com/shared/static/h1z9sw4bb1ybi0rm3tu8qdj8hs05ljbm.whl" \
-				"torch-1.9.0-cp36-cp36m-linux_aarch64.whl" \
-				"l4t-pytorch:r$L4T_VERSION-pth1.9-py3" \
-				"v0.10.0" \
-				"pillow" \
-				"v0.9.0"
-				
-	# PyTorch v1.10.0
-	build_pytorch "https://nvidia.box.com/shared/static/fjtbno0vpo676a25cgvuqc1wty0fkkg6.whl" \
-				"torch-1.10.0-cp36-cp36m-linux_aarch64.whl" \
-				"l4t-pytorch:r$L4T_VERSION-pth1.10-py3" \
-				"v0.11.1" \
-				"pillow" \
-				"v0.10.0"
-				
-	# PyTorch v1.11.0
-	build_pytorch "https://developer.download.nvidia.com/compute/redist/jp/v461/pytorch/torch-1.11.0a0+17540c5-cp36-cp36m-linux_aarch64.whl" \
-				"torch-1.11.0a0+17540c5-cp36-cp36m-linux_aarch64.whl" \
-				"l4t-pytorch:r$L4T_VERSION-pth1.11-py3" \
-				"v0.11.3" \
-				"pillow" \
-				"v0.10.2"
+		# PyTorch v1.8.0
+		#build_pytorch "https://nvidia.box.com/shared/static/p57jwntv436lfrd78inwl7iml6p13fzh.whl" \
+		#			"torch-1.8.0-cp36-cp36m-linux_aarch64.whl" \
+		#			"l4t-pytorch:r$L4T_VERSION-pth1.8-py3" \
+		#			"v0.9.0" \
+		#			"pillow" \
+		#			"v0.8.0"
+			
+		# PyTorch v1.9.0
+		build_pytorch "https://nvidia.box.com/shared/static/h1z9sw4bb1ybi0rm3tu8qdj8hs05ljbm.whl" \
+					"torch-1.9.0-cp36-cp36m-linux_aarch64.whl" \
+					"l4t-pytorch:r$L4T_VERSION-pth1.9-py3" \
+					"v0.10.0" \
+					"pillow" \
+					"v0.9.0"
+					
+		# PyTorch v1.10.0
+		build_pytorch "https://nvidia.box.com/shared/static/fjtbno0vpo676a25cgvuqc1wty0fkkg6.whl" \
+					"torch-1.10.0-cp36-cp36m-linux_aarch64.whl" \
+					"l4t-pytorch:r$L4T_VERSION-pth1.10-py3" \
+					"v0.11.1" \
+					"pillow" \
+					"v0.10.0"
+					
+		# PyTorch v1.11.0
+		build_pytorch "https://developer.download.nvidia.com/compute/redist/jp/v461/pytorch/torch-1.11.0a0+17540c5-cp36-cp36m-linux_aarch64.whl" \
+					"torch-1.11.0a0+17540c5-cp36-cp36m-linux_aarch64.whl" \
+					"l4t-pytorch:r$L4T_VERSION-pth1.11-py3" \
+					"v0.11.3" \
+					"pillow" \
+					"v0.10.2"
+					
+	elif [[ $L4T_RELEASE -eq 34 ]]; then   # JetPack 5.x
+	
+		# PyTorch v1.10.0
+		build_pytorch "https://nvidia.box.com/shared/static/19je2l0ppy1fpq4mw1a5gsbb5y9fopy7.whl" \
+					"torch-1.10.0-cp38-cp38-linux_aarch64.whl" \
+					"l4t-pytorch:r$L4T_VERSION-pth1.10-py3" \
+					"v0.11.1" \
+					"pillow" \
+					"v0.10.0"
+					
+	else
+		echo "warning -- unsupported L4T R$L4T_VERSION, skipping PyTorch..."
+	fi
 fi
 
 #			  
@@ -161,7 +177,8 @@ if [[ "$CONTAINERS" == "tensorflow" || "$CONTAINERS" == "all" ]]; then
 					  "l4t-tensorflow:r$L4T_VERSION-tf2.5-py3" \
 					  "3.19.4"
 					  
-	else
+	elif [[ $L4T_RELEASE -eq 32 ]] && [[ $L4T_REVISION_MAJOR -lt 6 ]]; then
+	
 		# TensorFlow 1.15.5 for JetPack 4.4/4.5
 		build_tensorflow "https://developer.download.nvidia.com/compute/redist/jp/v45/tensorflow/tensorflow-1.15.5+nv21.6-cp36-cp36m-linux_aarch64.whl" \
 					  "tensorflow-2.5.0+nv21.6-cp36-cp36m-linux_aarch64.whl" \
@@ -173,6 +190,9 @@ if [[ "$CONTAINERS" == "tensorflow" || "$CONTAINERS" == "all" ]]; then
 					  "tensorflow-2.5.0+nv21.6-cp36-cp36m-linux_aarch64.whl" \
 					  "l4t-tensorflow:r$L4T_VERSION-tf2.5-py3" \
 					  "3.19.4"
+					  
+	else
+		echo "warning -- unsupported L4T R$L4T_VERSION, skipping TensorFlow..."
 	fi
 fi
 
