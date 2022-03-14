@@ -20,17 +20,22 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 
 |                                                                                     | L4T Version | Container Tag                                      |
 |-------------------------------------------------------------------------------------|:-----------:|----------------------------------------------------|
-| [`l4t-ml`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-ml)                 |   R32.6.1   | `nvcr.io/nvidia/l4t-ml:r32.6.1-py3`                |
+| [`l4t-ml`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-ml)                 |   R32.7.1   | `nvcr.io/nvidia/l4t-ml:r32.7.1-py3`                |
+|                                                                                     |   R32.6.1   | `nvcr.io/nvidia/l4t-ml:r32.6.1-py3`                |
 |                                                                                     |   R32.5.0*  | `nvcr.io/nvidia/l4t-ml:r32.5.0-py3`                |
 |                                                                                     |   R32.4.4   | `nvcr.io/nvidia/l4t-ml:r32.4.4-py3`                |
 |                                                                                     |   R32.4.3   | `nvcr.io/nvidia/l4t-ml:r32.4.3-py3`                |
-| [`l4t-pytorch`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-pytorch)       |   R32.6.1   | `nvcr.io/nvidia/l4t-pytorch:r32.6.1-pth1.9-py3`    |
+| [`l4t-pytorch`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-pytorch)       |   R32.7.1   | `nvcr.io/nvidia/l4t-pytorch:r32.7.1-pth1.10-py3`   |
+|                                                                                     |   R32.7.1   | `nvcr.io/nvidia/l4t-pytorch:r32.7.1-pth1.9-py3`    |
+|                                                                                     |   R32.6.1   | `nvcr.io/nvidia/l4t-pytorch:r32.6.1-pth1.9-py3`    |
 |                                                                                     |   R32.6.1   | `nvcr.io/nvidia/l4t-pytorch:r32.6.1-pth1.8-py3`    |
 |                                                                                     |   R32.5.0*  | `nvcr.io/nvidia/l4t-pytorch:r32.5.0-pth1.7-py3`    |
 |                                                                                     |   R32.5.0*  | `nvcr.io/nvidia/l4t-pytorch:r32.5.0-pth1.6-py3`    |
 |                                                                                     |   R32.4.4   | `nvcr.io/nvidia/l4t-pytorch:r32.4.4-pth1.6-py3`    |
 |                                                                                     |   R32.4.3   | `nvcr.io/nvidia/l4t-pytorch:r32.4.3-pth1.6-py3`    |
-| [`l4t-tensorflow`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-tensorflow) |   R32.6.1   | `nvcr.io/nvidia/l4t-tensorflow:r32.5.0-tf1.15-py3` |
+| [`l4t-tensorflow`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-tensorflow) |   R32.7.1   | `nvcr.io/nvidia/l4t-tensorflow:r32.5.0-tf1.15-py3` |
+|                                                                                     |   R32.7.1   | `nvcr.io/nvidia/l4t-tensorflow:r32.5.0-tf2.7-py3`  |
+|                                                                                     |   R32.6.1   | `nvcr.io/nvidia/l4t-tensorflow:r32.5.0-tf1.15-py3` |
 |                                                                                     |   R32.6.1   | `nvcr.io/nvidia/l4t-tensorflow:r32.5.0-tf2.5-py3`  |
 |                                                                                     |   R32.5.0*  | `nvcr.io/nvidia/l4t-tensorflow:r32.5.0-tf1.15-py3` |
 |                                                                                     |   R32.5.0*  | `nvcr.io/nvidia/l4t-tensorflow:r32.5.0-tf2.3-py3`  |
