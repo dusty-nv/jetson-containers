@@ -172,10 +172,6 @@ RUN mkdir -p ${ROS_ROOT}/src && \
     cat ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall && \
     vcs import src < ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall && \
     
-    # patch libyaml - https://github.com/dusty-nv/jetson-containers/issues/41#issuecomment-774767272
-    rm ${ROS_ROOT}/src/libyaml_vendor/CMakeLists.txt && \
-    wget --no-check-certificate https://raw.githubusercontent.com/ros2/libyaml_vendor/master/CMakeLists.txt -P ${ROS_ROOT}/src/libyaml_vendor/ && \
-    
     # install dependencies using rosdep
     apt-get update && \
     cd ${ROS_ROOT} && \
