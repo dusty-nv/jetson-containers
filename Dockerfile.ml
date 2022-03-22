@@ -91,10 +91,10 @@ COPY --from=tensorflow /usr/local/include/google /usr/local/include/google
 # python packages from TF/PyTorch containers
 #
 COPY --from=tensorflow /usr/local/lib/python2.7/dist-packages/ /usr/local/lib/python2.7/dist-packages/
-COPY --from=tensorflow /usr/local/lib/${PYTHON3_VERSION}/dist-packages/ /usr/local/lib/${PYTHON3_VERSION}/dist-packages/
+COPY --from=tensorflow /usr/local/lib/python${PYTHON3_VERSION}/dist-packages/ /usr/local/lib/python${PYTHON3_VERSION}/dist-packages/
 
 COPY --from=pytorch /usr/local/lib/python2.7/dist-packages/ /usr/local/lib/python2.7/dist-packages/
-COPY --from=pytorch /usr/local/lib/${PYTHON3_VERSION}/dist-packages/ /usr/local/lib/${PYTHON3_VERSION}/dist-packages/
+COPY --from=pytorch /usr/local/lib/python${PYTHON3_VERSION}/dist-packages/ /usr/local/lib/python${PYTHON3_VERSION}/dist-packages/
 
 
 #
@@ -144,7 +144,7 @@ RUN apt-get purge -y '*opencv*' || echo "previous OpenCV installation not found"
     cd ../ && \
     rm -rf opencv && \
     cp -r /usr/include/opencv4 /usr/local/include/opencv4 && \
-    cp -r /usr/lib/${PYTHON3_VERSION}/dist-packages/cv2 /usr/local/lib/${PYTHON3_VERSION}/dist-packages/cv2
+    cp -r /usr/lib/python${PYTHON3_VERSION}/dist-packages/cv2 /usr/local/lib/python${PYTHON3_VERSION}/dist-packages/cv2
 
 
 #
