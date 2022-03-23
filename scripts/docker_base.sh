@@ -22,8 +22,16 @@ if [ $L4T_RELEASE -eq 32 ]; then
 		BASE_IMAGE=$BASE_DEVEL
 	fi
 	
+	BASE_IMAGE_L4T=$BASE_IMAGE
+	
 elif [ $L4T_RELEASE -eq 34 ]; then
-	BASE_IMAGE="nvcr.io/nvidian/nvidia-l4t-base:focal_CUDA_11.4.13_008"
+	if [ $L4T_REVISION_MAJOR -lt 2 ]; then
+		#BASE_IMAGE="nvcr.io/nvidian/nvidia-l4t-base:focal_CUDA_11.4.13_008"
+		BASE_IMAGE="nvcr.io/nvidian/nvidia-l4t-base:r34.1"
+	fi
+	
+	BASE_IMAGE_L4T=$BASE_IMAGE
+	BASE_IMAGE="jetpack:r$L4T_VERSION"
 fi
 	
-echo "l4t-base image:  $BASE_IMAGE"
+echo "l4t-base image:  $BASE_IMAGE_L4T"
