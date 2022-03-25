@@ -4,6 +4,8 @@ __pycache__
 *.so
 *.deb
 packages/usr
+packages/apt
+packages/*.list
 test/data
 build_log.txt
 logs
