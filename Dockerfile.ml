@@ -64,7 +64,7 @@ RUN apt-get update && \
 		zlib1g-dev \
 		zip \
 		libjpeg8-dev \
-		libopenmpi2 \
+		libopenmpi3 \
 		openmpi-bin \
 		openmpi-common \
 		protobuf-compiler \
@@ -89,12 +89,13 @@ COPY --from=tensorflow /usr/local/include/google /usr/local/include/google
 
 #
 # python packages from TF/PyTorch containers
+# note:  this is done in this order bc TF has some specific version dependencies
 #
-COPY --from=tensorflow /usr/local/lib/python2.7/dist-packages/ /usr/local/lib/python2.7/dist-packages/
-COPY --from=tensorflow /usr/local/lib/python${PYTHON3_VERSION}/dist-packages/ /usr/local/lib/python${PYTHON3_VERSION}/dist-packages/
-
 COPY --from=pytorch /usr/local/lib/python2.7/dist-packages/ /usr/local/lib/python2.7/dist-packages/
 COPY --from=pytorch /usr/local/lib/python${PYTHON3_VERSION}/dist-packages/ /usr/local/lib/python${PYTHON3_VERSION}/dist-packages/
+
+COPY --from=tensorflow /usr/local/lib/python2.7/dist-packages/ /usr/local/lib/python2.7/dist-packages/
+COPY --from=tensorflow /usr/local/lib/python${PYTHON3_VERSION}/dist-packages/ /usr/local/lib/python${PYTHON3_VERSION}/dist-packages/
 
 
 #
@@ -113,7 +114,7 @@ RUN pip3 install --no-cache-dir --verbose numba
 # CuPy
 #
 ARG CUPY_VERSION=v10.2.0
-ARG CUPY_NVCC_GENERATE_CODE="arch=compute_72,code=sm_72;arch=compute_87,code=sm_87"
+ARG CUPY_NVCC_GENERATE_CODE="arch=compute_53,code=sm_53;arch=compute_62,code=sm_62;arch=compute_72,code=sm_72;arch=compute_87,code=sm_87"
 
 RUN git clone -b ${CUPY_VERSION} --recursive https://github.com/cupy/cupy cupy && \
     cd cupy && \
