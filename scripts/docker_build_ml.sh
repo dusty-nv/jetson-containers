@@ -120,7 +120,14 @@ if [[ "$CONTAINERS" == "pytorch" || "$CONTAINERS" == "all" ]]; then
 					"v0.11.1" \
 					"pillow" \
 					"v0.10.0"
-					
+				
+		# PyTorch v1.12.0
+		build_pytorch "https://developer.download.nvidia.com/compute/redist/jp/v50/pytorch/torch-1.12.0a0+2c916ef.nv22.3-cp38-cp38-linux_aarch64.whl" \
+					"torch-1.12.0a0+2c916ef.nv22.3-cp38-cp38-linux_aarch64.whl" \
+					"l4t-pytorch:r$L4T_VERSION-pth1.12-py3" \
+					"v0.12.0" \
+					"pillow" \
+					"v0.11.0"
 	else
 		echo "warning -- unsupported L4T R$L4T_VERSION, skipping PyTorch..."
 	fi
@@ -181,7 +188,7 @@ if [[ "$CONTAINERS" == "tensorflow" || "$CONTAINERS" == "all" ]]; then
 	
 		# TensorFlow 1.15.5 for JetPack 4.4/4.5
 		build_tensorflow "https://developer.download.nvidia.com/compute/redist/jp/v45/tensorflow/tensorflow-1.15.5+nv21.6-cp36-cp36m-linux_aarch64.whl" \
-					  "tensorflow-2.5.0+nv21.6-cp36-cp36m-linux_aarch64.whl" \
+					  "tensorflow-1.15.5+nv21.6-cp36-cp36m-linux_aarch64.whl" \
 					  "l4t-tensorflow:r$L4T_VERSION-tf1.15-py3" \
 					  "3.19.4"
 
@@ -189,6 +196,20 @@ if [[ "$CONTAINERS" == "tensorflow" || "$CONTAINERS" == "all" ]]; then
 		build_tensorflow "https://developer.download.nvidia.com/compute/redist/jp/v45/tensorflow/tensorflow-2.5.0+nv21.6-cp36-cp36m-linux_aarch64.whl" \
 					  "tensorflow-2.5.0+nv21.6-cp36-cp36m-linux_aarch64.whl" \
 					  "l4t-tensorflow:r$L4T_VERSION-tf2.5-py3" \
+					  "3.19.4"
+	
+	elif [[ $L4T_RELEASE -eq 34 ]] && [[ $L4T_REVISION_MAJOR -le 1 ]]; then
+	
+		# TensorFlow 1.15.5 for JetPack 5.0
+		build_tensorflow "https://nvidia.box.com/shared/static/0zq4xyy0956vmq4kaaanfou1isw15rwa.whl" \
+					  "tensorflow-1.15.5+nv21.12-cp38-cp38-linux_aarch64.whl" \
+					  "l4t-tensorflow:r$L4T_VERSION-tf1.15-py3" \
+					  "3.19.4"
+
+		# TensorFlow 2.6.2 for JetPack 5.0
+		build_tensorflow "https://nvidia.box.com/shared/static/ru743bim6ppfpbnj2fcxd7bopxz53ddx.whl" \
+					  "tensorflow-2.6.2+nv21.12-cp38-cp38-linux_aarch64.whl" \
+					  "l4t-tensorflow:r$L4T_VERSION-tf2.6-py3" \
 					  "3.19.4"
 					  
 	else
@@ -202,22 +223,21 @@ fi
 #
 if [[ "$CONTAINERS" == "all" ]]; then
 
-	# opencv.csv mounts files that preclude us installing different version of opencv
-	# temporarily disable the opencv.csv mounts while we build the container
-	CV_CSV="/etc/nvidia-container-runtime/host-files-for-container.d/opencv.csv"
-	
-	if [ -f "$CV_CSV" ]; then
-		sudo mv $CV_CSV $CV_CSV.backup
+	# determine OpenCV package to use
+	if [[ $L4T_RELEASE -eq 32 ]]; then
+		OPENCV_URL="https://nvidia.box.com/shared/static/5v89u6g5rb62fpz4lh0rz531ajo2t5ef.gz"
+		OPENCV_DEB="OpenCV-4.5.0-aarch64.tar.gz"
+	elif [[ $L4T_RELEASE -eq 34 ]]; then
+		OPENCV_URL="https://nvidia.box.com/shared/static/2hssa5g3v28ozvo3tc3qwxmn78yerca9.gz"
+		OPENCV_DEB="OpenCV-4.5.0-aarch64.tar.gz"
 	fi
 	
 	sh ./scripts/docker_build.sh l4t-ml:r$L4T_VERSION-py3 Dockerfile.ml \
 			--build-arg BASE_IMAGE=$BASE_IMAGE \
-			--build-arg PYTORCH_IMAGE=l4t-pytorch:r$L4T_VERSION-pth1.10-py3 \
-			--build-arg TENSORFLOW_IMAGE=l4t-tensorflow:r$L4T_VERSION-tf1.15-py3 #\
-
-	if [ -f "$CV_CSV.backup" ]; then
-		sudo mv $CV_CSV.backup $CV_CSV
-	fi
+			--build-arg PYTORCH_IMAGE=l4t-pytorch:r$L4T_VERSION-pth1.12-py3 \
+			--build-arg TENSORFLOW_IMAGE=l4t-tensorflow:r$L4T_VERSION-tf1.15-py3 \
+			--build-arg OPENCV_URL=$OPENCV_URL \
+			--build-arg OPENCV_DEB=$OPENCV_DEB
 fi
 
 

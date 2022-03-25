@@ -41,10 +41,13 @@ RUN apt-get update && \
 #
 # configure nvidia apt repo
 #
-ARG L4T_APT_SOURCE="deb https://repo.download.nvidia.com/jetson/common r34.1 main"
+COPY packages/nvidia-l4t-apt-source.list /tmp/apt/nvidia-l4t-apt-source.list
+COPY packages/nvidia-l4t-apt-source.clean.list /tmp/apt/nvidia-l4t-apt-source.clean.list
 
-RUN apt-key adv --fetch-key https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
-COPY packages/nvidia-l4t-apt-source.list  /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
+RUN apt-key adv --fetch-key https://repo.download.nvidia.com/jetson/jetson-ota-public.asc && \
+    cp /etc/apt/sources.list /tmp/apt && \
+    cat /tmp/apt/nvidia-l4t-apt-source.list >> /etc/apt/sources.list && \
+    cat /etc/apt/sources.list
     
     
 #
@@ -52,7 +55,7 @@ COPY packages/nvidia-l4t-apt-source.list  /etc/apt/sources.list.d/nvidia-l4t-apt
 #    
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-            cuda-toolkit-* \
+		  cuda-toolkit-* \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
@@ -76,3 +79,12 @@ RUN apt-get update && \
 		  python3-libnvinfer-dev \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
+    
+    
+#
+# clean-up apt repos
+#
+RUN cp /tmp/apt/sources.list /etc/apt/sources.list && \
+    cat /tmp/apt/nvidia-l4t-apt-source.clean.list >> /etc/apt/sources.list && \
+    cat /etc/apt/sources.list && \
+    rm -rf /tmp/apt
