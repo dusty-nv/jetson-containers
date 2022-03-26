@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
 set -e
+
 source scripts/docker_base.sh
+source scripts/opencv_version.sh
 
 CONTAINERS=${1:-"all"}
 
@@ -222,15 +224,6 @@ fi
 # Machine Learning
 #
 if [[ "$CONTAINERS" == "all" ]]; then
-
-	# determine OpenCV package to use
-	if [[ $L4T_RELEASE -eq 32 ]]; then
-		OPENCV_URL="https://nvidia.box.com/shared/static/5v89u6g5rb62fpz4lh0rz531ajo2t5ef.gz"
-		OPENCV_DEB="OpenCV-4.5.0-aarch64.tar.gz"
-	elif [[ $L4T_RELEASE -eq 34 ]]; then
-		OPENCV_URL="https://nvidia.box.com/shared/static/2hssa5g3v28ozvo3tc3qwxmn78yerca9.gz"
-		OPENCV_DEB="OpenCV-4.5.0-aarch64.tar.gz"
-	fi
 	
 	sh ./scripts/docker_build.sh l4t-ml:r$L4T_VERSION-py3 Dockerfile.ml \
 			--build-arg BASE_IMAGE=$BASE_IMAGE \

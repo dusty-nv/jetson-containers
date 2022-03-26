@@ -20,7 +20,23 @@ test_tensorrt()
 	echo -e "done testing container $1 => TensorRT\n"
 }
 
+test_opencv()
+{
+	echo "testing container $1 => OpenCV"
+	sh ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_opencv.py
+	echo -e "done testing container $1 => OpenCV\n"
+}
+
+test_vpi()
+{
+	echo "testing container $1 => VPI"
+	sh ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_vpi.py
+	echo -e "done testing container $1 => VPI\n"
+}
+
 container_tag="jetpack:r$L4T_VERSION"
 
 test_cuda $container_tag
 test_tensorrt $container_tag
+test_opencv $container_tag
+test_vpi $container_tag

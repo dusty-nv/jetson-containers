@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
 set -e
-source scripts/docker_base.sh
 
+source scripts/docker_base.sh
+source scripts/opencv_version.sh
 
 # 
 # Notes for running local pre-release apt server:
@@ -81,7 +82,9 @@ build_jetpack()
 	echo ""
 	
 	sh ./scripts/docker_build.sh $container_tag Dockerfile.jetpack \
-			--build-arg BASE_IMAGE=$base_image
+			--build-arg BASE_IMAGE=$base_image \
+			--build-arg OPENCV_URL=$OPENCV_URL \
+			--build-arg OPENCV_DEB=$OPENCV_DEB
 
 }
 	

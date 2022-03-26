@@ -26,24 +26,32 @@ push()
 	push_retag $1 $2 $2
 }
 
+
+#
+# JetPack container
+#
+if [[ "$CONTAINERS" == "jetpack" || "$CONTAINERS" == "all" ]]; then
+	jetpack_container="jetpack:r$L4T_VERSION"
+	
+	if [[ "$(sudo docker images -q $jetpack_container 2> /dev/null)" != "" ]]; then
+		push $NGC_GROUP $jetpack_container
+	else
+		echo "did not find $jetpack_container locally, skipping..."
+	fi
+fi
+
+
 #
 # ML containers
 #
 if [[ "$CONTAINERS" == "pytorch" || "$CONTAINERS" == "all" ]]; then
-	#push "l4t-pytorch:r$L4T_VERSION-pth1.2-py3"
-	#push "l4t-pytorch:r$L4T_VERSION-pth1.3-py3"
-	#push "l4t-pytorch:r$L4T_VERSION-pth1.4-py3"
-	#push "l4t-pytorch:r$L4T_VERSION-pth1.5-py3"
-	#push $NGC_GROUP "l4t-pytorch:r$L4T_VERSION-pth1.6-py3"
-	#push $NGC_GROUP "l4t-pytorch:r$L4T_VERSION-pth1.7-py3"
-	#push $NGC_GROUP "l4t-pytorch:r$L4T_VERSION-pth1.8-py3"
-	#push $NGC_GROUP "l4t-pytorch:r$L4T_VERSION-pth1.9-py3"
-	push $NGC_GROUP "l4t-pytorch:r$L4T_VERSION-pth1.10-py3"
+	#push $NGC_GROUP "l4t-pytorch:r$L4T_VERSION-pth1.10-py3"
+	push $NGC_GROUP "l4t-pytorch:r$L4T_VERSION-pth1.12-py3"
 fi
 
 if [[ "$CONTAINERS" == "tensorflow" || "$CONTAINERS" == "all" ]]; then
 	push $NGC_GROUP "l4t-tensorflow:r$L4T_VERSION-tf1.15-py3"
-	push $NGC_GROUP "l4t-tensorflow:r$L4T_VERSION-tf2.7-py3"
+	push $NGC_GROUP "l4t-tensorflow:r$L4T_VERSION-tf2.6-py3"
 fi
 
 if [[ "$CONTAINERS" == "ml" || "$CONTAINERS" == "all" ]]; then

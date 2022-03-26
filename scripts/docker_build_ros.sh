@@ -46,6 +46,7 @@ die() {
 
 # determine the L4T version
 source scripts/docker_base.sh
+source scripts/opencv_version.sh
 
 # define default options
 SUPPORTED_ROS_DISTROS=("melodic" "noetic" "eloquent" "foxy" "galactic")
@@ -136,6 +137,7 @@ else
      fi
 fi
 
+
 # check for local version of PyTorch base container
 BASE_IMAGE_PYTORCH="jetson-inference:r$L4T_VERSION"
 
@@ -153,14 +155,6 @@ build_ros()
 	local dockerfile=${5:-"Dockerfile.ros.$distro"}
 	local container_tag="ros:${distro}-${extra_tag}l4t-r${L4T_VERSION}"
 	
-	# opencv.csv mounts files that preclude us installing different version of opencv
-	# temporarily disable the opencv.csv mounts while we build the container
-	CV_CSV="/etc/nvidia-container-runtime/host-files-for-container.d/opencv.csv"
-
-	if [ -f "$CV_CSV" ]; then
-		sudo mv $CV_CSV $CV_CSV.backup
-	fi
-	
 	echo ""
 	echo "Building container $container_tag"
 	echo "BASE_IMAGE=$base_image"
@@ -168,7 +162,9 @@ build_ros()
 	
 	sh ./scripts/docker_build.sh $container_tag $dockerfile \
 			--build-arg ROS_PKG=$package \
-			--build-arg BASE_IMAGE=$base_image
+			--build-arg BASE_IMAGE=$base_image \
+			--build-arg OPENCV_URL=$OPENCV_URL \
+			--build-arg OPENCV_DEB=$OPENCV_DEB
 			
 	# restore opencv.csv mounts
 	if [ -f "$CV_CSV.backup" ]; then
