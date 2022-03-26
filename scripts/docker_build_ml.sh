@@ -4,6 +4,7 @@ set -e
 
 source scripts/docker_base.sh
 source scripts/opencv_version.sh
+source scripts/python_version.sh
 
 CONTAINERS=${1:-"all"}
 
@@ -224,13 +225,14 @@ fi
 # Machine Learning
 #
 if [[ "$CONTAINERS" == "all" ]]; then
-	
+
 	sh ./scripts/docker_build.sh l4t-ml:r$L4T_VERSION-py3 Dockerfile.ml \
 			--build-arg BASE_IMAGE=$BASE_IMAGE \
 			--build-arg PYTORCH_IMAGE=l4t-pytorch:r$L4T_VERSION-pth1.12-py3 \
 			--build-arg TENSORFLOW_IMAGE=l4t-tensorflow:r$L4T_VERSION-tf1.15-py3 \
+			--build-arg PYTHON3_VERSION=$PYTHON3_VERSION \
 			--build-arg OPENCV_URL=$OPENCV_URL \
-			--build-arg OPENCV_DEB=$OPENCV_DEB
+			--build-arg OPENCV_DEB=$OPENCV_DEB 
 fi
 
 
