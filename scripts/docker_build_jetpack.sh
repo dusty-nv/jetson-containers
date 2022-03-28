@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
-
+#
+# Builds the self-contained JetPack Docker container, including development 
+# headers/libraries/samples for CUDA Toolkit, cuDNN, TensorRT, VPI, and OpenCV.
+#
+# Run this script as follows:
+#
+#   $ cd jetson-containers
+#   $ scripts/docker_build_jetpack.sh
+#
 set -e
 
 source scripts/docker_base.sh
