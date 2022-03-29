@@ -133,6 +133,14 @@ test_sklearn()
 	echo -e "done testing container $1 => sklearn\n"
 }
 
+# vpi tests
+test_vpi()
+{
+	echo "testing container $1 => VPI"
+	sh ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_vpi.py
+	echo -e "done testing container $1 => VPI\n"
+}
+
 # PyTorch tests (all)
 test_pytorch_all()
 {
@@ -140,6 +148,7 @@ test_pytorch_all()
 	test_tensorrt $1
 	test_cuda $1
 	test_numpy $1
+	test_vpi $1 
 	
 	if [[ $L4T_RELEASE -eq 34 ]]; then
 		test_opencv $1
@@ -154,6 +163,7 @@ test_tensorflow_all()
 	test_tensorrt $1
 	test_cuda $1
 	test_numpy $1
+	test_vpi $1
 	
 	if [[ $L4T_RELEASE -eq 34 ]]; then
 		test_opencv $1
@@ -176,6 +186,7 @@ test_all()
 	test_pandas $1
 	test_scipy $1
 	test_sklearn $1
+	test_vpi $1
 }
 
 
