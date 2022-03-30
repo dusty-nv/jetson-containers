@@ -1,5 +1,5 @@
 
-print('testing VPI...')
+print('testing VPI (Python)...')
 import vpi
 
 # test sample from https://docs.nvidia.com/vpi/tutorial_python.html
@@ -21,4 +21,4 @@ for backend_name, backend in backends:
     output = input.box_filter(5, border=vpi.Border.ZERO, backend=backend)
     Image.fromarray(output.cpu()).save(f'/test/data/test_vpi_{backend_name}.jpg')
      
-print('VPI OK\n')
+print('VPI (Python) OK\n')

@@ -138,6 +138,7 @@ test_vpi()
 {
 	echo "testing container $1 => VPI"
 	sh ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_vpi.py
+	sh ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r test/test_vpi.sh
 	echo -e "done testing container $1 => VPI\n"
 }
 
