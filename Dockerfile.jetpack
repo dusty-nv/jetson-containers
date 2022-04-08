@@ -96,7 +96,6 @@ RUN apt-get update && \
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
 		  vpi2-dev \
-		  vpi2-demos \
 		  vpi2-samples \
 		  python3-vpi2 \
 		  python3-pip \
