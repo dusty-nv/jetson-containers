@@ -152,13 +152,8 @@ RUN apt-get purge -y '*opencv*' || echo "previous OpenCV installation not found"
 #
 # JupyterLab
 #
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
-    apt-get update && \
-    apt-get install -y nodejs && \
-    rm -rf /var/lib/apt/lists/* && \
-    apt-get clean && \
-    pip3 install --no-cache-dir --verbose jupyter jupyterlab==2.2.9 && \
-    jupyter labextension install @jupyter-widgets/jupyterlab-manager
+RUN pip3 install --no-cache-dir --verbose jupyter jupyterlab && \
+    pip3 install --no-cache-dir --verbose jupyterlab_widgets
     
 RUN jupyter lab --generate-config
 RUN python3 -c "from notebook.auth.security import set_password; set_password('nvidia', '/root/.jupyter/jupyter_notebook_config.json')"
