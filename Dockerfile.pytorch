@@ -102,27 +102,27 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 		  
-# typically --only-upgrade is used in the apt install command below,
-# but cmake wasn't previously installed in this container		  
-RUN wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | apt-key add - && \
-    apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends \
-            cmake \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
+# typically --only-upgrade is used in the apt install, but cmake wasn't previously installed in this container	
+# note: skipping this way for now, because having trouble pinning it to specific version (see below)
+#RUN wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | apt-key add - && \
+#    apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" && \
+#    apt-get update && \
+#    apt-cache policy cmake && \
+#    apt-get install -y --no-install-recommends \
+#            cmake \
+#    && rm -rf /var/lib/apt/lists/* \
+#    && apt-get clean
     
+# note:  cmake is currently pinned to 3.22.3 because of https://github.com/pytorch/pytorch/issues/74955	 
+RUN pip3 install --upgrade --no-cache-dir --verbose cmake==3.22.3
 RUN cmake --version
+
 
 # patch for https://github.com/pytorch/pytorch/issues/45323
 RUN PYTHON_ROOT=`pip3 show torch | grep Location: | cut -d' ' -f2` && \
     TORCH_CMAKE_CONFIG=$PYTHON_ROOT/torch/share/cmake/Torch/TorchConfig.cmake && \
     echo "patching _GLIBCXX_USE_CXX11_ABI in ${TORCH_CMAKE_CONFIG}" && \
-    echo "contents of ${TORCH_CMAKE_CONFIG} before patching..." && \
-    cat ${TORCH_CMAKE_CONFIG} && \
-    sed -i 's/  set(TORCH_CXX_FLAGS "-D_GLIBCXX_USE_CXX11_ABI=")/  set(TORCH_CXX_FLAGS "-D_GLIBCXX_USE_CXX11_ABI=0")/g' ${TORCH_CMAKE_CONFIG} && \
-    echo "contents of ${TORCH_CMAKE_CONFIG} after patching..." && \
-    cat ${TORCH_CMAKE_CONFIG}
+    sed -i 's/  set(TORCH_CXX_FLAGS "-D_GLIBCXX_USE_CXX11_ABI=")/  set(TORCH_CXX_FLAGS "-D_GLIBCXX_USE_CXX11_ABI=0")/g' ${TORCH_CMAKE_CONFIG}
 
     
 #
