@@ -184,7 +184,7 @@ test_all()
 	test_numba $1
 	test_onnx $1
 	test_opencv $1
-	test_pandas $1
+	#test_pandas $1
 	test_scipy $1
 	test_sklearn $1
 	test_vpi $1
@@ -212,7 +212,7 @@ fi
 #
 if [[ "$CONTAINERS" == "tensorflow" || "$CONTAINERS" == "all" ]]; then
 	test_tensorflow_all "l4t-tensorflow:r$L4T_VERSION-tf1.15-py3"
-	test_tensorflow_all "l4t-tensorflow:r$L4T_VERSION-tf2.6-py3"
+	test_tensorflow_all "l4t-tensorflow:r$L4T_VERSION-tf2.8-py3"
 fi
 
 #

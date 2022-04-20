@@ -125,6 +125,13 @@ RUN git clone -b ${CUPY_VERSION} --recursive https://github.com/cupy/cupy cupy &
 
 
 #
+# PyCUDA
+#
+RUN pip3 uninstall -y pycuda
+RUN pip3 install --no-cache-dir --verbose pycuda six
+
+
+#
 # install OpenCV (with CUDA)
 # note:  do this after numba, because this installs TBB and numba complains about old TBB
 #

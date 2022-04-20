@@ -51,7 +51,7 @@ fi
 
 if [[ "$CONTAINERS" == "tensorflow" || "$CONTAINERS" == "all" ]]; then
 	push $NGC_GROUP "l4t-tensorflow:r$L4T_VERSION-tf1.15-py3"
-	push $NGC_GROUP "l4t-tensorflow:r$L4T_VERSION-tf2.6-py3"
+	push $NGC_GROUP "l4t-tensorflow:r$L4T_VERSION-tf2.8-py3"
 fi
 
 if [[ "$CONTAINERS" == "ml" || "$CONTAINERS" == "all" ]]; then
@@ -62,7 +62,11 @@ fi
 #
 # ROS containers
 #
-SUPPORTED_ROS_DISTROS=("melodic" "noetic" "eloquent" "foxy" "galactic")
+if [[ $L4T_RELEASE -eq 34 ]]; then   # JetPack 5.x / Ubuntu 20.04
+	SUPPORTED_ROS_DISTROS=("noetic" "foxy" "galactic")
+else
+	SUPPORTED_ROS_DISTROS=("melodic" "noetic" "eloquent" "foxy" "galactic")
+fi
 
 if [[ "$CONTAINERS" == "ros" ]]; then
 	ROS_CONTAINERS=${SUPPORTED_ROS_DISTROS[@]}

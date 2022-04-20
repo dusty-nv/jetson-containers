@@ -196,15 +196,15 @@ if [[ "$CONTAINERS" == "tensorflow" || "$CONTAINERS" == "all" ]]; then
 	elif [[ $L4T_RELEASE -eq 34 ]] && [[ $L4T_REVISION_MAJOR -le 1 ]]; then
 	
 		# TensorFlow 1.15.5 for JetPack 5.0
-		build_tensorflow "https://nvidia.box.com/shared/static/0zq4xyy0956vmq4kaaanfou1isw15rwa.whl" \
-					  "tensorflow-1.15.5+nv21.12-cp38-cp38-linux_aarch64.whl" \
+		build_tensorflow "https://developer.download.nvidia.com/compute/redist/jp/v50/tensorflow/tensorflow-1.15.5+nv22.3-cp38-cp38-linux_aarch64.whl" \
+					  "tensorflow-1.15.5+nv22.3-cp38-cp38-linux_aarch64.whl" \
 					  "l4t-tensorflow:r$L4T_VERSION-tf1.15-py3" \
 					  "3.19.4"
 
-		# TensorFlow 2.6.2 for JetPack 5.0
-		build_tensorflow "https://nvidia.box.com/shared/static/ru743bim6ppfpbnj2fcxd7bopxz53ddx.whl" \
-					  "tensorflow-2.6.2+nv21.12-cp38-cp38-linux_aarch64.whl" \
-					  "l4t-tensorflow:r$L4T_VERSION-tf2.6-py3" \
+		# TensorFlow 2.8 for JetPack 5.0
+		build_tensorflow "https://developer.download.nvidia.com/compute/redist/jp/v50/tensorflow/tensorflow-2.8.0+nv22.3-cp38-cp38-linux_aarch64.whl" \
+					  "tensorflow-2.8.0+nv22.3-cp38-cp38-linux_aarch64.whl" \
+					  "l4t-tensorflow:r$L4T_VERSION-tf2.8-py3" \
 					  "3.19.4"
 					  
 	else
