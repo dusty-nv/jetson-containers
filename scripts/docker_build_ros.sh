@@ -49,7 +49,12 @@ source scripts/docker_base.sh
 source scripts/opencv_version.sh
 
 # define default options
-SUPPORTED_ROS_DISTROS=("melodic" "noetic" "eloquent" "foxy" "galactic")
+if [[ $L4T_RELEASE -eq 34 ]]; then   # JetPack 5.x / Ubuntu 20.04
+	SUPPORTED_ROS_DISTROS=("noetic" "foxy" "galactic")
+else
+	SUPPORTED_ROS_DISTROS=("melodic" "noetic" "eloquent" "foxy" "galactic")
+fi
+
 SUPPORTED_ROS_PACKAGES=("ros_base" "ros_core" "desktop")
 
 ROS_DISTRO="all"
