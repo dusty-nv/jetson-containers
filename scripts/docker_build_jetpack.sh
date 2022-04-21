@@ -64,7 +64,7 @@ build_jetpack()
 		if [ $L4T_REVISION_MAJOR -eq 0 ]; then
 			# JetPack 5.0 EA
 			l4t_apt_source="deb https://repo.download.nvidia.com/jetson/jetson-50/common r34.0 main"
-		elif [ $L4T_REVISION_MAJOR -ge 1 ]; then
+		elif [ $L4T_REVISION_MAJOR -ge 2 ]; then
 			# JetPack 5.x pre-releases (see above for setting up local apt server)
 			l4t_apt_source="deb [trusted=yes] http://127.0.0.1:8000 ./"
 			l4t_apt_source_clean=""
