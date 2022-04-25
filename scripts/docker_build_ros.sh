@@ -47,6 +47,7 @@ die() {
 # determine the L4T version
 source scripts/docker_base.sh
 source scripts/opencv_version.sh
+source scripts/python_version.sh
 
 # define default options
 if [[ $L4T_RELEASE -eq 34 ]]; then   # JetPack 5.x / Ubuntu 20.04
@@ -169,7 +170,8 @@ build_ros()
 			--build-arg ROS_PKG=$package \
 			--build-arg BASE_IMAGE=$base_image \
 			--build-arg OPENCV_URL=$OPENCV_URL \
-			--build-arg OPENCV_DEB=$OPENCV_DEB
+			--build-arg OPENCV_DEB=$OPENCV_DEB \
+			--build-arg PYTHON3_VERSION=$PYTHON3_VERSION
 			
 	# restore opencv.csv mounts
 	if [ -f "$CV_CSV.backup" ]; then
