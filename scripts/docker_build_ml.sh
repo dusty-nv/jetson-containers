@@ -19,7 +19,7 @@ build_pytorch()
 	
 	local vision_version=$4
 	local audio_version=$5
-	local cuda_arch_list=${6:-"5.3;6.2;7.2;"}
+	local cuda_arch_list=${6:-"5.3;6.2;7.2"}
 	
 	echo "building PyTorch $pytorch_whl, torchvision $vision_version, torchaudio $audio_version, cuda arch $cuda_arch_list"
 
