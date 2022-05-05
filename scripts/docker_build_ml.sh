@@ -115,7 +115,15 @@ if [[ "$CONTAINERS" == "pytorch" || "$CONTAINERS" == "all" ]]; then
 					"v0.11.1" \
 					"v0.10.0" \
 					$jp5_cuda_arch
-				
+		
+		# PyTorch v1.11.0
+		build_pytorch "https://nvidia.box.com/shared/static/ssf2v7pf5i245fk4i0q926hy4imzs2ph.whl" \
+					"torch-1.11.0-cp38-cp38-linux_aarch64.whl" \
+					"l4t-pytorch:r$L4T_VERSION-pth1.11-py3" \
+					"v0.12.0" \
+					"v0.11.0" \
+					$jp5_cuda_arch
+					
 		# PyTorch v1.12.0
 		build_pytorch "https://developer.download.nvidia.com/compute/redist/jp/v50/pytorch/torch-1.12.0a0+2c916ef.nv22.3-cp38-cp38-linux_aarch64.whl" \
 					"torch-1.12.0a0+2c916ef.nv22.3-cp38-cp38-linux_aarch64.whl" \
