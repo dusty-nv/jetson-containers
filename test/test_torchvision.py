@@ -1,13 +1,38 @@
 
 print('testing torchvision...')
 
+import torch
 import torchvision
+
 print('torchvision version: ' + str(torchvision.__version__) + '\n')
 
+#
+# test extension operators
+#
+def test_nms(N=128):
+    print('testing torchvision extensions...')
+    
+    boxes = []
+    scores = []
+    
+    for n in range(N):
+        boxes.append((n, n+1, n, n+1))
+        scores.append(n)
+
+    boxes = torch.Tensor(boxes)
+    scores = torch.Tensor(scores)
+    indices = torchvision.ops.nms(boxes, scores, 0.5)
+    
+test_nms()
+
+
+#
+# test model inference
+#
 import time
 import argparse
 
-import torch
+
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 import torchvision.models as models
