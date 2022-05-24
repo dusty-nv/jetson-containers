@@ -46,6 +46,7 @@ fi
 #
 if [[ "$CONTAINERS" == "pytorch" || "$CONTAINERS" == "all" ]]; then
 	#push $NGC_GROUP "l4t-pytorch:r$L4T_VERSION-pth1.10-py3"
+	push $NGC_GROUP "l4t-pytorch:r$L4T_VERSION-pth1.11-py3"
 	push $NGC_GROUP "l4t-pytorch:r$L4T_VERSION-pth1.12-py3"
 fi
 

@@ -109,12 +109,12 @@ if [[ "$CONTAINERS" == "pytorch" || "$CONTAINERS" == "all" ]]; then
 		jp5_cuda_arch="7.2;8.7"
 		
 		# PyTorch v1.10.0
-		build_pytorch "https://nvidia.box.com/shared/static/19je2l0ppy1fpq4mw1a5gsbb5y9fopy7.whl" \
-					"torch-1.10.0-cp38-cp38-linux_aarch64.whl" \
-					"l4t-pytorch:r$L4T_VERSION-pth1.10-py3" \
-					"v0.11.1" \
-					"v0.10.0" \
-					$jp5_cuda_arch
+		#build_pytorch "https://nvidia.box.com/shared/static/19je2l0ppy1fpq4mw1a5gsbb5y9fopy7.whl" \
+		#			"torch-1.10.0-cp38-cp38-linux_aarch64.whl" \
+		#			"l4t-pytorch:r$L4T_VERSION-pth1.10-py3" \
+		#			"v0.11.1" \
+		#			"v0.10.0" \
+		#			$jp5_cuda_arch
 		
 		# PyTorch v1.11.0
 		build_pytorch "https://nvidia.box.com/shared/static/ssf2v7pf5i245fk4i0q926hy4imzs2ph.whl" \
@@ -204,16 +204,16 @@ if [[ "$CONTAINERS" == "tensorflow" || "$CONTAINERS" == "all" ]]; then
 	elif [[ $L4T_RELEASE -eq 34 ]] && [[ $L4T_REVISION_MAJOR -le 1 ]]; then
 	
 		# TensorFlow 1.15.5 for JetPack 5.0
-		build_tensorflow "https://developer.download.nvidia.com/compute/redist/jp/v50/tensorflow/tensorflow-1.15.5+nv22.3-cp38-cp38-linux_aarch64.whl" \
-					  "tensorflow-1.15.5+nv22.3-cp38-cp38-linux_aarch64.whl" \
+		build_tensorflow "https://developer.download.nvidia.com/compute/redist/jp/v50/tensorflow/tensorflow-1.15.5+nv22.4-cp38-cp38-linux_aarch64.whl" \
+					  "tensorflow-1.15.5+nv22.4-cp38-cp38-linux_aarch64.whl" \
 					  "l4t-tensorflow:r$L4T_VERSION-tf1.15-py3" \
-					  "3.19.4"
+					  "3.20.1"
 
 		# TensorFlow 2.8 for JetPack 5.0
-		build_tensorflow "https://developer.download.nvidia.com/compute/redist/jp/v50/tensorflow/tensorflow-2.8.0+nv22.3-cp38-cp38-linux_aarch64.whl" \
-					  "tensorflow-2.8.0+nv22.3-cp38-cp38-linux_aarch64.whl" \
+		build_tensorflow "https://developer.download.nvidia.com/compute/redist/jp/v50/tensorflow/tensorflow-2.8.0+nv22.4-cp38-cp38-linux_aarch64.whl" \
+					  "tensorflow-2.8.0+nv22.4-cp38-cp38-linux_aarch64.whl" \
 					  "l4t-tensorflow:r$L4T_VERSION-tf2.8-py3" \
-					  "3.19.4"
+					  "3.20.1"
 					  
 	else
 		echo "warning -- unsupported L4T R$L4T_VERSION, skipping TensorFlow..."

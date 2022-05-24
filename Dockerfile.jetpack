@@ -97,7 +97,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
 		  vpi2-dev \
 		  vpi2-samples \
-		  python3-vpi2 \
+		  python3.8-vpi2 \
 		  python3-pip \
 		  python3-pil \
     && rm -rf /var/lib/apt/lists/* \
