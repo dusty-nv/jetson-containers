@@ -10,7 +10,6 @@ ENV ROS_DISTRO=melodic
 ENV ROS_ROOT=/opt/ros/${ROS_DISTRO}
 
 ENV DEBIAN_FRONTEND=noninteractive
-ARG PYTHON3_VERSION=3.6
 
 WORKDIR /workspace
 
