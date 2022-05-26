@@ -8,11 +8,12 @@ Hosted on [NVIDIA GPU Cloud](https://ngc.nvidia.com/catalog/containers?orderBy=m
 
 The following ROS containers are also provided, which can be pulled from DockerHub or built for JetPack 4.4 or newer:
 
-* ROS Melodic (`ros:melodic-ros-base-l4t-r32.7.1`)
-* ROS Noetic (`ros:noetic-ros-base-l4t-r32.7.1`)
-* ROS2 Eloquent (`ros:eloquent-ros-base-l4t-r32.7.1`)
-* ROS2 Foxy (`ros:foxy-ros-base-l4t-r32.7.1`)
-* ROS2 Galactic (`ros:galactic-ros-base-l4t-r32.7.1`)
+* ROS Melodic (`ros:melodic-ros-base-l4t-r34.1.1`)
+* ROS Noetic (`ros:noetic-ros-base-l4t-r34.1.1`)
+* ROS2 Eloquent (`ros:eloquent-ros-base-l4t-r34.1.1`)
+* ROS2 Foxy (`ros:foxy-ros-base-l4t-r34.1.1`)
+* ROS2 Galactic (`ros:galactic-ros-base-l4t-r34.1.1`)
+* ROS2 Humble (`ros:humble-ros-base-l4t-r34.1.1`)
 
 ## Pre-built Container Images
 
@@ -50,8 +51,9 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 | [`ROS Melodic`](https://hub.docker.com/repository/docker/dustynv/ros)               |   R32.7.1   | `dustynv/ros:melodic-ros-base-l4t-r32.7.1`         |
 |                                                                                     |   R32.6.1   | `dustynv/ros:melodic-ros-base-l4t-r32.6.1`         |
 |                                                                                     |   R32.5.0*  | `dustynv/ros:melodic-ros-base-l4t-r32.5.0`         |
-|                                                                                     |   R32.4.4   | `dustynv/ros:melodic-ros-base-l4t-r32.4.4`         |
-| [`ROS Noetic`](https://hub.docker.com/repository/docker/dustynv/ros)                |   R34.1.0   | `dustynv/ros:noetic-ros-base-l4t-r34.1.0`          |
+|                                                                                     |   R32.4.4   | `dustynv/ros:melodic-ros-base-l4t-r32.4.4`         |'
+| [`ROS Noetic`](https://hub.docker.com/repository/docker/dustynv/ros)                |   R34.1.1   | `dustynv/ros:noetic-ros-base-l4t-r34.1.1`          |
+|                                                                                     |   R34.1.0   | `dustynv/ros:noetic-ros-base-l4t-r34.1.0`          |
 |                                                                                     |   R32.7.1   | `dustynv/ros:noetic-ros-base-l4t-r32.7.1`          |
 |                                                                                     |   R32.6.1   | `dustynv/ros:noetic-ros-base-l4t-r32.6.1`          |
 |                                                                                     |   R32.5.0*  | `dustynv/ros:noetic-ros-base-l4t-r32.5.0`          |
@@ -60,12 +62,14 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 |                                                                                     |   R32.6.1   | `dustynv/ros:eloquent-ros-base-l4t-r32.6.1`        |
 |                                                                                     |   R32.5.0*  | `dustynv/ros:eloquent-ros-base-l4t-r32.5.0`        |
 |                                                                                     |   R32.4.4   | `dustynv/ros:eloquent-ros-base-l4t-r32.4.4`        |
-| [`ROS2 Foxy`](https://hub.docker.com/repository/docker/dustynv/ros)                 |   R34.1.0   | `dustynv/ros:foxy-ros-base-l4t-r34.1.0`            |
+| [`ROS2 Foxy`](https://hub.docker.com/repository/docker/dustynv/ros)                 |   R34.1.1   | `dustynv/ros:foxy-ros-base-l4t-r34.1.1`            |
+|                                                                                     |   R34.1.0   | `dustynv/ros:foxy-ros-base-l4t-r34.1.0`            |
 |                                                                                     |   R32.7.1   | `dustynv/ros:foxy-ros-base-l4t-r32.7.1`            |
 |                                                                                     |   R32.6.1   | `dustynv/ros:foxy-ros-base-l4t-r32.6.1`            |
 |                                                                                     |   R32.5.0*  | `dustynv/ros:foxy-ros-base-l4t-r32.5.0`            |
 |                                                                                     |   R32.4.4   | `dustynv/ros:foxy-ros-base-l4t-r32.4.4`            |
-| [`ROS2 Galactic`](https://hub.docker.com/repository/docker/dustynv/ros)             |   R34.1.0   | `dustynv/ros:galactic-ros-base-l4t-r34.1.0`        |
+| [`ROS2 Galactic`](https://hub.docker.com/repository/docker/dustynv/ros)             |   R34.1.1   | `dustynv/ros:galactic-ros-base-l4t-r34.1.1`        |
+|                                                                                     |   R34.1.0   | `dustynv/ros:galactic-ros-base-l4t-r34.1.0`        |
 |                                                                                     |   R32.7.1   | `dustynv/ros:galactic-ros-base-l4t-r32.7.1`        |
 |                                                                                     |   R32.6.1   | `dustynv/ros:galactic-ros-base-l4t-r32.6.1`        |
 |                                                                                     |   R32.5.0*  | `dustynv/ros:galactic-ros-base-l4t-r32.5.0`        |
