@@ -19,10 +19,6 @@ The following ROS containers are also provided, which can be pulled from DockerH
 
 The following images can be pulled from NGC or DockerHub without needing to build the containers yourself:
 
-<details>
-<summary>l4t-ml</summary>
-<br/>
-
 |                                                                                     | L4T Version | Container Tag                                      |
 |-------------------------------------------------------------------------------------|:-----------:|----------------------------------------------------|
 | [`l4t-ml`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-ml)                 |   R34.1.0   | `nvcr.io/nvidia/l4t-ml:r34.1.0-py3`                |
@@ -31,14 +27,6 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 |                                                                                     |   R32.5.0*  | `nvcr.io/nvidia/l4t-ml:r32.5.0-py3`                |
 |                                                                                     |   R32.4.4   | `nvcr.io/nvidia/l4t-ml:r32.4.4-py3`                |
 |                                                                                     |   R32.4.3   | `nvcr.io/nvidia/l4t-ml:r32.4.3-py3`                |
-
-</details>
-<details>
-<summary>l4t-pytorch</summary>
-<br/>
-
-|                                                                                     | L4T Version | Container Tag                                      |
-|-------------------------------------------------------------------------------------|:-----------:|----------------------------------------------------|
 | [`l4t-pytorch`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-pytorch)       |   R34.1.0   | `nvcr.io/nvidia/l4t-pytorch:r34.1.0-pth1.12-py3`   |
 |                                                                                     |   R32.7.1   | `nvcr.io/nvidia/l4t-pytorch:r32.7.1-pth1.10-py3`   |
 |                                                                                     |   R32.7.1   | `nvcr.io/nvidia/l4t-pytorch:r32.7.1-pth1.9-py3`    |
@@ -48,14 +36,6 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 |                                                                                     |   R32.5.0*  | `nvcr.io/nvidia/l4t-pytorch:r32.5.0-pth1.6-py3`    |
 |                                                                                     |   R32.4.4   | `nvcr.io/nvidia/l4t-pytorch:r32.4.4-pth1.6-py3`    |
 |                                                                                     |   R32.4.3   | `nvcr.io/nvidia/l4t-pytorch:r32.4.3-pth1.6-py3`    |
-
-</details>
-<details>
-<summary>l4t-tensorflow</summary>
-<br/>
-
-|                                                                                     | L4T Version | Container Tag                                      |
-|-------------------------------------------------------------------------------------|:-----------:|----------------------------------------------------|
 | [`l4t-tensorflow`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-tensorflow) |   R34.1.0   | `nvcr.io/nvidia/l4t-tensorflow:r34.1.0-tf1.15-py3` |
 |                                                                                     |   R34.1.0   | `nvcr.io/nvidia/l4t-tensorflow:r34.1.0-tf2.8-py3`  |
 |                                                                                     |   R32.7.1   | `nvcr.io/nvidia/l4t-tensorflow:r32.5.0-tf1.15-py3` |
@@ -68,14 +48,6 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 |                                                                                     |   R32.4.4   | `nvcr.io/nvidia/l4t-tensorflow:r32.4.4-tf2.3-py3`  |
 |                                                                                     |   R32.4.3   | `nvcr.io/nvidia/l4t-tensorflow:r32.4.3-tf1.15-py3` |
 |                                                                                     |   R32.4.3   | `nvcr.io/nvidia/l4t-tensorflow:r32.4.3-tf2.2-py3`  |
-
-</details>
-<details>
-<summary>ROS</summary>
-<br/>
-
-|                                                                                     | L4T Version | Container Tag                                      |
-|-------------------------------------------------------------------------------------|:-----------:|----------------------------------------------------|
 | [`ROS Melodic`](https://hub.docker.com/repository/docker/dustynv/ros)               |   R32.7.1   | `dustynv/ros:melodic-ros-base-l4t-r32.7.1`         |
 |                                                                                     |   R32.6.1   | `dustynv/ros:melodic-ros-base-l4t-r32.6.1`         |
 |                                                                                     |   R32.5.0*  | `dustynv/ros:melodic-ros-base-l4t-r32.5.0`         |
@@ -104,8 +76,6 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 |                                                                                     |   R32.4.4   | `dustynv/ros:galactic-ros-base-l4t-r32.4.4`        |
 | [`ROS2 Humble`](https://hub.docker.com/repository/docker/dustynv/ros)               |   R34.1.1   | `dustynv/ros:humble-ros-base-l4t-r34.1.1`          |
 |                                                                                     |   R34.1.0   | `dustynv/ros:humble-ros-base-l4t-r34.1.0`          |
-
-</details>
 
 > **note:** the L4T R32.5.0 containers can be run on both JetPack 4.5 (L4T R32.5.0) and JetPack 4.5.1 (L4T R32.5.1)
 
