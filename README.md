@@ -38,10 +38,10 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 |                                                                                     |   R32.4.3   | `nvcr.io/nvidia/l4t-pytorch:r32.4.3-pth1.6-py3`    |
 | [`l4t-tensorflow`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-tensorflow) |   R34.1.0   | `nvcr.io/nvidia/l4t-tensorflow:r34.1.0-tf1.15-py3` |
 |                                                                                     |   R34.1.0   | `nvcr.io/nvidia/l4t-tensorflow:r34.1.0-tf2.8-py3`  |
-|                                                                                     |   R32.7.1   | `nvcr.io/nvidia/l4t-tensorflow:r32.5.0-tf1.15-py3` |
-|                                                                                     |   R32.7.1   | `nvcr.io/nvidia/l4t-tensorflow:r32.5.0-tf2.7-py3`  |
-|                                                                                     |   R32.6.1   | `nvcr.io/nvidia/l4t-tensorflow:r32.5.0-tf1.15-py3` |
-|                                                                                     |   R32.6.1   | `nvcr.io/nvidia/l4t-tensorflow:r32.5.0-tf2.5-py3`  |
+|                                                                                     |   R32.7.1   | `nvcr.io/nvidia/l4t-tensorflow:r32.7.1-tf1.15-py3` |
+|                                                                                     |   R32.7.1   | `nvcr.io/nvidia/l4t-tensorflow:r32.7.1-tf2.7-py3`  |
+|                                                                                     |   R32.6.1   | `nvcr.io/nvidia/l4t-tensorflow:r32.6.1-tf1.15-py3` |
+|                                                                                     |   R32.6.1   | `nvcr.io/nvidia/l4t-tensorflow:r32.6.1-tf2.5-py3`  |
 |                                                                                     |   R32.5.0*  | `nvcr.io/nvidia/l4t-tensorflow:r32.5.0-tf1.15-py3` |
 |                                                                                     |   R32.5.0*  | `nvcr.io/nvidia/l4t-tensorflow:r32.5.0-tf2.3-py3`  |
 |                                                                                     |   R32.4.4   | `nvcr.io/nvidia/l4t-tensorflow:r32.4.4-tf1.15-py3` |
