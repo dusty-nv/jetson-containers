@@ -34,11 +34,20 @@ apt-get clean
 cd ../
 rm -rf opencv
 
-# manage some paths on aarch64
-if [ $ARCH = "aarch64" ]; then
-    PYTHON3_VERSION=`python3 -c 'import sys; version=sys.version_info[:3]; print("{0}.{1}".format(*version))'`
-    cp -r /usr/include/opencv4 /usr/local/include/opencv4
-    cp -r /usr/lib/python${PYTHON3_VERSION}/dist-packages/cv2 /usr/local/lib/python${PYTHON3_VERSION}/dist-packages/cv2
+# manage some install paths
+PYTHON3_VERSION=`python3 -c 'import sys; version=sys.version_info[:3]; print("{0}.{1}".format(*version))'`
+
+if [ $ARCH = "aarch64" ]; then    
+	ln -s /usr/include/opencv4 /usr/local/include/opencv4
+	ln -s /usr/lib/python${PYTHON3_VERSION}/dist-packages/cv2 /usr/local/lib/python${PYTHON3_VERSION}/dist-packages/cv2
+elif [ $ARCH = "x86_64" ]; then
+	OPENCV_CONDA_PATH=/opt/conda/lib/python${PYTHON3_VERSION}/site-packages/cv2
+	
+	if [ -d "$OPENCV_CONDA_PATH" ]; then
+		echo "$OPENCV_CONDA_PATH already exists, replacing..."
+		rm -rf $OPENCV_CONDA_PATH
+		ln -s /usr/lib/python${PYTHON3_VERSION}/site-packages/cv2 $OPENCV_CONDA_PATH
+	fi
 fi
 
 # test importing cv2
