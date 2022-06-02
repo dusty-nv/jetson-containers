@@ -40,3 +40,7 @@ if [ $ARCH = "aarch64" ]; then
     cp -r /usr/include/opencv4 /usr/local/include/opencv4
     cp -r /usr/lib/python${PYTHON3_VERSION}/dist-packages/cv2 /usr/local/lib/python${PYTHON3_VERSION}/dist-packages/cv2
 fi
+
+# test importing cv2
+echo "testing cv2 module under python..."
+python3 -c "import cv2; print('OpenCV version:', str(cv2.__version__)); print(cv2.getBuildInformation())"
