@@ -14,7 +14,7 @@ if [ $ARCH = "aarch64" ]; then
 		OPENCV_DEB="OpenCV-4.5.0-aarch64.tar.gz"
 	fi
 	
-elif [ $ARCH != "x86_64" ]; then
+elif [ $ARCH = "x86_64" ]; then
 	echo "selecting OpenCV for $ARCH"
 
 	OPENCV_URL="https://nvidia.box.com/shared/static/omo7hraaonzrfth22ghc9on9x7nddggj.gz"
