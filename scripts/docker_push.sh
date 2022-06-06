@@ -30,15 +30,15 @@ push()
 #
 # JetPack container
 #
-if [[ "$CONTAINERS" == "jetpack" || "$CONTAINERS" == "all" ]]; then
-	jetpack_container="jetpack:r$L4T_VERSION"
-	
-	if [[ "$(sudo docker images -q $jetpack_container 2> /dev/null)" != "" ]]; then
-		push $NGC_GROUP $jetpack_container
-	else
-		echo "did not find $jetpack_container locally, skipping..."
-	fi
-fi
+#if [[ "$CONTAINERS" == "jetpack" || "$CONTAINERS" == "all" ]]; then
+#	jetpack_container="jetpack:r$L4T_VERSION"
+#	
+#	if [[ "$(sudo docker images -q $jetpack_container 2> /dev/null)" != "" ]]; then
+#		push $NGC_GROUP $jetpack_container
+#	else
+#		echo "did not find $jetpack_container locally, skipping..."
+#	fi
+#fi
 
 
 #
