@@ -26,10 +26,7 @@ if [ $ARCH = "aarch64" ]; then
 		BASE_IMAGE_L4T=$BASE_IMAGE
 		
 	elif [ $L4T_RELEASE -eq 34 ]; then
-		if [[ $L4T_REVISION_MAJOR -eq 1 && $L4T_REVISION_MINOR -eq 1 ]]; then
-			BASE_DEVEL="nvcr.io/nvidian/nvidia-l4t-base:r34.1.1"
-			BASE_IMAGE=$BASE_DEVEL
-		elif [ $L4T_REVISION_MAJOR -lt 2 ]; then
+		if [[ $L4T_REVISION_MAJOR -eq 1 && $L4T_REVISION_MINOR -eq 0 ]]; then
 			#BASE_DEVEL="nvcr.io/nvidian/nvidia-l4t-base:focal_CUDA_11.4.13_008"
 			BASE_DEVEL="nvcr.io/nvidian/nvidia-l4t-base:r34.1"
 			BASE_IMAGE="nvcr.io/nvidia/l4t-base:r34.1"
