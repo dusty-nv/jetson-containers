@@ -36,12 +36,6 @@ RUN ln -s /usr/include/$(uname -i)-linux-gnu/cudnn_version_v8.h /usr/include/$(u
 ARG CUDA_ARCH_BIN=""
 ARG ENABLE_NEON="OFF"
 
-# patch OPENGL headers to work with CUDA
-# ref: https://github.com/jkjung-avt/jetson_nano/blob/master/opencv/cuda_gl_interop.h.patch
-COPY scripts/cuda_gl_interop.h.patch cuda_gl_interop.h.patch
-RUN patch -N -r - /usr/local/cuda/include/cuda_gl_interop.h < cuda_gl_interop.h.patch && echo "** '/usr/local/cuda/include/cuda_gl_interop.h' appears to be patched already.  Continue..."
-
-
 # clone and configure OpenCV repo
 RUN git clone --depth 1 --branch ${OPENCV_VERSION} https://github.com/opencv/opencv.git && \
     git clone --depth 1 --branch ${OPENCV_VERSION} https://github.com/opencv/opencv_contrib.git && \
@@ -76,7 +70,7 @@ RUN git clone --depth 1 --branch ${OPENCV_VERSION} https://github.com/opencv/ope
         -D WITH_GSTREAMER=ON \
         -D WITH_V4L=ON \
         -D WITH_LIBV4L=ON \
-        -D WITH_OPENGL=ON \
+        -D WITH_OPENGL=OFF \
 	    -D WITH_OPENCL=OFF \
 	    -D WITH_IPP=OFF \
         -D WITH_TBB=ON \
