@@ -16,8 +16,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV CUDA_HOME="/usr/local/cuda"
 ENV PATH="/usr/local/cuda/bin:${PATH}"
 ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
-RUN "echo '/usr/local/cuda/lib64' >> /etc/ld.so.conf.d/nvidia-tegra.conf"
-RUN ldconfig
 
 WORKDIR /opt
 
@@ -72,7 +70,7 @@ RUN git clone --depth 1 --branch ${OPENCV_VERSION} https://github.com/opencv/ope
         -D WITH_GSTREAMER=ON \
         -D WITH_V4L=ON \
         -D WITH_LIBV4L=ON \
-        -D WITH_OPENGL=ON \
+        -D WITH_OPENGL=OFF \
 	    -D WITH_OPENCL=OFF \
 	    -D WITH_IPP=OFF \
         -D WITH_TBB=ON \
