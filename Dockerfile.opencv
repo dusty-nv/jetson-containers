@@ -16,6 +16,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV CUDA_HOME="/usr/local/cuda"
 ENV PATH="/usr/local/cuda/bin:${PATH}"
 ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
+RUN "echo '/usr/local/cuda/lib64' >> /etc/ld.so.conf.d/nvidia-tegra.conf"
+RUN ldconfig
 
 WORKDIR /opt
 
@@ -45,18 +47,19 @@ RUN git clone --depth 1 --branch ${OPENCV_VERSION} https://github.com/opencv/ope
     echo "configuring OpenCV ${OPENCV_VERSION}, CUDA_ARCH_BIN=${CUDA_ARCH_BIN}, ENABLE_NEON=${ENABLE_NEON}" && \
     cmake \
         -D CPACK_BINARY_DEB=ON \
-	   -D BUILD_EXAMPLES=OFF \
+	    -D BUILD_EXAMPLES=OFF \
         -D BUILD_opencv_python2=OFF \
         -D BUILD_opencv_python3=ON \
-	   -D BUILD_opencv_java=OFF \
+	    -D BUILD_opencv_java=OFF \
         -D CMAKE_BUILD_TYPE=RELEASE \
         -D CMAKE_INSTALL_PREFIX=/usr/local \
         -D CUDA_ARCH_BIN=${CUDA_ARCH_BIN} \
         -D CUDA_ARCH_PTX= \
+        -D ENABLE_FAST_MATH=ON \
         -D CUDA_FAST_MATH=ON \
         -D CUDNN_INCLUDE_DIR=/usr/include/$(uname -i)-linux-gnu \
         -D EIGEN_INCLUDE_PATH=/usr/include/eigen3 \
-	   -D WITH_EIGEN=ON \
+	    -D WITH_EIGEN=ON \
         -D ENABLE_NEON=${ENABLE_NEON} \
         -D OPENCV_DNN_CUDA=ON \
         -D OPENCV_ENABLE_NONFREE=ON \
@@ -65,15 +68,17 @@ RUN git clone --depth 1 --branch ${OPENCV_VERSION} https://github.com/opencv/ope
         -D WITH_CUBLAS=ON \
         -D WITH_CUDA=ON \
         -D WITH_CUDNN=ON \
+        -D WITH_FFMPEG=ON \
         -D WITH_GSTREAMER=ON \
+        -D WITH_V4L=ON \
         -D WITH_LIBV4L=ON \
         -D WITH_OPENGL=ON \
-	   -D WITH_OPENCL=OFF \
-	   -D WITH_IPP=OFF \
+	    -D WITH_OPENCL=OFF \
+	    -D WITH_IPP=OFF \
         -D WITH_TBB=ON \
-	   -D BUILD_TIFF=ON \
-	   -D BUILD_PERF_TESTS=OFF \
-	   -D BUILD_TESTS=OFF \
+	    -D BUILD_TIFF=ON \
+	    -D BUILD_PERF_TESTS=OFF \
+	    -D BUILD_TESTS=OFF \
 	   ../
 	   
 RUN cd opencv/build && make -j$(nproc)

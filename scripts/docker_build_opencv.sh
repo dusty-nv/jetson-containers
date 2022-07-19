@@ -3,7 +3,7 @@
 set -e
 source scripts/docker_base.sh
 
-OPENCV_VERSION=${1:-"4.5.0"}
+OPENCV_VERSION=${1:-"4.6.0"}
 
 build_opencv()
 {
@@ -30,7 +30,7 @@ build_opencv()
 	echo "building OpenCV $opencv_version deb packages"
 
 	sh ./scripts/docker_build.sh $container_tag Dockerfile.opencv \
-			--build-arg BASE_IMAGE=$BASE_IMAGE \
+			--build-arg BASE_IMAGE=jetpack:r34.1.1 \
 			--build-arg OPENCV_VERSION=$opencv_version \
 			--build-arg CUDA_ARCH_BIN=$cuda_arch_bin \
 			--build-arg ENABLE_NEON=$enable_neon
