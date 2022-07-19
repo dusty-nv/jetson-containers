@@ -1,0 +1,21 @@
+--- cuda_gl_interop.h.bak	2019-05-14 13:22:48.260006308 +0800
++++ cuda_gl_interop.h	2019-05-14 13:42:50.488005850 +0800
+@@ -58,13 +58,13 @@
+ 
+ #else /* __APPLE__ */
+ 
+-#if defined(__arm__) || defined(__aarch64__)
+-#ifndef GL_VERSION
+-#error Please include the appropriate gl headers before including cuda_gl_interop.h
+-#endif
+-#else
++//#if defined(__arm__) || defined(__aarch64__)
++//#ifndef GL_VERSION
++//#error Please include the appropriate gl headers before including cuda_gl_interop.h
++//#endif
++//#else
+ #include <GL/gl.h>
+-#endif
++//#endif
+ 
+ #endif /* __APPLE__ */
