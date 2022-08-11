@@ -51,6 +51,7 @@ RUN git clone --depth 1 --branch ${OPENCV_VERSION} https://github.com/opencv/ope
 	   -D BUILD_opencv_java=OFF \
         -D CMAKE_BUILD_TYPE=RELEASE \
         -D CMAKE_INSTALL_PREFIX=/usr/local \
+	-D CPACK_PACKAGING_INSTALL_PREFIX=/usr/local \
         -D CUDA_ARCH_BIN=${CUDA_ARCH_BIN} \
         -D CUDA_ARCH_PTX= \
         -D CUDA_FAST_MATH=ON \
