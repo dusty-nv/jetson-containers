@@ -41,7 +41,8 @@ ARG PYTHON3_VERSION=3.8
 
 RUN printenv
 
-
+    
+    
 #
 # apt packages
 #
@@ -131,29 +132,14 @@ RUN pip3 uninstall -y pycuda
 RUN pip3 install --no-cache-dir --verbose pycuda six
 
 
-#
+# 
 # install OpenCV (with CUDA)
-# note:  do this after numba, because this installs TBB and numba complains about old TBB
 #
-ARG OPENCV_URL=https://nvidia.box.com/shared/static/2hssa5g3v28ozvo3tc3qwxmn78yerca9.gz
+ARG OPENCV_URL=https://nvidia.box.com/shared/static/5v89u6g5rb62fpz4lh0rz531ajo2t5ef.gz
 ARG OPENCV_DEB=OpenCV-4.5.0-aarch64.tar.gz
 
-RUN apt-get purge -y '*opencv*' || echo "previous OpenCV installation not found" && \
-    mkdir opencv && \
-    cd opencv && \
-    wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${OPENCV_URL} -O ${OPENCV_DEB} && \
-    tar -xzvf ${OPENCV_DEB} && \
-    dpkg -i --force-depends *.deb && \
-    apt-get update && \
-    apt-get install -y -f --no-install-recommends && \
-    dpkg -i *.deb && \
-    rm -rf /var/lib/apt/lists/* && \
-    apt-get clean && \
-    cd ../ && \
-    rm -rf opencv && \
-    PYTHON3_VERSION=`python3 -c 'import sys; version=sys.version_info[:3]; print("{0}.{1}".format(*version))'` && \
-    cp -r /usr/include/opencv4 /usr/local/include/opencv4 && \
-    cp -r /usr/lib/python${PYTHON3_VERSION}/dist-packages/cv2 /usr/local/lib/python${PYTHON3_VERSION}/dist-packages/cv2
+COPY scripts/opencv_install.sh /tmp/opencv_install.sh
+RUN cd /tmp && ./opencv_install.sh ${OPENCV_URL} ${OPENCV_DEB}
 
 
 #

@@ -29,7 +29,9 @@ build_pytorch()
 			--build-arg PYTORCH_WHL=$pytorch_whl \
 			--build-arg TORCHVISION_VERSION=$vision_version \
 			--build-arg TORCHAUDIO_VERSION=$audio_version \
-			--build-arg TORCH_CUDA_ARCH_LIST=$cuda_arch_list
+			--build-arg TORCH_CUDA_ARCH_LIST=$cuda_arch_list \
+			--build-arg OPENCV_URL=$OPENCV_URL \
+			--build-arg OPENCV_DEB=$OPENCV_DEB 
 
 	echo "done building PyTorch $pytorch_whl, torchvision $vision_version, torchaudio $audio_version, cuda arch $cuda_arch_list"
 }
@@ -104,7 +106,7 @@ if [[ "$CONTAINERS" == "pytorch" || "$CONTAINERS" == "all" ]]; then
 					"v0.11.3" \
 					"v0.10.2"
 					
-	elif [[ $L4T_RELEASE -eq 34 ]]; then   # JetPack 5.x
+	elif [[ $L4T_RELEASE -eq 34 ]]; then   # JetPack 5.0.0 (DP) / 5.0.1 (DP2)
 	
 		jp5_cuda_arch="7.2;8.7"
 		
@@ -131,6 +133,32 @@ if [[ "$CONTAINERS" == "pytorch" || "$CONTAINERS" == "all" ]]; then
 					"v0.12.0" \
 					"v0.11.0" \
 					$jp5_cuda_arch
+					
+	elif [[ $L4T_RELEASE -eq 35 ]]; then   # JetPack 5.0.2 (GA)
+	
+		# PyTorch v1.11.0
+		build_pytorch "https://nvidia.box.com/shared/static/ssf2v7pf5i245fk4i0q926hy4imzs2ph.whl" \
+					"torch-1.11.0-cp38-cp38-linux_aarch64.whl" \
+					"l4t-pytorch:r$L4T_VERSION-pth1.11-py3" \
+					"v0.12.0" \
+					"v0.11.0" \
+					$jp5_cuda_arch
+					
+		# PyTorch v1.12.0
+		build_pytorch "https://developer.download.nvidia.com/compute/redist/jp/v50/pytorch/torch-1.12.0a0+8a1a93a9.nv22.5-cp38-cp38-linux_aarch64.whl" \
+					"torch-1.12.0a0+8a1a93a9.nv22.5-cp38-cp38-linux_aarch64.whl" \
+					"l4t-pytorch:r$L4T_VERSION-pth1.12-py3" \
+					"v0.13.0" \
+					"v0.12.0" \
+					$jp5_cuda_arch
+					
+		# PyTorch v1.13.0
+		build_pytorch "https://developer.download.nvidia.com/compute/redist/jp/v50/pytorch/torch-1.13.0a0+340c4120.nv22.06-cp38-cp38-linux_aarch64.whl" \
+					"torch-1.13.0a0+340c4120.nv22.06-cp38-cp38-linux_aarch64.whl" \
+					"l4t-pytorch:r$L4T_VERSION-pth1.13-py3" \
+					"v0.13.0" \
+					"v0.12.0" \
+					$jp5_cuda_arch
 	else
 		echo "warning -- unsupported L4T R$L4T_VERSION, skipping PyTorch..."
 	fi
@@ -152,8 +180,10 @@ build_tensorflow()
 		--build-arg BASE_IMAGE=$BASE_IMAGE \
 		--build-arg TENSORFLOW_URL=$tensorflow_url \
 		--build-arg TENSORFLOW_WHL=$tensorflow_whl \
-		--build-arg PROTOBUF_VERSION=$protobuf_version
-
+		--build-arg PROTOBUF_VERSION=$protobuf_version \
+		--build-arg OPENCV_URL=$OPENCV_URL \
+		--build-arg OPENCV_DEB=$OPENCV_DEB 
+		
 	echo "done building TensorFlow $tensorflow_whl, $tensorflow_tag"
 }
 
@@ -203,16 +233,30 @@ if [[ "$CONTAINERS" == "tensorflow" || "$CONTAINERS" == "all" ]]; then
 	
 	elif [[ $L4T_RELEASE -eq 34 ]] && [[ $L4T_REVISION_MAJOR -le 1 ]]; then
 	
-		# TensorFlow 1.15.5 for JetPack 5.0
+		# TensorFlow 1.15.5 for JetPack 5.0.0 / 5.0.1
 		build_tensorflow "https://developer.download.nvidia.com/compute/redist/jp/v50/tensorflow/tensorflow-1.15.5+nv22.4-cp38-cp38-linux_aarch64.whl" \
 					  "tensorflow-1.15.5+nv22.4-cp38-cp38-linux_aarch64.whl" \
 					  "l4t-tensorflow:r$L4T_VERSION-tf1.15-py3" \
 					  "3.20.1"
 
-		# TensorFlow 2.8 for JetPack 5.0
+		# TensorFlow 2.8 for JetPack 5.0.0 / 5.0.1
 		build_tensorflow "https://developer.download.nvidia.com/compute/redist/jp/v50/tensorflow/tensorflow-2.8.0+nv22.4-cp38-cp38-linux_aarch64.whl" \
 					  "tensorflow-2.8.0+nv22.4-cp38-cp38-linux_aarch64.whl" \
 					  "l4t-tensorflow:r$L4T_VERSION-tf2.8-py3" \
+					  "3.20.1"
+	
+	elif [[ $L4T_RELEASE -eq 35 ]]; then
+	
+		# TensorFlow 1.15.5 for JetPack 5.0.2
+		build_tensorflow "https://developer.download.nvidia.com/compute/redist/jp/v50/tensorflow/tensorflow-1.15.5+nv22.5-cp38-cp38-linux_aarch64.whl" \
+					  "tensorflow-1.15.5+nv22.5-cp38-cp38-linux_aarch64.whl" \
+					  "l4t-tensorflow:r$L4T_VERSION-tf1.15-py3" \
+					  "3.20.1"
+
+		# TensorFlow 2.9 for JetPack 5.0.2
+		build_tensorflow "https://developer.download.nvidia.com/compute/redist/jp/v50/tensorflow/tensorflow-2.9.1+nv22.06-cp38-cp38-linux_aarch64.whl" \
+					  "tensorflow-2.9.1+nv22.06-cp38-cp38-linux_aarch64.whl" \
+					  "l4t-tensorflow:r$L4T_VERSION-tf2.9-py3" \
 					  "3.20.1"
 					  
 	else
@@ -228,7 +272,7 @@ if [[ "$CONTAINERS" == "all" ]]; then
 
 	sh ./scripts/docker_build.sh l4t-ml:r$L4T_VERSION-py3 Dockerfile.ml \
 			--build-arg BASE_IMAGE=$BASE_IMAGE \
-			--build-arg PYTORCH_IMAGE=l4t-pytorch:r$L4T_VERSION-pth1.12-py3 \
+			--build-arg PYTORCH_IMAGE=l4t-pytorch:r$L4T_VERSION-pth1.13-py3 \
 			--build-arg TENSORFLOW_IMAGE=l4t-tensorflow:r$L4T_VERSION-tf1.15-py3 \
 			--build-arg PYTHON3_VERSION=$PYTHON3_VERSION \
 			--build-arg OPENCV_URL=$OPENCV_URL \

@@ -20,9 +20,9 @@ print('Tensor c = ' + str(c))
 print('testing LAPACK (OpenBLAS)...')
 
 a = torch.randn(2, 3, 1, 4, 4)
-b = torch.randn(2, 3, 1, 4, 6)
+b = torch.randn(2, 3, 1, 4, 4)
 
-x, lu = torch.solve(b, a)
+x, lu = torch.linalg.solve(b, a)
 
 print('done testing LAPACK (OpenBLAS)')
 

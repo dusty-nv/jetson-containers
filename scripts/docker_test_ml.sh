@@ -149,7 +149,7 @@ test_pytorch_all()
 	test_tensorrt $1
 	test_cuda $1
 	test_numpy $1
-	test_vpi $1 
+	#test_vpi $1 
 	
 	if [[ $L4T_RELEASE -eq 34 ]]; then
 		test_opencv $1
@@ -164,7 +164,7 @@ test_tensorflow_all()
 	test_tensorrt $1
 	test_cuda $1
 	test_numpy $1
-	test_vpi $1
+	#test_vpi $1
 	
 	if [[ $L4T_RELEASE -eq 34 ]]; then
 		test_opencv $1
@@ -187,7 +187,7 @@ test_all()
 	#test_pandas $1
 	test_scipy $1
 	test_sklearn $1
-	test_vpi $1
+	#test_vpi $1
 }
 
 
@@ -204,8 +204,10 @@ if [[ "$CONTAINERS" == "pytorch" || "$CONTAINERS" == "all" ]]; then
 	#test_pytorch_all "l4t-pytorch:r$L4T_VERSION-pth1.8-py3"
 	#test_pytorch_all "l4t-pytorch:r$L4T_VERSION-pth1.9-py3"
 	#test_pytorch_all "l4t-pytorch:r$L4T_VERSION-pth1.10-py3"
+	#test_pytorch_all "l4t-pytorch:r$L4T_VERSION-pth1.11-py3"
 	test_pytorch_all "l4t-pytorch:r$L4T_VERSION-pth1.11-py3"
 	test_pytorch_all "l4t-pytorch:r$L4T_VERSION-pth1.12-py3"
+	test_pytorch_all "l4t-pytorch:r$L4T_VERSION-pth1.13-py3"
 fi
 
 #
@@ -213,7 +215,7 @@ fi
 #
 if [[ "$CONTAINERS" == "tensorflow" || "$CONTAINERS" == "all" ]]; then
 	test_tensorflow_all "l4t-tensorflow:r$L4T_VERSION-tf1.15-py3"
-	test_tensorflow_all "l4t-tensorflow:r$L4T_VERSION-tf2.8-py3"
+	test_tensorflow_all "l4t-tensorflow:r$L4T_VERSION-tf2.9-py3"
 fi
 
 #

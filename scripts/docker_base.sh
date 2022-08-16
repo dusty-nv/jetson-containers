@@ -34,6 +34,12 @@ if [ $ARCH = "aarch64" ]; then
 		
 		BASE_IMAGE_L4T=$BASE_IMAGE
 		BASE_IMAGE="jetpack:r$L4T_VERSION"
+		
+	elif [ $L4T_RELEASE -eq 35 ]; then
+	
+		BASE_IMAGE_L4T="nvcr.io/nvidian/nvidia-l4t-base:r35.1.0"
+		BASE_IMAGE="nvcr.io/ea-linux4tegra/l4t-jetpack:r35.1.0"
+		
 	fi
 		
 	echo "l4t-base image:  $BASE_IMAGE_L4T"

@@ -32,6 +32,7 @@ ARG MAKEFLAGS=-j$(nproc)
 RUN printenv
 
 
+    
 #
 # install prerequisites - https://docs.nvidia.com/deeplearning/frameworks/install-tf-jetson-platform/index.html#prereqs
 #
@@ -121,6 +122,16 @@ ARG TENSORFLOW_WHL=tensorflow-1.15.3+nv20.9-cp36-cp36m-linux_aarch64.whl
 RUN wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${TENSORFLOW_URL} -O ${TENSORFLOW_WHL} && \
     pip3 install --no-cache-dir --verbose ${TENSORFLOW_WHL} && \
     rm ${TENSORFLOW_WHL}
+
+
+# 
+# install OpenCV (with CUDA)
+#
+ARG OPENCV_URL=https://nvidia.box.com/shared/static/5v89u6g5rb62fpz4lh0rz531ajo2t5ef.gz
+ARG OPENCV_DEB=OpenCV-4.5.0-aarch64.tar.gz
+
+COPY scripts/opencv_install.sh /tmp/opencv_install.sh
+RUN cd /tmp && ./opencv_install.sh ${OPENCV_URL} ${OPENCV_DEB}
 
 
 # 
