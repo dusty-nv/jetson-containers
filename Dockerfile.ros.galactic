@@ -40,12 +40,29 @@ RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/r
 
 
 # 
+# upgrade cmake - https://stackoverflow.com/a/56690743
+# this is needed to build some of the ROS2 packages
+#
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+		  software-properties-common \
+		  apt-transport-https \
+		  ca-certificates \
+		  gnupg \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+		  	  
+RUN wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | apt-key add - && \
+    apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main"
+    
+# 
 # install development packages
 #
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
 		build-essential \
-		cmake \
+		cmake-data=3.23.2-0kitware1ubuntu18.04.1 \
+		cmake=3.23.2-0kitware1ubuntu18.04.1 \
 		git \
 		libbullet-dev \
 		libpython3-dev \
@@ -63,6 +80,8 @@ RUN apt-get update && \
 		libcunit1-dev \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
+
+RUN cmake --version && apt-mark hold cmake cmake-data
 
 # install some pip packages needed for testing
 RUN python3 -m pip install -U \
@@ -101,31 +120,6 @@ RUN apt-get purge -y '*opencv*' || echo "previous OpenCV installation not found"
     PYTHON3_VERSION=`python3 -c 'import sys; version=sys.version_info[:3]; print("{0}.{1}".format(*version))'` && \
     cp -r /usr/include/opencv4 /usr/local/include/opencv4 && \
     cp -r /usr/lib/python${PYTHON3_VERSION}/dist-packages/cv2 /usr/local/lib/python${PYTHON3_VERSION}/dist-packages/cv2
-    
-    
-# 
-# upgrade cmake - https://stackoverflow.com/a/56690743
-# this is needed to build some of the ROS2 packages
-#
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-		  software-properties-common \
-		  apt-transport-https \
-		  ca-certificates \
-		  gnupg \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
-		  	  
-RUN wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | apt-key add - && \
-    apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends --only-upgrade \
-            cmake \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
-    
-RUN cmake --version
-
 
 # 
 # download/build ROS from source
