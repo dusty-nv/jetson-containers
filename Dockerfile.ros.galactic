@@ -156,6 +156,8 @@ RUN mkdir -p ${ROS_ROOT}/src && \
 		> ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall && \
     cat ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall && \
     vcs import src < ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall && \
+    
+    # https://github.com/dusty-nv/jetson-containers/issues/181
     rm -r ${ROS_ROOT}/src/ament_cmake && \
     git -C ${ROS_ROOT}/src/ clone https://github.com/ament/ament_cmake -b ${ROS_DISTRO} && \
 
