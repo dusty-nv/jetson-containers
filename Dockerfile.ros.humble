@@ -130,6 +130,14 @@ RUN wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | apt-key
 RUN cmake --version
 
 
+#
+# remove other versions of Python3
+# workaround for 'Could NOT find Python3 (missing: Python3_NumPy_INCLUDE_DIRS Development'
+#
+RUN apt purge -y python3.9 libpython3.9* && \
+    ls -ll /usr/bin/python*
+    
+    
 # 
 # download/build ROS from source
 #
@@ -159,6 +167,8 @@ RUN mkdir -p ${ROS_ROOT}/src && \
 		> ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall && \
     cat ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall && \
     vcs import src < ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall && \
+    
+    # https://github.com/dusty-nv/jetson-containers/issues/181
     rm -r ${ROS_ROOT}/src/ament_cmake && \
     git -C ${ROS_ROOT}/src/ clone https://github.com/ament/ament_cmake -b ${ROS_DISTRO} && \
 
