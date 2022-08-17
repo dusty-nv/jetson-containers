@@ -22,7 +22,6 @@ ENV LANG=en_US.UTF-8
 ENV PYTHONIOENCODING=utf-8
 
 
-
 # 
 # add the ROS deb repo to the apt sources list
 #
@@ -33,7 +32,6 @@ RUN apt-get update && \
 		gnupg2 \
 		lsb-release \
 		ca-certificates \
-		python3-pip \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
@@ -42,45 +40,18 @@ RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/r
 
 
 # 
-# upgrade cmake - https://stackoverflow.com/a/56690743
-# this is needed to build some of the ROS2 packages
-#
-#RUN apt-get update && \
-#    apt-get install -y --no-install-recommends \
-#		  software-properties-common \
-#		  apt-transport-https \
-#		  ca-certificates \
-#		  gnupg \
-#		  lsb-release \
-#    && rm -rf /var/lib/apt/lists/* \
-#    && apt-get clean
-		  	  
-#RUN wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | apt-key add - && \
-#    apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" && \
-#    apt-get update && \
-#    apt-get install -y --no-install-recommends --only-upgrade \
-#            cmake \
-#    && rm -rf /var/lib/apt/lists/* \
-#    && apt-get clean
-
-# workaround for https://github.com/dusty-nv/jetson-containers/issues/181
-RUN apt purge -y cmake && \
-    pip3 install cmake==3.23.3 --upgrade --verbose 
-    
-RUN cmake --version
-
-
-# 
 # install development packages
 #
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
 		build-essential \
+		cmake \
 		git \
 		libbullet-dev \
 		libpython3-dev \
 		python3-colcon-common-extensions \
 		python3-flake8 \
+		python3-pip \
 		python3-numpy \
 		python3-pytest-cov \
 		python3-rosdep \
@@ -131,6 +102,31 @@ RUN apt-get purge -y '*opencv*' || echo "previous OpenCV installation not found"
     cp -r /usr/include/opencv4 /usr/local/include/opencv4 && \
     cp -r /usr/lib/python${PYTHON3_VERSION}/dist-packages/cv2 /usr/local/lib/python${PYTHON3_VERSION}/dist-packages/cv2
 	
+
+# 
+# upgrade cmake - https://stackoverflow.com/a/56690743
+# this is needed to build some of the ROS2 packages
+#
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+		  software-properties-common \
+		  apt-transport-https \
+		  ca-certificates \
+		  gnupg \
+		  lsb-release \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+		  	  
+RUN wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | apt-key add - && \
+    apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends --only-upgrade \
+            cmake \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+    
+RUN cmake --version
+
 
 # 
 # compile yaml-cpp-0.6, which some ROS packages may use (but is not in the 18.04 apt repo)
