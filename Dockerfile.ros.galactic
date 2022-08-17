@@ -2,7 +2,7 @@
 # this dockerfile roughly follows the 'Install ROS From Source' procedures from:
 #   https://docs.ros.org/en/galactic/Installation/Ubuntu-Development-Setup.html
 #
-ARG BASE_IMAGE=nvcr.io/nvidia/l4t-base:r32.5.0
+ARG BASE_IMAGE=nvcr.io/nvidia/l4t-tensorflow:r32.6.1-tf2.5-py3
 FROM ${BASE_IMAGE}
 
 ARG ROS_PKG=ros_base
@@ -112,7 +112,7 @@ RUN python3 -m pip install -U \
 # 
 # install OpenCV (with CUDA)
 #
-ARG OPENCV_URL=https://nvidia.box.com/shared/static/2hssa5g3v28ozvo3tc3qwxmn78yerca9.gz
+ARG OPENCV_URL=https://nvidia.box.com/shared/static/5v89u6g5rb62fpz4lh0rz531ajo2t5ef.gz
 ARG OPENCV_DEB=OpenCV-4.5.0-aarch64.tar.gz
 
 RUN apt-get purge -y '*opencv*' || echo "previous OpenCV installation not found" && \
