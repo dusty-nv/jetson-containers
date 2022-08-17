@@ -32,41 +32,11 @@ RUN apt-get update && \
 		gnupg2 \
 		lsb-release \
 		ca-certificates \
-		python3-pip \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
 RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
 RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null
-
-
-# 
-# upgrade cmake - https://stackoverflow.com/a/56690743
-# this is needed to build some of the ROS2 packages
-#
-#RUN apt-get update && \
-#    apt-get install -y --no-install-recommends \
-#		  software-properties-common \
-#		  apt-transport-https \
-#		  ca-certificates \
-#		  gnupg \
-#		  lsb-release \
-#    && rm -rf /var/lib/apt/lists/* \
-#    && apt-get clean
-		  	  
-#RUN wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | apt-key add - && \
-#    apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" && \
-#    apt-get update && \
-#    apt-get install -y --no-install-recommends --only-upgrade \
-#            cmake \
-#    && rm -rf /var/lib/apt/lists/* \
-#    && apt-get clean
-
-# workaround for https://github.com/dusty-nv/jetson-containers/issues/181
-RUN apt purge -y cmake && \
-    pip3 install cmake==3.23.3 --upgrade --verbose 
-    
-RUN cmake --version
 
 
 # 
@@ -134,6 +104,30 @@ RUN apt-get purge -y '*opencv*' || echo "previous OpenCV installation not found"
     
     
 # 
+# upgrade cmake - https://stackoverflow.com/a/56690743
+# this is needed to build some of the ROS2 packages
+#
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+		  software-properties-common \
+		  apt-transport-https \
+		  ca-certificates \
+		  gnupg \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+		  	  
+RUN wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | apt-key add - && \
+    apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends --only-upgrade \
+            cmake \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+    
+RUN cmake --version
+
+
+# 
 # download/build ROS from source
 #
 RUN mkdir -p ${ROS_ROOT}/src && \
@@ -162,6 +156,8 @@ RUN mkdir -p ${ROS_ROOT}/src && \
 		> ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall && \
     cat ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall && \
     vcs import src < ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall && \
+    rm -r ${ROS_ROOT}/src/ament_cmake && \
+    git -C ${ROS_ROOT}/src/ clone https://github.com/ament/ament_cmake -b ${ROS_DISTRO} && \
 
     # install dependencies using rosdep
     apt-get update && \
