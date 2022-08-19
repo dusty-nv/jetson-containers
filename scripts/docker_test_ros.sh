@@ -6,7 +6,7 @@ source scripts/docker_base.sh
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 TEST_MOUNT="$ROOT/../test:/test"
 
-if [[ $L4T_RELEASE -eq 34 ]]; then   # JetPack 5.x / Ubuntu 20.04
+if [[ $L4T_RELEASE -eq 34 || $L4T_RELEASE -eq 35 ]]; then   # JetPack 5.x / Ubuntu 20.04
 	SUPPORTED_ROS_DISTROS=("noetic" "foxy" "galactic" "humble")
 else
 	SUPPORTED_ROS_DISTROS=("melodic" "noetic" "eloquent" "foxy" "galactic" "humble")
