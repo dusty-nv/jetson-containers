@@ -177,3 +177,10 @@ $ ./scripts/docker_test_ros.sh eloquent  # test if the build of 'ROS eloquent' w
 $ ./scripts/docker_test_ros.sh foxy      # test if the build of 'ROS foxy' was successful
 ```
 
+To run testing on upstream containers from NVIDIA container repository:
+
+``` bash
+$ ./scripts/docker_test_ml.sh all nvcr.io/nvidia/    # url with trailing slash is required
+```
+
+This can be useful to test your custom distribution.

@@ -100,17 +100,20 @@ done
 #echo "USER_VOLUME:     $USER_VOLUME"
 #echo "USER_COMMAND:    '$USER_COMMAND'"
 
+set +e
 
 # give docker root user X11 permissions
-sudo xhost +si:localuser:root
+${SUDO} xhost +si:localuser:root
 
 # enable SSH X11 forwarding inside container (https://stackoverflow.com/q/48235040)
 XAUTH=/tmp/.docker.xauth
 xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -
 chmod 777 $XAUTH
 
+set -e
+
 # run the container
-sudo docker run --runtime nvidia -it --rm --network host -e DISPLAY=$DISPLAY \
+${SUDO} docker run --runtime nvidia -it --rm --network host -e DISPLAY=$DISPLAY \
     -v /tmp/.X11-unix/:/tmp/.X11-unix \
     -v $XAUTH:$XAUTH -e XAUTHORITY=$XAUTH \
     $USER_VOLUME $CONTAINER_IMAGE $USER_COMMAND

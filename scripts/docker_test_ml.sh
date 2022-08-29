@@ -6,6 +6,7 @@ source scripts/l4t_version.sh
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 TEST_MOUNT="$ROOT/../test:/test"
 CONTAINERS=${1:-"all"}
+DOCKER_REPO=$2
 
 # cuda tests
 test_cuda()
@@ -80,7 +81,7 @@ test_pytorch()
 		if [ ! -d "test/data" ]; then
 			mkdir test/data
 		fi
-		wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate $DATA_URL -O test/data/$DATA_NAME.tar.gz
+		wget --quiet --no-check-certificate $WGET_ADDITIONAL_PARAMS $DATA_URL -O test/data/$DATA_NAME.tar.gz
 		tar -xzf test/data/$DATA_NAME.tar.gz -C test/data/
 	fi
 
@@ -205,24 +206,24 @@ if [[ "$CONTAINERS" == "pytorch" || "$CONTAINERS" == "all" ]]; then
 	#test_pytorch_all "l4t-pytorch:r$L4T_VERSION-pth1.9-py3"
 	#test_pytorch_all "l4t-pytorch:r$L4T_VERSION-pth1.10-py3"
 	#test_pytorch_all "l4t-pytorch:r$L4T_VERSION-pth1.11-py3"
-	test_pytorch_all "l4t-pytorch:r$L4T_VERSION-pth1.11-py3"
-	test_pytorch_all "l4t-pytorch:r$L4T_VERSION-pth1.12-py3"
-	test_pytorch_all "l4t-pytorch:r$L4T_VERSION-pth1.13-py3"
+	test_pytorch_all "${DOCKER_REPO}l4t-pytorch:r$L4T_VERSION-pth1.11-py3"
+	test_pytorch_all "${DOCKER_REPO}l4t-pytorch:r$L4T_VERSION-pth1.12-py3"
+	test_pytorch_all "${DOCKER_REPO}l4t-pytorch:r$L4T_VERSION-pth1.13-py3"
 fi
 
 #
 # TensorFlow container
 #
 if [[ "$CONTAINERS" == "tensorflow" || "$CONTAINERS" == "all" ]]; then
-	test_tensorflow_all "l4t-tensorflow:r$L4T_VERSION-tf1.15-py3"
-	test_tensorflow_all "l4t-tensorflow:r$L4T_VERSION-tf2.9-py3"
+	test_tensorflow_all "${DOCKER_REPO}l4t-tensorflow:r$L4T_VERSION-tf1.15-py3"
+	test_tensorflow_all "${DOCKER_REPO}l4t-tensorflow:r$L4T_VERSION-tf2.9-py3"
 fi
 
 #
 # ML container
 #
 if [[ "$CONTAINERS" == "ml" || "$CONTAINERS" == "all" ]]; then
-	test_all "l4t-ml:r$L4T_VERSION-py3"
+	test_all "${DOCKER_REPO}l4t-ml:r$L4T_VERSION-py3"
 fi
 
 
