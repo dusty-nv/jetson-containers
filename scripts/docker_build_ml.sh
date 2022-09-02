@@ -136,6 +136,8 @@ if [[ "$CONTAINERS" == "pytorch" || "$CONTAINERS" == "all" ]]; then
 					
 	elif [[ $L4T_RELEASE -eq 35 ]]; then   # JetPack 5.0.2 (GA)
 	
+		jp5_cuda_arch="7.2;8.7"
+		
 		# PyTorch v1.11.0
 		build_pytorch "https://nvidia.box.com/shared/static/ssf2v7pf5i245fk4i0q926hy4imzs2ph.whl" \
 					"torch-1.11.0-cp38-cp38-linux_aarch64.whl" \
