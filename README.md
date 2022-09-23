@@ -8,12 +8,12 @@ Hosted on [NVIDIA GPU Cloud](https://ngc.nvidia.com/catalog/containers?orderBy=m
 
 The following ROS containers are also available, which can be pulled from [DockerHub](https://hub.docker.com/repository/docker/dustynv/ros) or built from source:
 
-* ROS Melodic (`ros:melodic-ros-base-l4t-r32.7.1`)
-* ROS Noetic (`ros:noetic-ros-base-l4t-r35.1.0`) (`ros:noetic-pytorch-l4t-r35.1.0`)
-* ROS2 Eloquent (`ros:eloquent-ros-base-l4t-r32.7.1`)
-* ROS2 Foxy (`ros:foxy-ros-base-l4t-r35.1.0`) (`ros:foxy-pytorch-l4t-r35.1.0`)
-* ROS2 Galactic (`ros:galactic-ros-base-l4t-r35.1.0`) (`ros:galactic-pytorch-l4t-r35.1.0`)
-* ROS2 Humble (`ros:humble-ros-base-l4t-r35.1.0`) (`ros:humble-pytorch-l4t-r35.1.0`)
+* ROS Melodic <sup>([`ros-base`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=melodic))</sup>
+* ROS Noetic <sup>([`ros-base`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=noetic-ros-base))</sup> <sup>([`PyTorch`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=noetic-pytorch))</sup>
+* ROS2 Eloquent <sup>([`ros-base`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=eloquent))</sup>
+* ROS2 Foxy <sup>([`ros-base`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=foxy-ros-base))</sup> <sup>([`PyTorch`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=foxy-pytorch))</sup>
+* ROS2 Galactic <sup>([`ros-base`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=galactic-ros-base))</sup> <sup>([`PyTorch`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=galactic-pytorch))</sup>
+* ROS2 Humble <sup>([`ros-base`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=humble-ros-base))</sup> <sup>([`PyTorch`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=humble-pytorch))</sup>
 
 The ROS distributions that use Python3 have PyTorch-based container images available, and some have ROS Desktop images for JetPack 5.x.
 
@@ -178,14 +178,12 @@ Note that the TensorFlow and PyTorch pip wheel installers for aarch64 are automa
 To build the ROS containers, use [`scripts/docker_build_ros.sh`](scripts/docker_build_ros.sh) with the `--distro` option to specify the name of the ROS distro to build and `--package` to specify the ROS package to build (the default package is `ros_base`):
 
 ``` bash
-$ ./scripts/docker_build_ros.sh --distro all       # build all ROS distros (default)
-$ ./scripts/docker_build_ros.sh --distro foxy      # build only foxy (ros_base)
+$ ./scripts/docker_build_ros.sh --distro all   # build all ROS distros (default)
+$ ./scripts/docker_build_ros.sh --distro foxy  # build only foxy (ros_base)
 $ ./scripts/docker_build_ros.sh --distro foxy --package desktop  # build foxy desktop (on JetPack 5.x)
 ```
 
-The `--package` options are:  `ros_base`, `ros_core`, and `desktop`.  Note that the ROS2 Desktop packages only build on JetPack 5.x.
-
-You can also specify `--with-pytorch` to build variants with support for PyTorch.  Note that Noetic, Foxy, and Galactic are built from source for Ubuntu 18.04, while Melodic and Eloquent are installed from Debian packages into the containers.
+The package options are:  `ros_base`, `ros_core`, and `desktop` - note that the ROS2 Desktop packages only build on JetPack 5.x.  You can also specify `--with-pytorch` to build variants with support for PyTorch. 
 
 ## Testing the Containers
 
