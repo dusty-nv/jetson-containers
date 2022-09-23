@@ -59,45 +59,62 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 |                                                                                     |   R32.4.4   | `nvcr.io/nvidia/l4t-tensorflow:r32.4.4-tf2.3-py3`  |
 |                                                                                     |   R32.4.3   | `nvcr.io/nvidia/l4t-tensorflow:r32.4.3-tf1.15-py3` |
 |                                                                                     |   R32.4.3   | `nvcr.io/nvidia/l4t-tensorflow:r32.4.3-tf2.2-py3`  |
-| [`ROS Melodic`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=melodic) (base) |   R32.7.1   | `dustynv/ros:melodic-ros-base-l4t-r32.7.1`         |
+| [`ROS Melodic`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=melodic) <sup>ros-base</sup> |   R32.7.1   | `dustynv/ros:melodic-ros-base-l4t-r32.7.1`         |
 |                                                                                     |   R32.6.1   | `dustynv/ros:melodic-ros-base-l4t-r32.6.1`         |
 |                                                                                     |   R32.5.0*  | `dustynv/ros:melodic-ros-base-l4t-r32.5.0`         |
 |                                                                                     |   R32.4.4   | `dustynv/ros:melodic-ros-base-l4t-r32.4.4`         |
-| [`ROS Noetic`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=noetic-ros-base) (base) |   R35.1.0   | `dustynv/ros:noetic-ros-base-l4t-r35.1.0`          |
+| [`ROS Noetic`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=noetic-ros-base) <sup>ros-base</sup> |   R35.1.0   | `dustynv/ros:noetic-ros-base-l4t-r35.1.0`          |
 |                                                                                     |   R34.1.1   | `dustynv/ros:noetic-ros-base-l4t-r34.1.1`          |
 |                                                                                     |   R34.1.0   | `dustynv/ros:noetic-ros-base-l4t-r34.1.0`          |
 |                                                                                     |   R32.7.1   | `dustynv/ros:noetic-ros-base-l4t-r32.7.1`          |
 |                                                                                     |   R32.6.1   | `dustynv/ros:noetic-ros-base-l4t-r32.6.1`          |
 |                                                                                     |   R32.5.0*  | `dustynv/ros:noetic-ros-base-l4t-r32.5.0`          |
 |                                                                                     |   R32.4.4   | `dustynv/ros:noetic-ros-base-l4t-r32.4.4`          |
-| [`ROS Noetic`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=noetic-ros-base) <sup>(PyTorch)</sup> |   R35.1.0   | `dustynv/ros:noetic-pytorch-l4t-r35.1.0`          |
+| [`ROS Noetic`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=noetic-pytorch) <sup>PyTorch</sup> |   R35.1.0   | `dustynv/ros:noetic-pytorch-l4t-r35.1.0`          |
 |                                                                                     |   R34.1.1   | `dustynv/ros:noetic-pytorch-l4t-r34.1.1`          |
 |                                                                                     |   R34.1.0   | `dustynv/ros:noetic-pytorch-l4t-r34.1.0`          |
 |                                                                                     |   R32.7.1   | `dustynv/ros:noetic-pytorch-l4t-r32.7.1`          |
 |                                                                                     |   R32.6.1   | `dustynv/ros:noetic-pytorch-l4t-r32.6.1`          |
 |                                                                                     |   R32.5.0*  | `dustynv/ros:noetic-pytorch-l4t-r32.5.0`          |
 |                                                                                     |   R32.4.4   | `dustynv/ros:noetic-pytorch-l4t-r32.4.4`          |
-| [`ROS2 Eloquent`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=eloquent) (base) |   R32.7.1   | `dustynv/ros:eloquent-ros-base-l4t-r32.7.1`        |
+| [`ROS2 Eloquent`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=eloquent) <sup>ros-base</sup> |   R32.7.1   | `dustynv/ros:eloquent-ros-base-l4t-r32.7.1`        |
 |                                                                                     |   R32.6.1   | `dustynv/ros:eloquent-ros-base-l4t-r32.6.1`        |
 |                                                                                     |   R32.5.0*  | `dustynv/ros:eloquent-ros-base-l4t-r32.5.0`        |
 |                                                                                     |   R32.4.4   | `dustynv/ros:eloquent-ros-base-l4t-r32.4.4`        |
-| [`ROS2 Foxy`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=foxy) (base) |   R35.1.0   | `dustynv/ros:foxy-ros-base-l4t-r35.1.0`            |
+| [`ROS2 Foxy`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=foxy-ros-base) <sup>ros-base</sup> |   R35.1.0   | `dustynv/ros:foxy-ros-base-l4t-r35.1.0`            |
 |                                                                                     |   R34.1.1   | `dustynv/ros:foxy-ros-base-l4t-r34.1.1`            |
 |                                                                                     |   R34.1.0   | `dustynv/ros:foxy-ros-base-l4t-r34.1.0`            |
 |                                                                                     |   R32.7.1   | `dustynv/ros:foxy-ros-base-l4t-r32.7.1`            |
 |                                                                                     |   R32.6.1   | `dustynv/ros:foxy-ros-base-l4t-r32.6.1`            |
 |                                                                                     |   R32.5.0*  | `dustynv/ros:foxy-ros-base-l4t-r32.5.0`            |
 |                                                                                     |   R32.4.4   | `dustynv/ros:foxy-ros-base-l4t-r32.4.4`            |
-| [`ROS2 Galactic`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=galactic) (base) |   R35.1.0   | `dustynv/ros:galactic-ros-base-l4t-r35.1.0`        |
+| [`ROS2 Foxy`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=foxy-pytorch) <sup>PyTorch</sup> |   R35.1.0   | `dustynv/ros:foxy-pytorch-l4t-r35.1.0`            |
+|                                                                                     |   R34.1.1   | `dustynv/ros:foxy-pytorch-l4t-r34.1.1`            |
+|                                                                                     |   R34.1.0   | `dustynv/ros:foxy-pytorch-l4t-r34.1.0`            |
+|                                                                                     |   R32.7.1   | `dustynv/ros:foxy-pytorch-l4t-r32.7.1`            |
+|                                                                                     |   R32.6.1   | `dustynv/ros:foxy-pytorch-l4t-r32.6.1`            |
+|                                                                                     |   R32.5.0*  | `dustynv/ros:foxy-pytorch-l4t-r32.5.0`            |
+|                                                                                     |   R32.4.4   | `dustynv/ros:foxy-pytorch-l4t-r32.4.4`            |
+| [`ROS2 Galactic`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=galactic-ros-base) <sup>ros-base</sup> |   R35.1.0   | `dustynv/ros:galactic-ros-base-l4t-r35.1.0`        |
 |                                                                                     |   R34.1.1   | `dustynv/ros:galactic-ros-base-l4t-r34.1.1`        |
 |                                                                                     |   R34.1.0   | `dustynv/ros:galactic-ros-base-l4t-r34.1.0`        |
 |                                                                                     |   R32.7.1   | `dustynv/ros:galactic-ros-base-l4t-r32.7.1`        |
 |                                                                                     |   R32.6.1   | `dustynv/ros:galactic-ros-base-l4t-r32.6.1`        |
 |                                                                                     |   R32.5.0*  | `dustynv/ros:galactic-ros-base-l4t-r32.5.0`        |
 |                                                                                     |   R32.4.4   | `dustynv/ros:galactic-ros-base-l4t-r32.4.4`        |
-| [`ROS2 Humble`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=humble) (base) |   R35.1.0   | `dustynv/ros:humble-ros-base-l4t-r35.1.0`          |
+| [`ROS2 Galactic`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=galactic-pytorch) <sup>PyTorch</sup> |   R35.1.0   | `dustynv/ros:galactic-pytorch-l4t-r35.1.0`        |
+|                                                                                     |   R34.1.1   | `dustynv/ros:galactic-pytorch-l4t-r34.1.1`        |
+|                                                                                     |   R34.1.0   | `dustynv/ros:galactic-pytorch-l4t-r34.1.0`        |
+|                                                                                     |   R32.7.1   | `dustynv/ros:galactic-pytorch-l4t-r32.7.1`        |
+|                                                                                     |   R32.6.1   | `dustynv/ros:galactic-pytorch-l4t-r32.6.1`        |
+|                                                                                     |   R32.5.0*  | `dustynv/ros:galactic-pytorch-l4t-r32.5.0`        |
+|                                                                                     |   R32.4.4   | `dustynv/ros:galactic-pytorch-l4t-r32.4.4`        |
+| [`ROS2 Humble`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=humble-ros-base) <sup>ros-base</sup> |   R35.1.0   | `dustynv/ros:humble-ros-base-l4t-r35.1.0`          |
 |                                                                                     |   R34.1.1   | `dustynv/ros:humble-ros-base-l4t-r34.1.1`          |
 |                                                                                     |   R34.1.0   | `dustynv/ros:humble-ros-base-l4t-r34.1.0`          |
+| [`ROS2 Humble`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=humble-pytorch) <sup>PyTorch</sup> |   R35.1.0   | `dustynv/ros:humble-pytorch-l4t-r35.1.0`          |
+|                                                                                     |   R34.1.1   | `dustynv/ros:humble-pytorch-l4t-r34.1.1`          |
+|                                                                                     |   R34.1.0   | `dustynv/ros:humble-pytorch-l4t-r34.1.0`          |
 
 > **note:** the L4T R32.5.0 containers can be run on both JetPack 4.5 (L4T R32.5.0) and JetPack 4.5.1 (L4T R32.5.1)
 
