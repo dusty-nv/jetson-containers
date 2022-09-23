@@ -15,6 +15,8 @@ The following ROS containers are also provided, which can be pulled from [Docker
 * ROS2 Galactic (`ros:galactic-ros-base-l4t-r35.1.0`) (`ros:galactic-pytorch-l4t-r35.1.0`)
 * ROS2 Humble (`ros:humble-ros-base-l4t-r35.1.0`) (`ros:humble-pytorch-l4t-r35.1.0`)
 
+The ROS distributions that use Python3 have PyTorch-based container images available, and some have ROS Desktop images for JetPack 5.x.
+
 ## Pre-built Container Images
 
 The following images can be pulled from NGC or DockerHub without needing to build the containers yourself:
