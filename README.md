@@ -8,7 +8,7 @@ Hosted on [NVIDIA GPU Cloud](https://ngc.nvidia.com/catalog/containers?orderBy=m
 
 The following ROS containers are also available, which can be pulled from [DockerHub](https://hub.docker.com/repository/docker/dustynv/ros) or built from source:
 
-| Distro/Packages | | | |
+| Distro | base | desktop | PyTorch |
 |----|:----:|:----:|:----:|
 | ROS Melodic   | [`ros-base`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=melodic)           | X | X |
 | ROS Noetic    | [`ros-base`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=noetic-ros-base)   | X | [`PyTorch`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=noetic-pytorch) |
