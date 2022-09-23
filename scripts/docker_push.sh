@@ -79,7 +79,7 @@ fi
 for ROS_DISTRO in ${ROS_CONTAINERS[@]}; do
 	ros_image="ros:$ROS_DISTRO-ros-base-l4t-r$L4T_VERSION"
 	ros_pytorch_image="ros:$ROS_DISTRO-pytorch-l4t-r$L4T_VERSION"
-	ros_slam_image="ros:$ROS_DISTRO-slam-l4t-r$L4T_VERSION"
+	ros_desktop_image="ros:$ROS_DISTRO-desktop-l4t-r$L4T_VERSION"
 	
 	push $DOCKERHUB $ros_image
 	
@@ -87,7 +87,7 @@ for ROS_DISTRO in ${ROS_CONTAINERS[@]}; do
 		push $DOCKERHUB $ros_pytorch_image
 	fi
 	
-	if [[ "$(sudo docker images -q $ros_slam_image 2> /dev/null)" != "" ]]; then
-		push $DOCKERHUB $ros_slam_image
+	if [[ "$(sudo docker images -q $ros_desktop_image 2> /dev/null)" != "" ]]; then
+		push $DOCKERHUB $ros_desktop_image
 	fi
 done
