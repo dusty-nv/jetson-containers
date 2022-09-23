@@ -15,6 +15,8 @@ The following ROS containers are also available, which can be pulled from [Docke
 * ROS2 Galactic ([`ros-base`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=galactic-ros-base) [`PyTorch`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=galactic-pytorch))
 * ROS2 Humble ([`ros-base`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=humble-ros-base) [`desktop`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=humble-desktop) [`PyTorch`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=humble-pytorch))
 
+| | | |
+|-|:--:|:--:|:--:|
 | ROS Melodic   | [`ros-base`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=melodic)           | X | X |
 | ROS Noetic    | [`ros-base`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=noetic-ros-base)   | [`PyTorch`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=noetic-pytorch) | X |
 | ROS2 Eloquent | [`ros-base`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=eloquent)          | X | X |
