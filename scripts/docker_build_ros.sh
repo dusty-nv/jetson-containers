@@ -44,7 +44,7 @@ source scripts/opencv_version.sh
 
 # define default options
 if [[ $L4T_RELEASE -eq 34 || $L4T_RELEASE -eq 35 ]]; then   # JetPack 5.x / Ubuntu 20.04
-	SUPPORTED_ROS_DISTROS=("foxy" "galactic" "humble")
+	SUPPORTED_ROS_DISTROS=("noetic" "foxy" "galactic" "humble")
 else
 	SUPPORTED_ROS_DISTROS=("melodic" "noetic" "eloquent" "foxy" "galactic" "humble")
 fi
