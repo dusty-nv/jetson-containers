@@ -22,6 +22,7 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 |                                                                                     | L4T Version | Container Tag                                      |
 |-------------------------------------------------------------------------------------|:-----------:|----------------------------------------------------|
 | [`l4t-ml`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-ml)                 |   R35.1.0   | `nvcr.io/nvidia/l4t-ml:r35.1.0-py3`                |
+|                                                                                     |   R34.1.1   | `nvcr.io/nvidia/l4t-ml:r34.1.1-py3`                |
 |                                                                                     |   R34.1.0   | `nvcr.io/nvidia/l4t-ml:r34.1.0-py3`                |
 |                                                                                     |   R32.7.1   | `nvcr.io/nvidia/l4t-ml:r32.7.1-py3`                |
 |                                                                                     |   R32.6.1   | `nvcr.io/nvidia/l4t-ml:r32.6.1-py3`                |
@@ -31,6 +32,8 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 | [`l4t-pytorch`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-pytorch)       |   R35.1.0   | `nvcr.io/nvidia/l4t-pytorch:r35.1.0-pth1.13-py3`   |
 |                                                                                     |   R35.1.0   | `nvcr.io/nvidia/l4t-pytorch:r35.1.0-pth1.12-py3`   |
 |                                                                                     |   R35.1.0   | `nvcr.io/nvidia/l4t-pytorch:r35.1.0-pth1.11-py3`   |
+|                                                                                     |   R34.1.1   | `nvcr.io/nvidia/l4t-pytorch:r34.1.1-pth1.12-py3`   |
+|                                                                                     |   R34.1.1   | `nvcr.io/nvidia/l4t-pytorch:r34.1.1-pth1.11-py3`   |
 |                                                                                     |   R34.1.0   | `nvcr.io/nvidia/l4t-pytorch:r34.1.0-pth1.12-py3`   |
 |                                                                                     |   R32.7.1   | `nvcr.io/nvidia/l4t-pytorch:r32.7.1-pth1.10-py3`   |
 |                                                                                     |   R32.7.1   | `nvcr.io/nvidia/l4t-pytorch:r32.7.1-pth1.9-py3`    |
@@ -42,6 +45,8 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 |                                                                                     |   R32.4.3   | `nvcr.io/nvidia/l4t-pytorch:r32.4.3-pth1.6-py3`    |
 | [`l4t-tensorflow`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-tensorflow) |   R35.1.0   | `nvcr.io/nvidia/l4t-tensorflow:r35.1.0-tf1.15-py3` |
 |                                                                                     |   R35.1.0   | `nvcr.io/nvidia/l4t-tensorflow:r35.1.0-tf2.9-py3`  |
+|                                                                                     |   R34.1.1   | `nvcr.io/nvidia/l4t-tensorflow:r34.1.1-tf1.15-py3` |
+|                                                                                     |   R34.1.1   | `nvcr.io/nvidia/l4t-tensorflow:r34.1.1-tf2.8-py3`  |
 |                                                                                     |   R34.1.0   | `nvcr.io/nvidia/l4t-tensorflow:r34.1.0-tf1.15-py3` |
 |                                                                                     |   R34.1.0   | `nvcr.io/nvidia/l4t-tensorflow:r34.1.0-tf2.8-py3`  |
 |                                                                                     |   R32.7.1   | `nvcr.io/nvidia/l4t-tensorflow:r32.7.1-tf1.15-py3` |
@@ -59,7 +64,7 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 |                                                                                     |   R32.5.0*  | `dustynv/ros:melodic-ros-base-l4t-r32.5.0`         |
 |                                                                                     |   R32.4.4   | `dustynv/ros:melodic-ros-base-l4t-r32.4.4`         |
 | [`ROS Noetic`](https://hub.docker.com/repository/docker/dustynv/ros)                |   R35.1.0   | `dustynv/ros:noetic-ros-base-l4t-r35.1.0`          |
-|                                                                                     |   R34.1.1   | `dustynv/ros:noetic-ros-base-l4t-r35.1.0`          |
+|                                                                                     |   R34.1.1   | `dustynv/ros:noetic-ros-base-l4t-r34.1.1`          |
 |                                                                                     |   R34.1.0   | `dustynv/ros:noetic-ros-base-l4t-r34.1.0`          |
 |                                                                                     |   R32.7.1   | `dustynv/ros:noetic-ros-base-l4t-r32.7.1`          |
 |                                                                                     |   R32.6.1   | `dustynv/ros:noetic-ros-base-l4t-r32.6.1`          |
@@ -70,21 +75,21 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 |                                                                                     |   R32.5.0*  | `dustynv/ros:eloquent-ros-base-l4t-r32.5.0`        |
 |                                                                                     |   R32.4.4   | `dustynv/ros:eloquent-ros-base-l4t-r32.4.4`        |
 | [`ROS2 Foxy`](https://hub.docker.com/repository/docker/dustynv/ros)                 |   R35.1.0   | `dustynv/ros:foxy-ros-base-l4t-r35.1.0`            |
-|                                                                                     |   R34.1.1   | `dustynv/ros:foxy-ros-base-l4t-r35.1.0`            |
+|                                                                                     |   R34.1.1   | `dustynv/ros:foxy-ros-base-l4t-r34.1.1`            |
 |                                                                                     |   R34.1.0   | `dustynv/ros:foxy-ros-base-l4t-r34.1.0`            |
 |                                                                                     |   R32.7.1   | `dustynv/ros:foxy-ros-base-l4t-r32.7.1`            |
 |                                                                                     |   R32.6.1   | `dustynv/ros:foxy-ros-base-l4t-r32.6.1`            |
 |                                                                                     |   R32.5.0*  | `dustynv/ros:foxy-ros-base-l4t-r32.5.0`            |
 |                                                                                     |   R32.4.4   | `dustynv/ros:foxy-ros-base-l4t-r32.4.4`            |
 | [`ROS2 Galactic`](https://hub.docker.com/repository/docker/dustynv/ros)             |   R35.1.0   | `dustynv/ros:galactic-ros-base-l4t-r35.1.0`        |
-|                                                                                     |   R34.1.1   | `dustynv/ros:galactic-ros-base-l4t-r35.1.0`        |
+|                                                                                     |   R34.1.1   | `dustynv/ros:galactic-ros-base-l4t-r34.1.1`        |
 |                                                                                     |   R34.1.0   | `dustynv/ros:galactic-ros-base-l4t-r34.1.0`        |
 |                                                                                     |   R32.7.1   | `dustynv/ros:galactic-ros-base-l4t-r32.7.1`        |
 |                                                                                     |   R32.6.1   | `dustynv/ros:galactic-ros-base-l4t-r32.6.1`        |
 |                                                                                     |   R32.5.0*  | `dustynv/ros:galactic-ros-base-l4t-r32.5.0`        |
 |                                                                                     |   R32.4.4   | `dustynv/ros:galactic-ros-base-l4t-r32.4.4`        |
 | [`ROS2 Humble`](https://hub.docker.com/repository/docker/dustynv/ros)               |   R35.1.0   | `dustynv/ros:humble-ros-base-l4t-r35.1.0`          |
-|                                                                                     |   R34.1.1   | `dustynv/ros:humble-ros-base-l4t-r35.1.0`          |
+|                                                                                     |   R34.1.1   | `dustynv/ros:humble-ros-base-l4t-r34.1.1`          |
 |                                                                                     |   R34.1.0   | `dustynv/ros:humble-ros-base-l4t-r34.1.0`          |
 
 > **note:** the L4T R32.5.0 containers can be run on both JetPack 4.5 (L4T R32.5.0) and JetPack 4.5.1 (L4T R32.5.1)
