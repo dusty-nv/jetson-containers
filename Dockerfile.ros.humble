@@ -120,7 +120,7 @@ RUN cmake --version
 # remove other versions of Python3
 # workaround for 'Could NOT find Python3 (missing: Python3_NumPy_INCLUDE_DIRS Development'
 #
-RUN apt purge -y python3.9 libpython3.9* && \
+RUN apt purge -y python3.9 libpython3.9* || echo "python3.9 not found, skipping removal" && \
     ls -ll /usr/bin/python*
     
     
