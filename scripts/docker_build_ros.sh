@@ -13,7 +13,6 @@ show_help() {
     echo "   ./scripts/docker_build_ros.sh --distro DISTRO"
     echo "                                 --package PACKAGE"
     echo "                                 --with-pytorch"
-    echo "                                 --with-slam"
     echo " "
     echo "args:"
     echo " "
@@ -31,11 +30,6 @@ show_help() {
     echo "   --with-pytorch  Builds additional container with PyTorch support."
     echo "                   This only applies to noetic, foxy, and galactic."
     echo " "
-    echo "   --with-slam     Builds additional container with VSLAM packages,"
-    echo "                   including ORBSLAM2, RTABMAP, ZED, and Realsense."
-    echo "                   This only applies to foxy and galactic and implies"
-    echo "                   --with-pytorch as these containers use PyTorch."
-    echo " "
 }
 
 die() {
@@ -50,7 +44,7 @@ source scripts/opencv_version.sh
 
 # define default options
 if [[ $L4T_RELEASE -eq 34 || $L4T_RELEASE -eq 35 ]]; then   # JetPack 5.x / Ubuntu 20.04
-	SUPPORTED_ROS_DISTROS=("noetic" "foxy" "galactic" "humble")
+	SUPPORTED_ROS_DISTROS=("foxy" "galactic" "humble")
 else
 	SUPPORTED_ROS_DISTROS=("melodic" "noetic" "eloquent" "foxy" "galactic" "humble")
 fi
@@ -59,9 +53,7 @@ SUPPORTED_ROS_PACKAGES=("ros_base" "ros_core" "desktop")
 
 ROS_DISTRO="all"
 ROS_PACKAGE="ros_base"
-
 WITH_PYTORCH="off"
-WITH_SLAM="off"
 
 # parse options
 while :; do
@@ -101,10 +93,6 @@ while :; do
 	   --with-pytorch)
             WITH_PYTORCH="on"
             ;;
-	   --with-slam)
-		  WITH_PYTORCH="on"
-            WITH_SLAM="on"
-            ;;
         --)              # End of all options.
             shift
             break
@@ -122,7 +110,6 @@ done
 echo "ROS_DISTRO:   $ROS_DISTRO"
 echo "ROS_PACKAGE:  $ROS_PACKAGE"
 echo "WITH_PYTORCH: $WITH_PYTORCH"
-echo "WITH_SLAM:    $WITH_SLAM"
 
 if [[ "$ROS_DISTRO" == "all" ]]; then
 	BUILD_DISTRO=${SUPPORTED_ROS_DISTROS[@]}
@@ -184,11 +171,6 @@ for DISTRO in ${BUILD_DISTRO[@]}; do
 		
 		if [[ "$WITH_PYTORCH" == "on" && "$DISTRO" != "melodic" && "$DISTRO" != "eloquent" ]]; then
 			build_ros $DISTRO $PACKAGE $BASE_IMAGE_PYTORCH "pytorch-"
-		fi
-		
-		if [[ "$WITH_SLAM" == "on" && ("$DISTRO" == "foxy" || "$DISTRO" == "galactic") ]]; then
-			BASE_IMAGE_SLAM="ros:$DISTRO-pytorch-l4t-r$L4T_VERSION"
-			build_ros $DISTRO $PACKAGE $BASE_IMAGE_SLAM "slam-" "Dockerfile.ros.slam"
 		fi
 	done
 done
