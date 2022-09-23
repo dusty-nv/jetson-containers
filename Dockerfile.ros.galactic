@@ -21,6 +21,9 @@ RUN locale-gen en_US en_US.UTF-8 && update-locale LC_ALL=en_US.UTF-8 LANG=en_US.
 ENV LANG=en_US.UTF-8
 ENV PYTHONIOENCODING=utf-8
 
+# set Python3 as default
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+
 
 # 
 # add the ROS deb repo to the apt sources list
@@ -113,6 +116,14 @@ RUN wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | apt-key
 RUN cmake --version
 
 
+#
+# remove other versions of Python3
+# workaround for 'Could NOT find Python3 (missing: Python3_INCLUDE_DIRS Python3_LIBRARIES'
+#
+RUN apt purge -y python3.9 libpython3.9* && \
+    ls -ll /usr/bin/python*
+    
+    
 # 
 # download/build ROS from source
 #
