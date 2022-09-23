@@ -9,11 +9,11 @@ Hosted on [NVIDIA GPU Cloud](https://ngc.nvidia.com/catalog/containers?orderBy=m
 The following ROS containers are also provided, which can be pulled from [DockerHub](https://hub.docker.com/repository/docker/dustynv/ros) or built for JetPack 4.4 or newer:
 
 * ROS Melodic (`ros:melodic-ros-base-l4t-r32.7.1`)
-* ROS Noetic (`ros:noetic-ros-base-l4t-r35.1.0`)
+* ROS Noetic (`ros:noetic-ros-base-l4t-r35.1.0`) (`ros:noetic-pytorch-l4t-r35.1.0`)
 * ROS2 Eloquent (`ros:eloquent-ros-base-l4t-r32.7.1`)
-* ROS2 Foxy (`ros:foxy-ros-base-l4t-r35.1.0`)
-* ROS2 Galactic (`ros:galactic-ros-base-l4t-r35.1.0`)
-* ROS2 Humble (`ros:humble-ros-base-l4t-r35.1.0`)
+* ROS2 Foxy (`ros:foxy-ros-base-l4t-r35.1.0`) (`ros:foxy-pytorch-l4t-r35.1.0`)
+* ROS2 Galactic (`ros:galactic-ros-base-l4t-r35.1.0`) (`ros:galactic-pytorch-l4t-r35.1.0`)
+* ROS2 Humble (`ros:humble-ros-base-l4t-r35.1.0`) (`ros:humble-pytorch-l4t-r35.1.0`)
 
 ## Pre-built Container Images
 
