@@ -21,8 +21,9 @@
 # DEALINGS IN THE SOFTWARE.
 #
 
-ARCH=$(uname -i)
+ARCH=$(uname -m)
 echo "ARCH:  $ARCH"
+WGET_ADDITIONAL_PARAMS="--show-progress --progress=bar:force:noscroll"
 
 if [ $ARCH = "aarch64" ]; then
 	L4T_VERSION_STRING=$(head -n 1 /etc/nv_tegra_release)
@@ -41,8 +42,8 @@ if [ $ARCH = "aarch64" ]; then
 	else
 		echo "reading L4T version from /etc/nv_tegra_release"
 
-		L4T_RELEASE=$(echo $L4T_VERSION_STRING | cut -f 2 -d ' ' | grep -Po '(?<=R)[^;]+')
-		L4T_REVISION=$(echo $L4T_VERSION_STRING | cut -f 2 -d ',' | grep -Po '(?<=REVISION: )[^;]+')
+		L4T_RELEASE=$(echo $L4T_VERSION_STRING | sed 's/# R\([0-9]*\).*/\1/')
+		L4T_REVISION=$(echo $L4T_VERSION_STRING | sed 's/# R35 (release), REVISION: \([0-9]*.[0-9]*\).*/\1/')
 	fi
 
 	L4T_REVISION_MAJOR=${L4T_REVISION:0:1}
@@ -51,6 +52,11 @@ if [ $ARCH = "aarch64" ]; then
 	L4T_VERSION="$L4T_RELEASE.$L4T_REVISION"
 
 	echo "L4T BSP Version:  L4T R$L4T_VERSION"
+
+	L4T_DISTRO="$(cat /etc/os-release | grep -w ID | sed 's/ID=\([a-z]*\).*/\1/')"
+	if [ $L4T_DISTRO != "ubuntu" ]; then
+	    WGET_ADDITIONAL_PARAMS=""
+	fi
 	
 elif [ $ARCH != "x86_64" ]; then
 	echo "unsupported architecture:  $ARCH"
