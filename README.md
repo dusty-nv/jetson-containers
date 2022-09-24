@@ -13,8 +13,8 @@ The following ROS containers are also available, which can be pulled from [Docke
 | ROS Melodic   | [`ros-base`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=melodic)           | X | X |
 | ROS Noetic    | [`ros-base`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=noetic-ros-base)   | X | [`PyTorch`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=noetic-pytorch) |
 | ROS2 Eloquent | [`ros-base`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=eloquent)          | X | X |
-| ROS2 Foxy     | [`ros-base`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=foxy-ros-base)     | X | [`PyTorch`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=foxy-pytorch) |
-| ROS2 Galactic | [`ros-base`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=galactic-ros-base) | X | [`PyTorch`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=galactic-pytorch) |
+| ROS2 Foxy     | [`ros-base`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=foxy-ros-base)     | [`desktop`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=foxy-desktop) | [`PyTorch`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=foxy-pytorch) |
+| ROS2 Galactic | [`ros-base`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=galactic-ros-base) | [`desktop`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=galactic-desktop) | [`PyTorch`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=galactic-pytorch) |
 | ROS2 Humble   | [`ros-base`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=humble-ros-base)   | [`desktop`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=humble-desktop) | [`PyTorch`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=humble-pytorch) |
 
 The ROS distros that use Python3 have PyTorch-based containers, and some have ROS Desktop for JetPack 5.x.
@@ -92,6 +92,8 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 |                                                                                     |   R32.6.1   | `dustynv/ros:foxy-ros-base-l4t-r32.6.1`            |
 |                                                                                     |   R32.5.0*  | `dustynv/ros:foxy-ros-base-l4t-r32.5.0`            |
 |                                                                                     |   R32.4.4   | `dustynv/ros:foxy-ros-base-l4t-r32.4.4`            |
+| [`ROS2 Foxy`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=foxy-desktop) <sup>(desktop)</sup> |   R35.1.0   | `dustynv/ros:foxy-desktop-l4t-r35.1.0`          |
+|                                                                                     |   R34.1.1   | `dustynv/ros:foxy-desktop-l4t-r34.1.1`          |
 | [`ROS2 Foxy`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=foxy-pytorch) <sup>(PyTorch)</sup> |   R35.1.0   | `dustynv/ros:foxy-pytorch-l4t-r35.1.0`            |
 |                                                                                     |   R34.1.1   | `dustynv/ros:foxy-pytorch-l4t-r34.1.1`            |
 |                                                                                     |   R34.1.0   | `dustynv/ros:foxy-pytorch-l4t-r34.1.0`            |
@@ -106,6 +108,8 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 |                                                                                     |   R32.6.1   | `dustynv/ros:galactic-ros-base-l4t-r32.6.1`        |
 |                                                                                     |   R32.5.0*  | `dustynv/ros:galactic-ros-base-l4t-r32.5.0`        |
 |                                                                                     |   R32.4.4   | `dustynv/ros:galactic-ros-base-l4t-r32.4.4`        |
+| [`ROS2 Galactic`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=galactic-desktop) <sup>(desktop)</sup> |   R35.1.0   | `dustynv/ros:galactic-desktop-l4t-r35.1.0`          |
+|                                                                                     |   R34.1.1   | `dustynv/ros:galactic-desktop-l4t-r34.1.1`        |
 | [`ROS2 Galactic`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=galactic-pytorch) <sup>(PyTorch)</sup> |   R35.1.0   | `dustynv/ros:galactic-pytorch-l4t-r35.1.0`        |
 |                                                                                     |   R34.1.1   | `dustynv/ros:galactic-pytorch-l4t-r34.1.1`        |
 |                                                                                     |   R34.1.0   | `dustynv/ros:galactic-pytorch-l4t-r34.1.0`        |
@@ -116,10 +120,11 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 | [`ROS2 Humble`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=humble-ros-base) <sup>(ros-base)</sup> |   R35.1.0   | `dustynv/ros:humble-ros-base-l4t-r35.1.0`          |
 |                                                                                     |   R34.1.1   | `dustynv/ros:humble-ros-base-l4t-r34.1.1`          |
 |                                                                                     |   R34.1.0   | `dustynv/ros:humble-ros-base-l4t-r34.1.0`          |
+| [`ROS2 Humble`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=humble-desktop) <sup>(desktop)</sup> |   R35.1.0   | `dustynv/ros:humble-desktop-l4t-r35.1.0`          |
+|                                                                                     |   R34.1.1   | `dustynv/ros:humble-desktop-l4t-r34.1.1`          |
 | [`ROS2 Humble`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=humble-pytorch) <sup>(PyTorch)</sup> |   R35.1.0   | `dustynv/ros:humble-pytorch-l4t-r35.1.0`          |
 |                                                                                     |   R34.1.1   | `dustynv/ros:humble-pytorch-l4t-r34.1.1`          |
 |                                                                                     |   R34.1.0   | `dustynv/ros:humble-pytorch-l4t-r34.1.0`          |
-| [`ROS2 Humble`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=humble-desktop) <sup>(desktop)</sup> |   R35.1.0   | `dustynv/ros:humble-desktop-l4t-r35.1.0`          |
 
 > **note:** the L4T R32.5.0 containers can be run on both JetPack 4.5 (L4T R32.5.0) and JetPack 4.5.1 (L4T R32.5.1)
 
