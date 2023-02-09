@@ -14,7 +14,7 @@ ARCH=$(uname -i)
 echo "ARCH:  $ARCH"
 
 # remove previous OpenCV installation if it exists
-apt-get purge -y '*opencv*' || echo "previous OpenCV installation not found"
+apt-get purge -y '.*opencv.*' || echo "previous OpenCV installation not found"
 
 # download and extract the deb packages
 mkdir opencv
