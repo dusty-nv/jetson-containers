@@ -114,7 +114,7 @@ RUN pip3 install --no-cache-dir --verbose numba
 #
 # CuPy
 #
-ARG CUPY_VERSION=v10.2.0
+ARG CUPY_VERSION=v11.5.0
 ARG CUPY_NVCC_GENERATE_CODE="arch=compute_53,code=sm_53;arch=compute_62,code=sm_62;arch=compute_72,code=sm_72;arch=compute_87,code=sm_87"
 
 RUN git clone -b ${CUPY_VERSION} --recursive https://github.com/cupy/cupy cupy && \
@@ -143,6 +143,15 @@ RUN cd /tmp && ./opencv_install.sh ${OPENCV_URL} ${OPENCV_DEB}
 
 
 #
+# install rust (used by Jupyter)
+# 
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
+RUN rustc --version && \
+    pip3 install setuptools-rust
+    
+    
+#
 # JupyterLab
 #
 RUN pip3 install --no-cache-dir --verbose jupyter jupyterlab && \
@@ -157,3 +166,7 @@ CMD /bin/bash -c "jupyter lab --ip 0.0.0.0 --port 8888 --allow-root &> /var/log/
 	/bin/bash
 
 
+# vulnerability fixed in: 0.18.3 (GHSA-v3c5-jqr6-7qm8 - https://github.com/advisories/GHSA-v3c5-jqr6-7qm8)
+RUN pip3 install --upgrade --verbose future && \
+    pip3 show future
+    

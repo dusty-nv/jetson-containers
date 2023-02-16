@@ -105,6 +105,7 @@ RUN apt-get update && \
 		  
 # typically --only-upgrade is used in the apt install, but cmake wasn't previously installed in this container	
 # note: skipping this way for now, because having trouble pinning it to specific version (see below)
+# also avoid kitware's rotating GPG keys: https://github.com/dusty-nv/jetson-containers/issues/216
 #RUN wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | apt-key add - && \
 #    apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" && \
 #    apt-get update && \
@@ -115,7 +116,7 @@ RUN apt-get update && \
 #    && apt-get clean
     
 # note:  cmake is currently pinned to 3.22.3 because of https://github.com/pytorch/pytorch/issues/74955	 
-RUN pip3 install --upgrade --no-cache-dir --verbose cmake==3.22.3
+RUN pip3 install --upgrade --no-cache-dir --verbose cmake
 RUN cmake --version
 
 

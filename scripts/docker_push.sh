@@ -45,15 +45,15 @@ push()
 # ML containers
 #
 if [[ "$CONTAINERS" == "pytorch" || "$CONTAINERS" == "all" ]]; then
-	#push $NGC_GROUP "l4t-pytorch:r$L4T_VERSION-pth1.10-py3"
-	push $NGC_GROUP "l4t-pytorch:r$L4T_VERSION-pth1.11-py3"
-	push $NGC_GROUP "l4t-pytorch:r$L4T_VERSION-pth1.12-py3"
-	push $NGC_GROUP "l4t-pytorch:r$L4T_VERSION-pth1.13-py3"
+	#push $NGC_GROUP "l4t-pytorch:r$L4T_VERSION-pth1.11-py3"
+	#push $NGC_GROUP "l4t-pytorch:r$L4T_VERSION-pth1.12-py3"
+	#push $NGC_GROUP "l4t-pytorch:r$L4T_VERSION-pth1.13-py3"
+	push $NGC_GROUP "l4t-pytorch:r$L4T_VERSION-pth2.0-py3"
 fi
 
 if [[ "$CONTAINERS" == "tensorflow" || "$CONTAINERS" == "all" ]]; then
 	push $NGC_GROUP "l4t-tensorflow:r$L4T_VERSION-tf1.15-py3"
-	push $NGC_GROUP "l4t-tensorflow:r$L4T_VERSION-tf2.9-py3"
+	push $NGC_GROUP "l4t-tensorflow:r$L4T_VERSION-tf2.11-py3"
 fi
 
 if [[ "$CONTAINERS" == "ml" || "$CONTAINERS" == "all" ]]; then

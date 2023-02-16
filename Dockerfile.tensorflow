@@ -108,8 +108,8 @@ RUN pip3 show protobuf && \
 #
 # install Python TF dependencies
 #
-RUN pip3 install --no-cache-dir --verbose numpy==1.19.4
-RUN H5PY_SETUP_REQUIRES=0 pip3 install --no-cache-dir --verbose h5py==3.1.0
+RUN pip3 install --no-cache-dir --verbose numpy==1.21.1
+RUN H5PY_SETUP_REQUIRES=0 pip3 install --no-cache-dir --verbose h5py==3.6.0
 RUN pip3 install --no-cache-dir --verbose future==0.18.2 mock==3.0.5 keras_preprocessing==1.1.2 keras_applications==1.0.8 gast==0.4.0 futures pybind11
 
 
@@ -142,4 +142,9 @@ ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
 RUN echo "$PATH" && echo "$LD_LIBRARY_PATH"
 
 RUN pip3 install --no-cache-dir --verbose pycuda six
+
+
+# vulnerability fixed in: 0.18.3 (GHSA-v3c5-jqr6-7qm8 - https://github.com/advisories/GHSA-v3c5-jqr6-7qm8)
+RUN pip3 install --upgrade --verbose future && \
+    pip3 show future
 

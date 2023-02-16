@@ -6,6 +6,8 @@ print('PyTorch version: ' + str(torch.__version__))
 print('CUDA available:  ' + str(torch.cuda.is_available()))
 print('cuDNN version:   ' + str(torch.backends.cudnn.version()))
 
+print(torch.__config__.show())
+
 # quick cuda tensor test
 a = torch.cuda.FloatTensor(2).zero_()
 print('Tensor a = ' + str(a))

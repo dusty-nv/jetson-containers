@@ -105,14 +105,17 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 		  	  
-RUN wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | apt-key add - && \
-    apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends --only-upgrade \
-            cmake \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
+# use pip to upgrade cmake instead because of kitware's rotating GPG keys:
+# https://github.com/dusty-nv/jetson-containers/issues/216			  
+#RUN wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | apt-key add - && \
+#    apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" && \
+#    apt-get update && \
+#    apt-get install -y --no-install-recommends --only-upgrade \
+#            cmake \
+#    && rm -rf /var/lib/apt/lists/* \
+#    && apt-get clean
     
+RUN pip3 install --upgrade --no-cache-dir --verbose cmake   
 RUN cmake --version
 
 

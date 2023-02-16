@@ -23,11 +23,8 @@ if [ $ARCH = "aarch64" ]; then
 			BASE_IMAGE=$BASE_DEVEL
 		fi
 		
-		BASE_IMAGE_L4T=$BASE_IMAGE
-		
-	elif [ $L4T_RELEASE -eq 34 ]; then
+	elif [ $L4T_RELEASE -eq 34 ]; then # JetPack 5.0.0 (DP) / 5.0.1 (DP2)
 		if [[ $L4T_REVISION_MAJOR -eq 1 && $L4T_REVISION_MINOR -eq 0 ]]; then
-			#BASE_DEVEL="nvcr.io/nvidian/nvidia-l4t-base:focal_CUDA_11.4.13_008"
 			BASE_DEVEL="nvcr.io/nvidian/nvidia-l4t-base:r34.1"
 			BASE_IMAGE="nvcr.io/nvidia/l4t-base:r34.1"
 		fi
@@ -36,17 +33,16 @@ if [ $ARCH = "aarch64" ]; then
 		BASE_IMAGE="jetpack:r$L4T_VERSION"
 		
 	elif [ $L4T_RELEASE -eq 35 ]; then
-	
-		#BASE_IMAGE_L4T="nvcr.io/nvidian/nvidia-l4t-base:r35.1.0"
-		#BASE_IMAGE="nvcr.io/ea-linux4tegra/l4t-jetpack:r35.1.0"
-		
-		BASE_IMAGE_L4T="nvcr.io/nvidia/l4t-base:r35.1.0"
-		BASE_IMAGE="nvcr.io/nvidia/l4t-jetpack:r35.1.0"
-		
+		if [ $L4T_REVISION_MAJOR -le 1 ]; then # JetPack 5.0.2 (GA)
+			BASE_IMAGE_L4T="nvcr.io/nvidia/l4t-base:r35.1.0"
+			BASE_IMAGE="nvcr.io/nvidia/l4t-jetpack:r35.1.0"
+		else  # JetPack 5.1
+			BASE_IMAGE="nvcr.io/ea-linux4tegra/l4t-jetpack:r35.2.1"
+		fi
 	fi
-		
-	echo "l4t-base image:  $BASE_IMAGE_L4T"
 
 elif [ $ARCH = "x86_64" ]; then
 	BASE_IMAGE="nvcr.io/nvidia/pytorch:22.04-py3"
 fi
+
+echo "L4T Base Image:   $BASE_IMAGE"
