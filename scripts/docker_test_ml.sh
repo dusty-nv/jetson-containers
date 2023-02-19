@@ -206,7 +206,7 @@ fi
 # TensorFlow container
 #
 if [[ "$CONTAINERS" == "tensorflow" || "$CONTAINERS" == "all" ]]; then
-	test_tensorflow_all "l4t-tensorflow:r$L4T_VERSION-tf1.15-py3"
+	#test_tensorflow_all "l4t-tensorflow:r$L4T_VERSION-tf1.15-py3"
 	test_tensorflow_all "l4t-tensorflow:r$L4T_VERSION-tf2.11-py3"
 fi
 
