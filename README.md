@@ -207,6 +207,25 @@ $ ./scripts/docker_build_ros.sh --distro foxy --package desktop  # build foxy de
 
 The package options are:  `ros_base`, `ros_core`, and `desktop` - note that the ROS2 Desktop packages only build on JetPack 5.x.  You can also specify `--with-pytorch` to build variants with support for PyTorch. 
 
+## Run the Containers
+
+To run ROS container, first you should get the container name , type the command which built container, if container has been built successfully, it will give your container name like bellow.
+
+```bash
+$ ./scripts/docker_build_ros.s --distro humble
+ ... 
+Successfully built ebc1d71f00f3
+Successfully tagged ros:humble-ros-base-l4t-r35.1.0 # ros:humble-ros-base-l4t-r35.1.0 is the container name
+```
+
+Then, type
+
+```bash
+$ ./scripts/docker_run.sh -c ros:humble-ros-base-l4t-r35.1.0
+```
+
+to run the container.
+
 ## Testing the Containers
 
 To run a series of automated tests on the packages installed in the containers, run the following from your `jetson-containers` directory:
