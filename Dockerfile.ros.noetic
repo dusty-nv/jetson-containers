@@ -54,7 +54,7 @@ RUN apt-get update && \
 #
 RUN mkdir ros_catkin_ws && \
     cd ros_catkin_ws && \
-    rosinstall_generator ${ROS_PKG} vision_msgs --rosdistro ${ROS_DISTRO} --deps --tar > ${ROS_DISTRO}-${ROS_PKG}.rosinstall && \
+    rosinstall_generator ${ROS_PKG} vision_msgs image_transport --rosdistro ${ROS_DISTRO} --deps --tar > ${ROS_DISTRO}-${ROS_PKG}.rosinstall && \
     mkdir src && \
     vcs import --input ${ROS_DISTRO}-${ROS_PKG}.rosinstall ./src && \
     apt-get update && \
@@ -63,11 +63,21 @@ RUN mkdir ros_catkin_ws && \
     rm -rf /var/lib/apt/lists/*
 
 
-#
+# 
 # setup entrypoint
 #
-COPY ./packages/ros_entrypoint.sh /ros_entrypoint.sh
-RUN echo 'source /opt/ros/${ROS_DISTRO}/setup.bash' >> /root/.bashrc
-ENTRYPOINT ["/ros_entrypoint.sh"]
-CMD ["bash"]
+COPY ./scripts/ros_entrypoint.sh /ros_entrypoint.sh
+RUN echo 'source /ros_entrypoint.sh' >> /root/.bashrc
+
+#ENTRYPOINT ["/ros_entrypoint.sh"]
+#CMD ["bash"]
+
 WORKDIR /
+
+
+#
+# ros_deep_learning (PyTorch-based container only)
+#
+COPY ./scripts/ros_deep_learning.sh /tmp/ros_deep_learning.sh
+RUN cd /tmp && ./ros_deep_learning.sh
+

@@ -223,15 +223,18 @@ ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 # 
 # setup entrypoint
 #
-COPY ./packages/ros_entrypoint.sh /ros_entrypoint.sh
+COPY ./scripts/ros_entrypoint.sh /ros_entrypoint.sh
+RUN echo 'source /ros_entrypoint.sh' >> /root/.bashrc
 
-RUN sed -i \
-    's/ros_env_setup="\/opt\/ros\/$ROS_DISTRO\/setup.bash"/ros_env_setup="${ROS_ROOT}\/install\/setup.bash"/g' \
-    /ros_entrypoint.sh && \
-    cat /ros_entrypoint.sh
+#ENTRYPOINT ["/ros_entrypoint.sh"]
+#CMD ["bash"]
 
-RUN echo 'source ${ROS_ROOT}/install/setup.bash' >> /root/.bashrc
-
-ENTRYPOINT ["/ros_entrypoint.sh"]
-CMD ["bash"]
 WORKDIR /
+
+
+#
+# ros_deep_learning (PyTorch-based container only)
+#
+COPY ./scripts/ros_deep_learning.sh /tmp/ros_deep_learning.sh
+RUN cd /tmp && ./ros_deep_learning.sh
+
