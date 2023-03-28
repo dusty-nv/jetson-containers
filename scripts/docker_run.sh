@@ -96,21 +96,38 @@ while :; do
     shift
 done
 
+# check for V4L2 devices
+V4L2_DEVICES=" "
+
+for i in {0..9}
+do
+	if [ -a "/dev/video$i" ]; then
+		V4L2_DEVICES="$V4L2_DEVICES --device /dev/video$i "
+	fi
+done
+
+# check for display
+DISPLAY_DEVICE=" "
+
+if [ -n "$DISPLAY" ]; then
+	# give docker root user X11 permissions
+	sudo xhost +si:localuser:root
+	
+	# enable SSH X11 forwarding inside container (https://stackoverflow.com/q/48235040)
+	XAUTH=/tmp/.docker.xauth
+	xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -
+	chmod 777 $XAUTH
+
+	DISPLAY_DEVICE="-e DISPLAY=$DISPLAY -v /tmp/.X11-unix/:/tmp/.X11-unix -v $XAUTH:$XAUTH -e XAUTHORITY=$XAUTH"
+fi
+
 #echo "CONTAINER_IMAGE: $CONTAINER_IMAGE"
 #echo "USER_VOLUME:     $USER_VOLUME"
 #echo "USER_COMMAND:    '$USER_COMMAND'"
-
-
-# give docker root user X11 permissions
-sudo xhost +si:localuser:root
-
-# enable SSH X11 forwarding inside container (https://stackoverflow.com/q/48235040)
-XAUTH=/tmp/.docker.xauth
-xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -
-chmod 777 $XAUTH
+#echo "V4L2_DEVICES:    $V4L2_DEVICES"
+#echo "DISPLAY_DEVICE:  $DISPLAY_DEVICE"
 
 # run the container
-sudo docker run --runtime nvidia -it --rm --network host -e DISPLAY=$DISPLAY \
-    -v /tmp/.X11-unix/:/tmp/.X11-unix \
-    -v $XAUTH:$XAUTH -e XAUTHORITY=$XAUTH \
-    $USER_VOLUME $CONTAINER_IMAGE $USER_COMMAND
+sudo docker run --runtime nvidia -it --rm --network host \
+	$DISPLAY_DEVICE $V4L2_DEVICES \
+	$USER_VOLUME $CONTAINER_IMAGE $USER_COMMAND
