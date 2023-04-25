@@ -27,7 +27,7 @@ build_pytorch()
 	
 	echo "building PyTorch $pytorch_whl, torchvision $vision_version, torchaudio $audio_version, cuda arch $cuda_arch_list"
 
-	sh ./scripts/docker_build.sh $pytorch_tag Dockerfile.pytorch \
+	bash ./scripts/docker_build.sh $pytorch_tag Dockerfile.pytorch \
 			--build-arg BASE_IMAGE=$BASE_IMAGE \
 			--build-arg PYTORCH_URL=$pytorch_url \
 			--build-arg PYTORCH_WHL=$pytorch_whl \
@@ -149,15 +149,21 @@ if [[ "$CONTAINERS" == "pytorch" || "$CONTAINERS" == "all" ]]; then
 					"v0.13.0" \
 					"v0.12.0"
 					
-	elif [[ $L4T_RELEASE -eq 35 ]]; then   # JetPack 5.1
+	elif [[ $L4T_RELEASE -eq 35 ]]; then   # JetPack 5.1.x
 	
-		# PyTorch v2.0
-		build_pytorch "https://nvidia.box.com/shared/static/rehpfc4dwsxuhpv4jgqv8u6rzpgb64bq.whl" \
-					"torch-2.0.0a0+ec3941ad.nv23.2-cp38-cp38-linux_aarch64.whl" \
+		# PyTorch v2.0 (JetPack 5.1 / L4T R35.2.1)
+		#build_pytorch "https://nvidia.box.com/shared/static/rehpfc4dwsxuhpv4jgqv8u6rzpgb64bq.whl" \
+		#			"torch-2.0.0a0+ec3941ad.nv23.2-cp38-cp38-linux_aarch64.whl" \
+		#			"l4t-pytorch:r$L4T_VERSION-pth2.0-py3" \
+		#			"v0.14.1" \
+		#			"v0.13.1"
+		
+		# PyTorch v2.0 (JetPack 5.1.1 / L4T R35.3.1)
+		build_pytorch "https://nvidia.box.com/shared/static/sct3njlmea4whlf6ud9tj1853zi3vb1v.whl" \
+					"torch-2.0.0.nv23.05-cp38-cp38-linux_aarch64.whl" \
 					"l4t-pytorch:r$L4T_VERSION-pth2.0-py3" \
-					"v0.14.1" \
-					"v0.13.1"
-					
+					"v0.15.1" \
+					"v2.0.1"		
 	else
 		echo "warning -- unsupported L4T R$L4T_VERSION, skipping PyTorch..."
 	fi
@@ -175,7 +181,7 @@ build_tensorflow()
 	
 	echo "building TensorFlow $tensorflow_whl, $tensorflow_tag"
 	
-	sh ./scripts/docker_build.sh $tensorflow_tag Dockerfile.tensorflow \
+	bash ./scripts/docker_build.sh $tensorflow_tag Dockerfile.tensorflow \
 		--build-arg BASE_IMAGE=$BASE_IMAGE \
 		--build-arg TENSORFLOW_URL=$tensorflow_url \
 		--build-arg TENSORFLOW_WHL=$tensorflow_whl \
@@ -260,15 +266,15 @@ if [[ "$CONTAINERS" == "tensorflow" || "$CONTAINERS" == "all" ]]; then
 		
 	elif [[ $L4T_RELEASE -eq 35 ]]; then
 	
-		# TensorFlow 1.15.5 for JetPack 5.1
-		build_tensorflow "https://nvidia.box.com/shared/static/28np6obvzx6hwrh6ufhfsusg616t575c.whl" \
-					  "tensorflow-1.15.5+nv23.01-cp38-cp38-linux_aarch64.whl" \
+		# TensorFlow 1.15.5 for JetPack 5.1.x
+		build_tensorflow "https://developer.download.nvidia.com/compute/redist/jp/v51/tensorflow/tensorflow-1.15.5+nv23.03-cp38-cp38-linux_aarch64.whl" \
+					  "tensorflow-1.15.5+nv23.03-cp38-cp38-linux_aarch64.whl" \
 					  "l4t-tensorflow:r$L4T_VERSION-tf1.15-py3" \
 					  "3.20.3"
 
-		# TensorFlow 2.11 for JetPack 5.1
-		build_tensorflow "https://nvidia.box.com/shared/static/9vcmax1wmlqlw2e2r1adh1c045k2ju21.whl" \
-					  "tensorflow-2.11.0+nv23.01-cp38-cp38-linux_aarch64.whl" \
+		# TensorFlow 2.11 for JetPack 5.1.x
+		build_tensorflow "https://developer.download.nvidia.com/compute/redist/jp/v51/tensorflow/tensorflow-2.11.0+nv23.03-cp38-cp38-linux_aarch64.whl" \
+					  "tensorflow-2.11.0+nv23.03-cp38-cp38-linux_aarch64.whl" \
 					  "l4t-tensorflow:r$L4T_VERSION-tf2.11-py3" \
 					  "3.20.3"
 					  
@@ -283,7 +289,7 @@ fi
 #
 if [[ "$CONTAINERS" == "all" ]]; then
 
-	sh ./scripts/docker_build.sh l4t-ml:r$L4T_VERSION-py3 Dockerfile.ml \
+	bash ./scripts/docker_build.sh l4t-ml:r$L4T_VERSION-py3 Dockerfile.ml \
 			--build-arg BASE_IMAGE=$BASE_IMAGE \
 			--build-arg PYTORCH_IMAGE=l4t-pytorch:r$L4T_VERSION-pth2.0-py3 \
 			--build-arg TENSORFLOW_IMAGE=l4t-tensorflow:r$L4T_VERSION-tf2.11-py3 \

@@ -152,7 +152,7 @@ build_ros()
 	echo "BASE_IMAGE=$base_image"
 	echo ""
 	
-	sh ./scripts/docker_build.sh $container_tag $dockerfile \
+	bash ./scripts/docker_build.sh $container_tag $dockerfile \
 			--build-arg ROS_PKG=$package \
 			--build-arg BASE_IMAGE=$base_image \
 			--build-arg OPENCV_URL=$OPENCV_URL \

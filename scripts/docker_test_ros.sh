@@ -20,9 +20,9 @@ test_ros_version()
 	echo "testing container $1 => ros_version"
 	local DISTRO_TO_TEST=$(echo "$1" | cut -d ":" -f 2 | cut -d "-" -f 1)
 	if [[ "$DISTRO_TO_TEST" == "melodic" || "$DISTRO_TO_TEST" == "noetic" ]]; then
-		sh ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r test/test_ros_version.sh
+		bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r test/test_ros_version.sh
 	else
-		sh ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r test/test_ros2_version.sh
+		bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r test/test_ros2_version.sh
 	fi
 	echo -e "done testing container $1 => ros_version\n"
 }
@@ -30,21 +30,21 @@ test_ros_version()
 test_opencv()
 {
 	echo "testing container $1 => OpenCV"
-	sh ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_opencv.py
+	bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_opencv.py
 	echo -e "done testing container $1 => OpenCV\n"
 }
 
 test_pytorch()
 {
 	echo "testing container $1 => PyTorch"
-	sh ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_pytorch.py
+	bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_pytorch.py
 	echo -e "done testing container $1 => PyTorch\n"
 }
 
 test_numpy()
 {
 	echo "testing container $1 => numpy"
-	sh ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_numpy.py
+	bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_numpy.py
 	echo -e "done testing container $1 => numpy\n"
 }
 
