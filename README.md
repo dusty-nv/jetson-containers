@@ -23,7 +23,7 @@ The ROS distros that use Python3 have PyTorch-based containers, and some have RO
 
 The following images can be pulled from NGC or DockerHub without needing to build the containers yourself:
 
-<details>
+<details open>
 <summary>
 <a href=https://ngc.nvidia.com/catalog/containers/nvidia:l4t-ml><b>l4t-ml</b></a> (<code>nvcr.io/nvidia/l4t-ml:r35.2.1-py3</code>)
 </summary>
