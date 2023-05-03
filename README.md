@@ -23,7 +23,7 @@ The ROS distros that use Python3 have PyTorch-based containers, and some have RO
 
 The following images can be pulled from NGC or DockerHub without needing to build the containers yourself:
 
-<details>
+* <details>
 <summary>
 <a href=https://ngc.nvidia.com/catalog/containers/nvidia:l4t-ml><b>l4t-ml</b></a> (<code>nvcr.io/nvidia/l4t-ml:r35.2.1-py3</code>)
 </summary>
@@ -42,7 +42,7 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 |                                                                                     |   R32.4.3   | `nvcr.io/nvidia/l4t-ml:r32.4.3-py3`                |
 
 </details>
-<details>
+* <details>
 <summary>
 <a href=https://ngc.nvidia.com/catalog/containers/nvidia:l4t-pytorch><b>l4t-pytorch</b></a> (<code>nvcr.io/nvidia/l4t-pytorch:r35.2.1-pth2.0-py3</code>)
 </summary>
@@ -67,7 +67,7 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 |                                                                                     |   R32.4.3   | `nvcr.io/nvidia/l4t-pytorch:r32.4.3-pth1.6-py3`    |
 
 </details>
-<details>
+* <details>
 <summary>
 <a href=https://ngc.nvidia.com/catalog/containers/nvidia:l4t-tensorflow><b>l4t-tensorflow</b></a> (<code>nvcr.io/nvidia/l4t-tensorflow:r35.2.1-tf2.11-py3</code>)
 </summary>
