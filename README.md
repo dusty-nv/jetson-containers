@@ -152,7 +152,7 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 |                                                                                     |   R34.1.0   | `dustynv/ros:humble-pytorch-l4t-r34.1.0`          |
 
 > **note:** L4T R32.x containers can be run on other versions of R32.x (e.g. R32.7.1 containers can run on R32.7.2)<br/>
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; L4T R35 containers can run on other versions of R35 (e.g. R35.1 containers can run on R35.2)
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; L4T R35 containers can run on other versions of R35 (e.g. R35.1.0 containers can run on R35.2.1)
 
 To download and run one of these images, you can use the included run script from the repo:
 
