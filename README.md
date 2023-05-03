@@ -39,8 +39,13 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 |                                                                                     |   R32.5.0*  | `nvcr.io/nvidia/l4t-ml:r32.5.0-py3`                |
 |                                                                                     |   R32.4.4   | `nvcr.io/nvidia/l4t-ml:r32.4.4-py3`                |
 |                                                                                     |   R32.4.3   | `nvcr.io/nvidia/l4t-ml:r32.4.3-py3`                |
+
 </details>
-<details><summary><a href=https://ngc.nvidia.com/catalog/containers/nvidia:l4t-pytorch><b>l4t-pytorch</b></a> (<code>nvcr.io/nvidia/l4t-pytorch:r35.2.1-pth2.0-py3</code>)</summary>
+<details>
+<summary>
+<a href=https://ngc.nvidia.com/catalog/containers/nvidia:l4t-pytorch><b>l4t-pytorch</b></a> (<code>nvcr.io/nvidia/l4t-pytorch:r35.2.1-pth2.0-py3</code>)
+</summary>
+
 |                                                                                     | L4T Version | Container Tag                                      |
 |-------------------------------------------------------------------------------------|:-----------:|----------------------------------------------------|
 | [`l4t-pytorch`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-pytorch)       |   R35.2.1   | `nvcr.io/nvidia/l4t-pytorch:r35.2.1-pth2.0-py3`    |
@@ -230,7 +235,6 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 |                                                                                     |   R34.1.0   | `dustynv/ros:humble-pytorch-l4t-r34.1.0`          |
 
 </details>
-</br>
 
 > **note:** L4T R32.x containers can be run on other versions of R32.x (e.g. R32.7.1 containers can run on R32.7.2)<br/>
 > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; L4T R35 containers can run on other versions of R35 (e.g. R35.1.0 containers can run on R35.2.1)
