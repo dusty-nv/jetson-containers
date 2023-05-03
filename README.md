@@ -40,11 +40,7 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 |                                                                                     |   R32.4.4   | `nvcr.io/nvidia/l4t-ml:r32.4.4-py3`                |
 |                                                                                     |   R32.4.3   | `nvcr.io/nvidia/l4t-ml:r32.4.3-py3`                |
 </details>
-<details>
-<summary>
-<a href=https://ngc.nvidia.com/catalog/containers/nvidia:l4t-pytorch><b>l4t-pytorch</b></a> (<code>nvcr.io/nvidia/l4t-pytorch:r35.2.1-pth2.0-py3</code>)
-</summary>
-
+<details><summary><a href=https://ngc.nvidia.com/catalog/containers/nvidia:l4t-pytorch><b>l4t-pytorch</b></a> (<code>nvcr.io/nvidia/l4t-pytorch:r35.2.1-pth2.0-py3</code>)</summary>
 |                                                                                     | L4T Version | Container Tag                                      |
 |-------------------------------------------------------------------------------------|:-----------:|----------------------------------------------------|
 | [`l4t-pytorch`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-pytorch)       |   R35.2.1   | `nvcr.io/nvidia/l4t-pytorch:r35.2.1-pth2.0-py3`    |
