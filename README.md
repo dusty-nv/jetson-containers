@@ -39,7 +39,6 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 |                                                                                     |   R32.5.0*  | `nvcr.io/nvidia/l4t-ml:r32.5.0-py3`                |
 |                                                                                     |   R32.4.4   | `nvcr.io/nvidia/l4t-ml:r32.4.4-py3`                |
 |                                                                                     |   R32.4.3   | `nvcr.io/nvidia/l4t-ml:r32.4.3-py3`                |
-
 </details>
 <details>
 <summary>
