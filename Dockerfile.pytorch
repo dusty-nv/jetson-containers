@@ -42,6 +42,7 @@ RUN apt-get update && \
 
 RUN pip3 install --no-cache-dir setuptools Cython wheel
 RUN pip3 install --no-cache-dir --verbose numpy
+RUN pip3 install --no-cache-dir --verbose onnx
 
 
 #
