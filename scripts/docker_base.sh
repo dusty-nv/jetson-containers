@@ -36,7 +36,7 @@ if [ $ARCH = "aarch64" ]; then
 		if [ $L4T_REVISION_MAJOR -le 1 ]; then   # JetPack 5.0.2 (GA)
 			BASE_IMAGE="nvcr.io/nvidia/l4t-jetpack:r35.1.0"
 			BASE_IMAGE_L4T="nvcr.io/nvidia/l4t-base:r35.1.0"
-		elif [ $L4T_REVISION_MAJOR -eq 2]; then  # JetPack 5.1  
+		elif [ $L4T_REVISION_MAJOR -eq 2 ]; then  # JetPack 5.1  
 			BASE_IMAGE="nvcr.io/nvidia/l4t-jetpack:r35.2.1"
 			BASE_IMAGE_L4T="nvcr.io/nvidia/l4t-base:r35.2.1"
 		else  # JetPack 5.1.1
