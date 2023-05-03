@@ -21,9 +21,6 @@ The ROS distros that use Python3 have PyTorch-based containers, and some have RO
 
 ## Pre-built Container Images
 
-<details>ABC123</details>
-<details>DEF456</details>
-
 The following images can be pulled from NGC or DockerHub without needing to build the containers yourself:
 
 <details>
