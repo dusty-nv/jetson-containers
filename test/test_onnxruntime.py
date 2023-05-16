@@ -30,6 +30,7 @@ def test_infer(provider, model='resnet18.onnx', runs=100, warmup=10, verbose=Fal
         os.makedirs(trt_cache_path, exist_ok=True)
         
         provider_options = {
+            "trt_fp16_enable": True,
             "trt_detailed_build_log": True,    # not in onnxruntime 1.14
             "trt_timing_cache_enable": True,   # not in onnxruntime 1.14
             "trt_engine_cache_enable": True,
