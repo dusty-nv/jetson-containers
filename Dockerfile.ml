@@ -145,8 +145,9 @@ RUN cd /tmp && ./opencv_install.sh ${OPENCV_URL} ${OPENCV_DEB}
 #
 # upgrade cmake
 #
-RUN pip3 install --upgrade --no-cache-dir --verbose cmake && \
-    cmake --version
+RUN pip3 install --upgrade --force-reinstall --no-cache-dir --verbose cmake && \
+    cmake --version && \
+    which cmake
 
 
 #
