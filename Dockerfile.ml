@@ -56,6 +56,7 @@ RUN apt-get update && \
 		git \
 		cmake \
 		curl \
+		nano \
 		libopenblas-dev \
 		liblapack-dev \
 		libblas-dev \
@@ -143,7 +144,19 @@ RUN cd /tmp && ./opencv_install.sh ${OPENCV_URL} ${OPENCV_DEB}
 
 
 #
-# upgrade cmake
+# transformers/diffusers (avoid it changing package versions)
+#
+RUN pip3 freeze > /tmp/constraints.txt && \
+    pip3 install --no-cache-dir --verbose \
+	transformers \
+	diffusers \
+	optimum[exporters,onnxruntime] \
+	--constraint /tmp/constraints.txt && \
+    rm /tmp/constraints.txt
+    
+    
+#
+# upgrade cmake (required to build onnxruntime)
 #
 RUN pip3 install --upgrade --force-reinstall --no-cache-dir --verbose cmake && \
     cmake --version && \
@@ -155,7 +168,8 @@ RUN pip3 install --upgrade --force-reinstall --no-cache-dir --verbose cmake && \
 #
 ARG ONNXRUNTIME_VERSION=main
 
-RUN git clone --recursive --branch ${ONNXRUNTIME_VERSION} --depth 1 https://github.com/microsoft/onnxruntime /tmp/onnxruntime && \
+RUN pip3 uninstall -y onnxruntime && \
+    git clone --recursive --branch ${ONNXRUNTIME_VERSION} --depth 1 https://github.com/microsoft/onnxruntime /tmp/onnxruntime && \
     cd /tmp/onnxruntime && \
     ./build.sh --config Release --update --build --parallel --build_wheel --allow_running_as_root \
         --cmake_extra_defines CMAKE_CXX_FLAGS="-Wno-unused-variable" \
@@ -194,4 +208,3 @@ CMD /bin/bash -c "jupyter lab --ip 0.0.0.0 --port 8888 --allow-root &> /var/log/
 # vulnerability fixed in: 0.18.3 (GHSA-v3c5-jqr6-7qm8 - https://github.com/advisories/GHSA-v3c5-jqr6-7qm8)
 RUN pip3 install --upgrade --verbose future && \
     pip3 show future
-    
