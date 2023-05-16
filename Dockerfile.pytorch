@@ -175,4 +175,13 @@ RUN echo "$PATH" && echo "$LD_LIBRARY_PATH"
 RUN pip3 install --no-cache-dir --verbose pycuda six
 
 
-
+#
+# if needed, patch PyTorch version string to be compliant with PEP 440
+#
+RUN if [ -d "/usr/local/lib/python3.8/dist-packages/torch-2.0.0.nv23.05.dist-info" ]; then \
+     echo "patching PyTorch version string to be PEP 440 compliant..."; \
+	sed -i 's/2.0.0.nv23.05/2.0.0/g' /usr/local/lib/python3.8/dist-packages/torch/version.py; \
+	sed -i 's/2.0.0.nv23.05/2.0.0/g' /usr/local/lib/python3.8/dist-packages/torch-2.0.0.nv23.05.dist-info/METADATA; \
+	head /usr/local/lib/python3.8/dist-packages/torch/version.py; \
+	head /usr/local/lib/python3.8/dist-packages/torch-2.0.0.nv23.05.dist-info/METADATA; \
+    fi
