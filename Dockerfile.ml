@@ -143,6 +143,30 @@ RUN cd /tmp && ./opencv_install.sh ${OPENCV_URL} ${OPENCV_DEB}
 
 
 #
+# upgrade cmake
+#
+RUN pip3 install --upgrade --no-cache-dir --verbose cmake && \
+    cmake --version
+
+
+#
+# onnxruntime (https://onnxruntime.ai/docs/build/eps.html#nvidia-jetson-tx1tx2nanoxavier)
+#
+ARG ONNXRUNTIME_VERSION=main
+
+RUN git clone --recursive --branch ${ONNXRUNTIME_VERSION} --depth 1 https://github.com/microsoft/onnxruntime /tmp/onnxruntime && \
+    cd /tmp/onnxruntime && \
+    ./build.sh --config Release --update --build --parallel --build_wheel --allow_running_as_root \
+        --cmake_extra_defines CMAKE_CXX_FLAGS="-Wno-unused-variable" \
+        --cuda_home /usr/local/cuda --cudnn_home /usr/lib/aarch64-linux-gnu \
+        --use_tensorrt --tensorrt_home /usr/lib/aarch64-linux-gnu && \
+    cd build/Linux/Release && \
+    make install && \
+    pip3 install --no-cache-dir --verbose dist/onnxruntime_gpu-*.whl && \
+    rm -rf /tmp/onnxruntime
+	
+
+#
 # install rust (used by Jupyter)
 # 
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y

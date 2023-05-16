@@ -47,6 +47,27 @@ test_onnx()
 	echo -e "done testing container $1 => onnx\n"
 }
 
+# onnxruntime tests
+test_onnxruntime()
+{
+	echo "testing container $1 => onnxruntime"
+
+	# download test model
+	local MODEL_URL="https://nvidia.box.com/shared/static/zlvb4y43djygotpjn6azjhwu0r3j0yxc.gz"
+	local MODEL_NAME="cat_dog_epoch_100"
+	local MODEL_PATH="test/data/$MODEL_NAME/resnet18.onnx"
+
+	if [ ! -f "$MODEL_PATH" ]; then
+		echo 'downloading model for testing onnxruntime...'
+		wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate $MODEL_URL -O test/data/$MODEL_NAME.tar.gz
+		tar -xzf test/data/$MODEL_NAME.tar.gz -C test/data/
+	fi
+
+	bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_onnxruntime.py --model=$MODEL_PATH
+
+	echo -e "done testing container $1 => onnxruntime\n"
+}
+
 # opencv tests
 test_opencv()
 {
@@ -77,9 +98,6 @@ test_pytorch()
 
 	if [ ! -d "$DATA_PATH" ]; then
 		echo 'downloading data for testing torchvision...'
-		if [ ! -d "test/data" ]; then
-			mkdir test/data
-		fi
 		wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate $DATA_URL -O test/data/$DATA_NAME.tar.gz
 		tar -xzf test/data/$DATA_NAME.tar.gz -C test/data/
 	fi
@@ -90,7 +108,6 @@ test_pytorch()
 	echo -e "done testing container $1 => PyTorch\n"
 }
 
-
 # protobuf tests
 test_protobuf()
 {
@@ -99,7 +116,6 @@ test_protobuf()
 	bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_protobuf.py
 	echo -e "done testing container $1 => protobuf\n"
 }
-
 
 # TensorFlow tests
 test_tensorflow()
@@ -151,7 +167,7 @@ test_pytorch_all()
 	test_numpy $1
 	#test_vpi $1 
 	
-	if [[ $L4T_RELEASE -eq 34 ]]; then
+	if [[ $L4T_RELEASE -ge 34 ]]; then
 		test_opencv $1
 	fi
 }
@@ -166,7 +182,7 @@ test_tensorflow_all()
 	test_numpy $1
 	#test_vpi $1
 	
-	if [[ $L4T_RELEASE -eq 34 ]]; then
+	if [[ $L4T_RELEASE -ge 34 ]]; then
 		test_opencv $1
 	fi
 }
@@ -183,8 +199,9 @@ test_all()
 	test_cupy $1
 	test_numba $1
 	test_onnx $1
+	test_onnxruntime $1
 	test_opencv $1
-	#test_pandas $1
+	test_pandas $1
 	test_scipy $1
 	test_sklearn $1
 	#test_vpi $1
