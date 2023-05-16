@@ -1,8 +1,16 @@
+#!/usr/bin/env python3
+
+import time
+import argparse
 
 print('testing torchvision...')
 
 import torch
 import torchvision
+
+import torchvision.models as models
+import torchvision.datasets as datasets
+import torchvision.transforms as transforms
 
 print('torchvision version: ' + str(torchvision.__version__) + '\n')
 
@@ -25,39 +33,12 @@ def test_nms(N=128):
     
 test_nms()
 
-
 #
 # test model inference
 #
-import time
-import argparse
-
-
-import torchvision.transforms as transforms
-import torchvision.datasets as datasets
-import torchvision.models as models
-
 model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
     and callable(models.__dict__[name]))
-    
-parser = argparse.ArgumentParser()
-
-parser.add_argument('--data', type=str, default='/tmp/ILSVRC2012_img_val_subset_5k')
-parser.add_argument('--resolution', default=224, type=int, metavar='N',
-                    help='input NxN image resolution of model (default: 224x224) '
-                         'note than Inception models should use 299x299')
-parser.add_argument('-j', '--workers', default=2, type=int, metavar='N',
-                    help='number of data loading workers (default: 2)')
-parser.add_argument('-b', '--batch-size', default=8, type=int,
-                    metavar='N', help='mini-batch size (default: 8)') 
-parser.add_argument('-p', '--print-freq', default=25, type=int,
-                    metavar='N', help='print frequency (default: 10)')                    
-parser.add_argument('-t', '--test-threshold', default=-10.0, type=float,
-                    metavar='N', help='maximum passing delta between trained model top-1 accuracy  (default is -10%)')
-parser.add_argument("--use-cuda", action="store_true", help='use CUDA (otherwise CPU-only)')  
-                  
-args = parser.parse_args()
     
 print('torchvision classification models: ' + ' | '.join(model_names) + '\n')
 
@@ -74,7 +55,6 @@ def load_data(root):
             num_workers=args.workers, pin_memory=True)
         
 def test_model(model_info, data_loader):
-
     model_name = model_info[0]
     model_top1 = 100.0 - model_info[1]
     model_top5 = 100.0 - model_info[2]
@@ -201,10 +181,31 @@ class ProgressMeter(object):
         
         
 if __name__ == '__main__':  
-    
+    # parse command-line args
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('--data', type=str, default='/tmp/ILSVRC2012_img_val_subset_5k')
+    parser.add_argument('--resolution', default=224, type=int, metavar='N',
+                        help='input NxN image resolution of model (default: 224x224) '
+                             'note than Inception models should use 299x299')
+    parser.add_argument('-j', '--workers', default=2, type=int, metavar='N',
+                        help='number of data loading workers (default: 2)')
+    parser.add_argument('-b', '--batch-size', default=8, type=int,
+                        metavar='N', help='mini-batch size (default: 8)') 
+    parser.add_argument('-p', '--print-freq', default=25, type=int,
+                        metavar='N', help='print frequency (default: 10)')                    
+    parser.add_argument('-t', '--test-threshold', default=-10.0, type=float,
+                        metavar='N', help='maximum passing delta between trained model top-1 accuracy  (default is -10%)')
+    parser.add_argument("--use-cuda", action="store_true", help='use CUDA (otherwise CPU-only)')  
+                      
+    args = parser.parse_args()
+
+    # load dataset
     print('using {:s}'.format("CUDA" if args.use_cuda else "CPU"))     
     print('loading dataset from {:s}\n'.format(args.data))
+    
     data_loader = load_data(args.data)
+    
     print('dataset classes: {:d}'.format(len(data_loader.dataset.classes)))
     print('dataset images:  {:d}'.format(len(data_loader.dataset)))
     print('batch size:      {:d}'.format(args.batch_size))
