@@ -115,10 +115,10 @@ RUN pip3 install --no-cache-dir --verbose numba
 #
 # CuPy
 #
-ARG CUPY_VERSION=v11.5.0
+ARG CUPY_VERSION=main
 ARG CUPY_NVCC_GENERATE_CODE="arch=compute_53,code=sm_53;arch=compute_62,code=sm_62;arch=compute_72,code=sm_72;arch=compute_87,code=sm_87"
 
-RUN git clone -b ${CUPY_VERSION} --recursive https://github.com/cupy/cupy cupy && \
+RUN git clone --branch ${CUPY_VERSION} --depth 1 --recursive https://github.com/cupy/cupy cupy && \
     cd cupy && \
     pip3 install --no-cache-dir fastrlock && \
     python3 setup.py install --verbose && \
@@ -169,7 +169,7 @@ RUN pip3 install --upgrade --force-reinstall --no-cache-dir --verbose cmake && \
 ARG ONNXRUNTIME_VERSION=main
 
 RUN pip3 uninstall -y onnxruntime && \
-    git clone --recursive --branch ${ONNXRUNTIME_VERSION} --depth 1 https://github.com/microsoft/onnxruntime /tmp/onnxruntime && \
+    git clone --branch ${ONNXRUNTIME_VERSION} --depth 1 --recursive https://github.com/microsoft/onnxruntime /tmp/onnxruntime && \
     cd /tmp/onnxruntime && \
     ./build.sh --config Release --update --build --parallel --build_wheel --allow_running_as_root \
         --cmake_extra_defines CMAKE_CXX_FLAGS="-Wno-unused-variable" \
