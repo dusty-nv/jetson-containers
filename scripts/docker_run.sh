@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-CONTAINER_IMAGE="nvcr.io/nvidian/nvidia-l4t-base:r32.4"
+CONTAINER_IMAGE=""
 
 USER_VOLUME=""
 USER_COMMAND=""
@@ -17,8 +17,8 @@ show_help() {
     echo " "
     echo "   --help                       Show this help text and quit"
     echo " "
-    echo "   -c, --container DOCKER_IMAGE Specifies the name of the Docker container"
-    echo "                                image to use (default: 'nvidia-l4t-base')"
+    echo "   -c, --container DOCKER_IMAGE Specifies the Docker container image to use"
+    echo "                                (e.g. nvcr.io/nvidia/l4t-ml:32.7.1-py3)"
     echo " "
     echo "   -v, --volume HOST_DIR:MOUNT_DIR Mount a path from the host system into"
     echo "                                   the container.  Should be specified as:"
@@ -95,6 +95,11 @@ while :; do
 
     shift
 done
+
+# check for container image
+if [ -z "$CONTAINER_IMAGE" ]; then
+	die 'ERROR:  the container image to run must be set with the --container or -c options'
+fi
 
 # check for V4L2 devices
 V4L2_DEVICES=" "
