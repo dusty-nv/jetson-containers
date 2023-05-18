@@ -159,7 +159,7 @@ if [[ "$CONTAINERS" == "pytorch" || "$CONTAINERS" == "all" ]]; then
 		#			"v0.13.1"
 		
 		# PyTorch v2.0 (JetPack 5.1.1 / L4T R35.3.1)
-		build_pytorch "https://nvidia.box.com/shared/static/yffnumomyqepj4r806rjq77oqjjy34l7.whl" \
+		build_pytorch "https://nvidia.box.com/shared/static/i8pukc49h3lhak4kkn67tg9j4goqm0m7.whl" \
 					"torch-2.0.0+nv23.05-cp38-cp38-linux_aarch64.whl" \
 					"l4t-pytorch:r$L4T_VERSION-pth2.0-py3" \
 					"v0.15.1" \
