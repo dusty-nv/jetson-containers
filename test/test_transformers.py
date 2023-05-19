@@ -80,7 +80,7 @@ if __name__ == '__main__':
     # run model inference tests
     perf = {}
     
-    for provider in ['CUDAExecutionProvider', 'TensorrtExecutionProvider', 'CPUExecutionProvider']:
+    for provider in ['CUDAExecutionProvider', 'CPUExecutionProvider']:  #'TensorrtExecutionProvider', 
         perf[provider] = test_gpt(provider, **vars(args))
     
     print(f"\nPerformance Summary for {args.model} (over {args.runs} runs)")
