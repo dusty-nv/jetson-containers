@@ -133,6 +133,14 @@ test_tensorrt()
 	echo -e "done testing container $1 => TensorRT\n"
 }
 
+# transformers tests
+test_transformers()
+{
+	echo "testing container $1 => transformers"
+	bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_transformers.py
+	echo -e "done testing container $1 => TensorRT\n"
+}
+
 # scipy tests
 test_scipy()
 {
@@ -204,6 +212,7 @@ test_all()
 	test_pandas $1
 	test_scipy $1
 	test_sklearn $1
+	test_transformers $1
 	#test_vpi $1
 }
 
