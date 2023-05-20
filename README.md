@@ -233,15 +233,18 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 |                                                                                     |   R35.1.0   | `dustynv/ros:humble-ros-base-l4t-r35.1.0`          |
 |                                                                                     |   R34.1.1   | `dustynv/ros:humble-ros-base-l4t-r34.1.1`          |
 |                                                                                     |   R34.1.0   | `dustynv/ros:humble-ros-base-l4t-r34.1.0`          |
+|                                                                                     |   R32.7.1   | `dustynv/ros:humble-ros-base-l4t-r32.7.1`          |
 | [`ROS2 Humble`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=humble-desktop) <sup>(desktop)</sup> |   R35.3.1   | `dustynv/ros:humble-desktop-l4t-r35.3.1`          |
 |                                                                                     |   R35.2.1   | `dustynv/ros:humble-desktop-l4t-r35.2.1`          |
 |                                                                                     |   R35.1.0   | `dustynv/ros:humble-desktop-l4t-r35.1.0`          |
 |                                                                                     |   R34.1.1   | `dustynv/ros:humble-desktop-l4t-r34.1.1`          |
+|                                                                                     |   R32.7.1   | `dustynv/ros:humble-desktop-l4t-r32.7.1`          |
 | [`ROS2 Humble`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=humble-pytorch) <sup>(PyTorch)</sup> |   R35.3.1   | `dustynv/ros:humble-pytorch-l4t-r35.3.1`          |
 |                                                                                     |   R35.2.1   | `dustynv/ros:humble-pytorch-l4t-r35.2.1`          |
 |                                                                                     |   R35.1.0   | `dustynv/ros:humble-pytorch-l4t-r35.1.0`          |
 |                                                                                     |   R34.1.1   | `dustynv/ros:humble-pytorch-l4t-r34.1.1`          |
 |                                                                                     |   R34.1.0   | `dustynv/ros:humble-pytorch-l4t-r34.1.0`          |
+|                                                                                     |   R32.7.1   | `dustynv/ros:humble-pytorch-l4t-r32.7.1`          |
 
 </details>
 

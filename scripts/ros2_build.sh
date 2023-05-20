@@ -41,7 +41,7 @@ apt-get install -y --no-install-recommends \
 		libcunit1-dev
 
 # install some pip packages needed for testing
-python3 -m pip install -U \
+pip3 install --upgrade --no-cache-dir \
 		argcomplete \
 		flake8-blind-except \
 		flake8-builtins \
@@ -95,7 +95,7 @@ rosinstall_generator --deps --rosdistro ${ROS_DISTRO} ${ROS_PKG} \
 	image_transport \
 	compressed_image_transport \
 	compressed_depth_image_transport \
-		> ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall
+> ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall
 cat ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall
 vcs import src < ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall
     
@@ -106,17 +106,30 @@ git -C ${ROS_ROOT}/src/ clone https://github.com/ament/ament_cmake -b ${ROS_DIST
 # skip installation of some conflicting packages
 SKIP_KEYS="libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv"
 
+# patches for building Humble on 18.04
 if [ "$ROS_DISTRO" = "humble" ] && [ $(lsb_release --codename --short) = "bionic" ]; then
-   # (HUMBLE) rti_connext_dds_cmake_module: No definition of [rti-connext-dds-6.0.1] for OS version [bionic]
-   SKIP_KEYS="$SKIP_KEYS rti-connext-dds-6.0.1"
-   apt-get install -y --no-install-recommends gcc-8 g++-8
-   export CC="/usr/bin/gcc-8"
-   export CXX="/usr/bin/g++-8"
+	# rti_connext_dds_cmake_module: No definition of [rti-connext-dds-6.0.1] for OS version [bionic]
+	SKIP_KEYS="$SKIP_KEYS rti-connext-dds-6.0.1 ignition-cmake2 ignition-math6"
+
+	# the default gcc-7 is too old to build humble
+	apt-get install -y --no-install-recommends gcc-8 g++-8
+	export CC="/usr/bin/gcc-8"
+	export CXX="/usr/bin/g++-8"
+	echo "CC=$CC CXX=$CXX"
+
+	# upgrade pybind11
+	apt-get purge -y pybind11-dev
+	pip3 install --upgrade --no-cache-dir pybind11-global
+   
+	# https://github.com/dusty-nv/jetson-containers/issues/160#issuecomment-1429572145
+	git -C /tmp clone -b yaml-cpp-0.6.0 https://github.com/jbeder/yaml-cpp.git
+	cmake -S /tmp/yaml-cpp -B /tmp/yaml-cpp/BUILD -DBUILD_SHARED_LIBS=ON
+	cmake --build /tmp/yaml-cpp/BUILD --parallel $(nproc --ignore=1)
+	cmake --install /tmp/yaml-cpp/BUILD
+	rm -rf /tmp/yaml-cpp
 fi
     
 echo "--skip-keys $SKIP_KEYS"
-echo "CC=$CC"
-echo "CXX=$CXX"
     
 # install dependencies using rosdep
 rosdep init
