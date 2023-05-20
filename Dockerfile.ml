@@ -208,3 +208,11 @@ CMD /bin/bash -c "jupyter lab --ip 0.0.0.0 --port 8888 --allow-root &> /var/log/
 # vulnerability fixed in: 0.18.3 (GHSA-v3c5-jqr6-7qm8 - https://github.com/advisories/GHSA-v3c5-jqr6-7qm8)
 RUN pip3 install --upgrade --verbose future && \
     pip3 show future
+    
+# workaround for "cannot allocate memory in static TLS block"
+ENV LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libgomp.so.1:/usr/local/lib/python3.8/dist-packages/sklearn/__check_build/../../scikit_learn.libs/libgomp-d22c30c5.so.1.0.0
+
+# ImportError: `onnxruntime-gpu` is installed, but GPU dependencies are not loaded.
+RUN sed -i 's/if "ORT_CUDA" not in file_string or "ORT_TENSORRT" not in file_string:/if False:/g' /usr/local/lib/python3.8/dist-packages/optimum/onnxruntime/utils.py
+
+
