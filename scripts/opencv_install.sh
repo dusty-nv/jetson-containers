@@ -2,7 +2,7 @@
 # this script installs OpenCV from deb packages that it downloads
 # the opencv_version.sh script selects which packages to use
 
-set -e -x
+set -x
 
 OPENCV_URL=$1
 OPENCV_DEB=$2
@@ -12,6 +12,16 @@ echo "OPENCV_DEB = $OPENCV_DEB"
 
 ARCH=$(uname -i)
 echo "ARCH:  $ARCH"
+
+# install numpy if needed
+python3 -c 'import numpy'
+
+if [ $? != 0 ]; then
+	apt-get update
+	apt-get install -y --no-install-recommends python3-numpy
+fi
+
+set -e
 
 # remove previous OpenCV installation if it exists
 apt-get purge -y '.*opencv.*' || echo "previous OpenCV installation not found"
