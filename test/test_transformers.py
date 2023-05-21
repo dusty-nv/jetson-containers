@@ -115,19 +115,20 @@ def benchmark_gpt(model='optimum/gpt2', provider='TensorrtExecutionProvider',
             print(f"{provider} {'warmup' if run < warmup else 'run'} {run} -- {time_elapsed:.2f} ms")
             
     avg_latency /= runs
+    avg_qps = 1000.0 / avg_latency
     memory_usage = (process.memory_info().vms - memory_begin) / 1024 ** 2
     
     print(f"\nResponse: {response}\n")
-    print(f"done running {model} with '{provider}' (latency={avg_latency:.2f} ms, memory={memory_usage:.2f} MB, runs={runs}, do_sample={do_sample}, fp16={fp16}, int8={int8})")
+    print(f"done running {model} with '{provider}' (latency={avg_latency:.2f} ms, qps={avg_qps:.2f}, memory={memory_usage:.2f} MB, runs={runs}, do_sample={do_sample}, fp16={fp16}, int8={int8})")
     
     # save results to csv
     if output:
         if not os.path.isfile(output):  # csv header
             with open(output, 'w') as file:
-                file.write(f"timestamp, hostname, model, provider, do_sample, fp16, int8, latency, memory\n")
+                file.write(f"timestamp, hostname, model, provider, do_sample, fp16, int8, latency, qps, memory\n")
         with open(output, 'a') as file:
             file.write(f"{datetime.datetime.now().strftime('%Y%m%d %H:%M:%S')}, {socket.gethostname()}, ")
-            file.write(f"{model}, {provider}, {do_sample}, {fp16}, {int8}, {avg_latency}, {memory_usage}\n")
+            file.write(f"{model}, {provider}, {do_sample}, {fp16}, {int8}, {avg_latency}, {avg_qps}, {memory_usage}\n")
 
     # reclaim memory now to get a more accurate measurement for the next run
     del onnx_model
@@ -135,7 +136,7 @@ def benchmark_gpt(model='optimum/gpt2', provider='TensorrtExecutionProvider',
     
     gc.collect()
     
-    return avg_latency, memory_usage
+    return avg_latency, avg_qps, memory_usage
     
     
 def quantize_gpt(model='optimum/gpt2', provider='TensorrtExecutionProvider', output='', **kwargs):
@@ -239,7 +240,7 @@ if __name__ == '__main__':
     
     print(f"\nPerformance Summary for {args.model} (runs={args.runs}, do_sample={args.do_sample}, fp16={args.fp16}, int8={args.int8})")
     
-    for key, (latency, memory) in perf.items():
-        print(f"    {key} -- {latency:.2f} ms ({memory:.2f} MB)")
+    for key, (latency, qps, memory) in perf.items():
+        print(f"    {key} -- {latency:.2f} ms, {qps:.2f} qps ({memory:.2f} MB)")
         
     print("\ntransformers OK\n")
