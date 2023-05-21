@@ -4,8 +4,8 @@ import os
 import gc
 import sys
 import time
-import json
 import psutil
+import socket
 import datetime
 import argparse
 import functools
@@ -124,11 +124,11 @@ def benchmark_gpt(model='optimum/gpt2', provider='TensorrtExecutionProvider',
     if output:
         if not os.path.isfile(output):  # csv header
             with open(output, 'w') as file:
-                file.write(f"timestamp, model, provider, do_sample, fp16, int8, latency, memory\n")
+                file.write(f"timestamp, hostname, model, provider, do_sample, fp16, int8, latency, memory\n")
         with open(output, 'a') as file:
-            file.write(f"{datetime.datetime.now().strftime('%Y%m%d %H:%M:%S')}, {model}, {provider}, {do_sample}, {fp16}, {int8}, {avg_latency}, {memory}\n")
+            file.write(f"{datetime.datetime.now().strftime('%Y%m%d %H:%M:%S')}, {socket.gethostname()}, ")
+            file.write(f"{model}, {provider}, {do_sample}, {fp16}, {int8}, {avg_latency}, {memory_usage}\n")
 
-            
     # reclaim memory now to get a more accurate measurement for the next run
     del onnx_model
     del tokenizer
