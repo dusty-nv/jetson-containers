@@ -118,7 +118,7 @@ def benchmark_gpt(model='optimum/gpt2', provider='TensorrtExecutionProvider',
     memory_usage = (process.memory_info().vms - memory_begin) / 1024 ** 2
     
     print(f"\nResponse: {response}\n")
-    print(f"done running {model} with '{provider}' (latency={avg_latency:.2f} ms, memory={memory_usage:.2f} MB, runs={runs}, do_sample={do_sample})")
+    print(f"done running {model} with '{provider}' (latency={avg_latency:.2f} ms, memory={memory_usage:.2f} MB, runs={runs}, do_sample={do_sample}, fp16={fp16}, int8={int8})")
     
     # save results to csv
     if output:
@@ -237,7 +237,7 @@ if __name__ == '__main__':
     for provider in providers: 
         perf[provider] = benchmark_gpt(**{**vars(args), **{'provider':provider}})
     
-    print(f"\nPerformance Summary for {args.model} (runs={args.runs}, do_sample={args.do_sample})")
+    print(f"\nPerformance Summary for {args.model} (runs={args.runs}, do_sample={args.do_sample}, fp16={args.fp16}, int8={args.int8})")
     
     for key, (latency, memory) in perf.items():
         print(f"    {key} -- {latency:.2f} ms ({memory:.2f} MB)")
