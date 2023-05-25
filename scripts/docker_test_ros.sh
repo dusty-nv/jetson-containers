@@ -2,15 +2,10 @@
 
 set -e
 source scripts/docker_base.sh
+source scripts/ros_distro.sh
 
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 TEST_MOUNT="$ROOT/../test:/test"
-
-if [[ $L4T_RELEASE -eq 34 || $L4T_RELEASE -eq 35 ]]; then   # JetPack 5.x / Ubuntu 20.04
-	SUPPORTED_ROS_DISTROS=("noetic" "foxy" "galactic" "humble")
-else
-	SUPPORTED_ROS_DISTROS=("melodic" "noetic" "eloquent" "foxy" "galactic" "humble")
-fi
 
 ROS_DISTRO=${1:-"all"}
 ROS_PYTORCH=${2:-"yes"}
@@ -19,11 +14,13 @@ test_ros_version()
 {
 	echo "testing container $1 => ros_version"
 	local DISTRO_TO_TEST=$(echo "$1" | cut -d ":" -f 2 | cut -d "-" -f 1)
+	
 	if [[ "$DISTRO_TO_TEST" == "melodic" || "$DISTRO_TO_TEST" == "noetic" ]]; then
 		bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r test/test_ros_version.sh
 	else
 		bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r test/test_ros2_version.sh
 	fi
+	
 	echo -e "done testing container $1 => ros_version\n"
 }
 

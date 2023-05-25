@@ -41,14 +41,9 @@ die() {
 # determine the L4T version
 source scripts/docker_base.sh
 source scripts/opencv_version.sh
+source scripts/ros_distro.sh
 
-# define default options
-if [[ $L4T_RELEASE -ge 34 ]]; then   # JetPack 5.x / Ubuntu 20.04
-	SUPPORTED_ROS_DISTROS=("noetic" "foxy" "galactic" "humble" "iron")
-else
-	SUPPORTED_ROS_DISTROS=("melodic" "noetic" "eloquent" "foxy" "galactic" "humble")
-fi
-
+# define default build options
 SUPPORTED_ROS_PACKAGES=("ros_base" "ros_core" "desktop")
 
 ROS_DISTRO="all"
@@ -73,7 +68,7 @@ while :; do
         --distro=?*)
             ROS_DISTRO=${1#*=} # Delete everything up to "=" and assign the remainder.
             ;;
-        --distror=)         # Handle the case of an empty --distro=
+        --distro=)         # Handle the case of an empty --distro=
             die 'ERROR: "--distro" requires a non-empty option argument.'
             ;;
 	   --package)
@@ -165,6 +160,7 @@ build_ros()
 	
 	bash ./scripts/docker_build.sh $container_tag $dockerfile \
 			--build-arg ROS_PKG=$package \
+			--build-arg ROS_VERSION=$distro \
 			--build-arg BASE_IMAGE=$base_image \
 			--build-arg OPENCV_URL=$OPENCV_URL \
 			--build-arg OPENCV_DEB=$OPENCV_DEB
