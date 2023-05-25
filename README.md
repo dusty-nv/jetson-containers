@@ -1,5 +1,7 @@
 # Machine Learning Containers for Jetson and JetPack
 
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white) ![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=PyTorch&logoColor=white) ![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=TensorFlow&logoColor=white) ![ROS](https://img.shields.io/badge/ros-%230A0FF9.svg?style=for-the-badge&logo=ros&logoColor=white)
+
 Hosted on [NVIDIA GPU Cloud](https://ngc.nvidia.com/catalog/containers?orderBy=modifiedDESC&query=L4T&quickFilter=containers&filters=) (NGC) are the following Docker container images for machine learning on Jetson:
 
 * [`l4t-ml`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-ml)
@@ -19,11 +21,11 @@ The following ROS containers are also available, which can be pulled from [Docke
 
 The ROS distros that use Python3 have PyTorch-based containers, and some have ROS Desktop for JetPack 5.x.
 
-## Pre-built Container Images
+## Pre-Built Container Images
 
 The following images can be pulled from NGC or DockerHub without needing to build the containers yourself:
 
-<details open>
+<details>
 <summary>
 <a href=https://ngc.nvidia.com/catalog/containers/nvidia:l4t-ml><b>l4t-ml</b></a> (<code>nvcr.io/nvidia/l4t-ml:r35.2.1-py3</code>)
 </summary>
