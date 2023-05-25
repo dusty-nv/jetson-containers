@@ -139,16 +139,12 @@ build_ros()
 	local package=$2
 	local base_image=$3
 	local extra_tag=$4
-	local dockerfile="Dockerfile.ros.$distro" #"Dockerfile.ros2"
+	local dockerfile="Dockerfile.ros2"
 	
-	#if [[ $distro == "melodic" || $distro == "noetic" ]]; then
-	#	dockerfile="Dockerfile.ros.$distro"
-	#fi
-	
-	if [[ $distro == "iron" ]]; then
-		dockerfile="Dockerfile.ros2"
+	if [[ $distro == "melodic" || $distro == "noetic" ]]; then
+		dockerfile="Dockerfile.ros.$distro"
 	fi
-	
+
 	dockerfile=${5:-"$dockerfile"}
 	local container_tag="ros:${distro}-${extra_tag}l4t-r${L4T_VERSION}"
 	
