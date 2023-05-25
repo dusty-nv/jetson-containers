@@ -107,7 +107,7 @@ git -C ${ROS_ROOT}/src/ clone https://github.com/ament/ament_cmake -b ${ROS_DIST
 SKIP_KEYS="libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv"
 
 # patches for building Humble on 18.04
-if [ "$ROS_DISTRO" = "humble" ] || [ "ROS_DISTRO" = "iron" ] && [ $(lsb_release --codename --short) = "bionic" ]; then
+if [[ "$ROS_DISTRO" = "humble" || "ROS_DISTRO" = "iron" ]] && [[ $(lsb_release --codename --short) = "bionic" ]]; then
 	# rti_connext_dds_cmake_module: No definition of [rti-connext-dds-6.0.1] for OS version [bionic]
 	SKIP_KEYS="$SKIP_KEYS rti-connext-dds-6.0.1 ignition-cmake2 ignition-math6"
 
