@@ -146,20 +146,6 @@ The following images can be pulled from NGC or DockerHub without needing to buil
 
 <details>
 <summary>
-<a href=https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=eloquent><b>ROS2 Eloquent</b></a> (<code>dustynv/ros:eloquent-ros-base-l4t-r32.7.1</code>)
-</summary>
-</br>
-
-|                                                                                     | L4T Version | Container Tag                                      |
-|-------------------------------------------------------------------------------------|:-----------:|----------------------------------------------------|
-| [`ROS2 Eloquent`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=eloquent) <sup>(ros-base)</sup> |   R32.7.1   | `dustynv/ros:eloquent-ros-base-l4t-r32.7.1`        |
-|                                                                                     |   R32.6.1   | `dustynv/ros:eloquent-ros-base-l4t-r32.6.1`        |
-|                                                                                     |   R32.5.0*  | `dustynv/ros:eloquent-ros-base-l4t-r32.5.0`        |
-|                                                                                     |   R32.4.4   | `dustynv/ros:eloquent-ros-base-l4t-r32.4.4`        |
-
-</details>
-<details>
-<summary>
 <a href=https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=foxy><b>ROS2 Foxy</b></a> (<code>dustynv/ros:foxy-ros-base-l4t-r35.3.1</code>)
 </summary>
 </br>
