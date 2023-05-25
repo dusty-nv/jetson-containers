@@ -43,8 +43,8 @@ source scripts/docker_base.sh
 source scripts/opencv_version.sh
 
 # define default options
-if [[ $L4T_RELEASE -eq 34 || $L4T_RELEASE -eq 35 ]]; then   # JetPack 5.x / Ubuntu 20.04
-	SUPPORTED_ROS_DISTROS=("noetic" "foxy" "galactic" "humble")
+if [[ $L4T_RELEASE -ge 34 ]]; then   # JetPack 5.x / Ubuntu 20.04
+	SUPPORTED_ROS_DISTROS=("noetic" "foxy" "galactic" "humble" "iron")
 else
 	SUPPORTED_ROS_DISTROS=("melodic" "noetic" "eloquent" "foxy" "galactic" "humble")
 fi
@@ -144,12 +144,23 @@ build_ros()
 	local package=$2
 	local base_image=$3
 	local extra_tag=$4
-	local dockerfile=${5:-"Dockerfile.ros.$distro"}
+	local dockerfile="Dockerfile.ros.$distro" #"Dockerfile.ros2"
+	
+	#if [[ $distro == "melodic" || $distro == "noetic" ]]; then
+	#	dockerfile="Dockerfile.ros.$distro"
+	#fi
+	
+	if [[ $distro == "iron" ]]; then
+		dockerfile="Dockerfile.ros2"
+	fi
+	
+	dockerfile=${5:-"$dockerfile"}
 	local container_tag="ros:${distro}-${extra_tag}l4t-r${L4T_VERSION}"
 	
 	echo ""
 	echo "Building container $container_tag"
 	echo "BASE_IMAGE=$base_image"
+	echo "DOCKERFILE=$dockerfile"
 	echo ""
 	
 	bash ./scripts/docker_build.sh $container_tag $dockerfile \
