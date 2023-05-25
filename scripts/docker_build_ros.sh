@@ -71,7 +71,7 @@ while :; do
         --distro=)         # Handle the case of an empty --distro=
             die 'ERROR: "--distro" requires a non-empty option argument.'
             ;;
-	   --package)
+        --package)
             if [ "$2" ]; then
                 ROS_PACKAGE=$2
                 shift
@@ -85,7 +85,7 @@ while :; do
         --package=)         # Handle the case of an empty --distro=
             die 'ERROR: "--package" requires a non-empty option argument.'
             ;;
-	   --with-pytorch)
+        --with-pytorch)
             WITH_PYTORCH="on"
             ;;
         --)              # End of all options.
