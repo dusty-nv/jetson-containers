@@ -1,8 +1,8 @@
 # Machine Learning Containers for Jetson and JetPack
 
-![NVIDIA](https://img.shields.io/static/v1?style=for-the-badge&message=NVIDIA&color=222222&logo=NVIDIA&logoColor=76B900&label=) ![nVIDIA](https://img.shields.io/badge/nVIDIA-%2376B900.svg?style=for-the-badge&logo=nVIDIA&logoColor=white) ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white) ![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=PyTorch&logoColor=white) ![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=TensorFlow&logoColor=white) ![ROS](https://img.shields.io/badge/ros-%230A0FF9.svg?style=for-the-badge&logo=ros&logoColor=white)
+![NVIDIA](https://img.shields.io/static/v1?style=for-the-badge&message=NVIDIA&color=222222&logo=NVIDIA&logoColor=76B900&label=) ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white) ![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=PyTorch&logoColor=white) ![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=TensorFlow&logoColor=white) ![ROS](https://img.shields.io/badge/ros-%230A0FF9.svg?style=for-the-badge&logo=ros&logoColor=white)
 
-Hosted on [NVIDIA GPU Cloud](https://ngc.nvidia.com/catalog/containers?orderBy=modifiedDESC&query=L4T&quickFilter=containers&filters=) (NGC) are the following Docker container images for machine learning on Jetson:
+This project provides Dockerfiles, build scripts, and container images for machine learning on [NVIDIA Jetson](https://developer.nvidia.com/embedded-computing):
 
 * [`l4t-ml`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-ml)
 * [`l4t-pytorch`](https://ngc.nvidia.com/catalog/containers/nvidia:l4t-pytorch)
@@ -19,7 +19,7 @@ The following ROS containers are also available, which can be pulled from [Docke
 | ROS2 Galactic | [`ros-base`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=galactic-ros-base) | [`desktop`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=galactic-desktop) | [`PyTorch`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=galactic-pytorch) |
 | ROS2 Humble   | [`ros-base`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=humble-ros-base)   | [`desktop`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=humble-desktop) | [`PyTorch`](https://hub.docker.com/repository/registry-1.docker.io/dustynv/ros/tags?name=humble-pytorch) |
 
-The ROS distros that use Python3 have PyTorch-based containers, and some have ROS Desktop for JetPack 5.x.
+The PyTorch-based ROS containers also have the [jetson-inference](https://github.com/dusty-nv/jetson-inference) and [ros_deep_learning](https://github.com/dusty-nv/ros_deep_learning) packages installed.
 
 ## Pre-Built Container Images
 
@@ -262,7 +262,18 @@ $ scripts/docker_run.sh -c nvcr.io/nvidia/l4t-pytorch:r32.5.0-pth1.7-py3
 
 For other configurations, below are the instructions to build and test the containers using the included Dockerfiles.
 
-## Docker Default Runtime
+## Building the Containers
+
+To rebuild the containers from a Jetson device running [JetPack 4.4](https://developer.nvidia.com/embedded/jetpack) or newer, first clone this repo:
+
+``` bash
+$ git clone https://github.com/dusty-nv/jetson-containers
+$ cd jetson-containers
+```
+
+Before proceeding, make sure you have set your [Docker Default Runtime](#docker-default-runtime) to `nvidia` as shown below:
+
+### Docker Default Runtime
 
 To enable access to the CUDA compiler (nvcc) during `docker build` operations, add `"default-runtime": "nvidia"` to your `/etc/docker/daemon.json` configuration file before attempting to build the containers:
 
@@ -280,17 +291,6 @@ To enable access to the CUDA compiler (nvcc) during `docker build` operations, a
 ```
 
 You will then want to restart the Docker service or reboot your system before proceeding.
-
-## Building the Containers
-
-To rebuild the containers from a Jetson device running [JetPack 4.4](https://developer.nvidia.com/embedded/jetpack) or newer, first clone this repo:
-
-``` bash
-$ git clone https://github.com/dusty-nv/jetson-containers
-$ cd jetson-containers
-```
-
-Before proceeding, make sure you have set your [Docker Default Runtime](#docker-default-runtime) to `nvidia` as shown above.
 
 ### ML Containers
 
