@@ -23,6 +23,14 @@ test_cupy()
 	echo -e "done testing container $1 => CuPy\n"
 }
 
+# nemo tests
+test_nemo()
+{
+	echo "testing container $1 => nemo"
+	bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_nemo.py
+	echo -e "done testing container $1 => nemo\n"
+}
+
 # numpy tests
 test_numpy()
 {
@@ -31,7 +39,7 @@ test_numpy()
 	echo -e "done testing container $1 => numpy\n"
 }
 
-# numpa tests
+# numba tests
 test_numba()
 {
 	echo "testing container $1 => numba"
@@ -137,8 +145,9 @@ test_tensorrt()
 test_transformers()
 {
 	echo "testing container $1 => transformers"
-	bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_transformers.py
-	echo -e "done testing container $1 => TensorRT\n"
+	bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_transformers.py --model=distilgpt2 --provider=cuda
+	bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_transformers.py --model=distilgpt2 --provider=tensorrt --fp16
+	echo -e "done testing container $1 => transformers\n"
 }
 
 # scipy tests
@@ -206,6 +215,7 @@ test_all()
 	test_numpy $1
 	test_cupy $1
 	test_numba $1
+	test_nemo $1
 	test_onnx $1
 	test_onnxruntime $1
 	test_opencv $1

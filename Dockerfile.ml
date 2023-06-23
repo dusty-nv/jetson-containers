@@ -148,6 +148,7 @@ RUN cd /tmp && ./opencv_install.sh ${OPENCV_URL} ${OPENCV_DEB}
 #
 RUN pip3 freeze > /tmp/constraints.txt && \
     pip3 install --no-cache-dir --verbose \
+	xformers \
 	transformers \
 	diffusers \
 	optimum[exporters,onnxruntime] \
@@ -180,6 +181,23 @@ RUN pip3 uninstall -y onnxruntime && \
     pip3 install --no-cache-dir --verbose dist/onnxruntime_gpu-*.whl && \
     rm -rf /tmp/onnxruntime
 	
+
+#
+# NeMo (needs more recent OpenFST than focal apt
+#
+ARG FST_VERSION=1.8.2
+RUN cd /tmp && \
+    wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate https://www.openfst.org/twiki/pub/FST/FstDownload/openfst-${FST_VERSION}.tar.gz && \
+    tar -xzvf openfst-${FST_VERSION}.tar.gz && \
+    cd openfst-${FST_VERSION} && \
+    ./configure --enable-grm && \
+    make -j$(nproc) && \
+    make install && \
+    cd ../ && \
+    rm -rf openfst
+    
+RUN pip3 install --no-cache-dir --verbose nemo_toolkit['all']
+
 
 #
 # install rust (used by Jupyter)
