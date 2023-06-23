@@ -25,6 +25,9 @@ show_help() {
     echo " "
     echo "                                      -v /my/host/path:/my/container/path"
     echo " "
+    echo "                                   These should be absolute paths, and you"
+    echo "                                   can specify multiple --volume options."
+    echo " "
     echo "   -r, --run RUN_COMMAND  Command to run once the container is started."
     echo "                          Note that this argument must be invoked last,"
     echo "                          as all further arguments will form the command."
@@ -62,16 +65,16 @@ while :; do
             ;;
         -v|--volume)
             if [ "$2" ]; then
-                USER_VOLUME=" -v $2 "
+                USER_VOLUME="$USER_VOLUME --volume $2 "
                 shift
             else
                 die 'ERROR: "--volume" requires a non-empty option argument.'
             fi
             ;;
         --volume=?*)
-            USER_VOLUME=" -v ${1#*=} " # Delete everything up to "=" and assign the remainder.
+            USER_VOLUME="$USER_VOLUME --volume ${1#*=} "
             ;;
-        --volume=)         # Handle the case of an empty --image=
+        --volume=)
             die 'ERROR: "--volume" requires a non-empty option argument.'
             ;;
         -r|--run)
@@ -102,7 +105,7 @@ if [ -z "$CONTAINER_IMAGE" ]; then
 fi
 
 # check for V4L2 devices
-V4L2_DEVICES=" "
+V4L2_DEVICES=""
 
 for i in {0..9}
 do
@@ -112,7 +115,7 @@ do
 done
 
 # check for display
-DISPLAY_DEVICE=" "
+DISPLAY_DEVICE=""
 
 if [ -n "$DISPLAY" ]; then
 	# give docker root user X11 permissions
@@ -126,11 +129,20 @@ if [ -n "$DISPLAY" ]; then
 	DISPLAY_DEVICE="-e DISPLAY=$DISPLAY -v /tmp/.X11-unix/:/tmp/.X11-unix -v $XAUTH:$XAUTH -e XAUTHORITY=$XAUTH"
 fi
 
-#echo "CONTAINER_IMAGE: $CONTAINER_IMAGE"
-#echo "USER_VOLUME:     $USER_VOLUME"
-#echo "USER_COMMAND:    '$USER_COMMAND'"
-#echo "V4L2_DEVICES:    $V4L2_DEVICES"
-#echo "DISPLAY_DEVICE:  $DISPLAY_DEVICE"
+# print configuration
+print_var() 
+{
+	if [ -n "${!1}" ]; then                                                # reference var by name - https://stackoverflow.com/a/47768983
+		local trimmed="$(echo -e "${!1}" | sed -e 's/^[[:space:]]*//')"   # remove leading whitespace - https://stackoverflow.com/a/3232433    
+		printf '%-17s %s\n' "$1:" "$trimmed"                              # justify prefix - https://unix.stackexchange.com/a/354094
+	fi
+}
+
+print_var "CONTAINER_IMAGE"
+print_var "USER_VOLUME"
+print_var "USER_COMMAND"
+print_var "V4L2_DEVICES"
+print_var "DISPLAY_DEVICE"
 
 # run the container
 sudo docker run --runtime nvidia -it --rm --network host \
