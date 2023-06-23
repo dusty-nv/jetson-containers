@@ -203,7 +203,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     
     parser.add_argument('--provider', type=str, default='tensorrt')
-    parser.add_argument('--model', type=str, default='MBZUAI/LaMini-GPT-124M')
+    parser.add_argument('--model', type=str, default='gpt2')
     parser.add_argument('--runs', type=int, default=25)
     parser.add_argument('--warmup', type=int, default=10)
     parser.add_argument('--do-sample', action='store_true')
