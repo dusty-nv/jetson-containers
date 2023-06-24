@@ -183,7 +183,7 @@ RUN pip3 uninstall -y onnxruntime && \
 	
 
 #
-# NeMo (needs more recent OpenFST than focal apt
+# NeMo (needs more recent OpenFST than focal apt)
 #
 ARG FST_VERSION=1.8.2
 RUN cd /tmp && \
@@ -228,9 +228,9 @@ RUN pip3 install --upgrade --verbose future && \
     pip3 show future
     
 # workaround for "cannot allocate memory in static TLS block"
-ENV LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libgomp.so.1:/usr/local/lib/python3.8/dist-packages/sklearn/__check_build/../../scikit_learn.libs/libgomp-d22c30c5.so.1.0.0
+ENV LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libgomp.so.1:/usr/local/lib/python${PYTHON3_VERSION}/dist-packages/sklearn/__check_build/../../scikit_learn.libs/libgomp-d22c30c5.so.1.0.0
 
 # ImportError: `onnxruntime-gpu` is installed, but GPU dependencies are not loaded.
-RUN sed -i 's/if "ORT_CUDA" not in file_string or "ORT_TENSORRT" not in file_string:/if False:/g' /usr/local/lib/python3.8/dist-packages/optimum/onnxruntime/utils.py
+RUN sed -i 's/if "ORT_CUDA" not in file_string or "ORT_TENSORRT" not in file_string:/if False:/g' /usr/local/lib/python${PYTHON3_VERSION}/dist-packages/optimum/onnxruntime/utils.py
 
 
