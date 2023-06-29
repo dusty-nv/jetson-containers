@@ -199,7 +199,19 @@ RUN cd /tmp && \
     cd ../ && \
     rm -rf openfst
     
+# install nemo_toolkit
 RUN pip3 install --no-cache-dir --verbose nemo_toolkit['all']
+
+# libopencc.so.1 needed by: nemo/collections/common/tokenizers/chinese_tokenizers.py
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+          libopencc-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+    
+# patch for: cannot import name 'GradBucket' from 'torch.distributed'
+RUN NEMO_PATH="$(pip3 show nemo_toolkit | grep Location: | cut -d' ' -f2)/nemo" && \
+    sed -i '/from torch.distributed.algorithms.ddp_comm_hooks.debugging_hooks import noop_hook/d' $NEMO_PATH/collections/nlp/parts/nlp_overrides.py
 
 
 #
