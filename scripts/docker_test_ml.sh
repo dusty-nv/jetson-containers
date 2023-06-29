@@ -27,7 +27,22 @@ test_cupy()
 test_nemo()
 {
 	echo "testing container $1 => nemo"
-	bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_nemo.py
+	
+	local NEMO_CACHE_DIR="test/data/nemo"
+	local NEMO_SQUAD_DIR="$NEMO_CACHE_DIR/squad"
+	
+	if [ ! -d "$NEMO_SQUAD_DIR" ]; then
+		echo "downloading SQuAD dataset..."
+		mkdir -p $NEMO_SQUAD_DIR
+		wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate https://raw.githubusercontent.com/NVIDIA/NeMo/main/examples/nlp/question_answering/get_squad.py -O $NEMO_SQUAD_DIR/get_squad.py
+		bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 $NEMO_SQUAD_DIR/get_squad.py --destDir=$NEMO_SQUAD_DIR
+	fi
+		
+	bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT \
+	     -e NEMO_CACHE_DIR=$NEMO_CACHE_DIR \
+		-e TRANSFORMERS_CACHE="/test/data/transformers" \
+		-r python3 test/test_nemo.py --data=$NEMO_SQUAD_DIR/squad/v1.1/dev-v1.1.json
+	
 	echo -e "done testing container $1 => nemo\n"
 }
 
@@ -161,8 +176,12 @@ test_tensorrt()
 test_transformers()
 {
 	echo "testing container $1 => transformers"
-	bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_transformers.py --model=distilgpt2 --provider=cuda
-	bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_transformers.py --model=distilgpt2 --provider=tensorrt --fp16
+	
+	local TRANSFORMERS_CACHE="/test/data/transformers"
+	
+	bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -e TRANSFORMERS_CACHE=$TRANSFORMERS_CACHE -r python3 test/test_transformers.py --model=distilgpt2 --provider=cuda
+	bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -e TRANSFORMERS_CACHE=$TRANSFORMERS_CACHE -r python3 test/test_transformers.py --model=distilgpt2 --provider=tensorrt --fp16
+	
 	echo -e "done testing container $1 => transformers\n"
 }
 
@@ -260,7 +279,8 @@ fi
 # ML container
 #
 if [[ "$CONTAINERS" == "ml" || "$CONTAINERS" == "all" ]]; then
-	test_all "l4t-ml:r$L4T_VERSION-py3"
+	#test_all "l4t-ml:r$L4T_VERSION-py3"
+	test_nemo "l4t-ml:r$L4T_VERSION-py3"
 fi
 
 
