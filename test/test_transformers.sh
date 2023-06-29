@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
-
+# script for benchmarking various LLM transformers
 set -e
 
+# https://huggingface.co/docs/transformers/installation?highlight=transformers_cache#cache-setup
+export TRANSFORMERS_CACHE="/test/data/transformers"  
 
 benchmark_gpt()
 {
 	local model=$1
-	local output="data/transformers/benchmarks.csv"
+	local output="$TRANSFORMERS_CACHE/benchmarks.csv"
 	
 	python3 test_transformers.py --model=$model --output=$output --provider=tensorrt 
 	python3 test_transformers.py --model=$model --output=$output --provider=tensorrt --fp16

@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# script for benchmarking huggingface CausalLM transformers with Optimum / onnxruntime
+# to store models outside container, set NEMO_CACHE_DIR environment variable to a mounted directory 
 
 import os
 import gc
