@@ -2,8 +2,10 @@
 
 CONTAINER_IMAGE=""
 
+ENVIRONMENT=""
 USER_VOLUME=""
 USER_COMMAND=""
+
 
 show_help() {
     echo " "
@@ -19,6 +21,8 @@ show_help() {
     echo " "
     echo "   -c, --container DOCKER_IMAGE Specifies the Docker container image to use"
     echo "                                (e.g. nvcr.io/nvidia/l4t-ml:32.7.1-py3)"
+    echo " "
+    echo "   -e, --env VARIABLE=VALUE Set an environment variable in the container"
     echo " "
     echo "   -v, --volume HOST_DIR:MOUNT_DIR Mount a path from the host system into"
     echo "                                   the container.  Should be specified as:"
@@ -62,6 +66,20 @@ while :; do
             ;;
         --container=)         # Handle the case of an empty --image=
             die 'ERROR: "--container" requires a non-empty option argument.'
+            ;;
+	   -e|--env)
+            if [ "$2" ]; then
+                ENVIRONMENT="$ENVIRONMENT --env $2 "
+                shift
+            else
+                die 'ERROR: "--env" requires a non-empty option argument.'
+            fi
+            ;;
+        --env=?*)
+            ENVIRONMENT="$ENVIRONMENT --env ${1#*=} "
+            ;;
+        --env=)
+            die 'ERROR: "--env" requires a non-empty option argument.'
             ;;
         -v|--volume)
             if [ "$2" ]; then
@@ -139,6 +157,7 @@ print_var()
 }
 
 print_var "CONTAINER_IMAGE"
+print_var "ENVIRONMENT"
 print_var "USER_VOLUME"
 print_var "USER_COMMAND"
 print_var "V4L2_DEVICES"
@@ -146,5 +165,5 @@ print_var "DISPLAY_DEVICE"
 
 # run the container
 sudo docker run --runtime nvidia -it --rm --network host \
-	$DISPLAY_DEVICE $V4L2_DEVICES \
+	$ENVIRONMENT $DISPLAY_DEVICE $V4L2_DEVICES \
 	$USER_VOLUME $CONTAINER_IMAGE $USER_COMMAND
