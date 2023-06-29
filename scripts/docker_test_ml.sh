@@ -92,6 +92,15 @@ test_pandas()
 	echo -e "done testing container $1 => pandas\n"
 }
 
+# protobuf tests
+test_protobuf()
+{
+	echo "testing container $1 => protobuf"
+	bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r bash test/test_protobuf.sh
+	bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_protobuf.py
+	echo -e "done testing container $1 => protobuf\n"
+}
+
 # PyTorch tests
 test_pytorch()
 {
@@ -116,13 +125,20 @@ test_pytorch()
 	echo -e "done testing container $1 => PyTorch\n"
 }
 
-# protobuf tests
-test_protobuf()
+# scipy tests
+test_scipy()
 {
-	echo "testing container $1 => protobuf"
-	bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r bash test/test_protobuf.sh
-	bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_protobuf.py
-	echo -e "done testing container $1 => protobuf\n"
+	echo "testing container $1 => scipy"
+	bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_scipy.py
+	echo -e "done testing container $1 => scipy\n"
+}
+
+# sklearn tests
+test_sklearn()
+{
+	echo "testing container $1 => sklearn"
+	bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_sklearn.py
+	echo -e "done testing container $1 => sklearn\n"
 }
 
 # TensorFlow tests
@@ -150,20 +166,12 @@ test_transformers()
 	echo -e "done testing container $1 => transformers\n"
 }
 
-# scipy tests
-test_scipy()
+# xformers tests
+test_xformers()
 {
-	echo "testing container $1 => scipy"
-	bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_scipy.py
-	echo -e "done testing container $1 => scipy\n"
-}
-
-# sklearn tests
-test_sklearn()
-{
-	echo "testing container $1 => sklearn"
-	bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_sklearn.py
-	echo -e "done testing container $1 => sklearn\n"
+	echo "testing container $1 => xformers"
+	bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r python3 test/test_xformers.py
+	echo -e "done testing container $1 => transformers\n"
 }
 
 # vpi tests
@@ -174,6 +182,7 @@ test_vpi()
 	bash ./scripts/docker_run.sh -c $1 -v $TEST_MOUNT -r test/test_vpi.sh
 	echo -e "done testing container $1 => VPI\n"
 }
+
 
 # PyTorch tests (all)
 test_pytorch_all()
@@ -223,6 +232,7 @@ test_all()
 	test_scipy $1
 	test_sklearn $1
 	test_transformers $1
+	test_xformers $1
 	#test_vpi $1
 }
 
