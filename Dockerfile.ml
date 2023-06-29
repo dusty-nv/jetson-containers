@@ -145,8 +145,11 @@ RUN cd /tmp && ./opencv_install.sh ${OPENCV_URL} ${OPENCV_DEB}
 
 #
 # transformers/diffusers (avoid it changing package versions)
+# also, xformers needs TORCH_CUDA_ARCH_LIST set to build the kernels
 #
-RUN pip3 freeze > /tmp/constraints.txt && \
+RUN export TORCH_CUDA_ARCH_LIST=$(python3 -c 'import torch; print(";".join([str(float(x.lstrip("sm_"))/10) for x in torch.cuda.get_arch_list()]));') && \
+    echo "TORCH_CUDA_ARCH_LIST=$TORCH_CUDA_ARCH_LIST" && \
+    pip3 freeze > /tmp/constraints.txt && \
     pip3 install --no-cache-dir --verbose \
 	xformers \
 	transformers \
