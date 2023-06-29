@@ -279,8 +279,7 @@ fi
 # ML container
 #
 if [[ "$CONTAINERS" == "ml" || "$CONTAINERS" == "all" ]]; then
-	#test_all "l4t-ml:r$L4T_VERSION-py3"
-	test_nemo "l4t-ml:r$L4T_VERSION-py3"
+	test_all "l4t-ml:r$L4T_VERSION-py3"
 fi
 
 
