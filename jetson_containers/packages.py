@@ -74,7 +74,9 @@ def scan_packages(package_dirs=_PACKAGE_DIRS):
                 package['dockerfile'] = entry
             elif entry == 'config.py':
                 package['config'] = entry
-       
+            elif entry == 'test.py':
+                package['test'] = entry
+                
     # skip directories with no dockerfiles
     if 'dockerfile' not in package: #len(package) > 0:
         #print(f"warning -- didn't find a Dockerfile under '{path}', skipping...")
@@ -83,9 +85,14 @@ def scan_packages(package_dirs=_PACKAGE_DIRS):
     # configure new packages
     package_name = os.path.basename(path)
     
-    if package_name not in _PACKAGES:
-        package['name'] = package_name
-        _PACKAGES[package['name']] = config_package(package)
+    if package_name in _PACKAGES:
+        return _PACKAGES
+        
+    package['name'] = package_name
+    package = config_package(package)
+    
+    for pkg in package:
+        _PACKAGES[pkg['name']] = pkg
         
     return _PACKAGES
 
@@ -128,7 +135,7 @@ def config_package(package):
         raise ValueError("package should either be a string or dict")
         
     if 'config' not in package:
-        return package
+        return validate_package(package)
         
     config_path = os.path.join(package['path'], package['config'])
     print(f"-- Importing {config_path}")
@@ -141,18 +148,38 @@ def config_package(package):
     module.package = package   # add current package's dict as a global
     spec.loader.exec_module(module)
     package = module.package
-    
-    # validate configuration
-    def str2list(key):
-        if key in package and isinstance(package[key], str):
-            package[key] = [package[key]]
-            
-    str2list('alias')
-    str2list('depends')
         
-    return package
+    return validate_package(package)
     
 
+def validate_package(package):
+    """
+    Validate/check a package's configuration
+    """
+    packages = []
+    
+    if isinstance(package, dict):
+        for key, value in package.items():  # check for sub-packages
+            if isinstance(value, dict) and 'dockerfile' in value:
+                value['name'] = key  # assuming name based on key
+                packages.append(value)
+        if len(packages) == 0:  # there were no sub-packages
+            packages.append(package)
+    elif isinstance(package, list):
+        packages = package
+       
+    # make sure certain entries are lists
+    def str2list(pkg, key):
+        if key in pkg and isinstance(pkg[key], str):
+            pkg[key] = [pkg[key]]
+                  
+    for pkg in packages:
+        str2list(pkg, 'alias')
+        str2list(pkg, 'depends')
+    
+    return packages
+    
+        
 '''
 #_CURRENT_PACKAGE = None
 
