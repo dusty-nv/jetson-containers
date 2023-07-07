@@ -63,14 +63,16 @@ def build_container(name, packages, base=get_l4t_base(), simulate=False):
         # if this isn't the final container in the chain, tag it with the sub-package
         if idx < len(packages) - 1:  
             container_name = f"{name}-{package}"
-        
+        else:
+            container_name = name
+            
         # build next container
         pkg = find_package(package)
         
         cmd = f"sudo docker build --network=host --tag {container_name} \ \n"
         cmd += f"--file {os.path.join(pkg['path'], pkg['dockerfile'])} \ \n"
         cmd += f"--build-arg BASE_IMAGE={base} \ \n" 
-        cmd += ''.join([f"--build-arg {key}={value} \ \n" for key, value in pkg.get('build_args', {}).items()])
+        cmd += ''.join([f"--build-arg {key}=\"{value}\" \ \n" for key, value in pkg.get('build_args', {}).items()])
         cmd += " . "
         
         print(f"-- Building container {container_name}")
