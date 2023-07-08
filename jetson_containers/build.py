@@ -31,7 +31,7 @@ def unroll_dependencies(packages):
     return packages
     
 
-def build_container(name, packages, base=get_l4t_base(), simulate=False):
+def build_container(name, packages, base=get_l4t_base(), build_flags='', simulate=False):
     """
     Build container chain of packages
     """
@@ -69,15 +69,30 @@ def build_container(name, packages, base=get_l4t_base(), simulate=False):
         # build next container
         pkg = find_package(package)
         
-        cmd = f"sudo docker build --network=host --tag {container_name} \ \n"
-        cmd += f"--file {os.path.join(pkg['path'], pkg['dockerfile'])} \ \n"
-        cmd += f"--build-arg BASE_IMAGE={base} \ \n" 
-        cmd += ''.join([f"--build-arg {key}=\"{value}\" \ \n" for key, value in pkg.get('build_args', {}).items()])
-        cmd += " . "
+        if 'dockerfile' in pkg:
+            cmd = f"sudo docker build --network=host --tag {container_name} \ \n"
+            cmd += f"--file {os.path.join(pkg['path'], pkg['dockerfile'])} \ \n"
+            cmd += f"--build-arg BASE_IMAGE={base} \ \n" 
+            
+            if 'build_args' in pkg:
+                cmd += ''.join([f"--build-arg {key}=\"{value}\" \ \n" for key, value in pkg['build_args'].items()])
+            
+            if 'build_flags' in pkg:
+                cmd += pkg['build_flags'] + ' \ \n'
+                
+            if build_flags:
+                cmd += build_flags + ' \ \n'
+                
+            cmd += pkg['path'] #" . "
+            
+            print(f"-- Building container {container_name}")
+            print(f"\n{cmd}\n")
+        else:
+            cmd = f"sudo docker tag {base} {container_name}"
+            
+            print(f"-- Tagging container {container_name}")
+            print(f"\n{cmd}\n")
         
-        print(f"-- Building container {container_name}")
-        print(f"\n{cmd}\n")
-
         if not simulate:
             subprocess.run(cmd.replace('\ \n', ''), shell=True, check=True)  # remove the line breaks that were added for readability
 
@@ -92,6 +107,7 @@ if __name__ == "__main__":
     
     parser.add_argument('--name', type=str, default='', help='the name of the output container to build')
     parser.add_argument('--base', type=str, default=get_l4t_base(), help='the base container image to use at the beginning of the build chain')
+    parser.add_argument('--build-flags', type=str, default='', help="extra flags to pass to 'docker build'")
     parser.add_argument('--package-dirs', type=str, nargs='+', default=[], help='additional package search directories')
     parser.add_argument('--list-packages', action='store_true', help='list information about the found packages and exit')
     parser.add_argument('--simulate', action='store_true', help='print out the build commands without actually building the containers')
@@ -110,5 +126,5 @@ if __name__ == "__main__":
         sys.exit(0)
         
     # build container chain
-    build_container(args.name, args.packages, args.base, args.simulate)
+    build_container(args.name, args.packages, args.base, args.build_flags, args.simulate)
     
