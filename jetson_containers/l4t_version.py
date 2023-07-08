@@ -53,6 +53,18 @@ def get_l4t_version(version_file='/etc/nv_tegra_release'):
     # return packaging.version object
     return version.parse(f'{l4t_release}.{l4t_revision}')
     
-    
+
 L4T_VERSION = get_l4t_version()
+
+# x86_64, aarch64
 ARCH = platform.machine()
+
+# Nano/TX1 = 5.3
+# TX2 = 6.2
+# Xavier = 7.2
+# Orin = 8.7
+if L4T_VERSION.major >= 34:    # JetPack 5
+    CUDA_ARCH_LIST = ['7.2', '8.7']
+elif L4T_VERSION.major == 32:  # JetPack 4
+    CUDA_ARCH_LIST = ['5.3', '6.2', '7.2']
+    
