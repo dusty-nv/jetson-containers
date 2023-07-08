@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from l4t_version import L4T_VERSION
+from .l4t_version import L4T_VERSION
 
 def get_l4t_base():
     """

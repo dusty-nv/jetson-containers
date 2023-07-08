@@ -1,130 +1,70 @@
 #!/usr/bin/env python3
 import os
+import re
 import sys
 import pprint
+import fnmatch
 import argparse
-import subprocess
 
-from packages import find_package, package_search_dirs, list_packages
-from l4t_version import L4T_VERSION
-from base import get_l4t_base
+from jetson_containers import build_container, find_packages, package_search_dirs, set_log_dir, L4T_VERSION
 
 
-def unroll_dependencies(packages):
-    """
-    Expand the dependencies in the list of containers to build
-    """
-    if isinstance(packages, str):
-        packages = [packages]
-    
-    while True:
-        packages_org = packages.copy()
-        
-        for package in packages_org:
-            for dependency in find_package(package).get('depends', []):
-                if dependency not in packages:
-                    packages.insert(packages.index(package), dependency)
-                
-        if len(packages) == len(packages_org):
-            break
-            
-    return packages
-    
+parser = argparse.ArgumentParser()
+                    
+parser.add_argument('packages', type=str, nargs='*', default=[], help='packages or containers to build (filterable by wildcards)')
 
-def build_container(name, packages, base=get_l4t_base(), build_flags='', simulate=False):
-    """
-    Build container chain of packages
-    """
-    if isinstance(packages, str):
-        packages = [packages]
-        
-    if len(packages) == 0:
-        raise ValueError("must specify at least one package to build")    
-            
-    # add all dependencies to the build tree
-    packages = unroll_dependencies(packages)
-    print('-- Building containers ', packages)
-    
-    # make sure all packages can be found before building any
-    for package in packages:    
-        find_package(package)
-            
-    # assign default container name and tag if needed
-    if len(name) == 0:   
-        name = packages[-1]
-          
-    if name.find(':') < 0:
-        name += f":r{L4T_VERSION}"
-    
-    # build the chain of containers
-    container_name = name
-    
-    for idx, package in enumerate(packages):
-        # if this isn't the final container in the chain, tag it with the sub-package
-        if idx < len(packages) - 1:  
-            container_name = f"{name}-{package}"
-        else:
-            container_name = name
-            
-        # build next container
-        pkg = find_package(package)
-        
-        if 'dockerfile' in pkg:
-            cmd = f"sudo docker build --network=host --tag {container_name} \ \n"
-            cmd += f"--file {os.path.join(pkg['path'], pkg['dockerfile'])} \ \n"
-            cmd += f"--build-arg BASE_IMAGE={base} \ \n" 
-            
-            if 'build_args' in pkg:
-                cmd += ''.join([f"--build-arg {key}=\"{value}\" \ \n" for key, value in pkg['build_args'].items()])
-            
-            if 'build_flags' in pkg:
-                cmd += pkg['build_flags'] + ' \ \n'
-                
-            if build_flags:
-                cmd += build_flags + ' \ \n'
-                
-            cmd += pkg['path'] #" . "
-            
-            print(f"-- Building container {container_name}")
-            print(f"\n{cmd}\n")
-        else:
-            cmd = f"sudo docker tag {base} {container_name}"
-            
-            print(f"-- Tagging container {container_name}")
-            print(f"{cmd}\n")
-        
-        if not simulate:
-            subprocess.run(cmd.replace('\ \n', ''), shell=True, check=True)  # remove the line breaks that were added for readability
+parser.add_argument('--name', type=str, default='', help='the name of the output container to build')
+parser.add_argument('--base', type=str, default='', help='the base container to use at the beginning of the build chain (default: l4t-jetpack)')
+parser.add_argument('--multi-stage', action='store_true', help='launch a multi-stage container build by chaining together the packages')
+parser.add_argument('--build-flags', type=str, default='', help="extra flags to pass to 'docker build'")
+parser.add_argument('--package-dirs', type=str, default='', help='additional package search directories (comma or colon-separated)')
+parser.add_argument('--list-packages', action='store_true', help='show the list of packages that were found under the search directories')
+parser.add_argument('--show-packages', action='store_true', help='show info about one or more packages (if none are specified, all will be listed')
+parser.add_argument('--skip-packages', type=str, default='', help='disable certain packages/containers (filterable by wildcards, comma/colon-separated)')
+parser.add_argument('--simulate', action='store_true', help='print out the build commands without actually building the containers')
+parser.add_argument('--logs', type=str, default='', help='sets the directory to save container build logs to (default: jetson-containers/logs)')
 
-        base = container_name
-    
-    
-    
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-                        
-    parser.add_argument('packages', type=str, nargs='*', default=[], help='packages or configs to build')
-    
-    parser.add_argument('--name', type=str, default='', help='the name of the output container to build')
-    parser.add_argument('--base', type=str, default=get_l4t_base(), help='the base container image to use at the beginning of the build chain')
-    parser.add_argument('--build-flags', type=str, default='', help="extra flags to pass to 'docker build'")
-    parser.add_argument('--package-dirs', type=str, nargs='+', default=[], help='additional package search directories')
-    parser.add_argument('--list-packages', action='store_true', help='list information about the found packages and exit')
-    parser.add_argument('--simulate', action='store_true', help='print out the build commands without actually building the containers')
-    
-    args = parser.parse_args()
-    
-    print(args)
-    print(f"-- L4T_VERSION={L4T_VERSION}")
-    
-    # add package search directories from the user
+args = parser.parse_args()
+
+# split multi-value keyword arguments
+args.package_dirs = re.split(',|;|:', args.package_dirs)
+args.skip_packages = re.split(',|;|:', args.skip_packages)
+
+print(args)
+print(f"-- L4T_VERSION={L4T_VERSION}")
+
+# add package directories
+if args.package_dirs:
     package_search_dirs(args.package_dirs)
+
+# set logging directories
+if args.logs:
+    set_log_dir(args.logs)
     
-    # list packages
+# list/show package info
+if args.list_packages or args.show_packages:
+    packages = find_packages(args.packages, skip=args.skip_packages)
+
     if args.list_packages:
-        pprint.pprint(list_packages(scan=True))
-        sys.exit(0)
+        for package in sorted(packages.keys()):
+            print(package)
+    
+    if args.show_packages:
+        pprint.pprint(packages)
         
-    # build container chain
+    sys.exit(0)
+    
+# build one multi-stage container from chain of packages
+# or launch multiple independent container builds
+if args.multi_stage:
     build_container(args.name, args.packages, args.base, args.build_flags, args.simulate)
+else:   
+    if not args.packages:  # build everything (for testing)
+        args.packages = sorted(find_packages([]).keys())
+    
+    packages = find_packages(args.packages, skip=args.skip_packages)
+    print('-- Building containers', list(packages.keys()))
+    
+    for package in packages:  # build multiple containers
+        build_container(args.name, package, args.base, args.build_flags, args.simulate) 
     

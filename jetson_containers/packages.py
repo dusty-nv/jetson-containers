@@ -2,13 +2,10 @@
 import os
 import sys
 import json
+import fnmatch
 import importlib
 
-
-# this takes care of 'import jetson_containers' from sub-packages
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-
-# package management
+# package globals
 _PACKAGES = {}
 
 _PACKAGE_SCAN = False
@@ -28,13 +25,6 @@ def package_search_dirs(package_dirs, scan=False):
         package_dirs = [package_dirs]
         
     _PACKAGE_DIRS.extend(package_dirs)
-    
-    '''
-    for _PACKAGE_DIR in _PACKAGE_DIRS:
-        _PACKAGE_DIR = os.path.dirname(_PACKAGE_DIR)
-        if _PACKAGE_DIR not in sys.path:
-            sys.path.append(_PACKAGE_DIR)
-    '''
     
     if scan:
         scan_packages(_PACKAGE_DIRS, rescan=True)
@@ -113,33 +103,77 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
     return _PACKAGES
 
     
-def find_package(package, raise_exception=True):
+def find_package(package, required=True, scan=True):
     """
     Find a package by name or alias, and return it's configuration dict.
-    An exception will be thrown if the package can't be found and raise_exception is true.
+    This filters the names with pattern matching using shell-style wildcards.
+    If required is true, an exception will be thrown if the package can't be found.
     """
     scan_packages()
-    
+
     for key, pkg in _PACKAGES.items():
-        if package == key or package in pkg.get('alias', []):
+        names = [key, pkg['name']] + pkg.get('alias', [])
+
+        if len(fnmatch.filter(names, package)) > 0:
             return pkg
-         
-    if raise_exception:
+        
+    if required:
         raise ValueError(f"couldn't find package:  {package}")
     else:
         return None
         
-
-def list_packages(scan=False):
+        
+def find_packages(packages, required=True, scan=True, skip=[]):
     """
-    Return the dictionary of found packages.
-    If scan is true, the package directories will be searched.
+    Find a set of packages by name or alias, and return them in a dict.
+    This filters the names with pattern matching using shell-style wildcards.
+    If required is true, an exception will be thrown if any of the packages can't be found.
     """
     if scan:
         scan_packages()
+    
+    if isinstance(packages, str):
+        packages = [packages]
         
-    return _PACKAGES
+    if len(packages) == 0:
+        return skip_packages(_PACKAGES, skip)
+    
+    found_packages = {}
+    
+    for search_pattern in packages:
+        matches = fnmatch.filter(list(_PACKAGES.keys()), search_pattern)
+        
+        if required and len(matches) == 0:
+            raise ValueError(f"couldn't find package:  {search_pattern}")
+            
+        for match in matches:
+            found_packages[match] = _PACKAGES[match]
+            
+    return skip_packages(found_packages, skip)
+    
 
+def skip_packages(packages, skip):
+    """
+    Filter a dict of packages by a list of names to skip (can use wildcards)
+    """
+    if isinstance(skip, str):
+        skip = [skip]
+        
+    if len(skip) == 0:
+        return packages
+        
+    filtered = {}
+    
+    for key, value in packages.items():
+        found_match = False
+        for skip_pattern in skip:
+            if fnmatch.fnmatch(key, skip_pattern):
+                found_match = True
+        if not found_match:
+            filtered[key] = value
+                
+    return filtered
+    
     
 def config_package(package):
     """

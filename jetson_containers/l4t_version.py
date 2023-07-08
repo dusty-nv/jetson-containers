@@ -5,7 +5,6 @@ import platform
 from packaging import version
 
 
-
 def get_l4t_version(version_file='/etc/nv_tegra_release'):
     """
     Returns the L4T_VERSION in a packaging.version.Version object
