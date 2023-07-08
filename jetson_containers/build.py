@@ -91,7 +91,7 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
             cmd = f"sudo docker tag {base} {container_name}"
             
             print(f"-- Tagging container {container_name}")
-            print(f"\n{cmd}\n")
+            print(f"{cmd}\n")
         
         if not simulate:
             subprocess.run(cmd.replace('\ \n', ''), shell=True, check=True)  # remove the line breaks that were added for readability
