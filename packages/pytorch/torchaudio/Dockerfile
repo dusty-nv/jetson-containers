@@ -8,6 +8,7 @@ ARG TORCHAUDIO_VERSION
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
+		  git \
 		  pkg-config \
 		  libffi-dev \
 		  libsndfile1 \
