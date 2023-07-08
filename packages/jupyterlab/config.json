@@ -1,0 +1,5 @@
+{
+    "jupyterlab": {
+        "depends": ["rust"]
+    }
+}
