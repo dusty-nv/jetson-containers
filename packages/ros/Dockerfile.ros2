@@ -1,7 +1,5 @@
 #
-# To build this Dockerfile, run:  scripts/docker_build_ros.sh --distro humble
-# It sets the Docker arguments below (distro can be: foxy, galactic, humble, iron)
-# See scripts/docker_build_ros.sh --help for more options.
+# Dockerfile for building ROS2 from source
 #
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
@@ -26,16 +24,9 @@ ENV PYTHONIOENCODING=utf-8
 
 # set Python3 as default
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
-
-# install OpenCV (with CUDA)
-ARG OPENCV_URL=https://nvidia.box.com/shared/static/5v89u6g5rb62fpz4lh0rz531ajo2t5ef.gz
-ARG OPENCV_DEB=OpenCV-4.5.0-aarch64.tar.gz
-
-COPY scripts/opencv_install.sh opencv_install.sh
-RUN ./opencv_install.sh ${OPENCV_URL} ${OPENCV_DEB}
     
 # build ROS from source
-COPY scripts/ros2_build.sh ros2_build.sh
+COPY ros2_build.sh ros2_build.sh
 RUN ./ros2_build.sh
 
 # Set the default DDS middleware to cyclonedds
@@ -43,7 +34,7 @@ RUN ./ros2_build.sh
 ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 
 # setup container entrypoint
-COPY ./scripts/ros_entrypoint.sh /ros_entrypoint.sh
+COPY ros_entrypoint.sh /ros_entrypoint.sh
 RUN echo 'source /ros_entrypoint.sh' >> /root/.bashrc
 
 #ENTRYPOINT ["/ros_entrypoint.sh"]
@@ -52,5 +43,5 @@ RUN echo 'source /ros_entrypoint.sh' >> /root/.bashrc
 WORKDIR /
 
 # install ros_deep_learning package (PyTorch-based container only)
-COPY ./scripts/ros_deep_learning.sh ros_deep_learning.sh
-RUN ./ros_deep_learning.sh
+#COPY ./scripts/ros_deep_learning.sh ros_deep_learning.sh
+#RUN ./ros_deep_learning.sh
