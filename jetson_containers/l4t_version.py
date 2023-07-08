@@ -64,7 +64,10 @@ ARCH = platform.machine()
 # Xavier = 7.2
 # Orin = 8.7
 if L4T_VERSION.major >= 34:    # JetPack 5
-    CUDA_ARCH_LIST = ['7.2', '8.7']
-elif L4T_VERSION.major == 32:  # JetPack 4
-    CUDA_ARCH_LIST = ['5.3', '6.2', '7.2']
+    CUDA_ARCH_LIST_INT = [72, 87]
     
+elif L4T_VERSION.major == 32:  # JetPack 4
+    CUDA_ARCH_LIST_INT = [53, 62, 72]
+    
+CUDA_ARCH_LIST_FLOAT = [cc/10.0 for cc in CUDA_ARCH_LIST_INT]
+CUDA_ARCH_LIST = [f'{cc:.1f}' for cc in CUDA_ARCH_LIST_FLOAT]
