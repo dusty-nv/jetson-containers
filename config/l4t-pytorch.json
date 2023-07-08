@@ -1,0 +1,5 @@
+{
+    "l4t-pytorch": {
+        "depends": ["pytorch", "torchvision", "torchaudio", "opencv", "pycuda"]
+    }
+}
