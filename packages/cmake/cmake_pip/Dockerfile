@@ -6,5 +6,5 @@ FROM ${BASE_IMAGE}
 
     
 # prior issue:  cmake was pinned to 3.22.3 because of https://github.com/pytorch/pytorch/issues/74955	 
-RUN pip3 install --upgrade --no-cache-dir --verbose cmake
-RUN cmake --version
+RUN pip3 install --upgrade --force-reinstall --no-cache-dir --verbose cmake
+RUN cmake --version && which cmake
