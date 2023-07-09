@@ -2,19 +2,23 @@
 #
 # Container build system for managing package configurations and multi-stage build chains, with automated testing and dependency tracking. 
 #
-#   $ jetson-containers/build.sh pytorch tensorflow                # build separate pytorch & tensorflow containers
-#   $ jetson-containers/build.sh --multi-stage pytorch tensorflow  # build one container with both pytorch & tensorflow packages
-#   $ jetson-containers/build.sh ros:humble*                       # build all ROS Humble containers (can use wildcard filters)
-#   $ jetson-containers/build.sh --multi-stage ros:humble-desktop pytorch  # build ROS Humble with PyTorch on top
-#
-#   (typically the jetson-containers/build.sh wrapper script is used to launch the underlying Python modules)
-#
 # A "package" is composed of a Dockerfile, configs, and test scripts.  These are found under the jetson-containers/packages directory.
 # There are also "meta-packages" under jetson-containers/config that have no Dockerfiles, but specify a set of packages (e.g. l4t-pytorch)
 #
 # Configuration metadata (such as the package's dependencies) can be inline YAML in the Dockerfile header.
 # It can also be a config.py script that sets build arguments dynamically (i.e. based on the L4T version)
-# Subpackages can be dynamically created in the config files (i.e. all the permutations of the ROS containers)
+# Subpackages can be dynamically created in the config files (i.e. the various permutations of the ROS containers)
+#
+# Some example build scenarios:
+#
+#   $ jetson-containers/build.sh pytorch tensorflow                # build separate pytorch & tensorflow containers
+#   $ jetson-containers/build.sh --multi-stage pytorch tensorflow  # build one container with both pytorch & tensorflow packages
+#   $ jetson-containers/build.sh ros:humble*                       # build all ROS Humble containers (can use wildcard filters)
+#   $ jetson-containers/build.sh --multi-stage ros:humble-desktop pytorch  # build ROS Humble with PyTorch on top
+#
+# Any of the above commands can be run independent of one another, and typically the jetson-containers/build.sh wrapper script is 
+# used to launch this underlying Python module.  jetson-containers can als be added as a git submodule to other out-of-tree projects
+# that have their own Dockerfile and will add the container build infrastructure to them (or you can add your own package search dirs).
 #
 import os
 import re
