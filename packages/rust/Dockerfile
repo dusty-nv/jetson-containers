@@ -1,5 +1,7 @@
 #
-# Rust
+# name: rust
+# category: base
+# depends: build_essential
 #
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
