@@ -2,6 +2,7 @@
 # name: nemo
 # category: ml
 # depends: pytorch
+# test: test.py
 # description: NVIDIA NeMo for ASR/NLP/TTS https://nvidia.github.io/NeMo/
 #
 ARG BASE_IMAGE
