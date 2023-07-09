@@ -25,9 +25,15 @@ def unroll_dependencies(packages):
         
         for package in packages_org:
             for dependency in find_package(package).get('depends', []):
-                if dependency not in packages:
-                    packages.insert(packages.index(package), dependency)
+                package_index = packages.index(package)
+                dependency_index = packages.index(dependency) if dependency in packages else -1
                 
+                if dependency_index < 0:  # dependency not in list, add it before the package
+                    packages.insert(package_index, dependency)
+                elif dependency_index > package_index:  # dependency after current package, move it to before
+                    packages.remove(dependency)
+                    packages.insert(package_index, dependency)
+      
         if len(packages) == len(packages_org):
             break
             
@@ -105,7 +111,7 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
             tag_container(base, container_name, simulate)
             
         # run tests on the container
-        test_container(container_name, pkg)
+        test_container(container_name, pkg, simulate)
         
         # use this container as the next base
         base = container_name
