@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Container build system for managing package configurations and multi-stage build chains, with automated testing. 
+# Container build system for managing package configurations and multi-stage build chains, with automated testing and dependency tracking. 
 #
 #   $ jetson-containers/build.sh pytorch tensorflow                # build separate pytorch & tensorflow containers
 #   $ jetson-containers/build.sh --multi-stage pytorch tensorflow  # build one container with both pytorch & tensorflow packages
