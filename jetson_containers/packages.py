@@ -20,7 +20,7 @@ _PACKAGES = {}
 _PACKAGE_SCAN = False
 _PACKAGE_ROOT = os.path.dirname(os.path.dirname(__file__))
 _PACKAGE_DIRS = [os.path.join(_PACKAGE_ROOT, 'packages'), os.path.join(_PACKAGE_ROOT, 'config')]
-_PACKAGE_KEYS = ['alias', 'build_args', 'build_flags', 'config', 'depends', 'description', 'dockerfile', 'name', 'path', 'test']
+_PACKAGE_KEYS = ['alias', 'build_args', 'build_flags', 'category', 'config', 'depends', 'description', 'dockerfile', 'name', 'path', 'test']
 
 
 def package_search_dirs(package_dirs, scan=False):
