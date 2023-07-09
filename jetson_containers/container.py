@@ -113,8 +113,9 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
 def build_containers(name, packages, base=get_l4t_base(), build_flags='', simulate=False, skip_errors=False, skip_packages=[]):
     """
     Build a set of containers independently.
-    TODO add support for jobs=-1 (use all CPU cores)
-    TODO add return False on error
+    Returns true if all containers built successfully, or false if there were any errors.
+    Building will be halted on the first error encountered, unless skip_errors is set to true.
+    TODO add multiprocessing parallel build support for jobs=-1 (use all CPU cores)
     """
     if not packages:  # build everything (for testing)
         packages = sorted(find_packages([]).keys())
@@ -130,7 +131,7 @@ def build_containers(name, packages, base=get_l4t_base(), build_flags='', simula
         except Exception as error:
             print(error)
             if not skip_errors:
-                sys.exit(os.EX_SOFTWARE)
+                return False #raise error #sys.exit(os.EX_SOFTWARE)
             status[package] = (False, error)
         else:
             status[package] = (True, None)
