@@ -5,13 +5,22 @@ import json
 import fnmatch
 import importlib
 
+try:
+    import yaml
+except Exception as error:
+    print(error)
+    print("Failed to import yaml - please install in it either of these ways:")
+    print("$ sudo apt-get update && sudo apt-get install python3-yaml")
+    print("$ pip3 install pyyaml")
+    sys.exit(os.EX_UNAVAILABLE)
+    
 # package globals
 _PACKAGES = {}
 
 _PACKAGE_SCAN = False
 _PACKAGE_ROOT = os.path.dirname(os.path.dirname(__file__))
 _PACKAGE_DIRS = [os.path.join(_PACKAGE_ROOT, 'packages'), os.path.join(_PACKAGE_ROOT, 'config')]
-_PACKAGE_KEYS = ['alias', 'build_args', 'build_flags', 'config', 'depends', 'dockerfile', 'name', 'path', 'test']
+_PACKAGE_KEYS = ['alias', 'build_args', 'build_flags', 'config', 'depends', 'description', 'dockerfile', 'name', 'path', 'test']
 
 
 def package_search_dirs(package_dirs, scan=False):
@@ -21,7 +30,7 @@ def package_search_dirs(package_dirs, scan=False):
     """
     global _PACKAGE_DIRS
     
-    if isinstance(package_dirs, str):
+    if isinstance(package_dirs, str) and len(package_dirs) > 0:
         package_dirs = [package_dirs]
         
     _PACKAGE_DIRS.extend(package_dirs)
@@ -68,7 +77,7 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
     for entry in entries:
         entry_path = os.path.join(path, entry)
         
-        if entry.startswith('__'):  # skip hidden directories
+        if not entry or entry.startswith('__'):  # skip hidden directories
             continue
             
         if os.path.isdir(entry_path):
@@ -76,12 +85,12 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
         elif os.path.isfile(entry_path):
             if entry.lower().find('dockerfile') >= 0:
                 package['dockerfile'] = entry
-            elif validate_json(entry_path):
-                package['config'].append(entry)
-            elif entry == 'config.py':
-                package['config'].append(entry)
             elif entry == 'test.py':
                 package['test'].append(entry)
+            elif entry == 'config.py':
+                package['config'].append(entry)
+            elif validate_config(entry_path):
+                package['config'].append(entry)
                 
     # skip directories with no dockerfiles or configuration
     if 'dockerfile' not in package and len(package['config']) == 0:
@@ -174,7 +183,28 @@ def skip_packages(packages, skip):
                 
     return filtered
     
+   
+def apply_config(package, config):
+    """
+    Apply a config dict to an existing package configuration
+    """
+    if config is None or not isinstance(config, dict):
+        return
     
+    if validate_dict(config):  # the package config entries are in the top-level dict
+        package.update(config)
+    elif len(config) == 1:  # nested dict with just one package (merge with existing package)
+        name = list(config.keys())[0]
+        package['name'] = name
+        package.update(config[name])
+    else:
+        for pkg_name, pkg in config.items():  # nested dict with multiple subpackages
+            for key in _PACKAGE_KEYS:  # apply inherited package info
+                print(f"-- Setting {pkg_name} key {key} from {package[name]} to ", package[key])
+                pkg.setdefault(key, package[key])
+            package[pkg_name] = pkg
+    
+                    
 def config_package(package):
     """
     Run a package's config.py or JSON if it has one
@@ -183,6 +213,10 @@ def config_package(package):
         package = find_package(package)
     elif not isinstance(package, dict):
         raise ValueError("package should either be a string or dict")
+               
+    if 'dockerfile' in package:
+        config = parse_yaml_header(os.path.join(package['path'], package['dockerfile']))
+        apply_config(package, config)
         
     if len(package['config']) == 0:
         return validate_package(package)
@@ -201,22 +235,11 @@ def config_package(package):
             spec.loader.exec_module(module)
             package = module.package
             
-        elif config_ext == '.json':
+        elif config_ext == '.json' or config_ext == '.yaml':
             print(f"-- Loading {config_path}")
-            with open(config_path, 'r') as file:
-                config = json.load(file)
-                
-            if len(config) == 1 and len(package['config']) == 1:  # this is the only package
-                name = list(config.keys())[0]
-                package['name'] = name
-                package.update(config[name])
-            else:
-                for pkg_name, pkg in config.items(): # add subpackages (these have been validated)
-                    for key in _PACKAGE_KEYS:  # apply inherited package info
-                        print(f"-- Setting {pkg_name} key {key} from {package[name]} to ", package[key])
-                        pkg.setdefault(key, package[key])
-                    package[pkg_name] = pkg
-            
+            config = validate_config(config_path)  # load and validate the config file
+            apply_config(package, config)
+                    
     return validate_package(package)
     
 
@@ -248,31 +271,37 @@ def validate_package(package):
     return packages
     
 
-def validate_json(path):
+def validate_config(path):
     """
-    Return true if this is a well-formed package configuration JSON file.
+    Return a well-formed package configuration JSON or YAML file, or None on error.
     """
-    if os.path.splitext(path)[1] != '.json':
-        return False
+    ext = os.path.splitext(path)[1]
+    
+    if ext != '.json' and ext != '.yaml':
+        return None
         
     try:
         with open(path, 'r') as file:
-            config = json.load(file)
+            if ext == '.json':
+                config = json.load(file)
+            elif ext == '.yaml':
+                config = yaml.safe_load(file)
     except Exception as err:
         print(f"-- Error loading {path}")
         print(err)
-        return False
+        return None
 
-    if len(config) == 0:
-        return False
-            
-    for package_name, package in config.items():
-        if not validate_dict(package):
-            return False
-        
-    return True
+    if not isinstance(config, dict) or len(config) == 0:
+        return None
     
-  
+    if not validate_dict(config):  # see if the top-level dict contains the package configuration entries themselves
+        for package_name, package in config.items():  # see if this is a nested dict with one or multiple subpackages
+            if not validate_dict(package):
+                return None
+        
+    return config
+
+    
 def validate_dict(package):
     """
     Return true if this is a package configuration dict.
@@ -287,6 +316,36 @@ def validate_dict(package):
             
     return True
     
+
+def parse_yaml_header(dockerfile):
+    """
+    Parse YAML configuration from the Dockerfile header
+    """
+    try:
+        txt = ""
+        
+        with open(dockerfile, 'r') as file:
+            while True:
+                line = file.readline()
+                if len(line) == 0:
+                    break
+                if line[0] != '#':
+                    break
+                txt += line[1:]
+                
+        if len(txt) == 0:
+            return None
+
+        config = yaml.safe_load(txt)
+
+        if validate_dict(config):
+            return config
+            
+    except Exception as error:
+        print(f"Error parsing YAML from {dockerfile}:  {error}")
+        
+    return None
+
     
 '''
 #_CURRENT_PACKAGE = None
