@@ -120,7 +120,11 @@ def find_package(package, required=True, scan=True):
     This filters the names with pattern matching using shell-style wildcards.
     If required is true, an exception will be thrown if the package can't be found.
     """
-    scan_packages()
+    if validate_dict(package):
+        return package
+        
+    if scan:
+        scan_packages()
 
     for key, pkg in _PACKAGES.items():
         names = [key, pkg['name']] + pkg.get('alias', [])

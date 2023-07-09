@@ -10,6 +10,9 @@ from .base import get_l4t_base
 from .logging import log_dir
 
 
+_NEWLINE_=" \ \n"
+
+
 def unroll_dependencies(packages):
     """
     Expand the dependencies in the list of containers to build
@@ -72,20 +75,20 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
         pkg = find_package(package)
         
         if 'dockerfile' in pkg:
-            cmd = f"sudo docker build --network=host --tag {container_name} \ \n"
-            cmd += f"--file {os.path.join(pkg['path'], pkg['dockerfile'])} \ \n"
-            cmd += f"--build-arg BASE_IMAGE={base} \ \n" 
+            cmd = f"sudo docker build --network=host --tag {container_name}" + _NEWLINE_
+            cmd += f"--file {os.path.join(pkg['path'], pkg['dockerfile'])}" + _NEWLINE_
+            cmd += f"--build-arg BASE_IMAGE={base}" + _NEWLINE_
             
             if 'build_args' in pkg:
-                cmd += ''.join([f"--build-arg {key}=\"{value}\" \ \n" for key, value in pkg['build_args'].items()])
+                cmd += ''.join([f"--build-arg {key}=\"{value}\"" + _NEWLINE_ for key, value in pkg['build_args'].items()])
             
             if 'build_flags' in pkg:
-                cmd += pkg['build_flags'] + ' \ \n'
+                cmd += pkg['build_flags'] + _NEWLINE_
                 
             if build_flags:
-                cmd += build_flags + ' \ \n'
+                cmd += build_flags + _NEWLINE_
                 
-            cmd += pkg['path'] + ' \ \n' #" . "
+            cmd += pkg['path'] + _NEWLINE_ #" . "
             cmd += f"2>&1 | tee {log_file + '.txt'}" + "; exit ${PIPESTATUS[0]}"  # non-tee version:  https://stackoverflow.com/a/34604684
             
             print(f"-- Building container {container_name}")
@@ -97,8 +100,12 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
                 cmd_file.write(cmd + '\n')
             
             # remove the line breaks that were added for readability, and set the shell to bash so we can use $PIPESTATUS 
-            status = subprocess.run(cmd.replace('\ \n', ''), executable='/bin/bash', shell=True, check=True)  
+            status = subprocess.run(cmd.replace(_NEWLINE_, ' '), executable='/bin/bash', shell=True, check=True)  
 
+        # run tests on the container
+        test_container(container_name, pkg)
+        
+        # use this container as the next base
         base = container_name
 
     # tag the final container
@@ -147,6 +154,45 @@ def build_containers(name, packages, base=get_l4t_base(), build_flags='', simula
     for success, _ in status.values():
         if not success:
             return False
+            
+    return True
+    
+    
+def test_container(name, package, simulate=False):
+    """
+    Run tests on a container
+    """
+    package = find_package(package)
+    
+    if 'test' not in package:
+        return True
+        
+    for test in package['test']:
+        test_ext = os.path.splitext(test)[1]
+        log_file = os.path.join(log_dir('test'), f"{name}_{test}").replace(':','_')
+        
+        cmd = "sudo docker run -it --rm --runtime=nvidia --network=host" + _NEWLINE_
+        cmd += f"--volume {package['path']}:/test" + _NEWLINE_
+        cmd += f"--workdir /test" + _NEWLINE_
+        cmd += name + _NEWLINE_
+        
+        if test_ext == ".py":
+            cmd += f"python3 {test}" + _NEWLINE_
+        elif text_ext == ".sh":
+            cmd += f"/bin/bash {test}" + _NEWLINE_
+        
+        cmd += f"2>&1 | tee {log_file + '.txt'}" + "; exit ${PIPESTATUS[0]}"
+        
+        print(f"-- Testing container {name}")
+        print(f"\n{cmd}\n")
+            
+        if not simulate:
+            with open(log_file + '.sh', 'w') as cmd_file:
+                cmd_file.write('#!/usr/bin/env bash\n\n')
+                cmd_file.write(cmd + '\n')
+            
+            # TODO:  return false on errors
+            status = subprocess.run(cmd.replace(_NEWLINE_, ' '), executable='/bin/bash', shell=True, check=True)  
             
     return True
     
