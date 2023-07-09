@@ -16,3 +16,5 @@ package['build_args'] = {
     'OPENCV_URL': OPENCV_URL,
     'OPENCV_DEB': OPENCV_DEB
 }
+
+package['depends'] = ['numpy']

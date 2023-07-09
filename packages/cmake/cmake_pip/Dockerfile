@@ -1,5 +1,9 @@
 #
-# upgrade cmake with pip
+# name: cmake_pip
+# alias: cmake
+# category: base
+# depends: [build_essential, python]
+# description: upgrade cmake with pip
 #
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

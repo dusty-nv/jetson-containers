@@ -30,7 +30,6 @@ RUN pip3 install --no-cache-dir setuptools Cython wheel
 
 
 # install Python TF dependencies
-RUN pip3 install --no-cache-dir --verbose numpy  # ==1.21.1
 RUN H5PY_SETUP_REQUIRES=0 pip3 install --no-cache-dir --verbose h5py==3.6.0
 RUN pip3 install --no-cache-dir --verbose future==0.18.2 mock==3.0.5 keras_preprocessing==1.1.2 keras_applications==1.0.8 gast==0.4.0 futures pybind11
 

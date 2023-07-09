@@ -1,5 +1,8 @@
 #
-# NeMo (https://nvidia.github.io/NeMo/)
+# name: nemo
+# category: ml
+# depends: pytorch
+# description: NVIDIA NeMo for ASR/NLP/TTS https://nvidia.github.io/NeMo/
 #
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

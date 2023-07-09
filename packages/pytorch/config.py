@@ -17,3 +17,5 @@ package['build_args'] = {
 }
 
 package['alias'] = 'torch'
+package['depends'] = ['python', 'numpy']
+package['category'] = 'ml'

@@ -12,8 +12,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 #
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-            python3-pip \
-		  python3-dev \
 		  libopenblas-dev \
 		  libopenmpi-dev \
             openmpi-bin \
@@ -23,8 +21,6 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
-RUN pip3 install --no-cache-dir setuptools Cython wheel
-RUN pip3 install --no-cache-dir --verbose numpy
 RUN pip3 install --no-cache-dir --verbose onnx
 
 

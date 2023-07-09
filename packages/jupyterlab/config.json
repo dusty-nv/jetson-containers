@@ -1,5 +1,6 @@
 {
     "jupyterlab": {
-        "depends": ["rust"]
+        "depends": ["python", "numpy", "rust"],
+        "category": "base"
     }
 }

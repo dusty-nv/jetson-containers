@@ -13,3 +13,5 @@ package['build_args'] = {
 }
 
 package['alias'] = 'protobuf_cpp'
+package['depends'] = ['build_essential', 'python']
+package['category'] = 'base'

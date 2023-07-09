@@ -13,8 +13,6 @@ ENV PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=cpp
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-		python3-pip \
-		python3-dev \
 		build-essential \
 		autoconf \ 
 		automake \

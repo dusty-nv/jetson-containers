@@ -12,4 +12,5 @@ package['build_args'] = {
     'TORCHAUDIO_VERSION': TORCHAUDIO_VERSION,
 }
 
-package['depends'] = ['pytorch', 'cmake_pip']
+package['depends'] = ['cmake', 'pytorch']
+package['category'] = 'ml'

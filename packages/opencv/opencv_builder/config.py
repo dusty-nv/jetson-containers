@@ -15,3 +15,5 @@ package['build_args'] = {
     'CUDA_ARCH_BIN': CUDA_ARCH_BIN,
     'ENABLE_NEON': ENABLE_NEON
 }
+
+package['depends'] = ['cmake', 'python']

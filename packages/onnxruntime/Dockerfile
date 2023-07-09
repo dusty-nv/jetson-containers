@@ -1,11 +1,14 @@
 #
-# onnxruntime (https://onnxruntime.ai/docs/build/eps.html#nvidia-jetson-tx1tx2nanoxavier)
+# name: onnxruntime
+# category: ml
+# depends: [cmake, python]
 #
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG ONNXRUNTIME_VERSION=main
 
+# https://onnxruntime.ai/docs/build/eps.html#nvidia-jetson-tx1tx2nanoxavier
 RUN pip3 uninstall -y onnxruntime && \
     git clone --branch ${ONNXRUNTIME_VERSION} --depth 1 --recursive https://github.com/microsoft/onnxruntime /tmp/onnxruntime && \
     cd /tmp/onnxruntime && \
