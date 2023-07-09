@@ -94,14 +94,16 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
             print(f"-- Building container {container_name}")
             print(f"\n{cmd}\n")
 
-        if not simulate:
-            with open(log_file + '.sh', 'w') as cmd_file:   # save the build command to a shell script for future reference
-                cmd_file.write('#!/usr/bin/env bash\n\n')
-                cmd_file.write(cmd + '\n')
+            if not simulate:
+                with open(log_file + '.sh', 'w') as cmd_file:   # save the build command to a shell script for future reference
+                    cmd_file.write('#!/usr/bin/env bash\n\n')
+                    cmd_file.write(cmd + '\n')
+                
+                # remove the line breaks that were added for readability, and set the shell to bash so we can use $PIPESTATUS 
+                status = subprocess.run(cmd.replace(_NEWLINE_, ' '), executable='/bin/bash', shell=True, check=True)  
+        else:
+            tag_container(base, container_name, simulate)
             
-            # remove the line breaks that were added for readability, and set the shell to bash so we can use $PIPESTATUS 
-            status = subprocess.run(cmd.replace(_NEWLINE_, ' '), executable='/bin/bash', shell=True, check=True)  
-
         # run tests on the container
         test_container(container_name, pkg)
         
@@ -109,12 +111,7 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
         base = container_name
 
     # tag the final container
-    cmd = f"sudo docker tag {container_name} {name}"
-    print(f"-- Tagging container {container_name} -> {name}")
-    print(f"{cmd}\n")
-    
-    if not simulate:
-        subprocess.run(cmd, shell=True, check=True)
+    tag_container(container_name, name, simulate)
     
     
 def build_containers(name, packages, base=get_l4t_base(), build_flags='', simulate=False, skip_errors=False, skip_packages=[]):
@@ -157,6 +154,18 @@ def build_containers(name, packages, base=get_l4t_base(), build_flags='', simula
             
     return True
     
+    
+def tag_container(source, target, simulate=False):
+    """
+    Tag a container image
+    """
+    cmd = f"sudo docker tag {source} {target}"
+    print(f"-- Tagging container {source} -> {target}")
+    print(f"{cmd}\n")
+    
+    if not simulate:
+        subprocess.run(cmd, shell=True, check=True)
+        
     
 def test_container(name, package, simulate=False):
     """
