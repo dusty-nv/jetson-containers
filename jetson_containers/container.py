@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 import os
+import sys
+import traceback
 import subprocess
 
-from .packages import find_package, validate_dict
+from .packages import find_package, find_packages, validate_dict
 from .l4t_version import L4T_VERSION
 from .base import get_l4t_base
 from .logging import log_dir
@@ -31,7 +33,7 @@ def unroll_dependencies(packages):
 
 def build_container(name, packages, base=get_l4t_base(), build_flags='', simulate=False):
     """
-    Build container chain of packages
+    Multi-stage container build of that chains together selected packages.
     """
     if isinstance(packages, str):
         packages = [packages]
@@ -84,7 +86,7 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
                 cmd += build_flags + ' \ \n'
                 
             cmd += pkg['path'] + ' \ \n' #" . "
-            cmd += f"2>&1 | tee {log_file + '.txt'}"
+            cmd += f"2>&1 | tee {log_file + '.txt'}" + "; exit ${PIPESTATUS[0]}"  # non-tee version:  https://stackoverflow.com/a/34604684
             
             print(f"-- Building container {container_name}")
             print(f"\n{cmd}\n")
@@ -94,7 +96,8 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
                 cmd_file.write('#!/usr/bin/env bash\n\n')
                 cmd_file.write(cmd + '\n')
             
-            subprocess.run(cmd.replace('\ \n', ''), shell=True, check=True)  # remove the line breaks that were added for readability
+            # remove the line breaks that were added for readability, and set the shell to bash so we can use $PIPESTATUS 
+            status = subprocess.run(cmd.replace('\ \n', ''), executable='/bin/bash', shell=True, check=True)  
 
         base = container_name
 
@@ -106,3 +109,44 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
     if not simulate:
         subprocess.run(cmd, shell=True, check=True)
     
+    
+def build_containers(name, packages, base=get_l4t_base(), build_flags='', simulate=False, skip_errors=False, skip_packages=[]):
+    """
+    Build a set of containers independently.
+    TODO add support for jobs=-1 (use all CPU cores)
+    TODO add return False on error
+    """
+    if not packages:  # build everything (for testing)
+        packages = sorted(find_packages([]).keys())
+    
+    packages = find_packages(packages, skip=skip_packages)
+    print('-- Building containers', list(packages.keys()))
+    
+    status = {}
+
+    for package in packages:
+        try:
+            build_container(name, package, base, build_flags, simulate) 
+        except Exception as error:
+            print(error)
+            if not skip_errors:
+                sys.exit(os.EX_SOFTWARE)
+            status[package] = (False, error)
+        else:
+            status[package] = (True, None)
+            
+    print(f"\n-- Build logs at:  {log_dir('build')}")
+    
+    for package, (success, error) in status.items():
+        msg = f"   * {package} {'SUCCESS' if success else 'FAILED'}"
+        if error is not None:
+            msg += f"  ({error})"
+        print(msg)
+        
+    for success, _ in status.values():
+        if not success:
+            return False
+            
+    return True
+    
+        
