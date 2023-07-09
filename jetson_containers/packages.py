@@ -20,7 +20,7 @@ _PACKAGES = {}
 _PACKAGE_SCAN = False
 _PACKAGE_ROOT = os.path.dirname(os.path.dirname(__file__))
 _PACKAGE_DIRS = [os.path.join(_PACKAGE_ROOT, 'packages'), os.path.join(_PACKAGE_ROOT, 'config')]
-_PACKAGE_KEYS = ['alias', 'build_args', 'build_flags', 'category', 'config', 'depends', 'description', 'dockerfile', 'name', 'path', 'test']
+_PACKAGE_KEYS = ['alias', 'build_args', 'build_flags', 'category', 'config', 'depends', 'description', 'dockerfile', 'name', 'notes', 'path', 'test']
 
 
 def package_search_dirs(package_dirs, scan=False):
@@ -272,8 +272,10 @@ def validate_package(package):
                   
     for pkg in packages:
         str2list(pkg, 'alias')
+        str2list(pkg, 'config')
         str2list(pkg, 'depends')
-    
+        str2list(pkg, 'test')
+        
     return packages
     
 
