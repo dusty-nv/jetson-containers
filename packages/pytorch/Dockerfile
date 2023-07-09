@@ -1,5 +1,10 @@
 #
-# PyTorch - see config.py for build args
+# name: pytorch
+# alias: torch
+# category: ml
+# config: config.py
+# depends: [python, numpy]
+# test: test.py
 #
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

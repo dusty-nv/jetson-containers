@@ -1,5 +1,8 @@
 #
-# torchvision - see config.py for build args
+# name: torchvision
+# category: ml
+# config: config.py
+# depends: [cmake, pytorch]
 #
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

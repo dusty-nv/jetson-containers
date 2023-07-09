@@ -15,7 +15,3 @@ package['build_args'] = {
     'PYTORCH_URL': PYTORCH_URL,
     'PYTORCH_WHL': PYTORCH_WHL
 }
-
-package['alias'] = 'torch'
-package['depends'] = ['python', 'numpy']
-package['category'] = 'ml'

@@ -1,5 +1,8 @@
 #
-# JupyterLab (will autostart unless container entry CMD is overridden)
+# name: jupyterlab
+# category: base
+# depends: [python, numpy, rust]
+# notes: will autostart Jupyter server on port 8888 unless container entry CMD is overridden
 #
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

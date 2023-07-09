@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python3
 print('testing torchaudio...')
 import torchaudio
 print('torchaudio version: ' + str(torchaudio.__version__))

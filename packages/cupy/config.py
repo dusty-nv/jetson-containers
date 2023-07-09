@@ -9,6 +9,3 @@ CUPY_NVCC_GENERATE_CODE = ';'.join(CUPY_NVCC_GENERATE_CODE)
 package['build_args'] = {
     'CUPY_NVCC_GENERATE_CODE': CUPY_NVCC_GENERATE_CODE,
 }
-
-package['depends'] = ['python', 'numpy']
-package['category'] = 'cuda'

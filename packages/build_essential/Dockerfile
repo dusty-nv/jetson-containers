@@ -1,7 +1,7 @@
 #
 # name: build_essential
 # category: base
-# description:  installs compilers and build tools
+# description: installs compilers and build tools
 #
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

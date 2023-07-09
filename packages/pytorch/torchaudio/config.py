@@ -11,6 +11,3 @@ elif L4T_VERSION.major == 32:  # JetPack 4
 package['build_args'] = {
     'TORCHAUDIO_VERSION': TORCHAUDIO_VERSION,
 }
-
-package['depends'] = ['cmake', 'pytorch']
-package['category'] = 'ml'

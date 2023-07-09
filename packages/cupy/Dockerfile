@@ -1,5 +1,9 @@
 #
-# CuPy (see config.py for build args)
+# name: cupy
+# category: cuda
+# config: config.py
+# depends: [python, numpy]
+# test: test.py
 #
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

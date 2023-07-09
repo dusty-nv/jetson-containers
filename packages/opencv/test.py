@@ -1,8 +1,9 @@
-
+#!/usr/bin/env python3
 print('testing OpenCV...')
 
 import cv2
 import sys
+import wget
 
 print('OpenCV version:', str(cv2.__version__))
 print(cv2.getBuildInformation())
@@ -13,11 +14,18 @@ except Exception as ex:
     print(ex)
     print('OpenCV was not built with CUDA')
     sys.exit()
-    
-img_path = '/test/data/test_0.jpg'
+
+# download test image    
+img_url = 'https://raw.githubusercontent.com/dusty-nv/jetson-containers/59f840abbb99f22914a7b2471da829b3dd56122e/test/data/test_0.jpg'
+img_path = '/tmp/test_0.jpg'
+
+wget.download(img_url, img_path)
+
+# load image
 img_cpu = cv2.imread(img_path)
 print(f'loaded test image from {img_path}  {img_cpu.shape}  {img_cpu.dtype}')
 
+# test GPU processing
 img_gpu = cv2.cuda_GpuMat()
 img_gpu.upload(img_cpu)
 

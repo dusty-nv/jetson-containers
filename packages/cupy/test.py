@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python3
 print('testing CuPy...')
 import cupy as cp
 

@@ -1,7 +1,7 @@
 #
 # name: numpy
 # depends: [build_essential, python]
-# description: install/upgrade numpy
+# test: test.py
 #
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

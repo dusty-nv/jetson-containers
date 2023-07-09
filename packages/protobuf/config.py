@@ -11,7 +11,3 @@ elif L4T_VERSION.major == 32:  # JetPack 4
 package['build_args'] = {
     'PROTOBUF_VERSION': PROTOBUF_VERSION,
 }
-
-package['alias'] = 'protobuf_cpp'
-package['depends'] = ['build_essential', 'python']
-package['category'] = 'base'

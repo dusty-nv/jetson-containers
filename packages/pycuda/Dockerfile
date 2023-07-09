@@ -2,6 +2,7 @@
 # name: pycuda
 # category: cuda
 # depends: [build_essential, python]
+# test: test.py
 #
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
