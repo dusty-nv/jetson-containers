@@ -9,7 +9,7 @@
 # It can also be a config.py script that sets build arguments dynamically (i.e. based on the L4T version)
 # Subpackages can be dynamically created in the config files (i.e. the various permutations of the ROS containers)
 #
-# Some example build scenarios:
+# Some example scenarios for building containers:
 #
 #   $ jetson-containers/build.sh pytorch tensorflow                # build separate pytorch & tensorflow containers
 #   $ jetson-containers/build.sh --multi-stage pytorch tensorflow  # build one container with both pytorch & tensorflow packages
