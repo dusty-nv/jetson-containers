@@ -198,17 +198,17 @@ def apply_config(package, config):
         return
     
     if validate_dict(config):  # the package config entries are in the top-level dict
-        package.update(config)
+        package.update(validate_lists(config))
     elif len(config) == 1:  # nested dict with just one package (merge with existing package)
         name = list(config.keys())[0]
         package['name'] = name
-        package.update(config[name])
+        package.update(validate_lists(config[name]))
     else:
         for pkg_name, pkg in config.items():  # nested dict with multiple subpackages
             for key in _PACKAGE_KEYS:  # apply inherited package info
                 print(f"-- Setting {pkg_name} key {key} from {package[name]} to ", package[key])
                 pkg.setdefault(key, package[key])
-            package[pkg_name] = pkg
+            package[pkg_name] = validate_lists(pkg)
     
                     
 def config_package(package):
@@ -224,6 +224,8 @@ def config_package(package):
         config = parse_yaml_header(os.path.join(package['path'], package['dockerfile']))
         apply_config(package, config)
         
+    print('CONFIG_PACKAGE', package)
+    
     if len(package['config']) == 0:
         return validate_package(package)
         
@@ -266,15 +268,8 @@ def validate_package(package):
         packages = package
        
     # make sure certain entries are lists
-    def str2list(pkg, key):
-        if key in pkg and isinstance(pkg[key], str):
-            pkg[key] = [pkg[key]]
-                  
     for pkg in packages:
-        str2list(pkg, 'alias')
-        str2list(pkg, 'config')
-        str2list(pkg, 'depends')
-        str2list(pkg, 'test')
+        validate_lists(pkg)
         
     return packages
     
@@ -325,6 +320,22 @@ def validate_dict(package):
     return True
     
 
+def validate_lists(package):
+    """
+    Make sure that certain config entries are lists.
+    """
+    def str2list(pkg, key):
+        if key in pkg and isinstance(pkg[key], str):
+            pkg[key] = [pkg[key]]
+                  
+    str2list(package, 'alias')
+    str2list(package, 'config')
+    str2list(package, 'depends')
+    str2list(package, 'test')
+        
+    return package
+     
+     
 def parse_yaml_header(dockerfile):
     """
     Parse YAML configuration from the Dockerfile header
