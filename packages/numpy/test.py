@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python3
 print('testing numpy...')
 import numpy as np
 
