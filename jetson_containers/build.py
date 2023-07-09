@@ -1,4 +1,21 @@
 #!/usr/bin/env python3
+#
+# Container build system for managing package configurations and multi-stage build chains, with automated testing. 
+#
+#   $ jetson-containers/build.sh pytorch tensorflow                # build separate pytorch & tensorflow containers
+#   $ jetson-containers/build.sh --multi-stage pytorch tensorflow  # build one container with both pytorch & tensorflow packages
+#   $ jetson-containers/build.sh ros:humble*                       # build all ROS Humble containers (can use wildcard filters)
+#   $ jetson-containers/build.sh --multi-stage ros:humble-desktop pytorch  # build ROS Humble with PyTorch on top
+#
+#   (typically the jetson-containers/build.sh wrapper script is used to launch the underlying Python modules)
+#
+# A "package" is composed of a Dockerfile, configs, and test scripts.  These are found under the jetson-containers/packages directory.
+# There are also "meta-packages" under jetson-containers/config that have no Dockerfiles, but specify a set of packages (e.g. l4t-pytorch)
+#
+# Configuration metadata (such as the package's dependencies) can be inline YAML in the Dockerfile header.
+# It can also be a config.py script that sets build arguments dynamically (i.e. based on the L4T version)
+# Subpackages can be dynamically created in the config files (i.e. all the permutations of the ROS containers)
+#
 import os
 import re
 import sys
