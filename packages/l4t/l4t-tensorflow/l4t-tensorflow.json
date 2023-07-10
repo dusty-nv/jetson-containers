@@ -1,0 +1,9 @@
+{
+    "l4t-tensorflow:tf1": {
+        "depends": ["tensorflow", "opencv", "pycuda"]
+    },
+    
+    "l4t-tensorflow:tf2": {
+        "depends": ["tensorflow2", "opencv", "pycuda"]
+    }
+}
