@@ -1,5 +1,5 @@
 #
-# name: build_essential
+# name: build-essential
 # category: base
 # description: installs compilers and build tools
 #

@@ -1,6 +1,6 @@
 #
 # name: numpy
-# depends: [build_essential, python]
+# depends: [build-essential, python]
 # test: test.py
 #
 ARG BASE_IMAGE

@@ -22,7 +22,7 @@ RUN pip3 uninstall -y onnxruntime && \
     rm -rf /tmp/onnxruntime
 
 # ImportError: `onnxruntime-gpu` is installed, but GPU dependencies are not loaded.
-RUN sed -i 's/if "ORT_CUDA" not in file_string or "ORT_TENSORRT" not in file_string:/if False:/g' /usr/local/lib/python${PYTHON3_VERSION}/dist-packages/optimum/onnxruntime/utils.py
+#RUN sed -i 's/if "ORT_CUDA" not in file_string or "ORT_TENSORRT" not in file_string:/if False:/g' /usr/local/lib/python${PYTHON3_VERSION}/dist-packages/optimum/onnxruntime/utils.py
 
 # test import and print build info
 RUN python3 -c 'import onnxruntime; print(onnxruntime.get_build_info());'
