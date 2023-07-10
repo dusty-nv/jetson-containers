@@ -19,7 +19,7 @@ _PACKAGES = {}
 
 _PACKAGE_SCAN = False
 _PACKAGE_ROOT = os.path.dirname(os.path.dirname(__file__))
-_PACKAGE_DIRS = [os.path.join(_PACKAGE_ROOT, 'packages'), os.path.join(_PACKAGE_ROOT, 'config')]
+_PACKAGE_DIRS = [os.path.join(_PACKAGE_ROOT, 'packages')]
 _PACKAGE_KEYS = ['alias', 'build_args', 'build_flags', 'category', 'config', 'depends', 'description', 'dockerfile', 'name', 'notes', 'path', 'test']
 
 
@@ -206,8 +206,9 @@ def apply_config(package, config):
     else:
         for pkg_name, pkg in config.items():  # nested dict with multiple subpackages
             for key in _PACKAGE_KEYS:  # apply inherited package info
-                print(f"-- Setting {pkg_name} key {key} from {package[name]} to ", package[key])
-                pkg.setdefault(key, package[key])
+                if key in package:
+                    print(f"-- Setting {pkg_name} key {key} from {package['name']} to ", package[key])
+                    pkg.setdefault(key, package[key])
             package[pkg_name] = validate_lists(pkg)
     
                     
@@ -224,8 +225,6 @@ def config_package(package):
         config = parse_yaml_header(os.path.join(package['path'], package['dockerfile']))
         apply_config(package, config)
         
-    print('CONFIG_PACKAGE', package)
-    
     if len(package['config']) == 0:
         return validate_package(package)
         

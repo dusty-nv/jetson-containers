@@ -40,7 +40,7 @@ def unroll_dependencies(packages):
     return packages
     
 
-def build_container(name, packages, base=get_l4t_base(), build_flags='', simulate=False):
+def build_container(name, packages, base=get_l4t_base(), build_flags='', simulate=False, skip_tests=False):
     """
     Multi-stage container build of that chains together selected packages.
     """
@@ -72,7 +72,7 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
     
     for idx, package in enumerate(packages):
         # tag this build stage with the sub-package
-        container_name = f"{name}-{package}"
+        container_name = f"{name}-{package.replace(':','_')}"
 
         # generate the logging file (without the extension)
         log_file = os.path.join(log_dir('build'), container_name).replace(':','_')
@@ -111,7 +111,8 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
             tag_container(base, container_name, simulate)
             
         # run tests on the container
-        test_container(container_name, pkg, simulate)
+        if not skip_tests:
+            test_container(container_name, pkg, simulate)
         
         # use this container as the next base
         base = container_name
@@ -120,7 +121,7 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
     tag_container(container_name, name, simulate)
     
     
-def build_containers(name, packages, base=get_l4t_base(), build_flags='', simulate=False, skip_errors=False, skip_packages=[]):
+def build_containers(name, packages, base=get_l4t_base(), build_flags='', simulate=False, skip_tests=False, skip_errors=False, skip_packages=[]):
     """
     Build a set of containers independently.
     Returns true if all containers built successfully, or false if there were any errors.
@@ -137,7 +138,7 @@ def build_containers(name, packages, base=get_l4t_base(), build_flags='', simula
 
     for package in packages:
         try:
-            build_container(name, package, base, build_flags, simulate) 
+            build_container(name, package, base, build_flags, simulate, skip_tests) 
         except Exception as error:
             print(error)
             if not skip_errors:

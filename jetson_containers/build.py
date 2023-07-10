@@ -3,22 +3,24 @@
 # Container build system for managing package configurations and multi-stage build chains, with automated testing and dependency tracking. 
 #
 # A "package" is composed of a Dockerfile, configs, and test scripts.  These are found under the jetson-containers/packages directory.
-# There are also "meta-packages" under jetson-containers/config that have no Dockerfiles, but specify a set of packages (e.g. l4t-pytorch)
+# There are also "meta-packages" that have no Dockerfiles themselves, but specify a set of packages to include (e.g. l4t-pytorch)
 #
 # Configuration metadata (such as the package's dependencies) can be inline YAML in the Dockerfile header.
 # It can also be a config.py script that sets build arguments dynamically (i.e. based on the L4T version)
 # Subpackages can be dynamically created in the config files (i.e. the various permutations of the ROS containers)
 #
-# Some example scenarios for building containers:
+# Some example build scenarios:
 #
 #   $ jetson-containers/build.sh pytorch tensorflow                # build separate pytorch & tensorflow containers
 #   $ jetson-containers/build.sh --multi-stage pytorch tensorflow  # build one container with both pytorch & tensorflow packages
 #   $ jetson-containers/build.sh ros:humble*                       # build all ROS Humble containers (can use wildcard filters)
 #   $ jetson-containers/build.sh --multi-stage ros:humble-desktop pytorch  # build ROS Humble with PyTorch on top
 #
-# Any of the above commands can be run independent of one another, and typically the jetson-containers/build.sh wrapper script is 
-# used to launch this underlying Python module.  jetson-containers can als be added as a git submodule to other out-of-tree projects
-# that have their own Dockerfile and will add the container build infrastructure to them (or you can add your own package search dirs).
+# All of the above commands will build multi-stage container chains to satisfy the dependency requirements. The --multi-stage flag
+# is just used to specify the contents of a singular container from the command-line without needing to create a dedicated file for it.
+#
+# Typically the jetson-containers/build.sh wrapper script is used to launch this underlying Python module. jetson-containers can also
+# build external out-of-tree projects that have their own Dockerfile.  And you can add your own package search dirs for other packages.
 #
 import os
 import re
@@ -42,6 +44,7 @@ parser.add_argument('--list-packages', action='store_true', help="show the list 
 parser.add_argument('--show-packages', action='store_true', help="show info about one or more packages (if none are specified, all will be listed")
 parser.add_argument('--skip-packages', type=str, default='', help="disable certain packages/containers (filterable by wildcards, comma/colon-separated)")
 parser.add_argument('--skip-errors', action='store_true', help="continue building when errors occur (not used with --multi-stage)")
+parser.add_argument('--skip-tests', action='store_true', help="skip running the container tests during the build")
 parser.add_argument('--simulate', action='store_true', help="print out the build commands without actually building the containers")
 parser.add_argument('--logs', type=str, default='', help="sets the directory to save container build logs to (default: jetson-containers/logs)")
 
@@ -82,6 +85,6 @@ if args.list_packages or args.show_packages:
 # build one multi-stage container from chain of packages
 # or launch multiple independent container builds
 if args.multi_stage:
-    build_container(args.name, args.packages, args.base, args.build_flags, args.simulate)
+    build_container(args.name, args.packages, args.base, args.build_flags, args.simulate, args.skip_tests)
 else:   
-    build_containers(args.name, args.packages, args.base, args.build_flags, args.simulate, args.skip_errors, args.skip_packages)
+    build_containers(args.name, args.packages, args.base, args.build_flags, args.simulate, args.skip_tests, args.skip_errors, args.skip_packages)
