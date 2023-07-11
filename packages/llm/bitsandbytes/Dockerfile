@@ -1,6 +1,7 @@
 #
 # name: bitsandbytes
 # category: llm
+# config: config.py
 # depends: [build-essential, pytorch]
 # test: test.py
 #
