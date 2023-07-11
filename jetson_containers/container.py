@@ -4,7 +4,7 @@ import sys
 import traceback
 import subprocess
 
-from .packages import find_package, find_packages, validate_dict
+from .packages import find_package, find_packages, resolve_dependencies, validate_dict 
 from .l4t_version import L4T_VERSION
 from .base import get_l4t_base
 from .logging import log_dir
@@ -12,33 +12,6 @@ from .logging import log_dir
 
 _NEWLINE_=" \ \n"
 
-
-def unroll_dependencies(packages):
-    """
-    Expand the dependencies in the list of containers to build
-    """
-    if isinstance(packages, str):
-        packages = [packages]
-    
-    while True:
-        packages_org = packages.copy()
-        
-        for package in packages_org:
-            for dependency in find_package(package).get('depends', []):
-                package_index = packages.index(package)
-                dependency_index = packages.index(dependency) if dependency in packages else -1
-                
-                if dependency_index < 0:  # dependency not in list, add it before the package
-                    packages.insert(package_index, dependency)
-                elif dependency_index > package_index:  # dependency after current package, move it to before
-                    packages.remove(dependency)
-                    packages.insert(package_index, dependency)
-      
-        if len(packages) == len(packages_org):
-            break
-            
-    return packages
-    
 
 def build_container(name, packages, base=get_l4t_base(), build_flags='', simulate=False, skip_tests=False):
     """
@@ -56,7 +29,7 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
         base = get_l4t_base()
         
     # add all dependencies to the build tree
-    packages = unroll_dependencies(packages)
+    packages = resolve_dependencies(packages)
     print('-- Building containers ', packages)
     
     # make sure all packages can be found before building any

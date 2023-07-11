@@ -58,7 +58,16 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
     if isinstance(package_dirs, list):
         for path in package_dirs:
             scan_packages(path)
-        _PACKAGE_SCAN = True
+            
+        _PACKAGE_SCAN = True  # flag that all dirs have been scanned
+        
+        for key in _PACKAGES.copy():  # make sure all dependencies are met
+            try:
+                resolve_dependencies(key)
+            except Exception as error:
+                print(f"-- Package {key} has missing dependencies, disabling...  ({error})")
+                del _PACKAGES[key]
+                
         return _PACKAGES
     elif isinstance(package_dirs, str):
         path = package_dirs
@@ -189,7 +198,41 @@ def skip_packages(packages, skip):
                 
     return filtered
     
-   
+ 
+def resolve_dependencies(packages, check=True):
+    """
+    Resolve the required dependencies in the list of requested containers to build.
+    Returns a new list of containers to build which contains all the dependencies.
+    """
+    if isinstance(packages, str):
+        packages = [packages]
+    
+    # iteratively unroll/expand dependencies until the full list is resolved
+    while True:
+        packages_org = packages.copy()
+        
+        for package in packages_org:
+            for dependency in find_package(package).get('depends', []):
+                package_index = packages.index(package)
+                dependency_index = packages.index(dependency) if dependency in packages else -1
+                
+                if dependency_index < 0:  # dependency not in list, add it before the package
+                    packages.insert(package_index, dependency)
+                elif dependency_index > package_index:  # dependency after current package, move it to before
+                    packages.remove(dependency)
+                    packages.insert(package_index, dependency)
+      
+        if len(packages) == len(packages_org):
+            break
+     
+    # make sure all packages can be found
+    if check:
+        for package in packages:    
+            find_package(package)
+        
+    return packages
+
+    
 def apply_config(package, config):
     """
     Apply a config dict to an existing package configuration
@@ -241,7 +284,9 @@ def config_package(package):
             module.package = package   # add current package's dict as a global
             spec.loader.exec_module(module)
             package = module.package
-            
+            if package is None:  # package was disabled in config script
+                return []
+                
         elif config_ext == '.json' or config_ext == '.yaml':
             print(f"-- Loading {config_path}")
             config = validate_config(config_path)  # load and validate the config file
