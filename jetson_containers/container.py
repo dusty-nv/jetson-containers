@@ -184,8 +184,9 @@ def test_container(name, package, simulate=False):
         return True
         
     for test in package['test']:
-        test_ext = os.path.splitext(test)[1]
-        log_file = os.path.join(log_dir('test'), f"{name}_{test}").replace(':','_')
+        test_cmd = test.split(' ')[0]  # test could be a command with arguments - get just the script/executable name
+        test_ext = os.path.splitext(test_cmd)[1]
+        log_file = os.path.join(log_dir('test'), f"{name}_{test_cmd}").replace(':','_')
         
         cmd = "sudo docker run -it --rm --runtime=nvidia --network=host" + _NEWLINE_
         cmd += f"--volume {package['path']}:/test" + _NEWLINE_
@@ -194,8 +195,10 @@ def test_container(name, package, simulate=False):
         
         if test_ext == ".py":
             cmd += f"python3 {test}" + _NEWLINE_
-        elif text_ext == ".sh":
+        elif test_ext == ".sh":
             cmd += f"/bin/bash {test}" + _NEWLINE_
+        else:
+            cmd += f"{test}" + _NEWLINE_
         
         cmd += f"2>&1 | tee {log_file + '.txt'}" + "; exit ${PIPESTATUS[0]}"
         

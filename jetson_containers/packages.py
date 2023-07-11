@@ -87,7 +87,7 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
         elif os.path.isfile(entry_path):
             if entry.lower().find('dockerfile') >= 0:
                 package['dockerfile'] = entry
-            elif entry == 'test.py':
+            elif entry == 'test.py' or entry == 'test.sh':
                 package['test'].append(entry)
             elif entry == 'config.py':
                 package['config'].append(entry)
@@ -207,7 +207,7 @@ def apply_config(package, config):
         for pkg_name, pkg in config.items():  # nested dict with multiple subpackages
             for key in _PACKAGE_KEYS:  # apply inherited package info
                 if key in package:
-                    print(f"-- Setting {pkg_name} key {key} from {package['name']} to ", package[key])
+                    #print(f"-- Setting {pkg_name} key {key} from {package['name']} to ", package[key])
                     pkg.setdefault(key, package[key])
             package[pkg_name] = validate_lists(pkg)
     
