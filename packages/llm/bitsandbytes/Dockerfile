@@ -8,6 +8,13 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
+# upstream version is https://github.com/TimDettmers/bitsandbytes (this fork below has some Jetson-specific patches in it)
+ARG BITSANDBYTES_REPO=dusty-nv/bitsandbytes
+ARG BITSANDBYTES_BRANCH=main
+
+# force rebuild on new git commits - https://stackoverflow.com/a/56945508
+ADD https://api.github.com/repos/${BITSANDBYTES_REPO}/git/refs/heads/${BITSANDBYTES_BRANCH} /tmp/bitsandbytes_version.json
+
 RUN pip3 uninstall -y bitsandbytes && \
     cd /opt && \
     git clone https://github.com/dusty-nv/bitsandbytes /opt/bitsandbytes && \
