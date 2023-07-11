@@ -1,7 +1,7 @@
 #
 # name: pycuda
 # category: cuda
-# depends: ['build-essential', python]
+# depends: [build-essential, python]
 # test: test.py
 #
 ARG BASE_IMAGE
