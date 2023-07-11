@@ -29,5 +29,6 @@ RUN pip3 install --no-cache-dir \
 	setuptools \
 	packaging \
 	Cython \
-	wheel \
-	wget
+	wheel
+	
+RUN pip3 install --no-cache-dir --verbose wget
