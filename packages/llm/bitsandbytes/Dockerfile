@@ -8,7 +8,7 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-# upstream version is https://github.com/TimDettmers/bitsandbytes (this fork below has some Jetson-specific patches in it)
+# upstream version is https://github.com/TimDettmers/bitsandbytes (the fork below includes some patches for Jetson) 
 ARG BITSANDBYTES_REPO=dusty-nv/bitsandbytes
 ARG BITSANDBYTES_BRANCH=main
 
