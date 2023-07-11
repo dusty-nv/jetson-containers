@@ -13,5 +13,7 @@ RUN cd /opt && \
     cd GPTQ-for-LLaMa && \
     python3 setup_cuda.py install
     
+RUN pip3 install --no-cache-dir --verbose transformers
+
 # make sure it loads
 RUN cd /opt/GPTQ-for-LLaMa && python3 llama.py --help
