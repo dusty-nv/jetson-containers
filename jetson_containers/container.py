@@ -83,7 +83,7 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
             tag_container(base, container_name, simulate)
             
         # run tests on the intermediate container
-        if not skip_tests:
+        if package not in skip_tests and 'intermediate' not in skip_tests:
             test_container(container_name, pkg, simulate)
         
         # use this container as the next base
@@ -93,14 +93,14 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
     tag_container(container_name, name, simulate)
     
     # re-run tests on final container
-    if not skip_tests:
-        for package in packages:
+    for package in packages:
+        if package not in skip_tests:
             test_container(container_name, package, simulate)
             
     return container_name
     
     
-def build_containers(name, packages, base=get_l4t_base(), build_flags='', simulate=False, skip_tests=False, skip_errors=False, skip_packages=[]):
+def build_containers(name, packages, base=get_l4t_base(), build_flags='', simulate=False, skip_errors=False, skip_packages=[], skip_tests=[]):
     """
     Build a set of containers independently.
     Returns true if all containers built successfully, or false if there were any errors.

@@ -44,8 +44,8 @@ parser.add_argument('--package-dirs', type=str, default='', help="additional pac
 parser.add_argument('--list-packages', action='store_true', help="show the list of packages that were found under the search directories")
 parser.add_argument('--show-packages', action='store_true', help="show info about one or more packages (if none are specified, all will be listed")
 parser.add_argument('--skip-packages', type=str, default='', help="disable certain packages/containers (filterable by wildcards, comma/colon-separated)")
+parser.add_argument('--skip-tests', type=str, default='', help="comma-separated list of package tests to disable ('intermediate' to disable build-stage tests)")
 parser.add_argument('--skip-errors', action='store_true', help="continue building when errors occur (not used with --multi-stage)")
-parser.add_argument('--skip-tests', action='store_true', help="skip running the container tests during the build")
 parser.add_argument('--simulate', action='store_true', help="print out the build commands without actually building the containers")
 parser.add_argument('--logs', type=str, default='', help="sets the directory to save container build logs to (default: jetson-containers/logs)")
 
@@ -58,6 +58,7 @@ if args.multi_stage and args.skip_errors:
 # split multi-value keyword arguments
 args.package_dirs = re.split(',|;|:', args.package_dirs)
 args.skip_packages = re.split(',|;|:', args.skip_packages)
+args.skip_tests = re.split(',|;|:', args.skip_tests)
 
 print(args)
 
@@ -90,4 +91,4 @@ if args.list_packages or args.show_packages:
 if args.multi_stage:
     build_container(args.name, args.packages, args.base, args.build_flags, args.simulate, args.skip_tests)
 else:   
-    build_containers(args.name, args.packages, args.base, args.build_flags, args.simulate, args.skip_tests, args.skip_errors, args.skip_packages)
+    build_containers(args.name, args.packages, args.base, args.build_flags, args.simulate, args.skip_errors, args.skip_packages, args.skip_tests)
