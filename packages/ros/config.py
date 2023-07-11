@@ -26,9 +26,12 @@ for ROS_DISTRO in ROS_DISTROS:
         
         if ROS_DISTRO == 'melodic':
             pkg['dockerfile'] = 'Dockerfile.ros.melodic'
+            pkg['test'] = 'test_ros.sh'
         elif ROS_DISTRO == 'noetic':
             pkg['dockerfile'] = 'Dockerfile.ros.noetic'
+            pkg['test'] = 'test_ros.sh'
         else:
             pkg['dockerfile'] = 'Dockerfile.ros2'
+            pkg['test'] = 'test_ros2.sh'
             
         package.append(pkg)
