@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
-
+import os
+import re
 import time
+import wget
+import shutil
 import argparse
 
 print('testing torchvision...')
@@ -14,9 +17,7 @@ import torchvision.transforms as transforms
 
 print('torchvision version: ' + str(torchvision.__version__) + '\n')
 
-#
 # test extension operators
-#
 def test_nms(N=128):
     print('testing torchvision extensions...')
     
@@ -33,9 +34,7 @@ def test_nms(N=128):
     
 test_nms()
 
-#
 # test model inference
-#
 model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
     and callable(models.__dict__[name]))
@@ -53,7 +52,21 @@ def load_data(root):
             ])),
             batch_size=args.batch_size, shuffle=False,
             num_workers=args.workers, pin_memory=True)
+
+def download_data(url, tar, workdir='/data/datasets'):
+    filename = os.path.join(workdir, tar)
+    folder = filename[:-7] if '.tar.gz' in filename else os.path.splitext(filename)[0]
+    
+    if not os.path.isfile(filename):
+        print(f"Downloading {url} to {filename}")
+        wget.download(url, filename)
         
+    if not os.path.isdir(folder):
+        print(f"Extracting {filename} to {folder}")
+        shutil.unpack_archive(filename, workdir)
+        
+    return folder
+    
 def test_model(model_info, data_loader):
     model_name = model_info[0]
     model_top1 = 100.0 - model_info[1]
@@ -184,7 +197,10 @@ if __name__ == '__main__':
     # parse command-line args
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--data', type=str, default='/tmp/ILSVRC2012_img_val_subset_5k')
+    parser.add_argument('--data-url', type=str, default='https://nvidia.box.com/shared/static/y1ygiahv8h75yiyh0pt50jqdqt7pohgx.gz')
+    parser.add_argument('--data-tar', type=str, default='ILSVRC2012_img_val_subset_5k.tar.gz')
+    parser.add_argument('--models', type=str, default='resnet18', 
+                        help='comma-separated list of models to test from: alexnet,googlenet,resnet18,resnet50')
     parser.add_argument('--resolution', default=224, type=int, metavar='N',
                         help='input NxN image resolution of model (default: 224x224) '
                              'note than Inception models should use 299x299')
@@ -196,15 +212,18 @@ if __name__ == '__main__':
                         metavar='N', help='print frequency (default: 10)')                    
     parser.add_argument('-t', '--test-threshold', default=-10.0, type=float,
                         metavar='N', help='maximum passing delta between trained model top-1 accuracy  (default is -10%)')
-    parser.add_argument("--use-cuda", action="store_true", help='use CUDA (otherwise CPU-only)')  
-                      
+    parser.add_argument('--no-cuda', dest='use_cuda', action="store_false", help='disable CUDA (CPU-only)')  
+                   
     args = parser.parse_args()
 
-    # load dataset
-    print('using {:s}'.format("CUDA" if args.use_cuda else "CPU"))     
-    print('loading dataset from {:s}\n'.format(args.data))
+    # split multi-value keyword arguments
+    args.models = re.split(',|;|:', args.models)
     
-    data_loader = load_data(args.data)
+    print(args)
+    print('using {:s}'.format("CUDA" if args.use_cuda else "CPU"))     
+
+    # load dataset    
+    data_loader = load_data(download_data(args.data_url, args.data_tar))
     
     print('dataset classes: {:d}'.format(len(data_loader.dataset.classes)))
     print('dataset images:  {:d}'.format(len(data_loader.dataset)))
@@ -216,11 +235,12 @@ if __name__ == '__main__':
                   ('googlenet', 30.22, 10.47),
                   ('resnet18', 30.24, 10.92),
                   ('resnet50', 23.85, 7.13)]
-              
+         
     results = []
     
     for model in model_info:
-        results.append(test_model(model, data_loader))
+        if model[0] in args.models:
+            results.append(test_model(model, data_loader))
         
     print("\n")
     print("---------------------------------------------")
@@ -235,5 +255,8 @@ if __name__ == '__main__':
         if result[8] is True:
             num_passing += 1
             
-    print("\nModel tests passing:  {:d} / {:d}".format(num_passing, len(model_info)))
-    print('torchvision {:s}\n'.format('OK' if num_passing == len(model_info) else 'FAIL'))
+    print("\nModel tests passing:  {:d} / {:d}".format(num_passing, len(results)))
+    print('torchvision {:s}\n'.format('OK' if num_passing == len(results) else 'FAIL'))
+    
+    if num_passing != len(results):
+        raise Exception(f"Only {num_passing} / {len(results)} torchvision models passed")

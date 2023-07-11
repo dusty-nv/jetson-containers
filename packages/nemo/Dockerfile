@@ -1,7 +1,7 @@
 #
 # name: nemo
 # category: ml
-# depends: pytorch
+# depends: [pytorch, torchvision, torchaudio]
 # test: test.py
 # description: NVIDIA NeMo for ASR/NLP/TTS https://nvidia.github.io/NeMo/
 #
@@ -33,3 +33,6 @@ RUN apt-get update && \
 # patch for: cannot import name 'GradBucket' from 'torch.distributed'
 RUN NEMO_PATH="$(pip3 show nemo_toolkit | grep Location: | cut -d' ' -f2)/nemo" && \
     sed -i '/from torch.distributed.algorithms.ddp_comm_hooks.debugging_hooks import noop_hook/d' $NEMO_PATH/collections/nlp/parts/nlp_overrides.py
+
+# set the nemo model cache directory to mounted /data volume
+ENV NEMO_CACHE_DIR=/data/models/nemo

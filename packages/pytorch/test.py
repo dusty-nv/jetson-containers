@@ -8,6 +8,9 @@ print('cuDNN version:   ' + str(torch.backends.cudnn.version()))
 
 print(torch.__config__.show())
 
+# fail if CUDA isn't available
+assert(torch.cuda.is_available())
+
 # check that version can be parsed
 from packaging import version
 print(version.parse(torch.__version__))

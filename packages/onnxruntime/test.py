@@ -2,6 +2,8 @@
 
 import os
 import time
+import wget
+import shutil
 import pprint
 import argparse
 import numpy as np
@@ -91,18 +93,30 @@ if __name__ == '__main__':
     # parse command-line arguments
     parser = argparse.ArgumentParser()
     
-    parser.add_argument('--model', type=str, default='resnet18.onnx')
+    parser.add_argument('--model', type=str, default='/data/models/onnx/cat_dog_epoch_100/resnet18.onnx')
+    parser.add_argument('--model-url', type=str, default='https://nvidia.box.com/shared/static/zlvb4y43djygotpjn6azjhwu0r3j0yxc.gz')
+    parser.add_argument('--model-tar', type=str, default='cat_dog_epoch_100.tar.gz')
     parser.add_argument('--runs', type=int, default=100)
     parser.add_argument('--warmup', type=int, default=10)
     parser.add_argument('--verbose', action='store_true')
     
     args = parser.parse_args()
+    print(args)
+    
+    # download/extract model
+    if not os.isfile(args.model):
+        model_root = os.path.dirname(os.path.dirname(args.model))
+        model_tar = os.path.join(model_root, model_tar)
+        os.makedirs(model_root, exist_ok=True)
+        print(f"Downloading {args.model_url} to {model_tar}")
+        wget.download(args.model_url, model_tar)
+        shutil.unpack_archive(model_tar, model_root)
     
     # run model inference tests
     perf = {}
     
     for provider in providers:
-        perf[provider] = test_infer(provider, **vars(args))
+        perf[provider] = test_infer(provider, args.model, runs=args.runs, warmup=args.warmup, verbose=args.verbose)
     
     print(f"\nPerformance Summary for {args.model} (over {args.runs} runs)")
     

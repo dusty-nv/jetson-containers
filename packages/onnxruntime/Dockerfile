@@ -2,6 +2,7 @@
 # name: onnxruntime
 # category: ml
 # depends: [cmake, python]
+# test: test.py
 #
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

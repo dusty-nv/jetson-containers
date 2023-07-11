@@ -17,7 +17,7 @@ import os
 import wget
 import subprocess
 
-DATA_DIR='/tmp'
+DATA_DIR='/data/datasets'
 DATA_DOWNLOADER=os.path.join(DATA_DIR, 'get_squad.py')
 
 wget.download("https://raw.githubusercontent.com/NVIDIA/NeMo/main/examples/nlp/question_answering/get_squad.py", DATA_DOWNLOADER)
