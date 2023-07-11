@@ -4,18 +4,18 @@ import sys
 import traceback
 import subprocess
 
-from .packages import find_package, find_packages, resolve_dependencies, validate_dict 
+from .packages import find_package, find_packages, resolve_dependencies, validate_dict, _PACKAGE_ROOT
 from .l4t_version import L4T_VERSION
 from .base import get_l4t_base
 from .logging import log_dir
 
 
-_NEWLINE_=" \ \n"
+_NEWLINE_=" \\\n"  # used when building command strings
 
 
 def build_container(name, packages, base=get_l4t_base(), build_flags='', simulate=False, skip_tests=False):
     """
-    Multi-stage container build of that chains together selected packages.
+    Multi-stage container build that chains together selected packages.
     """
     if isinstance(packages, str):
         packages = [packages]
@@ -50,7 +50,7 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
         # generate the logging file (without the extension)
         log_file = os.path.join(log_dir('build'), container_name).replace(':','_')
         
-        # build next container
+        # build next intermediate container
         pkg = find_package(package)
         
         if 'dockerfile' in pkg:
@@ -73,17 +73,16 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
             print(f"-- Building container {container_name}")
             print(f"\n{cmd}\n")
 
-            if not simulate:
-                with open(log_file + '.sh', 'w') as cmd_file:   # save the build command to a shell script for future reference
-                    cmd_file.write('#!/usr/bin/env bash\n\n')
-                    cmd_file.write(cmd + '\n')
-                
-                # remove the line breaks that were added for readability, and set the shell to bash so we can use $PIPESTATUS 
+            with open(log_file + '.sh', 'w') as cmd_file:   # save the build command to a shell script for future reference
+                cmd_file.write('#!/usr/bin/env bash\n\n')
+                cmd_file.write(cmd + '\n')
+                    
+            if not simulate:  # remove the line breaks that were added for readability, and set the shell to bash so we can use $PIPESTATUS 
                 status = subprocess.run(cmd.replace(_NEWLINE_, ' '), executable='/bin/bash', shell=True, check=True)  
         else:
             tag_container(base, container_name, simulate)
             
-        # run tests on the container
+        # run tests on the intermediate container
         if not skip_tests:
             test_container(container_name, pkg, simulate)
         
@@ -92,6 +91,13 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
 
     # tag the final container
     tag_container(container_name, name, simulate)
+    
+    # re-run tests on final container
+    if not skip_tests:
+        for package in packages:
+            test_container(container_name, package, simulate)
+            
+    return container_name
     
     
 def build_containers(name, packages, base=get_l4t_base(), build_flags='', simulate=False, skip_tests=False, skip_errors=False, skip_packages=[]):
@@ -111,25 +117,25 @@ def build_containers(name, packages, base=get_l4t_base(), build_flags='', simula
 
     for package in packages:
         try:
-            build_container(name, package, base, build_flags, simulate, skip_tests) 
+            container_name = build_container(name, package, base, build_flags, simulate, skip_tests) 
         except Exception as error:
             print(error)
             if not skip_errors:
                 return False #raise error #sys.exit(os.EX_SOFTWARE)
-            status[package] = (False, error)
+            status[package] = (container_name, error)
         else:
-            status[package] = (True, None)
+            status[package] = (container_name, None)
             
     print(f"\n-- Build logs at:  {log_dir('build')}")
     
-    for package, (success, error) in status.items():
-        msg = f"   * {package} {'SUCCESS' if success else 'FAILED'}"
+    for package, (container_name, error) in status.items():
+        msg = f"   * {package} ({container_name}) {'FAILED' if error else 'SUCCESS'}"
         if error is not None:
             msg += f"  ({error})"
         print(msg)
         
-    for success, _ in status.values():
-        if not success:
+    for _, error in status.values():
+        if error:
             return False
             
     return True
@@ -163,6 +169,7 @@ def test_container(name, package, simulate=False):
         
         cmd = "sudo docker run -it --rm --runtime=nvidia --network=host" + _NEWLINE_
         cmd += f"--volume {package['path']}:/test" + _NEWLINE_
+        cmd += f"--volume {os.path.join(_PACKAGE_ROOT, 'data')}:/data" + _NEWLINE_
         cmd += f"--workdir /test" + _NEWLINE_
         cmd += name + _NEWLINE_
         
@@ -174,17 +181,16 @@ def test_container(name, package, simulate=False):
             cmd += f"{test}" + _NEWLINE_
         
         cmd += f"2>&1 | tee {log_file + '.txt'}" + "; exit ${PIPESTATUS[0]}"
-        
+                
         print(f"-- Testing container {name}")
         print(f"\n{cmd}\n")
+        
+        with open(log_file + '.sh', 'w') as cmd_file:
+            cmd_file.write('#!/usr/bin/env bash\n\n')
+            cmd_file.write(cmd + '\n')
             
-        if not simulate:
-            with open(log_file + '.sh', 'w') as cmd_file:
-                cmd_file.write('#!/usr/bin/env bash\n\n')
-                cmd_file.write(cmd + '\n')
-            
-            # TODO:  return false on errors
-            status = subprocess.run(cmd.replace(_NEWLINE_, ' '), executable='/bin/bash', shell=True, check=True)  
+        if not simulate:  # TODO: return false on errors 
+            status = subprocess.run(cmd.replace(_NEWLINE_, ' '), executable='/bin/bash', shell=True, check=True)
             
     return True
     

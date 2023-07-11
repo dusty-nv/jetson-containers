@@ -16,8 +16,9 @@
 #   $ jetson-containers/build.sh ros:humble*                       # build all ROS Humble containers (can use wildcard filters)
 #   $ jetson-containers/build.sh --multi-stage ros:humble-desktop pytorch  # build ROS Humble with PyTorch on top
 #
-# All of the above commands will build multi-stage container chains to satisfy the dependency requirements. The --multi-stage flag
-# is just used to specify the contents of a singular container from the command-line without needing to create a dedicated file for it.
+# All of the above commands will build one or more multi-stage containers, chaining together intermediate containers until all of the
+# dependency requirements are satisfied.  For example, the "pytorch" package expands to include the "python" and "numpy" dependencies.
+# The --multi-stage flag is used to specify the packages in a singular container from the command-line without any additional config files.
 #
 # Typically the jetson-containers/build.sh wrapper script is used to launch this underlying Python module. jetson-containers can also
 # build external out-of-tree projects that have their own Dockerfile.  And you can add your own package search dirs for other packages.
