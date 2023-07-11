@@ -9,7 +9,7 @@ FROM ${BASE_IMAGE}
 
 # this fork/branch still has native CUDA kernels
 RUN cd /opt && \
-    git clone --branch cuda https://github.com/oobabooga/GPTQ-for-LLaMa && \
+    git clone --branch cuda --depth=1 https://github.com/oobabooga/GPTQ-for-LLaMa && \
     cd GPTQ-for-LLaMa && \
     python3 setup_cuda.py install
     

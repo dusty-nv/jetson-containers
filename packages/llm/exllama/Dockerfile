@@ -8,7 +8,7 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 RUN cd /opt && \
-    git clone https://github.com/turboderp/exllama && \
+    git clone --depth=1 https://github.com/turboderp/exllama && \
     cd exllama && \
     pip3 install --no-cache-dir --verbose -r requirements.txt -r requirements-web.txt
 

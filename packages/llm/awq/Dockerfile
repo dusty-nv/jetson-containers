@@ -18,7 +18,7 @@ ARG AWQ_BRANCH=main
 ADD https://api.github.com/repos/${AWQ_REPO}/git/refs/heads/${AWQ_BRANCH} /tmp/awq_version.json
 
 RUN cd /opt && \
-    git clone https://github.com/${AWQ_REPO} && \
+    git clone --depth=1 https://github.com/${AWQ_REPO} && \
     cd llm-awq && \
     pip3 install --verbose . && \
     cd awq/kernels && \

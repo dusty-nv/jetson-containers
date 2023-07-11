@@ -9,7 +9,7 @@ FROM ${BASE_IMAGE}
 
 # alternate way to:  pip3 install auto-gptq
 RUN cd /opt && \
-    git clone https://github.com/PanQiWei/AutoGPTQ.git && \
+    git clone --depth=1 https://github.com/PanQiWei/AutoGPTQ.git && \
     cd AutoGPTQ && \
     pip3 install --no-cache-dir --verbose . 
 

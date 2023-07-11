@@ -17,7 +17,7 @@ ADD https://api.github.com/repos/${BITSANDBYTES_REPO}/git/refs/heads/${BITSANDBY
 
 RUN pip3 uninstall -y bitsandbytes && \
     cd /opt && \
-    git clone https://github.com/dusty-nv/bitsandbytes /opt/bitsandbytes && \
+    git clone --depth=1 https://github.com/dusty-nv/bitsandbytes /opt/bitsandbytes && \
     cd bitsandbytes && \
     CUDA_VERSION=114 make cuda11x && \
     pip3 install --verbose .
