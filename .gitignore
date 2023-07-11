@@ -3,10 +3,6 @@ __pycache__
 *.tar.gz
 *.so
 *.deb
-packages/usr
-packages/apt
-packages/*.list
-test/data
-build_log.txt
+data
 logs
-jetson-ota-public.asc
+test/data
