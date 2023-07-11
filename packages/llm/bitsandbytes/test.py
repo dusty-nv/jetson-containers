@@ -3,6 +3,4 @@ print('testing bitsandbytes...')
 
 import bitsandbytes
 
-print(bitsandbytes.__version__)
-
 print('bitsandbytes OK\n')
