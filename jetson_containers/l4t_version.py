@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
+# finds the versions of JetPack-L4T and CUDA from the build environment:
+#
+#    L4T_VERSION (packaging.version.Version)
+#    CUDA_VERSION (packaging.version.Version)
+#    CUDA_ARCH_LIST (list) -- e.g. ['5.3', '6.2', '7.2']
+#    ARCH (str) -- e.g. 'aarch64' or 'x86_64'
+#    
 import os
+import json
 import platform
 
 from packaging import version
@@ -14,9 +22,14 @@ def get_l4t_version(version_file='/etc/nv_tegra_release'):
         version.major == 35
         version.minor == 3
         version.micro == 1
+        
+    The L4T_VERSION will either be parsed from /etc/nv_tegra_release or the $L4T_VERSION environment variable.
     """
     if platform.machine() != 'aarch64':
         raise ValueError(f"L4T_VERSION isn't supported on {ARCH} architecture (aarch64 only)")
+        
+    if 'L4T_VERSION' in os.environ and len(os.environ['L4T_VERSION']) > 0:
+        return version.parse(os.environ['L4T_VERSION'].lower().lstrip('r'))
         
     if not os.path.isfile(version_file):
         raise IOError(f"L4T_VERSION file doesn't exist:  {version_file}")
@@ -52,11 +65,27 @@ def get_l4t_version(version_file='/etc/nv_tegra_release'):
     # return packaging.version object
     return version.parse(f'{l4t_release}.{l4t_revision}')
     
+    
+def get_cuda_version(version_file='/usr/local/cuda/version.json'):
+    """
+    Returns the installed version of the CUDA Toolkit in a packaging.version.Version object
+    The CUDA_VERSION will either be parsed from /usr/local/cuda/version.json or the $CUDA_VERSION environment variable.
+    """
+    if 'CUDA_VERSION' in os.environ and len(os.environ['CUDA_VERSION']) > 0:
+        return version.parse(os.environ['CUDA_VERSION'])
+        
+    if not os.path.isfile(version_file):
+        raise IOError(f"L4T_VERSION file doesn't exist:  {version_file}")
+        
+    with open(version_file) as file:
+        versions = json.load(file)
+        
+    return version.parse(versions['cuda_nvcc']['version'])
 
+
+# set L4T_VERSION and CUDA_VERSION globals        
 L4T_VERSION = get_l4t_version()
-
-# x86_64, aarch64
-ARCH = platform.machine()
+CUDA_VERSION = get_cuda_version()
 
 # Nano/TX1 = 5.3
 # TX2 = 6.2
@@ -70,3 +99,6 @@ elif L4T_VERSION.major == 32:  # JetPack 4
     
 CUDA_ARCH_LIST_FLOAT = [cc/10.0 for cc in CUDA_ARCH_LIST_INT]
 CUDA_ARCH_LIST = [f'{cc:.1f}' for cc in CUDA_ARCH_LIST_FLOAT]
+
+# x86_64, aarch64
+ARCH = platform.machine()

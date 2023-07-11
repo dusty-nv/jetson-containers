@@ -28,7 +28,7 @@ import sys
 import pprint
 import argparse
 
-from jetson_containers import build_container, build_containers, find_packages, package_search_dirs, set_log_dir, L4T_VERSION
+from jetson_containers import build_container, build_containers, find_packages, package_search_dirs, set_log_dir, L4T_VERSION, CUDA_VERSION
 
 
 parser = argparse.ArgumentParser()
@@ -59,7 +59,9 @@ args.package_dirs = re.split(',|;|:', args.package_dirs)
 args.skip_packages = re.split(',|;|:', args.skip_packages)
 
 print(args)
+
 print(f"-- L4T_VERSION={L4T_VERSION}")
+print(f"-- CUDA_VERSION={CUDA_VERSION}")
 
 # add package directories
 if args.package_dirs:
