@@ -104,9 +104,9 @@ if __name__ == '__main__':
     print(args)
     
     # download/extract model
-    if not os.isfile(args.model):
+    if not os.path.isfile(args.model):
         model_root = os.path.dirname(os.path.dirname(args.model))
-        model_tar = os.path.join(model_root, model_tar)
+        model_tar = os.path.join(model_root, args.model_tar)
         os.makedirs(model_root, exist_ok=True)
         print(f"Downloading {args.model_url} to {model_tar}")
         wget.download(args.model_url, model_tar)
