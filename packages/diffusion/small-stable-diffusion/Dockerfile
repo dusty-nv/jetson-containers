@@ -1,15 +1,28 @@
 #
 # name: small-stable-diffusion
 # category: diffusion
-# depends: [pytorch, torchvision]
+# depends: [pytorch, torchvision, onnxruntime]
+# disabled: true
 # test: test.sh
+# notes: disabled due to https://github.com/OFA-Sys/diffusion-deploy/issues/1
 #
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 # https://huggingface.co/spaces/OFA-Sys/small-stable-diffusion-v0
 # https://github.com/OFA-Sys/diffusion-deploy
-RUN cd /opt && git clone --depth=1 https://github.com/dusty-nv/small-stable-diffusion
+ARG SSD_REPO=dusty-nv/small-stable-diffusion
+ARG SSD_BRANCH=main
+
+# force rebuild on new git commits - https://stackoverflow.com/a/56945508
+ADD https://api.github.com/repos/${SSD_REPO}/git/refs/heads/${SSD_BRANCH} /tmp/small_stable_diffusion_version.json
+
+RUN cd /opt && \
+    git clone --branch ${SSD_BRANCH} --depth=1 https://github.com/${SSD_REPO} && \
+    cd small-stable-diffusion && \
+    pip3 install --no-cache-dir --verbose -r gpu_requirements.txt
+
+# set the huggingface model cache to mounted dir
 ENV DIFFUSERS_CACHE=/data/models/diffusers
 
 # make sure it loads
