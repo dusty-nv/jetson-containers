@@ -1,7 +1,7 @@
 #
 # name: awq
 # category: llm
-# depends: [pytorch]
+# depends: [pytorch, torchvision]
 # test: test.sh
 #
 ARG BASE_IMAGE
