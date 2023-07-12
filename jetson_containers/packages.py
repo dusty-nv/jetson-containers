@@ -20,7 +20,8 @@ _PACKAGES = {}
 _PACKAGE_SCAN = False
 _PACKAGE_ROOT = os.path.dirname(os.path.dirname(__file__))
 _PACKAGE_DIRS = [os.path.join(_PACKAGE_ROOT, 'packages')]
-_PACKAGE_KEYS = ['alias', 'build_args', 'build_flags', 'category', 'config', 'depends', 'description', 'dockerfile', 'name', 'notes', 'path', 'test']
+_PACKAGE_KEYS = ['alias', 'build_args', 'build_flags', 'category', 'config', 'depends', 
+                 'description', 'disabled', 'dockerfile', 'name', 'notes', 'path', 'test']
 
 
 def package_search_dirs(package_dirs, scan=False):
@@ -291,7 +292,7 @@ def config_package(package):
             print(f"-- Loading {config_path}")
             config = validate_config(config_path)  # load and validate the config file
             apply_config(package, config)
-                    
+    
     return validate_package(package)
     
 
@@ -309,11 +310,14 @@ def validate_package(package):
         if len(packages) == 0:  # there were no sub-packages
             packages.append(package)
     elif isinstance(package, list):
-        packages = package
+        packages = package  # TODO what if these contain subpackages?
        
-    # make sure certain entries are lists
-    for pkg in packages:
-        validate_lists(pkg)
+    for pkg in packages.copy():  # check to see if any packages were disabled
+        if pkg.get('disabled', False):
+            print(f"-- Package {pkg['name']} was disabled by its config")
+            packages.remove(pkg)
+        else:    
+            validate_lists(pkg)  # make sure certain entries are lists
         
     return packages
     
