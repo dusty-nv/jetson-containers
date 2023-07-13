@@ -13,7 +13,7 @@ try:
 except Exception as ex:
     print(ex)
     print('OpenCV was not built with CUDA')
-    sys.exit()
+    raise ex
 
 # download test image    
 img_url = 'https://raw.githubusercontent.com/dusty-nv/jetson-containers/59f840abbb99f22914a7b2471da829b3dd56122e/test/data/test_0.jpg'
