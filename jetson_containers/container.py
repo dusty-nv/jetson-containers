@@ -182,7 +182,7 @@ def test_container(name, package, simulate=False):
         
         cmd += f"2>&1 | tee {log_file + '.txt'}" + "; exit ${PIPESTATUS[0]}"
                 
-        print(f"-- Testing container {name}")
+        print(f"-- Testing container {name} ({package['name']}/{test})")
         print(f"\n{cmd}\n")
         
         with open(log_file + '.sh', 'w') as cmd_file:
