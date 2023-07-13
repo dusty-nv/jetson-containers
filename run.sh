@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # pass-through commands to 'docker run' with some added defaults
+# https://docs.docker.com/engine/reference/commandline/run/
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-DEFAULT_ARGS="--runtime nvidia -it --rm --network host"
+# comment this out for jetson-containers/data not to be mounted
 DATA_VOLUME="--volume $ROOT/data:/data"
 
 # check for V4L2 devices
@@ -30,9 +31,34 @@ if [ -n "$DISPLAY" ]; then
 	DISPLAY_DEVICE="-e DISPLAY=$DISPLAY -v /tmp/.X11-unix/:/tmp/.X11-unix -v $XAUTH:$XAUTH -e XAUTHORITY=$XAUTH"
 fi
 
-set -x 
-
 # run the container
-sudo docker run $DEFAULT_ARGS \
-	$DATA_VOLUME $V4L2_DEVICES $DISPLAY_DEVICE \
-	"$@"
+ARCH=$(uname -i)
+
+if [ $ARCH = "aarch64" ]; then
+
+	# this file shows what Jetson board is running
+	# /proc or /sys files aren't mountable into docker
+	cat /proc/device-tree/model > /tmp/nv_jetson_model
+
+	set -x
+
+	sudo docker run --runtime nvidia -it --rm --network host \
+		-v /tmp/argus_socket:/tmp/argus_socket \
+		-v /etc/enctune.conf:/etc/enctune.conf \
+		-v /etc/nv_tegra_release:/etc/nv_tegra_release \
+		-v /tmp/nv_jetson_model:/tmp/nv_jetson_model \
+		$DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES \
+		"$@"
+
+elif [ $ARCH = "x86_64" ]; then
+
+	set -x
+
+	sudo docker run --gpus all -it --rm --network=host \
+		--shm-size=8g \
+		--ulimit memlock=-1 \
+		--ulimit stack=67108864 \
+		--env NVIDIA_DRIVER_CAPABILITIES=all \
+		$DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES \
+		"$@"	
+fi
