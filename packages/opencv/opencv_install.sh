@@ -1,17 +1,19 @@
 #!/usr/bin/env bash
-# this script installs OpenCV from deb packages that it downloads
-# the opencv_version.sh script selects which packages to use
+OPENCV_URL=${1:-"$OPENCV_URL"}
+OPENCV_DEB=${2:-"$OPENCV_DEB"}
 
-set -x
+echo "OPENCV_URL=$OPENCV_URL"
+echo "OPENCV_DEB=$OPENCV_DEB"
 
-OPENCV_URL=$1
-OPENCV_DEB=$2
-
-echo "OPENCV_URL = $OPENCV_URL"
-echo "OPENCV_DEB = $OPENCV_DEB"
+if [[ -z ${OPENCV_URL} || -z ${OPENCV_DEB} ]]; then
+	echo "OPENCV_URL and OPENCV_DEB must be set as environment variables or as command-line arguments"
+	exit 255
+fi
 
 ARCH=$(uname -i)
 echo "ARCH:  $ARCH"
+
+set -x
 
 # install numpy if needed
 python3 -c 'import numpy'
