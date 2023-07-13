@@ -6,7 +6,7 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG STABLE_DIFFUSION_WEBUI_VERSION=v1.4.0-RC
+ARG STABLE_DIFFUSION_WEBUI_VERSION=master
 
 RUN cd /opt && \
     git clone --branch ${STABLE_DIFFUSION_WEBUI_VERSION} --depth=1 https://github.com/AUTOMATIC1111/stable-diffusion-webui && \
