@@ -19,7 +19,7 @@ _PACKAGES = {}
 
 _PACKAGE_SCAN = False
 _PACKAGE_ROOT = os.path.dirname(os.path.dirname(__file__))
-_PACKAGE_DIRS = [os.path.join(_PACKAGE_ROOT, 'packages')]
+_PACKAGE_DIRS = [os.path.join(_PACKAGE_ROOT, 'packages/*')]
 _PACKAGE_KEYS = ['alias', 'build_args', 'build_flags', 'category', 'config', 'depends', 
                  'description', 'disabled', 'dockerfile', 'name', 'notes', 'path', 'test']
 
@@ -44,7 +44,8 @@ def package_search_dirs(package_dirs, scan=False):
     
 def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
     """
-    Recursively find packages in and under the provided search paths.
+    Find packages from the list of provided search paths.
+    If a path ends in * wildcard, it will be searched recursively.
     This looks for Dockerfiles and config scripts in these directories.
     Returns a dict of package info from this path and sub-paths.
     """
@@ -56,7 +57,7 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
         return _PACKAGES
         
     # if this is a list of directories, scan each
-    if isinstance(package_dirs, list):
+    if isinstance(package_dirs, list) and len(package_dirs) > 0:
         for path in package_dirs:
             scan_packages(path)
             
@@ -70,13 +71,16 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
                 del _PACKAGES[key]
                 
         return _PACKAGES
-    elif isinstance(package_dirs, str):
+    elif isinstance(package_dirs, str) and len(package_dirs) > 0:
         path = package_dirs
     else:
-        raise ValueError(f"package_dirs should be a string or list")
+        raise ValueError(f"package_dirs should be a valid string or list")
         
-    # scan this specific directory for packages
+    # check for wildcard at end of path to scan recursively
     #print(f"-- Searching {path} for packages...")
+    
+    recursive = (path[-1] == '*')
+    path = path.rstrip('*').rstrip('/')
     
     if not os.path.isdir(path):
         print(f"-- Package dir '{path}' doesn't exist, skipping...")
@@ -92,8 +96,8 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
         if not entry or entry.startswith('__'):  # skip hidden directories
             continue
             
-        if os.path.isdir(entry_path):
-            scan_packages(entry_path)
+        if os.path.isdir(entry_path) and recursive:
+            scan_packages(os.path.join(entry_path, '*'))
         elif os.path.isfile(entry_path):
             if entry.lower().find('dockerfile') >= 0:
                 package['dockerfile'] = entry
@@ -116,9 +120,9 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
         return _PACKAGES
         
     package['name'] = package_name
-    package = config_package(package)  # returns a list (including subpackages)
+    packages = config_package(package)  # returns a list (including subpackages)
 
-    for pkg in package:
+    for pkg in packages:
         _PACKAGES[pkg['name']] = pkg
         
     return _PACKAGES
