@@ -43,10 +43,10 @@ if [ $ARCH = "aarch64" ]; then
 	set -x
 
 	sudo docker run --runtime nvidia -it --rm --network host \
-		-v /tmp/argus_socket:/tmp/argus_socket \
-		-v /etc/enctune.conf:/etc/enctune.conf \
-		-v /etc/nv_tegra_release:/etc/nv_tegra_release \
-		-v /tmp/nv_jetson_model:/tmp/nv_jetson_model \
+		--volume /tmp/argus_socket:/tmp/argus_socket \
+		--volume /etc/enctune.conf:/etc/enctune.conf \
+		--volume /etc/nv_tegra_release:/etc/nv_tegra_release \
+		--volume /tmp/nv_jetson_model:/tmp/nv_jetson_model \
 		$DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES \
 		"$@"
 
