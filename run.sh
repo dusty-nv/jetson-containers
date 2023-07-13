@@ -4,7 +4,7 @@
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # comment this out for jetson-containers/data not to be mounted
-DATA_VOLUME="--volume $ROOT/data:/data"
+DATA_VOLUME="--volume $ROOT/data:/data $DATA_VOLUME"
 
 # check for V4L2 devices
 V4L2_DEVICES=""
