@@ -2,7 +2,7 @@
 # name: tritonserver
 # category: ml
 # config: config.py
-# depends: [pytorch, torchvision]
+# depends: [python]
 # test: test.py
 # notes: https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/user_guide/jetson.html
 #
@@ -36,7 +36,8 @@ RUN apt-get update && \
 
 RUN pip3 install --upgrade --no-cache-dir --verbose wheel setuptools && \
     pip3 install --upgrade --no-cache-dir --verbose grpcio-tools numpy attrdict pillow
-    
-ENV LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib/llvm-8/lib"
+ 
+ENV PATH="$PATH:/opt/tritonserver/bin" 
+ENV LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib/llvm-8/lib:/opt/tritonserver/lib"
 
 RUN python3 -c 'import tritonclient'
