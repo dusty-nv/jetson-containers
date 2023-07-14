@@ -6,13 +6,21 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
+#RUN cp /usr/local/lib/python3.8/dist-packages/bitsandbytes/libbitsandbytes_cuda114.so
+
 RUN cd opt && \
     git clone --depth=1 https://github.com/oobabooga/text-generation-webui && \
     cd text-generation-webui && \
-    sed 's|^https\:\/\/github\.com\/PanQiWei|#|g' -i requirements.txt && \
+    sed 's|^accelerate==.*|accelerate|g' -i requirements.txt && \
+    sed 's|^bitsandbytes==.*|bitsandbytes|g' -i requirements.txt && \
+    sed 's|^git+https://github.com/huggingface/peft|#git+https://github.com/huggingface/peft|g' -i requirements.txt && \
+    sed 's|^git+https://github.com/huggingface/peft|#git+https://github.com/huggingface/peft|g' -i requirements.txt && \
+    #sed 's|^https://github.com/PanQiWei/AutoGPTQ|#https://github.com/PanQiWei/AutoGPTQ|g' -i requirements.txt && \
     #sed 's|^llama-cpp-python|#llama-cpp-python|g' -i requirements.txt && \
-    cat  requirements.txt && \
-    pip3 install --no-cache-dir --verbose -r requirements.txt && \
+    cat requirements.txt && \
+    pip3 freeze > /tmp/constraints.txt && \
+    pip3 install --no-cache-dir --verbose -r requirements.txt --constraint /tmp/constraints.txt && \
+    rm /tmp/constraints.txt && \
     sed 's|@functools.cache|@functools.lru_cache\(maxsize=None\)|' -i modules/chat.py && \
     sed 's|@functools.cache|@functools.lru_cache\(maxsize=None\)|' -i modules/loaders.py && \
     sed 's|@functools.cache|@functools.lru_cache\(maxsize=None\)|' -i modules/presets.py 
