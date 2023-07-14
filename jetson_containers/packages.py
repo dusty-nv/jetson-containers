@@ -170,6 +170,19 @@ def find_packages(packages, required=True, scan=True, skip=[]):
     found_packages = {}
     
     for search_pattern in packages:
+        found_package = False
+        
+        for key, pkg in _PACKAGES.items():
+            names = [key, pkg['name']] + pkg.get('alias', [])
+            
+            if len(fnmatch.filter(names, search_pattern)) > 0:
+                found_packages[pkg['name']] = pkg
+                found_package = True
+           
+        if required and not found_package:
+            raise ValueError(f"couldn't find package:  {search_pattern}")
+            
+        """
         matches = fnmatch.filter(list(_PACKAGES.keys()), search_pattern)
         
         if required and len(matches) == 0:
@@ -177,7 +190,8 @@ def find_packages(packages, required=True, scan=True, skip=[]):
             
         for match in matches:
             found_packages[match] = _PACKAGES[match]
-            
+        """
+        
     return skip_packages(found_packages, skip)
     
 
