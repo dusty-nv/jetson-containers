@@ -30,6 +30,8 @@ RUN git clone --branch ${TORCHVISION_VERSION} --recursive --depth=1 https://gith
     cd ../ && \
     rm -rf torchvision
 
+RUN python3 -c 'import torchvision; print(torchvision.__version__);'
+
 # note:  this was used on older torchvision versions (~0.4) to workaround a bug,
 #        but has since started causing another bug as of torchvision 0.11.1
 # ARG PILLOW_VERSION=pillow<7    
