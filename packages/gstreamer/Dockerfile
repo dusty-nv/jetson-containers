@@ -2,7 +2,7 @@
 # name: gstreamer
 # category: base
 # depends: opencv
-# test: test.sh
+# test: [test.sh, test.py]
 #
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
@@ -24,7 +24,9 @@ RUN apt-get update && \
 		  libgstreamer-plugins-base1.0-dev \
 		  libgstreamer-plugins-good1.0-dev \
 		  libgstreamer-plugins-bad1.0-dev \
-		  libgstrtspserver-1.0-0 && \
+		  libgstrtspserver-1.0-0 \
+		  python3-gi \
+		  python3-gst-1.0 && \
     if [ `lsb_release --codename --short` != 'bionic' ]; then \
     apt-get install -y --no-install-recommends \
 		  gstreamer1.0-plugins-rtp; \
