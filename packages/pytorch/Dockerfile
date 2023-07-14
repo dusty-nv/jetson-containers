@@ -29,9 +29,9 @@ RUN pip3 install --no-cache-dir --verbose onnx
 ARG PYTORCH_URL
 ARG PYTORCH_WHL
 
-RUN wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${PYTORCH_URL} -O ${PYTORCH_WHL} && \
-    pip3 install --no-cache-dir --verbose ${PYTORCH_WHL} && \
-    rm ${PYTORCH_WHL}
+RUN cd /opt && \
+    wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${PYTORCH_URL} -O ${PYTORCH_WHL} && \
+    pip3 install --verbose ${PYTORCH_WHL}
 
 RUN python3 -c 'import torch; print(f"PyTorch version: {torch.__version__}"); print(f"CUDA available:  {torch.cuda.is_available()}"); print(f"cuDNN version:   {torch.backends.cudnn.version()}"); print(torch.__config__.show());'
 
