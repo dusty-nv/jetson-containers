@@ -36,6 +36,7 @@ RUN cp /usr/local/lib/librdkafka* /opt/nvidia/deepstream/deepstream-*/lib
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
 		libyaml-cpp-dev \
+		libcairo2-dev \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
     
@@ -46,15 +47,15 @@ RUN cd /opt/nvidia/deepstream/deepstream-* && \
     ldconfig
 
 
-# install DeepStream Python bindings (pyds)
+# https://github.com/NVIDIA-AI-IOT/deepstream_python_apps/tree/master/bindings
 RUN cd /opt/nvidia/deepstream/deepstream && \
     git clone --recursive --depth=1 https://github.com/NVIDIA-AI-IOT/deepstream_python_apps && \
     cd deepstream_python_apps/bindings && \
     mkdir build && \
     cd build && \
-    cmake ../ && \
+    cmake -DDS_PATH=/opt/nvidia/deepstream/deepstream -DPIP_PLATFORM=linux_aarch64 ../ && \
     make -j$(nproc) && \
     pip3 install --verbose ./pyds-*-py3-none*.whl
 
 # make sure it loads
-RUN deepstream-app --version
+RUN deepstream-app --version && python3 -c 'import pyds'
