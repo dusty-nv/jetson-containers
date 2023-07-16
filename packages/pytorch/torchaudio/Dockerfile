@@ -19,9 +19,7 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
-RUN pip3 install --no-cache-dir scikit-build && \
-    pip3 install --no-cache-dir ninja && \
-    pip3 install --no-cache-dir --verbose pysoundfile
+RUN pip3 install --no-cache-dir --verbose pysoundfile
 
 # note:  see https://github.com/pytorch/audio/issues/2295 for the reason for the sed commands
 RUN git clone --branch ${TORCHAUDIO_VERSION} --recursive --depth=1 https://github.com/pytorch/audio torchaudio && \

@@ -41,5 +41,9 @@ RUN PYTHON_ROOT=`pip3 show torch | grep Location: | cut -d' ' -f2` && \
     echo "patching _GLIBCXX_USE_CXX11_ABI in ${TORCH_CMAKE_CONFIG}" && \
     sed -i 's/  set(TORCH_CXX_FLAGS "-D_GLIBCXX_USE_CXX11_ABI=")/  set(TORCH_CXX_FLAGS "-D_GLIBCXX_USE_CXX11_ABI=0")/g' ${TORCH_CMAKE_CONFIG}
 
+# PyTorch C++ extensions frequently use ninja parallel builds
+RUN pip3 install --no-cache-dir scikit-build && \
+    pip3 install --no-cache-dir ninja
+    
 # set the torch hub model cache directory to mounted /data volume
 ENV TORCH_HOME=/data/models/torch

@@ -15,9 +15,6 @@ RUN printenv && echo "torchvision version = $TORCHVISION_VERSION" && echo "TORCH
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-		  git \
-		  build-essential \
-		  ninja-build \
             libjpeg-dev \
 		  zlib1g-dev \
     && rm -rf /var/lib/apt/lists/* \
