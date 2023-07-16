@@ -14,6 +14,9 @@ ARG CUPY_NVCC_GENERATE_CODE="arch=compute_53,code=sm_53;arch=compute_62,code=sm_
 RUN git clone --branch ${CUPY_VERSION} --depth 1 --recursive https://github.com/cupy/cupy cupy && \
     cd cupy && \
     pip3 install --no-cache-dir fastrlock && \
-    python3 setup.py install --verbose && \
+    pip3 install --no-cache-dir --verbose . && \
     cd ../ && \
     rm -rf cupy
+    
+# the pip3 way used above catches dependency problems earlier
+# MAKEFLAGS="-j$(nproc)" python3 setup.py install --verbose && \
