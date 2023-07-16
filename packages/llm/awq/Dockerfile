@@ -1,6 +1,7 @@
 #
 # name: awq
 # category: llm
+# config: config.py
 # depends: [pytorch, torchvision]
 # test: test.sh
 #
