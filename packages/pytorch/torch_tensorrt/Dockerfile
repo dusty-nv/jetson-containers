@@ -1,14 +1,13 @@
 #
 # name: torch_tensorrt
 # category: ml
+# config: config.py
 # depends: [pytorch, bazel]
-# test: test.py
+# test: [test.py, test.sh]
 # notes: https://pytorch.org/TensorRT/getting_started/installation.html#installation
 #
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
-
-#COPY WORKSPACE /tmp/WORKSPACE
 
 RUN git clone --depth=1 https://github.com/pytorch/TensorRT torch_tensorrt && \
     cd torch_tensorrt && \
@@ -18,3 +17,7 @@ RUN git clone --depth=1 https://github.com/pytorch/TensorRT torch_tensorrt && \
     cd ../../ && \
     rm -rf torch_tensorrt
     
+# ./torchtrtc: error while loading shared libraries: libtorch.so: cannot open shared object file
+ARG PYTHON_VERSION
+ENV LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/lib/python${PYTHON_VERSION}/dist-packages/torch/lib
+ENV PATH=${PATH}:/usr/local/lib/python${PYTHON_VERSION}/dist-packages/torch_tensorrt/bin
