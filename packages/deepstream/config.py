@@ -1,5 +1,5 @@
 
-from jetson_containers import L4T_VERSION
+from jetson_containers import L4T_VERSION, PYTHON_VERSION
 from packaging.version import Version
 
 if L4T_VERSION >= Version('35.2.1'): # JetPack 5.1
@@ -18,4 +18,6 @@ if package:
     package['build_args'] = {
         'DEEPSTREAM_URL': DEEPSTREAM_URL,
         'DEEPSTREAM_TAR': DEEPSTREAM_TAR,
+        'PYTHON_VERSION_MAJOR': PYTHON_VERSION.major,
+        'PYTHON_VERSION_MINOR': PYTHON_VERSION.minor,
     }

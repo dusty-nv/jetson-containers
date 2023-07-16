@@ -45,7 +45,11 @@ RUN apt-get update && \
 RUN cd /opt/nvidia/deepstream/deepstream-* && \
     ./install.sh && \
     ldconfig
-
+    
+    
+# build pyds bindings
+ARG PYTHON_VERSION_MAJOR
+ARG PYTHON_VERSION_MINOR
 
 # https://github.com/NVIDIA-AI-IOT/deepstream_python_apps/tree/master/bindings
 RUN cd /opt/nvidia/deepstream/deepstream && \
@@ -53,7 +57,11 @@ RUN cd /opt/nvidia/deepstream/deepstream && \
     cd deepstream_python_apps/bindings && \
     mkdir build && \
     cd build && \
-    cmake -DDS_PATH=/opt/nvidia/deepstream/deepstream -DPIP_PLATFORM=linux_aarch64 ../ && \
+    cmake ../ \
+        -DDS_PATH=/opt/nvidia/deepstream/deepstream \
+	   -DPIP_PLATFORM=linux_aarch64 \
+	   -DPYTHON_MAJOR_VERSION=${PYTHON_VERSION_MAJOR} \
+	   -DPYTHON_MINOR_VERSION=${PYTHON_VERSION_MINOR} && \
     make -j$(nproc) && \
     pip3 install --verbose ./pyds-*-py3-none*.whl
 
