@@ -5,8 +5,10 @@
 #    CUDA_VERSION (packaging.version.Version)
 #    CUDA_ARCH_LIST (list) -- e.g. ['5.3', '6.2', '7.2']
 #    ARCH (str) -- e.g. 'aarch64' or 'x86_64'
+#    PYTHON_VERSION (packaging.version.Version)
 #    
 import os
+import sys
 import json
 import platform
 
@@ -102,3 +104,6 @@ CUDA_ARCH_LIST = [f'{cc:.1f}' for cc in CUDA_ARCH_LIST_FLOAT]
 
 # x86_64, aarch64
 ARCH = platform.machine()
+
+# Python version (3.6, 3.8, ect)
+PYTHON_VERSION = version.parse(f'{sys.version_info.major}.{sys.version_info.minor}')
