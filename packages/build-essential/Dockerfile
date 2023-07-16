@@ -20,6 +20,8 @@ RUN apt-get update && \
 		  wget \
 		  curl \
 		  nano \
+		  zip \
+		  unzip \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
     
