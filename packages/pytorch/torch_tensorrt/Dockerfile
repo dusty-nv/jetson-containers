@@ -2,7 +2,7 @@
 # name: torch_tensorrt
 # category: ml
 # config: config.py
-# depends: [pytorch, bazel]
+# depends: [pytorch, torchvision, bazel]
 # test: [test.py, test.sh]
 # notes: https://pytorch.org/TensorRT/getting_started/installation.html#installation
 #
