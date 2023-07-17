@@ -39,7 +39,9 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
     # assign default container name and tag if needed
     if len(name) == 0:   
         name = packages[-1]
-          
+    elif name.find(':') < 0 and name[-1] == '/':  # they gave a repo name to build under
+        name += packages[-1]
+        
     if name.find(':') < 0:
         name += f":r{L4T_VERSION}"
     
@@ -48,7 +50,7 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
         container_name = f"{name}-{package.replace(':','_')}"
 
         # generate the logging file (without the extension)
-        log_file = os.path.join(log_dir('build'), container_name).replace(':','_')
+        log_file = os.path.join(log_dir('build'), container_name.replace('/','_')).replace(':','_')
         
         # build next intermediate container
         pkg = find_package(package)
@@ -165,7 +167,7 @@ def test_container(name, package, simulate=False):
     for test in package['test']:
         test_cmd = test.split(' ')[0]  # test could be a command with arguments - get just the script/executable name
         test_ext = os.path.splitext(test_cmd)[1]
-        log_file = os.path.join(log_dir('test'), f"{name}_{test_cmd}").replace(':','_')
+        log_file = os.path.join(log_dir('test'), f"{name.replace('/','_')}_{test_cmd}").replace(':','_')
         
         cmd = "sudo docker run -it --rm --runtime=nvidia --network=host" + _NEWLINE_
         cmd += f"--volume {package['path']}:/test" + _NEWLINE_
