@@ -1,7 +1,7 @@
 #
 # name: auto-gptq
 # category: llm
-# depends: [pytorch, bitsandbytes]
+# depends: [pytorch, bitsandbytes, transformers]
 # test: test.py
 #
 ARG BASE_IMAGE

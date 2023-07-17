@@ -2,14 +2,11 @@
 # name: awq
 # category: llm
 # config: config.py
-# depends: [pytorch, torchvision]
+# depends: [pytorch, torchvision, transformers]
 # test: test.sh
 #
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
-
-# install transformers
-RUN pip3 install --no-cache-dir --verbose transformers
 
 # upstream version is https://github.com/mit-han-lab/llm-awq (the fork below includes some patches for Jetson) 
 ARG AWQ_REPO=dusty-nv/llm-awq

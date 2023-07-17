@@ -1,7 +1,7 @@
 #
 # name: gptq-for-llama
 # category: llm
-# depends: [pytorch, bitsandbytes]
+# depends: [pytorch, bitsandbytes, transformers]
 # test: test.sh
 #
 ARG BASE_IMAGE
