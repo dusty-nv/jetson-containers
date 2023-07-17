@@ -33,4 +33,4 @@ RUN pip3 install --no-cache-dir \
 	Cython \
 	wheel
 	
-RUN pip3 install --no-cache-dir --verbose wget
+RUN pip3 install --no-cache-dir --verbose wget psutil
