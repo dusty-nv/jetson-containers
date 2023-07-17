@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 # script for benchmarking huggingface CausalLM transformers with Optimum / onnxruntime
-# to store models outside container, set NEMO_CACHE_DIR environment variable to a mounted directory 
-
 import os
 import gc
 import sys
@@ -11,6 +9,7 @@ import socket
 import datetime
 import argparse
 import functools
+
 import onnxruntime
 
 from transformers import AutoTokenizer
@@ -35,7 +34,7 @@ def is_onnx(model):
     return False
     
 
-def benchmark_gpt(model='optimum/gpt2', provider='TensorrtExecutionProvider',
+def benchmark_gpt(model='distilgpt2', provider='TensorrtExecutionProvider',
                   runs=25, warmup=10, do_sample=False, fp16=False, int8=False, 
                   output='', verbose=False, **kwargs):
     """
@@ -141,7 +140,7 @@ def benchmark_gpt(model='optimum/gpt2', provider='TensorrtExecutionProvider',
     return avg_latency, avg_qps, memory_usage
     
     
-def quantize_gpt(model='optimum/gpt2', provider='TensorrtExecutionProvider', output='', **kwargs):
+def quantize_gpt(model='distilgpt2', provider='TensorrtExecutionProvider', output='', **kwargs):
     """
     Apply static int8 quantization to model using the specified dataset for calibration
     """
@@ -204,8 +203,8 @@ def quantize_gpt(model='optimum/gpt2', provider='TensorrtExecutionProvider', out
 if __name__ == '__main__':  
     parser = argparse.ArgumentParser()
     
-    parser.add_argument('--provider', type=str, default='tensorrt')
-    parser.add_argument('--model', type=str, default='gpt2')
+    parser.add_argument('--provider', type=str, default='cuda,tensorrt,cpu')
+    parser.add_argument('--model', type=str, default='distilgpt2')
     parser.add_argument('--runs', type=int, default=25)
     parser.add_argument('--warmup', type=int, default=10)
     parser.add_argument('--do-sample', action='store_true')
