@@ -1,5 +1,5 @@
 #
-# name: cmake_pip
+# name: cmake:pip
 # alias: cmake
 # category: base
 # depends: [build-essential, python]
