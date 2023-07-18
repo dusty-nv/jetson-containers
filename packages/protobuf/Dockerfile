@@ -3,8 +3,9 @@
 # alias: protobuf_cpp
 # category: base
 # config: config.py
-# depends: ['build-essential', 'python']
-# description: build protobuf using cpp implementation (https://jkjung-avt.github.io/tf-trt-revisited/)
+# depends: [build-essential, python]
+# test: [test.py, test.sh]
+# notes: build protobuf using cpp implementation (https://jkjung-avt.github.io/tf-trt-revisited/)
 #
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
