@@ -28,7 +28,7 @@ RUN which pip3 && pip3 --version && \
 RUN which python && python --version && pip --version && \
     which python3 && python3 --version && pip3 --version
 
-RUN pip3 install --no-cache-dir \
+RUN pip3 install --upgrade --no-cache-dir \
 	setuptools \
 	packaging \
 	Cython \
