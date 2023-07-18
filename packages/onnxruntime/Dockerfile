@@ -2,7 +2,7 @@
 # name: onnxruntime
 # category: ml
 # config: config.py
-# depends: [cmake, python, numpy]
+# depends: [cmake, python, numpy, onnx]
 # test: test.py
 # notes: the onnxruntime-gpu wheel that's built is saved in the container under /opt
 #
@@ -29,12 +29,14 @@ RUN pip3 uninstall -y onnxruntime && \
     rm -rf /tmp/onnxruntime
 
 # needed to install 'onnx' package below on 18.04 (but apparently not 20.04)
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-          protobuf-compiler \
-          libprotoc-dev \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
+RUN if [ -z "$(which protoc)" ]; then \
+        apt-get update; \
+        apt-get install -y --no-install-recommends \
+            protobuf-compiler \
+            libprotoc-dev; \
+        rm -rf /var/lib/apt/lists/*; \
+        apt-get clean; \
+	fi
     
 # onnx module isn't a dependency but is commonly used
 # RUN pip3 install --no-cache-dir --verbose onnx   # https://github.com/onnx/onnx/issues/5346

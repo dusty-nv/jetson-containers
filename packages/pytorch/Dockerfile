@@ -3,7 +3,7 @@
 # alias: torch
 # category: ml
 # config: config.py
-# depends: [python, numpy]
+# depends: [python, numpy, onnx]
 # test: test.py
 #
 ARG BASE_IMAGE
@@ -22,8 +22,6 @@ RUN apt-get update && \
 		  libomp-dev \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
-
-RUN pip3 install --no-cache-dir --verbose onnx
 
 # download and install the PyTorch wheel
 ARG PYTORCH_URL
