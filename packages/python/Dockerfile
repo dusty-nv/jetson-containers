@@ -2,7 +2,8 @@
 # name: python
 # alias: python3
 # category: base
-# description: installs core python3 packages and pip
+# depends: build-essential
+# notes: installs core python3 packages and pip
 #
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
