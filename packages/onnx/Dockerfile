@@ -2,8 +2,9 @@
 # name: onnx
 # category: ml
 # config: config.py
-# depends: [cmake, python, numpy, protobuf:apt]
+# depends: [cmake, python, numpy]
 # test: test.py
+# notes: protobuf_apt is added as a dependency on JetPack 4 (newer versions of onnx build it in-tree)
 #
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
