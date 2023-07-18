@@ -4,7 +4,7 @@
 # config: config.py
 # depends: [python, numpy]
 # test: test.py
-# description: install OpenCV (with CUDA) from binaries built by opencv_builder
+# notes: install OpenCV (with CUDA) from binaries built by opencv_builder
 #
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

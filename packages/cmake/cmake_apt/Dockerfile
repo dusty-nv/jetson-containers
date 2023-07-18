@@ -2,7 +2,7 @@
 # name: cmake_apt
 # category: base
 # depends: build-essential
-# description: upgrade cmake with apt
+# notes: upgrade cmake with apt
 #
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
