@@ -17,9 +17,6 @@ elif L4T_VERSION.major == 32:  # JetPack 4
     TENSORFLOW2_URL = 'https://developer.download.nvidia.com/compute/redist/jp/v461/tensorflow/tensorflow-2.7.0+nv22.1-cp36-cp36m-linux_aarch64.whl'
     TENSORFLOW2_WHL = 'tensorflow-2.7.0+nv22.1-cp36-cp36m-linux_aarch64.whl'
 
-package['depends'] = ['python', 'numpy', 'protobuf']
-package['category'] = 'ml'
-
 # duplicate the packages for separate tf1/tf2 containers
 tf1 = package.copy()
 tf2 = package.copy()
@@ -38,8 +35,8 @@ package = {'tensorflow': tf1, 'tensorflow2': tf2}
 
 '''
 # this way works too
-tf1.update({'name': 'tensorflow', 'depends': 'protobuf_cpp'})
-tf2.update({'name': 'tensorflow2', 'depends': 'protobuf_cpp'})
+tf1.update({'name': 'tensorflow', 'depends': 'protobuf:cpp'})
+tf2.update({'name': 'tensorflow2', 'depends': 'protobuf:cpp'})
 
 package = [tf1, tf2]
 '''

@@ -1,5 +1,8 @@
 #
-# TensorFlow - see config.py for build args
+# name: tensorflow
+# category: ml
+# depends: [python, numpy, protobuf:cpp]
+# test: test.py
 #
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
