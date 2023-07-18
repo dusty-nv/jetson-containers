@@ -1,6 +1,6 @@
 #
-# name: protobuf
-# alias: protobuf_cpp
+# name: protobuf:cpp
+# alias: protobuf
 # category: base
 # config: config.py
 # depends: [build-essential, python]
@@ -37,7 +37,7 @@ RUN cd /tmp && \
     ./autogen.sh && \
     ./configure --prefix=/usr/local && \
     make -j$(nproc) && \
-    make check -j4 && \
+    make check -j$(nproc) && \
     make install && \
     ldconfig && \
     cd python && \
@@ -45,7 +45,7 @@ RUN cd /tmp && \
     python3 setup.py test --cpp_implementation && \
     python3 setup.py bdist_wheel --cpp_implementation && \
     cp dist/*.whl /opt && \
-    pip3 install dist/*.whl && \
+    pip3 install /opt/protobuf*.whl && \
     cd ../../../ && \
     rm ${PROTOBUF_DIR}.zip && \
     rm ${PROTOC_DIR}.zip && \
@@ -55,5 +55,4 @@ RUN cd /tmp && \
 #RUN python3 setup.py install --cpp_implementation && \
 #RUN pip3 install protobuf==${PROTOBUF_VERSION} --install-option="--cpp_implementation" --no-cache-dir --verbose 
     
-RUN pip3 show protobuf && \
-    protoc --version
+RUN pip3 show protobuf && protoc --version

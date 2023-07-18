@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-print('testing protobuf...')
+print('testing protobuf (cpp)...')
 
 import google.protobuf
 print('protobuf version: ' + str(google.protobuf.__version__))
@@ -15,4 +15,4 @@ print(f'protobuf active API implementation:  {protobuf_implementation}')
 if protobuf_implementation != "cpp":
     raise ValueError(f'expected protobuf to have cpp implementation, but instead it has {protobuf_implementation} implementation')
     
-print('protobuf OK\n')
+print('protobuf (cpp) OK\n')
