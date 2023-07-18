@@ -1,7 +1,14 @@
 
-from jetson_containers import L4T_VERSION
+from jetson_containers import L4T_VERSION, CUDA_ARCH_LIST_INT
 
-# on JetPack 4, newer ORT builds fail due to gcc7
+ONNXRUNTIME_VERSION = 'main'
+CUDA_ARCHITECTURES = ';'.join([str(c) for c in CUDA_ARCH_LIST_INT])
+
+# onnxruntime >= 1.16 drops support for gcc7/Python 3.6 (JetPack 4)
 if L4T_VERSION.major <= 32:
-    package['build_args'] = {'ONNXRUNTIME_VERSION': 'v1.15.1'}
+    ONNXRUNTIME_VERSION = 'v1.15.1'
     
+package['build_args'] = {
+    'ONNXRUNTIME_VERSION': ONNXRUNTIME_VERSION,
+    'CUDA_ARCHITECTURES': CUDA_ARCHITECTURES,
+}
