@@ -425,9 +425,12 @@ def parse_yaml_header(dockerfile):
 
         if validate_dict(config):
             return config
+        else:
+            print(f"-- YAML header from {dockerfile} contained unknown/invalid entries, ignoring...")
+            print(txt)
             
     except Exception as error:
-        print(f"Error parsing YAML from {dockerfile}:  {error}")
+        print(f"-- Error parsing YAML from {dockerfile}:  {error}")
         
     return None
 
