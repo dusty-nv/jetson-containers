@@ -19,7 +19,7 @@ RUN pip3 uninstall -y onnxruntime && \
     cd /tmp/onnxruntime && \
     ./build.sh --config Release --update --parallel --build --build_wheel \
         --skip_tests --skip_submodule_sync ${ONNXRUNTIME_FLAGS} \
-        --cmake_extra_defines CMAKE_CXX_FLAGS="-Wno-unused-variable" CMAKE_CUDA_ARCHITECTURES="${CUDA_ARCHITECTURES}" onnxruntime_BUILD_UNIT_TESTS=OFF \
+        --cmake_extra_defines CMAKE_CXX_FLAGS="-Wno-unused-variable -I/usr/local/cuda/include" CMAKE_CUDA_ARCHITECTURES="${CUDA_ARCHITECTURES}" onnxruntime_BUILD_UNIT_TESTS=OFF \
         --cuda_home /usr/local/cuda --cudnn_home /usr/lib/$(uname -m)-linux-gnu \
         --use_tensorrt --tensorrt_home /usr/lib/$(uname -m)-linux-gnu && \
     cd build/Linux/Release && \
@@ -28,8 +28,17 @@ RUN pip3 uninstall -y onnxruntime && \
     pip3 install --no-cache-dir --verbose /opt/onnxruntime_gpu-*.whl && \
     rm -rf /tmp/onnxruntime
 
+# needed to install 'onnx' package below on 18.04 (but apparently not 20.04)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+          protobuf-compiler \
+          libprotoc-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+    
 # onnx module isn't a dependency but is commonly used
-RUN pip3 install --no-cache-dir --verbose onnx
+# RUN pip3 install --no-cache-dir --verbose onnx   # https://github.com/onnx/onnx/issues/5346
+RUN pip3 install --no-cache-dir --verbose git+https://github.com/onnx/onnx
 
 # test import and print build info
-RUN python3 -c 'import onnxruntime; print(onnxruntime.get_build_info());'
+RUN python3 -c 'import onnxruntime; print(onnxruntime.__version__);'

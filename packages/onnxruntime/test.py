@@ -8,10 +8,16 @@ import pprint
 import argparse
 import numpy as np
 
+from packaging.version import Version
+
 print('testing onnxruntime...')
 import onnxruntime as ort
 print('onnxruntime version: ' + str(ort.__version__))
-print(ort.get_build_info())
+
+ort_version = Version(ort.__version__)
+
+if ort_version > Version('1.10'):
+    print(ort.get_build_info())
 
 # verify execution providers
 providers = ort.get_available_providers()
@@ -32,12 +38,14 @@ def test_infer(provider, model='resnet18.onnx', runs=100, warmup=10, verbose=Fal
         os.makedirs(trt_cache_path, exist_ok=True)
         
         provider_options = {
-            "trt_fp16_enable": True,
-            "trt_detailed_build_log": True,    # not in onnxruntime 1.14
-            "trt_timing_cache_enable": True,   # not in onnxruntime 1.14
-            "trt_engine_cache_enable": True,
-            "trt_engine_cache_path": trt_cache_path
+            'trt_fp16_enable': True,
+            'trt_engine_cache_enable': True,
+            'trt_engine_cache_path': trt_cache_path
         }
+        
+        if ort_version >= Version('1.15'):
+            provider_options['trt_detailed_build_log'] = True
+            provider_options['trt_timing_cache_enable'] = True
         
     # setup session options
     session_options = ort.SessionOptions()
