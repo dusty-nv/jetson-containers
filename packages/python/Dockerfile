@@ -31,7 +31,7 @@ RUN which python && python --version && pip --version && \
 RUN pip3 install --upgrade --no-cache-dir \
 	setuptools \
 	packaging \
-	Cython \
+	'Cython<3' \
 	wheel
 	
 RUN pip3 install --no-cache-dir --verbose wget psutil
