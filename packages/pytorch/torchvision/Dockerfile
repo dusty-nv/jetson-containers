@@ -23,7 +23,9 @@ RUN apt-get update && \
 RUN git clone --branch ${TORCHVISION_VERSION} --recursive --depth=1 https://github.com/pytorch/vision torchvision && \
     cd torchvision && \
     git checkout ${TORCHVISION_VERSION} && \
-    python3 setup.py install && \
+    python3 setup.py bdist_wheel && \
+    cp dist/torchvision*.whl /opt && \
+    pip3 install --no-cache-dir --verbose /opt/torchvision*.whl && \
     cd ../ && \
     rm -rf torchvision
 
