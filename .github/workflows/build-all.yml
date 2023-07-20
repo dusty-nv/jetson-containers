@@ -1,0 +1,9 @@
+name: build-all
+run-name: ${{ github.actor }} is building containers
+on: [workflow_dispatch]
+jobs:
+  build-example:
+    runs-on: jax-461
+    steps:
+      - run: echo "HELLO!"
+      - run: echo "USER=$USER"
