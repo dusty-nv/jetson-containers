@@ -1,6 +1,10 @@
 name: build-all
 run-name: ${{ github.actor }} is building containers
-on: [workflow_dispatch]
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - 'dev'
 jobs:
   build-example:
     runs-on: jax-461
