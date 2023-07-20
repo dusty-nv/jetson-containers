@@ -1,9 +1,9 @@
-#
+#---
 # name: torch2trt
 # category: ml
 # depends: [pytorch, torchvision]
 # test: test.py
-#
+#---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 

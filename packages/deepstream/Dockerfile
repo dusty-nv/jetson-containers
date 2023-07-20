@@ -1,11 +1,11 @@
-#
+#---
 # name: deepstream
 # category: ml
 # config: config.py
 # depends: [cmake, python, gstreamer, tritonserver]
 # test: [test.sh, test.py]
 # notes: https://docs.nvidia.com/metropolis/deepstream/dev-guide/text/DS_Quickstart.html
-#
+#---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 

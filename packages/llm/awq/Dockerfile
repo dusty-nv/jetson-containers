@@ -1,10 +1,10 @@
-#
+#---
 # name: awq
 # category: llm
 # config: config.py
 # depends: [pytorch, torchvision, transformers]
 # test: test.sh
-#
+#---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 

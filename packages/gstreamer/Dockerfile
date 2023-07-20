@@ -1,9 +1,9 @@
-#
+#---
 # name: gstreamer
 # category: base
 # depends: opencv
 # test: [test.sh, test.py]
-#
+#---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 

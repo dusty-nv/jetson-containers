@@ -1,9 +1,9 @@
-#
+#---
 # name: numba
 # category: cuda
 # depends: [build-essential, python, numpy]
 # test: test.py
-#
+#---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 

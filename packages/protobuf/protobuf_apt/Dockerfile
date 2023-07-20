@@ -1,10 +1,10 @@
-#
+#---
 # name: protobuf:apt
 # category: base
 # depends: [python]
 # test: [test.py, test.sh]
 # notes: install protobuf from apt repo
-#
+#---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 

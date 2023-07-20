@@ -1,9 +1,9 @@
-#
+#---
 # name: gptq-for-llama
 # category: llm
 # depends: [pytorch, bitsandbytes, transformers]
 # test: test.sh
-#
+#---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 

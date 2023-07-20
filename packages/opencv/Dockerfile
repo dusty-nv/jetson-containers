@@ -1,11 +1,11 @@
-#
+#---
 # name: opencv
 # alias: opencv_cuda
 # config: config.py
 # depends: [python, numpy]
 # test: test.py
 # notes: install OpenCV (with CUDA) from binaries built by opencv_builder
-#
+#---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 

@@ -1,10 +1,10 @@
-#
+#---
 # name: nemo
 # category: ml
 # depends: [pytorch, torchvision, torchaudio]
 # test: test.py
 # notes: NVIDIA NeMo for ASR/NLP/TTS https://nvidia.github.io/NeMo/
-#
+#---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 

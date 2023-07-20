@@ -1,9 +1,9 @@
-#
+#---
 # name: stable-diffusion
 # category: diffusion
 # depends: [pytorch, torchvision]
 # test: test.sh
-#
+#---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 

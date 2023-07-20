@@ -1,9 +1,9 @@
-#
+#---
 # name: auto-gptq
 # category: llm
 # depends: [pytorch, bitsandbytes, transformers]
 # test: test.py
-#
+#---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 

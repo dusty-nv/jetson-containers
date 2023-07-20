@@ -1,11 +1,11 @@
-#
+#---
 # name: transformers
 # config: config.py
 # category: llm
 # depends: [pytorch, torchvision]
 # test: test.py
 # notes: bitsandbytes dependency added on JetPack5 for 4/8-bit
-#
+#---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 

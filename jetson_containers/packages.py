@@ -410,13 +410,21 @@ def parse_yaml_header(dockerfile):
         txt = ""
         
         with open(dockerfile, 'r') as file:
+            in_yaml = False
             while True:
                 line = file.readline()
                 if len(line) == 0:
                     break
                 if line[0] != '#':
                     break
-                txt += line[1:]
+                
+                if in_yaml:
+                    if line.startswith('#---'):
+                        in_yaml = False
+                    else:
+                        txt += line[1:]
+                elif line.startswith('#---'):
+                        in_yaml = True
                 
         if len(txt) == 0:
             return None

@@ -1,9 +1,9 @@
-#
+#---
 # name: bazel
 # category: base
 # depends: [build-essential]
 # test: test.sh
-#
+#---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 

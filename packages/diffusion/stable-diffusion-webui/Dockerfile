@@ -1,8 +1,8 @@
-#
+#---
 # name: stable-diffusion-webui
 # category: diffusion
 # depends: [pytorch, torchvision, opencv]
-#
+#---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 

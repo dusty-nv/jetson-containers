@@ -1,8 +1,8 @@
-#
+#---
 # name: rust
 # category: base
 # depends: [build-essential, python]
-#
+#---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 

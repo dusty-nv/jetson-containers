@@ -1,11 +1,11 @@
-#
+#---
 # name: tritonserver
 # category: ml
 # config: config.py
 # depends: [python]
 # test: test.py
 # notes: https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/user_guide/jetson.html
-#
+#---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 

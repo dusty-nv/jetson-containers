@@ -1,11 +1,11 @@
-#
+#---
 # name: zed
 # category: sensors
 # config: config.py
 # depends: [python]
 # test: test.py
 # notes: https://github.com/stereolabs/zed-docker/blob/master/4.X/l4t/py-devel/Dockerfile
-#
+#---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 

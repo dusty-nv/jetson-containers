@@ -1,10 +1,10 @@
-#
+#---
 # name: torchvision
 # category: ml
 # config: config.py
 # depends: [cmake, pytorch]
 # test: test.py
-#
+#---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 

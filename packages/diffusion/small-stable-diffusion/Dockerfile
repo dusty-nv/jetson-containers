@@ -1,11 +1,11 @@
-#
+#---
 # name: small-stable-diffusion
 # category: diffusion
 # depends: [pytorch, torchvision, onnxruntime]
 # disabled: true
 # test: test.sh
 # notes: disabled due to https://github.com/OFA-Sys/diffusion-deploy/issues/1
-#
+#---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
