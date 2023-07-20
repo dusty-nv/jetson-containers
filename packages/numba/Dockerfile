@@ -14,6 +14,7 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
     
+# https://github.com/numba/llvmlite/issues/621#issuecomment-737100914
 RUN update-alternatives --install /usr/bin/llvm-config llvm-config /usr/bin/llvm-config-9 1
 
 RUN pip3 install --no-cache-dir --verbose numba
