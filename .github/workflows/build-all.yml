@@ -7,7 +7,7 @@ on:
       - 'dev'
 jobs:
   build-example:
-    runs-on: jax-461
+    runs-on: self-hosted-jetson
     steps:
       - run: echo "HELLO!"
       - run: echo "USER=$USER"
