@@ -1,8 +1,8 @@
 
-from jetson_containers import L4T_VERSION, CUDA_ARCH_LIST_INT
+from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES
 
 package['build_args'] = {
-    'CUDA_ARCHITECTURES': ';'.join([str(c) for c in CUDA_ARCH_LIST_INT]),
+    'CUDA_ARCHITECTURES': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
 }
 
 # onnxruntime >= 1.16 drops support for gcc7/Python 3.6 (JetPack 4)

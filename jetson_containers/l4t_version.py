@@ -3,8 +3,8 @@
 #
 #    L4T_VERSION (packaging.version.Version)
 #    CUDA_VERSION (packaging.version.Version)
-#    CUDA_ARCH_LIST (list) -- e.g. ['5.3', '6.2', '7.2']
-#    ARCH (str) -- e.g. 'aarch64' or 'x86_64'
+#    CUDA_ARCHITECTURES (list[int]) -- e.g. [53, 62, 72, 87]
+#    SYSTEM_ARCH (str) -- e.g. 'aarch64' or 'x86_64'
 #    PYTHON_VERSION (packaging.version.Version)
 #    
 import os
@@ -89,21 +89,15 @@ def get_cuda_version(version_file='/usr/local/cuda/version.json'):
 L4T_VERSION = get_l4t_version()
 CUDA_VERSION = get_cuda_version()
 
-# Nano/TX1 = 5.3
-# TX2 = 6.2
-# Xavier = 7.2
-# Orin = 8.7
+# Nano/TX1 = 5.3, TX2 = 6.2, Xavier = 7.2, Orin = 8.7
 if L4T_VERSION.major >= 34:    # JetPack 5
-    CUDA_ARCH_LIST_INT = [72, 87]
+    CUDA_ARCHITECTURES = [72, 87]
     
 elif L4T_VERSION.major == 32:  # JetPack 4
-    CUDA_ARCH_LIST_INT = [53, 62, 72]
-    
-CUDA_ARCH_LIST_FLOAT = [cc/10.0 for cc in CUDA_ARCH_LIST_INT]
-CUDA_ARCH_LIST = [f'{cc:.1f}' for cc in CUDA_ARCH_LIST_FLOAT]
+    CUDA_ARCHITECTURES = [53, 62, 72]
 
 # x86_64, aarch64
-ARCH = platform.machine()
+SYSTEM_ARCH = platform.machine()
 
 # Python version (3.6, 3.8, ect)
 PYTHON_VERSION = version.parse(f'{sys.version_info.major}.{sys.version_info.minor}')
