@@ -11,3 +11,5 @@ jobs:
     steps:
       - run: echo "HELLO!"
       - run: echo "USER=$USER"
+      - run: pwd
+      - run: ls
