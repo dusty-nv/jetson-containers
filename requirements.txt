@@ -1,2 +1,3 @@
 packaging>=20.0
 pyyaml
+wget
