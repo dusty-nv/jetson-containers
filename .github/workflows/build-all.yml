@@ -1,0 +1,15 @@
+name: build-all
+run-name: ${{ github.actor }} is building containers
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - 'dev'
+jobs:
+  build-example:
+    runs-on: self-hosted-jetson
+    steps:
+      - run: echo "HELLO!"
+      - run: echo "USER=$USER"
+      - run: pwd
+      - run: ls
