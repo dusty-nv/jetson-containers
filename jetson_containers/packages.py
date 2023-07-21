@@ -162,9 +162,14 @@ def find_packages(packages, required=True, scan=True, skip=[]):
         scan_packages()
     
     if isinstance(packages, str):
-        packages = [packages]
+        if packages == '*' or packages == 'all' or len(packages) == 0:
+            return skip_packages(_PACKAGES, skip) 
+        else:
+            packages = [packages]
+    elif not isinstance(packages, list):
+        raise ValueError("packages argument must be a string or a list of strings")
         
-    if len(packages) == 0:
+    if len(packages) == 0 or not packages[0]:
         return skip_packages(_PACKAGES, skip)
     
     found_packages = {}
