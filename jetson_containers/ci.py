@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
-#L4T_VERSION=35.2.1 python3 -m jetson_containers.ci generate
+#
+# Tool for managing GitHub actions and self-hosted runners
+#
+# Generate build/test workflows from packages:
+#   L4T_VERSION=35.2.1 python3 -m jetson_containers.ci generate
+#
+# Setup/register self-hosted runner service:
+#   python3 -m jetson_containers.ci register --token $GITHUB_TOKEN
+#
 import os
 import re
 import wget
