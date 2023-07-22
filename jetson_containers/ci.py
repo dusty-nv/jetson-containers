@@ -51,7 +51,10 @@ def generate_workflow(package, root, l4t_version, simulate=False):
     txt += f"  {workflow_name}:\n"
     txt += f"    runs-on: [self-hosted-jetson, r{l4t_version}]\n"
     txt += "    steps:\n"
-    txt += f"    - run: echo \"Building {workflow_name}\"\n"
+    txt += "      - uses: actions/checkout@v3\n"
+    txt += f"      - run: echo \"Building {workflow_name}\"\n"
+    txt += f"      - run: env\n"
+    txt += f"      - run: ls -ll -a\n"
     
     print(filename)
     print(txt)
