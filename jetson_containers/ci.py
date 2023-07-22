@@ -17,7 +17,7 @@ import pprint
 import argparse
 import subprocess
 
-from jetson_containers import find_package, find_packages, resolve_dependencies, L4T_VERSION
+from jetson_containers import find_package, find_packages, resolve_dependencies, dependant_packages, L4T_VERSION
 
 
 def generate_package_docs(package, root, simulate=False):
@@ -38,11 +38,20 @@ def generate_package_docs(package, root, simulate=False):
     if 'alias' in package:
         txt += f"| Aliases | { ' '.join([f'`{x}`' for x in package['alias']])} |\n"
         
+    if 'category' in package:
+        txt += f"| Category | `{package['category']}` |\n"
+        
     if 'depends' in package:
         depends = resolve_dependencies(package['depends'], check=False)
         depends = [f"[`{x}`]({find_package(x)['path'].replace(root,'')})" for x in depends]
-        txt += f"| Depends | { ' '.join(depends)} |\n"
+        txt += f"| Dependencies | {' '.join(depends)} |\n"
        
+    dependants = dependant_packages(name)
+    
+    if len(dependants) > 0:
+        dependants = [f"[`{x}`]({find_package(x)['path'].replace(root,'')})" for x in dependants]
+        txt += f"| Dependants | {' '.join(dependants)} |\n"
+        
     if 'docs' in package:
         txt += f"{package['docs']}\n"
         
