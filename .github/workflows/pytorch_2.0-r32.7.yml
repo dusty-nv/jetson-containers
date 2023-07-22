@@ -4,7 +4,7 @@ on:
   workflow_dispatch: {}
   push:
     branches:
-      - 'jetpack'
+      - 'dev'
 jobs:
   pytorch_2.0-r32.7:
     runs-on: self-hosted-jetson r32.7
