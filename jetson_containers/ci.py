@@ -46,8 +46,8 @@ def generate_package_docs(package, root, repo, simulate=False):
     if 'alias' in package:
         txt += f"| Aliases | { ' '.join([f'`{x}`' for x in package['alias']])} |\n"
         
-    if 'category' in package:
-        txt += f"| Category | `{package['category']}` |\n"
+    #if 'category' in package:
+    #    txt += f"| Category | `{package['category']}` |\n"
                 
     if 'depends' in package:
         depends = resolve_dependencies(package['depends'], check=False)
