@@ -1,6 +1,5 @@
 name: "pytorch_110-r3271"
-run-name: "Build pytorch_110-r3271"
-package: "pytorch:1.10"
+run-name: "Build pytorch:1.10 (L4T R32.7.1)"
 on:
   workflow_dispatch: {}
   push:
