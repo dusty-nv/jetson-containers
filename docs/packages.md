@@ -1,13 +1,11 @@
 # Packages
 |            |            |
 |------------|------------|
-| **`BASE`** | |
+| **`BUILD`** | |
 | &nbsp;&nbsp; [`bazel`](/packages/bazel) |  |
 | &nbsp;&nbsp; [`build-essential`](/packages/build-essential) |  |
 | &nbsp;&nbsp; [`cmake:apt`](/packages/cmake/cmake_apt) |  |
 | &nbsp;&nbsp; [`cmake:pip`](/packages/cmake/cmake_pip) |  |
-| &nbsp;&nbsp; [`gstreamer`](/packages/gstreamer) |  |
-| &nbsp;&nbsp; [`jupyterlab`](/packages/jupyterlab) |  |
 | &nbsp;&nbsp; [`protobuf:apt`](/packages/protobuf/protobuf_apt) |  |
 | &nbsp;&nbsp; [`protobuf:cpp`](/packages/protobuf/protobuf_cpp) |  |
 | &nbsp;&nbsp; [`python`](/packages/python) |  |
@@ -16,9 +14,16 @@
 | &nbsp;&nbsp; [`cupy`](/packages/cupy) |  |
 | &nbsp;&nbsp; [`numba`](/packages/numba) |  |
 | &nbsp;&nbsp; [`pycuda`](/packages/pycuda) |  |
+| **`CV`** | |
+| &nbsp;&nbsp; [`opencv`](/packages/opencv) |  |
+| &nbsp;&nbsp; [`opencv_builder`](/packages/opencv/opencv_builder) |  |
 | **`DIFFUSION`** | |
 | &nbsp;&nbsp; [`stable-diffusion`](/packages/diffusion/stable-diffusion) |  |
 | &nbsp;&nbsp; [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) |  |
+| **`GENERAL`** | |
+| &nbsp;&nbsp; [`gstreamer`](/packages/gstreamer) |  |
+| &nbsp;&nbsp; [`jupyterlab`](/packages/jupyterlab) |  |
+| &nbsp;&nbsp; [`numpy`](/packages/numpy) |  |
 | **`LLM`** | |
 | &nbsp;&nbsp; [`exllama`](/packages/llm/exllama) |  |
 | &nbsp;&nbsp; [`optimum`](/packages/llm/optimum) |  |
@@ -26,6 +31,9 @@
 | **`ML`** | |
 | &nbsp;&nbsp; [`deepstream`](/packages/deepstream) |  |
 | &nbsp;&nbsp; [`l4t-ml`](/packages/l4t/l4t-ml) |  |
+| &nbsp;&nbsp; [`l4t-pytorch`](/packages/l4t/l4t-pytorch) |  |
+| &nbsp;&nbsp; [`l4t-tensorflow:tf1`](/packages/l4t/l4t-tensorflow) |  |
+| &nbsp;&nbsp; [`l4t-tensorflow:tf2`](/packages/l4t/l4t-tensorflow) |  |
 | &nbsp;&nbsp; [`nemo`](/packages/nemo) |  |
 | &nbsp;&nbsp; [`onnx`](/packages/onnx) |  |
 | &nbsp;&nbsp; [`onnxruntime`](/packages/onnxruntime) |  |
@@ -39,13 +47,9 @@
 | &nbsp;&nbsp; [`torchaudio`](/packages/pytorch/torchaudio) |  |
 | &nbsp;&nbsp; [`torchvision`](/packages/pytorch/torchvision) |  |
 | &nbsp;&nbsp; [`tritonserver`](/packages/tritonserver) |  |
-| **`OTHER`** | |
-| &nbsp;&nbsp; [`l4t-pytorch`](/packages/l4t/l4t-pytorch) |  |
-| &nbsp;&nbsp; [`l4t-tensorflow:tf1`](/packages/l4t/l4t-tensorflow) |  |
-| &nbsp;&nbsp; [`l4t-tensorflow:tf2`](/packages/l4t/l4t-tensorflow) |  |
-| &nbsp;&nbsp; [`numpy`](/packages/numpy) |  |
-| &nbsp;&nbsp; [`opencv`](/packages/opencv) |  |
-| &nbsp;&nbsp; [`opencv_builder`](/packages/opencv/opencv_builder) |  |
+| **`RAPIDS`** | |
+| &nbsp;&nbsp; [`cudf`](/packages/rapids/cudf) |  |
+| **`ROS`** | |
 | &nbsp;&nbsp; [`ros:foxy-desktop`](/packages/ros) |  |
 | &nbsp;&nbsp; [`ros:foxy-ros-base`](/packages/ros) |  |
 | &nbsp;&nbsp; [`ros:foxy-ros-core`](/packages/ros) |  |
@@ -64,8 +68,6 @@
 | &nbsp;&nbsp; [`ros:noetic-desktop`](/packages/ros) |  |
 | &nbsp;&nbsp; [`ros:noetic-ros-base`](/packages/ros) |  |
 | &nbsp;&nbsp; [`ros:noetic-ros-core`](/packages/ros) |  |
-| **`RAPIDS`** | |
-| &nbsp;&nbsp; [`cudf`](/packages/rapids/cudf) |  |
 | **`SENSORS`** | |
 | &nbsp;&nbsp; [`realsense`](/packages/realsense) |  |
 | &nbsp;&nbsp; [`zed`](/packages/zed) |  |
