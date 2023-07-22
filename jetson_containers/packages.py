@@ -225,7 +225,7 @@ def skip_packages(packages, skip):
  
 def resolve_dependencies(packages, check=True):
     """
-    Resolve the required dependencies in the list of requested containers to build.
+    Recursively expand the list of dependencies to include all sub-dependencies.
     Returns a new list of containers to build which contains all the dependencies.
     """
     if isinstance(packages, str):
@@ -256,6 +256,28 @@ def resolve_dependencies(packages, check=True):
         
     return packages
 
+
+def dependant_packages(package):
+    """
+    Find the list of all packages that depend on this package.
+    """
+    if isinstance(package, str):
+        package = find_package(package)
+        
+    dependants = []
+    
+    for key, pkg in _PACKAGES.items():
+        if package == pkg:
+            continue
+            
+        depends = resolve_dependencies(key, check=False)
+        
+        for dependency in depends:
+            if package == find_package(dependency):
+                dependants.append(key)
+    
+    return dependants
+    
     
 def apply_config(package, config):
     """
