@@ -28,6 +28,8 @@ def generate_workflow(package, root, l4t_version, simulate=False):
     workflow_name = f"{name}{'-' if ':' in name else ':'}r{l4t_version}".replace(':','_').replace('.','')
     filename = os.path.join(root, '.github/workflows', f"{workflow_name}.yml")
     
+    on_paths = [f".github/workflows/{workflow_name}.yml"]
+    
     txt = f"name: \"{workflow_name}\"\n"
     txt += f"run-name: \"Build {workflow_name}\"\n"
     txt += "on:\n"
@@ -35,6 +37,12 @@ def generate_workflow(package, root, l4t_version, simulate=False):
     txt += "  push:\n"
     txt += "    branches:\n"
     txt += "      - 'dev'\n"
+    
+    if len(on_paths) > 0:
+        txt += "    paths:\n"
+        for on_path in on_paths:
+            txt += f"      - '{on_path}'\n"  
+            
     txt += "jobs:\n"
     txt += f"  {workflow_name}:\n"
     txt += f"    runs-on: [self-hosted-jetson, r{l4t_version}]\n"

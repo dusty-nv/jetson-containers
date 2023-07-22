@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - 'dev'
+    paths:
+      - '.github/workflows/pytorch_20-r327.yml'
 jobs:
   pytorch_20-r327:
     runs-on: [self-hosted-jetson, r32.7]
