@@ -39,6 +39,8 @@ def generate_package_list(packages, root, repo, filename='docs/packages.md', sim
         group = groups[group_name]
         
         txt += f"\n## {group_name}\n"
+        txt += "\n<details open>\n"
+        txt += f"<summary>{group_name}</summary>\n"
         txt += f"| Name | Build Status |\n"
         txt += f"|{_TABLE_DASH}|{_TABLE_DASH}|\n"
         
@@ -53,6 +55,8 @@ def generate_package_list(packages, root, repo, filename='docs/packages.md', sim
                 txt += f"{' '.join(workflows)}"
 
             txt += " |\n"
+        
+        txt += "</details>\n\n"
         
     print(filename)
     print(txt)

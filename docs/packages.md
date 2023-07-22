@@ -1,6 +1,9 @@
 # Packages
 
 ## base
+
+<details open>
+<summary>base</summary>
 | Name | Build Status |
 |------------|------------|
 | [`bazel`](/packages/bazel) |  |
@@ -13,28 +16,48 @@
 | [`protobuf:cpp`](/packages/protobuf/protobuf_cpp) |  |
 | [`python`](/packages/python) |  |
 | [`rust`](/packages/rust) |  |
+</details>
+
 
 ## cuda
+
+<details open>
+<summary>cuda</summary>
 | Name | Build Status |
 |------------|------------|
 | [`cupy`](/packages/cupy) |  |
 | [`numba`](/packages/numba) |  |
 | [`pycuda`](/packages/pycuda) |  |
+</details>
+
 
 ## diffusion
+
+<details open>
+<summary>diffusion</summary>
 | Name | Build Status |
 |------------|------------|
 | [`stable-diffusion`](/packages/diffusion/stable-diffusion) |  |
 | [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) |  |
+</details>
+
 
 ## llm
+
+<details open>
+<summary>llm</summary>
 | Name | Build Status |
 |------------|------------|
 | [`exllama`](/packages/llm/exllama) |  |
 | [`optimum`](/packages/llm/optimum) |  |
 | [`transformers`](/packages/llm/transformers) |  |
+</details>
+
 
 ## ml
+
+<details open>
+<summary>ml</summary>
 | Name | Build Status |
 |------------|------------|
 | [`deepstream`](/packages/deepstream) |  |
@@ -52,8 +75,13 @@
 | [`torchaudio`](/packages/pytorch/torchaudio) |  |
 | [`torchvision`](/packages/pytorch/torchvision) |  |
 | [`tritonserver`](/packages/tritonserver) |  |
+</details>
+
 
 ## other
+
+<details open>
+<summary>other</summary>
 | Name | Build Status |
 |------------|------------|
 | [`l4t-pytorch`](/packages/l4t/l4t-pytorch) |  |
@@ -80,14 +108,26 @@
 | [`ros:noetic-desktop`](/packages/ros) |  |
 | [`ros:noetic-ros-base`](/packages/ros) |  |
 | [`ros:noetic-ros-core`](/packages/ros) |  |
+</details>
+
 
 ## rapids
+
+<details open>
+<summary>rapids</summary>
 | Name | Build Status |
 |------------|------------|
 | [`cudf`](/packages/rapids/cudf) |  |
+</details>
+
 
 ## sensors
+
+<details open>
+<summary>sensors</summary>
 | Name | Build Status |
 |------------|------------|
 | [`realsense`](/packages/realsense) |  |
 | [`zed`](/packages/zed) |  |
+</details>
+
