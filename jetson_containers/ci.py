@@ -20,29 +20,48 @@ import subprocess
 from jetson_containers import find_packages, L4T_VERSION
 
 
+#def abs2rel(path):
 def generate_workflow(package, root, l4t_version, simulate=False):
     """
     Generate the YAML workflow definition for building container for that package
     """
     name = package['name']
-    workflow_name = f"{name}{'-' if ':' in name else ':'}r{l4t_version}"
-    filename = os.path.join(root, '.github/workflows', f"{name.replace(':','_')}-r{l4t_version}.yml")
+    workflow_name = f"{name}{'-' if ':' in name else ':'}r{l4t_version}".replace(':','_').replace('.','')
+    filename = os.path.join(root, '.github/workflows', f"{workflow_name}.yml")
     
+    on_paths = [
+        f".github/workflows/{workflow_name}.yml",
+        "jetson_containers/**",
+        os.path.join(package['path'].replace(root+'/',''), '*')
+    ]
+
     txt = f"name: \"{workflow_name}\"\n"
+    txt += f"run-name: \"Build {workflow_name}\"\n"
     txt += "on:\n"
     txt += "  workflow_dispatch: {}\n"
     txt += "  push:\n"
     txt += "    branches:\n"
     txt += "      - 'dev'\n"
+    
+    if len(on_paths) > 0:
+        txt += "    paths:\n"
+        for on_path in on_paths:
+            txt += f"      - '{on_path}'\n"  
+            
     txt += "jobs:\n"
-    txt += f"  {workflow_name.replace(':','_')}:\n"
-    txt += f"    runs-on: self-hosted-jetson r{l4t_version}\n"
+    txt += f"  {workflow_name}:\n"
+    txt += f"    runs-on: [self-hosted-jetson, r{l4t_version}]\n"
     txt += "    steps:\n"
-    txt += f"    - run: echo \"Building {workflow_name}\"\n"
+    txt += "      - uses: actions/checkout@v3\n"
+    txt += f"      - run: ./build.sh --name=runner/ --build-flags='--no-cache' {package['name']}"
     
     print(filename)
     print(txt)
 
+    if not simulate:
+        with open(filename, 'w') as file:
+            file.write(txt)
+            
 
 def register_runner(token, root, repo, labels=[], prefix='runner', simulate=False):
     """
@@ -60,6 +79,7 @@ def register_runner(token, root, repo, labels=[], prefix='runner', simulate=Fals
     
     labels = [x for x in labels if x]
     
+    # github runner package
     run_dir = os.path.join(root, prefix)
     run_tar = os.path.join(run_dir, "actions-runner-linux-arm64-2.304.0.tar.gz")
     run_url = "https://github.com/actions/runner/releases/download/v2.304.0/actions-runner-linux-arm64-2.304.0.tar.gz"
@@ -70,6 +90,17 @@ def register_runner(token, root, repo, labels=[], prefix='runner', simulate=Fals
         wget.download(run_url, run_tar)
         shutil.unpack_archive(run_tar, run_dir)
         
+    # github cli package
+    cli_deb = os.path.join(run_dir, "gh_2.32.0_linux_arm64.deb")
+    cli_url = "https://github.com/cli/cli/releases/download/v2.32.0/gh_2.32.0_linux_arm64.deb"
+    
+    if not os.path.isfile(cli_deb) and not simulate:
+        print(f"-- Downloading GitHub CLI package to {cli_deb}")
+        wget.download(cli_url, cli_deb)
+        cmd = f"sudo dpkg --install {cli_deb}"
+        subprocess.run(cmd, executable='/bin/bash', shell=True, check=True) 
+        
+    # run config command
     cmd = f"cd {run_dir} && "
     cmd += f"./config.sh --url {repo} --token {token} --labels {','.join(labels)} --unattended && sudo ./svc.sh install && sudo ./svc.sh status "
 
@@ -97,7 +128,7 @@ if __name__ == "__main__":
     # generate args
     parser.add_argument('--packages', type=str, default='')
     parser.add_argument('--skip-packages', type=str, default='')
-    parser.add_argument('--l4t-versions', type=str, default='32.7,35.2')
+    parser.add_argument('--l4t-versions', type=str, default=str(L4T_VERSION)) #'32.7,35.2'
     parser.add_argument('--simulate', action='store_true')
     
     # register args

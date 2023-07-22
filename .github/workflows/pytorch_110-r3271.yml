@@ -1,0 +1,17 @@
+name: "pytorch_110-r3271"
+run-name: "Build pytorch_110-r3271"
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - 'dev'
+    paths:
+      - '.github/workflows/pytorch_110-r3271.yml'
+      - 'jetson_containers/**'
+      - 'packages/pytorch/*'
+jobs:
+  pytorch_110-r3271:
+    runs-on: [self-hosted-jetson, r32.7.1]
+    steps:
+      - uses: actions/checkout@v3
+      - run: ./build.sh --name=runner/ --build-flags='--no-cache' pytorch:1.10

@@ -169,7 +169,7 @@ def test_container(name, package, simulate=False):
         test_ext = os.path.splitext(test_cmd)[1]
         log_file = os.path.join(log_dir('test'), f"{name.replace('/','_')}_{test_cmd}").replace(':','_')
         
-        cmd = "sudo docker run -it --rm --runtime=nvidia --network=host" + _NEWLINE_
+        cmd = "sudo docker run -t --rm --runtime=nvidia --network=host" + _NEWLINE_
         cmd += f"--volume {package['path']}:/test" + _NEWLINE_
         cmd += f"--volume {os.path.join(_PACKAGE_ROOT, 'data')}:/data" + _NEWLINE_
         cmd += f"--workdir /test" + _NEWLINE_
