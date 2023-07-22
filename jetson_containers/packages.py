@@ -221,8 +221,30 @@ def skip_packages(packages, skip):
             filtered[key] = value
                 
     return filtered
+   
+
+def group_packages(packages, key, default=''):
+    """
+    Group packages by one of their keys, for example 'category' will return a dict
+    of all the categories where each category contains the packages belonging to it.
+    If a package doesn't have this key, it won't be added unless a default is specified.
+    """
+    grouped = {}
     
- 
+    for name, package in packages.items():
+        if key in package:
+            value = package[key]
+        else:
+            if not default:
+                continue
+            else:
+                value = default
+                
+        grouped.setdefault(value, {})[name] = package
+        
+    return grouped
+    
+    
 def resolve_dependencies(packages, check=True):
     """
     Recursively expand the list of dependencies to include all sub-dependencies.
