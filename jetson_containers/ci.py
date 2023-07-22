@@ -89,6 +89,7 @@ def generate_workflow(package, root, l4t_version, simulate=False):
 
     txt = f"name: \"{workflow_name}\"\n"
     txt += f"run-name: \"Build {workflow_name}\"\n"
+    txt += f"package: \"{name}\"\n"
     txt += "on:\n"
     txt += "  workflow_dispatch: {}\n"
     txt += "  push:\n"
