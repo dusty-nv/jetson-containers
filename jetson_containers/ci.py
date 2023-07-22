@@ -31,6 +31,7 @@ def generate_workflow(package, root, l4t_version, simulate=False):
     
     on_paths = [
         f".github/workflows/{workflow_name}.yml",
+        "jetson_containers/**",
         os.path.join(package['path'].replace(root+'/',''), '*')
     ]
 

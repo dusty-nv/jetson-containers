@@ -7,6 +7,7 @@ on:
       - 'dev'
     paths:
       - '.github/workflows/pytorch_110-r3271.yml'
+      - 'jetson_containers/**'
       - 'packages/pytorch/*'
 jobs:
   pytorch_110-r3271:
