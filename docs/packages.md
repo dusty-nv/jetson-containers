@@ -2,70 +2,70 @@
 |            |            |
 |------------|------------|
 | **`BASE`** | |
-| [`bazel`](/packages/bazel) |  |
-| [`build-essential`](/packages/build-essential) |  |
-| [`cmake:apt`](/packages/cmake/cmake_apt) |  |
-| [`cmake:pip`](/packages/cmake/cmake_pip) |  |
-| [`gstreamer`](/packages/gstreamer) |  |
-| [`jupyterlab`](/packages/jupyterlab) |  |
-| [`protobuf:apt`](/packages/protobuf/protobuf_apt) |  |
-| [`protobuf:cpp`](/packages/protobuf/protobuf_cpp) |  |
-| [`python`](/packages/python) |  |
-| [`rust`](/packages/rust) |  |
+| &nbsp;&nbsp; [`bazel`](/packages/bazel) |  |
+| &nbsp;&nbsp; [`build-essential`](/packages/build-essential) |  |
+| &nbsp;&nbsp; [`cmake:apt`](/packages/cmake/cmake_apt) |  |
+| &nbsp;&nbsp; [`cmake:pip`](/packages/cmake/cmake_pip) |  |
+| &nbsp;&nbsp; [`gstreamer`](/packages/gstreamer) |  |
+| &nbsp;&nbsp; [`jupyterlab`](/packages/jupyterlab) |  |
+| &nbsp;&nbsp; [`protobuf:apt`](/packages/protobuf/protobuf_apt) |  |
+| &nbsp;&nbsp; [`protobuf:cpp`](/packages/protobuf/protobuf_cpp) |  |
+| &nbsp;&nbsp; [`python`](/packages/python) |  |
+| &nbsp;&nbsp; [`rust`](/packages/rust) |  |
 | **`CUDA`** | |
-| [`cupy`](/packages/cupy) |  |
-| [`numba`](/packages/numba) |  |
-| [`pycuda`](/packages/pycuda) |  |
+| &nbsp;&nbsp; [`cupy`](/packages/cupy) |  |
+| &nbsp;&nbsp; [`numba`](/packages/numba) |  |
+| &nbsp;&nbsp; [`pycuda`](/packages/pycuda) |  |
 | **`DIFFUSION`** | |
-| [`stable-diffusion`](/packages/diffusion/stable-diffusion) |  |
-| [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) |  |
+| &nbsp;&nbsp; [`stable-diffusion`](/packages/diffusion/stable-diffusion) |  |
+| &nbsp;&nbsp; [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) |  |
 | **`LLM`** | |
-| [`exllama`](/packages/llm/exllama) |  |
-| [`optimum`](/packages/llm/optimum) |  |
-| [`transformers`](/packages/llm/transformers) |  |
+| &nbsp;&nbsp; [`exllama`](/packages/llm/exllama) |  |
+| &nbsp;&nbsp; [`optimum`](/packages/llm/optimum) |  |
+| &nbsp;&nbsp; [`transformers`](/packages/llm/transformers) |  |
 | **`ML`** | |
-| [`deepstream`](/packages/deepstream) |  |
-| [`l4t-ml`](/packages/l4t/l4t-ml) |  |
-| [`nemo`](/packages/nemo) |  |
-| [`onnx`](/packages/onnx) |  |
-| [`onnxruntime`](/packages/onnxruntime) |  |
-| [`pytorch:1.10`](/packages/pytorch) | [![`pytorch_110-r3271`](https://github.com/dusty-nv/jetson-containers/actions/workflows/pytorch_110-r3271.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/pytorch_110-r3271.yml) |
-| [`pytorch:1.11`](/packages/pytorch) |  |
-| [`pytorch:1.9`](/packages/pytorch) |  |
-| [`tensorflow`](/packages/tensorflow) |  |
-| [`tensorflow2`](/packages/tensorflow) |  |
-| [`torch2trt`](/packages/pytorch/torch2trt) |  |
-| [`torch_tensorrt`](/packages/pytorch/torch_tensorrt) |  |
-| [`torchaudio`](/packages/pytorch/torchaudio) |  |
-| [`torchvision`](/packages/pytorch/torchvision) |  |
-| [`tritonserver`](/packages/tritonserver) |  |
+| &nbsp;&nbsp; [`deepstream`](/packages/deepstream) |  |
+| &nbsp;&nbsp; [`l4t-ml`](/packages/l4t/l4t-ml) |  |
+| &nbsp;&nbsp; [`nemo`](/packages/nemo) |  |
+| &nbsp;&nbsp; [`onnx`](/packages/onnx) |  |
+| &nbsp;&nbsp; [`onnxruntime`](/packages/onnxruntime) |  |
+| &nbsp;&nbsp; [`pytorch:1.10`](/packages/pytorch) | [![`pytorch_110-r3271`](https://github.com/dusty-nv/jetson-containers/actions/workflows/pytorch_110-r3271.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/pytorch_110-r3271.yml) |
+| &nbsp;&nbsp; [`pytorch:1.11`](/packages/pytorch) |  |
+| &nbsp;&nbsp; [`pytorch:1.9`](/packages/pytorch) |  |
+| &nbsp;&nbsp; [`tensorflow`](/packages/tensorflow) |  |
+| &nbsp;&nbsp; [`tensorflow2`](/packages/tensorflow) |  |
+| &nbsp;&nbsp; [`torch2trt`](/packages/pytorch/torch2trt) |  |
+| &nbsp;&nbsp; [`torch_tensorrt`](/packages/pytorch/torch_tensorrt) |  |
+| &nbsp;&nbsp; [`torchaudio`](/packages/pytorch/torchaudio) |  |
+| &nbsp;&nbsp; [`torchvision`](/packages/pytorch/torchvision) |  |
+| &nbsp;&nbsp; [`tritonserver`](/packages/tritonserver) |  |
 | **`OTHER`** | |
-| [`l4t-pytorch`](/packages/l4t/l4t-pytorch) |  |
-| [`l4t-tensorflow:tf1`](/packages/l4t/l4t-tensorflow) |  |
-| [`l4t-tensorflow:tf2`](/packages/l4t/l4t-tensorflow) |  |
-| [`numpy`](/packages/numpy) |  |
-| [`opencv`](/packages/opencv) |  |
-| [`opencv_builder`](/packages/opencv/opencv_builder) |  |
-| [`ros:foxy-desktop`](/packages/ros) |  |
-| [`ros:foxy-ros-base`](/packages/ros) |  |
-| [`ros:foxy-ros-core`](/packages/ros) |  |
-| [`ros:galactic-desktop`](/packages/ros) |  |
-| [`ros:galactic-ros-base`](/packages/ros) |  |
-| [`ros:galactic-ros-core`](/packages/ros) |  |
-| [`ros:humble-desktop`](/packages/ros) |  |
-| [`ros:humble-ros-base`](/packages/ros) |  |
-| [`ros:humble-ros-core`](/packages/ros) |  |
-| [`ros:iron-desktop`](/packages/ros) |  |
-| [`ros:iron-ros-base`](/packages/ros) |  |
-| [`ros:iron-ros-core`](/packages/ros) |  |
-| [`ros:melodic-desktop`](/packages/ros) |  |
-| [`ros:melodic-ros-base`](/packages/ros) |  |
-| [`ros:melodic-ros-core`](/packages/ros) |  |
-| [`ros:noetic-desktop`](/packages/ros) |  |
-| [`ros:noetic-ros-base`](/packages/ros) |  |
-| [`ros:noetic-ros-core`](/packages/ros) |  |
+| &nbsp;&nbsp; [`l4t-pytorch`](/packages/l4t/l4t-pytorch) |  |
+| &nbsp;&nbsp; [`l4t-tensorflow:tf1`](/packages/l4t/l4t-tensorflow) |  |
+| &nbsp;&nbsp; [`l4t-tensorflow:tf2`](/packages/l4t/l4t-tensorflow) |  |
+| &nbsp;&nbsp; [`numpy`](/packages/numpy) |  |
+| &nbsp;&nbsp; [`opencv`](/packages/opencv) |  |
+| &nbsp;&nbsp; [`opencv_builder`](/packages/opencv/opencv_builder) |  |
+| &nbsp;&nbsp; [`ros:foxy-desktop`](/packages/ros) |  |
+| &nbsp;&nbsp; [`ros:foxy-ros-base`](/packages/ros) |  |
+| &nbsp;&nbsp; [`ros:foxy-ros-core`](/packages/ros) |  |
+| &nbsp;&nbsp; [`ros:galactic-desktop`](/packages/ros) |  |
+| &nbsp;&nbsp; [`ros:galactic-ros-base`](/packages/ros) |  |
+| &nbsp;&nbsp; [`ros:galactic-ros-core`](/packages/ros) |  |
+| &nbsp;&nbsp; [`ros:humble-desktop`](/packages/ros) |  |
+| &nbsp;&nbsp; [`ros:humble-ros-base`](/packages/ros) |  |
+| &nbsp;&nbsp; [`ros:humble-ros-core`](/packages/ros) |  |
+| &nbsp;&nbsp; [`ros:iron-desktop`](/packages/ros) |  |
+| &nbsp;&nbsp; [`ros:iron-ros-base`](/packages/ros) |  |
+| &nbsp;&nbsp; [`ros:iron-ros-core`](/packages/ros) |  |
+| &nbsp;&nbsp; [`ros:melodic-desktop`](/packages/ros) |  |
+| &nbsp;&nbsp; [`ros:melodic-ros-base`](/packages/ros) |  |
+| &nbsp;&nbsp; [`ros:melodic-ros-core`](/packages/ros) |  |
+| &nbsp;&nbsp; [`ros:noetic-desktop`](/packages/ros) |  |
+| &nbsp;&nbsp; [`ros:noetic-ros-base`](/packages/ros) |  |
+| &nbsp;&nbsp; [`ros:noetic-ros-core`](/packages/ros) |  |
 | **`RAPIDS`** | |
-| [`cudf`](/packages/rapids/cudf) |  |
+| &nbsp;&nbsp; [`cudf`](/packages/rapids/cudf) |  |
 | **`SENSORS`** | |
-| [`realsense`](/packages/realsense) |  |
-| [`zed`](/packages/zed) |  |
+| &nbsp;&nbsp; [`realsense`](/packages/realsense) |  |
+| &nbsp;&nbsp; [`zed`](/packages/zed) |  |

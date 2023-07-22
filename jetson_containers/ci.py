@@ -45,7 +45,7 @@ def generate_package_list(packages, root, repo, filename='docs/packages.md', sim
         
         for name in sorted(list(group.keys())):
             package = group[name]
-            txt += f"| [`{name}`]({package['path'].replace(root,'')}) | "
+            txt += f"| &nbsp;&nbsp; [`{name}`]({package['path'].replace(root,'')}) | "
             
             workflows = find_package_workflows(name, root)
 
