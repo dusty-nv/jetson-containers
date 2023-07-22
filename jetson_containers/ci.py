@@ -21,6 +21,41 @@ import subprocess
 from jetson_containers import find_package, find_packages, resolve_dependencies, dependant_packages, L4T_VERSION
 
 
+_TABLE_DASH="------------"
+_TABLE_SPACE="            "
+    
+    
+def generate_package_list(packages, root, repo, filename='docs/packages.md', simulate=False):
+    """
+    Generate a markdown table of all the packages
+    """
+    filename = os.path.join(root, filename)
+    
+    txt = "# Packages\n"
+    
+    txt += f"| Name | Build Status |\n"
+    txt += f"|{_TABLE_DASH}|{_TABLE_DASH}|\n"
+    
+    for name in sorted(list(packages.keys())):
+        package = packages[name]
+        txt += f"| [`{name}`]({package['path'].replace(root,'')}) | "
+        
+        workflows = find_package_workflows(name, root)
+
+        if len(workflows) > 0:
+            workflows = [f"[![`{workflow['name']}`]({repo}/actions/workflows/{workflow['name']}.yml/badge.svg)]({repo}/actions/workflows/{workflow['name']}.yml)" for workflow in workflows]
+            txt += f"{' '.join(workflows)}\n"
+
+        txt += " |\n"
+        
+    print(filename)
+    print(txt)
+    
+    if not simulate:
+        with open(filename, 'w') as file:
+            file.write(txt)
+    
+    
 def generate_package_docs(package, root, repo, simulate=False):
     """
     Generate a README.md for the package
@@ -37,11 +72,8 @@ def generate_package_docs(package, root, repo, simulate=False):
         txt += f"{' '.join(workflows)}\n"
 
     # info table
-    SEP_DASH="------------"
-    SEP_SPACE="            "
-
-    txt += f"|{SEP_SPACE}|{SEP_SPACE}|\n"
-    txt += f"|{SEP_DASH}|{SEP_DASH}|\n"
+    txt += f"|{_TABLE_SPACE}|{_TABLE_SPACE}|\n"
+    txt += f"|{_TABLE_DASH}|{_TABLE_DASH}|\n"
     
     if 'alias' in package:
         txt += f"| Aliases | { ' '.join([f'`{x}`' for x in package['alias']])} |\n"
@@ -222,7 +254,7 @@ def register_runner(token, root, repo, labels=[], prefix='runner', simulate=Fals
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     
-    parser.add_argument('cmd', type=str, choices=['generate', 'register', 'docs'])
+    parser.add_argument('cmd', type=str, choices=['generate', 'register', 'docs', 'docs_index'])
     parser.add_argument('--root', type=str, default=os.path.dirname(os.path.dirname(__file__)))
     
     # generate args
@@ -254,6 +286,8 @@ if __name__ == "__main__":
     elif args.cmd == 'docs':
         for package in packages.values():
             generate_package_docs(package, args.root, args.repo, simulate=args.simulate)
+    elif args.cmd == 'docs_index':
+        generate_package_list(packages, args.root, args.repo, simulate=args.simulate)
     elif args.cmd == 'register':
         register_runner(args.token, args.root, args.repo, args.labels, simulate=args.simulate)
         
