@@ -9,7 +9,6 @@
 | [`cupy`](/packages/cupy) |  |
 | [`deepstream`](/packages/deepstream) |  |
 | [`exllama`](/packages/llm/exllama) |  |
-| [`github-runner`](/packages/github-runner) |  |
 | [`gstreamer`](/packages/gstreamer) |  |
 | [`jupyterlab`](/packages/jupyterlab) |  |
 | [`l4t-ml`](/packages/l4t/l4t-ml) |  |
@@ -28,8 +27,7 @@
 | [`protobuf:cpp`](/packages/protobuf/protobuf_cpp) |  |
 | [`pycuda`](/packages/pycuda) |  |
 | [`python`](/packages/python) |  |
-| [`pytorch:1.10`](/packages/pytorch) | [![`pytorch_110-r3271`](https://github.com/dusty-nv/jetson-containers/actions/workflows/pytorch_110-r3271.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/pytorch_110-r3271.yml)
- |
+| [`pytorch:1.10`](/packages/pytorch) | [![`pytorch_110-r3271`](https://github.com/dusty-nv/jetson-containers/actions/workflows/pytorch_110-r3271.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/pytorch_110-r3271.yml) |
 | [`pytorch:1.11`](/packages/pytorch) |  |
 | [`pytorch:1.9`](/packages/pytorch) |  |
 | [`realsense`](/packages/realsense) |  |

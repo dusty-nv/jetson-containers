@@ -44,7 +44,7 @@ def generate_package_list(packages, root, repo, filename='docs/packages.md', sim
 
         if len(workflows) > 0:
             workflows = [f"[![`{workflow['name']}`]({repo}/actions/workflows/{workflow['name']}.yml/badge.svg)]({repo}/actions/workflows/{workflow['name']}.yml)" for workflow in workflows]
-            txt += f"{' '.join(workflows)}\n"
+            txt += f"{' '.join(workflows)}"
 
         txt += " |\n"
         
