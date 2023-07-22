@@ -37,7 +37,7 @@ def generate_workflow(package, root, l4t_version, simulate=False):
     txt += "      - 'dev'\n"
     txt += "jobs:\n"
     txt += f"  {workflow_name}:\n"
-    txt += f"    runs-on: self-hosted-jetson r{l4t_version.replace('.','')}\n"
+    txt += f"    runs-on: [self-hosted-jetson, r{l4t_version.replace('.','')}]\n"
     txt += "    steps:\n"
     txt += f"    - run: echo \"Building {workflow_name}\"\n"
     
