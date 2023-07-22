@@ -7,6 +7,7 @@ on:
       - 'dev'
     paths:
       - '.github/workflows/pytorch_20-r327.yml'
+      - 'packages/pytorch/*'
 jobs:
   pytorch_20-r327:
     runs-on: [self-hosted-jetson, r32.7]

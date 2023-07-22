@@ -20,6 +20,7 @@ import subprocess
 from jetson_containers import find_packages, L4T_VERSION
 
 
+#def abs2rel(path):
 def generate_workflow(package, root, l4t_version, simulate=False):
     """
     Generate the YAML workflow definition for building container for that package
@@ -28,8 +29,11 @@ def generate_workflow(package, root, l4t_version, simulate=False):
     workflow_name = f"{name}{'-' if ':' in name else ':'}r{l4t_version}".replace(':','_').replace('.','')
     filename = os.path.join(root, '.github/workflows', f"{workflow_name}.yml")
     
-    on_paths = [f".github/workflows/{workflow_name}.yml"]
-    
+    on_paths = [
+        f".github/workflows/{workflow_name}.yml",
+        os.path.join(package['path'].replace(root+'/',''), '*')
+    ]
+
     txt = f"name: \"{workflow_name}\"\n"
     txt += f"run-name: \"Build {workflow_name}\"\n"
     txt += "on:\n"
