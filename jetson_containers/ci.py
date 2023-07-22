@@ -10,6 +10,7 @@
 #
 import os
 import re
+import yaml
 import wget
 import shutil
 import socket
@@ -20,7 +21,7 @@ import subprocess
 from jetson_containers import find_package, find_packages, resolve_dependencies, dependant_packages, L4T_VERSION
 
 
-def generate_package_docs(package, root, simulate=False):
+def generate_package_docs(package, root, repo, simulate=False):
     """
     Generate a README.md for the package
     """
@@ -40,6 +41,12 @@ def generate_package_docs(package, root, simulate=False):
         
     if 'category' in package:
         txt += f"| Category | `{package['category']}` |\n"
+        
+    workflows = find_package_workflows(name, root)
+
+    if len(workflows) > 0:
+        workflows = [f"[![`{workflow['name']}`]({repo}/actions/workflows/{workflow['name']}.yml/badge.svg)]({repo}/actions/workflows/{workflow['name']}.yml)" for workflow in workflows]
+        txt += f"| CI/CD | {' '.join(workflows)} |\n"
         
     if 'depends' in package:
         depends = resolve_dependencies(package['depends'], check=False)
@@ -70,8 +77,48 @@ def generate_package_docs(package, root, simulate=False):
     if not simulate:
         with open(filename, 'w') as file:
             file.write(txt)
-            
+  
+  
+def find_package_workflows(package, root):
+    """
+    Find all the GitHub Workflows for building a specific package.
+    """
+    workflow_root = os.path.join(root, '.github/workflows')
+    workflows = []
+    entries = os.listdir(workflow_root)
+    
+    for entry in entries:
+        entry_path = os.path.join(workflow_root, entry)
         
+        if not os.path.isfile(entry_path):
+            continue
+            
+        entry_ext = os.path.splitext(entry)[1]
+        
+        if not (entry_ext == '.yml' or entry_ext == '.yaml'):
+            continue
+            
+        with open(entry_path) as file:
+            workflow = yaml.safe_load(file)
+            
+        # hacky way to decipher the actual package name from the workflow,
+        # since github doesn't allow custom entries and no special chars in names
+        if 'run-name' not in workflow:
+            continue
+            
+        tokens = workflow['run-name'].split(' ')
+        
+        if len(tokens) != 4:
+            continue
+            
+        if package != tokens[1]:
+            continue
+            
+        workflows.append(workflow)
+        
+    return workflows
+        
+    
 def generate_workflow(package, root, l4t_version, simulate=False):
     """
     Generate the YAML workflow definition for building container for that package
@@ -88,7 +135,7 @@ def generate_workflow(package, root, l4t_version, simulate=False):
     ]
 
     txt = f"name: \"{workflow_name}\"\n"
-    txt += f"run-name: \"Build {name} (L4T {l4t_version})\"\n"
+    txt += f"run-name: \"Build {name} (L4T {l4t_version})\"\n"  # update find_package_workflows() if this formatting changes
     txt += "on:\n"
     txt += "  workflow_dispatch: {}\n"
     txt += "  push:\n"
@@ -205,7 +252,7 @@ if __name__ == "__main__":
                 generate_workflow(package, args.root, l4t_version, simulate=args.simulate)
     elif args.cmd == 'docs':
         for package in packages.values():
-            generate_package_docs(package, args.root, simulate=args.simulate)
+            generate_package_docs(package, args.root, args.repo, simulate=args.simulate)
     elif args.cmd == 'register':
         register_runner(args.token, args.root, args.repo, args.labels, simulate=args.simulate)
         
