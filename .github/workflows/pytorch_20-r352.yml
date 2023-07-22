@@ -1,0 +1,12 @@
+name: "pytorch_20-r352"
+run-name: "Build pytorch_20-r352"
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - 'dev'
+jobs:
+  pytorch_20-r352:
+    runs-on: self-hosted-jetson r35.2
+    steps:
+    - run: echo "Building pytorch_20-r352"

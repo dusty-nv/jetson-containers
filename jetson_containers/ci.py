@@ -25,8 +25,8 @@ def generate_workflow(package, root, l4t_version, simulate=False):
     Generate the YAML workflow definition for building container for that package
     """
     name = package['name']
-    workflow_name = f"{name}{'-' if ':' in name else ':'}r{l4t_version}"
-    filename = os.path.join(root, '.github/workflows', f"{name.replace(':','_')}-r{l4t_version}.yml")
+    workflow_name = f"{name}{'-' if ':' in name else ':'}r{l4t_version}".replace(':','_').replace('.','')
+    filename = os.path.join(root, '.github/workflows', f"{workflow_name}.yml")
     
     txt = f"name: \"{workflow_name}\"\n"
     txt += f"run-name: \"Build {workflow_name}\"\n"
@@ -36,7 +36,7 @@ def generate_workflow(package, root, l4t_version, simulate=False):
     txt += "    branches:\n"
     txt += "      - 'dev'\n"
     txt += "jobs:\n"
-    txt += f"  {workflow_name.replace(':','_')}:\n"
+    txt += f"  {workflow_name}:\n"
     txt += f"    runs-on: self-hosted-jetson r{l4t_version}\n"
     txt += "    steps:\n"
     txt += f"    - run: echo \"Building {workflow_name}\"\n"
