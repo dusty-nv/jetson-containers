@@ -27,12 +27,19 @@ def generate_package_docs(package, root, repo, simulate=False):
     """
     name = package['name']
     filename = os.path.join(package['path'], 'README.md')
-    
-    SEP_DASH="------------"
-    SEP_SPACE="            "
-    
     txt = f"# {name}\n\n"
     
+    # ci/cd status
+    workflows = find_package_workflows(name, root)
+
+    if len(workflows) > 0:
+        workflows = [f"[![`{workflow['name']}`]({repo}/actions/workflows/{workflow['name']}.yml/badge.svg)]({repo}/actions/workflows/{workflow['name']}.yml)" for workflow in workflows]
+        txt += f"{' '.join(workflows)}\n"
+
+    # info table
+    SEP_DASH="------------"
+    SEP_SPACE="            "
+
     txt += f"|{SEP_SPACE}|{SEP_SPACE}|\n"
     txt += f"|{SEP_DASH}|{SEP_DASH}|\n"
     
@@ -41,13 +48,7 @@ def generate_package_docs(package, root, repo, simulate=False):
         
     if 'category' in package:
         txt += f"| Category | `{package['category']}` |\n"
-        
-    workflows = find_package_workflows(name, root)
-
-    if len(workflows) > 0:
-        workflows = [f"[![`{workflow['name']}`]({repo}/actions/workflows/{workflow['name']}.yml/badge.svg)]({repo}/actions/workflows/{workflow['name']}.yml)" for workflow in workflows]
-        txt += f"| CI/CD | {' '.join(workflows)} |\n"
-        
+                
     if 'depends' in package:
         depends = resolve_dependencies(package['depends'], check=False)
         depends = [f"[`{x}`]({find_package(x)['path'].replace(root,'')})" for x in depends]
@@ -59,11 +60,11 @@ def generate_package_docs(package, root, repo, simulate=False):
         dependants = [f"[`{x}`]({find_package(x)['path'].replace(root,'')})" for x in dependants]
         txt += f"| Dependants | {' '.join(dependants)} |\n"
     
-    if 'dockerfile' in package:
-        txt += f"| Dockerfile | [`{package['dockerfile']}`]({package['dockerfile']}) |\n"
+    #if 'dockerfile' in package:
+    #    txt += f"| Dockerfile | [`{package['dockerfile']}`]({package['dockerfile']}) |\n"
         
-    if 'test' in package:
-        txt += f"| Tests | {' '.join([f'[`{test}`]({test})' for test in package['test']])} |\n"
+    #if 'test' in package:
+    #    txt += f"| Tests | {' '.join([f'[`{test}`]({test})' for test in package['test']])} |\n"
         
     if 'docs' in package:
         txt += f"{package['docs']}\n"
