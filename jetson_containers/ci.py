@@ -18,7 +18,7 @@ import pprint
 import argparse
 import subprocess
 
-from jetson_containers import find_package, find_packages, resolve_dependencies, dependant_packages, L4T_VERSION
+from jetson_containers import find_package, find_packages, group_packages, resolve_dependencies, dependant_packages, L4T_VERSION
 
 
 _TABLE_DASH="------------"
@@ -30,23 +30,29 @@ def generate_package_list(packages, root, repo, filename='docs/packages.md', sim
     Generate a markdown table of all the packages
     """
     filename = os.path.join(root, filename)
-    
     txt = "# Packages\n"
     
-    txt += f"| Name | Build Status |\n"
-    txt += f"|{_TABLE_DASH}|{_TABLE_DASH}|\n"
+    # group packages by category for navigability
+    groups = group_packages(packages, key='category', default='other')
     
-    for name in sorted(list(packages.keys())):
-        package = packages[name]
-        txt += f"| [`{name}`]({package['path'].replace(root,'')}) | "
+    for group_name in sorted(list(groups.keys())):
+        group = groups[group_name]
         
-        workflows = find_package_workflows(name, root)
+        txt += f"\n## {group_name}\n"
+        txt += f"| Name | Build Status |\n"
+        txt += f"|{_TABLE_DASH}|{_TABLE_DASH}|\n"
+        
+        for name in sorted(list(group.keys())):
+            package = group[name]
+            txt += f"| [`{name}`]({package['path'].replace(root,'')}) | "
+            
+            workflows = find_package_workflows(name, root)
 
-        if len(workflows) > 0:
-            workflows = [f"[![`{workflow['name']}`]({repo}/actions/workflows/{workflow['name']}.yml/badge.svg)]({repo}/actions/workflows/{workflow['name']}.yml)" for workflow in workflows]
-            txt += f"{' '.join(workflows)}"
+            if len(workflows) > 0:
+                workflows = [f"[![`{workflow['name']}`]({repo}/actions/workflows/{workflow['name']}.yml/badge.svg)]({repo}/actions/workflows/{workflow['name']}.yml)" for workflow in workflows]
+                txt += f"{' '.join(workflows)}"
 
-        txt += " |\n"
+            txt += " |\n"
         
     print(filename)
     print(txt)

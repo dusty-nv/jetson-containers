@@ -1,36 +1,67 @@
 # Packages
+
+## base
 | Name | Build Status |
 |------------|------------|
 | [`bazel`](/packages/bazel) |  |
 | [`build-essential`](/packages/build-essential) |  |
 | [`cmake:apt`](/packages/cmake/cmake_apt) |  |
 | [`cmake:pip`](/packages/cmake/cmake_pip) |  |
-| [`cudf`](/packages/rapids/cudf) |  |
-| [`cupy`](/packages/cupy) |  |
-| [`deepstream`](/packages/deepstream) |  |
-| [`exllama`](/packages/llm/exllama) |  |
 | [`gstreamer`](/packages/gstreamer) |  |
 | [`jupyterlab`](/packages/jupyterlab) |  |
-| [`l4t-ml`](/packages/l4t/l4t-ml) |  |
-| [`l4t-pytorch`](/packages/l4t/l4t-pytorch) |  |
-| [`l4t-tensorflow:tf1`](/packages/l4t/l4t-tensorflow) |  |
-| [`l4t-tensorflow:tf2`](/packages/l4t/l4t-tensorflow) |  |
-| [`nemo`](/packages/nemo) |  |
-| [`numba`](/packages/numba) |  |
-| [`numpy`](/packages/numpy) |  |
-| [`onnx`](/packages/onnx) |  |
-| [`onnxruntime`](/packages/onnxruntime) |  |
-| [`opencv`](/packages/opencv) |  |
-| [`opencv_builder`](/packages/opencv/opencv_builder) |  |
-| [`optimum`](/packages/llm/optimum) |  |
 | [`protobuf:apt`](/packages/protobuf/protobuf_apt) |  |
 | [`protobuf:cpp`](/packages/protobuf/protobuf_cpp) |  |
-| [`pycuda`](/packages/pycuda) |  |
 | [`python`](/packages/python) |  |
+| [`rust`](/packages/rust) |  |
+
+## cuda
+| Name | Build Status |
+|------------|------------|
+| [`cupy`](/packages/cupy) |  |
+| [`numba`](/packages/numba) |  |
+| [`pycuda`](/packages/pycuda) |  |
+
+## diffusion
+| Name | Build Status |
+|------------|------------|
+| [`stable-diffusion`](/packages/diffusion/stable-diffusion) |  |
+| [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) |  |
+
+## llm
+| Name | Build Status |
+|------------|------------|
+| [`exllama`](/packages/llm/exllama) |  |
+| [`optimum`](/packages/llm/optimum) |  |
+| [`transformers`](/packages/llm/transformers) |  |
+
+## ml
+| Name | Build Status |
+|------------|------------|
+| [`deepstream`](/packages/deepstream) |  |
+| [`l4t-ml`](/packages/l4t/l4t-ml) |  |
+| [`nemo`](/packages/nemo) |  |
+| [`onnx`](/packages/onnx) |  |
+| [`onnxruntime`](/packages/onnxruntime) |  |
 | [`pytorch:1.10`](/packages/pytorch) | [![`pytorch_110-r3271`](https://github.com/dusty-nv/jetson-containers/actions/workflows/pytorch_110-r3271.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/pytorch_110-r3271.yml) |
 | [`pytorch:1.11`](/packages/pytorch) |  |
 | [`pytorch:1.9`](/packages/pytorch) |  |
-| [`realsense`](/packages/realsense) |  |
+| [`tensorflow`](/packages/tensorflow) |  |
+| [`tensorflow2`](/packages/tensorflow) |  |
+| [`torch2trt`](/packages/pytorch/torch2trt) |  |
+| [`torch_tensorrt`](/packages/pytorch/torch_tensorrt) |  |
+| [`torchaudio`](/packages/pytorch/torchaudio) |  |
+| [`torchvision`](/packages/pytorch/torchvision) |  |
+| [`tritonserver`](/packages/tritonserver) |  |
+
+## other
+| Name | Build Status |
+|------------|------------|
+| [`l4t-pytorch`](/packages/l4t/l4t-pytorch) |  |
+| [`l4t-tensorflow:tf1`](/packages/l4t/l4t-tensorflow) |  |
+| [`l4t-tensorflow:tf2`](/packages/l4t/l4t-tensorflow) |  |
+| [`numpy`](/packages/numpy) |  |
+| [`opencv`](/packages/opencv) |  |
+| [`opencv_builder`](/packages/opencv/opencv_builder) |  |
 | [`ros:foxy-desktop`](/packages/ros) |  |
 | [`ros:foxy-ros-base`](/packages/ros) |  |
 | [`ros:foxy-ros-core`](/packages/ros) |  |
@@ -49,15 +80,14 @@
 | [`ros:noetic-desktop`](/packages/ros) |  |
 | [`ros:noetic-ros-base`](/packages/ros) |  |
 | [`ros:noetic-ros-core`](/packages/ros) |  |
-| [`rust`](/packages/rust) |  |
-| [`stable-diffusion`](/packages/diffusion/stable-diffusion) |  |
-| [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) |  |
-| [`tensorflow`](/packages/tensorflow) |  |
-| [`tensorflow2`](/packages/tensorflow) |  |
-| [`torch2trt`](/packages/pytorch/torch2trt) |  |
-| [`torch_tensorrt`](/packages/pytorch/torch_tensorrt) |  |
-| [`torchaudio`](/packages/pytorch/torchaudio) |  |
-| [`torchvision`](/packages/pytorch/torchvision) |  |
-| [`transformers`](/packages/llm/transformers) |  |
-| [`tritonserver`](/packages/tritonserver) |  |
+
+## rapids
+| Name | Build Status |
+|------------|------------|
+| [`cudf`](/packages/rapids/cudf) |  |
+
+## sensors
+| Name | Build Status |
+|------------|------------|
+| [`realsense`](/packages/realsense) |  |
 | [`zed`](/packages/zed) |  |
