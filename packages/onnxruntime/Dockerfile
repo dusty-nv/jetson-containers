@@ -1,6 +1,6 @@
 #---
 # name: onnxruntime
-# category: ml
+# group: ml
 # config: config.py
 # depends: [cmake, python, numpy, onnx]
 # test: test.py

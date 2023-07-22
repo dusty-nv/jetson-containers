@@ -1,6 +1,6 @@
 #---
 # name: cuda-python
-# category: cuda
+# group: cuda
 # config: config.py
 # depends: [build-essential, python, numpy]
 # test: [test_driver.py, test_runtime.py]

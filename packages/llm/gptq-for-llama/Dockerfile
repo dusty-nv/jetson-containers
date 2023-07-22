@@ -1,6 +1,6 @@
 #---
 # name: gptq-for-llama
-# category: llm
+# group: llm
 # depends: [pytorch, bitsandbytes, transformers]
 # test: test.sh
 #---

@@ -1,6 +1,6 @@
 #---
 # name: torch2trt
-# category: ml
+# group: ml
 # depends: [pytorch, torchvision]
 # test: test.py
 #---

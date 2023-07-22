@@ -1,6 +1,6 @@
 #---
 # name: torch_tensorrt
-# category: ml
+# group: ml
 # config: config.py
 # depends: [pytorch, torchvision, bazel]
 # test: [test.py, test.sh]

@@ -1,6 +1,6 @@
 #---
 # name: numpy
-# category: core
+# group: core
 # depends: [build-essential, python]
 # test: test.py
 #---

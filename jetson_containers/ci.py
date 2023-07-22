@@ -36,7 +36,7 @@ def generate_package_list(packages, root, repo, filename='docs/packages.md', sim
     txt += f"|{_TABLE_DASH}|{_TABLE_DASH}|\n"
         
     # group packages by category for navigability
-    groups = group_packages(packages, key='category', default='other')
+    groups = group_packages(packages, key='group', default='other')
     
     for group_name in sorted(list(groups.keys())):
         group = groups[group_name]

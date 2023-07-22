@@ -1,6 +1,6 @@
 #---
 # name: exllama
-# category: llm
+# group: llm
 # depends: [pytorch]
 # test: test.sh
 #---

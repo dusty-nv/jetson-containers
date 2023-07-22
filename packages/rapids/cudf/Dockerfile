@@ -1,6 +1,6 @@
 #---
 # name: cudf
-# category: rapids
+# group: rapids
 # config: config.py
 # depends: [cmake, python, cupy, numba, protobuf:apt]
 # test: [test_cudf.py, test_dask.py]

@@ -1,6 +1,6 @@
 #---
 # name: tensorflow
-# category: ml
+# group: ml
 # depends: [python, numpy, protobuf:cpp]
 # test: test.py
 #---

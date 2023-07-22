@@ -20,8 +20,8 @@ _PACKAGES = {}
 _PACKAGE_SCAN = False
 _PACKAGE_ROOT = os.path.dirname(os.path.dirname(__file__))
 _PACKAGE_DIRS = [os.path.join(_PACKAGE_ROOT, 'packages/*')]
-_PACKAGE_KEYS = ['alias', 'build_args', 'build_flags', 'category', 'config', 'depends', 
-                 'description', 'disabled', 'dockerfile', 'name', 'notes', 'path', 'test']
+_PACKAGE_KEYS = ['alias', 'build_args', 'build_flags', 'config', 'depends', 'disabled',  
+                 'dockerfile', 'docs', 'group', 'name', 'notes', 'path', 'test']
 
 
 def package_search_dirs(package_dirs, scan=False):
@@ -225,9 +225,10 @@ def skip_packages(packages, skip):
 
 def group_packages(packages, key, default=''):
     """
-    Group packages by one of their keys, for example 'category' will return a dict
-    of all the categories where each category contains the packages belonging to it.
-    If a package doesn't have this key, it won't be added unless a default is specified.
+    Group packages by one of their keys, for example 'group' will return a dict
+    of all the groups where each group contains the packages belonging to it.
+    Or you can group by path, package name, depends, ect. or any other key.
+    If a package doesn't have the key, it won't be added unless a default is specified.
     """
     grouped = {}
     

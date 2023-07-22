@@ -1,6 +1,6 @@
 #---
 # name: text-generation-webui
-# category: llm
+# group: llm
 # depends: [pytorch, bitsandbytes, transformers, auto-gptq, gptq-for-llama]
 #---
 ARG BASE_IMAGE

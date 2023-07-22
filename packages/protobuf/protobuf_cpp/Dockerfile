@@ -1,7 +1,7 @@
 #---
 # name: protobuf:cpp
 # alias: protobuf
-# category: build
+# group: build
 # config: config.py
 # depends: [build-essential, python]
 # test: [test.py, test.sh]

@@ -11,7 +11,7 @@ ROS_PACKAGES = ['ros_base', 'ros_core', 'desktop']
 # add permutations of ROS distros/packages as subpackages
 template = package.copy()
 
-template['category'] = 'ros'
+template['group'] = 'ros'
 template['depends'] = ['cmake', 'python', 'opencv']
 
 package = []

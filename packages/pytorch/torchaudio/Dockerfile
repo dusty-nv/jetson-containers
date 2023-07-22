@@ -1,6 +1,6 @@
 #---
 # name: torchaudio
-# category: ml
+# group: ml
 # config: config.py
 # depends: [cmake, pytorch]
 # test: test.py

@@ -1,6 +1,6 @@
 #---
 # name: small-stable-diffusion
-# category: diffusion
+# group: diffusion
 # depends: [pytorch, torchvision, onnxruntime]
 # disabled: true
 # test: test.sh

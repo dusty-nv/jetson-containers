@@ -1,6 +1,6 @@
 #---
 # name: tritonserver
-# category: ml
+# group: ml
 # config: config.py
 # depends: [python]
 # test: test.py

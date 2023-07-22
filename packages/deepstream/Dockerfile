@@ -1,6 +1,6 @@
 #---
 # name: deepstream
-# category: ml
+# group: ml
 # config: config.py
 # depends: [cmake, python, gstreamer, tritonserver]
 # test: [test.sh, test.py]

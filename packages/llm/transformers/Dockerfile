@@ -1,7 +1,7 @@
 #---
 # name: transformers
 # config: config.py
-# category: llm
+# group: llm
 # depends: [pytorch, torchvision]
 # test: test.py
 # notes: bitsandbytes dependency added on JetPack5 for 4/8-bit

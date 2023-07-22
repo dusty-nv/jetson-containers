@@ -1,6 +1,6 @@
 #---
 # name: build-essential
-# category: build
+# group: build
 # notes: installs compilers and build tools
 #---
 ARG BASE_IMAGE

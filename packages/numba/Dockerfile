@@ -1,6 +1,6 @@
 #---
 # name: numba
-# category: cuda
+# group: cuda
 # depends: [build-essential, python, numpy]
 # test: test.py
 #---

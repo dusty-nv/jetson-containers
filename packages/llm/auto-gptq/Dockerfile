@@ -1,6 +1,6 @@
 #---
 # name: auto-gptq
-# category: llm
+# group: llm
 # depends: [pytorch, bitsandbytes, transformers]
 # test: test.py
 #---

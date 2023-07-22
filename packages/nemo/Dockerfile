@@ -1,6 +1,6 @@
 #---
 # name: nemo
-# category: ml
+# group: ml
 # depends: [pytorch, torchvision, torchaudio]
 # test: test.py
 # notes: NVIDIA NeMo for ASR/NLP/TTS https://nvidia.github.io/NeMo/
