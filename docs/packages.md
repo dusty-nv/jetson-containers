@@ -4,6 +4,7 @@
 
 <details open>
 <summary>base</summary>
+
 | Name | Build Status |
 |------------|------------|
 | [`bazel`](/packages/bazel) |  |
@@ -23,6 +24,7 @@
 
 <details open>
 <summary>cuda</summary>
+
 | Name | Build Status |
 |------------|------------|
 | [`cupy`](/packages/cupy) |  |
@@ -35,6 +37,7 @@
 
 <details open>
 <summary>diffusion</summary>
+
 | Name | Build Status |
 |------------|------------|
 | [`stable-diffusion`](/packages/diffusion/stable-diffusion) |  |
@@ -46,6 +49,7 @@
 
 <details open>
 <summary>llm</summary>
+
 | Name | Build Status |
 |------------|------------|
 | [`exllama`](/packages/llm/exllama) |  |
@@ -58,6 +62,7 @@
 
 <details open>
 <summary>ml</summary>
+
 | Name | Build Status |
 |------------|------------|
 | [`deepstream`](/packages/deepstream) |  |
@@ -82,6 +87,7 @@
 
 <details open>
 <summary>other</summary>
+
 | Name | Build Status |
 |------------|------------|
 | [`l4t-pytorch`](/packages/l4t/l4t-pytorch) |  |
@@ -115,6 +121,7 @@
 
 <details open>
 <summary>rapids</summary>
+
 | Name | Build Status |
 |------------|------------|
 | [`cudf`](/packages/rapids/cudf) |  |
@@ -125,6 +132,7 @@
 
 <details open>
 <summary>sensors</summary>
+
 | Name | Build Status |
 |------------|------------|
 | [`realsense`](/packages/realsense) |  |

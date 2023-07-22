@@ -40,7 +40,7 @@ def generate_package_list(packages, root, repo, filename='docs/packages.md', sim
         
         txt += f"\n## {group_name}\n"
         txt += "\n<details open>\n"
-        txt += f"<summary>{group_name}</summary>\n"
+        txt += f"<summary>{group_name}</summary>\n\n"
         txt += f"| Name | Build Status |\n"
         txt += f"|{_TABLE_DASH}|{_TABLE_DASH}|\n"
         
