@@ -38,7 +38,7 @@ def generate_package_list(packages, root, repo, filename='docs/packages.md', sim
     for group_name in sorted(list(groups.keys())):
         group = groups[group_name]
         
-        txt += f"\n## {group_name}\n"
+        #txt += f"\n## {group_name}\n"
         txt += "\n<details open>\n"
         txt += f"<summary>{group_name}</summary>\n\n"
         txt += f"| Name | Build Status |\n"

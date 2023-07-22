@@ -1,7 +1,5 @@
 # Packages
 
-## base
-
 <details open>
 <summary>base</summary>
 
@@ -20,8 +18,6 @@
 </details>
 
 
-## cuda
-
 <details open>
 <summary>cuda</summary>
 
@@ -33,8 +29,6 @@
 </details>
 
 
-## diffusion
-
 <details open>
 <summary>diffusion</summary>
 
@@ -44,8 +38,6 @@
 | [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) |  |
 </details>
 
-
-## llm
 
 <details open>
 <summary>llm</summary>
@@ -57,8 +49,6 @@
 | [`transformers`](/packages/llm/transformers) |  |
 </details>
 
-
-## ml
 
 <details open>
 <summary>ml</summary>
@@ -82,8 +72,6 @@
 | [`tritonserver`](/packages/tritonserver) |  |
 </details>
 
-
-## other
 
 <details open>
 <summary>other</summary>
@@ -117,8 +105,6 @@
 </details>
 
 
-## rapids
-
 <details open>
 <summary>rapids</summary>
 
@@ -127,8 +113,6 @@
 | [`cudf`](/packages/rapids/cudf) |  |
 </details>
 
-
-## sensors
 
 <details open>
 <summary>sensors</summary>
