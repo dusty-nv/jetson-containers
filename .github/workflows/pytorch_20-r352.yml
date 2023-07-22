@@ -7,6 +7,6 @@ on:
       - 'dev'
 jobs:
   pytorch_20-r352:
-    runs-on: self-hosted-jetson r35.2
+    runs-on: self-hosted-jetson r352
     steps:
     - run: echo "Building pytorch_20-r352"
