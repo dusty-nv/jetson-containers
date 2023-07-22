@@ -1,9 +1,10 @@
+name: "pytorch:2.0-r35.2"
 run-name: "Build pytorch:2.0-r35.2"
 on:
   workflow_dispatch: {}
   push:
     branches:
-      - 'placeholder'
+      - 'jetpack'
 jobs:
   pytorch_2.0-r35.2:
     runs-on: self-hosted-jetson r35.2
