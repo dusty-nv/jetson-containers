@@ -1,7 +1,7 @@
 #---
 # name: python
 # alias: python3
-# category: base
+# category: build
 # depends: build-essential
 # notes: installs core python3 packages and pip
 #---

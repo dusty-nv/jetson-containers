@@ -1,5 +1,6 @@
 {
     "l4t-pytorch": {
+        "category": "ml",
         "depends": ["pytorch", "torchvision", "torchaudio", "opencv", "pycuda"]
     }
 }

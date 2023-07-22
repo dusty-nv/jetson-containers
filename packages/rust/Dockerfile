@@ -1,6 +1,6 @@
 #---
 # name: rust
-# category: base
+# category: build
 # depends: [build-essential, python]
 #---
 ARG BASE_IMAGE

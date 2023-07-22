@@ -1,7 +1,7 @@
 #---
 # name: cmake:pip
 # alias: cmake
-# category: base
+# category: build
 # depends: [build-essential, python]
 # notes: upgrade cmake with pip
 #---

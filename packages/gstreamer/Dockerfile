@@ -1,6 +1,6 @@
 #---
 # name: gstreamer
-# category: base
+# category: general
 # depends: opencv
 # test: [test.sh, test.py]
 #---

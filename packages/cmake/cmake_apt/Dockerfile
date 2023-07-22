@@ -1,6 +1,6 @@
 #---
 # name: cmake:apt
-# category: base
+# category: build
 # depends: build-essential
 # notes: upgrade cmake with apt
 #---
