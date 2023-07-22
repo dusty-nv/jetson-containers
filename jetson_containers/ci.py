@@ -17,10 +17,46 @@ import pprint
 import argparse
 import subprocess
 
-from jetson_containers import find_packages, L4T_VERSION
+from jetson_containers import find_package, find_packages, resolve_dependencies, L4T_VERSION
 
 
-#def abs2rel(path):
+def generate_package_docs(package, root, simulate=False):
+    """
+    Generate a README.md for the package
+    """
+    name = package['name']
+    filename = os.path.join(package['path'], 'README.md')
+    
+    SEP_DASH="------------"
+    SEP_SPACE="            "
+    
+    txt = f"# {name}\n\n"
+    
+    txt += f"|{SEP_SPACE}|{SEP_SPACE}|\n"
+    txt += f"|{SEP_DASH}|{SEP_DASH}|\n"
+    
+    if 'alias' in package:
+        txt += f"| Aliases | { ' '.join([f'`{x}`' for x in package['alias']])} |\n"
+        
+    if 'depends' in package:
+        depends = resolve_dependencies(package['depends'], check=False)
+        depends = [f"[`{x}`]({find_package(x)['path'].replace(root+'/','')})" for x in depends]
+        txt += f"| Depends | { ' '.join(depends)} |\n"
+       
+    if 'docs' in package:
+        txt += f"{package['docs']}\n"
+        
+    if 'notes' in package:
+        txt += f"{package['notes']}\n"
+        
+    print(filename)
+    print(txt)
+    
+    if not simulate:
+        with open(filename, 'w') as file:
+            file.write(txt)
+            
+        
 def generate_workflow(package, root, l4t_version, simulate=False):
     """
     Generate the YAML workflow definition for building container for that package
@@ -31,8 +67,9 @@ def generate_workflow(package, root, l4t_version, simulate=False):
     
     on_paths = [
         f".github/workflows/{workflow_name}.yml",
-        "jetson_containers/**",
-        os.path.join(package['path'].replace(root+'/',''), '*')
+        #"jetson_containers/**",
+        os.path.join(package['path'].replace(root+'/',''), '*'),
+        f"!{os.path.join(package['path'].replace(root+'/',''), 'README.md')}",
     ]
 
     txt = f"name: \"{workflow_name}\"\n"
@@ -122,7 +159,7 @@ def register_runner(token, root, repo, labels=[], prefix='runner', simulate=Fals
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     
-    parser.add_argument('cmd', type=str, choices=['generate', 'register', 'docs', 'trigger'])
+    parser.add_argument('cmd', type=str, choices=['generate', 'register', 'docs'])
     parser.add_argument('--root', type=str, default=os.path.dirname(os.path.dirname(__file__)))
     
     # generate args
@@ -151,5 +188,9 @@ if __name__ == "__main__":
         for package in packages.values():
             for l4t_version in args.l4t_versions:
                 generate_workflow(package, args.root, l4t_version, simulate=args.simulate)
+    elif args.cmd == 'docs':
+        for package in packages.values():
+            generate_package_docs(package, args.root, simulate=args.simulate)
     elif args.cmd == 'register':
         register_runner(args.token, args.root, args.repo, args.labels, simulate=args.simulate)
+        

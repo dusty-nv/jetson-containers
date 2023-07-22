@@ -7,8 +7,8 @@ on:
       - 'dev'
     paths:
       - '.github/workflows/pytorch_110-r3271.yml'
-      - 'jetson_containers/**'
       - 'packages/pytorch/*'
+      - '!packages/pytorch/README.md'
 jobs:
   pytorch_110-r3271:
     runs-on: [self-hosted-jetson, r32.7.1]
