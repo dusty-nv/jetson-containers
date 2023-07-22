@@ -51,6 +51,12 @@ def generate_package_docs(package, root, simulate=False):
     if len(dependants) > 0:
         dependants = [f"[`{x}`]({find_package(x)['path'].replace(root,'')})" for x in dependants]
         txt += f"| Dependants | {' '.join(dependants)} |\n"
+    
+    if 'dockerfile' in package:
+        txt += f"| Dockerfile | [`{package['dockerfile']}`]({package['dockerfile']}) |\n"
+        
+    if 'test' in package:
+        txt += f"| Tests | {' '.join([f'[`{test}`]({test})' for test in package['test']])} |\n"
         
     if 'docs' in package:
         txt += f"{package['docs']}\n"
