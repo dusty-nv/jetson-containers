@@ -1,10 +1,7 @@
 # Packages
-
-<details open>
-<summary>base</summary>
-
-| Name | Build Status |
+|            |            |
 |------------|------------|
+| **`BASE`** | |
 | [`bazel`](/packages/bazel) |  |
 | [`build-essential`](/packages/build-essential) |  |
 | [`cmake:apt`](/packages/cmake/cmake_apt) |  |
@@ -15,46 +12,18 @@
 | [`protobuf:cpp`](/packages/protobuf/protobuf_cpp) |  |
 | [`python`](/packages/python) |  |
 | [`rust`](/packages/rust) |  |
-</details>
-
-
-<details open>
-<summary>cuda</summary>
-
-| Name | Build Status |
-|------------|------------|
+| **`CUDA`** | |
 | [`cupy`](/packages/cupy) |  |
 | [`numba`](/packages/numba) |  |
 | [`pycuda`](/packages/pycuda) |  |
-</details>
-
-
-<details open>
-<summary>diffusion</summary>
-
-| Name | Build Status |
-|------------|------------|
+| **`DIFFUSION`** | |
 | [`stable-diffusion`](/packages/diffusion/stable-diffusion) |  |
 | [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) |  |
-</details>
-
-
-<details open>
-<summary>llm</summary>
-
-| Name | Build Status |
-|------------|------------|
+| **`LLM`** | |
 | [`exllama`](/packages/llm/exllama) |  |
 | [`optimum`](/packages/llm/optimum) |  |
 | [`transformers`](/packages/llm/transformers) |  |
-</details>
-
-
-<details open>
-<summary>ml</summary>
-
-| Name | Build Status |
-|------------|------------|
+| **`ML`** | |
 | [`deepstream`](/packages/deepstream) |  |
 | [`l4t-ml`](/packages/l4t/l4t-ml) |  |
 | [`nemo`](/packages/nemo) |  |
@@ -70,14 +39,7 @@
 | [`torchaudio`](/packages/pytorch/torchaudio) |  |
 | [`torchvision`](/packages/pytorch/torchvision) |  |
 | [`tritonserver`](/packages/tritonserver) |  |
-</details>
-
-
-<details open>
-<summary>other</summary>
-
-| Name | Build Status |
-|------------|------------|
+| **`OTHER`** | |
 | [`l4t-pytorch`](/packages/l4t/l4t-pytorch) |  |
 | [`l4t-tensorflow:tf1`](/packages/l4t/l4t-tensorflow) |  |
 | [`l4t-tensorflow:tf2`](/packages/l4t/l4t-tensorflow) |  |
@@ -102,24 +64,8 @@
 | [`ros:noetic-desktop`](/packages/ros) |  |
 | [`ros:noetic-ros-base`](/packages/ros) |  |
 | [`ros:noetic-ros-core`](/packages/ros) |  |
-</details>
-
-
-<details open>
-<summary>rapids</summary>
-
-| Name | Build Status |
-|------------|------------|
+| **`RAPIDS`** | |
 | [`cudf`](/packages/rapids/cudf) |  |
-</details>
-
-
-<details open>
-<summary>sensors</summary>
-
-| Name | Build Status |
-|------------|------------|
+| **`SENSORS`** | |
 | [`realsense`](/packages/realsense) |  |
 | [`zed`](/packages/zed) |  |
-</details>
-

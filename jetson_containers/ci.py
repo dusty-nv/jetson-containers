@@ -30,19 +30,18 @@ def generate_package_list(packages, root, repo, filename='docs/packages.md', sim
     Generate a markdown table of all the packages
     """
     filename = os.path.join(root, filename)
-    txt = "# Packages\n"
     
+    txt = "# Packages\n"
+    txt += f"|{_TABLE_SPACE}|{_TABLE_SPACE}|\n"
+    txt += f"|{_TABLE_DASH}|{_TABLE_DASH}|\n"
+        
     # group packages by category for navigability
     groups = group_packages(packages, key='category', default='other')
     
     for group_name in sorted(list(groups.keys())):
         group = groups[group_name]
         
-        #txt += f"\n## {group_name}\n"
-        txt += "\n<details open>\n"
-        txt += f"<summary>{group_name}</summary>\n\n"
-        txt += f"| Name | Build Status |\n"
-        txt += f"|{_TABLE_DASH}|{_TABLE_DASH}|\n"
+        txt += f"| **`{group_name.upper()}`** | |\n"
         
         for name in sorted(list(group.keys())):
             package = group[name]
@@ -55,8 +54,6 @@ def generate_package_list(packages, root, repo, filename='docs/packages.md', sim
                 txt += f"{' '.join(workflows)}"
 
             txt += " |\n"
-        
-        txt += "</details>\n\n"
         
     print(filename)
     print(txt)
