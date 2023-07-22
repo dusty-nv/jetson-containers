@@ -40,7 +40,7 @@ def generate_package_docs(package, root, simulate=False):
         
     if 'depends' in package:
         depends = resolve_dependencies(package['depends'], check=False)
-        depends = [f"[`{x}`]({find_package(x)['path'].replace(root+'/','')})" for x in depends]
+        depends = [f"[`{x}`]({find_package(x)['path'].replace(root,'')})" for x in depends]
         txt += f"| Depends | { ' '.join(depends)} |\n"
        
     if 'docs' in package:
