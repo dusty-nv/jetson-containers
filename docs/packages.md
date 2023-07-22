@@ -10,20 +10,19 @@
 | &nbsp;&nbsp; [`protobuf:cpp`](/packages/protobuf/protobuf_cpp) |  |
 | &nbsp;&nbsp; [`python`](/packages/python) |  |
 | &nbsp;&nbsp; [`rust`](/packages/rust) |  |
+| **`CORE`** | |
+| &nbsp;&nbsp; [`gstreamer`](/packages/gstreamer) |  |
+| &nbsp;&nbsp; [`jupyterlab`](/packages/jupyterlab) |  |
+| &nbsp;&nbsp; [`numpy`](/packages/numpy) |  |
+| &nbsp;&nbsp; [`opencv`](/packages/opencv) |  |
+| &nbsp;&nbsp; [`opencv_builder`](/packages/opencv/opencv_builder) |  |
 | **`CUDA`** | |
 | &nbsp;&nbsp; [`cupy`](/packages/cupy) |  |
 | &nbsp;&nbsp; [`numba`](/packages/numba) |  |
 | &nbsp;&nbsp; [`pycuda`](/packages/pycuda) |  |
-| **`CV`** | |
-| &nbsp;&nbsp; [`opencv`](/packages/opencv) |  |
-| &nbsp;&nbsp; [`opencv_builder`](/packages/opencv/opencv_builder) |  |
 | **`DIFFUSION`** | |
 | &nbsp;&nbsp; [`stable-diffusion`](/packages/diffusion/stable-diffusion) |  |
 | &nbsp;&nbsp; [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) |  |
-| **`GENERAL`** | |
-| &nbsp;&nbsp; [`gstreamer`](/packages/gstreamer) |  |
-| &nbsp;&nbsp; [`jupyterlab`](/packages/jupyterlab) |  |
-| &nbsp;&nbsp; [`numpy`](/packages/numpy) |  |
 | **`LLM`** | |
 | &nbsp;&nbsp; [`exllama`](/packages/llm/exllama) |  |
 | &nbsp;&nbsp; [`optimum`](/packages/llm/optimum) |  |
