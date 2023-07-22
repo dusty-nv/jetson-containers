@@ -16,5 +16,5 @@ package['build_args'] = {
     'ENABLE_NEON': ENABLE_NEON
 }
 
-package['category'] = 'cv'
+package['category'] = 'core'
 package['depends'] = ['cmake', 'python']

@@ -1,6 +1,6 @@
 #---
 # name: jupyterlab
-# category: general
+# category: core
 # depends: [python, numpy, rust]
 # notes: will autostart Jupyter server on port 8888 unless container entry CMD is overridden
 #---
