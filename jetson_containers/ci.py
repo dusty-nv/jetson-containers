@@ -52,10 +52,7 @@ def generate_workflow(package, root, l4t_version, simulate=False):
     txt += f"    runs-on: [self-hosted-jetson, r{l4t_version}]\n"
     txt += "    steps:\n"
     txt += "      - uses: actions/checkout@v3\n"
-    txt += f"      - run: echo \"Building {workflow_name}\"\n"
-    txt += f"      - run: env\n"
-    txt += f"      - run: ls -ll -a\n"
-    txt += f"      - run: cd jetson-containers && ./build.sh --name=runner/ --build-flags='--no-cache' {package['name']}"
+    txt += f"      - run: ./build.sh --name=runner/ --build-flags='--no-cache' {package['name']}"
     
     print(filename)
     print(txt)
