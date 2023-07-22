@@ -55,6 +55,7 @@ def generate_workflow(package, root, l4t_version, simulate=False):
     txt += f"      - run: echo \"Building {workflow_name}\"\n"
     txt += f"      - run: env\n"
     txt += f"      - run: ls -ll -a\n"
+    txt += f"      - run: cd jetson-containers && ./build.sh --name=runner/ --build-flags='--no-cache' {package['name']}"
     
     print(filename)
     print(txt)
@@ -129,7 +130,7 @@ if __name__ == "__main__":
     # generate args
     parser.add_argument('--packages', type=str, default='')
     parser.add_argument('--skip-packages', type=str, default='')
-    parser.add_argument('--l4t-versions', type=str, default='32.7,35.2')
+    parser.add_argument('--l4t-versions', type=str, default=str(L4T_VERSION)) #'32.7,35.2'
     parser.add_argument('--simulate', action='store_true')
     
     # register args
