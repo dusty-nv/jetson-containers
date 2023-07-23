@@ -1,0 +1,18 @@
+name: "pytorch_20-jp5"
+run-name: "Build pytorch:2.0 (JetPack 5.1)"
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - 'dev'
+    paths:
+      - '.github/workflows/pytorch_20-jp5.yml'
+      - 'packages/pytorch/*'
+      - '!packages/pytorch/README.md'
+jobs:
+  pytorch_20-jp5:
+    runs-on: [self-hosted, jetson, jp5.1]
+    steps:
+      - uses: actions/checkout@v3
+      - run: cat /etc/nv_tegra_release
+      - run: ./build.sh --name=runner/ --build-flags='--no-cache' pytorch:2.0
