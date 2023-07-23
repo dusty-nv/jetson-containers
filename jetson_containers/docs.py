@@ -93,7 +93,7 @@ def generate_package_docs(package, root, repo, simulate=False):
     dependants = dependant_packages(name)
     
     if len(dependants) > 0:
-        dependants = [f"[`{x}`]({find_package(x)['path'].replace(root,'')})" for x in dependants]
+        dependants = [f"[`{x}`]({find_package(x)['path'].replace(root,'')})" for x in sorted(dependants)]
         txt += f"| Dependants | {' '.join(dependants)} |\n"
     
     #if 'dockerfile' in package:
