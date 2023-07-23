@@ -18,3 +18,11 @@ jobs:
          env 
          echo $PWD 
          ls -a 
+      - run: |
+         cd $RUNNER_WORKSPACE 
+         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+         cd jetson-containers 
+         git checkout $GITHUB_SHA 
+         git pull 
+         git status 
+         ls -a 
