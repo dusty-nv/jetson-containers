@@ -66,12 +66,7 @@ def generate_package_docs(package, root, repo, simulate=False):
     """
     name = package['name']
     filename = os.path.join(package['path'], 'README.md')
-    txt = f"# {name} "
-    
-    if 'group' in package:
-        txt += f"<sup>({package['group']})</sup>"
-        
-    txt += "\n\n"
+    txt = f"# {name}\n\n"
     
     # ci/cd status
     workflows = find_package_workflows(name, root)

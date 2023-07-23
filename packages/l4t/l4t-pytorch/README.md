@@ -1,4 +1,4 @@
-# l4t-pytorch <sup>(ml)</sup>
+# l4t-pytorch
 
 [![`l4t-pytorch_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-pytorch_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-pytorch_jp51.yml)
 |            |            |
