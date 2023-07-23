@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Tool for managing GitHub actions and self-hosted runners
+# Tool for generating GitHub Action workflows and self-hosted runners.
 #
 # Setup/register self-hosted runner service:
 #   python3 -m jetson_containers.ci register --token $GITHUB_TOKEN
@@ -24,105 +24,8 @@ import pprint
 import argparse
 import subprocess
 
-from jetson_containers import find_package, find_packages, group_packages, resolve_dependencies, dependant_packages, L4T_VERSION
-
-
-_TABLE_DASH="------------"
-_TABLE_SPACE="            "
-    
-    
-def generate_package_list(packages, root, repo, filename='docs/packages.md', simulate=False):
-    """
-    Generate a markdown table of all the packages
-    """
-    filename = os.path.join(root, filename)
-    
-    txt = "# Packages\n"
-    txt += f"|{_TABLE_SPACE}|{_TABLE_SPACE}|\n"
-    txt += f"|{_TABLE_DASH}|{_TABLE_DASH}|\n"
-        
-    # group packages by category for navigability
-    groups = group_packages(packages, key='group', default='other')
-    
-    for group_name in sorted(list(groups.keys())):
-        group = groups[group_name]
-        
-        txt += f"| **`{group_name.upper()}`** | |\n"
-        
-        for name in sorted(list(group.keys())):
-            package = group[name]
-            txt += f"| &nbsp;&nbsp; [`{name}`]({package['path'].replace(root,'')}) | "
-            
-            workflows = find_package_workflows(name, root)
-
-            if len(workflows) > 0:
-                workflows = [f"[![`{workflow['name']}`]({repo}/actions/workflows/{workflow['name']}.yml/badge.svg)]({repo}/actions/workflows/{workflow['name']}.yml)" for workflow in workflows]
-                txt += f"{' '.join(workflows)}"
-
-            txt += " |\n"
-        
-    print(filename)
-    print(txt)
-    
-    if not simulate:
-        with open(filename, 'w') as file:
-            file.write(txt)
-    
-    
-def generate_package_docs(package, root, repo, simulate=False):
-    """
-    Generate a README.md for the package
-    """
-    name = package['name']
-    filename = os.path.join(package['path'], 'README.md')
-    txt = f"# {name}\n\n"
-    
-    # ci/cd status
-    workflows = find_package_workflows(name, root)
-
-    if len(workflows) > 0:
-        workflows = [f"[![`{workflow['name']}`]({repo}/actions/workflows/{workflow['name']}.yml/badge.svg)]({repo}/actions/workflows/{workflow['name']}.yml)" for workflow in workflows]
-        txt += f"{' '.join(workflows)}\n"
-
-    # info table
-    txt += f"|{_TABLE_SPACE}|{_TABLE_SPACE}|\n"
-    txt += f"|{_TABLE_DASH}|{_TABLE_DASH}|\n"
-    
-    if 'alias' in package:
-        txt += f"| Aliases | { ' '.join([f'`{x}`' for x in package['alias']])} |\n"
-        
-    #if 'category' in package:
-    #    txt += f"| Category | `{package['category']}` |\n"
-                
-    if 'depends' in package:
-        depends = resolve_dependencies(package['depends'], check=False)
-        depends = [f"[`{x}`]({find_package(x)['path'].replace(root,'')})" for x in depends]
-        txt += f"| Dependencies | {' '.join(depends)} |\n"
-       
-    dependants = dependant_packages(name)
-    
-    if len(dependants) > 0:
-        dependants = [f"[`{x}`]({find_package(x)['path'].replace(root,'')})" for x in dependants]
-        txt += f"| Dependants | {' '.join(dependants)} |\n"
-    
-    #if 'dockerfile' in package:
-    #    txt += f"| Dockerfile | [`{package['dockerfile']}`]({package['dockerfile']}) |\n"
-        
-    #if 'test' in package:
-    #    txt += f"| Tests | {' '.join([f'[`{test}`]({test})' for test in package['test']])} |\n"
-        
-    if 'docs' in package:
-        txt += f"{package['docs']}\n"
-        
-    if 'notes' in package:
-        txt += f"{package['notes']}\n"
-        
-    print(filename)
-    print(txt)
-    
-    if not simulate:
-        with open(filename, 'w') as file:
-            file.write(txt)
+from jetson_containers import (find_package, find_packages, group_packages, dependant_packages, resolve_dependencies, 
+                               L4T_VERSION, JETPACK_VERSION)
   
   
 def find_package_workflows(package, root):
@@ -165,12 +68,12 @@ def find_package_workflows(package, root):
     return workflows
         
     
-def generate_workflow(package, root, l4t_version, simulate=False):
+def generate_workflow(package, root, simulate=False):
     """
-    Generate the YAML workflow definition for building container for that package
+    Generate the YAML workflow definition for automated container builds for that package
     """
     name = package['name']
-    workflow_name = f"{name}{'-' if ':' in name else ':'}r{l4t_version}".replace(':','_').replace('.','')
+    workflow_name = f"{name}_jp{JETPACK_VERSION.major}{JETPACK_VERSION.minor}".replace(':','-').replace('.','')
     filename = os.path.join(root, '.github/workflows', f"{workflow_name}.yml")
     
     on_paths = [
@@ -181,24 +84,24 @@ def generate_workflow(package, root, l4t_version, simulate=False):
     ]
 
     txt = f"name: \"{workflow_name}\"\n"
-    txt += f"run-name: \"Build {name} (L4T {l4t_version})\"\n"  # update find_package_workflows() if this formatting changes
+    txt += f"run-name: \"Build {name} (JetPack {JETPACK_VERSION.major}.{JETPACK_VERSION.minor})\"\n"  # update find_package_workflows() if this formatting changes
     txt += "on:\n"
     txt += "  workflow_dispatch: {}\n"
     txt += "  push:\n"
     txt += "    branches:\n"
     txt += "      - 'dev'\n"
+    txt += "    paths:\n"
     
-    if len(on_paths) > 0:
-        txt += "    paths:\n"
-        for on_path in on_paths:
-            txt += f"      - '{on_path}'\n"  
+    for on_path in on_paths:
+        txt += f"      - '{on_path}'\n"  
             
     txt += "jobs:\n"
     txt += f"  {workflow_name}:\n"
-    txt += f"    runs-on: [self-hosted-jetson, r{l4t_version}]\n"
+    txt += f"    runs-on: [self-hosted, jetson, jp{JETPACK_VERSION.major}{JETPACK_VERSION.minor}]\n"
     txt += "    steps:\n"
     txt += "      - uses: actions/checkout@v3\n"
-    txt += f"      - run: ./build.sh --name=runner/ --build-flags='--no-cache' {package['name']}"
+    txt += "      - run: cat /etc/nv_tegra_release\n"
+    txt += f"      - run: ./build.sh --name=runner/ {package['name']}"  # --build-flags='--no-cache' 
     
     print(filename)
     print(txt)
@@ -216,7 +119,9 @@ def register_runner(token, root, repo, labels=[], prefix='runner', simulate=Fals
         raise ValueError(f"--token must be provided from GitHub when registering self-hosted runners")
             
     labels.extend([
-        'self-hosted-jetson',
+        'jetson',
+        f'jp{JETPACK_VERSION.major}{JETPACK_VERSION.minor}',
+        f'jp{JETPACK_VERSION.major}{JETPACK_VERSION.minor}{JETPACK_VERSION.micro}',
         f'r{L4T_VERSION.major}.{L4T_VERSION.minor}',
         f'r{L4T_VERSION}',
         socket.gethostname(),
@@ -247,7 +152,7 @@ def register_runner(token, root, repo, labels=[], prefix='runner', simulate=Fals
         
     # run config command
     cmd = f"cd {run_dir} && "
-    cmd += f"./config.sh --url {repo} --token {token} --labels {','.join(labels)} --unattended && sudo ./svc.sh install && sudo ./svc.sh status "
+    cmd += f"./config.sh --url {repo} --token {token} --labels {','.join(labels)} --unattended && sudo ./svc.sh install && sudo ./svc.sh start && sudo ./svc.sh status "
 
     print(f"-- Configuring self-hosted runner for {repo}\n")
     print(cmd)
@@ -267,23 +172,21 @@ def register_runner(token, root, repo, labels=[], prefix='runner', simulate=Fals
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     
-    parser.add_argument('cmd', type=str, choices=['generate', 'register', 'docs', 'docs_index'])
-    parser.add_argument('--root', type=str, default=os.path.dirname(os.path.dirname(__file__)))
+    parser.add_argument('cmd', type=str, choices=['generate', 'register'])
+    parser.add_argument('packages', type=str, nargs='*', default=[], help='packages to generate workflows for')
     
-    # generate args
-    parser.add_argument('--packages', type=str, default='')
+    parser.add_argument('--root', type=str, default=os.path.dirname(os.path.dirname(__file__)))
     parser.add_argument('--skip-packages', type=str, default='')
     parser.add_argument('--l4t-versions', type=str, default=str(L4T_VERSION)) #'32.7,35.2'
     parser.add_argument('--simulate', action='store_true')
     
-    # register args
     parser.add_argument('--token', type=str, default='')
     parser.add_argument('--labels', type=str, default='')
     parser.add_argument('--repo', type=str, default='https://github.com/dusty-nv/jetson-containers')
     
     args = parser.parse_args()
     
-    args.packages = re.split(',|;|:', args.packages)
+    #args.packages = re.split(',|;|:', args.packages)
     args.skip_packages = re.split(',|;|:', args.skip_packages)
     args.l4t_versions = re.split(',|;|:', args.l4t_versions)
     args.labels = re.split(',|;|:', args.labels)
@@ -294,13 +197,7 @@ if __name__ == "__main__":
     
     if args.cmd == 'generate':
         for package in packages.values():
-            for l4t_version in args.l4t_versions:
-                generate_workflow(package, args.root, l4t_version, simulate=args.simulate)
-    elif args.cmd == 'docs':
-        for package in packages.values():
-            generate_package_docs(package, args.root, args.repo, simulate=args.simulate)
-    elif args.cmd == 'docs_index':
-        generate_package_list(packages, args.root, args.repo, simulate=args.simulate)
+            generate_workflow(package, args.root, simulate=args.simulate)
     elif args.cmd == 'register':
         register_runner(args.token, args.root, args.repo, args.labels, simulate=args.simulate)
         
