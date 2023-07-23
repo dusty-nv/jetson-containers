@@ -20,7 +20,6 @@ jobs:
          echo "PWD=$PWD" 
          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
          cd jetson-containers 
-         git pull 
          git checkout $GITHUB_SHA 
          git status 
          ls -a 

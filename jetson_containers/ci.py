@@ -109,7 +109,6 @@ def generate_workflow(package, root, simulate=False):
     txt += "         echo \"PWD=$PWD\" \n"
     txt += "         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' \n"
     txt += "         cd jetson-containers \n"
-    txt += "         git pull \n"
     txt += "         git checkout $GITHUB_SHA \n"
     txt += "         git status \n"
     txt += "         ls -a \n"
