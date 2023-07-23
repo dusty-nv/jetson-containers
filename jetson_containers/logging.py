@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import datetime
 
 from .packages import _PACKAGE_ROOT
 
@@ -32,5 +33,5 @@ def set_log_dir(path, type='root', create=True):
         
  
 # default log dir is:  jetson-containers/logs
-set_log_dir(os.path.join(_PACKAGE_ROOT, 'logs'))
+set_log_dir(os.path.join(_PACKAGE_ROOT, 'logs', datetime.datetime.now().strftime('%Y%m%d_%H%M%S')))
 

@@ -39,7 +39,7 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
     # assign default container name and tag if needed
     if len(name) == 0:   
         name = packages[-1]
-    elif name.find(':') < 0 and name[-1] == '/':  # they gave a repo name to build under
+    elif name.find(':') < 0 and name[-1] == '/':  # they gave a namespace to build under
         name += packages[-1]
         
     if name.find(':') < 0:
