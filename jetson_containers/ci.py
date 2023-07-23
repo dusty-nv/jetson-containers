@@ -72,6 +72,9 @@ def generate_workflow(package, root, simulate=False):
     """
     Generate the YAML workflow definition for automated container builds for that package
     """
+    if not root:
+        root = os.path.dirname(os.path.dirname(__file__))
+        
     name = package['name']
     workflow_name = f"{name}_jp{JETPACK_VERSION.major}{JETPACK_VERSION.minor}".replace(':','-').replace('.','')
     filename = os.path.join(root, '.github/workflows', f"{workflow_name}.yml")
@@ -99,9 +102,20 @@ def generate_workflow(package, root, simulate=False):
     txt += f"  {workflow_name}:\n"
     txt += f"    runs-on: [self-hosted, jetson, jp{JETPACK_VERSION.major}{JETPACK_VERSION.minor}]\n"
     txt += "    steps:\n"
-    txt += "      - uses: actions/checkout@v3\n"
-    txt += "      - run: cat /etc/nv_tegra_release\n"
-    txt += f"      - run: ./build.sh --name=runner/ {package['name']}"  # --build-flags='--no-cache' 
+    txt += "      - run: |\n"
+    txt += "         cat /etc/nv_tegra_release \n"
+    txt += "         env \n"
+    txt += "         echo $PWD \n"
+    txt += "         ls -a \n"
+    txt += "      - run: |\n"
+    txt += "         cd $RUNNER_WORKSPACE \n"
+    txt += "         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' \n"
+    txt += "         cd jetson-containers \n"
+    txt += "         git pull \n"
+    txt += "         git checkout $GITHUB_SHA \n"
+    txt += "         git status \n"
+    txt += "         ls -a \n"
+    #txt += f"      - run: ./build.sh --name=runner/ {package['name']}"  # --build-flags='--no-cache' 
     
     print(filename)
     print(txt)
@@ -111,13 +125,16 @@ def generate_workflow(package, root, simulate=False):
             file.write(txt)
             
 
-def register_runner(token, root, repo, labels=[], prefix='runner', simulate=False):
+def register_runner(token, root, repo, labels=[], simulate=False):
     """
     Setup and register this machine as a self-hosted runner with GitHub
     """
     if not args.token:
         raise ValueError(f"--token must be provided from GitHub when registering self-hosted runners")
-            
+       
+    if not root:
+        root = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'runner')
+        
     labels.extend([
         'jetson',
         f'jp{JETPACK_VERSION.major}{JETPACK_VERSION.minor}',
@@ -130,18 +147,17 @@ def register_runner(token, root, repo, labels=[], prefix='runner', simulate=Fals
     labels = [x for x in labels if x]
     
     # github runner package
-    run_dir = os.path.join(root, prefix)
-    run_tar = os.path.join(run_dir, "actions-runner-linux-arm64-2.304.0.tar.gz")
+    run_tar = os.path.join(root, "actions-runner-linux-arm64-2.304.0.tar.gz")
     run_url = "https://github.com/actions/runner/releases/download/v2.304.0/actions-runner-linux-arm64-2.304.0.tar.gz"
     
     if not os.path.isfile(run_tar) and not simulate:
-        print(f"-- Installing self-hosted runner under {run_dir}")
-        os.makedirs(run_dir, exist_ok=True)
+        print(f"-- Installing self-hosted runner under {root}")
+        os.makedirs(root, exist_ok=True)
         wget.download(run_url, run_tar)
-        shutil.unpack_archive(run_tar, run_dir)
+        shutil.unpack_archive(run_tar, root)
         
     # github cli package
-    cli_deb = os.path.join(run_dir, "gh_2.32.0_linux_arm64.deb")
+    cli_deb = os.path.join(root, "gh_2.32.0_linux_arm64.deb")
     cli_url = "https://github.com/cli/cli/releases/download/v2.32.0/gh_2.32.0_linux_arm64.deb"
     
     if not os.path.isfile(cli_deb) and not simulate:
@@ -151,7 +167,7 @@ def register_runner(token, root, repo, labels=[], prefix='runner', simulate=Fals
         subprocess.run(cmd, executable='/bin/bash', shell=True, check=True) 
         
     # run config command
-    cmd = f"cd {run_dir} && "
+    cmd = f"cd {root} && "
     cmd += f"./config.sh --url {repo} --token {token} --labels {','.join(labels)} --unattended && sudo ./svc.sh install && sudo ./svc.sh start && sudo ./svc.sh status "
 
     print(f"-- Configuring self-hosted runner for {repo}\n")
@@ -162,7 +178,7 @@ def register_runner(token, root, repo, labels=[], prefix='runner', simulate=Fals
     
     # https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/configuring-the-self-hosted-runner-application-as-a-service
     print(f"\n-- Commands for interacting with the runner service:")
-    print(f"  cd {run_dir}\n")
+    print(f"  cd {root}\n")
     print(f"  sudo ./svc.sh start      # manually start the service")
     print(f"  sudo ./svc.sh stop       # manually stop the service")
     print(f"  sudo ./svc.sh status     # check the service status")
@@ -175,7 +191,7 @@ if __name__ == "__main__":
     parser.add_argument('cmd', type=str, choices=['generate', 'register'])
     parser.add_argument('packages', type=str, nargs='*', default=[], help='packages to generate workflows for')
     
-    parser.add_argument('--root', type=str, default=os.path.dirname(os.path.dirname(__file__)))
+    parser.add_argument('--root', type=str, default='')
     parser.add_argument('--skip-packages', type=str, default='')
     parser.add_argument('--l4t-versions', type=str, default=str(L4T_VERSION)) #'32.7,35.2'
     parser.add_argument('--simulate', action='store_true')
