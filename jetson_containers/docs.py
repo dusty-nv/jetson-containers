@@ -4,7 +4,7 @@
 #   python3 -m jetson_containers.docs package pytorch tensorflow
 #   python3 -m jetson_containers.docs package *
 #
-# Generate the package index (docs/packages.md)
+# Generate the package index (packages/README.md)
 #   python3 -m jetson_containers.docs index
 #
 import os
@@ -22,7 +22,7 @@ _TABLE_DASH="------------"
 _TABLE_SPACE="            "
     
     
-def generate_package_list(packages, root, repo, filename='docs/packages.md', simulate=False):
+def generate_package_list(packages, root, repo, filename='packages/README.md', simulate=False):
     """
     Generate a markdown table of all the packages
     """
