@@ -69,7 +69,7 @@ def generate_package_docs(package, root, repo, simulate=False):
     txt = f"# {name} "
     
     if 'group' in package:
-        txt += f"<sup>{package['group']}</sup>"
+        txt += f"<sup>({package['group']})</sup>"
         
     txt += "\n\n"
     
