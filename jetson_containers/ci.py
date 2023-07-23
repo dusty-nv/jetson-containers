@@ -2,11 +2,17 @@
 #
 # Tool for managing GitHub actions and self-hosted runners
 #
-# Generate build/test workflows from packages:
-#   L4T_VERSION=35.2.1 python3 -m jetson_containers.ci generate
-#
 # Setup/register self-hosted runner service:
 #   python3 -m jetson_containers.ci register --token $GITHUB_TOKEN
+#
+# Generate build/test workflows from packages:
+#   python3 -m jetson_containers.ci generate
+#
+# Generate package readme cards:
+#   python3 -m jetson_containers.ci docs --packages=xyz,abc
+#
+# Generate package list (docs/packages.md)
+#   python3 -m jetson_containers.ci docs_index
 #
 import os
 import re
@@ -36,7 +42,7 @@ def generate_package_list(packages, root, repo, filename='docs/packages.md', sim
     txt += f"|{_TABLE_DASH}|{_TABLE_DASH}|\n"
         
     # group packages by category for navigability
-    groups = group_packages(packages, key='category', default='other')
+    groups = group_packages(packages, key='group', default='other')
     
     for group_name in sorted(list(groups.keys())):
         group = groups[group_name]

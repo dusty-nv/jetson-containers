@@ -1,6 +1,6 @@
 #---
 # name: optimum
-# category: llm
+# group: llm
 # depends: [onnxruntime, transformers]
 # test: test.py
 #---

@@ -1,6 +1,6 @@
 #---
 # name: protobuf:apt
-# category: build
+# group: build
 # depends: [python]
 # test: [test.py, test.sh]
 # notes: install protobuf from apt repo

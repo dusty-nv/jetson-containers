@@ -1,6 +1,6 @@
 #---
 # name: pycuda
-# category: cuda
+# group: cuda
 # depends: [build-essential, python]
 # test: test.py
 #---

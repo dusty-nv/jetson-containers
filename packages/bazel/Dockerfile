@@ -1,6 +1,6 @@
 #---
 # name: bazel
-# category: build
+# group: build
 # depends: [build-essential]
 # test: test.sh
 #---

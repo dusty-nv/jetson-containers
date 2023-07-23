@@ -1,6 +1,6 @@
 #---
 # name: zed
-# category: sensors
+# group: sensors
 # config: config.py
 # depends: [python]
 # test: test.py

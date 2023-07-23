@@ -1,6 +1,6 @@
 #---
 # name: l4t-ml
-# category: ml
+# group: ml
 # depends: [pytorch, torchvision, torchaudio, tensorflow2, opencv, pycuda, cupy, onnxruntime, numba, jupyterlab]
 # test: [test_pandas.py, test_scipy.py, test_sklearn.py]
 #---

@@ -1,6 +1,6 @@
 #---
 # name: cupy
-# category: cuda
+# group: cuda
 # config: config.py
 # depends: [python, numpy]
 # test: test.py

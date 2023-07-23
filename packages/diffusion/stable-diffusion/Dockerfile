@@ -1,6 +1,6 @@
 #---
 # name: stable-diffusion
-# category: diffusion
+# group: diffusion
 # depends: [pytorch, torchvision]
 # test: test.sh
 #---

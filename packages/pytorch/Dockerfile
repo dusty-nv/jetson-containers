@@ -1,7 +1,7 @@
 #---
 # name: pytorch
 # alias: torch
-# category: ml
+# group: ml
 # config: config.py
 # depends: [python, numpy, onnx]
 # test: test.py

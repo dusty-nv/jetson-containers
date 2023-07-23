@@ -1,7 +1,7 @@
 #---
 # name: opencv
 # alias: opencv_cuda
-# category: core
+# group: core
 # config: config.py
 # depends: [python, numpy]
 # test: test.py
