@@ -13,6 +13,6 @@ def get_l4t_base():
             return f"nvcr.io/nvidia/l4t-jetpack:r{L4T_VERSION}"
     else:
         if L4T_VERSION >= Version('32.7.1'):
-            return "nvcr.io/nvidia/l4t-jetpack:r32.7.1"
+            return "nvcr.io/nvidia/l4t-base:r32.7.1"
         else:
             return f"nvcr.io/nvidia/l4t-base:r{L4T_VERSION}"
