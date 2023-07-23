@@ -21,7 +21,7 @@ ADD https://api.github.com/repos/dusty-nv/cudf/git/refs/heads/${CUDF_VERSION} /t
 #RUN cd /tmp && ./build_cudf.sh ${CUDF_VERSION} ${CUDF_CMAKE_CUDA_ARCHITECTURES}
 
 # DEBUG build in dockerfile
-ARG BUILD_DIR=/opt
+ARG BUILD_DIR=/opt/rapids
 WORKDIR ${BUILD_DIR}
 
 #
