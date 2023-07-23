@@ -17,7 +17,7 @@ jobs:
          cat /etc/nv_tegra_release 
       - run: |
          cd $RUNNER_WORKSPACE 
-         echo PWD=$PWD 
+         echo "PWD=$PWD" 
          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
          cd jetson-containers 
          git pull 

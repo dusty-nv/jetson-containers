@@ -106,7 +106,7 @@ def generate_workflow(package, root, simulate=False):
     txt += "         cat /etc/nv_tegra_release \n"
     txt += "      - run: |\n"
     txt += "         cd $RUNNER_WORKSPACE \n"
-    txt += "         echo PWD=$PWD \n"
+    txt += "         echo \"PWD=$PWD\" \n"
     txt += "         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' \n"
     txt += "         cd jetson-containers \n"
     txt += "         git pull \n"
