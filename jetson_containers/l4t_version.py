@@ -2,6 +2,7 @@
 # finds the versions of JetPack-L4T and CUDA from the build environment:
 #
 #    L4T_VERSION (packaging.version.Version)
+#    JETPACK_VERSION (packaging.version.Version)
 #    CUDA_VERSION (packaging.version.Version)
 #    CUDA_ARCHITECTURES (list[int]) -- e.g. [53, 62, 72, 87]
 #    SYSTEM_ARCH (str) -- e.g. 'aarch64' or 'x86_64'
@@ -12,7 +13,7 @@ import sys
 import json
 import platform
 
-from packaging import version
+from packaging.version import Version
 
 
 def get_l4t_version(version_file='/etc/nv_tegra_release'):
@@ -65,16 +66,96 @@ def get_l4t_version(version_file='/etc/nv_tegra_release'):
     l4t_revision = l4t_revision[len(l4t_revision_prefix):]
     
     # return packaging.version object
-    return version.parse(f'{l4t_release}.{l4t_revision}')
+    return Version(f'{l4t_release}.{l4t_revision}')
     
+ 
+def get_jetpack_version(l4t_version=get_l4t_version(), default='5.1'):
+    """
+    Returns the version of JetPack (based on the L4T version)
+    https://github.com/rbonghi/jetson_stats/blob/master/jtop/core/jetson_variables.py
+    """
+    if not isinstance(l4t_version, Version):
+        l4t_version = Version(l4t_version)
+        
+    NVIDIA_JETPACK = {
+        # -------- JP5 --------
+        "35.4.1": "5.1.2",
+        "35.3.1": "5.1.1",
+        "35.3.0": "5.1.1 PRE",
+        "35.2.1": "5.1",
+        "35.1.0": "5.0.2 GA",
+        "34.1.1": "5.0.1 DP",
+        "34.1.0": "5.0 DP",
+        "34.0.1": "5.0 PRE-DP",
+        # -------- JP4 --------
+        "32.7.4": "4.6.4",
+        "32.7.3": "4.6.3",
+        "32.7.2": "4.6.2",
+        "32.7.1": "4.6.1",
+        "32.6.1": "4.6",
+        "32.5.2": "4.5.1",
+        "32.5.1": "4.5.1",
+        "32.5.0": "4.5",
+        "32.5": "4.5",
+        "32.4.4": "4.4.1",
+        "32.4.3": "4.4",
+        "32.4.2": "4.4 DP",
+        "32.3.1": "4.3",
+        "32.2.3": "4.2.3",
+        "32.2.1": "4.2.2",
+        "32.2.0": "4.2.1",
+        "32.2": "4.2.1",
+        "32.1.0": "4.2",
+        "32.1": "4.2",
+        "31.1.0": "4.1.1",
+        "31.1": "4.1.1",
+        "31.0.2": "4.1",
+        "31.0.1": "4.0",
+        # -------- Old JP --------
+        "28.4.0": "3.3.3",
+        "28.2.1": "3.3 | 3.2.1",
+        "28.2.0": "3.2",
+        "28.2": "3.2",
+        "28.1.0": "3.1",
+        "28.1": "3.1",
+        "27.1.0": "3.0",
+        "27.1": "3.0",
+        "24.2.1": "3.0 | 2.3.1",
+        "24.2.0": "2.3",
+        "24.2": "2.3",
+        "24.1.0": "2.2.1 | 2.2",
+        "24.1": "2.2.1 | 2.2",
+        "23.2.0": "2.1",
+        "23.2": "2.1",
+        "23.1.0": "2.0",
+        "23.1": "2.0",
+        "21.5.0": "2.3.1 | 2.3",
+        "21.5": "2.3.1 | 2.3",
+        "21.4.0": "2.2 | 2.1 | 2.0 | 1.2 DP",
+        "21.4": "2.2 | 2.1 | 2.0 | 1.2 DP",
+        "21.3.0": "1.1 DP",
+        "21.3": "1.1 DP",
+        "21.2.0": "1.0 DP",
+        "21.2": "1.0 DP",
+    }
+
+    for key in NVIDIA_JETPACK:
+        if Version(key) == l4t_version:
+            return Version(NVIDIA_JETPACK[key].split(' ')[0])
     
+    if not default:
+        raise RuntimeError(f"invalid/unknown L4T_VERSION {l4t_version}")
+    else:
+        return Version(default)
+        
+        
 def get_cuda_version(version_file='/usr/local/cuda/version.json'):
     """
     Returns the installed version of the CUDA Toolkit in a packaging.version.Version object
     The CUDA_VERSION will either be parsed from /usr/local/cuda/version.json or the $CUDA_VERSION environment variable.
     """
     if 'CUDA_VERSION' in os.environ and len(os.environ['CUDA_VERSION']) > 0:
-        return version.parse(os.environ['CUDA_VERSION'])
+        return Version(os.environ['CUDA_VERSION'])
         
     if not os.path.isfile(version_file):
         raise IOError(f"L4T_VERSION file doesn't exist:  {version_file}")
@@ -82,11 +163,12 @@ def get_cuda_version(version_file='/usr/local/cuda/version.json'):
     with open(version_file) as file:
         versions = json.load(file)
         
-    return version.parse(versions['cuda_nvcc']['version'])
+    return Version(versions['cuda_nvcc']['version'])
 
 
 # set L4T_VERSION and CUDA_VERSION globals        
 L4T_VERSION = get_l4t_version()
+JETPACK_VERSION = get_jetpack_version()
 CUDA_VERSION = get_cuda_version()
 
 # Nano/TX1 = 5.3, TX2 = 6.2, Xavier = 7.2, Orin = 8.7
@@ -100,4 +182,4 @@ elif L4T_VERSION.major == 32:  # JetPack 4
 SYSTEM_ARCH = platform.machine()
 
 # Python version (3.6, 3.8, ect)
-PYTHON_VERSION = version.parse(f'{sys.version_info.major}.{sys.version_info.minor}')
+PYTHON_VERSION = Version(f'{sys.version_info.major}.{sys.version_info.minor}')
