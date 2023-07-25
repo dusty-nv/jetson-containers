@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+#
+# Find a container image that's compatible with the requested package(s),
+# either locally, built from source, or pulled from DockerHub.
+#
+# For example, you can use this to automatically run a package without tracking
+# down yourself exactly which container image/tag to run:
+#
+#   $ ./run.sh $(./autotag pytorch)
+#
+# Or interspersed with more run arguments:
+#
+#   $ ./run.sh --volume /my/dir:/mount $(./autotag tensorflow2)
+#   $ ./run.sh --volume /my/dir:/mount $(./autotag tensorflow2) /bin/bash -c 'some cmd'
+#
+# See jetson_containers/tag.py for optional autotag arguments.
+# By default, the most-recent local image will be preferred - then DockerHub will be checked.
+#
+ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+return_output=$(PYTHONPATH="$PYTHONPATH:$ROOT" python3 -m jetson_containers.tag "$@")
+return_status=$?
+
+printf "%s\n" "$return_output" >&2
+#echo $v
+
+if [ $return_status -ne 0 ]; then
+	echo "-- Error:  return code $return_status" >&2
+	exit $return_status
+fi
+
+echo $(echo "$return_output" | tail -1)
