@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import os
 import sys
+import json
+import pprint
 import traceback
 import subprocess
 
@@ -196,4 +198,61 @@ def test_container(name, package, simulate=False):
             
     return True
     
+    
+def get_local_containers():
+    """
+    Get the locally-available container images from the 'docker images' command
+    Returns a list of dicts with entries like the following:
+    
+        {"Containers":"N/A","CreatedAt":"2023-07-23 15:24:28 -0400 EDT","CreatedSince":"42 hours ago",
+         "Digest":"\u003cnone\u003e","ID":"6acd9e526f50","Repository":"runner/l4t-pytorch",
+         "SharedSize":"N/A","Size":"11.4GB","Tag":"r35.2.1","UniqueSize":"N/A","VirtualSize":"11.37GB"}   
+         
+    These containers are sorted by most recent created to the oldest.
+    """
+    status = subprocess.run(["sudo", "docker", "images", "--format", "'{{json . }}'"], capture_output=True, 
+                            universal_newlines=True, shell=False, check=True)
+
+    return [json.loads(txt.lstrip("'").rstrip("'"))
+            for txt in status.stdout.splitlines()]
         
+        
+def find_container(package):
+    """
+    Finds a local or remote container image to run for the given package.
+    TODO search for other packages that depend on this package if an image isn't available.
+    """
+    parts = package.split(':')
+    repo = parts[0]
+    registry = ''
+    tag = ''
+    
+    if len(parts) == 2:
+        tag = parts[1]
+        
+    parts = repo.split('/')
+    
+    if len(parts) == 2:
+        registry = parts[0]
+        repo = parts[1]
+        
+    #print(f"registry={registry} repo={repo} tag={tag}")
+    
+    # search for local container images containing this package
+    local_images = get_local_containers()
+        
+    for image in local_images:
+        if registry:
+            if image['Repository'] != f'{registry}/{repo}':
+                continue
+        else:
+            if image['Repository'].split('/')[-1] != repo:
+                continue
+
+        if tag and tag != image['Tag']:
+            continue
+            
+        return f"{image['Repository']}:{image['Tag']}"
+     
+    # compatible container image could not be found
+    return None
