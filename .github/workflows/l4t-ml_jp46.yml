@@ -1,0 +1,28 @@
+name: "l4t-ml_jp46"
+run-name: "Build l4t-ml (JetPack 4.6)"
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - 'dev'
+    paths:
+      - '.github/workflows/l4t-ml_jp46.yml'
+      - 'packages/l4t/l4t-ml/*'
+      - '!packages/l4t/l4t-ml/README.md'
+jobs:
+  l4t-ml_jp46:
+    runs-on: [self-hosted, jetson, jp46]
+    steps:
+      - run: |
+         cat /etc/nv_tegra_release 
+      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+        run: |
+         echo "$RUNNER_WORKSPACE" 
+         cd $RUNNER_WORKSPACE 
+         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+         cd jetson-containers 
+         git fetch origin 
+         git checkout $GITHUB_SHA 
+         git status 
+         ls -a 
+      - run: ./build.sh --name=runner/ l4t-ml
