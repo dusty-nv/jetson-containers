@@ -9,6 +9,7 @@
 #    PYTHON_VERSION (packaging.version.Version)
 #    
 import os
+import re
 import sys
 import json
 import platform
@@ -166,6 +167,64 @@ def get_cuda_version(version_file='/usr/local/cuda/version.json'):
     return Version(versions['cuda_nvcc']['version'])
 
 
+def get_l4t_base(l4t_version=get_l4t_version()):
+    """
+    Returns the l4t-base or l4t-jetpack container to use
+    """
+    if l4t_version.major >= 34:   # JetPack 5
+        if l4t_version >= Version('35.3.1'):
+            return "nvcr.io/nvidia/l4t-jetpack:r35.3.1"
+        else:
+            return f"nvcr.io/nvidia/l4t-jetpack:r{l4t_version}"
+    else:
+        if l4t_version >= Version('32.7.1'):
+            return "nvcr.io/nvidia/l4t-base:r32.7.1"
+        else:
+            return f"nvcr.io/nvidia/l4t-base:r{l4t_version}"
+            
+            
+def l4t_version_from_tag(tag):
+    """
+    Extract the L4T_VERSION from a container tag by searching it for patterns like 'r35.2.1' / ect.
+    Returns a packaging.version.Version object, or None if a valid L4T_VERSION couldn't be found in the tag.
+    """
+    tag = tag.split(':')[-1]
+    tag = re.split('-|_', tag)
+    
+    for t in tag:
+        if t[0] != 'r' and t[0] != 'R':
+            continue
+        try:
+            return Version(t[1:])
+        except:
+            continue
+            
+    return None
+
+
+def l4t_version_compatible(l4t_version, l4t_version_host=get_l4t_version()):
+    """
+    Returns true if the host OS can run containers built for the provided L4T version.
+    """
+    if not l4t_version:
+        return False
+        
+    if not isinstance(l4t_version, Version):
+        l4t_version = Version(l4t_version)
+        
+    if l4t_version_host.major >= 35: # JetPack 5.1 can run other JetPack 5.1.x containers
+        if l4t_version.major >= 35:
+            return True
+    elif l4t_version_host.major == 34: # JetPack 5.0 runs other JetPack 5.0.x containers
+        if l4t_version.major == 34:
+            return True
+    elif l4t_version_host >= Version('32.7'): # JetPack 4.6.1+ runs other JetPack 4.6.x containers
+        if l4t_version >= Version('32.7'):
+            return True
+            
+    return l4t_version == l4t_version_host
+    
+    
 # set L4T_VERSION and CUDA_VERSION globals        
 L4T_VERSION = get_l4t_version()
 JETPACK_VERSION = get_jetpack_version()

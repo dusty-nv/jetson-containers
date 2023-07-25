@@ -5,11 +5,13 @@ import json
 import pprint
 import traceback
 import subprocess
+import dockerhub_api 
 
 from .packages import find_package, find_packages, resolve_dependencies, validate_dict, _PACKAGE_ROOT
-from .l4t_version import L4T_VERSION
-from .base import get_l4t_base
+from .l4t_version import L4T_VERSION, l4t_version_from_tag, l4t_version_compatible, get_l4t_base
 from .logging import log_dir
+
+from packaging.version import Version
 
 
 _NEWLINE_=" \\\n"  # used when building command strings
@@ -199,7 +201,7 @@ def test_container(name, package, simulate=False):
     return True
     
     
-def get_local_containers():
+def find_local_containers():
     """
     Get the locally-available container images from the 'docker images' command
     Returns a list of dicts with entries like the following:
@@ -216,15 +218,33 @@ def get_local_containers():
     return [json.loads(txt.lstrip("'").rstrip("'"))
             for txt in status.stdout.splitlines()]
         
-        
-def find_container(package):
+ 
+def find_registry_containers(user='dustynv'):
+    """
+    Fetch a DockerHub user's public container images/tags.
+    Returns a list of dicts with keys like 'namespace', 'name', and 'tags'.
+
+    To view the number of requests remaining within the rate-limit:
+      curl -i https://hub.docker.com/v2/namespaces/dustynv/repositories/l4t-pytorch/tags
+    """
+    hub = dockerhub_api.DockerHub(return_lists=True)
+    repos = hub.repositories(user)
+    
+    for repo in repos:
+        repo['tags'] = hub.tags(user, repo['name'])
+
+    return repos
+    
+
+def find_container(package, verbose=False, **kwargs):
     """
     Finds a local or remote container image to run for the given package.
     TODO search for other packages that depend on this package if an image isn't available.
+    TODO check if the dockerhub image has updated vs local copy, and if so ask user if they want to pull it.
     """
     parts = package.split(':')
     repo = parts[0]
-    registry = ''
+    namespace = ''
     tag = ''
     
     if len(parts) == 2:
@@ -233,17 +253,21 @@ def find_container(package):
     parts = repo.split('/')
     
     if len(parts) == 2:
-        registry = parts[0]
+        namespace = parts[0]
         repo = parts[1]
         
-    #print(f"registry={registry} repo={repo} tag={tag}")
-    
+    if verbose:
+        print(f"-- Finding compatible container image for namespace={namespace} repo={repo} tag={tag}")
+
     # search for local container images containing this package
-    local_images = get_local_containers()
+    local_images = find_local_containers()
+        
+    if verbose:
+        pprint.pprint(local_images)
         
     for image in local_images:
-        if registry:
-            if image['Repository'] != f'{registry}/{repo}':
+        if namespace:
+            if image['Repository'] != f'{namespace}/{repo}':
                 continue
         else:
             if image['Repository'].split('/')[-1] != repo:
@@ -254,5 +278,28 @@ def find_container(package):
             
         return f"{image['Repository']}:{image['Tag']}"
      
+    # search dockerhub for compatible container images
+    registry_repos = find_registry_containers(**kwargs)
+    
+    if verbose:
+        pprint.pprint(registry_repos)
+
+    for registry_repo in registry_repos:
+        if registry_repo['name'] != repo:
+            continue
+            
+        for registry_image in registry_repo['tags']:
+            if tag and tag != registry_image['name']:
+                continue
+            
+            if not l4t_version_compatible(l4t_version_from_tag(registry_image['name'])):
+                continue
+                
+            return f"{registry_repo['namespace']}/{registry_repo['name']}:{registry_image['name']}"
+
+    print(f"\nCouldn't find a compatible container for {package}, would you like to build it?  (Y/N)")
+    build = input()
+    print('BUILD', build)
+    
     # compatible container image could not be found
     return None

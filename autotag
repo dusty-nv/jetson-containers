@@ -18,15 +18,26 @@
 #
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-return_output=$(PYTHONPATH="$PYTHONPATH:$ROOT" python3 -m jetson_containers.tag "$@")
-return_status=$?
+PYTHONPATH="$PYTHONPATH:$ROOT" python3 -m jetson_containers.tag "$@" >&2
 
-printf "%s\n" "$return_output" >&2
-#echo $v
+return_status=$?
 
 if [ $return_status -ne 0 ]; then
 	echo "-- Error:  return code $return_status" >&2
 	exit $return_status
 fi
 
-echo $(echo "$return_output" | tail -1)
+cat /tmp/autotag
+
+# this way didn't require a /tmp file, but couldn't have interactive input
+#return_output=$(PYTHONPATH="$PYTHONPATH:$ROOT" python3 -m jetson_containers.tag "$@")
+#return_status=$?
+
+#printf "%s\n" "$return_output" >&2
+
+#if [ $return_status -ne 0 ]; then
+#	echo "-- Error:  return code $return_status" >&2
+#	exit $return_status
+#fi
+
+#echo $(echo "$return_output" | tail -1)

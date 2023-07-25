@@ -26,7 +26,6 @@ def _install_dependencies():
         
 _install_dependencies()
 
-from .base import *
 from .logging import *
 from .packages import *
 from .container import *
