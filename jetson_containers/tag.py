@@ -6,7 +6,8 @@
 # For example, you can use this to automatically run a package without tracking
 # down yourself exactly which container image/tag to run:
 #
-#   $ ./run.sh $(./autotag pytorch)
+#   $ sudo docker run --runtime nvidia -it --rm $(./autotag pytorch)
+#   $ ./run.sh $(./autotag pytorch)   # shorthand for full 'docker run' command
 #
 # Or interspersed with more run arguments:
 #
@@ -14,6 +15,7 @@
 #   $ ./run.sh --volume /my/dir:/mount $(./autotag tensorflow2) /bin/bash -c 'some cmd'
 #
 # By default, the most-recent local image will be preferred - then DockerHub will be checked.
+# If a compatible image isn't found on DockerHub, the user will be asked if they want to build it.
 #
 import os
 import sys
