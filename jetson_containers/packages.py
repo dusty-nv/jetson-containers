@@ -2,19 +2,10 @@
 import os
 import sys
 import json
+import yaml
 import fnmatch
 import importlib
 
-try:
-    import yaml
-except Exception as error:
-    print(error)
-    print("Failed to import yaml - please install in it either of these ways:")
-    print("$ sudo apt-get update && sudo apt-get install python3-yaml")
-    print("$ pip3 install pyyaml")
-    sys.exit(os.EX_UNAVAILABLE)
-    
-# package globals
 _PACKAGES = {}
 
 _PACKAGE_SCAN = False
