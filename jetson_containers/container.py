@@ -10,6 +10,7 @@ import dockerhub_api
 from .packages import find_package, find_packages, resolve_dependencies, validate_dict, _PACKAGE_ROOT
 from .l4t_version import L4T_VERSION, l4t_version_from_tag, l4t_version_compatible, get_l4t_base
 from .logging import log_dir
+from .utils import query_yes_no
 
 from packaging.version import Version
 
@@ -17,7 +18,7 @@ from packaging.version import Version
 _NEWLINE_=" \\\n"  # used when building command strings
 
 
-def build_container(name, packages, base=get_l4t_base(), build_flags='', simulate=False, skip_tests=False):
+def build_container(name, packages, base=get_l4t_base(), build_flags='', simulate=False, skip_tests=[]):
     """
     Multi-stage container build that chains together selected packages.
     """
@@ -101,9 +102,9 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
     # re-run tests on final container
     for package in packages:
         if package not in skip_tests:
-            test_container(container_name, package, simulate)
+            test_container(name, package, simulate)
             
-    return container_name
+    return name
     
     
 def build_containers(name, packages, base=get_l4t_base(), build_flags='', simulate=False, skip_errors=False, skip_packages=[], skip_tests=[]):
@@ -297,9 +298,8 @@ def find_container(package, verbose=False, **kwargs):
                 
             return f"{registry_repo['namespace']}/{registry_repo['name']}:{registry_image['name']}"
 
-    print(f"\nCouldn't find a compatible container for {package}, would you like to build it?  (Y/N)")
-    build = input()
-    print('BUILD', build)
-    
+    if query_yes_no(f"\nCouldn't find a compatible container for {package}, would you like to build it?"):
+        return build_container('', package, simulate=True)
+
     # compatible container image could not be found
     return None
