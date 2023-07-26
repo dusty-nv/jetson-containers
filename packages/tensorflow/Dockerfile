@@ -3,7 +3,9 @@
 # group: ml
 # depends: [python, numpy, protobuf:cpp]
 # test: test.py
-# notes: the TensorFlow wheels are from https://docs.nvidia.com/deeplearning/frameworks/install-tf-jetson-platform
+# docs: |
+#   The [`l4t-tensorflow`](/packages/l4t/l4t-tensorflow) containers are similar, with the addition of OpenCV:CUDA and PyCUDA.
+#   The TensorFlow wheels used in these are from https://docs.nvidia.com/deeplearning/frameworks/install-tf-jetson-platform
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
