@@ -78,13 +78,6 @@ def generate_package_docs(packages, root, repo, simulate=False):
             if len(pkgs) > 1:
                 txt += "<details open>\n"
                 txt += f"<summary><h3>{name}</h3></summary>\n\n"
-
-            # ci/cd status
-            workflows = find_package_workflows(name, root)
-
-            if len(workflows) > 0:
-                workflows = [f"[![`{workflow['name']}`]({repo}/actions/workflows/{workflow['name']}.yml/badge.svg)]({repo}/actions/workflows/{workflow['name']}.yml)" for workflow in workflows]
-                txt += f"{' '.join(workflows)}\n"
             
             # info table
             txt += f"|{_TABLE_SPACE}|{_TABLE_SPACE}|\n"
@@ -92,6 +85,13 @@ def generate_package_docs(packages, root, repo, simulate=False):
             
             if 'alias' in package:
                 txt += f"| Aliases | { ' '.join([f'`{x}`' for x in package['alias']])} |\n"
+                
+            # ci/cd status
+            workflows = find_package_workflows(name, root)
+
+            if len(workflows) > 0:
+                workflows = [f"[![`{workflow['name']}`]({repo}/actions/workflows/{workflow['name']}.yml/badge.svg)]({repo}/actions/workflows/{workflow['name']}.yml)" for workflow in workflows]
+                txt += f"| Builds | {' '.join(workflows)} |\n"
                 
             #if 'category' in package:
             #    txt += f"| Category | `{package['category']}` |\n"
