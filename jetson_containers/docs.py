@@ -15,7 +15,7 @@ import argparse
 from jetson_containers import (find_package, find_packages, group_packages, dependant_packages, 
                                resolve_dependencies, L4T_VERSION, JETPACK_VERSION)
 
-from jetson_containers.ci import find_package_workflows
+from jetson_containers.ci import find_package_workflows, generate_workflow_badge
 
 
 _TABLE_DASH="------------"
@@ -58,8 +58,8 @@ def generate_package_list(packages, root, repo, filename='packages/README.md', s
     if not simulate:
         with open(filename, 'w') as file:
             file.write(txt)
-    
-    
+
+
 def generate_package_docs(packages, root, repo, simulate=False):
     """
     Generate README.md files for the supplied packages.
@@ -90,7 +90,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
             workflows = find_package_workflows(name, root)
 
             if len(workflows) > 0:
-                workflows = [f"[![`{workflow['name']}`]({repo}/actions/workflows/{workflow['name']}.yml/badge.svg)]({repo}/actions/workflows/{workflow['name']}.yml)" for workflow in workflows]
+                workflows = [generate_workflow_badge(workflow, repo) for workflow in workflows]
                 txt += f"| Builds | {' '.join(workflows)} |\n"
                 
             #if 'category' in package:

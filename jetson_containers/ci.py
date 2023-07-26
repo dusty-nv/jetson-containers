@@ -123,7 +123,15 @@ def generate_workflow(package, root, simulate=False):
         with open(filename, 'w') as file:
             file.write(txt)
             
-
+ 
+def generate_workflow_badge(workflow, repo):
+    """
+    Generate the markdown for a workflow status badge.
+    """
+    #return f"[![`{workflow['name']}`]({repo}/actions/workflows/{workflow['name']}.yml/badge.svg)]({repo}/actions/workflows/{workflow['name']}.yml)"
+    return f"![`{workflow['name']}`](https://img.shields.io/github/actions/workflow/status/{repo}/{workflow['name']}.yml?label={workflow['name']})"
+    
+    
 def register_runner(token, root, repo, labels=[], simulate=False):
     """
     Setup and register this machine as a self-hosted runner with GitHub
