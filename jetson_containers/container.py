@@ -219,6 +219,9 @@ def find_local_containers():
     return [json.loads(txt.lstrip("'").rstrip("'"))
             for txt in status.stdout.splitlines()]
         
+
+_REGISTRY_CACHE=[]  # use this as to not exceed DockerHub API rate limits
+
  
 def find_registry_containers(user='dustynv'):
     """
@@ -228,13 +231,18 @@ def find_registry_containers(user='dustynv'):
     To view the number of requests remaining within the rate-limit:
       curl -i https://hub.docker.com/v2/namespaces/dustynv/repositories/l4t-pytorch/tags
     """
-    hub = dockerhub_api.DockerHub(return_lists=True)
-    repos = hub.repositories(user)
+    global _REGISTRY_CACHE
     
-    for repo in repos:
+    if len(_REGISTRY_CACHE) > 0:
+        return _REGISTRY_CACHE
+        
+    hub = dockerhub_api.DockerHub(return_lists=True)
+    _REGISTRY_CACHE = hub.repositories(user)
+    
+    for repo in _REGISTRY_CACHE:
         repo['tags'] = hub.tags(user, repo['name'])
 
-    return repos
+    return _REGISTRY_CACHE
     
 
 def find_container(package, verbose=False, **kwargs):
