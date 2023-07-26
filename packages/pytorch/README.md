@@ -1,5 +1,8 @@
 # pytorch
 
+Containers for PyTorch with CUDA support.
+Note that the [`l4t-pytorch`](/packages/l4t/l4t-pytorch) containers also include PyTorch, torchvision, and torchaudio.
+
 <details open>
 <summary><h3>pytorch:2.1</h3></summary>
 
@@ -8,9 +11,6 @@
 | Aliases | `torch:2.1` |
 | Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) |
 | Dockerfile | [`Dockerfile`](Dockerfile) |
-
-The [`l4t-pytorch`](/packages/l4t/l4t-pytorch) container includes PyTorch, torchvision, and torchaudio.
-
 </details>
 <details open>
 <summary><h3>pytorch:2.0</h3></summary>

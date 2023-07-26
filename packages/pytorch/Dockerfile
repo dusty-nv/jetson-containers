@@ -6,7 +6,8 @@
 # depends: [python, numpy, onnx]
 # test: test.py
 # docs: |
-#  The [`l4t-pytorch`](/packages/l4t/l4t-pytorch) container includes PyTorch, torchvision, and torchaudio.
+#  Containers for PyTorch with CUDA support.
+#  Note that the [`l4t-pytorch`](/packages/l4t/l4t-pytorch) containers also include PyTorch, torchvision, and torchaudio.
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
