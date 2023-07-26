@@ -7,6 +7,7 @@
 |------------|------------|
 | Aliases | `torch:1.11` |
 | Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) |
+
 The [`l4t-pytorch`](/packages/l4t/l4t-pytorch) container includes PyTorch, torchvision, and torchaudio.
 
 </details>

@@ -115,11 +115,11 @@ def generate_package_docs(packages, root, repo, simulate=False):
             #    txt += f"| Tests | {' '.join([f'[`{test}`]({test})' for test in package['test']])} |\n"
                 
             if 'docs' in package and package['docs'] != docs:
-                txt += f"{package['docs']}\n"
+                txt += f"\n{package['docs']}\n"
                 docs = package['docs']
                 
             if 'notes' in package and package['notes'] != notes:
-                txt += f"{package['notes']}\n"
+                txt += f"\n{package['notes']}\n"
                 notes = package['notes']
         
             if len(pkgs) > 1:
