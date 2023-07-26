@@ -60,9 +60,75 @@ def generate_package_list(packages, root, repo, filename='packages/README.md', s
             file.write(txt)
     
     
-def generate_package_docs(package, root, repo, simulate=False):
+def generate_package_docs(packages, root, repo, simulate=False):
     """
-    Generate a README.md for the package
+    Generate README.md files for the supplied packages.
+    Group them by path so there's just one page per directory.
+    """
+    groups = group_packages(packages, 'path')
+    
+    for pkg_path, pkgs in groups.items():
+        filename = os.path.join(pkg_path, 'README.md')
+        txt = f"# {os.path.basename(pkg_path)}\n\n"
+        
+        docs = ''
+        notes = ''
+        
+        for name, package in pkgs.items():
+            txt += "<details open>\n"
+            txt += f"<summary>{name}</summary>\n"
+
+            # ci/cd status
+            workflows = find_package_workflows(name, root)
+
+            if len(workflows) > 0:
+                workflows = [f"[![`{workflow['name']}`]({repo}/actions/workflows/{workflow['name']}.yml/badge.svg)]({repo}/actions/workflows/{workflow['name']}.yml)" for workflow in workflows]
+                txt += f"{' '.join(workflows)}\n"
+            
+            # info table
+            txt += f"|{_TABLE_SPACE}|{_TABLE_SPACE}|\n"
+            txt += f"|{_TABLE_DASH}|{_TABLE_DASH}|\n"
+            
+            if 'alias' in package:
+                txt += f"| Aliases | { ' '.join([f'`{x}`' for x in package['alias']])} |\n"
+                
+            #if 'category' in package:
+            #    txt += f"| Category | `{package['category']}` |\n"
+                        
+            if 'depends' in package:
+                depends = resolve_dependencies(package['depends'], check=False)
+                depends = [f"[`{x}`]({find_package(x)['path'].replace(root,'')})" for x in depends]
+                txt += f"| Dependencies | {' '.join(depends)} |\n"
+               
+            dependants = dependant_packages(name)
+            
+            if len(dependants) > 0:
+                dependants = [f"[`{x}`]({find_package(x)['path'].replace(root,'')})" for x in sorted(dependants)]
+                txt += f"| Dependants | {' '.join(dependants)} |\n"
+            
+            #if 'dockerfile' in package:
+            #    txt += f"| Dockerfile | [`{package['dockerfile']}`]({package['dockerfile']}) |\n"
+                
+            #if 'test' in package:
+            #    txt += f"| Tests | {' '.join([f'[`{test}`]({test})' for test in package['test']])} |\n"
+                
+            if 'docs' in package and package['docs'] != docs:
+                txt += f"{package['docs']}\n"
+                docs = package['docs']
+                
+            if 'notes' in package and package['notes'] != notes:
+                txt += f"{package['notes']}\n"
+                notes = package['notes']
+        
+            txt += "</details>\n"
+        
+        print(filename)
+        print(txt)
+    
+        if not simulate:
+            with open(filename, 'w') as file:
+                file.write(txt)
+            
     """
     name = package['name']
     filename = os.path.join(package['path'], 'README.md')
@@ -114,7 +180,8 @@ def generate_package_docs(package, root, repo, simulate=False):
     if not simulate:
         with open(filename, 'w') as file:
             file.write(txt)
-  
+    """
+    
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -135,8 +202,7 @@ if __name__ == "__main__":
     packages = find_packages(args.packages, skip=args.skip_packages)
     
     if args.cmd == 'package' or args.cmd == 'packages':
-        for package in packages.values():
-            generate_package_docs(package, args.root, args.repo, simulate=args.simulate)
+        generate_package_docs(packages, args.root, args.repo, simulate=args.simulate)
     elif args.cmd == 'index':
         generate_package_list(packages, args.root, args.repo, simulate=args.simulate)
 
