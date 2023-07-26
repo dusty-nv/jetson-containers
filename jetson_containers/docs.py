@@ -77,7 +77,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
         
             if len(pkgs) > 1:
                 txt += "<details open>\n"
-                txt += f"<summary>`{name}`</summary>\n\n"
+                txt += f"<summary><b><pre>{name}</pre></b></summary>\n\n"
 
             # ci/cd status
             workflows = find_package_workflows(name, root)

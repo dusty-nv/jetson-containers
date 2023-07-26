@@ -1,7 +1,7 @@
 # pytorch
 
 <details open>
-<summary>`pytorch:2.1`</summary>
+<summary><b><pre>pytorch:2.1</pre></b></summary>
 
 |            |            |
 |------------|------------|
@@ -13,7 +13,7 @@ The [`l4t-pytorch`](/packages/l4t/l4t-pytorch) container includes PyTorch, torch
 
 </details>
 <details open>
-<summary>`pytorch:2.0`</summary>
+<summary><b><pre>pytorch:2.0</pre></b></summary>
 
 |            |            |
 |------------|------------|
@@ -23,7 +23,7 @@ The [`l4t-pytorch`](/packages/l4t/l4t-pytorch) container includes PyTorch, torch
 | Dockerfile | [`Dockerfile`](Dockerfile) |
 </details>
 <details open>
-<summary>`pytorch:1.13`</summary>
+<summary><b><pre>pytorch:1.13</pre></b></summary>
 
 |            |            |
 |------------|------------|
@@ -32,7 +32,7 @@ The [`l4t-pytorch`](/packages/l4t/l4t-pytorch) container includes PyTorch, torch
 | Dockerfile | [`Dockerfile`](Dockerfile) |
 </details>
 <details open>
-<summary>`pytorch:1.12`</summary>
+<summary><b><pre>pytorch:1.12</pre></b></summary>
 
 |            |            |
 |------------|------------|
@@ -41,7 +41,7 @@ The [`l4t-pytorch`](/packages/l4t/l4t-pytorch) container includes PyTorch, torch
 | Dockerfile | [`Dockerfile`](Dockerfile) |
 </details>
 <details open>
-<summary>`pytorch:1.11`</summary>
+<summary><b><pre>pytorch:1.11</pre></b></summary>
 
 |            |            |
 |------------|------------|
