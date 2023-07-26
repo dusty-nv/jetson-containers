@@ -68,7 +68,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
     groups = group_packages(packages, 'path')
     
     for pkg_path, pkgs in groups.items():
-        filename = os.path.join(pkg_path, 'README.md')
+        filename = os.path.join(pkg_path, 'readme.md')
         
         txt = ''
         docs = ''
