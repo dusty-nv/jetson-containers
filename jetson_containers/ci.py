@@ -128,8 +128,15 @@ def generate_workflow_badge(workflow, repo):
     """
     Generate the markdown for a workflow status badge.
     """
+    def remove_prefix(str, prefix):
+        return str[len(prefix):] if str.startswith(prefix) else str
+     
+    def remove_domain(url):
+        url = url.split('/')
+        return url[-2] + '/' + url[-1]
+
     #return f"[![`{workflow['name']}`]({repo}/actions/workflows/{workflow['name']}.yml/badge.svg)]({repo}/actions/workflows/{workflow['name']}.yml)"
-    return f"![`{workflow['name']}`](https://img.shields.io/github/actions/workflow/status/{repo}/{workflow['name']}.yml?label={workflow['name']})"
+    return f"[![`{workflow['name']}`](https://img.shields.io/github/actions/workflow/status/{remove_domain(repo)}/{workflow['name']}.yml?label={workflow['name']})]({repo}/actions/workflows/{workflow['name']}.yml)"
     
     
 def register_runner(token, root, repo, labels=[], simulate=False):
