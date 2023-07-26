@@ -3,6 +3,7 @@
 # group: ml
 # depends: [python, numpy, protobuf:cpp]
 # test: test.py
+# notes: the TensorFlow wheels are from https://docs.nvidia.com/deeplearning/frameworks/install-tf-jetson-platform
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
