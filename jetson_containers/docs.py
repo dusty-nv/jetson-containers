@@ -69,12 +69,12 @@ def generate_package_docs(packages, root, repo, simulate=False):
     
     for pkg_path, pkgs in groups.items():
         filename = os.path.join(pkg_path, 'README.md')
-        txt = f"# {os.path.basename(pkg_path)}\n\n"
         
+        txt = ''
         docs = ''
 
         for name, package in pkgs.items():
-        
+            # rolldown for subpackages
             if len(pkgs) > 1:
                 txt += "<details open>\n"
                 txt += f"<summary><h3>{name}</h3></summary>\n\n"
@@ -116,12 +116,16 @@ def generate_package_docs(packages, root, repo, simulate=False):
             if 'notes' in package:
                 txt += f"| Notes | {package['notes']} |\n"
                 
-            if 'docs' in package and package['docs'] != docs:
-                txt += f"\n{package['docs']}\n"
+            if 'docs' in package:
                 docs = package['docs']
                 
             if len(pkgs) > 1:
                 txt += "</details>\n"
+        
+        if docs:
+            txt = docs + '\n' + txt
+            
+        txt = f"# {os.path.basename(pkg_path)}\n\n" + txt
         
         print(filename)
         print(txt)
