@@ -75,8 +75,10 @@ def generate_package_docs(packages, root, repo, simulate=False):
         notes = ''
         
         for name, package in pkgs.items():
-            txt += "<details open>\n"
-            txt += f"<summary>{name}</summary>\n"
+        
+            if len(pkgs) > 1:
+                txt += "<details open>\n"
+                txt += f"<summary>{name}</summary>\n\n"
 
             # ci/cd status
             workflows = find_package_workflows(name, root)
@@ -120,7 +122,8 @@ def generate_package_docs(packages, root, repo, simulate=False):
                 txt += f"{package['notes']}\n"
                 notes = package['notes']
         
-            txt += "</details>\n"
+            if len(pkgs) > 1:
+                txt += "</details>\n"
         
         print(filename)
         print(txt)

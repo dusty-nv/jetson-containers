@@ -2,6 +2,7 @@
 
 <details open>
 <summary>pytorch:1.11</summary>
+
 |            |            |
 |------------|------------|
 | Aliases | `torch:1.11` |
@@ -11,6 +12,7 @@ The [`l4t-pytorch`](/packages/l4t/l4t-pytorch) container includes PyTorch, torch
 </details>
 <details open>
 <summary>pytorch:1.12</summary>
+
 |            |            |
 |------------|------------|
 | Aliases | `torch:1.12` |
@@ -18,6 +20,7 @@ The [`l4t-pytorch`](/packages/l4t/l4t-pytorch) container includes PyTorch, torch
 </details>
 <details open>
 <summary>pytorch:1.13</summary>
+
 |            |            |
 |------------|------------|
 | Aliases | `torch:1.13` |
@@ -25,6 +28,7 @@ The [`l4t-pytorch`](/packages/l4t/l4t-pytorch) container includes PyTorch, torch
 </details>
 <details open>
 <summary>pytorch:2.0</summary>
+
 |            |            |
 |------------|------------|
 | Aliases | `torch:2.0` `pytorch` `torch` |
@@ -33,6 +37,7 @@ The [`l4t-pytorch`](/packages/l4t/l4t-pytorch) container includes PyTorch, torch
 </details>
 <details open>
 <summary>pytorch:2.1</summary>
+
 |            |            |
 |------------|------------|
 | Aliases | `torch:2.1` |
