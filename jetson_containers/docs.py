@@ -72,13 +72,12 @@ def generate_package_docs(packages, root, repo, simulate=False):
         txt = f"# {os.path.basename(pkg_path)}\n\n"
         
         docs = ''
-        notes = ''
-        
+
         for name, package in pkgs.items():
         
             if len(pkgs) > 1:
                 txt += "<details open>\n"
-                txt += f"<summary>{name}</summary>\n\n"
+                txt += f"<summary>**`{name}`**</summary>\n\n"
 
             # ci/cd status
             workflows = find_package_workflows(name, root)
@@ -108,20 +107,19 @@ def generate_package_docs(packages, root, repo, simulate=False):
                 dependants = [f"[`{x}`]({find_package(x)['path'].replace(root,'')})" for x in sorted(dependants)]
                 txt += f"| Dependants | {' '.join(dependants)} |\n"
             
-            #if 'dockerfile' in package:
-            #    txt += f"| Dockerfile | [`{package['dockerfile']}`]({package['dockerfile']}) |\n"
+            if 'dockerfile' in package:
+                txt += f"| Dockerfile | [`{package['dockerfile']}`]({package['dockerfile']}) |\n"
                 
             #if 'test' in package:
             #    txt += f"| Tests | {' '.join([f'[`{test}`]({test})' for test in package['test']])} |\n"
+                
+            if 'notes' in package:
+                txt += f"| Notes | {package['notes']} |\n"
                 
             if 'docs' in package and package['docs'] != docs:
                 txt += f"\n{package['docs']}\n"
                 docs = package['docs']
                 
-            if 'notes' in package and package['notes'] != notes:
-                txt += f"\n{package['notes']}\n"
-                notes = package['notes']
-        
             if len(pkgs) > 1:
                 txt += "</details>\n"
         
