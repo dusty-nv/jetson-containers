@@ -9,7 +9,7 @@
 | Dependants | [`l4t-tensorflow:tf1`](/packages/l4t/l4t-tensorflow) |
 | Dockerfile | [`Dockerfile`](Dockerfile) |
 
-The [`l4t-tensorflow`](/packages/l4t/l4t-tensorflow) containers are similar, with the addition of OpenCV:CUDA and PyCUDA.  
+The [`l4t-tensorflow`](/packages/l4t/l4t-tensorflow) containers are similar, with the addition of OpenCV and PyCUDA.  
 
 The TensorFlow wheels used in these are from https://docs.nvidia.com/deeplearning/frameworks/install-tf-jetson-platform
 
