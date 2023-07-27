@@ -85,7 +85,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
         for i, name, in enumerate(pkgs):
             package = pkgs[name]
             
-            txt += f"| ***`{name}`*** | |\n"
+            txt += f"| **`{name}`** | |\n"
             txt += f"| :-- | :-- |\n"
                 
             if 'alias' in package:
@@ -130,7 +130,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
         # example commands for running the container
         run_txt = "\n<details open>\n"
         run_txt += "<summary><h3>Run Container</h3></summary>\n\n"
-        run_txt = "[`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts a [`/data`](/data) cache, and detects devices)\n" 
+        run_txt += "[`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts a [`/data`](/data) cache, and detects devices)\n" 
         run_txt += "```bash\n"
         run_txt += "# automatically pull or build a compatible container image\n"
         run_txt += f"./run.sh $(./autotag {pkg_name})\n"
