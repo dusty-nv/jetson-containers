@@ -22,12 +22,9 @@
 | &nbsp;&nbsp;[`dustynv/l4t-ml:r32.5.0-py3`](https://hub.docker.com/r/dustynv/l4t-ml/tags) | `2021-06-29` | `arm64` | `1.7GB` |
 | &nbsp;&nbsp;[`dustynv/l4t-ml:r32.6.1-py3`](https://hub.docker.com/r/dustynv/l4t-ml/tags) | `2021-12-13` | `arm64` | `1.5GB` |
 
-<sub><sup>* Container images are compatible with other minor versions of JetPack/L4T</sup></sub>
-
-<sub><sup>* L4T R32.7.1 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sup></sub>
-
-<sub><sup>* L4T R35.2.1 containers can run on other versions of L4T R35.x (JetPack 5.1+)</sup></sub>
-
+Container images are compatible with other minor versions of JetPack/L4T:
+* L4T R32.7.1 containers can run on other versions of L4T R32.7 (JetPack 4.6+)
+* L4T R35.2.1 containers can run on other versions of L4T R35.x (JetPack 5.1+)
 </details>
 
 <details open>

@@ -159,9 +159,9 @@ def generate_package_docs(packages, root, repo, simulate=False):
                     txt += f"| `{tag['full_size']/(1024**3):.1f}GB` |\n"
             
             txt += "\n"
-            txt += "<sub><sup>* Container images are compatible with other minor versions of JetPack/L4T</sup></sub>\n\n"
-            txt += "<sub><sup>* L4T R32.7.1 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sup></sub>\n\n"
-            txt += "<sub><sup>* L4T R35.2.1 containers can run on other versions of L4T R35.x (JetPack 5.1+)</sup></sub>\n\n"
+            txt += "Container images are compatible with other minor versions of JetPack/L4T:\n"
+            txt += "* L4T R32.7.1 containers can run on other versions of L4T R32.7 (JetPack 4.6+)\n"
+            txt += "* L4T R35.2.1 containers can run on other versions of L4T R35.x (JetPack 5.1+)\n"
             txt += "</details>\n"
         
         run_txt += "\n# or if using 'docker run' (specify image and mounts/ect)\n"
