@@ -77,9 +77,9 @@ def generate_package_docs(packages, root, repo, simulate=False):
 
         for i, name, in enumerate(pkgs):
             package = pkgs[name]
-            txt += f"| **`{name}`** | |\n"
             
-            #if i == 0:
+            txt += f"| <h3>{name}</h3> | |\n"
+            #txt += f"| **`{name}`** | |\n"
             txt += f"| :-- | :-- |\n"
                 
             if 'alias' in package:
