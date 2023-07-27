@@ -78,7 +78,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
         for i, name, in enumerate(pkgs):
             package = pkgs[name]
             
-            txt += f"| <h3>{name}</h3> | |\n"
+            txt += f"| <font size=\"+3\">{name}</font> | |\n"
             #txt += f"| **`{name}`** | |\n"
             txt += f"| :-- | :-- |\n"
                 
