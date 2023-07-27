@@ -8,7 +8,8 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 
 <details open>
 <summary><b>CONTAINERS</b></summary>
-</br>
+
+
 
 | **`ros:melodic-ros-base`** | |
 | :-- | :-- |
@@ -121,7 +122,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 
-</br></details>
+</details>
 
 <details open>
 <summary><b>CONTAINER IMAGES</b></summary>

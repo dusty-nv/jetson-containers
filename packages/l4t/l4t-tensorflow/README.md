@@ -2,7 +2,8 @@
 
 <details open>
 <summary><b>CONTAINERS</b></summary>
-</br>
+
+
 
 | **`l4t-tensorflow:tf1`** | |
 | :-- | :-- |
@@ -16,7 +17,7 @@
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`protobuf:cpp`](/packages/protobuf/protobuf_cpp) [`tensorflow2`](/packages/tensorflow) [`opencv`](/packages/opencv) [`pycuda`](/packages/pycuda) |
 
-</br></details>
+</details>
 
 <details open>
 <summary><b>RUN CONTAINER</b></summary>

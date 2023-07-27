@@ -2,7 +2,8 @@
 
 <details open>
 <summary><b>CONTAINERS</b></summary>
-</br>
+
+
 
 | **`l4t-pytorch`** | |
 | :-- | :-- |
@@ -10,7 +11,7 @@
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`torchaudio`](/packages/pytorch/torchaudio) [`torch2trt`](/packages/pytorch/torch2trt) [`opencv`](/packages/opencv) [`pycuda`](/packages/pycuda) |
 
-</br></details>
+</details>
 
 <details open>
 <summary><b>CONTAINER IMAGES</b></summary>
