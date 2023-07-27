@@ -79,8 +79,8 @@ def generate_package_docs(packages, root, repo, simulate=False):
             package = pkgs[name]
             txt += f"| **`{name}`** | |\n"
             
-            if i == 0:
-                txt += f"| :-- | :-- |\n"
+            #if i == 0:
+            txt += f"| :-- | :-- |\n"
                 
             if 'alias' in package:
                 txt += f"| {_NBSP}Aliases | { ' '.join([f'`{x}`' for x in package['alias']])} |\n"
