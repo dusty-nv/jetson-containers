@@ -1,7 +1,7 @@
 #---
 # name: bitsandbytes
 # group: llm
-# config: config.py
+# compat: '>=34.1.0'
 # depends: [build-essential, pytorch]
 # test: test.py
 #---

@@ -1,6 +1,7 @@
 #---
 # name: cuda-python
 # group: cuda
+# compat: '>=34.1.0'
 # config: config.py
 # depends: [build-essential, python, numpy]
 # test: [test_driver.py, test_runtime.py]

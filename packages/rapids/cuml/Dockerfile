@@ -1,6 +1,7 @@
 #---
 # name: cuml
 # group: rapids
+# compat: '>=34.1.0'
 # config: config.py
 # depends: [cudf]
 # test: [test.py]

@@ -1,6 +1,7 @@
 #---
 # name: deepstream
 # group: ml
+# compat: '>=32.6'
 # config: config.py
 # depends: [cmake, python, gstreamer, tritonserver]
 # test: [test.sh, test.py]

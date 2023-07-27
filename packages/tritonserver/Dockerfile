@@ -1,6 +1,7 @@
 #---
 # name: tritonserver
 # group: ml
+# compat: '>=32.6'
 # config: config.py
 # depends: [python]
 # test: test.py

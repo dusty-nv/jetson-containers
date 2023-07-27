@@ -1,7 +1,7 @@
 #---
 # name: awq
 # group: llm
-# config: config.py
+# compat: '>=34.1.0'
 # depends: [pytorch, torchvision, transformers]
 # test: test.sh
 #---

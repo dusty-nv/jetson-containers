@@ -1,6 +1,7 @@
 #---
 # name: cudf
 # group: rapids
+# compat: '>=34.1.0'
 # config: config.py
 # depends: [cmake, python, cupy, numba, protobuf:apt]
 # test: [test_cudf.py, test_dask.py]
