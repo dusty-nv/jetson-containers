@@ -7,7 +7,7 @@ Supported ROS distros:   `melodic` `noetic` `foxy` `galactic` `humble` `iron`
 Supported ROS packages:  `ros_base` `ros_core` `desktop`
 
 <details >
-<summary><h3>ros:melodic-ros-base</h3></summary>
+<summary>ros:melodic-ros-base</summary>
 
 |            |            |
 |------------|------------|
@@ -18,7 +18,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 
 </details>
 <details >
-<summary><h3>ros:melodic-ros-core</h3></summary>
+<summary>ros:melodic-ros-core</summary>
 
 |            |            |
 |------------|------------|
@@ -29,7 +29,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 
 </details>
 <details >
-<summary><h3>ros:melodic-desktop</h3></summary>
+<summary>ros:melodic-desktop</summary>
 
 |            |            |
 |------------|------------|
@@ -40,7 +40,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 
 </details>
 <details >
-<summary><h3>ros:noetic-ros-base</h3></summary>
+<summary>ros:noetic-ros-base</summary>
 
 |            |            |
 |------------|------------|
@@ -50,7 +50,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 
 </details>
 <details >
-<summary><h3>ros:noetic-ros-core</h3></summary>
+<summary>ros:noetic-ros-core</summary>
 
 |            |            |
 |------------|------------|
@@ -60,7 +60,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 
 </details>
 <details >
-<summary><h3>ros:noetic-desktop</h3></summary>
+<summary>ros:noetic-desktop</summary>
 
 |            |            |
 |------------|------------|
@@ -70,7 +70,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 
 </details>
 <details >
-<summary><h3>ros:foxy-ros-base</h3></summary>
+<summary>ros:foxy-ros-base</summary>
 
 |            |            |
 |------------|------------|
@@ -80,7 +80,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 
 </details>
 <details >
-<summary><h3>ros:foxy-ros-core</h3></summary>
+<summary>ros:foxy-ros-core</summary>
 
 |            |            |
 |------------|------------|
@@ -90,7 +90,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 
 </details>
 <details >
-<summary><h3>ros:foxy-desktop</h3></summary>
+<summary>ros:foxy-desktop</summary>
 
 |            |            |
 |------------|------------|
@@ -100,7 +100,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 
 </details>
 <details >
-<summary><h3>ros:galactic-ros-base</h3></summary>
+<summary>ros:galactic-ros-base</summary>
 
 |            |            |
 |------------|------------|
@@ -110,7 +110,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 
 </details>
 <details >
-<summary><h3>ros:galactic-ros-core</h3></summary>
+<summary>ros:galactic-ros-core</summary>
 
 |            |            |
 |------------|------------|
@@ -120,7 +120,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 
 </details>
 <details >
-<summary><h3>ros:galactic-desktop</h3></summary>
+<summary>ros:galactic-desktop</summary>
 
 |            |            |
 |------------|------------|
@@ -130,7 +130,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 
 </details>
 <details >
-<summary><h3>ros:humble-ros-base</h3></summary>
+<summary>ros:humble-ros-base</summary>
 
 |            |            |
 |------------|------------|
@@ -140,7 +140,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 
 </details>
 <details >
-<summary><h3>ros:humble-ros-core</h3></summary>
+<summary>ros:humble-ros-core</summary>
 
 |            |            |
 |------------|------------|
@@ -150,7 +150,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 
 </details>
 <details >
-<summary><h3>ros:humble-desktop</h3></summary>
+<summary>ros:humble-desktop</summary>
 
 |            |            |
 |------------|------------|
@@ -160,7 +160,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 
 </details>
 <details >
-<summary><h3>ros:iron-ros-base</h3></summary>
+<summary>ros:iron-ros-base</summary>
 
 |            |            |
 |------------|------------|
@@ -170,7 +170,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 
 </details>
 <details >
-<summary><h3>ros:iron-ros-core</h3></summary>
+<summary>ros:iron-ros-core</summary>
 
 |            |            |
 |------------|------------|
@@ -180,7 +180,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 
 </details>
 <details >
-<summary><h3>ros:iron-desktop</h3></summary>
+<summary>ros:iron-desktop</summary>
 
 |            |            |
 |------------|------------|

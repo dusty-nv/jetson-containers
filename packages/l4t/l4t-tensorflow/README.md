@@ -1,7 +1,7 @@
 # l4t-tensorflow
 
 <details open>
-<summary><h3>l4t-tensorflow:tf1</h3></summary>
+<summary>l4t-tensorflow:tf1</summary>
 
 |            |            |
 |------------|------------|
@@ -11,7 +11,7 @@
 
 </details>
 <details open>
-<summary><h3>l4t-tensorflow:tf2</h3></summary>
+<summary>l4t-tensorflow:tf2</summary>
 
 |            |            |
 |------------|------------|

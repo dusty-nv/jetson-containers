@@ -78,7 +78,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
             # rolldown for subpackages
             if len(pkgs) > 1:
                 txt += f"<details {'open' if len(pkgs)<=5 else ''}>\n"
-                txt += f"<summary><h3>{name}</h3></summary>\n\n"
+                txt += f"<summary>{name}</summary>\n\n"
             
             # info table
             txt += f"|{_TABLE_SPACE}|{_TABLE_SPACE}|\n"
