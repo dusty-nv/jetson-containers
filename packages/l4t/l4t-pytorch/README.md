@@ -2,6 +2,7 @@
 
 <details open>
 <summary><b>Containers</b></summary>
+</br>
 
 | **`l4t-pytorch`** | |
 | :-- | :-- |
@@ -13,6 +14,7 @@
 
 <details open>
 <summary><b>Container Images</b></summary>
+</br>
 
 - [`dustynv/l4t-pytorch:r35.1.0-pth1.13-py3`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags)  `arm64`  `(5.8GB)`
 - [`dustynv/l4t-pytorch:r35.1.0-pth1.12-py3`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags)  `arm64`  `(5.8GB)`
@@ -21,6 +23,7 @@
 
 <details open>
 <summary><b>Run Container</b></summary>
+</br>
 
 [`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts a [`/data`](/data) cache, and detects devices)
 ```bash
@@ -44,6 +47,7 @@ To start the container running a command, as opposed to the shell:
 </details>
 <details open>
 <summary><b>Build Container</b></summary>
+</br>
 
 If you use [`autotag`](/autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do this System Setup, then run:
 ```bash
