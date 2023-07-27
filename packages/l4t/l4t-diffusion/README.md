@@ -15,7 +15,7 @@
 <summary><b>RUN CONTAINER</b></summary>
 <br>
 
-Use either [`run.sh`](/run.sh)/[`autotag`](/autotag) or [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) to start the container:
+You can use the [`run.sh`](/run.sh)/[`autotag`](/autotag) helpers or a full [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command to start the container:
 ```bash
 # automatically pull or build a compatible container image
 ./run.sh $(./autotag l4t-diffusion)
@@ -24,8 +24,9 @@ Use either [`run.sh`](/run.sh)/[`autotag`](/autotag) or [`docker run`](https://d
 sudo docker run --runtime nvidia -it --rm --network=host l4t-diffusion:35.2.1
 
 ```
-> [`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)
+> [`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)<br>
 > [`autotag`](/autotag) finds a container image that's compatible with your version of JetPack/L4T, either locally, pulled from DockerHub, or built.
+
 To mount your own directories into the container, use the [`-v`](https://docs.docker.com/engine/reference/commandline/run/#volume) or [`--volume`](https://docs.docker.com/engine/reference/commandline/run/#volume) flags:
 ```bash
 ./run.sh -v /path/on/host:/path/in/container $(./autotag l4t-diffusion)
