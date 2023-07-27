@@ -13,7 +13,7 @@ import pprint
 import argparse
 
 from jetson_containers import (find_package, find_packages, group_packages, dependant_packages, 
-                               resolve_dependencies, L4T_VERSION, JETPACK_VERSION)
+                               resolve_dependencies, find_registry_containers, L4T_VERSION, JETPACK_VERSION)
 
 from jetson_containers.ci import find_package_workflows, generate_workflow_badge
 
@@ -68,11 +68,22 @@ def generate_package_docs(packages, root, repo, simulate=False):
     groups = group_packages(packages, 'path')
     
     for pkg_path, pkgs in groups.items():
+        pkg_name = os.path.basename(pkg_path)
         filename = os.path.join(pkg_path, 'README.md')
         
         txt = ''
         docs = ''
 
+        registry = find_registry_containers(pkg_name, check_l4t_version=False, return_dicts=True)
+        
+        if len(registry) > 0:
+            pprint.pprint(registry)
+            txt += "### Registry Container Images\n"
+            for container in registry:
+                for tag in container['tags']:
+                    txt += f"- [`{container['namespace']}/{container['name']}:{tag['name']}`](https://hub.docker.com/r/{container['namespace']}/{container['name']}/tags)  {tag['images'][0]['architecture']}  ({tag['full_size']/(1024**3):.1f}GB)\n"
+            txt += "\n"
+            
         for name, package in pkgs.items():
             # rolldown for subpackages
             if len(pkgs) > 1:
@@ -125,7 +136,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
         if docs:
             txt = docs + '\n' + txt
             
-        txt = f"# {os.path.basename(pkg_path)}\n\n" + txt
+        txt = f"# {pkg_name}\n\n" + txt
         
         print(filename)
         print(txt)
