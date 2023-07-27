@@ -10,7 +10,8 @@
 - [`dustynv/l4t-pytorch:r35.1.0-pth1.11-py3`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags)  `arm64`  `(5.7GB)`
 
 ### Run Container
-[`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts [`data`](/data) cache, and detects devices).
+[`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts [`data`](/data) cache, and detects devices)
+```bash
 # automatically pull or build a compatible container image
 ./run.sh $(./autotag l4t-pytorch)
 

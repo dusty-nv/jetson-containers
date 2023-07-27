@@ -131,7 +131,8 @@ def generate_package_docs(packages, root, repo, simulate=False):
         
         # example commands for running the container
         run_txt = "### Run Container\n"
-        run_txt += "[`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts [`data`](/data) cache, and detects devices).\n" 
+        run_txt += "[`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts [`data`](/data) cache, and detects devices)\n" 
+        run_txt += "```bash\n"
         run_txt += "# automatically pull or build a compatible container image\n"
         run_txt += f"./run.sh $(./autotag {pkg_name})\n"
         run_img = f"{pkg_name}:{L4T_VERSION}\n"
