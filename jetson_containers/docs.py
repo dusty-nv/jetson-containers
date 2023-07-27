@@ -75,7 +75,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
         docs = ''
 
         for name, package in pkgs.items():
-            txt += f"| Name | {name} |\n"
+            txt += f"| Name | **`{name}`** |\n"
             
             if 'alias' in package:
                 txt += f"| Aliases | { ' '.join([f'`{x}`' for x in package['alias']])} |\n"

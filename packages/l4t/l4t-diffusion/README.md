@@ -2,7 +2,7 @@
 
 |            |            |
 |------------|------------|
-| Name | l4t-diffusion |
+| Name | **`l4t-diffusion`** |
 | Requires | `L4T >=34.1.0` |
 | Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`stable-diffusion`](/packages/diffusion/stable-diffusion) [`opencv`](/packages/opencv) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) |
 
