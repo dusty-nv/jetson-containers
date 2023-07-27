@@ -1,11 +1,7 @@
 
 from jetson_containers import L4T_VERSION
 
-if L4T_VERSION.major >= 34:   # JetPack 5
-    ROS_DISTROS = ['noetic', 'foxy', 'galactic', 'humble', 'iron']
-elif L4T_VERSION.major == 32: # JetPack 4
-    ROS_DISTROS = ['melodic', 'noetic', 'foxy', 'galactic', 'humble', 'iron']
-
+ROS_DISTROS = ['melodic', 'noetic', 'foxy', 'galactic', 'humble', 'iron']
 ROS_PACKAGES = ['ros_base', 'ros_core', 'desktop']
 
 # add permutations of ROS distros/packages as subpackages
@@ -21,6 +17,7 @@ for ROS_DISTRO in ROS_DISTROS:
         pkg = template.copy()
         
         pkg['name'] = f"ros:{ROS_DISTRO}-{ROS_PACKAGE.replace('_', '-')}"
+        
         pkg['build_args'] = {
             'ROS_VERSION': ROS_DISTRO,
             'ROS_PACKAGE': ROS_PACKAGE
@@ -29,6 +26,7 @@ for ROS_DISTRO in ROS_DISTROS:
         if ROS_DISTRO == 'melodic':
             pkg['dockerfile'] = 'Dockerfile.ros.melodic'
             pkg['test'] = 'test_ros.sh'
+            pkg['requires'] = '<34'   # melodic is for 18.04 only
         elif ROS_DISTRO == 'noetic':
             pkg['dockerfile'] = 'Dockerfile.ros.noetic'
             pkg['test'] = 'test_ros.sh'
