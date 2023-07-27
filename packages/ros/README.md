@@ -237,9 +237,12 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 | &nbsp;&nbsp;[`dustynv/ros:noetic-ros-base-l4t-r35.3.1`](https://hub.docker.com/r/dustynv/ros/tags) | `2023-05-02` | `arm64` | `5.1GB` |
 
 <sub><sup>* Container images are compatible with other minor versions of JetPack/L4T</sup></sub>
-  <sub><sup>* L4T R32.7.1 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sup></sub>
-  <sub><sup>* L4T R35.2.1 containers can run on other versions of L4T R35.x (JetPack 5.1+)</sup></sub>
-  </details>
+
+<sub><sup>* L4T R32.7.1 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sup></sub>
+
+<sub><sup>* L4T R35.2.1 containers can run on other versions of L4T R35.x (JetPack 5.1+)</sup></sub>
+
+</details>
 
 <details open>
 <summary><b>RUN CONTAINER</b></summary>

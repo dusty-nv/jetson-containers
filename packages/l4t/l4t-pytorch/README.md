@@ -23,9 +23,12 @@
 | &nbsp;&nbsp;[`dustynv/l4t-pytorch:r35.1.0-pth1.13-py3`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) | `2022-09-20` | `arm64` | `5.8GB` |
 
 <sub><sup>* Container images are compatible with other minor versions of JetPack/L4T</sup></sub>
-  <sub><sup>* L4T R32.7.1 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sup></sub>
-  <sub><sup>* L4T R35.2.1 containers can run on other versions of L4T R35.x (JetPack 5.1+)</sup></sub>
-  </details>
+
+<sub><sup>* L4T R32.7.1 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sup></sub>
+
+<sub><sup>* L4T R35.2.1 containers can run on other versions of L4T R35.x (JetPack 5.1+)</sup></sub>
+
+</details>
 
 <details open>
 <summary><b>RUN CONTAINER</b></summary>
