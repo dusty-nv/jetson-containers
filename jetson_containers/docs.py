@@ -96,7 +96,9 @@ def generate_package_docs(packages, root, repo, simulate=False):
                 
             #if 'category' in package:
             #    txt += f"| Category | `{package['category']}` |\n"
-                        
+                 
+            txt += f"| Requires | `L4T {package['requires']}` |\n"
+            
             if 'depends' in package:
                 depends = resolve_dependencies(package['depends'], check=False)
                 depends = [f"[`{x}`]({find_package(x)['path'].replace(root,'')})" for x in depends]
@@ -113,8 +115,6 @@ def generate_package_docs(packages, root, repo, simulate=False):
                 
             #if 'test' in package:
             #    txt += f"| Tests | {' '.join([f'[`{test}`]({test})' for test in package['test']])} |\n"
-             
-            txt += f"| Requires | `L4T {package['requires']}` |\n"
             
             if 'notes' in package:
                 txt += f"| Notes | {package['notes']} |\n"
@@ -166,11 +166,11 @@ def generate_package_docs(packages, root, repo, simulate=False):
         run_txt += "```\n"
         
         run_txt += "### Build Container\n"
-        run_txt += "If you use [`autotag`](/autotag) as shown above, it'll ask to build the container if needed.  To manually build it:\n"
+        run_txt += "If you use [`autotag`](/autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do this System Setup, then run:\n"
         run_txt += "```bash\n"
         run_txt += f"./build.sh {pkg_name}\n"
         run_txt += "```\n"
-        run_txt += "The dependencies from above will be built into the container, and it'll be tested.  First you should setup your system.  See [`./build.sh --help`](/jetson_containers/build.py) for build options.\n"
+        run_txt += "The dependencies from above will be built into the container, and it'll be tested.  See [`./build.sh --help`](/jetson_containers/build.py) for build options.\n"
         
         txt += run_txt
         
