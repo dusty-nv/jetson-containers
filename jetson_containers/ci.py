@@ -24,8 +24,8 @@ import pprint
 import argparse
 import subprocess
 
-from jetson_containers import (find_package, find_packages, group_packages, dependant_packages, resolve_dependencies, 
-                               L4T_VERSION, JETPACK_VERSION)
+from jetson_containers import (find_package, find_packages, group_packages, dependant_packages,  
+                               resolve_dependencies, L4T_VERSION, JETPACK_VERSION)
   
   
 def find_package_workflows(package, root):
@@ -86,6 +86,13 @@ def generate_workflow(package, root, simulate=False):
         f"!{os.path.join(package['path'].replace(root+'/',''), 'README.md')}",
     ]
 
+    depends = resolve_dependencies(package.get('depends', []))
+    
+    for depend in depends:
+        depend_pkg = find_package(depend)
+        on_paths.append(os.path.join(depend_pkg['path'].replace(root+'/',''), '*'))
+        on_paths.append(f"!{os.path.join(depend_pkg['path'].replace(root+'/',''), 'README.md')}")
+        
     txt = f"name: \"{workflow_name}\"\n"
     txt += f"run-name: \"Build {name} (JetPack {JETPACK_VERSION.major}.{JETPACK_VERSION.minor})\"\n"  # update find_package_workflows() if this formatting changes
     txt += "on:\n"

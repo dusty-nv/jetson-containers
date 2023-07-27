@@ -9,6 +9,20 @@ on:
       - '.github/workflows/l4t-tensorflow-tf2_jp51.yml'
       - 'packages/l4t/l4t-tensorflow/*'
       - '!packages/l4t/l4t-tensorflow/README.md'
+      - 'packages/build-essential/*'
+      - '!packages/build-essential/README.md'
+      - 'packages/python/*'
+      - '!packages/python/README.md'
+      - 'packages/numpy/*'
+      - '!packages/numpy/README.md'
+      - 'packages/protobuf/protobuf_cpp/*'
+      - '!packages/protobuf/protobuf_cpp/README.md'
+      - 'packages/tensorflow/*'
+      - '!packages/tensorflow/README.md'
+      - 'packages/opencv/*'
+      - '!packages/opencv/README.md'
+      - 'packages/pycuda/*'
+      - '!packages/pycuda/README.md'
 jobs:
   l4t-tensorflow-tf2_jp51:
     runs-on: [self-hosted, jetson, jp51]
