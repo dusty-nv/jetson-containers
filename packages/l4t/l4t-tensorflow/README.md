@@ -17,16 +17,23 @@
 | Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`protobuf:cpp`](/packages/protobuf/protobuf_cpp) [`tensorflow2`](/packages/tensorflow) [`opencv`](/packages/opencv) [`pycuda`](/packages/pycuda) |
 </details>
 ### Run Container
-The [`run.sh`](/run.sh) script sets some default `docker run` args like `--runtime nvidia` and auto-mounts some devices.  It prints out the full `docker run` command generated.
-```bash
+[`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts [`data`](/data) cache, and detects devices).
 # automatically pull or build a compatible container image
 ./run.sh $(./autotag l4t-tensorflow)
+
+# or if using 'docker run' (specify image)
+sudo docker run --runtime nvidia -it --rm --network=host l4t-tensorflow:35.2.1
+
 ```
 To mount your own directories into the container, use the [`-v`](https://docs.docker.com/engine/reference/commandline/run/#volume) or [`--volume`](https://docs.docker.com/engine/reference/commandline/run/#volume) flags:
 ```bash
 ./run.sh -v /path/on/host:/path/in/container $(./autotag l4t-tensorflow)
 ```
-To start the container running a command as opposed to the shell:
+To start the container running a command, as opposed to the shell:
 ```bash
 ./run.sh $(./autotag l4t-tensorflow) my_app --abc xyz
+```
+### Build ContainerIf you use [`autotag`](/autotag) as shown above, it will ask to build the container if needed.  Tests are done during builds.
+```bash
+./build.sh l4t-tensorflow
 ```
