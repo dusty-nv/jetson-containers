@@ -75,42 +75,42 @@ def generate_package_docs(packages, root, repo, simulate=False):
         docs = ''
 
         for name, package in pkgs.items():
-            txt += f"| Name | **`{name}`** |\n"
+            txt += f"| **`{name}`** | |\n"
             
             if 'alias' in package:
-                txt += f"| Aliases | { ' '.join([f'`{x}`' for x in package['alias']])} |\n"
+                txt += f"| &nbsp;&nbsp; Aliases | { ' '.join([f'`{x}`' for x in package['alias']])} |\n"
                 
             # ci/cd status
             workflows = find_package_workflows(name, root)
 
             if len(workflows) > 0:
                 workflows = [generate_workflow_badge(workflow, repo) for workflow in workflows]
-                txt += f"| Builds | {' '.join(workflows)} |\n"
+                txt += f"| &nbsp;&nbsp; Builds | {' '.join(workflows)} |\n"
                 
             #if 'category' in package:
             #    txt += f"| Category | `{package['category']}` |\n"
                  
-            txt += f"| Requires | `L4T {package['requires']}` |\n"
+            txt += f"| &nbsp;&nbsp; Requires | `L4T {package['requires']}` |\n"
             
             if 'depends' in package:
                 depends = resolve_dependencies(package['depends'], check=False)
                 depends = [f"[`{x}`]({find_package(x)['path'].replace(root,'')})" for x in depends]
-                txt += f"| Dependencies | {' '.join(depends)} |\n"
+                txt += f"| &nbsp;&nbsp; Dependencies | {' '.join(depends)} |\n"
                
             dependants = dependant_packages(name)
             
             if len(dependants) > 0:
                 dependants = [f"[`{x}`]({find_package(x)['path'].replace(root,'')})" for x in sorted(dependants)]
-                txt += f"| Dependants | {' '.join(dependants)} |\n"
+                txt += f"| &nbsp;&nbsp; Dependants | {' '.join(dependants)} |\n"
             
             if 'dockerfile' in package:
-                txt += f"| Dockerfile | [`{package['dockerfile']}`]({package['dockerfile']}) |\n"
+                txt += f"| &nbsp;&nbsp; Dockerfile | [`{package['dockerfile']}`]({package['dockerfile']}) |\n"
                 
             #if 'test' in package:
             #    txt += f"| Tests | {' '.join([f'[`{test}`]({test})' for test in package['test']])} |\n"
             
             if 'notes' in package:
-                txt += f"| Notes | {package['notes']} |\n"
+                txt += f"| &nbsp;&nbsp; Notes | {package['notes']} |\n"
                 
             if 'docs' in package:
                 docs = package['docs']

@@ -8,98 +8,98 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 
 |            |            |
 |------------|------------|
-| Name | **`ros:melodic-ros-base`** |
-| Requires | `L4T <34` |
-| Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
-| Dockerfile | [`Dockerfile.ros.melodic`](Dockerfile.ros.melodic) |
-| Notes | ROS Melodic is for JetPack 4 only |
+| **`ros:melodic-ros-base`** | |
+| &nbsp;&nbsp; Requires | `L4T <34` |
+| &nbsp;&nbsp; Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
+| &nbsp;&nbsp; Dockerfile | [`Dockerfile.ros.melodic`](Dockerfile.ros.melodic) |
+| &nbsp;&nbsp; Notes | ROS Melodic is for JetPack 4 only |
 | | |
-| Name | **`ros:melodic-ros-core`** |
-| Requires | `L4T <34` |
-| Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
-| Dockerfile | [`Dockerfile.ros.melodic`](Dockerfile.ros.melodic) |
-| Notes | ROS Melodic is for JetPack 4 only |
+| **`ros:melodic-ros-core`** | |
+| &nbsp;&nbsp; Requires | `L4T <34` |
+| &nbsp;&nbsp; Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
+| &nbsp;&nbsp; Dockerfile | [`Dockerfile.ros.melodic`](Dockerfile.ros.melodic) |
+| &nbsp;&nbsp; Notes | ROS Melodic is for JetPack 4 only |
 | | |
-| Name | **`ros:melodic-desktop`** |
-| Requires | `L4T <34` |
-| Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
-| Dockerfile | [`Dockerfile.ros.melodic`](Dockerfile.ros.melodic) |
-| Notes | ROS Melodic is for JetPack 4 only |
+| **`ros:melodic-desktop`** | |
+| &nbsp;&nbsp; Requires | `L4T <34` |
+| &nbsp;&nbsp; Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
+| &nbsp;&nbsp; Dockerfile | [`Dockerfile.ros.melodic`](Dockerfile.ros.melodic) |
+| &nbsp;&nbsp; Notes | ROS Melodic is for JetPack 4 only |
 | | |
-| Name | **`ros:noetic-ros-base`** |
-| Requires | `L4T >=32.6` |
-| Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
-| Dockerfile | [`Dockerfile.ros.noetic`](Dockerfile.ros.noetic) |
+| **`ros:noetic-ros-base`** | |
+| &nbsp;&nbsp; Requires | `L4T >=32.6` |
+| &nbsp;&nbsp; Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
+| &nbsp;&nbsp; Dockerfile | [`Dockerfile.ros.noetic`](Dockerfile.ros.noetic) |
 | | |
-| Name | **`ros:noetic-ros-core`** |
-| Requires | `L4T >=32.6` |
-| Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
-| Dockerfile | [`Dockerfile.ros.noetic`](Dockerfile.ros.noetic) |
+| **`ros:noetic-ros-core`** | |
+| &nbsp;&nbsp; Requires | `L4T >=32.6` |
+| &nbsp;&nbsp; Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
+| &nbsp;&nbsp; Dockerfile | [`Dockerfile.ros.noetic`](Dockerfile.ros.noetic) |
 | | |
-| Name | **`ros:noetic-desktop`** |
-| Requires | `L4T >=32.6` |
-| Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
-| Dockerfile | [`Dockerfile.ros.noetic`](Dockerfile.ros.noetic) |
+| **`ros:noetic-desktop`** | |
+| &nbsp;&nbsp; Requires | `L4T >=32.6` |
+| &nbsp;&nbsp; Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
+| &nbsp;&nbsp; Dockerfile | [`Dockerfile.ros.noetic`](Dockerfile.ros.noetic) |
 | | |
-| Name | **`ros:foxy-ros-base`** |
-| Requires | `L4T >=32.6` |
-| Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
-| Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
+| **`ros:foxy-ros-base`** | |
+| &nbsp;&nbsp; Requires | `L4T >=32.6` |
+| &nbsp;&nbsp; Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
+| &nbsp;&nbsp; Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 | | |
-| Name | **`ros:foxy-ros-core`** |
-| Requires | `L4T >=32.6` |
-| Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
-| Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
+| **`ros:foxy-ros-core`** | |
+| &nbsp;&nbsp; Requires | `L4T >=32.6` |
+| &nbsp;&nbsp; Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
+| &nbsp;&nbsp; Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 | | |
-| Name | **`ros:foxy-desktop`** |
-| Requires | `L4T >=32.6` |
-| Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
-| Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
+| **`ros:foxy-desktop`** | |
+| &nbsp;&nbsp; Requires | `L4T >=32.6` |
+| &nbsp;&nbsp; Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
+| &nbsp;&nbsp; Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 | | |
-| Name | **`ros:galactic-ros-base`** |
-| Requires | `L4T >=32.6` |
-| Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
-| Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
+| **`ros:galactic-ros-base`** | |
+| &nbsp;&nbsp; Requires | `L4T >=32.6` |
+| &nbsp;&nbsp; Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
+| &nbsp;&nbsp; Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 | | |
-| Name | **`ros:galactic-ros-core`** |
-| Requires | `L4T >=32.6` |
-| Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
-| Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
+| **`ros:galactic-ros-core`** | |
+| &nbsp;&nbsp; Requires | `L4T >=32.6` |
+| &nbsp;&nbsp; Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
+| &nbsp;&nbsp; Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 | | |
-| Name | **`ros:galactic-desktop`** |
-| Requires | `L4T >=32.6` |
-| Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
-| Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
+| **`ros:galactic-desktop`** | |
+| &nbsp;&nbsp; Requires | `L4T >=32.6` |
+| &nbsp;&nbsp; Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
+| &nbsp;&nbsp; Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 | | |
-| Name | **`ros:humble-ros-base`** |
-| Requires | `L4T >=32.6` |
-| Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
-| Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
+| **`ros:humble-ros-base`** | |
+| &nbsp;&nbsp; Requires | `L4T >=32.6` |
+| &nbsp;&nbsp; Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
+| &nbsp;&nbsp; Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 | | |
-| Name | **`ros:humble-ros-core`** |
-| Requires | `L4T >=32.6` |
-| Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
-| Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
+| **`ros:humble-ros-core`** | |
+| &nbsp;&nbsp; Requires | `L4T >=32.6` |
+| &nbsp;&nbsp; Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
+| &nbsp;&nbsp; Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 | | |
-| Name | **`ros:humble-desktop`** |
-| Requires | `L4T >=32.6` |
-| Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
-| Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
+| **`ros:humble-desktop`** | |
+| &nbsp;&nbsp; Requires | `L4T >=32.6` |
+| &nbsp;&nbsp; Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
+| &nbsp;&nbsp; Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 | | |
-| Name | **`ros:iron-ros-base`** |
-| Requires | `L4T >=32.6` |
-| Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
-| Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
+| **`ros:iron-ros-base`** | |
+| &nbsp;&nbsp; Requires | `L4T >=32.6` |
+| &nbsp;&nbsp; Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
+| &nbsp;&nbsp; Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 | | |
-| Name | **`ros:iron-ros-core`** |
-| Requires | `L4T >=32.6` |
-| Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
-| Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
+| **`ros:iron-ros-core`** | |
+| &nbsp;&nbsp; Requires | `L4T >=32.6` |
+| &nbsp;&nbsp; Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
+| &nbsp;&nbsp; Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 | | |
-| Name | **`ros:iron-desktop`** |
-| Requires | `L4T >=32.6` |
-| Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
-| Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
+| **`ros:iron-desktop`** | |
+| &nbsp;&nbsp; Requires | `L4T >=32.6` |
+| &nbsp;&nbsp; Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
+| &nbsp;&nbsp; Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 | | |
 
 <details open>
