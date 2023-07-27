@@ -1,7 +1,7 @@
 # l4t-text-generation
 
 | **`l4t-text-generation`** | |
-|{_TABLE_DASH}|{_TABLE_DASH}|
+|------------|------------|
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`bitsandbytes`](/packages/llm/bitsandbytes) [`transformers`](/packages/llm/transformers) [`awq`](/packages/llm/awq) [`onnxruntime`](/packages/onnxruntime) [`optimum`](/packages/llm/optimum) [`auto-gptq`](/packages/llm/auto-gptq) [`gptq-for-llama`](/packages/llm/gptq-for-llama) [`text-generation-webui`](/packages/llm/text-generation-webui) [`rust`](/packages/rust) [`text-generation-inference`](/packages/llm/text-generation-inference) |
 

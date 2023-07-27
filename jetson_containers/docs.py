@@ -80,7 +80,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
             txt += f"| **`{name}`** | |\n"
             
             if i == 0:
-                txt += "|{_TABLE_DASH}|{_TABLE_DASH}|\n"
+                txt += f"|{_TABLE_DASH}|{_TABLE_DASH}|\n"
                 
             if 'alias' in package:
                 txt += f"| {_NBSP}Aliases | { ' '.join([f'`{x}`' for x in package['alias']])} |\n"
