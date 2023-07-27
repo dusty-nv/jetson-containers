@@ -17,12 +17,12 @@
 | Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`protobuf:cpp`](/packages/protobuf/protobuf_cpp) [`tensorflow2`](/packages/tensorflow) [`opencv`](/packages/opencv) [`pycuda`](/packages/pycuda) |
 </details>
 ### Run Container
-[`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts [`data`](/data) cache, and detects devices)
+[`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts a [`/data`](/data) cache, and detects devices)
 ```bash
 # automatically pull or build a compatible container image
 ./run.sh $(./autotag l4t-tensorflow)
 
-# or if using 'docker run' (specify image)
+# or if using 'docker run' (specify image and mounts/ect)
 sudo docker run --runtime nvidia -it --rm --network=host l4t-tensorflow:35.2.1
 
 ```
@@ -34,7 +34,9 @@ To start the container running a command, as opposed to the shell:
 ```bash
 ./run.sh $(./autotag l4t-tensorflow) my_app --abc xyz
 ```
-### Build ContainerIf you use [`autotag`](/autotag) as shown above, it will ask to build the container if needed.  Tests are done during builds.
+### Build Container
+If you use [`autotag`](/autotag) as shown above, it'll ask to build the container if needed.  To manually build it:
 ```bash
 ./build.sh l4t-tensorflow
+All dependencies will be built into the container, and it will be tested.
 ```

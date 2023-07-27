@@ -131,7 +131,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
         
         # example commands for running the container
         run_txt = "### Run Container\n"
-        run_txt += "[`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts [`data`](/data) cache, and detects devices)\n" 
+        run_txt += "[`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts a [`/data`](/data) cache, and detects devices)\n" 
         run_txt += "```bash\n"
         run_txt += "# automatically pull or build a compatible container image\n"
         run_txt += f"./run.sh $(./autotag {pkg_name})\n"
@@ -151,7 +151,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
                     txt += f"- [`{container['namespace']}/{container['name']}:{tag['name']}`](https://hub.docker.com/r/{container['namespace']}/{container['name']}/tags)  `{tag['images'][0]['architecture']}`  `({tag['full_size']/(1024**3):.1f}GB)`\n"
             txt += "\n"
         
-        run_txt += "\n# or if using 'docker run' (specify image)\n"
+        run_txt += "\n# or if using 'docker run' (specify image and mounts/ect)\n"
         run_txt += f"sudo docker run --runtime nvidia -it --rm --network=host {run_img}\n"
         run_txt += "```\n"
         run_txt += f"To mount your own directories into the container, use the [`-v`](https://docs.docker.com/engine/reference/commandline/run/#volume) or [`--volume`](https://docs.docker.com/engine/reference/commandline/run/#volume) flags:\n"
@@ -163,10 +163,11 @@ def generate_package_docs(packages, root, repo, simulate=False):
         run_txt += f"./run.sh $(./autotag {pkg_name}) my_app --abc xyz\n"
         run_txt += "```\n"
         
-        run_txt += "### Build Container"
-        run_txt += "If you use [`autotag`](/autotag) as shown above, it will ask to build the container if needed.  Tests are done during builds.\n"
+        run_txt += "### Build Container\n"
+        run_txt += "If you use [`autotag`](/autotag) as shown above, it'll ask to build the container if needed.  To manually build it:\n"
         run_txt += "```bash\n"
         run_txt += f"./build.sh {pkg_name}\n"
+        run_txt += "All dependencies will be built into the container, and it will be tested.\n"
         run_txt += "```\n"
         
         txt += run_txt

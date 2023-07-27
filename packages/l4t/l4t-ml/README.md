@@ -10,7 +10,7 @@
 - [`dustynv/l4t-ml:r32.5.0-py3`](https://hub.docker.com/r/dustynv/l4t-ml/tags)  `arm64`  `(1.7GB)`
 
 ### Run Container
-[`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts [`data`](/data) cache, and detects devices)
+[`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts a [`/data`](/data) cache, and detects devices)
 ```bash
 # automatically pull or build a compatible container image
 ./run.sh $(./autotag l4t-ml)
@@ -18,7 +18,7 @@
 # or manually specify one of the container images above
 ./run.sh dustynv/l4t-ml:r32.6.1-py3
 
-# or if using 'docker run' (specify image)
+# or if using 'docker run' (specify image and mounts/ect)
 sudo docker run --runtime nvidia -it --rm --network=host dustynv/l4t-ml:r32.6.1-py3
 ```
 To mount your own directories into the container, use the [`-v`](https://docs.docker.com/engine/reference/commandline/run/#volume) or [`--volume`](https://docs.docker.com/engine/reference/commandline/run/#volume) flags:
@@ -29,7 +29,9 @@ To start the container running a command, as opposed to the shell:
 ```bash
 ./run.sh $(./autotag l4t-ml) my_app --abc xyz
 ```
-### Build ContainerIf you use [`autotag`](/autotag) as shown above, it will ask to build the container if needed.  Tests are done during builds.
+### Build Container
+If you use [`autotag`](/autotag) as shown above, it'll ask to build the container if needed.  To manually build it:
 ```bash
 ./build.sh l4t-ml
+All dependencies will be built into the container, and it will be tested.
 ```
