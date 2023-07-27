@@ -1,9 +1,8 @@
 # l4t-ml
 
 <details open>
-<summary><b>CONTAINERS</b></summary>  
-
-  
+<summary><b>CONTAINERS</b></summary>
+</br>
 
 | **`l4t-ml`** | |
 | :-- | :-- |

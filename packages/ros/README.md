@@ -7,9 +7,8 @@ Supported ROS distros:   `melodic` `noetic` `foxy` `galactic` `humble` `iron`
 Supported ROS packages:  `ros_base` `ros_core` `desktop`
 
 <details open>
-<summary><b>CONTAINERS</b></summary>  
-
-  
+<summary><b>CONTAINERS</b></summary>
+</br>
 
 | **`ros:melodic-ros-base`** | |
 | :-- | :-- |

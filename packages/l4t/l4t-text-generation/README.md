@@ -1,9 +1,8 @@
 # l4t-text-generation
 
 <details open>
-<summary><b>CONTAINERS</b></summary>  
-
-  
+<summary><b>CONTAINERS</b></summary>
+</br>
 
 | **`l4t-text-generation`** | |
 | :-- | :-- |
