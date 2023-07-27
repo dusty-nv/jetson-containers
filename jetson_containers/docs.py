@@ -147,7 +147,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
             txt += "\n<details open>\n"
             txt += "<summary><b>CONTAINER IMAGES</b></summary>\n</br>\n\n"
             for container in registry:
-                for tag in container['tags']:
+                for tag in sorted(container['tags'], key=lambda x: x['name']):
                     txt += f"- [`{container['namespace']}/{container['name']}:{tag['name']}`](https://hub.docker.com/r/{container['namespace']}/{container['name']}/tags)  `{tag['images'][0]['architecture']}`  `({tag['full_size']/(1024**3):.1f}GB)`\n"
             txt += "</details>\n"
         
