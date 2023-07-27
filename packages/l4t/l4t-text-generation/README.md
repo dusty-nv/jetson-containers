@@ -15,7 +15,7 @@
 <summary><b>RUN CONTAINER</b></summary>
 <br>
 
-[`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts a [`/data`](/data) cache, and detects devices)
+Use either [`run.sh`](/run.sh)/[`autotag`](/autotag) or [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) to start the container:
 ```bash
 # automatically pull or build a compatible container image
 ./run.sh $(./autotag l4t-text-generation)
@@ -24,11 +24,13 @@
 sudo docker run --runtime nvidia -it --rm --network=host l4t-text-generation:35.2.1
 
 ```
+> [`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)
+> [`autotag`](/autotag) finds a container image that's compatible with your version of JetPack/L4T, either locally, pulled from DockerHub, or built.
 To mount your own directories into the container, use the [`-v`](https://docs.docker.com/engine/reference/commandline/run/#volume) or [`--volume`](https://docs.docker.com/engine/reference/commandline/run/#volume) flags:
 ```bash
 ./run.sh -v /path/on/host:/path/in/container $(./autotag l4t-text-generation)
 ```
-To start the container running a command, as opposed to the shell:
+To launch the container running a command, as opposed to an interactive shell:
 ```bash
 ./run.sh $(./autotag l4t-text-generation) my_app --abc xyz
 ```
