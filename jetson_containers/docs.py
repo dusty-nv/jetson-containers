@@ -77,7 +77,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
         for name, package in pkgs.items():
             # rolldown for subpackages
             if len(pkgs) > 1:
-                txt += "<details open>\n"
+                txt += f"<details {'open' if len(pkgs)>5 else ''}>\n"
                 txt += f"<summary><h3>{name}</h3></summary>\n\n"
             
             # info table
@@ -123,7 +123,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
                 docs = package['docs']
                 
             if len(pkgs) > 1:
-                txt += "</details>\n"
+                txt += "\n</details>\n"
         
         # add the help text back to the top (if one of the packages had it)
         if docs:
