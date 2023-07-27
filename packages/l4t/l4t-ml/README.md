@@ -17,10 +17,10 @@
 <summary><b>CONTAINER IMAGES</b></summary>
 </br>
 
-| Tag | Date | Arch | Size |
+| Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| [`dustynv/l4t-ml:r32.5.0-py3`](https://hub.docker.com/r/dustynv/l4t-ml/tags) | `arm64` | `2021-06-29` | `(1.7GB)` |
-| [`dustynv/l4t-ml:r32.6.1-py3`](https://hub.docker.com/r/dustynv/l4t-ml/tags) | `arm64` | `2021-12-13` | `(1.5GB)` |
+| [`dustynv/l4t-ml:r32.5.0-py3`](https://hub.docker.com/r/dustynv/l4t-ml/tags) | `2021-06-29` | `arm64` | `1.7GB` |
+| [`dustynv/l4t-ml:r32.6.1-py3`](https://hub.docker.com/r/dustynv/l4t-ml/tags) | `2021-12-13` | `arm64` | `1.5GB` |
 </details>
 
 <details open>
