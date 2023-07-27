@@ -31,19 +31,19 @@
 <summary><b>RUN CONTAINER</b></summary>
 <br>
 
-You can use the [`run.sh`](/run.sh)/[`autotag`](/autotag) helpers or a full [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command to start the container:
+You can use the [`run.sh`](/run.sh)/[`autotag`](/autotag) helpers, or construct a full [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command to start the container:
 ```bash
 # automatically pull or build a compatible container image
 ./run.sh $(./autotag l4t-pytorch)
 
-# or manually specify one of the container images above
+# or explicitly specify one of the container images above
 ./run.sh dustynv/l4t-pytorch:r35.1.0-pth1.13-py3
 
 # or if using 'docker run' (specify image and mounts/ect)
 sudo docker run --runtime nvidia -it --rm --network=host dustynv/l4t-pytorch:r35.1.0-pth1.13-py3
 ```
-> [`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)<br>
-> [`autotag`](/autotag) finds a container image that's compatible with your version of JetPack/L4T, either locally, pulled from DockerHub, or built.
+> <sub>[`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sub><br>
+> <sub>[`autotag`](/autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from DockerHub, or built.</sub>
 
 To mount your own directories into the container, use the [`-v`](https://docs.docker.com/engine/reference/commandline/run/#volume) or [`--volume`](https://docs.docker.com/engine/reference/commandline/run/#volume) flags:
 ```bash
