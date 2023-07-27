@@ -123,7 +123,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
                 docs = package['docs']
                 
             if len(pkgs) > 1:
-                txt += "</details>\n\n"
+                txt += "</details>\n"
         
         # add the help text back to the top (if one of the packages had it)
         if docs:
