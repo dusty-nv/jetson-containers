@@ -53,6 +53,7 @@ To launch the container running a command, as opposed to an interactive shell:
 ```bash
 ./run.sh $(./autotag l4t-ml) my_app --abc xyz
 ```
+You can pass any arguments to `run.sh` that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it will print out the full run command that it constructs before executing it.
 </details>
 <details open>
 <summary><b>BUILD CONTAINER</b></summary>
