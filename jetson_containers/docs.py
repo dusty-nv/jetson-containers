@@ -131,6 +131,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
         
         # example commands for running the container
         run_txt = "### Run Container\n"
+        run_txt += "The [`run.sh`](/run.sh) script sets some default `docker run` args like `--runtime nvidia` and auto-mounts some devices.  It prints out the full `docker run` command generated.\n"
         run_txt += "```bash\n"
         run_txt += "# automatically pull or build a compatible container image\n"
         run_txt += f"./run.sh $(./autotag {pkg_name})\n"
@@ -140,8 +141,8 @@ def generate_package_docs(packages, root, repo, simulate=False):
         
         if len(registry) > 0:
             pprint.pprint(registry)
-            run_txt += "\n# or manually specify one of the container images above:\n"
-            run_txt += f"./run.sh `{registry[0]['namespace']}/{registry[0]['name']}:{registry[0]['tags'][0]['name']}`\n"
+            run_txt += "\n# or manually specify one of the container images above\n"
+            run_txt += f"./run.sh {registry[0]['namespace']}/{registry[0]['name']}:{registry[0]['tags'][0]['name']}\n"
             txt += "### Container Images\n"
             for container in registry:
                 for tag in container['tags']:
@@ -152,6 +153,10 @@ def generate_package_docs(packages, root, repo, simulate=False):
         run_txt += f"To mount your own directories into the container, use the [`-v`](https://docs.docker.com/engine/reference/commandline/run/#volume) or [`--volume`](https://docs.docker.com/engine/reference/commandline/run/#volume) flags:\n"
         run_txt += "```bash\n"
         run_txt += f"./run.sh -v /path/on/host:/path/in/container $(./autotag {pkg_name})\n"
+        run_txt += "```\n"
+        run_txt += f"To start the container running a command as opposed to the shell:\n"
+        run_txt += "```bash\n"
+        run_txt += f"./run.sh $(./autotag {pkg_name}) my_app --abc xyz\n"
         run_txt += "```\n"
         
         txt += run_txt

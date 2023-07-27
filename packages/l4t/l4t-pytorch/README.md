@@ -10,14 +10,19 @@
 - [`dustynv/l4t-pytorch:r35.1.0-pth1.11-py3`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags)  `arm64`  `(5.7GB)`
 
 ### Run Container
+The [`run.sh`](/run.sh) script sets some default `docker run` args like `--runtime nvidia` and auto-mounts some devices.  It prints out the full `docker run` command generated.
 ```bash
 # automatically pull or build a compatible container image
 ./run.sh $(./autotag l4t-pytorch)
 
-# or manually specify one of the container images above:
-./run.sh `dustynv/l4t-pytorch:r35.1.0-pth1.13-py3`
+# or manually specify one of the container images above
+./run.sh dustynv/l4t-pytorch:r35.1.0-pth1.13-py3
 ```
 To mount your own directories into the container, use the [`-v`](https://docs.docker.com/engine/reference/commandline/run/#volume) or [`--volume`](https://docs.docker.com/engine/reference/commandline/run/#volume) flags:
 ```bash
 ./run.sh -v /path/on/host:/path/in/container $(./autotag l4t-pytorch)
+```
+To start the container running a command as opposed to the shell:
+```bash
+./run.sh $(./autotag l4t-pytorch) my_app --abc xyz
 ```
