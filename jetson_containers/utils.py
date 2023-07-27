@@ -62,3 +62,27 @@ def query_yes_no(question, default="no"):
             return valid[choice]
         else:
             sys.stdout.write("Please respond with 'yes' or 'no' " "(or 'y' or 'n').\n")
+
+
+def split_container_name(name):
+    """
+    Splits a container name like `dustynv/ros:tag` or `nvcr.io/nvidia/l4t-pytorch:tag`
+    into a (namespace, repository, tag) tuple (where namespace would be `dustynv` or
+    `nvcr.io/nvidia`, and repository would be `ros` or `l4t-pytorch`)
+    """
+    parts = name.split(':')
+    repo = parts[0]
+    namespace = ''
+    tag = ''
+    
+    if len(parts) == 2:
+        tag = parts[1]
+        
+    parts = repo.split('/')
+    
+    if len(parts) == 2:
+        namespace = parts[0]
+        repo = parts[1]
+        
+    return namespace, repo, tag
+    
