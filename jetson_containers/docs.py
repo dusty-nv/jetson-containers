@@ -147,11 +147,12 @@ def generate_package_docs(packages, root, repo, simulate=False):
             run_txt += "\n# or manually specify one of the container images above\n"
             run_img = f"{registry[0]['namespace']}/{registry[0]['name']}:{registry[0]['tags'][0]['name']}"
             run_txt += f"./run.sh {run_img}\n"
-            txt += "\n### Container Images\n"
+            txt += "\n<details open>\n"
+            txt += "<summary><h3>Container Images</h3></summary>\n\n"
             for container in registry:
                 for tag in container['tags']:
                     txt += f"- [`{container['namespace']}/{container['name']}:{tag['name']}`](https://hub.docker.com/r/{container['namespace']}/{container['name']}/tags)  `{tag['images'][0]['architecture']}`  `({tag['full_size']/(1024**3):.1f}GB)`\n"
-            txt += "\n"
+            txt += "</details>\n"
         
         run_txt += "\n# or if using 'docker run' (specify image and mounts/ect)\n"
         run_txt += f"sudo docker run --runtime nvidia -it --rm --network=host {run_img}\n"

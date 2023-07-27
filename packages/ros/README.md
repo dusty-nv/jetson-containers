@@ -1,5 +1,6 @@
 # ros
 
+ROS/ROS2 containers for JetPack.  These build ROS from source to run them on the needed versions of Ubuntu.
 <details open>
 <summary><h3>ros:melodic-ros-base</h3></summary>
 
@@ -8,6 +9,7 @@
 | Requires | `L4T <34` |
 | Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
 | Dockerfile | [`Dockerfile.ros.melodic`](Dockerfile.ros.melodic) |
+| Notes | for JetPack 4 only |
 </details>
 <details open>
 <summary><h3>ros:melodic-ros-core</h3></summary>
@@ -17,6 +19,7 @@
 | Requires | `L4T <34` |
 | Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
 | Dockerfile | [`Dockerfile.ros.melodic`](Dockerfile.ros.melodic) |
+| Notes | for JetPack 4 only |
 </details>
 <details open>
 <summary><h3>ros:melodic-desktop</h3></summary>
@@ -26,6 +29,7 @@
 | Requires | `L4T <34` |
 | Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
 | Dockerfile | [`Dockerfile.ros.melodic`](Dockerfile.ros.melodic) |
+| Notes | for JetPack 4 only |
 </details>
 <details open>
 <summary><h3>ros:noetic-ros-base</h3></summary>
@@ -163,7 +167,9 @@
 | Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 </details>
 
-### Container Images
+<details open>
+<summary><h3>Container Images</h3></summary>
+
 - [`dustynv/ros:iron-desktop-l4t-r35.1.0`](https://hub.docker.com/r/dustynv/ros/tags)  `arm64`  `(6.2GB)`
 - [`dustynv/ros:iron-pytorch-l4t-r35.1.0`](https://hub.docker.com/r/dustynv/ros/tags)  `arm64`  `(6.3GB)`
 - [`dustynv/ros:iron-ros-base-l4t-r35.1.0`](https://hub.docker.com/r/dustynv/ros/tags)  `arm64`  `(5.6GB)`
@@ -270,7 +276,7 @@
 - [`dustynv/ros:noetic-pytorch-l4t-r32.4.4`](https://hub.docker.com/r/dustynv/ros/tags)  `arm64`  `(1.1GB)`
 - [`dustynv/ros:noetic-ros-base-l4t-r32.4.4`](https://hub.docker.com/r/dustynv/ros/tags)  `arm64`  `(0.5GB)`
 - [`dustynv/ros:melodic-ros-base-l4t-r32.4.4`](https://hub.docker.com/r/dustynv/ros/tags)  `arm64`  `(0.5GB)`
-
+</details>
 
 ### Run Container
 [`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts a [`/data`](/data) cache, and detects devices)
