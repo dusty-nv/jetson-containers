@@ -2,7 +2,7 @@
 
 <details open>
 <summary><b>CONTAINERS</b></summary>
-</br>
+<br>
 
 | **`l4t-ml`** | |
 | :-- | :-- |
@@ -15,21 +15,21 @@
 
 <details open>
 <summary><b>CONTAINER IMAGES</b></summary>
-</br>
+<br>
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/l4t-ml:r32.5.0-py3`](https://hub.docker.com/r/dustynv/l4t-ml/tags) | `2021-06-29` | `arm64` | `1.7GB` |
 | &nbsp;&nbsp;[`dustynv/l4t-ml:r32.6.1-py3`](https://hub.docker.com/r/dustynv/l4t-ml/tags) | `2021-12-13` | `arm64` | `1.5GB` |
 
-> <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub></br>
-> <sub>&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub></br>
-> <sub>&nbsp;&nbsp;&nbsp;• L4T R35.x containers can run on other versions of L4T R35.x (JetPack 5.1+)</sub></br>
+> <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
+> <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
+> <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R35.x containers can run on other versions of L4T R35.x (JetPack 5.1+)</sub><br>
 </details>
 
 <details open>
 <summary><b>RUN CONTAINER</b></summary>
-</br>
+<br>
 
 [`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts a [`/data`](/data) cache, and detects devices)
 ```bash
@@ -53,7 +53,7 @@ To start the container running a command, as opposed to the shell:
 </details>
 <details open>
 <summary><b>BUILD CONTAINER</b></summary>
-</br>
+<br>
 
 If you use [`autotag`](/autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do this System Setup, then run:
 ```bash

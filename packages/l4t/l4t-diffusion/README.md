@@ -2,7 +2,7 @@
 
 <details open>
 <summary><b>CONTAINERS</b></summary>
-</br>
+<br>
 
 | **`l4t-diffusion`** | |
 | :-- | :-- |
@@ -13,7 +13,7 @@
 
 <details open>
 <summary><b>RUN CONTAINER</b></summary>
-</br>
+<br>
 
 [`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts a [`/data`](/data) cache, and detects devices)
 ```bash
@@ -35,7 +35,7 @@ To start the container running a command, as opposed to the shell:
 </details>
 <details open>
 <summary><b>BUILD CONTAINER</b></summary>
-</br>
+<br>
 
 If you use [`autotag`](/autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do this System Setup, then run:
 ```bash
