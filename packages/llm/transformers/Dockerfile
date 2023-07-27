@@ -4,7 +4,7 @@
 # group: llm
 # depends: [pytorch, torchvision]
 # test: test.py
-# notes: bitsandbytes dependency added on JetPack5 for 4/8-bit
+# notes: bitsandbytes dependency added on JetPack5 for 4-bit/8-bit quantization
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
