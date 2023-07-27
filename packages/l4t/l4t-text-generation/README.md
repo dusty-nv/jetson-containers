@@ -1,7 +1,7 @@
 # l4t-text-generation
 
 <details open>
-<summary><big>Containers</big></summary>
+<summary><h4>Containers</h4></summary>
 
 | **`l4t-text-generation`** | |
 | :-- | :-- |

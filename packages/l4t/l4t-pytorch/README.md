@@ -1,7 +1,7 @@
 # l4t-pytorch
 
 <details open>
-<summary><big>Containers</big></summary>
+<summary><h4>Containers</h4></summary>
 
 | **`l4t-pytorch`** | |
 | :-- | :-- |

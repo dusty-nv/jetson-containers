@@ -80,7 +80,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
                 break
 
         txt += "<details open>\n"
-        txt += "<summary><big>Containers</big></summary>\n\n"
+        txt += "<summary><h4>Containers</h4></summary>\n\n"
         
         for i, name, in enumerate(pkgs):
             package = pkgs[name]
