@@ -20,7 +20,7 @@ from jetson_containers.ci import find_package_workflows, generate_workflow_badge
 
 _TABLE_DASH="------------"
 _TABLE_SPACE="            "
-_NBSP="&nbsp;&nbsp;"
+_NBSP="&nbsp;&nbsp;&nbsp;"
     
     
 def generate_package_list(packages, root, repo, filename='packages/README.md', simulate=False):
@@ -79,19 +79,19 @@ def generate_package_docs(packages, root, repo, simulate=False):
             txt += f"| **`{name}`** | |\n"
             
             if 'alias' in package:
-                txt += f"| {_NBSP} Aliases | { ' '.join([f'`{x}`' for x in package['alias']])} |\n"
+                txt += f"| {_NBSP}Aliases | { ' '.join([f'`{x}`' for x in package['alias']])} |\n"
                 
             # ci/cd status
             workflows = find_package_workflows(name, root)
 
             if len(workflows) > 0:
                 workflows = [generate_workflow_badge(workflow, repo) for workflow in workflows]
-                txt += f"| {_NBSP} Builds | {' '.join(workflows)} |\n"
+                txt += f"| {_NBSP}Builds | {' '.join(workflows)} |\n"
                 
             #if 'category' in package:
             #    txt += f"| Category | `{package['category']}` |\n"
                  
-            txt += f"| {_NBSP} Requires | `L4T {package['requires']}` |\n"
+            txt += f"| {_NBSP}Requires | `L4T {package['requires']}` |\n"
             
             if 'depends' in package:
                 depends = resolve_dependencies(package['depends'], check=False)
@@ -102,16 +102,16 @@ def generate_package_docs(packages, root, repo, simulate=False):
             
             if len(dependants) > 0:
                 dependants = [f"[`{x}`]({find_package(x)['path'].replace(root,'')})" for x in sorted(dependants)]
-                txt += f"| {_NBSP} Dependants | {' '.join(dependants)} |\n"
+                txt += f"| {_NBSP}Dependants | {' '.join(dependants)} |\n"
             
             if 'dockerfile' in package:
-                txt += f"| {_NBSP} Dockerfile | [`{package['dockerfile']}`]({package['dockerfile']}) |\n"
+                txt += f"| {_NBSP}Dockerfile | [`{package['dockerfile']}`]({package['dockerfile']}) |\n"
                 
             #if 'test' in package:
             #    txt += f"| Tests | {' '.join([f'[`{test}`]({test})' for test in package['test']])} |\n"
             
             if 'notes' in package:
-                txt += f"| {_NBSP} Notes | {package['notes']} |\n"
+                txt += f"| {_NBSP}Notes | {package['notes']} |\n"
                 
             if 'docs' in package:
                 docs = package['docs']
