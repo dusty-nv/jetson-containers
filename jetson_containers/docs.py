@@ -96,7 +96,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
             if 'depends' in package:
                 depends = resolve_dependencies(package['depends'], check=False)
                 depends = [f"[`{x}`]({find_package(x)['path'].replace(root,'')})" for x in depends]
-                txt += f"| Dependencies | {' '.join(depends)} |\n"
+                txt += f"| {_NBSP}Dependencies | {' '.join(depends)} |\n"
                
             dependants = dependant_packages(name)
             
