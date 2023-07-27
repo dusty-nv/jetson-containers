@@ -1,0 +1,4 @@
+name: l4t-text-generation
+group: 'llm'
+requires: '>=34.1.0'
+depends: [awq, optimum, text-generation-webui, text-generation-inference]
