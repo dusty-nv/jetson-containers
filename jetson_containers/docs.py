@@ -178,7 +178,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
         run_txt += "```bash\n"
         run_txt += f"./run.sh $(./autotag {pkg_name}) my_app --abc xyz\n"
         run_txt += "```\n"
-        run_txt += "You can pass any arguments to `run.sh` that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it will print out the full run command that it constructs before executing it.\n"
+        run_txt += "You can pass any options to `run.sh` that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command before executing it.\n"
         run_txt += "</details>\n"
         
         run_txt += "<details open>\n"
