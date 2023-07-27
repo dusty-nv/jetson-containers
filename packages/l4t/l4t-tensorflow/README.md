@@ -1,6 +1,6 @@
 # l4t-tensorflow
 
-<details >
+<details open>
 <summary><h3>l4t-tensorflow:tf1</h3></summary>
 
 |            |            |
@@ -10,7 +10,7 @@
 | Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`protobuf:cpp`](/packages/protobuf/protobuf_cpp) [`tensorflow`](/packages/tensorflow) [`opencv`](/packages/opencv) [`pycuda`](/packages/pycuda) |
 
 </details>
-<details >
+<details open>
 <summary><h3>l4t-tensorflow:tf2</h3></summary>
 
 |            |            |

@@ -3,9 +3,10 @@
 Various ROS/ROS2 containers for JetPack.  These build ROS from source to run them on the needed versions of Ubuntu.
 
 Supported ROS distros:   `melodic` `noetic` `foxy` `galactic` `humble` `iron`
+</br>
 Supported ROS packages:  `ros_base` `ros_core` `desktop`
 
-<details open>
+<details >
 <summary><h3>ros:melodic-ros-base</h3></summary>
 
 |            |            |
@@ -16,7 +17,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 | Notes | ROS Melodic is for JetPack 4 only |
 
 </details>
-<details open>
+<details >
 <summary><h3>ros:melodic-ros-core</h3></summary>
 
 |            |            |
@@ -27,7 +28,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 | Notes | ROS Melodic is for JetPack 4 only |
 
 </details>
-<details open>
+<details >
 <summary><h3>ros:melodic-desktop</h3></summary>
 
 |            |            |
@@ -38,7 +39,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 | Notes | ROS Melodic is for JetPack 4 only |
 
 </details>
-<details open>
+<details >
 <summary><h3>ros:noetic-ros-base</h3></summary>
 
 |            |            |
@@ -48,7 +49,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 | Dockerfile | [`Dockerfile.ros.noetic`](Dockerfile.ros.noetic) |
 
 </details>
-<details open>
+<details >
 <summary><h3>ros:noetic-ros-core</h3></summary>
 
 |            |            |
@@ -58,7 +59,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 | Dockerfile | [`Dockerfile.ros.noetic`](Dockerfile.ros.noetic) |
 
 </details>
-<details open>
+<details >
 <summary><h3>ros:noetic-desktop</h3></summary>
 
 |            |            |
@@ -68,7 +69,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 | Dockerfile | [`Dockerfile.ros.noetic`](Dockerfile.ros.noetic) |
 
 </details>
-<details open>
+<details >
 <summary><h3>ros:foxy-ros-base</h3></summary>
 
 |            |            |
@@ -78,7 +79,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 | Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 
 </details>
-<details open>
+<details >
 <summary><h3>ros:foxy-ros-core</h3></summary>
 
 |            |            |
@@ -88,7 +89,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 | Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 
 </details>
-<details open>
+<details >
 <summary><h3>ros:foxy-desktop</h3></summary>
 
 |            |            |
@@ -98,7 +99,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 | Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 
 </details>
-<details open>
+<details >
 <summary><h3>ros:galactic-ros-base</h3></summary>
 
 |            |            |
@@ -108,7 +109,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 | Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 
 </details>
-<details open>
+<details >
 <summary><h3>ros:galactic-ros-core</h3></summary>
 
 |            |            |
@@ -118,7 +119,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 | Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 
 </details>
-<details open>
+<details >
 <summary><h3>ros:galactic-desktop</h3></summary>
 
 |            |            |
@@ -128,7 +129,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 | Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 
 </details>
-<details open>
+<details >
 <summary><h3>ros:humble-ros-base</h3></summary>
 
 |            |            |
@@ -138,7 +139,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 | Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 
 </details>
-<details open>
+<details >
 <summary><h3>ros:humble-ros-core</h3></summary>
 
 |            |            |
@@ -148,7 +149,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 | Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 
 </details>
-<details open>
+<details >
 <summary><h3>ros:humble-desktop</h3></summary>
 
 |            |            |
@@ -158,7 +159,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 | Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 
 </details>
-<details open>
+<details >
 <summary><h3>ros:iron-ros-base</h3></summary>
 
 |            |            |
@@ -168,7 +169,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 | Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 
 </details>
-<details open>
+<details >
 <summary><h3>ros:iron-ros-core</h3></summary>
 
 |            |            |
@@ -178,7 +179,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 | Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 
 </details>
-<details open>
+<details >
 <summary><h3>ros:iron-desktop</h3></summary>
 
 |            |            |
