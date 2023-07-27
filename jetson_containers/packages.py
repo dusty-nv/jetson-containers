@@ -14,9 +14,10 @@ _PACKAGES = {}
 _PACKAGE_SCAN = False
 _PACKAGE_ROOT = os.path.dirname(os.path.dirname(__file__))
 _PACKAGE_DIRS = [os.path.join(_PACKAGE_ROOT, 'packages/*')]
+_PACKAGE_OPTS = {'check_l4t_version': True}
 _PACKAGE_KEYS = ['alias', 'build_args', 'build_flags', 'config', 'depends', 'disabled',  
                  'dockerfile', 'docs', 'group', 'name', 'notes', 'path', 'requires', 'test']
-
+                 
 
 def package_search_dirs(package_dirs, scan=False):
     """
@@ -34,6 +35,15 @@ def package_search_dirs(package_dirs, scan=False):
     
     if scan:
         scan_packages(_PACKAGE_DIRS, rescan=True)
+    
+    
+def package_scan_options(dict):
+    """
+    Set global package scanning options
+      -- check_l4t_version:  if true (default), packages that don't meet the required L4T_VERSION of the host will be disabled
+    """
+    global _PACKAGE_OPTS
+    _PACKAGE_OPTS.update(dict)
     
     
 def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
@@ -215,7 +225,7 @@ def skip_packages(packages, skip):
             filtered[key] = value
                 
     return filtered
-   
+
 
 def group_packages(packages, key, default=''):
     """
@@ -377,8 +387,8 @@ def validate_package(package):
     for pkg in packages.copy():  # check to see if any packages were disabled
         pkg['requires'] = SpecifierSet(pkg['requires'])
         
-        if L4T_VERSION not in pkg['requires']:
-            print(f"-- Package {pkg['name']} isn't compatible with L4T r{L4T_VERSION} (requires {pkg['requires']})")
+        if _PACKAGE_OPTS['check_l4t_version'] and L4T_VERSION not in pkg['requires']:
+            print(f"-- Package {pkg['name']} isn't compatible with L4T r{L4T_VERSION} (requires L4T {pkg['requires']})")
             pkg['disabled'] = True
             
         if pkg.get('disabled', False):
