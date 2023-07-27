@@ -33,5 +33,5 @@ To start the container running a command, as opposed to the shell:
 If you use [`autotag`](/autotag) as shown above, it'll ask to build the container if needed.  To manually build it:
 ```bash
 ./build.sh l4t-ml
-All dependencies will be built into the container, and it will be tested.
 ```
+The dependencies from above will be built into the container, and it'll be tested.  See [`./build.sh --help`](/jetson_containers/build.py) for build options.
