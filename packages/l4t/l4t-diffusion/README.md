@@ -1,12 +1,15 @@
 # l4t-diffusion
 
-| <p style="font-size: 64px">l4t-diffusion</p> | |
+<details open>
+<summary><h3>Containers</h3></summary>
+
+| ***`l4t-diffusion`*** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`stable-diffusion`](/packages/diffusion/stable-diffusion) [`opencv`](/packages/opencv) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) |
 
+</details>
 
-### Run Container
 [`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts a [`/data`](/data) cache, and detects devices)
 ```bash
 # automatically pull or build a compatible container image
@@ -24,9 +27,15 @@ To start the container running a command, as opposed to the shell:
 ```bash
 ./run.sh $(./autotag l4t-diffusion) my_app --abc xyz
 ```
+</details>
+
+<details open>
+<summary><h3>Build Container</h3></summary>
+
 ### Build Container
 If you use [`autotag`](/autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do this System Setup, then run:
 ```bash
 ./build.sh l4t-diffusion
 ```
 The dependencies from above will be built into the container, and it'll be tested.  See [`./build.sh --help`](/jetson_containers/build.py) for build options.
+</details>

@@ -72,14 +72,20 @@ def generate_package_docs(packages, root, repo, simulate=False):
         pkg_name = os.path.basename(pkg_path)
         filename = os.path.join(pkg_path, 'README.md')
         
-        txt = '' #f"|{_TABLE_SPACE}|{_TABLE_SPACE}|\n|{_TABLE_DASH}|{_TABLE_DASH}|\n"
-        docs = ''
+        txt = f"# {pkg_name}\n\n"
+        
+        for package in pkgs.values():
+            if 'docs' in package:
+                txt += package['docs'] + '\n'
+                break
 
+        txt += "<details open>\n"
+        txt += "<summary><h3>Containers</h3></summary>\n\n"
+        
         for i, name, in enumerate(pkgs):
             package = pkgs[name]
             
-            txt += f"| <p style=\"font-size: 64px\">{name}</p> | |\n"
-            #txt += f"| **`{name}`** | |\n"
+            txt += f"| ***`{name}`*** | |\n"
             txt += f"| :-- | :-- |\n"
                 
             if 'alias' in package:
@@ -117,20 +123,14 @@ def generate_package_docs(packages, root, repo, simulate=False):
             if 'notes' in package:
                 txt += f"| {_NBSP}Notes | {package['notes']} |\n"
                 
-            if 'docs' in package:
-                docs = package['docs']
-                
             txt += "\n"
             
-        # add the help text back to the top (if one of the packages had it)
-        if docs:
-            txt = docs + '\n' + txt
-            
-        txt = f"# {pkg_name}\n\n" + txt
+        txt += "</details>\n\n"
         
         # example commands for running the container
-        run_txt = "\n### Run Container\n"
-        run_txt += "[`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts a [`/data`](/data) cache, and detects devices)\n" 
+        run_txt = "\n<details open>\n"
+        run_txt += "<summary><h3>Run Container</h3></summary>\n\n"
+        run_txt = "[`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts a [`/data`](/data) cache, and detects devices)\n" 
         run_txt += "```bash\n"
         run_txt += "# automatically pull or build a compatible container image\n"
         run_txt += f"./run.sh $(./autotag {pkg_name})\n"
@@ -162,13 +162,17 @@ def generate_package_docs(packages, root, repo, simulate=False):
         run_txt += "```bash\n"
         run_txt += f"./run.sh $(./autotag {pkg_name}) my_app --abc xyz\n"
         run_txt += "```\n"
+        run_txt += "</details>\n"
         
+        run_txt += "\n<details open>\n"
+        run_txt += "<summary><h3>Build Container</h3></summary>\n\n"
         run_txt += "### Build Container\n"
         run_txt += "If you use [`autotag`](/autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do this System Setup, then run:\n"
         run_txt += "```bash\n"
         run_txt += f"./build.sh {pkg_name}\n"
         run_txt += "```\n"
         run_txt += "The dependencies from above will be built into the container, and it'll be tested.  See [`./build.sh --help`](/jetson_containers/build.py) for build options.\n"
+        run_txt += "</details>\n"
         
         txt += run_txt
         
