@@ -1,7 +1,7 @@
 # l4t-ml
 
 <details open>
-<summary><h4>Containers</h4></summary>
+<summary><b>Containers</b></summary>
 
 | **`l4t-ml`** | |
 | :-- | :-- |
@@ -13,14 +13,14 @@
 </details>
 
 <details open>
-<summary>**Container Images**</summary>
+<summary><b>Container Images</b></summary>
 
 - [`dustynv/l4t-ml:r32.6.1-py3`](https://hub.docker.com/r/dustynv/l4t-ml/tags)  `arm64`  `(1.5GB)`
 - [`dustynv/l4t-ml:r32.5.0-py3`](https://hub.docker.com/r/dustynv/l4t-ml/tags)  `arm64`  `(1.7GB)`
 </details>
 
 <details open>
-<summary>**Run Container**</summary>
+<summary><b>Run Container</b></summary>
 
 [`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts a [`/data`](/data) cache, and detects devices)
 ```bash
@@ -43,7 +43,7 @@ To start the container running a command, as opposed to the shell:
 ```
 </details>
 <details open>
-<summary>**Build Container**</summary>
+<summary><b>Build Container</b></summary>
 
 If you use [`autotag`](/autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do this System Setup, then run:
 ```bash
