@@ -277,5 +277,5 @@ If you use [`autotag`](/autotag) as shown above, it'll ask to build the containe
 ```bash
 ./build.sh ros
 ```
-The dependencies from above will be built into the container, and it'll be tested.  See [`./build.sh --help`](/jetson_containers/build.py) for build options.
+The dependencies from above will be built into the container, and it'll be tested during.  See [`./build.sh --help`](/jetson_containers/build.py) for build options.
 </details>

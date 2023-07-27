@@ -187,7 +187,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
         run_txt += "```bash\n"
         run_txt += f"./build.sh {pkg_name}\n"
         run_txt += "```\n"
-        run_txt += "The dependencies from above will be built into the container, and it'll be tested.  See [`./build.sh --help`](/jetson_containers/build.py) for build options.\n"
+        run_txt += "The dependencies from above will be built into the container, and it'll be tested during.  See [`./build.sh --help`](/jetson_containers/build.py) for build options.\n"
         run_txt += "</details>\n"
         
         txt += run_txt
