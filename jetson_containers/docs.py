@@ -130,7 +130,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
         # example commands for running the container
         run_txt = "\n<details open>\n"
         run_txt += "<summary><b>RUN CONTAINER</b></summary>\n<br>\n\n"
-        run_txt += "To start the container, you can use the [`run.sh`](/run.sh)/[`autotag`](/autotag) helpers or construct a full [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:\n" 
+        run_txt += "To start the container, you can use the [`run.sh`](/run.sh)/[`autotag`](/autotag) helpers or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:\n" 
         run_txt += "```bash\n"
         run_txt += "# automatically pull or build a compatible container image\n"
         run_txt += f"./run.sh $(./autotag {pkg_name})\n"
@@ -168,7 +168,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
         run_txt += f"sudo docker run --runtime nvidia -it --rm --network=host {run_img}\n"
         run_txt += "```\n"
         run_txt += "> <sup>[`run.sh`](/run.sh) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>\n" 
-        run_txt += "> <sup>[`autotag`](/autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from DockerHub, or by building it.</sup>\n\n"
+        run_txt += "> <sup>[`autotag`](/autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>\n\n"
         
         run_txt += f"To mount your own directories into the container, use the [`-v`](https://docs.docker.com/engine/reference/commandline/run/#volume) or [`--volume`](https://docs.docker.com/engine/reference/commandline/run/#volume) flags:\n"
         run_txt += "```bash\n"
@@ -178,7 +178,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
         run_txt += "```bash\n"
         run_txt += f"./run.sh $(./autotag {pkg_name}) my_app --abc xyz\n"
         run_txt += "```\n"
-        run_txt += "You can pass any options to `run.sh` that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command it constructs before executing it.\n"
+        run_txt += "You can pass any options to `run.sh` that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.\n"
         run_txt += "</details>\n"
         
         run_txt += "<details open>\n"
