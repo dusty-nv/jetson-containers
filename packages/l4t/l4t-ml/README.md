@@ -1,7 +1,7 @@
 # l4t-ml
 
 <details open>
-<summary><b>Containers</b></summary>
+<summary><b>CONTAINERS</b></summary>
 </br>
 
 | **`l4t-ml`** | |
@@ -11,10 +11,10 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`torchaudio`](/packages/pytorch/torchaudio) [`protobuf:cpp`](/packages/protobuf/protobuf_cpp) [`tensorflow2`](/packages/tensorflow) [`opencv`](/packages/opencv) [`pycuda`](/packages/pycuda) [`cupy`](/packages/cupy) [`onnxruntime`](/packages/onnxruntime) [`numba`](/packages/numba) [`rust`](/packages/rust) [`jupyterlab`](/packages/jupyterlab) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 
-</details>
+</br></details>
 
 <details open>
-<summary><b>Container Images</b></summary>
+<summary><b>CONTAINER IMAGES</b></summary>
 </br>
 
 - [`dustynv/l4t-ml:r32.6.1-py3`](https://hub.docker.com/r/dustynv/l4t-ml/tags)  `arm64`  `(1.5GB)`
@@ -22,7 +22,7 @@
 </details>
 
 <details open>
-<summary><b>Run Container</b></summary>
+<summary><b>RUN CONTAINER</b></summary>
 </br>
 
 [`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts a [`/data`](/data) cache, and detects devices)
@@ -46,7 +46,7 @@ To start the container running a command, as opposed to the shell:
 ```
 </details>
 <details open>
-<summary><b>Build Container</b></summary>
+<summary><b>BUILD CONTAINER</b></summary>
 </br>
 
 If you use [`autotag`](/autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do this System Setup, then run:

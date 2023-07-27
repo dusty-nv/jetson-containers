@@ -7,7 +7,7 @@ Supported ROS distros:   `melodic` `noetic` `foxy` `galactic` `humble` `iron`
 Supported ROS packages:  `ros_base` `ros_core` `desktop`
 
 <details open>
-<summary><b>Containers</b></summary>
+<summary><b>CONTAINERS</b></summary>
 </br>
 
 | **`ros:melodic-ros-base`** | |
@@ -121,10 +121,10 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 
-</details>
+</br></details>
 
 <details open>
-<summary><b>Container Images</b></summary>
+<summary><b>CONTAINER IMAGES</b></summary>
 </br>
 
 - [`dustynv/ros:iron-desktop-l4t-r35.1.0`](https://hub.docker.com/r/dustynv/ros/tags)  `arm64`  `(6.2GB)`
@@ -236,7 +236,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 </details>
 
 <details open>
-<summary><b>Run Container</b></summary>
+<summary><b>RUN CONTAINER</b></summary>
 </br>
 
 [`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts a [`/data`](/data) cache, and detects devices)
@@ -260,7 +260,7 @@ To start the container running a command, as opposed to the shell:
 ```
 </details>
 <details open>
-<summary><b>Build Container</b></summary>
+<summary><b>BUILD CONTAINER</b></summary>
 </br>
 
 If you use [`autotag`](/autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do this System Setup, then run:

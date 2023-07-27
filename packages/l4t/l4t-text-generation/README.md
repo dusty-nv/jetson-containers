@@ -1,7 +1,7 @@
 # l4t-text-generation
 
 <details open>
-<summary><b>Containers</b></summary>
+<summary><b>CONTAINERS</b></summary>
 </br>
 
 | **`l4t-text-generation`** | |
@@ -9,10 +9,10 @@
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`bitsandbytes`](/packages/llm/bitsandbytes) [`transformers`](/packages/llm/transformers) [`awq`](/packages/llm/awq) [`onnxruntime`](/packages/onnxruntime) [`optimum`](/packages/llm/optimum) [`auto-gptq`](/packages/llm/auto-gptq) [`gptq-for-llama`](/packages/llm/gptq-for-llama) [`text-generation-webui`](/packages/llm/text-generation-webui) [`rust`](/packages/rust) [`text-generation-inference`](/packages/llm/text-generation-inference) |
 
-</details>
+</br></details>
 
 <details open>
-<summary><b>Run Container</b></summary>
+<summary><b>RUN CONTAINER</b></summary>
 </br>
 
 [`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts a [`/data`](/data) cache, and detects devices)
@@ -34,7 +34,7 @@ To start the container running a command, as opposed to the shell:
 ```
 </details>
 <details open>
-<summary><b>Build Container</b></summary>
+<summary><b>BUILD CONTAINER</b></summary>
 </br>
 
 If you use [`autotag`](/autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do this System Setup, then run:
