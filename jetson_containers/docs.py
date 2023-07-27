@@ -160,8 +160,8 @@ def generate_package_docs(packages, root, repo, simulate=False):
             
             txt += "\n"
             txt += "<sub>Container images are compatible with other minor versions of JetPack/L4T:\n"
-            txt += "* L4T R32.7.1 containers can run on other versions of L4T R32.7 (JetPack 4.6+)\n"
-            txt += "* L4T R35.2.1 containers can run on other versions of L4T R35.x (JetPack 5.1+)\n</sub>"
+            txt += "L4T R32.7.1 containers can run on other versions of L4T R32.7 (JetPack 4.6+)\n"
+            txt += "L4T R35.2.1 containers can run on other versions of L4T R35.x (JetPack 5.1+)</sub>\n"
             txt += "</details>\n"
         
         run_txt += "\n# or if using 'docker run' (specify image and mounts/ect)\n"
