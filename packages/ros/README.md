@@ -245,7 +245,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 <summary><b>RUN CONTAINER</b></summary>
 <br>
 
-You can use the [`run.sh`](/run.sh)/[`autotag`](/autotag) helpers, or construct a full [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command to start the container:
+To start the container, you can use the [`run.sh`](/run.sh)/[`autotag`](/autotag) shortcuts or construct a full [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
 ```bash
 # automatically pull or build a compatible container image
 ./run.sh $(./autotag ros)
@@ -256,7 +256,7 @@ You can use the [`run.sh`](/run.sh)/[`autotag`](/autotag) helpers, or construct 
 # or if using 'docker run' (specify image and mounts/ect)
 sudo docker run --runtime nvidia -it --rm --network=host dustynv/ros:iron-desktop-l4t-r35.1.0
 ```
-> <sub>[`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sub><br>
+> <sub>[`run.sh`](/run.sh) calls [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some default args (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sub><br>
 > <sub>[`autotag`](/autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from DockerHub, or built.</sub>
 
 To mount your own directories into the container, use the [`-v`](https://docs.docker.com/engine/reference/commandline/run/#volume) or [`--volume`](https://docs.docker.com/engine/reference/commandline/run/#volume) flags:

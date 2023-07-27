@@ -130,7 +130,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
         # example commands for running the container
         run_txt = "\n<details open>\n"
         run_txt += "<summary><b>RUN CONTAINER</b></summary>\n<br>\n\n"
-        run_txt += "You can use the [`run.sh`](/run.sh)/[`autotag`](/autotag) helpers, or construct a full [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command to start the container:\n" 
+        run_txt += "To start the container, you can use the [`run.sh`](/run.sh)/[`autotag`](/autotag) shortcuts or construct a full [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:\n" 
         run_txt += "```bash\n"
         run_txt += "# automatically pull or build a compatible container image\n"
         run_txt += f"./run.sh $(./autotag {pkg_name})\n"
@@ -167,7 +167,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
         run_txt += "\n# or if using 'docker run' (specify image and mounts/ect)\n"
         run_txt += f"sudo docker run --runtime nvidia -it --rm --network=host {run_img}\n"
         run_txt += "```\n"
-        run_txt += "> <sub>[`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sub><br>\n" 
+        run_txt += "> <sub>[`run.sh`](/run.sh) calls [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some default args (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sub><br>\n" 
         run_txt += "> <sub>[`autotag`](/autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from DockerHub, or built.</sub>\n\n"
         
         run_txt += f"To mount your own directories into the container, use the [`-v`](https://docs.docker.com/engine/reference/commandline/run/#volume) or [`--volume`](https://docs.docker.com/engine/reference/commandline/run/#volume) flags:\n"
