@@ -71,6 +71,123 @@ def generate_package_docs(packages, root, repo, simulate=False):
         pkg_name = os.path.basename(pkg_path)
         filename = os.path.join(pkg_path, 'README.md')
         
+        txt = f"|{_TABLE_SPACE}|{_TABLE_SPACE}|\n|{_TABLE_DASH}|{_TABLE_DASH}|\n"
+        docs = ''
+
+        for name, package in pkgs.items():
+            txt += f"| Name | {name} |\n"
+            
+            if 'alias' in package:
+                txt += f"| Aliases | { ' '.join([f'`{x}`' for x in package['alias']])} |\n"
+                
+            # ci/cd status
+            workflows = find_package_workflows(name, root)
+
+            if len(workflows) > 0:
+                workflows = [generate_workflow_badge(workflow, repo) for workflow in workflows]
+                txt += f"| Builds | {' '.join(workflows)} |\n"
+                
+            #if 'category' in package:
+            #    txt += f"| Category | `{package['category']}` |\n"
+                 
+            txt += f"| Requires | `L4T {package['requires']}` |\n"
+            
+            if 'depends' in package:
+                depends = resolve_dependencies(package['depends'], check=False)
+                depends = [f"[`{x}`]({find_package(x)['path'].replace(root,'')})" for x in depends]
+                txt += f"| Dependencies | {' '.join(depends)} |\n"
+               
+            dependants = dependant_packages(name)
+            
+            if len(dependants) > 0:
+                dependants = [f"[`{x}`]({find_package(x)['path'].replace(root,'')})" for x in sorted(dependants)]
+                txt += f"| Dependants | {' '.join(dependants)} |\n"
+            
+            if 'dockerfile' in package:
+                txt += f"| Dockerfile | [`{package['dockerfile']}`]({package['dockerfile']}) |\n"
+                
+            #if 'test' in package:
+            #    txt += f"| Tests | {' '.join([f'[`{test}`]({test})' for test in package['test']])} |\n"
+            
+            if 'notes' in package:
+                txt += f"| Notes | {package['notes']} |\n"
+                
+            if 'docs' in package:
+                docs = package['docs']
+        
+            if len(pkgs) > 1:
+                txt += "| | |\n"
+                
+        # add the help text back to the top (if one of the packages had it)
+        if docs:
+            txt = docs + '\n' + txt
+            
+        txt = f"# {pkg_name}\n\n" + txt
+        
+        # example commands for running the container
+        run_txt = "\n### Run Container\n"
+        run_txt += "[`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts a [`/data`](/data) cache, and detects devices)\n" 
+        run_txt += "```bash\n"
+        run_txt += "# automatically pull or build a compatible container image\n"
+        run_txt += f"./run.sh $(./autotag {pkg_name})\n"
+        run_img = f"{pkg_name}:{L4T_VERSION}\n"
+        
+        # list all the dockerhub images for this group of packages
+        registry = find_registry_containers(pkg_name, check_l4t_version=False, return_dicts=True)
+        
+        if len(registry) > 0:
+            pprint.pprint(registry)
+            run_txt += "\n# or manually specify one of the container images above\n"
+            run_img = f"{registry[0]['namespace']}/{registry[0]['name']}:{registry[0]['tags'][0]['name']}"
+            run_txt += f"./run.sh {run_img}\n"
+            txt += "\n<details open>\n"
+            txt += "<summary><h3>Container Images</h3></summary>\n\n"
+            for container in registry:
+                for tag in container['tags']:
+                    txt += f"- [`{container['namespace']}/{container['name']}:{tag['name']}`](https://hub.docker.com/r/{container['namespace']}/{container['name']}/tags)  `{tag['images'][0]['architecture']}`  `({tag['full_size']/(1024**3):.1f}GB)`\n"
+            txt += "</details>\n"
+        
+        run_txt += "\n# or if using 'docker run' (specify image and mounts/ect)\n"
+        run_txt += f"sudo docker run --runtime nvidia -it --rm --network=host {run_img}\n"
+        run_txt += "```\n"
+        run_txt += f"To mount your own directories into the container, use the [`-v`](https://docs.docker.com/engine/reference/commandline/run/#volume) or [`--volume`](https://docs.docker.com/engine/reference/commandline/run/#volume) flags:\n"
+        run_txt += "```bash\n"
+        run_txt += f"./run.sh -v /path/on/host:/path/in/container $(./autotag {pkg_name})\n"
+        run_txt += "```\n"
+        run_txt += f"To start the container running a command, as opposed to the shell:\n"
+        run_txt += "```bash\n"
+        run_txt += f"./run.sh $(./autotag {pkg_name}) my_app --abc xyz\n"
+        run_txt += "```\n"
+        
+        run_txt += "### Build Container\n"
+        run_txt += "If you use [`autotag`](/autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do this System Setup, then run:\n"
+        run_txt += "```bash\n"
+        run_txt += f"./build.sh {pkg_name}\n"
+        run_txt += "```\n"
+        run_txt += "The dependencies from above will be built into the container, and it'll be tested.  See [`./build.sh --help`](/jetson_containers/build.py) for build options.\n"
+        
+        txt += run_txt
+        
+        print(filename)
+        print(txt)
+    
+        if not simulate:
+            with open(filename, 'w') as file:
+                file.write(txt)
+                
+                
+'''
+def generate_package_docs(packages, root, repo, simulate=False):
+    """
+    Generate README.md files for the supplied packages.
+    Group them by path so there's just one page per directory.
+    """
+    groups = group_packages(packages, 'path')
+    
+    for pkg_path, pkgs in groups.items():
+        pkg_name = os.path.basename(pkg_path)
+        filename = os.path.join(pkg_path, 'README.md')
+        
         txt = ''
         docs = ''
 
@@ -78,7 +195,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
             # rolldown for subpackages
             if len(pkgs) > 1:
                 txt += f"<details {'open' if len(pkgs)<=5 else ''}>\n"
-                txt += f"<summary>{name}</summary>\n\n"
+                txt += f"<summary><h3>{name}</h3></summary>\n\n"
             
             # info table
             txt += f"|{_TABLE_SPACE}|{_TABLE_SPACE}|\n"
@@ -181,6 +298,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
         if not simulate:
             with open(filename, 'w') as file:
                 file.write(txt)
+'''
     
     
 if __name__ == "__main__":
