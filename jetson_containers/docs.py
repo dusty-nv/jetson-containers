@@ -120,6 +120,8 @@ def generate_package_docs(packages, root, repo, simulate=False):
             if 'docs' in package:
                 docs = package['docs']
                 
+            txt += "\n"
+            
         # add the help text back to the top (if one of the packages had it)
         if docs:
             txt = docs + '\n' + txt
