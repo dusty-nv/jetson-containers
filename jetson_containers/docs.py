@@ -78,10 +78,10 @@ def generate_package_docs(packages, root, repo, simulate=False):
         
         if len(registry) > 0:
             pprint.pprint(registry)
-            txt += "### Registry Container Images\n"
+            txt += "### Container Images\n"
             for container in registry:
                 for tag in container['tags']:
-                    txt += f"- [`{container['namespace']}/{container['name']}:{tag['name']}`](https://hub.docker.com/r/{container['namespace']}/{container['name']}/tags)  {tag['images'][0]['architecture']}  ({tag['full_size']/(1024**3):.1f}GB)\n"
+                    txt += f"- [`{container['namespace']}/{container['name']}:{tag['name']}`](https://hub.docker.com/r/{container['namespace']}/{container['name']}/tags)`  {tag['images'][0]['architecture']}  ({tag['full_size']/(1024**3):.1f}GB)`\n"
             txt += "\n"
             
         for name, package in pkgs.items():
