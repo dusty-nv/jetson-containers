@@ -7,7 +7,7 @@ Supported ROS distros:   `melodic` `noetic` `foxy` `galactic` `humble` `iron`
 Supported ROS packages:  `ros_base` `ros_core` `desktop`
 
 <details open>
-<summary>Containers</summary>
+<summary>**Containers**</summary>
 
 | **`ros:melodic-ros-base`** | |
 | :-- | :-- |
@@ -123,7 +123,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 </details>
 
 <details open>
-<summary>Container Images</summary>
+<summary>**Container Images**</summary>
 
 - [`dustynv/ros:iron-desktop-l4t-r35.1.0`](https://hub.docker.com/r/dustynv/ros/tags)  `arm64`  `(6.2GB)`
 - [`dustynv/ros:iron-pytorch-l4t-r35.1.0`](https://hub.docker.com/r/dustynv/ros/tags)  `arm64`  `(6.3GB)`
@@ -234,7 +234,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 </details>
 
 <details open>
-<summary>Run Container</summary>
+<summary>**Run Container**</summary>
 
 [`run.sh`](/run.sh) adds some default `docker run` args (like `--runtime nvidia`, mounts a [`/data`](/data) cache, and detects devices)
 ```bash
@@ -257,7 +257,7 @@ To start the container running a command, as opposed to the shell:
 ```
 </details>
 <details open>
-<summary>Build Container</summary>
+<summary>**Build Container**</summary>
 
 If you use [`autotag`](/autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do this System Setup, then run:
 ```bash
