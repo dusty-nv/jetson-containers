@@ -350,7 +350,7 @@ def config_package(package):
             if package is None:  # package was disabled in config script
                 return []
                 
-        elif config_ext == '.json' or config_ext == '.yaml':
+        elif config_ext == '.json' or config_ext == '.yml' or config_ext == '.yaml':
             print(f"-- Loading {config_path}")
             config = validate_config(config_path)  # load and validate the config file
             apply_config(package, config)
@@ -396,14 +396,14 @@ def validate_config(path):
     """
     ext = os.path.splitext(path)[1]
     
-    if ext != '.json' and ext != '.yaml':
+    if ext != '.json' and ext != '.yml' and ext != '.yaml':
         return None
         
     try:
         with open(path, 'r') as file:
             if ext == '.json':
                 config = json.load(file)
-            elif ext == '.yaml':
+            elif ext == '.yml' or ext == '.yaml':
                 config = yaml.safe_load(file)
     except Exception as err:
         print(f"-- Error loading {path}")
