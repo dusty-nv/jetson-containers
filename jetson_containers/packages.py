@@ -378,7 +378,7 @@ def validate_package(package):
         pkg['requires'] = SpecifierSet(pkg['requires'])
         
         if L4T_VERSION not in pkg['requires']:
-            print(f"-- Package {pkg['name']} isn't compatible with L4T r{L4T_VERSION} (requires {pkg['compat']})")
+            print(f"-- Package {pkg['name']} isn't compatible with L4T r{L4T_VERSION} (requires {pkg['requires']})")
             pkg['disabled'] = True
             
         if pkg.get('disabled', False):
