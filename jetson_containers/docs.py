@@ -72,12 +72,16 @@ def generate_package_docs(packages, root, repo, simulate=False):
         pkg_name = os.path.basename(pkg_path)
         filename = os.path.join(pkg_path, 'README.md')
         
-        txt = f"|{_TABLE_SPACE}|{_TABLE_SPACE}|\n|{_TABLE_DASH}|{_TABLE_DASH}|\n"
+        txt = '' #f"|{_TABLE_SPACE}|{_TABLE_SPACE}|\n|{_TABLE_DASH}|{_TABLE_DASH}|\n"
         docs = ''
 
-        for name, package in pkgs.items():
+        for i, name, in enumerate(pkgs):
+            package = pkgs[name]
             txt += f"| **`{name}`** | |\n"
             
+            if i == 0:
+                txt += "|{_TABLE_DASH}|{_TABLE_DASH}|\n"
+                
             if 'alias' in package:
                 txt += f"| {_NBSP}Aliases | { ' '.join([f'`{x}`' for x in package['alias']])} |\n"
                 

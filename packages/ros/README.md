@@ -6,9 +6,8 @@ Supported ROS distros:   `melodic` `noetic` `foxy` `galactic` `humble` `iron`
 </br>
 Supported ROS packages:  `ros_base` `ros_core` `desktop`
 
-|            |            |
-|------------|------------|
 | **`ros:melodic-ros-base`** | |
+|{_TABLE_DASH}|{_TABLE_DASH}|
 | &nbsp;&nbsp;&nbsp;Requires | `L4T <34` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.ros.melodic`](Dockerfile.ros.melodic) |
