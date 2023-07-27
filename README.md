@@ -4,15 +4,20 @@
 
 Automated container build system that provides many specialty [**AI/ML packages**](packages) for [NVIDIA Jetson](https://developer.nvidia.com/embedded-computing).
 
-| ML | [`pytorch`](packages/pytorch) [`tensorflow`](packages/tensorflow) [`onnxruntime`](packages/onnxruntime) [`deepstream`](packages/deepstream) [`tritonserver`](packages/tritonserver) [`nemo`](packages/nemo) [`jupyterlab`](packages/jupyterlab) |
+| | |
 |---|---|
+| ML | [`pytorch`](packages/pytorch) [`tensorflow`](packages/tensorflow) [`onnxruntime`](packages/onnxruntime) [`deepstream`](packages/deepstream) [`tritonserver`](packages/tritonserver) [`nemo`](packages/nemo) [`jupyterlab`](packages/jupyterlab) |
 | LLMs | [`transformers`](packages/llm/transformers) [`text-generation-webui`](packages/llm/text-generation-webui) [`optimum`](packages/llm/optimum) [`awq`](packages/llm/awq) [`bitsandbytes`](packages/llm/bitsandbytes) [`exllama`](packages/llm/exllama) [`AutoGPTQ`](packages/llm/auto-gptq) |
 | CUDA | [`cupy`](packages/cupy) [`cuda-python`](packages/cuda-python) [`pycuda`](packages/pycuda) [`numba`](packages/numba) [`cudf`](packages/rapids/cudf) [`cuml`](packages/rapids/cuml) |
 | Robotics | [`ros`](packages/ros) [`ros2`](packages/ros) [`opencv:cuda`](packages/opencv) [`realsense`](packages/realsense) [`zed`](packages/zed) |
 
 See the [**`packages`**](packages) directory for the full list of packages, including pre-built container images.
 
-Using the included tools, you can easily combine packages together for building your own containers.  Want to run ROS2 with PyTorch and Transformers?  No problem!
+Using the included tools, you can easily combine packages together for building your own containers.  Want to run ROS2 with PyTorch and Transformers?  No problem - build it like this!
+
+```bash
+$ ./build.sh --name=my_container ros:humble-desktop pytorch transformers
+```
 
 <details>
 <summary><h3>Legacy Documentation</h3></summary>
