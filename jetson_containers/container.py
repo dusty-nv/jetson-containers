@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import sys
+import copy
 import json
 import pprint
 import traceback
@@ -9,8 +10,8 @@ import dockerhub_api
 
 from .packages import find_package, find_packages, resolve_dependencies, validate_dict, _PACKAGE_ROOT
 from .l4t_version import L4T_VERSION, l4t_version_from_tag, l4t_version_compatible, get_l4t_base
+from .utils import split_container_name, query_yes_no
 from .logging import log_dir
-from .utils import query_yes_no
 
 from packaging.version import Version
 
@@ -202,7 +203,7 @@ def test_container(name, package, simulate=False):
     return True
     
     
-def find_local_containers():
+def get_local_containers():
     """
     Get the locally-available container images from the 'docker images' command
     Returns a list of dicts with entries like the following:
@@ -223,7 +224,7 @@ def find_local_containers():
 _REGISTRY_CACHE=[]  # use this as to not exceed DockerHub API rate limits
 
  
-def find_registry_containers(user='dustynv'):
+def get_registry_containers(user='dustynv', **kwargs):
     """
     Fetch a DockerHub user's public container images/tags.
     Returns a list of dicts with keys like 'namespace', 'name', and 'tags'.
@@ -244,36 +245,24 @@ def find_registry_containers(user='dustynv'):
 
     return _REGISTRY_CACHE
     
-
-def find_container(package, verbose=False, **kwargs):
+  
+def find_local_containers(package, return_dicts=False, **kwargs):
     """
-    Finds a local or remote container image to run for the given package.
-    TODO search for other packages that depend on this package if an image isn't available.
-    TODO check if the dockerhub image has updated vs local copy, and if so ask user if they want to pull it.
+    Search for local containers on the machine containing this package.
+    Returns a list of strings, unless return_dicts=True in which case
+    a list of dicts is returned with the full metadata from the Docker engine.
     """
-    parts = package.split(':')
-    repo = parts[0]
-    namespace = ''
-    tag = ''
+    if isinstance(package, dict):
+        package = package['name']
     
-    if len(parts) == 2:
-        tag = parts[1]
+    namespace, repo, tag = split_container_name(package)
+    local_images = get_local_containers()
         
-    parts = repo.split('/')
-    
-    if len(parts) == 2:
-        namespace = parts[0]
-        repo = parts[1]
-        
-    if verbose:
-        print(f"-- Finding compatible container image for namespace={namespace} repo={repo} tag={tag}")
-
-    # search for local container images containing this package
-    local_images = find_local_containers()
-        
-    if verbose:
+    if kwargs.get('verbose', False):
         pprint.pprint(local_images)
         
+    found_containers = []
+    
     for image in local_images:
         if namespace:
             if image['Repository'] != f'{namespace}/{repo}':
@@ -285,28 +274,94 @@ def find_container(package, verbose=False, **kwargs):
         if tag and tag != image['Tag']:
             continue
             
-        return f"{image['Repository']}:{image['Tag']}"
-     
-    # search dockerhub for compatible container images
-    registry_repos = find_registry_containers(**kwargs)
+        if return_dicts:
+            found_containers.append(image)
+        else:
+            found_containers.append(f"{image['Repository']}:{image['Tag']}")
+            
+    return found_containers
     
-    if verbose:
+        
+def find_registry_containers(package, check_l4t_version=True, return_dicts=False, **kwargs):
+    """
+    Search DockerHub for container images compatible with the package or container name.
+    
+    The returned list of images will also be compatible with the version of L4T 
+    running on the device, unless check_l4t_version is set to false
+    
+    Normally a list of strings is returned, unless return_dicts=True in which case
+    a list of dicts is returned with the full metadata from DockerHub.
+    """
+    if isinstance(package, dict):
+        package = package['name']
+    
+    namespace, repo, tag = split_container_name(package)
+    registry_repos = get_registry_containers(**kwargs)
+    
+    if kwargs.get('verbose', False):
         pprint.pprint(registry_repos)
 
+    found_containers = []
+    
     for registry_repo in registry_repos:
         if registry_repo['name'] != repo:
             continue
-            
+        
+        repo_copy = copy.deepcopy(registry_repo)
+        repo_copy['tags'] = []
+        
         for registry_image in registry_repo['tags']:
             if tag and tag != registry_image['name']:
                 continue
             
-            if not l4t_version_compatible(l4t_version_from_tag(registry_image['name'])):
-                continue
-                
-            return f"{registry_repo['namespace']}/{registry_repo['name']}:{registry_image['name']}"
+            if check_l4t_version:
+                if not l4t_version_compatible(l4t_version_from_tag(registry_image['name']), **kwargs):
+                    continue
+            
+            repo_copy['tags'].append(copy.deepcopy(registry_image))
+            
+            if not return_dicts:
+                found_containers.append(
+                    f"{registry_repo['namespace']}/{registry_repo['name']}:{registry_image['name']}"
+                )
+        
+        if return_dicts and len(repo_copy['tags']) > 0:
+            found_containers.append(repo_copy)
+            
+    return found_containers
+    
+            
+def find_container(package, **kwargs):
+    """
+    Finds a local or remote container image to run for the given package (returns a string)
+    TODO search for other packages that depend on this package if an image isn't available.
+    TODO check if the dockerhub image has updated vs local copy, and if so ask user if they want to pull it.
+    """
+    if isinstance(package, dict):
+        package = package['name']
+     
+    namespace, repo, tag = split_container_name(package)
+    
+    verbose = kwargs.get('verbose', False)
+    quiet = kwargs.get('quiet', False)
+    
+    if verbose:
+        print(f"-- Finding compatible container image for namespace={namespace} repo={repo} tag={tag}")
 
-    if query_yes_no(f"\nCouldn't find a compatible container for {package}, would you like to build it?"):
+    # search for local container images containing this package
+    local_images = find_local_containers(package, **kwargs)
+    
+    if len(local_images) > 0:
+        return local_images[0]
+     
+    # search dockerhub for compatible container images
+    registry_images = find_registry_containers(package, **kwargs)
+    
+    if len(registry_images) > 0:
+        return registry_images[0]
+        
+    # ask if they want to build it
+    if not quiet and query_yes_no(f"\nCouldn't find a compatible container for {package}, would you like to build it?"):
         return build_container('', package, simulate=True)
 
     # compatible container image could not be found
