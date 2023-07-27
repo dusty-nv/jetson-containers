@@ -113,7 +113,9 @@ def generate_package_docs(packages, root, repo, simulate=False):
                 
             #if 'test' in package:
             #    txt += f"| Tests | {' '.join([f'[`{test}`]({test})' for test in package['test']])} |\n"
-                
+             
+            txt += f"| Requires | `L4T {package['requires']}` |\n"
+            
             if 'notes' in package:
                 txt += f"| Notes | {package['notes']} |\n"
                 
