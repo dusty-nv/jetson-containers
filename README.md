@@ -2,18 +2,17 @@
 
 ![NVIDIA](https://img.shields.io/static/v1?style=for-the-badge&message=NVIDIA&color=222222&logo=NVIDIA&logoColor=76B900&label=) ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white) ![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=PyTorch&logoColor=white) ![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=TensorFlow&logoColor=white) ![Jupyter Notebook](https://img.shields.io/badge/jupyter-%26FA0F00.svg?style=for-the-badge&logo=jupyter&logoColor=white) ![ROS](https://img.shields.io/badge/ros-%230A0FF9.svg?style=for-the-badge&logo=ros&logoColor=white) 
 
-Automated container system that provides many specialty AI/ML [packages](packages) for [NVIDIA Jetson](https://developer.nvidia.com/embedded-computing) with CUDA optimizations.
+Automated container build system that provides many specialty [**AI/ML packages**](packages) for [NVIDIA Jetson](https://developer.nvidia.com/embedded-computing).
 
-| | |
-|---|---|
 | ML | [`pytorch`](packages/pytorch) [`tensorflow`](packages/tensorflow) [`onnxruntime`](packages/onnxruntime) [`deepstream`](packages/deepstream) [`tritonserver`](packages/tritonserver) [`nemo`](packages/nemo) [`jupyterlab`](packages/jupyterlab) |
+|---|---|
 | LLMs | [`transformers`](packages/llm/transformers) [`text-generation-webui`](packages/llm/text-generation-webui) [`optimum`](packages/llm/optimum) [`awq`](packages/llm/awq) [`bitsandbytes`](packages/llm/bitsandbytes) [`exllama`](packages/llm/exllama) [`AutoGPTQ`](packages/llm/auto-gptq) |
-| CUDA | [`cupy`](packages/cupy) [`cuda-python`](packages/cuda-python) [`pycuda`](packages/pycuda) [`numba`](packages/numba) |
+| CUDA | [`cupy`](packages/cupy) [`cuda-python`](packages/cuda-python) [`pycuda`](packages/pycuda) [`numba`](packages/numba) [`cudf`](packages/rapids/cudf) [`cuml`](packages/rapids/cuml) |
 | Robotics | [`ros`](packages/ros) [`ros2`](packages/ros) [`opencv:cuda`](packages/opencv) [`realsense`](packages/realsense) [`zed`](packages/zed) |
 
-See the [**`packages`**](packages) directory for the full list of packages.  Included are pre-built container images, automated testing, and CI/CD.
+See the [**`packages`**](packages) directory for the full list of packages, including pre-built container images.
 
-Using the included tools, you can easily combine these packages together into multi-stage build chains for building your own custom containers.
+Using the included tools, you can easily combine packages together for building your own containers.  Want to run ROS2 with PyTorch and Transformers?  No problem!
 
 <details>
 <summary><h3>Legacy Documentation</h3></summary>
