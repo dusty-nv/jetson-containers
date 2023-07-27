@@ -123,7 +123,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
                 docs = package['docs']
                 
             if len(pkgs) > 1:
-                txt += "</details>\n"
+                txt += "</details>\n\n"
         
         # add the help text back to the top (if one of the packages had it)
         if docs:
@@ -147,7 +147,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
             run_txt += "\n# or manually specify one of the container images above\n"
             run_img = f"{registry[0]['namespace']}/{registry[0]['name']}:{registry[0]['tags'][0]['name']}"
             run_txt += f"./run.sh {run_img}\n"
-            txt += "### Container Images\n"
+            txt += "\n### Container Images\n"
             for container in registry:
                 for tag in container['tags']:
                     txt += f"- [`{container['namespace']}/{container['name']}:{tag['name']}`](https://hub.docker.com/r/{container['namespace']}/{container['name']}/tags)  `{tag['images'][0]['architecture']}`  `({tag['full_size']/(1024**3):.1f}GB)`\n"
@@ -180,59 +180,6 @@ def generate_package_docs(packages, root, repo, simulate=False):
         if not simulate:
             with open(filename, 'w') as file:
                 file.write(txt)
-            
-    """
-    name = package['name']
-    filename = os.path.join(package['path'], 'README.md')
-    txt = f"# {name}\n\n"
-    
-    # ci/cd status
-    workflows = find_package_workflows(name, root)
-
-    if len(workflows) > 0:
-        workflows = [f"[![`{workflow['name']}`]({repo}/actions/workflows/{workflow['name']}.yml/badge.svg)]({repo}/actions/workflows/{workflow['name']}.yml)" for workflow in workflows]
-        txt += f"{' '.join(workflows)}\n"
-
-    # info table
-    txt += f"|{_TABLE_SPACE}|{_TABLE_SPACE}|\n"
-    txt += f"|{_TABLE_DASH}|{_TABLE_DASH}|\n"
-    
-    if 'alias' in package:
-        txt += f"| Aliases | { ' '.join([f'`{x}`' for x in package['alias']])} |\n"
-        
-    #if 'category' in package:
-    #    txt += f"| Category | `{package['category']}` |\n"
-                
-    if 'depends' in package:
-        depends = resolve_dependencies(package['depends'], check=False)
-        depends = [f"[`{x}`]({find_package(x)['path'].replace(root,'')})" for x in depends]
-        txt += f"| Dependencies | {' '.join(depends)} |\n"
-       
-    dependants = dependant_packages(name)
-    
-    if len(dependants) > 0:
-        dependants = [f"[`{x}`]({find_package(x)['path'].replace(root,'')})" for x in sorted(dependants)]
-        txt += f"| Dependants | {' '.join(dependants)} |\n"
-    
-    #if 'dockerfile' in package:
-    #    txt += f"| Dockerfile | [`{package['dockerfile']}`]({package['dockerfile']}) |\n"
-        
-    #if 'test' in package:
-    #    txt += f"| Tests | {' '.join([f'[`{test}`]({test})' for test in package['test']])} |\n"
-        
-    if 'docs' in package:
-        txt += f"{package['docs']}\n"
-        
-    if 'notes' in package:
-        txt += f"{package['notes']}\n"
-        
-    print(filename)
-    print(txt)
-    
-    if not simulate:
-        with open(filename, 'w') as file:
-            file.write(txt)
-    """
     
     
 if __name__ == "__main__":
