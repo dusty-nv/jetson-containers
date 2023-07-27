@@ -6,8 +6,6 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-#RUN cp /usr/local/lib/python3.8/dist-packages/bitsandbytes/libbitsandbytes_cuda114.so
-
 RUN cd opt && \
     git clone --depth=1 https://github.com/oobabooga/text-generation-webui && \
     cd text-generation-webui && \
