@@ -125,7 +125,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
                 
             txt += "\n"
             
-        txt += "</details>\n\n"
+        txt += "</details>\n"
         
         # example commands for running the container
         run_txt = "\n<details open>\n"
@@ -164,9 +164,8 @@ def generate_package_docs(packages, root, repo, simulate=False):
         run_txt += "```\n"
         run_txt += "</details>\n"
         
-        run_txt += "\n<details open>\n"
+        run_txt += "<details open>\n"
         run_txt += "<summary><h3>Build Container</h3></summary>\n\n"
-        run_txt += "### Build Container\n"
         run_txt += "If you use [`autotag`](/autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do this System Setup, then run:\n"
         run_txt += "```bash\n"
         run_txt += f"./build.sh {pkg_name}\n"

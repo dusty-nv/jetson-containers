@@ -11,7 +11,6 @@
 
 </details>
 
-
 <details open>
 <summary><h3>Container Images</h3></summary>
 
@@ -43,11 +42,9 @@ To start the container running a command, as opposed to the shell:
 ./run.sh $(./autotag l4t-pytorch) my_app --abc xyz
 ```
 </details>
-
 <details open>
 <summary><h3>Build Container</h3></summary>
 
-### Build Container
 If you use [`autotag`](/autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do this System Setup, then run:
 ```bash
 ./build.sh l4t-pytorch
