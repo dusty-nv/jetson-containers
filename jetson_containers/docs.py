@@ -158,6 +158,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
                     txt += f"| `{tag['images'][0]['architecture']}` "
                     txt += f"| `{tag['full_size']/(1024**3):.1f}GB` |\n"
             
+            txt += "\n"
             txt += "<sm>* Container images are compatible with other minor versions of JetPack/L4T</sm>\n"
             txt += "<sm>* L4T R32.7.1 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sm>\n"
             txt += "<sm>* L4T R35.2.1 containers can run on other versions of L4T R35.x (JetPack 5.1+)</sm>\n"
