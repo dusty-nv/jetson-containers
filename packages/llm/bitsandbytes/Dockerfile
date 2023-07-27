@@ -19,8 +19,12 @@ RUN pip3 uninstall -y bitsandbytes && \
     cd /opt && \
     git clone --depth=1 https://github.com/dusty-nv/bitsandbytes /opt/bitsandbytes && \
     cd bitsandbytes && \
-    CUDA_VERSION=114 make cuda11x && \
-    pip3 install --verbose .
+    CUDA_VERSION=114 make -j$(nproc) cuda11x && \
+    python3 setup.py --verbose build_ext --inplace -j$(nproc) bdist_wheel && \
+    cp dist/bitsandbytes*.whl /opt && \
+    pip3 install --no-cache-dir --verbose /opt/bitsandbytes*.whl  && \
+    cd ../ && \
+    rm -rf bitsandbytes
 
 RUN pip3 install --no-cache-dir --verbose scipy
 RUN pip3 show bitsandbytes && python3 -c 'import bitsandbytes'

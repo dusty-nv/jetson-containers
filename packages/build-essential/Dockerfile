@@ -15,6 +15,7 @@ RUN apt-get update && \
 		  apt-transport-https \
 		  ca-certificates \
 		  lsb-release \
+		  pkg-config \
 		  gnupg \
 		  git \
 		  wget \
