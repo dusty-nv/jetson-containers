@@ -18,9 +18,9 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;&nbsp;[`dustynv/l4t-pytorch:r35.1.0-pth1.11-py3`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) | `2022-09-20` | `arm64` | `5.7GB` |
-| &nbsp;&nbsp;&nbsp;[`dustynv/l4t-pytorch:r35.1.0-pth1.12-py3`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) | `2022-09-20` | `arm64` | `5.8GB` |
-| &nbsp;&nbsp;&nbsp;[`dustynv/l4t-pytorch:r35.1.0-pth1.13-py3`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) | `2022-09-20` | `arm64` | `5.8GB` |
+| &nbsp;&nbsp;[`dustynv/l4t-pytorch:r35.1.0-pth1.11-py3`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) | `2022-09-20` | `arm64` | `5.7GB` |
+| &nbsp;&nbsp;[`dustynv/l4t-pytorch:r35.1.0-pth1.12-py3`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) | `2022-09-20` | `arm64` | `5.8GB` |
+| &nbsp;&nbsp;[`dustynv/l4t-pytorch:r35.1.0-pth1.13-py3`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) | `2022-09-20` | `arm64` | `5.8GB` |
 </details>
 
 <details open>
