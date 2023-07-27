@@ -74,16 +74,6 @@ def generate_package_docs(packages, root, repo, simulate=False):
         txt = ''
         docs = ''
 
-        registry = find_registry_containers(pkg_name, check_l4t_version=False, return_dicts=True)
-        
-        if len(registry) > 0:
-            pprint.pprint(registry)
-            txt += "### Container Images\n"
-            for container in registry:
-                for tag in container['tags']:
-                    txt += f"- [`{container['namespace']}/{container['name']}:{tag['name']}`](https://hub.docker.com/r/{container['namespace']}/{container['name']}/tags)  `{tag['images'][0]['architecture']}`  `({tag['full_size']/(1024**3):.1f}GB)`\n"
-            txt += "\n"
-            
         for name, package in pkgs.items():
             # rolldown for subpackages
             if len(pkgs) > 1:
@@ -133,10 +123,38 @@ def generate_package_docs(packages, root, repo, simulate=False):
             if len(pkgs) > 1:
                 txt += "</details>\n"
         
+        # add the help text back to the top (if one of the packages had it)
         if docs:
             txt = docs + '\n' + txt
             
         txt = f"# {pkg_name}\n\n" + txt
+        
+        # example commands for running the container
+        run_txt = "### Run Container\n"
+        run_txt += "```bash\n"
+        run_txt += "# automatically pull or build a compatible container image\n"
+        run_txt += f"./run.sh $(./autotag {pkg_name})\n"
+        
+        # list all the dockerhub images for this group of packages
+        registry = find_registry_containers(pkg_name, check_l4t_version=False, return_dicts=True)
+        
+        if len(registry) > 0:
+            pprint.pprint(registry)
+            run_txt += "\n# or manually specify one of the container images above:\n"
+            run_txt += f"./run.sh `{registry[0]['namespace']}/{registry[0]['name']}:{registry[0]['tags'][0]['name']}`\n"
+            txt += "### Container Images\n"
+            for container in registry:
+                for tag in container['tags']:
+                    txt += f"- [`{container['namespace']}/{container['name']}:{tag['name']}`](https://hub.docker.com/r/{container['namespace']}/{container['name']}/tags)  `{tag['images'][0]['architecture']}`  `({tag['full_size']/(1024**3):.1f}GB)`\n"
+            txt += "\n"
+            
+        run_txt += "```\n"
+        run_txt += f"To mount your own directories into the container, use the [`-v`](https://docs.docker.com/engine/reference/commandline/run/#volume) or [`--volume`](https://docs.docker.com/engine/reference/commandline/run/#volume) flags:\n"
+        run_txt += "```bash\n"
+        run_txt += f"./run.sh -v /path/on/host:/path/in/container $(./autotag {pkg_name})\n"
+        run_txt += "```\n"
+        
+        txt += run_txt
         
         print(filename)
         print(txt)
