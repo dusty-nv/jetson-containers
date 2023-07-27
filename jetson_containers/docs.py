@@ -12,7 +12,7 @@ import re
 import pprint
 import argparse
 
-from jetson_containers import (find_package, find_packages, group_packages, dependant_packages, 
+from jetson_containers import (find_package, find_packages, group_packages, dependant_packages, package_scan_options,
                                resolve_dependencies, find_registry_containers, L4T_VERSION, JETPACK_VERSION)
 
 from jetson_containers.ci import find_package_workflows, generate_workflow_badge
@@ -244,12 +244,16 @@ if __name__ == "__main__":
     parser.add_argument('--root', type=str, default=os.path.dirname(os.path.dirname(__file__)))
     parser.add_argument('--repo', type=str, default='https://github.com/dusty-nv/jetson-containers')
     parser.add_argument('--skip-packages', type=str, default='')
+    parser.add_argument('--skip-l4t-checks', action='store_true')
     parser.add_argument('--simulate', action='store_true')
     
     args = parser.parse_args()
     args.skip_packages = re.split(',|;|:', args.skip_packages)
     
     print(args)
+    
+    if args.skip_l4t_checks:
+        package_scan_options({'check_l4t_version': False})
 
     packages = find_packages(args.packages, skip=args.skip_packages)
     
