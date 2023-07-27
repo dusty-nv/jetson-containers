@@ -1,8 +1,8 @@
 #---
 # name: cuml
 # group: rapids
-# compat: '>=34.1.0'
 # config: config.py
+# requires: '>=34.1.0'
 # depends: [cudf]
 # test: [test.py]
 # notes: installed under `/usr/local`

@@ -1,8 +1,8 @@
 #---
 # name: tritonserver
 # group: ml
-# compat: '>=32.6'
 # config: config.py
+# requires: '>=32.6'
 # depends: [python]
 # test: test.py
 # notes: https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/user_guide/jetson.html

@@ -1,8 +1,8 @@
 #---
 # name: awq
 # group: llm
-# compat: '>=34.1.0'
 # depends: [pytorch, torchvision, transformers]
+# requires: '>=34.1.0'
 # test: test.sh
 #---
 ARG BASE_IMAGE

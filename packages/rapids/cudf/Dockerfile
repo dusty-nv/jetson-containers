@@ -1,8 +1,8 @@
 #---
 # name: cudf
 # group: rapids
-# compat: '>=34.1.0'
 # config: config.py
+# requires: '>=34.1.0'
 # depends: [cmake, python, cupy, numba, protobuf:apt]
 # test: [test_cudf.py, test_dask.py]
 # notes: installed under /usr/local

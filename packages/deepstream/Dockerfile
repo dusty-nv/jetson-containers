@@ -1,8 +1,8 @@
 #---
 # name: deepstream
 # group: ml
-# compat: '>=32.6'
 # config: config.py
+# requires: '>=32.6'
 # depends: [cmake, python, gstreamer, tritonserver]
 # test: [test.sh, test.py]
 # notes: https://docs.nvidia.com/metropolis/deepstream/dev-guide/text/DS_Quickstart.html

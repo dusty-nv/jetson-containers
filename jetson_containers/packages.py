@@ -14,8 +14,8 @@ _PACKAGES = {}
 _PACKAGE_SCAN = False
 _PACKAGE_ROOT = os.path.dirname(os.path.dirname(__file__))
 _PACKAGE_DIRS = [os.path.join(_PACKAGE_ROOT, 'packages/*')]
-_PACKAGE_KEYS = ['alias', 'build_args', 'build_flags', 'compat', 'config', 'depends', 'disabled',  
-                 'dockerfile', 'docs', 'group', 'name', 'notes', 'path', 'test']
+_PACKAGE_KEYS = ['alias', 'build_args', 'build_flags', 'config', 'depends', 'disabled',  
+                 'dockerfile', 'docs', 'group', 'name', 'notes', 'path', 'requires', 'test']
 
 
 def package_search_dirs(package_dirs, scan=False):
@@ -82,7 +82,7 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
         
     # search this directory for dockerfiles and config scripts
     entries = os.listdir(path)
-    package = {'path': path, 'compat': '>=32.6', 'config': [], 'test': []}
+    package = {'path': path, 'requires': '>=32.6', 'config': [], 'test': []}
     
     for entry in entries:
         entry_path = os.path.join(path, entry)
@@ -375,9 +375,9 @@ def validate_package(package):
         packages = package  # TODO what if these contain subpackages?
        
     for pkg in packages.copy():  # check to see if any packages were disabled
-        pkg['compat'] = SpecifierSet(pkg['compat'])
+        pkg['requires'] = SpecifierSet(pkg['requires'])
         
-        if L4T_VERSION not in pkg['compat']:
+        if L4T_VERSION not in pkg['requires']:
             print(f"-- Package {pkg['name']} isn't compatible with L4T r{L4T_VERSION} (requires {pkg['compat']})")
             pkg['disabled'] = True
             
