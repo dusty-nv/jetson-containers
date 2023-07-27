@@ -1,7 +1,7 @@
 # l4t-diffusion
 
 <details open>
-<summary>**Containers**</summary>
+<summary><b>Containers</b></summary>
 
 | **`l4t-diffusion`** | |
 | :-- | :-- |

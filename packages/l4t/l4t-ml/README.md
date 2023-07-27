@@ -1,7 +1,7 @@
 # l4t-ml
 
 <details open>
-<summary>**Containers**</summary>
+<summary><b>Containers</b></summary>
 
 | **`l4t-ml`** | |
 | :-- | :-- |
