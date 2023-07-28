@@ -19,10 +19,10 @@ Using the included tools, you can easily combine packages together for building 
 $ ./build.sh --name=my_container ros:humble-desktop pytorch transformers
 ```
 
-Some shortcuts are provided for running containers too:
+Shortcuts are provided for running containers too - this will pull or build a compatible [`l4t-pytorch`](packages/l4t/l4t-pytorch) image:
 
 ```bash
-$ ./run.sh $(autotag l4t-pytorch)  # automatically pull or build l4t-pytorch compatible with your JetPack/L4T
+$ ./run.sh $(autotag l4t-pytorch)  # find/build for your version of JetPack/L4T
 ```
 > <sup>[`run.sh`](/run.sh) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
@@ -91,7 +91,7 @@ This would be equivalent to having it encoded into the Dockerfile like above.
 
 ### JSON
 
-Config files can also be provided in JSON format (normally called `config.json`).  The JSON and YAML configs typically get used when defining meta-containers that may not even have their own Dockerfiles, but exist solely as combinations of other packages - like [`l4t-pytorch`](packages/l4t/l4t-pytorch):
+Config files can also be provided in JSON format (normally called `config.json`).  The JSON and YAML configs typically get used when defining meta-containers that may not even have their own Dockerfiles, but exist solely as combinations of other packages - like [`l4t-pytorch`](packages/l4t/l4t-pytorch) does:
 
 ```json
 {
