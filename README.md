@@ -19,7 +19,7 @@ Using the included tools, you can easily combine packages together for building 
 $ ./build.sh --name=my_container ros:humble-desktop pytorch transformers
 ```
 
-There are shortcuts for running containers too - this will pull or build a [`l4t-pytorch`](packages/l4t/l4t-pytorch) image that's compatible with your L4T:
+There are shortcuts for running containers too - this will pull or build a [`l4t-pytorch`](packages/l4t/l4t-pytorch) image that's compatible:
 
 ```bash
 $ ./run.sh $(./autotag l4t-pytorch)
