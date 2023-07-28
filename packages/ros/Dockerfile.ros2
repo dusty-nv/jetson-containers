@@ -4,7 +4,7 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG ROS_PKG=ros_base
+ARG ROS_PACKAGE=ros_base
 ARG ROS_VERSION=humble
 
 ENV ROS_DISTRO=${ROS_VERSION}
@@ -33,12 +33,14 @@ RUN ./ros2_build.sh
 # https://github.com/ros2/rclcpp/issues/1335
 ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 
-# setup container entrypoint
+# commands will be appended/run by the entrypoint which sources the ROS environment
 COPY ros_entrypoint.sh /ros_entrypoint.sh
-RUN echo 'source /ros_entrypoint.sh' >> /root/.bashrc
+ENTRYPOINT ["/ros_entrypoint.sh"]
 
-#ENTRYPOINT ["/ros_entrypoint.sh"]
+# https://stackoverflow.com/a/74017557
+#SHELL ["/bin/bash", "-l", "-c"]
 #CMD ["bash"]
+#RUN echo 'source /ros_entrypoint.sh' >> /root/.bashrc
 
 WORKDIR /
 

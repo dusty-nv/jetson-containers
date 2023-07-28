@@ -5,7 +5,7 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG ROS_PKG=ros_base
+ARG ROS_PACKAGE=ros_base
 ENV ROS_DISTRO=melodic
 ENV ROS_ROOT=/opt/ros/${ROS_DISTRO}
 
@@ -38,7 +38,7 @@ RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt
 #
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-		ros-melodic-`echo "${ROS_PKG}" | tr '_' '-'` \
+		ros-melodic-`echo "${ROS_PACKAGE}" | tr '_' '-'` \
 		ros-melodic-image-transport \
 		ros-melodic-vision-msgs \
           python-rosdep \
@@ -59,12 +59,9 @@ RUN apt-get update && \
 
 
 # 
-# setup entrypoint
+# commands will be appended/run by the entrypoint which sources the ROS environment
 #
-COPY ./scripts/ros_entrypoint.sh /ros_entrypoint.sh
-RUN echo 'source /ros_entrypoint.sh' >> /root/.bashrc
-
-#ENTRYPOINT ["/ros_entrypoint.sh"]
-#CMD ["bash"]
+COPY ros_entrypoint.sh /ros_entrypoint.sh
+ENTRYPOINT ["/ros_entrypoint.sh"]
 
 WORKDIR /
