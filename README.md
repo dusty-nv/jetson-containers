@@ -42,7 +42,7 @@ FROM ${BASE_IMAGE}
 
 The text between `#---` is YAML and is extracted by the build system.  Each package dict has the following keys:
 
-| Key           |         Type         | Notes                                                                                   |
+| Key           |         Type         | Description                                                                             |
 |---------------|:--------------------:|-----------------------------------------------------------------------------------------|
 | `name`        |         `str`        | the name of the package                                                                 |
 | `alias`       | `str` or `list[str]` | alternate names the package can be referred to by                                       |
@@ -67,7 +67,7 @@ Packages can also include nested sub-packages (for example, all the ROS variants
 
 ### YAML
 
-In lieu of including the package metadata in the Dockerfile header, a package can provide a separate YAML file (typically called `config.yaml` or `config.yml`) with the same information:
+In lieu of having the package metadata right there in the Dockerfile header, packages can provide a separate YAML file (typically called `config.yaml` or `config.yml`) with the same information:
 
 ```yaml
 name: pytorch
@@ -79,11 +79,11 @@ dockerfile: Dockerfile
 test: test.py
 ```
 
-This would be equivalent to having it encoded into the Dockerfile like above (with the addition of the `dockerfile` key being set since it's now separate)
+This would be equivalent to having it encoded into the Dockerfile like above.
 
 ### JSON
 
-Config files can also be provided in JSON format (typically called `config.json`).  The JSON and YAML configs typically get used when defining meta-containers that may not even have their own Dockerfiles, but exist soley as combinations of other packages.  A good example of this are the [`l4t`](packages/l4t) containers, like [`l4t-pytorch`](packages/l4t/l4t-pytorch):
+Config files can also be provided in JSON format (typically called `config.json`).  The JSON and YAML configs typically get used when defining meta-containers that may not even have their own Dockerfiles, but exist solely as combinations of other packages.  A good example of this are the [`l4t`](packages/l4t) meta-containers, like [`l4t-pytorch`](packages/l4t/l4t-pytorch):
 
 ```json
 {
@@ -114,10 +114,40 @@ You can define multiple packages/containers per config file, like how [`l4t-tens
 
 Python configuration scripts (typically called `config.py`) are the most expressive and get executed at the start of a build, and can dynamically set build parameters based on your environment and version of JetPack/L4T.
 
+These are special in that the build system automatically sets a `package` dict into the module's namespace, which is used to configure the package:
+
+```python
+from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES
+
+if L4T_VERSION.major >= 34:  
+	MY_PACKAGE_VERSION = 'v5.0'  # for JetPack 5
+else:                        
+	MY_PACKAGE_VERSION = 'v4.0'  # on JetPack 4
+
+package['build_args'] = {
+    'MY_PACKAGE_VERSION': MY_PACKAGE_VERSION,
+    'CUDA_ARCHITECTURES': ';'.join(CUDA_ARCHITECTURES),
+}
+```
+
+This example sets build args in the Dockerfile, based on the version of JetPack/L4T that's running and the GPU architectures to compile for.  Typically the static settings remain in the Dockerfile header for visibility, and `config.py` only sets the dynamic ones.
 
 
+The [`jetson_containers`](jetson_containers) Python module implements the build system, and exposes these [system/environment variables](jetson_containers/l4t_version.py) that you can parameterize Dockerfiles off of:
 
+| Name                 |                                       Type                                      | Description                                                  |
+|----------------------|:-------------------------------------------------------------------------------:|--------------------------------------------------------------|
+| `L4T_VERSION`        | [`packaging.version.Version`](https://packaging.pypa.io/en/latest/version.html) | version of L4T from `/etc/nv_tegra_release`                  |
+| `JETPACK_VERSION`    | [`packaging.version.Version`](https://packaging.pypa.io/en/latest/version.html) | version of JetPack corresponding to L4T version              |
+| `PYTHON_VERSION`     | [`packaging.version.Version`](https://packaging.pypa.io/en/latest/version.html) | version of Python (`3.6` or `3.8`)                           |
+| `CUDA_VERSION`       | [`packaging.version.Version`](https://packaging.pypa.io/en/latest/version.html) | version of CUDA (under `/usr/local/cuda`)                    |
+| `CUDA_ARCHITECTURES` |                                   `list[int]`                                   | NVCC GPU architectures to generate code for (e.g. `[72,87]`) |
+| `SYSTEM_ARCH`        |                                      `str`                                      | `aarch64` or `x86_64`                                        |
+| `LSB_RELEASE`        |                                      `str`                                      | `18.04` or `20.04`                                           |
+| `LSB_CODENAME`       |                                      `str`                                      | `bionic` or `focal`                                          |
 
+Of course, it being Python, you can perform basically any other system queries/configuration you want using Python's built-in libraries, including manipulating files used by the build context, ect.
+ 
 
 <details>
 <summary><h3>Legacy Documentation</h3></summary>
