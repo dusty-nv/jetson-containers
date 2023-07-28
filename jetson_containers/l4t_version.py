@@ -3,10 +3,12 @@
 #
 #    L4T_VERSION (packaging.version.Version)
 #    JETPACK_VERSION (packaging.version.Version)
+#    PYTHON_VERSION (packaging.version.Version)
 #    CUDA_VERSION (packaging.version.Version)
 #    CUDA_ARCHITECTURES (list[int]) -- e.g. [53, 62, 72, 87]
 #    SYSTEM_ARCH (str) -- e.g. 'aarch64' or 'x86_64'
-#    PYTHON_VERSION (packaging.version.Version)
+#    LSB_RELEASE (str) -- e.g. '18.04' or '20.04'
+#    LSB_CODENAME (str) -- e.g. 'bionic' or 'focal'
 #    
 import os
 import re
