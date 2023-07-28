@@ -75,7 +75,7 @@ Packages can also include nested sub-packages (for example, all the [ROS variant
 
 ### YAML
 
-In lieu of having the package metadata right there in the Dockerfile header, packages can provide a separate YAML file (typically called `config.yaml` or `config.yml`) with the same information:
+In lieu of having the package metadata right there in the Dockerfile header, packages can provide a separate YAML file (normally called `config.yaml` or `config.yml`) with the same information:
 
 ```yaml
 name: pytorch
@@ -91,7 +91,7 @@ This would be equivalent to having it encoded into the Dockerfile like above.
 
 ### JSON
 
-Config files can also be provided in JSON format (typically called `config.json`).  The JSON and YAML configs typically get used when defining meta-containers that may not even have their own Dockerfiles, but exist solely as combinations of other packages.  A good example of this are the [`l4t`](packages/l4t) meta-containers, like [`l4t-pytorch`](packages/l4t/l4t-pytorch):
+Config files can also be provided in JSON format (normally called `config.json`).  The JSON and YAML configs typically get used when defining meta-containers that may not even have their own Dockerfiles, but exist solely as combinations of other packages - like [`l4t-pytorch`](packages/l4t/l4t-pytorch):
 
 ```json
 {
@@ -120,7 +120,7 @@ You can define multiple packages/containers per config file, like how [`l4t-tens
 
 ### Python
 
-Python configuration scripts (typically called `config.py`) are the most expressive and get executed at the start of a build, and can dynamically set build parameters based on your environment and version of JetPack/L4T.  They have a global `package` dict added to their scope by the build system, which is used to configure the package:
+Python configuration scripts (normally called `config.py`) are the most expressive and get executed at the start of a build, and can dynamically set build parameters based on your environment and version of JetPack/L4T.  They have a global `package` dict added to their scope by the build system, which is used to configure the package:
 
 ```python
 from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES
