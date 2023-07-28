@@ -2,7 +2,7 @@
 
 ![NVIDIA](https://img.shields.io/static/v1?style=for-the-badge&message=NVIDIA&color=222222&logo=NVIDIA&logoColor=76B900&label=) ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white) ![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=PyTorch&logoColor=white) ![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=TensorFlow&logoColor=white) ![Jupyter Notebook](https://img.shields.io/badge/jupyter-%26FA0F00.svg?style=for-the-badge&logo=jupyter&logoColor=white) ![ROS](https://img.shields.io/badge/ros-%230A0FF9.svg?style=for-the-badge&logo=ros&logoColor=white) 
 
-Automated container build system that provides many specialty [**AI/ML packages**](packages) for [NVIDIA Jetson](https://developer.nvidia.com/embedded-computing).
+Automated container build system provides [**AI/ML packages**](packages) for [NVIDIA Jetson](https://developer.nvidia.com/embedded-computing).
 
 | | |
 |---|---|
@@ -13,11 +13,19 @@ Automated container build system that provides many specialty [**AI/ML packages*
 
 See the [**`packages`**](packages) directory for the full list of packages, including pre-built container images.
 
-Using the included tools, you can easily combine packages together for building your own containers.  Want to run ROS2 with PyTorch and Transformers?  No problem - just build it on your Jetson like this:
+Using the included tools, you can easily combine packages together for building your own containers.  Want to run ROS2 with PyTorch and Transformers?  No problem - do the [setup](README.md), and build it on your Jetson like this:
 
 ```bash
 $ ./build.sh --name=my_container ros:humble-desktop pytorch transformers
 ```
+
+Some shortcuts are provided for running containers too:
+
+```bash
+$ ./run.sh $(autotag l4t-pytorch)  # automatically pull or build l4t-pytorch compatible with your JetPack/L4T
+```
+> <sup>[`run.sh`](/run.sh) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
+> <sup>[`autotag`](/autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
 
 ## Package Definitions
 
@@ -112,17 +120,15 @@ You can define multiple packages/containers per config file, like how [`l4t-tens
 
 ### Python
 
-Python configuration scripts (typically called `config.py`) are the most expressive and get executed at the start of a build, and can dynamically set build parameters based on your environment and version of JetPack/L4T.
-
-These are special in that the build system automatically sets a `package` dict into the module's namespace, which is used to configure the package:
+Python configuration scripts (typically called `config.py`) are the most expressive and get executed at the start of a build, and can dynamically set build parameters based on your environment and version of JetPack/L4T.  They have a global `package` dict added to their scope by the build system, which is used to configure the package:
 
 ```python
 from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES
 
 if L4T_VERSION.major >= 34:  
-	MY_PACKAGE_VERSION = 'v5.0'  # for JetPack 5
+    MY_PACKAGE_VERSION = 'v5.0'  # on JetPack 5
 else:                        
-	MY_PACKAGE_VERSION = 'v4.0'  # on JetPack 4
+    MY_PACKAGE_VERSION = 'v4.0'  # on JetPack 4
 
 package['build_args'] = {
     'MY_PACKAGE_VERSION': MY_PACKAGE_VERSION,
@@ -130,10 +136,10 @@ package['build_args'] = {
 }
 ```
 
-This example sets build args in the Dockerfile, based on the version of JetPack/L4T that's running and the GPU architectures to compile for.  Typically the static settings remain in the Dockerfile header for visibility, and `config.py` only sets the dynamic ones.
+This example sets build args in a Dockerfile, based on the version of JetPack/L4T that's running and the GPU architectures to compile for.  Typically the package's static settings remain in the Dockerfile header for the best visibility, while `config.py` sets the dynamic ones.
 
 
-The [`jetson_containers`](jetson_containers) Python module implements the build system, and exposes these [system/environment variables](jetson_containers/l4t_version.py) that you can parameterize Dockerfiles off of:
+The [`jetson_containers`](jetson_containers) exposes these [system variables](jetson_containers/l4t_version.py) that you can parameterize Dockerfiles off of:
 
 | Name                 |                                       Type                                      | Description                                                  |
 |----------------------|:-------------------------------------------------------------------------------:|--------------------------------------------------------------|
