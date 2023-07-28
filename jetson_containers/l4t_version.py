@@ -13,6 +13,7 @@ import re
 import sys
 import json
 import platform
+import subprocess
 
 from packaging.version import Version
 
@@ -182,7 +183,7 @@ def get_l4t_base(l4t_version=get_l4t_version()):
         else:
             return f"nvcr.io/nvidia/l4t-base:r{l4t_version}"
             
-            
+           
 def l4t_version_from_tag(tag):
     """
     Extract the L4T_VERSION from a container tag by searching it for patterns like 'r35.2.1' / ect.
@@ -224,7 +225,17 @@ def l4t_version_compatible(l4t_version, l4t_version_host=get_l4t_version()):
             
     return l4t_version == l4t_version_host
     
-    
+ 
+def get_lsb_release():
+    """
+    Returns a tuple of (LSB_RELEASE, LSB_CODENAME)
+       ("18.04", "bionic")
+       ("20.04", "focal")
+    """
+    return (subprocess.run(["lsb_release", "-rs"], capture_output=True, universal_newlines=True, check=True).stdout.strip(),
+           subprocess.run(["lsb_release", "-cs"], capture_output=True, universal_newlines=True, check=True).stdout.strip())
+
+            
 # set L4T_VERSION and CUDA_VERSION globals        
 L4T_VERSION = get_l4t_version()
 JETPACK_VERSION = get_jetpack_version()
@@ -242,3 +253,7 @@ SYSTEM_ARCH = platform.machine()
 
 # Python version (3.6, 3.8, ect)
 PYTHON_VERSION = Version(f'{sys.version_info.major}.{sys.version_info.minor}')
+
+# LSB release and codename ("20.04", "focal")
+LSB_RELEASE, LSB_CODENAME = get_lsb_release()
+

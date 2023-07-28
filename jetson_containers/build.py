@@ -27,7 +27,7 @@ import pprint
 import argparse
 
 from jetson_containers import (build_container, build_containers, find_packages, package_search_dirs, set_log_dir, 
-                               L4T_VERSION, JETPACK_VERSION, CUDA_VERSION)
+                               L4T_VERSION, JETPACK_VERSION, CUDA_VERSION, LSB_RELEASE, LSB_CODENAME)
 
 
 parser = argparse.ArgumentParser()
@@ -63,6 +63,7 @@ print(args)
 print(f"-- L4T_VERSION={L4T_VERSION}")
 print(f"-- JETPACK_VERSION={JETPACK_VERSION}")
 print(f"-- CUDA_VERSION={CUDA_VERSION}")
+print(f"-- LSB_RELEASE={LSB_RELEASE} ({LSB_CODENAME})")
 
 # add package directories
 if args.package_dirs:
