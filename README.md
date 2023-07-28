@@ -147,7 +147,7 @@ The [`jetson_containers`](jetson_containers) module exposes these [system variab
 | `JETPACK_VERSION`    | [`packaging.version.Version`](https://packaging.pypa.io/en/latest/version.html) | version of JetPack corresponding to L4T version              |
 | `PYTHON_VERSION`     | [`packaging.version.Version`](https://packaging.pypa.io/en/latest/version.html) | version of Python (`3.6` or `3.8`)                           |
 | `CUDA_VERSION`       | [`packaging.version.Version`](https://packaging.pypa.io/en/latest/version.html) | version of CUDA (under `/usr/local/cuda`)                    |
-| `CUDA_ARCHITECTURES` |                                   `list[int]`                                   | NVCC GPU architectures to generate code for (e.g. `[72,87]`) |
+| `CUDA_ARCHITECTURES` |                                   `list[int]`                                   | NVCC GPU architectures for codegen (e.g. `[72,87]`) |
 | `SYSTEM_ARCH`        |                                      `str`                                      | `aarch64` or `x86_64`                                        |
 | `LSB_RELEASE`        |                                      `str`                                      | `18.04` or `20.04`                                           |
 | `LSB_CODENAME`       |                                      `str`                                      | `bionic` or `focal`                                          |

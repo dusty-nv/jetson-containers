@@ -219,11 +219,8 @@ def get_local_containers():
                             #capture_output=True, universal_newlines=True, 
                             shell=False, check=True)
 
-    for txt in str(status.stdout).splitlines():
-        print(f"'{txt}'")
-        
     return [json.loads(txt.lstrip("'").rstrip("'"))
-            for txt in str(status.stdout).splitlines()]
+            for txt in status.stdout.decode('ascii').splitlines()]
         
 
 _REGISTRY_CACHE=[]  # use this as to not exceed DockerHub API rate limits
