@@ -234,8 +234,8 @@ def get_lsb_release():
        ("18.04", "bionic")
        ("20.04", "focal")
     """
-    return (subprocess.run(["lsb_release", "-rs"], capture_output=True, universal_newlines=True, check=True).stdout.strip(),
-           subprocess.run(["lsb_release", "-cs"], capture_output=True, universal_newlines=True, check=True).stdout.strip())
+    return (subprocess.run(["lsb_release", "-rs"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True).stdout.strip(),
+           subprocess.run(["lsb_release", "-cs"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True).stdout.strip())
 
             
 # set L4T_VERSION and CUDA_VERSION globals        

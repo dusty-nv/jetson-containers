@@ -214,11 +214,16 @@ def get_local_containers():
          
     These containers are sorted by most recent created to the oldest.
     """
-    status = subprocess.run(["sudo", "docker", "images", "--format", "'{{json . }}'"], capture_output=True, 
-                            universal_newlines=True, shell=False, check=True)
+    status = subprocess.run(["sudo", "docker", "images", "--format", "'{{json . }}'"],  
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                            #capture_output=True, universal_newlines=True, 
+                            shell=False, check=True)
 
+    for txt in str(status.stdout).splitlines():
+        print(f"'{txt}'")
+        
     return [json.loads(txt.lstrip("'").rstrip("'"))
-            for txt in status.stdout.splitlines()]
+            for txt in str(status.stdout).splitlines()]
         
 
 _REGISTRY_CACHE=[]  # use this as to not exceed DockerHub API rate limits
