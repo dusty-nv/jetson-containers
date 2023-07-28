@@ -139,7 +139,7 @@ package['build_args'] = {
 This example sets build args in a Dockerfile, based on the version of JetPack/L4T that's running and the GPU architectures to compile for.  Typically the package's static settings remain in the Dockerfile header for the best visibility, while `config.py` sets the dynamic ones.
 
 
-The [`jetson_containers`](jetson_containers) exposes these [system variables](jetson_containers/l4t_version.py) that you can parameterize Dockerfiles off of:
+The [`jetson_containers`](jetson_containers) module exposes these [system variables](jetson_containers/l4t_version.py) that you can import and parameterize Dockerfiles off of:
 
 | Name                 |                                       Type                                      | Description                                                  |
 |----------------------|:-------------------------------------------------------------------------------:|--------------------------------------------------------------|
