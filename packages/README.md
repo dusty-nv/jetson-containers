@@ -2,77 +2,80 @@
 |            |            |
 |------------|------------|
 | **`BUILD`** | |
-| &nbsp;&nbsp; [`bazel`](/packages/bazel) |  |
-| &nbsp;&nbsp; [`build-essential`](/packages/build-essential) |  |
-| &nbsp;&nbsp; [`cmake:apt`](/packages/cmake/cmake_apt) |  |
-| &nbsp;&nbsp; [`cmake:pip`](/packages/cmake/cmake_pip) |  |
-| &nbsp;&nbsp; [`protobuf:apt`](/packages/protobuf/protobuf_apt) |  |
-| &nbsp;&nbsp; [`protobuf:cpp`](/packages/protobuf/protobuf_cpp) |  |
-| &nbsp;&nbsp; [`python`](/packages/python) |  |
-| &nbsp;&nbsp; [`rust`](/packages/rust) |  |
+| &nbsp;&nbsp;&nbsp; [`bazel`](/packages/bazel) | [![`bazel_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/bazel_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/bazel_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`build-essential`](/packages/build-essential) | [![`build-essential_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/build-essential_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/build-essential_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`cmake:apt`](/packages/cmake/cmake_apt) | [![`cmake-apt_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/cmake-apt_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cmake-apt_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`cmake:pip`](/packages/cmake/cmake_pip) | [![`cmake-pip_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/cmake-pip_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cmake-pip_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`protobuf:apt`](/packages/protobuf/protobuf_apt) | [![`protobuf-apt_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/protobuf-apt_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/protobuf-apt_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`protobuf:cpp`](/packages/protobuf/protobuf_cpp) | [![`protobuf-cpp_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/protobuf-cpp_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/protobuf-cpp_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`python`](/packages/python) | [![`python_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/python_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/python_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`rust`](/packages/rust) | [![`rust_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/rust_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/rust_jp51.yml) |
 | **`CORE`** | |
-| &nbsp;&nbsp; [`gstreamer`](/packages/gstreamer) |  |
-| &nbsp;&nbsp; [`jupyterlab`](/packages/jupyterlab) |  |
-| &nbsp;&nbsp; [`numpy`](/packages/numpy) |  |
-| &nbsp;&nbsp; [`opencv`](/packages/opencv) |  |
-| &nbsp;&nbsp; [`opencv_builder`](/packages/opencv/opencv_builder) |  |
+| &nbsp;&nbsp;&nbsp; [`gstreamer`](/packages/gstreamer) | [![`gstreamer_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/gstreamer_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/gstreamer_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`jupyterlab`](/packages/jupyterlab) | [![`jupyterlab_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/jupyterlab_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/jupyterlab_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`numpy`](/packages/numpy) | [![`numpy_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/numpy_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/numpy_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`opencv`](/packages/opencv) | [![`opencv_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/opencv_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/opencv_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`opencv_builder`](/packages/opencv/opencv_builder) | [![`opencv_builder_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/opencv_builder_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/opencv_builder_jp51.yml) |
 | **`CUDA`** | |
-| &nbsp;&nbsp; [`cuda-python`](/packages/cuda-python) |  |
-| &nbsp;&nbsp; [`cupy`](/packages/cupy) |  |
-| &nbsp;&nbsp; [`numba`](/packages/numba) |  |
-| &nbsp;&nbsp; [`pycuda`](/packages/pycuda) |  |
+| &nbsp;&nbsp;&nbsp; [`cuda-python`](/packages/cuda-python) | [![`cuda-python_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/cuda-python_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cuda-python_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`cupy`](/packages/cupy) | [![`cupy_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/cupy_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cupy_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`numba`](/packages/numba) | [![`numba_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/numba_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/numba_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`pycuda`](/packages/pycuda) | [![`pycuda_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/pycuda_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/pycuda_jp51.yml) |
 | **`DIFFUSION`** | |
-| &nbsp;&nbsp; [`stable-diffusion`](/packages/diffusion/stable-diffusion) |  |
-| &nbsp;&nbsp; [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) |  |
+| &nbsp;&nbsp;&nbsp; [`l4t-diffusion`](/packages/l4t/l4t-diffusion) | [![`l4t-diffusion_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-diffusion_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-diffusion_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`stable-diffusion`](/packages/diffusion/stable-diffusion) | [![`stable-diffusion_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/stable-diffusion_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/stable-diffusion_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) | [![`stable-diffusion-webui_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/stable-diffusion-webui_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/stable-diffusion-webui_jp51.yml) |
 | **`LLM`** | |
-| &nbsp;&nbsp; [`auto-gptq`](/packages/llm/auto-gptq) |  |
-| &nbsp;&nbsp; [`awq`](/packages/llm/awq) |  |
-| &nbsp;&nbsp; [`bitsandbytes`](/packages/llm/bitsandbytes) |  |
-| &nbsp;&nbsp; [`exllama`](/packages/llm/exllama) |  |
-| &nbsp;&nbsp; [`gptq-for-llama`](/packages/llm/gptq-for-llama) |  |
-| &nbsp;&nbsp; [`optimum`](/packages/llm/optimum) |  |
-| &nbsp;&nbsp; [`text-generation-webui`](/packages/llm/text-generation-webui) |  |
-| &nbsp;&nbsp; [`transformers`](/packages/llm/transformers) |  |
+| &nbsp;&nbsp;&nbsp; [`auto-gptq`](/packages/llm/auto-gptq) | [![`auto-gptq_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/auto-gptq_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/auto-gptq_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`awq`](/packages/llm/awq) | [![`awq_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/awq_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/awq_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`bitsandbytes`](/packages/llm/bitsandbytes) | [![`bitsandbytes_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/bitsandbytes_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/bitsandbytes_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`exllama`](/packages/llm/exllama) | [![`exllama_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/exllama_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/exllama_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`gptq-for-llama`](/packages/llm/gptq-for-llama) | [![`gptq-for-llama_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/gptq-for-llama_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/gptq-for-llama_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`l4t-text-generation`](/packages/l4t/l4t-text-generation) | [![`l4t-text-generation_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-text-generation_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-text-generation_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`optimum`](/packages/llm/optimum) | [![`optimum_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/optimum_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/optimum_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`text-generation-inference`](/packages/llm/text-generation-inference) | [![`text-generation-inference_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/text-generation-inference_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/text-generation-inference_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`text-generation-webui`](/packages/llm/text-generation-webui) | [![`text-generation-webui_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/text-generation-webui_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/text-generation-webui_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`transformers`](/packages/llm/transformers) | [![`transformers_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/transformers_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/transformers_jp51.yml) |
 | **`ML`** | |
-| &nbsp;&nbsp; [`deepstream`](/packages/deepstream) |  |
-| &nbsp;&nbsp; [`l4t-ml`](/packages/l4t/l4t-ml) | [![`l4t-ml_jp46`](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-ml_jp46.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-ml_jp46.yml) [![`l4t-ml_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-ml_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-ml_jp51.yml) |
-| &nbsp;&nbsp; [`l4t-pytorch`](/packages/l4t/l4t-pytorch) | [![`l4t-pytorch_jp46`](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-pytorch_jp46.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-pytorch_jp46.yml) [![`l4t-pytorch_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-pytorch_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-pytorch_jp51.yml) |
-| &nbsp;&nbsp; [`l4t-tensorflow:tf1`](/packages/l4t/l4t-tensorflow) | [![`l4t-tensorflow-tf1_jp46`](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-tensorflow-tf1_jp46.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-tensorflow-tf1_jp46.yml) [![`l4t-tensorflow-tf1_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-tensorflow-tf1_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-tensorflow-tf1_jp51.yml) |
-| &nbsp;&nbsp; [`l4t-tensorflow:tf2`](/packages/l4t/l4t-tensorflow) | [![`l4t-tensorflow-tf2_jp46`](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-tensorflow-tf2_jp46.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-tensorflow-tf2_jp46.yml) [![`l4t-tensorflow-tf2_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-tensorflow-tf2_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-tensorflow-tf2_jp51.yml) |
-| &nbsp;&nbsp; [`nemo`](/packages/nemo) |  |
-| &nbsp;&nbsp; [`onnx`](/packages/onnx) |  |
-| &nbsp;&nbsp; [`onnxruntime`](/packages/onnxruntime) |  |
-| &nbsp;&nbsp; [`pytorch:1.11`](/packages/pytorch) |  |
-| &nbsp;&nbsp; [`pytorch:1.12`](/packages/pytorch) |  |
-| &nbsp;&nbsp; [`pytorch:1.13`](/packages/pytorch) |  |
-| &nbsp;&nbsp; [`pytorch:2.0`](/packages/pytorch) |  |
-| &nbsp;&nbsp; [`pytorch:2.1`](/packages/pytorch) |  |
-| &nbsp;&nbsp; [`tensorflow`](/packages/tensorflow) |  |
-| &nbsp;&nbsp; [`tensorflow2`](/packages/tensorflow) |  |
-| &nbsp;&nbsp; [`torch2trt`](/packages/pytorch/torch2trt) |  |
-| &nbsp;&nbsp; [`torch_tensorrt`](/packages/pytorch/torch_tensorrt) |  |
-| &nbsp;&nbsp; [`torchaudio`](/packages/pytorch/torchaudio) |  |
-| &nbsp;&nbsp; [`torchvision`](/packages/pytorch/torchvision) |  |
-| &nbsp;&nbsp; [`tritonserver`](/packages/tritonserver) |  |
+| &nbsp;&nbsp;&nbsp; [`deepstream`](/packages/deepstream) | [![`deepstream_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/deepstream_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/deepstream_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`l4t-ml`](/packages/l4t/l4t-ml) | [![`l4t-ml_jp46`](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-ml_jp46.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-ml_jp46.yml) [![`l4t-ml_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-ml_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-ml_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`l4t-pytorch`](/packages/l4t/l4t-pytorch) | [![`l4t-pytorch_jp46`](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-pytorch_jp46.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-pytorch_jp46.yml) [![`l4t-pytorch_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-pytorch_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-pytorch_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`l4t-tensorflow:tf1`](/packages/l4t/l4t-tensorflow) | [![`l4t-tensorflow-tf1_jp46`](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-tensorflow-tf1_jp46.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-tensorflow-tf1_jp46.yml) [![`l4t-tensorflow-tf1_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-tensorflow-tf1_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-tensorflow-tf1_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`l4t-tensorflow:tf2`](/packages/l4t/l4t-tensorflow) | [![`l4t-tensorflow-tf2_jp46`](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-tensorflow-tf2_jp46.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-tensorflow-tf2_jp46.yml) [![`l4t-tensorflow-tf2_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-tensorflow-tf2_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-tensorflow-tf2_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`nemo`](/packages/nemo) | [![`nemo_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/nemo_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nemo_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`onnx`](/packages/onnx) | [![`onnx_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/onnx_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/onnx_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`onnxruntime`](/packages/onnxruntime) | [![`onnxruntime_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/onnxruntime_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/onnxruntime_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`pytorch:1.11`](/packages/pytorch) | [![`pytorch-111_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/pytorch-111_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/pytorch-111_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`pytorch:1.12`](/packages/pytorch) | [![`pytorch-112_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/pytorch-112_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/pytorch-112_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`pytorch:1.13`](/packages/pytorch) | [![`pytorch-113_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/pytorch-113_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/pytorch-113_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`pytorch:2.0`](/packages/pytorch) | [![`pytorch-20_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/pytorch-20_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/pytorch-20_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`pytorch:2.1`](/packages/pytorch) | [![`pytorch-21_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/pytorch-21_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/pytorch-21_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`tensorflow`](/packages/tensorflow) | [![`tensorflow_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/tensorflow_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tensorflow_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`tensorflow2`](/packages/tensorflow) | [![`tensorflow2_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/tensorflow2_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tensorflow2_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`torch2trt`](/packages/pytorch/torch2trt) | [![`torch2trt_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/torch2trt_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torch2trt_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`torch_tensorrt`](/packages/pytorch/torch_tensorrt) | [![`torch_tensorrt_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/torch_tensorrt_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torch_tensorrt_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`torchaudio`](/packages/pytorch/torchaudio) | [![`torchaudio_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/torchaudio_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torchaudio_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`torchvision`](/packages/pytorch/torchvision) | [![`torchvision_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/torchvision_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torchvision_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`tritonserver`](/packages/tritonserver) | [![`tritonserver_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/tritonserver_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tritonserver_jp51.yml) |
 | **`RAPIDS`** | |
-| &nbsp;&nbsp; [`cudf`](/packages/rapids/cudf) |  |
-| &nbsp;&nbsp; [`cuml`](/packages/rapids/cuml) |  |
+| &nbsp;&nbsp;&nbsp; [`cudf`](/packages/rapids/cudf) | [![`cudf_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/cudf_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cudf_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`cuml`](/packages/rapids/cuml) | [![`cuml_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/cuml_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cuml_jp51.yml) |
 | **`ROS`** | |
-| &nbsp;&nbsp; [`ros:foxy-desktop`](/packages/ros) |  |
-| &nbsp;&nbsp; [`ros:foxy-ros-base`](/packages/ros) |  |
-| &nbsp;&nbsp; [`ros:foxy-ros-core`](/packages/ros) |  |
-| &nbsp;&nbsp; [`ros:galactic-desktop`](/packages/ros) |  |
-| &nbsp;&nbsp; [`ros:galactic-ros-base`](/packages/ros) |  |
-| &nbsp;&nbsp; [`ros:galactic-ros-core`](/packages/ros) |  |
-| &nbsp;&nbsp; [`ros:humble-desktop`](/packages/ros) |  |
-| &nbsp;&nbsp; [`ros:humble-ros-base`](/packages/ros) |  |
-| &nbsp;&nbsp; [`ros:humble-ros-core`](/packages/ros) |  |
-| &nbsp;&nbsp; [`ros:iron-desktop`](/packages/ros) |  |
-| &nbsp;&nbsp; [`ros:iron-ros-base`](/packages/ros) |  |
-| &nbsp;&nbsp; [`ros:iron-ros-core`](/packages/ros) |  |
-| &nbsp;&nbsp; [`ros:noetic-desktop`](/packages/ros) |  |
-| &nbsp;&nbsp; [`ros:noetic-ros-base`](/packages/ros) |  |
-| &nbsp;&nbsp; [`ros:noetic-ros-core`](/packages/ros) |  |
+| &nbsp;&nbsp;&nbsp; [`ros:foxy-desktop`](/packages/ros) | [![`ros-foxy-desktop_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-foxy-desktop_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-foxy-desktop_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`ros:foxy-ros-base`](/packages/ros) | [![`ros-foxy-ros-base_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-foxy-ros-base_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-foxy-ros-base_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`ros:foxy-ros-core`](/packages/ros) | [![`ros-foxy-ros-core_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-foxy-ros-core_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-foxy-ros-core_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`ros:galactic-desktop`](/packages/ros) | [![`ros-galactic-desktop_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-galactic-desktop_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-galactic-desktop_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`ros:galactic-ros-base`](/packages/ros) | [![`ros-galactic-ros-base_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-galactic-ros-base_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-galactic-ros-base_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`ros:galactic-ros-core`](/packages/ros) | [![`ros-galactic-ros-core_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-galactic-ros-core_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-galactic-ros-core_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`ros:humble-desktop`](/packages/ros) | [![`ros-humble-desktop_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-humble-desktop_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-humble-desktop_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`ros:humble-ros-base`](/packages/ros) | [![`ros-humble-ros-base_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-humble-ros-base_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-humble-ros-base_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`ros:humble-ros-core`](/packages/ros) | [![`ros-humble-ros-core_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-humble-ros-core_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-humble-ros-core_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`ros:iron-desktop`](/packages/ros) | [![`ros-iron-desktop_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-iron-desktop_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-iron-desktop_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`ros:iron-ros-base`](/packages/ros) | [![`ros-iron-ros-base_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-iron-ros-base_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-iron-ros-base_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`ros:iron-ros-core`](/packages/ros) | [![`ros-iron-ros-core_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-iron-ros-core_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-iron-ros-core_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`ros:noetic-desktop`](/packages/ros) | [![`ros-noetic-desktop_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-noetic-desktop_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-noetic-desktop_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`ros:noetic-ros-base`](/packages/ros) | [![`ros-noetic-ros-base_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-noetic-ros-base_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-noetic-ros-base_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`ros:noetic-ros-core`](/packages/ros) | [![`ros-noetic-ros-core_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-noetic-ros-core_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-noetic-ros-core_jp51.yml) |
 | **`SENSORS`** | |
-| &nbsp;&nbsp; [`realsense`](/packages/realsense) |  |
-| &nbsp;&nbsp; [`zed`](/packages/zed) |  |
+| &nbsp;&nbsp;&nbsp; [`realsense`](/packages/realsense) | [![`realsense_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/realsense_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/realsense_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`zed`](/packages/zed) | [![`zed_jp51`](https://github.com/dusty-nv/jetson-containers/actions/workflows/zed_jp51.yml/badge.svg)](https://github.com/dusty-nv/jetson-containers/actions/workflows/zed_jp51.yml) |
