@@ -28,7 +28,7 @@ To start the container, you can use the [`run.sh`](/run.sh)/[`autotag`](/autotag
 ./run.sh $(./autotag l4t-tensorflow)
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host l4t-tensorflow:35.2.1
+sudo docker run --runtime nvidia -it --rm --network=host l4t-tensorflow:35.4.1
 
 ```
 > <sup>[`run.sh`](/run.sh) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>

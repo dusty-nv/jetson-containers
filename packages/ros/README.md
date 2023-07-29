@@ -10,113 +10,107 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 <summary><b>CONTAINERS</b></summary>
 <br>
 
-| **`ros:melodic-ros-base`** | |
-| :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T <34` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
-| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.ros.melodic`](Dockerfile.ros.melodic) |
-| &nbsp;&nbsp;&nbsp;Notes | ROS Melodic is for JetPack 4 only |
-
-| **`ros:melodic-ros-core`** | |
-| :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T <34` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
-| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.ros.melodic`](Dockerfile.ros.melodic) |
-| &nbsp;&nbsp;&nbsp;Notes | ROS Melodic is for JetPack 4 only |
-
-| **`ros:melodic-desktop`** | |
-| :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T <34` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
-| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.ros.melodic`](Dockerfile.ros.melodic) |
-| &nbsp;&nbsp;&nbsp;Notes | ROS Melodic is for JetPack 4 only |
-
 | **`ros:noetic-ros-base`** | |
 | :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Builds | [![`ros-noetic-ros-base_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-noetic-ros-base_jp51.yml?label=ros-noetic-ros-base_jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-noetic-ros-base_jp51.yml) [![`ros-noetic-ros-base_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-noetic-ros-base_jp46.yml?label=ros-noetic-ros-base_jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-noetic-ros-base_jp46.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.ros.noetic`](Dockerfile.ros.noetic) |
 
 | **`ros:noetic-ros-core`** | |
 | :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Builds | [![`ros-noetic-ros-core_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-noetic-ros-core_jp46.yml?label=ros-noetic-ros-core_jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-noetic-ros-core_jp46.yml) [![`ros-noetic-ros-core_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-noetic-ros-core_jp51.yml?label=ros-noetic-ros-core_jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-noetic-ros-core_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.ros.noetic`](Dockerfile.ros.noetic) |
 
 | **`ros:noetic-desktop`** | |
 | :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Builds | [![`ros-noetic-desktop_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-noetic-desktop_jp51.yml?label=ros-noetic-desktop_jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-noetic-desktop_jp51.yml) [![`ros-noetic-desktop_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-noetic-desktop_jp46.yml?label=ros-noetic-desktop_jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-noetic-desktop_jp46.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.ros.noetic`](Dockerfile.ros.noetic) |
 
 | **`ros:foxy-ros-base`** | |
 | :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Builds | [![`ros-foxy-ros-base_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-foxy-ros-base_jp46.yml?label=ros-foxy-ros-base_jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-foxy-ros-base_jp46.yml) [![`ros-foxy-ros-base_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-foxy-ros-base_jp51.yml?label=ros-foxy-ros-base_jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-foxy-ros-base_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 
 | **`ros:foxy-ros-core`** | |
 | :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Builds | [![`ros-foxy-ros-core_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-foxy-ros-core_jp46.yml?label=ros-foxy-ros-core_jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-foxy-ros-core_jp46.yml) [![`ros-foxy-ros-core_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-foxy-ros-core_jp51.yml?label=ros-foxy-ros-core_jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-foxy-ros-core_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 
 | **`ros:foxy-desktop`** | |
 | :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Builds | [![`ros-foxy-desktop_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-foxy-desktop_jp51.yml?label=ros-foxy-desktop_jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-foxy-desktop_jp51.yml) [![`ros-foxy-desktop_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-foxy-desktop_jp46.yml?label=ros-foxy-desktop_jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-foxy-desktop_jp46.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 
 | **`ros:galactic-ros-base`** | |
 | :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Builds | [![`ros-galactic-ros-base_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-galactic-ros-base_jp46.yml?label=ros-galactic-ros-base_jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-galactic-ros-base_jp46.yml) [![`ros-galactic-ros-base_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-galactic-ros-base_jp51.yml?label=ros-galactic-ros-base_jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-galactic-ros-base_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 
 | **`ros:galactic-ros-core`** | |
 | :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Builds | [![`ros-galactic-ros-core_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-galactic-ros-core_jp46.yml?label=ros-galactic-ros-core_jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-galactic-ros-core_jp46.yml) [![`ros-galactic-ros-core_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-galactic-ros-core_jp51.yml?label=ros-galactic-ros-core_jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-galactic-ros-core_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 
 | **`ros:galactic-desktop`** | |
 | :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Builds | [![`ros-galactic-desktop_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-galactic-desktop_jp46.yml?label=ros-galactic-desktop_jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-galactic-desktop_jp46.yml) [![`ros-galactic-desktop_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-galactic-desktop_jp51.yml?label=ros-galactic-desktop_jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-galactic-desktop_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 
 | **`ros:humble-ros-base`** | |
 | :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Builds | [![`ros-humble-ros-base_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-humble-ros-base_jp51.yml?label=ros-humble-ros-base_jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-humble-ros-base_jp51.yml) [![`ros-humble-ros-base_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-humble-ros-base_jp46.yml?label=ros-humble-ros-base_jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-humble-ros-base_jp46.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 
 | **`ros:humble-ros-core`** | |
 | :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Builds | [![`ros-humble-ros-core_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-humble-ros-core_jp46.yml?label=ros-humble-ros-core_jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-humble-ros-core_jp46.yml) [![`ros-humble-ros-core_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-humble-ros-core_jp51.yml?label=ros-humble-ros-core_jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-humble-ros-core_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 
 | **`ros:humble-desktop`** | |
 | :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Builds | [![`ros-humble-desktop_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-humble-desktop_jp51.yml?label=ros-humble-desktop_jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-humble-desktop_jp51.yml) [![`ros-humble-desktop_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-humble-desktop_jp46.yml?label=ros-humble-desktop_jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-humble-desktop_jp46.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 
 | **`ros:iron-ros-base`** | |
 | :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Builds | [![`ros-iron-ros-base_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-iron-ros-base_jp46.yml?label=ros-iron-ros-base_jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-iron-ros-base_jp46.yml) [![`ros-iron-ros-base_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-iron-ros-base_jp51.yml?label=ros-iron-ros-base_jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-iron-ros-base_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 
 | **`ros:iron-ros-core`** | |
 | :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Builds | [![`ros-iron-ros-core_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-iron-ros-core_jp46.yml?label=ros-iron-ros-core_jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-iron-ros-core_jp46.yml) [![`ros-iron-ros-core_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-iron-ros-core_jp51.yml?label=ros-iron-ros-core_jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-iron-ros-core_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
 
 | **`ros:iron-desktop`** | |
 | :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Builds | [![`ros-iron-desktop_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-iron-desktop_jp46.yml?label=ros-iron-desktop_jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-iron-desktop_jp46.yml) [![`ros-iron-desktop_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-iron-desktop_jp51.yml?label=ros-iron-desktop_jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-iron-desktop_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.ros2`](Dockerfile.ros2) |
@@ -192,6 +186,7 @@ Supported ROS packages:  `ros_base` `ros_core` `desktop`
 | &nbsp;&nbsp;[`dustynv/ros:humble-pytorch-l4t-r35.2.1`](https://hub.docker.com/r/dustynv/ros/tags) | `2023-03-28` | `arm64` | `6.2GB` |
 | &nbsp;&nbsp;[`dustynv/ros:humble-pytorch-l4t-r35.3.1`](https://hub.docker.com/r/dustynv/ros/tags) | `2023-05-02` | `arm64` | `5.8GB` |
 | &nbsp;&nbsp;[`dustynv/ros:humble-ros-base-deepstream-l4t-r35.1.0`](https://hub.docker.com/r/dustynv/ros/tags) | `2022-10-03` | `arm64` | `5.5GB` |
+| &nbsp;&nbsp;[`dustynv/ros:humble-ros-base-l4t-35.2.1`](https://hub.docker.com/r/dustynv/ros/tags) | `2023-07-29` | `arm64` | `5.2GB` |
 | &nbsp;&nbsp;[`dustynv/ros:humble-ros-base-l4t-r32.7.1`](https://hub.docker.com/r/dustynv/ros/tags) | `2023-05-19` | `arm64` | `0.6GB` |
 | &nbsp;&nbsp;[`dustynv/ros:humble-ros-base-l4t-r34.1.0`](https://hub.docker.com/r/dustynv/ros/tags) | `2022-05-26` | `arm64` | `5.6GB` |
 | &nbsp;&nbsp;[`dustynv/ros:humble-ros-base-l4t-r34.1.1`](https://hub.docker.com/r/dustynv/ros/tags) | `2022-09-23` | `arm64` | `5.6GB` |
@@ -251,10 +246,10 @@ To start the container, you can use the [`run.sh`](/run.sh)/[`autotag`](/autotag
 ./run.sh $(./autotag ros)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/ros:iron-desktop-l4t-r35.1.0
+./run.sh dustynv/ros:humble-ros-base-l4t-35.2.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/ros:iron-desktop-l4t-r35.1.0
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/ros:humble-ros-base-l4t-35.2.1
 ```
 > <sup>[`run.sh`](/run.sh) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
