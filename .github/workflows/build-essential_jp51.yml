@@ -25,4 +25,4 @@ jobs:
          git checkout $GITHUB_SHA 
          git status 
          ls -a 
-      - run: ./build.sh --name=runner/ build-essential
+      - run: ./build.sh --name=runner/ --push=dustynv build-essential

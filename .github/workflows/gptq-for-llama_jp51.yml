@@ -43,4 +43,4 @@ jobs:
          git checkout $GITHUB_SHA 
          git status 
          ls -a 
-      - run: ./build.sh --name=runner/ gptq-for-llama
+      - run: ./build.sh --name=runner/ --push=dustynv gptq-for-llama

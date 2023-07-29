@@ -39,4 +39,4 @@ jobs:
          git checkout $GITHUB_SHA 
          git status 
          ls -a 
-      - run: ./build.sh --name=runner/ stable-diffusion
+      - run: ./build.sh --name=runner/ --push=dustynv stable-diffusion

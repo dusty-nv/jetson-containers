@@ -47,4 +47,4 @@ jobs:
          git checkout $GITHUB_SHA 
          git status 
          ls -a 
-      - run: ./build.sh --name=runner/ text-generation-webui
+      - run: ./build.sh --name=runner/ --push=dustynv text-generation-webui

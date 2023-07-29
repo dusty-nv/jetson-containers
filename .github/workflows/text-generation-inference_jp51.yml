@@ -45,4 +45,4 @@ jobs:
          git checkout $GITHUB_SHA 
          git status 
          ls -a 
-      - run: ./build.sh --name=runner/ text-generation-inference
+      - run: ./build.sh --name=runner/ --push=dustynv text-generation-inference

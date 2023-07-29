@@ -121,7 +121,7 @@ def generate_workflow(package, root, simulate=False):
     txt += "         git checkout $GITHUB_SHA \n"
     txt += "         git status \n"
     txt += "         ls -a \n"
-    txt += f"      - run: ./build.sh --name=runner/ {package['name']}"  # --build-flags='--no-cache' 
+    txt += f"      - run: ./build.sh --name=runner/ --push=dustynv {package['name']}"  # --build-flags='--no-cache' 
     
     print(filename)
     print(txt)

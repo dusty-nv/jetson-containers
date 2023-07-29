@@ -41,4 +41,4 @@ jobs:
          git checkout $GITHUB_SHA 
          git status 
          ls -a 
-      - run: ./build.sh --name=runner/ cuml
+      - run: ./build.sh --name=runner/ --push=dustynv cuml

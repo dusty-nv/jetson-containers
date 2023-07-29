@@ -31,4 +31,4 @@ jobs:
          git checkout $GITHUB_SHA 
          git status 
          ls -a 
-      - run: ./build.sh --name=runner/ cuda-python
+      - run: ./build.sh --name=runner/ --push=dustynv cuda-python

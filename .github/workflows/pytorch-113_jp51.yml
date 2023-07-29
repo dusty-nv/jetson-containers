@@ -35,4 +35,4 @@ jobs:
          git checkout $GITHUB_SHA 
          git status 
          ls -a 
-      - run: ./build.sh --name=runner/ pytorch:1.13
+      - run: ./build.sh --name=runner/ --push=dustynv pytorch:1.13

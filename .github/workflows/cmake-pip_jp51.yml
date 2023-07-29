@@ -29,4 +29,4 @@ jobs:
          git checkout $GITHUB_SHA 
          git status 
          ls -a 
-      - run: ./build.sh --name=runner/ cmake:pip
+      - run: ./build.sh --name=runner/ --push=dustynv cmake:pip
