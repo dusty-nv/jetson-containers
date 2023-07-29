@@ -64,6 +64,8 @@ The text between `#---` is YAML and is extracted by the build system.  Each pack
 | `group`       | `str`                | optional group the package belongs to (e.g. `ml`, `llm`, `cuda`)                        |
 | `notes`       | `str`                | brief one-line docs that are added to a package's readme table                          |
 | `path`        | `str`                | path to the package's directory (automatically populated)                               |
+| `prefix`      | `str`                | text prepended to the container tag. not part of the package's name for referencing.    |
+| `postfix`     | `str`                | text appended to the container tag (default is `r$L4T_VERSION`)                         |
 | `requires`    | `str`                | the version(s) of L4T the package is compatible with (e.g. `>=35.2.1` for JetPack 5.1+) |
 | `test`        | `str` or `list[str]` | one or more test commands/scripts to run (`.py`, `.sh`, or a shell command)             |
 
