@@ -1,4 +1,4 @@
-
+import copy
 from jetson_containers import L4T_VERSION
 
 ROS_DISTROS = ['melodic', 'noetic', 'foxy', 'galactic', 'humble', 'iron']
@@ -9,6 +9,7 @@ template = package.copy()
 
 template['group'] = 'ros'
 template['depends'] = ['cmake', 'python', 'opencv']
+template['postfix'] = f"l4t-{L4T_VERSION}"
 
 template['docs'] = "Various ROS/ROS2 containers for JetPack.  These build ROS from source to run them on the needed versions of Ubuntu.\n\n"
 template['docs'] += f"Supported ROS distros:   {' '.join([f'`{distro}`' for distro in ROS_DISTROS])}\n<br>\n"
@@ -18,7 +19,7 @@ package = []
 
 for ROS_DISTRO in ROS_DISTROS:
     for ROS_PACKAGE in ROS_PACKAGES:
-        pkg = template.copy()
+        pkg = copy.deepcopy(template)
         
         pkg['name'] = f"ros:{ROS_DISTRO}-{ROS_PACKAGE.replace('_', '-')}"
         
@@ -32,6 +33,7 @@ for ROS_DISTRO in ROS_DISTROS:
             pkg['test'] = 'test_ros.sh'
             pkg['requires'] = '<34'   # melodic is for 18.04 only
             pkg['notes'] = 'ROS Melodic is for JetPack 4 only'
+            pkg['depends'].remove('opencv')  # melodic apt packages install the ubuntu opencv
         elif ROS_DISTRO == 'noetic':
             pkg['dockerfile'] = 'Dockerfile.ros.noetic'
             pkg['test'] = 'test_ros.sh'
