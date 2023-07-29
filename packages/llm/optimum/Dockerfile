@@ -1,6 +1,7 @@
 #---
 # name: optimum
 # group: llm
+# config: config.py
 # depends: [onnxruntime, transformers]
 # test: test.py
 # notes: https://github.com/huggingface/optimum
