@@ -19,9 +19,24 @@ from packaging.version import Version
 _NEWLINE_=" \\\n"  # used when building command strings
 
 
-def build_container(name, packages, base=get_l4t_base(), build_flags='', simulate=False, skip_tests=[]):
+def build_container(name, packages, base=get_l4t_base(), build_flags='', simulate=False, skip_tests=[], push=''):
     """
-    Multi-stage container build that chains together selected packages.
+    Multi-stage container build that chains together selected packages into one container image.
+    For example, `['pytorch', 'tensorflow']` would build a container that had both pytorch and tensorflow in it.
+    
+    Parameters:
+      name (str) -- name of container image to build (or a namespace to build under, ending in /)
+                    if empty, a default name will be assigned based on the package(s) selected.           
+      packages (list[str]) -- list of package names to build (into one container)
+      base (str) -- base container image to use (defaults to l4t-base or l4t-jetpack)
+      build_flags (str) -- arguments to add to the 'docker build' command
+      simulate (bool) -- if true, just print out the commands that would have been run
+      skip_tests (list[str]) -- list of tests to skip (or 'all' or 'intermediate')
+      push (str) -- name of repository or user to push container to (no push if blank)
+      
+    Returns: 
+      The full name of the container image that was built (as a string)
+      
     """
     if isinstance(packages, str):
         packages = [packages]
@@ -119,15 +134,35 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
         if package not in skip_tests:
             test_container(name, package, simulate)
             
+    # push container
+    if push:
+        push_container(name, push, simulate)
+            
     return name
     
     
-def build_containers(name, packages, base=get_l4t_base(), build_flags='', simulate=False, skip_errors=False, skip_packages=[], skip_tests=[]):
+def build_containers(name, packages, base=get_l4t_base(), build_flags='', simulate=False, skip_errors=False, skip_packages=[], skip_tests=[], push=''):
     """
-    Build a set of containers independently.
-    Returns true if all containers built successfully, or false if there were any errors.
-    Building will be halted on the first error encountered, unless skip_errors is set to true.
+    Build separate container images for each of the requested packages (this is typically used in batch building jobs)
+    For example, `['pytorch', 'tensorflow']` would build a pytorch container and a tensorflow container.
+    
     TODO add multiprocessing parallel build support for jobs=-1 (use all CPU cores)
+    
+    Parameters:
+      name (str) -- name of container to build (or a namespace to build under, ending in /)
+                    if empty, a default name will be assigned based on the package(s) selected.
+                    wildcards can be used to select packages (i.e. 'ros*' would build all ROS packages)             
+      packages (list[str]) -- list of package names to build (in separated containers)
+      base (str) -- base container image to use (defaults to l4t-base or l4t-jetpack)
+      build_flags (str) -- arguments to add to the 'docker build' command
+      simulate (bool) -- if true, just print out the commands that would have been run
+      skip_errors (bool) -- proceed with building the next container on an error (default false)
+      skip_packages (list[str]) -- list of packages to skip from the list
+      skip_tests (list[str]) -- list of tests to skip (or 'all' or 'intermediate')
+      push (str) -- name of repository or user to push container to (no push if blank)
+      
+    Returns: 
+      True if all containers built successfully, or False if there were any errors.
     """
     if not packages:  # build everything (for testing)
         packages = sorted(find_packages([]).keys())
@@ -139,7 +174,7 @@ def build_containers(name, packages, base=get_l4t_base(), build_flags='', simula
 
     for package in packages:
         try:
-            container_name = build_container(name, package, base, build_flags, simulate, skip_tests) 
+            container_name = build_container(name, package, base, build_flags, simulate, skip_tests, push) 
         except Exception as error:
             print(error)
             if not skip_errors:
@@ -165,15 +200,55 @@ def build_containers(name, packages, base=get_l4t_base(), build_flags='', simula
     
 def tag_container(source, target, simulate=False):
     """
-    Tag a container image
+    Tag a container image (source -> target)
     """
     cmd = f"sudo docker tag {source} {target}"
+    
     print(f"-- Tagging container {source} -> {target}")
     print(f"{cmd}\n")
     
     if not simulate:
         subprocess.run(cmd, shell=True, check=True)
         
+
+def push_container(name, repository='', simulate=False):
+    """
+    Push container to a repository or user with 'docker push'  
+
+    If repository is specified (for example, a DockerHub username) the container will be re-tagged
+    under that repository first. Otherwise, it's assumed the image is tagged under the correct name already.
+    
+    It's also assumed that this machine has already been logged into the repository with 'docker login'
+    
+    Returns the container name/tag that was pushed.
+    """
+    cmd = ""
+    
+    if repository:
+        namespace_idx = name.find('/')
+        local_name = name
+        
+        if namespace_idx >= 0:
+            name = repository + local_name[namespace_idx:]
+        else:
+            name = repository + '/' + local_name
+        
+        print(f"-- Tagging container {local_name} -> {name}")
+        
+        cmd += f"sudo docker rmi {name} ; "
+        cmd += f"sudo docker tag {local_name} {name} && "
+        
+    cmd += f"sudo docker push {name}"
+    
+    print(f"-- Pushing container {name}")
+    print(f"\n{cmd}\n")
+    
+    if not simulate:
+        subprocess.run(cmd, executable='/bin/bash', shell=True, check=True)
+        print(f"\n-- Pushed {name}\n")
+        
+    return name
+    
     
 def test_container(name, package, simulate=False):
     """

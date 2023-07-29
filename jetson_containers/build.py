@@ -45,6 +45,7 @@ parser.add_argument('--skip-packages', type=str, default='', help="disable certa
 parser.add_argument('--skip-tests', type=str, default='', help="comma-separated list of package tests to disable ('intermediate' to disable build-stage tests)")
 parser.add_argument('--skip-errors', action='store_true', help="continue building when errors occur (only relevant when --multiple is in use)")
 parser.add_argument('--simulate', action='store_true', help="print out the build commands without actually building the containers")
+parser.add_argument('--push', type=str, default='', help="repo or user to push built container image to (no push by default)")
 parser.add_argument('--logs', type=str, default='', help="sets the directory to save container build logs to (default: jetson-containers/logs)")
 
 args = parser.parse_args()
@@ -89,6 +90,6 @@ if args.list_packages or args.show_packages:
 # build one multi-stage container from chain of packages
 # or launch multiple independent container builds
 if not args.multiple:
-    build_container(args.name, args.packages, args.base, args.build_flags, args.simulate, args.skip_tests)
+    build_container(args.name, args.packages, args.base, args.build_flags, args.simulate, args.skip_tests, args.push)
 else:   
-    build_containers(args.name, args.packages, args.base, args.build_flags, args.simulate, args.skip_errors, args.skip_packages, args.skip_tests)
+    build_containers(args.name, args.packages, args.base, args.build_flags, args.simulate, args.skip_errors, args.skip_packages, args.skip_tests, args.push)
