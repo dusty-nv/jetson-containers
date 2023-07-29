@@ -30,9 +30,13 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
     
-# patch for: cannot import name 'GradBucket' from 'torch.distributed'
+# patch: cannot import name 'GradBucket' from 'torch.distributed'
 RUN NEMO_PATH="$(pip3 show nemo_toolkit | grep Location: | cut -d' ' -f2)/nemo" && \
     sed -i '/from torch.distributed.algorithms.ddp_comm_hooks.debugging_hooks import noop_hook/d' $NEMO_PATH/collections/nlp/parts/nlp_overrides.py
+
+# patch: Unexpected key(s) in state_dict: "bert_model.embeddings.position_ids".
+# with:  nemo_toolkit 1.19.1, transformers 4.31.0
+RUN pip3 install --no-cache-dir --verbose 'transformers<4.31'
 
 # set the nemo model cache directory to mounted /data volume
 ENV NEMO_CACHE_DIR=/data/models/nemo
