@@ -42,15 +42,29 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
     for package in packages:    
         find_package(package)
             
-    # assign default container name and tag if needed
+    # assign default container repository if needed
     if len(name) == 0:   
         name = packages[-1]
     elif name.find(':') < 0 and name[-1] == '/':  # they gave a namespace to build under
         name += packages[-1]
-        
-    if name.find(':') < 0:
-        name += f":r{L4T_VERSION}"
     
+    # add prefix to tag
+    last_pkg = find_package(packages[-1])
+    prefix = last_pkg.get('prefix', '')
+    postfix = last_pkg.get('postfix', '')
+    
+    tag_idx = name.find(':')
+    
+    if prefix:
+        if tag_idx >= 0:
+            name = name[:tag_idx+1] + prefix + '-' + name[tag_idx+1:]
+        else:
+            name = name + ':' + prefix
+
+    if postfix:
+        name += f"{':' if tag_idx < 0 else '-'}{postfix}"
+
+    # build chain of all packages
     for idx, package in enumerate(packages):
         # tag this build stage with the sub-package
         container_name = f"{name}-{package.replace(':','_')}"

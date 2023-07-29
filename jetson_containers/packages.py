@@ -16,7 +16,8 @@ _PACKAGE_ROOT = os.path.dirname(os.path.dirname(__file__))
 _PACKAGE_DIRS = [os.path.join(_PACKAGE_ROOT, 'packages/*')]
 _PACKAGE_OPTS = {'check_l4t_version': True}
 _PACKAGE_KEYS = ['alias', 'build_args', 'build_flags', 'config', 'depends', 'disabled',  
-                 'dockerfile', 'docs', 'group', 'name', 'notes', 'path', 'requires', 'test']
+                 'dockerfile', 'docs', 'group', 'name', 'notes', 'path', 
+                 'prefix', 'postfix', 'requires', 'test']
                  
 
 def package_search_dirs(package_dirs, scan=False):
@@ -90,9 +91,17 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
         print(f"-- Package dir '{path}' doesn't exist, skipping...")
         return _PACKAGES
         
+    # create a new default package
+    package = {
+        'path': path, 
+        'requires': '>=32.6',
+        'postfix': f'r{L4T_VERSION}',
+        'config': [], 
+        'test': []
+    }
+    
     # search this directory for dockerfiles and config scripts
     entries = os.listdir(path)
-    package = {'path': path, 'requires': '>=32.6', 'config': [], 'test': []}
     
     for entry in entries:
         entry_path = os.path.join(path, entry)
