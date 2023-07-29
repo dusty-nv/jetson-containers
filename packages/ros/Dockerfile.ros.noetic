@@ -5,7 +5,7 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG ROS_PKG=ros_base
+ARG ROS_PACKAGE=ros_base
 ENV ROS_DISTRO=noetic
 ENV ROS_ROOT=/opt/ros/${ROS_DISTRO}
 ENV ROS_PYTHON_VERSION=3
@@ -71,20 +71,9 @@ RUN mkdir ros_catkin_ws && \
 
 
 # 
-# setup entrypoint
+# commands will be appended/run by the entrypoint which sources the ROS environment
 #
 COPY ros_entrypoint.sh /ros_entrypoint.sh
-RUN echo 'source /ros_entrypoint.sh' >> /root/.bashrc
-
-#ENTRYPOINT ["/ros_entrypoint.sh"]
-#CMD ["bash"]
+ENTRYPOINT ["/ros_entrypoint.sh"]
 
 WORKDIR /
-
-
-#
-# ros_deep_learning (PyTorch-based container only)
-#
-#COPY ./scripts/ros_deep_learning.sh /tmp/ros_deep_learning.sh
-#RUN cd /tmp && ./ros_deep_learning.sh
-

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # this script builds a ROS2 distribution from source
-# ROS_DISTRO, ROS_ROOT, ROS_PKG environment variables should be set
+# ROS_DISTRO, ROS_ROOT, ROS_PACKAGE environment variables should be set
 
-echo "ROS2 builder => ROS_DISTRO=$ROS_DISTRO ROS_PKG=$ROS_PKG ROS_ROOT=$ROS_ROOT"
+echo "ROS2 builder => ROS_DISTRO=$ROS_DISTRO ROS_PACKAGE=$ROS_PACKAGE ROS_ROOT=$ROS_ROOT"
 
 set -e
 #set -x
@@ -76,7 +76,7 @@ cd ${ROS_ROOT}
     
 # download ROS sources
 # https://answers.ros.org/question/325245/minimal-ros2-installation/?answer=325249#post-id-325249
-rosinstall_generator --deps --rosdistro ${ROS_DISTRO} ${ROS_PKG} \
+rosinstall_generator --deps --rosdistro ${ROS_DISTRO} ${ROS_PACKAGE} \
 	launch_xml \
 	launch_yaml \
 	launch_testing \
@@ -95,9 +95,9 @@ rosinstall_generator --deps --rosdistro ${ROS_DISTRO} ${ROS_PKG} \
 	image_transport \
 	compressed_image_transport \
 	compressed_depth_image_transport \
-> ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall
-cat ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall
-vcs import src < ros2.${ROS_DISTRO}.${ROS_PKG}.rosinstall
+> ros2.${ROS_DISTRO}.${ROS_PACKAGE}.rosinstall
+cat ros2.${ROS_DISTRO}.${ROS_PACKAGE}.rosinstall
+vcs import src < ros2.${ROS_DISTRO}.${ROS_PACKAGE}.rosinstall
     
 # https://github.com/dusty-nv/jetson-containers/issues/181
 rm -r ${ROS_ROOT}/src/ament_cmake
