@@ -245,7 +245,7 @@ def push_container(name, repository='', simulate=False):
     
     if not simulate:
         subprocess.run(cmd, executable='/bin/bash', shell=True, check=True)
-        print(f"\n-- Pushed {name}\n")
+        print(f"\n-- Pushed container {name}\n")
         
     return name
     
