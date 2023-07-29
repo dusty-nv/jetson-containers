@@ -4,6 +4,7 @@
 # requires: '>=34.1.0'
 # depends: [build-essential, pytorch]
 # test: test.py
+# notes: fork of https://github.com/TimDettmers/bitsandbytes for Jetson
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
@@ -17,7 +18,7 @@ ADD https://api.github.com/repos/${BITSANDBYTES_REPO}/git/refs/heads/${BITSANDBY
 
 RUN pip3 uninstall -y bitsandbytes && \
     cd /opt && \
-    git clone --depth=1 https://github.com/dusty-nv/bitsandbytes /opt/bitsandbytes && \
+    git clone --depth=1 https://github.com/${BITSANDBYTES_REPO} bitsandbytes && \
     cd bitsandbytes && \
     CUDA_VERSION=114 make -j$(nproc) cuda11x && \
     python3 setup.py --verbose build_ext --inplace -j$(nproc) bdist_wheel && \

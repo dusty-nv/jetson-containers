@@ -3,6 +3,7 @@
 # group: llm
 # depends: [pytorch, bitsandbytes, transformers]
 # test: test.py
+# notes: https://github.com/PanQiWei/AutoGPTQ
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

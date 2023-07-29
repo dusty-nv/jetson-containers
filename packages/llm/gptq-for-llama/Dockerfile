@@ -3,6 +3,7 @@
 # group: llm
 # depends: [pytorch, bitsandbytes, transformers]
 # test: test.sh
+# notes: https://github.com/oobabooga/GPTQ-for-LLaMa
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

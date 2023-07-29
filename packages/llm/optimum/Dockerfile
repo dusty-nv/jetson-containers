@@ -3,6 +3,7 @@
 # group: llm
 # depends: [onnxruntime, transformers]
 # test: test.py
+# notes: https://github.com/huggingface/optimum
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

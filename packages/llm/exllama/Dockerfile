@@ -4,6 +4,7 @@
 # config: config.py
 # depends: [pytorch]
 # test: test.sh
+# notes: https://github.com/turboderp/exllama
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

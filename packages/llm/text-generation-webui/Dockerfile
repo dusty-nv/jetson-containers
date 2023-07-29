@@ -2,6 +2,7 @@
 # name: text-generation-webui
 # group: llm
 # depends: [pytorch, bitsandbytes, transformers, auto-gptq, gptq-for-llama]
+# notes: https://github.com/oobabooga/text-generation-webui
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
