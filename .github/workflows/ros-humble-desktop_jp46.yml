@@ -35,4 +35,4 @@ jobs:
          git checkout $GITHUB_SHA 
          git status 
          ls -a 
-      - run: ./build.sh --name=runner/ ros:humble-desktop
+      - run: ./build.sh --name=runner/ --push=dustynv ros:humble-desktop

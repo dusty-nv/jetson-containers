@@ -13,6 +13,8 @@ on:
       - '!packages/build-essential/README.md'
       - 'packages/python/*'
       - '!packages/python/README.md'
+      - 'packages/numpy/*'
+      - '!packages/numpy/README.md'
 jobs:
   pycuda_jp46:
     runs-on: [self-hosted, jetson, jp46]
@@ -29,4 +31,4 @@ jobs:
          git checkout $GITHUB_SHA 
          git status 
          ls -a 
-      - run: ./build.sh --name=runner/ pycuda
+      - run: ./build.sh --name=runner/ --push=dustynv pycuda

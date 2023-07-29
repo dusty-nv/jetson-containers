@@ -43,4 +43,4 @@ jobs:
          git checkout $GITHUB_SHA 
          git status 
          ls -a 
-      - run: ./build.sh --name=runner/ torch_tensorrt
+      - run: ./build.sh --name=runner/ --push=dustynv torch_tensorrt

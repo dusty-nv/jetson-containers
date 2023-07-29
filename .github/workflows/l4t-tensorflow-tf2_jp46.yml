@@ -39,4 +39,4 @@ jobs:
          git checkout $GITHUB_SHA 
          git status 
          ls -a 
-      - run: ./build.sh --name=runner/ l4t-tensorflow:tf2
+      - run: ./build.sh --name=runner/ --push=dustynv l4t-tensorflow:tf2

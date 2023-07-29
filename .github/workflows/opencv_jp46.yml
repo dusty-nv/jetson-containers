@@ -31,4 +31,4 @@ jobs:
          git checkout $GITHUB_SHA 
          git status 
          ls -a 
-      - run: ./build.sh --name=runner/ opencv
+      - run: ./build.sh --name=runner/ --push=dustynv opencv

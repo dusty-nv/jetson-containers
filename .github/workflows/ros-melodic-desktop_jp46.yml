@@ -15,10 +15,6 @@ on:
       - '!packages/python/README.md'
       - 'packages/cmake/cmake_pip/*'
       - '!packages/cmake/cmake_pip/README.md'
-      - 'packages/numpy/*'
-      - '!packages/numpy/README.md'
-      - 'packages/opencv/*'
-      - '!packages/opencv/README.md'
 jobs:
   ros-melodic-desktop_jp46:
     runs-on: [self-hosted, jetson, jp46]
@@ -35,4 +31,4 @@ jobs:
          git checkout $GITHUB_SHA 
          git status 
          ls -a 
-      - run: ./build.sh --name=runner/ ros:melodic-desktop
+      - run: ./build.sh --name=runner/ --push=dustynv ros:melodic-desktop
