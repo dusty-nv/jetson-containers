@@ -54,6 +54,7 @@ RUN pip3 install --no-cache-dir --verbose importlib.metadata
 
 #
 # download/build the ROS source
+# error: option --install-layout not recognized  https://github.com/ros/catkin/issues/863#issuecomment-1000446018
 #
 RUN mkdir ros_catkin_ws && \
     cd ros_catkin_ws && \
@@ -66,7 +67,7 @@ RUN mkdir ros_catkin_ws && \
 	 --ignore-packages-from-source \
 	 --rosdistro ${ROS_DISTRO} \
 	 --skip-keys "python3-pykdl libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv" && \
-    python3 ./src/catkin/bin/catkin_make_isolated --install --install-space ${ROS_ROOT} -DCMAKE_BUILD_TYPE=Release && \
+    python3 ./src/catkin/bin/catkin_make_isolated --install --install-space ${ROS_ROOT} -DCMAKE_BUILD_TYPE=Release -DSETUPTOOLS_DEB_LAYOUT=OFF && \
     rm -rf /var/lib/apt/lists/*
 
 
