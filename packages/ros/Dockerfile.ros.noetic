@@ -48,6 +48,9 @@ RUN apt-get update && \
     rosdep update && \
     rm -rf /var/lib/apt/lists/*
 
+# /usr/bin/rosinstall_generator => No module named 'importlib.metadata'
+RUN pip3 install --no-cache-dir --verbose importlib.metadata
+
 
 #
 # download/build the ROS source
@@ -58,7 +61,11 @@ RUN mkdir ros_catkin_ws && \
     mkdir src && \
     vcs import --input ${ROS_DISTRO}-${ROS_PKG}.rosinstall ./src && \
     apt-get update && \
-    rosdep install --from-paths ./src --ignore-packages-from-source --rosdistro ${ROS_DISTRO} --skip-keys python3-pykdl -y && \
+    rosdep install -y \
+	 --from-paths ./src \
+	 --ignore-packages-from-source \
+	 --rosdistro ${ROS_DISTRO} \
+	 --skip-keys "python3-pykdl libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv" && \
     python3 ./src/catkin/bin/catkin_make_isolated --install --install-space ${ROS_ROOT} -DCMAKE_BUILD_TYPE=Release && \
     rm -rf /var/lib/apt/lists/*
 
