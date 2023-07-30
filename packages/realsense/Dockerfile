@@ -17,8 +17,12 @@ RUN apt-get update && \
             libglfw3-dev \
 		  libgl1-mesa-dev \
 		  libglu1-mesa-dev \
-		  qtcreator \
-		  python2-dev \
+		  qtcreator && \
+    if [ $(lsb_release -cs) = "bionic" ]; then \
+        apt-get install -y --no-install-recommends python-dev; \
+    else \
+        apt-get install -y --no-install-recommends python2-dev; \
+    fi \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
