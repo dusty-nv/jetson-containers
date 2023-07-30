@@ -11,7 +11,7 @@ Automated container build system provides [**AI/ML packages**](packages) for [NV
 | CUDA | [`cupy`](packages/cupy) [`cuda-python`](packages/cuda-python) [`pycuda`](packages/pycuda) [`numba`](packages/numba) [`cudf`](packages/rapids/cudf) [`cuml`](packages/rapids/cuml) |
 | Robotics | [`ros`](packages/ros) [`ros2`](packages/ros) [`opencv:cuda`](packages/opencv) [`realsense`](packages/realsense) [`zed`](packages/zed) |
 
-See the [**`packages`**](packages) directory for the full list of packages, including pre-built container images.
+See the [**`packages`**](packages) directory for the full list, including pre-built container images.
 
 Using the included tools, you can easily combine packages together for building your own containers.  Want to run ROS2 with PyTorch and Transformers?  No problem - do the [setup](README.md), and build it on your Jetson like this:
 
@@ -357,6 +357,38 @@ $ ./build.sh --skip-tests=intermediate pytorch  # only run tests at the end of t
 ```
 
 These flags tend to get used more during development - normally it's good to thoroughly test the build stack, as to not run into cryptic issues with packages later on.
+
+### Running
+
+See [Running Containers](/docs/run.md).
+
+## Running Containers
+
+Let's say that you found an image from the [Package List](/packages) or [DockerHub](https://hub.docker.com/u/dustynv), or [built a container](/docs/build.md) - the normal way to run an interactive Docker container on your Jetson would be like:
+
+``` bash
+sudo docker run --runtime nvidia -it --rm --network=host CONTAINER:TAG
+```
+
+That's actually a rather minimal command, and doesn't have support for display or other devices, and it doesn't mount the model/data cache ([`/data`](/data)). Once you add everything in, it gets to be a lot to specify by hand.  Hence, we have some helpers that provide shortcuts.
+
+The [`run.sh`](/run.sh) launcher forwards the command-line to `docker run`, with some added defaults - including the above flags, mounting the `/data` cache, and mounting V4L2 and display devices.
+
+``` bash
+./run.sh CONTAINER:TAG  # run with --runtime=nvidia, default mounts, ect
+./run.sh CONTAINER:TAG my_app --abc xyz  # run a command (instead of interactive mode)
+./run.sh --volume /path/on/host:/path/in/container CONTAINER:TAG  # mount a directory
+```
+
+The flags and arguments to `run.sh` are the same as they are to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) - anything you specify will be passed along.
+
+### `autotag`
+
+To solve the problem of finding a container that's compatible with your version of L4T
+
+### JetPack/L4T Compatability
+
+aalkdsjf
 
 <details>
 <summary><h3>Legacy Documentation</h3></summary>
