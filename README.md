@@ -27,6 +27,8 @@ $ ./run.sh $(./autotag l4t-pytorch)
 > <sup>[`run.sh`](/run.sh) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
 
+If you look at any package's readme (like [`l4t-pytorch`](packages/l4t/l4t-pytorch)), it will have detailed instructions for running it's container.
+
 ## Package Definitions
 
 A package is one building block of a container - typically composed of a Dockerfile and optional configuration scripts.
@@ -158,10 +160,10 @@ Of course, it being Python, you can perform basically any other system queries/c
  
 ## System Setup
 
-Install the latest version of JetPack 4 if you are on Nano/TX1/TX2 or JetPack 5 if you are on Xavier/Orin.  This repo tests on the following versions of JetPack:
+Install the latest version of JetPack 4 if you are on Nano/TX1/TX2, or JetPack 5 if you are on Xavier/Orin.  This repo tests on the following versions of JetPack:
 
-* JetPack 4.6.1+ (L4T R32.7.1+)
-* JetPack 5.1+  (L4T R35.2.1+)
+* JetPack 4.6.1+ (>= L4T R32.7.1)
+* JetPack 5.1+  (>= L4T R35.2.1)
 
 ### Clone the Repo
 
@@ -189,7 +191,7 @@ If you're going to be building containers, you need to set Docker's `default-run
 }
 ```
 
-Then restart the Docker service or reboot your system before proceeding:
+Then restart the Docker service, or reboot your system before proceeding:
 
 ```bash
 $ sudo systemctl restart docker
@@ -204,11 +206,9 @@ Default Runtime: nvidia
 
 ### Relocating Docker Data Root
 
-Containers can take up a lot of disk space.  If you have external storage available (NVME is preferred if possible), it's advised to relocate your Docker container cache to the larger drive.  First, get your drive setup and so that it's mounted at boot (i.e. it should be in `/etc/fstab`).  If it's not automatically mounted at boot before the Docker daemon starts, the directory won't exist for it to use.
+Containers can take up a lot of disk space.  If you have external storage available, it's advised to relocate your Docker container cache to the larger drive (NVME is preferred if possible).  If it's not already, get your drive formatted as ext4 and so that it's mounted at boot (i.e. it should be in `/etc/fstab`).  If it's not automatically mounted at boot before the Docker daemon starts, the directory won't exist for Docker to use.
 
-> In the commands below, the path of the mounted drive is `/mnt`
-
-First, copy the existing Docker cache from `/var/lib/docker` to a directory on your drive of choice (in this case, `/mnt/docker`):
+Copy the existing Docker cache from `/var/lib/docker` to a directory on your drive of choice (in this case, `/mnt/docker`):
 
 ```bash
 sudo cp -r /var/lib/docker /mnt/docker
@@ -230,7 +230,7 @@ Then add your directory as `"data-root"` in `/etc/docker/daemon.json`:
 }
 ```
 
-Then restart the Docker service or reboot your system before proceeding:
+Then restart the Docker service, or reboot your system before proceeding:
 
 ```bash
 $ sudo systemctl restart docker
@@ -245,13 +245,11 @@ Docker Root Dir: /mnt/docker
 Default Runtime: nvidia
 ```
 
-That directory will also now have had it's permissions changed to root-access only by the Docker daemon, with several subdirectories having been created within it.
+That directory will also now have had it's permissions changed to root-access only by the Docker daemon.
 
 ### Mounting Swap
 
-If you're building containers or working with large models, it's advisable to mount SWAP (typically correlated with the amount of memory in the board)
-
-Run these commands on your Jetson (outside of container) to disable ZRAM and create a swap file:
+If you're building containers or working with large models, it's advisable to mount SWAP (typically correlated with the amount of memory in the board).  Run these commands to disable ZRAM and create a swap file:
 
 ``` bash
 sudo systemctl disable nvzramconfig
@@ -259,7 +257,7 @@ sudo fallocate -l 16G /mnt/16GB.swap
 sudo mkswap /mnt/16GB.swap
 sudo swapon /mnt/16GB.swap
 ```
-> If you have NVME storage available, try allocating the swap file on NVME.
+> If you have NVME storage available, it's preferred to allocate the swap file on NVME.
 
 Then add the following line to the end of `/etc/fstab` to make the change persistent:
 
@@ -288,7 +286,7 @@ $ sudo systemctl set-default graphical.target      # enable desktop on boot
 
 ### sudo NOPASSWD
 
-Seeing as Ubuntu users aren't by default in the `docker` group, they need to run docker commands with `sudo`, and the build tools do that.  Hence you could randomly be asked for your sudo password during builds.  To disable sudo from repeatedly asking you for your password, run `sudo visudo` and add this to the end:
+Seeing as Ubuntu users aren't by default in the `docker` group, they need to run docker commands with `sudo`, as do the build tools.  Hence you could be randomly asked for your sudo password during builds.  To disable sudo from repeatedly asking you for your password, run `sudo visudo` and add this to the end:
 
 ```
 your_username ALL=(ALL) NOPASSWD: ALL
@@ -300,6 +298,65 @@ Or to not ask for sudo password only when a docker command is being used:
 your_username ALL=(ALL) NOPASSWD: /usr/bin/docker
 ```
 
+## Building Containers
+
+[`build.sh`](/build.sh) is a proxy launcher script for [`/jetson_containers/build.py`].  It can be run from any working directory (in the examples below, that's assumed to be your jetson-containers repo).  Make sure you do the [System Setup](/docs/setup.md) first.
+
+To list the packages available to build for your version of JetPack/L4T, you can use `--list-packages` and `--show-packages`:
+
+```bash
+$ ./build.sh --list-packages      # list all packages
+$ ./build.sh --show-packages      # show all package metadata
+$ ./build.sh --show-packages ros* # show all the ros packages
+```
+
+To build a container that includes one or more packages:
+
+```bash
+$ ./build.sh pytorch              # build a container with just PyTorch
+$ ./build.sh pytorch jupyterlab   # build container with PyTorch and JupyterLab
+```
+
+The builder will chain together the Dockerfiles of each of packages specified, and use the result of one build stage as the base image of the next.  The initial base image defaults to `l4t-base`/`l4t-jetpack` (for JetPack 4 and JetPack 5, respectively) but can be changed by specifying the `--base-image` argument.
+
+The docker commands that get run during the build are printed and also saved to shell scripts under the `jetson-containers/logs` directory.  To see just the commands it would have run without actually running them, use the `--simulate` flag.
+
+### Container Names
+
+By default, the name of the container will be based on the package you chose to build. However, you can name it with the `--name` argument:
+
+```bash
+$ ./build.sh --name=my_container pytorch jupyterlab
+```
+
+If you omit a tag from your name, then a default one will be assigned (based on the tag prefix/postfix of the package - typically `$L4T_VERSION`)
+
+You can also build your container under a namespace (ending in `/`), for example `--name=my_builds/` would result in an image like `my_builds/pytorch:r35.2.1` (doing that can help manage/organize your images if you have a lot)
+
+### Multiple Containers
+
+The `--multiple` flag builds separate containers for each of the packages specified:
+
+```bash
+$ ./build.sh --multiple pytorch tensorflow2   # built a pytorch container and a tensorflow2 container
+$ ./build.sh --multiple ros*                  # build all ROS containers
+```
+
+If you wish to continue building other containers if one fails, use the `--skip-errors` flag (this only applies to building multiple containers)
+
+### Tests
+
+By default, tests are run during container builds for the packages that provide test scripts.  After each stage of the build chain is complete, that package will be tested.  After the build is complete, the final container will be tested against all of the packages again.  This is to assure that package versions aren't inadvertantly changed/overwritten/uninstalled at some point during the build chain (typically, the GPU-accelerated version of the package being supplanted by the one that some other package installs from pip/apt/ect)
+
+You can skip these tests however with the `--skip-tests` argument, which is a comma/colon-separated list of package names to skip their tests.  Or `all` or `*` will skip all tests, while `intermediate` will only run tests at the end (not during).
+
+``` bash
+$ ./build.sh --skip-tests=numpy,onnx pytorch    # skip testing the numpy and onnx packages when building pytorch
+$ ./build.sh --skip-tests=all pytorch           # skip all tests
+$ ./build.sh --skip-tests=intermediate pytorch  # only run tests at the end of the container build
+```
+
+These flags tend to get used more during development - normally it's good to thoroughly test the build stack, as to not run into cryptic issues with packages later on.
 
 <details>
 <summary><h3>Legacy Documentation</h3></summary>
