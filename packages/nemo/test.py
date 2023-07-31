@@ -8,9 +8,10 @@ print('nemo version: ' + str(nemo.__version__))
 # https://github.com/NVIDIA/NeMo/blob/main/examples/nlp/question_answering/question_answering.py
 # https://colab.research.google.com/github/NVIDIA/NeMo/blob/stable/tutorials/nlp/Question_Answering.ipynb
 from nemo.collections.nlp.models.question_answering.qa_model import QAModel
-from nemo.collections.nlp.models.question_answering.qa_bert_model import BERTQAModel
-from nemo.collections.nlp.models.question_answering.qa_gpt_model import GPTQAModel
-from nemo.collections.nlp.models.question_answering.qa_s2s_model import S2SQAModel
+
+#from nemo.collections.nlp.models.question_answering.qa_bert_model import BERTQAModel
+#from nemo.collections.nlp.models.question_answering.qa_gpt_model import GPTQAModel
+#from nemo.collections.nlp.models.question_answering.qa_s2s_model import S2SQAModel
 
 # download test dataset (SQuAD)
 import os

@@ -1,12 +1,14 @@
 #---
 # name: nemo
 # group: ml
-# depends: [pytorch, torchvision, torchaudio]
+# depends: [transformers, torchaudio, numba]
 # test: test.py
-# notes: NVIDIA NeMo for ASR/NLP/TTS https://nvidia.github.io/NeMo/
+# docs: NVIDIA NeMo for ASR/NLP/TTS https://nvidia.github.io/NeMo/
+# notes: this Dockerfile gets switched out for `Dockerfile.jp4` on JetPack 4
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
+
 
 # Nemo needs more recent OpenFST than focal apt has
 ARG FST_VERSION=1.8.2
@@ -37,6 +39,9 @@ RUN NEMO_PATH="$(pip3 show nemo_toolkit | grep Location: | cut -d' ' -f2)/nemo" 
 # patch: Unexpected key(s) in state_dict: "bert_model.embeddings.position_ids".
 # with:  nemo_toolkit 1.19.1, transformers 4.31.0
 RUN pip3 install --no-cache-dir --verbose 'transformers<4.31'
+
+# make sure it loads
+RUN pip3 show nemo_toolkit && python3 -c 'import nemo; print(nemo.__version__)'
 
 # set the nemo model cache directory to mounted /data volume
 ENV NEMO_CACHE_DIR=/data/models/nemo

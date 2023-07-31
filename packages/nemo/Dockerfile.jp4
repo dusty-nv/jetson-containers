@@ -1,0 +1,80 @@
+#
+# this dockerfile gets swapped in on JetPack 4 (see config.py)
+#
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+WORKDIR /opt
+
+# h5py fails to build without libhd5f
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+		  libhdf5-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+ 
+# https://github.com/biobakery/homebrew-biobakery/issues/31 
+RUN ln -s /usr/include/locale.h /usr/include/xlocale.h
+
+# https://github.com/scikit-learn/sklearn-pypi-package
+ARG SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
+
+# Cannot uninstall 'PyYAML'. It is a distutils installed project...
+RUN pip3 install --ignore-installed --upgrade --no-cache-dir --verbose PyYAML
+
+# install sentencepiece
+RUN git clone https://github.com/google/sentencepiece && \
+	cd sentencepiece && \
+	mkdir build && \
+	cd build && \
+	cmake .. && \
+	make -j $(nproc) && \
+	make install && \
+	ldconfig -v && \
+	cd .. && \
+	cd python && \
+	python3 setup.py install --verbose && \
+	cd ../../ && \
+	rm -r -f sentencepiece
+
+# libopencc
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+          libopencc-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
+#    
+# install nemo (this is the last version to support Python 3.6)
+# patches:  https://github.com/NVIDIA/NeMo/pull/2597
+#           https://github.com/NVIDIA/NeMo/issues/2707
+ARG NEMO_VERSION=v1.7.2    
+
+RUN git clone --branch=${NEMO_VERSION} --depth=1 --recursive https://github.com/nvidia/nemo && \
+    cd nemo && \
+    sed 's|^numpy.*|numpy|g' -i requirements/requirements.txt && \
+    cat requirements/requirements.txt && \
+    sed 's|import nemo.collections.nlp.data.text_normalization.constants as constants|from nemo.collections.nlp.data.text_normalization import constants|g' -i nemo/collections/nlp/models/duplex_text_normalization/duplex_decoder.py && \
+    head -n 100 nemo/collections/nlp/models/duplex_text_normalization/duplex_decoder.py && \
+    python3 setup.py --verbose bdist_wheel && \
+    cp dist/nemo*.whl /opt
+    
+# opencc: 'ascii' codec can't decode byte 0xe4 in position 454 (https://stackoverflow.com/a/50639442)
+RUN LANG=en_US.UTF-8 \
+    LANGUAGE=en_US:en \
+    LC_ALL=en_US.UTF-8 \
+    pip3 install --no-cache-dir --verbose opencc
+
+# use 'find' since bash won't recognize it as a path (to expand the wildcard) with the [all] extras being used
+RUN pip3 install --no-cache-dir --verbose "$(find /opt -name 'nemo*.whl' | head -n1)[all]"
+
+# cannot allocate memory in static TLS block
+ENV LD_PRELOAD=/usr/local/lib/python3.6/dist-packages/sklearn/__check_build/../../scikit_learn.libs/libgomp-d22c30c5.so.1.0.0
+
+# make sure it loads
+RUN pip3 show nemo_toolkit && python3 -c 'import nemo; print(nemo.__version__)'
+
+# set the nemo model cache directory to mounted /data volume
+ENV NEMO_CACHE_DIR=/data/models/nemo
+
+WORKDIR /
