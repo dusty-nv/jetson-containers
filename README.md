@@ -2,7 +2,7 @@
 
 [![l4t-pytorch](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/l4t-pytorch_jp51.yml?label=l4t-pytorch)](/packages/l4t/l4t-pytorch)  [![l4t-tensorflow](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/l4t-tensorflow-tf2_jp51.yml?label=l4t-tensorflow)](/packages/l4t/l4t-tensorflow) [![l4t-ml](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/l4t-ml_jp51.yml?label=l4t-ml)](/packages/l4t/l4t-ml) [![l4t-diffusion](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/l4t-diffusion_jp51.yml?label=l4t-diffusion)](/packages/l4t/l4t-diffusion) [![l4t-text-generation](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/l4t-text-generation_jp51.yml?label=l4t-text-generation)](/packages/l4t/l4t-text-generation)
 
-Automated container build system provides [**AI/ML packages**](packages) for [NVIDIA Jetson](https://developer.nvidia.com/embedded-computing).
+Automated container build system that provides various [**AI/ML packages**](packages) for [NVIDIA Jetson](https://developer.nvidia.com/embedded-computing).
 
 | | |
 |---|---|
@@ -14,7 +14,7 @@ Automated container build system provides [**AI/ML packages**](packages) for [NV
 
 See the [**`packages`**](packages) directory for the full list, including pre-built container images.  The L4T containers package up common configurations.
 
-Using the included tools, you can easily combine packages together for building your own containers.  Want to run ROS2 with PyTorch and Transformers?  No problem - do the [setup](README.md), and build it on your Jetson like this:
+Using the included tools, you can easily combine packages together for building your own containers.  Want to run ROS2 with PyTorch and Transformers?  No problem - just do the [system setup](README.md), and build it on your Jetson like this:
 
 ```bash
 $ ./build.sh --name=my_container ros:humble-desktop pytorch transformers
@@ -345,6 +345,26 @@ $ ./build.sh --multiple ros*                  # build all ROS containers
 
 If you wish to continue building other containers if one fails, use the `--skip-errors` flag (this only applies to building multiple containers)
 
+### Changing the Base Image
+
+By default, the base container image used at the start of the build chain will be [`l4t-base`](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-base) (on JetPack 4) or [`l4t-jetpack`](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-jetpack) (on JetPack 5).  However, if you want to add packages to a container that you already have, you can specify your own base image with the `--base` flag:
+
+```bash
+$ ./build.sh --base=my_container:latest --name=my_container:pytorch pytorch  # add pytorch to your existing container
+```
+
+> note:  it's assumed that base images have the JetPack components available/installed (i.e. CUDA Toolkit, cuDNN, TensorRT)
+
+### Building External Packages
+
+Let's say that you have a project that you want to build a container for - if you define a [custom package](/docs/packages.md) (i.e. by creating a Dockerfile with a YAML header), you can point `build.sh` to out-of-tree locations using the `--package-dirs` option:
+
+```bash
+$ ./build.sh --package-dirs=/path/to/your/package your_package_name
+```
+
+You can also add jetson-containers as a git submodule to your project and build it that way - see [jetson-inference](https://github.com/dusty-nv/jetson-inference) as an example of this.
+
 ### Tests
 
 By default, tests are run during container builds for the packages that provide test scripts.  After each stage of the build chain is complete, that package will be tested.  After the build is complete, the final container will be tested against all of the packages again.  This is to assure that package versions aren't inadvertantly changed/overwritten/uninstalled at some point during the build chain (typically, the GPU-accelerated version of the package being supplanted by the one that some other package installs from pip/apt/ect)
@@ -359,37 +379,60 @@ $ ./build.sh --skip-tests=intermediate pytorch  # only run tests at the end of t
 
 These flags tend to get used more during development - normally it's good to thoroughly test the build stack, as to not run into cryptic issues with packages later on.
 
-### Running
+### Running Containers
 
-See [Running Containers](/docs/run.md).
+To launch containers that you've built or pulled, see the [Running Containers](/docs/run.md) page or the package's readme.
 
 ## Running Containers
 
 Let's say that you found an image from the [Package List](/packages) or [DockerHub](https://hub.docker.com/u/dustynv), or [built a container](/docs/build.md) - the normal way to run an interactive Docker container on your Jetson would be like:
 
 ``` bash
-sudo docker run --runtime nvidia -it --rm --network=host CONTAINER:TAG
+$ sudo docker run --runtime nvidia -it --rm --network=host CONTAINER:TAG
 ```
 
-That's actually a rather minimal command, and doesn't have support for display or other devices, and it doesn't mount the model/data cache ([`/data`](/data)). Once you add everything in, it gets to be a lot to specify by hand.  Hence, we have some helpers that provide shortcuts.
+That's actually a rather minimal command, and doesn't have support for displays or other devices, and it doesn't mount the model/data cache ([`/data`](/data)). Once you add everything in, it can get to be a lot to specify by hand.  Hence, we have some helpers that provide shortcuts.
 
-The [`run.sh`](/run.sh) launcher forwards the command-line to `docker run`, with some added defaults - including the above flags, mounting the `/data` cache, and mounting V4L2 and display devices.
+The [`run.sh`](/run.sh) launcher forwards its command-line to `docker run`, with some added defaults - including the above flags, mounting the `/data` cache, and mounting V4L2 and display devices.
 
 ``` bash
-./run.sh CONTAINER:TAG  # run with --runtime=nvidia, default mounts, ect
-./run.sh CONTAINER:TAG my_app --abc xyz  # run a command (instead of interactive mode)
-./run.sh --volume /path/on/host:/path/in/container CONTAINER:TAG  # mount a directory
+$ ./run.sh CONTAINER:TAG  # run with --runtime=nvidia, default mounts, ect
+$ ./run.sh CONTAINER:TAG my_app --abc xyz  # run a command (instead of interactive mode)
+$ ./run.sh --volume /path/on/host:/path/in/container CONTAINER:TAG  # mount a directory
 ```
 
 The flags and arguments to `run.sh` are the same as they are to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) - anything you specify will be passed along.
 
 ### `autotag`
 
-To solve the problem of finding a container that's compatible with your version of L4T
+To solve the issue of finding a container with package(s) that you want and that's compatible with your version of JetPack/L4T, there's the [`autotag`](/autotag) tool.  It locates a container image for you - either locally, pulled from a registry, or built from source:
 
-### JetPack/L4T Compatability
+``` bash
+$ ./run.sh $(./autotag pytorch)   # find pytorch container to run for your version of JetPack/L4T
+```
 
-aalkdsjf
+What's happening here with the `$(./autotag xyz)` syntax, is that Bash command substitution expands the full container image name and forwards it to the `docker run` command.  For example, if you do `echo $(./autotag pytorch)` it would print out something like `dustynv/pytorch:r35.2.1` (assuming that you don't already have the `pytorch` image locally).
+
+You can of course use `autotag` interspersed along with other command-line arguments to launch the container:
+
+``` bash
+$ ./run.sh $(./autotag pytorch) my_app --abc xyz  # run a command (instead of interactive mode)
+$ ./run.sh --volume /path/on/host:/path/in/container $(./autotag pytorch)  # mount a directory
+```
+
+Or with using `docker run` directly:
+
+``` bash
+$ sudo docker run --runtime nvidia -it --rm --network=host $(./autotag pytorch)
+```
+
+This is the order in which `autotag` searches for container images:
+
+1. Local images (found under `docker images`)
+2. Pulled from registry (by default [`hub.docker.com/u/dustynv`](https://hub.docker.com/u/dustynv))
+3. Build it from source (it'll ask for your confirmation first)
+
+When searching for images, it knows to find containers that are compatible with your version of JetPack-L4T.  For example, if you're on JetPack 4.6.x (L4T R32.7.x), you can run images that were built for other versions of JetPack 4.6.  Or if you're on JetPack 5.1 (L4T R35), you can run images built for other versions of JetPack 5.1.
 
 <details>
 <summary><h3>Legacy Documentation</h3></summary>
