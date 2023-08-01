@@ -11,7 +11,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`auto-gptq`](/packages/llm/auto-gptq) [`awq`](/packages/llm/awq) [`gptq-for-llama`](/packages/llm/gptq-for-llama) [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`nemo`](/packages/nemo) [`optimum`](/packages/llm/optimum) [`text-generation-inference`](/packages/llm/text-generation-inference) [`text-generation-webui`](/packages/llm/text-generation-webui) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/bitsandbytes:r35.3.1`](https://hub.docker.com/r/dustynv/bitsandbytes/tags) (`2023-07-30`, `5.4GB`)<br>[`dustynv/bitsandbytes:r35.2.1`](https://hub.docker.com/r/dustynv/bitsandbytes/tags) (`2023-07-30`, `5.4GB`) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/bitsandbytes:r35.2.1`](https://hub.docker.com/r/dustynv/bitsandbytes/tags) `(2023-07-30, 5.4GB)`<br>[`dustynv/bitsandbytes:r35.3.1`](https://hub.docker.com/r/dustynv/bitsandbytes/tags) `(2023-07-30, 5.4GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | fork of https://github.com/TimDettmers/bitsandbytes for Jetson |
 
 </details>

@@ -11,7 +11,7 @@ NVIDIA NeMo for ASR/NLP/TTS https://nvidia.github.io/NeMo/
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`bitsandbytes`](/packages/llm/bitsandbytes) [`transformers`](/packages/llm/transformers) [`torchaudio`](/packages/pytorch/torchaudio) [`numba`](/packages/numba) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/nemo:r35.2.1`](https://hub.docker.com/r/dustynv/nemo/tags) (`2023-07-31`, `6.5GB`)<br>[`dustynv/nemo:r32.7.1`](https://hub.docker.com/r/dustynv/nemo/tags) (`2023-07-31`, `1.8GB`)<br>[`dustynv/nemo:r35.3.1`](https://hub.docker.com/r/dustynv/nemo/tags) (`2023-07-31`, `6.4GB`) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/nemo:r32.7.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-07-31, 1.8GB)`<br>[`dustynv/nemo:r35.2.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-07-31, 6.5GB)`<br>[`dustynv/nemo:r35.3.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-07-31, 6.4GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | this Dockerfile gets switched out for `Dockerfile.jp4` on JetPack 4 |
 
 </details>

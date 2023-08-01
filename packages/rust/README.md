@@ -11,7 +11,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`jupyterlab`](/packages/jupyterlab) [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`text-generation-inference`](/packages/llm/text-generation-inference) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/rust:r35.3.1`](https://hub.docker.com/r/dustynv/rust/tags) (`2023-07-29`, `5.3GB`)<br>[`dustynv/rust:r32.7.1`](https://hub.docker.com/r/dustynv/rust/tags) (`2023-07-29`, `0.7GB`) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/rust:r32.7.1`](https://hub.docker.com/r/dustynv/rust/tags) `(2023-07-29, 0.7GB)`<br>[`dustynv/rust:r35.3.1`](https://hub.docker.com/r/dustynv/rust/tags) `(2023-07-29, 5.3GB)` |
 
 </details>
 

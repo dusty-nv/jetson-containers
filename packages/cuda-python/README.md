@@ -10,7 +10,7 @@
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/cuda-python:r35.2.1`](https://hub.docker.com/r/dustynv/cuda-python/tags) (`2023-07-29`, `5.0GB`) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/cuda-python:r35.2.1`](https://hub.docker.com/r/dustynv/cuda-python/tags) `(2023-07-29, 5.0GB)` |
 
 </details>
 

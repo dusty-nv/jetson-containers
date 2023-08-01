@@ -11,7 +11,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-pytorch`](/packages/l4t/l4t-pytorch) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/torch2trt:r35.2.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) (`2023-07-31`, `5.5GB`)<br>[`dustynv/torch2trt:r32.7.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) (`2023-07-30`, `1.1GB`) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/torch2trt:r32.7.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) `(2023-07-30, 1.1GB)`<br>[`dustynv/torch2trt:r35.2.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) `(2023-07-31, 5.5GB)` |
 
 </details>
 

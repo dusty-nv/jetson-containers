@@ -10,7 +10,7 @@
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) [`gstreamer`](/packages/gstreamer) [`tritonserver`](/packages/tritonserver) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/deepstream:r32.7.1`](https://hub.docker.com/r/dustynv/deepstream/tags) (`2023-07-29`, `2.3GB`)<br>[`dustynv/deepstream:r35.3.1`](https://hub.docker.com/r/dustynv/deepstream/tags) (`2023-07-29`, `6.8GB`) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/deepstream:r32.7.1`](https://hub.docker.com/r/dustynv/deepstream/tags) `(2023-07-29, 2.3GB)`<br>[`dustynv/deepstream:r35.3.1`](https://hub.docker.com/r/dustynv/deepstream/tags) `(2023-07-29, 6.8GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://docs.nvidia.com/metropolis/deepstream/dev-guide/text/DS_Quickstart.html |
 
 </details>

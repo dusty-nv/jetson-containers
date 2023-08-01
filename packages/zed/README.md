@@ -10,7 +10,7 @@
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/zed:r35.2.1`](https://hub.docker.com/r/dustynv/zed/tags) (`2023-07-29`, `5.1GB`)<br>[`dustynv/zed:r32.7.1`](https://hub.docker.com/r/dustynv/zed/tags) (`2023-07-29`, `0.5GB`) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/zed:r32.7.1`](https://hub.docker.com/r/dustynv/zed/tags) `(2023-07-29, 0.5GB)`<br>[`dustynv/zed:r35.2.1`](https://hub.docker.com/r/dustynv/zed/tags) `(2023-07-29, 5.1GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/stereolabs/zed-docker/blob/master/4.X/l4t/py-devel/Dockerfile |
 
 </details>

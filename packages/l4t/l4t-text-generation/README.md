@@ -9,7 +9,7 @@
 | &nbsp;&nbsp;&nbsp;Builds | [![`l4t-text-generation_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/l4t-text-generation_jp51.yml?label=l4t-text-generation:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-text-generation_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`bitsandbytes`](/packages/llm/bitsandbytes) [`transformers`](/packages/llm/transformers) [`awq`](/packages/llm/awq) [`onnxruntime`](/packages/onnxruntime) [`optimum`](/packages/llm/optimum) [`auto-gptq`](/packages/llm/auto-gptq) [`gptq-for-llama`](/packages/llm/gptq-for-llama) [`text-generation-webui`](/packages/llm/text-generation-webui) [`rust`](/packages/rust) [`text-generation-inference`](/packages/llm/text-generation-inference) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/l4t-text-generation:r35.3.1`](https://hub.docker.com/r/dustynv/l4t-text-generation/tags) (`2023-07-31`, `7.7GB`)<br>[`dustynv/l4t-text-generation:r35.2.1`](https://hub.docker.com/r/dustynv/l4t-text-generation/tags) (`2023-07-31`, `7.7GB`) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/l4t-text-generation:r35.2.1`](https://hub.docker.com/r/dustynv/l4t-text-generation/tags) `(2023-07-31, 7.7GB)`<br>[`dustynv/l4t-text-generation:r35.3.1`](https://hub.docker.com/r/dustynv/l4t-text-generation/tags) `(2023-07-31, 7.7GB)` |
 
 </details>
 

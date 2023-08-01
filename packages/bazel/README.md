@@ -11,7 +11,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`torch_tensorrt`](/packages/pytorch/torch_tensorrt) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/bazel:r35.3.1`](https://hub.docker.com/r/dustynv/bazel/tags) (`2023-07-29`, `5.1GB`)<br>[`dustynv/bazel:r32.7.1`](https://hub.docker.com/r/dustynv/bazel/tags) (`2023-07-29`, `0.4GB`) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/bazel:r32.7.1`](https://hub.docker.com/r/dustynv/bazel/tags) `(2023-07-29, 0.4GB)`<br>[`dustynv/bazel:r35.3.1`](https://hub.docker.com/r/dustynv/bazel/tags) `(2023-07-29, 5.1GB)` |
 
 </details>
 

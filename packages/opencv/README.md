@@ -12,7 +12,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`deepstream`](/packages/deepstream) [`gstreamer`](/packages/gstreamer) [`l4t-diffusion`](/packages/l4t/l4t-diffusion) [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-pytorch`](/packages/l4t/l4t-pytorch) [`l4t-tensorflow:tf1`](/packages/l4t/l4t-tensorflow) [`l4t-tensorflow:tf2`](/packages/l4t/l4t-tensorflow) [`ros:foxy-desktop`](/packages/ros) [`ros:foxy-ros-base`](/packages/ros) [`ros:foxy-ros-core`](/packages/ros) [`ros:galactic-desktop`](/packages/ros) [`ros:galactic-ros-base`](/packages/ros) [`ros:galactic-ros-core`](/packages/ros) [`ros:humble-desktop`](/packages/ros) [`ros:humble-ros-base`](/packages/ros) [`ros:humble-ros-core`](/packages/ros) [`ros:iron-desktop`](/packages/ros) [`ros:iron-ros-base`](/packages/ros) [`ros:iron-ros-core`](/packages/ros) [`ros:noetic-desktop`](/packages/ros) [`ros:noetic-ros-base`](/packages/ros) [`ros:noetic-ros-core`](/packages/ros) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/opencv:r35.2.1`](https://hub.docker.com/r/dustynv/opencv/tags) (`2023-07-29`, `5.0GB`)<br>[`dustynv/opencv:r32.7.1`](https://hub.docker.com/r/dustynv/opencv/tags) (`2023-07-29`, `0.5GB`) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/opencv:r32.7.1`](https://hub.docker.com/r/dustynv/opencv/tags) `(2023-07-29, 0.5GB)`<br>[`dustynv/opencv:r35.2.1`](https://hub.docker.com/r/dustynv/opencv/tags) `(2023-07-29, 5.0GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | install OpenCV (with CUDA) from binaries built by opencv_builder |
 
 </details>
