@@ -34,9 +34,6 @@ If you look at any package's readme (like [`l4t-pytorch`](packages/l4t/l4t-pytor
 
 * [Package List](/packages)
 * [Package Definitions](/docs/packages.md)
-
-<br>
-
 * [System Setup](/docs/setup.md)
 * [Building Containers](/docs/build.md)
 * [Running Containers](/docs/run.md)
