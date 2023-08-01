@@ -6,7 +6,7 @@
 
 | **`torchaudio`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`torchaudio_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torchaudio_jp46.yml?label=torchaudio_jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torchaudio_jp46.yml) [![`torchaudio_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torchaudio_jp51.yml?label=torchaudio_jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torchaudio_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`torchaudio_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torchaudio_jp51.yml?label=torchaudio_jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torchaudio_jp51.yml) [![`torchaudio_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torchaudio_jp46.yml?label=torchaudio_jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torchaudio_jp46.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-pytorch`](/packages/l4t/l4t-pytorch) [`nemo`](/packages/nemo) |
@@ -20,7 +20,8 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/torchaudio:r32.7.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) | `2023-07-29` | `arm64` | `1.1GB` |
+| &nbsp;&nbsp;[`dustynv/torchaudio:r32.7.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) | `2023-07-31` | `arm64` | `1.1GB` |
+| &nbsp;&nbsp;[`dustynv/torchaudio:r35.2.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) | `2023-07-31` | `arm64` | `5.4GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -31,19 +32,19 @@
 <summary><b>RUN CONTAINER</b></summary>
 <br>
 
-To start the container, you can use the [`run.sh`](/run.sh)/[`autotag`](/autotag) helpers or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
+To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/docs/run.md#autotag) helpers or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
 ```bash
 # automatically pull or build a compatible container image
 ./run.sh $(./autotag torchaudio)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/torchaudio:r32.7.1
+./run.sh dustynv/torchaudio:r35.2.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/torchaudio:r32.7.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/torchaudio:r35.2.1
 ```
-> <sup>[`run.sh`](/run.sh) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
-> <sup>[`autotag`](/autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
+> <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
+> <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
 
 To mount your own directories into the container, use the [`-v`](https://docs.docker.com/engine/reference/commandline/run/#volume) or [`--volume`](https://docs.docker.com/engine/reference/commandline/run/#volume) flags:
 ```bash
@@ -59,7 +60,7 @@ You can pass any options to `run.sh` that you would to [`docker run`](https://do
 <summary><b>BUILD CONTAINER</b></summary>
 <br>
 
-If you use [`autotag`](/autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do this System Setup, then run:
+If you use [`autotag`](/docs/run.md#autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do the [system setup](/docs/setup.md), then run:
 ```bash
 ./build.sh torchaudio
 ```
