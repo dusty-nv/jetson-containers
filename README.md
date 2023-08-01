@@ -6,12 +6,13 @@ Automated container build system provides [**AI/ML packages**](packages) for [NV
 
 | | |
 |---|---|
-| ML | [`pytorch`](packages/pytorch) [`tensorflow`](packages/tensorflow) [`onnxruntime`](packages/onnxruntime) [`deepstream`](packages/deepstream) [`tritonserver`](packages/tritonserver) [`nemo`](packages/nemo) [`jupyterlab`](packages/jupyterlab) |
-| LLMs | [`transformers`](packages/llm/transformers) [`text-generation-webui`](packages/llm/text-generation-webui) [`exllama`](packages/llm/exllama) [`optimum`](packages/llm/optimum) [`awq`](packages/llm/awq) [`bitsandbytes`](packages/llm/bitsandbytes) [`AutoGPTQ`](packages/llm/auto-gptq) |
+| ML | [`pytorch`](packages/pytorch) [`tensorflow`](packages/tensorflow) [`onnxruntime`](packages/onnxruntime) [`deepstream`](packages/deepstream) [`tritonserver`](packages/tritonserver) [`nemo`](packages/nemo) [`jupyterlab`](packages/jupyterlab) [`stable-diffusion`](packages/diffusion/stable-diffusion) |
+| LLM | [`transformers`](packages/llm/transformers) [`text-generation-webui`](packages/llm/text-generation-webui) [`exllama`](packages/llm/exllama) [`optimum`](packages/llm/optimum) [`awq`](packages/llm/awq) [`bitsandbytes`](packages/llm/bitsandbytes) [`AutoGPTQ`](packages/llm/auto-gptq) |
+| L4T | [`l4t-pytorch](packages/l4t/l4t-pytorch) [`l4t-tensorflow`](packages/l4t/l4t-tensorflow) [`l4t-ml`](packages/l4t/l4t-ml) [`l4t-diffusion`](packages/l4t/l4t-diffusion) [`l4t-text-generation`](packages/l4t/l4t-text-generation) |
 | CUDA | [`cupy`](packages/cupy) [`cuda-python`](packages/cuda-python) [`pycuda`](packages/pycuda) [`numba`](packages/numba) [`cudf`](packages/rapids/cudf) [`cuml`](packages/rapids/cuml) |
 | Robotics | [`ros`](packages/ros) [`ros2`](packages/ros) [`opencv:cuda`](packages/opencv) [`realsense`](packages/realsense) [`zed`](packages/zed) |
 
-See the [**`packages`**](packages) directory for the full list, including pre-built container images.
+See the [**`packages`**](packages) directory for the full list, including pre-built container images.  The L4T containers package up common configurations.
 
 Using the included tools, you can easily combine packages together for building your own containers.  Want to run ROS2 with PyTorch and Transformers?  No problem - do the [setup](README.md), and build it on your Jetson like this:
 
