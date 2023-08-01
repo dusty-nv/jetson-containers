@@ -12,9 +12,9 @@ Automated container build system that provides various [**AI/ML packages**](pack
 | CUDA | [`cupy`](packages/cupy) [`cuda-python`](packages/cuda-python) [`pycuda`](packages/pycuda) [`numba`](packages/numba) [`cudf`](packages/rapids/cudf) [`cuml`](packages/rapids/cuml) |
 | Robotics | [`ros`](packages/ros) [`ros2`](packages/ros) [`opencv:cuda`](packages/opencv) [`realsense`](packages/realsense) [`zed`](packages/zed) |
 
-See the [**`packages`**](packages) directory for the full list, including pre-built container images and CI/CD status for versions of JetPack/L4T.
+See the [**`packages`**](packages) directory for the full list, including pre-built container images and CI/CD status for JetPack/L4T.
 
-Using the included tools, you can easily combine packages together for building your own containers.  Want to run ROS2 with PyTorch and Transformers?  No problem - just do the [system setup](README.md), and build it on your Jetson like this:
+Using the included tools, you can easily combine packages together for building your own containers.  Want to run ROS2 with PyTorch and Transformers?  No problem - just do the [system setup](/docs/setup.md), and build it on your Jetson like this:
 
 ```bash
 $ ./build.sh --name=my_container ros:humble-desktop pytorch transformers
@@ -34,7 +34,9 @@ If you look at any package's readme (like [`l4t-pytorch`](packages/l4t/l4t-pytor
 
 * [Package List](/packages)
 * [Package Definitions](/docs/packages.md)
+
 <br>
+
 * [System Setup](/docs/setup.md)
 * [Building Containers](/docs/build.md)
 * [Running Containers](/docs/run.md)
