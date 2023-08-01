@@ -17,11 +17,6 @@ ARG TORCH_TRT_VERSION=main
 
 COPY WORKSPACE.jp46 /tmp
 
-
-# force rebuild on new git commits - https://stackoverflow.com/a/56945508
-ADD https://api.github.com/repos/pytorch/TensorRT/git/refs/heads/${TORCH_TRT_VERSION} /tmp/torch_trt_version.json
-
-
 #
 # https://github.com/pytorch/TensorRT/commit/9b0b8f1ccac81050c08091f74870092cbac91ac0
 #   pip3 install --no-cache-dir --verbose pyyaml
