@@ -18,8 +18,8 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/l4t-text-generation:r35.3.1`](https://hub.docker.com/r/dustynv/l4t-text-generation/tags) | `2023-07-31` | `arm64` | `7.7GB` |
 | &nbsp;&nbsp;[`dustynv/l4t-text-generation:r35.2.1`](https://hub.docker.com/r/dustynv/l4t-text-generation/tags) | `2023-07-31` | `arm64` | `7.7GB` |
+| &nbsp;&nbsp;[`dustynv/l4t-text-generation:r35.3.1`](https://hub.docker.com/r/dustynv/l4t-text-generation/tags) | `2023-07-31` | `arm64` | `7.7GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>

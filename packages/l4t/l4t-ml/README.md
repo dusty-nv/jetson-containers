@@ -19,11 +19,11 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/l4t-ml:r35.3.1`](https://hub.docker.com/r/dustynv/l4t-ml/tags) | `2023-07-31` | `arm64` | `6.9GB` |
+| &nbsp;&nbsp;[`dustynv/l4t-ml:r32.5.0-py3`](https://hub.docker.com/r/dustynv/l4t-ml/tags) | `2021-06-29` | `arm64` | `1.7GB` |
+| &nbsp;&nbsp;[`dustynv/l4t-ml:r32.6.1-py3`](https://hub.docker.com/r/dustynv/l4t-ml/tags) | `2021-12-13` | `arm64` | `1.5GB` |
 | &nbsp;&nbsp;[`dustynv/l4t-ml:r32.7.1`](https://hub.docker.com/r/dustynv/l4t-ml/tags) | `2023-07-31` | `arm64` | `2.4GB` |
 | &nbsp;&nbsp;[`dustynv/l4t-ml:r35.2.1`](https://hub.docker.com/r/dustynv/l4t-ml/tags) | `2023-07-30` | `arm64` | `6.9GB` |
-| &nbsp;&nbsp;[`dustynv/l4t-ml:r32.6.1-py3`](https://hub.docker.com/r/dustynv/l4t-ml/tags) | `2021-12-13` | `arm64` | `1.5GB` |
-| &nbsp;&nbsp;[`dustynv/l4t-ml:r32.5.0-py3`](https://hub.docker.com/r/dustynv/l4t-ml/tags) | `2021-06-29` | `arm64` | `1.7GB` |
+| &nbsp;&nbsp;[`dustynv/l4t-ml:r35.3.1`](https://hub.docker.com/r/dustynv/l4t-ml/tags) | `2023-07-31` | `arm64` | `6.9GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>

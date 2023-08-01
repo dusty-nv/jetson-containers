@@ -24,10 +24,10 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/l4t-tensorflow:tf1-r35.2.1`](https://hub.docker.com/r/dustynv/l4t-tensorflow/tags) | `2023-07-29` | `arm64` | `5.5GB` |
-| &nbsp;&nbsp;[`dustynv/l4t-tensorflow:tf2-r35.2.1`](https://hub.docker.com/r/dustynv/l4t-tensorflow/tags) | `2023-07-29` | `arm64` | `5.7GB` |
 | &nbsp;&nbsp;[`dustynv/l4t-tensorflow:tf1-r32.7.1`](https://hub.docker.com/r/dustynv/l4t-tensorflow/tags) | `2023-07-29` | `arm64` | `0.9GB` |
+| &nbsp;&nbsp;[`dustynv/l4t-tensorflow:tf1-r35.2.1`](https://hub.docker.com/r/dustynv/l4t-tensorflow/tags) | `2023-07-29` | `arm64` | `5.5GB` |
 | &nbsp;&nbsp;[`dustynv/l4t-tensorflow:tf2-r32.7.1`](https://hub.docker.com/r/dustynv/l4t-tensorflow/tags) | `2023-07-29` | `arm64` | `1.0GB` |
+| &nbsp;&nbsp;[`dustynv/l4t-tensorflow:tf2-r35.2.1`](https://hub.docker.com/r/dustynv/l4t-tensorflow/tags) | `2023-07-29` | `arm64` | `5.7GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>

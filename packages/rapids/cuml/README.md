@@ -20,8 +20,8 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/cuml:r35.3.1`](https://hub.docker.com/r/dustynv/cuml/tags) | `2023-07-29` | `arm64` | `8.0GB` |
 | &nbsp;&nbsp;[`dustynv/cuml:r35.2.1`](https://hub.docker.com/r/dustynv/cuml/tags) | `2023-07-29` | `arm64` | `7.9GB` |
+| &nbsp;&nbsp;[`dustynv/cuml:r35.3.1`](https://hub.docker.com/r/dustynv/cuml/tags) | `2023-07-29` | `arm64` | `8.0GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
