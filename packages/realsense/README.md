@@ -10,6 +10,7 @@
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/realsense:r35.2.1`](https://hub.docker.com/r/dustynv/realsense/tags) (`2023-07-31`, `5.5GB`)<br>[`dustynv/realsense:r32.7.1`](https://hub.docker.com/r/dustynv/realsense/tags) (`2023-07-31`, `0.9GB`) |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/IntelRealSense/librealsense/blob/master/doc/installation_jetson.md |
 
 </details>

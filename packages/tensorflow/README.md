@@ -16,6 +16,7 @@ The TensorFlow wheels used in these are from https://docs.nvidia.com/deeplearnin
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`protobuf:cpp`](/packages/protobuf/protobuf_cpp) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-tensorflow:tf1`](/packages/l4t/l4t-tensorflow) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/tensorflow:r35.3.1`](https://hub.docker.com/r/dustynv/tensorflow/tags) (`2023-07-29`, `5.5GB`)<br>[`dustynv/tensorflow:r32.7.1`](https://hub.docker.com/r/dustynv/tensorflow/tags) (`2023-07-29`, `0.8GB`) |
 
 | **`tensorflow2`** | |
 | :-- | :-- |
@@ -24,6 +25,7 @@ The TensorFlow wheels used in these are from https://docs.nvidia.com/deeplearnin
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`protobuf:cpp`](/packages/protobuf/protobuf_cpp) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-tensorflow:tf2`](/packages/l4t/l4t-tensorflow) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/tensorflow2:r35.2.1`](https://hub.docker.com/r/dustynv/tensorflow2/tags) (`2023-07-29`, `5.6GB`)<br>[`dustynv/tensorflow2:r32.7.1`](https://hub.docker.com/r/dustynv/tensorflow2/tags) (`2023-07-29`, `0.9GB`) |
 
 </details>
 

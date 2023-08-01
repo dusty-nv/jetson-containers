@@ -11,6 +11,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`deepstream`](/packages/deepstream) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/gstreamer:r35.2.1`](https://hub.docker.com/r/dustynv/gstreamer/tags) (`2023-07-29`, `5.1GB`)<br>[`dustynv/gstreamer:r32.7.1`](https://hub.docker.com/r/dustynv/gstreamer/tags) (`2023-07-29`, `0.7GB`) |
 
 </details>
 

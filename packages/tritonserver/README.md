@@ -11,6 +11,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`deepstream`](/packages/deepstream) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/tritonserver:r35.2.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) (`2023-07-29`, `5.9GB`)<br>[`dustynv/tritonserver:r32.7.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) (`2023-07-29`, `1.3GB`) |
 | &nbsp;&nbsp;&nbsp;Notes | https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/user_guide/jetson.html |
 
 </details>

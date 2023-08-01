@@ -11,6 +11,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`cupy`](/packages/cupy) [`numba`](/packages/numba) [`protobuf:apt`](/packages/protobuf/protobuf_apt) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`cuml`](/packages/rapids/cuml) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/cudf:r35.2.1`](https://hub.docker.com/r/dustynv/cudf/tags) (`2023-07-29`, `6.4GB`)<br>[`dustynv/cudf:r35.3.1`](https://hub.docker.com/r/dustynv/cudf/tags) (`2023-07-29`, `6.4GB`) |
 | &nbsp;&nbsp;&nbsp;Notes | installed under /usr/local |
 
 </details>

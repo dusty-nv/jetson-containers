@@ -120,6 +120,18 @@ def generate_package_docs(packages, root, repo, simulate=False):
             #if 'test' in package:
             #    txt += f"| Tests | {' '.join([f'[`{test}`]({test})' for test in package['test']])} |\n"
             
+            # list all the dockerhub images for this specific package
+            registry = find_registry_containers(name, check_l4t_version=False, return_dicts=True)
+        
+            if len(registry) > 0:
+                reg_txt = []
+                
+                for container in registry:
+                    for tag in sorted(container['tags'], key=lambda x: x['tag_last_pushed'], reverse=True):
+                        reg_txt.append(f"[`{container['namespace']}/{container['name']}:{tag['name']}`](https://hub.docker.com/r/{container['namespace']}/{container['name']}/tags) (`{tag['tag_last_pushed'][:10]}`, `{tag['full_size']/(1024**3):.1f}GB`)")
+                
+                txt += f"| {_NBSP}Images | {'<br>'.join(reg_txt)} |\n"
+                
             if 'notes' in package:
                 txt += f"| {_NBSP}Notes | {package['notes']} |\n"
                 

@@ -11,6 +11,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`cudf`](/packages/rapids/cudf) [`cuml`](/packages/rapids/cuml) [`l4t-ml`](/packages/l4t/l4t-ml) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/cupy:r35.2.1`](https://hub.docker.com/r/dustynv/cupy/tags) (`2023-07-29`, `5.1GB`)<br>[`dustynv/cupy:r32.7.1`](https://hub.docker.com/r/dustynv/cupy/tags) (`2023-07-29`, `0.5GB`) |
 
 </details>
 

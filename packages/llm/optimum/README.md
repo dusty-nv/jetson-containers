@@ -11,6 +11,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) [`onnxruntime`](/packages/onnxruntime) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`bitsandbytes`](/packages/llm/bitsandbytes) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/optimum:r35.2.1`](https://hub.docker.com/r/dustynv/optimum/tags) (`2023-07-31`, `5.7GB`)<br>[`dustynv/optimum:r32.7.1`](https://hub.docker.com/r/dustynv/optimum/tags) (`2023-07-30`, `1.3GB`)<br>[`dustynv/optimum:r35.3.1`](https://hub.docker.com/r/dustynv/optimum/tags) (`2023-07-30`, `5.8GB`) |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/huggingface/optimum |
 
 </details>

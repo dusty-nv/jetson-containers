@@ -10,6 +10,7 @@
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`bazel`](/packages/bazel) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/torch_tensorrt:r32.7.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) (`2023-08-01`, `1.6GB`)<br>[`dustynv/torch_tensorrt:r35.2.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) (`2023-08-01`, `5.9GB`)<br>[`dustynv/torch_tensorrt:r35.3.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) (`2023-07-30`, `6.0GB`) |
 | &nbsp;&nbsp;&nbsp;Notes | https://pytorch.org/TensorRT/getting_started/installation.html#installation |
 
 </details>

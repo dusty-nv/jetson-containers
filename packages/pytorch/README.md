@@ -14,6 +14,7 @@ Note that the [`l4t-pytorch`](/packages/l4t/l4t-pytorch) containers also include
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/pytorch:2.1-r35.2.1`](https://hub.docker.com/r/dustynv/pytorch/tags) (`2023-07-31`, `5.4GB`)<br>[`dustynv/pytorch:2.1-r35.3.1`](https://hub.docker.com/r/dustynv/pytorch/tags) (`2023-07-30`, `5.4GB`) |
 
 | **`pytorch:2.0`** | |
 | :-- | :-- |
@@ -23,6 +24,7 @@ Note that the [`l4t-pytorch`](/packages/l4t/l4t-pytorch) containers also include
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`auto-gptq`](/packages/llm/auto-gptq) [`awq`](/packages/llm/awq) [`bitsandbytes`](/packages/llm/bitsandbytes) [`exllama`](/packages/llm/exllama) [`gptq-for-llama`](/packages/llm/gptq-for-llama) [`l4t-diffusion`](/packages/l4t/l4t-diffusion) [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-pytorch`](/packages/l4t/l4t-pytorch) [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`nemo`](/packages/nemo) [`optimum`](/packages/llm/optimum) [`stable-diffusion`](/packages/diffusion/stable-diffusion) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) [`text-generation-inference`](/packages/llm/text-generation-inference) [`text-generation-webui`](/packages/llm/text-generation-webui) [`torch2trt`](/packages/pytorch/torch2trt) [`torch_tensorrt`](/packages/pytorch/torch_tensorrt) [`torchaudio`](/packages/pytorch/torchaudio) [`torchvision`](/packages/pytorch/torchvision) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/pytorch:2.0-r35.2.1`](https://hub.docker.com/r/dustynv/pytorch/tags) (`2023-07-31`, `5.4GB`)<br>[`dustynv/pytorch:2.0-r35.3.1`](https://hub.docker.com/r/dustynv/pytorch/tags) (`2023-07-30`, `5.4GB`) |
 
 | **`pytorch:1.13`** | |
 | :-- | :-- |
@@ -31,6 +33,7 @@ Note that the [`l4t-pytorch`](/packages/l4t/l4t-pytorch) containers also include
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/pytorch:1.13-r35.2.1`](https://hub.docker.com/r/dustynv/pytorch/tags) (`2023-07-30`, `5.5GB`)<br>[`dustynv/pytorch:1.13-r35.3.1`](https://hub.docker.com/r/dustynv/pytorch/tags) (`2023-07-30`, `5.5GB`) |
 
 | **`pytorch:1.12`** | |
 | :-- | :-- |
@@ -39,6 +42,7 @@ Note that the [`l4t-pytorch`](/packages/l4t/l4t-pytorch) containers also include
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/pytorch:1.12-r35.2.1`](https://hub.docker.com/r/dustynv/pytorch/tags) (`2023-07-31`, `5.5GB`) |
 
 | **`pytorch:1.11`** | |
 | :-- | :-- |
@@ -47,6 +51,7 @@ Note that the [`l4t-pytorch`](/packages/l4t/l4t-pytorch) containers also include
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/pytorch:1.11-r35.2.1`](https://hub.docker.com/r/dustynv/pytorch/tags) (`2023-07-30`, `5.4GB`)<br>[`dustynv/pytorch:1.11-r35.3.1`](https://hub.docker.com/r/dustynv/pytorch/tags) (`2023-07-29`, `5.4GB`) |
 
 | **`pytorch:1.10`** | |
 | :-- | :-- |
@@ -55,6 +60,7 @@ Note that the [`l4t-pytorch`](/packages/l4t/l4t-pytorch) containers also include
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ==32.*` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/pytorch:1.10-r32.7.1`](https://hub.docker.com/r/dustynv/pytorch/tags) (`2023-07-31`, `1.1GB`) |
 
 | **`pytorch:1.9`** | |
 | :-- | :-- |
@@ -63,6 +69,7 @@ Note that the [`l4t-pytorch`](/packages/l4t/l4t-pytorch) containers also include
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ==32.*` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/pytorch:1.9-r32.7.1`](https://hub.docker.com/r/dustynv/pytorch/tags) (`2023-07-30`, `1.0GB`) |
 
 </details>
 

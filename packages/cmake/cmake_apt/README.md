@@ -10,6 +10,7 @@
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/cmake:apt-r32.7.1`](https://hub.docker.com/r/dustynv/cmake/tags) (`2023-07-29`, `0.3GB`)<br>[`dustynv/cmake:apt-r35.3.1`](https://hub.docker.com/r/dustynv/cmake/tags) (`2023-07-29`, `5.0GB`) |
 | &nbsp;&nbsp;&nbsp;Notes | upgrade cmake with apt |
 
 </details>
