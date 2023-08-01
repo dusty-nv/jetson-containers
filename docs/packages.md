@@ -44,7 +44,7 @@ The text between `#---` is YAML and is extracted by the build system.  Each pack
 > * any filenames or paths should be relative to the package's `path`<br>
 > * see the [Version Specifiers Specification](https://packaging.pypa.io/en/latest/specifiers.html) for valid syntax around `requires`
 
-Packages can also include nested sub-packages (for example, all the [ROS variants](packages/ros)), which are typically generated in a config file.
+Packages can also include nested sub-packages (for example, all the [ROS variants](/packages/ros)), which are typically generated in a config file.
 
 ## YAML
 
@@ -64,7 +64,7 @@ This would be equivalent to having it encoded into the Dockerfile like above.
 
 ## JSON
 
-Config files can also be provided in JSON format (normally called `config.json`).  The JSON and YAML configs typically get used when defining meta-containers that may not even have their own Dockerfiles, but exist solely as combinations of other packages - like [`l4t-pytorch`](packages/l4t/l4t-pytorch) does:
+Config files can also be provided in JSON format (normally called `config.json`).  The JSON and YAML configs typically get used when defining meta-containers that may not even have their own Dockerfiles, but exist solely as combinations of other packages - like [`l4t-pytorch`](/packages/l4t/l4t-pytorch) does:
 
 ```json
 {
@@ -75,7 +75,7 @@ Config files can also be provided in JSON format (normally called `config.json`)
 }
 ```
 
-You can define multiple packages/containers per config file, like how [`l4t-tensorflow`](packages/l4t/l4t-tensorflow) has versions for both TF1/TF2:
+You can define multiple packages/containers per config file, like how [`l4t-tensorflow`](/packages/l4t/l4t-tensorflow) has versions for both TF1/TF2:
 
 ```json
 {
@@ -112,7 +112,7 @@ package['build_args'] = {
 This example sets build args in a Dockerfile, based on the version of JetPack/L4T that's running and the GPU architectures to compile for.  Typically the package's static settings remain in the Dockerfile header for the best visibility, while `config.py` sets the dynamic ones.
 
 
-The [`jetson_containers`](jetson_containers) module exposes these [system variables](jetson_containers/l4t_version.py) that you can import and parameterize Dockerfiles off of:
+The [`jetson_containers`](/jetson_containers) module exposes these [system variables](/jetson_containers/l4t_version.py) that you can import and parameterize Dockerfiles off of:
 
 | Name                 |                                       Type                                      | Description                                                  |
 |----------------------|:-------------------------------------------------------------------------------:|--------------------------------------------------------------|
