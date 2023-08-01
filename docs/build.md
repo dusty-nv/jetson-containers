@@ -1,6 +1,6 @@
 # Building Containers
 
-[`build.sh`](/build.sh) is a proxy launcher script for [`jetson_containers/build.py`](/jetson_containers/build.py).  It can be run from any working directory (in the examples below, that's assumed to be your jetson-containers repo).  Make sure you do the [System Setup](/docs/setup.md) first.
+[`build.sh`](/build.sh) is a proxy launcher script for [`jetson_containers/build.py`](/jetson_containers/build.py).  It can be run from any working directory (in the examples below, that's assumed to be your jetson-containers repo).  Make sure you do the [system setup](/docs/setup.md) first.
 
 To list the packages available to build for your version of JetPack/L4T, you can use `--list-packages` and `--show-packages`:
 
