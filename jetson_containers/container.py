@@ -4,6 +4,7 @@ import sys
 import copy
 import json
 import pprint
+import fnmatch
 import traceback
 import subprocess
 import dockerhub_api 
@@ -402,7 +403,7 @@ def find_registry_containers(package, check_l4t_version=True, return_dicts=False
         repo_copy['tags'] = []
         
         for registry_image in registry_repo['tags']:
-            if tag and tag != registry_image['name']:
+            if tag and not (tag == registry_image['name'] or fnmatch.fnmatch(registry_image['name'], tag + '-*')):
                 continue
             
             if check_l4t_version:
