@@ -422,7 +422,7 @@ def find_registry_containers(package, check_l4t_version=True, return_dicts=False
     return found_containers
     
             
-def find_container(package, **kwargs):
+def find_container(package, prefer_sources=['local', 'registry', 'build'], disable_sources=[], **kwargs):
     """
     Finds a local or remote container image to run for the given package (returns a string)
     TODO search for other packages that depend on this package if an image isn't available.
@@ -439,21 +439,29 @@ def find_container(package, **kwargs):
     if verbose:
         print(f"-- Finding compatible container image for namespace={namespace} repo={repo} tag={tag}")
 
-    # search for local container images containing this package
-    local_images = find_local_containers(package, **kwargs)
-    
-    if len(local_images) > 0:
-        return local_images[0]
+    for source in prefer_sources:
+        if source in disable_sources:
+            continue
+            
+        if source == 'local':
+            local_images = find_local_containers(package, **kwargs)
+            
+            if len(local_images) > 0:
+                return local_images[0]
      
-    # search dockerhub for compatible container images
-    registry_images = find_registry_containers(package, **kwargs)
-    
-    if len(registry_images) > 0:
-        return registry_images[0]
+        elif source == 'registry':
+            registry_images = find_registry_containers(package, return_dicts=True, **kwargs)
+            
+            if len(registry_images) > 0:
+                img = registry_images[0]  # TODO allow use to select image if there are multiple candidates
+                img_tag = img['tags'][0]
+                img_name = f"{img['namespace']}/{img['name']}:{img_tag['name']}"
+                if quiet or query_yes_no(f"\nFound compatible container {img_name} ({img_tag['tag_last_pushed'][:10]}, {img_tag['full_size']/(1024**3):.1f}GB) - would you like to pull it?", default="yes"):
+                    return img_name
         
-    # ask if they want to build it
-    if not quiet and query_yes_no(f"\nCouldn't find a compatible container for {package}, would you like to build it?"):
-        return build_container('', package, simulate=True)
+        elif source == 'build':
+            if not quiet and query_yes_no(f"\nCouldn't find a compatible container for {package}, would you like to build it?"):
+                return build_container('', package) #, simulate=True)
 
     # compatible container image could not be found
     return None
