@@ -205,7 +205,7 @@ def l4t_version_from_tag(tag):
     return None
 
 
-def l4t_version_compatible(l4t_version, l4t_version_host=get_l4t_version()):
+def l4t_version_compatible(l4t_version, l4t_version_host=get_l4t_version(), **kwargs):
     """
     Returns true if the host OS can run containers built for the provided L4T version.
     """
