@@ -12,7 +12,7 @@ Automated container build system that provides various [**AI/ML packages**](pack
 | CUDA | [`cupy`](packages/cupy) [`cuda-python`](packages/cuda-python) [`pycuda`](packages/pycuda) [`numba`](packages/numba) [`cudf`](packages/rapids/cudf) [`cuml`](packages/rapids/cuml) |
 | Robotics | [`ros`](packages/ros) [`ros2`](packages/ros) [`opencv:cuda`](packages/opencv) [`realsense`](packages/realsense) [`zed`](packages/zed) |
 
-See the [**`packages`**](packages) directory for the full list, including pre-built container images.  The L4T containers package up common configurations.
+See the [**`packages`**](packages) directory for the full list, including pre-built container images and CI/CD status for versions of JetPack/L4T.
 
 Using the included tools, you can easily combine packages together for building your own containers.  Want to run ROS2 with PyTorch and Transformers?  No problem - just do the [system setup](README.md), and build it on your Jetson like this:
 
@@ -25,18 +25,18 @@ There are shortcuts for running containers too - this will pull or build a [`l4t
 ```bash
 $ ./run.sh $(./autotag l4t-pytorch)
 ```
-> <sup>[`run.sh`](/run.sh) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
-> <sup>[`autotag`](/autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
+> <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
+> <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
 
 If you look at any package's readme (like [`l4t-pytorch`](packages/l4t/l4t-pytorch)), it will have detailed instructions for running it's container.
 
 ## Documentation
 
-* [**Package List**](/packages)
-* [**Package Definitions**](/docs/packages.md)
+* [Package List](/packages)
+* [Package Definitions](/docs/packages.md)
+<br>
+* [System Setup](/docs/setup.md)
+* [Building Containers](/docs/build.md)
+* [Running Containers](/docs/run.md)
 
-* [**System Setup**](/docs/setup.md)
-* [**Building Containers**](/docs/build.md)
-* [**Running Containers**](/docs/run.md)
-
-> What happened to the old jetson-containers?   See the [`legacy`](https://github.com/dusty-nv/jetson-containers/tree/legacy) branch
+Looking for the old jetson-containers?   See the [`legacy`](https://github.com/dusty-nv/jetson-containers/tree/legacy) branch
