@@ -142,8 +142,14 @@ def generate_workflow_badge(workflow, repo):
         url = url.split('/')
         return url[-2] + '/' + url[-1]
 
+    def restore_tag(name):
+        idx = name.rfind('_')
+        if idx >= 0:
+            name = name[:idx] + ':' + name[idx+1:]
+        return name
+        
     #return f"[![`{workflow['name']}`]({repo}/actions/workflows/{workflow['name']}.yml/badge.svg)]({repo}/actions/workflows/{workflow['name']}.yml)"
-    return f"[![`{workflow['name']}`](https://img.shields.io/github/actions/workflow/status/{remove_domain(repo)}/{workflow['name']}.yml?label={workflow['name']})]({repo}/actions/workflows/{workflow['name']}.yml)"
+    return f"[![`{workflow['name']}`](https://img.shields.io/github/actions/workflow/status/{remove_domain(repo)}/{workflow['name']}.yml?label={restore_tag(workflow['name'])})]({repo}/actions/workflows/{workflow['name']}.yml)"
     
     
 def register_runner(token, root, repo, labels=[], simulate=False):
