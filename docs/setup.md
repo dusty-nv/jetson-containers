@@ -37,7 +37,7 @@ Then restart the Docker service, or reboot your system before proceeding:
 $ sudo systemctl restart docker
 ```
 
-You can then confirm it by looking under `docker info`
+You can then confirm the changes by looking under `docker info`
 
 ```bash
 $ sudo docker info | grep 'Default Runtime'
@@ -76,7 +76,7 @@ Then restart the Docker service, or reboot your system before proceeding:
 $ sudo systemctl restart docker
 ```
 
-You can then confirm it by looking under `docker info`
+You can then confirm the changes by looking under `docker info`
 
 ```bash
 $ sudo docker info | grep 'Docker Root Dir'
@@ -126,13 +126,13 @@ $ sudo systemctl set-default graphical.target      # enable desktop on boot
 
 ## sudo NOPASSWD
 
-Seeing as Ubuntu users aren't by default in the `docker` group, they need to run docker commands with `sudo`, as do the build tools.  Hence you could be randomly asked for your sudo password during builds.  To disable sudo from repeatedly asking you for your password, run `sudo visudo` and add this to the end:
+Seeing as Ubuntu users aren't by default in the `docker` group, they need to run docker commands with `sudo` (as do the build tools).  Hence you could be periodically asked for your sudo password during builds.  To disable sudo from repeatedly asking you for your password, run `sudo visudo` and add this to the end:
 
 ```
 your_username ALL=(ALL) NOPASSWD: ALL
 ```
 
-Or to not ask for sudo password only when a docker command is being used:
+Or to skip asking for sudo password only when a docker command is being used:
 
 ```
 your_username ALL=(ALL) NOPASSWD: /usr/bin/docker

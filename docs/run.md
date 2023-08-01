@@ -1,6 +1,6 @@
 # Running Containers
 
-Let's say that you found an image from the [Package List](/packages) or [DockerHub](https://hub.docker.com/u/dustynv), or [built a container](/docs/build.md) - the normal way to run an interactive Docker container on your Jetson would be like:
+Let's say that you found an image from the [Package List](/packages) or [DockerHub](https://hub.docker.com/u/dustynv), or [built a container](/docs/build.md) - the normal way to run an interactive Docker container on your Jetson using [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) would be like:
 
 ``` bash
 $ sudo docker run --runtime nvidia -it --rm --network=host CONTAINER:TAG
@@ -8,7 +8,7 @@ $ sudo docker run --runtime nvidia -it --rm --network=host CONTAINER:TAG
 
 That's actually a rather minimal command, and doesn't have support for displays or other devices, and it doesn't mount the model/data cache ([`/data`](/data)). Once you add everything in, it can get to be a lot to specify by hand.  Hence, we have some helpers that provide shortcuts.
 
-The [`run.sh`](/run.sh) launcher forwards its command-line to `docker run`, with some added defaults - including the above flags, mounting the `/data` cache, and mounting V4L2 and display devices.
+The [`run.sh`](/run.sh) launcher forwards its command-line to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), with some added defaults - including the above flags, mounting the `/data` cache, and mounting V4L2 and display devices.
 
 ``` bash
 $ ./run.sh CONTAINER:TAG  # run with --runtime=nvidia, default mounts, ect
@@ -28,20 +28,20 @@ $ ./run.sh $(./autotag pytorch)   # find pytorch container to run for your versi
 
 What's happening here with the `$(./autotag xyz)` syntax, is that Bash command substitution expands the full container image name and forwards it to the `docker run` command.  For example, if you do `echo $(./autotag pytorch)` it would print out something like `dustynv/pytorch:r35.2.1` (assuming that you don't already have the `pytorch` image locally).
 
-You can of course use `autotag` interspersed along with other command-line arguments to launch the container:
+You can of course use [`autotag`](/autotag) interspersed along with other command-line arguments to launch the container:
 
 ``` bash
 $ ./run.sh $(./autotag pytorch) my_app --abc xyz  # run a command (instead of interactive mode)
 $ ./run.sh --volume /path/on/host:/path/in/container $(./autotag pytorch)  # mount a directory
 ```
 
-Or with using `docker run` directly:
+Or with using [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) directly:
 
 ``` bash
 $ sudo docker run --runtime nvidia -it --rm --network=host $(./autotag pytorch)
 ```
 
-This is the order in which `autotag` searches for container images:
+This is the order in which [`autotag`](/autotag) searches for container images:
 
 1. Local images (found under `docker images`)
 2. Pulled from registry (by default [`hub.docker.com/u/dustynv`](https://hub.docker.com/u/dustynv))

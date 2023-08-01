@@ -1,20 +1,20 @@
 # Building Containers
 
-[`build.sh`](/build.sh) is a proxy launcher script for [`/jetson_containers/build.py`].  It can be run from any working directory (in the examples below, that's assumed to be your jetson-containers repo).  Make sure you do the [System Setup](/docs/setup.md) first.
+[`build.sh`](/build.sh) is a proxy launcher script for [`jetson_containers/build.py`](/jetson_containers/build.py).  It can be run from any working directory (in the examples below, that's assumed to be your jetson-containers repo).  Make sure you do the [System Setup](/docs/setup.md) first.
 
 To list the packages available to build for your version of JetPack/L4T, you can use `--list-packages` and `--show-packages`:
 
 ```bash
-$ ./build.sh --list-packages      # list all packages
-$ ./build.sh --show-packages      # show all package metadata
-$ ./build.sh --show-packages ros* # show all the ros packages
+$ ./build.sh --list-packages       # list all packages
+$ ./build.sh --show-packages       # show all package metadata
+$ ./build.sh --show-packages ros*  # show all the ros packages
 ```
 
 To build a container that includes one or more packages:
 
 ```bash
-$ ./build.sh pytorch              # build a container with just PyTorch
-$ ./build.sh pytorch jupyterlab   # build container with PyTorch and JupyterLab
+$ ./build.sh pytorch               # build a container with just PyTorch
+$ ./build.sh pytorch jupyterlab    # build container with PyTorch and JupyterLab
 ```
 
 The builder will chain together the Dockerfiles of each of packages specified, and use the result of one build stage as the base image of the next.  The initial base image defaults to `l4t-base`/`l4t-jetpack` (for JetPack 4 and JetPack 5, respectively) but can be changed by specifying the `--base-image` argument.
@@ -80,4 +80,4 @@ These flags tend to get used more during development - normally it's good to tho
 
 ## Running Containers
 
-To launch containers that you've built or pulled, see the [Running Containers](/docs/run.md) page or the package's readme.
+To launch containers that you've built or pulled, see the [Running Containers](/docs/run.md) documentation or the package's readme page.
