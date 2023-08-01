@@ -6,7 +6,7 @@
 
 | **`deepstream`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`deepstream_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/deepstream_jp46.yml?label=deepstream_jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/deepstream_jp46.yml) [![`deepstream_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/deepstream_jp51.yml?label=deepstream_jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/deepstream_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`deepstream_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/deepstream_jp46.yml?label=deepstream:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/deepstream_jp46.yml) [![`deepstream_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/deepstream_jp51.yml?label=deepstream:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/deepstream_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) [`gstreamer`](/packages/gstreamer) [`tritonserver`](/packages/tritonserver) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
@@ -20,8 +20,8 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/deepstream:r32.7.1`](https://hub.docker.com/r/dustynv/deepstream/tags) | `2023-07-29` | `arm64` | `2.3GB` |
 | &nbsp;&nbsp;[`dustynv/deepstream:r35.3.1`](https://hub.docker.com/r/dustynv/deepstream/tags) | `2023-07-29` | `arm64` | `6.8GB` |
+| &nbsp;&nbsp;[`dustynv/deepstream:r32.7.1`](https://hub.docker.com/r/dustynv/deepstream/tags) | `2023-07-29` | `arm64` | `2.3GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -54,7 +54,7 @@ To launch the container running a command, as opposed to an interactive shell:
 ```bash
 ./run.sh $(./autotag deepstream) my_app --abc xyz
 ```
-You can pass any options to `run.sh` that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
+You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
 </details>
 <details open>
 <summary><b>BUILD CONTAINER</b></summary>

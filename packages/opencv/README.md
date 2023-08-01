@@ -7,7 +7,7 @@
 | **`opencv`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `opencv_cuda` |
-| &nbsp;&nbsp;&nbsp;Builds | [![`opencv_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/opencv_jp46.yml?label=opencv_jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/opencv_jp46.yml) [![`opencv_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/opencv_jp51.yml?label=opencv_jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/opencv_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`opencv_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/opencv_jp46.yml?label=opencv:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/opencv_jp46.yml) [![`opencv_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/opencv_jp51.yml?label=opencv:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/opencv_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`deepstream`](/packages/deepstream) [`gstreamer`](/packages/gstreamer) [`l4t-diffusion`](/packages/l4t/l4t-diffusion) [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-pytorch`](/packages/l4t/l4t-pytorch) [`l4t-tensorflow:tf1`](/packages/l4t/l4t-tensorflow) [`l4t-tensorflow:tf2`](/packages/l4t/l4t-tensorflow) [`ros:foxy-desktop`](/packages/ros) [`ros:foxy-ros-base`](/packages/ros) [`ros:foxy-ros-core`](/packages/ros) [`ros:galactic-desktop`](/packages/ros) [`ros:galactic-ros-base`](/packages/ros) [`ros:galactic-ros-core`](/packages/ros) [`ros:humble-desktop`](/packages/ros) [`ros:humble-ros-base`](/packages/ros) [`ros:humble-ros-core`](/packages/ros) [`ros:iron-desktop`](/packages/ros) [`ros:iron-ros-base`](/packages/ros) [`ros:iron-ros-core`](/packages/ros) [`ros:noetic-desktop`](/packages/ros) [`ros:noetic-ros-base`](/packages/ros) [`ros:noetic-ros-core`](/packages/ros) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) |
@@ -56,7 +56,7 @@ To launch the container running a command, as opposed to an interactive shell:
 ```bash
 ./run.sh $(./autotag opencv) my_app --abc xyz
 ```
-You can pass any options to `run.sh` that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
+You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
 </details>
 <details open>
 <summary><b>BUILD CONTAINER</b></summary>

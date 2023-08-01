@@ -152,7 +152,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
             txt += "| :-- | :--: | :--: | :--: |\n"
             
             for container in registry:
-                for tag in sorted(container['tags'], key=lambda x: x['name']):
+                for tag in sorted(container['tags'], key=lambda x: x['tag_last_pushed']):
                     txt += f"| &nbsp;&nbsp;[`{container['namespace']}/{container['name']}:{tag['name']}`](https://hub.docker.com/r/{container['namespace']}/{container['name']}/tags) "
                     txt += f"| `{tag['tag_last_pushed'][:10]}` "
                     txt += f"| `{tag['images'][0]['architecture']}` "
@@ -178,7 +178,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
         run_txt += "```bash\n"
         run_txt += f"./run.sh $(./autotag {pkg_name}) my_app --abc xyz\n"
         run_txt += "```\n"
-        run_txt += "You can pass any options to `run.sh` that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.\n"
+        run_txt += "You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.\n"
         run_txt += "</details>\n"
         
         run_txt += "<details open>\n"

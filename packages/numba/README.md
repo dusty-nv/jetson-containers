@@ -6,7 +6,7 @@
 
 | **`numba`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`numba_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/numba_jp46.yml?label=numba_jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/numba_jp46.yml) [![`numba_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/numba_jp51.yml?label=numba_jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/numba_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`numba_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/numba_jp46.yml?label=numba:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/numba_jp46.yml) [![`numba_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/numba_jp51.yml?label=numba:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/numba_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`cudf`](/packages/rapids/cudf) [`cuml`](/packages/rapids/cuml) [`l4t-ml`](/packages/l4t/l4t-ml) [`nemo`](/packages/nemo) |
@@ -54,7 +54,7 @@ To launch the container running a command, as opposed to an interactive shell:
 ```bash
 ./run.sh $(./autotag numba) my_app --abc xyz
 ```
-You can pass any options to `run.sh` that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
+You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
 </details>
 <details open>
 <summary><b>BUILD CONTAINER</b></summary>

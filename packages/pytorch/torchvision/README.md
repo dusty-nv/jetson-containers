@@ -6,7 +6,7 @@
 
 | **`torchvision`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`torchvision_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torchvision_jp46.yml?label=torchvision_jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torchvision_jp46.yml) [![`torchvision_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torchvision_jp51.yml?label=torchvision_jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torchvision_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`torchvision_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torchvision_jp46.yml?label=torchvision:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torchvision_jp46.yml) [![`torchvision_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torchvision_jp51.yml?label=torchvision:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torchvision_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`auto-gptq`](/packages/llm/auto-gptq) [`awq`](/packages/llm/awq) [`gptq-for-llama`](/packages/llm/gptq-for-llama) [`l4t-diffusion`](/packages/l4t/l4t-diffusion) [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-pytorch`](/packages/l4t/l4t-pytorch) [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`nemo`](/packages/nemo) [`optimum`](/packages/llm/optimum) [`stable-diffusion`](/packages/diffusion/stable-diffusion) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) [`text-generation-inference`](/packages/llm/text-generation-inference) [`text-generation-webui`](/packages/llm/text-generation-webui) [`torch2trt`](/packages/pytorch/torch2trt) [`torch_tensorrt`](/packages/pytorch/torch_tensorrt) [`transformers`](/packages/llm/transformers) |
@@ -54,7 +54,7 @@ To launch the container running a command, as opposed to an interactive shell:
 ```bash
 ./run.sh $(./autotag torchvision) my_app --abc xyz
 ```
-You can pass any options to `run.sh` that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
+You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
 </details>
 <details open>
 <summary><b>BUILD CONTAINER</b></summary>

@@ -6,7 +6,7 @@
 
 | **`torchaudio`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`torchaudio_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torchaudio_jp51.yml?label=torchaudio_jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torchaudio_jp51.yml) [![`torchaudio_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torchaudio_jp46.yml?label=torchaudio_jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torchaudio_jp46.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`torchaudio_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torchaudio_jp51.yml?label=torchaudio:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torchaudio_jp51.yml) [![`torchaudio_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torchaudio_jp46.yml?label=torchaudio:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torchaudio_jp46.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-pytorch`](/packages/l4t/l4t-pytorch) [`nemo`](/packages/nemo) |
@@ -54,7 +54,7 @@ To launch the container running a command, as opposed to an interactive shell:
 ```bash
 ./run.sh $(./autotag torchaudio) my_app --abc xyz
 ```
-You can pass any options to `run.sh` that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
+You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
 </details>
 <details open>
 <summary><b>BUILD CONTAINER</b></summary>

@@ -6,7 +6,7 @@
 
 | **`cmake:apt`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`cmake-apt_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cmake-apt_jp51.yml?label=cmake-apt_jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cmake-apt_jp51.yml) [![`cmake-apt_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cmake-apt_jp46.yml?label=cmake-apt_jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cmake-apt_jp46.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`cmake-apt_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cmake-apt_jp51.yml?label=cmake-apt:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cmake-apt_jp51.yml) [![`cmake-apt_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cmake-apt_jp46.yml?label=cmake-apt:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cmake-apt_jp46.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
@@ -38,7 +38,7 @@ To launch the container running a command, as opposed to an interactive shell:
 ```bash
 ./run.sh $(./autotag cmake_apt) my_app --abc xyz
 ```
-You can pass any options to `run.sh` that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
+You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
 </details>
 <details open>
 <summary><b>BUILD CONTAINER</b></summary>

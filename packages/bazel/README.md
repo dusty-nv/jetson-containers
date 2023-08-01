@@ -6,7 +6,7 @@
 
 | **`bazel`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`bazel_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/bazel_jp46.yml?label=bazel_jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/bazel_jp46.yml) [![`bazel_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/bazel_jp51.yml?label=bazel_jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/bazel_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`bazel_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/bazel_jp46.yml?label=bazel:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/bazel_jp46.yml) [![`bazel_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/bazel_jp51.yml?label=bazel:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/bazel_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`torch_tensorrt`](/packages/pytorch/torch_tensorrt) |
@@ -54,7 +54,7 @@ To launch the container running a command, as opposed to an interactive shell:
 ```bash
 ./run.sh $(./autotag bazel) my_app --abc xyz
 ```
-You can pass any options to `run.sh` that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
+You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
 </details>
 <details open>
 <summary><b>BUILD CONTAINER</b></summary>

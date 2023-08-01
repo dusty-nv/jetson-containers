@@ -11,7 +11,7 @@ The TensorFlow wheels used in these are from https://docs.nvidia.com/deeplearnin
 
 | **`tensorflow`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`tensorflow_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/tensorflow_jp46.yml?label=tensorflow_jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tensorflow_jp46.yml) [![`tensorflow_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/tensorflow_jp51.yml?label=tensorflow_jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tensorflow_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`tensorflow_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/tensorflow_jp46.yml?label=tensorflow:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tensorflow_jp46.yml) [![`tensorflow_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/tensorflow_jp51.yml?label=tensorflow:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tensorflow_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`protobuf:cpp`](/packages/protobuf/protobuf_cpp) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-tensorflow:tf1`](/packages/l4t/l4t-tensorflow) |
@@ -19,7 +19,7 @@ The TensorFlow wheels used in these are from https://docs.nvidia.com/deeplearnin
 
 | **`tensorflow2`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`tensorflow2_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/tensorflow2_jp46.yml?label=tensorflow2_jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tensorflow2_jp46.yml) [![`tensorflow2_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/tensorflow2_jp51.yml?label=tensorflow2_jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tensorflow2_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`tensorflow2_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/tensorflow2_jp46.yml?label=tensorflow2:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tensorflow2_jp46.yml) [![`tensorflow2_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/tensorflow2_jp51.yml?label=tensorflow2:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tensorflow2_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`protobuf:cpp`](/packages/protobuf/protobuf_cpp) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-tensorflow:tf2`](/packages/l4t/l4t-tensorflow) |
@@ -67,7 +67,7 @@ To launch the container running a command, as opposed to an interactive shell:
 ```bash
 ./run.sh $(./autotag tensorflow) my_app --abc xyz
 ```
-You can pass any options to `run.sh` that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
+You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
 </details>
 <details open>
 <summary><b>BUILD CONTAINER</b></summary>
