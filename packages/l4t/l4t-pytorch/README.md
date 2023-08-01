@@ -18,12 +18,12 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/l4t-pytorch:r35.1.0-pth1.11-py3`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) | `2022-09-20` | `arm64` | `5.7GB` |
-| &nbsp;&nbsp;[`dustynv/l4t-pytorch:r35.1.0-pth1.12-py3`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) | `2022-09-20` | `arm64` | `5.8GB` |
-| &nbsp;&nbsp;[`dustynv/l4t-pytorch:r35.1.0-pth1.13-py3`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) | `2022-09-20` | `arm64` | `5.8GB` |
-| &nbsp;&nbsp;[`dustynv/l4t-pytorch:r35.3.1`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) | `2023-07-30` | `arm64` | `5.6GB` |
-| &nbsp;&nbsp;[`dustynv/l4t-pytorch:r32.7.1`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) | `2023-07-30` | `arm64` | `1.2GB` |
 | &nbsp;&nbsp;[`dustynv/l4t-pytorch:r35.2.1`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) | `2023-07-31` | `arm64` | `5.5GB` |
+| &nbsp;&nbsp;[`dustynv/l4t-pytorch:r32.7.1`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) | `2023-07-30` | `arm64` | `1.2GB` |
+| &nbsp;&nbsp;[`dustynv/l4t-pytorch:r35.3.1`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) | `2023-07-30` | `arm64` | `5.6GB` |
+| &nbsp;&nbsp;[`dustynv/l4t-pytorch:r35.1.0-pth1.13-py3`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) | `2022-09-20` | `arm64` | `5.8GB` |
+| &nbsp;&nbsp;[`dustynv/l4t-pytorch:r35.1.0-pth1.12-py3`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) | `2022-09-20` | `arm64` | `5.8GB` |
+| &nbsp;&nbsp;[`dustynv/l4t-pytorch:r35.1.0-pth1.11-py3`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) | `2022-09-20` | `arm64` | `5.7GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>

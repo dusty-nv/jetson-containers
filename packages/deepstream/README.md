@@ -20,8 +20,8 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/deepstream:r35.3.1`](https://hub.docker.com/r/dustynv/deepstream/tags) | `2023-07-29` | `arm64` | `6.8GB` |
 | &nbsp;&nbsp;[`dustynv/deepstream:r32.7.1`](https://hub.docker.com/r/dustynv/deepstream/tags) | `2023-07-29` | `arm64` | `2.3GB` |
+| &nbsp;&nbsp;[`dustynv/deepstream:r35.3.1`](https://hub.docker.com/r/dustynv/deepstream/tags) | `2023-07-29` | `arm64` | `6.8GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>

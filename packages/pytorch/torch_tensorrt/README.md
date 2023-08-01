@@ -20,9 +20,9 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/torch_tensorrt:r35.3.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) | `2023-07-30` | `arm64` | `6.0GB` |
-| &nbsp;&nbsp;[`dustynv/torch_tensorrt:r35.2.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) | `2023-08-01` | `arm64` | `5.9GB` |
 | &nbsp;&nbsp;[`dustynv/torch_tensorrt:r32.7.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) | `2023-08-01` | `arm64` | `1.6GB` |
+| &nbsp;&nbsp;[`dustynv/torch_tensorrt:r35.2.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) | `2023-08-01` | `arm64` | `5.9GB` |
+| &nbsp;&nbsp;[`dustynv/torch_tensorrt:r35.3.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) | `2023-07-30` | `arm64` | `6.0GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
