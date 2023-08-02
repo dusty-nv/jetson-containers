@@ -6,11 +6,11 @@ Automated container build system that provides various [**AI/ML packages**](pack
 
 | | |
 |---|---|
-| [ML](packages/README.md#user-content-ml) | [`pytorch`](packages/pytorch) [`tensorflow`](packages/tensorflow) [`onnxruntime`](packages/onnxruntime) [`deepstream`](packages/deepstream) [`tritonserver`](packages/tritonserver) [`jupyterlab`](packages/jupyterlab) [`stable-diffusion`](packages/diffusion/stable-diffusion) |
-| [LLM](packages/README.md#user-content-llm) | [`transformers`](packages/llm/transformers) [`text-generation-webui`](packages/llm/text-generation-webui) [`text-generation-inference`](packages/llm/text-generation-inference) [`exllama`](packages/llm/exllama) [`bitsandbytes`](packages/llm/bitsandbytes) [`awq`](packages/llm/awq) [`AutoGPTQ`](packages/llm/auto-gptq) [`GPTQ-for-LLaMa`](packages/llm/gptq-for-llama) [`optimum`](packages/llm/optimum) [`nemo`](packages/nemo) |
-| [L4T](packages/README.md#user-content-ml) | [`l4t-pytorch`](packages/l4t/l4t-pytorch) [`l4t-tensorflow`](packages/l4t/l4t-tensorflow) [`l4t-ml`](packages/l4t/l4t-ml) [`l4t-diffusion`](packages/l4t/l4t-diffusion) [`l4t-text-generation`](packages/l4t/l4t-text-generation) |
-| [CUDA](packages/README.md#user-content-cuda) | [`cupy`](packages/cupy) [`cuda-python`](packages/cuda-python) [`pycuda`](packages/pycuda) [`numba`](packages/numba) [`cudf`](packages/rapids/cudf) [`cuml`](packages/rapids/cuml) |
-| [Robotics](packages/README.md#user-content-ros) | [`ros`](packages/ros) [`ros2`](packages/ros) [`opencv:cuda`](packages/opencv) [`realsense`](packages/realsense) [`zed`](packages/zed) |
+| [**ML**](packages/README.md#user-content-ml) | [`pytorch`](packages/pytorch) [`tensorflow`](packages/tensorflow) [`onnxruntime`](packages/onnxruntime) [`deepstream`](packages/deepstream) [`tritonserver`](packages/tritonserver) [`jupyterlab`](packages/jupyterlab) [`stable-diffusion`](packages/diffusion/stable-diffusion) |
+| [**LLM**](packages/README.md#user-content-llm) | [`transformers`](packages/llm/transformers) [`text-generation-webui`](packages/llm/text-generation-webui) [`text-generation-inference`](packages/llm/text-generation-inference) [`exllama`](packages/llm/exllama) [`bitsandbytes`](packages/llm/bitsandbytes) [`awq`](packages/llm/awq) [`AutoGPTQ`](packages/llm/auto-gptq) [`GPTQ-for-LLaMa`](packages/llm/gptq-for-llama) [`optimum`](packages/llm/optimum) [`nemo`](packages/nemo) |
+| [**L4T**](packages/README.md#user-content-ml) | [`l4t-pytorch`](packages/l4t/l4t-pytorch) [`l4t-tensorflow`](packages/l4t/l4t-tensorflow) [`l4t-ml`](packages/l4t/l4t-ml) [`l4t-diffusion`](packages/l4t/l4t-diffusion) [`l4t-text-generation`](packages/l4t/l4t-text-generation) |
+| [**CUDA**](packages/README.md#user-content-cuda) | [`cupy`](packages/cupy) [`cuda-python`](packages/cuda-python) [`pycuda`](packages/pycuda) [`numba`](packages/numba) [`cudf`](packages/rapids/cudf) [`cuml`](packages/rapids/cuml) |
+| [**Robotics**](packages/README.md#user-content-ros) | [`ros`](packages/ros) [`ros2`](packages/ros) [`opencv:cuda`](packages/opencv) [`realsense`](packages/realsense) [`zed`](packages/zed) |
 
 See the [**`packages`**](packages) directory for the full list, including pre-built container images and CI/CD status for JetPack/L4T.
 
