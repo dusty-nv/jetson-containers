@@ -36,7 +36,9 @@ def generate_package_list(packages, root, repo, filename='packages/README.md', s
     
     # build list of groups
     for group_name in sorted(list(groups.keys())):
-        txt += f"* [{group_name.upper()}](#user-content-{group_name})\n"
+        txt += f"* [**`{group_name.upper()}`**](#user-content-{group_name})\n"
+    
+    txt += "<br>\n"
     
     # build package table
     txt += f"|{_TABLE_SPACE}|{_TABLE_SPACE}|\n"
