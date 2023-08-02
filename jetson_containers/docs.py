@@ -29,13 +29,19 @@ def generate_package_list(packages, root, repo, filename='packages/README.md', s
     """
     filename = os.path.join(root, filename)
     
-    txt = "# Packages\n"
-    txt += f"|{_TABLE_SPACE}|{_TABLE_SPACE}|\n"
-    txt += f"|{_TABLE_DASH}|{_TABLE_DASH}|\n"
-        
     # group packages by category for navigability
     groups = group_packages(packages, key='group', default='other')
     
+    txt = "# Packages\n"
+    
+    # build list of groups
+    for group_name in sorted(list(groups.keys())):
+        txt += f"* [{group_name.upper()}](#user-content-{group_name})\n"
+    
+    # build package table
+    txt += f"|{_TABLE_SPACE}|{_TABLE_SPACE}|\n"
+    txt += f"|{_TABLE_DASH}|{_TABLE_DASH}|\n"
+        
     for group_name in sorted(list(groups.keys())):
         group = groups[group_name]
         
