@@ -33,6 +33,7 @@ def generate_package_list(packages, root, repo, filename='packages/README.md', s
     groups = group_packages(packages, key='group', default='other')
     
     txt = "# Packages\n"
+    txt += "> "
     
     # build list of groups
     for group_name in sorted(list(groups.keys())):
