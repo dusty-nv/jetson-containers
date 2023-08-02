@@ -39,7 +39,7 @@ def generate_package_list(packages, root, repo, filename='packages/README.md', s
     for group_name in sorted(list(groups.keys())):
         group = groups[group_name]
         
-        txt += f'| <a id="{group_name}">**`{group_name.upper()}`**</a> | |\n'
+        txt += f'| <a>**`{group_name.upper()}`**</a> | |\n'
         
         for name in sorted(list(group.keys())):
             package = group[name]
