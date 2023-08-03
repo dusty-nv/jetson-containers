@@ -9,13 +9,17 @@
 #
 import os
 import re
+import time
 import pprint
 import argparse
+import dockerhub_api
 
 from jetson_containers import (find_package, find_packages, group_packages, dependant_packages, package_scan_options,
                                resolve_dependencies, find_registry_containers, L4T_VERSION, JETPACK_VERSION)
 
 from jetson_containers.ci import find_package_workflows, generate_workflow_badge
+
+from jetson_containers.utils import split_container_name
 
 
 _TABLE_DASH="------------"
@@ -70,7 +74,7 @@ def generate_package_list(packages, root, repo, filename='packages/README.md', s
         with open(filename, 'w') as file:
             file.write(txt)
 
-
+    
 def generate_package_docs(packages, root, repo, simulate=False):
     """
     Generate README.md files for the supplied packages.
@@ -221,15 +225,59 @@ def generate_package_docs(packages, root, repo, simulate=False):
             with open(filename, 'w') as file:
                 file.write(txt)
                 
+
+def generate_registry_docs(packages, root, repo, user, password, simulate=False):
+    """
+    Apply descriptions to the container repos on DockerHub
+    """
+    groups = group_packages(packages, 'path')
+    hub = dockerhub_api.DockerHub(username=user, password=password, return_lists=True)
+    request_cache = []
+    
+    for name, package in packages.items():
+        namespace, repository, tag = split_container_name(name)
+        repo_path = package['path'][package['path'].find('/packages/')+1:]
+        readme_path = os.path.join(package['path'], 'README.md')
+        
+        if repository in request_cache:
+            continue
+            
+        request_cache.append(repository)
+        
+        short = f"{repo}/{repo_path}"
+        
+        with open(readme_path, 'r') as file:
+            full = file.read()
+            
+        full = full.replace("](/", f"]({repo}/")
+        full = full.replace("](Dockerfile", f"]({repo}/{repo_path}/Dockerfile")
+        full = full[:24999] if len(full) >= 25000 else full  # length limit
+        
+        print(f"-- Setting DockerHub description for {user}/{repository}")
+        print(f"        {short}")
+        print(f"        {readme_path}")
+        print(full)
+        
+        if not simulate:
+            hub.set_repository_description(user, repository, descriptions={
+                'short': short,
+                'full': full,
+            })
+            
+        #if not simulate:
+        #    time.sleep(5.0)
+            
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     
-    parser.add_argument('cmd', type=str, choices=['package', 'packages', 'index'])
+    parser.add_argument('cmd', type=str, choices=['package', 'packages', 'index', 'registry'])
     parser.add_argument('packages', type=str, nargs='*', default=[], help='packages to generate docs for')
     
     parser.add_argument('--root', type=str, default=os.path.dirname(os.path.dirname(__file__)))
     parser.add_argument('--repo', type=str, default='https://github.com/dusty-nv/jetson-containers')
+    parser.add_argument('--user', type=str, default='dustynv', help="the DockerHub user for registry container images")
+    parser.add_argument('--password', type=str, default='', help="DockerHub password (only needed for 'registry' command)")
     parser.add_argument('--skip-packages', type=str, default='')
     parser.add_argument('--skip-l4t-checks', action='store_true')
     parser.add_argument('--simulate', action='store_true')
@@ -248,5 +296,7 @@ if __name__ == "__main__":
         generate_package_docs(packages, args.root, args.repo, simulate=args.simulate)
     elif args.cmd == 'index':
         generate_package_list(packages, args.root, args.repo, simulate=args.simulate)
+    elif args.cmd == 'registry':
+        generate_registry_docs(packages, args.root, args.repo, args.user, args.password, simulate=args.simulate)
 
         
