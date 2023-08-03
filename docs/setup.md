@@ -1,9 +1,11 @@
 # System Setup
 
-Install the latest version of JetPack 4 if you are on Nano/TX1/TX2, or JetPack 5 if you are on Xavier/Orin.  This repo tests on the following versions of JetPack:
+Install the latest version of JetPack 4 if you're on Nano/TX1/TX2, or JetPack 5 if you're on Xavier/Orin.  The following versions are supported:
 
 * JetPack 4.6.1+ (>= L4T R32.7.1)
 * JetPack 5.1+  (>= L4T R35.2.1)
+
+> note: x86 platforms are not supported at this time
 
 ## Clone the Repo
 
