@@ -249,8 +249,8 @@ def generate_registry_docs(packages, root, repo, user, password, simulate=False)
         with open(readme_path, 'r') as file:
             full = file.read()
             
-        full = full.replace("](/", f"]({repo}/")
-        full = full.replace("](Dockerfile", f"]({repo}/{repo_path}/Dockerfile")
+        full = full.replace("](/", f"]({repo}/tree/master/")
+        full = full.replace("](Dockerfile", f"]({repo}/tree/master/{repo_path}/Dockerfile")
         full = full[:24999] if len(full) >= 25000 else full  # length limit
         
         print(f"-- Setting DockerHub description for {user}/{repository}")
