@@ -34,6 +34,7 @@ for ROS_DISTRO in ROS_DISTROS:
             pkg['requires'] = '<34'   # melodic is for 18.04 only
             pkg['notes'] = 'ROS Melodic is for JetPack 4 only'
             pkg['depends'].remove('opencv')  # melodic apt packages install the ubuntu opencv
+            pkg['depends'][0] = 'cmake:apt'  # melodic (python 2.7) doesn't like pip-based cmake
         elif ROS_DISTRO == 'noetic':
             pkg['dockerfile'] = 'Dockerfile.ros.noetic'
             pkg['test'] = 'test_ros.sh'
