@@ -5,7 +5,7 @@ Install the latest version of JetPack 4 if you're on Nano/TX1/TX2, or JetPack 5 
 * JetPack 4.6.1+ (>= L4T R32.7.1)
 * JetPack 5.1+  (>= L4T R35.2.1)
 
-> <sup>Building on/for x86 platforms isn't supported at this time (one can typically install/run packages the upstream way there)</sup>
+> Building on/for x86 platforms isn't supported at this time (one can typically install/run packages the upstream way there)
 
 ## Clone the Repo
 
