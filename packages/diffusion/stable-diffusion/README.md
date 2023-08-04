@@ -8,7 +8,7 @@
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`stable-diffusion_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/stable-diffusion_jp51.yml?label=stable-diffusion:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/stable-diffusion_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`bitsandbytes`](/packages/llm/bitsandbytes) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-diffusion`](/packages/l4t/l4t-diffusion) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/stable-diffusion:r35.2.1`](https://hub.docker.com/r/dustynv/stable-diffusion/tags) `(2023-07-31, 5.6GB)` |
@@ -27,6 +27,64 @@
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R35.x containers can run on other versions of L4T R35.x (JetPack 5.1+)</sub><br>
+</details>
+
+<details open>
+<summary><b>CONTAINER DOCS</b></summary>
+<br>
+
+
+* https://github.com/CompVis/stable-diffusion (installed under `/opt/stable-diffusion`)
+* with memory optimizations from https://github.com/basujindal/stable-diffusion (`/opt/stable-diffusion/optimizedSD`)
+
+> tested on `stable-diffusion-1.4` from https://huggingface.co/CompVis/stable-diffusion-v-1-4-original
+
+### txt2img
+
+Download the [stable-diffusion-1.4](https://huggingface.co/CompVis/stable-diffusion-v-1-4-original) model (`sd-v1-4.ckpt`)
+
+```bash
+mkdir -p /data/models/stable-diffusion /data/images/stable-diffusion
+wget https://huggingface.co/CompVis/stable-diffusion-v-1-4-original/resolve/main/sd-v1-4.ckpt -O /data/models/stable-diffusion
+```
+
+Then run this in the container to generate images (by default, six 512x512 images with 50 refinement steps)
+
+```bash
+cd stable-diffusion
+python3 scripts/txt2img.py --plms \
+  --ckpt $DATA/stable-diffusion/sd-v1-4.ckpt \
+  --outdir $DATA/stable-diffusion/images \
+  --prompt "a photograph of an astronaut riding a horse"
+```
+
+See here for options:  https://github.com/CompVis/stable-diffusion#reference-sampling-script
+
+For just one 512x512 image with 25 steps:
+
+```bash
+python3 scripts/txt2img.py --plms \
+  --n_samples 1 --n_iter 1 --ddim_steps 25 \
+  --ckpt $DATA/stable-diffusion/sd-v1-4.ckpt \
+  --outdir $DATA/stable-diffusion/images \
+  --prompt "two robots walking in the woods"
+```
+
+* Change the image resolution with `--W` and `--H` (the default is 512x512)
+* Change the `--seed` to have the images be different (the default seed is 42)
+
+For Jetson Orin Nano and reduced memory usage:
+
+```bash
+python3 optimizedSD/optimized_txt2img.py \
+  --sampler plms --seed 42 \
+  --n_samples 1 --n_iter 1 --ddim_steps 25 \
+  --ckpt $DATA/stable-diffusion/sd-v1-4.ckpt \
+  --outdir $DATA/stable-diffusion/images \
+  --prompt "a photograph of an astronaut riding a horse"
+```
+
+To run these steps from a script, see [`stable-diffusion/test.sh`](/packages/diffusion/stable-diffusion/test.sh) 
 </details>
 
 <details open>

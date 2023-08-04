@@ -1,7 +1,7 @@
 #---
 # name: stable-diffusion-webui
 # group: diffusion
-# depends: [pytorch, torchvision, opencv]
+# depends: [pytorch, torchvision, opencv, xformers]
 # requires: '>=34.1.0'
 # notes: disabled on JetPack 4
 #---
