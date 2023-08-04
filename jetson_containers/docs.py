@@ -100,9 +100,11 @@ def generate_package_docs(packages, root, repo, simulate=False):
             if os.path.isfile(docs_path):
                 with open(docs_path) as file:
                     docs = file.read()
-            else:
-                txt = docs + "\n"
-                docs = ""
+            #else:
+            #    txt = docs + "\n"
+            #    docs = ""
+            
+            txt += docs + "\n"
 
         txt += "<details open>\n"
         txt += "<summary><b>CONTAINERS</b></summary>\n<br>\n\n"
@@ -227,11 +229,11 @@ def generate_package_docs(packages, root, repo, simulate=False):
         run_txt += "The dependencies from above will be built into the container, and it'll be tested during.  See [`./build.sh --help`](/jetson_containers/build.py) for build options.\n"
         run_txt += "</details>\n"
         
-        if docs:
-            txt += "\n<details open>\n"
-            txt += "<summary><b>CONTAINER DOCS</b></summary>\n<br>\n\n"
-            txt += docs + "\n"
-            txt += "</details>\n"
+        #if docs:
+        #    txt += "\n<details open>\n"
+        #    txt += "<summary><b>CONTAINER DOCS</b></summary>\n<br>\n\n"
+        #    txt += docs + "\n"
+        #    txt += "</details>\n"
             
         txt += run_txt
         

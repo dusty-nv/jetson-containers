@@ -1,38 +1,5 @@
 # stable-diffusion
 
-<details open>
-<summary><b>CONTAINERS</b></summary>
-<br>
-
-| **`stable-diffusion`** | |
-| :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`stable-diffusion_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/stable-diffusion_jp51.yml?label=stable-diffusion:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/stable-diffusion_jp51.yml) |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`bitsandbytes`](/packages/llm/bitsandbytes) [`transformers`](/packages/llm/transformers) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`l4t-diffusion`](/packages/l4t/l4t-diffusion) |
-| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/stable-diffusion:r35.2.1`](https://hub.docker.com/r/dustynv/stable-diffusion/tags) `(2023-07-31, 5.6GB)` |
-| &nbsp;&nbsp;&nbsp;Notes | disabled on JetPack 4 |
-
-</details>
-
-<details open>
-<summary><b>CONTAINER IMAGES</b></summary>
-<br>
-
-| Repository/Tag | Date | Arch | Size |
-| :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/stable-diffusion:r35.2.1`](https://hub.docker.com/r/dustynv/stable-diffusion/tags) | `2023-07-31` | `arm64` | `5.6GB` |
-
-> <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
-> <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
-> <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R35.x containers can run on other versions of L4T R35.x (JetPack 5.1+)</sub><br>
-</details>
-
-<details open>
-<summary><b>CONTAINER DOCS</b></summary>
-<br>
-
 
 * https://github.com/CompVis/stable-diffusion (installed under `/opt/stable-diffusion`)
 * with memory optimizations from https://github.com/basujindal/stable-diffusion (`/opt/stable-diffusion/optimizedSD`)
@@ -85,6 +52,33 @@ python3 optimizedSD/optimized_txt2img.py \
 ```
 
 To run these steps from a script, see [`stable-diffusion/test.sh`](/packages/diffusion/stable-diffusion/test.sh) 
+<details open>
+<summary><b>CONTAINERS</b></summary>
+<br>
+
+| **`stable-diffusion`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Builds | [![`stable-diffusion_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/stable-diffusion_jp51.yml?label=stable-diffusion:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/stable-diffusion_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`bitsandbytes`](/packages/llm/bitsandbytes) [`transformers`](/packages/llm/transformers) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`l4t-diffusion`](/packages/l4t/l4t-diffusion) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/stable-diffusion:r35.2.1`](https://hub.docker.com/r/dustynv/stable-diffusion/tags) `(2023-07-31, 5.6GB)` |
+| &nbsp;&nbsp;&nbsp;Notes | disabled on JetPack 4 |
+
+</details>
+
+<details open>
+<summary><b>CONTAINER IMAGES</b></summary>
+<br>
+
+| Repository/Tag | Date | Arch | Size |
+| :-- | :--: | :--: | :--: |
+| &nbsp;&nbsp;[`dustynv/stable-diffusion:r35.2.1`](https://hub.docker.com/r/dustynv/stable-diffusion/tags) | `2023-07-31` | `arm64` | `5.6GB` |
+
+> <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
+> <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
+> <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R35.x containers can run on other versions of L4T R35.x (JetPack 5.1+)</sub><br>
 </details>
 
 <details open>
