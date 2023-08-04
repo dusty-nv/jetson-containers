@@ -1,28 +1,30 @@
 # stable-diffusion-webui
 
+> [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 <details open>
-<summary><b>CONTAINERS</b></summary>
+<summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
 | **`stable-diffusion-webui`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`stable-diffusion-webui_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/stable-diffusion-webui_jp51.yml?label=stable-diffusion-webui:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/stable-diffusion-webui_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`opencv`](/packages/opencv) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`opencv`](/packages/opencv) [`xformers`](/packages/llm/xformers) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-diffusion`](/packages/l4t/l4t-diffusion) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/stable-diffusion-webui:r35.2.1`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) `(2023-07-31, 6.4GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/stable-diffusion-webui:r35.2.1`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) `(2023-07-31, 6.4GB)`<br>[`dustynv/stable-diffusion-webui:r35.3.1`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) `(2023-08-04, 6.5GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | disabled on JetPack 4 |
 
 </details>
 
 <details open>
-<summary><b>CONTAINER IMAGES</b></summary>
+<summary><b><a id="images">CONTAINER IMAGES</a></b></summary>
 <br>
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/stable-diffusion-webui:r35.2.1`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) | `2023-07-31` | `arm64` | `6.4GB` |
+| &nbsp;&nbsp;[`dustynv/stable-diffusion-webui:r35.3.1`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) | `2023-08-04` | `arm64` | `6.5GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -30,7 +32,7 @@
 </details>
 
 <details open>
-<summary><b>RUN CONTAINER</b></summary>
+<summary><b><a id="run">RUN CONTAINER</a></b></summary>
 <br>
 
 To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/docs/run.md#autotag) helpers or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
@@ -39,10 +41,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag stable-diffusion-webui)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/stable-diffusion-webui:r35.2.1
+./run.sh dustynv/stable-diffusion-webui:r35.3.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/stable-diffusion-webui:r35.2.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/stable-diffusion-webui:r35.3.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
@@ -58,7 +60,7 @@ To launch the container running a command, as opposed to an interactive shell:
 You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
 </details>
 <details open>
-<summary><b>BUILD CONTAINER</b></summary>
+<summary><b><a id="build">BUILD CONTAINER</b></summary>
 <br>
 
 If you use [`autotag`](/docs/run.md#autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do the [system setup](/docs/setup.md), then run:

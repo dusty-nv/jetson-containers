@@ -1,10 +1,11 @@
 # pytorch
 
+> [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 Containers for PyTorch with CUDA support.
 Note that the [`l4t-pytorch`](/packages/l4t/l4t-pytorch) containers also include PyTorch, torchvision, and torchaudio.
 
 <details open>
-<summary><b>CONTAINERS</b></summary>
+<summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
 | **`pytorch:2.1`** | |
@@ -22,7 +23,7 @@ Note that the [`l4t-pytorch`](/packages/l4t/l4t-pytorch) containers also include
 | &nbsp;&nbsp;&nbsp;Builds | [![`pytorch-20_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/pytorch-20_jp51.yml?label=pytorch-20:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/pytorch-20_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`auto-gptq`](/packages/llm/auto-gptq) [`awq`](/packages/llm/awq) [`bitsandbytes`](/packages/llm/bitsandbytes) [`exllama`](/packages/llm/exllama) [`gptq-for-llama`](/packages/llm/gptq-for-llama) [`l4t-diffusion`](/packages/l4t/l4t-diffusion) [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-pytorch`](/packages/l4t/l4t-pytorch) [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`nemo`](/packages/nemo) [`optimum`](/packages/llm/optimum) [`stable-diffusion`](/packages/diffusion/stable-diffusion) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) [`text-generation-inference`](/packages/llm/text-generation-inference) [`text-generation-webui`](/packages/llm/text-generation-webui) [`torch2trt`](/packages/pytorch/torch2trt) [`torch_tensorrt`](/packages/pytorch/torch_tensorrt) [`torchaudio`](/packages/pytorch/torchaudio) [`torchvision`](/packages/pytorch/torchvision) [`transformers`](/packages/llm/transformers) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`auto-gptq`](/packages/llm/auto-gptq) [`awq`](/packages/llm/awq) [`bitsandbytes`](/packages/llm/bitsandbytes) [`exllama`](/packages/llm/exllama) [`gptq-for-llama`](/packages/llm/gptq-for-llama) [`l4t-diffusion`](/packages/l4t/l4t-diffusion) [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-pytorch`](/packages/l4t/l4t-pytorch) [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`nemo`](/packages/nemo) [`optimum`](/packages/llm/optimum) [`stable-diffusion`](/packages/diffusion/stable-diffusion) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) [`text-generation-inference`](/packages/llm/text-generation-inference) [`text-generation-webui`](/packages/llm/text-generation-webui) [`torch2trt`](/packages/pytorch/torch2trt) [`torch_tensorrt`](/packages/pytorch/torch_tensorrt) [`torchaudio`](/packages/pytorch/torchaudio) [`torchvision`](/packages/pytorch/torchvision) [`transformers`](/packages/llm/transformers) [`xformers`](/packages/llm/xformers) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/pytorch:2.0-r35.2.1`](https://hub.docker.com/r/dustynv/pytorch/tags) `(2023-07-31, 5.4GB)`<br>[`dustynv/pytorch:2.0-r35.3.1`](https://hub.docker.com/r/dustynv/pytorch/tags) `(2023-07-30, 5.4GB)` |
 
@@ -74,7 +75,7 @@ Note that the [`l4t-pytorch`](/packages/l4t/l4t-pytorch) containers also include
 </details>
 
 <details open>
-<summary><b>CONTAINER IMAGES</b></summary>
+<summary><b><a id="images">CONTAINER IMAGES</a></b></summary>
 <br>
 
 | Repository/Tag | Date | Arch | Size |
@@ -97,7 +98,7 @@ Note that the [`l4t-pytorch`](/packages/l4t/l4t-pytorch) containers also include
 </details>
 
 <details open>
-<summary><b>RUN CONTAINER</b></summary>
+<summary><b><a id="run">RUN CONTAINER</a></b></summary>
 <br>
 
 To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/docs/run.md#autotag) helpers or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
@@ -125,7 +126,7 @@ To launch the container running a command, as opposed to an interactive shell:
 You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
 </details>
 <details open>
-<summary><b>BUILD CONTAINER</b></summary>
+<summary><b><a id="build">BUILD CONTAINER</b></summary>
 <br>
 
 If you use [`autotag`](/docs/run.md#autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do the [system setup](/docs/setup.md), then run:

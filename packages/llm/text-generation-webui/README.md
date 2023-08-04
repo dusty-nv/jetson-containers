@@ -1,7 +1,8 @@
 # text-generation-webui
 
+> [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 <details open>
-<summary><b>CONTAINERS</b></summary>
+<summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
 | **`text-generation-webui`** | |
@@ -17,7 +18,7 @@
 </details>
 
 <details open>
-<summary><b>CONTAINER IMAGES</b></summary>
+<summary><b><a id="images">CONTAINER IMAGES</a></b></summary>
 <br>
 
 | Repository/Tag | Date | Arch | Size |
@@ -30,7 +31,7 @@
 </details>
 
 <details open>
-<summary><b>RUN CONTAINER</b></summary>
+<summary><b><a id="run">RUN CONTAINER</a></b></summary>
 <br>
 
 To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/docs/run.md#autotag) helpers or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
@@ -58,7 +59,7 @@ To launch the container running a command, as opposed to an interactive shell:
 You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
 </details>
 <details open>
-<summary><b>BUILD CONTAINER</b></summary>
+<summary><b><a id="build">BUILD CONTAINER</b></summary>
 <br>
 
 If you use [`autotag`](/docs/run.md#autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do the [system setup](/docs/setup.md), then run:

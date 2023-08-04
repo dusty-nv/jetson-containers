@@ -1,7 +1,8 @@
 # transformers
 
+> [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 <details open>
-<summary><b>CONTAINERS</b></summary>
+<summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
 | **`transformers`** | |
@@ -9,7 +10,7 @@
 | &nbsp;&nbsp;&nbsp;Builds | [![`transformers_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/transformers_jp51.yml?label=transformers:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/transformers_jp51.yml) [![`transformers_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/transformers_jp46.yml?label=transformers:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/transformers_jp46.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`bitsandbytes`](/packages/llm/bitsandbytes) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`auto-gptq`](/packages/llm/auto-gptq) [`awq`](/packages/llm/awq) [`gptq-for-llama`](/packages/llm/gptq-for-llama) [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`nemo`](/packages/nemo) [`optimum`](/packages/llm/optimum) [`text-generation-inference`](/packages/llm/text-generation-inference) [`text-generation-webui`](/packages/llm/text-generation-webui) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`auto-gptq`](/packages/llm/auto-gptq) [`awq`](/packages/llm/awq) [`gptq-for-llama`](/packages/llm/gptq-for-llama) [`l4t-diffusion`](/packages/l4t/l4t-diffusion) [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`nemo`](/packages/nemo) [`optimum`](/packages/llm/optimum) [`stable-diffusion`](/packages/diffusion/stable-diffusion) [`text-generation-inference`](/packages/llm/text-generation-inference) [`text-generation-webui`](/packages/llm/text-generation-webui) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/transformers:r32.7.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-07-31, 1.1GB)`<br>[`dustynv/transformers:r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-07-29, 5.5GB)`<br>[`dustynv/transformers:r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-07-30, 5.5GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | bitsandbytes dependency added on JetPack5 for 4-bit/8-bit quantization |
@@ -17,7 +18,7 @@
 </details>
 
 <details open>
-<summary><b>CONTAINER IMAGES</b></summary>
+<summary><b><a id="images">CONTAINER IMAGES</a></b></summary>
 <br>
 
 | Repository/Tag | Date | Arch | Size |
@@ -32,7 +33,7 @@
 </details>
 
 <details open>
-<summary><b>RUN CONTAINER</b></summary>
+<summary><b><a id="run">RUN CONTAINER</a></b></summary>
 <br>
 
 To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/docs/run.md#autotag) helpers or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
@@ -60,7 +61,7 @@ To launch the container running a command, as opposed to an interactive shell:
 You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
 </details>
 <details open>
-<summary><b>BUILD CONTAINER</b></summary>
+<summary><b><a id="build">BUILD CONTAINER</b></summary>
 <br>
 
 If you use [`autotag`](/docs/run.md#autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do the [system setup](/docs/setup.md), then run:

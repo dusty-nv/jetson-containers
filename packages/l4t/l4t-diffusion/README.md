@@ -1,25 +1,26 @@
 # l4t-diffusion
 
+> [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 <details open>
-<summary><b>CONTAINERS</b></summary>
+<summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
 | **`l4t-diffusion`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`l4t-diffusion_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/l4t-diffusion_jp51.yml?label=l4t-diffusion:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-diffusion_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`stable-diffusion`](/packages/diffusion/stable-diffusion) [`opencv`](/packages/opencv) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/l4t-diffusion:r35.2.1`](https://hub.docker.com/r/dustynv/l4t-diffusion/tags) `(2023-07-31, 6.4GB)` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`bitsandbytes`](/packages/llm/bitsandbytes) [`transformers`](/packages/llm/transformers) [`stable-diffusion`](/packages/diffusion/stable-diffusion) [`opencv`](/packages/opencv) [`xformers`](/packages/llm/xformers) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/l4t-diffusion:r35.2.1`](https://hub.docker.com/r/dustynv/l4t-diffusion/tags) `(2023-08-04, 6.5GB)` |
 
 </details>
 
 <details open>
-<summary><b>CONTAINER IMAGES</b></summary>
+<summary><b><a id="images">CONTAINER IMAGES</a></b></summary>
 <br>
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/l4t-diffusion:r35.2.1`](https://hub.docker.com/r/dustynv/l4t-diffusion/tags) | `2023-07-31` | `arm64` | `6.4GB` |
+| &nbsp;&nbsp;[`dustynv/l4t-diffusion:r35.2.1`](https://hub.docker.com/r/dustynv/l4t-diffusion/tags) | `2023-08-04` | `arm64` | `6.5GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -27,7 +28,7 @@
 </details>
 
 <details open>
-<summary><b>RUN CONTAINER</b></summary>
+<summary><b><a id="run">RUN CONTAINER</a></b></summary>
 <br>
 
 To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/docs/run.md#autotag) helpers or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
@@ -55,7 +56,7 @@ To launch the container running a command, as opposed to an interactive shell:
 You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
 </details>
 <details open>
-<summary><b>BUILD CONTAINER</b></summary>
+<summary><b><a id="build">BUILD CONTAINER</b></summary>
 <br>
 
 If you use [`autotag`](/docs/run.md#autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do the [system setup](/docs/setup.md), then run:
