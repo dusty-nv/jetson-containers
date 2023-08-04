@@ -9,14 +9,19 @@ on:
       - '.github/workflows/tensorflow2_jp51.yml'
       - 'packages/tensorflow/*'
       - '!packages/tensorflow/README.md'
+      - '!packages/tensorflow/docs.md'
       - 'packages/build-essential/*'
       - '!packages/build-essential/README.md'
+      - '!packages/build-essential/docs.md'
       - 'packages/python/*'
       - '!packages/python/README.md'
+      - '!packages/python/docs.md'
       - 'packages/numpy/*'
       - '!packages/numpy/README.md'
+      - '!packages/numpy/docs.md'
       - 'packages/protobuf/protobuf_cpp/*'
       - '!packages/protobuf/protobuf_cpp/README.md'
+      - '!packages/protobuf/protobuf_cpp/docs.md'
 jobs:
   tensorflow2_jp51:
     runs-on: [self-hosted, jetson, jp51]

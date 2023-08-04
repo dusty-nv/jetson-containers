@@ -9,10 +9,13 @@ on:
       - '.github/workflows/protobuf-apt_jp51.yml'
       - 'packages/protobuf/protobuf_apt/*'
       - '!packages/protobuf/protobuf_apt/README.md'
+      - '!packages/protobuf/protobuf_apt/docs.md'
       - 'packages/build-essential/*'
       - '!packages/build-essential/README.md'
+      - '!packages/build-essential/docs.md'
       - 'packages/python/*'
       - '!packages/python/README.md'
+      - '!packages/python/docs.md'
 jobs:
   protobuf-apt_jp51:
     runs-on: [self-hosted, jetson, jp51]

@@ -9,16 +9,22 @@ on:
       - '.github/workflows/pytorch-20_jp51.yml'
       - 'packages/pytorch/*'
       - '!packages/pytorch/README.md'
+      - '!packages/pytorch/docs.md'
       - 'packages/build-essential/*'
       - '!packages/build-essential/README.md'
+      - '!packages/build-essential/docs.md'
       - 'packages/python/*'
       - '!packages/python/README.md'
+      - '!packages/python/docs.md'
       - 'packages/numpy/*'
       - '!packages/numpy/README.md'
+      - '!packages/numpy/docs.md'
       - 'packages/cmake/cmake_pip/*'
       - '!packages/cmake/cmake_pip/README.md'
+      - '!packages/cmake/cmake_pip/docs.md'
       - 'packages/onnx/*'
       - '!packages/onnx/README.md'
+      - '!packages/onnx/docs.md'
 jobs:
   pytorch-20_jp51:
     runs-on: [self-hosted, jetson, jp51]

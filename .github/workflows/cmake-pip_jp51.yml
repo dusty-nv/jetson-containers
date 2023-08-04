@@ -9,10 +9,13 @@ on:
       - '.github/workflows/cmake-pip_jp51.yml'
       - 'packages/cmake/cmake_pip/*'
       - '!packages/cmake/cmake_pip/README.md'
+      - '!packages/cmake/cmake_pip/docs.md'
       - 'packages/build-essential/*'
       - '!packages/build-essential/README.md'
+      - '!packages/build-essential/docs.md'
       - 'packages/python/*'
       - '!packages/python/README.md'
+      - '!packages/python/docs.md'
 jobs:
   cmake-pip_jp51:
     runs-on: [self-hosted, jetson, jp51]

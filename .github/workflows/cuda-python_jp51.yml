@@ -9,12 +9,16 @@ on:
       - '.github/workflows/cuda-python_jp51.yml'
       - 'packages/cuda-python/*'
       - '!packages/cuda-python/README.md'
+      - '!packages/cuda-python/docs.md'
       - 'packages/build-essential/*'
       - '!packages/build-essential/README.md'
+      - '!packages/build-essential/docs.md'
       - 'packages/python/*'
       - '!packages/python/README.md'
+      - '!packages/python/docs.md'
       - 'packages/numpy/*'
       - '!packages/numpy/README.md'
+      - '!packages/numpy/docs.md'
 jobs:
   cuda-python_jp51:
     runs-on: [self-hosted, jetson, jp51]

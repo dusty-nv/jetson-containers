@@ -9,10 +9,13 @@ on:
       - '.github/workflows/zed_jp51.yml'
       - 'packages/zed/*'
       - '!packages/zed/README.md'
+      - '!packages/zed/docs.md'
       - 'packages/build-essential/*'
       - '!packages/build-essential/README.md'
+      - '!packages/build-essential/docs.md'
       - 'packages/python/*'
       - '!packages/python/README.md'
+      - '!packages/python/docs.md'
 jobs:
   zed_jp51:
     runs-on: [self-hosted, jetson, jp51]

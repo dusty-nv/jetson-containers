@@ -84,6 +84,7 @@ def generate_workflow(package, root, simulate=False):
         #"jetson_containers/**",
         os.path.join(package['path'].replace(root+'/',''), '*'),
         f"!{os.path.join(package['path'].replace(root+'/',''), 'README.md')}",
+        f"!{os.path.join(package['path'].replace(root+'/',''), 'docs.md')}",
     ]
 
     depends = resolve_dependencies(package.get('depends', []))
@@ -92,6 +93,7 @@ def generate_workflow(package, root, simulate=False):
         depend_pkg = find_package(depend)
         on_paths.append(os.path.join(depend_pkg['path'].replace(root+'/',''), '*'))
         on_paths.append(f"!{os.path.join(depend_pkg['path'].replace(root+'/',''), 'README.md')}")
+        on_paths.append(f"!{os.path.join(depend_pkg['path'].replace(root+'/',''), 'docs.md')}")
         
     txt = f"name: \"{workflow_name}\"\n"
     txt += f"run-name: \"Build {name} (JetPack {JETPACK_VERSION.major}.{JETPACK_VERSION.minor})\"\n"  # update find_package_workflows() if this formatting changes

@@ -9,12 +9,16 @@ on:
       - '.github/workflows/cupy_jp51.yml'
       - 'packages/cupy/*'
       - '!packages/cupy/README.md'
+      - '!packages/cupy/docs.md'
       - 'packages/build-essential/*'
       - '!packages/build-essential/README.md'
+      - '!packages/build-essential/docs.md'
       - 'packages/python/*'
       - '!packages/python/README.md'
+      - '!packages/python/docs.md'
       - 'packages/numpy/*'
       - '!packages/numpy/README.md'
+      - '!packages/numpy/docs.md'
 jobs:
   cupy_jp51:
     runs-on: [self-hosted, jetson, jp51]
