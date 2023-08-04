@@ -3,9 +3,9 @@
 
 Generate images from text (txt2img) or from other images (img2img)
 
-* stable-diffusion: https://github.com/CompVis/stable-diffusion (installed under `/opt/stable-diffusion`)
+* stable-diffusion: https://github.com/CompVis/stable-diffusion (`/opt/stable-diffusion`)
 * with memory optimizations: https://github.com/basujindal/stable-diffusion (`/opt/stable-diffusion/optimizedSD`)
-* tested on `stable-diffusion-1.4` model from https://huggingface.co/CompVis/stable-diffusion-v-1-4-original
+* tested on `stable-diffusion-1.4` model: https://huggingface.co/CompVis/stable-diffusion-v-1-4-original
 
 ### txt2img
 

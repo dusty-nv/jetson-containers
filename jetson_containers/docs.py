@@ -89,6 +89,8 @@ def generate_package_docs(packages, root, repo, simulate=False):
         txt = f"# {pkg_name}\n\n"
         docs = ""
         
+        txt += "[`CONTAINERS`](#user-content-containers)\n"
+        
         for package in pkgs.values():
             if 'docs' in package:
                 docs = package['docs']
@@ -107,7 +109,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
             txt += docs + "\n"
 
         txt += "<details open>\n"
-        txt += "<summary><b>CONTAINERS</b></summary>\n<br>\n\n"
+        txt += '<summary><b><a id="containers">CONTAINERS</a></b></summary>\n<br>\n\n'
         
         for i, name, in enumerate(pkgs):
             package = pkgs[name]

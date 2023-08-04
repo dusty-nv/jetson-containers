@@ -1,13 +1,14 @@
 # stable-diffusion
 
+[`CONTAINERS`](#user-content-containers)
 
 ![a photograph of an astronaut riding a horse](/docs/images/diffusion_astronaut.jpg)
 
 Generate images from text (txt2img) or from other images (img2img)
 
-* stable-diffusion: https://github.com/CompVis/stable-diffusion (installed under `/opt/stable-diffusion`)
+* stable-diffusion: https://github.com/CompVis/stable-diffusion (`/opt/stable-diffusion`)
 * with memory optimizations: https://github.com/basujindal/stable-diffusion (`/opt/stable-diffusion/optimizedSD`)
-* tested on `stable-diffusion-1.4` model from https://huggingface.co/CompVis/stable-diffusion-v-1-4-original
+* tested on `stable-diffusion-1.4` model: https://huggingface.co/CompVis/stable-diffusion-v-1-4-original
 
 ### txt2img
 
@@ -56,7 +57,7 @@ python3 optimizedSD/optimized_txt2img.py \
 
 To run these steps from a script, see [`stable-diffusion/test.sh`](/packages/diffusion/stable-diffusion/test.sh) 
 <details open>
-<summary><b>CONTAINERS</b></summary>
+<summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
 | **`stable-diffusion`** | |
