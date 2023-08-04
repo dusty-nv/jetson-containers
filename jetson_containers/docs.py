@@ -89,7 +89,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
         txt = f"# {pkg_name}\n\n"
         docs = ""
         
-        txt += "[`CONTAINERS`](#user-content-containers)\n"
+        txt += "> [**`CONTAINERS`**](#user-content-containers) [**`IMAGES`**](#user-content-images) [**`RUN`**](#user-content-run) [**`BUILD`**](#user-content-build)\n"
         
         for package in pkgs.values():
             if 'docs' in package:
@@ -170,7 +170,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
         
         # example commands for running the container
         run_txt = "\n<details open>\n"
-        run_txt += "<summary><b>RUN CONTAINER</b></summary>\n<br>\n\n"
+        run_txt += '<summary><b><a id="run">RUN CONTAINER</a></b></summary>\n<br>\n\n'
         run_txt += "To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/docs/run.md#autotag) helpers or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:\n" 
         run_txt += "```bash\n"
         run_txt += "# automatically pull or build a compatible container image\n"
@@ -188,7 +188,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
             run_txt += f"./run.sh {run_img}\n"
             
             txt += "\n<details open>\n"
-            txt += "<summary><b>CONTAINER IMAGES</b></summary>\n<br>\n\n"
+            txt += '<summary><b><a id="images">CONTAINER IMAGES</a></b></summary>\n<br>\n\n'
             txt += "| Repository/Tag | Date | Arch | Size |\n"
             txt += "| :-- | :--: | :--: | :--: |\n"
             
@@ -223,7 +223,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
         run_txt += "</details>\n"
         
         run_txt += "<details open>\n"
-        run_txt += "<summary><b>BUILD CONTAINER</b></summary>\n<br>\n\n"
+        run_txt += '<summary><b><a id="build">BUILD CONTAINER</b></summary>\n<br>\n\n'
         run_txt += "If you use [`autotag`](/docs/run.md#autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do the [system setup](/docs/setup.md), then run:\n"
         run_txt += "```bash\n"
         run_txt += f"./build.sh {pkg_name}\n"
