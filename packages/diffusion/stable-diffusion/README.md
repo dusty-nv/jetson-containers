@@ -2,6 +2,7 @@
 
 > [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 
+
 ![a photograph of an astronaut riding a horse](/docs/images/diffusion_astronaut.jpg)
 
 Generate images from text (txt2img) or from other images (img2img)
@@ -67,7 +68,7 @@ To run these steps from a script, see [`stable-diffusion/test.sh`](/packages/dif
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`bitsandbytes`](/packages/llm/bitsandbytes) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-diffusion`](/packages/l4t/l4t-diffusion) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/stable-diffusion:r35.2.1`](https://hub.docker.com/r/dustynv/stable-diffusion/tags) `(2023-07-31, 5.6GB)`<br>[`dustynv/stable-diffusion:r35.3.1`](https://hub.docker.com/r/dustynv/stable-diffusion/tags) `(2023-08-04, 5.7GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/stable-diffusion:r35.2.1`](https://hub.docker.com/r/dustynv/stable-diffusion/tags) `(2023-08-04, 5.7GB)`<br>[`dustynv/stable-diffusion:r35.3.1`](https://hub.docker.com/r/dustynv/stable-diffusion/tags) `(2023-08-04, 5.7GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | disabled on JetPack 4 |
 
 </details>
@@ -78,7 +79,7 @@ To run these steps from a script, see [`stable-diffusion/test.sh`](/packages/dif
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/stable-diffusion:r35.2.1`](https://hub.docker.com/r/dustynv/stable-diffusion/tags) | `2023-07-31` | `arm64` | `5.6GB` |
+| &nbsp;&nbsp;[`dustynv/stable-diffusion:r35.2.1`](https://hub.docker.com/r/dustynv/stable-diffusion/tags) | `2023-08-04` | `arm64` | `5.7GB` |
 | &nbsp;&nbsp;[`dustynv/stable-diffusion:r35.3.1`](https://hub.docker.com/r/dustynv/stable-diffusion/tags) | `2023-08-04` | `arm64` | `5.7GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
@@ -96,10 +97,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag stable-diffusion)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/stable-diffusion:r35.3.1
+./run.sh dustynv/stable-diffusion:r35.2.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/stable-diffusion:r35.3.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/stable-diffusion:r35.2.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
