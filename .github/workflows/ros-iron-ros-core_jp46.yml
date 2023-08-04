@@ -9,16 +9,22 @@ on:
       - '.github/workflows/ros-iron-ros-core_jp46.yml'
       - 'packages/ros/*'
       - '!packages/ros/README.md'
+      - '!packages/ros/docs.md'
       - 'packages/build-essential/*'
       - '!packages/build-essential/README.md'
+      - '!packages/build-essential/docs.md'
       - 'packages/python/*'
       - '!packages/python/README.md'
+      - '!packages/python/docs.md'
       - 'packages/cmake/cmake_pip/*'
       - '!packages/cmake/cmake_pip/README.md'
+      - '!packages/cmake/cmake_pip/docs.md'
       - 'packages/numpy/*'
       - '!packages/numpy/README.md'
+      - '!packages/numpy/docs.md'
       - 'packages/opencv/*'
       - '!packages/opencv/README.md'
+      - '!packages/opencv/docs.md'
 jobs:
   ros-iron-ros-core_jp46:
     runs-on: [self-hosted, jetson, jp46]

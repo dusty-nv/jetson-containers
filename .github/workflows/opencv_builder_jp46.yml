@@ -9,12 +9,16 @@ on:
       - '.github/workflows/opencv_builder_jp46.yml'
       - 'packages/opencv/opencv_builder/*'
       - '!packages/opencv/opencv_builder/README.md'
+      - '!packages/opencv/opencv_builder/docs.md'
       - 'packages/build-essential/*'
       - '!packages/build-essential/README.md'
+      - '!packages/build-essential/docs.md'
       - 'packages/python/*'
       - '!packages/python/README.md'
+      - '!packages/python/docs.md'
       - 'packages/cmake/cmake_pip/*'
       - '!packages/cmake/cmake_pip/README.md'
+      - '!packages/cmake/cmake_pip/docs.md'
 jobs:
   opencv_builder_jp46:
     runs-on: [self-hosted, jetson, jp46]

@@ -9,8 +9,10 @@ on:
       - '.github/workflows/python_jp46.yml'
       - 'packages/python/*'
       - '!packages/python/README.md'
+      - '!packages/python/docs.md'
       - 'packages/build-essential/*'
       - '!packages/build-essential/README.md'
+      - '!packages/build-essential/docs.md'
 jobs:
   python_jp46:
     runs-on: [self-hosted, jetson, jp46]

@@ -9,8 +9,10 @@ on:
       - '.github/workflows/cmake-apt_jp46.yml'
       - 'packages/cmake/cmake_apt/*'
       - '!packages/cmake/cmake_apt/README.md'
+      - '!packages/cmake/cmake_apt/docs.md'
       - 'packages/build-essential/*'
       - '!packages/build-essential/README.md'
+      - '!packages/build-essential/docs.md'
 jobs:
   cmake-apt_jp46:
     runs-on: [self-hosted, jetson, jp46]

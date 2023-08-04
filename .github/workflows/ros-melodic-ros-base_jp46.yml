@@ -9,12 +9,16 @@ on:
       - '.github/workflows/ros-melodic-ros-base_jp46.yml'
       - 'packages/ros/*'
       - '!packages/ros/README.md'
+      - '!packages/ros/docs.md'
       - 'packages/build-essential/*'
       - '!packages/build-essential/README.md'
+      - '!packages/build-essential/docs.md'
+      - 'packages/cmake/cmake_apt/*'
+      - '!packages/cmake/cmake_apt/README.md'
+      - '!packages/cmake/cmake_apt/docs.md'
       - 'packages/python/*'
       - '!packages/python/README.md'
-      - 'packages/cmake/cmake_pip/*'
-      - '!packages/cmake/cmake_pip/README.md'
+      - '!packages/python/docs.md'
 jobs:
   ros-melodic-ros-base_jp46:
     runs-on: [self-hosted, jetson, jp46]

@@ -9,10 +9,13 @@ on:
       - '.github/workflows/tritonserver_jp46.yml'
       - 'packages/tritonserver/*'
       - '!packages/tritonserver/README.md'
+      - '!packages/tritonserver/docs.md'
       - 'packages/build-essential/*'
       - '!packages/build-essential/README.md'
+      - '!packages/build-essential/docs.md'
       - 'packages/python/*'
       - '!packages/python/README.md'
+      - '!packages/python/docs.md'
 jobs:
   tritonserver_jp46:
     runs-on: [self-hosted, jetson, jp46]
