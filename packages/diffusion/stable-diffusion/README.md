@@ -1,10 +1,13 @@
 # stable-diffusion
 
 
-* https://github.com/CompVis/stable-diffusion (installed under `/opt/stable-diffusion`)
-* with memory optimizations from https://github.com/basujindal/stable-diffusion (`/opt/stable-diffusion/optimizedSD`)
+![a photograph of an astronaut riding a horse](/docs/images/diffusion_astronaut.jpg)
 
-> tested on `stable-diffusion-1.4` from https://huggingface.co/CompVis/stable-diffusion-v-1-4-original
+Generate images from text (txt2img) or from other images (img2img)
+
+* stable-diffusion: https://github.com/CompVis/stable-diffusion (installed under `/opt/stable-diffusion`)
+* with memory optimizations: https://github.com/basujindal/stable-diffusion (`/opt/stable-diffusion/optimizedSD`)
+* tested on `stable-diffusion-1.4` model from https://huggingface.co/CompVis/stable-diffusion-v-1-4-original
 
 ### txt2img
 
@@ -18,10 +21,10 @@ wget https://huggingface.co/CompVis/stable-diffusion-v-1-4-original/resolve/main
 Then run this in the container to generate images (by default, six 512x512 images with 50 refinement steps)
 
 ```bash
-cd stable-diffusion
+cd /opt/stable-diffusion
 python3 scripts/txt2img.py --plms \
-  --ckpt $DATA/stable-diffusion/sd-v1-4.ckpt \
-  --outdir $DATA/stable-diffusion/images \
+  --ckpt /data/stable-diffusion/sd-v1-4.ckpt \
+  --outdir /data/stable-diffusion/images \
   --prompt "a photograph of an astronaut riding a horse"
 ```
 
@@ -32,8 +35,8 @@ For just one 512x512 image with 25 steps:
 ```bash
 python3 scripts/txt2img.py --plms \
   --n_samples 1 --n_iter 1 --ddim_steps 25 \
-  --ckpt $DATA/stable-diffusion/sd-v1-4.ckpt \
-  --outdir $DATA/stable-diffusion/images \
+  --ckpt /data/stable-diffusion/sd-v1-4.ckpt \
+  --outdir /data/stable-diffusion/images \
   --prompt "two robots walking in the woods"
 ```
 
@@ -46,8 +49,8 @@ For Jetson Orin Nano and reduced memory usage:
 python3 optimizedSD/optimized_txt2img.py \
   --sampler plms --seed 42 \
   --n_samples 1 --n_iter 1 --ddim_steps 25 \
-  --ckpt $DATA/stable-diffusion/sd-v1-4.ckpt \
-  --outdir $DATA/stable-diffusion/images \
+  --ckpt /data/stable-diffusion/sd-v1-4.ckpt \
+  --outdir /data/stable-diffusion/images \
   --prompt "a photograph of an astronaut riding a horse"
 ```
 
@@ -63,7 +66,7 @@ To run these steps from a script, see [`stable-diffusion/test.sh`](/packages/dif
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`bitsandbytes`](/packages/llm/bitsandbytes) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-diffusion`](/packages/l4t/l4t-diffusion) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/stable-diffusion:r35.2.1`](https://hub.docker.com/r/dustynv/stable-diffusion/tags) `(2023-07-31, 5.6GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/stable-diffusion:r35.2.1`](https://hub.docker.com/r/dustynv/stable-diffusion/tags) `(2023-07-31, 5.6GB)`<br>[`dustynv/stable-diffusion:r35.3.1`](https://hub.docker.com/r/dustynv/stable-diffusion/tags) `(2023-08-04, 5.7GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | disabled on JetPack 4 |
 
 </details>
@@ -75,6 +78,7 @@ To run these steps from a script, see [`stable-diffusion/test.sh`](/packages/dif
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/stable-diffusion:r35.2.1`](https://hub.docker.com/r/dustynv/stable-diffusion/tags) | `2023-07-31` | `arm64` | `5.6GB` |
+| &nbsp;&nbsp;[`dustynv/stable-diffusion:r35.3.1`](https://hub.docker.com/r/dustynv/stable-diffusion/tags) | `2023-08-04` | `arm64` | `5.7GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -91,10 +95,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag stable-diffusion)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/stable-diffusion:r35.2.1
+./run.sh dustynv/stable-diffusion:r35.3.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/stable-diffusion:r35.2.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/stable-diffusion:r35.3.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

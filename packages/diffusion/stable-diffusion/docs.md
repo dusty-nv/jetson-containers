@@ -1,8 +1,11 @@
 
-* https://github.com/CompVis/stable-diffusion (installed under `/opt/stable-diffusion`)
-* with memory optimizations from https://github.com/basujindal/stable-diffusion (`/opt/stable-diffusion/optimizedSD`)
+![a photograph of an astronaut riding a horse](/docs/images/diffusion_astronaut.jpg)
 
-> tested on `stable-diffusion-1.4` from https://huggingface.co/CompVis/stable-diffusion-v-1-4-original
+Generate images from text (txt2img) or from other images (img2img)
+
+* stable-diffusion: https://github.com/CompVis/stable-diffusion (installed under `/opt/stable-diffusion`)
+* with memory optimizations: https://github.com/basujindal/stable-diffusion (`/opt/stable-diffusion/optimizedSD`)
+* tested on `stable-diffusion-1.4` model from https://huggingface.co/CompVis/stable-diffusion-v-1-4-original
 
 ### txt2img
 
@@ -16,10 +19,10 @@ wget https://huggingface.co/CompVis/stable-diffusion-v-1-4-original/resolve/main
 Then run this in the container to generate images (by default, six 512x512 images with 50 refinement steps)
 
 ```bash
-cd stable-diffusion
+cd /opt/stable-diffusion
 python3 scripts/txt2img.py --plms \
-  --ckpt $DATA/stable-diffusion/sd-v1-4.ckpt \
-  --outdir $DATA/stable-diffusion/images \
+  --ckpt /data/stable-diffusion/sd-v1-4.ckpt \
+  --outdir /data/stable-diffusion/images \
   --prompt "a photograph of an astronaut riding a horse"
 ```
 
@@ -30,8 +33,8 @@ For just one 512x512 image with 25 steps:
 ```bash
 python3 scripts/txt2img.py --plms \
   --n_samples 1 --n_iter 1 --ddim_steps 25 \
-  --ckpt $DATA/stable-diffusion/sd-v1-4.ckpt \
-  --outdir $DATA/stable-diffusion/images \
+  --ckpt /data/stable-diffusion/sd-v1-4.ckpt \
+  --outdir /data/stable-diffusion/images \
   --prompt "two robots walking in the woods"
 ```
 
@@ -44,8 +47,8 @@ For Jetson Orin Nano and reduced memory usage:
 python3 optimizedSD/optimized_txt2img.py \
   --sampler plms --seed 42 \
   --n_samples 1 --n_iter 1 --ddim_steps 25 \
-  --ckpt $DATA/stable-diffusion/sd-v1-4.ckpt \
-  --outdir $DATA/stable-diffusion/images \
+  --ckpt /data/stable-diffusion/sd-v1-4.ckpt \
+  --outdir /data/stable-diffusion/images \
   --prompt "a photograph of an astronaut riding a horse"
 ```
 
