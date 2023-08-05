@@ -89,7 +89,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
         txt = f"# {pkg_name}\n\n"
         docs = ""
         
-        txt += "> &gt; [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)\n\n"
+        txt += "> [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)\n\n"
         
         for package in pkgs.values():
             if 'docs' in package:
