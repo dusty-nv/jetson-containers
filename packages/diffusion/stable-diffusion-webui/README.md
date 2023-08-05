@@ -13,11 +13,11 @@ This container has a default run command that will automatically start the webse
 
 ```bash
 cd /opt/stable-diffusion-webui && python3 launch.py \
-	--data=/data/models/stable-diffusion \
-	--enable-insecure-extension-access \
-	--xformers \
-	--listen \
-	--port=7860
+     --data=/data/models/stable-diffusion \
+     --enable-insecure-extension-access \
+     --xformers \
+     --listen \
+     --port=7860
 ```
 
 After starting the container, you can navigate your browser to `http://$IP_ADDRESS:7860` (substitute the address or hostname of your device).  The server will automatically download the default model ([`stable-diffusion-1.5`](https://huggingface.co/runwayml/stable-diffusion-v1-5)) during startup.
