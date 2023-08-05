@@ -13,7 +13,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`ros:melodic-desktop`](/packages/ros) [`ros:melodic-ros-base`](/packages/ros) [`ros:melodic-ros-core`](/packages/ros) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/cmake:apt-r32.7.1`](https://hub.docker.com/r/dustynv/cmake/tags) `(2023-07-29, 0.3GB)`<br>[`dustynv/cmake:apt-r35.3.1`](https://hub.docker.com/r/dustynv/cmake/tags) `(2023-07-29, 5.0GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/cmake:apt-r32.7.1`](https://hub.docker.com/r/dustynv/cmake/tags) `(2023-08-04, 0.3GB)`<br>[`dustynv/cmake:apt-r35.2.1`](https://hub.docker.com/r/dustynv/cmake/tags) `(2023-08-04, 4.9GB)`<br>[`dustynv/cmake:apt-r35.3.1`](https://hub.docker.com/r/dustynv/cmake/tags) `(2023-07-29, 5.0GB)`<br>[`dustynv/cmake:apt-r35.4.1`](https://hub.docker.com/r/dustynv/cmake/tags) `(2023-08-04, 4.9GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | upgrade cmake with apt |
 
 </details>
