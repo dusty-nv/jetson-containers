@@ -1,8 +1,9 @@
 #---
 # name: stable-diffusion-webui
 # group: diffusion
-# depends: [pytorch, torchvision, opencv, xformers]
+# depends: [pytorch, torchvision, transformers, xformers, pycuda, opencv]
 # requires: '>=34.1.0'
+# docs: docs.md
 # notes: disabled on JetPack 4
 #---
 ARG BASE_IMAGE
@@ -21,3 +22,7 @@ RUN cd /opt && ./opencv_install.sh
 
 # set the cache dir for models
 ENV DIFFUSERS_CACHE=/data/models/diffusers
+
+# default start-up command
+CMD /bin/bash -c "cd /opt/stable-diffusion-webui && python3 launch.py --data=/data/models/stable-diffusion --enable-insecure-extension-access --xformers --listen --port=7860"
+
