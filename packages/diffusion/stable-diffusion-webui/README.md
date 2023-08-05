@@ -5,8 +5,8 @@
 
 ![two robots sitting by a lake by a mountain](/docs/images/diffusion_webui.jpg)
 
-* stable-diffusion-webui — https://github.com/AUTOMATIC1111/stable-diffusion-webui (`/opt/stable-diffusion-webui`)
-* with TensorRT extension — https://github.com/AUTOMATIC1111/stable-diffusion-webui-tensorrt 
+* stable-diffusion-webui: (https://github.com/AUTOMATIC1111/stable-diffusion-webui) (`/opt/stable-diffusion-webui`)
+* with TensorRT extension: https://github.com/AUTOMATIC1111/stable-diffusion-webui-tensorrt 
 * faster performance than the base [`stable-diffusion/txt2img.py`](/packages/diffusion/stable-diffusion) script
 
 This container has a default run command that will automatically start the webserver like this:
@@ -40,7 +40,7 @@ To run image generation from a script (`txt2img.py`) as opposed to the web UI, s
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`bitsandbytes`](/packages/llm/bitsandbytes) [`transformers`](/packages/llm/transformers) [`xformers`](/packages/llm/xformers) [`pycuda`](/packages/pycuda) [`opencv`](/packages/opencv) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-diffusion`](/packages/l4t/l4t-diffusion) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/stable-diffusion-webui:r35.2.1`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) `(2023-08-04, 6.5GB)`<br>[`dustynv/stable-diffusion-webui:r35.3.1`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) `(2023-08-04, 6.5GB)`<br>[`dustynv/stable-diffusion-webui:r35.4.1`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) `(2023-08-04, 6.5GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/stable-diffusion-webui:r35.2.1`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) `(2023-08-05, 6.5GB)`<br>[`dustynv/stable-diffusion-webui:r35.3.1`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) `(2023-08-04, 6.5GB)`<br>[`dustynv/stable-diffusion-webui:r35.4.1`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) `(2023-08-04, 6.5GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | disabled on JetPack 4 |
 
 </details>
@@ -51,7 +51,7 @@ To run image generation from a script (`txt2img.py`) as opposed to the web UI, s
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/stable-diffusion-webui:r35.2.1`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) | `2023-08-04` | `arm64` | `6.5GB` |
+| &nbsp;&nbsp;[`dustynv/stable-diffusion-webui:r35.2.1`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) | `2023-08-05` | `arm64` | `6.5GB` |
 | &nbsp;&nbsp;[`dustynv/stable-diffusion-webui:r35.3.1`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) | `2023-08-04` | `arm64` | `6.5GB` |
 | &nbsp;&nbsp;[`dustynv/stable-diffusion-webui:r35.4.1`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) | `2023-08-04` | `arm64` | `6.5GB` |
 
@@ -70,10 +70,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag stable-diffusion-webui)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/stable-diffusion-webui:r35.4.1
+./run.sh dustynv/stable-diffusion-webui:r35.2.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/stable-diffusion-webui:r35.4.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/stable-diffusion-webui:r35.2.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

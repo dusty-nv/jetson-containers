@@ -1,8 +1,8 @@
 
 ![two robots sitting by a lake by a mountain](/docs/images/diffusion_webui.jpg)
 
-* stable-diffusion-webui — https://github.com/AUTOMATIC1111/stable-diffusion-webui (`/opt/stable-diffusion-webui`)
-* with TensorRT extension — https://github.com/AUTOMATIC1111/stable-diffusion-webui-tensorrt 
+* stable-diffusion-webui: (https://github.com/AUTOMATIC1111/stable-diffusion-webui) (`/opt/stable-diffusion-webui`)
+* with TensorRT extension: https://github.com/AUTOMATIC1111/stable-diffusion-webui-tensorrt 
 * faster performance than the base [`stable-diffusion/txt2img.py`](/packages/diffusion/stable-diffusion) script
 
 This container has a default run command that will automatically start the webserver like this:
