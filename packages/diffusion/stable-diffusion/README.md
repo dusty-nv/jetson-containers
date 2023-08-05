@@ -16,7 +16,6 @@ Generate images from text (txt2img) or from other images (img2img)
 Download the [stable-diffusion-1.4](https://huggingface.co/CompVis/stable-diffusion-v-1-4-original) model (`sd-v1-4.ckpt`)
 
 ```bash
-mkdir -p /data/models/stable-diffusion /data/images/stable-diffusion
 wget https://huggingface.co/CompVis/stable-diffusion-v-1-4-original/resolve/main/sd-v1-4.ckpt -O /data/models/stable-diffusion
 ```
 
@@ -25,8 +24,8 @@ Then run this in the container to generate images (by default, six 512x512 image
 ```bash
 cd /opt/stable-diffusion
 python3 scripts/txt2img.py --plms \
-  --ckpt /data/stable-diffusion/sd-v1-4.ckpt \
-  --outdir /data/stable-diffusion/images \
+  --ckpt /data/models/stable-diffusion/sd-v1-4.ckpt \
+  --outdir /data/images/stable-diffusion \
   --prompt "a photograph of an astronaut riding a horse"
 ```
 
@@ -37,8 +36,8 @@ For just one 512x512 image with 25 steps:
 ```bash
 python3 scripts/txt2img.py --plms \
   --n_samples 1 --n_iter 1 --ddim_steps 25 \
-  --ckpt /data/stable-diffusion/sd-v1-4.ckpt \
-  --outdir /data/stable-diffusion/images \
+  --ckpt /data/models/stable-diffusion/sd-v1-4.ckpt \
+  --outdir /data/images/stable-diffusion \
   --prompt "two robots walking in the woods"
 ```
 
@@ -51,8 +50,8 @@ For Jetson Orin Nano and reduced memory usage:
 python3 optimizedSD/optimized_txt2img.py \
   --sampler plms --seed 42 \
   --n_samples 1 --n_iter 1 --ddim_steps 25 \
-  --ckpt /data/stable-diffusion/sd-v1-4.ckpt \
-  --outdir /data/stable-diffusion/images \
+  --ckpt /data/models/stable-diffusion/sd-v1-4.ckpt \
+  --outdir /data/images/stable-diffusion \
   --prompt "a photograph of an astronaut riding a horse"
 ```
 
@@ -68,7 +67,7 @@ To run these steps from a script, see [`stable-diffusion/test.sh`](/packages/dif
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`bitsandbytes`](/packages/llm/bitsandbytes) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-diffusion`](/packages/l4t/l4t-diffusion) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/stable-diffusion:r35.2.1`](https://hub.docker.com/r/dustynv/stable-diffusion/tags) `(2023-08-04, 5.7GB)`<br>[`dustynv/stable-diffusion:r35.3.1`](https://hub.docker.com/r/dustynv/stable-diffusion/tags) `(2023-08-04, 5.7GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/stable-diffusion:r35.2.1`](https://hub.docker.com/r/dustynv/stable-diffusion/tags) `(2023-08-04, 5.7GB)`<br>[`dustynv/stable-diffusion:r35.3.1`](https://hub.docker.com/r/dustynv/stable-diffusion/tags) `(2023-08-04, 5.7GB)`<br>[`dustynv/stable-diffusion:r35.4.1`](https://hub.docker.com/r/dustynv/stable-diffusion/tags) `(2023-08-04, 5.7GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | disabled on JetPack 4 |
 
 </details>
@@ -81,6 +80,7 @@ To run these steps from a script, see [`stable-diffusion/test.sh`](/packages/dif
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/stable-diffusion:r35.2.1`](https://hub.docker.com/r/dustynv/stable-diffusion/tags) | `2023-08-04` | `arm64` | `5.7GB` |
 | &nbsp;&nbsp;[`dustynv/stable-diffusion:r35.3.1`](https://hub.docker.com/r/dustynv/stable-diffusion/tags) | `2023-08-04` | `arm64` | `5.7GB` |
+| &nbsp;&nbsp;[`dustynv/stable-diffusion:r35.4.1`](https://hub.docker.com/r/dustynv/stable-diffusion/tags) | `2023-08-04` | `arm64` | `5.7GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -97,10 +97,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag stable-diffusion)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/stable-diffusion:r35.2.1
+./run.sh dustynv/stable-diffusion:r35.4.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/stable-diffusion:r35.2.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/stable-diffusion:r35.4.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
