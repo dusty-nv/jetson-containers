@@ -12,7 +12,6 @@ Generate images from text (txt2img) or from other images (img2img)
 Download the [stable-diffusion-1.4](https://huggingface.co/CompVis/stable-diffusion-v-1-4-original) model (`sd-v1-4.ckpt`)
 
 ```bash
-mkdir -p /data/models/stable-diffusion /data/images/stable-diffusion
 wget https://huggingface.co/CompVis/stable-diffusion-v-1-4-original/resolve/main/sd-v1-4.ckpt -O /data/models/stable-diffusion
 ```
 
@@ -21,8 +20,8 @@ Then run this in the container to generate images (by default, six 512x512 image
 ```bash
 cd /opt/stable-diffusion
 python3 scripts/txt2img.py --plms \
-  --ckpt /data/stable-diffusion/sd-v1-4.ckpt \
-  --outdir /data/stable-diffusion/images \
+  --ckpt /data/models/stable-diffusion/sd-v1-4.ckpt \
+  --outdir /data/images/stable-diffusion \
   --prompt "a photograph of an astronaut riding a horse"
 ```
 
@@ -33,8 +32,8 @@ For just one 512x512 image with 25 steps:
 ```bash
 python3 scripts/txt2img.py --plms \
   --n_samples 1 --n_iter 1 --ddim_steps 25 \
-  --ckpt /data/stable-diffusion/sd-v1-4.ckpt \
-  --outdir /data/stable-diffusion/images \
+  --ckpt /data/models/stable-diffusion/sd-v1-4.ckpt \
+  --outdir /data/images/stable-diffusion \
   --prompt "two robots walking in the woods"
 ```
 
@@ -47,8 +46,8 @@ For Jetson Orin Nano and reduced memory usage:
 python3 optimizedSD/optimized_txt2img.py \
   --sampler plms --seed 42 \
   --n_samples 1 --n_iter 1 --ddim_steps 25 \
-  --ckpt /data/stable-diffusion/sd-v1-4.ckpt \
-  --outdir /data/stable-diffusion/images \
+  --ckpt /data/models/stable-diffusion/sd-v1-4.ckpt \
+  --outdir /data/images/stable-diffusion \
   --prompt "a photograph of an astronaut riding a horse"
 ```
 
