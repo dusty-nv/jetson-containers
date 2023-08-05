@@ -121,7 +121,7 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
             tag_container(base, container_name, simulate)
             
         # run tests on the intermediate container
-        if package not in skip_tests and 'intermediate' not in skip_tests:
+        if package not in skip_tests and 'intermediate' not in skip_tests and 'all' not in skip_tests:
             test_container(container_name, pkg, simulate)
         
         # use this container as the next base
@@ -132,7 +132,7 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
     
     # re-run tests on final container
     for package in packages:
-        if package not in skip_tests:
+        if package not in skip_tests and 'all' not in skip_tests:
             test_container(name, package, simulate)
             
     # push container
