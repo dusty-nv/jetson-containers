@@ -27,7 +27,7 @@ Other configuration arguments can be found at [AUTOMATIC1111/stable-diffusion-we
 * `--medvram` (sacrifice some performance for low VRAM usage)
 * `--lowvram` (sacrafice a lot of speed for very low VRAM usage)
 
-To run image generation from a script (`txt2img.py`) as opposed to the web UI, see the [`stable-diffusion`](/packages/diffusion/stable-diffusion) container.
+See the [`stable-diffusion`](/packages/diffusion/stable-diffusion) container to run image generation from a script (`txt2img.py`) as opposed to the web UI. 
 
 <details open>
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
