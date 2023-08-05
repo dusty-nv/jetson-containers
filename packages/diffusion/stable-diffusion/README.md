@@ -1,6 +1,6 @@
 # stable-diffusion
 
-> [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
+> &gt; [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 
 
 ![a photograph of an astronaut riding a horse](/docs/images/diffusion_astronaut.jpg)
