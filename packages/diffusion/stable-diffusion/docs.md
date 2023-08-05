@@ -7,6 +7,8 @@ Generate images from text (txt2img) or from other images (img2img)
 * with memory optimizations: https://github.com/basujindal/stable-diffusion (`/opt/stable-diffusion/optimizedSD`)
 * tested on `stable-diffusion-1.4` model: https://huggingface.co/CompVis/stable-diffusion-v-1-4-original
 
+See the [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) container for a faster implementation with a web interface.
+
 ### txt2img
 
 Download the [stable-diffusion-1.4](https://huggingface.co/CompVis/stable-diffusion-v-1-4-original) model (`sd-v1-4.ckpt`)

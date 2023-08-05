@@ -7,8 +7,7 @@
 
 * stable-diffusion-webui: https://github.com/AUTOMATIC1111/stable-diffusion-webui (`/opt/stable-diffusion-webui`)
 * with TensorRT extension: https://github.com/AUTOMATIC1111/stable-diffusion-webui-tensorrt 
-* faster performance than the base [`stable-diffusion`](/packages/diffusion/stable-diffusion) package (`txt2img.py`)
-* tested on default `stable-diffusion-1.5` model: https://huggingface.co/runwayml/stable-diffusion-v1-5
+* faster performance than the base [`stable-diffusion/txt2img.py`](/packages/diffusion/stable-diffusion)
 
 This container has a default run command that will automatically start the webserver like this:
 
@@ -21,12 +20,14 @@ cd /opt/stable-diffusion-webui && python3 launch.py \
 	--port=7860
 ```
 
-After starting the container, you can navigate your browser to `http://$IP_ADDRESS:7860` (substitute the address or hostname of your device for `$IP_ADDRESS`).  It will automatically download the diffusion model when starting.
+After starting the container, you can navigate your browser to `http://$IP_ADDRESS:7860` (substitute the address or hostname of your device).  The server will automatically download the default [`stable-diffusion-1.5`](https://huggingface.co/runwayml/stable-diffusion-v1-5) model during startup.
 
-Other configuration arguments can be found at https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Command-Line-Arguments-and-Settings
+Other configuration arguments can be found at [`stable-diffusion-webui/wiki/Command-Line-Arguments-and-Settings`](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Command-Line-Arguments-and-Settings)
 
 * `--medvram` (sacrifice some performance for low VRAM usage)
 * `--lowvram` (sacrafice a lot of speed for very low VRAM usage)
+
+To run image generation from a script (`txt2img.py`) as opposed to the web UI, see the [`stable-diffusion`](/packages/diffusion/stable-diffusion) container.
 
 <details open>
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
