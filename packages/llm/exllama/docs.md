@@ -13,7 +13,7 @@ Substitute the GPTQ model from [HuggingFace Hub](https://huggingface.co/models?s
 ```
 > If the model repository is private or requires authentication, add `--env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN>`
 
-Memory usage:
+### Memory Usage
 
 | Model                                                                           | RAM (GB) | VRAM (GB) |
 |---------------------------------------------------------------------------------|:--------:|:---------:|
