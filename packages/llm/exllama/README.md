@@ -3,17 +3,19 @@
 > [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 
 
-This is using the https://github.com/jllllll/exllama fork of https://github.com/turboderp/exllama.  It's found under `/opt/exllama`, and the pip wheel is at `/opt/exllama-*.whl` and has been installed (with the CUDA kernels built).
+This is using the https://github.com/jllllll/exllama fork of https://github.com/turboderp/exllama.  
+
+It's found under `/opt/exllama`, and the pip wheel is at `/opt/exllama-*.whl` and has been installed (with the CUDA kernels already built)
 
 ### Inference Benchmark
 
-Substitute the GPTQ model from [HuggingFace Hub](https://huggingface.co/models?search=gptq) that you want to run (see [exllama-compatible models](https://github.com/turboderp/exllama/blob/master/doc/model_compatibility.md)):
+Substitute the GPTQ model from [HuggingFace Hub](https://huggingface.co/models?search=gptq) that you want to run (see [exllama-compatible models](https://github.com/turboderp/exllama/blob/master/doc/model_compatibility.md))
 
 ```bash
 ./run.sh --workdir=/opt/exllama $(autotag exllama) /bin/bash -c \
   '/usr/bin/time -v python3 test_benchmark_inference.py --perf --validate -d $(huggingface-downloader TheBloke/Llama-2-7B-GPTQ)'
 ```
-> if it's a private model, add `--env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN>`
+> If the model repository is private or requires authentication, add `--env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN>`
 
 Memory usage:
 
@@ -31,8 +33,8 @@ Memory usage:
 
 | **`exllama`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`exllama_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/exllama_jp46.yml?label=exllama:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/exllama_jp46.yml) [![`exllama_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/exllama_jp51.yml?label=exllama:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/exllama_jp51.yml) |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
+| &nbsp;&nbsp;&nbsp;Builds | [![`exllama_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/exllama_jp51.yml?label=exllama:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/exllama_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`huggingface_hub`](/packages/llm/huggingface_hub) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/exllama:r35.2.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-08-06, 5.4GB)`<br>[`dustynv/exllama:r35.3.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-08-04, 5.4GB)`<br>[`dustynv/exllama:r35.4.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-08-04, 5.4GB)` |
