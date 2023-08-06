@@ -21,9 +21,11 @@ Memory usage:
 
 | Model                                                                           | RAM (GB) | VRAM (GB) |
 |---------------------------------------------------------------------------------|:--------:|:---------:|
+| [`TheBloke/LLaMA-7b-GPTQ`](https://huggingface.co/TheBloke/LLaMA-7b-GPTQ)       |    3.4   |    5.2    |
+| [`TheBloke/LLaMA-13b-GPTQ`](https://huggingface.co/TheBloke/LLaMA-13b-GPTQ)     |    3.5   |    9.2    |
+| [`TheBloke/LLaMA-30b-GPTQ`](https://huggingface.co/TheBloke/LLaMA-30b-GPTQ)     |   3.25   |    20.2   |
 | [`TheBloke/Llama-2-7B-GPTQ`](https://huggingface.co/TheBloke/Llama-2-7B-GPTQ)   |    3.5   |    5.2    |
 | [`TheBloke/Llama-2-13B-GPTQ`](https://huggingface.co/TheBloke/Llama-2-13B-GPTQ) |    3.3   |    9.2    |
-| [`TheBloke/LLaMA-30b-GPTQ`](https://huggingface.co/TheBloke/LLaMA-30b-GPTQ)     |   3.25   |    20.2   |
 | [`TheBloke/Llama-2-70B-GPTQ`](https://huggingface.co/TheBloke/Llama-2-70B-GPTQ) |    3.1   |    35.5   |
 
 
