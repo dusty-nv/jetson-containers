@@ -2,6 +2,29 @@
 
 > [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 
+
+This is using the https://github.com/jllllll/exllama fork of https://github.com/turboderp/exllama.  It's found under `/opt/exllama`, and the pip wheel is at `/opt/exllama-*.whl` and has been installed (with the CUDA kernels built).
+
+### Inference Benchmark
+
+Substitute the GPTQ model from [HuggingFace Hub](https://huggingface.co/models?search=gptq) that you want to run (see [exllama-compatible models](https://github.com/turboderp/exllama/blob/master/doc/model_compatibility.md)):
+
+```bash
+./run.sh --workdir=/opt/exllama $(autotag exllama) /bin/bash -c \
+  '/usr/bin/time -v python3 test_benchmark_inference.py --perf --validate -d $(huggingface-downloader TheBloke/Llama-2-7B-GPTQ)'
+```
+> if it's a private model, add `--env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN>`
+
+Memory usage:
+
+| Model                                                                           | RAM (GB) | VRAM (GB) |
+|---------------------------------------------------------------------------------|:--------:|:---------:|
+| [`TheBloke/Llama-2-7B-GPTQ`](https://huggingface.co/TheBloke/Llama-2-7B-GPTQ)   |    3.5   |    5.2    |
+| [`TheBloke/Llama-2-13B-GPTQ`](https://huggingface.co/TheBloke/Llama-2-13B-GPTQ) |    3.3   |    9.2    |
+| [`TheBloke/LLaMA-30b-GPTQ`](https://huggingface.co/TheBloke/LLaMA-30b-GPTQ)     |   3.25   |    20.2   |
+| [`TheBloke/Llama-2-70B-GPTQ`](https://huggingface.co/TheBloke/Llama-2-70B-GPTQ) |    3.1   |    35.5   |
+
+
 <details open>
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
@@ -10,10 +33,9 @@
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`exllama_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/exllama_jp46.yml?label=exllama:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/exllama_jp46.yml) [![`exllama_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/exllama_jp51.yml?label=exllama:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/exllama_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`huggingface_hub`](/packages/llm/huggingface_hub) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/exllama:r35.2.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-07-30, 5.4GB)`<br>[`dustynv/exllama:r35.3.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-08-04, 5.4GB)`<br>[`dustynv/exllama:r35.4.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-08-04, 5.4GB)` |
-| &nbsp;&nbsp;&nbsp;Notes | https://github.com/turboderp/exllama |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/exllama:r35.2.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-08-06, 5.4GB)`<br>[`dustynv/exllama:r35.3.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-08-04, 5.4GB)`<br>[`dustynv/exllama:r35.4.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-08-04, 5.4GB)` |
 
 </details>
 
@@ -23,7 +45,7 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/exllama:r35.2.1`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-07-30` | `arm64` | `5.4GB` |
+| &nbsp;&nbsp;[`dustynv/exllama:r35.2.1`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-08-06` | `arm64` | `5.4GB` |
 | &nbsp;&nbsp;[`dustynv/exllama:r35.3.1`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-08-04` | `arm64` | `5.4GB` |
 | &nbsp;&nbsp;[`dustynv/exllama:r35.4.1`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-08-04` | `arm64` | `5.4GB` |
 
@@ -42,10 +64,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag exllama)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/exllama:r35.4.1
+./run.sh dustynv/exllama:r35.2.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/exllama:r35.4.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/exllama:r35.2.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
