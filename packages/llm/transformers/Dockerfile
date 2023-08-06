@@ -2,7 +2,7 @@
 # name: transformers
 # config: config.py
 # group: llm
-# depends: [pytorch, torchvision]
+# depends: [pytorch, torchvision, huggingface_hub]
 # test: test.py
 # notes: bitsandbytes dependency added on JetPack5 for 4-bit/8-bit quantization
 #---
@@ -12,5 +12,5 @@ FROM ${BASE_IMAGE}
 # this is actually a simple install, however the tests are useful
 RUN pip3 install --no-cache-dir --verbose transformers
 
-# and it's a good way to make sure the model cache dir is mounted
-ENV TRANSFORMERS_CACHE=/data/models/huggingface
+# this now gets set in the huggingface-hub package
+# ENV TRANSFORMERS_CACHE=/data/models/huggingface
