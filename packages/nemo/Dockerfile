@@ -38,7 +38,7 @@ RUN NEMO_PATH="$(pip3 show nemo_toolkit | grep Location: | cut -d' ' -f2)/nemo" 
 
 # patch: Unexpected key(s) in state_dict: "bert_model.embeddings.position_ids".
 # with:  nemo_toolkit 1.19.1, transformers 4.31.0
-RUN pip3 install --no-cache-dir --verbose 'transformers<4.31'
+#RUN pip3 install --no-cache-dir --verbose 'transformers<4.31'
 
 # make sure it loads
 RUN pip3 show nemo_toolkit && python3 -c 'import nemo; print(nemo.__version__)'
