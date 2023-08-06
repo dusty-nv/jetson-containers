@@ -11,6 +11,9 @@ FROM ${BASE_IMAGE}
 # install huggingface_hub package (with CLI)
 RUN pip3 install --no-cache-dir --verbose huggingface_hub[cli]
 
+# ModuleNotFoundError: No module named 'dataclasses' (on JetPack 4)
+RUN pip3 install --no-cache-dir --verbose dataclasses
+
 # set the model cache dir
 ENV TRANSFORMERS_CACHE=/data/models/huggingface
 
