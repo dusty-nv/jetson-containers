@@ -10,10 +10,10 @@
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`auto-gptq_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/auto-gptq_jp51.yml?label=auto-gptq:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/auto-gptq_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`bitsandbytes`](/packages/llm/bitsandbytes) [`torchvision`](/packages/pytorch/torchvision) [`transformers`](/packages/llm/transformers) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`bitsandbytes`](/packages/llm/bitsandbytes) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`text-generation-webui`](/packages/llm/text-generation-webui) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/auto-gptq:r35.2.1`](https://hub.docker.com/r/dustynv/auto-gptq/tags) `(2023-08-04, 5.6GB)`<br>[`dustynv/auto-gptq:r35.3.1`](https://hub.docker.com/r/dustynv/auto-gptq/tags) `(2023-07-30, 5.6GB)`<br>[`dustynv/auto-gptq:r35.4.1`](https://hub.docker.com/r/dustynv/auto-gptq/tags) `(2023-08-04, 5.6GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/auto-gptq:r35.2.1`](https://hub.docker.com/r/dustynv/auto-gptq/tags) `(2023-08-06, 5.6GB)`<br>[`dustynv/auto-gptq:r35.3.1`](https://hub.docker.com/r/dustynv/auto-gptq/tags) `(2023-07-30, 5.6GB)`<br>[`dustynv/auto-gptq:r35.4.1`](https://hub.docker.com/r/dustynv/auto-gptq/tags) `(2023-08-04, 5.6GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/PanQiWei/AutoGPTQ |
 
 </details>
@@ -24,7 +24,7 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/auto-gptq:r35.2.1`](https://hub.docker.com/r/dustynv/auto-gptq/tags) | `2023-08-04` | `arm64` | `5.6GB` |
+| &nbsp;&nbsp;[`dustynv/auto-gptq:r35.2.1`](https://hub.docker.com/r/dustynv/auto-gptq/tags) | `2023-08-06` | `arm64` | `5.6GB` |
 | &nbsp;&nbsp;[`dustynv/auto-gptq:r35.3.1`](https://hub.docker.com/r/dustynv/auto-gptq/tags) | `2023-07-30` | `arm64` | `5.6GB` |
 | &nbsp;&nbsp;[`dustynv/auto-gptq:r35.4.1`](https://hub.docker.com/r/dustynv/auto-gptq/tags) | `2023-08-04` | `arm64` | `5.6GB` |
 
@@ -43,10 +43,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag auto-gptq)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/auto-gptq:r35.4.1
+./run.sh dustynv/auto-gptq:r35.2.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/auto-gptq:r35.4.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/auto-gptq:r35.2.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
