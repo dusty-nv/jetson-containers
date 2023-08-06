@@ -28,6 +28,9 @@ on:
       - 'packages/pytorch/*'
       - '!packages/pytorch/README.md'
       - '!packages/pytorch/docs.md'
+      - 'packages/llm/huggingface_hub/*'
+      - '!packages/llm/huggingface_hub/README.md'
+      - '!packages/llm/huggingface_hub/docs.md'
 jobs:
   exllama_jp51:
     runs-on: [self-hosted, jetson, jp51]
