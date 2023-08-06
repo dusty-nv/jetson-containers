@@ -4,7 +4,7 @@
 # config: config.py
 # depends: [pytorch, huggingface_hub]
 # test: test.sh
-# notes: https://github.com/jllllll/exllama fork of https://github.com/turboderp/exllama
+# docs: docs.md
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
@@ -50,4 +50,10 @@ RUN pip3 show exllama && python3 -c 'import exllama'
 # this will build cuda_ext.py to ~/.cache/torch_extensions/
 #RUN cd exllama && python3 test_benchmark_inference.py --help
 
+# for benchmark timing
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends time \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+    
 WORKDIR /
