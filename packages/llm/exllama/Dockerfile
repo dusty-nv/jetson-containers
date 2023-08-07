@@ -51,6 +51,12 @@ RUN pip3 show exllama && python3 -c 'import exllama'
 # this will build cuda_ext.py to ~/.cache/torch_extensions/
 #RUN cd exllama && python3 test_benchmark_inference.py --help
 
+# add some memory usage stuff to the benchmark
+RUN sed '1 i import psutil' -i exllama/test_benchmark_inference.py && \
+    sed '2 i mem_free = psutil.virtual_memory().available' -i exllama/test_benchmark_inference.py && \
+    sed '/    mem("Total", total = True)/a\ \ \ \ print(f" ** RAM, Total: {(mem_free - psutil.virtual_memory().available) / (1024**2):,.2f} MB")' -i exllama/test_benchmark_inference.py && \
+    cat exllama/test_benchmark_inference.py
+    
 # for benchmark timing
 RUN apt-get update && \
     apt-get install -y --no-install-recommends time \
