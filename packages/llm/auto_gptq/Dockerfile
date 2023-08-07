@@ -1,6 +1,7 @@
 #---
 # name: auto_gptq
 # group: llm
+# config: config.py
 # depends: [pytorch, bitsandbytes, transformers]
 # test: test.py
 # requires: '>=34.1.0'
