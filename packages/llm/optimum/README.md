@@ -13,7 +13,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) [`onnxruntime`](/packages/onnxruntime) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`bitsandbytes`](/packages/llm/bitsandbytes) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/optimum:r32.7.1`](https://hub.docker.com/r/dustynv/optimum/tags) `(2023-08-06, 1.3GB)`<br>[`dustynv/optimum:r35.2.1`](https://hub.docker.com/r/dustynv/optimum/tags) `(2023-08-06, 5.7GB)`<br>[`dustynv/optimum:r35.3.1`](https://hub.docker.com/r/dustynv/optimum/tags) `(2023-07-30, 5.8GB)`<br>[`dustynv/optimum:r35.4.1`](https://hub.docker.com/r/dustynv/optimum/tags) `(2023-08-04, 5.7GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/optimum:r32.7.1`](https://hub.docker.com/r/dustynv/optimum/tags) `(2023-08-07, 1.3GB)`<br>[`dustynv/optimum:r35.2.1`](https://hub.docker.com/r/dustynv/optimum/tags) `(2023-08-06, 5.7GB)`<br>[`dustynv/optimum:r35.3.1`](https://hub.docker.com/r/dustynv/optimum/tags) `(2023-08-07, 5.8GB)`<br>[`dustynv/optimum:r35.4.1`](https://hub.docker.com/r/dustynv/optimum/tags) `(2023-08-04, 5.7GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/huggingface/optimum |
 
 </details>
@@ -24,9 +24,9 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/optimum:r32.7.1`](https://hub.docker.com/r/dustynv/optimum/tags) | `2023-08-06` | `arm64` | `1.3GB` |
+| &nbsp;&nbsp;[`dustynv/optimum:r32.7.1`](https://hub.docker.com/r/dustynv/optimum/tags) | `2023-08-07` | `arm64` | `1.3GB` |
 | &nbsp;&nbsp;[`dustynv/optimum:r35.2.1`](https://hub.docker.com/r/dustynv/optimum/tags) | `2023-08-06` | `arm64` | `5.7GB` |
-| &nbsp;&nbsp;[`dustynv/optimum:r35.3.1`](https://hub.docker.com/r/dustynv/optimum/tags) | `2023-07-30` | `arm64` | `5.8GB` |
+| &nbsp;&nbsp;[`dustynv/optimum:r35.3.1`](https://hub.docker.com/r/dustynv/optimum/tags) | `2023-08-07` | `arm64` | `5.8GB` |
 | &nbsp;&nbsp;[`dustynv/optimum:r35.4.1`](https://hub.docker.com/r/dustynv/optimum/tags) | `2023-08-04` | `arm64` | `5.7GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>

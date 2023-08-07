@@ -13,7 +13,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`bitsandbytes`](/packages/llm/bitsandbytes) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`text-generation-webui`](/packages/llm/text-generation-webui) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/auto-gptq:r35.2.1`](https://hub.docker.com/r/dustynv/auto-gptq/tags) `(2023-08-06, 5.6GB)`<br>[`dustynv/auto-gptq:r35.3.1`](https://hub.docker.com/r/dustynv/auto-gptq/tags) `(2023-07-30, 5.6GB)`<br>[`dustynv/auto-gptq:r35.4.1`](https://hub.docker.com/r/dustynv/auto-gptq/tags) `(2023-08-04, 5.6GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/auto-gptq:r35.2.1`](https://hub.docker.com/r/dustynv/auto-gptq/tags) `(2023-08-07, 5.6GB)`<br>[`dustynv/auto-gptq:r35.3.1`](https://hub.docker.com/r/dustynv/auto-gptq/tags) `(2023-08-06, 5.6GB)`<br>[`dustynv/auto-gptq:r35.4.1`](https://hub.docker.com/r/dustynv/auto-gptq/tags) `(2023-08-04, 5.6GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/PanQiWei/AutoGPTQ |
 
 </details>
@@ -24,8 +24,8 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/auto-gptq:r35.2.1`](https://hub.docker.com/r/dustynv/auto-gptq/tags) | `2023-08-06` | `arm64` | `5.6GB` |
-| &nbsp;&nbsp;[`dustynv/auto-gptq:r35.3.1`](https://hub.docker.com/r/dustynv/auto-gptq/tags) | `2023-07-30` | `arm64` | `5.6GB` |
+| &nbsp;&nbsp;[`dustynv/auto-gptq:r35.2.1`](https://hub.docker.com/r/dustynv/auto-gptq/tags) | `2023-08-07` | `arm64` | `5.6GB` |
+| &nbsp;&nbsp;[`dustynv/auto-gptq:r35.3.1`](https://hub.docker.com/r/dustynv/auto-gptq/tags) | `2023-08-06` | `arm64` | `5.6GB` |
 | &nbsp;&nbsp;[`dustynv/auto-gptq:r35.4.1`](https://hub.docker.com/r/dustynv/auto-gptq/tags) | `2023-08-04` | `arm64` | `5.6GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
