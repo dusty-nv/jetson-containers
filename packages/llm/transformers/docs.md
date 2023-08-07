@@ -6,7 +6,7 @@ The HuggingFace [Transformers](https://huggingface.co/docs/transformers/index) l
 Substitute the [text-generation model](https://huggingface.co/models?pipeline_tag=text-generation&sort=trending) that you want to run (it should be a CausalLM model like GPT, Llama, ect)
 
 ```bash
-./run.sh $(./autotag exllama) \
+./run.sh $(./autotag transformers) \
    huggingface-benchmark.py --model=gpt2
 ```
 > If the model repository is private or requires authentication, add `--env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN>`
@@ -28,6 +28,6 @@ On JetPack 5, the [`bitsandbytes`](/packages/llm/bitsandbytes) package is includ
 * Get a User Access Token from https://huggingface.co/settings/tokens
 
 ```bash
-./run.sh --env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN> $(./autotag exllama) \
+./run.sh --env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN> $(./autotag transformers) \
    huggingface-benchmark.py --model=meta-llama/Llama-2-7b-hf
 ```
