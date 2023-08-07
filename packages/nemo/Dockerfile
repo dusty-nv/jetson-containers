@@ -45,3 +45,6 @@ RUN pip3 show nemo_toolkit && python3 -c 'import nemo; print(nemo.__version__)'
 
 # set the nemo model cache directory to mounted /data volume
 ENV NEMO_CACHE_DIR=/data/models/nemo
+
+# cannot allocate memory in static TLS block
+ENV LD_PRELOAD=${LD_PRELOAD}:/usr/local/lib/python3.8/dist-packages/sklearn/__check_build/../../scikit_learn.libs/libgomp-d22c30c5.so.1.0.0
