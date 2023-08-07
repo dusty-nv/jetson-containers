@@ -24,7 +24,7 @@ parser.add_argument('--prompt', type=str, default='Once upon a time,')
 parser.add_argument('--precision', type=str, default='fp16', choices=['fp32', 'fp16', 'fp4', 'int8'])
 parser.add_argument('--tokens', type=int, nargs='+', default=[128], help='number of output tokens to generate (not including the input prompt)')
 parser.add_argument('--token', type=str, default=os.environ.get('HUGGINGFACE_TOKEN', ''), help="HuggingFace account login token from https://huggingface.co/docs/hub/security-tokens (defaults to $HUGGINGFACE_TOKEN)")
-parser.add_argument('--runs', type=int, default=5, help='the number of benchmark timing iterations')
+parser.add_argument('--runs', type=int, default=2, help='the number of benchmark timing iterations')
 parser.add_argument('--warmup', type=int, default=2, help='the number of warmup iterations')
 parser.add_argument('--save', type=str, default='', help='CSV file to save benchmarking results to')
 
