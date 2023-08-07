@@ -13,7 +13,7 @@ NVIDIA NeMo for ASR/NLP/TTS https://nvidia.github.io/NeMo/
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`bitsandbytes`](/packages/llm/bitsandbytes) [`transformers`](/packages/llm/transformers) [`torchaudio`](/packages/pytorch/torchaudio) [`numba`](/packages/numba) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/nemo:r32.7.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-08-07, 1.8GB)`<br>[`dustynv/nemo:r35.2.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-08-06, 6.4GB)`<br>[`dustynv/nemo:r35.3.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-07-31, 6.4GB)`<br>[`dustynv/nemo:r35.4.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-08-04, 6.4GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/nemo:r32.7.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-08-07, 1.8GB)`<br>[`dustynv/nemo:r35.2.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-08-06, 6.4GB)`<br>[`dustynv/nemo:r35.3.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-08-07, 6.5GB)`<br>[`dustynv/nemo:r35.4.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-08-04, 6.4GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | this Dockerfile gets switched out for `Dockerfile.jp4` on JetPack 4 |
 
 </details>
@@ -26,7 +26,7 @@ NVIDIA NeMo for ASR/NLP/TTS https://nvidia.github.io/NeMo/
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/nemo:r32.7.1`](https://hub.docker.com/r/dustynv/nemo/tags) | `2023-08-07` | `arm64` | `1.8GB` |
 | &nbsp;&nbsp;[`dustynv/nemo:r35.2.1`](https://hub.docker.com/r/dustynv/nemo/tags) | `2023-08-06` | `arm64` | `6.4GB` |
-| &nbsp;&nbsp;[`dustynv/nemo:r35.3.1`](https://hub.docker.com/r/dustynv/nemo/tags) | `2023-07-31` | `arm64` | `6.4GB` |
+| &nbsp;&nbsp;[`dustynv/nemo:r35.3.1`](https://hub.docker.com/r/dustynv/nemo/tags) | `2023-08-07` | `arm64` | `6.5GB` |
 | &nbsp;&nbsp;[`dustynv/nemo:r35.4.1`](https://hub.docker.com/r/dustynv/nemo/tags) | `2023-08-04` | `arm64` | `6.4GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
@@ -44,10 +44,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag nemo)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/nemo:r32.7.1
+./run.sh dustynv/nemo:r35.3.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/nemo:r32.7.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/nemo:r35.3.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
