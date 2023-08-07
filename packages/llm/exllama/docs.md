@@ -5,7 +5,7 @@ It's found under `/opt/exllama`, and the pip wheel is at `/opt/exllama-*.whl` an
 
 ### Inference Benchmark
 
-Substitute the GPTQ model from [HuggingFace Hub](https://huggingface.co/models?search=gptq) that you want to run (see [exllama-compatible models](https://github.com/turboderp/exllama/blob/master/doc/model_compatibility.md))
+Substitute the GPTQ model from [HuggingFace Hub](https://huggingface.co/models?search=gptq) that you want to run (see [exllama compatible models](https://github.com/turboderp/exllama/blob/master/doc/model_compatibility.md))
 
 ```bash
 ./run.sh --workdir=/opt/exllama $(./autotag exllama) /bin/bash -c \
