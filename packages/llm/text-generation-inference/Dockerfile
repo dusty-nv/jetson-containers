@@ -2,6 +2,7 @@
 # name: text-generation-inference
 # group: llm
 # depends: [pytorch, torchvision, bitsandbytes, transformers, rust]
+# requires: '>=34.1.0'
 # notes: https://github.com/huggingface/text-generation-inference
 #---
 ARG BASE_IMAGE
@@ -37,13 +38,24 @@ RUN env
 
 RUN make gen-server
 
+RUN sed 's|^scipy.*|scipy|g' -i requirements.txt && \ 
+    sed 's|^opentelemetry-api.*|opentelemetry-api|g' -i requirements.txt && \ 
+    cat requirements.txt
+
 RUN pip3 install --no-cache-dir --verbose -r requirements.txt
     
-RUN sed 's|^python = \"^3.9\"|python = "^3.8"|g' -i pyproject.toml && \
+RUN sed 's|^python = .*|python = "^3.8"|g' -i pyproject.toml && \
+    sed 's|^protobuf = .*|protobuf = \"*\"|g' -i pyproject.toml && \
+    sed 's|^grpcio = .*|grpcio = \"*\"|g' -i pyproject.toml && \
+    sed 's|^grpcio-status = .*|grpcio-status = \"*\"|g' -i pyproject.toml && \
+    sed 's|^grpcio-reflection = .*|grpcio-reflection = \"*\"|g' -i pyproject.toml && \
+    sed 's|^opentelemetry-api = .*|opentelemetry-api = \"*\"|g' -i pyproject.toml && \
+    sed 's|^opentelemetry-exporter-otlp = .*|opentelemetry-exporter-otlp = \"*\"|g' -i pyproject.toml && \
     sed 's|^opentelemetry-instrumentation-grpc = .*|opentelemetry-instrumentation-grpc = \"*\"|g' -i pyproject.toml && \
+    sed 's|^scipy = .*|scipy = \"*\"|g' -i pyproject.toml && \
     cat pyproject.toml
     
-RUN pip3 install --verbose -e ".[bnb, accelerate]" --verbose
+RUN pip3 install --verbose --no-deps -e ".[bnb, accelerate]" --verbose
 
 WORKDIR /opt/text-generation-inference/
 
