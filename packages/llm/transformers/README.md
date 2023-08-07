@@ -16,9 +16,11 @@ Substitute the [text-generation model](https://huggingface.co/models?pipeline_ta
 
 By default, the performance is measured for generating 128 new output tokens (this can be set with `--tokens=N`)
 
+The prompt can be changed with `--prompt='your prompt here'`
+
 #### Precision / Quantization
 
-You can change the precision used and enable quantization with the `--precision` argument (options are: `fp32` `fp16` `fp4` `int8`)
+Use the `--precision` argument to enable quantization (options are: `fp32` `fp16` `fp4` `int8`)
 
 The default is `fp16` - on JetPack 5, the [`bitsandbytes`](/packages/llm/bitsandbytes) package is included in the container to enable 4-bit/8-bit quantization through the Transformers API.  It's expected that 4-bit/8-bit quantization is slower through Transformers than FP16 (while consuming less memory).  Other libraries like [`exllama`](/packages/llm/exllama), [`awq`](/packages/llm/awq), and [`AutoGPTQ`](/packages/llm/auto-gptq) have custom CUDA kernels and more efficient quantized performance. 
 
@@ -45,7 +47,7 @@ The default is `fp16` - on JetPack 5, the [`bitsandbytes`](/packages/llm/bitsand
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`bitsandbytes`](/packages/llm/bitsandbytes) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`auto-gptq`](/packages/llm/auto-gptq) [`awq`](/packages/llm/awq) [`gptq-for-llama`](/packages/llm/gptq-for-llama) [`l4t-diffusion`](/packages/l4t/l4t-diffusion) [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`nemo`](/packages/nemo) [`optimum`](/packages/llm/optimum) [`stable-diffusion`](/packages/diffusion/stable-diffusion) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) [`text-generation-inference`](/packages/llm/text-generation-inference) [`text-generation-webui`](/packages/llm/text-generation-webui) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/transformers:r32.7.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-08-06, 1.1GB)`<br>[`dustynv/transformers:r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-08-04, 5.5GB)`<br>[`dustynv/transformers:r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-08-06, 5.5GB)`<br>[`dustynv/transformers:r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-08-04, 5.5GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/transformers:r32.7.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-08-07, 1.1GB)`<br>[`dustynv/transformers:r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-08-04, 5.5GB)`<br>[`dustynv/transformers:r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-08-07, 5.5GB)`<br>[`dustynv/transformers:r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-08-04, 5.5GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | bitsandbytes dependency added on JetPack5 for 4-bit/8-bit quantization |
 
 </details>
@@ -56,9 +58,9 @@ The default is `fp16` - on JetPack 5, the [`bitsandbytes`](/packages/llm/bitsand
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/transformers:r32.7.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-08-06` | `arm64` | `1.1GB` |
+| &nbsp;&nbsp;[`dustynv/transformers:r32.7.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-08-07` | `arm64` | `1.1GB` |
 | &nbsp;&nbsp;[`dustynv/transformers:r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-08-04` | `arm64` | `5.5GB` |
-| &nbsp;&nbsp;[`dustynv/transformers:r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-08-06` | `arm64` | `5.5GB` |
+| &nbsp;&nbsp;[`dustynv/transformers:r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-08-07` | `arm64` | `5.5GB` |
 | &nbsp;&nbsp;[`dustynv/transformers:r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-08-04` | `arm64` | `5.5GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
@@ -76,10 +78,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag transformers)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/transformers:r35.3.1
+./run.sh dustynv/transformers:r32.7.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/transformers:r35.3.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/transformers:r32.7.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

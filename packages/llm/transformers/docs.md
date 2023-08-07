@@ -12,9 +12,11 @@ Substitute the [text-generation model](https://huggingface.co/models?pipeline_ta
 
 By default, the performance is measured for generating 128 new output tokens (this can be set with `--tokens=N`)
 
+The prompt can be changed with `--prompt='your prompt here'`
+
 #### Precision / Quantization
 
-You can change the precision used and enable quantization with the `--precision` argument (options are: `fp32` `fp16` `fp4` `int8`)
+Use the `--precision` argument to enable quantization (options are: `fp32` `fp16` `fp4` `int8`)
 
 The default is `fp16` - on JetPack 5, the [`bitsandbytes`](/packages/llm/bitsandbytes) package is included in the container to enable 4-bit/8-bit quantization through the Transformers API.  It's expected that 4-bit/8-bit quantization is slower through Transformers than FP16 (while consuming less memory).  Other libraries like [`exllama`](/packages/llm/exllama), [`awq`](/packages/llm/awq), and [`AutoGPTQ`](/packages/llm/auto-gptq) have custom CUDA kernels and more efficient quantized performance. 
 
