@@ -13,7 +13,7 @@ Substitute the GPTQ model from [HuggingFace Hub](https://huggingface.co/models?s
 
 ```bash
 ./run.sh --workdir=/opt/exllama $(./autotag exllama) /bin/bash -c \
-  '/usr/bin/time -v python3 test_benchmark_inference.py --perf --validate -d $(huggingface-downloader TheBloke/Llama-2-7B-GPTQ)'
+  'python3 test_benchmark_inference.py --perf --validate -d $(huggingface-downloader TheBloke/Llama-2-7B-GPTQ)'
 ```
 > If the model repository is private or requires authentication, add `--env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN>`
 
@@ -68,10 +68,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag exllama)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/exllama:r35.3.1
+./run.sh dustynv/exllama:r35.2.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/exllama:r35.3.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/exllama:r35.2.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

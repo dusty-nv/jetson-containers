@@ -9,7 +9,7 @@ Substitute the GPTQ model from [HuggingFace Hub](https://huggingface.co/models?s
 
 ```bash
 ./run.sh --workdir=/opt/exllama $(./autotag exllama) /bin/bash -c \
-  '/usr/bin/time -v python3 test_benchmark_inference.py --perf --validate -d $(huggingface-downloader TheBloke/Llama-2-7B-GPTQ)'
+  'python3 test_benchmark_inference.py --perf --validate -d $(huggingface-downloader TheBloke/Llama-2-7B-GPTQ)'
 ```
 > If the model repository is private or requires authentication, add `--env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN>`
 
