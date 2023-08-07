@@ -1,7 +1,8 @@
 #---
 # name: text-generation-webui
 # group: llm
-# depends: [pytorch, bitsandbytes, transformers, auto-gptq, gptq-for-llama]
+# depends: [pytorch, bitsandbytes, transformers, auto_gptq, gptq-for-llama]
+# requires: '>=34.1.0'
 # notes: https://github.com/oobabooga/text-generation-webui
 #---
 ARG BASE_IMAGE
