@@ -1,0 +1,22 @@
+#---
+# name: auto_gptq
+# group: llm
+# depends: [pytorch, bitsandbytes, transformers]
+# test: test.py
+# requires: '>=34.1.0'
+# notes: https://github.com/PanQiWei/AutoGPTQ
+#---
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+ARG TORCH_CUDA_ARCH_LIST
+
+RUN cd /opt && \
+    git clone --depth=1 https://github.com/PanQiWei/AutoGPTQ.git && \
+    cd AutoGPTQ && \
+    python3 setup.py --verbose bdist_wheel && \
+    cp dist/auto_gptq*.whl /opt
+
+RUN pip3 install --no-cache-dir --verbose /opt/auto_gptq*.whl
+
+RUN pip3 show auto-gptq && python3 -c 'import auto_gptq'

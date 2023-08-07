@@ -1,15 +1,15 @@
-name: "auto-gptq_jp51"
-run-name: "Build auto-gptq (JetPack 5.1)"
+name: "auto_gptq_jp51"
+run-name: "Build auto_gptq (JetPack 5.1)"
 on:
   workflow_dispatch: {}
   push:
     branches:
       - 'dev'
     paths:
-      - '.github/workflows/auto-gptq_jp51.yml'
-      - 'packages/llm/auto-gptq/*'
-      - '!packages/llm/auto-gptq/README.md'
-      - '!packages/llm/auto-gptq/docs.md'
+      - '.github/workflows/auto_gptq_jp51.yml'
+      - 'packages/llm/auto_gptq/*'
+      - '!packages/llm/auto_gptq/README.md'
+      - '!packages/llm/auto_gptq/docs.md'
       - 'packages/build-essential/*'
       - '!packages/build-essential/README.md'
       - '!packages/build-essential/docs.md'
@@ -41,7 +41,7 @@ on:
       - '!packages/llm/transformers/README.md'
       - '!packages/llm/transformers/docs.md'
 jobs:
-  auto-gptq_jp51:
+  auto_gptq_jp51:
     runs-on: [self-hosted, jetson, jp51]
     steps:
       - run: |
@@ -56,4 +56,4 @@ jobs:
          git checkout $GITHUB_SHA 
          git status 
          ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv auto-gptq
+      - run: ./build.sh --name=runner/ --push=dustynv auto_gptq
