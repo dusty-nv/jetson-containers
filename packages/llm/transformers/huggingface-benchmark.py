@@ -54,6 +54,8 @@ if model_type != 'AutoModelForCausalLM':
 tokenizer = AutoTokenizer.from_pretrained(args.model)
 input_ids = tokenizer(args.prompt, return_tensors="pt").input_ids.to(device)
 
+print('Input tokens:', input_ids, 'shape:', input_ids.shape)
+
 # setup precision args
 kwargs = {}
 
@@ -83,7 +85,7 @@ for num_tokens in args.tokens:
 
     for run in range(args.runs + args.warmup):
         time_begin = time.perf_counter()
-        generated_ids = model.generate(input_ids, do_sample=False, min_new_tokens=num_tokens, max_new_tokens=num_tokens) #min_length=num_tokens, max_length=num_tokens)  # greedy generation of fixed # of tokens   #max_new_tokens=args.max_new_tokens
+        generated_ids = model.generate(input_ids, do_sample=False, min_length=num_tokens+input_ids.shape[1], max_length=num_tokens+input_ids.shape[1]) #min_new_tokens=num_tokens, max_new_tokens=num_tokens)  # greedy generation of fixed # of tokens
         time_elapsed = (time.perf_counter() - time_begin)
         
         print(tokenizer.decode(generated_ids[0], skip_special_tokens=True))
