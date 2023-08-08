@@ -53,8 +53,7 @@ RUN pip3 show exllama && python3 -c 'import exllama'
 
 # add some memory usage stuff to the benchmark
 RUN sed '1 i import psutil' -i exllama/test_benchmark_inference.py && \
-    sed '2 i mem_free = psutil.virtual_memory().available' -i exllama/test_benchmark_inference.py && \
-    sed '/    mem("Total", total = True)/a\ \ \ \ print(f" ** RAM, Total: {(mem_free - psutil.virtual_memory().available) / (1024**2):,.2f} MB")' -i exllama/test_benchmark_inference.py && \
+    sed '/    mem("Total", total = True)/a\ \ \ \ print(f" ** RAM, Total: {(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss + resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss) / 1024:,.2f} MB")' -i exllama/test_benchmark_inference.py && \
     cat exllama/test_benchmark_inference.py
     
 # for benchmark timing
