@@ -2,7 +2,7 @@
 # name: transformers
 # config: config.py
 # group: llm
-# depends: [pytorch, torchvision, huggingface_hub]
+# depends: [pytorch, torchvision, huggingface_hub, rust]
 # test: [test.py, huggingface-benchmark.py]
 # docs: docs.md
 # notes: bitsandbytes dependency added on JetPack5 for 4-bit/8-bit quantization
