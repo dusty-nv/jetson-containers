@@ -18,7 +18,7 @@ If you downloaded a model from the [AWQ Model Zoo](https://huggingface.co/datase
    /bin/bash -c '/opt/awq/quantize.py --model=$(huggingface-downloader meta-llama/Llama-2-7b-hf) --output=/data/models/awq/Llama-2-7b --load_awq=/data/models/awq/Llama-2-7b/llama-2-7b-w4-g128.pt'
 ```
 
-This process will save the model with the real quantized weights to a file like `$OUTPUT/w4-g128-awq.pt`
+This process will save the model with the real quantized weights (to a file like `$OUTPUT/w4-g128-awq.pt`)
 
 ### Inference Benchmark
 
