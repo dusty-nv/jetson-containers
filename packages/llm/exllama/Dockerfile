@@ -52,7 +52,7 @@ RUN pip3 show exllama && python3 -c 'import exllama'
 #RUN cd exllama && python3 test_benchmark_inference.py --help
 
 # add some memory usage stuff to the benchmark
-RUN sed '1 i import psutil' -i exllama/test_benchmark_inference.py && \
+RUN sed '1 i import resource' -i exllama/test_benchmark_inference.py && \
     sed '/    mem("Total", total = True)/a\ \ \ \ print(f" ** RAM, Total: {(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss + resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss) / 1024:,.2f} MB")' -i exllama/test_benchmark_inference.py && \
     cat exllama/test_benchmark_inference.py
     
