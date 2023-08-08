@@ -24,10 +24,10 @@ If you get the error `Exllama kernel does not support query/key/value fusion wit
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`auto_gptq_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/auto_gptq_jp51.yml?label=auto_gptq:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/auto_gptq_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`bitsandbytes`](/packages/llm/bitsandbytes) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`transformers`](/packages/llm/transformers) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`bitsandbytes`](/packages/llm/bitsandbytes) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`text-generation-webui`](/packages/llm/text-generation-webui) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/auto_gptq:r35.2.1`](https://hub.docker.com/r/dustynv/auto_gptq/tags) `(2023-08-08, 5.6GB)`<br>[`dustynv/auto_gptq:r35.3.1`](https://hub.docker.com/r/dustynv/auto_gptq/tags) `(2023-08-08, 5.7GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/auto_gptq:r35.2.1`](https://hub.docker.com/r/dustynv/auto_gptq/tags) `(2023-08-08, 6.0GB)`<br>[`dustynv/auto_gptq:r35.3.1`](https://hub.docker.com/r/dustynv/auto_gptq/tags) `(2023-08-08, 5.7GB)` |
 
 </details>
 
@@ -37,7 +37,7 @@ If you get the error `Exllama kernel does not support query/key/value fusion wit
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/auto_gptq:r35.2.1`](https://hub.docker.com/r/dustynv/auto_gptq/tags) | `2023-08-08` | `arm64` | `5.6GB` |
+| &nbsp;&nbsp;[`dustynv/auto_gptq:r35.2.1`](https://hub.docker.com/r/dustynv/auto_gptq/tags) | `2023-08-08` | `arm64` | `6.0GB` |
 | &nbsp;&nbsp;[`dustynv/auto_gptq:r35.3.1`](https://hub.docker.com/r/dustynv/auto_gptq/tags) | `2023-08-08` | `arm64` | `5.7GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>

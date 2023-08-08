@@ -42,10 +42,10 @@ Make sure that you load the output from the quantization steps above with `--qua
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`awq_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/awq_jp51.yml?label=awq:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/awq_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`bitsandbytes`](/packages/llm/bitsandbytes) [`transformers`](/packages/llm/transformers) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`bitsandbytes`](/packages/llm/bitsandbytes) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/awq:r35.2.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-08-07, 5.7GB)`<br>[`dustynv/awq:r35.3.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-08-08, 5.7GB)`<br>[`dustynv/awq:r35.4.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-08-04, 5.7GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/awq:r35.2.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-08-08, 5.7GB)`<br>[`dustynv/awq:r35.3.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-08-08, 6.1GB)`<br>[`dustynv/awq:r35.4.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-08-04, 5.7GB)` |
 
 </details>
 
@@ -55,8 +55,8 @@ Make sure that you load the output from the quantization steps above with `--qua
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/awq:r35.2.1`](https://hub.docker.com/r/dustynv/awq/tags) | `2023-08-07` | `arm64` | `5.7GB` |
-| &nbsp;&nbsp;[`dustynv/awq:r35.3.1`](https://hub.docker.com/r/dustynv/awq/tags) | `2023-08-08` | `arm64` | `5.7GB` |
+| &nbsp;&nbsp;[`dustynv/awq:r35.2.1`](https://hub.docker.com/r/dustynv/awq/tags) | `2023-08-08` | `arm64` | `5.7GB` |
+| &nbsp;&nbsp;[`dustynv/awq:r35.3.1`](https://hub.docker.com/r/dustynv/awq/tags) | `2023-08-08` | `arm64` | `6.1GB` |
 | &nbsp;&nbsp;[`dustynv/awq:r35.4.1`](https://hub.docker.com/r/dustynv/awq/tags) | `2023-08-04` | `arm64` | `5.7GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
