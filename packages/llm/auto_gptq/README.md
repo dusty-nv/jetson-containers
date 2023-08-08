@@ -7,7 +7,7 @@ AutoGPTQ from https://github.com/PanQiWei/AutoGPTQ (installed under `/opt/AutoGP
 
 ### Inference Benchmark
 
-Substitute the GPTQ model from [HuggingFace Hub](https://huggingface.co/models?search=gptq) that you want to run:
+Substitute the GPTQ model from [HuggingFace Hub](https://huggingface.co/models?search=gptq) (or model path) that you want to run:
 
 ```bash
 ./run.sh --workdir=/opt/AutoGPTQ/examples/benchmark/ $(./autotag auto_gptq) \
