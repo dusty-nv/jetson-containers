@@ -49,5 +49,5 @@ if not args.load_awq and not args.skip_eval:
 run_cmd(f"{cmd_prefix} --load_awq {model_search} --q_backend real --dump_quant {model_quant}")
 
 # Load and evaluate the real quantized model
-if not args.no_eval:
+if not args.skip_eval:
     run_cmd(f"{cmd_prefix} --tasks wikitext --load_quant {model_quant}")
