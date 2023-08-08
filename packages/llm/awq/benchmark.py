@@ -13,7 +13,6 @@ from accelerate import init_empty_weights, load_checkpoint_and_dispatch
 
 from awq.quantize.quantizer import real_quantize_model_weight
 
-
 # parse command-line arguments
 parser = argparse.ArgumentParser()
 
@@ -23,8 +22,8 @@ parser.add_argument('--prompt', type=str, default='Once upon a time,')
 
 # benchmarking options
 parser.add_argument('--tokens', type=int, nargs='+', default=[128], help='number of output tokens to generate, including the input prompt')
-parser.add_argument('--runs', type=int, default=10, help='the number of benchmark timing iterations')
-parser.add_argument('--warmup', type=int, default=5, help='the number of warmup iterations')
+parser.add_argument('--runs', type=int, default=2, help='the number of benchmark timing iterations')
+parser.add_argument('--warmup', type=int, default=2, help='the number of warmup iterations')
 parser.add_argument('--save', type=str, default='', help='CSV file to save benchmarking results to')
 
 # quantization options
@@ -89,9 +88,8 @@ for num_tokens in args.tokens:
     time_avg /= args.runs  
     tokens_sec = num_tokens / time_avg
     memory_usage = (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss + resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss) / 1024  # https://stackoverflow.com/a/7669482
-    memory_info_gpu = torch.cuda.mem_get_info()
 
-    print(f"AVG = {time_avg:.4f} seconds, {tokens_sec:.1f} tokens/sec  memory={memory_usage:.2f} MB  (--model={args.model} --quant={args.quant} --w_bit={args.w_bit} --tokens={num_tokens})\n")
+    print(f"\nAVG = {time_avg:.4f} seconds, {tokens_sec:.1f} tokens/sec  memory={memory_usage:.2f} MB  (--model={args.model} --quant={args.quant} --w_bit={args.w_bit} --tokens={num_tokens})\n")
 
     if args.save:
         if not os.path.isfile(args.save):  # csv header

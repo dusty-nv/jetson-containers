@@ -5,7 +5,7 @@
 # depends: [pytorch, transformers]
 # requires: '>=34.1.0'
 # test: test.sh
-# notes: https://github.com/mit-han-lab/llm-awq - requires >= sm_75 GPU (for Jetson, Orin)
+# docs: docs.md
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
