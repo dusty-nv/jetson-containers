@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
 # benchmark a text-generation model (CausalLM) with huggingface transformers library
-import psutil
-
-mem_free = psutil.virtual_memory().available
-
 import os
 import time
 import datetime
@@ -98,7 +94,7 @@ for num_tokens in args.tokens:
     # compute statistics
     time_avg /= args.runs  
     tokens_sec = num_tokens / time_avg
-    memory_usage = (mem_free - psutil.virtual_memory().available) / (1024**2)
+    memory_usage = (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss + resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss) / 1024  # https://stackoverflow.com/a/7669482
 
     print(f"AVG = {time_avg:.4f} seconds, {tokens_sec:.1f} tokens/sec  memory={memory_usage:.2f} MB  (--model={args.model} --precision={args.precision} --tokens={num_tokens})\n")
 
