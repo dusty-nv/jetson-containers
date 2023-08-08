@@ -12,6 +12,9 @@ FROM ${BASE_IMAGE}
 
 ARG TORCH_CUDA_ARCH_LIST
 
+# force rebuild on new git commits - https://stackoverflow.com/a/56945508
+ADD https://api.github.com/repos/PanQiWei/AutoGPTQ/git/refs/heads/main /tmp/autogptq_version.json
+
 RUN cd /opt && \
     git clone --depth=1 https://github.com/PanQiWei/AutoGPTQ.git && \
     cd AutoGPTQ && \
