@@ -38,8 +38,10 @@ RUN env
 
 RUN make gen-server
 
-RUN sed 's|^scipy.*|scipy|g' -i requirements.txt && \ 
-    sed 's|^opentelemetry-api.*|opentelemetry-api|g' -i requirements.txt && \ 
+RUN sed 's|python_version >= "3.9"|python_version >= "3.8"|g' -i requirements.txt && \
+    sed 's|==.* ;|\ ;|g' -i requirements.txt && \
+    #sed 's|^scipy.*|scipy|g' -i requirements.txt && \ 
+    #sed 's|^opentelemetry-api.*|opentelemetry-api|g' -i requirements.txt && \ 
     cat requirements.txt
 
 RUN pip3 install --no-cache-dir --verbose -r requirements.txt
@@ -81,3 +83,6 @@ RUN pip3 install --no-cache-dir --verbose text-generation
 
 # re-install bitsandbytes because it got overwritten
 RUN pip3 install --no-cache-dir --verbose /opt/bitsandbytes*.whl
+
+# make sure it loads
+RUN cd /opt/text-generation-inference/server/text_generation_server && python3 cli.py --help
