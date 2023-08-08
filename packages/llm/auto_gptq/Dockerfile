@@ -3,9 +3,9 @@
 # group: llm
 # config: config.py
 # depends: [pytorch, bitsandbytes, transformers]
-# test: test.py
 # requires: '>=34.1.0'
-# notes: https://github.com/PanQiWei/AutoGPTQ
+# test: test.py
+# docs: docs.md
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

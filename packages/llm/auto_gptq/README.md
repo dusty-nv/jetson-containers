@@ -2,6 +2,20 @@
 
 > [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 
+
+AutoGPTQ from https://github.com/PanQiWei/AutoGPTQ (installed under `/opt/AutoGPTQ`)
+
+### Inference Benchmark
+
+Substitute the GPTQ model from [HuggingFace Hub](https://huggingface.co/models?search=gptq) that you want to run:
+
+```bash
+./run.sh --workdir=/opt/AutoGPTQ/examples/benchmark/ $(./autotag auto_gptq) \
+	python3 generation_speed.py --model_name_or_path TheBloke/LLaMA-7b-GPTQ --use_safetensors --max_new_tokens=128
+```
+
+If you get the error `Exllama kernel does not support query/key/value fusion with act-order`, try adding the `--no_inject_fused_attention` flag.
+
 <details open>
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
@@ -13,8 +27,22 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`bitsandbytes`](/packages/llm/bitsandbytes) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`text-generation-webui`](/packages/llm/text-generation-webui) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Notes | https://github.com/PanQiWei/AutoGPTQ |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/auto_gptq:r35.2.1`](https://hub.docker.com/r/dustynv/auto_gptq/tags) `(2023-08-07, 5.6GB)`<br>[`dustynv/auto_gptq:r35.3.1`](https://hub.docker.com/r/dustynv/auto_gptq/tags) `(2023-08-08, 5.7GB)` |
 
+</details>
+
+<details open>
+<summary><b><a id="images">CONTAINER IMAGES</a></b></summary>
+<br>
+
+| Repository/Tag | Date | Arch | Size |
+| :-- | :--: | :--: | :--: |
+| &nbsp;&nbsp;[`dustynv/auto_gptq:r35.2.1`](https://hub.docker.com/r/dustynv/auto_gptq/tags) | `2023-08-07` | `arm64` | `5.6GB` |
+| &nbsp;&nbsp;[`dustynv/auto_gptq:r35.3.1`](https://hub.docker.com/r/dustynv/auto_gptq/tags) | `2023-08-08` | `arm64` | `5.7GB` |
+
+> <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
+> <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
+> <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R35.x containers can run on other versions of L4T R35.x (JetPack 5.1+)</sub><br>
 </details>
 
 <details open>
@@ -26,9 +54,11 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 # automatically pull or build a compatible container image
 ./run.sh $(./autotag auto_gptq)
 
-# or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host auto_gptq:35.2.1
+# or explicitly specify one of the container images above
+./run.sh dustynv/auto_gptq:r35.3.1
 
+# or if using 'docker run' (specify image and mounts/ect)
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/auto_gptq:r35.3.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
