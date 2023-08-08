@@ -10,4 +10,4 @@ Substitute the GPTQ model from [HuggingFace Hub](https://huggingface.co/models?s
 	python3 generation_speed.py --model_name_or_path TheBloke/LLaMA-7b-GPTQ --use_safetensors --max_new_tokens=128
 ```
 
-If you get the error `Exllama kernel does not support query/key/value fusion with act-order`, try adding the `--no_inject_fused_attention` flag.
+If you get the error `Exllama kernel does not support query/key/value fusion with act-order`, try adding `--no_inject_fused_attention`
