@@ -24,3 +24,9 @@ RUN cd /opt && \
 RUN pip3 install --no-cache-dir --verbose /opt/auto_gptq*.whl
 
 RUN pip3 show auto-gptq && python3 -c 'import auto_gptq'
+
+# for benchmark timing
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends time \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
