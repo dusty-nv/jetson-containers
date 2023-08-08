@@ -25,6 +25,11 @@ RUN pip3 install --no-cache-dir --verbose /opt/auto_gptq*.whl
 
 RUN pip3 show auto-gptq && python3 -c 'import auto_gptq'
 
+# add memory stats to benchmark
+RUN sed '/    logger.info(f"model device map.*/a\ \ \ \ logger.info(f"torch.cuda.max_memory_allocated: {torch.cuda.max_memory_allocated()}")' -i /opt/AutoGPTQ/examples/benchmark/generation_speed.py && \
+    sed '/    benchmark_generation_speed(model.*/a\ \ \ \ logger.info(f"torch.cuda.max_memory_allocated: {torch.cuda.max_memory_allocated()}")' -i /opt/AutoGPTQ/examples/benchmark/generation_speed.py && \
+    cat /opt/AutoGPTQ/examples/benchmark/generation_speed.py
+
 # for benchmark timing
 RUN apt-get update && \
     apt-get install -y --no-install-recommends time \
