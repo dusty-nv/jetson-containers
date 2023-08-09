@@ -33,3 +33,5 @@ RUN cd text-generation-webui && \
 RUN cp /opt/GPTQ-for-LLaMa/*.py /opt/text-generation-webui
 
 WORKDIR /
+
+CMD /bin/bash -c "cd /opt/text-generation-webui && python3 server.py --listen --chat --model-dir=/data/models/text-generation-webui"
