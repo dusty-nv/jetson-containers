@@ -2,6 +2,7 @@
 
 > [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 
+
 * text-generation-webui: https://github.com/oobabooga/text-generation-webui (`/opt/text-generation-webui`)
 * supporting ExLlama loader: https://github.com/turboderp/exllama
 
@@ -25,8 +26,7 @@ cd /opt/text-generation-webui && python3 server.py \
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`bitsandbytes`](/packages/llm/bitsandbytes) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) [`auto_gptq`](/packages/llm/auto_gptq) [`gptq-for-llama`](/packages/llm/gptq-for-llama) [`exllama`](/packages/llm/exllama) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/text-generation-webui:r35.2.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) `(2023-08-06, 5.7GB)`<br>[`dustynv/text-generation-webui:r35.3.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) `(2023-08-08, 6.1GB)`<br>[`dustynv/text-generation-webui:r35.4.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) `(2023-08-04, 5.7GB)` |
-| &nbsp;&nbsp;&nbsp;Notes | https://github.com/oobabooga/text-generation-webui |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/text-generation-webui:r35.2.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) `(2023-08-08, 6.1GB)`<br>[`dustynv/text-generation-webui:r35.3.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) `(2023-08-10, 6.1GB)`<br>[`dustynv/text-generation-webui:r35.4.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) `(2023-08-04, 5.7GB)` |
 
 </details>
 
@@ -36,8 +36,8 @@ cd /opt/text-generation-webui && python3 server.py \
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/text-generation-webui:r35.2.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) | `2023-08-06` | `arm64` | `5.7GB` |
-| &nbsp;&nbsp;[`dustynv/text-generation-webui:r35.3.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) | `2023-08-08` | `arm64` | `6.1GB` |
+| &nbsp;&nbsp;[`dustynv/text-generation-webui:r35.2.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) | `2023-08-08` | `arm64` | `6.1GB` |
+| &nbsp;&nbsp;[`dustynv/text-generation-webui:r35.3.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) | `2023-08-10` | `arm64` | `6.1GB` |
 | &nbsp;&nbsp;[`dustynv/text-generation-webui:r35.4.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) | `2023-08-04` | `arm64` | `5.7GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
