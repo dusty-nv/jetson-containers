@@ -175,8 +175,8 @@ def get_l4t_base(l4t_version=get_l4t_version()):
     Returns the l4t-base or l4t-jetpack container to use
     """
     if l4t_version.major >= 34:   # JetPack 5
-        if l4t_version >= Version('35.3.1'):
-            return "nvcr.io/nvidia/l4t-jetpack:r35.3.1"
+        if l4t_version >= Version('35.4.1'):
+            return "nvcr.io/nvidia/l4t-jetpack:r35.4.1"
         else:
             return f"nvcr.io/nvidia/l4t-jetpack:r{l4t_version}"
     else:
