@@ -11,15 +11,18 @@
 Follow the instructions from https://github.com/mit-han-lab/llm-awq#usage to quantize your model of choice.  Or use [`awq/quantize.py`](/packages/llm/awq/quantize.py)
 
 ```bash
-./run.sh --env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN> $(./autotag awq) \
-   /bin/bash -c '/opt/awq/quantize.py --model=$(huggingface-downloader meta-llama/Llama-2-7b-hf) --output=/data/models/awq/Llama-2-7b'
+./run.sh --env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN> $(./autotag awq) /bin/bash -c \
+  '/opt/awq/quantize.py --model=$(huggingface-downloader meta-llama/Llama-2-7b-hf) \
+      --output=/data/models/awq/Llama-2-7b'
 ```
 
 If you downloaded a model from the [AWQ Model Zoo](https://huggingface.co/datasets/mit-han-lab/awq-model-zoo) that already has the AWQ search results applied, you can load that with `--load_awq` and skip the search step (which can take a while and use lots of memory)
 
 ```bash
-./run.sh --env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN> $(./autotag awq) \
-   /bin/bash -c '/opt/awq/quantize.py --model=$(huggingface-downloader meta-llama/Llama-2-7b-hf) --output=/data/models/awq/Llama-2-7b --load_awq=/data/models/awq/Llama-2-7b/llama-2-7b-w4-g128.pt'
+./run.sh --env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN> $(./autotag awq) /bin/bash -c \
+  '/opt/awq/quantize.py --model=$(huggingface-downloader meta-llama/Llama-2-7b-hf) \
+      --output=/data/models/awq/Llama-2-7b \
+      --load_awq=/data/models/awq/Llama-2-7b/llama-2-7b-w4-g128.pt'
 ```
 
 This process will save the model with the real quantized weights (to a file like `$OUTPUT/w4-g128-awq.pt`)
@@ -29,8 +32,9 @@ This process will save the model with the real quantized weights (to a file like
 You can use the [`awq/benchmark.py`](/packages/llm/awq/quantize.py) tool to gather performance and memory measurements:
 
 ```bash
-./run.sh --env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN> $(./autotag awq) \
-   /bin/bash -c '/opt/awq/benchmark.py --model=$(huggingface-downloader meta-llama/Llama-2-7b-hf) --quant=/data/models/awq/Llama-2-7b/w4-g128-awq.pt'
+./run.sh --env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN> $(./autotag awq) /bin/bash -c \
+  '/opt/awq/benchmark.py --model=$(huggingface-downloader meta-llama/Llama-2-7b-hf) \
+      --quant=/data/models/awq/Llama-2-7b/w4-g128-awq.pt'
 ```
 
 Make sure that you load the output from the quantization steps above with `--quant` (use the model that ends with `-awq.pt`)
@@ -45,7 +49,7 @@ Make sure that you load the output from the quantization steps above with `--qua
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`bitsandbytes`](/packages/llm/bitsandbytes) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/awq:r35.2.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-08-08, 5.7GB)`<br>[`dustynv/awq:r35.3.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-08-08, 6.1GB)`<br>[`dustynv/awq:r35.4.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-08-04, 5.7GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/awq:r35.2.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-08-10, 6.0GB)`<br>[`dustynv/awq:r35.3.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-08-08, 6.1GB)`<br>[`dustynv/awq:r35.4.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-08-04, 5.7GB)` |
 
 </details>
 
@@ -55,7 +59,7 @@ Make sure that you load the output from the quantization steps above with `--qua
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/awq:r35.2.1`](https://hub.docker.com/r/dustynv/awq/tags) | `2023-08-08` | `arm64` | `5.7GB` |
+| &nbsp;&nbsp;[`dustynv/awq:r35.2.1`](https://hub.docker.com/r/dustynv/awq/tags) | `2023-08-10` | `arm64` | `6.0GB` |
 | &nbsp;&nbsp;[`dustynv/awq:r35.3.1`](https://hub.docker.com/r/dustynv/awq/tags) | `2023-08-08` | `arm64` | `6.1GB` |
 | &nbsp;&nbsp;[`dustynv/awq:r35.4.1`](https://hub.docker.com/r/dustynv/awq/tags) | `2023-08-04` | `arm64` | `5.7GB` |
 
@@ -74,10 +78,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag awq)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/awq:r35.3.1
+./run.sh dustynv/awq:r35.2.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/awq:r35.3.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/awq:r35.2.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
