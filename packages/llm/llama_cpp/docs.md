@@ -14,8 +14,8 @@ You can use llama.cpp's built-in [`main`](https://github.com/ggerganov/llama.cpp
          --n-gpu-layers 999 --threads $(nproc)'
 ```
 
-> if you're trying to load Llama-2-70B, add the `--gqa 8` flag <br>
-> the `--model` argument expects a `.bin` filename (typically the `*q4_0.bin` quantization is used)
+> * the `--model` argument expects a `.bin` filename (typically the `*q4_0.bin` quantization is used) <br>
+> * if you're trying to load Llama-2-70B, add the `--gqa 8` flag
 
 To use the Python API and [`benchmark.py`](/packages/llm/llama_cpp/benchmark.py) instead:
 
