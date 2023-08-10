@@ -1,7 +1,7 @@
 #---
 # name: text-generation-webui
 # group: llm
-# depends: [pytorch, bitsandbytes, transformers, auto_gptq, gptq-for-llama, exllama]
+# depends: [pytorch, bitsandbytes, transformers, auto_gptq, gptq-for-llama, exllama, llama_cpp]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---
