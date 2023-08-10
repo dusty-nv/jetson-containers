@@ -5,6 +5,7 @@
 # depends: [cmake, python, numpy, huggingface_hub]
 # requires: '>=34.1.0'
 # test: test.py
+# docs: docs.md
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
@@ -50,6 +51,8 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
     
+COPY benchmark.py /opt/llama.cpp/bin/benchmark.py
+
 WORKDIR / 
 
 RUN pip3 show llama-cpp-python | grep llama && python3 -c 'import llama_cpp'
