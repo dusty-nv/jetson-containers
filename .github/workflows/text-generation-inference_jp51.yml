@@ -37,12 +37,12 @@ on:
       - 'packages/llm/huggingface_hub/*'
       - '!packages/llm/huggingface_hub/README.md'
       - '!packages/llm/huggingface_hub/docs.md'
-      - 'packages/llm/transformers/*'
-      - '!packages/llm/transformers/README.md'
-      - '!packages/llm/transformers/docs.md'
       - 'packages/rust/*'
       - '!packages/rust/README.md'
       - '!packages/rust/docs.md'
+      - 'packages/llm/transformers/*'
+      - '!packages/llm/transformers/README.md'
+      - '!packages/llm/transformers/docs.md'
 jobs:
   text-generation-inference_jp51:
     runs-on: [self-hosted, jetson, jp51]
