@@ -8,30 +8,6 @@ You can use llama.cpp's built-in [`main`](https://github.com/ggerganov/llama.cpp
 
 ```bash
 ./run.sh --workdir=/opt/llama.cpp/bin $(./autotag llama_cpp) /bin/bash -c \
-   './main --model $(huggingface-downloader TheBloke/Llama-2-7B-GGML/llama-2-7b.ggmlv3.q4_0.bin) \
-           --prompt "Once upon a time," \
-           --n-predict 128 --ctx-size 192 --batch-size 192 \
-           --n-gpu-layers 999 --threads $(nproc)'
-```
-
-```bash
-./run.sh --workdir=/opt/llama.cpp/bin $(./autotag llama_cpp) /bin/bash -c '\
-./main --model $(huggingface-downloader TheBloke/Llama-2-7B-GGML/llama-2-7b.ggmlv3.q4_0.bin) \
-       --prompt "Once upon a time," \
-       --n-predict 128 --ctx-size 192 --batch-size 192 \
-       --n-gpu-layers 999 --threads $(nproc)'
-```
-
-```bash
-./run.sh --workdir=/opt/llama.cpp/bin $(./autotag llama_cpp) /bin/bash -c \
-'./main --model $(huggingface-downloader TheBloke/Llama-2-7B-GGML/llama-2-7b.ggmlv3.q4_0.bin) \
-        --prompt "Once upon a time," \
-        --n-predict 128 --ctx-size 192 --batch-size 192 \
-        --n-gpu-layers 999 --threads $(nproc)'
-```
-
-```bash
-./run.sh --workdir=/opt/llama.cpp/bin $(./autotag llama_cpp) /bin/bash -c \
  './main --model $(huggingface-downloader TheBloke/Llama-2-7B-GGML/llama-2-7b.ggmlv3.q4_0.bin) \
          --prompt "Once upon a time," \
          --n-predict 128 --ctx-size 192 --batch-size 192 \
@@ -45,18 +21,10 @@ To use the Python API and [`benchmark.py`](/packages/llm/llama_cpp/benchmark.py)
 
 ```bash
 ./run.sh --workdir=/opt/llama.cpp/bin $(./autotag llama_cpp) /bin/bash -c \
-   'python3 benchmark.py --model $(huggingface-downloader TheBloke/Llama-2-7B-GGML/llama-2-7b.ggmlv3.q4_0.bin) \
+ 'python3 benchmark.py --model $(huggingface-downloader TheBloke/Llama-2-7B-GGML/llama-2-7b.ggmlv3.q4_0.bin) \
             --prompt "Once upon a time," \
             --n-predict 128 --ctx-size 192 --batch-size 192 \
             --n-gpu-layers 999 --threads $(nproc)'
-```
-
-```bash
-./run.sh --workdir=/opt/llama.cpp/bin $(./autotag llama_cpp) /bin/bash -c '\
-python3 benchmark.py --model $(huggingface-downloader TheBloke/Llama-2-7B-GGML/llama-2-7b.ggmlv3.q4_0.bin) \
-          --prompt "Once upon a time," \
-          --n-predict 128 --ctx-size 192 --batch-size 192 \
-          --n-gpu-layers 999 --threads $(nproc)'
 ```
 
 ### Memory Usage
