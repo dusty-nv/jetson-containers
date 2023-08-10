@@ -13,7 +13,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`bitsandbytes`](/packages/llm/bitsandbytes) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`text-generation-webui`](/packages/llm/text-generation-webui) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/gptq-for-llama:r35.2.1`](https://hub.docker.com/r/dustynv/gptq-for-llama/tags) `(2023-08-08, 5.8GB)`<br>[`dustynv/gptq-for-llama:r35.3.1`](https://hub.docker.com/r/dustynv/gptq-for-llama/tags) `(2023-08-07, 5.5GB)`<br>[`dustynv/gptq-for-llama:r35.4.1`](https://hub.docker.com/r/dustynv/gptq-for-llama/tags) `(2023-08-04, 5.5GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/gptq-for-llama:r35.2.1`](https://hub.docker.com/r/dustynv/gptq-for-llama/tags) `(2023-08-10, 5.8GB)`<br>[`dustynv/gptq-for-llama:r35.3.1`](https://hub.docker.com/r/dustynv/gptq-for-llama/tags) `(2023-08-07, 5.5GB)`<br>[`dustynv/gptq-for-llama:r35.4.1`](https://hub.docker.com/r/dustynv/gptq-for-llama/tags) `(2023-08-04, 5.5GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/oobabooga/GPTQ-for-LLaMa |
 
 </details>
@@ -24,7 +24,7 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/gptq-for-llama:r35.2.1`](https://hub.docker.com/r/dustynv/gptq-for-llama/tags) | `2023-08-08` | `arm64` | `5.8GB` |
+| &nbsp;&nbsp;[`dustynv/gptq-for-llama:r35.2.1`](https://hub.docker.com/r/dustynv/gptq-for-llama/tags) | `2023-08-10` | `arm64` | `5.8GB` |
 | &nbsp;&nbsp;[`dustynv/gptq-for-llama:r35.3.1`](https://hub.docker.com/r/dustynv/gptq-for-llama/tags) | `2023-08-07` | `arm64` | `5.5GB` |
 | &nbsp;&nbsp;[`dustynv/gptq-for-llama:r35.4.1`](https://hub.docker.com/r/dustynv/gptq-for-llama/tags) | `2023-08-04` | `arm64` | `5.5GB` |
 
