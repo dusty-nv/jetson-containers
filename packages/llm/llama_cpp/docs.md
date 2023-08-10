@@ -4,7 +4,7 @@
 
 ### Inference Benchmark
 
-You can use the built-in [`main`](https://github.com/ggerganov/llama.cpp/tree/master/examples/main) tool to run GGML models (from [HuggingFace Hub](https://huggingface.co/models?search=ggml) or elsewhere)
+You can use llama.cpp's built-in [`main`](https://github.com/ggerganov/llama.cpp/tree/master/examples/main) tool to run GGML models (from [HuggingFace Hub](https://huggingface.co/models?search=ggml) or elsewhere)
 
 ```bash
 ./run.sh --workdir=/opt/llama.cpp/bin $(./autotag llama_cpp) /bin/bash -c \
@@ -14,10 +14,34 @@ You can use the built-in [`main`](https://github.com/ggerganov/llama.cpp/tree/ma
            --n-gpu-layers 999 --threads $(nproc)'
 ```
 
+```bash
+./run.sh --workdir=/opt/llama.cpp/bin $(./autotag llama_cpp) /bin/bash -c '\
+./main --model $(huggingface-downloader TheBloke/Llama-2-7B-GGML/llama-2-7b.ggmlv3.q4_0.bin) \
+       --prompt "Once upon a time," \
+       --n-predict 128 --ctx-size 192 --batch-size 192 \
+       --n-gpu-layers 999 --threads $(nproc)'
+```
+
+```bash
+./run.sh --workdir=/opt/llama.cpp/bin $(./autotag llama_cpp) /bin/bash -c \
+'./main --model $(huggingface-downloader TheBloke/Llama-2-7B-GGML/llama-2-7b.ggmlv3.q4_0.bin) \
+        --prompt "Once upon a time," \
+        --n-predict 128 --ctx-size 192 --batch-size 192 \
+        --n-gpu-layers 999 --threads $(nproc)'
+```
+
+```bash
+./run.sh --workdir=/opt/llama.cpp/bin $(./autotag llama_cpp) /bin/bash -c \
+ './main --model $(huggingface-downloader TheBloke/Llama-2-7B-GGML/llama-2-7b.ggmlv3.q4_0.bin) \
+         --prompt "Once upon a time," \
+         --n-predict 128 --ctx-size 192 --batch-size 192 \
+         --n-gpu-layers 999 --threads $(nproc)'
+```
+
 > if you're trying to load Llama-2-70B, add the `--gqa 8` flag <br>
 > the `--model` argument expects a `.bin` filename (typically the `*q4_0.bin` quantization is used)
 
-To use the Python API instead:
+To use the Python API and [`benchmark.py`](/packages/llm/llama_cpp/benchmark.py) instead:
 
 ```bash
 ./run.sh --workdir=/opt/llama.cpp/bin $(./autotag llama_cpp) /bin/bash -c \
@@ -25,6 +49,14 @@ To use the Python API instead:
             --prompt "Once upon a time," \
             --n-predict 128 --ctx-size 192 --batch-size 192 \
             --n-gpu-layers 999 --threads $(nproc)'
+```
+
+```bash
+./run.sh --workdir=/opt/llama.cpp/bin $(./autotag llama_cpp) /bin/bash -c '\
+python3 benchmark.py --model $(huggingface-downloader TheBloke/Llama-2-7B-GGML/llama-2-7b.ggmlv3.q4_0.bin) \
+          --prompt "Once upon a time," \
+          --n-predict 128 --ctx-size 192 --batch-size 192 \
+          --n-gpu-layers 999 --threads $(nproc)'
 ```
 
 ### Memory Usage
