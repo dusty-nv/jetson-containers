@@ -19,14 +19,12 @@ Substitute the GPTQ model from [HuggingFace Hub](https://huggingface.co/models?s
 
 ### Memory Usage
 
-| Model                                                                           | RAM (GB) | VRAM (GB) |
-|---------------------------------------------------------------------------------|:--------:|:---------:|
-| [`TheBloke/LLaMA-7b-GPTQ`](https://huggingface.co/TheBloke/LLaMA-7b-GPTQ)       |    3.4   |    5.2    |
-| [`TheBloke/LLaMA-13b-GPTQ`](https://huggingface.co/TheBloke/LLaMA-13b-GPTQ)     |    3.5   |    9.2    |
-| [`TheBloke/LLaMA-30b-GPTQ`](https://huggingface.co/TheBloke/LLaMA-30b-GPTQ)     |   3.25   |    20.2   |
-| [`TheBloke/Llama-2-7B-GPTQ`](https://huggingface.co/TheBloke/Llama-2-7B-GPTQ)   |    3.5   |    5.2    |
-| [`TheBloke/Llama-2-13B-GPTQ`](https://huggingface.co/TheBloke/Llama-2-13B-GPTQ) |    3.3   |    9.2    |
-| [`TheBloke/Llama-2-70B-GPTQ`](https://huggingface.co/TheBloke/Llama-2-70B-GPTQ) |    3.1   |    35.5   |
+| Model                                                                           | Memory (MB) |
+|---------------------------------------------------------------------------------|:-----------:|
+| [`TheBloke/Llama-2-7B-GPTQ`](https://huggingface.co/TheBloke/Llama-2-7B-GPTQ)   |    5,200    |
+| [`TheBloke/Llama-2-13B-GPTQ`](https://huggingface.co/TheBloke/Llama-2-13B-GPTQ) |    9,135    |
+| [`TheBloke/LLaMA-30b-GPTQ`](https://huggingface.co/TheBloke/LLaMA-30b-GPTQ)     |   20,206    |
+| [`TheBloke/Llama-2-70B-GPTQ`](https://huggingface.co/TheBloke/Llama-2-70B-GPTQ) |   35,462    |
 
 
 <details open>
@@ -40,7 +38,7 @@ Substitute the GPTQ model from [HuggingFace Hub](https://huggingface.co/models?s
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`huggingface_hub`](/packages/llm/huggingface_hub) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`text-generation-webui`](/packages/llm/text-generation-webui) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/exllama:r35.2.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-08-06, 5.4GB)`<br>[`dustynv/exllama:r35.3.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-08-08, 5.4GB)`<br>[`dustynv/exllama:r35.4.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-08-04, 5.4GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/exllama:r35.2.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-08-10, 5.4GB)`<br>[`dustynv/exllama:r35.3.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-08-08, 5.4GB)`<br>[`dustynv/exllama:r35.4.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-08-04, 5.4GB)` |
 
 </details>
 
@@ -50,7 +48,7 @@ Substitute the GPTQ model from [HuggingFace Hub](https://huggingface.co/models?s
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/exllama:r35.2.1`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-08-06` | `arm64` | `5.4GB` |
+| &nbsp;&nbsp;[`dustynv/exllama:r35.2.1`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-08-10` | `arm64` | `5.4GB` |
 | &nbsp;&nbsp;[`dustynv/exllama:r35.3.1`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-08-08` | `arm64` | `5.4GB` |
 | &nbsp;&nbsp;[`dustynv/exllama:r35.4.1`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-08-04` | `arm64` | `5.4GB` |
 
@@ -69,10 +67,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag exllama)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/exllama:r35.3.1
+./run.sh dustynv/exllama:r35.2.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/exllama:r35.3.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/exllama:r35.2.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

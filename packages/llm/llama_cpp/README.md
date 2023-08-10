@@ -33,7 +33,7 @@ To use the Python API and [`benchmark.py`](/packages/llm/llama_cpp/benchmark.py)
 
 ### Memory Usage
 
-| Model                                                                           |          Quantization         | Memory (GB) |
+| Model                                                                           |          Quantization         | Memory (MB) |
 |---------------------------------------------------------------------------------|:-----------------------------:|:-----------:|
 | [`TheBloke/Llama-2-7B-GGML`](https://huggingface.co/TheBloke/Llama-2-7B-GGML)   |  `llama-2-7b.ggmlv3.q4_0.bin` |    5,268    |
 | [`TheBloke/Llama-2-13B-GGML`](https://huggingface.co/TheBloke/Llama-2-13B-GGML) | `llama-2-13b.ggmlv3.q4_0.bin` |    8,609    |

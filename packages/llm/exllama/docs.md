@@ -15,12 +15,10 @@ Substitute the GPTQ model from [HuggingFace Hub](https://huggingface.co/models?s
 
 ### Memory Usage
 
-| Model                                                                           | RAM (GB) | VRAM (GB) |
-|---------------------------------------------------------------------------------|:--------:|:---------:|
-| [`TheBloke/LLaMA-7b-GPTQ`](https://huggingface.co/TheBloke/LLaMA-7b-GPTQ)       |    3.4   |    5.2    |
-| [`TheBloke/LLaMA-13b-GPTQ`](https://huggingface.co/TheBloke/LLaMA-13b-GPTQ)     |    3.5   |    9.2    |
-| [`TheBloke/LLaMA-30b-GPTQ`](https://huggingface.co/TheBloke/LLaMA-30b-GPTQ)     |   3.25   |    20.2   |
-| [`TheBloke/Llama-2-7B-GPTQ`](https://huggingface.co/TheBloke/Llama-2-7B-GPTQ)   |    3.5   |    5.2    |
-| [`TheBloke/Llama-2-13B-GPTQ`](https://huggingface.co/TheBloke/Llama-2-13B-GPTQ) |    3.3   |    9.2    |
-| [`TheBloke/Llama-2-70B-GPTQ`](https://huggingface.co/TheBloke/Llama-2-70B-GPTQ) |    3.1   |    35.5   |
+| Model                                                                           | Memory (MB) |
+|---------------------------------------------------------------------------------|:-----------:|
+| [`TheBloke/Llama-2-7B-GPTQ`](https://huggingface.co/TheBloke/Llama-2-7B-GPTQ)   |    5,200    |
+| [`TheBloke/Llama-2-13B-GPTQ`](https://huggingface.co/TheBloke/Llama-2-13B-GPTQ) |    9,135    |
+| [`TheBloke/LLaMA-30b-GPTQ`](https://huggingface.co/TheBloke/LLaMA-30b-GPTQ)     |   20,206    |
+| [`TheBloke/Llama-2-70B-GPTQ`](https://huggingface.co/TheBloke/Llama-2-70B-GPTQ) |   35,462    |
 
