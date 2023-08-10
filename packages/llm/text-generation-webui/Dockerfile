@@ -3,7 +3,7 @@
 # group: llm
 # depends: [pytorch, bitsandbytes, transformers, auto_gptq, gptq-for-llama, exllama]
 # requires: '>=34.1.0'
-# notes: https://github.com/oobabooga/text-generation-webui
+# docs: docs.md
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
