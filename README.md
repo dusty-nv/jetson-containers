@@ -44,7 +44,7 @@ Looking for the old jetson-containers?   See the [`legacy`](https://github.com/d
 
 ## Getting Started
 
-See [System Setup](/docs/setup.md) for tips about setting up your Docker daemon and memory/storage tuning.
+Refer to the [System Setup](/docs/setup.md) page for tips about setting up your Docker daemon and memory/storage tuning.
 
 ```bash
 sudo apt-get update && sudo apt-get install git python3-pip
@@ -54,5 +54,5 @@ pip3 install -r requirements.txt
 ./run.sh $(./autotag l4t-pytorch)
 ```
 
-Follow the tutorials on the [**Jetson Generative AI Playground**](https://nvidia-ai-iot.github.io/jetson-generative-ai-playground/tutorial_text-generation.html)!
+Follow the tutorials on the [**Jetson Generative AI Playground**](https://nvidia-ai-iot.github.io/jetson-generative-ai-playground)!
 
