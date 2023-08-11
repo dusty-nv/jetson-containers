@@ -41,3 +41,18 @@ If you look at any package's readme (like [`l4t-pytorch`](packages/l4t/l4t-pytor
 * [Running Containers](/docs/run.md)
 
 Looking for the old jetson-containers?   See the [`legacy`](https://github.com/dusty-nv/jetson-containers/tree/legacy) branch
+
+## Getting Started
+
+See [system setup](/docs/setup.md)
+
+```bash
+$ sudo apt-get update && sudo apt-get install git python3-pip
+$ git clone https://github.com/dusty-nv/jetson-containers
+$ cd jetson-containers
+$ pip3 install -r requirements.txt
+$ ./run.sh $(./autotag l4t-pytorch)
+```
+
+See the tutorials on the [**Jetson Generative AI Playground**](https://nvidia-ai-iot.github.io/jetson-generative-ai-playground/tutorial_text-generation.html)!
+
