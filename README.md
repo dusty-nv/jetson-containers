@@ -54,5 +54,5 @@ pip3 install -r requirements.txt
 ./run.sh $(./autotag l4t-pytorch)
 ```
 
-Follow the tutorials on the [**Jetson Generative AI Playground**](https://nvidia-ai-iot.github.io/jetson-generative-ai-playground)!
+Check out the tutorials on the [**Jetson Generative AI Playground**](https://nvidia-ai-iot.github.io/jetson-generative-ai-playground)!
 
