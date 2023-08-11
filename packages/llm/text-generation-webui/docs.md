@@ -1,5 +1,9 @@
 
-* text-generation-webui: https://github.com/oobabooga/text-generation-webui (`/opt/text-generation-webui`)
+![](https://nvidia-ai-iot.github.io/jetson-generative-ai-playground/images/text-generation-webui_sf-trip.gif)
+
+* text-generation-webui from https://github.com/oobabooga/text-generation-webui (found under `/opt/text-generation-webui`)
+* see the tutorial on the [Jetson Generative AI Playground](https://nvidia-ai-iot.github.io/jetson-generative-ai-playground/tutorial_text-generation.html)
+
 * supporting ExLlama loader: https://github.com/turboderp/exllama
 
 This container has a default run command that will automatically start the webserver like this:
