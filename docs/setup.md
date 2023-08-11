@@ -11,10 +11,10 @@ Install the latest version of JetPack 4 if you're on Nano/TX1/TX2, or JetPack 5 
 ## Clone the Repo
 
 ```bash
-$ sudo apt-get update && sudo apt-get install git python3-pip
-$ git clone https://github.com/dusty-nv/jetson-containers
-$ cd jetson-containers
-$ pip3 install -r requirements.txt
+sudo apt-get update && sudo apt-get install git python3-pip
+git clone https://github.com/dusty-nv/jetson-containers
+cd jetson-containers
+pip3 install -r requirements.txt
 ```
 
 ## Docker Default Runtime
@@ -54,7 +54,7 @@ Containers can take up a lot of disk space.  If you have external storage availa
 Copy the existing Docker cache from `/var/lib/docker` to a directory on your drive of choice (in this case, `/mnt/docker`):
 
 ```bash
-sudo cp -r /var/lib/docker /mnt/docker
+$ sudo cp -r /var/lib/docker /mnt/docker
 ```
 
 Then add your directory as `"data-root"` in `/etc/docker/daemon.json`:
