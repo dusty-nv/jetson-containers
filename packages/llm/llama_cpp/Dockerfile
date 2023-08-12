@@ -45,6 +45,9 @@ RUN cd llama-cpp-python && \
 RUN cp llama-cpp-python/dist/llama_cpp_python*.whl /opt && \
     pip3 install --no-cache-dir --verbose /opt/llama_cpp_python*.whl
 
+# python3 -m llama_cpp.server missing 'import uvicorn'
+RUN pip3 install --no-cache-dir --verbose uvicorn anyio starlette sse-starlette fastapi pydantic-settings
+
 # for benchmark timing
 RUN apt-get update && \
     apt-get install -y --no-install-recommends time \
@@ -55,5 +58,8 @@ COPY benchmark.py /opt/llama.cpp/bin/benchmark.py
 
 WORKDIR / 
 
-RUN pip3 show llama-cpp-python | grep llama && python3 -c 'import llama_cpp'
+# make sure it loads
+RUN pip3 show llama-cpp-python | grep llama && \
+    python3 -c 'import llama_cpp' && \
+    python3 -m llama_cpp.server --help
 
