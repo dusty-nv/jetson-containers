@@ -8,11 +8,8 @@
 # Generate build/test workflows from packages:
 #   python3 -m jetson_containers.ci generate
 #
-# Generate package readme cards:
-#   python3 -m jetson_containers.ci docs --packages=xyz,abc
-#
-# Generate package list (docs/packages.md)
-#   python3 -m jetson_containers.ci docs_index
+# Generate the BUILD ALL workflow:
+#   python3 -m jetson_containers.ci generate --build-all
 #
 import os
 import re
@@ -132,7 +129,52 @@ def generate_workflow(package, root, simulate=False):
         with open(filename, 'w') as file:
             file.write(txt)
             
- 
+
+def generate_workflow_build_all(packages, root, simulate=False):
+    """
+    Generate the BUILD ALL workflow which builds all containers for that L4T version.
+    """
+    if not root:
+        root = os.path.dirname(os.path.dirname(__file__))
+        
+    workflow_name = f"build-all_r{L4T_VERSION}"
+    filename = os.path.join(root, '.github/workflows', f"{workflow_name}.yml")
+
+    txt = f"name: \"{workflow_name}\"\n"
+    txt += f"run-name: \"Build All (JetPack {JETPACK_VERSION})\"\n"
+    txt += "on:\n"
+    txt += "  workflow_dispatch: {}\n"
+    txt += "jobs:\n"
+    
+    for key in sorted(list(packages.keys())):
+        name = packages[key]['name']
+        
+        txt += f"  {name.replace(':','-').replace('.','')}:\n"
+        txt += f"     name: \"{name}\"\n"
+        txt += f"     runs-on: [self-hosted, jetson, r{L4T_VERSION}]\n"
+        txt += "    steps:\n"
+        txt += "      - run: |\n"
+        txt += "         cat /etc/nv_tegra_release \n"
+        txt += "      - name: \"Checkout ${{ github.repository }} SHA=${{ github.sha }}\" \n"
+        txt += "        run: |\n"
+        txt += "         echo \"$RUNNER_WORKSPACE\" \n"
+        txt += "         cd $RUNNER_WORKSPACE \n"
+        txt += "         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' \n"
+        txt += "         cd jetson-containers \n"
+        txt += "         git fetch origin \n"
+        txt += "         git checkout $GITHUB_SHA \n"
+        txt += "         git status \n"
+        txt += "         ls -a \n"
+        txt += f"      - run: ./build.sh --name=runner/ --push=dustynv {name}\n"
+    
+    print(filename)
+    print(txt)
+
+    if not simulate:
+        with open(filename, 'w') as file:
+            file.write(txt)
+
+            
 def generate_workflow_badge(workflow, repo):
     """
     Generate the markdown for a workflow status badge.
@@ -222,9 +264,8 @@ if __name__ == "__main__":
     
     parser.add_argument('--root', type=str, default='')
     parser.add_argument('--skip-packages', type=str, default='')
-    parser.add_argument('--l4t-versions', type=str, default=str(L4T_VERSION)) #'32.7,35.2'
     parser.add_argument('--simulate', action='store_true')
-    
+    parser.add_argument('--build-all', action='store_true')
     parser.add_argument('--token', type=str, default='')
     parser.add_argument('--labels', type=str, default='')
     parser.add_argument('--repo', type=str, default='https://github.com/dusty-nv/jetson-containers')
@@ -233,7 +274,6 @@ if __name__ == "__main__":
     
     #args.packages = re.split(',|;|:', args.packages)
     args.skip_packages = re.split(',|;|:', args.skip_packages)
-    args.l4t_versions = re.split(',|;|:', args.l4t_versions)
     args.labels = re.split(',|;|:', args.labels)
     
     print(args)
@@ -241,8 +281,11 @@ if __name__ == "__main__":
     packages = find_packages(args.packages, skip=args.skip_packages)
     
     if args.cmd == 'generate':
-        for package in packages.values():
-            generate_workflow(package, args.root, simulate=args.simulate)
+        if args.build_all:
+            generate_workflow_build_all(packages, args.root, simulate=args.simulate)
+        else:
+            for package in packages.values():
+                generate_workflow(package, args.root, simulate=args.simulate)
     elif args.cmd == 'register':
         register_runner(args.token, args.root, args.repo, args.labels, simulate=args.simulate)
         
