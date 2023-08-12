@@ -15,11 +15,11 @@ RUN git clone --depth=1 https://github.com/oobabooga/text-generation-webui
 RUN cd text-generation-webui && \
     sed 's|^accelerate.*|accelerate|g' -i requirements.txt && \
     sed 's|^bitsandbytes.*|bitsandbytes|g' -i requirements.txt && \
+    sed 's|^fastapi.*|fastapi|g' -i requirements.txt && \
+    sed 's|^llama-cpp-python.*|llama-cpp-python|g' -i requirements.txt && \
     sed 's|^git+https://github.com/huggingface/transformers.*|transformers|g' -i requirements.txt && \
     sed 's|^git+https://github.com/huggingface/peft|#git+https://github.com/huggingface/peft|g' -i requirements.txt && \
-    sed 's|^git+https://github.com/huggingface/peft|#git+https://github.com/huggingface/peft|g' -i requirements.txt && \
-    #sed 's|^https://github.com/PanQiWei/AutoGPTQ|#https://github.com/PanQiWei/AutoGPTQ|g' -i requirements.txt && \
-    #sed 's|^llama-cpp-python|#llama-cpp-python|g' -i requirements.txt && \
+    sed 's|^https://github.com/PanQiWei/AutoGPTQ|#https://github.com/PanQiWei/AutoGPTQ|g' -i requirements.txt && \
     cat requirements.txt
     
 RUN cd text-generation-webui && \
@@ -31,6 +31,9 @@ RUN cd text-generation-webui && \
     sed 's|@functools.cache|@functools.lru_cache\(maxsize=None\)|' -i modules/presets.py 
 
 RUN cp /opt/GPTQ-for-LLaMa/*.py /opt/text-generation-webui
+
+# https://github.com/oobabooga/text-generation-webui/issues/3042#issuecomment-1626160643
+RUN pip3 install --no-cache-dir --verbose 'gradio>=3.36.1'
 
 WORKDIR /
 
