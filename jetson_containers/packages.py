@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import sys
+import copy
 import json
 import yaml
 import fnmatch
@@ -112,7 +113,7 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
         if os.path.isdir(entry_path) and recursive:
             scan_packages(os.path.join(entry_path, '*'))
         elif os.path.isfile(entry_path):
-            if entry.lower().find('dockerfile') >= 0:
+            if entry.lower() == 'dockerfile': #entry.lower().find('dockerfile') >= 0:
                 package['dockerfile'] = entry
             elif entry == 'test.py' or entry == 'test.sh':
                 package['test'].append(entry)
@@ -324,16 +325,22 @@ def apply_config(package, config):
     
     if validate_dict(config):  # the package config entries are in the top-level dict
         package.update(validate_lists(config))
+        if 'dockerfile' in config:
+            apply_config(package, parse_yaml_header(os.path.join(config['path'], config['dockerfile'])))  
     elif len(config) == 1:  # nested dict with just one package (merge with existing package)
         name = list(config.keys())[0]
         package['name'] = name
         package.update(validate_lists(config[name]))
+        if 'dockerfile' in config[name]:
+            apply_config(package, parse_yaml_header(os.path.join(config[name]['path'], config[name]['dockerfile']))) 
     else:
         for pkg_name, pkg in config.items():  # nested dict with multiple subpackages
             for key in _PACKAGE_KEYS:  # apply inherited package info
                 if key in package:
                     #print(f"-- Setting {pkg_name} key {key} from {package['name']} to ", package[key])
                     pkg.setdefault(key, package[key])
+            if 'dockerfile' in pkg:
+                apply_config(pkg, parse_yaml_header(os.path.join(pkg['path'], pkg['dockerfile'])))
             package[pkg_name] = validate_lists(pkg)
     
                     
