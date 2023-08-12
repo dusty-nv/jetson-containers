@@ -1,0 +1,35 @@
+name: "riva-client-cpp_jp51"
+run-name: "Build riva-client:cpp (JetPack 5.1)"
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - 'dev'
+    paths:
+      - '.github/workflows/riva-client-cpp_jp51.yml'
+      - 'packages/riva-client/*'
+      - '!packages/riva-client/README.md'
+      - '!packages/riva-client/docs.md'
+      - 'packages/build-essential/*'
+      - '!packages/build-essential/README.md'
+      - '!packages/build-essential/docs.md'
+      - 'packages/bazel/*'
+      - '!packages/bazel/README.md'
+      - '!packages/bazel/docs.md'
+jobs:
+  riva-client-cpp_jp51:
+    runs-on: [self-hosted, jetson, jp51]
+    steps:
+      - run: |
+         cat /etc/nv_tegra_release 
+      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+        run: |
+         echo "$RUNNER_WORKSPACE" 
+         cd $RUNNER_WORKSPACE 
+         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+         cd jetson-containers 
+         git fetch origin 
+         git checkout $GITHUB_SHA 
+         git status 
+         ls -a 
+      - run: ./build.sh --name=runner/ --push=dustynv riva-client:cpp

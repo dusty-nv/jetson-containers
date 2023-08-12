@@ -1,12 +1,12 @@
-name: "riva-client_jp51"
-run-name: "Build riva-client (JetPack 5.1)"
+name: "riva-client-python_jp51"
+run-name: "Build riva-client:python (JetPack 5.1)"
 on:
   workflow_dispatch: {}
   push:
     branches:
       - 'dev'
     paths:
-      - '.github/workflows/riva-client_jp51.yml'
+      - '.github/workflows/riva-client-python_jp51.yml'
       - 'packages/riva-client/*'
       - '!packages/riva-client/README.md'
       - '!packages/riva-client/docs.md'
@@ -16,11 +16,8 @@ on:
       - 'packages/python/*'
       - '!packages/python/README.md'
       - '!packages/python/docs.md'
-      - 'packages/bazel/*'
-      - '!packages/bazel/README.md'
-      - '!packages/bazel/docs.md'
 jobs:
-  riva-client_jp51:
+  riva-client-python_jp51:
     runs-on: [self-hosted, jetson, jp51]
     steps:
       - run: |
@@ -35,4 +32,4 @@ jobs:
          git checkout $GITHUB_SHA 
          git status 
          ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv riva-client
+      - run: ./build.sh --name=runner/ --push=dustynv riva-client:python

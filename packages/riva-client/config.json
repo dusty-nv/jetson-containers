@@ -1,0 +1,9 @@
+{
+    "riva-client:cpp": {
+        "dockerfile": "Dockerfile.cpp"
+    },
+    
+    "riva-client:python": {
+        "dockerfile": "Dockerfile.python"
+    }
+}

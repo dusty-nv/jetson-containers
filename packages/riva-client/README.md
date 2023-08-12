@@ -11,13 +11,21 @@
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`riva-client`** | |
+| **`riva-client:cpp`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`riva-client_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/riva-client_jp51.yml?label=riva-client:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/riva-client_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`riva-client-cpp_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/riva-client-cpp_jp51.yml?label=riva-client-cpp:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/riva-client-cpp_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`bazel`](/packages/bazel) |
-| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/riva-client:r35.2.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-08-10, 6.3GB)` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`bazel`](/packages/bazel) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.cpp`](Dockerfile.cpp) |
+| &nbsp;&nbsp;&nbsp;Notes | https://github.com/nvidia-riva/cpp-clients |
+
+| **`riva-client:python`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Builds | [![`riva-client-python_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/riva-client-python_jp51.yml?label=riva-client-python:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/riva-client-python_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.python`](Dockerfile.python) |
+| &nbsp;&nbsp;&nbsp;Notes | https://github.com/nvidia-riva/python-clients |
 
 </details>
 
