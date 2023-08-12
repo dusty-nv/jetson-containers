@@ -5,952 +5,952 @@ jobs:
   bazel:
      name: "bazel"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv bazel
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv bazel
   build-essential:
      name: "build-essential"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv build-essential
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv build-essential
   cmake-apt:
      name: "cmake:apt"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv cmake:apt
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv cmake:apt
   cmake-pip:
      name: "cmake:pip"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv cmake:pip
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv cmake:pip
   cupy:
      name: "cupy"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv cupy
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv cupy
   deepstream:
      name: "deepstream"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv deepstream
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv deepstream
   gstreamer:
      name: "gstreamer"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv gstreamer
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv gstreamer
   huggingface_hub:
      name: "huggingface_hub"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv huggingface_hub
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv huggingface_hub
   jupyterlab:
      name: "jupyterlab"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv jupyterlab
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv jupyterlab
   l4t-ml:
      name: "l4t-ml"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv l4t-ml
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv l4t-ml
   l4t-pytorch:
      name: "l4t-pytorch"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv l4t-pytorch
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv l4t-pytorch
   l4t-tensorflow-tf1:
      name: "l4t-tensorflow:tf1"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv l4t-tensorflow:tf1
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv l4t-tensorflow:tf1
   l4t-tensorflow-tf2:
      name: "l4t-tensorflow:tf2"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv l4t-tensorflow:tf2
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv l4t-tensorflow:tf2
   nemo:
      name: "nemo"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv nemo
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv nemo
   numba:
      name: "numba"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv numba
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv numba
   numpy:
      name: "numpy"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv numpy
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv numpy
   onnx:
      name: "onnx"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv onnx
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv onnx
   onnxruntime:
      name: "onnxruntime"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv onnxruntime
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv onnxruntime
   opencv:
      name: "opencv"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv opencv
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv opencv
   opencv_builder:
      name: "opencv_builder"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv opencv_builder
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv opencv_builder
   optimum:
      name: "optimum"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv optimum
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv optimum
   protobuf-apt:
      name: "protobuf:apt"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv protobuf:apt
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv protobuf:apt
   protobuf-cpp:
      name: "protobuf:cpp"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv protobuf:cpp
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv protobuf:cpp
   pycuda:
      name: "pycuda"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv pycuda
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv pycuda
   python:
      name: "python"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv python
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv python
   pytorch-110:
      name: "pytorch:1.10"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv pytorch:1.10
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv pytorch:1.10
   pytorch-19:
      name: "pytorch:1.9"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv pytorch:1.9
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv pytorch:1.9
   realsense:
      name: "realsense"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv realsense
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv realsense
   ros-foxy-desktop:
      name: "ros:foxy-desktop"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv ros:foxy-desktop
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv ros:foxy-desktop
   ros-foxy-ros-base:
      name: "ros:foxy-ros-base"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv ros:foxy-ros-base
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv ros:foxy-ros-base
   ros-foxy-ros-core:
      name: "ros:foxy-ros-core"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv ros:foxy-ros-core
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv ros:foxy-ros-core
   ros-galactic-desktop:
      name: "ros:galactic-desktop"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv ros:galactic-desktop
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv ros:galactic-desktop
   ros-galactic-ros-base:
      name: "ros:galactic-ros-base"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv ros:galactic-ros-base
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv ros:galactic-ros-base
   ros-galactic-ros-core:
      name: "ros:galactic-ros-core"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv ros:galactic-ros-core
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv ros:galactic-ros-core
   ros-humble-desktop:
      name: "ros:humble-desktop"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv ros:humble-desktop
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv ros:humble-desktop
   ros-humble-ros-base:
      name: "ros:humble-ros-base"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv ros:humble-ros-base
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv ros:humble-ros-base
   ros-humble-ros-core:
      name: "ros:humble-ros-core"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv ros:humble-ros-core
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv ros:humble-ros-core
   ros-iron-desktop:
      name: "ros:iron-desktop"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv ros:iron-desktop
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv ros:iron-desktop
   ros-iron-ros-base:
      name: "ros:iron-ros-base"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv ros:iron-ros-base
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv ros:iron-ros-base
   ros-iron-ros-core:
      name: "ros:iron-ros-core"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv ros:iron-ros-core
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv ros:iron-ros-core
   ros-melodic-desktop:
      name: "ros:melodic-desktop"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv ros:melodic-desktop
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv ros:melodic-desktop
   ros-melodic-ros-base:
      name: "ros:melodic-ros-base"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv ros:melodic-ros-base
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv ros:melodic-ros-base
   ros-melodic-ros-core:
      name: "ros:melodic-ros-core"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv ros:melodic-ros-core
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv ros:melodic-ros-core
   ros-noetic-desktop:
      name: "ros:noetic-desktop"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv ros:noetic-desktop
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv ros:noetic-desktop
   ros-noetic-ros-base:
      name: "ros:noetic-ros-base"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv ros:noetic-ros-base
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv ros:noetic-ros-base
   ros-noetic-ros-core:
      name: "ros:noetic-ros-core"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv ros:noetic-ros-core
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv ros:noetic-ros-core
   rust:
      name: "rust"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv rust
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv rust
   tensorflow:
      name: "tensorflow"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv tensorflow
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv tensorflow
   tensorflow2:
      name: "tensorflow2"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv tensorflow2
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv tensorflow2
   torch2trt:
      name: "torch2trt"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv torch2trt
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv torch2trt
   torch_tensorrt:
      name: "torch_tensorrt"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv torch_tensorrt
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv torch_tensorrt
   torchaudio:
      name: "torchaudio"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv torchaudio
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv torchaudio
   torchvision:
      name: "torchvision"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv torchvision
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv torchvision
   transformers:
      name: "transformers"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv transformers
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv transformers
   tritonserver:
      name: "tritonserver"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv tritonserver
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv tritonserver
   zed:
      name: "zed"
      runs-on: [self-hosted, jetson, r32.7.1]
-    steps:
-      - run: |
-         cat /etc/nv_tegra_release 
-      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
-        run: |
-         echo "$RUNNER_WORKSPACE" 
-         cd $RUNNER_WORKSPACE 
-         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
-         cd jetson-containers 
-         git fetch origin 
-         git checkout $GITHUB_SHA 
-         git status 
-         ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv zed
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv zed
