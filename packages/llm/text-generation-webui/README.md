@@ -28,7 +28,7 @@ cd /opt/text-generation-webui && python3 server.py \
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`bitsandbytes`](/packages/llm/bitsandbytes) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) [`auto_gptq`](/packages/llm/auto_gptq) [`gptq-for-llama`](/packages/llm/gptq-for-llama) [`exllama`](/packages/llm/exllama) [`llama_cpp`](/packages/llm/llama_cpp) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/text-generation-webui:r35.2.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) `(2023-08-10, 6.2GB)`<br>[`dustynv/text-generation-webui:r35.3.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) `(2023-08-10, 6.1GB)`<br>[`dustynv/text-generation-webui:r35.4.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) `(2023-08-04, 5.7GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/text-generation-webui:r35.2.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) `(2023-08-12, 6.2GB)`<br>[`dustynv/text-generation-webui:r35.3.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) `(2023-08-10, 6.1GB)`<br>[`dustynv/text-generation-webui:r35.4.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) `(2023-08-04, 5.7GB)` |
 
 </details>
 
@@ -38,7 +38,7 @@ cd /opt/text-generation-webui && python3 server.py \
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/text-generation-webui:r35.2.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) | `2023-08-10` | `arm64` | `6.2GB` |
+| &nbsp;&nbsp;[`dustynv/text-generation-webui:r35.2.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) | `2023-08-12` | `arm64` | `6.2GB` |
 | &nbsp;&nbsp;[`dustynv/text-generation-webui:r35.3.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) | `2023-08-10` | `arm64` | `6.1GB` |
 | &nbsp;&nbsp;[`dustynv/text-generation-webui:r35.4.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) | `2023-08-04` | `arm64` | `5.7GB` |
 

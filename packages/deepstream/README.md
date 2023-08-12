@@ -8,7 +8,7 @@
 
 | **`deepstream`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`deepstream_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/deepstream_jp46.yml?label=deepstream:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/deepstream_jp46.yml) [![`deepstream_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/deepstream_jp51.yml?label=deepstream:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/deepstream_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`deepstream_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/deepstream_jp51.yml?label=deepstream:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/deepstream_jp51.yml) [![`deepstream_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/deepstream_jp46.yml?label=deepstream:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/deepstream_jp46.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) [`gstreamer`](/packages/gstreamer) [`tritonserver`](/packages/tritonserver) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |

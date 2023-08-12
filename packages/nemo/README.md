@@ -9,7 +9,7 @@ NVIDIA NeMo for ASR/NLP/TTS https://nvidia.github.io/NeMo/
 
 | **`nemo`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`nemo_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nemo_jp46.yml?label=nemo:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nemo_jp46.yml) [![`nemo_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nemo_jp51.yml?label=nemo:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nemo_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`nemo_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nemo_jp51.yml?label=nemo:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nemo_jp51.yml) [![`nemo_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nemo_jp46.yml?label=nemo:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nemo_jp46.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`bitsandbytes`](/packages/llm/bitsandbytes) [`transformers`](/packages/llm/transformers) [`torchaudio`](/packages/pytorch/torchaudio) [`numba`](/packages/numba) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |

@@ -8,7 +8,7 @@
 
 | **`torch_tensorrt`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`torch_tensorrt_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torch_tensorrt_jp46.yml?label=torch_tensorrt:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torch_tensorrt_jp46.yml) [![`torch_tensorrt_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torch_tensorrt_jp51.yml?label=torch_tensorrt:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torch_tensorrt_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`torch_tensorrt_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torch_tensorrt_jp51.yml?label=torch_tensorrt:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torch_tensorrt_jp51.yml) [![`torch_tensorrt_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torch_tensorrt_jp46.yml?label=torch_tensorrt:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torch_tensorrt_jp46.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`bazel`](/packages/bazel) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |

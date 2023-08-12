@@ -8,7 +8,7 @@
 
 | **`gstreamer`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`gstreamer_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/gstreamer_jp51.yml?label=gstreamer:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/gstreamer_jp51.yml) [![`gstreamer_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/gstreamer_jp46.yml?label=gstreamer:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/gstreamer_jp46.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`gstreamer_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/gstreamer_jp46.yml?label=gstreamer:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/gstreamer_jp46.yml) [![`gstreamer_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/gstreamer_jp51.yml?label=gstreamer:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/gstreamer_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`deepstream`](/packages/deepstream) |
