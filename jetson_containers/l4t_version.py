@@ -36,7 +36,7 @@ def get_l4t_version(version_file='/etc/nv_tegra_release'):
         raise ValueError(f"L4T_VERSION isn't supported on {ARCH} architecture (aarch64 only)")
         
     if 'L4T_VERSION' in os.environ and len(os.environ['L4T_VERSION']) > 0:
-        return version.parse(os.environ['L4T_VERSION'].lower().lstrip('r'))
+        return Version(os.environ['L4T_VERSION'].lower().lstrip('r'))
         
     if not os.path.isfile(version_file):
         raise IOError(f"L4T_VERSION file doesn't exist:  {version_file}")
