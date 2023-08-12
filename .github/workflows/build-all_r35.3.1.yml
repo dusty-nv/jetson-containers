@@ -1,6 +1,6 @@
 name: "build-all_r35.3.1"
 run-name: "Build All (JetPack 5.1.1)"
-on: workflow_dispatch
+on: [workflow_dispatch]
 jobs:
   auto_gptq:
      name: "auto_gptq"

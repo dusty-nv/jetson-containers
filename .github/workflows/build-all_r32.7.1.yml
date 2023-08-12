@@ -1,6 +1,6 @@
 name: "build-all_r32.7.1"
 run-name: "Build All (JetPack 4.6.1)"
-on: workflow_dispatch
+on: [workflow_dispatch]
 jobs:
   bazel:
      name: "bazel"

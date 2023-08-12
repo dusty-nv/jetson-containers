@@ -142,7 +142,7 @@ def generate_workflow_build_all(packages, root, simulate=False):
 
     txt = f"name: \"{workflow_name}\"\n"
     txt += f"run-name: \"Build All (JetPack {JETPACK_VERSION})\"\n"
-    txt += "on: workflow_dispatch\n"
+    txt += "on: [workflow_dispatch]\n"
     txt += "jobs:\n"
     
     for key in sorted(list(packages.keys())):
