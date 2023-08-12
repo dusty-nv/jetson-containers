@@ -45,6 +45,8 @@ if [ $ARCH = "aarch64" ]; then
 		--volume /etc/nv_tegra_release:/etc/nv_tegra_release \
 		--volume /tmp/nv_jetson_model:/tmp/nv_jetson_model \
 		--volume $ROOT/data:/data \
+		--device /dev/snd \
+		--device /dev/bus/usb \
 		$DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES \
 		"$@"
 
