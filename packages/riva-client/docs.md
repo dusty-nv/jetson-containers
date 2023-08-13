@@ -7,7 +7,7 @@
 
 Before doing anything, you should download and run the Riva server container from [`riva_quickstart_arm64`](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/riva/resources/riva_quickstart_arm64)
 
-This will run locally on your Jetson Xavier or Orin and is [supported on JetPack 5](https://docs.nvidia.com/deeplearning/riva/user-guide/docs/support-matrix.html#embedded).  You can disable NLP/NMT in its `config.sh` and it will use ~5GB of memory for ASR+TTS.
+This will run locally on your Jetson Xavier or Orin device and is [supported on JetPack 5](https://docs.nvidia.com/deeplearning/riva/user-guide/docs/support-matrix.html#embedded).  You can disable NLP/NMT in its `config.sh` and it will use around ~5GB of memory for ASR+TTS.
 
 ### List Audio Devices
 
@@ -18,7 +18,7 @@ This will print out a list of audio input/output devices that are connected to y
    python3 scripts/list_audio_devices.py
 ```
 
-You can refer to them in the below steps by either their device number or name.  Depending on the sample rate(s) they support, you may need to set `--sample-rate-hz` below to a valid rate (e.g. `16000`, `44100`, `48000`)
+You can refer to them in the steps below by either their device number or name.  Depending on the sample rate they support, you may also need to set `--sample-rate-hz` below to a valid frequency (e.g. `16000` `44100` `48000`)
 
 ### Streaming ASR
 
@@ -43,7 +43,7 @@ Also, you can customize the rate, pitch, and pronunciation of individual words/p
 
 ### Loopback
 
-To feed the ASR into the TTS and have it speak your words back to you:
+To feed the live ASR transcript into the TTS and have it speak your words back to you:
 
 ```bash
 ./run.sh --workdir /opt/riva/python-clients $(./autotag riva-client:python) \
