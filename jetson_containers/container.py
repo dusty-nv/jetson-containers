@@ -363,7 +363,7 @@ def find_local_containers(package, return_dicts=False, **kwargs):
             if image['Repository'].split('/')[-1] != repo:
                 continue
 
-        if tag and tag != image['Tag']:
+        if tag and tag != image['Tag'] and not image['Tag'].startswith(tag + '-'):
             continue
             
         if return_dicts:
