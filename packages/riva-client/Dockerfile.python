@@ -34,4 +34,10 @@ RUN git clone --depth=1 --recursive https://github.com/nvidia-riva/python-client
 RUN pip3 install --no-cache-dir --verbose /opt/nvidia_riva_client*.whl
 RUN pip3 show nvidia-riva-client && python3 -c 'import riva.client; print(riva.client.__version__)'
 
+
+# add extra scripts
+COPY list_audio_devices.py python-clients/scripts/
+COPY loopback.py python-clients/scripts/
+
+
 WORKDIR /

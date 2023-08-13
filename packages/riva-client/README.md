@@ -7,6 +7,52 @@
 * see [`riva_quickstart_arm64`](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/riva/resources/riva_quickstart_arm64) from NGC to start the core Riva server container first
 * Riva API reference docs:  https://docs.nvidia.com/deeplearning/riva/user-guide/docs/
 
+### Start Riva Server
+
+Before doing anything, you should download and run the Riva server container from [`riva_quickstart_arm64`](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/riva/resources/riva_quickstart_arm64)
+
+This will run locally on your Jetson Xavier or Orin and is [supported on JetPack 5](https://docs.nvidia.com/deeplearning/riva/user-guide/docs/support-matrix.html#embedded).  You can disable NLP/NMT in its `config.sh` and it will use ~5GB of memory for ASR+TTS.
+
+### List Audio Devices
+
+This will print out a list of audio input/output devices that are connected to your system:
+
+```bash
+./run.sh --workdir /opt/riva/python-clients $(./autotag riva-client:python) \
+   python3 scripts/list_audio_devices.py
+```
+
+You can refer to them in the below steps by either their device number or name.  Depending on the sample rate(s) they support, you may need to set `--sample-rate-hz` below to a valid rate (e.g. `16000`, `44100`, `48000`)
+
+### Streaming ASR
+
+```bash
+./run.sh --workdir /opt/riva/python-clients $(./autotag riva-client:python) \
+   python3 scripts/asr/transcribe_mic.py --input-device=24 --sample-rate-hz=44100
+```
+
+You can find more ASR examples to run at https://github.com/nvidia-riva/python-clients#asr
+
+### Streaming TTS
+
+```bash
+./run.sh --workdir /opt/riva/python-clients $(./autotag riva-client:python) \
+   python3 scripts/tts/talk.py --stream --output-device=24 --sample-rate-hz=44100 \
+     --text "Hello, how are you today? My name is Riva." 
+```
+
+You can set the `--voice` argument to one of the [available voices](https://docs.nvidia.com/deeplearning/riva/user-guide/docs/tts/tts-overview.html#voices) (the default is `English-US.Female-1`)
+
+Also, you can customize the rate, pitch, and pronunciation of individual words/phrases by including [inline SSML](https://docs.nvidia.com/deeplearning/riva/user-guide/docs/tutorials/tts-basics-customize-ssml.html#customizing-riva-tts-audio-output-with-ssml) in your text.
+
+### Loopback
+
+To feed the ASR into the TTS and have it speak your words back to you:
+
+```bash
+./run.sh --workdir /opt/riva/python-clients $(./autotag riva-client:python) \
+   python3 scripts/loopback.py --input-device=24 --output-device=24 --sample-rate-hz=48000
+```
 <details open>
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
@@ -17,7 +63,7 @@
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`bazel`](/packages/bazel) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.cpp`](Dockerfile.cpp) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/riva-client:cpp-r35.3.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-08-12, 6.3GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/riva-client:cpp-r35.2.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-08-13, 6.3GB)`<br>[`dustynv/riva-client:cpp-r35.3.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-08-13, 6.3GB)`<br>[`dustynv/riva-client:cpp-r35.4.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-08-13, 6.3GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/nvidia-riva/cpp-clients |
 
 | **`riva-client:python`** | |
@@ -25,8 +71,9 @@
 | &nbsp;&nbsp;&nbsp;Builds | [![`riva-client-python_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/riva-client-python_jp51.yml?label=riva-client-python:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/riva-client-python_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`llamaspeak`](/packages/llm/llamaspeak) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.python`](Dockerfile.python) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/riva-client:python-r35.2.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-08-12, 5.0GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/riva-client:python-r35.2.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-08-13, 5.0GB)`<br>[`dustynv/riva-client:python-r35.3.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-08-13, 5.0GB)`<br>[`dustynv/riva-client:python-r35.4.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-08-13, 5.0GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/nvidia-riva/python-clients |
 
 </details>
@@ -37,8 +84,12 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/riva-client:cpp-r35.3.1`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2023-08-12` | `arm64` | `6.3GB` |
-| &nbsp;&nbsp;[`dustynv/riva-client:python-r35.2.1`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2023-08-12` | `arm64` | `5.0GB` |
+| &nbsp;&nbsp;[`dustynv/riva-client:cpp-r35.2.1`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2023-08-13` | `arm64` | `6.3GB` |
+| &nbsp;&nbsp;[`dustynv/riva-client:cpp-r35.3.1`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2023-08-13` | `arm64` | `6.3GB` |
+| &nbsp;&nbsp;[`dustynv/riva-client:cpp-r35.4.1`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2023-08-13` | `arm64` | `6.3GB` |
+| &nbsp;&nbsp;[`dustynv/riva-client:python-r35.2.1`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2023-08-13` | `arm64` | `5.0GB` |
+| &nbsp;&nbsp;[`dustynv/riva-client:python-r35.3.1`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2023-08-13` | `arm64` | `5.0GB` |
+| &nbsp;&nbsp;[`dustynv/riva-client:python-r35.4.1`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2023-08-13` | `arm64` | `5.0GB` |
 | &nbsp;&nbsp;[`dustynv/riva-client:r35.2.1`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2023-08-10` | `arm64` | `6.3GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
@@ -56,10 +107,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag riva-client)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/riva-client:cpp-r35.3.1
+./run.sh dustynv/riva-client:python-r35.3.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/riva-client:cpp-r35.3.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/riva-client:python-r35.3.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
