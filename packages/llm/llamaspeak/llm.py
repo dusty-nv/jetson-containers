@@ -270,8 +270,11 @@ if __name__ == '__main__':
                 print(response, end='')
                 sys.stdout.flush()
             elif request['type'] == 'chat':
-                history = response['visible'][-1][1]
-                print(history)
+                current_length = request.get('current_length', 0)
+                msg = response['visible'][-1][1][current_length:]
+                request['current_length'] = current_length + len(msg)
+                print(msg, end='')
+                sys.stdout.flush()
         else:
             print("\n")
 
