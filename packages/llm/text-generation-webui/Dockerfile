@@ -34,6 +34,7 @@ RUN cp /opt/GPTQ-for-LLaMa/*.py /opt/text-generation-webui
 
 # https://github.com/oobabooga/text-generation-webui/issues/3042#issuecomment-1626160643
 RUN pip3 install --no-cache-dir --verbose 'gradio>=3.36.1'
+RUN pip3 install --no-cache-dir --verbose -r text-generation-webui/extensions/api/requirements.txt
 
 WORKDIR /
 
