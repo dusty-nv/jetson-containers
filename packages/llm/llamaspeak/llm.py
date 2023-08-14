@@ -4,7 +4,6 @@ import json
 import queue
 import pprint
 import asyncio
-import argparse
 import requests
 import threading
 
@@ -15,11 +14,12 @@ class LLM(threading.Thread):
     """
     LLM service using text-generation-webui API
     """
-    def __init__(self, llm_server='0.0.0.0', llm_api_port=5000, llm_streaming_port=5005, **kwargs):
+    def __init__(self, llm_server='0.0.0.0', llm_api_port=5000, llm_streaming_port=5005, verbose=False, **kwargs):
                  
         super(LLM, self).__init__()
         
         self.queue = queue.Queue()
+        self.verbose = verbose
         
         self.server = llm_server
         self.blocking_port = llm_api_port
@@ -121,7 +121,11 @@ class LLM(threading.Thread):
             'id': self.request_count,
             'type': 'completion',
             'params': params,
-            'callback': callback
+            'output': '',
+            'callback': callback,
+            'events': {
+                'end': threading.Event()
+            }
         }
         
         self.request_count += 1
@@ -201,7 +205,11 @@ class LLM(threading.Thread):
             'id': self.request_count,
             'type': 'chat',
             'params': params,
-            'callback': callback
+            'output': {},
+            'callback': callback,
+            'events': {
+                'end': threading.Event()
+            }
         }
         
         self.request_count += 1
@@ -214,8 +222,9 @@ class LLM(threading.Thread):
         while True:
             request = self.queue.get()
             
-            print("-- LLM:")
-            pprint.pprint(request)
+            if self.verbose:
+                print("-- LLM:")
+                pprint.pprint(request)
             
             if request['type'] == 'completion':
                 url = f"ws://{self.server}:{self.streaming_port}/api/v1/stream"
@@ -229,36 +238,47 @@ class LLM(threading.Thread):
                     incoming_data = websocket.recv()
                     incoming_data = json.loads(incoming_data)
 
-                    if request['callback'] is None:
-                        continue
-
                     if incoming_data['event'] == 'text_stream':
-                        key = 'history' if request['type'] is 'chat' else 'text'
-                        request['callback'](incoming_data[key], request=request, end=False)
+                        key = 'history' if request['type'] == 'chat' else 'text'
+                        if request['type'] == 'chat':
+                            response = incoming_data['history']
+                            request['output'] = response
+                        elif request['type'] == 'text':
+                            response = incoming_data['text']
+                            request['output'] += response
+                        if request['callback'] is not None:
+                            request['callback'](response, request=request, end=False)
                     elif incoming_data['event'] == 'stream_end':
-                        request['callback'](None, request=request, end=True)
-                        return
+                        if request['callback'] is not None:
+                            request['callback'](None, request=request, end=True)
+                        request['events']['end'].set()
+                        break
 
 
 if __name__ == '__main__':
-
+    import argparse
+    from termcolor import cprint
+    
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     
     parser.add_argument("--llm-server", type=str, default='0.0.0.0', help="hostname of the LLM server (text-generation-webui)")
     parser.add_argument("--llm-api-port", type=int, default=5000, help="port of the blocking API on the LLM server")
     parser.add_argument("--llm-streaming-port", type=int, default=5005, help="port of the streaming websocket API on the LLM server")
     parser.add_argument("--max-new-tokens", type=int, default=250, help="the maximum number of new tokens for the LLM to generate")
-    parser.add_argument("--prompt", type=str, default="")
+    parser.add_argument("--prompt", action='append', nargs='*')
     parser.add_argument("--chat", action="store_true")
+    parser.add_argument("--verbose", action="store_true")
     
     args = parser.parse_args()
     
     if not args.prompt:
         if args.chat:
-            args.prompt = "Please give me a step-by-step guide on how to plant a tree in my backyard."
+            args.prompt = ["Please give me a step-by-step guide on how to plant a tree in my backyard."]
         else:
-            args.prompt = "Once upon a time,"
-            
+            args.prompt = ["Once upon a time,"]
+    else:
+        args.prompt = [x[0] for x in args.prompt]
+        
     print(args)
     
     llm = LLM(**vars(args))
@@ -280,8 +300,15 @@ if __name__ == '__main__':
 
     if args.chat:
         history = {'internal': [], 'visible': []}
-        llm.generate_chat(args.prompt, history, max_new_tokens=args.max_new_tokens, callback=on_llm_reply)
+        
+        for i, prompt in enumerate(args.prompt):
+            cprint(prompt, 'blue')
+            request = llm.generate_chat(prompt, history, max_new_tokens=args.max_new_tokens, _continue=False, callback=on_llm_reply)
+            request['events']['end'].wait()
+            history = request['output']
     else:
-        llm.generate(args.prompt, max_new_tokens=args.max_new_tokens, callback=on_llm_reply)
+        for prompt in args.prompt:
+            cprint(prompt, 'blue')
+            llm.generate(prompt, max_new_tokens=args.max_new_tokens, callback=on_llm_reply)
     
     
