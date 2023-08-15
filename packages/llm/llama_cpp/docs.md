@@ -2,6 +2,11 @@
 * llama.cpp from https://github.com/ggerganov/llama.cpp with CUDA enabled (found under `/opt/llama.cpp`)
 * Python bindings from https://github.com/abetlen/llama-cpp-python (found under `/opt/llama-cpp-python`)
 
+This build also has the following patches applied (from [`patches.diff`](patches.diff))
+
+* fixed `__fp16` typedef in llama.h on ARM64 (use `half` with NVCC)
+* parsing of BOS/EOS tokens (see https://github.com/ggerganov/llama.cpp/pull/1931)
+
 ### Inference Benchmark
 
 You can use llama.cpp's built-in [`main`](https://github.com/ggerganov/llama.cpp/tree/master/examples/main) tool to run GGML models (from [HuggingFace Hub](https://huggingface.co/models?search=ggml) or elsewhere)

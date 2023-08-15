@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# benchmark a quantized AWQ model
+# benchmark a quantized GGML model with llama_cpp_python API
 import os
 import time
 import datetime

@@ -4,7 +4,9 @@
 # config: config.py
 # depends: [cmake, python, numpy, huggingface_hub]
 # requires: '>=34.1.0'
-# test: test.py
+# test:
+#   - 'test.py --model $(huggingface-downloader TheBloke/Llama-2-7B-GGML/llama-2-7b.ggmlv3.q4_0.bin)'
+#   - 'test_tokenizer.py --model $(huggingface-downloader TheBloke/Llama-2-7B-GGML/llama-2-7b.ggmlv3.q4_0.bin)'
 # docs: docs.md
 #---
 ARG BASE_IMAGE
@@ -14,14 +16,24 @@ ARG CUDA_ARCHITECTURES
 
 WORKDIR /opt
 
-# force rebuild on new git commits - https://stackoverflow.com/a/56945508
+# clone it (force rebuild on new git commits)
 ADD https://api.github.com/repos/ggerganov/llama.cpp/git/refs/heads/master /tmp/llama_cpp_version.json
+RUN git clone --depth=1 --recursive https://github.com/ggerganov/llama.cpp
+    
+# apply patches
+COPY patches.diff llama.cpp/
 
+RUN cd llama.cpp && \
+    git apply patches.diff && \
+    git diff
+    
 # llama.cpp/ggml.h(260): error: identifier "__fp16" is undefined
-RUN git clone --depth=1 --recursive https://github.com/ggerganov/llama.cpp && \
-    sed 's|#ifdef __ARM_NEON|#if defined(__ARM_NEON) \&\& !defined(__CUDACC__)|g' -i llama.cpp/ggml.h && \
-    cat llama.cpp/ggml.h | grep '__ARM_NEON'
+# these are now applied in patch.diff (along with other patches)
+#RUN cd llama.cpp && \
+#    sed 's|#ifdef __ARM_NEON|#if defined(__ARM_NEON) \&\& !defined(__CUDACC__)|g' -i llama.cpp/ggml.h && \
+#    cat llama.cpp/ggml.h | grep '__ARM_NEON'
 
+# build it
 RUN cd llama.cpp && \
     mkdir build && \
     cd build && \
@@ -35,13 +47,17 @@ RUN ln -s /opt/llama.cpp/build/bin /opt/llama.cpp/bin
 ADD https://api.github.com/repos/abetlen/llama-cpp-python/git/refs/heads/main /tmp/llama_cpp_python_version.json
 RUN git clone --depth=1 --recursive https://github.com/abetlen/llama-cpp-python
 
-# llama.cpp/ggml.h(260): error: identifier "__fp16" is undefined
-RUN sed 's|#ifdef __ARM_NEON|#if defined(__ARM_NEON) \&\& !defined(__CUDACC__)|g' -i llama-cpp-python/vendor/llama.cpp/ggml.h
-
+# apply patches
+RUN cd llama-cpp-python/vendor/llama.cpp && \
+    git apply /opt/llama.cpp/patches.diff && \
+    git diff
+    
+# build the wheel
 RUN cd llama-cpp-python && \
     CMAKE_ARGS="-DLLAMA_CUBLAS=on -DLLAMA_CUDA_F16=1 -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}" FORCE_CMAKE=1 \
     pip3 wheel -w dist --verbose . 
  
+# install the wheel
 RUN cp llama-cpp-python/dist/llama_cpp_python*.whl /opt && \
     pip3 install --no-cache-dir --verbose /opt/llama_cpp_python*.whl
 
