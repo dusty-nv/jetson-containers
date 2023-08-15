@@ -16,19 +16,19 @@ index bdbd128..28a806a 100644
      typedef uint16_t ggml_fp16_t;
  #endif
 diff --git a/llama.cpp b/llama.cpp
-index c8ab313..a8e4f28 100644
+index c8ab313..2e9cc90 100644
 --- a/llama.cpp
 +++ b/llama.cpp
 @@ -572,6 +572,13 @@ struct llama_file_loader {
              uint32_t len = file.read_u32();
              std::string word = file.read_string(len);
  
-+            /*if (i == 0)
++            if (i == 0)
 +                word = "<unk>";
 +            else if (i == 1)
 +                word = "<s>";
 +            else if (i == 2)
-+                word = "</s>";*/
++                word = "</s>";
 +		  
              float score = 0.0f;
              file.read_raw(&score, sizeof(score));
@@ -42,7 +42,32 @@ index c8ab313..a8e4f28 100644
          }
      }
      void read_tensor_metadata(llama_load_tensors_map & tensors_map) {
-@@ -2089,7 +2098,47 @@ static std::vector<llama_vocab::id> llama_tokenize(const llama_vocab & vocab, co
+@@ -1975,18 +1984,19 @@ struct llama_sp_bigram {
+ struct llama_tokenizer {
+     llama_tokenizer(const llama_vocab & vocab): vocab_(vocab) {}
+ 
+-    void tokenize(const std::string & text, std::vector<llama_vocab::id> & output) {
++    void tokenize(const char * text, size_t len, std::vector<llama_vocab::id> & output) {
++	   symbols_.clear();
+         // split string into utf8 chars
+         int index = 0;
+         size_t offs = 0;
+-        while (offs < text.size()) {
++        while (offs < len) {
+             llama_sp_symbol sym;
+-            size_t char_len = std::min(text.size() - offs, utf8_len(text[offs]));
+-            sym.text = text.c_str() + offs;
++            size_t char_len = std::min(len - offs, utf8_len(text[offs]));
++            sym.text = text + offs;
+             sym.n = char_len;
+             offs += char_len;
+             sym.prev = index - 1;
+-            sym.next = offs == text.size() ? -1 : index + 1;
++            sym.next = offs == len ? -1 : index + 1;
+             index++;
+             symbols_.emplace_back(sym);
+         }
+@@ -2089,7 +2099,47 @@ static std::vector<llama_vocab::id> llama_tokenize(const llama_vocab & vocab, co
          output.push_back(llama_token_bos());
      }
  
@@ -74,7 +99,7 @@ index c8ab313..a8e4f28 100644
 +
 +        if (token_id != -1) {
 +            if (last_delim_end < delim_start) {
-+                tokenizer.tokenize(text.substr(last_delim_end, delim_start - last_delim_end), output);
++                tokenizer.tokenize(text.c_str() + last_delim_end, delim_start - last_delim_end, output);
 +            }
 +            output.push_back(token_id);
 +            delim_start = delim_end;
@@ -85,7 +110,7 @@ index c8ab313..a8e4f28 100644
 +    }
 +
 +    if (last_delim_end < text.size()) {
-+        tokenizer.tokenize(text.substr(last_delim_end, text.size() - last_delim_end), output);
++        tokenizer.tokenize(text.c_str() + last_delim_end, text.size() - last_delim_end, output);
 +    }
 +    
      return output;
