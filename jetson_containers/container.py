@@ -261,9 +261,10 @@ def test_container(name, package, simulate=False):
         return True
         
     for test in package['test']:
-        test_cmd = test.split(' ')[0]  # test could be a command with arguments - get just the script/executable name
-        test_ext = os.path.splitext(test_cmd)[1]
-        log_file = os.path.join(log_dir('test'), f"{name.replace('/','_')}_{test_cmd}").replace(':','_')
+        test_cmd = test.split(' ')  # test could be a command with arguments
+        test_exe = test_cmd[0]      # just get just the script/executable name
+        test_ext = os.path.splitext(test_exe)[1]
+        log_file = os.path.join(log_dir('test'), f"{name.replace('/','_')}_{test_exe}").replace(':','_')
         
         cmd = "sudo docker run -t --rm --runtime=nvidia --network=host" + _NEWLINE_
         cmd += f"--volume {package['path']}:/test" + _NEWLINE_
@@ -271,13 +272,16 @@ def test_container(name, package, simulate=False):
         cmd += f"--workdir /test" + _NEWLINE_
         cmd += name + _NEWLINE_
         
-        if test_ext == ".py":
-            cmd += f"python3 {test}" + _NEWLINE_
-        elif test_ext == ".sh":
-            cmd += f"/bin/bash {test}" + _NEWLINE_
-        else:
-            cmd += f"{test}" + _NEWLINE_
+        cmd += "/bin/bash -c '"
         
+        if test_ext == ".py":
+            cmd += f"python3 {test}"
+        elif test_ext == ".sh":
+            cmd += f"/bin/bash {test}"
+        else:
+            cmd += f"{test}"
+        
+        cmd += "'" + _NEWLINE_
         cmd += f"2>&1 | tee {log_file + '.txt'}" + "; exit ${PIPESTATUS[0]}"
                 
         print(f"-- Testing container {name} ({package['name']}/{test})")
