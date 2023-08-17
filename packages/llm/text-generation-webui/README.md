@@ -23,6 +23,8 @@ To launch the container, run the command below, and then navigate your browser t
 ./run.sh $(./autotag text-generation-webui)
 ```
 
+### Command-Line Options
+
 See here for command-line options:   https://github.com/oobabooga/text-generation-webui/tree/main#basic-settings
 
 For example, after you've [downloaded a model](#downloading-models), you can load it directly at startup like so:
