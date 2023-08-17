@@ -21,7 +21,7 @@ To launch the container, run the command below, and then navigate your browser t
 
 ### Command-Line Options
 
-While the server and models are dynamically configurable from within the webui at runtime, see here for the list of command-line options that you can set at start-up:   
+While the server and models are dynamically configurable from within the webui at runtime, see here for optional command-line settings:
 
 * https://github.com/oobabooga/text-generation-webui/tree/main#basic-settings
 
