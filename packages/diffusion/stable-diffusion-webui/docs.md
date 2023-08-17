@@ -25,3 +25,13 @@ Other configuration arguments can be found at [AUTOMATIC1111/stable-diffusion-we
 * `--lowvram` (sacrafice a lot of speed for very low VRAM usage)
 
 See the [`stable-diffusion`](/packages/diffusion/stable-diffusion) container to run image generation from a script (`txt2img.py`) as opposed to the web UI. 
+
+### Tips & Tricks
+
+Negative prompts:  https://huggingface.co/spaces/stabilityai/stable-diffusion/discussions/7857
+
+Stable Diffusion XL
+  * https://huggingface.co/docs/diffusers/api/pipelines/stable_diffusion/stable_diffusion_xl
+  * https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0
+  * https://huggingface.co/stabilityai/stable-diffusion-xl-refiner-1.0
+  * https://stable-diffusion-art.com/sdxl-model/
