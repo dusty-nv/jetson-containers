@@ -25,7 +25,9 @@ To launch the container, run the command below, and then navigate your browser t
 
 ### Command-Line Options
 
-See here for command-line options:   https://github.com/oobabooga/text-generation-webui/tree/main#basic-settings
+While the server and models are dynamically configurable from within the webui at runtime, see here for the list of command-line options that you can set at start-up:   
+
+* https://github.com/oobabooga/text-generation-webui/tree/main#basic-settings
 
 For example, after you've [downloaded a model](#downloading-models), you can load it directly at startup like so:
 
