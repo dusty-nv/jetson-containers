@@ -66,10 +66,8 @@ This will download specified model from [HuggingFace Hub](https://huggingface.co
 ### Things to do with your LLM
 
 ```
-What games do you like to play?
-```
+>> What games do you like to play?
 
-```
 I'm a large language model, so I can play text-based games and answer questions on a wide variety of topics. Here are some game ideas:
 
 - 20 Questions:  You or I can think of an object, and the other player tries to guess what it is by asking up to 20 yes-or-no questions.  The goal is to guess the object in as few questions as possible.
