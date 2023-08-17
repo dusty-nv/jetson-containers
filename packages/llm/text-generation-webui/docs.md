@@ -39,7 +39,7 @@ For example, after you've [downloaded a model](#downloading-models), you can loa
 
 ### Downloading Models 
 
-See [here](https://github.com/oobabooga/text-generation-webui/tree/main#downloading-models) for instructions for downloading models - you can do this from within the webui, or by running their [`download-model.py`](https://github.com/oobabooga/text-generation-webui/blob/main/download-model.py) script in the container:
+See [here](https://github.com/oobabooga/text-generation-webui/tree/main#downloading-models) for instructions for downloading models - you can do this from within the webui, or by running their [`download-model.py`](https://github.com/oobabooga/text-generation-webui/blob/main/download-model.py) script:
 
 ```bash
 ./run.sh --workdir=/opt/text-generation-webui $(./autotag text-generation-webui) /bin/bash -c \
