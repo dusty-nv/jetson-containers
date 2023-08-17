@@ -1,7 +1,7 @@
 #---
 # name: llamaspeak
 # group: llm
-# depends: [riva-client:python]
+# depends: [riva-client:python, numpy]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import time
 import queue
 import pprint
 import threading
@@ -6,28 +7,27 @@ import threading
 import riva.client
 import riva.client.audio_io
 
+import numpy as np
+
 
 class TTS(threading.Thread):
     """
     Streaming TTS service
     """
-    def __init__(self, auth, output_device=0, sample_rate_hz=44100, audio_channels=1, 
-                 language_code='en-US', voice='English-US.Female-1', **kwargs):
-                 
+    def __init__(self, auth, language_code='en-US', voice='English-US.Female-1', sample_rate_hz=44100, **kwargs): 
+          
         super(TTS, self).__init__()
         
         self.queue = queue.Queue()
         self.voice = voice
+        self.muted = False
         
         self.language_code = language_code
-        self.sample_rate_hz = sample_rate_hz
+        self.sample_rate = sample_rate_hz
         self.request_count = 0
-        
+        self.needs_text_by = 0.0
+
         self.tts_service = riva.client.SpeechSynthesisService(auth)
-        
-        self.output_stream = riva.client.audio_io.SoundCallBack(
-            output_device, nchannels=audio_channels, sampwidth=2, framerate=sample_rate_hz
-        ).__enter__()
 
     def generate(self, text, voice=None, callback=None):
         """
@@ -46,22 +46,45 @@ class TTS(threading.Thread):
         self.request_count += 1
         self.queue.put(request)
         return request
+
+    def mute(self):
+        """
+        Mutes the TTS until another request comes in
+        """
+        self.muted = True
+     
+    def needs_text(self):
+        """
+        Returns true if the TTS needs text to keep the audio flowing.
+        """
+        return (time.perf_counter() > self.needs_text_by)
         
     def run(self):
         print(f"-- running TTS service ({self.language_code}, {self.voice})")
         
         while True:
             request = self.queue.get()
+            self.muted = False
             
-            print(f"-- TTS:  {request['text']}")
+            print(f"-- TTS:  '{request['text']}'")
             
             responses = self.tts_service.synthesize_online(
-                request['text'], request['voice'], self.language_code, sample_rate_hz=self.sample_rate_hz
+                request['text'], request['voice'], self.language_code, sample_rate_hz=self.sample_rate
             )
+            
+            num_samples = 0
 
             for response in responses:
-                self.output_stream(response.audio)
+                if self.muted:
+                    break
+                    
+                samples = np.frombuffer(response.audio, dtype=np.int16)
+
+                current_time = time.perf_counter()
+                if current_time > self.needs_text_by:
+                    self.needs_text_by = current_time
+                self.needs_text_by += len(samples) / self.sample_rate
                 
                 if request['callback'] is not None:
-                    request['callback'](response, request)
+                    request['callback'](samples, request)
             

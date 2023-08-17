@@ -1,4 +1,21 @@
 #!/usr/bin/env python3
+#
+# Streaming LLM service for text completion and chat (using oobabooga text-generation-webui API)
+#
+# To test text completion, load a model in the text-generation-webui server and run the following: 
+#
+#   python3 llm.py --max-new-tokens=128 \
+#      --prompt "Once upon a time," \
+#      --prompt "In a galaxy far, far away" \
+#      --prompt "A good recipe for pasta is"
+#
+# To test multi-turn chat, load a chat model in the text-generation-webui server and run the following:
+#
+#   python3 llm.py --max-new-tokens=128 --chat \
+#      --prompt "What's for dinner tonight?" \
+#      --prompt "My, that does sound delightful!" \
+#      --prompt "It sounds like you're quite the chef!  How long have you been cooking for?"
+#
 import sys
 import json
 import queue
@@ -12,11 +29,11 @@ from websockets.sync.client import connect as websocket_connect
 
 class LLM(threading.Thread):
     """
-    LLM service using text-generation-webui API
+    Streaming LLM service using text-generation-webui API
     """
     def __init__(self, llm_server='0.0.0.0', llm_api_port=5000, llm_streaming_port=5005, verbose=False, **kwargs):
                  
-        super(LLM, self).__init__()
+        super(LLM, self).__init__(daemon=True)  # stop thread on main() exit
         
         self.queue = queue.Queue()
         self.verbose = verbose
@@ -26,6 +43,7 @@ class LLM(threading.Thread):
         self.streaming_port = llm_streaming_port
         
         self.request_count = 0
+        self.muted = False
         
         pprint.pprint(self.model_list())
         pprint.pprint(self.model_info())   
@@ -129,7 +147,8 @@ class LLM(threading.Thread):
         }
         
         self.request_count += 1
-        self.queue.put(request)
+        self.enqueue(request, clear=True)
+        
         return request
     
     def generate_chat(self, user_input, history, callback=None, **kwargs):
@@ -213,14 +232,25 @@ class LLM(threading.Thread):
         }
         
         self.request_count += 1
-        self.queue.put(request)
+        self.enqueue(request, clear=True)
+        
         return request
+        
+    def enqueue(self, request, clear=False):
+        if clear:
+            while not self.queue.empty():
+                self.queue.get()        
+        self.queue.put(request)
+    
+    def mute():
+        self.muted = True
         
     def run(self):
         print(f"-- running LLM service ({self.model_name()})")
         
         while True:
             request = self.queue.get()
+            self.muted = False
             
             if self.verbose:
                 print("-- LLM:")
@@ -234,7 +264,7 @@ class LLM(threading.Thread):
             with websocket_connect(url) as websocket:
                 websocket.send(json.dumps(request['params']))
                 
-                while True:
+                while not self.muted:
                     incoming_data = websocket.recv()
                     incoming_data = json.loads(incoming_data)
 
@@ -243,7 +273,7 @@ class LLM(threading.Thread):
                         if request['type'] == 'chat':
                             response = incoming_data['history']
                             request['output'] = response
-                        elif request['type'] == 'text':
+                        elif request['type'] == 'completion':
                             response = incoming_data['text']
                             request['output'] += response
                         if request['callback'] is not None:
@@ -309,6 +339,6 @@ if __name__ == '__main__':
     else:
         for prompt in args.prompt:
             cprint(prompt, 'blue')
-            llm.generate(prompt, max_new_tokens=args.max_new_tokens, callback=on_llm_reply)
-    
+            request = llm.generate(prompt, max_new_tokens=args.max_new_tokens, callback=on_llm_reply)
+            request['events']['end'].wait()
     
