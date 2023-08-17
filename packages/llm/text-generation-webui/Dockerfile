@@ -38,4 +38,4 @@ RUN pip3 install --no-cache-dir --verbose -r text-generation-webui/extensions/ap
 
 WORKDIR /
 
-CMD /bin/bash -c "cd /opt/text-generation-webui && python3 server.py --listen --chat --model-dir=/data/models/text-generation-webui"
+CMD /bin/bash -c "cd /opt/text-generation-webui && python3 server.py --model-dir=/data/models/text-generation-webui --listen --verbose"
