@@ -5,6 +5,7 @@ import ssl
 import time
 import json
 import flask
+import queue
 import base64
 import pprint
 import asyncio
@@ -46,9 +47,10 @@ class Webserver(threading.Thread):
         
         # websocket
         self.ws_port = ws_port
+        self.ws_queue = queue.Queue()
         self.ws_server = websocket_serve(self.on_websocket, host=self.host, port=self.ws_port, ssl_context=self.ssl_context)
         self.ws_thread = threading.Thread(target=lambda: self.ws_server.serve_forever(), daemon=True)
-        
+       
     @staticmethod
     def on_index():
         return flask.render_template('index.html')
@@ -58,33 +60,9 @@ class Webserver(threading.Thread):
 
         listener_thread = threading.Thread(target=self.websocket_listener, args=[websocket], daemon=True)
         listener_thread.start()
-        
-        num_msgs = 0
-        num_users = 2
-        
+ 
         while True:
-            websocket.send(json.dumps({
-                'id': num_msgs,
-                'type': 'message',
-                'text': f"This is message {num_msgs}",
-                'user': (num_msgs % num_users)
-            }))
-            
-            #incoming_data = websocket.recv()
-            #incoming_data = json.loads(incoming_data)
-
-            time.sleep(1.0)
-            
-            websocket.send(json.dumps({
-                'id': num_msgs,
-                'type': 'message',
-                'text': f"This is message {num_msgs} (updated)",
-                'user': (num_msgs % num_users)
-            }))
-            
-            num_msgs += 1
-            
-            time.sleep(0.5)
+            websocket.send(json.dumps(self.ws_queue.get()))
 
     def websocket_listener(self, websocket):
         print(f"-- listening on websocket connection from {websocket.remote_address}")
@@ -108,7 +86,16 @@ class Webserver(threading.Thread):
                 wav.writeframes(msg['data'])
                 if self.audio_callback:
                     self.audio_callback(msg)
-            
+    
+    def send_message(self, msg):
+        self.ws_queue.put(msg)   # do we even need this queue at all and can the websocket just send straight away?
+        
+    def output_audio(self, samples):
+        self.send_message({
+            'type': 'audio',
+            'data': samples
+        })
+
     def run(self):
         print(f"-- starting webserver @ {self.host}:{self.port}")
         self.ws_thread.start()

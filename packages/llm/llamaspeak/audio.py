@@ -12,7 +12,7 @@ class AudioMixer(threading.Thread):
     """
     Multi-track audio output mixer / sound generator
     """
-    def __init__(self, output_device=None, output_file=None, sample_rate_hz=44100, audio_channels=1, **kwargs):
+    def __init__(self, output_device=None, output_file=None, callback=None, sample_rate_hz=44100, audio_channels=1, **kwargs):
                  
         super(AudioMixer, self).__init__(daemon=True)
         
@@ -20,35 +20,23 @@ class AudioMixer(threading.Thread):
 
         self.tracks = []
         self.channels = audio_channels
+        self.callback = callback
+        self.output_device_id = output_device
         self.output_device = None
         self.output_wav = None
         self.output_file = output_file
         self.sample_rate = sample_rate_hz
         self.sample_type = np.int16
         self.sample_width = 2
+        self.audio_chunk = 6000
         self.muted = False
-        self.opened = False
-
-        if output_device is not None:
-            self.output_device = self.pa.open(
-                output_device_index=self.output_device,
-                format=self.pa.get_format_from_width(self.sample_width),
-                channels=self.channels,
-                rate=self.sample_rate,
-                stream_callback=self.need_audio,
-                output=True,
-            )
-            self.opened = True
-   
+ 
         if self.output_file:
             self.output_wav = wave.open(self.output_file, 'wb')
             self.output_wav.setnchannels(self.channels)
             self.output_wav.setsampwidth(self.sample_width)
             self.output_wav.setframerate(self.sample_rate)
-            self.opened = True
-            
-            if self.output_device is None:
-                self.start()
+
      
     def play(self, samples=None, filename=None, tone=None):
         """
@@ -72,9 +60,9 @@ class AudioMixer(threading.Thread):
         self.tracks.append(track)
         return track
             
-    def need_audio(self, in_data, frame_count, time_info, status):
+    def generate(self, in_data, frame_count, time_info, status):
         """
-        Callback from the sound device when it needs audio samples to output
+        Generate mixed audio samples for either the sound device, output file, web audio, ect.
         """
         samples = np.zeros(frame_count * self.channels, dtype=self.sample_type)
         
@@ -92,22 +80,44 @@ class AudioMixer(threading.Thread):
                 track['status'] = 'done'
                 self.tracks.remove(track)
         
+        samples = samples.tobytes()
+        
         if self.output_wav:
-            self.output_wav.writeframesraw(samples)
+            self.output_wav.writeframes(samples) #raw(samples)
+            
+        if self.callback:
+            self.callback(samples)
             
         return (samples, pyaudio.paContinue)
         
     def run(self):
         """
-        Thread main (only gets used for wav-only output)
+        Used when there's not a soundcard output device
         """
+        if self.output_device_id is not None:
+            print(f"-- opening audio output device ({self.output_device_id})")
+            self.output_device = self.pa.open(
+                output_device_index=self.output_device_id,
+                format=self.pa.get_format_from_width(self.sample_width),
+                channels=self.channels,
+                rate=self.sample_rate,
+                stream_callback=self.generate,
+                output=True,
+            )
+            return # the soundcard callback will run in another thread
+            
+        if not self.output_wav and not self.callback:
+            return
+
         print(f"-- running AudioMixer thread")
         
-        if not self.output_wav:
-            return
-            
         while True:
-            self.output_wav.writeframesraw(
-                self.need_audio(None, self.sample_rate_hz, None, None)
-            )
-            time.sleep(1.0)
+            time_start = time.perf_counter()
+            self.generate(None, self.audio_chunk, None, None)
+            time_sleep = (self.audio_chunk / self.sample_rate) - (time.perf_counter() - time_start)
+            
+            if time_sleep > 0.001:
+                #print(f"-- AudioMixer sleeping for {time_sleep} seconds")
+                time.sleep(time_sleep)
+                
+            

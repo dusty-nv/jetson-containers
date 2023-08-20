@@ -78,14 +78,13 @@ class Chatbot(threading.Thread):
         self.args = args
         self.auth = riva.client.Auth(uri=args.server) # args.ssl_cert, args.use_ssl
         
-        self.audio_mixer = AudioMixer(**vars(args))
-
         self.asr = ASR(self.auth, callback=self.on_asr_transcript, **vars(args)) #if args.input_device is not None else None
-        self.tts = TTS(self.auth, **vars(args)) if self.audio_mixer.opened else None
+        self.tts = TTS(self.auth, **vars(args))
         self.llm = LLM(**vars(args))
         
-        self.web = Webserver(audio_callback=self.on_web_audio, **vars(args))
-        
+        self.webserver = Webserver(audio_callback=self.on_web_audio, **vars(args))
+        self.audio_mixer = AudioMixer(callback=self.on_mixed_audio, **vars(args))
+
         self.asr_history = ""
         self.tts_history = ""
         self.llm_history = {'internal': [], 'visible': []}
@@ -133,6 +132,12 @@ class Chatbot(threading.Thread):
         Recieve audio samples from web client microphone
         """
         self.asr.process(msg['data'])
+    
+    def on_mixed_audio(self, audio):
+        """
+        Send mixed-down audio from the TTS/ect to web client
+        """
+        self.webserver.output_audio(audio)
         
     def on_asr_transcript(self, result):
         """
@@ -215,16 +220,17 @@ class Chatbot(threading.Thread):
         """
         Chatbot thread main()
         """
-        if self.asr:
-            self.asr.start()
-            
-        if self.tts:
-            self.tts.start()
-
+        self.asr.start()
+        self.tts.start()
         self.llm.start()
-        self.web.start()
+        
+        self.audio_mixer.start()
+        self.webserver.start()
             
         time.sleep(0.5)
+        
+        num_msgs = 0
+        num_users = 2
         
         while True:
             if not self.asr: #or self.interrupt_flag:
@@ -235,8 +241,25 @@ class Chatbot(threading.Thread):
                 request = self.llm.generate_chat(prompt, self.llm_history, max_new_tokens=self.args.max_new_tokens, callback=self.on_llm_reply)
                 request['event'].wait()
             else:
+                #time.sleep(1.0)
+                self.webserver.send_message({
+                    'id': num_msgs,
+                    'type': 'message',
+                    'text': f"This is message {num_msgs}",
+                    'user': (num_msgs % num_users)
+                })
+                
                 time.sleep(1.0)
- 
+                
+                self.webserver.send_message({
+                    'id': num_msgs,
+                    'type': 'message',
+                    'text': f"This is message {num_msgs} (updated)",
+                    'user': (num_msgs % num_users)
+                })
+                
+                num_msgs += 1
+                time.sleep(0.5)
 
 if __name__ == '__main__':
     args = parse_args()

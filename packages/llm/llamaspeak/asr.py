@@ -60,7 +60,7 @@ class ASR(threading.Thread):
                         self.callback(result)
       
     def run_mic(self):
-        print(f"-- starting audio input device ({self.input_device})")
+        print(f"-- opening audio input device ({self.input_device})")
         self.generate(riva.client.audio_io.MicrophoneStream(
             self.sample_rate,
             self.audio_chunk,
