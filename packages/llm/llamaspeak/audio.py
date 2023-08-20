@@ -63,9 +63,10 @@ class AudioMixer(threading.Thread):
             samples = np.frombuffer(samples, dtype=self.sample_type)
             
         track = {
-            'status': 'playing',  # 'done', 'muted'
+            'status': 'playing',   # playing, paused, done
             'samples': samples,
-            'playhead': 0
+            'playhead': 0,
+            'muted': False,
         }
             
         self.tracks.append(track)
@@ -81,10 +82,11 @@ class AudioMixer(threading.Thread):
             playhead = track['playhead']
             num_samples = min(frame_count, len(track['samples']) - playhead)
             
-            if not self.muted and track['status'] == 'playing':
+            if not self.muted and track['status'] == 'playing' and not track['muted']:
                 samples[:num_samples] += track['samples'][playhead:playhead+num_samples]
                 
-            track['playhead'] += frame_count
+            if track['status'] != 'paused':
+                track['playhead'] += frame_count
             
             if track['playhead'] >= len(track['samples']):
                 track['status'] = 'done'

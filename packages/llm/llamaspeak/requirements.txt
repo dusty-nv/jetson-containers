@@ -1,3 +1,4 @@
 nvidia-riva-client
 websockets
 termcolor
+flask

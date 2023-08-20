@@ -141,9 +141,7 @@ class LLM(threading.Thread):
             'params': params,
             'output': '',
             'callback': callback,
-            'events': {
-                'end': threading.Event()
-            }
+            'event': threading.Event(),
         }
         
         self.request_count += 1
@@ -226,9 +224,7 @@ class LLM(threading.Thread):
             'params': params,
             'output': {},
             'callback': callback,
-            'events': {
-                'end': threading.Event()
-            }
+            'event': threading.Event()
         }
         
         self.request_count += 1
@@ -242,7 +238,7 @@ class LLM(threading.Thread):
                 self.queue.get()        
         self.queue.put(request)
     
-    def mute():
+    def mute(self):
         self.muted = True
         
     def run(self):
@@ -264,7 +260,7 @@ class LLM(threading.Thread):
             with websocket_connect(url) as websocket:
                 websocket.send(json.dumps(request['params']))
                 
-                while not self.muted:
+                while True:
                     incoming_data = websocket.recv()
                     incoming_data = json.loads(incoming_data)
 
@@ -278,10 +274,11 @@ class LLM(threading.Thread):
                             request['output'] += response
                         if request['callback'] is not None:
                             request['callback'](response, request=request, end=False)
-                    elif incoming_data['event'] == 'stream_end':
+                            
+                    if incoming_data['event'] == 'stream_end' or self.muted:
                         if request['callback'] is not None:
                             request['callback'](None, request=request, end=True)
-                        request['events']['end'].set()
+                        request['event'].set()
                         break
 
 
@@ -334,11 +331,11 @@ if __name__ == '__main__':
         for i, prompt in enumerate(args.prompt):
             cprint(prompt, 'blue')
             request = llm.generate_chat(prompt, history, max_new_tokens=args.max_new_tokens, _continue=False, callback=on_llm_reply)
-            request['events']['end'].wait()
+            request['event'].wait()
             history = request['output']
     else:
         for prompt in args.prompt:
             cprint(prompt, 'blue')
             request = llm.generate(prompt, max_new_tokens=args.max_new_tokens, callback=on_llm_reply)
-            request['events']['end'].wait()
+            request['event'].wait()
     

@@ -38,7 +38,7 @@ class TTS(threading.Thread):
         """
         request = {
             'id': self.request_count,
-            'text': text,
+            'text': text.strip(),
             'voice': voice if voice else self.voice,
             'callback': callback
         }
@@ -76,6 +76,7 @@ class TTS(threading.Thread):
 
             for response in responses:
                 if self.muted:
+                    print(f"-- TTS muted, exiting request early:  {request['text']}")
                     break
                     
                 samples = np.frombuffer(response.audio, dtype=np.int16)

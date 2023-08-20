@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<title>Chat Bubbles</title>
+		
+    <link rel="stylesheet" href="/static/chat.css">
+
+		<script type='text/javascript' src="/static/jquery-3.6.3.min.js"></script>
+    <script type='text/javascript' src='/static/bootstrap.bundle.min.js'></script>
+    <script type='text/javascript' src='/static/websocket.js'></script>
+    
+		<script type="text/javascript">
+			$(function(){
+				$("#submit_left").click(function() {
+					var left_text = $('textarea#input_text_left').val(); // get textarea contents
+					if ($('textarea#input_text_left').val() != '') { // make sure textarea is not empty
+						$('#container').append('<br/><div class="message_body">'
+								+ left_text +
+								'</div><br/>');
+						$("#input_text_left").val('');
+					}
+				});
+			});
+			
+      function onMicSelect() {
+        sendAudio(document.getElementById('audio-mic-select').value);
+      }
+      
+      window.onload = function() {
+      
+        connectWebsocket();
+        setupAudio();
+        
+        window.setInterval(function() {
+            var bubbleContainer = document.getElementById('container');
+            bubbleContainer.scrollTop = bubbleContainer.scrollHeight;
+        }, 100);
+      
+      }
+		</script>
+		
+    
+	</head>
+	
+	<body>
+		<h2>llamaspeak</h2>
+		
+		<div id="container">
+			<!--<h3>Conversation</h3>-->
+		</div>
+		
+    <div id="chat_left">
+			<textarea id="input_text_left"></textarea>
+			<br/>
+			<button id="submit_left">Submit</button>
+		</div>
+    
+    <div>
+      <label for="audio-mic-select">Mic:</label>
+      <select id="audio-mic-select" name="audio-mic-select" onclick="onMicSelect()"></select>
+    </div>
+		
+	</body>
+</html>

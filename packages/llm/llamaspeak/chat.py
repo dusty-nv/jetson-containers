@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # python3 chat.py --input-device=24 --output-device=24 --sample-rate-hz=48000
+import os
 import sys
 import time
 import pprint
 import signal
 import argparse
-import readline
 import threading
 import subprocess
 import numpy as np
@@ -20,6 +20,7 @@ from tts import TTS
 from llm import LLM
 
 from audio import AudioMixer
+from webserver import Webserver
 
 
 def parse_args():
@@ -46,6 +47,11 @@ def parse_args():
     parser.add_argument("--llm-streaming-port", type=int, default=5005, help="port of the streaming websocket API on the LLM server")
     parser.add_argument("--max-new-tokens", type=int, default=256, help="maximum number of new tokens for the LLM to generate for a reply")
     
+    # Webserver settings
+    parser.add_argument("--web-server", type=str, default='0.0.0.0', help="interface to bind to for hosting the chat webserver")
+    parser.add_argument("--web-port", type=int, default=8050, help="port used for webserver HTTP/HTTPS")
+    parser.add_argument("--ssl-key", default=os.getenv('SSL_KEY'), type=str, help="path to PEM-encoded SSL/TLS key file for enabling HTTPS")
+    
     parser = add_asr_config_argparse_parameters(parser, profanity_filter=True)
     parser = add_connection_argparse_parameters(parser)
     
@@ -54,47 +60,80 @@ def parse_args():
     args.automatic_punctuation = not args.no_punctuation
     args.verbatim_transcripts = not args.no_verbatim_transcripts
     
+    if not args.ssl_cert:
+        args.ssl_cert = os.getenv('SSL_CERT')
+        
     print(args)
     return args
     
  
 class Chatbot(threading.Thread):
     """
-    LLM-based chatbot with streaming ASR/TTS 
+    LLM-based chatbot with streaming ASR/TTS.
+    This class essentially routes different requests/responses between the services.
     """
     def __init__(self, args, **kwargs):
         super(Chatbot, self).__init__()
         
         self.args = args
-        self.auth = riva.client.Auth(args.ssl_cert, args.use_ssl, args.server)
+        self.auth = riva.client.Auth(uri=args.server) # args.ssl_cert, args.use_ssl
         
         self.audio_mixer = AudioMixer(**vars(args))
 
-        self.asr = ASR(self.auth, callback=self.on_asr_transcript, **vars(args)) if args.input_device is not None else None
+        self.asr = ASR(self.auth, callback=self.on_asr_transcript, **vars(args)) #if args.input_device is not None else None
         self.tts = TTS(self.auth, **vars(args)) if self.audio_mixer.opened else None
         self.llm = LLM(**vars(args))
+        
+        self.web = Webserver(audio_callback=self.on_web_audio, **vars(args))
         
         self.asr_history = ""
         self.tts_history = ""
         self.llm_history = {'internal': [], 'visible': []}
         
         self.tts_track = None
+        self.last_sigint = 0.0
         
-        #self.interrupt_flag = False
- 
+        #signal.signal(signal.SIGINT, self.on_sigint)
+
     def mute(self):
         """
-        Mutes output audio and cancels any text or TTS requests being generated for it
+        Interrupt the bot by muting audio and cancelling LLM/TTS requests
         """
+        print("-- MUTING CHATBOT")
+        
         if self.llm:
-            self.mute()
+            self.llm.mute()
             
         if self.tts:
             self.tts.mute()
             
         if self.tts_track:
-            self.tts_track['status'] = 'muted'
-            
+            self.tts_track['status'] = 'done'
+
+    def on_sigint(self, signum, frame):
+        """
+        Ctrl+C handler - if done once, mutes the LLM/TTS
+        If done twice in succession, exits the program
+        """
+        curr_time = time.perf_counter()
+        time_diff = curr_time - self.last_sigint
+        self.last_sigint = curr_time
+        
+        if time_diff > 2.0:
+            print("-- Ctrl+C:  muting chatbot")
+            self.mute()
+        else:
+            while True:
+                print("-- Ctrl+C:  exiting...")
+                sys.exit(0)
+                time.sleep(0.5)
+
+    def on_web_audio(self, msg):
+        """
+        Recieve audio samples from web client microphone
+        """
+        self.asr.process(msg['data'])
+        
     def on_asr_transcript(self, result):
         """
         Recieve new ASR responses
@@ -105,12 +144,13 @@ class Chatbot(threading.Thread):
             confidence = result.alternatives[0].confidence
             print(f"## {transcript} ({confidence})")
             if confidence > -2.0: #len(transcript.split(' ')) > 1:
+                self.mute() # intterupt any bot output
                 self.llm.generate_chat(transcript, self.llm_history, max_new_tokens=self.args.max_new_tokens, callback=self.on_llm_reply)
         else:
             if transcript != self.asr_history:
                 print(f">> {transcript}")   
                 self.asr_history = transcript
-                if len(self.asr_history.split(' ')) > 1:
+                if len(self.asr_history.split(' ')) >= 3:
                     self.mute()
                         
     def on_llm_reply(self, response, request, end):
@@ -132,16 +172,16 @@ class Chatbot(threading.Thread):
         else:
             self.send_tts(end=True)
             print("\n")
-    
+        
     def on_tts_audio(self, audio, request):
         """
         Recieve audio output from the TTS
         """
-        if not self.tts_track or self.tts_track['status'] == 'done':
+        if not self.tts_track or self.tts_track['status'] != 'playing':
             self.tts_track = self.audio_mixer.play(audio)
         else:
             self.tts_track['samples'] = np.append(self.tts_track['samples'], audio)
-
+        
     def send_tts(self, msg=None, end=False):
         """ 
         Buffer and dispatch text to the TTS service 
@@ -170,33 +210,30 @@ class Chatbot(threading.Thread):
 
         if txt:
             self.tts.generate(txt, callback=self.on_tts_audio)
-            
-            
-    #def interrupt():
-    #    if self.interrupt_flag:
-    #        sys.exit()
-    #    self.interrupt_flag = True
-        
+
     def run(self):
+        """
+        Chatbot thread main()
+        """
         if self.asr:
             self.asr.start()
             
         if self.tts:
             self.tts.start()
 
-        if self.llm:
-            self.llm.start()
-        
+        self.llm.start()
+        self.web.start()
+            
         time.sleep(0.5)
         
         while True:
             if not self.asr: #or self.interrupt_flag:
                 #self.interrupt_flag = False
                 sys.stdout.write(">> PROMPT: ")
-                prompt = input()
+                prompt = sys.stdin.readline().strip() #input()
                 print('PROMPT => ', prompt)
                 request = self.llm.generate_chat(prompt, self.llm_history, max_new_tokens=self.args.max_new_tokens, callback=self.on_llm_reply)
-                request['events']['end'].wait()
+                request['event'].wait()
             else:
                 time.sleep(1.0)
  
@@ -209,7 +246,4 @@ if __name__ == '__main__':
         sys.exit(0)
     
     chatbot = Chatbot(args)
-    chatbot.start()
-    
-    #def sigint_handler(signum, frame):
-    #    chatbot.interrupt()
+    chatbot.run() #start()
