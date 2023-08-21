@@ -9,6 +9,7 @@
 		<script type='text/javascript' src="/static/jquery-3.6.3.min.js"></script>
     <script type='text/javascript' src='/static/bootstrap.bundle.min.js'></script>
     <script type='text/javascript' src='/static/websocket.js'></script>
+    <script type='text/javascript' src='/static/audio.js'></script>
     
 		<script type="text/javascript">
 			$(function(){
@@ -24,13 +25,14 @@
 			});
 			
       function onMicSelect() {
-        sendAudio(document.getElementById('audio-mic-select').value);
+        sendAudio(document.getElementById('audio-input-select').value);
       }
       
       window.onload = function() {
       
         connectWebsocket();
-        setupAudio();
+        enumerateAudioDevices();
+        openAudioDevices();
         
         window.setInterval(function() {
             var bubbleContainer = document.getElementById('container');
@@ -57,9 +59,14 @@
 		</div>
     
     <div>
-      <label for="audio-mic-select">Mic:</label>
-      <select id="audio-mic-select" name="audio-mic-select" onclick="onMicSelect()"></select>
+      <label for="audio-input-select">Mic:</label>
+      <select id="audio-input-select" name="audio-input-select" onclick="openAudioDevices()"></select>
     </div>
 		
+    <div>
+      <label for="audio-output-select">Speaker:</label>
+      <select id="audio-output-select" name="audio-output-select" onclick="openAudioDevices()"></select>
+    </div>
+    
 	</body>
 </html>

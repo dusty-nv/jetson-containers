@@ -80,7 +80,7 @@ class AudioMixer(threading.Thread):
                 track['status'] = 'done'
                 self.tracks.remove(track)
         
-        samples = samples.tobytes()
+        #samples = samples.tobytes()
         
         if self.output_wav:
             self.output_wav.writeframes(samples) #raw(samples)

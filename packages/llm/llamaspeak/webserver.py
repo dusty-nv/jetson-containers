@@ -61,16 +61,25 @@ class Webserver(threading.Thread):
         listener_thread = threading.Thread(target=self.websocket_listener, args=[websocket], daemon=True)
         listener_thread.start()
  
+        # empty the queue from before the connection was made
+        # (otherwise client will be flooded with old messages)
+        # TODO implement self.connected so the ws_queue doesn't grow so large without webclient connected...
+        while True:
+            try:
+                self.ws_queue.get(block=False)
+            except queue.Empty:
+                break
+            
         while True:
             websocket.send(json.dumps(self.ws_queue.get()))
 
     def websocket_listener(self, websocket):
         print(f"-- listening on websocket connection from {websocket.remote_address}")
 
-        wav = wave.open('/data/audio/capture.wav', 'wb')
-        wav.setnchannels(1)
-        wav.setsampwidth(2)
-        wav.setframerate(48000)
+        #wav = wave.open('/data/audio/capture.wav', 'wb')
+        #wav.setnchannels(1)
+        #wav.setsampwidth(2)
+        #wav.setframerate(48000)
             
         while True:
             msg = websocket.recv()
@@ -83,7 +92,7 @@ class Webserver(threading.Thread):
                 if len(msg['data']) != msg['size']:
                     raise RuntimeError(f"web audio chunk had length={len(msg['data'])}  (expected={msg['size']})")
                 #wav.writeframesraw(msg['data'])
-                wav.writeframes(msg['data'])
+                #wav.writeframes(msg['data'])
                 if self.audio_callback:
                     self.audio_callback(msg)
     
@@ -93,7 +102,7 @@ class Webserver(threading.Thread):
     def output_audio(self, samples):
         self.send_message({
             'type': 'audio',
-            'data': samples
+            'data': samples.tolist()
         })
 
     def run(self):
