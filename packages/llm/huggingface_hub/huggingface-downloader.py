@@ -25,8 +25,15 @@ locations = []
 for repo in args.repos:
     print(f"\nDownloading {repo} to {args.cache_dir}\n")
     
-    # either download an individual file, or the entire repo
-    if os.path.splitext(repo)[1]:  
+    # handle either "org/repo" or individual "org/repo/file"
+    # the former has 0-1 slashes, while the later has 2.
+    num_slashes = 0
+    
+    for c in repo:
+        if c == '/':
+            num_slashes += 1
+            
+    if num_slashes >= 2:  
         slash_count = 0
         
         for idx, i in enumerate(repo):
