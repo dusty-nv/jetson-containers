@@ -2,7 +2,7 @@
 # name: nemo
 # group: ml
 # depends: [transformers, torchaudio, numba]
-# test: test.py
+# test: [test_qa.py]
 # docs: NVIDIA NeMo for ASR/NLP/TTS https://nvidia.github.io/NeMo/
 # notes: this Dockerfile gets switched out for `Dockerfile.jp4` on JetPack 4
 #---
@@ -43,6 +43,45 @@ RUN NEMO_PATH="$(pip3 show nemo_toolkit | grep Location: | cut -d' ' -f2)/nemo" 
 # make sure it loads
 RUN pip3 show nemo_toolkit && python3 -c 'import nemo; print(nemo.__version__)'
 
+# clone the repo for the examples
+RUN git clone --depth=1 https://github.com/NVIDIA/NeMo /opt/nemo
+
+# install apex (needed for megatron)
+ARG TORCH_CUDA_ARCH_LIST
+
+RUN cd /opt && \
+    git clone https://github.com/NVIDIA/apex && \
+    cd apex && \
+    sed 's|if "all_gather_into_tensor"|if torch.distributed.is_available() and "all_gather_into_tensor"|g' -i apex/transformer/utils.py && \
+    sed 's|if "all_gather_into_tensor"|if torch.distributed.is_available() and "all_gather_into_tensor"|g' -i apex/transformer/tensor_parallel/layers.py && \
+    sed 's|if "reduce_scatter_tensor"|if torch.distributed.is_available() and "reduce_scatter_tensor"|g' -i apex/transformer/tensor_parallel/layers.py && \
+    sed 's|if "all_gather_into_tensor"|if torch.distributed.is_available() and "all_gather_into_tensor"|g' -i apex/transformer/tensor_parallel/mappings.py && \
+    sed 's|if "reduce_scatter_tensor"|if torch.distributed.is_available() and "reduce_scatter_tensor"|g' -i apex/transformer/tensor_parallel/mappings.py && \
+    head -n15 apex/transformer/utils.py && \
+    head -n75 apex/transformer/tensor_parallel/layers.py && \
+    head -n40 apex/transformer/tensor_parallel/mappings.py && \
+    pip3 install --verbose --no-cache-dir -r requirements.txt && \
+    python3 setup.py --verbose bdist_wheel --cpp_ext --cuda_ext --fast_layer_norm --distributed_adam --deprecated_fused_adam && \
+    cp dist/apex*.whl /opt && \
+    rm -rf /opt/apex
+    
+RUN pip3 install --no-cache-dir /opt/apex*.whl
+ 
+# module 'torch.distributed' has no attribute 'is_initialized'
+RUN PYTHON_ROOT=`pip3 show nemo_toolkit | grep Location: | cut -d' ' -f2` && \
+    sed 's|^        master_device =.*|        master_device = True|g' -i $PYTHON_ROOT/nemo/collections/nlp/modules/common/megatron/megatron_utils.py && \
+    sed 's|not torch.distributed.is_initialized() or torch.distributed.get_rank() == 0|torch.distributed.is_available() and (not torch.distributed.is_initialized() or torch.distributed.get_rank() == 0)|g' -i $PYTHON_ROOT/nemo/collections/nlp/modules/common/megatron/megatron_utils.py && \
+    sed 's|if torch.distributed.is_initialized()|if torch.distributed.is_available() and torch.distributed.is_initialized()|g' -i $PYTHON_ROOT/nemo/collections/nlp/modules/common/megatron/megatron_utils.py && \
+    sed 's|self.trainer.strategy.setup_environment()|#self.trainer.strategy.setup_environment()|g' -i $PYTHON_ROOT/nemo/collections/nlp/models/language_modeling/megatron_gpt_model.py && \
+    head -225 $PYTHON_ROOT/nemo/collections/nlp/modules/common/megatron/megatron_utils.py | tail +190 && \
+    head -1150 $PYTHON_ROOT/nemo/collections/nlp/models/language_modeling/megatron_gpt_model.py | tail +1100 
+    
+# for benchmark timing
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends time \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+    
 # set the nemo model cache directory to mounted /data volume
 ENV NEMO_CACHE_DIR=/data/models/nemo
 
