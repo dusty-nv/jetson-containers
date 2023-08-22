@@ -16,6 +16,12 @@ ARG TORCH_CUDA_ARCH_LIST
 # could not find a version that satisfies the requirement triton
 #RUN pip3 install --no-cache-dir --verbose triton
 
-RUN pip3 install --no-cache-dir --verbose xformers
+# force rebuild on new releases
+ADD https://pypi.org/pypi/xformers/json /tmp/xformers_version.json
+
+RUN pip3 list && python3 -c 'import setuptools'
+
+# install from pip
+RUN pip3 install --no-cache-dir --verbose 'xformers!=0.0.21'
 
 RUN pip3 show xformers && python3 -c 'import xformers.info; xformers.info.print_info()'
