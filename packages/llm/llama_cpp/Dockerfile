@@ -17,9 +17,14 @@ ARG CUDA_ARCHITECTURES
 WORKDIR /opt
 
 # clone it (force rebuild on new git commits)
-ADD https://api.github.com/repos/ggerganov/llama.cpp/git/refs/heads/master /tmp/llama_cpp_version.json
-RUN git clone --depth=1 --recursive https://github.com/ggerganov/llama.cpp
-    
+#ADD https://api.github.com/repos/ggerganov/llama.cpp/git/refs/heads/master /tmp/llama_cpp_version.json
+#RUN git clone --depth=1 --recursive https://github.com/ggerganov/llama.cpp
+
+# the llama-cpp-python bindings contain llama-cpp as submodule - use that version for sanity
+ADD https://api.github.com/repos/abetlen/llama-cpp-python/git/refs/heads/main /tmp/llama_cpp_python_version.json
+RUN git clone --depth=1 --recursive https://github.com/abetlen/llama-cpp-python
+RUN ln -s llama-cpp-python/vendor/llama.cpp llama.cpp
+
 # apply patches
 COPY patches.diff llama.cpp/
 
@@ -33,26 +38,21 @@ RUN cd llama.cpp && \
 #    sed 's|#ifdef __ARM_NEON|#if defined(__ARM_NEON) \&\& !defined(__CUDACC__)|g' -i llama.cpp/ggml.h && \
 #    cat llama.cpp/ggml.h | grep '__ARM_NEON'
 
-# build it
-RUN cd llama.cpp && \
+# build C++ libraries
+RUN cd llama-cpp-python/vendor/llama.cpp && \
     mkdir build && \
     cd build && \
     cmake .. -DLLAMA_CUBLAS=on -DLLAMA_CUDA_F16=1 -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES} && \
     cmake --build . --config Release --parallel $(nproc)
     
-#RUN cmake --install llama.cpp/build
-RUN ln -s /opt/llama.cpp/build/bin /opt/llama.cpp/bin
-
-# Python bindings
-ADD https://api.github.com/repos/abetlen/llama-cpp-python/git/refs/heads/main /tmp/llama_cpp_python_version.json
-RUN git clone --depth=1 --recursive https://github.com/abetlen/llama-cpp-python
+RUN ln -s build/bin llama.cpp/bin
 
 # apply patches
-RUN cd llama-cpp-python/vendor/llama.cpp && \
-    git apply /opt/llama.cpp/patches.diff && \
-    git diff
+#RUN cd llama-cpp-python/vendor/llama.cpp && \
+#    git apply /opt/llama.cpp/patches.diff && \
+#    git diff
     
-# build the wheel
+# build Python bindings
 RUN cd llama-cpp-python && \
     CMAKE_ARGS="-DLLAMA_CUBLAS=on -DLLAMA_CUDA_F16=1 -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}" FORCE_CMAKE=1 \
     pip3 wheel -w dist --verbose . 
@@ -70,7 +70,7 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
     
-COPY benchmark.py /opt/llama.cpp/bin/benchmark.py
+COPY benchmark.py llama.cpp/bin/benchmark.py
 
 WORKDIR / 
 
