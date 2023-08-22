@@ -44,10 +44,7 @@ if __name__ == "__main__":
     args.disable = re.split(',|;|:', args.disable)
     
     print(args)
-    
-    print(f"-- L4T_VERSION={L4T_VERSION}")
-    print(f"-- JETPACK_VERSION={JETPACK_VERSION}")
-    print(f"-- CUDA_VERSION={CUDA_VERSION}")
+    print(f"-- L4T_VERSION={L4T_VERSION}  JETPACK_VERSION={JETPACK_VERSION}  CUDA_VERSION={CUDA_VERSION}")
 
     if len(args.packages) == 0:
         print(f"-- Error:  no packages were specified")
