@@ -15,4 +15,3 @@ RUN pip3 install --upgrade --no-cache-dir --verbose matplotlib ultralytics openc
 RUN pip3 show matplotlib && python3 -c 'import matplotlib; print(matplotlib.__version__)'
 RUN pip3 show ultralytics && python3 -c 'import ultralytics; print(ultralytics.__version__)'
 RUN pip3 show opencv-python && python3 -c 'import cv2; print(cv2.__version__)'
-RUN pip3 show super-globals && python3 -c 'import super_globals; print(super_globals.__version__)'
