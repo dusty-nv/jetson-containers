@@ -4,8 +4,10 @@
 	<head>
 		<title>Chat Bubbles</title>
 		
+    
+    <link rel="stylesheet" href="/static/bootstrap.css">
     <link rel="stylesheet" href="/static/chat.css">
-
+    
 		<script type='text/javascript' src="/static/jquery-3.6.3.min.js"></script>
     <script type='text/javascript' src='/static/bootstrap.bundle.min.js'></script>
     <script type='text/javascript' src='/static/websocket.js'></script>
@@ -24,8 +26,28 @@
 				});
 			});
 			
-      function onMicSelect() {
-        sendAudio(document.getElementById('audio-input-select').value);
+      function muteAudioInput() {  
+        var button = document.getElementById('mute-audio-input');
+        var toggled = button.classList.contains('active');
+        console.log(`muteAudioInput(${toggled})`);
+        button.innerHTML = toggled ? "Unmute Mic" : "Mute Mic";
+        if( audioInputTrack != undefined )
+          audioInputTrack.enabled = !toggled;
+      }
+      
+      let sampleCount = 0;
+      
+      function generateAudio() {
+        
+        samples = new Int16Array(4800);
+        const hz = 440.0;
+        let time = Date.now() / 1000.0;
+        
+        for (i = 0; i < samples.length; i++) {
+          samples[i] = Math.sin(sampleCount * (Math.sin(sampleCount/24000.0)+hz) * Math.PI * 2.0 / 48000.0) * 32767;
+          sampleCount++;
+        }
+        onAudioOutput(samples);
       }
       
       window.onload = function() {
@@ -39,6 +61,7 @@
             bubbleContainer.scrollTop = bubbleContainer.scrollHeight;
         }, 100);
       
+        //window.setInterval(generateAudio, 100);
       }
 		</script>
 		
@@ -67,6 +90,8 @@
       <label for="audio-output-select">Speaker:</label>
       <select id="audio-output-select" name="audio-output-select" onclick="openAudioDevices()"></select>
     </div>
-    
+
+    <button type="button" id="mute-audio-input" class="btn btn-primary" data-bs-toggle="button" autocomplete="off" onclick="muteAudioInput()">Mute Mic</button>
+
 	</body>
 </html>

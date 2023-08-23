@@ -31,39 +31,49 @@ class AudioCaptureProcessor extends AudioWorkletProcessor {
 class AudioOutputProcessor extends AudioWorkletProcessor {
 	constructor(options) {
 		super();
-		
-		this.bufferLength = options.processorOptions.bufferLength;
-    this.channelCount = options.processorOptions.channelCount;
-		
-		this.ringBuffer = new RingBuffer(this.bufferLength, this.channelCount);
-		
+
+		this.queue = [];
+		this.playhead = 0;
+
 		this.port.onmessage = this.onmessage.bind(this);
 	}
 	
 	onmessage(event) {
 		const { data } = event;
-
-		let int16Array = new Int16Array(data);
-		let floatArray = new Float32Array(int16Array.length);
-
-		for( let i=0; i < int16Array.length; i++ )
-			floatArray[i] = int16Array[i] / 32767.0;
-
-		this.ringBuffer.push([floatArray]);
+		this.queue.push(data);
 	}
 	
 	process([inputs], [outputs], parameters) {
-		//console.log(`AudioOutputProcessor::process(${inputs.length}, ${outputs.length})`);
-
-		/*const output = outputs[0];
-		output.forEach((channel) => {
-      for (let i = 0; i < channel.length; i++) {
-        channel[i] = Math.random() * 2 - 1;
-      }
-    });*/
+		const output = outputs[0];
+		var samplesWritten = 0;
 		
-		// pull 128 frames out (output will be silent if not enough frames in buffer)
-		this.ringBuffer.pull([outputs[0]]);
+		/*for(let i = 0; i < output.length; i++) {
+				output[i] = Math.sin(this.sampleCount * (Math.sin(this.sampleCount/24000.0) + 440.0) * Math.PI * 2.0 / 48000.0); //* 32767;
+				this.sampleCount++;
+		}*/
+		
+		//console.log(`audio queue length ${this.queue.length} ${output.length} ${this.playhead}`);
+		
+		while( this.queue.length > 0 && samplesWritten < output.length ) {
+			for( let i=samplesWritten; i < output.length && this.playhead < this.queue[0].length; i++ ) {
+				output[i] = this.queue[0][this.playhead] / 32767.0;
+				this.playhead++;
+				samplesWritten++;
+			}
+			
+			if( this.playhead >= this.queue[0].length ) {
+				this.queue.shift();
+				this.playhead = 0;
+			}
+		}
+
+		/*if( samplesWritten < output.length ) {
+			console.warn(`gap in output audio  (${samplesWritten} of ${output.length} samples written)`);
+		}*/
+		
+		for( let i=samplesWritten; i < output.length; i++ ) {
+			output[i] = 0;
+		}
 		
 		for( let i=1; i < outputs.length; i++ )
 			outputs[i].set(outputs[0]);
@@ -74,111 +84,3 @@ class AudioOutputProcessor extends AudioWorkletProcessor {
 
 registerProcessor("AudioCaptureProcessor", AudioCaptureProcessor);
 registerProcessor("AudioOutputProcessor", AudioOutputProcessor);
-
-
-/**
- * A JS FIFO implementation for the AudioWorklet. 3 assumptions for the
- * simpler operation:
- *  1. the push and the pull operation are done by 128 frames. (Web Audio
- *    API's render quantum size in the speficiation)
- *  2. the channel count of input/output cannot be changed dynamically.
- *    The AudioWorkletNode should be configured with the `.channelCount = k`
- *    (where k is the channel count you want) and
- *    `.channelCountMode = explicit`.
- *  3. This is for the single-thread operation. (obviously)
- *
- * https://github.com/GoogleChromeLabs/web-audio-samples/blob/main/src/audio-worklet/design-pattern/lib/wasm-audio-helper.js
- */
-class RingBuffer {
-  /**
-   * @constructor
-   * @param  {number} length Buffer length in frames.
-   * @param  {number} channelCount Buffer channel count.
-   */
-  constructor(length, channelCount) {
-    this._readIndex = 0;
-    this._writeIndex = 0;
-    this._framesAvailable = 0;
-
-    this._channelCount = channelCount;
-    this._length = length;
-    this._channelData = [];
-    for (let i = 0; i < this._channelCount; ++i) {
-      this._channelData[i] = new Float32Array(length);
-    }
-  }
-
-  /**
-   * Getter for Available frames in buffer.
-   *
-   * @return {number} Available frames in buffer.
-   */
-  get framesAvailable() {
-    return this._framesAvailable;
-  }
-
-  /**
-   * Push a sequence of Float32Arrays to buffer.
-   *
-   * @param  {array} arraySequence A sequence of Float32Arrays.
-   */
-  push(arraySequence) {
-    // The channel count of arraySequence and the length of each channel must
-    // match with this buffer obejct.
-
-    // Transfer data from the |arraySequence| storage to the internal buffer.
-    const sourceLength = arraySequence[0].length;
-    for (let i = 0; i < sourceLength; ++i) {
-      const writeIndex = (this._writeIndex + i) % this._length;
-      for (let channel = 0; channel < this._channelCount; ++channel) {
-        this._channelData[channel][writeIndex] = arraySequence[channel][i];
-      }
-    }
-
-    this._writeIndex += sourceLength;
-    if (this._writeIndex >= this._length) {
-      this._writeIndex = 0;
-    }
-
-    // For excessive frames, the buffer will be overwritten.
-    this._framesAvailable += sourceLength;
-    if (this._framesAvailable > this._length) {
-      this._framesAvailable = this._length;
-    }
-  }
-
-  /**
-   * Pull data out of buffer and fill a given sequence of Float32Arrays.
-   *
-   * @param  {array} arraySequence An array of Float32Arrays.
-   */
-  pull(arraySequence) {
-    // The channel count of arraySequence and the length of each channel must
-    // match with this buffer obejct.
-
-    // If the FIFO is completely empty, do nothing.
-    if (this._framesAvailable === 0) {
-      return;
-    }
-
-    const destinationLength = arraySequence[0].length;
-
-    // Transfer data from the internal buffer to the |arraySequence| storage.
-    for (let i = 0; i < destinationLength; ++i) {
-      const readIndex = (this._readIndex + i) % this._length;
-      for (let channel = 0; channel < this._channelCount; ++channel) {
-        arraySequence[channel][i] = this._channelData[channel][readIndex];
-      }
-    }
-
-    this._readIndex += destinationLength;
-    if (this._readIndex >= this._length) {
-      this._readIndex = 0;
-    }
-
-    this._framesAvailable -= destinationLength;
-    if (this._framesAvailable < 0) {
-      this._framesAvailable = 0;
-    }
-  }
-}

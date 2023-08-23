@@ -6,6 +6,7 @@ import time
 import json
 import flask
 import queue
+import struct
 import base64
 import pprint
 import asyncio
@@ -30,6 +31,9 @@ class Webserver(threading.Thread):
         
         self.text_callback = text_callback
         self.audio_callback = audio_callback
+        
+        self.msg_count_rx = 0
+        self.msg_count_tx = 0
         
         # SSL / HTTPS
         self.ssl_key = ssl_key
@@ -71,7 +75,7 @@ class Webserver(threading.Thread):
                 break
             
         while True:
-            websocket.send(json.dumps(self.ws_queue.get()))
+            websocket.send(self.ws_queue.get()) #json.dumps(self.ws_queue.get()))
 
     def websocket_listener(self, websocket):
         print(f"-- listening on websocket connection from {websocket.remote_address}")
@@ -96,15 +100,45 @@ class Webserver(threading.Thread):
                 if self.audio_callback:
                     self.audio_callback(msg)
     
-    def send_message(self, msg):
-        self.ws_queue.put(msg)   # do we even need this queue at all and can the websocket just send straight away?
+    def send_message(self, payload, type, timestamp=None):
+        if timestamp is None:
+            timestamp = time.time() * 1000
+          
+        if not isinstance(payload, bytes):
+            payload = bytes(payload)
+            
+        # do we even need this queue at all and can the websocket just send straight away?
+        self.ws_queue.put(b''.join([
+            #
+            # 32-byte message header format:
+            #
+            #   0   uint64  message_id    (message_count_tx)
+            #   8   uint64  timestamp     (milliseconds since Unix epoch)
+            #   16  uint16  magic_number  (42)
+            #   18  uint16  message_type  (1=text, 2=audio)
+            #   20  uint32  payload_size  (in bytes)
+            #   24  uint32  unused        (padding)
+            #   28  uint32  unused        (padding)
+            #
+            struct.pack('!QQHHIII',
+                self.msg_count_tx,
+                int(timestamp),
+                42, type,
+                len(payload),
+                0, 0,
+            ),
+            payload
+        ]))
+ 
+        self.msg_count_tx += 1
         
     def output_audio(self, samples):
-        self.send_message({
-            'type': 'audio',
-            'data': samples.tolist()
-        })
-
+        #self.send_message({
+        #    'type': 'audio',
+        #    'data': samples.tolist()
+        #})
+        self.send_message(samples, 2)
+        
     def run(self):
         print(f"-- starting webserver @ {self.host}:{self.port}")
         self.ws_thread.start()

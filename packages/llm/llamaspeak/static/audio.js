@@ -91,12 +91,7 @@ function openAudioDevices(inputDeviceId, outputDeviceId) {
 		audioInputStream = audioContext.createMediaStreamSource(audioInputDevice);
 		audioContext.audioWorklet.addModule("/static/audioWorkers.js").then(() => {
 			audioInputCapture = new AudioWorkletNode(audioContext, "AudioCaptureProcessor");
-			audioOutputWorker = new AudioWorkletNode(audioContext, "AudioOutputProcessor", {
-					processorOptions: {
-						bufferLength: audioSettings.sampleRate,
-						channelCount: 1
-				},
-			});
+			audioOutputWorker = new AudioWorkletNode(audioContext, "AudioOutputProcessor");
 			audioInputStream.connect(audioInputCapture).connect(audioOutputWorker).connect(audioContext.destination);
 			audioInputCapture.port.onmessage = onAudioInputCapture;
 		});
@@ -125,8 +120,10 @@ function onAudioInputCapture(event) {
 }
 
 function onAudioOutput(samples) {
-	if( audioOutputWorker != undefined )
-		audioOutputWorker.port.postMessage(samples);
+	if( audioOutputWorker != undefined ) {
+		int16Array = new Int16Array(samples);
+		audioOutputWorker.port.postMessage(int16Array, [int16Array.buffer]);
+	}
 }
 
 /*function onMicAudio(event) {  // previous handler used with MediaRecorder

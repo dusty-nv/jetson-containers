@@ -133,12 +133,13 @@ class Chatbot(threading.Thread):
         """
         self.asr.process(msg['data'])
     
-    def on_mixed_audio(self, audio):
+    def on_mixed_audio(self, audio, silent):
         """
         Send mixed-down audio from the TTS/ect to web client
         """
-        self.webserver.output_audio(audio)
-        
+        if not silent:
+            self.webserver.output_audio(audio)
+            
     def on_asr_transcript(self, result):
         """
         Recieve new ASR responses
@@ -231,6 +232,9 @@ class Chatbot(threading.Thread):
         
         num_msgs = 0
         num_users = 2
+        note_step = -8
+        
+        self.audio_mixer.play(wav="/opt/riva/python-clients/data/examples/en-US_AntiBERTa_for_word_boosting_testing.wav")
         
         while True:
             if not self.asr: #or self.interrupt_flag:
@@ -242,6 +246,24 @@ class Chatbot(threading.Thread):
                 request['event'].wait()
             else:
                 #time.sleep(1.0)
+                
+
+                self.audio_mixer.play(tone={
+                    'frequency': 440 * 2** ((1 + note_step) / 12),
+                    'duration': 0.25,
+                    'vibrato_frequency': 2.5, 
+                    'vibrato_variance': 5
+                })
+
+                note_step += 1
+                
+                if note_step > 8:
+                    note_step = -8
+                    self.audio_mixer.play(wav="/opt/riva/python-clients/data/examples/en-US_AntiBERTa_for_word_boosting_testing.wav") # en-US_sample.wav  en-US_percent.wav  en-US_AntiBERTa_for_word_boosting_testing.wav
+                
+                time.sleep(1.5)
+                #self.webserver.send_message("abc".encode('utf-8'), 1);
+                """
                 self.webserver.send_message({
                     'id': num_msgs,
                     'type': 'message',
@@ -260,7 +282,8 @@ class Chatbot(threading.Thread):
                 
                 num_msgs += 1
                 time.sleep(0.5)
-
+                """
+                
 if __name__ == '__main__':
     args = parse_args()
      
