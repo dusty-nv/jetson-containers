@@ -50,18 +50,25 @@
         onAudioOutput(samples);
       }
       
+      function testWebsocketSend() {
+        sendWebsocket({'abc': 123, 'def': 'xyz', 'test_array': [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]});
+        sendWebsocket("Hello my name is ABC123", type=1);
+      }
+      
+      function onSubmitChatMsg() {
+        msg = document.getElementById('chat-message-input').value;
+        console.log('submitting chat message:', document.getElementById('chat-message-input').value);
+        sendWebsocket(msg, type=1);
+      }
+      
       window.onload = function() {
       
         connectWebsocket();
         enumerateAudioDevices();
         openAudioDevices();
-        
-        window.setInterval(function() {
-            var bubbleContainer = document.getElementById('container');
-            bubbleContainer.scrollTop = bubbleContainer.scrollHeight;
-        }, 100);
-      
+
         //window.setInterval(generateAudio, 100);
+        //window.setInterval(testWebsocketSend, 500);
       }
 		</script>
 		
@@ -71,15 +78,21 @@
 	<body>
 		<h2>llamaspeak</h2>
 		
-		<div id="container">
+		<div id="chat-history-container">
 			<!--<h3>Conversation</h3>-->
 		</div>
 		
-    <div id="chat_left">
-			<textarea id="input_text_left"></textarea>
-			<br/>
-			<button id="submit_left">Submit</button>
-		</div>
+    <br/>
+    
+    <div id="chat-input-container">
+      <div>
+        <textarea id="chat-message-input" class="form-control" rows="3"></textarea>
+        <br/>
+        <button id="chat-message-submit" onclick="onSubmitChatMsg()">Submit</button>
+      </div>
+    </div>
+    
+    <br/>
     
     <div>
       <label for="audio-input-select">Mic:</label>
@@ -91,7 +104,7 @@
       <select id="audio-output-select" name="audio-output-select" onclick="openAudioDevices()"></select>
     </div>
 
-    <button type="button" id="mute-audio-input" class="btn btn-primary" data-bs-toggle="button" autocomplete="off" onclick="muteAudioInput()">Mute Mic</button>
+    <button type="button" id="mute-audio-input" class="btn btn-primary active" data-bs-toggle="button" autocomplete="off" onclick="muteAudioInput()">Unmute Mic</button>
 
 	</body>
 </html>

@@ -1,6 +1,6 @@
 /*
  * handles audio input/output device streaming
- * websocket.js should be included before this
+ * websocket.js should be included also
  */
 
 var audioContext;       // AudioContext
@@ -69,6 +69,8 @@ function openAudioDevices(inputDeviceId, outputDeviceId) {
 		audioInputTrack = stream.getAudioTracks()[0];
 	  audioSettings = audioInputTrack.getSettings();
 		
+		audioInputTrack.enabled = false;  // mute the mic by default
+		
 		console.log(audioInputTrack);
 		console.log(audioSettings);
 		
@@ -99,11 +101,17 @@ function openAudioDevices(inputDeviceId, outputDeviceId) {
 }
 
 function onAudioInputCapture(event) {
-	msg = event.data;
+
+	if( audioInputTrack.enabled )  // unmuted
+		sendWebsocket(event.data, type=2);  // event.data is a Uint16Array
+	
+  //console.log('onAudioInputCapture()', event.data);
+	
+  /*msg = event.data;
 	
 	if( msg['type'] != 'audio' )
 		return;
-
+	
 	// encode to base64
 	var reader = new FileReader();
 	reader.readAsDataURL(new Blob([msg['data']]));
@@ -116,7 +124,9 @@ function onAudioInputCapture(event) {
 				'settings': audioInputTrack.getSettings(),
 			});
 		websocket.send(json);
-	};
+	};*/
+	
+	
 }
 
 function onAudioOutput(samples) {

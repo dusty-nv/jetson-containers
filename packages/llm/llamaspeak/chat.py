@@ -82,7 +82,7 @@ class Chatbot(threading.Thread):
         self.tts = TTS(self.auth, **vars(args))
         self.llm = LLM(**vars(args))
         
-        self.webserver = Webserver(audio_callback=self.on_web_audio, **vars(args))
+        self.webserver = Webserver(msg_callback=self.on_websocket_msg, **vars(args))
         self.audio_mixer = AudioMixer(callback=self.on_mixed_audio, **vars(args))
 
         self.asr_history = ""
@@ -126,19 +126,22 @@ class Chatbot(threading.Thread):
                 print("-- Ctrl+C:  exiting...")
                 sys.exit(0)
                 time.sleep(0.5)
-
-    def on_web_audio(self, msg):
+    
+    def on_websocket_msg(self, msg, type):
         """
-        Recieve audio samples from web client microphone
+        Recieve websocket message from client
         """
-        self.asr.process(msg['data'])
+        if type == 1:  # text (chat input)
+            self.on_llm_prompt(msg)
+        elif type == 2:  # web audio (mic)
+            self.asr.process(msg)
     
     def on_mixed_audio(self, audio, silent):
         """
         Send mixed-down audio from the TTS/ect to web client
         """
         if not silent:
-            self.webserver.output_audio(audio)
+            self.webserver.send_message(audio, type=2)
             
     def on_asr_transcript(self, result):
         """
@@ -150,14 +153,21 @@ class Chatbot(threading.Thread):
             confidence = result.alternatives[0].confidence
             print(f"## {transcript} ({confidence})")
             if confidence > -2.0: #len(transcript.split(' ')) > 1:
-                self.mute() # intterupt any bot output
-                self.llm.generate_chat(transcript, self.llm_history, max_new_tokens=self.args.max_new_tokens, callback=self.on_llm_reply)
+                self.on_llm_prompt(transcript)
         else:
             if transcript != self.asr_history:
                 print(f">> {transcript}")   
                 self.asr_history = transcript
                 if len(self.asr_history.split(' ')) >= 3:
                     self.mute()
+    
+    def on_llm_prompt(self, prompt):
+        """
+        Send the LLM the next chat message) from the user
+        """
+        self.mute() # interrupt any ongoing bot output
+        self.audio_mixer.play(tone={'note': 'C', 'duration': 0.25, 'attack': 0.05, 'amplitude': 0.5})
+        self.llm.generate_chat(prompt, self.llm_history, max_new_tokens=self.args.max_new_tokens, callback=self.on_llm_reply)
                         
     def on_llm_reply(self, response, request, end):
         """
@@ -169,10 +179,11 @@ class Chatbot(threading.Thread):
                 sys.stdout.flush()
             elif request['type'] == 'chat':
                 current_length = request.get('current_length', 0)
-                msg = response['visible'][-1][1][current_length:]
+                msg = response['internal'][-1][1][current_length:]
                 request['current_length'] = current_length + len(msg)
                 self.llm_history = response
                 self.send_tts(msg)
+                self.webserver.send_message({'chat_history': response['internal']})
                 print(msg, end='')
                 sys.stdout.flush()
         else:
@@ -234,8 +245,6 @@ class Chatbot(threading.Thread):
         num_users = 2
         note_step = -8
         
-        self.audio_mixer.play(wav="/opt/riva/python-clients/data/examples/en-US_AntiBERTa_for_word_boosting_testing.wav")
-        
         while True:
             if not self.asr: #or self.interrupt_flag:
                 #self.interrupt_flag = False
@@ -245,9 +254,9 @@ class Chatbot(threading.Thread):
                 request = self.llm.generate_chat(prompt, self.llm_history, max_new_tokens=self.args.max_new_tokens, callback=self.on_llm_reply)
                 request['event'].wait()
             else:
-                #time.sleep(1.0)
+                time.sleep(1.0)
                 
-
+                """
                 self.audio_mixer.play(tone={
                     'frequency': 440 * 2** ((1 + note_step) / 12),
                     'duration': 0.25,
@@ -262,6 +271,8 @@ class Chatbot(threading.Thread):
                     self.audio_mixer.play(wav="/opt/riva/python-clients/data/examples/en-US_AntiBERTa_for_word_boosting_testing.wav") # en-US_sample.wav  en-US_percent.wav  en-US_AntiBERTa_for_word_boosting_testing.wav
                 
                 time.sleep(1.5)
+                """
+                
                 #self.webserver.send_message("abc".encode('utf-8'), 1);
                 """
                 self.webserver.send_message({

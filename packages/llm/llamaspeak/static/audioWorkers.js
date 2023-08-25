@@ -15,10 +15,7 @@ class AudioCaptureProcessor extends AudioWorkletProcessor {
 		for( let i=0; i < input.length; i++ )
 			samples[i] = 32767 * Math.min(Math.max(input[i], -1), 1);
 		
-		this.port.postMessage({
-			'type': 'audio',
-			'data': samples
-		});
+		this.port.postMessage(samples, [samples.buffer]);
 		
 		// relay outputs
 		//for( let i=0; i < inputs.length && i < outputs.length; i++ )
