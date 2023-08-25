@@ -10,6 +10,9 @@ FROM ${BASE_IMAGE}
 
 WORKDIR /opt
 
+# force rebuild on new commits
+ADD https://api.github.com/repos/oobabooga/text-generation-webui/git/refs/heads/main /tmp/oobabooga_version.json
+
 RUN git clone --depth=1 https://github.com/oobabooga/text-generation-webui
 
 RUN cd text-generation-webui && \
