@@ -22,8 +22,8 @@ function getUserMessageStyle(user) {
 	var color = '#999999';
 	
 	switch(user) {
-		case 0: color = '#659864'; break; //'#347B98' '5F8D4E'
-		case 1: color = '#56718F'; break; //'#559E54' 
+		case 0: color = '#659864'; break;
+		case 1: color = '#426c99'; break; // '#375a7f' '#56718F' 
   }
 
 	return `background-color: ${color}; border-color: ${color};`

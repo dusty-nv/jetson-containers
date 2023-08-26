@@ -1,10 +1,13 @@
-<!DOCTYPE HTML>
-<html>
+<!doctype html>
 
+<html>
 	<head>
-		<title>Chat Bubbles</title>
-		
+    <meta charset="utf-8">
+		<title>llamaspeak</title>
+
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/static/bootstrap.css">
     <link rel="stylesheet" href="/static/chat.css">
     
@@ -14,28 +17,8 @@
     <script type='text/javascript' src='/static/audio.js'></script>
     
 		<script type="text/javascript">
-			$(function(){
-				$("#submit_left").click(function() {
-					var left_text = $('textarea#input_text_left').val(); // get textarea contents
-					if ($('textarea#input_text_left').val() != '') { // make sure textarea is not empty
-						$('#container').append('<br/><div class="message_body">'
-								+ left_text +
-								'</div><br/>');
-						$("#input_text_left").val('');
-					}
-				});
-			});
-			
-      function muteAudioInput() {  
-        var button = document.getElementById('mute-audio-input');
-        var toggled = button.classList.contains('active');
-        console.log(`muteAudioInput(${toggled})`);
-        button.innerHTML = toggled ? "Unmute Mic" : "Mute Mic";
-        if( audioInputTrack != undefined )
-          audioInputTrack.enabled = !toggled;
-      }
-      
-      let sampleCount = 0;
+
+      /*let sampleCount = 0;
       
       function generateAudio() {
         
@@ -53,12 +36,21 @@
       function testWebsocketSend() {
         sendWebsocket({'abc': 123, 'def': 'xyz', 'test_array': [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]});
         sendWebsocket("Hello my name is ABC123", type=1);
+      }*/
+
+      function onChatMessageKey(event) {  // https://stackoverflow.com/a/49389811
+        if( event.which === 13 && !event.shiftKey ) {
+          if( !event.repeat )
+            onChatMessageSubmit();
+          event.preventDefault(); // prevents the addition of a new line in the text field
+        }
       }
       
-      function onSubmitChatMsg() {
-        msg = document.getElementById('chat-message-input').value;
-        console.log('submitting chat message:', document.getElementById('chat-message-input').value);
-        sendWebsocket(msg, type=1);
+      function onChatMessageSubmit() {
+        const input = document.getElementById('chat-message-input');
+        console.log('submitting chat message:', input.value);
+        sendWebsocket(input.value, type=1);
+        input.value = "";
       }
       
       window.onload = function() {
@@ -76,35 +68,85 @@
 	</head>
 	
 	<body>
-		<h2>llamaspeak</h2>
-		
-		<div id="chat-history-container">
-			<!--<h3>Conversation</h3>-->
-		</div>
-		
-    <br/>
-    
-    <div id="chat-input-container">
-      <div>
-        <textarea id="chat-message-input" class="form-control" rows="3"></textarea>
-        <br/>
-        <button id="chat-message-submit" onclick="onSubmitChatMsg()">Submit</button>
+    <!-- Navbar + main body -->
+		<div class="d-flex flex-column h-100">
+      <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #426c99;"> <!-- fixed-top will let rest of body scroll -->
+        <div class="container-fluid">
+          <div class="d-flex flex-grow-1">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand ms-2" href="#"><span class="mb-0 h4" style="font-family: monospace, monospace;">llamaspeak</span></a>
+            <span class="w-100 d-lg-none d-block">
+              <!-- hidden spacer to center brand on mobile --></span>
+          </div>
+          <div class="collapse navbar-collapse flex-grow-1 text-right" id="navbarToggler">
+            <ul class="navbar-nav ms-auto flex-nowrap"> <!-- me-auto mb-2 mb-lg-0 -->
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#audioDialog">Audio</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Personality</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarChatHistory" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Chat History
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarChatHistory">
+                  <li><a class="dropdown-item" href="#">Reset</a></li>
+                  <li><a class="dropdown-item" href="#">Save</a></li>
+                  <li><a class="dropdown-item" href="#">Load</a></li>
+                  <!--<li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Something else here</a></li>-->
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <span class="navbar-nav ms-auto flex-row">
+            <button id="audio-input-mute" class="btn btn-primary btn-circle btn-md bi bi-mic-mute-fill ms-1 me-1" type="button" onclick="muteAudioInput()"></button>
+            <button id="audio-output-mute" class="btn btn-primary btn-circle btn-md bi bi-volume-up-fill" type="button" onclick="muteAudioOutput()"></button>
+          </span>
+        </div>
+      </nav>
+      
+      <div id="chat-history-container" class="flex-grow-1 bg-light-gray p-2 m-3" style="overflow-y: scroll;">
+        <!--<h3>Conversation</h3>-->
+      </div>
+
+      <div class="mx-3 mb-3">
+        <div class="input-group">
+          <textarea id="chat-message-input" class="form-control" rows="3" placeholder="Enter to send (Shift+Enter for newline)" onkeydown="onChatMessageKey(event)"></textarea>
+          <span class="input-group-text bi bi-arrow-return-left" onclick="onChatMessageSubmit()"></span>
+        </div>
       </div>
     </div>
     
-    <br/>
-    
-    <div>
-      <label for="audio-input-select">Mic:</label>
-      <select id="audio-input-select" name="audio-input-select" onclick="openAudioDevices()"></select>
+    <!-- Audio settings dialog -->
+    <div class="modal fade" id="audioDialog" tabindex="-1" aria-labelledby="audioDialogLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="audioDialogLabel">Audio Settings</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div>
+              <label for="audio-input-select">Input:</label>
+              <select id="audio-input-select" name="audio-input-select" onclick="openAudioDevices()"></select>
+            </div>
+            <br/>
+            <div>
+              <label for="audio-output-select">Output:</label>
+              <select id="audio-output-select" name="audio-output-select" onclick="openAudioDevices()"></select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Done</button>
+            <!--<button type="button" class="btn btn-primary">Save changes</button>-->
+          </div>
+        </div>
+      </div>
     </div>
-		
-    <div>
-      <label for="audio-output-select">Speaker:</label>
-      <select id="audio-output-select" name="audio-output-select" onclick="openAudioDevices()"></select>
-    </div>
-
-    <button type="button" id="mute-audio-input" class="btn btn-primary active" data-bs-toggle="button" autocomplete="off" onclick="muteAudioInput()">Unmute Mic</button>
 
 	</body>
 </html>

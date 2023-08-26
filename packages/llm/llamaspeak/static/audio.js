@@ -9,6 +9,7 @@ var audioInputDevice;   // MediaStream
 var audioInputStream;   // MediaStreamAudioSourceNode
 var audioInputCapture;  // AudioWorkletNode
 var audioOutputWorker;  // AudioWorkletNode
+var audioOutputMuted = false;
 
 //var audioMicRecorder;
 
@@ -125,12 +126,10 @@ function onAudioInputCapture(event) {
 			});
 		websocket.send(json);
 	};*/
-	
-	
 }
 
 function onAudioOutput(samples) {
-	if( audioOutputWorker != undefined ) {
+	if( audioOutputWorker != undefined && !audioOutputMuted ) {
 		int16Array = new Int16Array(samples);
 		audioOutputWorker.port.postMessage(int16Array, [int16Array.buffer]);
 	}
@@ -154,3 +153,26 @@ function onAudioOutput(samples) {
 		websocket.send(json);
 	};
 }*/
+
+function muteAudioInput() {  
+	var button = document.getElementById('audio-input-mute');
+	const muted = button.classList.contains('bi-mic-fill');
+	console.log(`muteAudioInput(${muted})`);
+	if( muted )
+		button.classList.replace('bi-mic-fill', 'bi-mic-mute-fill');
+	else
+		button.classList.replace('bi-mic-mute-fill', 'bi-mic-fill');
+	if( audioInputTrack != undefined )
+		audioInputTrack.enabled = !muted;
+}
+
+function muteAudioOutput() {  
+	var button = document.getElementById('audio-output-mute');
+	const muted = button.classList.contains('bi-volume-up-fill');
+	console.log(`muteAudioOutput(${muted})`);
+	if( muted )
+		button.classList.replace('bi-volume-up-fill', 'bi-volume-mute-fill');
+	else
+		button.classList.replace('bi-volume-mute-fill', 'bi-volume-up-fill');
+	audioOutputMuted = muted;
+}
