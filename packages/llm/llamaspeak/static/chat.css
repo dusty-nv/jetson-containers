@@ -1,7 +1,7 @@
 
 html, body {
 	/*color: #eeeeee;*/
-	background-color:#555555;
+	/*background-color:#4c4c4c;*/
 	height:100%;
 	/*margin:10px;
 	padding:0;
@@ -52,6 +52,21 @@ html, body {
 	text-align: center;
 	/*width:250px;*/
 }
-.bg-light-gray {
-	background-color: #666666;
-};
+.bg-gray-4, .bg-dark-gray {
+	background-color: #444444;
+}
+.bg-gray-5, .bg-medium-gray {
+	background-color: #555555; /*#5c5c5c;*/
+}
+.bg-gray-6 {
+	background-color: #6c6c6c;
+}
+.bg-gray-7, .bg-light-gray {
+	background-color: #7c7c7c;
+}		
+.bg-gray-8 {
+	background-color: #888888;
+}
+.bg-sage-green {
+	background-color: #577468;
+}

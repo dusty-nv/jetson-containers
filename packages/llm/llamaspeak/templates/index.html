@@ -63,14 +63,12 @@
         //window.setInterval(testWebsocketSend, 500);
       }
 		</script>
-		
-    
 	</head>
 	
-	<body>
+	<body class="bg-dark-gray" data-bs-theme="dark">
     <!-- Navbar + main body -->
 		<div class="d-flex flex-column h-100">
-      <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #426c99;"> <!-- fixed-top will let rest of body scroll -->
+      <nav class="navbar navbar-expand-lg navbar-dark bg-sage-green"> <!-- fixed-top will let rest of body scroll -->
         <div class="container-fluid">
           <div class="d-flex flex-grow-1">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
@@ -109,14 +107,14 @@
         </div>
       </nav>
       
-      <div id="chat-history-container" class="flex-grow-1 bg-light-gray p-2 m-3" style="overflow-y: scroll;">
+      <div id="chat-history-container" class="flex-grow-1 bg-medium-gray p-2 m-3" style="overflow-y: scroll;">
         <!--<h3>Conversation</h3>-->
       </div>
 
       <div class="mx-3 mb-3">
         <div class="input-group">
           <textarea id="chat-message-input" class="form-control" rows="3" placeholder="Enter to send (Shift+Enter for newline)" onkeydown="onChatMessageKey(event)"></textarea>
-          <span class="input-group-text bi bi-arrow-return-left" onclick="onChatMessageSubmit()"></span>
+          <span class="input-group-text bg-light-gray bi bi-arrow-return-left" style="color: #eeeeee;" onclick="onChatMessageSubmit()"></span>
         </div>
       </div>
     </div>
