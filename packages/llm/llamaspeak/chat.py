@@ -2,6 +2,7 @@
 # python3 chat.py --input-device=24 --output-device=24 --sample-rate-hz=48000
 import os
 import sys
+import copy
 import time
 import pprint
 import signal
@@ -87,8 +88,9 @@ class Chatbot(threading.Thread):
 
         self.asr_history = ""
         self.tts_history = ""
-        self.llm_history = {'internal': [], 'visible': []}
+        self.llm_history = LLM.create_new_history()
         
+        self.llm_timer = None
         self.tts_track = None
         self.last_sigint = 0.0
         
@@ -153,26 +155,61 @@ class Chatbot(threading.Thread):
             confidence = result.alternatives[0].confidence
             print(f"## {transcript} ({confidence})")
             if confidence > -2.0: #len(transcript.split(' ')) > 1:
+                self.asr_history = transcript
                 self.on_llm_prompt(transcript)
+            else:
+                self.webserver.send_chat_history(self.llm_history['internal']) # drop the rejected ASR from the client
         else:
             if transcript != self.asr_history:
-                print(f">> {transcript}")   
                 self.asr_history = transcript
+                print(f">> {transcript}") 
+                
                 if len(self.asr_history.split(' ')) >= 3:
                     self.mute()
+                    
+                web_history = LLM.add_prompt_history(self.llm_history, transcript) # show streaming ASR on the client
+                self.webserver.send_chat_history(web_history)
+                
+                threading.Timer(1.5, self.on_asr_waiting, args=[self.asr_history]).start()
     
+    def on_asr_waiting(self, transcript):
+        """
+        If the ASR partial transcript has stagnated and not "gone final", then it was probably a misque and hsould be dropped
+        """
+        if self.asr_history == transcript:  # if the partial transcript hasn't changed, probably a misrecognized sound or echo
+            self.asr_history = ""
+            self.webserver.send_chat_history(self.llm_history['internal']) # drop the rejected ASR from the client
+
     def on_llm_prompt(self, prompt):
         """
         Send the LLM the next chat message) from the user
         """
-        self.mute() # interrupt any ongoing bot output
+        self.mute()  # interrupt any ongoing bot output
         self.audio_mixer.play(tone={'note': 'C', 'duration': 0.25, 'attack': 0.05, 'amplitude': 0.5})
         self.llm.generate_chat(prompt, self.llm_history, max_new_tokens=self.args.max_new_tokens, callback=self.on_llm_reply)
+
+        web_history = LLM.add_prompt_history(self.llm_history, prompt) # show prompt on the client before reply is ready
+        self.webserver.send_chat_history(web_history)
+        
+        self.llm_timer = threading.Timer(1.0, self.on_llm_waiting, args=[web_history]) # add a "..." chat bubble
+        self.llm_timer.start()
+        
+    def on_llm_waiting(self, history):
+        """
+        Called when the user is waiting for an LLM reply to provide a "..." update
+        """
+        history[-1].append("...")
+        self.webserver.send_chat_history(history)
+        self.llm_timer = None
                         
     def on_llm_reply(self, response, request, end):
         """
         Recieve replies from the LLM
         """  
+        if self.llm_timer is not None:
+            self.llm_timer.cancel()
+            self.llm_timer = None
+            
         if not end:
             if request['type'] == 'completion':
                 print(response, end='')
@@ -183,7 +220,7 @@ class Chatbot(threading.Thread):
                 request['current_length'] = current_length + len(msg)
                 self.llm_history = response
                 self.send_tts(msg)
-                self.webserver.send_message({'chat_history': response['internal']})
+                self.webserver.send_chat_history(response['internal'])
                 print(msg, end='')
                 sys.stdout.flush()
         else:

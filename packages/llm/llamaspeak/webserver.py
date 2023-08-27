@@ -176,6 +176,10 @@ class Webserver(threading.Thread):
         ]))
 
         self.msg_count_tx += 1
+     
+    def send_chat_history(self, history):
+        print("-- sending chat history", history)
+        self.send_message({'chat_history': history})
         
     def run(self):
         print(f"-- starting webserver @ {self.host}:{self.port}")

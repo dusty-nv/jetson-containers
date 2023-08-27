@@ -87,6 +87,28 @@ class LLM(threading.Thread):
         """
         return requests.post(f'http://{self.server}:{self.blocking_port}/api/v1/model', json=request).json()
     
+    @staticmethod
+    def create_new_history():
+        """
+        Create a new/blank history dict
+        """
+        return {'internal': [], 'visible': []}
+    
+    @staticmethod
+    def add_prompt_history(history, prompt, type='internal'):
+        """
+        Return a new history list that includes the given prompt (but no reply yet)
+        This only operates on the history list specified by type ('internal' or 'visible')
+        """
+        history = history[type].copy()
+        
+        if len(history) > 0 and len(history[-1]) == 1:
+            history[-1][0] = prompt
+        else:
+            history.append([prompt])
+            
+        return history
+        
     def generate(self, prompt, callback=None, **kwargs):
         """
         Generate an asynchronous text completion request to run on the LLM server.
@@ -156,6 +178,9 @@ class LLM(threading.Thread):
         If the callback function is provided, it will be called as the generated tokens are streamed in.
         This function returns the request that was queued.
         """
+        if history is None:
+            history = LLM.create_new_history()
+            
         params = {
             'user_input': user_input,
             'max_new_tokens': 250,

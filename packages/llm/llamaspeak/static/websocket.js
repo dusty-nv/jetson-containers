@@ -108,6 +108,8 @@ function onWebsocket(event) {
 					var chc = document.getElementById('chat-history-container');
 					var isScrolledToBottom = chc.scrollHeight - chc.clientHeight <= chc.scrollTop + 1;
 					
+					$('#chat-history-container').empty(); // started clearing because server may remove partial/rejected ASR prompts
+					
 					for( let n=0; n < chat_history.length; n++ ) {
 						for( let m=0; m < chat_history[n].length; m++ ) {
 							prev_msg = $(`#chat-history-container #msg_${n}_${m}`);
