@@ -12,3 +12,5 @@ COPY requirements.txt /opt/llamaspeak/
 RUN pip3 install --no-cache-dir --verbose -r /opt/llamaspeak/requirements.txt
 
 COPY *.py /opt/llamaspeak/
+COPY static/ /opt/llamaspeak/static
+COPY templates/ /opt/llamaspeak/templates
