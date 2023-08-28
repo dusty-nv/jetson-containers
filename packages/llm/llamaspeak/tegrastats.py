@@ -72,8 +72,8 @@ class Tegrastats(threading.Thread):
             
         summary = [
             f"CPU: {int(self.stats['cpu']['load'])}%@{int(self.stats['cpu']['cur_freq'])}",
-            f"GPU: {self.stats['gpu']['load']}%@{int(self.stats['gpu']['cur_freq'])}",
-            f"Mem: {int(self.stats['memory']['used'])}/{int(self.stats['memory']['total'])}MB",
+            f"GPU: {int(self.stats['gpu']['load'])}%@{int(self.stats['gpu']['cur_freq'])}",
+            f"Mem: {self.stats['memory']['used']/1024:.1f}/{self.stats['memory']['total']/1024:.1f}GB",
         ]
         
         self.stats['summary'] = '  '.join(summary)
