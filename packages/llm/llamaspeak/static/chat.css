@@ -77,3 +77,7 @@ html, body {
 .chat-message-user-0 {
 	background-color: #465d54;
 }
+
+.btn-close {
+	--bs-btn-close-white-filter: grayscale(100%) brightness(200%); /* invert(1) grayscale(100%) brightness(200%); */
+}

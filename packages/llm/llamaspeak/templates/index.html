@@ -57,6 +57,12 @@
         sendWebsocket({'chat_history_reset': true});
       }
       
+      function onVoiceSelect() {
+        const voice = document.getElementById('voice-select').value;
+        console.log(`select voice: ${voice}`);
+        sendWebsocket({'tts_voice': voice});
+      }
+      
       window.onload = function() {
       
         connectWebsocket();
@@ -129,17 +135,35 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="audioDialogLabel">Audio Settings</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: #eeeeee;"></button>
           </div>
           <div class="modal-body">
-            <div>
-              <label for="audio-input-select">Input:</label>
-              <select id="audio-input-select" name="audio-input-select" onclick="openAudioDevices()"></select>
+            <div class="mb-3">
+              <label for="audio-input-select" class="form-label">Input Device (Microphone)</label>
+              <select id="audio-input-select" name="audio-input-select" class="form-select" onclick="openAudioDevices()"></select>
             </div>
-            <br/>
+            <div class="mb-3">
+              <label for="audio-output-select" class="form-label">Output Device (Speaker)</label>
+              <select id="audio-output-select" name="audio-output-select" class="form-select" onclick="openAudioDevices()"></select>
+            </div>
             <div>
-              <label for="audio-output-select">Output:</label>
-              <select id="audio-output-select" name="audio-output-select" onclick="openAudioDevices()"></select>
+              <label for="voice-select" class="form-label">TTS Voice</label>
+              <select id="voice-select" name="voice-select" class="form-select" onclick="onVoiceSelect()">
+                <option value="English-US.Female-1" selected>English-US.Female-1</option>
+                <option value="English-US.Male-1">English-US.Male-1</option>
+                <!--<option value="English-US-RadTTS.Female-1">English-US-RadTTS.Female-1</option>
+                <option value="English-US-RadTTS.Male-1">English-US-RadTTS.Male-1</option>-->
+                <option value="English-US.Female-Calm">English-US.Female-Calm</option>
+                <option value="English-US.Female-Neutral">English-US.Female-Neutral</option>
+                <option value="English-US.Female-Happy">English-US.Female-Happy</option>
+                <option value="English-US.Female-Angry">English-US.Female-Angry</option>
+                <option value="English-US.Female-Fearful">English-US.Female-Fearful</option>
+                <option value="English-US.Female-Sad">English-US.Female-Sad</option>
+                <option value="English-US.Male-Calm">English-US.Male-Calm</option>
+                <option value="English-US.Male-Neutral">English-US.Male-Neutral</option>
+                <option value="English-US.Male-Happy">English-US.Male-Happy</option>
+                <option value="English-US.Male-Angry">English-US.Male-Angry</option>
+              </select>
             </div>
           </div>
           <div class="modal-footer">

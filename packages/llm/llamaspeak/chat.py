@@ -141,6 +141,8 @@ class Chatbot(threading.Thread):
             if 'client_state' in msg:
                 if msg['client_state'] == 'connected':
                     threading.Timer(1.0, lambda: self.webserver.send_chat_history(self.llm_history['internal'])).start()
+            if 'tts_voice' in msg:
+                self.tts.voice = msg['tts_voice']
         elif type == 1:  # text (chat input)
             self.on_llm_prompt(msg)
         elif type == 2:  # web audio (mic)
@@ -303,7 +305,7 @@ class Chatbot(threading.Thread):
             if not self.asr: #or self.interrupt_flag:
                 #self.interrupt_flag = False
                 sys.stdout.write(">> PROMPT: ")
-                prompt = sys.stdin.readline().strip() #input()
+                prompt = sys.stdin.readline().strip() #input()  # https://stackoverflow.com/a/74325860
                 print('PROMPT => ', prompt)
                 request = self.llm.generate_chat(prompt, self.llm_history, max_new_tokens=self.args.max_new_tokens, callback=self.on_llm_reply)
                 request['event'].wait()
