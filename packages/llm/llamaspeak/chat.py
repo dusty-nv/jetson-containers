@@ -2,7 +2,6 @@
 # python3 chat.py --input-device=24 --output-device=24 --sample-rate-hz=48000
 import os
 import sys
-import copy
 import time
 import pprint
 import signal
@@ -22,6 +21,7 @@ from llm import LLM
 
 from audio import AudioMixer
 from webserver import Webserver
+from tegrastats import Tegrastats
 
 
 def parse_args():
@@ -84,6 +84,7 @@ class Chatbot(threading.Thread):
         self.llm = LLM(**vars(args))
         
         self.webserver = Webserver(msg_callback=self.on_websocket_msg, **vars(args))
+        self.tegrastats = Tegrastats(callback=self.on_tegrastats, **vars(args))
         self.audio_mixer = AudioMixer(callback=self.on_mixed_audio, **vars(args))
 
         self.asr_history = ""
@@ -129,15 +130,29 @@ class Chatbot(threading.Thread):
                 sys.exit(0)
                 time.sleep(0.5)
     
-    def on_websocket_msg(self, msg, type):
+    def on_websocket_msg(self, msg, type, timestamp):
         """
         Recieve websocket message from client
         """
-        if type == 1:  # text (chat input)
+        if type == 0:  # JSON
+            if 'chat_history_reset' in msg:
+                self.llm_history = LLM.create_new_history()
+                self.webserver.send_chat_history(self.llm_history['internal'])
+            if 'client_state' in msg:
+                if msg['client_state'] == 'connected':
+                    threading.Timer(1.0, lambda: self.webserver.send_chat_history(self.llm_history['internal'])).start()
+        elif type == 1:  # text (chat input)
             self.on_llm_prompt(msg)
         elif type == 2:  # web audio (mic)
             self.asr.process(msg)
     
+    def on_tegrastats(self, stats):
+        """
+        Recieve update system stats
+        """
+        self.webserver.send_message({'tegrastats': stats['summary']})
+        print("-- tegrastats ", stats['summary'])
+        
     def on_mixed_audio(self, audio, silent):
         """
         Send mixed-down audio from the TTS/ect to web client
@@ -269,13 +284,15 @@ class Chatbot(threading.Thread):
         """
         Chatbot thread main()
         """
+        self.tegrastats.start()
+        
         self.asr.start()
         self.tts.start()
         self.llm.start()
         
         self.audio_mixer.start()
         self.webserver.start()
-            
+
         time.sleep(0.5)
         
         num_msgs = 0

@@ -53,6 +53,10 @@
         input.value = "";
       }
       
+      function onChatHistoryReset() {
+        sendWebsocket({'chat_history_reset': true});
+      }
+      
       window.onload = function() {
       
         connectWebsocket();
@@ -91,7 +95,7 @@
                   History
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarChatHistory">
-                  <li><a class="dropdown-item" href="#">Reset</a></li>
+                  <li><a class="dropdown-item" href="#" onclick="onChatHistoryReset()">Reset</a></li>
                   <li><a class="dropdown-item" href="#">Save</a></li>
                   <li><a class="dropdown-item" href="#">Load</a></li>
                   <!--<li><hr class="dropdown-divider"></li>

@@ -8,6 +8,7 @@ html, body {
 	width:100%;
 	font-family: monospace, monospace;*/
 }
+
 .btn-circle.btn-sm {
 	width: 30px;
 	height: 30px;
@@ -40,18 +41,20 @@ html, body {
 	font-size: 28px;
 	text-align: center;
 }
-.chat-message-body {
-	background-color: #a5f7c3;
-	border-color: green;
-	border-radius: 10px;
-	border-style: solid;
-	margin-left: auto;
-	margin-right: auto;
-	padding: 5px;
+
+.chat-message-user-0, .chat-message-user-1 {
+	/*border-color: green;
+	border-style: solid;*/
+	border-radius: 7px;
+	padding-left: 9px;
+	padding-right: 9px;
+	padding-top: 6px;
+	padding-bottom: 6px;
 	position: relative;
-	text-align: center;
-	/*width:250px;*/
+	display: inline-block;
+	text-align: left;
 }
+
 .bg-gray-4, .bg-dark-gray {
 	background-color: #444444;
 }
@@ -61,12 +64,16 @@ html, body {
 .bg-gray-6 {
 	background-color: #6c6c6c;
 }
-.bg-gray-7, .bg-light-gray {
+.bg-gray-7, .bg-light-gray, .chat-message-user-1 {
 	background-color: #7c7c7c;
-}		
+}	
 .bg-gray-8 {
 	background-color: #888888;
 }
-.bg-sage-green {
+.bg-sage-green, .chat-message-user-0 {
 	background-color: #577468;
+}
+
+.chat-message-user-0 {
+	background-color: #465d54;
 }

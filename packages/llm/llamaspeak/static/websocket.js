@@ -18,17 +18,6 @@ function getWebsocketURL(port=49000) {  // wss://192.168.1.2:49000
   return `${getWebsocketProtocol()}${window.location.hostname}:${port}/${name}`;
 }
 
-function getUserMessageStyle(user) {
-	var color = '#999999';
-	
-	switch(user) {
-		case 0: color = '#465d54'; break; // '#659864'
-		case 1: color = '#7c7c7c'; break; // '#426c99' '#375a7f' '#56718F' 
-  }
-
-	return `background-color: ${color}; border-color: ${color};`
-}
-
 function sendWebsocket(payload, type=0) {
   const timestamp = Date.now();	
 	let header = new DataView(new ArrayBuffer(32));
@@ -118,7 +107,7 @@ function onWebsocket(event) {
 							}
 							else {
 								$('#chat-history-container').append(
-									`<br/><span id="msg_${n}_${m}" class="chat-message-body" style="${getUserMessageStyle(m)}">${chat_history[n][m]}</span><br/><br/>`
+									`<div id="msg_${n}_${m}" class="chat-message-user-${m} mb-3">${chat_history[n][m]}</div><br/>`
 								);
 							}
 						}
@@ -126,6 +115,10 @@ function onWebsocket(event) {
 					
 					if( isScrolledToBottom ) // autoscroll unless the user has scrolled up
 						chc.scrollTop = chc.scrollHeight - chc.clientHeight;
+				}
+				
+				if( 'tegrastats' in json ) {
+					console.log(json['tegrastats']);
 				}
 			});
 		}

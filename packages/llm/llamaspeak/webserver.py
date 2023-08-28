@@ -3,6 +3,7 @@
 import sys
 import ssl
 import time
+import copy
 import json
 import flask
 import queue
@@ -22,7 +23,7 @@ class Webserver(threading.Thread):
     Flask + websockets server for the chat interface
     """
     def __init__(self, web_server='0.0.0.0', web_port=8050, ws_port=49000, 
-                 ssl_cert=None, ssl_key=None, msg_callback=None, **kwargs):
+                 ssl_cert=None, ssl_key=None, client_callback=None, msg_callback=None, **kwargs):
                  
         super(Webserver, self).__init__(daemon=True)  # stop thread on main() exit
         
@@ -60,9 +61,6 @@ class Webserver(threading.Thread):
     def on_websocket(self, websocket):
         print(f"-- new websocket connection from {websocket.remote_address}")
 
-        listener_thread = threading.Thread(target=self.websocket_listener, args=[websocket], daemon=True)
-        listener_thread.start()
- 
         # empty the queue from before the connection was made
         # (otherwise client will be flooded with old messages)
         # TODO implement self.connected so the ws_queue doesn't grow so large without webclient connected...
@@ -71,7 +69,13 @@ class Webserver(threading.Thread):
                 self.ws_queue.get(block=False)
             except queue.Empty:
                 break
+        
+        if self.msg_callback:
+            self.msg_callback({'client_state': 'connected'}, 0, int(time.time()*1000))
             
+        listener_thread = threading.Thread(target=self.websocket_listener, args=[websocket], daemon=True)
+        listener_thread.start()
+
         while True:
             websocket.send(self.ws_queue.get()) #json.dumps(self.ws_queue.get()))
 
@@ -125,7 +129,7 @@ class Webserver(threading.Thread):
                 print("-- text websocket message:", payload)
 
             if self.msg_callback:
-                self.msg_callback(payload, msg_type)
+                self.msg_callback(payload, msg_type, timestamp)
     
     def send_message(self, payload, type=None, timestamp=None):
         if timestamp is None:
@@ -144,6 +148,7 @@ class Webserver(threading.Thread):
                 encoding = 'ascii'
                 
         if type == 0 and not isinstance(payload, str):  # json.dumps() might have already been called
+            #print('sending JSON', payload)
             payload = json.dumps(payload)
             
         if not isinstance(payload, bytes):
@@ -178,7 +183,17 @@ class Webserver(threading.Thread):
         self.msg_count_tx += 1
      
     def send_chat_history(self, history):
-        print("-- sending chat history", history)
+        history = copy.deepcopy(history)
+        
+        def translate_web(text):
+            text = text.replace('\n', '<br/>')
+            return text
+            
+        for n in range(len(history)):
+            for m in range(len(history[n])):
+                history[n][m] = translate_web(history[n][m])
+                
+        #print("-- sending chat history", history)
         self.send_message({'chat_history': history})
         
     def run(self):
