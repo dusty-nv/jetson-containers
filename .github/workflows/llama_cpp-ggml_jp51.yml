@@ -1,12 +1,12 @@
-name: "llama_cpp_jp51"
-run-name: "Build llama_cpp (JetPack 5.1)"
+name: "llama_cpp-ggml_jp51"
+run-name: "Build llama_cpp:ggml (JetPack 5.1)"
 on:
   workflow_dispatch: {}
   push:
     branches:
       - 'dev'
     paths:
-      - '.github/workflows/llama_cpp_jp51.yml'
+      - '.github/workflows/llama_cpp-ggml_jp51.yml'
       - 'packages/llm/llama_cpp/*'
       - '!packages/llm/llama_cpp/README.md'
       - '!packages/llm/llama_cpp/docs.md'
@@ -26,7 +26,7 @@ on:
       - '!packages/llm/huggingface_hub/README.md'
       - '!packages/llm/huggingface_hub/docs.md'
 jobs:
-  llama_cpp_jp51:
+  llama_cpp-ggml_jp51:
     runs-on: [self-hosted, jetson, jp51]
     steps:
       - run: |
@@ -41,4 +41,4 @@ jobs:
          git checkout $GITHUB_SHA 
          git status 
          ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv llama_cpp
+      - run: ./build.sh --name=runner/ --push=dustynv llama_cpp:ggml
