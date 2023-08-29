@@ -22,6 +22,7 @@ RUN cd text-generation-webui && \
     sed 's|^fastapi.*|fastapi|g' -i requirements.txt && \
     sed 's|^safetensors.*|safetensors|g' -i requirements.txt && \
     sed 's|^llama-cpp-python.*|llama-cpp-python|g' -i requirements.txt && \
+    sed 's|^transformers.*|transformers|g' -i requirements.txt && \
     sed 's|^git+https://github.com/huggingface/transformers.*|transformers|g' -i requirements.txt && \
     sed 's|^git+https://github.com/huggingface/peft|#git+https://github.com/huggingface/peft|g' -i requirements.txt && \
     sed 's|^https://github.com/PanQiWei/AutoGPTQ|#https://github.com/PanQiWei/AutoGPTQ|g' -i requirements.txt && \
@@ -31,10 +32,14 @@ RUN cd text-generation-webui && \
 RUN cd text-generation-webui && \
     pip3 freeze > /tmp/constraints.txt && \
     pip3 install --no-cache-dir --verbose -r requirements.txt --constraint /tmp/constraints.txt && \
-    rm /tmp/constraints.txt && \
+    rm /tmp/constraints.txt
+    
+RUN cd text-generation-webui && \
     sed 's|@functools.cache|@functools.lru_cache\(maxsize=None\)|' -i modules/chat.py && \
     sed 's|@functools.cache|@functools.lru_cache\(maxsize=None\)|' -i modules/loaders.py && \
-    sed 's|@functools.cache|@functools.lru_cache\(maxsize=None\)|' -i modules/presets.py 
+    sed 's|@functools.cache|@functools.lru_cache\(maxsize=None\)|' -i modules/presets.py && \
+    sed 's/params = params | ggml_params/params.update(ggml_params)/' -i modules/llamacpp_model.py && \
+    cat modules/llamacpp_model.py | grep ggml_params
 
 RUN cp /opt/GPTQ-for-LLaMa/*.py /opt/text-generation-webui
 
