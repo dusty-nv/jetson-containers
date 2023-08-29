@@ -31,12 +31,12 @@ class LLM(threading.Thread):
     """
     Streaming LLM service using text-generation-webui API
     """
-    def __init__(self, llm_server='0.0.0.0', llm_api_port=5000, llm_streaming_port=5005, verbose=False, **kwargs):
+    def __init__(self, llm_server='0.0.0.0', llm_api_port=5000, llm_streaming_port=5005, log_level=0, **kwargs):
                  
         super(LLM, self).__init__(daemon=True)  # stop thread on main() exit
         
         self.queue = queue.Queue()
-        self.verbose = verbose
+        self.log_level = log_level
         
         self.server = llm_server
         self.blocking_port = llm_api_port
@@ -273,7 +273,7 @@ class LLM(threading.Thread):
             request = self.queue.get()
             self.muted = False
             
-            if self.verbose:
+            if self.log_level > 0:
                 print("-- LLM:")
                 pprint.pprint(request)
             

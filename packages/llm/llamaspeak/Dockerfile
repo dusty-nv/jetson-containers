@@ -8,9 +8,15 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-COPY requirements.txt /opt/llamaspeak/
-RUN pip3 install --no-cache-dir --verbose -r /opt/llamaspeak/requirements.txt
+WORKDIR /opt/llamaspeak
 
-COPY *.py /opt/llamaspeak/
-COPY static/ /opt/llamaspeak/static
-COPY templates/ /opt/llamaspeak/templates
+COPY requirements.txt .
+RUN pip3 install --no-cache-dir --verbose -r requirements.txt
+
+COPY *.py ./
+COPY static/ static
+COPY templates/ templates
+
+WORKDIR /
+
+CMD /bin/bash -c "cd /opt/llamaspeak && python3 chat.py"

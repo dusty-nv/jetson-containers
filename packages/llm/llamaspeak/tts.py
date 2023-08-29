@@ -66,7 +66,7 @@ class TTS(threading.Thread):
             request = self.queue.get()
             self.muted = False
             
-            print(f"-- TTS:  '{request['text']}'")
+            #print(f"-- TTS:  '{request['text']}'")
             
             responses = self.tts_service.synthesize_online(
                 request['text'], request['voice'], self.language_code, sample_rate_hz=self.sample_rate

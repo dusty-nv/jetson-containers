@@ -6,6 +6,7 @@ import time
 import pprint
 import signal
 import argparse
+import termcolor
 import threading
 import subprocess
 import numpy as np
@@ -34,7 +35,7 @@ def parse_args():
     parser.add_argument("--list-devices", action="store_true", help="List output audio devices indices.")
     parser.add_argument("--input-device", type=int, default=None, help="An input audio device to use.")
     parser.add_argument("--output-device", type=int, default=None, help="Output device to use.")
-    parser.add_argument("--sample-rate-hz", type=int, default=44100, help="Number of audio frames per second in synthesized audio.")
+    parser.add_argument("--sample-rate-hz", type=int, default=48000, help="Number of audio frames per second in synthesized audio.")
     parser.add_argument("--audio-chunk", type=int, default=1600, help="A maximum number of frames in a audio chunk sent to server.")
     parser.add_argument("--audio-channels", type=int, default=1, help="The number of audio channels to use")
     
@@ -53,6 +54,11 @@ def parse_args():
     parser.add_argument("--web-port", type=int, default=8050, help="port used for webserver HTTP/HTTPS")
     parser.add_argument("--ssl-key", default=os.getenv('SSL_KEY'), type=str, help="path to PEM-encoded SSL/TLS key file for enabling HTTPS")
     
+    # verbose/debug logging
+    parser.add_argument("--log-level", type=str, default='info', choices=['info', 'verbose', 'debug'], help="logging level")
+    parser.add_argument("--verbose", action='store_true', help="enable verbose logging")
+    parser.add_argument("--debug", action='store_true', help="enable debug logging (extra verbose)")
+    
     parser = add_asr_config_argparse_parameters(parser, profanity_filter=True)
     parser = add_connection_argparse_parameters(parser)
     
@@ -61,6 +67,20 @@ def parse_args():
     args.automatic_punctuation = not args.no_punctuation
     args.verbatim_transcripts = not args.no_verbatim_transcripts
     
+    # setup logging level
+    if args.debug:
+        args.verbose = True
+        args.log_level = 'debug'
+    elif args.verbose:
+        args.log_level = 'verbose'
+        
+    if args.log_level == 'info':
+        args.log_level = 0
+    elif args.log_level == 'verbose':
+        args.log_level = 1
+    elif args.log_level == 'debug':
+        args.log_level = 2
+        
     if not args.ssl_cert:
         args.ssl_cert = os.getenv('SSL_CERT')
         
@@ -93,6 +113,8 @@ class Chatbot(threading.Thread):
         
         self.llm_timer = None
         self.tts_track = None
+        self.log_level = args.log_level
+        
         self.last_sigint = 0.0
         
         #signal.signal(signal.SIGINT, self.on_sigint)
@@ -101,7 +123,7 @@ class Chatbot(threading.Thread):
         """
         Interrupt the bot by muting audio and cancelling LLM/TTS requests
         """
-        print("-- MUTING CHATBOT")
+        print("-- muting chatbot output")
         
         if self.llm:
             self.llm.mute()
@@ -153,8 +175,10 @@ class Chatbot(threading.Thread):
         Recieve update system stats
         """
         self.webserver.send_message({'tegrastats': stats['summary']})
-        print("-- tegrastats ", stats['summary'])
         
+        if self.log_level == 0:
+            print(f"-- tegrastats:  {stats['summary']}")
+            
     def on_mixed_audio(self, audio, silent):
         """
         Send mixed-down audio from the TTS/ect to web client
@@ -170,7 +194,7 @@ class Chatbot(threading.Thread):
         
         if result.is_final:
             confidence = result.alternatives[0].confidence
-            print(f"## {transcript} ({confidence})")
+            termcolor.cprint(f"## {transcript} ({confidence})", "green")
             if confidence > -2.0: #len(transcript.split(' ')) > 1:
                 self.asr_history = transcript
                 self.on_llm_prompt(transcript)
@@ -179,7 +203,7 @@ class Chatbot(threading.Thread):
         else:
             if transcript != self.asr_history:
                 self.asr_history = transcript
-                print(f">> {transcript}") 
+                termcolor.cprint(f">> {transcript}", "green") 
                 
                 if len(self.asr_history.split(' ')) >= 3:
                     self.mute()
@@ -229,8 +253,9 @@ class Chatbot(threading.Thread):
             
         if not end:
             if request['type'] == 'completion':
-                print(response, end='')
-                sys.stdout.flush()
+                termcolor.cprint(f"<< {response}", "blue")
+                #print(response, end='')
+                #sys.stdout.flush()
             elif request['type'] == 'chat':
                 current_length = request.get('current_length', 0)
                 msg = response['internal'][-1][1][current_length:]
@@ -238,11 +263,12 @@ class Chatbot(threading.Thread):
                 self.llm_history = response
                 self.send_tts(msg)
                 self.webserver.send_chat_history(response['internal'])
-                print(msg, end='')
-                sys.stdout.flush()
+                termcolor.cprint(f"<< {response['internal'][-1][1]}", "blue")
+                #print(msg, end='')
+                #sys.stdout.flush()
         else:
             self.send_tts(end=True)
-            print("\n")
+            #print("\n")
         
     def on_tts_audio(self, audio, request):
         """
@@ -280,6 +306,8 @@ class Chatbot(threading.Thread):
                     self.tts_history = self.tts_history[idx+1:]
 
         if txt:
+            if self.log_level > 0:
+                print(f"-- TTS:  '{txt}'")
             self.tts.generate(txt, callback=self.on_tts_audio)
 
     def run(self):
