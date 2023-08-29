@@ -393,8 +393,8 @@ jobs:
           git status 
           ls -a 
        - run: ./build.sh --name=runner/ --push=dustynv l4t-text-generation
-  llama_cpp:
-     name: "llama_cpp"
+  llama_cpp-ggml:
+     name: "llama_cpp:ggml"
      runs-on: [self-hosted, jetson, r35.3.1]
      steps:
        - run: |
@@ -409,7 +409,41 @@ jobs:
           git checkout $GITHUB_SHA 
           git status 
           ls -a 
-       - run: ./build.sh --name=runner/ --push=dustynv llama_cpp
+       - run: ./build.sh --name=runner/ --push=dustynv llama_cpp:ggml
+  llama_cpp-gguf:
+     name: "llama_cpp:gguf"
+     runs-on: [self-hosted, jetson, r35.3.1]
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv llama_cpp:gguf
+  llamaspeak:
+     name: "llamaspeak"
+     runs-on: [self-hosted, jetson, r35.3.1]
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv llamaspeak
   nemo:
      name: "nemo"
      runs-on: [self-hosted, jetson, r35.3.1]
