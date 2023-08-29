@@ -12,26 +12,34 @@ FROM ${BASE_IMAGE}
 
 ARG TORCH_CUDA_ARCH_LIST
 
-# force rebuild on new git commits - https://stackoverflow.com/a/56945508
-ADD https://api.github.com/repos/PanQiWei/AutoGPTQ/git/refs/heads/main /tmp/autogptq_version.json
+WORKDIR /opt
 
-RUN cd /opt && \
-    git clone --depth=1 https://github.com/PanQiWei/AutoGPTQ.git && \
+# 8/28/2023 - build errors in main (v0.4.2 is tag prior)
+ARG AUTOGPTQ_BRANCH="v0.4.2"
+
+#ADD https://api.github.com/repos/PanQiWei/AutoGPTQ/git/refs/heads/${AUTOGPTQ_BRANCH} /tmp/autogptq_version.json
+
+RUN git clone --branch=${AUTOGPTQ_BRANCH} --depth=1 https://github.com/PanQiWei/AutoGPTQ.git && \
     cd AutoGPTQ && \
+    sed 's|^    p = int(subprocess.*| \ \ \ p = os.cpu_count()|g' -i setup.py && \
     python3 setup.py --verbose bdist_wheel && \
     cp dist/auto_gptq*.whl /opt
 
 RUN pip3 install --no-cache-dir --verbose /opt/auto_gptq*.whl
 
-RUN pip3 show auto-gptq && python3 -c 'import auto_gptq'
-
 # add memory stats to benchmark
 RUN sed '/    logger.info(f"model device map.*/a\ \ \ \ logger.info(f"torch.cuda.max_memory_allocated: {torch.cuda.max_memory_allocated()}")' -i /opt/AutoGPTQ/examples/benchmark/generation_speed.py && \
     sed '/    benchmark_generation_speed(model.*/a\ \ \ \ logger.info(f"torch.cuda.max_memory_allocated: {torch.cuda.max_memory_allocated()}")' -i /opt/AutoGPTQ/examples/benchmark/generation_speed.py && \
-    cat /opt/AutoGPTQ/examples/benchmark/generation_speed.py
+    cat AutoGPTQ/examples/benchmark/generation_speed.py
+    
+WORKDIR /
+
+# make sure it loads
+RUN pip3 show auto-gptq && python3 -c 'import auto_gptq'
 
 # for benchmark timing
 RUN apt-get update && \
     apt-get install -y --no-install-recommends time \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
+    
