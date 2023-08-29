@@ -6,6 +6,11 @@
 * llama.cpp from https://github.com/ggerganov/llama.cpp with CUDA enabled (found under `/opt/llama.cpp`)
 * Python bindings from https://github.com/abetlen/llama-cpp-python (found under `/opt/llama-cpp-python`)
 
+This build also has the following patches applied (from [`patches.diff`](patches.diff))
+
+* fixed `__fp16` typedef in llama.h on ARM64 (use `half` with NVCC)
+* parsing of BOS/EOS tokens (see https://github.com/ggerganov/llama.cpp/pull/1931)
+
 ### Inference Benchmark
 
 You can use llama.cpp's built-in [`main`](https://github.com/ggerganov/llama.cpp/tree/master/examples/main) tool to run GGML models (from [HuggingFace Hub](https://huggingface.co/models?search=ggml) or elsewhere)
@@ -44,14 +49,19 @@ To use the Python API and [`benchmark.py`](/packages/llm/llama_cpp/benchmark.py)
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`llama_cpp`** | |
+| **`llama_cpp:ggml`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`llama_cpp_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/llama_cpp_jp51.yml?label=llama_cpp:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/llama_cpp_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Aliases | `llama_cpp` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`huggingface_hub`](/packages/llm/huggingface_hub) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`text-generation-webui`](/packages/llm/text-generation-webui) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/llama_cpp:r35.2.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) `(2023-08-10, 5.2GB)`<br>[`dustynv/llama_cpp:r35.3.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) `(2023-08-12, 5.2GB)` |
+
+| **`llama_cpp:gguf`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`huggingface_hub`](/packages/llm/huggingface_hub) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 
 </details>
 
@@ -61,8 +71,9 @@ To use the Python API and [`benchmark.py`](/packages/llm/llama_cpp/benchmark.py)
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/llama_cpp:r35.2.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-08-10` | `arm64` | `5.2GB` |
-| &nbsp;&nbsp;[`dustynv/llama_cpp:r35.3.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-08-12` | `arm64` | `5.2GB` |
+| &nbsp;&nbsp;[`dustynv/llama_cpp:r35.2.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-08-22` | `arm64` | `5.2GB` |
+| &nbsp;&nbsp;[`dustynv/llama_cpp:r35.3.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-08-15` | `arm64` | `5.2GB` |
+| &nbsp;&nbsp;[`dustynv/llama_cpp:r35.4.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-08-13` | `arm64` | `5.1GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -79,10 +90,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag llama_cpp)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/llama_cpp:r35.3.1
+./run.sh dustynv/llama_cpp:r35.2.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/llama_cpp:r35.3.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/llama_cpp:r35.2.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
