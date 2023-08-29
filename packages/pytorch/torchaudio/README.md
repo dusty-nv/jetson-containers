@@ -8,12 +8,12 @@
 
 | **`torchaudio`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`torchaudio_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torchaudio_jp46.yml?label=torchaudio:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torchaudio_jp46.yml) [![`torchaudio_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torchaudio_jp51.yml?label=torchaudio:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torchaudio_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`torchaudio_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torchaudio_jp51.yml?label=torchaudio:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torchaudio_jp51.yml) [![`torchaudio_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torchaudio_jp46.yml?label=torchaudio:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torchaudio_jp46.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-pytorch`](/packages/l4t/l4t-pytorch) [`nemo`](/packages/nemo) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/torchaudio:r32.7.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) `(2023-08-04, 1.1GB)`<br>[`dustynv/torchaudio:r35.2.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) `(2023-08-04, 5.4GB)`<br>[`dustynv/torchaudio:r35.4.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) `(2023-08-04, 5.4GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/torchaudio:r32.7.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) `(2023-08-12, 1.1GB)`<br>[`dustynv/torchaudio:r35.2.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) `(2023-08-13, 5.4GB)`<br>[`dustynv/torchaudio:r35.3.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) `(2023-08-13, 5.4GB)`<br>[`dustynv/torchaudio:r35.4.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) `(2023-08-13, 5.4GB)` |
 
 </details>
 
@@ -23,9 +23,10 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/torchaudio:r32.7.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) | `2023-08-04` | `arm64` | `1.1GB` |
-| &nbsp;&nbsp;[`dustynv/torchaudio:r35.2.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) | `2023-08-04` | `arm64` | `5.4GB` |
-| &nbsp;&nbsp;[`dustynv/torchaudio:r35.4.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) | `2023-08-04` | `arm64` | `5.4GB` |
+| &nbsp;&nbsp;[`dustynv/torchaudio:r32.7.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) | `2023-08-12` | `arm64` | `1.1GB` |
+| &nbsp;&nbsp;[`dustynv/torchaudio:r35.2.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) | `2023-08-13` | `arm64` | `5.4GB` |
+| &nbsp;&nbsp;[`dustynv/torchaudio:r35.3.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) | `2023-08-13` | `arm64` | `5.4GB` |
+| &nbsp;&nbsp;[`dustynv/torchaudio:r35.4.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) | `2023-08-13` | `arm64` | `5.4GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>

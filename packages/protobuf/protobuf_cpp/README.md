@@ -14,7 +14,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-tensorflow:tf1`](/packages/l4t/l4t-tensorflow) [`l4t-tensorflow:tf2`](/packages/l4t/l4t-tensorflow) [`tensorflow`](/packages/tensorflow) [`tensorflow2`](/packages/tensorflow) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/protobuf:cpp-r32.7.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-08-04, 0.4GB)`<br>[`dustynv/protobuf:cpp-r35.2.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-08-04, 5.1GB)`<br>[`dustynv/protobuf:cpp-r35.3.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-07-29, 5.1GB)`<br>[`dustynv/protobuf:cpp-r35.4.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-08-04, 5.1GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/protobuf:cpp-r32.7.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-08-12, 0.4GB)`<br>[`dustynv/protobuf:cpp-r35.2.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-08-13, 5.1GB)`<br>[`dustynv/protobuf:cpp-r35.3.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-08-13, 5.1GB)`<br>[`dustynv/protobuf:cpp-r35.4.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-08-13, 5.1GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | build protobuf using cpp implementation (https://jkjung-avt.github.io/tf-trt-revisited/) |
 
 </details>
@@ -29,7 +29,7 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag protobuf_cpp)
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host protobuf_cpp:35.4.1
+sudo docker run --runtime nvidia -it --rm --network=host protobuf_cpp:35.2.1
 
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>

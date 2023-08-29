@@ -8,12 +8,12 @@
 
 | **`bazel`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`bazel_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/bazel_jp51.yml?label=bazel:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/bazel_jp51.yml) [![`bazel_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/bazel_jp46.yml?label=bazel:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/bazel_jp46.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`bazel_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/bazel_jp46.yml?label=bazel:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/bazel_jp46.yml) [![`bazel_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/bazel_jp51.yml?label=bazel:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/bazel_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`riva-client:cpp`](/packages/riva-client) [`torch_tensorrt`](/packages/pytorch/torch_tensorrt) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/bazel:r32.7.1`](https://hub.docker.com/r/dustynv/bazel/tags) `(2023-08-04, 0.4GB)`<br>[`dustynv/bazel:r35.3.1`](https://hub.docker.com/r/dustynv/bazel/tags) `(2023-08-04, 5.1GB)`<br>[`dustynv/bazel:r35.4.1`](https://hub.docker.com/r/dustynv/bazel/tags) `(2023-08-04, 5.1GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/bazel:r32.7.1`](https://hub.docker.com/r/dustynv/bazel/tags) `(2023-08-12, 0.4GB)`<br>[`dustynv/bazel:r35.2.1`](https://hub.docker.com/r/dustynv/bazel/tags) `(2023-08-12, 5.1GB)`<br>[`dustynv/bazel:r35.3.1`](https://hub.docker.com/r/dustynv/bazel/tags) `(2023-08-13, 5.1GB)`<br>[`dustynv/bazel:r35.4.1`](https://hub.docker.com/r/dustynv/bazel/tags) `(2023-08-13, 5.1GB)` |
 
 </details>
 
@@ -23,9 +23,10 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/bazel:r32.7.1`](https://hub.docker.com/r/dustynv/bazel/tags) | `2023-08-04` | `arm64` | `0.4GB` |
-| &nbsp;&nbsp;[`dustynv/bazel:r35.3.1`](https://hub.docker.com/r/dustynv/bazel/tags) | `2023-08-04` | `arm64` | `5.1GB` |
-| &nbsp;&nbsp;[`dustynv/bazel:r35.4.1`](https://hub.docker.com/r/dustynv/bazel/tags) | `2023-08-04` | `arm64` | `5.1GB` |
+| &nbsp;&nbsp;[`dustynv/bazel:r32.7.1`](https://hub.docker.com/r/dustynv/bazel/tags) | `2023-08-12` | `arm64` | `0.4GB` |
+| &nbsp;&nbsp;[`dustynv/bazel:r35.2.1`](https://hub.docker.com/r/dustynv/bazel/tags) | `2023-08-12` | `arm64` | `5.1GB` |
+| &nbsp;&nbsp;[`dustynv/bazel:r35.3.1`](https://hub.docker.com/r/dustynv/bazel/tags) | `2023-08-13` | `arm64` | `5.1GB` |
+| &nbsp;&nbsp;[`dustynv/bazel:r35.4.1`](https://hub.docker.com/r/dustynv/bazel/tags) | `2023-08-13` | `arm64` | `5.1GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>

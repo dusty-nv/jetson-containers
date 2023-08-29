@@ -8,11 +8,11 @@
 
 | **`torch_tensorrt`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`torch_tensorrt_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torch_tensorrt_jp51.yml?label=torch_tensorrt:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torch_tensorrt_jp51.yml) [![`torch_tensorrt_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torch_tensorrt_jp46.yml?label=torch_tensorrt:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torch_tensorrt_jp46.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`torch_tensorrt_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torch_tensorrt_jp46.yml?label=torch_tensorrt:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torch_tensorrt_jp46.yml) [![`torch_tensorrt_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torch_tensorrt_jp51.yml?label=torch_tensorrt:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torch_tensorrt_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`bazel`](/packages/bazel) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/torch_tensorrt:r32.7.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) `(2023-08-04, 1.6GB)`<br>[`dustynv/torch_tensorrt:r35.2.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) `(2023-08-04, 5.9GB)`<br>[`dustynv/torch_tensorrt:r35.3.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) `(2023-07-30, 6.0GB)`<br>[`dustynv/torch_tensorrt:r35.4.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) `(2023-08-04, 5.9GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/torch_tensorrt:r32.7.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) `(2023-08-12, 1.6GB)`<br>[`dustynv/torch_tensorrt:r35.2.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) `(2023-08-13, 5.9GB)`<br>[`dustynv/torch_tensorrt:r35.3.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) `(2023-08-13, 6.0GB)`<br>[`dustynv/torch_tensorrt:r35.4.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) `(2023-08-13, 5.9GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://pytorch.org/TensorRT/getting_started/installation.html#installation |
 
 </details>
@@ -23,10 +23,10 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/torch_tensorrt:r32.7.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) | `2023-08-04` | `arm64` | `1.6GB` |
-| &nbsp;&nbsp;[`dustynv/torch_tensorrt:r35.2.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) | `2023-08-04` | `arm64` | `5.9GB` |
-| &nbsp;&nbsp;[`dustynv/torch_tensorrt:r35.3.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) | `2023-07-30` | `arm64` | `6.0GB` |
-| &nbsp;&nbsp;[`dustynv/torch_tensorrt:r35.4.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) | `2023-08-04` | `arm64` | `5.9GB` |
+| &nbsp;&nbsp;[`dustynv/torch_tensorrt:r32.7.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) | `2023-08-12` | `arm64` | `1.6GB` |
+| &nbsp;&nbsp;[`dustynv/torch_tensorrt:r35.2.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) | `2023-08-13` | `arm64` | `5.9GB` |
+| &nbsp;&nbsp;[`dustynv/torch_tensorrt:r35.3.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) | `2023-08-13` | `arm64` | `6.0GB` |
+| &nbsp;&nbsp;[`dustynv/torch_tensorrt:r35.4.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) | `2023-08-13` | `arm64` | `5.9GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>

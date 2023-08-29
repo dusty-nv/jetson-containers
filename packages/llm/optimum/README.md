@@ -8,12 +8,12 @@
 
 | **`optimum`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`optimum_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/optimum_jp51.yml?label=optimum:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/optimum_jp51.yml) [![`optimum_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/optimum_jp46.yml?label=optimum:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/optimum_jp46.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`optimum_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/optimum_jp46.yml?label=optimum:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/optimum_jp46.yml) [![`optimum_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/optimum_jp51.yml?label=optimum:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/optimum_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) [`onnxruntime`](/packages/onnxruntime) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`bitsandbytes`](/packages/llm/bitsandbytes) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/optimum:r32.7.1`](https://hub.docker.com/r/dustynv/optimum/tags) `(2023-08-10, 1.6GB)`<br>[`dustynv/optimum:r35.2.1`](https://hub.docker.com/r/dustynv/optimum/tags) `(2023-08-10, 6.0GB)`<br>[`dustynv/optimum:r35.3.1`](https://hub.docker.com/r/dustynv/optimum/tags) `(2023-08-10, 6.1GB)`<br>[`dustynv/optimum:r35.4.1`](https://hub.docker.com/r/dustynv/optimum/tags) `(2023-08-04, 5.7GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/optimum:r32.7.1`](https://hub.docker.com/r/dustynv/optimum/tags) `(2023-08-21, 1.6GB)`<br>[`dustynv/optimum:r35.2.1`](https://hub.docker.com/r/dustynv/optimum/tags) `(2023-08-13, 6.0GB)`<br>[`dustynv/optimum:r35.3.1`](https://hub.docker.com/r/dustynv/optimum/tags) `(2023-08-21, 6.1GB)`<br>[`dustynv/optimum:r35.4.1`](https://hub.docker.com/r/dustynv/optimum/tags) `(2023-08-13, 6.0GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/huggingface/optimum |
 
 </details>
@@ -24,10 +24,10 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/optimum:r32.7.1`](https://hub.docker.com/r/dustynv/optimum/tags) | `2023-08-10` | `arm64` | `1.6GB` |
-| &nbsp;&nbsp;[`dustynv/optimum:r35.2.1`](https://hub.docker.com/r/dustynv/optimum/tags) | `2023-08-10` | `arm64` | `6.0GB` |
-| &nbsp;&nbsp;[`dustynv/optimum:r35.3.1`](https://hub.docker.com/r/dustynv/optimum/tags) | `2023-08-10` | `arm64` | `6.1GB` |
-| &nbsp;&nbsp;[`dustynv/optimum:r35.4.1`](https://hub.docker.com/r/dustynv/optimum/tags) | `2023-08-04` | `arm64` | `5.7GB` |
+| &nbsp;&nbsp;[`dustynv/optimum:r32.7.1`](https://hub.docker.com/r/dustynv/optimum/tags) | `2023-08-21` | `arm64` | `1.6GB` |
+| &nbsp;&nbsp;[`dustynv/optimum:r35.2.1`](https://hub.docker.com/r/dustynv/optimum/tags) | `2023-08-13` | `arm64` | `6.0GB` |
+| &nbsp;&nbsp;[`dustynv/optimum:r35.3.1`](https://hub.docker.com/r/dustynv/optimum/tags) | `2023-08-21` | `arm64` | `6.1GB` |
+| &nbsp;&nbsp;[`dustynv/optimum:r35.4.1`](https://hub.docker.com/r/dustynv/optimum/tags) | `2023-08-13` | `arm64` | `6.0GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
