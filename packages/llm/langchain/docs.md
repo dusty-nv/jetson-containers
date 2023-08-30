@@ -1,6 +1,6 @@
 
 * langchain from https://github.com/langchain-ai/langchain
 
-This container has a default run command to launch Jupyter Lab with notebook directory to be `/opt/langchain-notebooks`.
+The `langchain:samples` container has a default run command to launch Jupyter Lab with notebook directory to be `/opt/langchain`
 
 Use your web browser to access `http://HOSTNAME:8888`
