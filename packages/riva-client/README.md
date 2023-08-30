@@ -11,7 +11,7 @@
 
 Before doing anything, you should download and run the Riva server container from [`riva_quickstart_arm64`](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/riva/resources/riva_quickstart_arm64) using `riva_start.sh`
 
-This will run locally on your Jetson Xavier or Orin device and is [supported on JetPack 5](https://docs.nvidia.com/deeplearning/riva/user-guide/docs/support-matrix.html#embedded).  You can disable NLP/NMT in its `config.sh` and it will use around ~5GB of memory for ASR+TTS.  It's recommended to test the system with [these examples](https://github.com/nvidia-riva/python-clients#asr) under `/opt/riva/python-clients`.
+This will run locally on your Jetson Xavier or Orin device and is [supported on JetPack 5](https://docs.nvidia.com/deeplearning/riva/user-guide/docs/support-matrix.html#embedded).  You can disable NLP/NMT in its `config.sh` and it will use around ~5GB of memory for ASR+TTS.  It's then recommended to test the system with [these examples](https://github.com/nvidia-riva/python-clients#asr) under `/opt/riva/python-clients`
 
 ### List Audio Devices
 

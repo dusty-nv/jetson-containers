@@ -1,20 +1,20 @@
 
 ![llamaspeak](/docs/images/llamaspeak_screenshot_0.jpg)
 
-* Talk live with LLM's using NVIDIA [Riva](/packages/riva-client) ASR and TTS!
-* Requires the [riva-server](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/riva/resources/riva_quickstart_arm64) and [`text-generation-webui`](/packages/llm/text-generation-webui) to be running
+* Talk live with LLM's using [NVIDIA Riva](/packages/riva-client) ASR and TTS!
+* Requires the [`riva-server`](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/riva/resources/riva_quickstart_arm64) and [`text-generation-webui`](/packages/llm/text-generation-webui) to be running
 
 ### Start Riva
 
 First, follow the steps from the [`riva-client:python`](/packages/riva-client) package to run and test the Riva server:
 
-1. Start the Riva server running on your Jetson by following [`riva_quickstart_arm64`](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/riva/resources/riva_quickstart_arm64)
+1. Start the Riva server on your Jetson by following [`riva_quickstart_arm64`](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/riva/resources/riva_quickstart_arm64)
 2. Run some of the Riva ASR examples to confirm that ASR is working:  https://github.com/nvidia-riva/python-clients#asr
 3. Run some of the Riva TTS examples to confirm that TTS is working:  https://github.com/nvidia-riva/python-clients#tts
 
 ### Load LLM
 
-Next, start [`text-generation-webui`](/packages/llm/text-generation-webui) with the `--api` flag and load your chat model of choice through the web UI:
+Next, start [`text-generation-webui`](/packages/llm/text-generation-webui) with the `--api` flag and load your chat model of choice through it's web UI on port 7860:
 
 ```bash
 ./run.sh --workdir /opt/text-generation-webui $(./autotag text-generation-webui) \
@@ -47,17 +47,15 @@ $ cd /path/to/your/jetson-containers/data
 $ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -sha256 -days 365 -nodes -subj '/CN=localhost'
 ```
 
-You'll want to place it in your [`jetson-containers/data`](/data) directory, because this gets automatically mounted into the containers under `/data`, and will keep your SSL certificate persistent across container runs.
+You'll want to place these in your [`jetson-containers/data`](/data) directory, because this gets automatically mounted into the containers under `/data`, and will keep your SSL certificate persistent across container runs.  When you first navigate your browser to a page that uses these self-signed certificates, it will issue you a warning since they don't originate from a trusted authority:
 
-When you first navigate your browser to a page that uses these self-signed certificates, it will issue you a warning since they don't originate from a trusted authority:
-
-![self-signed certificate warning](/docs/images/ssl_warning.jpg)
+<img src="https://github.com/dusty-nv/jetson-containers/raw/master/docs/images/ssl_warning.jpg" width="400">
 
 You can choose to override this, and it won't re-appear again until you change certificates or your device's hostname/IP changes.
 
 ### Run Llamaspeak
 
-To run the llamaspeak chat server with default arguments and the SSL keys you generated, start it like this:
+To run the llamaspeak chat server with its default arguments and the SSL keys you generated, start it like this:
 
 ```bash
 ./run.sh --env SSL_CERT=/data/cert.pem --env SSL_KEY=/data/key.pem $(./autotag llamaspeak)
@@ -72,6 +70,6 @@ See [`chat.py`](chat.py) for command-line options that can be changed.  For exam
   $(./autotag llamaspeak) \
   python3 chat.py --verbose
 ```
-> if you're having issues with getting audio or responses from the web client, it's recommend to enable debug logging to check the message traffic
+> if you're having issues with getting audio or responses from the web client, it's enable debug logging to check the message traffic.
 
 The default port is `8050`, but that can be changed with the `--port` argument.  You can then navigate your browser to `https://HOSTNAME:8050`
