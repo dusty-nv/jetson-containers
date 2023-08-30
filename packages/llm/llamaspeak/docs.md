@@ -70,6 +70,6 @@ See [`chat.py`](chat.py) for command-line options that can be changed.  For exam
   $(./autotag llamaspeak) \
   python3 chat.py --verbose
 ```
-> if you're having issues with getting audio or responses from the web client, it's enable debug logging to check the message traffic.
+> if you're having issues with getting audio or responses from the web client, enable debug logging to check the message traffic.
 
 The default port is `8050`, but that can be changed with the `--port` argument.  You can then navigate your browser to `https://HOSTNAME:8050`
