@@ -1,15 +1,16 @@
 
-* Talk live with LLM's using [RIVA](/packages/riva-client) ASR and TTS!
-* Requires the [RIVA server](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/riva/resources/riva_quickstart_arm64) and [`text-generation-webui`](/packages/llm/text-generation-webui) to be running
-* 
+![llamaspeak](/docs/images/llamaspeak_screenshot_0.jpg)
 
-### Audio Check
+* Talk live with LLM's using NVIDIA [Riva](/packages/riva-client) ASR and TTS!
+* Requires the [riva-server](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/riva/resources/riva_quickstart_arm64) and [`text-generation-webui`](/packages/llm/text-generation-webui) to be running
 
-First, it's recommended to test your microphone/speaker with RIVA ASR/TTS.  Follow the steps from the [`riva-client:python`](/packages/riva-client) package:
+### Start Riva
 
-1. Start the RIVA server running on your Jetson by following [`riva_quickstart_arm64`](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/riva/resources/riva_quickstart_arm64)
-2. List your [audio devices](/packages/riva-client/README.md#list-audio-devices)
-3. Perform the ASR/TTS [loopback test](/packages/riva-client/README.md#loopback)
+First, follow the steps from the [`riva-client:python`](/packages/riva-client) package to run and test the Riva server:
+
+1. Start the Riva server running on your Jetson by following [`riva_quickstart_arm64`](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/riva/resources/riva_quickstart_arm64)
+2. Run some of the Riva ASR examples to confirm that ASR is working:  https://github.com/nvidia-riva/python-clients#asr
+3. Run some of the Riva TTS examples to confirm that TTS is working:  https://github.com/nvidia-riva/python-clients#tts
 
 ### Load LLM
 
@@ -29,7 +30,48 @@ Alternatively, you can manually specify the model that you want to load without 
 	--model-dir=/data/models/text-generation-webui \
 	--model=llama-2-13b-chat.ggmlv3.q4_0.bin \
 	--loader=llamacpp \
-	--n-gpu-layers=128
+	--n-gpu-layers=128 \
+	--n_ctx=4096 \
+	--n_batch=4096 \
+	--threads=$(($(nproc) - 2))
 ```
 
 See here for command-line arguments:  https://github.com/oobabooga/text-generation-webui/tree/main#basic-settings
+
+### Enabling HTTPS/SSL
+
+Browsers require HTTPS to be used in order to access the client's microphone.  Hence, you'll need to create a self-signed SSL certificate and key:
+
+```bash
+$ cd /path/to/your/jetson-containers/data
+$ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -sha256 -days 365 -nodes -subj '/CN=localhost'
+```
+
+You'll want to place it in your [`jetson-containers/data`](/data) directory, because this gets automatically mounted into the containers under `/data`, and will keep your SSL certificate persistent across container runs.
+
+When you first navigate your browser to a page that uses these self-signed certificates, it will issue you a warning since they don't originate from a trusted authority:
+
+![self-signed certificate warning](/docs/images/ssl_warning.jpg)
+
+You can choose to override this, and it won't re-appear again until you change certificates or your device's hostname/IP changes.
+
+### Run Llamaspeak
+
+To run the llamaspeak chat server with default arguments and the SSL keys you generated, start it like this:
+
+```bash
+./run.sh --env SSL_CERT=/data/cert.pem --env SSL_KEY=/data/key.pem $(./autotag llamaspeak)
+```
+
+See [`chat.py`](chat.py) for command-line options that can be changed.  For example, to enable `--verbose` or `--debug` logging:
+
+```bash
+./run.sh --workdir=/opt/llamaspeak \
+  --env SSL_CERT=/data/cert.pem \
+  --env SSL_KEY=/data/key.pem \
+  $(./autotag llamaspeak) \
+  python3 chat.py --verbose
+```
+> if you're having issues with getting audio or responses from the web client, it's recommend to enable debug logging to check the message traffic
+
+The default port is `8050`, but that can be changed with the `--port` argument.  You can then navigate your browser to `https://HOSTNAME:8050`

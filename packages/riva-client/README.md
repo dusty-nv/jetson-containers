@@ -9,9 +9,9 @@
 
 ### Start Riva Server
 
-Before doing anything, you should download and run the Riva server container from [`riva_quickstart_arm64`](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/riva/resources/riva_quickstart_arm64)
+Before doing anything, you should download and run the Riva server container from [`riva_quickstart_arm64`](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/riva/resources/riva_quickstart_arm64) using `riva_start.sh`
 
-This will run locally on your Jetson Xavier or Orin device and is [supported on JetPack 5](https://docs.nvidia.com/deeplearning/riva/user-guide/docs/support-matrix.html#embedded).  You can disable NLP/NMT in its `config.sh` and it will use around ~5GB of memory for ASR+TTS.
+This will run locally on your Jetson Xavier or Orin device and is [supported on JetPack 5](https://docs.nvidia.com/deeplearning/riva/user-guide/docs/support-matrix.html#embedded).  You can disable NLP/NMT in its `config.sh` and it will use around ~5GB of memory for ASR+TTS.  It's recommended to test the system with [these examples](https://github.com/nvidia-riva/python-clients#asr) under `/opt/riva/python-clients`.
 
 ### List Audio Devices
 
@@ -63,7 +63,7 @@ To feed the live ASR transcript into the TTS and have it speak your words back t
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`bazel`](/packages/bazel) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.cpp`](Dockerfile.cpp) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/riva-client:cpp-r35.2.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-08-13, 6.3GB)`<br>[`dustynv/riva-client:cpp-r35.3.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-08-13, 6.3GB)`<br>[`dustynv/riva-client:cpp-r35.4.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-08-13, 6.3GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/riva-client:cpp-r35.2.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-08-29, 6.3GB)`<br>[`dustynv/riva-client:cpp-r35.3.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-08-29, 6.3GB)`<br>[`dustynv/riva-client:cpp-r35.4.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-08-29, 6.3GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/nvidia-riva/cpp-clients |
 
 | **`riva-client:python`** | |
@@ -73,7 +73,7 @@ To feed the live ASR transcript into the TTS and have it speak your words back t
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`llamaspeak`](/packages/llm/llamaspeak) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.python`](Dockerfile.python) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/riva-client:python-r35.2.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-08-13, 5.0GB)`<br>[`dustynv/riva-client:python-r35.3.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-08-13, 5.0GB)`<br>[`dustynv/riva-client:python-r35.4.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-08-13, 5.0GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/riva-client:python-r35.2.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-08-29, 5.0GB)`<br>[`dustynv/riva-client:python-r35.3.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-08-29, 5.0GB)`<br>[`dustynv/riva-client:python-r35.4.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-08-29, 5.0GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/nvidia-riva/python-clients |
 
 </details>
@@ -84,12 +84,12 @@ To feed the live ASR transcript into the TTS and have it speak your words back t
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/riva-client:cpp-r35.2.1`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2023-08-13` | `arm64` | `6.3GB` |
-| &nbsp;&nbsp;[`dustynv/riva-client:cpp-r35.3.1`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2023-08-13` | `arm64` | `6.3GB` |
-| &nbsp;&nbsp;[`dustynv/riva-client:cpp-r35.4.1`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2023-08-13` | `arm64` | `6.3GB` |
-| &nbsp;&nbsp;[`dustynv/riva-client:python-r35.2.1`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2023-08-13` | `arm64` | `5.0GB` |
-| &nbsp;&nbsp;[`dustynv/riva-client:python-r35.3.1`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2023-08-13` | `arm64` | `5.0GB` |
-| &nbsp;&nbsp;[`dustynv/riva-client:python-r35.4.1`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2023-08-13` | `arm64` | `5.0GB` |
+| &nbsp;&nbsp;[`dustynv/riva-client:cpp-r35.2.1`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2023-08-29` | `arm64` | `6.3GB` |
+| &nbsp;&nbsp;[`dustynv/riva-client:cpp-r35.3.1`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2023-08-29` | `arm64` | `6.3GB` |
+| &nbsp;&nbsp;[`dustynv/riva-client:cpp-r35.4.1`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2023-08-29` | `arm64` | `6.3GB` |
+| &nbsp;&nbsp;[`dustynv/riva-client:python-r35.2.1`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2023-08-29` | `arm64` | `5.0GB` |
+| &nbsp;&nbsp;[`dustynv/riva-client:python-r35.3.1`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2023-08-29` | `arm64` | `5.0GB` |
+| &nbsp;&nbsp;[`dustynv/riva-client:python-r35.4.1`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2023-08-29` | `arm64` | `5.0GB` |
 | &nbsp;&nbsp;[`dustynv/riva-client:r35.2.1`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2023-08-10` | `arm64` | `6.3GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
