@@ -54,5 +54,11 @@ pip3 install -r requirements.txt
 ./run.sh $(./autotag l4t-pytorch)
 ```
 
+Or you can manually run a [container image](https://hub.docker.com/r/dustynv) of your choice without using the helper scripts above:
+
+```bash
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/l4t-pytorch:r35.4.1
+```
+
 Check out the tutorials on the [**Jetson Generative AI Playground**](https://nvidia-ai-iot.github.io/jetson-generative-ai-playground)!
 
