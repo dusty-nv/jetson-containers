@@ -12,7 +12,7 @@
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/cuda-python:r35.2.1`](https://hub.docker.com/r/dustynv/cuda-python/tags) `(2023-08-12, 5.0GB)`<br>[`dustynv/cuda-python:r35.3.1`](https://hub.docker.com/r/dustynv/cuda-python/tags) `(2023-08-13, 5.0GB)`<br>[`dustynv/cuda-python:r35.4.1`](https://hub.docker.com/r/dustynv/cuda-python/tags) `(2023-08-13, 5.0GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/cuda-python:r35.2.1`](https://hub.docker.com/r/dustynv/cuda-python/tags) `(2023-08-29, 5.0GB)`<br>[`dustynv/cuda-python:r35.3.1`](https://hub.docker.com/r/dustynv/cuda-python/tags) `(2023-08-29, 5.0GB)`<br>[`dustynv/cuda-python:r35.4.1`](https://hub.docker.com/r/dustynv/cuda-python/tags) `(2023-08-29, 5.0GB)` |
 
 </details>
 
@@ -22,9 +22,9 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/cuda-python:r35.2.1`](https://hub.docker.com/r/dustynv/cuda-python/tags) | `2023-08-12` | `arm64` | `5.0GB` |
-| &nbsp;&nbsp;[`dustynv/cuda-python:r35.3.1`](https://hub.docker.com/r/dustynv/cuda-python/tags) | `2023-08-13` | `arm64` | `5.0GB` |
-| &nbsp;&nbsp;[`dustynv/cuda-python:r35.4.1`](https://hub.docker.com/r/dustynv/cuda-python/tags) | `2023-08-13` | `arm64` | `5.0GB` |
+| &nbsp;&nbsp;[`dustynv/cuda-python:r35.2.1`](https://hub.docker.com/r/dustynv/cuda-python/tags) | `2023-08-29` | `arm64` | `5.0GB` |
+| &nbsp;&nbsp;[`dustynv/cuda-python:r35.3.1`](https://hub.docker.com/r/dustynv/cuda-python/tags) | `2023-08-29` | `arm64` | `5.0GB` |
+| &nbsp;&nbsp;[`dustynv/cuda-python:r35.4.1`](https://hub.docker.com/r/dustynv/cuda-python/tags) | `2023-08-29` | `arm64` | `5.0GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>

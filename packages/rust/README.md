@@ -11,9 +11,9 @@
 | &nbsp;&nbsp;&nbsp;Builds | [![`rust_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/rust_jp51.yml?label=rust:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/rust_jp51.yml) [![`rust_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/rust_jp46.yml?label=rust:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/rust_jp46.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`auto_gptq`](/packages/llm/auto_gptq) [`awq`](/packages/llm/awq) [`gptq-for-llama`](/packages/llm/gptq-for-llama) [`jupyterlab`](/packages/jupyterlab) [`l4t-diffusion`](/packages/l4t/l4t-diffusion) [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`nemo`](/packages/nemo) [`optimum`](/packages/llm/optimum) [`stable-diffusion`](/packages/diffusion/stable-diffusion) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) [`text-generation-inference`](/packages/llm/text-generation-inference) [`text-generation-webui`](/packages/llm/text-generation-webui) [`transformers`](/packages/llm/transformers) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`auto_gptq`](/packages/llm/auto_gptq) [`awq`](/packages/llm/awq) [`gptq-for-llama`](/packages/llm/gptq-for-llama) [`jupyterlab`](/packages/jupyterlab) [`l4t-diffusion`](/packages/l4t/l4t-diffusion) [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`langchain:samples`](/packages/llm/langchain) [`nemo`](/packages/nemo) [`optimum`](/packages/llm/optimum) [`stable-diffusion`](/packages/diffusion/stable-diffusion) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) [`text-generation-inference`](/packages/llm/text-generation-inference) [`text-generation-webui`](/packages/llm/text-generation-webui) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/rust:r32.7.1`](https://hub.docker.com/r/dustynv/rust/tags) `(2023-08-12, 0.7GB)`<br>[`dustynv/rust:r35.2.1`](https://hub.docker.com/r/dustynv/rust/tags) `(2023-08-13, 5.3GB)`<br>[`dustynv/rust:r35.3.1`](https://hub.docker.com/r/dustynv/rust/tags) `(2023-08-13, 5.3GB)`<br>[`dustynv/rust:r35.4.1`](https://hub.docker.com/r/dustynv/rust/tags) `(2023-08-13, 5.2GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/rust:r32.7.1`](https://hub.docker.com/r/dustynv/rust/tags) `(2023-08-12, 0.7GB)`<br>[`dustynv/rust:r35.2.1`](https://hub.docker.com/r/dustynv/rust/tags) `(2023-08-29, 5.3GB)`<br>[`dustynv/rust:r35.3.1`](https://hub.docker.com/r/dustynv/rust/tags) `(2023-08-29, 5.3GB)`<br>[`dustynv/rust:r35.4.1`](https://hub.docker.com/r/dustynv/rust/tags) `(2023-08-29, 5.2GB)` |
 
 </details>
 
@@ -24,9 +24,9 @@
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/rust:r32.7.1`](https://hub.docker.com/r/dustynv/rust/tags) | `2023-08-12` | `arm64` | `0.7GB` |
-| &nbsp;&nbsp;[`dustynv/rust:r35.2.1`](https://hub.docker.com/r/dustynv/rust/tags) | `2023-08-13` | `arm64` | `5.3GB` |
-| &nbsp;&nbsp;[`dustynv/rust:r35.3.1`](https://hub.docker.com/r/dustynv/rust/tags) | `2023-08-13` | `arm64` | `5.3GB` |
-| &nbsp;&nbsp;[`dustynv/rust:r35.4.1`](https://hub.docker.com/r/dustynv/rust/tags) | `2023-08-13` | `arm64` | `5.2GB` |
+| &nbsp;&nbsp;[`dustynv/rust:r35.2.1`](https://hub.docker.com/r/dustynv/rust/tags) | `2023-08-29` | `arm64` | `5.3GB` |
+| &nbsp;&nbsp;[`dustynv/rust:r35.3.1`](https://hub.docker.com/r/dustynv/rust/tags) | `2023-08-29` | `arm64` | `5.3GB` |
+| &nbsp;&nbsp;[`dustynv/rust:r35.4.1`](https://hub.docker.com/r/dustynv/rust/tags) | `2023-08-29` | `arm64` | `5.2GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>

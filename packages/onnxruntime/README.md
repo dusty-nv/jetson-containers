@@ -13,7 +13,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`optimum`](/packages/llm/optimum) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/onnxruntime:r32.7.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) `(2023-08-12, 0.5GB)`<br>[`dustynv/onnxruntime:r35.2.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) `(2023-08-13, 5.2GB)`<br>[`dustynv/onnxruntime:r35.3.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) `(2023-08-13, 5.2GB)`<br>[`dustynv/onnxruntime:r35.4.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) `(2023-08-13, 5.1GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/onnxruntime:r32.7.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) `(2023-08-12, 0.5GB)`<br>[`dustynv/onnxruntime:r35.2.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) `(2023-08-29, 5.2GB)`<br>[`dustynv/onnxruntime:r35.3.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) `(2023-08-29, 5.2GB)`<br>[`dustynv/onnxruntime:r35.4.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) `(2023-08-29, 5.1GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | the onnxruntime-gpu wheel that's built is saved in the container under /opt |
 
 </details>
@@ -25,9 +25,9 @@
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/onnxruntime:r32.7.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) | `2023-08-12` | `arm64` | `0.5GB` |
-| &nbsp;&nbsp;[`dustynv/onnxruntime:r35.2.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) | `2023-08-13` | `arm64` | `5.2GB` |
-| &nbsp;&nbsp;[`dustynv/onnxruntime:r35.3.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) | `2023-08-13` | `arm64` | `5.2GB` |
-| &nbsp;&nbsp;[`dustynv/onnxruntime:r35.4.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) | `2023-08-13` | `arm64` | `5.1GB` |
+| &nbsp;&nbsp;[`dustynv/onnxruntime:r35.2.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) | `2023-08-29` | `arm64` | `5.2GB` |
+| &nbsp;&nbsp;[`dustynv/onnxruntime:r35.3.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) | `2023-08-29` | `arm64` | `5.2GB` |
+| &nbsp;&nbsp;[`dustynv/onnxruntime:r35.4.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) | `2023-08-29` | `arm64` | `5.1GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -44,10 +44,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag onnxruntime)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/onnxruntime:r35.3.1
+./run.sh dustynv/onnxruntime:r35.4.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/onnxruntime:r35.3.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/onnxruntime:r35.4.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
