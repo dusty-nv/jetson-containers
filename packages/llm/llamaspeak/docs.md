@@ -4,6 +4,10 @@
 * Talk live with LLM's using [NVIDIA Riva](/packages/riva-client) ASR and TTS!
 * Requires the [`riva-server`](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/riva/resources/riva_quickstart_arm64) and [`text-generation-webui`](/packages/llm/text-generation-webui) to be running
 
+> this demo is under active development and is tested on Jetson AGX Orin
+
+![llamaspeak](/docs/images/llamaspeak_block_diagram.jpg)
+
 ### Start Riva
 
 First, follow the steps from the [`riva-client:python`](/packages/riva-client) package to run and test the Riva server:
