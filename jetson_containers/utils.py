@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import os
+import grp
 import sys
 
 
@@ -85,4 +87,35 @@ def split_container_name(name):
         repo = parts[1]
         
     return namespace, repo, tag
+    
+    
+def user_in_group(group):
+    """
+    Returns true if the user running the current process is in the specified user group.
+    Equivalent to this bash command:   id -nGz "$USER" | grep -qzxF "$GROUP"
+    """
+    try:
+        group = grp.getgrnam(group)
+    except KeyError:
+        return False
+        
+    return (group.gr_gid in os.getgroups())
+  
+
+def needs_sudo(group='docker'):
+    """
+    Returns true if sudo is needed to use the docker engine (if user isn't in the docker group)
+    """
+    return not user_in_group(group)
+    
+
+def sudo_prefix(group='docker'):
+    """
+    Returns a sudo prefix for command strings if the user needs sudo for accessing docker
+    """
+    if needs_sudo(group):
+        return "sudo "
+    else:
+        return ""
+        
     

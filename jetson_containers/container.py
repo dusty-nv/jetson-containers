@@ -11,7 +11,7 @@ import dockerhub_api
 
 from .packages import find_package, find_packages, resolve_dependencies, validate_dict, _PACKAGE_ROOT
 from .l4t_version import L4T_VERSION, l4t_version_from_tag, l4t_version_compatible, get_l4t_base
-from .utils import split_container_name, query_yes_no
+from .utils import split_container_name, query_yes_no, needs_sudo, sudo_prefix
 from .logging import log_dir
 
 from packaging.version import Version
@@ -92,7 +92,7 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
         pkg = find_package(package)
         
         if 'dockerfile' in pkg:
-            cmd = f"sudo docker build --network=host --tag {container_name}" + _NEWLINE_
+            cmd = f"{sudo_prefix()}docker build --network=host --tag {container_name}" + _NEWLINE_
             cmd += f"--file {os.path.join(pkg['path'], pkg['dockerfile'])}" + _NEWLINE_
             cmd += f"--build-arg BASE_IMAGE={base}" + _NEWLINE_
             
@@ -203,7 +203,7 @@ def tag_container(source, target, simulate=False):
     """
     Tag a container image (source -> target)
     """
-    cmd = f"sudo docker tag {source} {target}"
+    cmd = f"{sudo_prefix()}docker tag {source} {target}"
     
     print(f"-- Tagging container {source} -> {target}")
     print(f"{cmd}\n")
@@ -236,10 +236,10 @@ def push_container(name, repository='', simulate=False):
         
         print(f"-- Tagging container {local_name} -> {name}")
         
-        cmd += f"sudo docker rmi {name} ; "
-        cmd += f"sudo docker tag {local_name} {name} && "
+        cmd += f"{sudo_prefix()}docker rmi {name} ; "
+        cmd += f"{sudo_prefix()}docker tag {local_name} {name} && "
         
-    cmd += f"sudo docker push {name}"
+    cmd += f"{sudo_prefix()}docker push {name}"
     
     print(f"-- Pushing container {name}")
     print(f"\n{cmd}\n")
@@ -265,8 +265,8 @@ def test_container(name, package, simulate=False):
         test_exe = test_cmd[0]      # just get just the script/executable name
         test_ext = os.path.splitext(test_exe)[1]
         log_file = os.path.join(log_dir('test'), f"{name.replace('/','_')}_{test_exe}").replace(':','_')
-        
-        cmd = "sudo docker run -t --rm --runtime=nvidia --network=host" + _NEWLINE_
+
+        cmd = f"{sudo_prefix()}docker run -t --rm --runtime=nvidia --network=host" + _NEWLINE_
         cmd += f"--volume {package['path']}:/test" + _NEWLINE_
         cmd += f"--volume {os.path.join(_PACKAGE_ROOT, 'data')}:/data" + _NEWLINE_
         cmd += f"--workdir /test" + _NEWLINE_
@@ -308,8 +308,12 @@ def get_local_containers():
          
     These containers are sorted by most recent created to the oldest.
     """
-    status = subprocess.run(["sudo", "docker", "images", "--format", "'{{json . }}'"],  
-                            stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+    cmd = ["docker", "images", "--format", "'{{json . }}'"]
+    
+    if needs_sudo():
+        cmd = ["sudo"] + cmd
+        
+    status = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                             #capture_output=True, universal_newlines=True, 
                             shell=False, check=True)
 

@@ -28,6 +28,13 @@ if [ -n "$DISPLAY" ]; then
 	DISPLAY_DEVICE="-e DISPLAY=$DISPLAY -v /tmp/.X11-unix/:/tmp/.X11-unix -v $XAUTH:$XAUTH -e XAUTHORITY=$XAUTH"
 fi
 
+# check if sudo is needed
+if id -nG "$USER" | grep -qw "docker"; then
+	SUDO=""
+else
+	SUDO="sudo"
+fi
+
 # run the container
 ARCH=$(uname -i)
 
@@ -39,7 +46,7 @@ if [ $ARCH = "aarch64" ]; then
 
 	set -x
 
-	sudo docker run --runtime nvidia -it --rm --network host \
+	$SUDO docker run --runtime nvidia -it --rm --network host \
 		--volume /tmp/argus_socket:/tmp/argus_socket \
 		--volume /etc/enctune.conf:/etc/enctune.conf \
 		--volume /etc/nv_tegra_release:/etc/nv_tegra_release \
@@ -54,7 +61,7 @@ elif [ $ARCH = "x86_64" ]; then
 
 	set -x
 
-	sudo docker run --gpus all -it --rm --network=host \
+	$SUDO docker run --gpus all -it --rm --network=host \
 		--shm-size=8g \
 		--ulimit memlock=-1 \
 		--ulimit stack=67108864 \
