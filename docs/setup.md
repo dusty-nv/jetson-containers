@@ -127,12 +127,14 @@ $ sudo systemctl set-default multi-user.target     # disable desktop on boot
 $ sudo systemctl set-default graphical.target      # enable desktop on boot
 ```
 
-## Adding User to `docker` Group
+## Adding User to docker Group
 
-Seeing as Ubuntu users aren't by default in the `docker` group, they need to run docker commands with `sudo` (the build tools will automatically do this with needed).  Hence you could be periodically asked for your sudo password during builds.  Instead, add your user to the docker group like below:
+Seeing as Ubuntu users aren't by default in the `docker` group, they need to run docker commands with `sudo` (the build tools automatically do this when needed).  Hence you could be periodically asked for your sudo password during builds.  
+
+Instead, you can add your user to the docker group like below:
 
 ```bash
 sudo usermod -aG docker $USER
 ```
 
-Then close/restart your terminal, or logout and log back in, and you should be able to run docker commands (like `docker info`) without needing sudo anymore.
+Then close/restart your terminal (or logout) and you should be able to run docker commands (like `docker info`) without needing sudo anymore.
