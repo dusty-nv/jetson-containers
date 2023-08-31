@@ -11,8 +11,9 @@
 | &nbsp;&nbsp;&nbsp;Builds | [![`cmake-apt_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cmake-apt_jp51.yml?label=cmake-apt:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cmake-apt_jp51.yml) [![`cmake-apt_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cmake-apt_jp46.yml?label=cmake-apt:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cmake-apt_jp46.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`ros:melodic-desktop`](/packages/ros) [`ros:melodic-ros-base`](/packages/ros) [`ros:melodic-ros-core`](/packages/ros) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/cmake:apt-r32.7.1`](https://hub.docker.com/r/dustynv/cmake/tags) `(2023-08-12, 0.3GB)`<br>[`dustynv/cmake:apt-r35.2.1`](https://hub.docker.com/r/dustynv/cmake/tags) `(2023-08-12, 4.9GB)`<br>[`dustynv/cmake:apt-r35.3.1`](https://hub.docker.com/r/dustynv/cmake/tags) `(2023-08-13, 5.0GB)`<br>[`dustynv/cmake:apt-r35.4.1`](https://hub.docker.com/r/dustynv/cmake/tags) `(2023-08-13, 4.9GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/cmake:apt-r32.7.1`](https://hub.docker.com/r/dustynv/cmake/tags) `(2023-08-12, 0.3GB)`<br>[`dustynv/cmake:apt-r35.2.1`](https://hub.docker.com/r/dustynv/cmake/tags) `(2023-08-29, 4.9GB)`<br>[`dustynv/cmake:apt-r35.3.1`](https://hub.docker.com/r/dustynv/cmake/tags) `(2023-08-29, 5.0GB)`<br>[`dustynv/cmake:apt-r35.4.1`](https://hub.docker.com/r/dustynv/cmake/tags) `(2023-08-29, 4.9GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | upgrade cmake with apt |
 
 </details>

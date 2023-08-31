@@ -13,7 +13,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-pytorch`](/packages/l4t/l4t-pytorch) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/torch2trt:r32.7.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) `(2023-08-12, 1.1GB)`<br>[`dustynv/torch2trt:r35.2.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) `(2023-08-13, 5.5GB)`<br>[`dustynv/torch2trt:r35.3.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) `(2023-08-13, 5.5GB)`<br>[`dustynv/torch2trt:r35.4.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) `(2023-08-13, 5.4GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/torch2trt:r32.7.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) `(2023-08-12, 1.1GB)`<br>[`dustynv/torch2trt:r35.2.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) `(2023-08-29, 5.5GB)`<br>[`dustynv/torch2trt:r35.3.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) `(2023-08-29, 5.5GB)`<br>[`dustynv/torch2trt:r35.4.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) `(2023-08-29, 5.4GB)` |
 
 </details>
 
@@ -24,9 +24,9 @@
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/torch2trt:r32.7.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) | `2023-08-12` | `arm64` | `1.1GB` |
-| &nbsp;&nbsp;[`dustynv/torch2trt:r35.2.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) | `2023-08-13` | `arm64` | `5.5GB` |
-| &nbsp;&nbsp;[`dustynv/torch2trt:r35.3.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) | `2023-08-13` | `arm64` | `5.5GB` |
-| &nbsp;&nbsp;[`dustynv/torch2trt:r35.4.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) | `2023-08-13` | `arm64` | `5.4GB` |
+| &nbsp;&nbsp;[`dustynv/torch2trt:r35.2.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) | `2023-08-29` | `arm64` | `5.5GB` |
+| &nbsp;&nbsp;[`dustynv/torch2trt:r35.3.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) | `2023-08-29` | `arm64` | `5.5GB` |
+| &nbsp;&nbsp;[`dustynv/torch2trt:r35.4.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) | `2023-08-29` | `arm64` | `5.4GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
