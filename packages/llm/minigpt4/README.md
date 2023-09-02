@@ -5,10 +5,11 @@
 
 * minigpt4.cpp from https://github.com/Maknee/minigpt4.cpp with CUDA enabled (found under `/opt/minigpt4.cpp`)
 
-To start the web server with the [recommended models](https://github.com/Maknee/minigpt4.cpp/tree/master#3-obtaining-the-model), run this:
+To start the MiniGPT4 container and webserver with the [recommended models](https://github.com/Maknee/minigpt4.cpp/tree/master#3-obtaining-the-model), run this command:
 
 ```bash
-./run.sh --workdir=/opt/minigpt4.cpp/minigpt4 $(./autotag minigpt4) /bin/bash -c 'python3 webui.py \
+./run.sh --workdir=/opt/minigpt4.cpp/minigpt4 $(./autotag minigpt4) \
+  /bin/bash -c 'python3 webui.py \
   $(huggingface-downloader --type=dataset maknee/minigpt4-13b-ggml/minigpt4-13B-f16.bin) \
   $(huggingface-downloader --type=dataset maknee/ggml-vicuna-v0-quantized/ggml-vicuna-13B-v0-q5_k.bin)'
 ```
@@ -21,6 +22,7 @@ Then navigate your browser to `http://HOSTNAME:7860`
 
 | **`minigpt4`** | |
 | :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Builds | [![`minigpt4_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/minigpt4_jp51.yml?label=minigpt4:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/minigpt4_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
