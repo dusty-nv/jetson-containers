@@ -13,6 +13,8 @@ Before doing anything, you should download and run the Riva server container fro
 
 This will run locally on your Jetson Xavier or Orin device and is [supported on JetPack 5](https://docs.nvidia.com/deeplearning/riva/user-guide/docs/support-matrix.html#embedded).  You can disable NLP/NMT in its `config.sh` and it will use around ~5GB of memory for ASR+TTS.  It's then recommended to test the system with [these examples](https://github.com/nvidia-riva/python-clients#asr) under `/opt/riva/python-clients`
 
+You can also see this helpful video and guide from JetsonHacks for setting up Riva:  [Speech AI on Jetson Tutorial](https://jetsonhacks.com/2023/08/07/speech-ai-on-nvidia-jetson-tutorial/)
+
 ### List Audio Devices
 
 This will print out a list of audio input/output devices that are connected to your system:
