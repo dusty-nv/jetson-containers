@@ -19,7 +19,7 @@ First, follow the steps from the [`riva-client:python`](/packages/riva-client) p
 2. Run some of the Riva ASR examples to confirm that ASR is working:  https://github.com/nvidia-riva/python-clients#asr
 3. Run some of the Riva TTS examples to confirm that TTS is working:  https://github.com/nvidia-riva/python-clients#tts
 
-You can also see this helpful video and guide from JetsonHacks for setting up Riva:  [Speech AI on Jetson Tutorial](https://jetsonhacks.com/2023/08/07/speech-ai-on-nvidia-jetson-tutorial/)
+You can also see this helpful video and guide from JetsonHacks for setting up Riva:  [**Speech AI on Jetson Tutorial**](https://jetsonhacks.com/2023/08/07/speech-ai-on-nvidia-jetson-tutorial/)
 
 ### Load LLM
 
