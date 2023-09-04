@@ -29,8 +29,6 @@ ASSISTANT: The environment is desert-like, with a rocky landscape and a dirt roa
 
 ### llava-llama-2-13b-chat
 
-Using [`liuhaotian/llava-llama-2-13b-chat-lightning-preview`](https://huggingface.co/liuhaotian/llava-llama-2-13b-chat-lightning-preview)
-
 ```bash
 ./run.sh $(./autotag llava) \
   python3 -m llava.serve.cli \
