@@ -2,11 +2,11 @@
 * LLaVa vision LLM from https://github.com/haotian-liu/LLaVA 
 * Quantization is WIP :warning: (https://huggingface.co/liuhaotian/llava-llama-2-13b-chat-lightning-gptq)
 
-![hoover](/data/images/hoover.jpg)
+<img src="https://github.com/dusty-nv/jetson-containers/raw/master/data/images/hoover.jpg" width="400">
 
 ### llava-llama-2-7b-chat
 
-This is a LoRA applied to the original llama-2-7b-chat model, hence you need to request access and provide your HF token (or use [SaffalPoosh/llava-llama-2-7B-merged](https://huggingface.co/SaffalPoosh/llava-llama-2-7B-merged))
+This is a LoRA applied to the original llama-2-7b-chat model, hence you need to request access and provide your HuggingFace [personal access token](https://huggingface.co/docs/hub/security-tokens) (or use [`SaffalPoosh/llava-llama-2-7B-merged`](https://huggingface.co/SaffalPoosh/llava-llama-2-7B-merged) instead)
 
 ```bash
 ./run.sh --env HUGGING_FACE_HUB_TOKEN=<YOUR-ACCESS-TOKEN> $(./autotag llava) \
@@ -19,8 +19,10 @@ This is a LoRA applied to the original llama-2-7b-chat model, hence you need to 
 ```
 USER: what does the road sign say?
 ASSISTANT: The road sign says "Hoover Dam."
+
 USER: how far away is the exit?
 ASSISTANT: The exit is 1 mile away.
+
 USER: what is the environment like?
 ASSISTANT: The environment is desert-like, with a rocky landscape and a dirt road leading to the exit.
 ```
@@ -37,8 +39,10 @@ ASSISTANT: The environment is desert-like, with a rocky landscape and a dirt roa
 ```
 USER: what does the text in the road sign say?
 ASSISTANT: The text in the road sign says "Hoover Dam Exit 2 Mile."
+
 USER: How far away is the exit?
 ASSISTANT: The exit is two miles away from the current location.
+
 USER: What kind of environment is it?
 ASSISTANT: The environment is a desert setting, with a mountain in the background.
 ```
