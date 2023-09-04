@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 087fc8e..eefb1ee 100644
+index 087fc8e..408bb32 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -3,6 +3,7 @@ project(minigpt4.cpp C CXX)
@@ -27,22 +27,31 @@ index 087fc8e..eefb1ee 100644
  set(CMAKE_CXX_STANDARD_REQUIRED true)
  set(CMAKE_C_STANDARD 11)
  set(CMAKE_C_STANDARD_REQUIRED true)
-@@ -314,7 +316,10 @@ set(LLAMA_AVX512_VBMI ${MINIGPT4_AVX512_VBMI})
+@@ -314,8 +316,11 @@ set(LLAMA_AVX512_VBMI ${MINIGPT4_AVX512_VBMI})
  set(LLAMA_AVX512_VNNI ${MINIGPT4_AVX512_VNNI})
  set(LLAMA_FMA ${MINIGPT4_FMA})
  set(LLAMA_ACCELERATE ${MINIGPT4_ACCELERATE})
 +set(LLAMA_CUBLAS ${MINIGPT4_CUBLAS})
 +set(LLAMA_CUDA_FP16 ${MINIGPT4_CUDA_FP16})
  set(GGML_USE_K_QUANTS ON)
-+#add_dependency(llama_cpp https://github.com/dusty-nv/llama.cpp ggml TRUE)
- add_dependency(llama_cpp https://github.com/ggerganov/llama.cpp master-31cfbb1 TRUE)
+-add_dependency(llama_cpp https://github.com/ggerganov/llama.cpp master-31cfbb1 TRUE)
++add_dependency(llama_cpp https://github.com/dusty-nv/llama.cpp ggml TRUE)
++# add_dependency(llama_cpp https://github.com/ggerganov/llama.cpp master-31cfbb1 TRUE)
  
  set(OPENCV_INCLUDE_DIRS "")
+ set(OPENCV_LIBS "")
 diff --git a/minigpt4.cpp b/minigpt4.cpp
-index f8287f1..7a59b41 100644
+index f8287f1..62efeac 100644
 --- a/minigpt4.cpp
 +++ b/minigpt4.cpp
-@@ -1779,6 +1779,7 @@ public:
+@@ -1773,12 +1773,13 @@ public:
+ 
+         {
+             LoggingTimer timer("LLM model init");
+-            llama_init_backend(numa);
++            llama_backend_init(numa);
+             llm_params = llama_context_default_params();
+             llm_params.n_ctx = n_ctx;
              llm_params.n_batch = n_batch;
              llm_params.seed = seed;
              llm_params.use_mmap = true;
@@ -50,6 +59,24 @@ index f8287f1..7a59b41 100644
              // llm_params.use_mlock = true;
              llm_model = LLMModel(llama_load_model_from_file(llm_path.string().c_str(), llm_params));
              llm_ctx = LLMContext(llama_new_context_with_model(&*llm_model, llm_params));
+@@ -2117,7 +2118,7 @@ public:
+ 
+         auto ctx0 = ctx;
+         struct ggml_cgraph gf = {};
+-        gf.n_threads = n_threads;
++        //gf.n_threads = n_threads;
+ 
+         ggml_tensor *cur;
+ 
+@@ -2347,7 +2348,7 @@ public:
+         use_scratch(-1);
+ 
+         ggml_build_forward_expand(&gf, cur);
+-        ggml_graph_compute(ctx0, &gf);
++        ggml_graph_compute_with_ctx(ctx0, &gf, n_threads);
+ 
+         INFO("Compute buffer uses {} MB", bytes_to_mb(get_memory_usage(-1)));
+         INFO("Scratch buffer uses {} MB", bytes_to_mb(get_memory_usage(0)));
 diff --git a/minigpt4/requirements.txt b/minigpt4/requirements.txt
 index 7d536c1..0f73551 100644
 --- a/minigpt4/requirements.txt
