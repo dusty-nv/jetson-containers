@@ -10,7 +10,7 @@
 
 ### llava-llama-2-7b-chat
 
-This is a LoRA applied to the original llama-2-7b-chat model, hence you need to request access and provide your HuggingFace [personal access token](https://huggingface.co/docs/hub/security-tokens) (or use [`SaffalPoosh/llava-llama-2-7B-merged`](https://huggingface.co/SaffalPoosh/llava-llama-2-7B-merged) instead)
+This is a LoRA applied to the original llama-2-7b-chat model, hence you need to [request access](https://huggingface.co/meta-llama) and provide your [HuggingFace token](https://huggingface.co/docs/hub/security-tokens) (or use [`SaffalPoosh/llava-llama-2-7B-merged`](https://huggingface.co/SaffalPoosh/llava-llama-2-7B-merged) instead)
 
 ```bash
 ./run.sh --env HUGGING_FACE_HUB_TOKEN=<YOUR-ACCESS-TOKEN> $(./autotag llava) \
@@ -32,6 +32,8 @@ ASSISTANT: The environment is desert-like, with a rocky landscape and a dirt roa
 ```
 
 ### llava-llama-2-13b-chat
+
+Using [`liuhaotian/llava-llama-2-13b-chat-lightning-preview`](https://huggingface.co/liuhaotian/llava-llama-2-13b-chat-lightning-preview)
 
 ```bash
 ./run.sh $(./autotag llava) \
