@@ -1,5 +1,6 @@
 
 * minigpt4.cpp from https://github.com/Maknee/minigpt4.cpp with CUDA enabled (found under `/opt/minigpt4.cpp`)
+* original MiniGPT-4 models and project are from https://github.com/Vision-CAIR/MiniGPT-4
 
 To start the MiniGPT4 container and webserver with the [recommended models](https://github.com/Maknee/minigpt4.cpp/tree/master#3-obtaining-the-model), run this command:
 
