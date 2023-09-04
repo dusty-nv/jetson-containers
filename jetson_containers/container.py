@@ -20,7 +20,7 @@ from packaging.version import Version
 _NEWLINE_=" \\\n"  # used when building command strings
 
 
-def build_container(name, packages, base=get_l4t_base(), build_flags='', simulate=False, skip_tests=[], push=''):
+def build_container(name, packages, base=get_l4t_base(), build_flags='', simulate=False, skip_tests=[], test_only=[], push=''):
     """
     Multi-stage container build that chains together selected packages into one container image.
     For example, `['pytorch', 'tensorflow']` would build a container that had both pytorch and tensorflow in it.
@@ -33,6 +33,7 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
       build_flags (str) -- arguments to add to the 'docker build' command
       simulate (bool) -- if true, just print out the commands that would have been run
       skip_tests (list[str]) -- list of tests to skip (or 'all' or 'intermediate')
+      test_only (list[str]) -- only test these specified packages, skipping all other tests
       push (str) -- name of repository or user to push container to (no push if blank)
       
     Returns: 
@@ -46,7 +47,15 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
         
     if len(packages) == 0:
         raise ValueError("must specify at least one package to build")    
-           
+        
+    # by default these have an empty string
+    if len(skip_tests) == 1 and len(skip_tests[0]) == 0:
+        skip_tests = []
+        
+    if len(test_only) == 1 and len(test_only[0]) == 0:
+        test_only = []
+
+    # get default base container (l4t-jetpack)
     if not base:
         base = get_l4t_base()
         
@@ -122,7 +131,8 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
             
         # run tests on the intermediate container
         if package not in skip_tests and 'intermediate' not in skip_tests and 'all' not in skip_tests:
-            test_container(container_name, pkg, simulate)
+            if len(test_only) == 0 or package in test_only:
+                test_container(container_name, pkg, simulate)
         
         # use this container as the next base
         base = container_name
@@ -133,7 +143,8 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
     # re-run tests on final container
     for package in packages:
         if package not in skip_tests and 'all' not in skip_tests:
-            test_container(name, package, simulate)
+            if len(test_only) == 0 or package in test_only:
+                test_container(name, package, simulate)
             
     # push container
     if push:
@@ -142,7 +153,7 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
     return name
     
     
-def build_containers(name, packages, base=get_l4t_base(), build_flags='', simulate=False, skip_errors=False, skip_packages=[], skip_tests=[], push=''):
+def build_containers(name, packages, base=get_l4t_base(), build_flags='', simulate=False, skip_errors=False, skip_packages=[], skip_tests=[], test_only=[], push=''):
     """
     Build separate container images for each of the requested packages (this is typically used in batch building jobs)
     For example, `['pytorch', 'tensorflow']` would build a pytorch container and a tensorflow container.
@@ -160,6 +171,7 @@ def build_containers(name, packages, base=get_l4t_base(), build_flags='', simula
       skip_errors (bool) -- proceed with building the next container on an error (default false)
       skip_packages (list[str]) -- list of packages to skip from the list
       skip_tests (list[str]) -- list of tests to skip (or 'all' or 'intermediate')
+      test_only (list[str]) -- only test these specified packages, skipping all other tests
       push (str) -- name of repository or user to push container to (no push if blank)
       
     Returns: 
@@ -175,7 +187,7 @@ def build_containers(name, packages, base=get_l4t_base(), build_flags='', simula
 
     for package in packages:
         try:
-            container_name = build_container(name, package, base, build_flags, simulate, skip_tests, push) 
+            container_name = build_container(name, package, base, build_flags, simulate, skip_tests, test_only, push) 
         except Exception as error:
             print(error)
             if not skip_errors:
