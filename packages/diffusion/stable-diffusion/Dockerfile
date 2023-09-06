@@ -13,11 +13,6 @@ FROM ${BASE_IMAGE}
 WORKDIR /opt
 
 # install prerequisites
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends time \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
-    
 RUN pip3 install --no-cache-dir --verbose \
 	diffusers \
 	clip \

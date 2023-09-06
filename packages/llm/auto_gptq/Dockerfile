@@ -36,10 +36,3 @@ WORKDIR /
 
 # make sure it loads
 RUN pip3 show auto-gptq && python3 -c 'import auto_gptq'
-
-# for benchmark timing
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends time \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
-    

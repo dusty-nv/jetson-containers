@@ -32,12 +32,6 @@ RUN PYTHON_ROOT=`pip3 show transformers | grep Location: | cut -d' ' -f2` && \
     
 # add benchmark script
 COPY huggingface-benchmark.py /usr/local/bin
-
-# for benchmark timing
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends time \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
     
 # make sure it loads
 RUN pip3 show transformers && python3 -c 'import transformers; print(transformers.__version__)'

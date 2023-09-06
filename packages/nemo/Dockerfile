@@ -75,13 +75,7 @@ RUN PYTHON_ROOT=`pip3 show nemo_toolkit | grep Location: | cut -d' ' -f2` && \
     sed 's|self.trainer.strategy.setup_environment()|#self.trainer.strategy.setup_environment()|g' -i $PYTHON_ROOT/nemo/collections/nlp/models/language_modeling/megatron_gpt_model.py && \
     head -225 $PYTHON_ROOT/nemo/collections/nlp/modules/common/megatron/megatron_utils.py | tail +190 && \
     head -1150 $PYTHON_ROOT/nemo/collections/nlp/models/language_modeling/megatron_gpt_model.py | tail +1100 
-    
-# for benchmark timing
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends time \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
-    
+
 # set the nemo model cache directory to mounted /data volume
 ENV NEMO_CACHE_DIR=/data/models/nemo
 

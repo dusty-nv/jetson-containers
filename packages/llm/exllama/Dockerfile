@@ -56,10 +56,4 @@ RUN sed '1 i import resource' -i exllama/test_benchmark_inference.py && \
     sed '/    mem("Total", total = True)/a\ \ \ \ print(f" ** RAM, Total: {(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss + resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss) / 1024:,.2f} MB")' -i exllama/test_benchmark_inference.py && \
     cat exllama/test_benchmark_inference.py
     
-# for benchmark timing
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends time \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
-    
 WORKDIR /
