@@ -2,10 +2,10 @@
 * llama.cpp from https://github.com/ggerganov/llama.cpp with CUDA enabled (found under `/opt/llama.cpp`)
 * Python bindings from https://github.com/abetlen/llama-cpp-python (found under `/opt/llama-cpp-python`)
 
-:warning: there are two branches for backwards compatability:
+There are two branches for backwards compatability:
 
-* llama_cpp:gguf (which tracks ggerganov/llama.cpp master)
-* llama_cpp:ggml (which tracks pre-GGUF merge)
+* `llama_cpp:gguf` (which tracks ggerganov/llama.cpp master)
+* `llama_cpp:ggml` (which tracks pre-GGUF merge)
 
 There are a couple patches applied to the GGML branch:
 
