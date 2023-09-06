@@ -16,6 +16,11 @@ ADD https://api.github.com/repos/oobabooga/text-generation-webui/git/refs/heads/
 RUN git clone --depth=1 https://github.com/oobabooga/text-generation-webui
 
 RUN cd text-generation-webui && \
+    git remote add llava2 https://github.com/haotian-liu/text-generation-webui && \
+    git fetch llava2 && \
+    git cherry-pick 9c085ee
+
+RUN cd text-generation-webui && \
     sed 's|^numpy.*|numpy|g' -i requirements.txt && \
     sed 's|^accelerate.*|accelerate|g' -i requirements.txt && \
     sed 's|^bitsandbytes.*|bitsandbytes|g' -i requirements.txt && \
