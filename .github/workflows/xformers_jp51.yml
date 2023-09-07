@@ -38,6 +38,8 @@ jobs:
         run: |
          echo "$RUNNER_WORKSPACE" 
          cd $RUNNER_WORKSPACE 
+         git config --global user.email "dustinf@nvidia.com" 
+         git config --global user.name "Dustin Franklin" 
          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
          cd jetson-containers 
          git fetch origin 

@@ -43,6 +43,9 @@ on:
       - 'packages/llm/transformers/*'
       - '!packages/llm/transformers/README.md'
       - '!packages/llm/transformers/docs.md'
+      - 'packages/llm/auto_gptq/*'
+      - '!packages/llm/auto_gptq/README.md'
+      - '!packages/llm/auto_gptq/docs.md'
       - 'packages/llm/awq/*'
       - '!packages/llm/awq/README.md'
       - '!packages/llm/awq/docs.md'
@@ -52,9 +55,6 @@ on:
       - 'packages/llm/optimum/*'
       - '!packages/llm/optimum/README.md'
       - '!packages/llm/optimum/docs.md'
-      - 'packages/llm/auto_gptq/*'
-      - '!packages/llm/auto_gptq/README.md'
-      - '!packages/llm/auto_gptq/docs.md'
       - 'packages/llm/gptq-for-llama/*'
       - '!packages/llm/gptq-for-llama/README.md'
       - '!packages/llm/gptq-for-llama/docs.md'
@@ -77,6 +77,8 @@ jobs:
         run: |
          echo "$RUNNER_WORKSPACE" 
          cd $RUNNER_WORKSPACE 
+         git config --global user.email "dustinf@nvidia.com" 
+         git config --global user.name "Dustin Franklin" 
          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
          cd jetson-containers 
          git fetch origin 

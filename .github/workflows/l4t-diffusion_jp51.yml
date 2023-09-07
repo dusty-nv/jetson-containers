@@ -40,6 +40,9 @@ on:
       - 'packages/llm/bitsandbytes/*'
       - '!packages/llm/bitsandbytes/README.md'
       - '!packages/llm/bitsandbytes/docs.md'
+      - 'packages/llm/auto_gptq/*'
+      - '!packages/llm/auto_gptq/README.md'
+      - '!packages/llm/auto_gptq/docs.md'
       - 'packages/llm/transformers/*'
       - '!packages/llm/transformers/README.md'
       - '!packages/llm/transformers/docs.md'
@@ -68,6 +71,8 @@ jobs:
         run: |
          echo "$RUNNER_WORKSPACE" 
          cd $RUNNER_WORKSPACE 
+         git config --global user.email "dustinf@nvidia.com" 
+         git config --global user.name "Dustin Franklin" 
          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
          cd jetson-containers 
          git fetch origin 
