@@ -2,7 +2,7 @@
 # name: awq
 # group: llm
 # config: config.py
-# depends: [pytorch, transformers]
+# depends: [pytorch, llava]
 # requires: '>=34.1.0'
 # test: test.sh
 # docs: docs.md

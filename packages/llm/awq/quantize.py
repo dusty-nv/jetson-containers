@@ -12,6 +12,7 @@ parser.add_argument('--load_awq', type=str, default='', help="load a model that'
 
 parser.add_argument('--w_bit', type=int, default=4, choices=[3,4], help="the number of bits (3 or 4)")
 parser.add_argument('--q_group_size', type=int, default=128, help="the group size (default 128)")
+parser.add_argument('--no_cache', action='store_true', help="dump the quantized AWQ weights even if the file already exists")
 parser.add_argument('--skip_eval', action='store_true', help="evaluate the real quantized model on wikitext")
 parser.add_argument('--simulate', action='store_true', help="print out the commands without actually running them")
 
@@ -46,7 +47,8 @@ if not args.load_awq and not args.skip_eval:
     run_cmd(f"{cmd_prefix} --tasks wikitext --load_awq {model_search} --q_backend fake")
 
 # Generate real quantized weights (INT4)
-run_cmd(f"{cmd_prefix} --load_awq {model_search} --q_backend real --dump_quant {model_quant}")
+if args.no_cache or not os.path.isfile(model_quant):
+    run_cmd(f"{cmd_prefix} --load_awq {model_search} --q_backend real --dump_quant {model_quant}")
 
 # Load and evaluate the real quantized model
 if not args.skip_eval:
