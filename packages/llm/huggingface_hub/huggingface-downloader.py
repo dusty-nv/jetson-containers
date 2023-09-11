@@ -23,6 +23,11 @@ if args.token:
 locations = []
 
 for repo in args.repos:
+    if os.path.isdir(repo) or os.path.isfile(repo):
+        print(f"\nPath to local directory or file given: {repo}")
+        locations.append(repo)
+        continue
+        
     print(f"\nDownloading {repo} to {args.cache_dir}\n")
     
     # handle either "org/repo" or individual "org/repo/file"
