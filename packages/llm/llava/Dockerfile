@@ -2,7 +2,8 @@
 # name: llava
 # group: llm
 # docs: docs.md
-# depends: [pytorch, transformers]
+# depends: [pytorch, transformers:nvgpt]
+# requires: '>=34.1.0'
 # test: test.py
 #---
 ARG BASE_IMAGE
@@ -23,10 +24,12 @@ RUN git clone --branch=${LLAVA_BRANCH} --depth=1 https://github.com/${LLAVA_REPO
     sed 's|"bitsandbytes.*"|"bitsandbytes"|' -i pyproject.toml && \
     cat pyproject.toml
 
+COPY benchmark.py llava/llava/serve/
+
 RUN cd llava && \
     pip3 wheel --wheel-dir=dist --no-deps --verbose . && \
     cp dist/llava*.whl /opt
     
 RUN pip3 install --no-cache-dir --verbose llava*.whl
-
+ 
 WORKDIR /
