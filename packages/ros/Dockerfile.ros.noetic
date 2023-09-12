@@ -58,9 +58,9 @@ RUN pip3 install --no-cache-dir --verbose importlib.metadata
 #
 RUN mkdir ros_catkin_ws && \
     cd ros_catkin_ws && \
-    rosinstall_generator ${ROS_PKG} vision_msgs image_transport --rosdistro ${ROS_DISTRO} --deps --tar > ${ROS_DISTRO}-${ROS_PKG}.rosinstall && \
+    rosinstall_generator ${ROS_PACKAGE} vision_msgs image_transport --rosdistro ${ROS_DISTRO} --deps --tar > ${ROS_DISTRO}-${ROS_PACKAGE}.rosinstall && \
     mkdir src && \
-    vcs import --input ${ROS_DISTRO}-${ROS_PKG}.rosinstall ./src && \
+    vcs import --input ${ROS_DISTRO}-${ROS_PACKAGE}.rosinstall ./src && \
     apt-get update && \
     rosdep install -y \
 	 --from-paths ./src \
