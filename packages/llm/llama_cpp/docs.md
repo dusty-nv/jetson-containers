@@ -5,7 +5,7 @@
 > [!WARNING]  
 > Starting with version 0.1.79, the model format has changed from GGML to GGUF.  Existing GGML models can be converted using the `convert-llama-ggmlv3-to-gguf.py` script in [`llama.cpp`](https://github.com/ggerganov/llama.cpp) (or you can often find the GGUF conversions on [HuggingFace Hub](https://huggingface.co/models?search=GGUF))
 
-There are two branches for backwards compatability:
+There are two branches of this container for backwards compatability:
 
 * `llama_cpp:gguf` (which tracks ggerganov/llama.cpp master)
 * `llama_cpp:ggml` (which still supports GGML model format)
