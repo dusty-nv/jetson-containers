@@ -1,7 +1,7 @@
 #---
 # name: text-generation-webui
 # group: llm
-# depends: [pytorch, bitsandbytes, transformers, auto_gptq, gptq-for-llama, exllama, llama_cpp]
+# depends: [pytorch, bitsandbytes, transformers, auto_gptq, gptq-for-llama, exllama, exllama:v2, llama_cpp:gguf]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---
@@ -28,6 +28,8 @@ RUN cd text-generation-webui && \
     sed 's|^safetensors.*|safetensors|g' -i requirements.txt && \
     sed 's|^llama-cpp-python.*|llama-cpp-python|g' -i requirements.txt && \
     sed 's|^transformers.*|transformers|g' -i requirements.txt && \
+    sed 's|^optimum.*|optimum|g' -i requirements.txt && \
+    sed 's|^pydantic.*|pydantic|g' -i requirements.txt && \
     sed 's|^git+https://github.com/huggingface/transformers.*|transformers|g' -i requirements.txt && \
     sed 's|^git+https://github.com/huggingface/peft|#git+https://github.com/huggingface/peft|g' -i requirements.txt && \
     sed 's|^https://github.com/PanQiWei/AutoGPTQ|#https://github.com/PanQiWei/AutoGPTQ|g' -i requirements.txt && \
@@ -42,15 +44,15 @@ RUN cd text-generation-webui && \
 RUN cd text-generation-webui && \
     sed 's|@functools.cache|@functools.lru_cache\(maxsize=None\)|' -i modules/chat.py && \
     sed 's|@functools.cache|@functools.lru_cache\(maxsize=None\)|' -i modules/loaders.py && \
-    sed 's|@functools.cache|@functools.lru_cache\(maxsize=None\)|' -i modules/presets.py && \
-    sed 's/params = params | ggml_params/params.update(ggml_params)/' -i modules/llamacpp_model.py && \
-    cat modules/llamacpp_model.py | grep ggml_params
+    sed 's|@functools.cache|@functools.lru_cache\(maxsize=None\)|' -i modules/presets.py
 
 RUN cp /opt/GPTQ-for-LLaMa/*.py /opt/text-generation-webui
 
 # https://github.com/oobabooga/text-generation-webui/issues/3042#issuecomment-1626160643
 RUN pip3 install --no-cache-dir --verbose 'gradio>=3.36.1'
 RUN pip3 install --no-cache-dir --verbose -r text-generation-webui/extensions/api/requirements.txt
+
+COPY settings.json text-generation-webui/
 
 WORKDIR /
 
