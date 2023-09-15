@@ -13,7 +13,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`cudf`](/packages/rapids/cudf) [`cuml`](/packages/rapids/cuml) [`l4t-ml`](/packages/l4t/l4t-ml) [`nemo`](/packages/nemo) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/numba:r32.7.1`](https://hub.docker.com/r/dustynv/numba/tags) `(2023-08-12, 0.5GB)`<br>[`dustynv/numba:r35.2.1`](https://hub.docker.com/r/dustynv/numba/tags) `(2023-08-29, 5.1GB)`<br>[`dustynv/numba:r35.3.1`](https://hub.docker.com/r/dustynv/numba/tags) `(2023-08-29, 5.1GB)`<br>[`dustynv/numba:r35.4.1`](https://hub.docker.com/r/dustynv/numba/tags) `(2023-08-29, 5.1GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/numba:r32.7.1`](https://hub.docker.com/r/dustynv/numba/tags) `(2023-09-07, 0.5GB)`<br>[`dustynv/numba:r35.2.1`](https://hub.docker.com/r/dustynv/numba/tags) `(2023-09-07, 5.1GB)`<br>[`dustynv/numba:r35.3.1`](https://hub.docker.com/r/dustynv/numba/tags) `(2023-08-29, 5.1GB)`<br>[`dustynv/numba:r35.4.1`](https://hub.docker.com/r/dustynv/numba/tags) `(2023-08-29, 5.1GB)` |
 
 </details>
 
@@ -23,8 +23,8 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/numba:r32.7.1`](https://hub.docker.com/r/dustynv/numba/tags) | `2023-08-12` | `arm64` | `0.5GB` |
-| &nbsp;&nbsp;[`dustynv/numba:r35.2.1`](https://hub.docker.com/r/dustynv/numba/tags) | `2023-08-29` | `arm64` | `5.1GB` |
+| &nbsp;&nbsp;[`dustynv/numba:r32.7.1`](https://hub.docker.com/r/dustynv/numba/tags) | `2023-09-07` | `arm64` | `0.5GB` |
+| &nbsp;&nbsp;[`dustynv/numba:r35.2.1`](https://hub.docker.com/r/dustynv/numba/tags) | `2023-09-07` | `arm64` | `5.1GB` |
 | &nbsp;&nbsp;[`dustynv/numba:r35.3.1`](https://hub.docker.com/r/dustynv/numba/tags) | `2023-08-29` | `arm64` | `5.1GB` |
 | &nbsp;&nbsp;[`dustynv/numba:r35.4.1`](https://hub.docker.com/r/dustynv/numba/tags) | `2023-08-29` | `arm64` | `5.1GB` |
 

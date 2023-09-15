@@ -40,12 +40,18 @@ on:
       - 'packages/llm/bitsandbytes/*'
       - '!packages/llm/bitsandbytes/README.md'
       - '!packages/llm/bitsandbytes/docs.md'
+      - 'packages/llm/transformers/*'
+      - '!packages/llm/transformers/README.md'
+      - '!packages/llm/transformers/docs.md'
       - 'packages/llm/auto_gptq/*'
       - '!packages/llm/auto_gptq/README.md'
       - '!packages/llm/auto_gptq/docs.md'
       - 'packages/llm/transformers/*'
       - '!packages/llm/transformers/README.md'
       - '!packages/llm/transformers/docs.md'
+      - 'packages/llm/llava/*'
+      - '!packages/llm/llava/README.md'
+      - '!packages/llm/llava/docs.md'
 jobs:
   awq_jp51:
     runs-on: [self-hosted, jetson, jp51]

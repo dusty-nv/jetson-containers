@@ -10,9 +10,9 @@
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`text-generation-inference_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/text-generation-inference_jp51.yml?label=text-generation-inference:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/text-generation-inference_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`bitsandbytes`](/packages/llm/bitsandbytes) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`bitsandbytes`](/packages/llm/bitsandbytes) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`auto_gptq`](/packages/llm/auto_gptq) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/text-generation-inference:r35.2.1`](https://hub.docker.com/r/dustynv/text-generation-inference/tags) `(2023-08-29, 6.9GB)`<br>[`dustynv/text-generation-inference:r35.3.1`](https://hub.docker.com/r/dustynv/text-generation-inference/tags) `(2023-08-29, 7.0GB)`<br>[`dustynv/text-generation-inference:r35.4.1`](https://hub.docker.com/r/dustynv/text-generation-inference/tags) `(2023-08-29, 7.0GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/text-generation-inference:r35.2.1`](https://hub.docker.com/r/dustynv/text-generation-inference/tags) `(2023-09-07, 7.1GB)`<br>[`dustynv/text-generation-inference:r35.3.1`](https://hub.docker.com/r/dustynv/text-generation-inference/tags) `(2023-09-11, 7.1GB)`<br>[`dustynv/text-generation-inference:r35.4.1`](https://hub.docker.com/r/dustynv/text-generation-inference/tags) `(2023-08-29, 7.0GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/huggingface/text-generation-inference |
 
 </details>
@@ -23,8 +23,8 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/text-generation-inference:r35.2.1`](https://hub.docker.com/r/dustynv/text-generation-inference/tags) | `2023-08-29` | `arm64` | `6.9GB` |
-| &nbsp;&nbsp;[`dustynv/text-generation-inference:r35.3.1`](https://hub.docker.com/r/dustynv/text-generation-inference/tags) | `2023-08-29` | `arm64` | `7.0GB` |
+| &nbsp;&nbsp;[`dustynv/text-generation-inference:r35.2.1`](https://hub.docker.com/r/dustynv/text-generation-inference/tags) | `2023-09-07` | `arm64` | `7.1GB` |
+| &nbsp;&nbsp;[`dustynv/text-generation-inference:r35.3.1`](https://hub.docker.com/r/dustynv/text-generation-inference/tags) | `2023-09-11` | `arm64` | `7.1GB` |
 | &nbsp;&nbsp;[`dustynv/text-generation-inference:r35.4.1`](https://hub.docker.com/r/dustynv/text-generation-inference/tags) | `2023-08-29` | `arm64` | `7.0GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
@@ -42,10 +42,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag text-generation-inference)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/text-generation-inference:r35.4.1
+./run.sh dustynv/text-generation-inference:r35.3.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/text-generation-inference:r35.4.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/text-generation-inference:r35.3.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
