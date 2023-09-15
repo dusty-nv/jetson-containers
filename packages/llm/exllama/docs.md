@@ -1,7 +1,10 @@
 
-This is using the https://github.com/jllllll/exllama fork of https://github.com/turboderp/exllama  
+This package provides containers for both ExLlama and ExLlamaV2:
 
-It's found under `/opt/exllama`, and the pip wheel is at `/opt/exllama-*.whl` and has been installed (with the CUDA kernels already built)
+* `exllama` container uses the https://github.com/jllllll/exllama fork of https://github.com/turboderp/exllama (installed under `/opt/exllama`)
+* `exllama:v2` container uses https://github.com/turboderp/exllamav2 (installed uner `/opt/exllamav2`)
+
+Both loaders are also supported in the oobabooga [`text-generation-webui`](/packages/llm/text-generation-webui) container.
 
 ### Inference Benchmark
 
