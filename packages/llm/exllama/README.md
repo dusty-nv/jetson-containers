@@ -6,7 +6,7 @@
 This package provides containers for both ExLlama and ExLlamaV2:
 
 * `exllama` container uses the https://github.com/jllllll/exllama fork of https://github.com/turboderp/exllama (installed under `/opt/exllama`)
-* `exllama:v2` container uses https://github.com/turboderp/exllamav2 (installed uner `/opt/exllamav2`)
+* `exllama:v2` container uses https://github.com/turboderp/exllamav2 (installed under `/opt/exllamav2`)
 
 Both loaders are also supported in the oobabooga [`text-generation-webui`](/packages/llm/text-generation-webui) container.
 
