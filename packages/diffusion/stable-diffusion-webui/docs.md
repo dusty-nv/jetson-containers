@@ -3,8 +3,9 @@
 
 * stable-diffusion-webui from https://github.com/AUTOMATIC1111/stable-diffusion-webui (found under `/opt/stable-diffusion-webui`)
 * with TensorRT extension from https://github.com/AUTOMATIC1111/stable-diffusion-webui-tensorrt 
-* see the tutorial on the [**Jetson Generative AI Playground**](https://nvidia-ai-iot.github.io/jetson-generative-ai-playground/tutorial_diffusion.html)
 
+> [!IMPORTANT]  
+> Follow the tutorial on the [**Jetson Generative AI Playground**](https://nvidia-ai-iot.github.io/jetson-generative-ai-playground/tutorial_diffusion.html)
 
 This container has a default run command that will automatically start the webserver like this:
 
