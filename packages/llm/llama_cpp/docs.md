@@ -2,6 +2,9 @@
 * llama.cpp from https://github.com/ggerganov/llama.cpp with CUDA enabled (found under `/opt/llama.cpp`)
 * Python bindings from https://github.com/abetlen/llama-cpp-python (found under `/opt/llama-cpp-python`)
 
+> [!WARNING]  
+> Starting with version 0.1.79, the model format has changed from GGML to GGUF.  Existing GGML models can be converted using the `convert-llama-ggmlv3-to-gguf.py` script in [`llama.cpp`](https://github.com/ggerganov/llama.cpp) (or you can often find the GGUF conversions on [HuggingFace Hub](https://huggingface.co/models?search=GGUF))
+
 There are two branches for backwards compatability:
 
 * `llama_cpp:gguf` (which tracks ggerganov/llama.cpp master)

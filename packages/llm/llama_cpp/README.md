@@ -6,6 +6,9 @@
 * llama.cpp from https://github.com/ggerganov/llama.cpp with CUDA enabled (found under `/opt/llama.cpp`)
 * Python bindings from https://github.com/abetlen/llama-cpp-python (found under `/opt/llama-cpp-python`)
 
+> [!WARNING]  
+> Starting with version 0.1.79, the model format has changed from GGML to GGUF.  Existing GGML models can be converted using the `convert-llama-ggmlv3-to-gguf.py` script in [`llama.cpp`](https://github.com/ggerganov/llama.cpp) (or you can often find the GGUF conversions on [HuggingFace Hub](https://huggingface.co/models?search=GGUF))
+
 There are two branches for backwards compatability:
 
 * `llama_cpp:gguf` (which tracks ggerganov/llama.cpp master)
@@ -60,9 +63,18 @@ To use the Python API and [`benchmark.py`](/packages/llm/llama_cpp/benchmark.py)
 | &nbsp;&nbsp;&nbsp;Builds | [![`llama_cpp-ggml_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/llama_cpp-ggml_jp51.yml?label=llama_cpp-ggml:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/llama_cpp-ggml_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`huggingface_hub`](/packages/llm/huggingface_hub) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`langchain`](/packages/llm/langchain) [`langchain:samples`](/packages/llm/langchain) [`text-generation-webui`](/packages/llm/text-generation-webui) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`langchain`](/packages/llm/langchain) [`langchain:samples`](/packages/llm/langchain) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/llama_cpp:ggml-r35.2.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) `(2023-08-29, 5.2GB)`<br>[`dustynv/llama_cpp:ggml-r35.3.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) `(2023-08-29, 5.2GB)`<br>[`dustynv/llama_cpp:ggml-r35.4.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) `(2023-08-29, 5.2GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/llama_cpp:ggml-r35.2.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) `(2023-09-15, 5.2GB)`<br>[`dustynv/llama_cpp:ggml-r35.3.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) `(2023-09-11, 5.2GB)`<br>[`dustynv/llama_cpp:ggml-r35.4.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) `(2023-08-29, 5.2GB)` |
+
+| **`llama_cpp:gguf`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Builds | [![`llama_cpp-gguf_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/llama_cpp-gguf_jp51.yml?label=llama_cpp-gguf:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/llama_cpp-gguf_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`huggingface_hub`](/packages/llm/huggingface_hub) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`orion`](/packages/llm/orion) [`text-generation-webui`](/packages/llm/text-generation-webui) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/llama_cpp:gguf-r35.2.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) `(2023-09-07, 5.2GB)`<br>[`dustynv/llama_cpp:gguf-r35.3.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) `(2023-09-15, 5.2GB)`<br>[`dustynv/llama_cpp:gguf-r35.4.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) `(2023-08-29, 5.2GB)` |
 
 </details>
 
@@ -72,11 +84,11 @@ To use the Python API and [`benchmark.py`](/packages/llm/llama_cpp/benchmark.py)
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/llama_cpp:ggml-r35.2.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-08-29` | `arm64` | `5.2GB` |
-| &nbsp;&nbsp;[`dustynv/llama_cpp:ggml-r35.3.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-08-29` | `arm64` | `5.2GB` |
+| &nbsp;&nbsp;[`dustynv/llama_cpp:ggml-r35.2.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-09-15` | `arm64` | `5.2GB` |
+| &nbsp;&nbsp;[`dustynv/llama_cpp:ggml-r35.3.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-09-11` | `arm64` | `5.2GB` |
 | &nbsp;&nbsp;[`dustynv/llama_cpp:ggml-r35.4.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-08-29` | `arm64` | `5.2GB` |
-| &nbsp;&nbsp;[`dustynv/llama_cpp:gguf-r35.2.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-08-29` | `arm64` | `5.2GB` |
-| &nbsp;&nbsp;[`dustynv/llama_cpp:gguf-r35.3.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-08-29` | `arm64` | `5.2GB` |
+| &nbsp;&nbsp;[`dustynv/llama_cpp:gguf-r35.2.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-09-07` | `arm64` | `5.2GB` |
+| &nbsp;&nbsp;[`dustynv/llama_cpp:gguf-r35.3.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-09-15` | `arm64` | `5.2GB` |
 | &nbsp;&nbsp;[`dustynv/llama_cpp:gguf-r35.4.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-08-29` | `arm64` | `5.2GB` |
 | &nbsp;&nbsp;[`dustynv/llama_cpp:r35.2.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-08-29` | `arm64` | `5.2GB` |
 | &nbsp;&nbsp;[`dustynv/llama_cpp:r35.3.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-08-15` | `arm64` | `5.2GB` |
@@ -97,10 +109,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag llama_cpp)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/llama_cpp:gguf-r35.4.1
+./run.sh dustynv/llama_cpp:ggml-r35.2.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/llama_cpp:gguf-r35.4.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/llama_cpp:ggml-r35.2.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
