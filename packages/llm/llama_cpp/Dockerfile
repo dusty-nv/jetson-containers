@@ -46,7 +46,7 @@ RUN cp llama-cpp-python/dist/llama_cpp_python*.whl /opt && \
     pip3 install --no-cache-dir --verbose /opt/llama_cpp_python*.whl
 
 # python3 -m llama_cpp.server missing 'import uvicorn'
-RUN pip3 install --no-cache-dir --verbose uvicorn anyio starlette sse-starlette fastapi pydantic-settings
+RUN pip3 install --no-cache-dir --verbose uvicorn anyio starlette sse-starlette starlette-context fastapi pydantic-settings
 
 # add benchmark script
 COPY benchmark.py llama.cpp/bin/benchmark.py
