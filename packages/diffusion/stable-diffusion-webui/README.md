@@ -7,9 +7,7 @@
 
 * stable-diffusion-webui from https://github.com/AUTOMATIC1111/stable-diffusion-webui (found under `/opt/stable-diffusion-webui`)
 * with TensorRT extension from https://github.com/AUTOMATIC1111/stable-diffusion-webui-tensorrt 
-
-> [!IMPORTANT]  
-> Follow the tutorial on the [**Jetson Generative AI Playground**](https://nvidia-ai-iot.github.io/jetson-generative-ai-playground/tutorial_diffusion.html)
+* see the tutorial on the [**Jetson Generative AI Playground**](https://nvidia-ai-iot.github.io/jetson-generative-ai-playground/tutorial_diffusion.html)
 
 This container has a default run command that will automatically start the webserver like this:
 
@@ -29,7 +27,8 @@ Other configuration arguments can be found at [AUTOMATIC1111/stable-diffusion-we
 * `--medvram` (sacrifice some performance for low VRAM usage)
 * `--lowvram` (sacrafice a lot of speed for very low VRAM usage)
 
-See the [`stable-diffusion`](/packages/diffusion/stable-diffusion) container to run image generation from a script (`txt2img.py`) as opposed to the web UI. 
+> [!NOTE]  
+> See the [`stable-diffusion`](/packages/diffusion/stable-diffusion) container to run image generation from a script (`txt2img.py`) as opposed to the web UI. 
 
 ### Tips & Tricks
 
