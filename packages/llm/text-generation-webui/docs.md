@@ -2,8 +2,11 @@
 ![](https://nvidia-ai-iot.github.io/jetson-generative-ai-playground/images/text-generation-webui_sf-trip.gif)
 
 * text-generation-webui from https://github.com/oobabooga/text-generation-webui (found under `/opt/text-generation-webui`)
-* includes CUDA-optimized model loaders for: [`llama.cpp`](/packages/llm/llama_cpp) [`exllama`](/packages/llm/exllama) [`AutoGPTQ`](/packages/llm/auto_gptq) [`transformers`](/packages/llm/transformers)
+* includes CUDA-optimized model loaders for: [`llama.cpp`](/packages/llm/llama_cpp) [`exllama2`](/packages/llm/exllama) [`AutoGPTQ`](/packages/llm/auto_gptq) [`transformers`](/packages/llm/transformers)
 * see the tutorial on the [**Jetson Generative AI Playground**](https://nvidia-ai-iot.github.io/jetson-generative-ai-playground/tutorial_text-generation.html)
+
+> [!WARNING]  
+> If you're using the llama.cpp loader, the model format has changed from GGML to GGUF.  GGML models can be converted using the `convert-llama-ggmlv3-to-gguf.py` script in [`llama.cpp`](https://github.com/ggerganov/llama.cpp) (or you can find the GGUF conversions on [Huggingface Hub](https://huggingface.co/models?search=GGUF))
 
 This container has a default run command that will automatically start the webserver like this:
 
@@ -31,7 +34,7 @@ For example, after you've [downloaded a model](#downloading-models), you can loa
 ./run.sh $(./autotag text-generation-webui) /bin/bash -c \
   "cd /opt/text-generation-webui && python3 server.py \
 	--model-dir=/data/models/text-generation-webui \
-	--model=llama-2-13b-chat.ggmlv3.q4_0.bin \
+	--model=llama-2-13b-chat.Q4_K_M.gguf \
 	--loader=llamacpp \
 	--n-gpu-layers=128 \
 	--listen --chat --verbose
@@ -50,10 +53,10 @@ This will download specified model from [HuggingFace Hub](https://huggingface.co
 
 ### Tips and Tricks
 
-* The fastest model loader to use is currently [llama.cpp](/packages/llm/llama_cpp) with 4-bit quantized GGML models
+* The fastest model loader to use is currently [llama.cpp](/packages/llm/llama_cpp) with 4-bit quantized GGUF models
   * Remember to set `n-gpu-layers` to 128 in the loader settings
   * If you're using Llama-2-70B, set `n_gqa` to 8 (otherwise an error will occur)
-  * Tested using the `*q4_0.bin` model quantizations
+  * Tested using the `*Q4_K_M` model quantizations
 * Unless you loaded a model fine-tuned for chat, use text completion mode in the `Default` or `Notebook` tab
 * If you're using a Llama-2 chat model, use the `Instruct` chat mode and set the Instruction Template to `Llama-v2` (in the `Parameters` tab)
   * This will make sure the correct [chat prompt format](https://huggingface.co/blog/llama2#how-to-prompt-llama-2) is being used for Llama-2

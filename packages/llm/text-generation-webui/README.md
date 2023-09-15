@@ -6,8 +6,11 @@
 ![](https://nvidia-ai-iot.github.io/jetson-generative-ai-playground/images/text-generation-webui_sf-trip.gif)
 
 * text-generation-webui from https://github.com/oobabooga/text-generation-webui (found under `/opt/text-generation-webui`)
-* includes CUDA-optimized model loaders for: [`llama.cpp`](/packages/llm/llama_cpp) [`exllama`](/packages/llm/exllama) [`AutoGPTQ`](/packages/llm/auto_gptq) [`transformers`](/packages/llm/transformers)
+* includes CUDA-optimized model loaders for: [`llama.cpp`](/packages/llm/llama_cpp) [`exllama2`](/packages/llm/exllama) [`AutoGPTQ`](/packages/llm/auto_gptq) [`transformers`](/packages/llm/transformers)
 * see the tutorial on the [**Jetson Generative AI Playground**](https://nvidia-ai-iot.github.io/jetson-generative-ai-playground/tutorial_text-generation.html)
+
+> [!WARNING]  
+> If you're using the llama.cpp loader, the model format has changed from GGML to GGUF.  GGML models can be converted using the `convert-llama-ggmlv3-to-gguf.py` script in [`llama.cpp`](https://github.com/ggerganov/llama.cpp) (or you can find the GGUF conversions on [Huggingface Hub](https://huggingface.co/models?search=GGUF))
 
 This container has a default run command that will automatically start the webserver like this:
 
@@ -35,7 +38,7 @@ For example, after you've [downloaded a model](#downloading-models), you can loa
 ./run.sh $(./autotag text-generation-webui) /bin/bash -c \
   "cd /opt/text-generation-webui && python3 server.py \
 	--model-dir=/data/models/text-generation-webui \
-	--model=llama-2-13b-chat.ggmlv3.q4_0.bin \
+	--model=llama-2-13b-chat.Q4_K_M.gguf \
 	--loader=llamacpp \
 	--n-gpu-layers=128 \
 	--listen --chat --verbose
@@ -54,10 +57,10 @@ This will download specified model from [HuggingFace Hub](https://huggingface.co
 
 ### Tips and Tricks
 
-* The fastest model loader to use is currently [llama.cpp](/packages/llm/llama_cpp) with 4-bit quantized GGML models
+* The fastest model loader to use is currently [llama.cpp](/packages/llm/llama_cpp) with 4-bit quantized GGUF models
   * Remember to set `n-gpu-layers` to 128 in the loader settings
   * If you're using Llama-2-70B, set `n_gqa` to 8 (otherwise an error will occur)
-  * Tested using the `*q4_0.bin` model quantizations
+  * Tested using the `*Q4_K_M` model quantizations
 * Unless you loaded a model fine-tuned for chat, use text completion mode in the `Default` or `Notebook` tab
 * If you're using a Llama-2 chat model, use the `Instruct` chat mode and set the Instruction Template to `Llama-v2` (in the `Parameters` tab)
   * This will make sure the correct [chat prompt format](https://huggingface.co/blog/llama2#how-to-prompt-llama-2) is being used for Llama-2
@@ -87,10 +90,10 @@ I'm a large language model, so I can play text-based games and answer questions 
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`text-generation-webui_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/text-generation-webui_jp51.yml?label=text-generation-webui:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/text-generation-webui_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`bitsandbytes`](/packages/llm/bitsandbytes) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) [`auto_gptq`](/packages/llm/auto_gptq) [`gptq-for-llama`](/packages/llm/gptq-for-llama) [`exllama`](/packages/llm/exllama) [`llama_cpp`](/packages/llm/llama_cpp) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`bitsandbytes`](/packages/llm/bitsandbytes) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) [`auto_gptq`](/packages/llm/auto_gptq) [`gptq-for-llama`](/packages/llm/gptq-for-llama) [`exllama`](/packages/llm/exllama) [`exllama:v2`](/packages/llm/exllama) [`llama_cpp:gguf`](/packages/llm/llama_cpp) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/text-generation-webui:r35.2.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) `(2023-08-29, 6.2GB)`<br>[`dustynv/text-generation-webui:r35.3.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) `(2023-08-29, 6.2GB)`<br>[`dustynv/text-generation-webui:r35.4.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) `(2023-08-29, 6.2GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/text-generation-webui:r35.2.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) `(2023-09-06, 6.2GB)`<br>[`dustynv/text-generation-webui:r35.3.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) `(2023-08-29, 6.2GB)`<br>[`dustynv/text-generation-webui:r35.4.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) `(2023-08-29, 6.2GB)` |
 
 </details>
 
@@ -100,7 +103,7 @@ I'm a large language model, so I can play text-based games and answer questions 
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/text-generation-webui:r35.2.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) | `2023-08-29` | `arm64` | `6.2GB` |
+| &nbsp;&nbsp;[`dustynv/text-generation-webui:r35.2.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) | `2023-09-06` | `arm64` | `6.2GB` |
 | &nbsp;&nbsp;[`dustynv/text-generation-webui:r35.3.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) | `2023-08-29` | `arm64` | `6.2GB` |
 | &nbsp;&nbsp;[`dustynv/text-generation-webui:r35.4.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) | `2023-08-29` | `arm64` | `6.2GB` |
 
@@ -119,10 +122,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag text-generation-webui)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/text-generation-webui:r35.4.1
+./run.sh dustynv/text-generation-webui:r35.2.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/text-generation-webui:r35.4.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/text-generation-webui:r35.2.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
