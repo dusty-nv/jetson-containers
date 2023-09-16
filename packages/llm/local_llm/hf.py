@@ -87,8 +87,6 @@ class TextIteratorWithStats:
     def __init__(self, model, streamer):
         self.model = model
         self.streamer = streamer
-        self.time_begin = time.perf_counter()
-        
         self.model.stats.prefill_latency = 0
         self.model.stats.decode_tokens = 0
         
@@ -96,16 +94,24 @@ class TextIteratorWithStats:
         return self
 
     def __next__(self):
+        if self.model.stats.decode_tokens == 0:
+            self.time_begin = time.perf_counter()
+            
         token = self.streamer.__next__()
-        time_elapsed = time.perf_counter() - self.time_begin
+        
+        time_current = time.perf_counter()
+        time_elapsed = time_current - self.time_begin
         
         if self.model.stats.decode_tokens == 0:
             self.model.stats.prefill_latency = time_elapsed
+            self.time_begin = time_current
             #self.model.generate_stats.prefill_rate = 
 
         self.model.stats.decode_tokens += 1
         self.model.stats.decode_time = time_elapsed
-        self.model.stats.decode_rate = self.model.stats.decode_tokens / time_elapsed
+        
+        if self.model.stats.decode_tokens > 1:
+            self.model.stats.decode_rate = (self.model.stats.decode_tokens-1) / time_elapsed
 
         return token
                 

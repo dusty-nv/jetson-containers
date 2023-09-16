@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import os
-import sys
 import time
+import json
 import tabulate
 
 from termcolor import cprint
@@ -44,10 +44,15 @@ class LocalLM():
         elif api == 'awq':
             from .awq import AWQModel
             model = AWQModel(model_path, quant, **kwargs)
+        elif api == 'mlc':
+            from .mlc import MLCModel
+            model = MLCModel(model_path, **kwargs)
         else:
             raise ValueError(f"invalid API: {api}")
         
-        model.config.name = model_name
+        if 'name' not in model.config:
+            model.config.name = model_name
+            
         model.config.api = api
         
         model.print_config(extras=['load_time', f"{time.perf_counter()-load_begin:.2f} sec"])
@@ -85,7 +90,7 @@ class LocalLM():
             else:
                 table.append(extras)
             
-        cprint(tabulate(table, tablefmt='simple_grid'), 'green')
+        cprint(tabulate(table, tablefmt='simple_grid', numalign='center'), 'green')
      
     def print_stats(self, extras=None):
         """
@@ -102,7 +107,7 @@ class LocalLM():
             else:
                 table.append(extras)
             
-        cprint(tabulate(table, tablefmt='simple_grid'), 'green')
+        cprint(tabulate(table, tablefmt='simple_grid', numalign='center'), 'green')
         
     @staticmethod
     def download(model, type='model', cache_dir=None):
@@ -177,6 +182,35 @@ class LocalLM():
         self.config.api = ''
         
 
+def load_prompts(prompts):
+    """
+    Load prompts from a list of txt or json files
+    (or if these are strings, just return the strings)
+    """
+    prompt_list = []
+    
+    for prompt in prompts:
+        ext = os.path.splitext(prompt)[1]
+        
+        if ext == '.json':
+            with open(prompt) as file:
+                json_prompts = json.load(file)
+            for json_prompt in json_prompts:
+                if isinstance(json_prompt, dict):
+                    prompt_list.append(json_prompt['text'])
+                elif ifinstance(json_prompt, str):
+                    prompt_list.append(json_prompt)
+                else:
+                    raise TypeError(f"{type(json_prompt)}")
+        elif ext == '.txt':
+            with open(prompt) as file:
+                prompt_list.append(file.read())
+        else:
+            prompt_list.append(prompt)
+            
+    return prompt_list
+    
+            
 if __name__ == '__main__':
     import argparse
 
@@ -224,18 +258,18 @@ if __name__ == '__main__':
         
     print(args)
     
+    prompts = load_prompts(args.prompt)
+    
     model = LocalLM.from_pretrained(args.model, quant=args.quant, api=args.api)
     
-    for prompt in args.prompt:
-        cprint(prompt + ' ', 'blue', end='')
-        sys.stdout.flush()
-        
-        output = model.generate(prompt, streaming=args.streaming, min_new_tokens=args.max_new_tokens, max_new_tokens=args.max_new_tokens)
+    for prompt in prompts:
+        cprint(prompt + ' ', 'blue', end='', flush=True)
+
+        output = model.generate(prompt, streaming=args.streaming, max_new_tokens=args.max_new_tokens)
         
         if args.streaming:
             for token in output:
-                print(token, end='')
-                sys.stdout.flush()
+                print(token, end='', flush=True)
         else:
             print(output)
             
