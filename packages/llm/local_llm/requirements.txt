@@ -1,0 +1,4 @@
+websockets
+termcolor
+tabulate
+flask
