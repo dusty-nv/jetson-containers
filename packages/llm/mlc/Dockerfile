@@ -27,11 +27,18 @@ RUN apt-get update && \
     
 #ADD https://api.github.com/repos/${MLC_REPO}/git/refs/heads/${MLC_BRANCH} /tmp/mlc_version.json
 
-# https://github.com/mlc-ai/mlc-llm/issues/906
-RUN echo "20230914 sha=015414f60e395708345defa2d793df5f3f474e98" > /tmp/mlc_version.txt
+# https://github.com/mlc-ai/mlc-llm/issues/906 sha=015414f60e395708345defa2d793df5f3f474e98
+RUN echo "20230917" > /tmp/mlc_version.txt
 
 RUN git clone --branch=${MLC_BRANCH} --depth=1 --recursive https://github.com/${MLC_REPO}
 
+COPY patches.diff mlc-llm/
+
+RUN cd mlc-llm && \
+    git apply patches.diff && \
+    git status && \
+    git diff
+    
 # https://github.com/Dao-AILab/flash-attention/pull/343
 RUN cd mlc-llm/3rdparty/tvm/3rdparty/libflash_attn && \
     wget https://raw.githubusercontent.com/Dao-AILab/flash-attention/main/csrc/flash_attn/src/static_switch.h -O src/static_switch.h && \
