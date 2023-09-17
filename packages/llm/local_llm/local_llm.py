@@ -15,7 +15,7 @@ class LocalLM():
     Base class for local LLM APIs. It defines common Huggingface-like interfaces for
     model loading, text generation, chat, tokenization/detokenization, and streaming.
     
-    Supported API backends include: llama.cpp, exllama2, AutoGPTQ, AWQ, and MLC
+    Supported API backends include: AutoGPTQ, AWQ, MLC (TODO llama.cpp, exllama2)
     
     Use LocalLM.from_pretrained() rather than instantiating this class directly.
     """
@@ -61,10 +61,10 @@ class LocalLM():
      
     def generate(self, inputs, streaming=True, **kwargs):
         """
-        Generate output from input tokens or text.
+        Generate output from input text or an embedding.
         
         Parameters:
-          inputs (str|list[int]|torch.Tensor) -- the prompt string or tokens
+          inputs (str|list[int]|torch.Tensor|np.ndarray) -- the prompt string or embedding
           streaming (bool) -- if true (default), an iterator will be returned that outputs
                               one token at a time.  Otherwise, return the full response.
           kwargs -- see https://huggingface.co/docs/transformers/main/en/main_classes/text_generation  
@@ -261,6 +261,8 @@ if __name__ == '__main__':
     prompts = load_prompts(args.prompt)
     
     model = LocalLM.from_pretrained(args.model, quant=args.quant, api=args.api)
+    
+    print(model.model)
     
     for prompt in prompts:
         cprint(prompt + ' ', 'blue', end='', flush=True)
