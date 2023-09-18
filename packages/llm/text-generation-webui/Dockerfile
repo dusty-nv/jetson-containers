@@ -32,6 +32,7 @@ RUN cd text-generation-webui && \
     sed 's|^transformers.*|transformers|g' -i requirements.txt && \
     sed 's|^optimum.*|optimum|g' -i requirements.txt && \
     sed 's|^pydantic.*|pydantic|g' -i requirements.txt && \
+    sed 's|^aiofiles.*|aiofiles|g' -i requirements.txt && \
     sed 's|^git+https://github.com/huggingface/transformers.*|transformers|g' -i requirements.txt && \
     sed 's|^git+https://github.com/huggingface/peft|#git+https://github.com/huggingface/peft|g' -i requirements.txt && \
     sed 's|^https://github.com/PanQiWei/AutoGPTQ|#https://github.com/PanQiWei/AutoGPTQ|g' -i requirements.txt && \
