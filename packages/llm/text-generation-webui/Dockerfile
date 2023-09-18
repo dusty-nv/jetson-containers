@@ -18,8 +18,8 @@ RUN git clone --depth=1 https://github.com/oobabooga/text-generation-webui
 RUN cd text-generation-webui && \
     git remote add llava2 https://github.com/haotian-liu/text-generation-webui && \
     git fetch llava2 && \
-    git config --local user.email "dustinf@nvidia.com" \
-    git config --local user.name "Dustin Franklin" \
+    git config user.email "dustinf@nvidia.com" && \
+    git config user.name "Dustin Franklin" && \
     git cherry-pick 9c085ee
 
 RUN cd text-generation-webui && \
