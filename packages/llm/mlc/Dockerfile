@@ -51,6 +51,7 @@ RUN sed 's|set(BUILD_DUMMY_LIBTVM ON)||' -i mlc-llm/CMakeLists.txt && \
     sed 's|set(USE_GRAPH_EXECUTOR OFF)||' -i mlc-llm/CMakeLists.txt && \
     cat mlc-llm/CMakeLists.txt
     
+# disable pytorch: https://github.com/apache/tvm/issues/9362
 RUN mkdir mlc-llm/build && \
     cd mlc-llm/build && \
     cmake -G Ninja \
@@ -64,9 +65,10 @@ RUN mkdir mlc-llm/build && \
 	-DUSE_CUTLASS=ON \
 	-DUSE_THRUST=ON \
 	-DUSE_GRAPH_EXECUTOR_CUDA_GRAPH=ON \
-	-DUSE_LLVM=ON \
 	-DUSE_STACKVM_RUNTIME=ON \
-	-DUSE_LIBTORCH=$(pip3 show torch | grep Location: | cut -d' ' -f2)/torch \
+	-DUSE_LLVM="/usr/bin/llvm-config --link-static" \
+	-DHIDE_PRIVATE_SYMBOLS=ON \
+	#-DUSE_LIBTORCH=$(pip3 show torch | grep Location: | cut -d' ' -f2)/torch \
 	-DSUMMARIZE=ON \
 	../ && \
     ninja && \
