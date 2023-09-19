@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 import os
+import tvm
 import time
 import json
 import queue
 import threading
+import numpy as np
 
 from mlc_chat import ChatModule, ChatConfig, ConvConfig
 from mlc_chat.callback import DeltaCallback
@@ -56,6 +58,21 @@ class MLCModel(LocalLM):
         
         return stream
 
+    def embed_text(self, text, return_tensors='np'):  # pt, np, tvm
+        embedding = self.embedding_cache.get(text)
+        
+        if embedding is None:
+            embedding = self.model.embed_text(text)
+            self.embedding_cache[text] = embedding
+            self.device = embedding.device
+        else:
+            print('TEXT EMBEDDING CACHE HIT')
+         
+        if return_tensors == 'np':
+            embedding = embedding.numpy()
+            
+        return embedding
+        
     def _run(self):
         while True:
             inputs, stream, kwargs = self.queue.get()
@@ -66,30 +83,29 @@ class MLCModel(LocalLM):
             self.model.reset_chat(self.model.chat_config)
             
             # https://github.com/mlc-ai/mlc-llm/blob/main/python/mlc_chat/chat_module.py
-            time_begin_embed = time.perf_counter()
-            
-            embedding = self.embedding_cache.get(inputs)
-            
-            if embedding is None:
-                embedding = self.model.embed_text(inputs)
-                self.embedding_cache[inputs] = embedding
+            if isinstance(inputs, str):
+                time_begin_embed = time.perf_counter()
+                embedding = self.embed_text(inputs, return_tensors='tvm')
+                self.stats.embed_time = time.perf_counter() - time_begin_embed
             else:
-                print('CACHE HIT')
-                
+                embedding = inputs
+                if not isinstance(embedding, tvm.runtime.ndarray.NDArray):
+                    embedding = tvm.nd.array(embedding, device=self.device)
+                    
+            self.stats.input_tokens = embedding.shape[1]
+            
             self.model.reset_chat(self.model.chat_config)
             
-            print('embedding', embedding.shape)
-
             time_begin_prefill = time.perf_counter()
             self.model._prefill_with_embed(embedding)#, decode_next_token=False)
             time_begin_decode = time.perf_counter()
-            self.stats.decode_tokens = 0
+            self.stats.output_tokens = 0
             
             last_msg_len = 0
             
             while not self.model._stopped():
                 self.model._decode()
-                self.stats.decode_tokens += 1
+                self.stats.output_tokens += 1
                 msg = self.model._get_message()
                 msg_len = len(msg)
                 msg = msg[last_msg_len:]
@@ -102,11 +118,10 @@ class MLCModel(LocalLM):
             stream.stop = True
             stream.event.set()
             
-            self.stats.embed_time = time_begin_prefill - time_begin_embed
             self.stats.prefill_time = time_begin_decode - time_begin_prefill
             self.stats.prefill_rate = embedding.shape[1] / self.stats.prefill_time
             self.stats.decode_time = time_end - time_begin_decode
-            self.stats.decode_rate = self.stats.decode_tokens / self.stats.decode_time
+            self.stats.decode_rate = self.stats.output_tokens / self.stats.decode_time
             
             
 class StreamIterator():
@@ -143,7 +158,7 @@ class StreamIterator(DeltaCallback):
         
         self.callback_interval = 1
         self.model.stats.prefill_latency = 0
-        self.model.stats.decode_tokens = 0
+        self.model.stats.output_tokens = 0
 
     def delta_callback(self, delta_message: str):
         self.queue.put(delta_message)
@@ -158,7 +173,7 @@ class StreamIterator(DeltaCallback):
         return self
 
     def __next__(self):
-        if self.model.stats.decode_tokens == 0:
+        if self.model.stats.output_tokens == 0:
             self.time_begin = time.perf_counter()
             
         self.event.wait()
@@ -173,16 +188,16 @@ class StreamIterator(DeltaCallback):
         time_current = time.perf_counter()
         time_elapsed = time_current - self.time_begin
         
-        if self.model.stats.decode_tokens == 0:
+        if self.model.stats.output_tokens == 0:
             self.model.stats.prefill_latency = time_elapsed
             self.time_begin = time_current
             #self.model.generate_stats.prefill_rate = 
             
-        self.model.stats.decode_tokens += 1
+        self.model.stats.output_tokens += 1
         self.model.stats.decode_time = time_elapsed
         
-        if self.model.stats.decode_tokens > 1:
-            self.model.stats.decode_rate = (self.model.stats.decode_tokens-1) / time_elapsed
+        if self.model.stats.output_tokens > 1:
+            self.model.stats.decode_rate = (self.model.stats.output_tokens-1) / time_elapsed
             
         return token
 """       

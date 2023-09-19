@@ -29,10 +29,15 @@ class HFModel(LocalLM):
             with init_empty_weights_ctx():
                 self.model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.float16)
         else:
-            self.model = AutoModelForCausalLM.from_pretrained(model_path, device=self.device, 
-                torch_dtype=torch.float16, low_cpu_mem_usage=True
-            ).eval()
-
+            if 'gtpq' in self.model_path:
+                self.model = AutoModelForCausalLM.from_pretrained(model_path, device=self.device, 
+                    torch_dtype=torch.float16, low_cpu_mem_usage=True
+                ).eval()
+            else:
+                self.model = AutoModelForCausalLM.from_pretrained(model_path,
+                    torch_dtype=torch.float16, low_cpu_mem_usage=True
+                ).to(self.device).eval()
+                
         self.load_config()
         
     def load_config(self):
