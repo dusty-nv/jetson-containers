@@ -1,15 +1,15 @@
-name: "l4t-text-generation_jp51"
-run-name: "Build l4t-text-generation (JetPack 5.1)"
+name: "local_llm_jp51"
+run-name: "Build local_llm (JetPack 5.1)"
 on:
   workflow_dispatch: {}
   push:
     branches:
       - 'dev'
     paths:
-      - '.github/workflows/l4t-text-generation_jp51.yml'
-      - 'packages/l4t/l4t-text-generation/*'
-      - '!packages/l4t/l4t-text-generation/README.md'
-      - '!packages/l4t/l4t-text-generation/docs.md'
+      - '.github/workflows/local_llm_jp51.yml'
+      - 'packages/llm/local_llm/*'
+      - '!packages/llm/local_llm/README.md'
+      - '!packages/llm/local_llm/docs.md'
       - 'packages/build-essential/*'
       - '!packages/build-essential/README.md'
       - '!packages/build-essential/docs.md'
@@ -40,41 +40,32 @@ on:
       - 'packages/llm/bitsandbytes/*'
       - '!packages/llm/bitsandbytes/README.md'
       - '!packages/llm/bitsandbytes/docs.md'
-      - 'packages/llm/transformers/*'
-      - '!packages/llm/transformers/README.md'
-      - '!packages/llm/transformers/docs.md'
       - 'packages/llm/auto_gptq/*'
       - '!packages/llm/auto_gptq/README.md'
       - '!packages/llm/auto_gptq/docs.md'
+      - 'packages/llm/transformers/*'
+      - '!packages/llm/transformers/README.md'
+      - '!packages/llm/transformers/docs.md'
+      - 'packages/llm/mlc/*'
+      - '!packages/llm/mlc/README.md'
+      - '!packages/llm/mlc/docs.md'
       - 'packages/llm/llava/*'
       - '!packages/llm/llava/README.md'
       - '!packages/llm/llava/docs.md'
       - 'packages/llm/awq/*'
       - '!packages/llm/awq/README.md'
       - '!packages/llm/awq/docs.md'
-      - 'packages/onnxruntime/*'
-      - '!packages/onnxruntime/README.md'
-      - '!packages/onnxruntime/docs.md'
-      - 'packages/llm/optimum/*'
-      - '!packages/llm/optimum/README.md'
-      - '!packages/llm/optimum/docs.md'
-      - 'packages/llm/gptq-for-llama/*'
-      - '!packages/llm/gptq-for-llama/README.md'
-      - '!packages/llm/gptq-for-llama/docs.md'
-      - 'packages/llm/exllama/*'
-      - '!packages/llm/exllama/README.md'
-      - '!packages/llm/exllama/docs.md'
-      - 'packages/llm/exllama/*'
-      - '!packages/llm/exllama/README.md'
-      - '!packages/llm/exllama/docs.md'
       - 'packages/llm/llama_cpp/*'
       - '!packages/llm/llama_cpp/README.md'
       - '!packages/llm/llama_cpp/docs.md'
-      - 'packages/llm/text-generation-webui/*'
-      - '!packages/llm/text-generation-webui/README.md'
-      - '!packages/llm/text-generation-webui/docs.md'
+      - 'packages/llm/exllama/*'
+      - '!packages/llm/exllama/README.md'
+      - '!packages/llm/exllama/docs.md'
+      - 'packages/pytorch/torch2trt/*'
+      - '!packages/pytorch/torch2trt/README.md'
+      - '!packages/pytorch/torch2trt/docs.md'
 jobs:
-  l4t-text-generation_jp51:
+  local_llm_jp51:
     runs-on: [self-hosted, jetson, jp51]
     steps:
       - run: |
@@ -91,4 +82,4 @@ jobs:
          git checkout $GITHUB_SHA 
          git status 
          ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv l4t-text-generation
+      - run: ./build.sh --name=runner/ --push=dustynv local_llm
