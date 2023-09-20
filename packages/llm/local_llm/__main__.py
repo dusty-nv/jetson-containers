@@ -7,7 +7,7 @@ import numpy as np
 
 from termcolor import cprint
 
-from local_llm import LocalLM, CLIPModel, load_image, load_prompts, print_table
+from local_llm import LocalLM, ChatHistory, CLIPModel, load_image, load_prompts, print_table
 
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -17,6 +17,7 @@ parser.add_argument("--quant", type=str, default=None, help="path to the quantiz
 parser.add_argument("--api", type=str, default=None, choices=['auto_gptq', 'awq', 'hf', 'mlc'], help="specify the API to use (otherwise inferred)")
 parser.add_argument("--prompt", action='append', nargs='*')
 parser.add_argument("--chat", action="store_true")
+parser.add_argument("--chat-template", type=str, default=None)
 parser.add_argument("--no-streaming", action="store_true")
 parser.add_argument("--max-new-tokens", type=int, default=128, help="the maximum number of new tokens to generate, in addition to the prompt")
 parser.add_argument("--image", type=str, default=None)
@@ -69,6 +70,7 @@ print(model.model)
 print_table(model.config)
 
 # load image
+"""
 clip = None
 image_embedding = None
 
@@ -100,7 +102,7 @@ chat_templates = {
 }
         
 chat_template = chat_templates['llama-2']
-
+"""
 
 # system prompt
 '''
@@ -110,7 +112,7 @@ You are a helpful language and vision assistant. You are able to understand the 
 
 """
 '''
-
+"""
 if 'llava' in model.config.name.lower():
     system_prompt = 'You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.'
 else:
@@ -129,8 +131,18 @@ system_prompt = replace_text(
 print(f"system_prompt:\n```\n{system_prompt}```")
 system_embedding = model.embed_text(system_prompt)
 print('system_embedding', system_embedding.shape, system_embedding.dtype)
+"""
 
-chat_history = []
+if args.chat:
+    if not args.chat_template:
+        if 'llama-2' in model.config.name.lower():
+            if 'llava' in model.config.name.lower():
+                args.chat_template = 'llava-2'
+            else:
+                args.chat_template = 'llama-2'
+                
+    chat_history = ChatHistory(model, template=args.chat_template)
+    
 
 while True: 
     if isinstance(prompts, list):
@@ -141,11 +153,14 @@ while True:
     else:
         cprint('>> PROMPT: ', 'blue', end='', flush=True)
         user_prompt = sys.stdin.readline().strip()
-        
+    
+    """
     if user_prompt.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')):
         image_embedding = get_image_embedding(prompt)
         continue
+    """
     
+    """
     chat_history.append([user_prompt, ''])
     chat_text = ""
     
@@ -176,19 +191,26 @@ while True:
         embedding = (system_embedding, chat_embedding)
       
     embedding = np.concatenate(embedding, axis=1)
+    """
+    if args.chat:
+        chat_history.add_entry(role='user', text=user_prompt)
     
-    output = model.generate(embedding, streaming=not args.no_streaming, max_new_tokens=args.max_new_tokens)
+        embedding = chat_history.embed_chat()
         
-    if args.no_streaming:
-        chat_history[-1][1] = output
-        print(output)
-    else:
-        for token in output:
-            chat_history[-1][1] += token
-            print(token, end='', flush=True)
+        output = model.generate(embedding, streaming=not args.no_streaming, max_new_tokens=args.max_new_tokens)
             
-    print('')
-    print_table(model.stats)
+        bot_reply = chat_history.add_entry(role='bot', text='')
+        
+        if args.no_streaming:
+            bot_reply.text = output
+            print(output)
+        else:
+            for token in output:
+                bot_reply.text += token
+                print(token, end='', flush=True)
+                
+        print('')
+        print_table(model.stats)
 
     
 """

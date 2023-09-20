@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 import os
+import inspect
 import numpy as np
 
-from .utils import AttrDict
+from .clip import CLIPModel
+from .utils import AttrDict, replace_text, print_table
 
 chat_templates = {
     'llama-2': {
@@ -24,7 +26,7 @@ chat_templates = {
 }
 
 for key in chat_templates:
-    chat_templates[key] = AttrDict(key)
+    chat_templates[key] = AttrDict(chat_templates[key])
     
 
 class ChatHistory():
@@ -43,8 +45,6 @@ class ChatHistory():
     model architectures.  In typicaly 2-turn chat, there are 'user' and 'bot' roles
     defined, but arbitrary roles can be added, each with their own template.
     The system prompt can also be configured through the chat template.
-    
-    TODO: add_entry_handler(type, function)
     """
     def __init__(self, model, template='llama-2'):
         self.model = model
@@ -73,14 +73,8 @@ class ChatHistory():
         
     def __getitem__(self, entry):
         return self.entries[entry]
-       
-    def to_list(self):
-        """
-        Returns the list of chat entries.
-        """
-        return self.entries
     
-    def embed_text(self, text, role_template):
+    def embed_text(self, text, template):
         """
         Get the text embedding after applying the template for 'user', 'bot', ect.
         """
@@ -88,15 +82,17 @@ class ChatHistory():
             replace_text(role_template, {'${MESSAGE}': entry.text})
         )
     
-    def embed_image(self, image, role_template):
+    def embed_image(self, image):
         """
         Given an image, extract features and perfom the image embedding.
         This uses the CLIP encoder and a linear projection layer that
         maps it into the embedding space the model expects.
         """
-        return None
+        clip = CLIPModel.from_pretrained()
+        embedding = clip.embed_image(image)
+        print_table(clip.stats)
         
-    def to_embedding(self):
+    def embed_chat(self):
         """
         Assemble the embedding of the entire chat.
         """
@@ -123,9 +119,12 @@ class ChatHistory():
                     role_template = self.template[entry.role]
 
                 if '_embedding' not in key and key + '_embedding' not in entry:
-                    embedding = self.embedding_functions[key](role, entry[key])
+                    if self.embedding_functions[key].uses_template:
+                        embedding = self.embedding_functions[key].func(entry[key], role)
+                    else:
+                        embedding = self.embedding_functions[key].func(entry[key])
                     entry[key + '_embedding'] = embedding  # cache the embedding
-                else if isinstance(entry[key], np.ndarray):
+                elif isinstance(entry[key], np.ndarray):
                     embedding = entry[key]
                 else:
                     embedding = entry[key + '_embedding']
@@ -135,6 +134,9 @@ class ChatHistory():
         return np.concatenate(embeddings, axis=1)
 
     def register_embedding(self, type, func):
-        self.entry_handlers[type] = func
+        params = inspect.signature(func).parameters
+        self.entry_handlers[type] = AttrDict(
+            func=func,
+            uses_template='role_template' in params
+        )
         
-    

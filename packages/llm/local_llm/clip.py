@@ -5,12 +5,23 @@ import torch
 import PIL
 
 from transformers import CLIPImageProcessor, CLIPVisionModel
-from .utils import AttrDict, load_image, download_model
+from .utils import AttrDict, load_image, download_model, print_table
+
+_clip_model_cache = {}
 
 class CLIPModel():
     """
     CLIP feature extractor for image embeddings
     """
+    @staticmethod
+    def from_pretrained(model, use_cache=True, **kwargs):
+        global _clip_model_cache
+        
+        if use_cache and model in _clip_model_cache:
+            return _clip_model_cache[model]
+            
+        return CLIPModel(model, **kwargs)
+    
     def __init__(self, model="openai/clip-vit-large-patch14-336", **kwargs):
         self.stats = AttrDict()
         self.config = AttrDict()
@@ -44,6 +55,7 @@ class CLIPModel():
         
         print(f'-- {self.config.name} warmup')
         self.embed_image(PIL.Image.new('RGB', (self.model.config.image_size, self.model.config.image_size), (255,255,255)))
+        print_table(self.config)
         
     def embed_image(self, image):
         if isinstance(image, str):
