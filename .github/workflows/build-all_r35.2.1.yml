@@ -512,6 +512,23 @@ jobs:
           git status 
           ls -a 
        - run: ./build.sh --name=runner/ --push=dustynv llava
+  local_llm:
+     name: "local_llm"
+     runs-on: [self-hosted, jetson, r35.2.1]
+     steps:
+       - run: |
+          cat /etc/nv_tegra_release 
+       - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+         run: |
+          echo "$RUNNER_WORKSPACE" 
+          cd $RUNNER_WORKSPACE 
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+          cd jetson-containers 
+          git fetch origin 
+          git checkout $GITHUB_SHA 
+          git status 
+          ls -a 
+       - run: ./build.sh --name=runner/ --push=dustynv local_llm
   minigpt4:
      name: "minigpt4"
      runs-on: [self-hosted, jetson, r35.2.1]
