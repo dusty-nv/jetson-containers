@@ -142,9 +142,9 @@ while True:
         cprint('>> PROMPT: ', 'blue', end='', flush=True)
         user_prompt = sys.stdin.readline().strip()
         
-    #if prompt.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')):
-    #    image_embedding = get_image_embedding(prompt)
-    #    continue
+    if user_prompt.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')):
+        image_embedding = get_image_embedding(prompt)
+        continue
     
     chat_history.append([user_prompt, ''])
     chat_text = ""

@@ -58,9 +58,12 @@ class MLCModel(LocalLM):
         
         return stream
 
-    def embed_text(self, text, return_tensors='np'):  # pt, np, tvm
-        embedding = self.embedding_cache.get(text)
-        
+    def embed_text(self, text, return_tensors='np', use_cache=False):  # pt, np, tvm
+        if use_cache:
+            embedding = self.embedding_cache.get(text)
+        else:
+            embedding = None
+            
         if embedding is None:
             embedding = self.model.embed_text(text)
             self.embedding_cache[text] = embedding

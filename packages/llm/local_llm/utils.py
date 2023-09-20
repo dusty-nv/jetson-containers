@@ -139,6 +139,15 @@ def print_table(rows, header=None, footer=None, color='green'):
         rows = rows + footer
         
     cprint(tabulate(rows, tablefmt='simple_grid', numalign='center'), color)
+
+
+def replace_text(self, text, dict):
+    """
+    Replace instances of each of the keys in dict in the text string with the values in dict
+    """
+    for key, value in dict.items():
+        text = text.replace(key, value)
+    return text    
     
     
 class AttrDict(dict):
