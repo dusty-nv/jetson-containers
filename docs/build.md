@@ -103,3 +103,7 @@ ADD https://api.github.com/repos/${LLAMA_CPP_PYTHON_REPO}/git/refs/heads/${LLAMA
 You will find `Dockerfile.minus-github-api` file newly created in each package directory if the Dockerfile contains such line, and that's what used for building.
 
 The `Dockerfile.minus-github-api` is temporary (and is listed in `.gitignore`), so always edit the original `Dockerfile` when needed.
+
+If you want to remove all such temporary files, you can execute the following command.
+
+> `find . -type f -name *.minus-github-api -delete`
