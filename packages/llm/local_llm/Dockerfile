@@ -1,7 +1,7 @@
 #---
 # name: local_llm
 # group: llm
-# depends: [transformers, mlc, awq, llama_cpp:gguf, exllama:v2, torch2trt]
+# depends: [awq, torch2trt, mlc:dev]
 # requires: '>=34.1.0'
 #---
 ARG BASE_IMAGE

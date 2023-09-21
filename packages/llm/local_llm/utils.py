@@ -141,7 +141,7 @@ def print_table(rows, header=None, footer=None, color='green'):
     cprint(tabulate(rows, tablefmt='simple_grid', numalign='center'), color)
 
 
-def replace_text(self, text, dict):
+def replace_text(text, dict):
     """
     Replace instances of each of the keys in dict in the text string with the values in dict
     """

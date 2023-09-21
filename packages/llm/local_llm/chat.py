@@ -51,7 +51,7 @@ class ChatHistory():
         self.template = chat_templates[template]
         self.template_name = template
         self.entries = []
-        self.entry_handlers = {}
+        self.embedding_functions = {}
         
         self.register_embedding('text', self.embed_text)
         self.register_embedding('image', self.embed_image)
@@ -78,9 +78,9 @@ class ChatHistory():
         """
         Get the text embedding after applying the template for 'user', 'bot', ect.
         """
-        return self.model.embed_text(
-            replace_text(role_template, {'${MESSAGE}': entry.text})
-        )
+        text = replace_text(template, {'${MESSAGE}': text})
+        print(f"```{text}```")
+        return self.model.embed_text(text)
     
     def embed_image(self, image):
         """
@@ -92,7 +92,7 @@ class ChatHistory():
         embedding = clip.embed_image(image)
         print_table(clip.stats)
         
-    def embed_chat(self):
+    def embed_chat(self, use_cache=False):
         """
         Assemble the embedding of the entire chat.
         """
@@ -103,7 +103,7 @@ class ChatHistory():
         
         print(f"system_prompt:\n```\n{system_prompt}```")
         embeddings = [self.model.embed_text(system_prompt, use_cache=True)]
-        print('system_embedding', system_embedding.shape, system_embedding.dtype)
+        #print('system_embedding', embeddings[0].shape, embeddings[0].dtype)
         
         # add all the chat entries
         for i, entry in enumerate(self.entries):
@@ -118,25 +118,31 @@ class ChatHistory():
                         raise RuntimeError(f"chat template {self.template_name} didn't have an entry for role={entry.role}")
                     role_template = self.template[entry.role]
 
-                if '_embedding' not in key and key + '_embedding' not in entry:
+                def generate_embedding(entry, key, template):
                     if self.embedding_functions[key].uses_template:
-                        embedding = self.embedding_functions[key].func(entry[key], role)
+                        return self.embedding_functions[key].func(entry[key], template)
                     else:
-                        embedding = self.embedding_functions[key].func(entry[key])
-                    entry[key + '_embedding'] = embedding  # cache the embedding
-                elif isinstance(entry[key], np.ndarray):
-                    embedding = entry[key]
+                        return self.embedding_functions[key].func(entry[key])
+                        
+                if use_cache:
+                    if ('_embedding' not in key and key + '_embedding' not in entry):
+                        embedding = generate_embedding(entry, key, role_template)
+                        entry[key + '_embedding'] = embedding  # cache the embedding
+                    elif isinstance(entry[key], np.ndarray):
+                        embedding = entry[key]
+                    else:
+                        embedding = entry[key + '_embedding']
                 else:
-                    embedding = entry[key + '_embedding']
-                    
+                    embedding = generate_embedding(entry, key, role_template)
+                            
                 embeddings.append(embedding)
 
         return np.concatenate(embeddings, axis=1)
 
     def register_embedding(self, type, func):
         params = inspect.signature(func).parameters
-        self.entry_handlers[type] = AttrDict(
+        self.embedding_functions[type] = AttrDict(
             func=func,
-            uses_template='role_template' in params
+            uses_template=len(params) > 1 #'role_template' in params
         )
         

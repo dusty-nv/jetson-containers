@@ -11,7 +11,7 @@ _clip_model_cache = {}
 
 class CLIPModel():
     """
-    CLIP feature extractor for image embeddings
+    CLIP feature extractor and projector for generating image embeddings.
     """
     @staticmethod
     def from_pretrained(model, use_cache=True, **kwargs):
