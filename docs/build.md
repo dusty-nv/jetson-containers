@@ -88,7 +88,13 @@ When building a container, you may hit this GitHub API rate limit especially if 
 
 > ADD failed: failed to GET https://api.github.com/repos/abetlen/llama-cpp-python/git/refs/heads/main with status 403 Forbidden: {"message":"API rate limit exceeded for 216.228.112.22. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)","documentation_url":"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting"}
 
-If that is the case, use `--no-github-api` to remove a line like below from `Dockerfile` that was added to force rebuild on new git commits.
+If that is the case, use `--no-github-api` option when running `build.sh`
+
+```
+./build.sh --no-github-api --skip-test=all text-generation-webui
+```
+
+The option `--no-github-api` is to remove a line like below from `Dockerfile` that was added to force rebuild on new git commits.
 
 ```
 ADD https://api.github.com/repos/${LLAMA_CPP_PYTHON_REPO}/git/refs/heads/${LLAMA_CPP_PYTHON_BRANCH} /tmp/llama_cpp_python_version.json
