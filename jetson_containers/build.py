@@ -48,6 +48,7 @@ parser.add_argument('--test-only', type=str, default='', help="only test the spe
 parser.add_argument('--simulate', action='store_true', help="print out the build commands without actually building the containers")
 parser.add_argument('--push', type=str, default='', help="repo or user to push built container image to (no push by default)")
 parser.add_argument('--logs', type=str, default='', help="sets the directory to save container build logs to (default: jetson-containers/logs)")
+parser.add_argument('--no-github-api', action='store_true', help="disalbe Github API use to force rebuild on new git commits")
 
 args = parser.parse_args()
 
@@ -92,6 +93,6 @@ if args.list_packages or args.show_packages:
 # build one multi-stage container from chain of packages
 # or launch multiple independent container builds
 if not args.multiple:
-    build_container(args.name, args.packages, args.base, args.build_flags, args.simulate, args.skip_tests, args.test_only, args.push)
+    build_container(args.name, args.packages, args.base, args.build_flags, args.simulate, args.skip_tests, args.test_only, args.push, args.no_github_api)
 else:   
-    build_containers(args.name, args.packages, args.base, args.build_flags, args.simulate, args.skip_errors, args.skip_packages, args.skip_tests, args.test_only, args.push)
+    build_containers(args.name, args.packages, args.base, args.build_flags, args.simulate, args.skip_errors, args.skip_packages, args.skip_tests, args.test_only, args.push, args.no_github_api)

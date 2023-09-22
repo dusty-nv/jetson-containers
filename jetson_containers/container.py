@@ -20,7 +20,7 @@ from packaging.version import Version
 _NEWLINE_=" \\\n"  # used when building command strings
 
 
-def build_container(name, packages, base=get_l4t_base(), build_flags='', simulate=False, skip_tests=[], test_only=[], push=''):
+def build_container(name, packages, base=get_l4t_base(), build_flags='', simulate=False, skip_tests=[], test_only=[], push='', no_github_api=False):
     """
     Multi-stage container build that chains together selected packages into one container image.
     For example, `['pytorch', 'tensorflow']` would build a container that had both pytorch and tensorflow in it.
@@ -35,6 +35,7 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
       skip_tests (list[str]) -- list of tests to skip (or 'all' or 'intermediate')
       test_only (list[str]) -- only test these specified packages, skipping all other tests
       push (str) -- name of repository or user to push container to (no push if blank)
+      no_github_api (bool) -- if true, use custom Dockerfile with no `ADD https://api.github.com/repos/...` line.
       
     Returns: 
       The full name of the container image that was built (as a string)
@@ -102,7 +103,19 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
         
         if 'dockerfile' in pkg:
             cmd = f"{sudo_prefix()}docker build --network=host --tag {container_name}" + _NEWLINE_
-            cmd += f"--file {os.path.join(pkg['path'], pkg['dockerfile'])}" + _NEWLINE_
+            if no_github_api:
+                dockerfilepath = os.path.join(pkg['path'], pkg['dockerfile'])
+                with open(dockerfilepath, 'r') as fp:
+                    data = fp.read()
+                    if 'ADD https://api.github.com' in data:
+                        dockerfilepath_minus_github_api = os.path.join(pkg['path'], pkg['dockerfile'] + '.minus-github-api')
+                        os.system(f"cp {dockerfilepath} {dockerfilepath_minus_github_api}")
+                        os.system(f"sed 's|^ADD https://api.github.com|#[minus-github-api]ADD https://api.github.com|' -i {dockerfilepath_minus_github_api}")
+                        cmd += f"--file {os.path.join(pkg['path'], pkg['dockerfile'] + '.minus-github-api')}" + _NEWLINE_
+                    else:
+                        cmd += f"--file {os.path.join(pkg['path'], pkg['dockerfile'])}" + _NEWLINE_
+            else:
+                cmd += f"--file {os.path.join(pkg['path'], pkg['dockerfile'])}" + _NEWLINE_
             cmd += f"--build-arg BASE_IMAGE={base}" + _NEWLINE_
             
             if 'build_args' in pkg:
