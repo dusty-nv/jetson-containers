@@ -1,6 +1,6 @@
 #---
 # name: sam
-# group: sam
+# group: vit
 # depends: [opencv, python, pytorch, torchvision, numpy, onnxruntime, jupyterlab]
 # requires: '>=34.1.0'
 # docs: docs.md
