@@ -1,7 +1,7 @@
 #---
 # name: tam
 # group: vit
-# depends: [sam]
+# depends: [sam, pytorch:2.0_rebuilt]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---
@@ -18,8 +18,6 @@ RUN git clone https://github.com/gaomingqi/Track-Anything.git && \
     sed 's|^opencv-python||g' -i requirements.txt && \
     pip3 install -r requirements.txt 
 
-RUN mim install mmcv
-
 RUN LD_LIBRARY_PATH=/usr/local/lib/python3.8/dist-packages/opencv_python.libs/:$LD_LIBRARY_PATH
 
 RUN cd /opt/Track-Anything && \
@@ -28,4 +26,18 @@ RUN cd /opt/Track-Anything && \
 # Dependencies and Installation
 #RUN git clone https://github.com/MCG-NKU/E2FGVI.git
 
-# CMD export LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libgomp.so.1 && cd /opt/Track-Anything && python3 app.py
+RUN pip3 install  opencv-python==4.5.4.60
+
+ENV LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libgomp.so.1
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/python3.8/dist-packages/opencv_python.libs/
+
+RUN python3 -c 'import torch; print(f"PyTorch version: {torch.__version__}"); print(f"CUDA available:  {torch.cuda.is_available()}"); print(f"cuDNN version:   {torch.backends.cudnn.version()}"); print(f"torch.distributed:   {torch.distributed.is_available()}"); print(torch.__config__.show());'
+
+ENV CPP_EXTENSION_PY_FILE=/usr/local/lib/python3.8/dist-packages/torch/utils/cpp_extension.py
+RUN sed "s|('Ampere', '8.0;8.6+PTX'),|('Ampere', '8.0;8.6+PTX'),('Ampere+Tegra', '8.7'),|" -i ${CPP_EXTENSION_PY_FILE}
+RUN sed "s|'8.6', '8.9'|'8.6', '8.7', '8.9'|" -i ${CPP_EXTENSION_PY_FILE}
+RUN sed -n 1729,1746p ${CPP_EXTENSION_PY_FILE}
+
+RUN mim install mmcv
+
+CMD cd /opt/Track-Anything && python3 app.py
