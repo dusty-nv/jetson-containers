@@ -23,6 +23,10 @@ def pytorch(version, whl, url, requires, default=False):
     
     return pkg
     
+extra_pkg = package.copy()
+extra_pkg['name'] = 'pytorch:2.0_use_distributed'
+extra_pkg['dockerfile'] = 'Dockerfile.2.0_use_distributed'
+extra_pkg['depends'] = ['python', 'numpy', 'onnx']
     
 package = [
     # JetPack 5
@@ -35,5 +39,6 @@ package = [
     # JetPack 4
     #pytorch('1.11', 'torch-1.11.0a0+17540c5-cp36-cp36m-linux_aarch64.whl', 'https://developer.download.nvidia.com/compute/redist/jp/v461/pytorch/torch-1.11.0a0+17540c5+nv22.01-cp36-cp36m-linux_aarch64.whl', '==32.*'),  # (built without LAPACK support)
     pytorch('1.10', 'torch-1.10.0-cp36-cp36m-linux_aarch64.whl', 'https://nvidia.box.com/shared/static/fjtbno0vpo676a25cgvuqc1wty0fkkg6.whl', '==32.*', default=True),
-    pytorch('1.9', 'torch-1.9.0-cp36-cp36m-linux_aarch64.whl', 'https://nvidia.box.com/shared/static/h1z9sw4bb1ybi0rm3tu8qdj8hs05ljbm.whl', '==32.*')
+    pytorch('1.9', 'torch-1.9.0-cp36-cp36m-linux_aarch64.whl', 'https://nvidia.box.com/shared/static/h1z9sw4bb1ybi0rm3tu8qdj8hs05ljbm.whl', '==32.*'),
+    extra_pkg
 ]
