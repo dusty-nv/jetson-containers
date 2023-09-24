@@ -36,7 +36,7 @@ RUN mkdir faiss/build && \
     cmake \
      -DFAISS_ENABLE_GPU=ON \
 	-DFAISS_ENABLE_PYTHON=ON \
-	-DFAISS_ENABLE_RAFT=ON \
+	-DFAISS_ENABLE_RAFT=OFF \
 	-DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES} \
 	../ && \
     make -j$(nproc) faiss && \

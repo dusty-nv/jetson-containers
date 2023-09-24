@@ -92,8 +92,8 @@ for i in range(0, args.search_queries, args.search_batch):
     search_rate = args.search_batch / search_time
     avg_search_time += search_time * avg_factor
     avg_search_rate += search_rate * avg_factor
-    if i % 32 == 0:
-        print(f"search ({args.search_batch}, {args.dim}) vectors:  {search_time*1000:.2f} ms,  {search_rate:.1f} vectors/sec,  {search_rate*vector_size:.1f} MB/s")
+    #if i % 32 == 0:
+    print(f"search ({args.search_batch}, {args.dim}) vectors:  {search_time*1000:.2f} ms,  {search_rate:.1f} vectors/sec,  {search_rate*vector_size:.1f} MB/s")
     
 def print_search_stats():
     print(f"{args.index} search size:      ({args.search_batch}, {args.dim})")
