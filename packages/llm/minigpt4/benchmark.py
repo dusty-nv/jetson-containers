@@ -16,7 +16,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('model_path', help='Path to model file')
 parser.add_argument('llm_model_path', help='Path to llm model file')
 
-parser.add_argument('-p', '--prompt', nargs='*')
+parser.add_argument('-p', '--prompt', action='append')
 parser.add_argument('-i', '--image', default='/data/images/hoover.jpg', help="Path to the image to test")
 parser.add_argument('-r', '--runs', type=int, default=2, help="Number of inferencing runs to do (for timing)")
 parser.add_argument('-w', '--warmup', type=int, default=1, help='the number of warmup iterations')

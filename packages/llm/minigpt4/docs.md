@@ -19,7 +19,7 @@ Then navigate your browser to `http://HOSTNAME:7860`
   'python3 benchmark.py \
     $(huggingface-downloader --type=dataset maknee/minigpt4-13b-ggml/minigpt4-13B-f16.bin) \
     $(huggingface-downloader --type=dataset maknee/ggml-vicuna-v0-quantized/ggml-vicuna-13B-v0-q5_k.bin) \
-    --prompt "What does the sign say?" "How far is the exit?" "What would happen next?" \
+    --prompt "What does the sign say?" --prompt "How far is the exit?" --prompt "What would happen next?" \
     --image /data/images/hoover.jpg \
     --run 3 \
     --save /data/minigpt4.csv'
