@@ -1,0 +1,143 @@
+[
+  {
+    "text": "Once upon a time,",
+    "tokens": [
+      1,
+      9038,
+      2501,
+      263,
+      931,
+      29892
+    ],
+    "num_tokens": 6
+  },
+  {
+    "text": "A great place to live is",
+    "tokens": [
+      1,
+      319,
+      2107,
+      2058,
+      304,
+      5735,
+      338
+    ],
+    "num_tokens": 7
+  },
+  {
+    "text": "In a world where dreams are shared,",
+    "tokens": [
+      1,
+      512,
+      263,
+      3186,
+      988,
+      12561,
+      29879,
+      526,
+      7258,
+      29892
+    ],
+    "num_tokens": 10
+  },
+  {
+    "text": "The weather forecast today is",
+    "tokens": [
+      1,
+      450,
+      14826,
+      29821,
+      579,
+      9826,
+      338
+    ],
+    "num_tokens": 7
+  },
+  {
+    "text": "Large language models are",
+    "tokens": [
+      1,
+      8218,
+      479,
+      4086,
+      4733,
+      526
+    ],
+    "num_tokens": 6
+  },
+  {
+    "text": "Space exploration is exciting",
+    "tokens": [
+      1,
+      14121,
+      3902,
+      12418,
+      338,
+      5566,
+      11407
+    ],
+    "num_tokens": 7
+  },
+  {
+    "text": "The history of the Hoover Dam is",
+    "tokens": [
+      1,
+      450,
+      4955,
+      310,
+      278,
+      8335,
+      957,
+      9865,
+      338
+    ],
+    "num_tokens": 9
+  },
+  {
+    "text": "San Fransisco is a city in",
+    "tokens": [
+      1,
+      3087,
+      4693,
+      550,
+      275,
+      1111,
+      338,
+      263,
+      4272,
+      297
+    ],
+    "num_tokens": 10
+  },
+  {
+    "text": "To train for running a marathon,",
+    "tokens": [
+      1,
+      1763,
+      7945,
+      363,
+      2734,
+      263,
+      1766,
+      25206,
+      29892
+    ],
+    "num_tokens": 9
+  },
+  {
+    "text": "A recipe for making tabouli is",
+    "tokens": [
+      1,
+      319,
+      9522,
+      412,
+      363,
+      3907,
+      4434,
+      283,
+      492,
+      338
+    ],
+    "num_tokens": 10
+  }
+]

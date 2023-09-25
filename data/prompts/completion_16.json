@@ -1,0 +1,222 @@
+[
+  {
+    "text": "Once upon a time, there was a little girl who loved to read.",
+    "tokens": [
+      1,
+      9038,
+      2501,
+      263,
+      931,
+      29892,
+      727,
+      471,
+      263,
+      2217,
+      7826,
+      1058,
+      18012,
+      304,
+      1303,
+      29889
+    ],
+    "num_tokens": 16
+  },
+  {
+    "text": "A great place to live is a great place to work.\nWe are",
+    "tokens": [
+      1,
+      319,
+      2107,
+      2058,
+      304,
+      5735,
+      338,
+      263,
+      2107,
+      2058,
+      304,
+      664,
+      29889,
+      13,
+      4806,
+      526
+    ],
+    "num_tokens": 16
+  },
+  {
+    "text": "In a world where dreams are shared, a young girl named Yume",
+    "tokens": [
+      1,
+      512,
+      263,
+      3186,
+      988,
+      12561,
+      29879,
+      526,
+      7258,
+      29892,
+      263,
+      4123,
+      7826,
+      4257,
+      612,
+      2017
+    ],
+    "num_tokens": 16
+  },
+  {
+    "text": "The weather forecast today is for a high of 100 degrees",
+    "tokens": [
+      1,
+      450,
+      14826,
+      29821,
+      579,
+      9826,
+      338,
+      363,
+      263,
+      1880,
+      310,
+      29871,
+      29896,
+      29900,
+      29900,
+      14496
+    ],
+    "num_tokens": 16
+  },
+  {
+    "text": "Large language models are a hot topic in the AI community. They",
+    "tokens": [
+      1,
+      8218,
+      479,
+      4086,
+      4733,
+      526,
+      263,
+      7375,
+      11261,
+      297,
+      278,
+      319,
+      29902,
+      7881,
+      29889,
+      2688
+    ],
+    "num_tokens": 16
+  },
+  {
+    "text": "Space exploration is exciting, but it\u2019s also dangerous. The",
+    "tokens": [
+      1,
+      14121,
+      3902,
+      12418,
+      338,
+      5566,
+      11407,
+      29892,
+      541,
+      372,
+      30010,
+      29879,
+      884,
+      18215,
+      29889,
+      450
+    ],
+    "num_tokens": 16
+  },
+  {
+    "text": "The history of the Hoover Dam is a story of the American spirit.",
+    "tokens": [
+      1,
+      450,
+      4955,
+      310,
+      278,
+      8335,
+      957,
+      9865,
+      338,
+      263,
+      5828,
+      310,
+      278,
+      3082,
+      8548,
+      29889
+    ],
+    "num_tokens": 16
+  },
+  {
+    "text": "San Fransisco is a city in California, United States. It",
+    "tokens": [
+      1,
+      3087,
+      4693,
+      550,
+      275,
+      1111,
+      338,
+      263,
+      4272,
+      297,
+      8046,
+      29892,
+      3303,
+      3900,
+      29889,
+      739
+    ],
+    "num_tokens": 16
+  },
+  {
+    "text": "To train for running a marathon, you need to be able to run",
+    "tokens": [
+      1,
+      1763,
+      7945,
+      363,
+      2734,
+      263,
+      1766,
+      25206,
+      29892,
+      366,
+      817,
+      304,
+      367,
+      2221,
+      304,
+      1065
+    ],
+    "num_tokens": 16
+  },
+  {
+    "text": "A recipe for making tabouli is provided.\nTabouli",
+    "tokens": [
+      1,
+      319,
+      9522,
+      412,
+      363,
+      3907,
+      4434,
+      283,
+      492,
+      338,
+      4944,
+      29889,
+      13,
+      8863,
+      283,
+      492
+    ],
+    "num_tokens": 16
+  }
+]
