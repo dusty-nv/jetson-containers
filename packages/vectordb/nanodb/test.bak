@@ -1,0 +1,172 @@
+#!/usr/bin/env python3
+import os
+import math
+import time
+import pprint
+import argparse
+
+import cupy as cp
+import numpy as np
+import ctypes as C
+
+from cuda.cudart import cudaGetDeviceProperties, cudaMallocManaged, cudaMemAttachGlobal, cudaDeviceSynchronize
+
+from pylibraft.distance import pairwise_distance
+
+
+class cudaVectorIndex:
+    def __init__(self, dim, reserve=1024, dtype=np.float32):
+        self.shape = (0, dim)
+        self.dtype = dtype
+        self.reserved = reserve
+        self.reserved_size = dim * reserve * dtype.itemsize
+        
+        print(f"-- allocating {self.reserved_size/(1024*1024):.1f} MB for CUDA vector store")
+        
+        if dtype == np.float32:
+            ctype = C.c_float
+        elif dtype == np.float64:
+            ctype = C.c_double
+        elif dtype == np.float16:
+            ctype = C.c_ushort
+        else:
+            raise RuntimeError(f"unsupported dtype:  {dtype}")
+            
+        #ctype = np.ctypeslib.as_ctypes_type(dtype)
+        #print('types', dtype, ctype)
+            
+        _, self.data = cudaMallocManaged(self.reserved_size, cudaMemAttachGlobal)
+        self.array = np.ctypeslib.as_array(C.cast(self.data, C.POINTER(ctype)), shape=(reserve, dim))  # C.c_float
+        
+        _, self.search_data = cudaMallocManaged(reserve * reserve * 4, cudaMemAttachGlobal)
+        self.search_array = np.ctypeslib.as_array(C.cast(self.search_data, C.POINTER(ctype)), shape=(reserve, reserve))
+
+        if dtype == np.float16:
+            self.array.dtype = np.float16
+            self.search_array.dtype = np.float16
+            print('cudaVectorIndex dtypes', self.array.dtype, self.search_array.dtype)
+            
+        #self.__array_interface__ = self.array.__array_interface__
+
+    def add(self, vector):
+        self.array[self.shape[0]] = vector
+        self.shape = (self.shape[0] + 1, self.shape[1])
+        
+    def search(self, vector, k=1, metric='euclidean'):
+        """
+        Returns indexes of the k closest vectors using the given distance metric.
+        Todo: return_distances=True
+        """
+        # 
+        vector = cp.asarray(vector)
+        
+        if len(vector.shape) == 1:
+            vector.shape = (1, vector.shape[0])
+            print('new input shape', vector.shape)
+            
+        #num_vectors = vector.shape[-2] if len(vector.shape) > 1 else 1
+        
+        print(vector)
+        print(vector.shape)
+        #print(num_vectors)
+        print(self.shape)
+        source_view = cudaArrayView(self.data, self.shape, self.dtype)
+        print(source_view.__cuda_array_interface__)
+        
+        # https://github.com/rapidsai/raft/blob/4f0a2d2d6e30eea0c036ca3b531e03e44e760fbe/python/pylibraft/pylibraft/distance/pairwise_distance.pyx#L93
+        time_dist_begin = time.perf_counter()
+        pairwise_distance(
+            vector, 
+            source_view,
+            cudaArrayView(self.search_data, (vector.shape[0], self.shape[0]), self.dtype),
+            metric=metric
+        )
+        
+        cudaDeviceSynchronize()
+        time_dist_end = time.perf_counter()
+
+        if k == 1:
+            topk = np.argmin(self.search_array, axis=1)
+
+        time_sort_end = time.perf_counter()
+        
+        print(f'dist: {(time_dist_end - time_dist_begin) * 1000:.3f} ms')
+        print(f'sort: {(time_sort_end - time_dist_end) * 1000:.3f} ms')
+        
+        print(self.search_array)
+        
+        return topk
+    
+class cudaArrayView:
+    def __init__(self, data, shape, dtype=np.float32):
+        if dtype == np.float32:
+            typestr = 'f4'
+        elif dtype == np.float64:
+            typestr = 'f8'
+        elif dtype == np.float16:
+            typestr = 'f2'
+        else:
+            raise RuntimeError(f"unsupported dtype:  {dtype}")
+            
+        self.__cuda_array_interface__ = {
+            'data': (data, False),  # R/W
+            'shape': shape,
+            'typestr': typestr,
+            'version': 3,
+        }
+        
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+
+    parser.add_argument('-d', '--dim', type=int, default=5120, help='the dimensionality of the embedding vectors') 
+    parser.add_argument('-n', '--num-vectors', type=int, default=512, help='the number of vectors to add to the index')
+    parser.add_argument('--dtype', type=str, default='float32', help='datatype of the vectors')
+    parser.add_argument('--metric', type=str, default='euclidean', help='the distance metric to use during search')
+    
+    parser.add_argument('--seed', type=int, default=1234, help='change the random seed used')
+    parser.add_argument('--num-queries', type=int, default=1)
+    
+    args = parser.parse_args()
+    print(args)
+
+    print('-- generating random test vectors')
+    
+    arr = np.array([[0.5, 0.2, 0.7, 0.1], [0.2, 0.05, 0.6, 0.1]])
+    print(np.argmin(arr, axis=1))
+    
+    np.random.seed(args.seed)
+    dtype = np.dtype(args.dtype)
+    
+    _, device_props = cudaGetDeviceProperties(0)
+    print(f"-- cuda device:  {device_props.name}")
+
+    index = cudaVectorIndex(args.dim, args.num_vectors, dtype=dtype)
+    
+    xb = np.random.random((args.num_vectors, args.dim)).astype(args.dtype)
+    #xb[:, 0] += np.arange(args.num_vectors) / 1000.
+    xq = np.random.random((args.num_queries, 1, args.dim)).astype(args.dtype)
+    #xq[:, 0] += np.arange(args.num_queries) / 1000.
+    
+    for n in range(args.num_vectors):
+        index.add(xb[n])
+
+    print(f"-- added {index.shape} vectors")
+    
+    for i in range(3):
+        search = index.search(xb, metric=args.metric)
+        print(search)
+
+    """
+    for m in range(args.num_queries):
+        search = index.search(xq[m], metric=args.metric)
+        #print(search.shape)
+        #print(search)
+        
+    for m in range(args.num_vectors):
+        search = index.search(xb[m], metric=args.metric)
+        assert(search[0] == m)
+        #print(search)
+        #print(search.shape)
+        #
+    """
