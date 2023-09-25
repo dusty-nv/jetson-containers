@@ -2,11 +2,14 @@
 import os
 import math
 import ctypes as C
+import numpy as np
+    
+from cuda.cudart import cudaMallocManaged, cudaMemAttachGlobal
 
 _lib = C.CDLL('/opt/faiss_lite/build/libfaiss_lite.so')
 
 # https://github.com/facebookresearch/faiss/blob/main/faiss/MetricType.h
-METRICS = {
+DistanceMetrics = {
     'inner_product': 0,
     'l2': 1,
     'l1': 2,
@@ -16,7 +19,6 @@ METRICS = {
     'jensenshannon': 22,
     'jaccard': 23,
 }
-
 
 def _cudaKNN(name='cudaKNN'):
     func = _lib[name]
@@ -70,12 +72,11 @@ def dtype_to_ctype(dtype):
         return C.c_longlong
     else:
         raise RuntimeError(f"unsupported dtype:  {dtype}")
-        
-def cudaAlloc(shape, dtype):
+  
+def cudaAllocMapped(shape, dtype):
     """
     Allocate cudaMallocManaged() memory and map it to a numpy array
     """
-    ctype = dtype_to_ctype(dtype)
     dsize = np.dtype(dtype).itemsize
 
     if isinstance(shape, int):
@@ -87,20 +88,28 @@ def cudaAlloc(shape, dtype):
     print(f"-- allocating {size} bytes ({size/(1024*1024):.2f} MB) with cudaMallocManaged()")
     
     _, ptr = cudaMallocManaged(size, cudaMemAttachGlobal)
-    array = np.ctypeslib.as_array(C.cast(ptr, C.POINTER(ctype)), shape=shape)
+
+    return cudaToNumpy(ptr, shape, dtype), ptr
+        
+def cudaToNumpy(ptr, shape, dtype):
+    """
+    Map a shared CUDA pointer into np.ndarray with the given shape and datatype.
+    The pointer should have been allocated with cudaMallocManaged() or using cudaHostAllocMapped,
+    and the user is responsible for any CPU/GPU synchronization (i.e. by using cudaStreams)
+    """
+    array = np.ctypeslib.as_array(C.cast(ptr, C.POINTER(dtype_to_ctype(dtype))), shape=shape)
     
     if dtype == np.float16:
         array.dtype = np.float16
-
-    return array, ptr
-        
-
+       
+    return array
+    
+    
 if __name__ == '__main__':
     import time
     import argparse
-    import numpy as np
     
-    from cuda.cudart import cudaGetDeviceProperties, cudaMallocManaged, cudaMemAttachGlobal, cudaDeviceSynchronize
+    from cuda.cudart import cudaGetDeviceProperties, cudaDeviceSynchronize
     
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
@@ -137,11 +146,11 @@ if __name__ == '__main__':
     xq = np.random.random((args.num_queries, 1, args.dim)).astype(dtype)
     #xq[:, 0] += np.arange(args.num_queries) / 1000.
 
-    vectors, vector_ptr = cudaAlloc((args.num_vectors, args.dim), dtype)
-    queries, query_ptr = cudaAlloc((args.num_queries, args.dim), dtype)
+    vectors, vector_ptr = cudaAllocMapped((args.num_vectors, args.dim), dtype)
+    queries, query_ptr = cudaAllocMapped((args.num_queries, args.dim), dtype)
   
-    distances, distance_ptr = cudaAlloc((args.num_queries, args.k), np.float32)
-    indices, index_ptr = cudaAlloc((args.num_queries, args.k), np.int64)
+    distances, distance_ptr = cudaAllocMapped((args.num_queries, args.k), np.float32)
+    indices, index_ptr = cudaAllocMapped((args.num_queries, args.k), np.int64)
 
     for n in range(args.num_vectors):
         vectors[n] = xb[n]
@@ -155,7 +164,7 @@ if __name__ == '__main__':
     vector_norms_ptr = None
     
     if args.metric == 'l2':
-        vector_norms, vector_norms_ptr = cudaAlloc(args.num_vectors, np.float32)
+        vector_norms, vector_norms_ptr = cudaAllocMapped(args.num_vectors, np.float32)
 
         result = cudaL2Norm(
             C.cast(vector_ptr, C.c_void_p),
@@ -196,7 +205,7 @@ if __name__ == '__main__':
             1,
             args.dim,
             args.k,
-            METRICS[args.metric],
+            DistanceMetrics[args.metric],
             C.cast(vector_norms_ptr, C.POINTER(C.c_float)),
             C.cast(distance_ptr, C.POINTER(C.c_float)),
             C.cast(index_ptr, C.POINTER(C.c_longlong)),
@@ -220,7 +229,7 @@ if __name__ == '__main__':
             args.num_queries,
             args.dim,
             args.k,
-            METRICS[args.metric],
+            DistanceMetrics[args.metric],
             C.cast(vector_norms_ptr, C.POINTER(C.c_float)),
             C.cast(distance_ptr, C.POINTER(C.c_float)),
             C.cast(index_ptr, C.POINTER(C.c_longlong)),

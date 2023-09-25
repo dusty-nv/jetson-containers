@@ -29,7 +29,8 @@ RUN mkdir faiss_lite/build && \
 	../ && \
     make
     
-COPY faiss_lite.py faiss_lite/faiss_lite/
+
+COPY faiss_lite.py faiss_lite/faiss_lite.py
 
 ENV PYTHONPATH=${PYTHONPATH}:/opt/faiss_lite
     
