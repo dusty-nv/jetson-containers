@@ -23,8 +23,8 @@ RUN apt-get update && \
     && apt-get clean
     
 # workaround for 'Could NOT find Python3 (missing: Python3_NumPy_INCLUDE_DIRS Development'
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \
-    apt purge -y python3.9 libpython3.9* || echo "python3.9 not found, skipping removal" && \
+# update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \
+RUN apt purge -y python3.9 libpython3.9* || echo "python3.9 not found, skipping removal" && \
     ls -ll /usr/bin/python*
 
 ADD https://api.github.com/repos/${FAISS_REPO}/git/refs/heads/${FAISS_BRANCH} /tmp/faiss_version.json
@@ -38,6 +38,7 @@ RUN mkdir faiss/build && \
 	-DFAISS_ENABLE_PYTHON=ON \
 	-DFAISS_ENABLE_RAFT=OFF \
 	-DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES} \
+	-DPYTHON_EXECUTABLE=/usr/bin/python3 \
 	../ && \
     make -j$(nproc) faiss && \
     make install
