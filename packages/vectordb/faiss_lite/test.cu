@@ -19,7 +19,7 @@ bool cudaKNN(
 	float* vector_norms,
 	float* out_distances,
 	int64_t* out_indices,
-	cudaStream_t stream=0);
+	cudaStream_t* stream=NULL);
 
 extern "C" 
 bool cudaL2Norm(
@@ -27,7 +27,7 @@ bool cudaL2Norm(
 	int n, int d,
 	float* output, 
 	bool squared=true, 
-	cudaStream_t stream=0 );
+	cudaStream_t* stream=NULL );
 	
 	
 #define CUDA(x)				cudaCheckError((x), #x, __FILE__, __LINE__)
@@ -93,16 +93,13 @@ T* cudaAlloc(int elements)
 }
 
 template<typename T>
-double test(int N, int M, int D, int K, faiss::MetricType metric=faiss::METRIC_L2, int runs=10)
+double test(int N, int M, int D, int K, faiss::MetricType metric=faiss::METRIC_L2, int runs=10, cudaStream_t stream=0)
 {
 	T* vectors = cudaAlloc<T>(N * D);
 	T* queries = cudaAlloc<T>(M * D);
 	
 	float* distances = cudaAlloc<float>(M * K);
 	int64_t* indices = cudaAlloc<int64_t>(M * K);
-	
-	cudaStream_t stream = NULL;
-	CUDA(cudaStreamCreateWithFlags(&stream, cudaStreamNonBlocking));  // https://docs.nvidia.com/cuda/cuda-runtime-api/stream-sync-behavior.html#stream-sync-behavior
 	
 	float* vectorNorms = NULL;
 	
@@ -117,7 +114,7 @@ double test(int N, int M, int D, int K, faiss::MetricType metric=faiss::METRIC_L
 		const bool result = cudaL2Norm(
 			vectors, sizeof(T),
 			N, D, vectorNorms,
-			true, stream);
+			true, &stream);
 			
 		clock_gettime(CLOCK_REALTIME, &time_enqueue);
 		CUDA(cudaStreamSynchronize(stream));
@@ -148,7 +145,7 @@ double test(int N, int M, int D, int K, faiss::MetricType metric=faiss::METRIC_L
 			vectorNorms,
 			distances,
 			indices,
-			stream
+			&stream
 		);
 
 		clock_gettime(CLOCK_REALTIME, &time_enqueue);
@@ -166,9 +163,7 @@ double test(int N, int M, int D, int K, faiss::MetricType metric=faiss::METRIC_L
 		
 		printf("cudaKNN   enqueue:  %.3f ms   process:  %.3f ms\n", enqueue_time, process_time);
 	}
-	
-	CUDA(cudaStreamDestroy(stream));
-	
+
 	CUDA(cudaFree(vectors));
 	CUDA(cudaFree(queries));
 	CUDA(cudaFree(distances));
@@ -180,13 +175,13 @@ double test(int N, int M, int D, int K, faiss::MetricType metric=faiss::METRIC_L
 	return time_avg / double(runs-1);
 }
 
-void benchmark(int N, int M, int D, int K, double results[4])
+void benchmark(int N, int M, int D, int K, double results[4], int runs=10, cudaStream_t stream=0)
 {
-	results[0] = test<float>(N, M, D, K, faiss::METRIC_L2);
-	results[1] = test<float>(N, M, D, K, faiss::METRIC_INNER_PRODUCT);
+	results[0] = test<float>(N, M, D, K, faiss::METRIC_L2, runs, stream);
+	results[1] = test<float>(N, M, D, K, faiss::METRIC_INNER_PRODUCT, runs, stream);
 	
-	results[2] = test<half>(N, M, D, K, faiss::METRIC_L2);
-	results[3] = test<half>(N, M, D, K, faiss::METRIC_INNER_PRODUCT);
+	results[2] = test<half>(N, M, D, K, faiss::METRIC_L2, runs, stream);
+	results[3] = test<half>(N, M, D, K, faiss::METRIC_INNER_PRODUCT, runs, stream);
 }
 
 int main( int argc, char* argv[] )
@@ -196,13 +191,16 @@ int main( int argc, char* argv[] )
 	int M[] = {1};
 	int K[] = {4};
 
+	cudaStream_t stream = NULL;
+	CUDA(cudaStreamCreateWithFlags(&stream, cudaStreamNonBlocking));  // https://docs.nvidia.com/cuda/cuda-runtime-api/stream-sync-behavior.html#stream-sync-behavior
+	
 	double results[3][2][1][1][4];
 	
 	for( int d=0; d < 3; d++ )
 		for( int n=0; n < 2; n++ )
 			for( int m=0; m < 1; m++ )
 				for( int k=0; k < 1; k++ )
-					benchmark(N[n], M[m], D[d], K[k], results[d][n][m][k]);
+					benchmark(N[n], M[m], D[d], K[k], results[d][n][m][k], 10, stream);
 	
 	for( int d=0; d < 3; d++ )
 	{
@@ -221,4 +219,6 @@ int main( int argc, char* argv[] )
 			}
 		}
 	}
+	
+	CUDA(cudaStreamDestroy(stream));
 }

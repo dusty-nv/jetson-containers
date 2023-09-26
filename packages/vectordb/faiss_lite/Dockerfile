@@ -28,9 +28,9 @@ RUN mkdir faiss_lite/build && \
 	-DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES} \
 	../ && \
     make
-    
 
-COPY faiss_lite.py faiss_lite/faiss_lite.py
+COPY faiss_lite.py faiss_lite/
+COPY benchmark.py faiss_lite/
 
 ENV PYTHONPATH=${PYTHONPATH}:/opt/faiss_lite
     

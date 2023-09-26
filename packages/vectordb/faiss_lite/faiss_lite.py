@@ -1,10 +1,20 @@
 #!/usr/bin/env python3
+# exposes cudaKNN() and cudaL2Norm() functions from fiass_lite.cu to Python via ctypes
+# see benchmark.py for example usage from Python
 import os
 import math
 import ctypes as C
 import numpy as np
     
-from cuda.cudart import cudaMallocManaged, cudaMemAttachGlobal
+from cuda import cuda, nvrtc
+
+from cuda.cudart import (
+    cudaMallocManaged, 
+    cudaMemAttachGlobal, 
+    cudaGetLastError,
+    cudaGetErrorString,
+    cudaError_t
+)
 
 _lib = C.CDLL('/opt/faiss_lite/build/libfaiss_lite.so')
 
@@ -87,8 +97,9 @@ def cudaAllocMapped(shape, dtype):
     
     print(f"-- allocating {size} bytes ({size/(1024*1024):.2f} MB) with cudaMallocManaged()")
     
-    _, ptr = cudaMallocManaged(size, cudaMemAttachGlobal)
-
+    err, ptr = cudaMallocManaged(size, cudaMemAttachGlobal)
+    assert_cuda(err)
+    
     return cudaToNumpy(ptr, shape, dtype), ptr
         
 def cudaToNumpy(ptr, shape, dtype):
@@ -103,154 +114,23 @@ def cudaToNumpy(ptr, shape, dtype):
         array.dtype = np.float16
        
     return array
-    
-    
-if __name__ == '__main__':
-    import time
-    import argparse
-    
-    from cuda.cudart import cudaGetDeviceProperties, cudaDeviceSynchronize
-    
-    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-
-    parser.add_argument('-d', '--dim', type=int, default=5120, help='the dimensionality of the embedding vectors') 
-    parser.add_argument('-n', '--num-vectors', type=int, default=64, help='the number of vectors to add to the index')
-    parser.add_argument('-k', type=int, default=4, help='the number of nearest-neighbors to find')
-    parser.add_argument('--dtype', type=str, default='float32', choices=['float32', 'float16'], help='datatype of the vectors')
-    parser.add_argument('--metric', type=str, default='l2', help='the distance metric to use during search')
-    parser.add_argument('--num-queries', type=int, default=1) 
-    
-    parser.add_argument('--seed', type=int, default=1234, help='change the random seed used')
-    parser.add_argument('--runs', type=int, default=25)
-    
-    args = parser.parse_args()
-    print(args)
-    
-    np.random.seed(args.seed)
-    
-    if args.dtype == 'float32':
-        dtype = np.float32
-    elif args.dtype.lower() == 'float16':
-        dtype = np.float16
+ 
+def assert_cuda(err):
+    """
+    Throw a runtime exception if a CUDA error occurred
+    """
+    if isinstance(err, tuple) and len(err) == 1:
+        err = err[0]
+        
+    if isinstance(err, cuda.CUresult):
+        if err != cuda.CUresult.CUDA_SUCCESS:
+            raise RuntimeError(f"CUDA Error {err} -- {cudaGetErrorString(err)[1]}")
+    elif isinstance(err, cudaError_t):
+        if err != cudaError_t.cudaSuccess:
+            raise RuntimeError(f"CUDA Error {err} -- {cudaGetErrorString(err)[1]}")
+    elif isinstance(err, nvrtc.nvrtcResult):
+        if err != nvrtc.nvrtcResult.NVRTC_SUCCESS:
+            raise RuntimeError(f"nvrtc Error {err}")
     else:
-        raise ValueError(f"unsupported dtype:  {args.dtype}")
-     
-    dsize = np.dtype(dtype).itemsize     
-    print("-- using datatype:", dtype, dsize)
-    
-    _, device_props = cudaGetDeviceProperties(0)
-    print(f"-- cuda device:  {device_props.name}")
-    
-    xb = np.random.random((args.num_vectors, args.dim)).astype(dtype)
-    #xb[:, 0] += np.arange(args.num_vectors) / 1000.
-    xq = np.random.random((args.num_queries, 1, args.dim)).astype(dtype)
-    #xq[:, 0] += np.arange(args.num_queries) / 1000.
-
-    vectors, vector_ptr = cudaAllocMapped((args.num_vectors, args.dim), dtype)
-    queries, query_ptr = cudaAllocMapped((args.num_queries, args.dim), dtype)
-  
-    distances, distance_ptr = cudaAllocMapped((args.num_queries, args.k), np.float32)
-    indices, index_ptr = cudaAllocMapped((args.num_queries, args.k), np.int64)
-
-    for n in range(args.num_vectors):
-        vectors[n] = xb[n]
-     
-    for n in range(args.num_queries):
-        queries[n] = xq[n]
-       
-    print('vectors', vectors, vectors.shape, vectors.dtype)
-    print('queries', queries, queries.shape, queries.dtype)
-    
-    vector_norms_ptr = None
-    
-    if args.metric == 'l2':
-        vector_norms, vector_norms_ptr = cudaAllocMapped(args.num_vectors, np.float32)
-
-        result = cudaL2Norm(
-            C.cast(vector_ptr, C.c_void_p),
-            dsize, args.num_vectors, args.dim,
-            C.cast(vector_norms_ptr, C.POINTER(C.c_float)),
-            True, None
-        )
-        
-        cudaDeviceSynchronize()
-        print('vector_norms', vector_norms, vector_norms.shape, vector_norms.dtype)
-
-        # check the time for single vectors
-        avg_l2_time = 0
-        
-        for n in range(args.num_vectors):
-            time_begin = time.perf_counter()
-            cudaL2Norm(
-                C.cast(vector_ptr+n*args.dim*dsize, C.c_void_p),
-                dsize, 1, args.dim,
-                C.cast(vector_norms_ptr+n*4, C.POINTER(C.c_float)),
-                True, None
-            )
-            cudaDeviceSynchronize()
-            time_elapsed = (time.perf_counter() - time_begin) * 1000
-            print(f"l2_norm time for (1,{args.dim}) vector:  {time_elapsed:.3f} ms")
-            if n > 0:
-                avg_l2_time += time_elapsed / (args.num_vectors-1)
-            
-    ctype = C.POINTER(dtype_to_ctype(dtype))
-      
-    # sanity check
-    for n in range(args.num_vectors):
-        result = cudaKNN(
-            C.cast(vector_ptr, C.c_void_p),
-            C.cast(vector_ptr+n*args.dim*dsize, C.c_void_p),
-            dsize,
-            args.num_vectors,
-            1,
-            args.dim,
-            args.k,
-            DistanceMetrics[args.metric],
-            C.cast(vector_norms_ptr, C.POINTER(C.c_float)),
-            C.cast(distance_ptr, C.POINTER(C.c_float)),
-            C.cast(index_ptr, C.POINTER(C.c_longlong)),
-            None
-        )
-        cudaDeviceSynchronize()
-        #print(f"n={n}  {indices[0]}  dist={distances[0]}")
-        assert(result)
-        assert(indices[0][0]==n)
-    
-    avg_time = 0
-    
-    for r in range(args.runs):
-        time_begin = time.perf_counter()
-
-        result = cudaKNN(
-            C.cast(vector_ptr, C.c_void_p),
-            C.cast(query_ptr, C.c_void_p),
-            dsize,
-            args.num_vectors,
-            args.num_queries,
-            args.dim,
-            args.k,
-            DistanceMetrics[args.metric],
-            C.cast(vector_norms_ptr, C.POINTER(C.c_float)),
-            C.cast(distance_ptr, C.POINTER(C.c_float)),
-            C.cast(index_ptr, C.POINTER(C.c_longlong)),
-            None
-        )
-        time_enqueue = (time.perf_counter() - time_begin) * 1000
-        assert(result)
-        
-        cudaDeviceSynchronize()
-        time_elapsed = (time.perf_counter() - time_begin) * 1000
-        
-        print(f"cudaKNN  enqueue:  {time_enqueue:.3f} ms   process:  {time_elapsed:.3f}")
-        
-        if r > 0:
-            avg_time += time_elapsed / (args.runs-1)
-    
-    print("")
-    print(f"N={args.num_vectors} M={args.num_queries} D={args.dim} K={args.k} metric={args.metric} dtype={args.dtype}\n")
-    print(f"average search time:   {avg_time:.3f} ms")
-    
-    if args.metric == 'l2':
-        print(f"average l2 norm time:  {avg_l2_time:.3f} ms")
-        
-    
+        raise RuntimeError(f"Unknown error type: {err}") 
+ 
