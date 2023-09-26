@@ -33,6 +33,8 @@ if not args.prompt:
         "What kind of environment is it in?",
         "Does it look like it's going to rain?",
     ]
+else:
+    args.prompt = [x[0] for x in args.prompt]
     
 print(args)
 
