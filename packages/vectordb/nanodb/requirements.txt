@@ -1,5 +1,7 @@
 websockets
 termcolor
 tabulate
+gradio
 flask
 tqdm
+git+https://github.com/openai/CLIP

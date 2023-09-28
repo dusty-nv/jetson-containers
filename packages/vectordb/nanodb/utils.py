@@ -18,14 +18,15 @@ def load_image(path):
     """
     Load an image from a local path or URL
     """
+    time_begin = time.perf_counter()
+    
     if path.startswith('http') or path.startswith('https'):
-        print(f'-- downloading {path}')
         response = requests.get(path)
         image = Image.open(BytesIO(response.content)).convert('RGB')
     else:
-        print(f'-- loading {path}')
         image = Image.open(path).convert('RGB')
-        
+    
+    print(f'-- loaded {path} in {(time.perf_counter()-time_begin)*1000:.0f} ms')
     return image
     
     
