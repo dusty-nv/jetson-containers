@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 import os
 import time
-import torch
 import PIL
+import torch
+import numpy as np
 
 from transformers import CLIPImageProcessor, CLIPVisionModel
 from .utils import AttrDict, load_image, download_model, print_table
@@ -14,22 +15,29 @@ class CLIPEmbedding():
     CLIP feature extractor and projector for generating image embeddings.
     """
     @staticmethod
-    def from_pretrained(model, use_cache=True, **kwargs):
+    def from_pretrained(model, dtype=np.float32, use_cache=True, **kwargs):
         global _clip_model_cache
         
         if use_cache and model in _clip_model_cache:
             return _clip_model_cache[model]
             
-        return CLIPModel(model, **kwargs)
+        return CLIPEmbedding(model, dtype=dtype, **kwargs)
     
-    def __init__(self, model="openai/clip-vit-large-patch14-336", **kwargs):
+    def __init__(self, model="openai/clip-vit-large-patch14-336", dtype=np.float32, **kwargs):
         self.stats = AttrDict()
         self.config = AttrDict()
         self.config.name = model
+        self.extensions = ('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')
         
         self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-        self.dtype = torch.float16
         
+        if dtype == np.float32:
+            self.dtype = torch.float32
+        elif dtype == np.float16:
+            self.dtype = torch.float16
+        else:
+            raise ValueError(f"unsupported datatype:  {self.dtype}")
+
         print(f'-- loading {model}')
         
         self.preprocessor = CLIPImageProcessor.from_pretrained(model, torch_dtype=self.dtype)#.to(self.device)
@@ -54,27 +62,39 @@ class CLIPEmbedding():
         print('mm_projector', self.mm_projector)
         
         print(f'-- {self.config.name} warmup')
-        self.embed_image(PIL.Image.new('RGB', (self.model.config.image_size, self.model.config.image_size), (255,255,255)))
+        self.config.input_shape = (self.model.config.image_size, self.model.config.image_size)
+        self.embed(PIL.Image.new('RGB', self.config.input_shape, (255,255,255)))
         print_table(self.config)
         
-    def embed_image(self, image):
+    def embed(self, image, crop=False, do_projection=False, return_tensors='pt', **kwargs):
+        """
+        TODO:  return 'pooled', 'hidden', 'projected' in a dict
+        """
         if isinstance(image, str):
             image = load_image(image)
 
+        if not crop:
+            image = image.resize(self.config.input_shape, PIL.Image.BICUBIC)
+            
         image_size = image.size
         
         time_begin_pre = time.perf_counter()
         
-        image = self.preprocessor(image, return_tensors='pt')['pixel_values']
+        image = self.preprocessor(image, do_center_crop=crop, do_resize=crop, return_tensors='pt')['pixel_values']  # 
         image = image.to(self.device, dtype=self.dtype)
         
         time_begin_enc = time.perf_counter()
         
         with torch.inference_mode():
-            image_forward_outs = self.model(image, output_hidden_states=True)
-            select_hidden_state = image_forward_outs.hidden_states[-2]
-            image_features = select_hidden_state[:, 1:].to(self.device, dtype=self.dtype)
-            image_features = self.mm_projector(image_features)
+            image_forward_outs = self.model(image, output_hidden_states=do_projection)   #.pooler_output  .last_hidden_state
+            
+            if do_projection:
+                image_features = self.mm_projector(
+                    image_forward_outs.hidden_states[-2][:, 1:].to(self.device, dtype=self.dtype)
+                )
+            else:
+                image_features = image_forward_outs.pooler_output.to(dtype=self.dtype)
+            self.config.output_shape = image_features.shape
             
         time_end_enc = time.perf_counter()
         
@@ -88,5 +108,10 @@ class CLIPEmbedding():
         #print('input: ', image.shape, image.dtype, image.device)
         #print('output:', image_features.shape, image_features.dtype, image_features.device)
         
-        return image_features.detach().cpu().numpy()  # .squeeze
+        if return_tensors == 'np':
+            return image_features.detach().cpu().numpy()  # .squeeze
+        elif return_tensors == 'pt':
+            return image_features
+        else:
+            raise ValueError(f"return_tensors should be 'np' or 'pt' (was '{return_tensors}')")
         

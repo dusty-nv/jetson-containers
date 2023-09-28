@@ -32,6 +32,73 @@ if args.scan:
     
 print(args)
 
+class NanoDB:
+    def __init__(self, path=None, model=None, reserve_size=1024, max_search_queries=1, dtype=np.float32, metric='cosine'):
+        self.path = path
+        self.dtype = dtype
+        self.reserve = reserve
+        
+        self.model = AutoEmbedding(dtype=dtype) if model is None else model
+        dim = self.model.embeddings['image'].config.output_shape[-1]
+        self.index = cudaVectorIndex(dim, reserve, max_search_queries, dtype=dtype, metric=metric)
+   
+    def search(self, query, k=4):
+        """
+        Queries can be text (str or list[str]), tokens (list[int], ndarray[int] or torch.Tensor[int])
+        or images (filename or list of filenames, PIL image or a list of PIL images)
+        """
+        embedding = self.model.embed(query)
+        indexes, distances = self.index.search(embedding, k=k)
+        return indices, distances
+        
+    def scan(self, path, max_embeddings=None, **kwargs):
+        if os.path.isfile(path):
+            return [load(path)]
+            
+        if max_embeddings is None:
+            max_embeddings = self.index.reserved - self.index.shape[0]
+            
+        entries = sorted([os.path.join(dp, f) for dp, dn, fn in os.walk(os.path.expanduser(path)) for f in fn])
+        files = []
+        
+        if len(entries) > max_embeddings:
+            entries = entries[:max_embeddings]
+        
+        for entry in entries:
+            if not os.path.isfile(entry):
+                continue
+
+            if os.path.splitext(entry)[1].lower() in self.model.extensions:
+                files.append(entry)
+         
+        embeddings = []
+        metadata = []
+        
+        for file in files:
+            embeddings.append(self.extract(file, **kwargs))
+            metadata.append(file)
+            
+        return embeddings, metadata
+        
+    def extract(self, path, **kwargs):
+        if os.path.isdir(path):
+            return scan(path)
+          
+        if not os.path.isfile(path):
+            raise IOError(f"file '{path}' doesn't exist")
+            
+        ext = os.path.splitext(path)[1].lower()
+        
+        for key, embedder in self.model.embeddings.items():
+            if hasattr(value, 'extensions') and ext in embedder.extensions:
+                print(f"-- generating embedding for {path} with {type(embedder)}")
+                embedding = embedder.embed(path, **kwargs)
+                if hasattr(embedder, 'stats'):
+                    print_table(embedder.stats)
+                return embedding
+                
+        return RuntimeError(f"could not find embedding model for {path}")
+        
 np.random.seed(args.seed)
 dtype = np.dtype(args.dtype)
 

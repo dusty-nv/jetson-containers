@@ -34,6 +34,9 @@ def load_prompts(prompts):
     Load prompts from a list of txt or json files
     (or if these are strings, just return the strings)
     """
+    if isinstance(prompts, str):
+        prompts = [prompts]
+        
     prompt_list = []
     
     for prompt in prompts:
@@ -45,7 +48,7 @@ def load_prompts(prompts):
             for json_prompt in json_prompts:
                 if isinstance(json_prompt, dict):
                     prompt_list.append(json_prompt['text'])
-                elif ifinstance(json_prompt, str):
+                elif isinstance(json_prompt, str):
                     prompt_list.append(json_prompt)
                 else:
                     raise TypeError(f"{type(json_prompt)}")
@@ -167,18 +170,9 @@ class cudaArrayInterface():
     https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html
     """
     def __init__(self, data, shape, dtype=np.float32):
-        if dtype == np.float32:
-            typestr = 'f4'
-        elif dtype == np.float64:
-            typestr = 'f8'
-        elif dtype == np.float16:
-            typestr = 'f2'
-        else:
-            raise RuntimeError(f"unsupported dtype:  {dtype}")
-            
         self.__cuda_array_interface__ = {
             'data': (data, False),  # R/W
             'shape': shape,
-            'typestr': typestr,
+            'typestr': np.dtype(dtype).str,
             'version': 3,
         }  
