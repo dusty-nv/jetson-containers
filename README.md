@@ -34,13 +34,15 @@ If you look at any package's readme (like [`l4t-pytorch`](packages/l4t/l4t-pytor
 
 ## Documentation
 
+<a href="https://nvidia-ai-iot.github.io/jetson-generative-ai-playground/"><img align="right" width="300" height="300" src="https://nvidia-ai-iot.github.io/jetson-generative-ai-playground/images/JON_Gen-AI-panels.png"></a>
+
 * [Package List](/packages)
 * [Package Definitions](/docs/packages.md)
 * [System Setup](/docs/setup.md)
 * [Building Containers](/docs/build.md)
 * [Running Containers](/docs/run.md)
 
-Looking for the old jetson-containers?   See the [`legacy`](https://github.com/dusty-nv/jetson-containers/tree/legacy) branch
+Check out the tutorials on the [**Jetson Generative AI Playground**](https://nvidia-ai-iot.github.io/jetson-generative-ai-playground)!
 
 ## Getting Started
 
@@ -60,5 +62,5 @@ Or you can manually run a [container image](https://hub.docker.com/r/dustynv) of
 sudo docker run --runtime nvidia -it --rm --network=host dustynv/l4t-pytorch:r35.4.1
 ```
 
-Check out the tutorials on the [**Jetson Generative AI Playground**](https://nvidia-ai-iot.github.io/jetson-generative-ai-playground)!
+Looking for the old jetson-containers?   See the [`legacy`](https://github.com/dusty-nv/jetson-containers/tree/legacy) branch.
 
