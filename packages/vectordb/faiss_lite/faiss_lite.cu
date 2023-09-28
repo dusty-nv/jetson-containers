@@ -67,19 +67,14 @@ bool cudaKNN(
 	float* vector_norms,
 	float* out_distances,
 	int64_t* out_indices,
-	cudaStream_t* stream=NULL )
+	cudaStream_t stream=0 )
 {
-	cudaStream_t stream_t = NULL;
-	
-	if( stream != NULL )
-		stream_t = *stream;
-	
-	//printf("cudaKNN(vectors=%p, queries=%p, dsize=%i, n=%i, m=%i, d=%i, k=%i, metric=%i, vector_norms=%p, out_distances=%p, out_indices=%p, stream=%p);\n", vectors, queries, dsize, n, m, d, k, metric, vector_norms, out_distances, out_indices, stream_t);
+	//printf("cudaKNN(vectors=%p, queries=%p, dsize=%i, n=%i, m=%i, d=%i, k=%i, metric=%i, vector_norms=%p, out_distances=%p, out_indices=%p, stream=%p);\n", vectors, queries, dsize, n, m, d, k, metric, vector_norms, out_distances, out_indices, stream);
 	
 	if( dsize == sizeof(float) )
-		return _cudaKNN<float>((float*)vectors, (float*)queries, n, m, d, k, metric, vector_norms, out_distances, out_indices, stream_t);
+		return _cudaKNN<float>((float*)vectors, (float*)queries, n, m, d, k, metric, vector_norms, out_distances, out_indices, stream);
 	else if( dsize == sizeof(half) )
-		return _cudaKNN<half>((half*)vectors, (half*)queries, n, m, d, k, metric, vector_norms, out_distances, out_indices, stream_t);
+		return _cudaKNN<half>((half*)vectors, (half*)queries, n, m, d, k, metric, vector_norms, out_distances, out_indices, stream);
 	
 	printf("cudaKNN() -- invalid datatype size (%i)\n", dsize);
 	return false;
@@ -96,7 +91,7 @@ bool _cudaL2Norm(
 	int n, int d,
 	float* output,
 	bool squared=true,
-	cudaStream_t stream=NULL )
+	cudaStream_t stream=0 )
 {
 	faiss::gpu::DeviceTensor<T, 2, true> vector_t(vectors, {n, d}); 
 	faiss::gpu::DeviceTensor<float, 1, true> output_t(output, {n}); 
@@ -113,19 +108,14 @@ bool cudaL2Norm(
 	int n, int d,
 	float* output, 
 	bool squared=true, 
-	cudaStream_t* stream=NULL ) 
+	cudaStream_t stream=0 ) 
 {
-	cudaStream_t stream_t = NULL;
-	
-	if( stream != NULL )
-		stream_t = *stream;
-	
-	//printf("cudaL2Norm(vectors=%p, dsize=%i, n=%i, d=%i, output=%p, squared=%s, stream=%p);\n", vectors, dsize, n, d, output, squared ? "true" : "false", stream_t);
+	//printf("cudaL2Norm(vectors=%p, dsize=%i, n=%i, d=%i, output=%p, squared=%s, stream=%p);\n", vectors, dsize, n, d, output, squared ? "true" : "false", stream);
 	
 	if( dsize == sizeof(float) )
-		return _cudaL2Norm<float>((float*)vectors, n, d, output, squared, stream_t);
+		return _cudaL2Norm<float>((float*)vectors, n, d, output, squared, stream);
 	else if( dsize == sizeof(half) )
-		return _cudaL2Norm<half>((half*)vectors, n, d, output, squared, stream_t);
+		return _cudaL2Norm<half>((half*)vectors, n, d, output, squared, stream);
 	
 	printf("cudaKNN() -- invalid datatype size (%i)\n", dsize);
 	return false;

@@ -29,6 +29,7 @@ DistanceMetrics = {
     'braycurtis': 21,
     'jensenshannon': 22,
     'jaccard': 23,
+    'cosine': 99,  # custom: normalized inner_product
 }
 
 def _cudaKNN(name='cudaKNN'):
@@ -97,16 +98,12 @@ class cudaArrayInterface():
 
         
 def dtype_to_ctype(dtype):
-    if dtype == np.float32:
-        return C.c_float
-    elif dtype == np.float16:
+    if isinstance(dtype, str):
+        dtype = np.dtype(dtype)
+    if dtype == np.float16:
         return C.c_ushort
-    elif dtype == np.int32:
-        return C.c_int
-    elif dtype == np.int64:
-        return C.c_longlong
     else:
-        raise RuntimeError(f"unsupported dtype:  {dtype}")
+        return np.ctypeslib.as_ctypes_type(dtype)
   
 
 def cudaAllocMapped(shape, dtype, map_numpy=True, map_torch=True, return_dict=True):

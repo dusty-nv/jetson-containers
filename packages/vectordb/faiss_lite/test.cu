@@ -19,7 +19,7 @@ bool cudaKNN(
 	float* vector_norms,
 	float* out_distances,
 	int64_t* out_indices,
-	cudaStream_t* stream=NULL);
+	cudaStream_t stream=NULL);
 
 extern "C" 
 bool cudaL2Norm(
@@ -27,7 +27,7 @@ bool cudaL2Norm(
 	int n, int d,
 	float* output, 
 	bool squared=true, 
-	cudaStream_t* stream=NULL );
+	cudaStream_t stream=NULL );
 	
 	
 #define CUDA(x)				cudaCheckError((x), #x, __FILE__, __LINE__)
@@ -114,7 +114,7 @@ double test(int N, int M, int D, int K, faiss::MetricType metric=faiss::METRIC_L
 		const bool result = cudaL2Norm(
 			vectors, sizeof(T),
 			N, D, vectorNorms,
-			true, &stream);
+			true, stream);
 			
 		clock_gettime(CLOCK_REALTIME, &time_enqueue);
 		CUDA(cudaStreamSynchronize(stream));
@@ -145,7 +145,7 @@ double test(int N, int M, int D, int K, faiss::MetricType metric=faiss::METRIC_L
 			vectorNorms,
 			distances,
 			indices,
-			&stream
+			stream
 		);
 
 		clock_gettime(CLOCK_REALTIME, &time_enqueue);
