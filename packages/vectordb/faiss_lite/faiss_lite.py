@@ -3,6 +3,7 @@
 # see benchmark.py for example usage from Python
 import os
 import math
+import torch
 import ctypes as C
 import numpy as np
     
@@ -71,6 +72,30 @@ cudaKNN = _cudaKNN()
 cudaL2Norm = _cudaL2Norm()
 
 
+class AttrDict(dict):
+    """
+    A dict where keys are available as attributes
+    https://stackoverflow.com/a/14620633
+    """
+    def __init__(self, *args, **kwargs):
+        super(AttrDict, self).__init__(*args, **kwargs)
+        self.__dict__ = self
+        
+ 
+class cudaArrayInterface():
+    """
+    Exposes __cuda_array_interface__ - typically used as a temporary view into a larger buffer
+    https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html
+    """
+    def __init__(self, data, shape, dtype=np.float32):
+        self.__cuda_array_interface__ = {
+            'data': (data, False),  # R/W
+            'shape': shape,
+            'typestr': np.dtype(dtype).str,
+            'version': 3,
+        }  
+
+        
 def dtype_to_ctype(dtype):
     if dtype == np.float32:
         return C.c_float
@@ -83,9 +108,13 @@ def dtype_to_ctype(dtype):
     else:
         raise RuntimeError(f"unsupported dtype:  {dtype}")
   
-def cudaAllocMapped(shape, dtype):
+
+def cudaAllocMapped(shape, dtype, map_numpy=True, map_torch=True, return_dict=True):
     """
-    Allocate cudaMallocManaged() memory and map it to a numpy array
+    Allocate cudaMallocManaged() memory and map it to a numpy array and PyTorch tensor
+    If return dict is true, these will be returned in a dict-like DictAttr object
+    with keys for 'ptr', 'array' (if map_numpy is True), and 'tensor' (if map_torch is True).
+    Otherwise, a tuple will be returned with (ptr, array, tensor)
     """
     dsize = np.dtype(dtype).itemsize
 
@@ -100,7 +129,34 @@ def cudaAllocMapped(shape, dtype):
     err, ptr = cudaMallocManaged(size, cudaMemAttachGlobal)
     assert_cuda(err)
     
-    return cudaToNumpy(ptr, shape, dtype), ptr
+    if map_numpy:
+        array = cudaToNumpy(ptr, shape, dtype)
+        
+    if map_torch:
+        tensor = cudaToTorch(ptr, shape, dtype)
+        
+    if return_dict:
+        d = AttrDict()
+        d.ptr = ptr
+        d.shape = shape
+        d.dtype = dtype
+        
+        if map_numpy:
+            d.array = array
+            
+        if map_torch:
+            d.tensor = tensor
+
+        return d
+    else:
+        if map_numpy and map_torch:
+            return ptr, array, tensor
+        elif map_numpy:
+            return ptr, array
+        elif map_torch:
+            return ptr, tensor
+        else:
+            return ptr
         
 def cudaToNumpy(ptr, shape, dtype):
     """
@@ -115,6 +171,14 @@ def cudaToNumpy(ptr, shape, dtype):
        
     return array
  
+def cudaToTorch(ptr, shape, dtype):
+    """
+    Map a shared CUDA pointer into np.ndarray with the given shape and datatype.
+    The pointer should have been allocated with cudaMallocManaged() or using cudaHostAllocMapped,
+    and the user is responsible for any CPU/GPU synchronization (i.e. by using cudaStreams)
+    """
+    return torch.as_tensor(cudaArrayInterface(ptr, shape, dtype), device='cuda')
+    
 def assert_cuda(err):
     """
     Throw a runtime exception if a CUDA error occurred

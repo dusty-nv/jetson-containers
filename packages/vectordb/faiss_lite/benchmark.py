@@ -26,7 +26,7 @@ from faiss_lite import (
     
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-parser.add_argument('-d', '--dim', type=int, default=5120, help='the dimensionality of the embedding vectors') 
+parser.add_argument('-d', '--dim', type=int, default=1024, help='the dimensionality of the embedding vectors') 
 parser.add_argument('-n', '--num-vectors', type=int, default=64, help='the number of vectors to add to the index')
 parser.add_argument('-k', type=int, default=4, help='the number of nearest-neighbors to find')
 parser.add_argument('--dtype', type=str, default='float32', choices=['float32', 'float16'], help='datatype of the vectors')
@@ -62,22 +62,27 @@ xb = np.random.random((args.num_vectors, args.dim)).astype(dtype)
 xq = np.random.random((args.num_queries, 1, args.dim)).astype(dtype)
 #xq[:, 0] += np.arange(args.num_queries) / 1000.
 
+print('xb', xb.shape, xb.dtype)
+
 vector_size = (args.dim * xb.itemsize) / (1024*1024)  # size of one vector in MB
 
-vectors, vector_ptr = cudaAllocMapped((args.num_vectors, args.dim), dtype)
-queries, query_ptr = cudaAllocMapped((args.num_queries, args.dim), dtype)
+vectors = cudaAllocMapped((args.num_vectors, args.dim), dtype)
+queries = cudaAllocMapped((args.num_queries, args.dim), dtype)
 
-distances, distance_ptr = cudaAllocMapped((args.num_queries, args.k), np.float32)
-indices, index_ptr = cudaAllocMapped((args.num_queries, args.k), np.int64)
+distances = cudaAllocMapped((args.num_queries, args.k), np.float32)
+indexes = cudaAllocMapped((args.num_queries, args.k), np.int64)
+
+print('vectors', vectors.__dict__, vectors.array, vectors.shape, vectors.dtype)
+print('queries', queries.__dict__, queries.array, queries.shape, queries.dtype)
 
 for n in range(args.num_vectors):
-    vectors[n] = xb[n]
+    vectors.array[n] = xb[n]
  
 for n in range(args.num_queries):
-    queries[n] = xq[n]
+    queries.array[n] = xq[n]
    
-print('vectors', vectors, vectors.shape, vectors.dtype)
-print('queries', queries, queries.shape, queries.dtype)
+print('vectors', vectors.array, vectors.shape, vectors.dtype)
+print('queries', queries.array, queries.shape, queries.dtype)
 
 vector_norms_ptr = None
 
@@ -85,13 +90,13 @@ avg_l2_time = 0
 avg_l2_rate = 0
 
 if args.metric == 'l2':
-    vector_norms, vector_norms_ptr = cudaAllocMapped(args.num_vectors, np.float32)
+    vector_norms = cudaAllocMapped(args.num_vectors, np.float32)
 
     if not args.skip_validation:
         assert(cudaL2Norm(
-            C.cast(vector_ptr, C.c_void_p),
+            C.cast(vectors.ptr, C.c_void_p),
             dsize, args.num_vectors, args.dim,
-            C.cast(vector_norms_ptr, C.POINTER(C.c_float)),
+            C.cast(vector_norms.ptr, C.POINTER(C.c_float)),
             True, None
         ))
         assert_cuda(cudaDeviceSynchronize())
@@ -102,9 +107,9 @@ if args.metric == 'l2':
     for n in range(args.num_vectors):
         time_begin = time.perf_counter()
         cudaL2Norm(
-            C.cast(vector_ptr+n*args.dim*dsize, C.c_void_p),
+            C.cast(vectors.ptr+n*args.dim*dsize, C.c_void_p),
             dsize, 1, args.dim,
-            C.cast(vector_norms_ptr+n*4, C.POINTER(C.c_float)),
+            C.cast(vector_norms.ptr+n*4, C.POINTER(C.c_float)),
             True, None
         )
         assert_cuda(cudaDeviceSynchronize())
@@ -120,38 +125,38 @@ if not args.skip_validation:
 
     for n in range(args.num_vectors):
         assert(cudaKNN(
-            C.cast(vector_ptr, C.c_void_p),
-            C.cast(vector_ptr+n*args.dim*dsize, C.c_void_p),
+            C.cast(vectors.ptr, C.c_void_p),
+            C.cast(vectors.ptr+n*args.dim*dsize, C.c_void_p),
             dsize,
             args.num_vectors,
             1,
             args.dim,
             args.k,
             DistanceMetrics[args.metric],
-            C.cast(vector_norms_ptr, C.POINTER(C.c_float)),
-            C.cast(distance_ptr, C.POINTER(C.c_float)),
-            C.cast(index_ptr, C.POINTER(C.c_longlong)),
+            C.cast(vector_norms.ptr, C.POINTER(C.c_float)),
+            C.cast(distances.ptr, C.POINTER(C.c_float)),
+            C.cast(indexes.ptr, C.POINTER(C.c_longlong)),
             None
         ))
         assert_cuda(cudaDeviceSynchronize())
-        assert(indices[0][0]==n)
+        assert(indexes.array[0][0]==n)
 
 avg_time = 0
 
 for r in range(args.runs):
     time_begin = time.perf_counter()
     assert(cudaKNN(
-        C.cast(vector_ptr, C.c_void_p),
-        C.cast(query_ptr, C.c_void_p),
+        C.cast(vectors.ptr, C.c_void_p),
+        C.cast(queries.ptr, C.c_void_p),
         dsize,
         args.num_vectors,
         args.num_queries,
         args.dim,
         args.k,
         DistanceMetrics[args.metric],
-        C.cast(vector_norms_ptr, C.POINTER(C.c_float)),
-        C.cast(distance_ptr, C.POINTER(C.c_float)),
-        C.cast(index_ptr, C.POINTER(C.c_longlong)),
+        C.cast(vector_norms.ptr, C.POINTER(C.c_float)),
+        C.cast(distances.ptr, C.POINTER(C.c_float)),
+        C.cast(indexes.ptr, C.POINTER(C.c_longlong)),
         None
     ))
     time_enqueue = (time.perf_counter() - time_begin) * 1000
