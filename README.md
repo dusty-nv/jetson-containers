@@ -34,7 +34,7 @@ If you look at any package's readme (like [`l4t-pytorch`](packages/l4t/l4t-pytor
 
 ## Documentation
 
-<a href="https://nvidia-ai-iot.github.io/jetson-generative-ai-playground/"><img align="right" width="150" height="150" src="https://nvidia-ai-iot.github.io/jetson-generative-ai-playground/images/JON_Gen-AI-panels.png"></a>
+<a href="https://nvidia-ai-iot.github.io/jetson-generative-ai-playground/"><img align="right" width="250" height="250" src="https://nvidia-ai-iot.github.io/jetson-generative-ai-playground/images/JON_Gen-AI-panels.png"></a>
 
 * [Package List](/packages)
 * [Package Definitions](/docs/packages.md)
