@@ -95,4 +95,4 @@ if args.list_packages or args.show_packages:
 if not args.multiple:
     build_container(args.name, args.packages, args.base, args.build_flags, args.simulate, args.skip_tests, args.test_only, args.push, args.no_github_api)
 else:   
-    build_containers(args.name, args.packages, args.base, args.build_flags, args.simulate, args.skip_errors, args.skip_packages, args.skip_tests, args.test_only, args.push, args.no_github_api)
+    build_containers(args.name, args.packages, args.base, args.build_flags, args.simulate, args.skip_errors, args.skip_packages, args.skip_tests, args.test_only, args.push)
