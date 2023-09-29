@@ -18,7 +18,6 @@ from cuda.cudart import (
     cudaStreamCreateWithFlags, 
     cudaStreamNonBlocking, 
     cudaStreamSynchronize,
-    cudaDeviceSynchronize
 )
 
 from .utils import AttrDict, torch_dtype
@@ -76,6 +75,12 @@ class cudaVectorIndex:
      
     def __len__(self):
         return self.shape[0]
+     
+    def size(self):
+        return self.shape[0] * self.shape[1] * self.dsize
+     
+    def sync(self):
+        assert_cuda(cudaStreamSynchronize(self.stream))
         
     def add(self, vector, sync=True):
         """
@@ -102,7 +107,7 @@ class cudaVectorIndex:
             ))
             
             if sync:
-                assert_cuda(cudaStreamSynchronize(self.stream))
+                self.sync()
 
         elif self.metric == 'cosine':
             with torch.cuda.StreamContext(self.torch_stream), torch.inference_mode():
@@ -112,7 +117,7 @@ class cudaVectorIndex:
                 )
             
             if sync:
-                assert_cuda(cudaStreamSynchronize(self.stream))
+                self.sync()
                 
         self.shape = (index + 1, self.shape[1])
         return index
@@ -181,7 +186,8 @@ class cudaVectorIndex:
         ))
 
         if sync:
-            assert_cuda(cudaStreamSynchronize(self.stream))
+            self.sync()
+            
             self.stats.query_shape = queries.shape
             self.stats.index_shape = self.shape
             self.stats.search_time = time.perf_counter() - time_begin
@@ -217,7 +223,7 @@ class cudaVectorIndex:
                 C.cast(self.indexes.ptr, C.POINTER(C.c_longlong)),
                 C.cast(int(self.stream), C.c_void_p) if self.stream else None
             ))
-            assert_cuda(cudaStreamSynchronize(self.stream))
+            self.sync()
             if self.indexes.array[0][0] != n:
                 print(f"incorrect or duplicate index [{n}]  indexes={self.indexes.array[0,:k]}  distances={self.distances.array[0,:k]}")
                 #assert(self.indexes[0][0]==n)

@@ -28,7 +28,7 @@ class AutoEmbedding():
     def embed(self, data, type=None, **kwargs):
         if type is None:
             type = self.embedding_type(data)
-            print(f"-- generating embedding for {data} with {self.embeddings[type].__class__}")
+            #print(f"-- generating embedding for {data} with {self.embeddings[type].__class__}")
                 
         if type not in self.embeddings:
             raise RuntimeError(f"AutoEmbedding was not loading with embedding model for type '{type}'")

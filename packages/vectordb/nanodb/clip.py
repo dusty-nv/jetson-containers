@@ -36,9 +36,9 @@ class CLIPEmbedding():
         dtype = np.dtype(dtype)
         
         if dtype == np.float32:
-            self.dtype = torch.float32
+            self.config.dtype = torch.float32
         elif dtype == np.float16:
-            self.dtype = torch.float16
+            self.config.dtype = torch.float16
         else:
             raise ValueError(f"unsupported datatype:  {dtype}")
             
@@ -51,7 +51,9 @@ class CLIPEmbedding():
             download_root=model_cache
         )
 
+        self.config.crop = crop
         self.config.input_shape = (self.model.visual.input_resolution, self.model.visual.input_resolution)
+        
         self.image_model = self.model.visual
 
         """
@@ -67,7 +69,7 @@ class CLIPEmbedding():
             self.image_model = torch2trt.torch2trt(
                 self.model.visual.cpu().float(),  # put on CPU for onnx export
                 [torch.ones(1, 3, *self.config.input_shape, dtype=torch.float32)],  # TRT expects FP32 input
-                fp16_mode=(self.dtype == torch.float16),
+                fp16_mode=(self.config.dtype == torch.float16),
                 log_level=tensorrt.Logger.VERBOSE,
                 use_onnx=True,
                 onnx_opset=14,
@@ -91,7 +93,7 @@ class CLIPEmbedding():
             self.preprocessor.append(transforms.CenterCrop(self.config.input_shape[0]))
             
         self.preprocessor.append(transforms.Normalize((0.48145466, 0.4578275, 0.40821073), (0.26862954, 0.26130258, 0.27577711)))
-        self.preprocessor.append(transforms.ConvertImageDtype(self.dtype))
+        self.preprocessor.append(transforms.ConvertImageDtype(self.config.dtype))
         
         self.preprocessor = self.preprocessor.eval().to(self.device)
 
@@ -111,9 +113,9 @@ class CLIPEmbedding():
             if isinstance(image, PIL.Image.Image) or isinstance(image, np.ndarray):
                 image = transforms.functional.to_tensor(image)
             #else:
-            #    image = image.to(device=self.device, dtype=self.dtype) / 255.0  # needed when load_image(api='torchvision')
+            #    image = image.to(device=self.device, dtype=self.config.dtype) / 255.0  # needed when load_image(api='torchvision')
             
-            image = image.to(device=self.device, dtype=self.dtype)            
+            image = image.to(device=self.device, dtype=self.config.dtype)            
             image = self.preprocessor(image).unsqueeze(0)
 
             time_begin_enc = time.perf_counter()
