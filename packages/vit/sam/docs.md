@@ -28,3 +28,25 @@ Open `predictor_example.ipynb`.
 Make sure you have `sam_vit_h_4b8939.pth` checkpoint file saved under `notebooks` directory.
 
 Then, start executing the cells below **Set-up**.
+
+### Benchmark script
+
+You can run the following command to run a benchmark script.
+
+```
+python3 benchmark.py --save sam.csv
+```
+
+Or for full options:
+
+```
+python3 benchmark.py \
+  --images https://raw.githubusercontent.com/facebookresearch/segment-anything/main/notebooks/images/dog.jpg  https://raw.githubusercontent.com/facebookresearch/segment-anything/main/notebooks/images/groceries.jpg \
+  --runs=1 --warmup=0 \
+  --save sam.csv
+```
+
+Outputs are:
+
+- `sam_benchmark_output.jpg` :
+- `sam.csv` (optional) : 
