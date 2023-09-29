@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import time
+import PIL
 import numpy as np
 
 from .clip import CLIPEmbedding
@@ -8,7 +9,14 @@ from .vector_index import cudaVectorIndex, DistanceMetrics
 from .utils import print_table
 
 class NanoDB:
-    def __init__(self, path=None, model='ViT-L/14@336px', dtype=np.float32, reserve=1024, metric='cosine', max_search_queries=1):
+    def __init__(self, path=None, model='ViT-L/14@336px', dtype=np.float32, **kwargs):
+        """
+        kwargs:
+            reserve (int) -- reseve memory (in MB) for cudaVectorIndex (default 1024)
+            metric (str) -- metric for cudaVectorIndex (default 'cosine')
+            max_search_queries (int) -- maximum search batch size (default 1)
+            crop (bool) -- enable/disable cropping (default True)
+        """
         self.path = path
         self.metadata = []
         self.img_extensions = ('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')
@@ -16,9 +24,13 @@ class NanoDB:
         if isinstance(dtype, str):
             dtype = np.dtype(dtype)
             
-        self.model = CLIPEmbedding(model, dtype=dtype) #AutoEmbedding(dtype=dtype) if model is None else model
+        #if path:
+        #    if os.path.isdir(path):
+        #        bin_path = os.path.join(path, 
+                
+        self.model = CLIPEmbedding(model, dtype=dtype, **kwargs) #AutoEmbedding(dtype=dtype) if model is None else model
         dim = self.model.config.output_shape[-1]
-        self.index = cudaVectorIndex(dim, dtype, reserve, metric, max_search_queries)
+        self.index = cudaVectorIndex(dim, dtype, **kwargs)
         self.model.stream = self.index.torch_stream
         
     def __len__(self):
@@ -29,9 +41,10 @@ class NanoDB:
         Queries can be text (str or list[str]), tokens (list[int], ndarray[int] or torch.Tensor[int])
         or images (filename or list of filenames, PIL image or a list of PIL images)
         """
-        embedding = self.model.embed(query)
+        embedding = self.embed(query)
         indexes, distances = self.index.search(embedding, k=k)
-        return indices, distances
+        print_table(self.index.stats)
+        return indexes, distances
         
     def scan(self, path, max_items=None, **kwargs):
         time_begin = time.perf_counter()
@@ -91,14 +104,12 @@ class NanoDB:
                 return 'image'
             elif len(ext) > 0:
                 raise ValueError(f"-- file {str} has unsupported extension for embeddings")
-                
-                for key, embedder in self.embeddings.items():
-                    if hasattr(embedder, 'extensions') and ext in embedder.extensions:
-                        return key
             else:
                 return "text" 
-        elif isinstance(data, PIL.Image):
+        elif isinstance(data, PIL.Image.Image):
             return 'image'
+        elif isinstance(data, list) and len(data) > 0 and isinstance(data[0], str):
+            return 'text'
         else:
             raise ValueError(f"couldn't find type of embedding for {type(data)}, please specify the 'type' argument")
             
@@ -107,5 +118,5 @@ class NanoDB:
             indexes, distances = self.index.search(self.index.vectors.array[i], k=k)
             print(f"-- search results for {i} {self.metadata[i]}")
             for n in range(k):
-                print(f"   * {indexes[n]} {self.metadata[indexes[n]]}  dist={distances[n]}")
+                print(f"   * {indexes[n]} {self.metadata[indexes[n]]}  {'similarity' if self.index.metric == 'cosine' else 'distance'}={distances[n]}")
                 

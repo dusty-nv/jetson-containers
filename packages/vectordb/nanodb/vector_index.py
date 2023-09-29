@@ -21,6 +21,8 @@ from cuda.cudart import (
     cudaDeviceSynchronize
 )
 
+from .utils import AttrDict, torch_dtype
+
 
 class cudaVectorIndex:
     """
@@ -33,7 +35,7 @@ class cudaVectorIndex:
     It's aimed at storing high-dimensional embeddings,
     with a fixed reserve allocation due to their size.
     """
-    def __init__(self, dim, dtype=np.float32, reserve=1024, metric='l2', max_search_queries=1):
+    def __init__(self, dim, dtype=np.float32, reserve=1<<30, metric='cosine', max_search_queries=1, **kwargs):
         """
         Allocate memory for a vector index.
         
@@ -41,7 +43,7 @@ class cudaVectorIndex:
         
           dim (int) -- dimension of the vectors (i.e. the size of the embedding)
           dtype (np.dtype) -- data type of the vectors, either float32 or float16
-          reserve (int) -- maximum amount of memory (in MB) to allocate for storing vectors
+          reserve (int) -- maximum amount of memory (in bytes) to allocate for storing vectors (default 1GB)
           metric (str) -- the distance metric to use (recommend 'l2', 'inner_product', or 'cosine')
           max_search_queries (int) -- the maximum number of queries to search for at a time
         """
@@ -49,8 +51,9 @@ class cudaVectorIndex:
         self.dtype = dtype
         self.dsize = np.dtype(dtype).itemsize
         self.metric = metric
+        self.stats = AttrDict()
         
-        self.reserved_size = reserve * 1024 * 1024
+        self.reserved_size = reserve
         self.reserved = int(self.reserved_size / (dim * self.dsize))
         self.max_search_queries = max_search_queries
 
@@ -60,7 +63,7 @@ class cudaVectorIndex:
         #torch.cuda.set_stream(self.torch_stream)
         
         print(f"-- creating CUDA stream {self.stream}")
-        print(f"-- creating CUDA vector index ({self.reserved},{dim}) {dtype}")
+        print(f"-- creating CUDA vector index ({self.reserved},{dim}) dtype={dtype} metric={metric}")
         
         self.vectors = cudaAllocMapped((self.reserved, dim), dtype) # inputs
         self.queries = cudaAllocMapped((max_search_queries, dim), dtype)
@@ -142,8 +145,8 @@ class cudaVectorIndex:
         if queries.shape[1] != self.shape[1]:
             raise ValueError(f"queries must match the vector dimension ({self.shape[1]})")
         
-        if queries.dtype != self.dtype:
-            raise ValueError(f"queries need to use {self.dtype} dtype")
+        if queries.dtype != self.dtype and queries.dtype != torch_dtype(self.dtype):
+            raise ValueError(f"queries need to use {self.dtype} dtype (was type {queries.dtype})")
             
         if isinstance(queries, np.ndarray):
             np.copyto(dst=self.queries.array[:queries.shape[0]], src=queries, casting='no')
@@ -151,6 +154,8 @@ class cudaVectorIndex:
             with torch.cuda.StreamContext(self.torch_stream):
                 self.queries.tensor[:queries.shape[0]] = queries 
            
+        time_begin = time.perf_counter()
+        
         if self.metric == 'cosine':
             with torch.cuda.StreamContext(self.torch_stream), torch.inference_mode():
                 torch.nn.functional.normalize(
@@ -177,6 +182,9 @@ class cudaVectorIndex:
 
         if sync:
             assert_cuda(cudaStreamSynchronize(self.stream))
+            self.stats.query_shape = queries.shape
+            self.stats.index_shape = self.shape
+            self.stats.search_time = time.perf_counter() - time_begin
             
             if return_tensors == 'np':
                 return (
@@ -184,6 +192,7 @@ class cudaVectorIndex:
                     np.copy(self.distances.array[:queries.shape[0], :k]).squeeze()
                 )
         else:
+            self.stats.search_time = time.perf_counter() - time_begin
             return None
             
     def validate(self, k=4):

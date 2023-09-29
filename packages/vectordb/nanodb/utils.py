@@ -3,6 +3,8 @@ import os
 import time
 import json
 import requests
+import torch
+import torchvision
 import numpy as np
 
 from PIL import Image
@@ -14,9 +16,11 @@ from tabulate import tabulate
 from huggingface_hub import snapshot_download, hf_hub_download, login
 
 
-def load_image(path):
+def load_image(path, api='PIL'):
     """
     Load an image from a local path or URL
+    api should be either 'PIL' or 'torchvision'
+    torchvision loads directly to tensor and is only for local files.
     """
     time_begin = time.perf_counter()
     
@@ -24,8 +28,11 @@ def load_image(path):
         response = requests.get(path)
         image = Image.open(BytesIO(response.content)).convert('RGB')
     else:
-        image = Image.open(path).convert('RGB')
-    
+        if api.lower() == 'pil':
+            image = Image.open(path).convert('RGB')
+        elif api.lower() == 'torchvision':
+            image = torchvision.io.read_image(path, mode=torchvision.io.ImageReadMode.RGB)
+            
     print(f'-- loaded {path} in {(time.perf_counter()-time_begin)*1000:.0f} ms')
     return image
     
@@ -177,3 +184,25 @@ class cudaArrayInterface():
             'typestr': np.dtype(dtype).str,
             'version': 3,
         }  
+        
+
+torch_dtype_dict = {
+    'bool'       : torch.bool,
+    'uint8'      : torch.uint8,
+    'int8'       : torch.int8,
+    'int16'      : torch.int16,
+    'int32'      : torch.int32,
+    'int64'      : torch.int64,
+    'float16'    : torch.float16,
+    'float32'    : torch.float32,
+    'float64'    : torch.float64,
+    'complex64'  : torch.complex64,
+    'complex128' : torch.complex128
+}
+
+def torch_dtype(dtype):
+    """
+    Convert numpy.dtype or str to torch.dtype
+    """
+    return torch_dtype_dict[str(dtype)]
+    
