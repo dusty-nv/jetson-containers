@@ -62,8 +62,6 @@ xb = np.random.random((args.num_vectors, args.dim)).astype(dtype)
 xq = np.random.random((args.num_queries, 1, args.dim)).astype(dtype)
 #xq[:, 0] += np.arange(args.num_queries) / 1000.
 
-print('xb', xb.shape, xb.dtype)
-
 vector_size = (args.dim * xb.itemsize) / (1024*1024)  # size of one vector in MB
 
 vectors = cudaAllocMapped((args.num_vectors, args.dim), dtype)
@@ -72,18 +70,12 @@ queries = cudaAllocMapped((args.num_queries, args.dim), dtype)
 distances = cudaAllocMapped((args.num_queries, args.k), np.float32)
 indexes = cudaAllocMapped((args.num_queries, args.k), np.int64)
 
-print('vectors', vectors.__dict__, vectors.array, vectors.shape, vectors.dtype)
-print('queries', queries.__dict__, queries.array, queries.shape, queries.dtype)
-
 for n in range(args.num_vectors):
     vectors.array[n] = xb[n]
  
 for n in range(args.num_queries):
     queries.array[n] = xq[n]
    
-print('vectors', vectors.array, vectors.shape, vectors.dtype)
-print('queries', queries.array, queries.shape, queries.dtype)
-
 vector_norms_ptr = None
 
 avg_l2_time = 0
