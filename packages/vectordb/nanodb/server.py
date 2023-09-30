@@ -79,8 +79,8 @@ class Server(threading.Thread):
             ).style(columns=8, height='750px', object_fit='scale_down')
 
             gallery.select(self.on_gallery_select, None, image_upload, show_progress=False)
-            text_query.change(self.on_query, text_query, [gallery, stats], show_progress=False)
-            image_upload.upload(self.on_query, image_upload, [gallery, stats], show_progress=False)
+            text_query.change(self.on_query, text_query, [gallery, stats, image_upload], show_progress=False)
+            image_upload.upload(self.on_query, image_upload, [gallery, stats, text_query], show_progress=False)
             
         self.app = gr.mount_gradio_app(self.app, blocks, path='/')
 
@@ -119,7 +119,7 @@ class Server(threading.Thread):
         for n in range(self.gallery_size):
             images.append((self.db.metadata[indexes[n]]['path'], f"{distances[n]*100:.1f}%"))
 
-        return images, gr.HTML.update(value=self.create_stats(query_type))
+        return images, gr.HTML.update(value=self.create_stats(query_type)), None
        
     def on_gallery_select(self, evt: gr.SelectData):
         print(f"You selected {evt.value} at {evt.index} from {evt.target}  selected={evt.selected}")
