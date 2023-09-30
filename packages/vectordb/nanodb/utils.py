@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 import os
+import sys
 import time
+import tqdm
 import json
 import requests
+import contextlib
+
 import torch
 import torchvision
 import numpy as np
@@ -205,4 +209,22 @@ def torch_dtype(dtype):
     Convert numpy.dtype or str to torch.dtype
     """
     return torch_dtype_dict[str(dtype)]
+    
+    
+# https://stackoverflow.com/a/37243211    
+class TQDMRedirectStdOut(object):
+  file = None
+  def __init__(self, file):
+    self.file = file
+
+  def write(self, x):
+    if len(x.rstrip()) > 0:  # Avoid print() second call (useless \n)
+        tqdm.tqdm.write(x, file=self.file)
+
+@contextlib.contextmanager
+def tqdm_redirect_stdout():
+    save_stdout = sys.stdout
+    sys.stdout = TQDMRedirectStdOut(sys.stdout)
+    yield
+    sys.stdout = save_stdout
     

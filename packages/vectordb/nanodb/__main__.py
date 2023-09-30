@@ -6,6 +6,7 @@ import argparse
 import numpy as np
 
 from .nanodb import NanoDB, DistanceMetrics
+from .server import Server
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
@@ -24,6 +25,10 @@ parser.add_argument('--crop', action='store_true', help="apply cropping to the i
 parser.add_argument('--validate', action='store_true', help="run index validation to test items find themselves")
 parser.add_argument('--test', action='store_true', help="run a search query for each item in the index")
 parser.add_argument('--autosave', action='store_true', help="automatically save the database when new items are scanned")
+
+parser.add_argument('--server', action='store_true', help="start the webserver and gradio UI")
+parser.add_argument('--host', type=str, default='0.0.0.0', help="the network interface to listen on (default all)")
+parser.add_argument('--port', type=int, default=7860, help="the webserver port to use")
 
 args = parser.parse_args()
 
@@ -57,9 +62,16 @@ if args.test:
     print(f"-- testing index with k={args.k}")
     db.test(k=args.k)
 
-while True:
-    query = input('\n> ')
+if args.server:
+    server = Server(db, host=args.host, port=args.port)
+    server.start()
     
+while True:
+    query = input('\n> ').strip()
+    
+    if not query:
+        continue
+        
     if os.path.isfile(query) or os.path.isdir(query):
         db.scan(path)
     elif query.lower() == 'save':

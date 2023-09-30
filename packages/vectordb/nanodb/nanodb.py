@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import sys
 import math
 import time
 import tqdm
@@ -10,7 +11,7 @@ import numpy as np
 
 from .clip import CLIPEmbedding
 from .vector_index import cudaVectorIndex, DistanceMetrics
-from .utils import print_table
+from .utils import print_table, tqdm_redirect_stdout
 
 class NanoDB:
     def __init__(self, path=None, model='ViT-L/14@336px', dtype=np.float32, autosave=False, **kwargs):
@@ -75,11 +76,14 @@ class NanoDB:
          
         indexes = []
 
-        for file in files:
-            embedding = self.embed(file, **kwargs)
-            index = self.index.add(embedding, sync=False)
-            self.metadata.insert(index, dict(path=file))
-            indexes.append(index)
+        for file in tqdm.tqdm(files, file=sys.stdout):
+            with tqdm_redirect_stdout():
+                embedding = self.embed(file, **kwargs)
+                index = self.index.add(embedding, sync=False)
+                self.metadata.insert(index, dict(path=file))
+                indexes.append(index)
+                if (len(indexes) % 1000 == 0) and self.path and self.autosave:
+                    self.save(self.path)
         
         time_elapsed = time.perf_counter() - time_begin
         print(f"-- added {len(indexes)} items to the index in from {path} ({time_elapsed:.1f} sec, {len(indexes)/time_elapsed:.1f} items/sec)")
@@ -107,7 +111,7 @@ class NanoDB:
         with open(paths['config'], 'r') as file:
             config = json.load(file)
             pprint.pprint(config)
-            
+        
         with open(paths['metadata'], 'r') as file:
             self.metadata = json.load(file)
             
@@ -122,8 +126,10 @@ class NanoDB:
             
         if config['shape'][0] > self.index.reserved:
             raise RuntimeError(f"{paths['vectors']} exceeds the reserve memory that the index was allocated with")
-            
+        
+        self.scans.extend(config['scans'])
         vectors.shape = config['shape']
+        
         self.index.vectors.array[:vectors.shape[0]] = vectors
         self.index.shape = (vectors.shape[0], self.index.shape[1])
         
@@ -205,7 +211,7 @@ class NanoDB:
     def embed(self, data, type=None, **kwargs):
         if type is None:
             type = self.embedding_type(data)
-            print(f"-- generating embedding for {data} with type={type}")
+            #print(f"-- generating embedding for {data} with type={type}")
                 
         if type == 'image':
             embedding = self.model.embed_image(data)
@@ -235,9 +241,10 @@ class NanoDB:
             raise ValueError(f"couldn't find type of embedding for {type(data)}, please specify the 'type' argument")
             
     def test(self, k):
-        for i in range(len(self.index)):
-            indexes, distances = self.index.search(self.index.vectors.array[i], k=k)
-            print(f"-- search results for {i} {self.metadata[i]['path']}")
-            for n in range(k):
-                print(f"   * {indexes[n]} {self.metadata[indexes[n]]['path']}  {'similarity' if self.index.metric == 'cosine' else 'distance'}={distances[n]}")
-                
+        for i in tqdm.tqdm(range(len(self.index)), file=sys.stdout):
+            with tqdm_redirect_stdout():
+                indexes, distances = self.index.search(self.index.vectors.array[i], k=k)
+                print(f"-- search results for {i} {self.metadata[i]['path']}")
+                for n in range(k):
+                    print(f"   * {indexes[n]} {self.metadata[indexes[n]]['path']}  {'similarity' if self.index.metric == 'cosine' else 'distance'}={distances[n]}")
+                    

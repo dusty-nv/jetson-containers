@@ -91,6 +91,7 @@ class CLIPEmbedding():
         
         if crop:
             self.preprocessor.append(transforms.CenterCrop(self.config.input_shape[0]))
+            print("-- image cropping enabled")
             
         self.preprocessor.append(transforms.Normalize((0.48145466, 0.4578275, 0.40821073), (0.26862954, 0.26130258, 0.27577711)))
         self.preprocessor.append(transforms.ConvertImageDtype(self.config.dtype))
@@ -99,8 +100,9 @@ class CLIPEmbedding():
 
         print(self.model)
         
-        print(f'-- {self.config.name} warmup')
-        self.embed_image(PIL.Image.new('RGB', self.config.input_shape, (255,255,255)))
+        print(f"-- {self.config.name} warmup")
+        for i in range(2):
+            self.embed_image(PIL.Image.new('RGB', self.config.input_shape, (255,255,255)))
         print_table(self.config)
         
     def embed_image(self, image, return_tensors='pt', **kwargs):

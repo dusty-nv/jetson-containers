@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import os
+import sys
 import time
+import tqdm
 import torch
 
 import numpy as np
@@ -20,7 +22,7 @@ from cuda.cudart import (
     cudaStreamSynchronize,
 )
 
-from .utils import AttrDict, torch_dtype
+from .utils import AttrDict, torch_dtype, tqdm_redirect_stdout
 
 
 class cudaVectorIndex:
@@ -208,26 +210,27 @@ class cudaVectorIndex:
         correct=True
         metric=self.metric if self.metric != 'cosine' else 'inner_product'
 
-        for n in range(self.shape[0]):
-            assert(cudaKNN(
-                C.cast(self.vectors.ptr, C.c_void_p),
-                C.cast(self.vectors.ptr+n*self.shape[1]*self.dsize, C.c_void_p),
-                self.dsize,
-                self.shape[0],
-                1,
-                self.shape[1],
-                k,
-                DistanceMetrics[metric],
-                C.cast(self.vector_norms.ptr, C.POINTER(C.c_float)) if self.metric == 'l2' else None,
-                C.cast(self.distances.ptr, C.POINTER(C.c_float)),
-                C.cast(self.indexes.ptr, C.POINTER(C.c_longlong)),
-                C.cast(int(self.stream), C.c_void_p) if self.stream else None
-            ))
-            self.sync()
-            if self.indexes.array[0][0] != n:
-                print(f"incorrect or duplicate index [{n}]  indexes={self.indexes.array[0,:k]}  distances={self.distances.array[0,:k]}")
-                #assert(self.indexes[0][0]==n)
-                correct=False
+        for n in tqdm.tqdm(range(self.shape[0]), file=sys.stdout):
+            with tqdm_redirect_stdout():
+                assert(cudaKNN(
+                    C.cast(self.vectors.ptr, C.c_void_p),
+                    C.cast(self.vectors.ptr+n*self.shape[1]*self.dsize, C.c_void_p),
+                    self.dsize,
+                    self.shape[0],
+                    1,
+                    self.shape[1],
+                    k,
+                    DistanceMetrics[metric],
+                    C.cast(self.vector_norms.ptr, C.POINTER(C.c_float)) if self.metric == 'l2' else None,
+                    C.cast(self.distances.ptr, C.POINTER(C.c_float)),
+                    C.cast(self.indexes.ptr, C.POINTER(C.c_longlong)),
+                    C.cast(int(self.stream), C.c_void_p) if self.stream else None
+                ))
+                self.sync()
+                if self.indexes.array[0][0] != n:
+                    print(f"incorrect or duplicate index [{n}]  indexes={self.indexes.array[0,:k]}  distances={self.distances.array[0,:k]}")
+                    #assert(self.indexes[0][0]==n)
+                    correct=False
                 
         return correct
         

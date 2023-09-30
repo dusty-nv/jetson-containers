@@ -1,7 +1,8 @@
 websockets
 termcolor
 tabulate
-gradio
+gradio==3.34.0
+fastapi==0.99.0
 flask
 tqdm
 git+https://github.com/openai/CLIP
