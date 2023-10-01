@@ -62,7 +62,7 @@ ASSISTANT: The environment is a desert setting, with a mountain in the backgroun
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`bitsandbytes`](/packages/llm/bitsandbytes) [`auto_gptq`](/packages/llm/auto_gptq) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`awq`](/packages/llm/awq) [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`local_llm`](/packages/llm/local_llm) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/llava:r35.2.1`](https://hub.docker.com/r/dustynv/llava/tags) `(2023-09-19, 6.0GB)`<br>[`dustynv/llava:r35.3.1`](https://hub.docker.com/r/dustynv/llava/tags) `(2023-09-15, 6.1GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/llava:r35.2.1`](https://hub.docker.com/r/dustynv/llava/tags) `(2023-09-19, 6.0GB)`<br>[`dustynv/llava:r35.3.1`](https://hub.docker.com/r/dustynv/llava/tags) `(2023-09-24, 6.1GB)` |
 
 </details>
 
@@ -73,7 +73,7 @@ ASSISTANT: The environment is a desert setting, with a mountain in the backgroun
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/llava:r35.2.1`](https://hub.docker.com/r/dustynv/llava/tags) | `2023-09-19` | `arm64` | `6.0GB` |
-| &nbsp;&nbsp;[`dustynv/llava:r35.3.1`](https://hub.docker.com/r/dustynv/llava/tags) | `2023-09-15` | `arm64` | `6.1GB` |
+| &nbsp;&nbsp;[`dustynv/llava:r35.3.1`](https://hub.docker.com/r/dustynv/llava/tags) | `2023-09-24` | `arm64` | `6.1GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -90,10 +90,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag llava)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/llava:r35.2.1
+./run.sh dustynv/llava:r35.3.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/llava:r35.2.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/llava:r35.3.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

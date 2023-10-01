@@ -21,7 +21,7 @@ By default, this container will automatically start the [`stable-diffusion-webui
 | &nbsp;&nbsp;&nbsp;Builds | [![`l4t-diffusion_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/l4t-diffusion_jp51.yml?label=l4t-diffusion:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-diffusion_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`bitsandbytes`](/packages/llm/bitsandbytes) [`auto_gptq`](/packages/llm/auto_gptq) [`transformers`](/packages/llm/transformers) [`stable-diffusion`](/packages/diffusion/stable-diffusion) [`xformers`](/packages/llm/xformers) [`pycuda`](/packages/pycuda) [`opencv`](/packages/opencv) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/l4t-diffusion:r35.2.1`](https://hub.docker.com/r/dustynv/l4t-diffusion/tags) `(2023-09-06, 6.8GB)`<br>[`dustynv/l4t-diffusion:r35.3.1`](https://hub.docker.com/r/dustynv/l4t-diffusion/tags) `(2023-09-11, 6.8GB)`<br>[`dustynv/l4t-diffusion:r35.4.1`](https://hub.docker.com/r/dustynv/l4t-diffusion/tags) `(2023-08-29, 6.8GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/l4t-diffusion:r35.2.1`](https://hub.docker.com/r/dustynv/l4t-diffusion/tags) `(2023-09-06, 6.8GB)`<br>[`dustynv/l4t-diffusion:r35.3.1`](https://hub.docker.com/r/dustynv/l4t-diffusion/tags) `(2023-09-24, 6.9GB)`<br>[`dustynv/l4t-diffusion:r35.4.1`](https://hub.docker.com/r/dustynv/l4t-diffusion/tags) `(2023-08-29, 6.8GB)` |
 
 </details>
 
@@ -32,7 +32,7 @@ By default, this container will automatically start the [`stable-diffusion-webui
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/l4t-diffusion:r35.2.1`](https://hub.docker.com/r/dustynv/l4t-diffusion/tags) | `2023-09-06` | `arm64` | `6.8GB` |
-| &nbsp;&nbsp;[`dustynv/l4t-diffusion:r35.3.1`](https://hub.docker.com/r/dustynv/l4t-diffusion/tags) | `2023-09-11` | `arm64` | `6.8GB` |
+| &nbsp;&nbsp;[`dustynv/l4t-diffusion:r35.3.1`](https://hub.docker.com/r/dustynv/l4t-diffusion/tags) | `2023-09-24` | `arm64` | `6.9GB` |
 | &nbsp;&nbsp;[`dustynv/l4t-diffusion:r35.4.1`](https://hub.docker.com/r/dustynv/l4t-diffusion/tags) | `2023-08-29` | `arm64` | `6.8GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>

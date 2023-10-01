@@ -12,7 +12,7 @@
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`bitsandbytes`](/packages/llm/bitsandbytes) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`auto_gptq`](/packages/llm/auto_gptq) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/text-generation-inference:r35.2.1`](https://hub.docker.com/r/dustynv/text-generation-inference/tags) `(2023-09-07, 7.1GB)`<br>[`dustynv/text-generation-inference:r35.3.1`](https://hub.docker.com/r/dustynv/text-generation-inference/tags) `(2023-09-11, 7.1GB)`<br>[`dustynv/text-generation-inference:r35.4.1`](https://hub.docker.com/r/dustynv/text-generation-inference/tags) `(2023-08-29, 7.0GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/text-generation-inference:r35.2.1`](https://hub.docker.com/r/dustynv/text-generation-inference/tags) `(2023-09-07, 7.1GB)`<br>[`dustynv/text-generation-inference:r35.3.1`](https://hub.docker.com/r/dustynv/text-generation-inference/tags) `(2023-09-24, 7.1GB)`<br>[`dustynv/text-generation-inference:r35.4.1`](https://hub.docker.com/r/dustynv/text-generation-inference/tags) `(2023-08-29, 7.0GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/huggingface/text-generation-inference |
 
 </details>
@@ -24,7 +24,7 @@
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/text-generation-inference:r35.2.1`](https://hub.docker.com/r/dustynv/text-generation-inference/tags) | `2023-09-07` | `arm64` | `7.1GB` |
-| &nbsp;&nbsp;[`dustynv/text-generation-inference:r35.3.1`](https://hub.docker.com/r/dustynv/text-generation-inference/tags) | `2023-09-11` | `arm64` | `7.1GB` |
+| &nbsp;&nbsp;[`dustynv/text-generation-inference:r35.3.1`](https://hub.docker.com/r/dustynv/text-generation-inference/tags) | `2023-09-24` | `arm64` | `7.1GB` |
 | &nbsp;&nbsp;[`dustynv/text-generation-inference:r35.4.1`](https://hub.docker.com/r/dustynv/text-generation-inference/tags) | `2023-08-29` | `arm64` | `7.0GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>

@@ -13,7 +13,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-diffusion`](/packages/l4t/l4t-diffusion) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/xformers:r35.2.1`](https://hub.docker.com/r/dustynv/xformers/tags) `(2023-09-07, 5.5GB)`<br>[`dustynv/xformers:r35.3.1`](https://hub.docker.com/r/dustynv/xformers/tags) `(2023-08-29, 5.5GB)`<br>[`dustynv/xformers:r35.4.1`](https://hub.docker.com/r/dustynv/xformers/tags) `(2023-08-29, 5.5GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/xformers:r35.2.1`](https://hub.docker.com/r/dustynv/xformers/tags) `(2023-09-24, 5.5GB)`<br>[`dustynv/xformers:r35.3.1`](https://hub.docker.com/r/dustynv/xformers/tags) `(2023-08-29, 5.5GB)`<br>[`dustynv/xformers:r35.4.1`](https://hub.docker.com/r/dustynv/xformers/tags) `(2023-08-29, 5.5GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/facebookresearch/xformers |
 
 </details>
@@ -24,7 +24,7 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/xformers:r35.2.1`](https://hub.docker.com/r/dustynv/xformers/tags) | `2023-09-07` | `arm64` | `5.5GB` |
+| &nbsp;&nbsp;[`dustynv/xformers:r35.2.1`](https://hub.docker.com/r/dustynv/xformers/tags) | `2023-09-24` | `arm64` | `5.5GB` |
 | &nbsp;&nbsp;[`dustynv/xformers:r35.3.1`](https://hub.docker.com/r/dustynv/xformers/tags) | `2023-08-29` | `arm64` | `5.5GB` |
 | &nbsp;&nbsp;[`dustynv/xformers:r35.4.1`](https://hub.docker.com/r/dustynv/xformers/tags) | `2023-08-29` | `arm64` | `5.5GB` |
 

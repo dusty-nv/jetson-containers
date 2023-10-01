@@ -45,9 +45,9 @@ On JetPack 5, the [`bitsandbytes`](/packages/llm/bitsandbytes) package is includ
 | &nbsp;&nbsp;&nbsp;Builds | [![`transformers_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/transformers_jp51.yml?label=transformers:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/transformers_jp51.yml) [![`transformers_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/transformers_jp46.yml?label=transformers:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/transformers_jp46.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`bitsandbytes`](/packages/llm/bitsandbytes) [`transformers`](/packages/llm/transformers) [`auto_gptq`](/packages/llm/auto_gptq) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`auto_gptq`](/packages/llm/auto_gptq) [`awq`](/packages/llm/awq) [`gptq-for-llama`](/packages/llm/gptq-for-llama) [`l4t-diffusion`](/packages/l4t/l4t-diffusion) [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`llava`](/packages/llm/llava) [`local_llm`](/packages/llm/local_llm) [`mlc`](/packages/llm/mlc) [`nemo`](/packages/nemo) [`optimum`](/packages/llm/optimum) [`stable-diffusion`](/packages/diffusion/stable-diffusion) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) [`text-generation-inference`](/packages/llm/text-generation-inference) [`text-generation-webui`](/packages/llm/text-generation-webui) [`transformers:git`](/packages/llm/transformers) [`transformers:nvgpt`](/packages/llm/transformers) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`auto_gptq`](/packages/llm/auto_gptq) [`awq`](/packages/llm/awq) [`gptq-for-llama`](/packages/llm/gptq-for-llama) [`l4t-diffusion`](/packages/l4t/l4t-diffusion) [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`llava`](/packages/llm/llava) [`local_llm`](/packages/llm/local_llm) [`mlc`](/packages/llm/mlc) [`mlc:dev`](/packages/llm/mlc) [`nanodb`](/packages/vectordb/nanodb) [`nanosam`](/packages/vit/nanosam) [`nemo`](/packages/nemo) [`optimum`](/packages/llm/optimum) [`stable-diffusion`](/packages/diffusion/stable-diffusion) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) [`text-generation-inference`](/packages/llm/text-generation-inference) [`text-generation-webui`](/packages/llm/text-generation-webui) [`transformers:git`](/packages/llm/transformers) [`transformers:nvgpt`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/transformers:git-r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-09-11, 6.0GB)`<br>[`dustynv/transformers:nvgpt-r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-09-07, 6.0GB)`<br>[`dustynv/transformers:nvgpt-r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-09-11, 6.0GB)`<br>[`dustynv/transformers:r32.7.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-09-11, 1.4GB)`<br>[`dustynv/transformers:r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-09-06, 6.0GB)`<br>[`dustynv/transformers:r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-09-11, 6.0GB)`<br>[`dustynv/transformers:r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-08-29, 5.8GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/transformers:git-r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-09-24, 6.0GB)`<br>[`dustynv/transformers:git-r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-09-11, 6.0GB)`<br>[`dustynv/transformers:nvgpt-r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-09-24, 6.0GB)`<br>[`dustynv/transformers:nvgpt-r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-09-11, 6.0GB)`<br>[`dustynv/transformers:r32.7.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-09-24, 1.4GB)`<br>[`dustynv/transformers:r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-09-06, 6.0GB)`<br>[`dustynv/transformers:r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-09-24, 6.0GB)`<br>[`dustynv/transformers:r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-08-29, 5.8GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | bitsandbytes and auto_gptq dependencies added on JetPack5 for 4-bit/8-bit quantization |
 
 | **`transformers:git`** | |
@@ -56,7 +56,7 @@ On JetPack 5, the [`bitsandbytes`](/packages/llm/bitsandbytes) package is includ
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`bitsandbytes`](/packages/llm/bitsandbytes) [`transformers`](/packages/llm/transformers) [`auto_gptq`](/packages/llm/auto_gptq) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/transformers:git-r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-09-11, 6.0GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/transformers:git-r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-09-24, 6.0GB)`<br>[`dustynv/transformers:git-r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-09-11, 6.0GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | bitsandbytes and auto_gptq dependencies added on JetPack5 for 4-bit/8-bit quantization |
 
 | **`transformers:nvgpt`** | |
@@ -65,7 +65,7 @@ On JetPack 5, the [`bitsandbytes`](/packages/llm/bitsandbytes) package is includ
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`bitsandbytes`](/packages/llm/bitsandbytes) [`transformers`](/packages/llm/transformers) [`auto_gptq`](/packages/llm/auto_gptq) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/transformers:nvgpt-r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-09-07, 6.0GB)`<br>[`dustynv/transformers:nvgpt-r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-09-11, 6.0GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/transformers:nvgpt-r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-09-24, 6.0GB)`<br>[`dustynv/transformers:nvgpt-r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-09-11, 6.0GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | bitsandbytes and auto_gptq dependencies added on JetPack5 for 4-bit/8-bit quantization |
 
 </details>
@@ -76,12 +76,13 @@ On JetPack 5, the [`bitsandbytes`](/packages/llm/bitsandbytes) package is includ
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
+| &nbsp;&nbsp;[`dustynv/transformers:git-r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-09-24` | `arm64` | `6.0GB` |
 | &nbsp;&nbsp;[`dustynv/transformers:git-r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-09-11` | `arm64` | `6.0GB` |
-| &nbsp;&nbsp;[`dustynv/transformers:nvgpt-r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-09-07` | `arm64` | `6.0GB` |
+| &nbsp;&nbsp;[`dustynv/transformers:nvgpt-r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-09-24` | `arm64` | `6.0GB` |
 | &nbsp;&nbsp;[`dustynv/transformers:nvgpt-r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-09-11` | `arm64` | `6.0GB` |
-| &nbsp;&nbsp;[`dustynv/transformers:r32.7.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-09-11` | `arm64` | `1.4GB` |
+| &nbsp;&nbsp;[`dustynv/transformers:r32.7.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-09-24` | `arm64` | `1.4GB` |
 | &nbsp;&nbsp;[`dustynv/transformers:r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-09-06` | `arm64` | `6.0GB` |
-| &nbsp;&nbsp;[`dustynv/transformers:r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-09-11` | `arm64` | `6.0GB` |
+| &nbsp;&nbsp;[`dustynv/transformers:r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-09-24` | `arm64` | `6.0GB` |
 | &nbsp;&nbsp;[`dustynv/transformers:r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-08-29` | `arm64` | `5.8GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
@@ -99,10 +100,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag transformers)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/transformers:nvgpt-r35.4.1
+./run.sh dustynv/transformers:r35.3.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/transformers:nvgpt-r35.4.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/transformers:r35.3.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

@@ -11,7 +11,7 @@
 | &nbsp;&nbsp;&nbsp;Builds | [![`onnxruntime_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/onnxruntime_jp51.yml?label=onnxruntime:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/onnxruntime_jp51.yml) [![`onnxruntime_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/onnxruntime_jp46.yml?label=onnxruntime:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/onnxruntime_jp46.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`optimum`](/packages/llm/optimum) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`optimum`](/packages/llm/optimum) [`sam`](/packages/vit/sam) [`tam`](/packages/vit/tam) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/onnxruntime:r32.7.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) `(2023-09-07, 0.5GB)`<br>[`dustynv/onnxruntime:r35.2.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) `(2023-08-29, 5.2GB)`<br>[`dustynv/onnxruntime:r35.3.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) `(2023-09-07, 5.2GB)`<br>[`dustynv/onnxruntime:r35.4.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) `(2023-08-29, 5.1GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | the onnxruntime-gpu wheel that's built is saved in the container under /opt |

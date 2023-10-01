@@ -8,10 +8,26 @@
 
 | **`local_llm`** | |
 | :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Builds | [![`local_llm_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/local_llm_jp51.yml?label=local_llm:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/local_llm_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`bitsandbytes`](/packages/llm/bitsandbytes) [`auto_gptq`](/packages/llm/auto_gptq) [`transformers`](/packages/llm/transformers) [`mlc`](/packages/llm/mlc) [`llava`](/packages/llm/llava) [`awq`](/packages/llm/awq) [`llama_cpp:gguf`](/packages/llm/llama_cpp) [`exllama:v2`](/packages/llm/exllama) [`torch2trt`](/packages/pytorch/torch2trt) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`bitsandbytes`](/packages/llm/bitsandbytes) [`auto_gptq`](/packages/llm/auto_gptq) [`transformers`](/packages/llm/transformers) [`llava`](/packages/llm/llava) [`awq`](/packages/llm/awq) [`torch2trt`](/packages/pytorch/torch2trt) [`mlc:dev`](/packages/llm/mlc) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/local_llm:r35.2.1`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2023-09-20, 9.3GB)`<br>[`dustynv/local_llm:r35.3.1`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2023-09-20, 9.3GB)` |
 
+</details>
+
+<details open>
+<summary><b><a id="images">CONTAINER IMAGES</a></b></summary>
+<br>
+
+| Repository/Tag | Date | Arch | Size |
+| :-- | :--: | :--: | :--: |
+| &nbsp;&nbsp;[`dustynv/local_llm:r35.2.1`](https://hub.docker.com/r/dustynv/local_llm/tags) | `2023-09-20` | `arm64` | `9.3GB` |
+| &nbsp;&nbsp;[`dustynv/local_llm:r35.3.1`](https://hub.docker.com/r/dustynv/local_llm/tags) | `2023-09-20` | `arm64` | `9.3GB` |
+
+> <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
+> <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
+> <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R35.x containers can run on other versions of L4T R35.x (JetPack 5.1+)</sub><br>
 </details>
 
 <details open>
@@ -23,9 +39,11 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 # automatically pull or build a compatible container image
 ./run.sh $(./autotag local_llm)
 
-# or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host local_llm:35.2.1
+# or explicitly specify one of the container images above
+./run.sh dustynv/local_llm:r35.3.1
 
+# or if using 'docker run' (specify image and mounts/ect)
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/local_llm:r35.3.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

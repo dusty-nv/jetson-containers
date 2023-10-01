@@ -16,6 +16,21 @@ To start the MiniGPT4 container and webserver with the [recommended models](http
 
 Then navigate your browser to `http://HOSTNAME:7860`
 
+### Inference Benchmark
+
+```
+./run.sh --workdir=/opt/minigpt4.cpp/minigpt4/ $(./autotag minigpt4) /bin/bash -c \
+  'python3 benchmark.py \
+    $(huggingface-downloader --type=dataset maknee/minigpt4-13b-ggml/minigpt4-13B-f16.bin) \
+    $(huggingface-downloader --type=dataset maknee/ggml-vicuna-v0-quantized/ggml-vicuna-13B-v0-q5_k.bin) \
+    --prompt "What does the sign say?" --prompt "How far is the exit?" --prompt "What would happen next?" \
+    --image /data/images/hoover.jpg \
+    --run 3 \
+    --save /data/minigpt4.csv'
+```
+
+
+
 <details open>
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
@@ -26,7 +41,7 @@ Then navigate your browser to `http://HOSTNAME:7860`
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/minigpt4:r35.2.1`](https://hub.docker.com/r/dustynv/minigpt4/tags) `(2023-09-11, 5.8GB)`<br>[`dustynv/minigpt4:r35.3.1`](https://hub.docker.com/r/dustynv/minigpt4/tags) `(2023-09-07, 5.9GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/minigpt4:r35.2.1`](https://hub.docker.com/r/dustynv/minigpt4/tags) `(2023-09-26, 5.8GB)`<br>[`dustynv/minigpt4:r35.3.1`](https://hub.docker.com/r/dustynv/minigpt4/tags) `(2023-09-07, 5.9GB)` |
 
 </details>
 
@@ -36,7 +51,7 @@ Then navigate your browser to `http://HOSTNAME:7860`
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/minigpt4:r35.2.1`](https://hub.docker.com/r/dustynv/minigpt4/tags) | `2023-09-11` | `arm64` | `5.8GB` |
+| &nbsp;&nbsp;[`dustynv/minigpt4:r35.2.1`](https://hub.docker.com/r/dustynv/minigpt4/tags) | `2023-09-26` | `arm64` | `5.8GB` |
 | &nbsp;&nbsp;[`dustynv/minigpt4:r35.3.1`](https://hub.docker.com/r/dustynv/minigpt4/tags) | `2023-09-07` | `arm64` | `5.9GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>

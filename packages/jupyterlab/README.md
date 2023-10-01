@@ -11,7 +11,7 @@
 | &nbsp;&nbsp;&nbsp;Builds | [![`jupyterlab_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/jupyterlab_jp46.yml?label=jupyterlab:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/jupyterlab_jp46.yml) [![`jupyterlab_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/jupyterlab_jp51.yml?label=jupyterlab:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/jupyterlab_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`rust`](/packages/rust) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`l4t-ml`](/packages/l4t/l4t-ml) [`langchain:samples`](/packages/llm/langchain) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`l4t-ml`](/packages/l4t/l4t-ml) [`langchain:samples`](/packages/llm/langchain) [`sam`](/packages/vit/sam) [`tam`](/packages/vit/tam) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/jupyterlab:r32.7.1`](https://hub.docker.com/r/dustynv/jupyterlab/tags) `(2023-09-07, 0.7GB)`<br>[`dustynv/jupyterlab:r35.2.1`](https://hub.docker.com/r/dustynv/jupyterlab/tags) `(2023-09-07, 5.3GB)`<br>[`dustynv/jupyterlab:r35.3.1`](https://hub.docker.com/r/dustynv/jupyterlab/tags) `(2023-08-29, 5.3GB)`<br>[`dustynv/jupyterlab:r35.4.1`](https://hub.docker.com/r/dustynv/jupyterlab/tags) `(2023-08-29, 5.3GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | will autostart Jupyter server on port 8888 unless container entry CMD is overridden |
