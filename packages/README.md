@@ -1,5 +1,5 @@
 # Packages
-> [`BUILD`](#user-content-build) [`CORE`](#user-content-core) [`CUDA`](#user-content-cuda) [`DIFFUSION`](#user-content-diffusion) [`LLM`](#user-content-llm) [`ML`](#user-content-ml) [`RAPIDS`](#user-content-rapids) [`ROS`](#user-content-ros) [`SENSORS`](#user-content-sensors) 
+> [`BUILD`](#user-content-build) [`CORE`](#user-content-core) [`CUDA`](#user-content-cuda) [`DIFFUSION`](#user-content-diffusion) [`LLM`](#user-content-llm) [`ML`](#user-content-ml) [`RAPIDS`](#user-content-rapids) [`ROS`](#user-content-ros) [`SENSORS`](#user-content-sensors) [`VECTORDB`](#user-content-vectordb) [`VIT`](#user-content-vit) 
 
 |            |            |
 |------------|------------|
@@ -42,9 +42,10 @@
 | &nbsp;&nbsp;&nbsp; [`llama_cpp:gguf`](/packages/llm/llama_cpp) | [![`llama_cpp-gguf_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/llama_cpp-gguf_jp51.yml?label=llama_cpp-gguf:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/llama_cpp-gguf_jp51.yml) |
 | &nbsp;&nbsp;&nbsp; [`llamaspeak`](/packages/llm/llamaspeak) | [![`llamaspeak_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/llamaspeak_jp51.yml?label=llamaspeak:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/llamaspeak_jp51.yml) |
 | &nbsp;&nbsp;&nbsp; [`llava`](/packages/llm/llava) | [![`llava_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/llava_jp51.yml?label=llava:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/llava_jp51.yml) |
-| &nbsp;&nbsp;&nbsp; [`local_llm`](/packages/llm/local_llm) |  |
+| &nbsp;&nbsp;&nbsp; [`local_llm`](/packages/llm/local_llm) | [![`local_llm_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/local_llm_jp51.yml?label=local_llm:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/local_llm_jp51.yml) |
 | &nbsp;&nbsp;&nbsp; [`minigpt4`](/packages/llm/minigpt4) | [![`minigpt4_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/minigpt4_jp51.yml?label=minigpt4:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/minigpt4_jp51.yml) |
 | &nbsp;&nbsp;&nbsp; [`mlc`](/packages/llm/mlc) | [![`mlc_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/mlc_jp51.yml?label=mlc:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/mlc_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`mlc:dev`](/packages/llm/mlc) |  |
 | &nbsp;&nbsp;&nbsp; [`optimum`](/packages/llm/optimum) | [![`optimum_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/optimum_jp46.yml?label=optimum:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/optimum_jp46.yml) [![`optimum_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/optimum_jp51.yml?label=optimum:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/optimum_jp51.yml) |
 | &nbsp;&nbsp;&nbsp; [`text-generation-inference`](/packages/llm/text-generation-inference) | [![`text-generation-inference_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/text-generation-inference_jp51.yml?label=text-generation-inference:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/text-generation-inference_jp51.yml) |
 | &nbsp;&nbsp;&nbsp; [`text-generation-webui`](/packages/llm/text-generation-webui) | [![`text-generation-webui_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/text-generation-webui_jp51.yml?label=text-generation-webui:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/text-generation-webui_jp51.yml) |
@@ -67,6 +68,7 @@
 | &nbsp;&nbsp;&nbsp; [`pytorch:1.13`](/packages/pytorch) | [![`pytorch-113_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/pytorch-113_jp51.yml?label=pytorch-113:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/pytorch-113_jp51.yml) |
 | &nbsp;&nbsp;&nbsp; [`pytorch:1.9`](/packages/pytorch) | [![`pytorch-19_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/pytorch-19_jp46.yml?label=pytorch-19:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/pytorch-19_jp46.yml) |
 | &nbsp;&nbsp;&nbsp; [`pytorch:2.0`](/packages/pytorch) | [![`pytorch-20_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/pytorch-20_jp51.yml?label=pytorch-20:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/pytorch-20_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`pytorch:2.0_use_distributed`](/packages/pytorch) |  |
 | &nbsp;&nbsp;&nbsp; [`pytorch:2.1`](/packages/pytorch) | [![`pytorch-21_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/pytorch-21_jp51.yml?label=pytorch-21:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/pytorch-21_jp51.yml) |
 | &nbsp;&nbsp;&nbsp; [`riva-client:cpp`](/packages/riva-client) | [![`riva-client-cpp_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/riva-client-cpp_jp51.yml?label=riva-client-cpp:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/riva-client-cpp_jp51.yml) |
 | &nbsp;&nbsp;&nbsp; [`riva-client:python`](/packages/riva-client) | [![`riva-client-python_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/riva-client-python_jp51.yml?label=riva-client-python:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/riva-client-python_jp51.yml) |
@@ -103,3 +105,12 @@
 | <a id="sensors">**`SENSORS`**</a> | |
 | &nbsp;&nbsp;&nbsp; [`realsense`](/packages/realsense) | [![`realsense_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/realsense_jp46.yml?label=realsense:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/realsense_jp46.yml) [![`realsense_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/realsense_jp51.yml?label=realsense:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/realsense_jp51.yml) |
 | &nbsp;&nbsp;&nbsp; [`zed`](/packages/zed) | [![`zed_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/zed_jp46.yml?label=zed:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/zed_jp46.yml) [![`zed_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/zed_jp51.yml?label=zed:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/zed_jp51.yml) |
+| <a id="vectordb">**`VECTORDB`**</a> | |
+| &nbsp;&nbsp;&nbsp; [`faiss`](/packages/vectordb/faiss) |  |
+| &nbsp;&nbsp;&nbsp; [`faiss:lite`](/packages/vectordb/faiss_lite) |  |
+| &nbsp;&nbsp;&nbsp; [`nanodb`](/packages/vectordb/nanodb) |  |
+| &nbsp;&nbsp;&nbsp; [`raft`](/packages/rapids/raft) |  |
+| <a id="vit">**`VIT`**</a> | |
+| &nbsp;&nbsp;&nbsp; [`nanosam`](/packages/vit/nanosam) |  |
+| &nbsp;&nbsp;&nbsp; [`sam`](/packages/vit/sam) |  |
+| &nbsp;&nbsp;&nbsp; [`tam`](/packages/vit/tam) |  |
