@@ -2,7 +2,7 @@
 # name: awq
 # group: llm
 # config: config.py
-# depends: [pytorch, llava]
+# depends: [transformers]
 # requires: '>=34.1.0'
 # test: test.sh
 # docs: docs.md
@@ -20,7 +20,7 @@ WORKDIR /opt
 # force rebuild on new git commits - https://stackoverflow.com/a/56945508
 ADD https://api.github.com/repos/${AWQ_REPO}/git/refs/heads/${AWQ_BRANCH} /tmp/awq_version.json
 
-RUN git clone --depth=1 https://github.com/${AWQ_REPO} awq
+RUN git clone --branch=${AWQ_BRANCH} --depth=1 https://github.com/${AWQ_REPO} awq
 
 # enable giving huggingface model names (as opposed to paths only)
 #RUN sed 's|^    if not os.path.exists(model_path)|#    if not os.path.exists(model_path)|g' -i awq/awq/entry.py && \

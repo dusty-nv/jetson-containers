@@ -3,12 +3,14 @@
 import os
 import sys
 import time
+import json
 import datetime
 import argparse
 import resource
 import socket
 import threading
 import torch
+import tinychat
 
 from transformers import AutoModelForCausalLM, AutoTokenizer, TextIteratorStreamer
 from accelerate import init_empty_weights, load_checkpoint_and_dispatch
@@ -25,12 +27,11 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument('--model', type=str, default='', required=True, help="name or path of the huggingface model")
 parser.add_argument('--quant', type=str, default='', required=True, help="path to the real AWQ quantized model checkpoint")
-parser.add_argument('--prompt', type=str, default='Once upon a time,')
+parser.add_argument("--prompt", action='append', nargs='*')
 
 # benchmarking options
-parser.add_argument('--tokens', type=int, default=128, help='number of output tokens to generate, including the input prompt')
-parser.add_argument('--runs', type=int, default=2, help='the number of benchmark timing iterations')
-parser.add_argument('--warmup', type=int, default=2, help='the number of warmup iterations')
+parser.add_argument("--max-new-tokens", type=int, default=128)
+parser.add_argument("--max-num-prompts", type=int, default=None)
 parser.add_argument('--save', type=str, default='', help='CSV file to save benchmarking results to')
 
 # quantization options
@@ -38,18 +39,74 @@ parser.add_argument('--w_bit', type=int, default=4)
 parser.add_argument('--q_group_size', type=int, default=128)
 parser.add_argument('--no_zero_point', action='store_true', help="disable zero_point")
 parser.add_argument('--no_tinychat_kernels', action='store_true', help="disable tinychat kernels")
-parser.add_argument('--no_tinychat_infer', action='store_true', help="disable tinychat inference")
-parser.add_argument('--no_streaming', action='store_true', help="disable streaming mode")
+#parser.add_argument('--no_tinychat_infer', action='store_true', help="disable tinychat inference")
 parser.add_argument('--no_quant', action='store_true', help="disable quantization and use FP16 through transformers")
 parser.add_argument('--do_sample', action='store_true')
 
 args = parser.parse_args()
 
-#args.prompt="Once upon a time, there was a young man named Jack who lived in a small village nestled in the rolling hills of the countryside. Jack was a curious and adventurous soul, always eager to explore the world beyond his village. One day, while wandering through the nearby forest, he stumbled upon a hidden path that he had never seen before. The path was overgrown with weeds and vines, and it looked as though it had been untouched for many years. Jack's curiosity was piqued, and he decided to follow the path to see where it led"
-#args.prompt="Once upon a time, there was a young man named Jack who lived in a small village nestled in the rolling hills of the countryside. Jack was a curious and adventurous soul, always eager to explore the world beyond his village. One day, while wandering through the nearby forest, he stumbled upon a hidden path that he had never seen before. The path was overgrown with weeds and vines, and it looked as though it had been untouched for many years. Jack's curiosity was piqued, and he decided to follow the path to see where it led. As he walked down the path, the trees grew taller and the air grew colder. Jack could feel a strange energy emanating from the forest, as if it were alive and watching him. He quickened his pace, eager to reach the end of the path and discover its secrets. After a while, the path opened up into a clearing, and Jack found himself standing in front of a massive stone structure. The building was unlike anything he had ever seen before, with intricate carvings and symbols etched into its walls. Jack felt a sense of awe and wonder as he approached the"
-
+if not args.prompt:
+    if args.chat:  # https://modal.com/docs/guide/ex/vllm_inference
+        args.prompt = [
+            "What is the meaning of life?",
+            "How many points did you list out?",
+            "What is the weather forecast today?",
+            "What is the fable involving a fox and grapes?",
+            "What's a good recipe for making tabouli?",
+            "What is the product of 9 and 8?",
+            "If a train travels 120 miles in 2 hours, what is its average speed?",
+        ]
+    else:
+        args.prompt = [
+            "Once upon a time,",
+            "A great place to live is",
+            "In a world where dreams are shared,",
+            "The weather forecast today is",
+            "Large language models are",
+            "Space exploration is exciting",
+            "The history of the Hoover Dam is",
+            "San Fransisco is a city in",
+            "To train for running a marathon,",
+            "A recipe for making tabouli is"
+        ]
+else:
+    args.prompt = [x[0] for x in args.prompt]
+    
 print(args)
 
+def load_prompts(prompts):
+    """
+    Load prompts from a list of txt or json files
+    (or if these are strings, just return the strings)
+    """
+    prompt_list = []
+    
+    for prompt in prompts:
+        ext = os.path.splitext(prompt)[1]
+        
+        if ext == '.json':
+            with open(prompt) as file:
+                json_prompts = json.load(file)
+            for json_prompt in json_prompts:
+                if isinstance(json_prompt, dict):
+                    prompt_list.append(json_prompt)  # json_prompt['text']
+                elif ifinstance(json_prompt, str):
+                    prompt_list.append(json_prompt)
+                else:
+                    raise TypeError(f"{type(json_prompt)}")
+        elif ext == '.txt':
+            with open(prompt) as file:
+                prompt_list.append(file.read())
+        else:
+            prompt_list.append(prompt)
+            
+    return prompt_list
+    
+args.prompt = load_prompts(args.prompt)
+
+if args.max_num_prompts:
+    args.prompt = args.prompt[:args.max_num_prompts]
+    
 def get_model_name_from_path(model_path):
     model_path = model_path.strip("/")
     model_paths = model_path.split("/")
@@ -97,19 +154,19 @@ else:
         no_split_module_classes=["OPTDecoderLayer", "LlamaDecoderLayer"]
     )
     
-    precision = f"int{args.w_bit}"
+    precision = f"W{args.w_bit}A16"
 
     print(model)
     print(f"model device: {model.device}")
      
     if not args.no_tinychat_kernels:
+        tinychat.utils.constants.max_seq_len = model.config.max_position_embeddings
         make_quant_attn(model, device)
         make_quant_norm(model)
         make_fused_mlp(model)
-
-    print(model)
-    print(f"model device: {model.device}")
-
+        print("TinyChat model:\n", model)
+        print(f"Model max context length: {model.config.max_position_embeddings}")
+        
 #for name, param in model.named_parameters():
 #    print(f"{name} {param}")
     
@@ -117,80 +174,79 @@ model.eval()
                   
 # create tokenizer
 tokenizer = AutoTokenizer.from_pretrained(args.model, use_fast=False)
-input_ids = tokenizer(args.prompt, return_tensors="pt").input_ids.to(device)
 
 # benchmark inference
-avg_latency=0
-avg_tokens_sec=0
+avg_prefill_time = 0
+avg_prefill_rate = 0
+avg_decode_time = 0
+avg_decode_rate = 0
 
-for run in range(args.runs + args.warmup):
-    if args.no_streaming:
-        time_begin = time.perf_counter()
-        generated_ids = model.generate(input_ids, do_sample=args.do_sample, min_new_tokens=args.tokens, max_new_tokens=args.tokens)
-        time_elapsed = time.perf_counter() - time_begin
-        
-        print(tokenizer.decode(generated_ids[0], skip_special_tokens=False))
-        
-        num_tokens=len(generated_ids[0])
-        tokens_sec=num_tokens / time_elapsed
-        latency=time_elapsed
-    else:
-        streamer = TextIteratorStreamer(tokenizer, skip_prompt=True, skip_special_tokens=False)
-        
-        def generate():
-            with torch.inference_mode():
-                model.generate(
-                    inputs=input_ids,
-                    do_sample=args.do_sample,
-                    min_new_tokens=args.tokens, 
-                    max_new_tokens=args.tokens,
-                    streamer=streamer
-                )
-        
-        thread = threading.Thread(target=generate)
-        thread.start()
-        
-        print(f"Prompt:  {args.prompt}")
-        
-        new_tokens = ''
-        num_tokens = 0
-        time_begin = time.perf_counter()
-       
-        for token in streamer:
-            print(token, end='')
-            sys.stdout.flush()
-
-            if num_tokens == 0:
-                time_first_token=time.perf_counter()
-                latency=time_first_token - time_begin
-                time_begin=time_first_token
-                
-            new_tokens += token
-            num_tokens += 1
+for i, prompt in enumerate(args.prompt):
+    if isinstance(prompt, dict):
+        prompt = prompt['text']
     
-        time_elapsed=time.perf_counter() - time_begin
-        tokens_sec=(num_tokens-1) / time_elapsed
-        
-    print(f"\n{model_name}:  {num_tokens} tokens in {time_elapsed:.2f} sec, {tokens_sec:.2f} tokens/sec, latency {latency:.2f} sec  ({precision})\n")
+    input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(device)
+    num_input_tokens = input_ids.shape[-1]
+
+    streamer = TextIteratorStreamer(tokenizer, skip_prompt=True, skip_special_tokens=False)
+    time_begin = 0
+    
+    def generate():
+        global time_begin
+        time_begin = time.perf_counter()
+        with torch.inference_mode():
+            model.generate(
+                inputs=input_ids,
+                do_sample=args.do_sample,
+                min_new_tokens=args.max_new_tokens, 
+                max_new_tokens=args.max_new_tokens,
+                streamer=streamer
+            )
+    
+    thread = threading.Thread(target=generate)
+    thread.start()
+    
+    print(f"Prompt:  {prompt}\n")
+    
+    new_tokens = ''
+    num_tokens = 0
+
+    for token in streamer:
+        print(token, end='', flush=True)
+
+        if num_tokens == 0:
+            time_first_token=time.perf_counter()
+            prefill_time=time_first_token - time_begin
+            time_begin=time_first_token
             
-    if run >= args.warmup:
-        avg_latency += latency
-        avg_tokens_sec += tokens_sec
+        new_tokens += token
+        num_tokens += 1
+
+    decode_time=time.perf_counter() - time_begin
+    decode_rate=(args.max_new_tokens-1) / decode_time
+    prefill_rate=num_input_tokens / prefill_time
+
+    print(f"\n\n{model_name}:  input={num_input_tokens} output={num_tokens} prefill_time {prefill_time:.3f} sec, prefill_rate {prefill_rate:.1f} tokens/sec, decode_time {decode_time:.3f} sec, decode_rate {decode_rate:.1f} tokens/sec\n")
+            
+    if i > 0:
+        avg_factor = 1.0 / (len(args.prompt) - 1)
+        avg_prefill_time += prefill_time * avg_factor
+        avg_prefill_rate += prefill_rate * avg_factor
+        avg_decode_time += decode_time * avg_factor
+        avg_decode_rate += decode_rate * avg_factor
   
-# compute statistics
-avg_latency /= args.runs
-avg_tokens_sec /= args.runs
+print(f"AVERAGE OVER {len(args.prompt) - 1} RUNS, input={num_input_tokens}, output={args.max_new_tokens}, precision={precision}")
+print(f"{model_name}:  prefill_time {avg_prefill_time:.3f} sec, prefill_rate {avg_prefill_rate:.1f} tokens/sec, decode_time {avg_decode_time:.3f} sec, decode_rate {avg_decode_rate:.1f} tokens/sec\n")
 
 memory_usage = (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss + resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss) / 1024  # https://stackoverflow.com/a/7669482
-
-print(f"AVERAGE of {args.runs} runs:")
-print(f"{model_name}:  {avg_tokens_sec:.2f} tokens/sec, latency {avg_latency:.2f} sec, memory={memory_usage:.2f} MB  ({precision})\n")
+print(f"Peak memory usage:  {memory_usage:.2f} MB")
 
 if args.save:
     if not os.path.isfile(args.save):  # csv header
         with open(args.save, 'w') as file:
-            file.write(f"timestamp, hostname, api, model, precision, tokens, tokens/sec, latency, memory\n")
+            file.write(f"timestamp, hostname, api, model, precision, input_tokens, output_tokens, prefill_time, prefill_rate, decode_time, decode_rate, memory\n")
     with open(args.save, 'a') as file:
-        file.write(f"{datetime.datetime.now().strftime('%Y%m%d %H:%M:%S')}, {socket.gethostname()}, {'tinychat' if args.tiny_chat else 'awq'}, ")
-        file.write(f"{model_name}, {precision}, {args.tokens}, {avg_tokens_sec}, {avg_latency}, {memory_usage}\n")
+        file.write(f"{datetime.datetime.now().strftime('%Y%m%d %H:%M:%S')}, {socket.gethostname()}, {'tinychat' if not args.no_tinychat_kernels else 'awq'}, ")
+        file.write(f"{model_name}, {precision}, {num_input_tokens}, {args.max_new_tokens}, ")
+        file.write(f"{avg_prefill_time}, {avg_prefill_rate}, {avg_decode_time}, {avg_decode_rate}, {memory_usage}\n")
             
