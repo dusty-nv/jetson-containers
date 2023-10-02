@@ -28,7 +28,8 @@ RUN apt-get update && \
 #ADD https://api.github.com/repos/${MLC_REPO}/git/refs/heads/${MLC_BRANCH} /tmp/mlc_version.json
 
 # https://github.com/mlc-ai/mlc-llm/issues/906 sha=015414f60e395708345defa2d793df5f3f474e98
-RUN echo "20230917" > /tmp/mlc_version.txt
+# https://github.com/mlc-ai/mlc-llm/pull/941 sha=5902cc6624b828858060654fbcad3eb7c5158179
+RUN echo "20231001" > /tmp/mlc_version.txt
 
 RUN git clone --branch=${MLC_BRANCH} --depth=1 --recursive https://github.com/${MLC_REPO}
 

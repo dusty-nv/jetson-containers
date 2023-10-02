@@ -141,12 +141,12 @@ for i, prompt in enumerate(args.prompt):
         avg_decode_rate += decode_rate * avg_factor
         avg_decode_time += decode_time * avg_factor
         
-    print(f"\n{args.model}:  prefill_time {prefill_time:.3f} sec, prefill_rate {prefill_rate:.1f} tokens/sec, decode_time {decode_time:.3f} sec, decode_rate {decode_rate:.1f} tokens/sec\n")
+    print(f"\n{args.model}:  input={num_input_tokens} output={args.max_new_tokens} prefill_time {prefill_time:.3f} sec, prefill_rate {prefill_rate:.1f} tokens/sec, decode_time {decode_time:.3f} sec, decode_rate {decode_rate:.1f} tokens/sec\n")
 
     if not args.streaming or not args.chat:
         cm.reset_chat()
 
-print(f"AVERAGE OVER {len(args.prompt) - 1} RUNS:")
+print(f"AVERAGE OVER {len(args.prompt) - 1} RUNS, input={num_input_tokens}, output={args.max_new_tokens}")
 print(f"{args.model}:  prefill_time {avg_prefill_time:.3f} sec, prefill_rate {avg_prefill_rate:.1f} tokens/sec, decode_time {avg_decode_time:.3f} sec, decode_rate {avg_decode_rate:.1f} tokens/sec\n")
 
 memory_usage = (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss + resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss) / 1024  # https://stackoverflow.com/a/7669482
