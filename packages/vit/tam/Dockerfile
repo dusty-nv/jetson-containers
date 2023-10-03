@@ -1,7 +1,7 @@
 #---
 # name: tam
 # group: vit
-# depends: [sam, pytorch:2.0_use_distributed]
+# depends: [sam]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---
@@ -38,6 +38,22 @@ RUN sed "s|('Ampere', '8.0;8.6+PTX'),|('Ampere', '8.0;8.6+PTX'),('Ampere+Tegra',
 RUN sed "s|'8.6', '8.9'|'8.6', '8.7', '8.9'|" -i ${CPP_EXTENSION_PY_FILE}
 RUN sed -n 1729,1746p ${CPP_EXTENSION_PY_FILE}
 
-RUN mim install mmcv
+RUN mim install mmcv --verbose --no-cache-dir
 
+RUN cd /opt && ./opencv_install.sh
+
+# patch mmengine and mmcv to not use torch.distributed
+RUN PYTHON_ROOT=`pip3 show mmengine | grep Location: | cut -d' ' -f2` && \
+    sed 's|-> torch_dist\.ReduceOp||' -i $PYTHON_ROOT/mmengine/dist/dist.py && \
+    sed 's|digit_version(TORCH_VERSION)|(0,0,0)|' -i $PYTHON_ROOT/mmengine/model/wrappers/__init__.py && \
+    sed 's|digit_version(TORCH_VERSION)|(0,0,0)|' -i $PYTHON_ROOT/mmengine/model/__init__.py && \
+    cat $PYTHON_ROOT/mmengine/model/wrappers/__init__.py
+
+# cache the checkpoints under /data
+RUN mkdir -p /data/models/tam && \
+    ln -s /data/models/tam /opt/Track-Anything/checkpoints
+    
+WORKDIR /
+
+RUN cd /opt/Track-Anything && python3 app.py --help
 CMD cd /opt/Track-Anything && python3 app.py
