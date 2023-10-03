@@ -78,7 +78,6 @@ Note that the [`l4t-pytorch`](/packages/l4t/l4t-pytorch) containers also include
 | &nbsp;&nbsp;&nbsp;Aliases | `torch` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`tam`](/packages/vit/tam) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.2.0_use_distributed`](Dockerfile.2.0_use_distributed) |
 
 </details>

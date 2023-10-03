@@ -49,7 +49,7 @@ Make sure that you load the output from the quantization steps above with `--qua
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`bitsandbytes`](/packages/llm/bitsandbytes) [`auto_gptq`](/packages/llm/auto_gptq) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`local_llm`](/packages/llm/local_llm) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/awq:r35.2.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-09-24, 6.1GB)`<br>[`dustynv/awq:r35.3.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-09-19, 6.2GB)`<br>[`dustynv/awq:r35.4.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-09-20, 6.1GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/awq:r35.2.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-10-02, 6.1GB)`<br>[`dustynv/awq:r35.3.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-09-19, 6.2GB)`<br>[`dustynv/awq:r35.4.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-09-20, 6.1GB)` |
 
 | **`awq:dev`** | |
 | :-- | :-- |
@@ -65,7 +65,7 @@ Make sure that you load the output from the quantization steps above with `--qua
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/awq:r35.2.1`](https://hub.docker.com/r/dustynv/awq/tags) | `2023-09-24` | `arm64` | `6.1GB` |
+| &nbsp;&nbsp;[`dustynv/awq:r35.2.1`](https://hub.docker.com/r/dustynv/awq/tags) | `2023-10-02` | `arm64` | `6.1GB` |
 | &nbsp;&nbsp;[`dustynv/awq:r35.3.1`](https://hub.docker.com/r/dustynv/awq/tags) | `2023-09-19` | `arm64` | `6.2GB` |
 | &nbsp;&nbsp;[`dustynv/awq:r35.4.1`](https://hub.docker.com/r/dustynv/awq/tags) | `2023-09-20` | `arm64` | `6.1GB` |
 
