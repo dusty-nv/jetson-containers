@@ -21,6 +21,7 @@ RUN pip3 uninstall -y bitsandbytes && \
     git clone --depth=1 https://github.com/${BITSANDBYTES_REPO} bitsandbytes && \
     cd bitsandbytes && \
     CUDA_VERSION=114 make -j$(nproc) cuda11x && \
+    CUDA_VERSION=114 make -j$(nproc) cuda11x_nomatmul && \
     python3 setup.py --verbose build_ext --inplace -j$(nproc) bdist_wheel && \
     cp dist/bitsandbytes*.whl /opt && \
     pip3 install --no-cache-dir --verbose /opt/bitsandbytes*.whl  && \
