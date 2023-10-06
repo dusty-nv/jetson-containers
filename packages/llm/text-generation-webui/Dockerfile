@@ -23,31 +23,34 @@ RUN cd text-generation-webui && \
     git cherry-pick 9c085ee
 
 RUN cd text-generation-webui && \
-    sed 's|^numpy.*|numpy|g' -i requirements.txt && \
-    sed 's|^accelerate.*|accelerate|g' -i requirements.txt && \
+    #sed 's|^numpy.*|numpy|g' -i requirements.txt && \
+    #sed 's|^accelerate.*|accelerate|g' -i requirements.txt && \
     sed 's|^bitsandbytes.*|bitsandbytes|g' -i requirements.txt && \
-    sed 's|^fastapi.*|fastapi|g' -i requirements.txt && \
-    sed 's|^safetensors.*|safetensors|g' -i requirements.txt && \
+    #sed 's|^fastapi.*|fastapi|g' -i requirements.txt && \
+    #sed 's|^safetensors.*|safetensors|g' -i requirements.txt && \
     sed 's|^llama-cpp-python.*|llama-cpp-python|g' -i requirements.txt && \
     sed 's|^exllamav2.*|exllamav2|g' -i requirements.txt && \
     sed 's|^autoawq.*||g' -i requirements.txt && \
-    sed 's|^transformers.*|transformers|g' -i requirements.txt && \
-    sed 's|^optimum.*|optimum|g' -i requirements.txt && \
-    sed 's|^pydantic.*|pydantic|g' -i requirements.txt && \
-    sed 's|^aiofiles.*|aiofiles|g' -i requirements.txt && \
-    sed 's|^gradio.*|gradio|g' -i requirements.txt && \
-    sed 's|^gradio_client.*|gradio_client|g' -i requirements.txt && \
-    sed 's|^peft.*|peft|g' -i requirements.txt && \
+    #sed 's|^transformers.*|transformers|g' -i requirements.txt && \
+    #sed 's|^optimum.*|optimum|g' -i requirements.txt && \
+    #sed 's|^pydantic.*|pydantic|g' -i requirements.txt && \
+    #sed 's|^aiofiles.*|aiofiles|g' -i requirements.txt && \
+    #sed 's|^gradio.*|gradio|g' -i requirements.txt && \
+    #sed 's|^gradio_client.*|gradio_client|g' -i requirements.txt && \
+    #sed 's|^peft.*|peft|g' -i requirements.txt && \
+    sed 's|^git+https://github.com/oobabooga/torch-grammar.git||g' -i requirements.txt && \
     sed 's|^git+https://github.com/huggingface/transformers.*|transformers|g' -i requirements.txt && \
     sed 's|^git+https://github.com/huggingface/peft|#git+https://github.com/huggingface/peft|g' -i requirements.txt && \
     sed 's|^https://github.com/PanQiWei/AutoGPTQ|#https://github.com/PanQiWei/AutoGPTQ|g' -i requirements.txt && \
     sed 's|^https://github.com/jllllll/ctransformers-cuBLAS-wheels.*|#https://github.com/jllllll/ctransformers-cuBLAS-wheels|g' -i requirements.txt && \
     cat requirements.txt
     
-RUN cd text-generation-webui && \
-    pip3 freeze > /tmp/constraints.txt && \
-    pip3 install --no-cache-dir --verbose -r requirements.txt --constraint /tmp/constraints.txt && \
-    rm /tmp/constraints.txt
+RUN pip3 install --no-cache-dir --verbose -r text-generation-webui/requirements.txt
+
+#RUN cd text-generation-webui && \
+#    pip3 freeze > /tmp/constraints.txt && \
+#    pip3 install --no-cache-dir --verbose -r requirements.txt --constraint /tmp/constraints.txt && \
+#    rm /tmp/constraints.txt
     
 RUN cd text-generation-webui && \
     sed 's|@functools.cache|@functools.lru_cache\(maxsize=None\)|' -i modules/chat.py && \
@@ -61,6 +64,14 @@ RUN pip3 install --no-cache-dir --verbose 'gradio>=3.36.1'
 RUN pip3 install --no-cache-dir --verbose -r text-generation-webui/extensions/api/requirements.txt
 RUN pip3 install --no-cache-dir --verbose -r text-generation-webui/extensions/openai/requirements.txt
 
+RUN git clone --depth=1 https://github.com/oobabooga/torch-grammar && \
+    cd torch-grammar && \
+    sed 's|"\^3.9"|"^3.8"|' -i pyproject.toml && \
+    cat pyproject.toml && \
+    pip3 wheel --wheel-dir=dist --no-deps --verbose . && \
+    cp dist/torch_grammar*.whl /opt && \
+    pip3 install --no-cache-dir --verbose /opt/torch_grammar*.whl
+    
 ENV LD_PRELOAD=${LD_PRELOAD}:/usr/local/lib/python3.8/dist-packages/sklearn/__check_build/../../scikit_learn.libs/libgomp-d22c30c5.so.1.0.0
 
 COPY settings.json text-generation-webui/
