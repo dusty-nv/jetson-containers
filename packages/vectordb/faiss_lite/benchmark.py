@@ -35,6 +35,7 @@ parser.add_argument('--num-queries', type=int, default=1)
 
 parser.add_argument('--seed', type=int, default=1234, help='change the random seed used')
 parser.add_argument('--runs', type=int, default=15)
+parser.add_argument('--warmup', type=int, default=3)
 parser.add_argument('--save', type=str, default='', help='CSV file to save benchmarking results to')
 parser.add_argument('--skip-validation', action='store_true')
 
@@ -76,7 +77,7 @@ for n in range(args.num_vectors):
 for n in range(args.num_queries):
     queries.array[n] = xq[n]
    
-vector_norms_ptr = None
+vector_norms = None
 
 avg_l2_time = 0
 avg_l2_rate = 0
@@ -101,7 +102,7 @@ if args.metric == 'l2':
         cudaL2Norm(
             C.cast(vectors.ptr+n*args.dim*dsize, C.c_void_p),
             dsize, 1, args.dim,
-            C.cast(vector_norms.ptr+n*4, C.POINTER(C.c_float)),
+            C.cast(vector_norms.ptr+n*4, C.POINTER(C.c_float)) if vector_norms else None,
             True, None
         )
         assert_cuda(cudaDeviceSynchronize())
@@ -125,7 +126,7 @@ if not args.skip_validation:
             args.dim,
             args.k,
             DistanceMetrics[args.metric],
-            C.cast(vector_norms.ptr, C.POINTER(C.c_float)),
+            C.cast(vector_norms.ptr, C.POINTER(C.c_float)) if vector_norms else None,
             C.cast(distances.ptr, C.POINTER(C.c_float)),
             C.cast(indexes.ptr, C.POINTER(C.c_longlong)),
             None
@@ -135,7 +136,7 @@ if not args.skip_validation:
 
 avg_time = 0
 
-for r in range(args.runs):
+for r in range(args.runs + args.warmup):
     time_begin = time.perf_counter()
     assert(cudaKNN(
         C.cast(vectors.ptr, C.c_void_p),
@@ -146,7 +147,7 @@ for r in range(args.runs):
         args.dim,
         args.k,
         DistanceMetrics[args.metric],
-        C.cast(vector_norms.ptr, C.POINTER(C.c_float)),
+        C.cast(vector_norms.ptr, C.POINTER(C.c_float)) if vector_norms else None,
         C.cast(distances.ptr, C.POINTER(C.c_float)),
         C.cast(indexes.ptr, C.POINTER(C.c_longlong)),
         None
@@ -157,8 +158,8 @@ for r in range(args.runs):
     
     print(f"cudaKNN  enqueue:  {time_enqueue:.3f} ms   process:  {time_elapsed:.3f} ms")
     
-    if r > 0:
-        avg_time += time_elapsed / (args.runs-1)
+    if r >= args.warmup:
+        avg_time += time_elapsed / args.runs
 
 avg_rate = args.num_queries * 1000 / avg_time
 
