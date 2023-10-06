@@ -22,6 +22,7 @@ ADD https://pypi.org/pypi/xformers/json /tmp/xformers_version.json
 RUN pip3 list && python3 -c 'import setuptools'
 
 # install from pip
-RUN pip3 install --no-cache-dir --verbose 'xformers!=0.0.21'
+RUN MAX_JOBS=8 pip3 install --no-cache-dir --verbose 'xformers!=0.0.21'
+RUN pip3 install --force-reinstall --no-cache-dir --verbose /opt/torch*.whl
 
 RUN pip3 show xformers && python3 -c 'import xformers.info; xformers.info.print_info()'
