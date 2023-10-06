@@ -29,6 +29,7 @@ RUN cd text-generation-webui && \
     sed 's|^fastapi.*|fastapi|g' -i requirements.txt && \
     sed 's|^safetensors.*|safetensors|g' -i requirements.txt && \
     sed 's|^llama-cpp-python.*|llama-cpp-python|g' -i requirements.txt && \
+    sed 's|^exllamav2.*|exllamav2|g' -i requirements.txt && \
     sed 's|^transformers.*|transformers|g' -i requirements.txt && \
     sed 's|^optimum.*|optimum|g' -i requirements.txt && \
     sed 's|^pydantic.*|pydantic|g' -i requirements.txt && \
