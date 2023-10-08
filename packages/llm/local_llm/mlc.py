@@ -2,13 +2,18 @@
 import os
 import tvm
 import time
+import math
 import json
 import queue
 import threading
+import subprocess
+import random
+
+import torch
 import numpy as np
 
-from mlc_chat import ChatModule, ChatConfig, ConvConfig
-from mlc_chat.callback import DeltaCallback
+from tvm.runtime.relax_vm import VirtualMachine
+from transformers import AutoTokenizer, AutoConfig
 
 from .local_llm import LocalLM
 
@@ -17,57 +22,155 @@ class MLCModel(LocalLM):
     """
     MLC model (https://github.com/mlc-ai/mlc-llm)
     """
-    def __init__(self, model_path, **kwargs):
+    def __init__(self, model_path, quant='q4f16_ft', **kwargs):
+        """
+        Parameters:
+        
+          model_path (str) -- the original model on HuggingFace - used for getting
+                              the tokenizer and original model config.  If this is a 
+                              Llama2 model, it will be automatically set if Llama/ect
+                              is in the path. Otherwise, this should be set to the name.
+                              
+          quant (str) -- either a directory path containing the mlc_llm quantized model,
+                         or the quantization method to use (q4f16_1, q4f16_ft, ect)          
+                         If a path, there should be a .so in this dir, with params/ 
+                         directory under it containing the weights and MLC config.
+                         
+          quant_cache (str) -- 
+        """
         super(MLCModel, self).__init__(**kwargs)
 
-        self.model = ChatModule(model=model_path)
+        # perform quantization if needed
+        if not quant:
+            quant = 'q4f16_ft'
+            
+        if not os.path.isdir(quant):
+            quant = MLCModel.quantize(model_path, quant, **kwargs)
+            
+        self.config.quant = quant.split('-')[-1]  # recover the quant method
+        
+        self.quant_path = quant
         self.model_path = model_path
         
-        self.config.name = self.model.chat_config.local_id #.model_name
-        self.config.type = self.model.chat_config.model_category
+        self.tokenizer = AutoTokenizer.from_pretrained(self.model_path, use_fast=False)
         
-        with open(self.model.config_file_path) as file:
-            json_config = json.load(file)
-                
-        self.config.max_length = json_config['max_window_size']
-        self.config.vocab_size = json_config['vocab_size']
-        
-        self.conv_template = self.model.chat_config.conv_template
+        # initialize tvm device
+        self.device = tvm.runtime.cuda(0)  # tvm.runtime.Device(tvm.runtime.Device.kDLCUDAManaged, 0)
+        assert(self.device.exist) # this is needed to initialize CUDA?
+        print(f"-- device={self.device}, name={self.device.device_name}, compute={self.device.compute_version}, max_clocks={self.device.max_clock_rate}, multiprocessors={self.device.multi_processor_count}, max_thread_dims={self.device.max_thread_dimensions}, api_version={self.device.api_version}, driver_version={self.device.driver_version}")
 
-        if 'llama-2' in self.conv_template or 'llama-2' in self.config.name.lower():
-            conv_config = ConvConfig(stop_tokens=[2], stop_str='[INST]') #</s>)
-        else:
-            conv_config = None
+        # load model config
+        with open(os.path.join(quant, 'params/mlc-chat-config.json'), 'r') as file:
+            config = json.load(file)
+        
+        #self.config.name = config['local_id']  # model_name
+        self.config.type = config['model_category']  # 'conv_template'
+        self.config.max_length = config['max_window_size']
+        self.config.vocab_size = config['vocab_size']
+        
+        # load model's dynamic library
+        self.module_path = os.path.join(quant, os.path.basename(quant) + '-cuda.so')
+        
+        if not os.path.isfile(self.module_path):
+            raise IOError(f"-- MLC couldn't find {self.module_path}")
             
-        self.model.reset_chat(ChatConfig(
-            max_gen_len=128,
-            conv_template='LM', # disable internal templating
-            conv_config=conv_config
-        ))
+        print(f"-- loading {self.config.name} from {self.module_path}")
+        load_time_begin = time.perf_counter()
+        self.module = tvm.runtime.load_module(self.module_path)
         
-        print(self.model.chat_config)
-        print(self.model.chat_config.conv_config)
+        self.vm = self.module['vm_load_executable']()
+        self.vm['vm_initialization'](
+            self.device.device_type, self.device.device_id,
+            VirtualMachine.POOLED_ALLOCATOR,
+            tvm.runtime.Device.kDLCPU, 0,  # kDLCUDAManaged kDLCUDAHost  kDLCUDA
+            VirtualMachine.POOLED_ALLOCATOR
+        )    
         
+        # embedding/generation functions
+        self._embed = self.vm['embed']
+        self._decode = self.vm['decode']
+        self._prefill_with_embed = self.vm['prefill_with_embed']
+        
+        # KV cache manipulation functions
+        self._create_kv_cache = self.vm['create_kv_cache']
+
+        if self.vm.implements_function('reset_kv_cache'):
+            self._clear_kv_cache = self.vm['reset_kv_cache']
+            self.backtracking_kv = False
+        else:
+            self._clear_kv_cache = tvm.get_global_func('vm.builtin.attention_kv_cache_array_clear')
+            self.backtracking_kv = True
+            
+        self._pop_kv_cache = tvm.get_global_func('vm.builtin.attention_kv_cache_array_popn')
+        self._append_kv_cache = tvm.get_global_func('vm.builtin.attention_kv_cache_append')
+        self._update_kv_cache = tvm.get_global_func('vm.builtin.attention_kv_cache_update')
+        self._view_kv_cache = tvm.get_global_func('vm.builtin.attention_kv_cache_view')
+        
+        self._sample_top_p_from_prob = tvm.get_global_func('vm.builtin.sample_top_p_from_prob')
+        self._sample_top_p_from_logits = tvm.get_global_func('vm.builtin.sample_top_p_from_logits')
+        
+        self._apply_repetition_penalty = tvm.get_global_func('vm.builtin.apply_repetition_penalty')
+        self._apply_softmax_with_temperature = tvm.get_global_func('vm.builtin.apply_softmax_with_temperature')
+
+        #self.kv_cache = None #create_kv_cache()
+        
+        # param loading functions
+        self._load_cache = tvm.get_global_func('vm.builtin.ndarray_cache.load')
+        self._load_params = tvm.get_global_func('vm.builtin.param_array_from_cache')
+        self._clear_cache = tvm.get_global_func('vm.builtin.ndarray_cache.clear')
+
+        # load model weights
+        self._load_cache(os.path.join(self.quant_path, 'params'), self.device.device_type, self.device.device_id)
+        self.params = self._load_params('param', -1)
+        self._clear_cache() # after we get params, it is safe to simply clear the cached version
+        self.config.load_time = time.perf_counter() - load_time_begin
+        
+        # add up the total weight size
+        self.params_size = 0
+
+        for param in self.params:
+            self.params_size += math.prod(param.shape) * np.dtype(param.dtype).itemsize
+
+        self.config.params_size = self.params_size / (1024 * 1024)
+        
+        # create multithreading
         self.queue = queue.Queue()
-        self.thread = threading.Thread(target=self._run, daemon=True).start()
-        
+        self.thread = threading.Thread(target=self._run, daemon=True).start()        
         self.embedding_cache = {}
 
-        # ChatConfig(model_lib='Llama-2-7b-chat-hf-q4f16_1', local_id='Llama-2-7b-chat-hf-q4f16_1', conv_template='llama-2', temperature=0.7, repetition_penalty=1.0, top_p=0.95, mean_gen_len=128, max_gen_len=512, shift_fill_factor=0.3, tokenizer_files=['tokenizer.model', 'tokenizer.json'], conv_config=None, model_category='llama', model_name='Llama-2-7b-chat-hf')
-        # ConvConfig(name=None, system=None, roles=None, messages=None, offset=None, separator_style=None, seps=None, role_msg_sep=None, role_empty_sep=None, stop_str=None, stop_tokens=None, add_bos=None)
+    
+    @staticmethod
+    def quantize(model, method='q4f16_ft', output='/data/models/mlc/dist', **kwargs):
+        """
+        Quantize a model with the given method.  It will be saved under the output directory,
+        in a subdirectory based on the model name and quant method (Llama-2-7b-chat-hf-q4f16_ft)
+        """
+        quant_path = os.path.join(output, os.path.basename(model) + '-' + method)
         
-    def generate(self, inputs, streaming=True, **kwargs):
-        stream = StreamIterator(self)
-        self.queue.put((inputs, stream, kwargs))
+        if os.path.isdir(quant_path):
+            return quant_path
+            
+        cmd = f"python3 -m mlc_llm.build --model {model} --quantization {method} "
+        cmd += f"--target cuda --use-cuda-graph --use-flash-attn-mqa --sep-embed "
+        cmd += f"--max-seq-len {AutoConfig.from_pretrained(model).max_position_embeddings} "
+        cmd += f"--artifact-path {output}"
         
-        if not streaming:
-            text = ''
-            for token in stream:
-                text += token
-            return text
+        print(f"-- running MLC quantization:\n\n{cmd}\n\n")
+        subprocess.run(cmd, executable='/bin/bash', shell=True, check=True)  
         
-        return stream
-
+        return quant_path
+        
+    @staticmethod
+    def get_kv_cache_size(kv_cache, length=None):
+        size = 0
+        for n in range(len(kv_cache)):
+            view = view_kv_cache(kv_cache[n])
+            #print(f"kv_cache {n}  {view.shape} {view.dtype}")
+            if length is None:
+                length = view.shape[0]
+            size += length * view.shape[1] * view.shape[2] * np.dtype(view.dtype).itemsize
+        return size
+    
     def embed_text(self, text, return_tensors='np', use_cache=False):  # pt, np, tvm
         if use_cache:
             embedding = self.embedding_cache.get(text)
@@ -75,7 +178,8 @@ class MLCModel(LocalLM):
             embedding = None
             
         if embedding is None:
-            embedding = self.model.embed_text(text)
+            tokens = self.tokenizer(text, return_tensors='np').input_ids
+            embedding = self.embed_tokens(tokens)
             self.embedding_cache[text] = embedding
             self.device = embedding.device
         else:
@@ -85,67 +189,161 @@ class MLCModel(LocalLM):
             embedding = embedding.numpy()
             
         return embedding
+    
+    def embed_tokens(self, tokens, return_tensors='np'):  # pt, np, tvm
+        if isinstance(tokens, torch.Tensor):
+            tokens = tokens.numpy()
+            
+        if isinstance(tokens, np.ndarray):
+            tokens = tvm.nd.array(tokens.astype(np.int32), self.device)
+
+        time_begin = time.perf_counter()
+        embedding = self._embed(tokens, self.params)
+        self.stats.embed_time = time.perf_counter() - time_begin
+        return embedding
+        
+    def generate(self, inputs, streaming=True, **kwargs):
+        """
+        Parameters:
+        
+          inputs (str|ndarray) -- text or embedding inputs to the model
+          streaming (bool) -- if True, an iterator will be returned that returns text chunks.
+                              Otherwise, this function will block and return the generated text.
+        
+        kwargs:
+
+          max_new_tokens (int) -- the number of tokens to output in addition to the prompt (default: 128)
+          min_new_tokens (int) -- force the model to generate a set number of output tokens (default: -1)
+          do_sample (bool) -- if True, temperature/top_p will be used.  Otherwise, greedy search (default: False)
+          repetition_penalty -- the parameter for repetition penalty. 1.0 means no penalty (default: 1.0)  
+          temperature (float) -- the value used to modulate the next token probabilities (only used if do_sample=True)
+          top_p (float) -- if set to float < 1 and do_sample=True, only the smallest set of most probable tokens
+                           with probabilities that add up to top_p or higher are kept for generation.
+          stop_tokens (list[int]) -- defaults to EOS token ID
+          kv_cache (ndarray) -- previous kv_cache that the inputs will be appended to.  By default, a blank kv_cache 
+                                will be created for each generation (i.e. a new chat).  This generation's kv_cache
+                                will be set in the returned StreamIterator after the request is complete.
+                                
+          TODO start_tokens
+        """
+        stream = StreamIterator(self, inputs, **kwargs)
+        self.queue.put(stream)
+        
+        if not streaming:
+            text = ''
+            for token in stream:
+                text += token
+            return text
+        
+        return stream
+
+    def _generate(self, stream):
+        max_new_tokens = stream.kwargs.get('max_new_tokens', 128)
+        min_new_tokens = stream.kwargs.get('min_new_tokens', -1)
+        
+        do_sample = stream.kwargs.get('do_sample', False)
+        temperature = stream.kwargs.get('temperature', 1.0)
+        top_p = stream.kwargs.get('top_p', 1.0)
+        repetition_penalty = stream.kwargs.get('repetition_penalty', 1.0)
+        
+        stop_tokens = stream.kwargs.get('stop_tokens', [self.tokenizer.eos_token_id])
+        
+        if isinstance(stop_tokens, int):
+            stop_tokens = [stop_tokens]
+
+        if isinstance(stream.input, str):
+            embedding = self.embed_text(stream.input, return_tensors='tvm')
+        else:
+            embedding = stream.input
+            
+        if not isinstance(embedding, tvm.runtime.ndarray.NDArray):
+            embedding = tvm.nd.array(embedding, device=self.device)
+       
+        self.stats.input_tokens = embedding.shape[1]
+        self.stats.output_tokens = 0
+        
+        # create a kv_cache if needed
+        if stream.kv_cache is None:
+            stream.kv_cache = self._create_kv_cache()
+            stream.kv_cache.num_tokens = 0
+
+        stream.kv_cache.num_tokens += embedding.shape[1]
+
+        # returns a list[logits, [kv_cache]] - logits are [1,1,32000] float32 (on the GPU)
+        time_begin_prefill = time.perf_counter()
+        
+        output = self._prefill_with_embed(embedding, 
+            tvm.runtime.ShapeTuple([stream.kv_cache.num_tokens]), 
+            stream.kv_cache, self.params
+        )
+
+        # decode until EOS or max_new_tokens
+        time_begin_decode = time.perf_counter()
+        
+        while True:
+            token = self._sample(output[0], do_sample, temperature, top_p, repetition_penalty)
+            
+            stream.output_tokens.append(token)
+            stream.event.set()
+            stream.kv_cache.num_tokens += 1
+            self.stats.output_tokens += 1
+            
+            if len(stream.output_tokens) >= max_new_tokens:
+                break
+                
+            if stream.stopped:
+                break
+            
+            if token in stop_tokens and len(stream.output_tokens) > min_new_tokens:
+                break
+                
+            output = self._decode(
+                tvm.nd.array(np.array([[stream.output_tokens[-1]]], dtype=np.int32), self.device),
+                tvm.runtime.ShapeTuple([stream.kv_cache.num_tokens]), stream.kv_cache, self.params
+            )
+            
+        time_end_decode = time.perf_counter()
+        
+        stream.stopped = True
+        stream.event.set()
+        
+        self.stats.prefill_time = time_begin_decode - time_begin_prefill
+        self.stats.prefill_rate = self.stats.input_tokens / self.stats.prefill_time
+        self.stats.decode_time = time_end_decode - time_begin_decode
+        self.stats.decode_rate = self.stats.output_tokens / self.stats.decode_time
+       
+    def _sample(self, logits, do_sample, temperature, top_p, repetition_penalty):
+        """
+        if do_sample:
+            # TODO https://github.com/mlc-ai/mlc-llm/blob/6e40c21fb6433aeffe50ee321f1b589ef846b6fb/cpp/llm_chat.cc#L1044
+            return self._sample_top_p_from_logits(logits, top_p, temperature, random.random())
+        else:
+            return np.argmax(logits)
+        """
+        return self._sample_top_p_from_logits(logits, top_p, temperature, random.random())
         
     def _run(self):
         while True:
-            inputs, stream, kwargs = self.queue.get()
+            stream = self.queue.get()
+            self._generate(stream)
             
-            if 'max_new_tokens' in kwargs:
-                self.model.chat_config.max_gen_len = kwargs['max_new_tokens']
-                
-            self.model.reset_chat(self.model.chat_config)
-            
-            # https://github.com/mlc-ai/mlc-llm/blob/main/python/mlc_chat/chat_module.py
-            if isinstance(inputs, str):
-                time_begin_embed = time.perf_counter()
-                embedding = self.embed_text(inputs, return_tensors='tvm')
-                self.stats.embed_time = time.perf_counter() - time_begin_embed
-            else:
-                embedding = inputs
-                if not isinstance(embedding, tvm.runtime.ndarray.NDArray):
-                    embedding = tvm.nd.array(embedding, device=self.device)
-                    
-            self.stats.input_tokens = embedding.shape[1]
-            
-            self.model.reset_chat(self.model.chat_config)
-            
-            time_begin_prefill = time.perf_counter()
-            self.model._prefill_with_embed(embedding)#, decode_next_token=False)
-            time_begin_decode = time.perf_counter()
-            self.stats.output_tokens = 0
-            
-            last_msg_len = 0
-            
-            while not self.model._stopped():
-                self.model._decode()
-                self.stats.output_tokens += 1
-                msg = self.model._get_message()
-                msg_len = len(msg)
-                msg = msg[last_msg_len:]
-                last_msg_len = msg_len
-                stream.queue.put(msg)
-                stream.event.set()
-                
-            time_end = time.perf_counter()
-            
-            stream.stop = True
-            stream.event.set()
-            
-            self.stats.prefill_time = time_begin_decode - time_begin_prefill
-            self.stats.prefill_rate = embedding.shape[1] / self.stats.prefill_time
-            self.stats.decode_time = time_end - time_begin_decode
-            self.stats.decode_rate = self.stats.output_tokens / self.stats.decode_time
             
             
 class StreamIterator():
-    def __init__(self, model):
+    def __init__(self, model, input, **kwargs):
         super().__init__()
         
         self.model = model
-        self.queue = queue.Queue()
+        self.input = input
+        #self.queue = queue.Queue()
         self.event = threading.Event()
-        self.stop = False
-
+        self.stopped = False
+        self.kwargs = kwargs
+        self.kv_cache = kwargs.get('kv_cache', None)
+        
+        self.output_tokens = []
+        self.output_text = ''
+        
     def __iter__(self):
         return self
 
@@ -153,10 +351,16 @@ class StreamIterator():
         self.event.wait()
         self.event.clear()
 
-        if self.stop:
+        if self.stopped:
             raise StopIteration
-            
-        return self.queue.get()
+         
+        text = self.model.tokenizer.decode(self.output_tokens, skip_special_tokens=False) #, clean_up_tokenization_spaces=None
+        latest_text = text[len(self.output_text):]
+        self.output_text = text
+        return latest_text
+        
+    def stop(self):
+        self.stopped = True
         
 """           
 class StreamIterator(DeltaCallback):

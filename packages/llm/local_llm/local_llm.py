@@ -19,6 +19,8 @@ class LocalLM():
         """
         Load a model from the given path or download it from HuggingFace Hub.
         If the API isn't specified, it will be inferred from the type of model.
+        For AWQ and MLC, you need to specify the path to the quantized model in
+        the `quant` argument, and `model` should be the original HuggingFace model.
         """
         if os.path.isdir(model) or os.path.isfile(model):
             model_path = model
@@ -28,7 +30,7 @@ class LocalLM():
             model_name = model
             
         if not api:
-            api = default_model_api(model_path)
+            api = default_model_api(model_path, quant)
             
         print(f"-- loading {model_path} with {api.upper()}")
         load_begin = time.perf_counter()
@@ -43,14 +45,14 @@ class LocalLM():
             model = AWQModel(model_path, quant, **kwargs)
         elif api == 'mlc':
             from .mlc import MLCModel
-            model = MLCModel(model_path, **kwargs)
+            model = MLCModel(model_path, quant, **kwargs)
         elif api == 'hf':
             from .hf import HFModel
             model = HFModel(model_path, **kwargs)
         else:
             raise ValueError(f"invalid API: {api}")
         
-        if 'name' not in model.config:
+        if 'name' not in model.config or not model.config.name:
             model.config.name = model_name
             
         model.config.api = api

@@ -61,11 +61,12 @@ class CLIPModel():
         if isinstance(image, str):
             image = load_image(image)
 
+        image = image.resize((336,336), PIL.Image.BICUBIC)
         image_size = image.size
         
         time_begin_pre = time.perf_counter()
         
-        image = self.preprocessor(image, return_tensors='pt')['pixel_values']
+        image = self.preprocessor(image, do_center_crop=False, do_resize=False, return_tensors='pt')['pixel_values']
         image = image.to(self.device, dtype=self.dtype)
         
         time_begin_enc = time.perf_counter()

@@ -1,9 +1,10 @@
 #---
 # name: local_llm
 # group: llm
-# depends: [awq, torch2trt, mlc:dev]
+# depends: [mlc:dev]
 # requires: '>=34.1.0'
 #---
+# depends: [mlc:dev, awq:dev]
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
