@@ -33,10 +33,10 @@ RUN echo "20231001" > /tmp/mlc_version.txt
 
 RUN git clone --branch=${MLC_BRANCH} --depth=1 --recursive https://github.com/${MLC_REPO}
 
-COPY patches.diff mlc-llm/
+COPY patches/min.diff mlc-llm/
 
 RUN cd mlc-llm && \
-    git apply patches.diff && \
+    git apply min.diff && \
     git status && \
     git diff
     

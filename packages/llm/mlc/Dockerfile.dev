@@ -68,15 +68,15 @@ RUN mkdir mlc-llm/build && \
     ninja
 
 # these patches are currently only to tvm/python
-COPY patches.tvm.diff mlc-llm/
+#COPY patches/tvm.diff mlc-llm/
 
-RUN cd mlc-llm/3rdparty/tvm && \
-    git apply ../../patches.tvm.diff && \
-    git status && \
-    git diff
+#RUN cd mlc-llm/3rdparty/tvm && \
+#    git apply ../../tvm.diff && \
+#    git status && \
+#    git diff
    
-RUN cd mlc-llm/build && \
-    ninja
+#RUN cd mlc-llm/build && \
+#    ninja
     
 RUN cd mlc-llm/3rdparty/tvm/python && \
     TVM_LIBRARY_PATH=/opt/mlc-llm/build/tvm \
@@ -88,13 +88,16 @@ RUN cd mlc-llm/3rdparty/tvm/python && \
 RUN pip3 install --no-cache-dir --verbose tvm*.whl
 RUN pip3 show tvm && python3 -c 'import tvm'
 
-COPY patches.dev.diff mlc-llm/
+COPY patches/min.diff mlc-llm/
 
 RUN cd mlc-llm && \
-    git apply patches.dev.diff && \
+    git apply min.diff && \
     git status && \
     git diff
 
+RUN cd mlc-llm/build && \
+    ninja
+    
 RUN cd mlc-llm && \
     python3 setup.py --verbose bdist_wheel && \
     cp dist/mlc*.whl /opt 
