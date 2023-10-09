@@ -58,22 +58,27 @@ class ChatHistory():
     
         self.reset()
  
-    def add_entry(self, role='user', text=None, image=None, **kwargs):
+    def add_entry(self, role='user', input=None, **kwargs):
         """
         Add a chat entry consisting of text, image, ect.  Other inputs
         can be specified in kwargs that have registered embedding types.
         Role is the turn template to apply, typically 'user' or 'bot'.
         """
-        self.entries.append(self.create_entry(role, text, image, **kwargs))
+        self.entries.append(self.create_entry(role, input, **kwargs))
         return self.entries[-1]
 
-    def create_entry(self, role='user', text=None, image=None, **kwargs):
+    def create_entry(self, role='user', input=None, **kwargs):
         """
         Create a chat entry consisting of text, image, ect.  Other inputs
         can be specified in kwargs that have registered embedding types.
         Role is the turn template to apply, typically 'user' or 'bot'.
         """    
-        return AttrDict(role=role, text=text, image=image, **kwargs)
+        entry = AttrDict(role=role, **kwargs)
+        
+        if input is not None:
+            entry[self.embedding_type(input)] = input
+            
+        return entry
 
     def reset(self, add_system_prompt=True):
         """
@@ -83,6 +88,9 @@ class ChatHistory():
         self.kv_cache = None
         if add_system_prompt:
             self.add_entry(role='system', text=self.template['system_prompt'])
+    
+    def __len__(self):
+        return len(self.entries)
         
     def __getitem__(self, entry):
         return self.entries[entry]
@@ -107,15 +115,16 @@ class ChatHistory():
         else:
             return self.embedding_functions[type].func(input)
         
-    def embed_text(self, text, template):
+    def embed_text(self, text, template=None, use_cache=False):
         """
         Get the text embedding after applying the template for 'user', 'bot', ect.
         """
-        text = replace_text(template, {'${MESSAGE}': text})
+        if template:
+            text = replace_text(template, {'${MESSAGE}': text})
         print(f"```{text}```")
-        return self.model.embed_text(text)
+        return self.model.embed_text(text, use_cache=use_cache)
     
-    def embed_dict(self, dict, template):
+    def embed_dict(self, dict, template=None):
         """
         Get the embedding of a chat entry dict that can contain multiple embedding types.
         """
@@ -134,7 +143,7 @@ class ChatHistory():
         else:
             return np.concatenate(embeddings, axis=1)
                 
-    def embed_image(self, image):
+    def embed_image(self, image, template=None):
         """
         Given an image, extract features and perfom the image embedding.
         This uses the CLIP encoder and a linear projection layer that
@@ -143,6 +152,15 @@ class ChatHistory():
         clip = CLIPModel.from_pretrained()
         embedding = clip.embed_image(image)
         print_table(clip.stats)
+        
+        if template:
+            template = template.split("${MESSAGE}")[0]
+            
+        if template:
+            template = self.embed_text(template, use_cache=True)
+            embedding = np.concatenate((template, embedding), axis=1)
+        
+        return embedding
         
     def embed_chat(self, use_cache=True):
         """
@@ -155,6 +173,7 @@ class ChatHistory():
         """
         embeddings = []
         position = 0
+        open_user_prompt = False
         
         for i, entry in enumerate(self.entries):
             for key in entry.copy():
@@ -168,6 +187,10 @@ class ChatHistory():
                         raise RuntimeError(f"chat template {self.template_name} didn't have an entry for role={entry.role}")
                     role_template = self.template[entry.role]
 
+                    if open_user_prompt:
+                        role_template = role_template.split('${MESSAGE}')[1]
+                        open_user_promt = False
+                        
                 embed_key = key + '_embedding'
 
                 if use_cache:
@@ -176,6 +199,8 @@ class ChatHistory():
                         if entry.role != 'bot':  # bot outputs are already included in kv_cache
                             embeddings.append(entry[embed_key])
                             use_cache = False  # all entries after this need to be included
+                            if key == 'image':
+                                open_user_prompt = True
                         else:
                             position += entry[embed_key].shape[1]
                     else:
@@ -202,6 +227,7 @@ class ChatHistory():
 
     def register_embedding(self, type, func):
         params = inspect.signature(func).parameters
+        print(type, ' has template:  ', (len(params) > 1))
         self.embedding_functions[type] = AttrDict(
             func=func,
             uses_template=len(params) > 1 #'role_template' in params
@@ -209,11 +235,8 @@ class ChatHistory():
         
     def embedding_type(self, input):
         if isinstance(input, str):
-            ext = os.path.splitext(input)[1].lower()
-            if ext in ImageExtensions:
+            if input.endswith(ImageExtensions):
                 return 'image'
-            elif len(ext) > 0:
-                raise ValueError(f"-- file {str} has unsupported extension for embeddings")
             else:
                 return "text" 
         elif isinstance(input, PIL.Image.Image):

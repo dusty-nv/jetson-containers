@@ -23,7 +23,7 @@ parser.add_argument("--chat-template", type=str, default=None)
 parser.add_argument("--no-streaming", action="store_true")
 parser.add_argument("--max-new-tokens", type=int, default=128, help="the maximum number of new tokens to generate, in addition to the prompt")
 parser.add_argument("--image", type=str, default=None)
-parser.add_argument("--use-embeddings", action="store_true")
+parser.add_argument("--no-embeddings", action="store_true")
 
 args = parser.parse_args()
 
@@ -81,7 +81,7 @@ model = LocalLM.from_pretrained(args.model, quant=args.quant, api=args.api)
 print_table(model.config)
 
 # load image
-if not args.use_embeddings:
+if args.no_embeddings:
     clip = None
     image_embedding = None
 
@@ -189,7 +189,7 @@ while True:
         cprint('>> PROMPT: ', 'blue', end='', flush=True)
         user_prompt = sys.stdin.readline().strip()
     
-    if not args.use_embeddings:
+    if args.no_embeddings:
         if user_prompt.lower().endswith(ImageExtensions):
             image_embedding = get_image_embedding(user_prompt)
             continue
@@ -279,8 +279,14 @@ while True:
         chat_history.append([user_prompt, output.output_text])
         
     else: #args.chat:
-        chat_history.add_entry(role='user', text=user_prompt)
+        entry = chat_history.add_entry(role='user', input=user_prompt)
     
+        print(f"chat entry {len(chat_history)}:  {entry}")
+
+        if 'image' in entry:
+            print('-- image message, waiting for user prompt')
+            continue  # wait for text user prompt asking about the image
+            
         embedding, position = chat_history.embed_chat()
         
         print('adding embedding', embedding.shape, 'position', position)

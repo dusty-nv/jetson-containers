@@ -14,13 +14,18 @@ class CLIPModel():
     CLIP feature extractor and projector for generating image embeddings.
     """
     @staticmethod
-    def from_pretrained(model, use_cache=True, **kwargs):
+    def from_pretrained(model="openai/clip-vit-large-patch14-336", use_cache=True, **kwargs):
         global _clip_model_cache
         
         if use_cache and model in _clip_model_cache:
             return _clip_model_cache[model]
             
-        return CLIPModel(model, **kwargs)
+        instance = CLIPModel(model, **kwargs)
+        
+        if use_cache:
+            _clip_model_cache[model] = instance
+            
+        return instance
     
     def __init__(self, model="openai/clip-vit-large-patch14-336", **kwargs):
         self.stats = AttrDict()
