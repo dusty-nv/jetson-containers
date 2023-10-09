@@ -181,7 +181,7 @@ class MLCModel(LocalLM):
             tokens = self.tokenizer(text, 
                 add_special_tokens=add_special_tokens, 
                 return_tensors='np').input_ids
-            print('input_ids', tokens)
+            #print('input_ids', tokens)
             embedding = self.embed_tokens(tokens)
             self.embedding_cache[text] = embedding
             self.device = embedding.device

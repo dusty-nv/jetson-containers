@@ -8,7 +8,7 @@ import numpy as np
 
 from termcolor import cprint
 
-from local_llm import LocalLM, ChatHistory, CLIPModel, load_image, load_prompts, print_table
+from local_llm import LocalLM, ChatHistory, CLIPModel, load_image, load_prompts, print_table, ImageExtensions
 
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -31,36 +31,37 @@ if 'chat' in args.model:
     args.chat = True
     
 # populate default prompts - https://modal.com/docs/guide/ex/vllm_inference
-if args.prompt == 'default' or args.prompt == 'defaults':
-    if args.chat:
-        args.prompt = [
-            "What is the weather forecast today?",
-            "What is the fable involving a fox and grapes?",
-            "What's a good recipe for making tabouli?",
-            "How do I allocate memory in C?",
-            "Implement a Python function to compute the Fibonacci numbers.",
-            "What is the product of 9 and 8?",
-            "Is Pluto really a planet or not?",
-            "When was the Hoover Dam built?",
-            "What's a training plan to run a marathon?",
-            "If a train travels 120 miles in 2 hours, what is its average speed?",
-        ]
-    else:
-        args.prompt = [
-            "Once upon a time,",
-            "A great place to live is",
-            "In a world where dreams are shared,",
-            "The weather forecast today is",
-            "Large language models are",
-            "Space exploration is exciting",
-            "The history of the Hoover Dam is",
-            "San Fransisco is a city in",
-            "To train for running a marathon,",
-            "A recipe for making tabouli is"
-        ]
-elif args.prompt:
+print('prompt', args.prompt)
+if args.prompt:
     args.prompt = [x[0] for x in args.prompt]
-    
+    if args.prompt[0] == 'default' or args.prompt[0] == 'defaults':
+        if args.chat:
+            args.prompt = [
+                "What is the weather forecast today?",
+                "What is the fable involving a fox and grapes?",
+                "What's a good recipe for making tabouli?",
+                "How do I allocate memory in C?",
+                "Implement a Python function to compute the Fibonacci numbers.",
+                "What is the product of 9 and 8?",
+                "Is Pluto really a planet or not?",
+                "When was the Hoover Dam built?",
+                "What's a training plan to run a marathon?",
+                "If a train travels 120 miles in 2 hours, what is its average speed?",
+            ]
+        else:
+            args.prompt = [
+                "Once upon a time,",
+                "A great place to live is",
+                "In a world where dreams are shared,",
+                "The weather forecast today is",
+                "Large language models are",
+                "Space exploration is exciting",
+                "The history of the Hoover Dam is",
+                "San Fransisco is a city in",
+                "To train for running a marathon,",
+                "A recipe for making tabouli is"
+            ]
+
 if args.system:
     args.system = [x[0] for x in args.system]
     
@@ -189,7 +190,7 @@ while True:
         user_prompt = sys.stdin.readline().strip()
     
     if not args.use_embeddings:
-        if user_prompt.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')):
+        if user_prompt.lower().endswith(ImageExtensions):
             image_embedding = get_image_embedding(user_prompt)
             continue
         elif user_prompt.lower().endswith(('.txt', '.json')):
@@ -280,9 +281,16 @@ while True:
     else: #args.chat:
         chat_history.add_entry(role='user', text=user_prompt)
     
-        embedding = chat_history.embed_chat()
+        embedding, position = chat_history.embed_chat()
         
-        output = model.generate(embedding, streaming=not args.no_streaming, max_new_tokens=args.max_new_tokens)
+        print('adding embedding', embedding.shape, 'position', position)
+        
+        output = model.generate(
+            embedding, 
+            streaming=not args.no_streaming, 
+            max_new_tokens=args.max_new_tokens,
+            kv_cache=chat_history.kv_cache
+        )
             
         bot_reply = chat_history.add_entry(role='bot', text='')
         
@@ -293,10 +301,16 @@ while True:
             for token in output:
                 bot_reply.text += token
                 print(token, end='', flush=True)
+                if interrupt_chat:
+                    output.stop()
+                    interrupt_chat = False
+                    break
                 
         print('')
         print_table(model.stats)
 
+        chat_history.kv_cache = output.kv_cache
+        bot_reply.text = output.output_text
     
 """
 for prompt in prompts:

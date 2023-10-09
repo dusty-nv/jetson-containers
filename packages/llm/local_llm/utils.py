@@ -14,6 +14,9 @@ from tabulate import tabulate
 from huggingface_hub import snapshot_download, hf_hub_download, login
 
 
+ImageExtensions = ('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')
+
+
 def load_image(path):
     """
     Load an image from a local path or URL
