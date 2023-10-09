@@ -2,6 +2,7 @@
 import os
 import sys
 import time
+import signal
 import argparse
 import numpy as np
 
@@ -150,6 +151,32 @@ else: #args.chat:
                 
     chat_history = ChatHistory(model, template=args.chat_template)
     
+    
+last_interrupt = 0.0
+interrupt_chat = False
+
+def on_interrupt(signum, frame):
+    """
+    Ctrl+C handler - if done once, interrupts the LLM
+    If done twice in succession, exits the program
+    """
+    global last_interrupt
+    global interrupt_chat
+    
+    curr_time = time.perf_counter()
+    time_diff = curr_time - last_interrupt
+    last_interrupt = curr_time
+    
+    if time_diff > 2.0:
+        print("\n-- Ctrl+C:  interrupting chatbot")
+        interrupt_chat = True
+    else:
+        while True:
+            print("\n-- Ctrl+C:  exiting...")
+            sys.exit(0)
+            time.sleep(0.5)
+               
+signal.signal(signal.SIGINT, on_interrupt)
 
 while True: 
     if isinstance(prompts, list):
@@ -239,6 +266,10 @@ while True:
             for token in output:
                 #chat_history[-1][1] += token
                 print(token, end='', flush=True)
+                if interrupt_chat:
+                    output.stop()
+                    interrupt_chat = False
+                    break
                 
         print('')
         print_table(model.stats)
