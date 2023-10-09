@@ -103,7 +103,7 @@ if not args.use_embeddings:
 
     chat_templates = {
         'llama-2': {
-            'system': '[INST] <<SYS>>\n${SYSTEM_PROMPT}\n<</SYS>>\n\n',
+            'system': '<s>[INST] <<SYS>>\n${SYSTEM_PROMPT}\n<</SYS>>\n\n',
             'turn': '${USER_MESSAGE} [/INST] ${BOT_MESSAGE} </s><s>[INST] '
         }
     }
@@ -139,6 +139,7 @@ if not args.use_embeddings:
     print('system_embedding', system_embedding.shape, system_embedding.dtype)
 
     chat_history = []
+    kv_cache = None
 else: #args.chat:
     if not args.chat_template:
         if 'llama-2' in model.config.name.lower():
@@ -169,8 +170,10 @@ while True:
         elif user_prompt.lower() == 'reset' or user_prompt.lower() == 'clear':
             print('-- resetting chat history')
             chat_history = []
+            kv_cache = None
             continue
-            
+           
+        """
         chat_history.append([user_prompt, ''])
         chat_text = ""
         
@@ -205,23 +208,43 @@ while True:
         print('embedding', len(embedding))
         
         embedding = np.concatenate(embedding, axis=1)
-
+        """
+        
+        if len(chat_history) == 0:
+            text = f"{user_prompt} [/INST]"  #'${USER_MESSAGE} [/INST] ${BOT_MESSAGE} </s><s>[INST] '
+            embedding = (system_embedding, model.embed_text(text))
+            embedding = np.concatenate(embedding, axis=1)
+        else:
+            text = f"<s>[INST] {user_prompt} [/INST]"
+            
+            if not chat_history[-1][1].strip().endswith('</s>'):
+                print(f"-- adding EOS to bot reply")
+                text = "</s>" + text
+                
+            embedding = model.embed_text(text)
+        
+        print('prompt', text)
+        
         output = model.generate(
             embedding, 
             streaming=not args.no_streaming, 
-            max_new_tokens=args.max_new_tokens
+            max_new_tokens=args.max_new_tokens,
+            kv_cache=kv_cache
         )
         
         if args.no_streaming:
-            chat_history[-1][1] = output
+            #chat_history[-1][1] = output
             print(output)
         else:
             for token in output:
-                chat_history[-1][1] += token
+                #chat_history[-1][1] += token
                 print(token, end='', flush=True)
                 
         print('')
         print_table(model.stats)
+        
+        kv_cache = output.kv_cache
+        chat_history.append([user_prompt, output.output_text])
         
     else: #args.chat:
         chat_history.add_entry(role='user', text=user_prompt)

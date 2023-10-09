@@ -171,14 +171,17 @@ class MLCModel(LocalLM):
             size += length * view.shape[1] * view.shape[2] * np.dtype(view.dtype).itemsize
         return size
     
-    def embed_text(self, text, return_tensors='np', use_cache=False):  # pt, np, tvm
+    def embed_text(self, text, return_tensors='np', add_special_tokens=False, use_cache=False):  # pt, np, tvm
         if use_cache:
             embedding = self.embedding_cache.get(text)
         else:
             embedding = None
             
         if embedding is None:
-            tokens = self.tokenizer(text, return_tensors='np').input_ids
+            tokens = self.tokenizer(text, 
+                add_special_tokens=add_special_tokens, 
+                return_tensors='np').input_ids
+            print('input_ids', tokens)
             embedding = self.embed_tokens(tokens)
             self.embedding_cache[text] = embedding
             self.device = embedding.device
@@ -285,23 +288,24 @@ class MLCModel(LocalLM):
             
             stream.output_tokens.append(token)
             stream.event.set()
-            stream.kv_cache.num_tokens += 1
-            self.stats.output_tokens += 1
             
+            if token in stop_tokens and len(stream.output_tokens) > min_new_tokens:
+                break
+
             if len(stream.output_tokens) >= max_new_tokens:
                 break
                 
             if stream.stopped:
                 break
+
+            stream.kv_cache.num_tokens += 1
+            self.stats.output_tokens += 1
             
-            if token in stop_tokens and len(stream.output_tokens) > min_new_tokens:
-                break
-                
             output = self._decode(
                 tvm.nd.array(np.array([[stream.output_tokens[-1]]], dtype=np.int32), self.device),
                 tvm.runtime.ShapeTuple([stream.kv_cache.num_tokens]), stream.kv_cache, self.params
             )
-            
+
         time_end_decode = time.perf_counter()
         
         stream.stopped = True
