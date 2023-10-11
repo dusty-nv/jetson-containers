@@ -107,9 +107,9 @@
 | &nbsp;&nbsp;&nbsp; [`realsense`](/packages/realsense) | [![`realsense_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/realsense_jp46.yml?label=realsense:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/realsense_jp46.yml) [![`realsense_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/realsense_jp51.yml?label=realsense:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/realsense_jp51.yml) |
 | &nbsp;&nbsp;&nbsp; [`zed`](/packages/zed) | [![`zed_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/zed_jp46.yml?label=zed:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/zed_jp46.yml) [![`zed_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/zed_jp51.yml?label=zed:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/zed_jp51.yml) |
 | <a id="vectordb">**`VECTORDB`**</a> | |
-| &nbsp;&nbsp;&nbsp; [`faiss`](/packages/vectordb/faiss) |  |
-| &nbsp;&nbsp;&nbsp; [`faiss:lite`](/packages/vectordb/faiss_lite) |  |
-| &nbsp;&nbsp;&nbsp; [`nanodb`](/packages/vectordb/nanodb) |  |
+| &nbsp;&nbsp;&nbsp; [`faiss`](/packages/vectordb/faiss) | [![`faiss_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/faiss_jp51.yml?label=faiss:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/faiss_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`faiss:lite`](/packages/vectordb/faiss_lite) | [![`faiss-lite_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/faiss-lite_jp51.yml?label=faiss-lite:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/faiss-lite_jp51.yml) |
+| &nbsp;&nbsp;&nbsp; [`nanodb`](/packages/vectordb/nanodb) | [![`nanodb_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nanodb_jp51.yml?label=nanodb:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nanodb_jp51.yml) |
 | &nbsp;&nbsp;&nbsp; [`raft`](/packages/rapids/raft) |  |
 | <a id="vit">**`VIT`**</a> | |
 | &nbsp;&nbsp;&nbsp; [`nanosam`](/packages/vit/nanosam) | [![`nanosam_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nanosam_jp51.yml?label=nanosam:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nanosam_jp51.yml) |
