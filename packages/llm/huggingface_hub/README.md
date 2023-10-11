@@ -13,7 +13,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`auto_gptq`](/packages/llm/auto_gptq) [`awq`](/packages/llm/awq) [`awq:dev`](/packages/llm/awq) [`exllama`](/packages/llm/exllama) [`exllama:v2`](/packages/llm/exllama) [`gptq-for-llama`](/packages/llm/gptq-for-llama) [`l4t-diffusion`](/packages/l4t/l4t-diffusion) [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`langchain`](/packages/llm/langchain) [`langchain:samples`](/packages/llm/langchain) [`llama_cpp:ggml`](/packages/llm/llama_cpp) [`llama_cpp:gguf`](/packages/llm/llama_cpp) [`llava`](/packages/llm/llava) [`local_llm`](/packages/llm/local_llm) [`minigpt4`](/packages/llm/minigpt4) [`mlc`](/packages/llm/mlc) [`mlc:dev`](/packages/llm/mlc) [`nanodb`](/packages/vectordb/nanodb) [`nanosam`](/packages/vit/nanosam) [`nemo`](/packages/nemo) [`optimum`](/packages/llm/optimum) [`stable-diffusion`](/packages/diffusion/stable-diffusion) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) [`text-generation-inference`](/packages/llm/text-generation-inference) [`text-generation-webui`](/packages/llm/text-generation-webui) [`transformers`](/packages/llm/transformers) [`transformers:git`](/packages/llm/transformers) [`transformers:nvgpt`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/huggingface_hub:r32.7.1`](https://hub.docker.com/r/dustynv/huggingface_hub/tags) `(2023-09-11, 0.4GB)`<br>[`dustynv/huggingface_hub:r35.2.1`](https://hub.docker.com/r/dustynv/huggingface_hub/tags) `(2023-08-29, 5.0GB)`<br>[`dustynv/huggingface_hub:r35.3.1`](https://hub.docker.com/r/dustynv/huggingface_hub/tags) `(2023-09-07, 5.0GB)`<br>[`dustynv/huggingface_hub:r35.4.1`](https://hub.docker.com/r/dustynv/huggingface_hub/tags) `(2023-09-11, 5.0GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/huggingface_hub:r32.7.1`](https://hub.docker.com/r/dustynv/huggingface_hub/tags) `(2023-09-11, 0.4GB)`<br>[`dustynv/huggingface_hub:r35.2.1`](https://hub.docker.com/r/dustynv/huggingface_hub/tags) `(2023-08-29, 5.0GB)`<br>[`dustynv/huggingface_hub:r35.3.1`](https://hub.docker.com/r/dustynv/huggingface_hub/tags) `(2023-09-07, 5.0GB)`<br>[`dustynv/huggingface_hub:r35.4.1`](https://hub.docker.com/r/dustynv/huggingface_hub/tags) `(2023-10-07, 5.0GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | provides `huggingface-cli` and `huggingface-downloader` tools |
 
 </details>
@@ -27,7 +27,7 @@
 | &nbsp;&nbsp;[`dustynv/huggingface_hub:r32.7.1`](https://hub.docker.com/r/dustynv/huggingface_hub/tags) | `2023-09-11` | `arm64` | `0.4GB` |
 | &nbsp;&nbsp;[`dustynv/huggingface_hub:r35.2.1`](https://hub.docker.com/r/dustynv/huggingface_hub/tags) | `2023-08-29` | `arm64` | `5.0GB` |
 | &nbsp;&nbsp;[`dustynv/huggingface_hub:r35.3.1`](https://hub.docker.com/r/dustynv/huggingface_hub/tags) | `2023-09-07` | `arm64` | `5.0GB` |
-| &nbsp;&nbsp;[`dustynv/huggingface_hub:r35.4.1`](https://hub.docker.com/r/dustynv/huggingface_hub/tags) | `2023-09-11` | `arm64` | `5.0GB` |
+| &nbsp;&nbsp;[`dustynv/huggingface_hub:r35.4.1`](https://hub.docker.com/r/dustynv/huggingface_hub/tags) | `2023-10-07` | `arm64` | `5.0GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>

@@ -65,7 +65,7 @@ To use the Python API and [`benchmark.py`](/packages/llm/llama_cpp/benchmark.py)
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`huggingface_hub`](/packages/llm/huggingface_hub) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`langchain`](/packages/llm/langchain) [`langchain:samples`](/packages/llm/langchain) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/llama_cpp:ggml-r35.2.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) `(2023-09-15, 5.2GB)`<br>[`dustynv/llama_cpp:ggml-r35.3.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) `(2023-09-11, 5.2GB)`<br>[`dustynv/llama_cpp:ggml-r35.4.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) `(2023-08-29, 5.2GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/llama_cpp:ggml-r35.2.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) `(2023-09-15, 5.2GB)`<br>[`dustynv/llama_cpp:ggml-r35.3.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) `(2023-09-11, 5.2GB)`<br>[`dustynv/llama_cpp:ggml-r35.4.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) `(2023-10-07, 5.2GB)` |
 
 | **`llama_cpp:gguf`** | |
 | :-- | :-- |
@@ -74,7 +74,7 @@ To use the Python API and [`benchmark.py`](/packages/llm/llama_cpp/benchmark.py)
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`huggingface_hub`](/packages/llm/huggingface_hub) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`text-generation-webui`](/packages/llm/text-generation-webui) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/llama_cpp:gguf-r35.2.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) `(2023-09-07, 5.2GB)`<br>[`dustynv/llama_cpp:gguf-r35.3.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) `(2023-09-15, 5.2GB)`<br>[`dustynv/llama_cpp:gguf-r35.4.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) `(2023-08-29, 5.2GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/llama_cpp:gguf-r35.2.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) `(2023-09-07, 5.2GB)`<br>[`dustynv/llama_cpp:gguf-r35.3.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) `(2023-09-15, 5.2GB)`<br>[`dustynv/llama_cpp:gguf-r35.4.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) `(2023-10-07, 5.2GB)` |
 
 </details>
 
@@ -86,10 +86,10 @@ To use the Python API and [`benchmark.py`](/packages/llm/llama_cpp/benchmark.py)
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/llama_cpp:ggml-r35.2.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-09-15` | `arm64` | `5.2GB` |
 | &nbsp;&nbsp;[`dustynv/llama_cpp:ggml-r35.3.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-09-11` | `arm64` | `5.2GB` |
-| &nbsp;&nbsp;[`dustynv/llama_cpp:ggml-r35.4.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-08-29` | `arm64` | `5.2GB` |
+| &nbsp;&nbsp;[`dustynv/llama_cpp:ggml-r35.4.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-10-07` | `arm64` | `5.2GB` |
 | &nbsp;&nbsp;[`dustynv/llama_cpp:gguf-r35.2.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-09-07` | `arm64` | `5.2GB` |
 | &nbsp;&nbsp;[`dustynv/llama_cpp:gguf-r35.3.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-09-15` | `arm64` | `5.2GB` |
-| &nbsp;&nbsp;[`dustynv/llama_cpp:gguf-r35.4.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-08-29` | `arm64` | `5.2GB` |
+| &nbsp;&nbsp;[`dustynv/llama_cpp:gguf-r35.4.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-10-07` | `arm64` | `5.2GB` |
 | &nbsp;&nbsp;[`dustynv/llama_cpp:r35.2.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-08-29` | `arm64` | `5.2GB` |
 | &nbsp;&nbsp;[`dustynv/llama_cpp:r35.3.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-08-15` | `arm64` | `5.2GB` |
 | &nbsp;&nbsp;[`dustynv/llama_cpp:r35.4.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-08-13` | `arm64` | `5.1GB` |
@@ -109,10 +109,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag llama_cpp)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/llama_cpp:ggml-r35.2.1
+./run.sh dustynv/llama_cpp:gguf-r35.4.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/llama_cpp:ggml-r35.2.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/llama_cpp:gguf-r35.4.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

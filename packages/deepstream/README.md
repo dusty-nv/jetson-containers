@@ -12,7 +12,7 @@
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) [`gstreamer`](/packages/gstreamer) [`tritonserver`](/packages/tritonserver) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/deepstream:r32.7.1`](https://hub.docker.com/r/dustynv/deepstream/tags) `(2023-09-07, 2.3GB)`<br>[`dustynv/deepstream:r35.2.1`](https://hub.docker.com/r/dustynv/deepstream/tags) `(2023-09-07, 6.7GB)`<br>[`dustynv/deepstream:r35.3.1`](https://hub.docker.com/r/dustynv/deepstream/tags) `(2023-08-29, 6.8GB)`<br>[`dustynv/deepstream:r35.4.1`](https://hub.docker.com/r/dustynv/deepstream/tags) `(2023-08-29, 6.7GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/deepstream:r32.7.1`](https://hub.docker.com/r/dustynv/deepstream/tags) `(2023-09-07, 2.3GB)`<br>[`dustynv/deepstream:r35.2.1`](https://hub.docker.com/r/dustynv/deepstream/tags) `(2023-09-07, 6.7GB)`<br>[`dustynv/deepstream:r35.3.1`](https://hub.docker.com/r/dustynv/deepstream/tags) `(2023-08-29, 6.8GB)`<br>[`dustynv/deepstream:r35.4.1`](https://hub.docker.com/r/dustynv/deepstream/tags) `(2023-10-07, 6.7GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://docs.nvidia.com/metropolis/deepstream/dev-guide/text/DS_Quickstart.html |
 
 </details>
@@ -26,7 +26,7 @@
 | &nbsp;&nbsp;[`dustynv/deepstream:r32.7.1`](https://hub.docker.com/r/dustynv/deepstream/tags) | `2023-09-07` | `arm64` | `2.3GB` |
 | &nbsp;&nbsp;[`dustynv/deepstream:r35.2.1`](https://hub.docker.com/r/dustynv/deepstream/tags) | `2023-09-07` | `arm64` | `6.7GB` |
 | &nbsp;&nbsp;[`dustynv/deepstream:r35.3.1`](https://hub.docker.com/r/dustynv/deepstream/tags) | `2023-08-29` | `arm64` | `6.8GB` |
-| &nbsp;&nbsp;[`dustynv/deepstream:r35.4.1`](https://hub.docker.com/r/dustynv/deepstream/tags) | `2023-08-29` | `arm64` | `6.7GB` |
+| &nbsp;&nbsp;[`dustynv/deepstream:r35.4.1`](https://hub.docker.com/r/dustynv/deepstream/tags) | `2023-10-07` | `arm64` | `6.7GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -43,10 +43,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag deepstream)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/deepstream:r35.2.1
+./run.sh dustynv/deepstream:r35.4.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/deepstream:r35.2.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/deepstream:r35.4.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

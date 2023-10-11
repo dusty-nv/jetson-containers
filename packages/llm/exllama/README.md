@@ -41,7 +41,7 @@ Substitute the GPTQ model from [HuggingFace Hub](https://huggingface.co/models?s
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`huggingface_hub`](/packages/llm/huggingface_hub) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`text-generation-webui`](/packages/llm/text-generation-webui) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/exllama:r35.2.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-09-24, 5.4GB)`<br>[`dustynv/exllama:r35.3.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-08-29, 5.4GB)`<br>[`dustynv/exllama:r35.4.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-09-13, 5.4GB)`<br>[`dustynv/exllama:v2-r35.3.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-09-24, 5.5GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/exllama:r35.2.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-09-24, 5.4GB)`<br>[`dustynv/exllama:r35.3.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-08-29, 5.4GB)`<br>[`dustynv/exllama:r35.4.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-10-07, 5.4GB)`<br>[`dustynv/exllama:v2-r35.3.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-09-24, 5.5GB)`<br>[`dustynv/exllama:v2-r35.4.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-10-07, 5.5GB)` |
 
 | **`exllama:v2`** | |
 | :-- | :-- |
@@ -50,7 +50,7 @@ Substitute the GPTQ model from [HuggingFace Hub](https://huggingface.co/models?s
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`huggingface_hub`](/packages/llm/huggingface_hub) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`text-generation-webui`](/packages/llm/text-generation-webui) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.v2`](Dockerfile.v2) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/exllama:v2-r35.3.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-09-24, 5.5GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/exllama:v2-r35.3.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-09-24, 5.5GB)`<br>[`dustynv/exllama:v2-r35.4.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-10-07, 5.5GB)` |
 
 </details>
 
@@ -62,8 +62,9 @@ Substitute the GPTQ model from [HuggingFace Hub](https://huggingface.co/models?s
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/exllama:r35.2.1`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-09-24` | `arm64` | `5.4GB` |
 | &nbsp;&nbsp;[`dustynv/exllama:r35.3.1`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-08-29` | `arm64` | `5.4GB` |
-| &nbsp;&nbsp;[`dustynv/exllama:r35.4.1`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-09-13` | `arm64` | `5.4GB` |
+| &nbsp;&nbsp;[`dustynv/exllama:r35.4.1`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-10-07` | `arm64` | `5.4GB` |
 | &nbsp;&nbsp;[`dustynv/exllama:v2-r35.3.1`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-09-24` | `arm64` | `5.5GB` |
+| &nbsp;&nbsp;[`dustynv/exllama:v2-r35.4.1`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-10-07` | `arm64` | `5.5GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -80,10 +81,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag exllama)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/exllama:v2-r35.3.1
+./run.sh dustynv/exllama:v2-r35.4.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/exllama:v2-r35.3.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/exllama:v2-r35.4.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
