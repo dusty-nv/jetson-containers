@@ -1,5 +1,5 @@
 
-![two robots sitting by a lake by a mountain](/docs/images/diffusion_robots_lake.jpg)
+<img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/diffusion_robots_lake.jpg">
 
 Please refer to the documentation from the following packages:
 

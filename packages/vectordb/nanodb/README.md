@@ -3,7 +3,7 @@
 > [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 
 
-<a href="https://youtu.be/ayqKpQNd1Jw"><img src=https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/nanodb_horse.gif></a>
+<a href="https://youtu.be/ayqKpQNd1Jw"><img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/nanodb_horse.gif"></a>
 
 NanoDB is a CUDA-optimized multimodal vector database that uses embeddings from the [CLIP](https://openai.com/research/clip) vision transformer for txt2img and img2img similarity search. The [demo video](https://youtu.be/ayqKpQNd1Jw) above is running in realtime on 275K images from the MS COCO image captioning dataset using Jetson AGX Orin, and shows a fundamental capability in multimodal applications - operating in a shared embedding space between text/images/etc., and being able to query with a deep contextual understanding. 
 
@@ -87,7 +87,7 @@ To spin up the Gradio server, start nanodb with the `--server` command-line argu
 
 Then navigate your browser to `http://HOSTNAME:7860?__theme=dark`, and you can enter text search queries as well as drag/upload images:
 
-<a href="https://youtu.be/ayqKpQNd1Jw"><img src=https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/nanodb_tennis.jpg></a>
+<a href="https://youtu.be/ayqKpQNd1Jw"><img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/nanodb_tennis.jpg"></a>
 
 <details open>
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
@@ -99,7 +99,7 @@ Then navigate your browser to `http://HOSTNAME:7860?__theme=dark`, and you can e
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`bitsandbytes`](/packages/llm/bitsandbytes) [`auto_gptq`](/packages/llm/auto_gptq) [`transformers`](/packages/llm/transformers) [`faiss`](/packages/vectordb/faiss) [`cuda-python`](/packages/cuda-python) [`faiss:lite`](/packages/vectordb/faiss_lite) [`torch2trt`](/packages/pytorch/torch2trt) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/nanodb:r35.3.1`](https://hub.docker.com/r/dustynv/nanodb/tags) `(2023-10-11, 7.0GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/nanodb:r35.2.1`](https://hub.docker.com/r/dustynv/nanodb/tags) `(2023-10-11, 7.0GB)`<br>[`dustynv/nanodb:r35.3.1`](https://hub.docker.com/r/dustynv/nanodb/tags) `(2023-10-11, 7.0GB)` |
 
 </details>
 
@@ -109,6 +109,7 @@ Then navigate your browser to `http://HOSTNAME:7860?__theme=dark`, and you can e
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
+| &nbsp;&nbsp;[`dustynv/nanodb:r35.2.1`](https://hub.docker.com/r/dustynv/nanodb/tags) | `2023-10-11` | `arm64` | `7.0GB` |
 | &nbsp;&nbsp;[`dustynv/nanodb:r35.3.1`](https://hub.docker.com/r/dustynv/nanodb/tags) | `2023-10-11` | `arm64` | `7.0GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
@@ -126,10 +127,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag nanodb)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/nanodb:r35.3.1
+./run.sh dustynv/nanodb:r35.2.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/nanodb:r35.3.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/nanodb:r35.2.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

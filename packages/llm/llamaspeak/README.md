@@ -3,13 +3,13 @@
 > [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 
 
-![llamaspeak](/docs/images/llamaspeak_screenshot_0.jpg)
+<img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/llamaspeak_screenshot_0.jpg">
 
 * Talk live with LLM's using [NVIDIA Riva](/packages/riva-client) ASR and TTS!
 * Requires the [`riva-server`](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/riva/resources/riva_quickstart_arm64) and [`text-generation-webui`](/packages/llm/text-generation-webui) to be running
 * Under active development :warning: (tested on Jetson AGX Orin)
 
-![llamaspeak](/docs/images/llamaspeak_block_diagram.jpg)
+<img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/llamaspeak_block_diagram.jpg">
 
 ### Start Riva
 
@@ -58,7 +58,7 @@ $ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -sha256 -days
 
 You'll want to place these in your [`jetson-containers/data`](/data) directory, because this gets automatically mounted into the containers under `/data`, and will keep your SSL certificate persistent across container runs.  When you first navigate your browser to a page that uses these self-signed certificates, it will issue you a warning since they don't originate from a trusted authority:
 
-<img src="https://github.com/dusty-nv/jetson-containers/raw/master/docs/images/ssl_warning.jpg" width="400">
+<img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/ssl_warning.jpg" width="400">
 
 You can choose to override this, and it won't re-appear again until you change certificates or your device's hostname/IP changes.
 
@@ -93,7 +93,7 @@ The default port is `8050`, but that can be changed with the `--port` argument. 
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`riva-client:python`](/packages/riva-client) [`numpy`](/packages/numpy) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/llamaspeak:r35.2.1`](https://hub.docker.com/r/dustynv/llamaspeak/tags) `(2023-09-07, 5.0GB)`<br>[`dustynv/llamaspeak:r35.3.1`](https://hub.docker.com/r/dustynv/llamaspeak/tags) `(2023-08-29, 5.0GB)`<br>[`dustynv/llamaspeak:r35.4.1`](https://hub.docker.com/r/dustynv/llamaspeak/tags) `(2023-08-29, 5.0GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/llamaspeak:r35.2.1`](https://hub.docker.com/r/dustynv/llamaspeak/tags) `(2023-09-07, 5.0GB)`<br>[`dustynv/llamaspeak:r35.3.1`](https://hub.docker.com/r/dustynv/llamaspeak/tags) `(2023-08-29, 5.0GB)`<br>[`dustynv/llamaspeak:r35.4.1`](https://hub.docker.com/r/dustynv/llamaspeak/tags) `(2023-10-07, 5.0GB)` |
 
 </details>
 
@@ -105,7 +105,7 @@ The default port is `8050`, but that can be changed with the `--port` argument. 
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/llamaspeak:r35.2.1`](https://hub.docker.com/r/dustynv/llamaspeak/tags) | `2023-09-07` | `arm64` | `5.0GB` |
 | &nbsp;&nbsp;[`dustynv/llamaspeak:r35.3.1`](https://hub.docker.com/r/dustynv/llamaspeak/tags) | `2023-08-29` | `arm64` | `5.0GB` |
-| &nbsp;&nbsp;[`dustynv/llamaspeak:r35.4.1`](https://hub.docker.com/r/dustynv/llamaspeak/tags) | `2023-08-29` | `arm64` | `5.0GB` |
+| &nbsp;&nbsp;[`dustynv/llamaspeak:r35.4.1`](https://hub.docker.com/r/dustynv/llamaspeak/tags) | `2023-10-07` | `arm64` | `5.0GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -122,10 +122,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag llamaspeak)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/llamaspeak:r35.2.1
+./run.sh dustynv/llamaspeak:r35.4.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/llamaspeak:r35.2.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/llamaspeak:r35.4.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
