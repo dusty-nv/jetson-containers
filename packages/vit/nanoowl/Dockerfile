@@ -37,3 +37,5 @@ RUN cd /opt/nanoowl/examples/ && \
         --image_encoder_engine=../data/owl_image_encoder_patch32.engine
 
 COPY benchmark.py /opt/nanoowl/
+
+WORKDIR /opt/nanoowl
