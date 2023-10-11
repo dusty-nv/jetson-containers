@@ -1,4 +1,4 @@
-![a header for a software project about building containers for AI and machine learning](/docs/images/header.jpg)
+![a header for a software project about building containers for AI and machine learning](https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/header_robots_fall.jpg)
 
 # Machine Learning Containers for Jetson and JetPack
 
