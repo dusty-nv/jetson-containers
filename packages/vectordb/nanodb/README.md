@@ -3,12 +3,12 @@
 > [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 
 
-<a href="https://youtu.be/ayqKpQNd1Jw"><img src=https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/nanodb_horse.gif></a>
+<a href="https://youtu.be/ayqKpQNd1Jw"><img src=https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/nanodb_horse.gif></a><br/>
 <sub><a href="https://www.youtube.com/watch?v=ayqKpQNd1Jw">youtube.com/watch?v=ayqKpQNd1Jw</a></sub>
 
-NanoDB is a CUDA-optimized memory-efficient multimodal vector database that uses embeddings from the [CLIP](https://openai.com/research/clip) vision transformer for txt2img and img2img similarity search. The [video](https://youtu.be/ayqKpQNd1Jw) above is running in realtime on 275K images from the MS COCO image captioning dataset using Jetson AGX Orin, and shows a fundamental capability in multimodal applications - operating in a shared embedding space between text/images/etc., and being able to query with a deep contextual understanding. 
+NanoDB is a CUDA-optimized multimodal vector database that uses embeddings from the [CLIP](https://openai.com/research/clip) vision transformer for txt2img and img2img similarity search. The [video](https://youtu.be/ayqKpQNd1Jw) above is running in realtime on 275K images from the MS COCO image captioning dataset using Jetson AGX Orin, and shows a fundamental capability in multimodal applications - operating in a shared embedding space between text/images/etc., and being able to query with a deep contextual understanding. 
 
-In addition to effectively indexing and searching your data at the edge, these vector databases are often used in tandem with LLMs for Retrieval Augmented Generation (RAG) for long-term memory beyond their built-in context length (4096 tokens for Llama-2 models), and Vision-Language Models also use the same embeddings as inputs. 
+In addition to effectively indexing and searching your data at the edge, these vector databases are often used in tandem with LLMs for [Retrieval Augmented Generation](https://www.promptingguide.ai/techniques/rag) (RAG) for long-term memory beyond their built-in context length (4096 tokens for Llama-2 models), and Vision-Language Models also use the same embeddings as inputs. 
 
 ### Indexing Data
 
@@ -28,7 +28,7 @@ NanoDB can recursively scan directories of images, compute their CLIP embeddings
   * You can specify `--scan` multiple times to import different directories
 * `--path` specifies the directory that the NanoDB config/database will be saved to or loaded from
   * This directory will be created for a new database if it doesn't already exist.
-  * If there's already an existing NanoDB there, it will be loaded first and any scans performed added to that database.
+  * If there's already an existing NanoDB there, it will be loaded first, and any scans performed are added to that database.
   * After images have been added, you can launch NanoDB with `--path` only to load a ready database.
 * `--autosave` automatically saves the NanoDB embedding vectors after each scan, and after every 1000 images in the scan.
 * `--validate` will cross-check each image against the database to confirm that it returns itself (or finds duplicates already included)
@@ -37,7 +37,7 @@ Only the embedding vectors are actually saved in the NanoDB database - the image
 
 ### Console Commands
 
-Once the database has loaded and completed any start-up operations like `--scan` or `--validate`, it will drop down to a `>` prompt from which the user can run search queries, start additional scans, and save the database from the terminal:
+Once the database has loaded and completed any start-up operations like `--scan` or `--validate`, it will drop down to a `>` prompt from which the user can run search queries, perform additional scans, and save the database from the terminal:
 
 ```bash
 > a girl riding a horse
@@ -100,7 +100,7 @@ Then navigate your browser to `http://HOSTNAME:7860?__theme=dark`, and you can e
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`bitsandbytes`](/packages/llm/bitsandbytes) [`auto_gptq`](/packages/llm/auto_gptq) [`transformers`](/packages/llm/transformers) [`faiss`](/packages/vectordb/faiss) [`cuda-python`](/packages/cuda-python) [`faiss:lite`](/packages/vectordb/faiss_lite) [`torch2trt`](/packages/pytorch/torch2trt) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/nanodb:r35.3.1`](https://hub.docker.com/r/dustynv/nanodb/tags) `(2023-10-06, 7.0GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/nanodb:r35.3.1`](https://hub.docker.com/r/dustynv/nanodb/tags) `(2023-10-11, 7.0GB)` |
 
 </details>
 
@@ -110,7 +110,7 @@ Then navigate your browser to `http://HOSTNAME:7860?__theme=dark`, and you can e
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/nanodb:r35.3.1`](https://hub.docker.com/r/dustynv/nanodb/tags) | `2023-10-06` | `arm64` | `7.0GB` |
+| &nbsp;&nbsp;[`dustynv/nanodb:r35.3.1`](https://hub.docker.com/r/dustynv/nanodb/tags) | `2023-10-11` | `arm64` | `7.0GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>

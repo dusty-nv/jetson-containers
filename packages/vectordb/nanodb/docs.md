@@ -1,10 +1,10 @@
 
-<a href="https://youtu.be/ayqKpQNd1Jw"><img src=https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/nanodb_horse.gif></a>
+<a href="https://youtu.be/ayqKpQNd1Jw"><img src=https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/nanodb_horse.gif></a><br/>
 <sub><a href="https://www.youtube.com/watch?v=ayqKpQNd1Jw">youtube.com/watch?v=ayqKpQNd1Jw</a></sub>
 
-NanoDB is a CUDA-optimized memory-efficient multimodal vector database that uses embeddings from the [CLIP](https://openai.com/research/clip) vision transformer for txt2img and img2img similarity search. The [video](https://youtu.be/ayqKpQNd1Jw) above is running in realtime on 275K images from the MS COCO image captioning dataset using Jetson AGX Orin, and shows a fundamental capability in multimodal applications - operating in a shared embedding space between text/images/etc., and being able to query with a deep contextual understanding. 
+NanoDB is a CUDA-optimized multimodal vector database that uses embeddings from the [CLIP](https://openai.com/research/clip) vision transformer for txt2img and img2img similarity search. The [video](https://youtu.be/ayqKpQNd1Jw) above is running in realtime on 275K images from the MS COCO image captioning dataset using Jetson AGX Orin, and shows a fundamental capability in multimodal applications - operating in a shared embedding space between text/images/etc., and being able to query with a deep contextual understanding. 
 
-In addition to effectively indexing and searching your data at the edge, these vector databases are often used in tandem with LLMs for Retrieval Augmented Generation (RAG) for long-term memory beyond their built-in context length (4096 tokens for Llama-2 models), and Vision-Language Models also use the same embeddings as inputs. 
+In addition to effectively indexing and searching your data at the edge, these vector databases are often used in tandem with LLMs for [Retrieval Augmented Generation](https://www.promptingguide.ai/techniques/rag) (RAG) for long-term memory beyond their built-in context length (4096 tokens for Llama-2 models), and Vision-Language Models also use the same embeddings as inputs. 
 
 ### Indexing Data
 
@@ -24,7 +24,7 @@ NanoDB can recursively scan directories of images, compute their CLIP embeddings
   * You can specify `--scan` multiple times to import different directories
 * `--path` specifies the directory that the NanoDB config/database will be saved to or loaded from
   * This directory will be created for a new database if it doesn't already exist.
-  * If there's already an existing NanoDB there, it will be loaded first and any scans performed added to that database.
+  * If there's already an existing NanoDB there, it will be loaded first, and any scans performed are added to that database.
   * After images have been added, you can launch NanoDB with `--path` only to load a ready database.
 * `--autosave` automatically saves the NanoDB embedding vectors after each scan, and after every 1000 images in the scan.
 * `--validate` will cross-check each image against the database to confirm that it returns itself (or finds duplicates already included)
@@ -33,7 +33,7 @@ Only the embedding vectors are actually saved in the NanoDB database - the image
 
 ### Console Commands
 
-Once the database has loaded and completed any start-up operations like `--scan` or `--validate`, it will drop down to a `>` prompt from which the user can run search queries, start additional scans, and save the database from the terminal:
+Once the database has loaded and completed any start-up operations like `--scan` or `--validate`, it will drop down to a `>` prompt from which the user can run search queries, perform additional scans, and save the database from the terminal:
 
 ```bash
 > a girl riding a horse
