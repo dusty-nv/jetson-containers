@@ -73,13 +73,14 @@ while True:
         continue
         
     if os.path.isfile(query) or os.path.isdir(query):
-        db.scan(path)
+        db.scan(query)
     elif query.lower() == 'save':
         db.save()
     else: 
         indexes, distances = db.search(query, k=args.k)
     
-    print(' ')
-    
-    for k in range(args.k):
-        print(f"   * index={indexes[k]}  {db.metadata[indexes[k]]['path']}  {'similarity' if args.metric == 'cosine' else 'distance'}={distances[k]}")
+        print(' ')
+        
+        for k in range(args.k):
+            print(f"   * index={indexes[k]}  {db.metadata[indexes[k]]['path']}  {'similarity' if args.metric == 'cosine' else 'distance'}={distances[k]}")
+            
