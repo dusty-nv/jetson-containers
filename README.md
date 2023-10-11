@@ -51,7 +51,7 @@ Refer to the [System Setup](/docs/setup.md) page for tips about setting up your 
 
 ```bash
 sudo apt-get update && sudo apt-get install git python3-pip
-git clone https://github.com/dusty-nv/jetson-containers
+git clone --depth=1 https://github.com/dusty-nv/jetson-containers
 cd jetson-containers
 pip3 install -r requirements.txt
 ./run.sh $(./autotag l4t-pytorch)
