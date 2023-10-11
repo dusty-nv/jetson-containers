@@ -14,7 +14,7 @@ Modular container build system that provides various [**AI/ML packages**](packag
 | **VIT** | [`Track Anything (TAM)`](packages/vit/tam) [`Segment Anything (SAM)`](packages/vit/sam) [`NanoSAM`](packages/vit/nanosam) |
 | **CUDA** | [`cupy`](packages/cupy) [`cuda-python`](packages/cuda-python) [`pycuda`](packages/pycuda) [`numba`](packages/numba) [`cudf`](packages/rapids/cudf) [`cuml`](packages/rapids/cuml) |
 | **Robotics** | [`ros`](packages/ros) [`ros2`](packages/ros) [`opencv:cuda`](packages/opencv) [`realsense`](packages/realsense) [`zed`](packages/zed) |
-| **VectorDB** | [`FAISS`](packages/vectordb/faiss) [`RAFT`](packages/rapids/raft) [`NanoDB`](packages/vectordb/nanodb) |
+| **VectorDB** | [`NanoDB`](packages/vectordb/nanodb) [`FAISS`](packages/vectordb/faiss) [`RAFT`](packages/rapids/raft) |
 
 See the [**`packages`**](packages) directory for the full list, including pre-built container images and CI/CD status for JetPack/L4T.
 
