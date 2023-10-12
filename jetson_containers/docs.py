@@ -280,11 +280,14 @@ def generate_registry_docs(packages, root, repo, user, password, simulate=False)
         print(full)
         
         if not simulate:
-            hub.set_repository_description(user, repository, descriptions={
-                'short': short,
-                'full': full,
-            })
-            
+            try:
+                hub.set_repository_description(user, repository, descriptions={
+                    'short': short,
+                    'full': full,
+                })
+            except Exception as err:
+                print(f"Exception occurred setting DockerHub container readme for {name}\n", err)
+                
         #if not simulate:
         #    time.sleep(5.0)
             
