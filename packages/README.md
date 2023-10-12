@@ -112,6 +112,7 @@
 | &nbsp;&nbsp;&nbsp; [`nanodb`](/packages/vectordb/nanodb) | [![`nanodb_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nanodb_jp51.yml?label=nanodb:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nanodb_jp51.yml) |
 | &nbsp;&nbsp;&nbsp; [`raft`](/packages/rapids/raft) |  |
 | <a id="vit">**`VIT`**</a> | |
+| &nbsp;&nbsp;&nbsp; [`nanoowl`](/packages/vit/nanoowl) | [![`nanoowl_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nanoowl_jp51.yml?label=nanoowl:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nanoowl_jp51.yml) |
 | &nbsp;&nbsp;&nbsp; [`nanosam`](/packages/vit/nanosam) | [![`nanosam_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nanosam_jp51.yml?label=nanosam:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nanosam_jp51.yml) |
 | &nbsp;&nbsp;&nbsp; [`sam`](/packages/vit/sam) | [![`sam_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/sam_jp51.yml?label=sam:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/sam_jp51.yml) |
 | &nbsp;&nbsp;&nbsp; [`tam`](/packages/vit/tam) | [![`tam_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/tam_jp51.yml?label=tam:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tam_jp51.yml) |
