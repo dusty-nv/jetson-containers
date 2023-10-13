@@ -5,6 +5,7 @@
 # depends: [transformers]
 # requires: '>=34.1.0'
 # test: [test.py]
+# docs: docs.md
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
