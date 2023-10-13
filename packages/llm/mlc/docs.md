@@ -1,16 +1,16 @@
 
-Container for [MLC LLM](https://github.com/mlc-ai/mlc-llm) project using Apache TVM Unity with CUDA, cuDNN, CUTLASS enabled.
+Container for [MLC LLM](https://github.com/mlc-ai/mlc-llm) project using Apache TVM Unity with CUDA, cuDNN, CUTLASS, FasterTransformer, and FlashAttention-2 kernels enabled.
 
 ### Model Quantization
 
-First, download the original HF Transformers version of the model that you want to quantize with MLC, and symbolically link it to `/data/models/mlc/dist/models`
+First, download the original HF Transformers version of the model that you want to quantize with MLC, and symbolically link it under `/data/models/mlc/dist/models` so that MLC can find it properly:
 
 ```bash
 ./run.sh --env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN> $(./autotag mlc) /bin/bash -c '\
   ln -s $(huggingface-downloader meta-llama/Llama-2-7b-chat-hf) /data/models/mlc/dist/models/Llama-2-7b-chat-hf'
 ```
 
-Then run the W4A16 quantization on the model:
+Then perform W4A16 quantization on the model:
 
 ```bash
 ./run.sh $(./autotag mlc) \
@@ -24,7 +24,10 @@ Then run the W4A16 quantization on the model:
     --use-flash-attn-mqa
 ```
 
-The quantized model and its runtime will be saved under `/data/models/mlc/dist/Llama-2-7b-chat-hf-q4f16_ft'
+> [!NOTE]  
+> If you are quantizing a Llava model, you need to change `"model_type": "llava"` to `"model_type": "llama"` in the original HF Transformers `config.json` version of the model.
+
+In this example, the quantized model and its runtime will be saved under `/data/models/mlc/dist/Llama-2-7b-chat-hf-q4f16_ft`
 
 ### Benchmarks
 

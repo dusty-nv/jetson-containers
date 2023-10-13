@@ -3,18 +3,18 @@
 > [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 
 
-Container for [MLC LLM](https://github.com/mlc-ai/mlc-llm) project using Apache TVM Unity with CUDA, cuDNN, CUTLASS enabled.
+Container for [MLC LLM](https://github.com/mlc-ai/mlc-llm) project using Apache TVM Unity with CUDA, cuDNN, CUTLASS, FasterTransformer, and FlashAttention-2 kernels enabled.
 
 ### Model Quantization
 
-First, download the original HF Transformers version of the model that you want to quantize with MLC, and symbolically link it to `/data/models/mlc/dist/models`
+First, download the original HF Transformers version of the model that you want to quantize with MLC, and symbolically link it under `/data/models/mlc/dist/models` so that MLC can find it properly:
 
 ```bash
 ./run.sh --env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN> $(./autotag mlc) /bin/bash -c '\
   ln -s $(huggingface-downloader meta-llama/Llama-2-7b-chat-hf) /data/models/mlc/dist/models/Llama-2-7b-chat-hf'
 ```
 
-Then run the W4A16 quantization on the model:
+Then perform W4A16 quantization on the model:
 
 ```bash
 ./run.sh $(./autotag mlc) \
@@ -28,7 +28,10 @@ Then run the W4A16 quantization on the model:
     --use-flash-attn-mqa
 ```
 
-The quantized model and its runtime will be saved under `/data/models/mlc/dist/Llama-2-7b-chat-hf-q4f16_ft'
+> [!NOTE]  
+> If you are quantizing a Llava model, you need to change `"model_type": "llava"` to `"model_type": "llama"` in the original HF Transformers `config.json` version of the model.
+
+In this example, the quantized model and its runtime will be saved under `/data/models/mlc/dist/Llama-2-7b-chat-hf-q4f16_ft`
 
 ### Benchmarks
 
@@ -59,7 +62,7 @@ The `--prompt` file used controls the number of input tokens (context length) - 
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`bitsandbytes`](/packages/llm/bitsandbytes) [`auto_gptq`](/packages/llm/auto_gptq) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/mlc:r35.2.1`](https://hub.docker.com/r/dustynv/mlc/tags) `(2023-10-09, 9.0GB)`<br>[`dustynv/mlc:r35.3.1`](https://hub.docker.com/r/dustynv/mlc/tags) `(2023-10-02, 9.0GB)`<br>[`dustynv/mlc:r35.4.1`](https://hub.docker.com/r/dustynv/mlc/tags) `(2023-09-19, 8.9GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/mlc:r35.2.1`](https://hub.docker.com/r/dustynv/mlc/tags) `(2023-10-13, 9.0GB)`<br>[`dustynv/mlc:r35.3.1`](https://hub.docker.com/r/dustynv/mlc/tags) `(2023-10-02, 9.0GB)`<br>[`dustynv/mlc:r35.4.1`](https://hub.docker.com/r/dustynv/mlc/tags) `(2023-09-19, 8.9GB)` |
 
 | **`mlc:dev`** | |
 | :-- | :-- |
@@ -76,7 +79,7 @@ The `--prompt` file used controls the number of input tokens (context length) - 
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/mlc:r35.2.1`](https://hub.docker.com/r/dustynv/mlc/tags) | `2023-10-09` | `arm64` | `9.0GB` |
+| &nbsp;&nbsp;[`dustynv/mlc:r35.2.1`](https://hub.docker.com/r/dustynv/mlc/tags) | `2023-10-13` | `arm64` | `9.0GB` |
 | &nbsp;&nbsp;[`dustynv/mlc:r35.3.1`](https://hub.docker.com/r/dustynv/mlc/tags) | `2023-10-02` | `arm64` | `9.0GB` |
 | &nbsp;&nbsp;[`dustynv/mlc:r35.4.1`](https://hub.docker.com/r/dustynv/mlc/tags) | `2023-09-19` | `arm64` | `8.9GB` |
 
