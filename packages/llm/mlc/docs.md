@@ -10,6 +10,9 @@ First, download the original HF Transformers version of the model that you want 
   ln -s $(huggingface-downloader meta-llama/Llama-2-7b-chat-hf) /data/models/mlc/dist/models/Llama-2-7b-chat-hf'
 ```
 
+> [!NOTE]  
+> If you are quantizing a Llava model, you need to change `"model_type": "llava"` to `"model_type": "llama"` in the original HF Transformers [`config.json`](https://huggingface.co/liuhaotian/llava-v1.5-7b/blob/main/config.json) version of the model (you can patch this locally after it's been downloaded)
+
 Then perform W4A16 quantization on the model:
 
 ```bash
@@ -23,9 +26,6 @@ Then perform W4A16 quantization on the model:
     --use-cuda-graph \
     --use-flash-attn-mqa
 ```
-
-> [!NOTE]  
-> If you are quantizing a Llava model, you need to change `"model_type": "llava"` to `"model_type": "llama"` in the original HF Transformers `config.json` version of the model.
 
 In this example, the quantized model and its runtime will be saved under `/data/models/mlc/dist/Llama-2-7b-chat-hf-q4f16_ft`
 
