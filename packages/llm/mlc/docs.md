@@ -1,5 +1,5 @@
 
-Container for [MLC LLM](https://github.com/mlc-ai/mlc-llm) project using Apache TVM Unity with CUDA, cuDNN, CUTLASS, FasterTransformer, and FlashAttention-2 kernels enabled.
+Container for [MLC LLM](https://github.com/mlc-ai/mlc-llm) project using Apache TVM Unity with CUDA, cuDNN, CUTLASS, FasterTransformer, and FlashAttention-2 kernels.
 
 ### Model Quantization
 
@@ -41,9 +41,11 @@ To benchmark the quantized model, run the [`benchmark.py`](benchmark.py) script:
     --max-new-tokens 128
 ```
 
+The `--prompt` file used controls the number of input tokens (context length) - there are generated prompt sequences under `/data/prompts` for up to 3968 tokens.  The `--max-new-tokens` argument specifies how many output tokens the model generates for each prompt.
+
 ```
 AVERAGE OVER 10 RUNS:
 /data/models/mlc/ft_mqa/Llama-2-7b-chat-hf-q4f16_ft/params:  prefill_time 0.027 sec, prefill_rate 582.8 tokens/sec, decode_time 2.986 sec, decode_rate 42.9 tokens/sec
 ```
 
-The `--prompt` file used controls the number of input tokens (context length) - there are generated prompt sequences under `/data/prompts` for up to 3968 tokens.  The `--max-new-tokens` argument specifies how many output tokens the model generates for each prompt.
+The prefill time is how long the model takes to process the input context before it can start generating output tokens.  The decode rate is the speed at which it generates output tokens.
