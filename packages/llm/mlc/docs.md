@@ -11,7 +11,7 @@ First, download the original HF Transformers version of the model that you want 
 ```
 
 > [!NOTE]  
-> If you are quantizing a Llava model, you need to change `"model_type": "llava"` to `"model_type": "llama"` in the original HF Transformers [`config.json`](https://huggingface.co/liuhaotian/llava-v1.5-7b/blob/main/config.json) version of the model (you can patch this locally after it's been downloaded)
+> If you're quantizing Llava, you need to change `"model_type": "llava"` to `"model_type": "llama"` in the original model's [`config.json`](https://huggingface.co/liuhaotian/llava-v1.5-7b/blob/main/config.json) version of the model (you can patch this locally after it's been downloaded under `/data/models/huggingface`)
 
 Then perform W4A16 quantization on the model:
 
@@ -41,7 +41,7 @@ To benchmark the quantized model, run the [`benchmark.py`](benchmark.py) script:
     --max-new-tokens 128
 ```
 
-The `--prompt` file used controls the number of input tokens (context length) - there are generated prompt sequences under `/data/prompts` for up to 3968 tokens.  The `--max-new-tokens` argument specifies how many output tokens the model generates for each prompt.
+The `--prompt` file used controls the number of input tokens (context length) - there are generated prompt sequences under `/data/prompts` for up to 4096 tokens.  The `--max-new-tokens` argument specifies how many output tokens the model generates for each prompt.
 
 ```
 AVERAGE OVER 10 RUNS:
