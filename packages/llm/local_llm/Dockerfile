@@ -1,7 +1,7 @@
 #---
 # name: local_llm
 # group: llm
-# depends: [mlc:dev]
+# depends: [mlc:dev, jetson-utils]
 # requires: '>=34.1.0'
 #---
 # depends: [mlc:dev, awq:dev]

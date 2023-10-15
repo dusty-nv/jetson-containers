@@ -27,7 +27,7 @@ class CLIPModel():
             
         return instance
     
-    def __init__(self, model="openai/clip-vit-large-patch14-336", **kwargs):
+    def __init__(self, model, **kwargs):
         self.stats = AttrDict()
         self.config = AttrDict()
         self.config.name = model

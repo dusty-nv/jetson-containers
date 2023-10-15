@@ -3,30 +3,45 @@ import os
 import inspect
 import numpy as np
 
-from .clip import CLIPModel
 from .utils import AttrDict, replace_text, print_table, ImageExtensions
 
-chat_templates = {
+ChatTemplates = {
+
+    # https://huggingface.co/blog/llama2#how-to-prompt-llama-2
     'llama-2': {
         'system_prompt': "Answer the questions.",
         'system': '<s>[INST] <<SYS>>\n${MESSAGE}\n<</SYS>>\n\n',
         'first': '${MESSAGE} [/INST]',
         'user': '<s>[INST] ${MESSAGE} [/INST]',
-        'bot': ' ${MESSAGE}'
-        #'turn': '${USER_MESSAGE} [/INST] ${BOT_MESSAGE} </s><s>[INST] ', 
+        'bot': ' ${MESSAGE}'  # llama-2 output already ends in </s>
     },
     
-    'llava-2': {
-        'system_prompt': "You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.",
-        'system': '<s>[INST] <<SYS>>\n${MESSAGE}\n<</SYS>>\n\n',
-        'first': '${MESSAGE} [/INST]',
-        'user': '<s>[INST] ${MESSAGE} [/INST]',
-        'bot': ' ${MESSAGE}'
-    }  
+    # https://github.com/lm-sys/FastChat/blob/main/docs/vicuna_weights_version.md#prompt-template
+    'vicuna-v0': {
+        'system_prompt': "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.",
+        'system': '${MESSAGE}\n\n',
+        'user': '### Human: ${MESSAGE}\n',
+        'bot': '### Assistant: ${MESSAGE}\n',
+    },
+    
+    'vicuna-v1': {
+        'system_prompt': "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.",
+        'system': '${MESSAGE}\n\n',
+        'user': 'USER: ${MESSAGE}\n',
+        'bot': 'ASSISTANT: ${MESSAGE}</s>\n', # TODO: does output already end in </s> ?
+    },
 }
 
-for key in chat_templates:
-    chat_templates[key] = AttrDict(chat_templates[key])
+ChatTemplates['llava-v0'] = ChatTemplates['vicuna-v0']
+ChatTemplates['llava-v1'] = ChatTemplates['vicuna-v1']
+
+ChatTemplates['llava-llama-2'] = ChatTemplates['llama-2'].copy()
+ChatTemplates['llava-llama-2'].update({
+    'system_prompt': "You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language."
+})
+
+for key in ChatTemplates:
+    ChatTemplates[key] = AttrDict(ChatTemplates[key])
     
 
 class ChatHistory():
@@ -46,9 +61,31 @@ class ChatHistory():
     defined, but arbitrary roles can be added, each with their own template.
     The system prompt can also be configured through the chat template.
     """
-    def __init__(self, model, template='llama-2'):
+    def __init__(self, model, template=None):
         self.model = model
-        self.template = chat_templates[template]
+        
+        if not template:
+            name = model.config.name.lower()
+            if 'llama-2' in name:
+                if 'llava' in name:
+                    template = 'llava-llama-2'
+                else:
+                    template = 'llama-2'
+            elif 'vicuna' in name:
+                if 'v1' in name:
+                    template = 'vicuna-v1'
+                else:
+                    template = 'vicuna-v0'
+            elif 'llava' in name:
+                if 'v1' in name:
+                    template = 'llava-v1'
+                else:
+                    template = 'llava-v0'
+            else:
+                raise RuntimeError(f"Couldn't automatically determine model type from {model.config.name}, please set the --chat-template argument")
+            print(f"-- using chat template '{template}' for model {model.config.name}")
+            
+        self.template = ChatTemplates[template]
         self.template_name = template
         self.embedding_functions = {}
         
@@ -146,12 +183,14 @@ class ChatHistory():
     def embed_image(self, image, template=None):
         """
         Given an image, extract features and perfom the image embedding.
-        This uses the CLIP encoder and a linear projection layer that
+        This uses the CLIP encoder and a projection model that
         maps it into the embedding space the model expects.
+        
+        This is only applicable to vision VLM's like Llava and Mini-GPT4,
+        and will throw an exception if model.has_vision is False.
         """
-        clip = CLIPModel.from_pretrained()
-        embedding = clip.embed_image(image)
-        print_table(clip.stats)
+        embedding = self.model.embed_image(image, return_tensors='np')
+        print_table(self.model.vision.stats)
         
         if template:
             template = template.split("${MESSAGE}")[0]
@@ -168,8 +207,6 @@ class ChatHistory():
         If cached, only the new embeddings will be returned.
         Otherwise, the entire chat history will be returned.
         Returns the embedding and its token position in the history.
-        
-        TODO image templating in user input
         """
         embeddings = []
         position = 0
@@ -186,13 +223,13 @@ class ChatHistory():
                     if entry.role not in self.template:
                         raise RuntimeError(f"chat template {self.template_name} didn't have an entry for role={entry.role}")
                     role_template = self.template[entry.role]
-
                     if open_user_prompt:
-                        role_template = role_template.split('${MESSAGE}')[1]
+                        role_template = role_template.split('${MESSAGE}')[1]  # user prompt needs closed out from an image
                         open_user_promt = False
                         
                 embed_key = key + '_embedding'
 
+                # TODO reconcile/refactor these together
                 if use_cache:
                     if embed_key not in entry:
                         entry[embed_key] = self.embed(entry[key], type=key, template=role_template)
@@ -200,7 +237,7 @@ class ChatHistory():
                             embeddings.append(entry[embed_key])
                             use_cache = False  # all entries after this need to be included
                             if key == 'image':
-                                open_user_prompt = True
+                                open_user_prompt = True  # image is inside first half of a user prompt
                         else:
                             position += entry[embed_key].shape[1]
                     else:
@@ -208,6 +245,8 @@ class ChatHistory():
                 else:
                     if embed_key not in entry:
                         entry[embed_key] = self.embed(entry[key], type=key, template=role_template)
+                        if key == 'image':
+                            open_user_prompt = True
                     embeddings.append(entry[embed_key])
                 
                 """

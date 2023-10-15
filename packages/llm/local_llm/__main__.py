@@ -8,7 +8,7 @@ import numpy as np
 
 from termcolor import cprint
 
-from local_llm import LocalLM, ChatHistory, CLIPModel, load_image, load_prompts, print_table, ImageExtensions
+from local_llm import LocalLM, ChatHistory, ChatTemplates, CLIPModel, load_image, load_prompts, print_table, ImageExtensions
 
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -16,13 +16,16 @@ parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFo
 parser.add_argument("--model", type=str, required=True, help="path to the model, or repository on HuggingFace Hub")
 parser.add_argument("--quant", type=str, default=None, help="path to the quantized weights (AWQ uses this)")
 parser.add_argument("--api", type=str, default=None, choices=['auto_gptq', 'awq', 'hf', 'mlc'], help="specify the API to use (otherwise inferred)")
-parser.add_argument("--prompt", action='append', nargs='*')
-parser.add_argument("--system", action='append', nargs='*')
-parser.add_argument("--chat", action="store_true")
-parser.add_argument("--chat-template", type=str, default=None)
-parser.add_argument("--no-streaming", action="store_true")
+
+parser.add_argument("--vision-model", type=str, default=None, help="for VLMs, manually select the CLIP vision model to use (e.g. openai/clip-vit-large-patch14-336 for higher-res)")
+
+parser.add_argument("--prompt", action='append', nargs='*', help="add a prompt (can be prompt text or path to .txt, .json, or image file)")
+parser.add_argument("--system", action='append', nargs='*', help="set the system prompt instruction")
+parser.add_argument("--chat", action="store_true", help="enabled chat mode (automatically enabled if 'chat' in model name)")
+parser.add_argument("--chat-template", type=str, default=None, choices=list(ChatTemplates.keys()), help="manually select the chat template")
+
+parser.add_argument("--no-streaming", action="store_true", help="disable streaming output (text output will appear all at once)")
 parser.add_argument("--max-new-tokens", type=int, default=128, help="the maximum number of new tokens to generate, in addition to the prompt")
-parser.add_argument("--image", type=str, default=None)
 parser.add_argument("--no-embeddings", action="store_true")
 
 args = parser.parse_args()
@@ -75,7 +78,12 @@ print('prompts', prompts)
 print('system_prompts', system_prompts)
 
 # load model
-model = LocalLM.from_pretrained(args.model, quant=args.quant, api=args.api)
+model = LocalLM.from_pretrained(
+    args.model, 
+    quant=args.quant, 
+    api=args.api,
+    vision_model=args.vision_model
+)
 
 #print(model.model)
 print_table(model.config)
@@ -143,13 +151,6 @@ if args.no_embeddings:
     chat_history = []
     kv_cache = None
 else: #args.chat:
-    if not args.chat_template:
-        if 'llama-2' in model.config.name.lower():
-            if 'llava' in model.config.name.lower():
-                args.chat_template = 'llava-2'
-            else:
-                args.chat_template = 'llama-2'
-                
     chat_history = ChatHistory(model, template=args.chat_template)
     
     

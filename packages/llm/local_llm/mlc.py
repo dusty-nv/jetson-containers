@@ -35,10 +35,8 @@ class MLCModel(LocalLM):
                          or the quantization method to use (q4f16_1, q4f16_ft, ect)          
                          If a path, there should be a .so in this dir, with params/ 
                          directory under it containing the weights and MLC config.
-                         
-          quant_cache (str) -- 
         """
-        super(MLCModel, self).__init__(**kwargs)
+        super(MLCModel, self).__init__(model_path, **kwargs)
 
         # perform quantization if needed
         if not quant:
@@ -47,11 +45,8 @@ class MLCModel(LocalLM):
         if not os.path.isdir(quant):
             quant = MLCModel.quantize(model_path, quant, **kwargs)
             
-        self.config.quant = quant.split('-')[-1]  # recover the quant method
-        
+        self.config.quant = quant.split('-')[-1]  # recover the quant method        
         self.quant_path = quant
-        self.model_path = model_path
-        
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_path, use_fast=False)
         
         # initialize tvm device
