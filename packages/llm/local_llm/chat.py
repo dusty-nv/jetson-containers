@@ -46,22 +46,35 @@ for key in ChatTemplates:
 
 class ChatHistory():
     """
-    Unstructured chat that can be a mix of images/text from multiple roles.
+    Multimodal chat history that can contain a mix of media including text/images.
     
-    It can be indexed like a list of chat entries, where each entry contains
-    different media like text, images or video, sound, ect.  
+    ChatHistory objects can be indexed like a list of chat entry dicts,
+    where each entry dict may have keys for 'text', 'image', 'role', ect.
     
-    Each of these types has a different embedding function (e.g. for converting 
-    text to tokens and it's word embedding, or extracting image features with CLIP
-    and performing their embedding). From these, it assembles the embedding for
-    the entire chat as input to the LLM.
+       `chat_history[n]` will return the n-th chat entry
+
+    Each type of media has a different embedding function (e.g. LLM's typically 
+    do text token embedding internally, and images use CLIP + projection layers). 
+    From these, it assembles the embedding for the entire chat as input to the LLM.
     
     It uses templating to add the required special tokens as defined by different
-    model architectures.  In typicaly 2-turn chat, there are 'user' and 'bot' roles
+    model architectures.  In normal 2-turn chat, there are 'user' and 'bot' roles
     defined, but arbitrary roles can be added, each with their own template.
     The system prompt can also be configured through the chat template.
     """
-    def __init__(self, model, template=None):
+    def __init__(self, model, template=None, system_prompt=None):
+        """
+        Parameters:
+           
+           model (LocalLM) -- the model instance used for embeddings
+           
+           template (str|dict) -- either a chat template dict, or the name of the 
+                                  chat template to use like 'llama-2', 'vicuna-v1'
+                                  If None, will attempt to determine model type.
+                                  
+           system_prompt (str) -- set the default system prompt
+                                  if None, will use system prompt from the template.
+        """
         self.model = model
         
         if not template:
@@ -85,8 +98,14 @@ class ChatHistory():
                 raise RuntimeError(f"Couldn't automatically determine model type from {model.config.name}, please set the --chat-template argument")
             print(f"-- using chat template '{template}' for model {model.config.name}")
             
-        self.template = ChatTemplates[template]
-        self.template_name = template
+        if isinstance(template, str):
+            self.template = ChatTemplates[template].copy()
+        else:
+            self.template = template
+            
+        if system_prompt:
+            self.template['system_prompt'] = system_prompt
+
         self.embedding_functions = {}
         
         self.register_embedding('text', self.embed_text)
@@ -95,6 +114,23 @@ class ChatHistory():
     
         self.reset()
  
+    @property
+    def system_prompt(self):
+        """
+        Get the system prompt, the typically hidden instruction at the beginning
+        of the chat like "You are a curious and helpful AI assistant, ..."
+        """
+        return self.template['system_prompt']
+        
+    @system_prompt.setter
+    def system_prompt(self, instruction):
+        """
+        Set the system prompt instruction string and reset the chat history.
+        TODO make it so this doesn't reset the chat history, but uncaches it.
+        """
+        self.template['system_prompt'] = instruction
+        self.reset()
+        
     def add_entry(self, role='user', input=None, **kwargs):
         """
         Add a chat entry consisting of text, image, ect.  Other inputs
@@ -203,9 +239,9 @@ class ChatHistory():
         
     def embed_chat(self, use_cache=True):
         """
-        Assemble the embedding of the entire chat.
-        If cached, only the new embeddings will be returned.
-        Otherwise, the entire chat history will be returned.
+        Assemble the embedding of either the latest or entire chat.
+        If use_cache is true (the default), and only the new embeddings will be returned.
+        If use_cache is set to false, then the entire chat history will be returned.
         Returns the embedding and its token position in the history.
         """
         embeddings = []
@@ -231,7 +267,7 @@ class ChatHistory():
 
                 # TODO reconcile/refactor these together
                 if use_cache:
-                    if embed_key not in entry:
+                    if embed_key not in entry: # TODO  and entry.role != 'bot'  -- only compute bot embeddings when needed
                         entry[embed_key] = self.embed(entry[key], type=key, template=role_template)
                         if entry.role != 'bot':  # bot outputs are already included in kv_cache
                             embeddings.append(entry[embed_key])

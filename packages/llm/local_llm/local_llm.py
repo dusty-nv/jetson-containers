@@ -155,7 +155,6 @@ class LocalLM():
         ) 
         
         # create image embedding projection model
-        self.mm_projector = torch.nn.Sequential()
         self.mm_projector_type = 'linear'
         
         if hasattr(self.model_config, 'mm_projector_type'):
@@ -171,9 +170,7 @@ class LocalLM():
                 modules.append(torch.nn.Linear(self.model_config.hidden_size, self.model_config.hidden_size))
             self.mm_projector = torch.nn.Sequential(*modules)
         elif self.mm_projector_type == 'linear':
-            self.mm_projector.add_module('mm_projector',
-                torch.nn.Linear(self.model_config.mm_hidden_size, self.model_config.hidden_size)
-            )
+            self.mm_projector = torch.nn.Linear(self.model_config.mm_hidden_size, self.model_config.hidden_size)
         else:
             raise RuntimeError(f"Unknown vision mm_projector type: {self.mm_projector_type}")
             
@@ -201,7 +198,7 @@ class LocalLM():
         
         # TODO take out model.mm_projector all together and none of the naming should be needed?
         mm_projector_weights = torch.load(self.mm_projector_path, map_location='cpu')
-        mm_projector_weights = {k.replace('model.', ''):v for k,v in mm_projector_weights.items()}  
+        mm_projector_weights = {k.replace('model.mm_projector.', ''):v for k,v in mm_projector_weights.items()}  
         
         #def get_w(weights, keyword):
         #    return {k.split(keyword + '.')[1]: v for k, v in weights.items() if keyword in k}
@@ -210,5 +207,6 @@ class LocalLM():
         
         self.mm_projector.load_state_dict(mm_projector_weights)
         self.mm_projector.to(dtype=self.vision.dtype, device=self.vision.device).eval()
+        
         print("mm_projector", self.mm_projector)
         

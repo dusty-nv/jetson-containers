@@ -26,7 +26,6 @@ parser.add_argument("--chat-template", type=str, default=None, choices=list(Chat
 
 parser.add_argument("--no-streaming", action="store_true", help="disable streaming output (text output will appear all at once)")
 parser.add_argument("--max-new-tokens", type=int, default=128, help="the maximum number of new tokens to generate, in addition to the prompt")
-parser.add_argument("--no-embeddings", action="store_true")
 
 args = parser.parse_args()
 
@@ -34,7 +33,6 @@ if 'chat' in args.model:
     args.chat = True
     
 # populate default prompts - https://modal.com/docs/guide/ex/vllm_inference
-print('prompt', args.prompt)
 if args.prompt:
     args.prompt = [x[0] for x in args.prompt]
     if args.prompt[0] == 'default' or args.prompt[0] == 'defaults':
@@ -72,10 +70,7 @@ print(args)
 
 # load .txt or .json files
 prompts = load_prompts(args.prompt) if args.prompt else None
-system_prompts = load_prompts(args.system) if args.system else None
-
-print('prompts', prompts)
-print('system_prompts', system_prompts)
+system_prompt = ' '.join(load_prompts(args.system)) if args.system else None
 
 # load model
 model = LocalLM.from_pretrained(
@@ -85,75 +80,12 @@ model = LocalLM.from_pretrained(
     vision_model=args.vision_model
 )
 
-#print(model.model)
 print_table(model.config)
 
-# load image
-if args.no_embeddings:
-    clip = None
-    image_embedding = None
+# create the chat history
+chat_history = ChatHistory(model, args.chat_template, system_prompt)
 
-    def get_image_embedding(image):
-        global clip
-        
-        if clip is None:
-            clip = CLIPModel()
-            print_table(clip.config)
-            
-        if isinstance(image, str):
-            image = load_image(image)
-            
-        embedding = clip.embed_image(image)
-        print_table(clip.stats)
-        #print('image_embedding', embedding.shape, embedding.dtype)
-        return embedding
-        
-    if args.image:
-        image_embedding = get_image_embedding(args.image)
-
-    chat_templates = {
-        'llama-2': {
-            'system': '<s>[INST] <<SYS>>\n${SYSTEM_PROMPT}\n<</SYS>>\n\n',
-            'turn': '${USER_MESSAGE} [/INST] ${BOT_MESSAGE} </s><s>[INST] '
-        }
-    }
-            
-    chat_template = chat_templates['llama-2']
-
-    # system prompt
-    '''
-    system_prompt="""[INST] <<SYS>>
-    You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.
-    <</SYS>>
-    '''
-    if system_prompts is None:
-        if 'llava' in model.config.name.lower():
-            system_prompt = 'You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.'
-        else:
-            system_prompt = 'Answer the questions.'
-    else:
-        system_prompt = ' '.join(system_prompts)
-        
-    def replace_text(text, dict):
-        for key, value in dict.items():
-            text = text.replace(key, value)
-        return text
-        
-    system_prompt = replace_text(
-        chat_template['system'],
-        {'${SYSTEM_PROMPT}': system_prompt}
-    )
-
-    print(f"system_prompt:\n```\n{system_prompt}```")
-    system_embedding = model.embed_text(system_prompt, use_cache=True)
-    print('system_embedding', system_embedding.shape, system_embedding.dtype)
-
-    chat_history = []
-    kv_cache = None
-else: #args.chat:
-    chat_history = ChatHistory(model, template=args.chat_template)
-    
-    
+# make an interrupt handler for muting the bot output
 last_interrupt = 0.0
 interrupt_chat = False
 
@@ -180,158 +112,70 @@ def on_interrupt(signum, frame):
                
 signal.signal(signal.SIGINT, on_interrupt)
 
+
 while True: 
+    # get the next prompt from the list, or from the user interactivey
     if isinstance(prompts, list):
         if len(prompts) > 0:
             user_prompt = prompts.pop(0)
+            cprint(f'>> PROMPT: {user_prompt}', 'blue')
         else:
             break
     else:
         cprint('>> PROMPT: ', 'blue', end='', flush=True)
         user_prompt = sys.stdin.readline().strip()
     
-    if args.no_embeddings:
-        if user_prompt.lower().endswith(ImageExtensions):
-            image_embedding = get_image_embedding(user_prompt)
-            continue
-        elif user_prompt.lower().endswith(('.txt', '.json')):
-            user_prompt = ' '.join(load_prompts(user_prompt))
-        elif user_prompt.lower() == 'reset' or user_prompt.lower() == 'clear':
+    # special commands:  load prompts from file
+    # 'reset' or 'clear' resets the chat history
+    if user_prompt.lower().endswith(('.txt', '.json')):
+        user_prompt = ' '.join(load_prompts(user_prompt))
+    elif user_prompt.lower() == 'reset' or user_prompt.lower() == 'clear':
             print('-- resetting chat history')
             chat_history = []
             kv_cache = None
             continue
-           
-        """
-        chat_history.append([user_prompt, ''])
-        chat_text = ""
-        
-        for i, turn in enumerate(chat_history):
-            if not turn[1]: # latest user prompt
-                text = replace_text(
-                    chat_template['turn'].split('${BOT_MESSAGE}')[0].rstrip(' '),
-                    {'${USER_MESSAGE}': turn[0]}
-                )
-            else: # previous query/response turn
-                text = replace_text(
-                    chat_template['turn'],
-                    {'${USER_MESSAGE}': turn[0], '${BOT_MESSAGE}': turn[1]}
-                 )
-            chat_text += text
-            
-        print(f"chat_text:\n```{chat_text}```")
-        
-        chat_embedding = model.embed_text(chat_text)
-        
-        print('system_embedding', system_embedding.shape, system_embedding.dtype, type(system_embedding))
-        print('chat_embedding', chat_embedding.shape, chat_embedding.dtype, type(chat_embedding))
-        #prompt = '\n' + prompt + ' [/INST]'
 
-        #prompt_embedding = model.embed_text(prompt)
+    # add the latest user prompt to the chat history
+    entry = chat_history.add_entry(role='user', input=user_prompt)
 
-        if image_embedding is not None:
-            embedding = (system_embedding, image_embedding, chat_embedding)
-        else:
-            embedding = (system_embedding, chat_embedding)
-          
-        print('embedding', len(embedding))
+    print(f"chat entry {len(chat_history)}:  {entry}")
+
+    # images should be followed by text prompts
+    if 'image' in entry and 'text' not in entry:
+        print('-- image message, waiting for user prompt')
+        continue
         
-        embedding = np.concatenate(embedding, axis=1)
-        """
-        
-        if len(chat_history) == 0:
-            text = f"{user_prompt} [/INST]"  #'${USER_MESSAGE} [/INST] ${BOT_MESSAGE} </s><s>[INST] '
-            embedding = (system_embedding, model.embed_text(text))
-            embedding = np.concatenate(embedding, axis=1)
-        else:
-            text = f"<s>[INST] {user_prompt} [/INST]"
-            
-            if not chat_history[-1][1].strip().endswith('</s>'):
-                print(f"-- adding EOS to bot reply")
-                text = "</s>" + text
-                
-            embedding = model.embed_text(text)
-        
-        print('prompt', text)
-        
-        output = model.generate(
-            embedding, 
-            streaming=not args.no_streaming, 
-            max_new_tokens=args.max_new_tokens,
-            kv_cache=kv_cache
-        )
-        
-        if args.no_streaming:
-            #chat_history[-1][1] = output
-            print(output)
-        else:
-            for token in output:
-                #chat_history[-1][1] += token
-                print(token, end='', flush=True)
-                if interrupt_chat:
-                    output.stop()
-                    interrupt_chat = False
-                    break
-                
-        print('')
-        print_table(model.stats)
-        
-        kv_cache = output.kv_cache
-        chat_history.append([user_prompt, output.output_text])
-        
-    else: #args.chat:
-        entry = chat_history.add_entry(role='user', input=user_prompt)
+    # get the latest embeddings from the chat
+    embedding, position = chat_history.embed_chat()
     
-        print(f"chat entry {len(chat_history)}:  {entry}")
-
-        if 'image' in entry:
-            print('-- image message, waiting for user prompt')
-            continue  # wait for text user prompt asking about the image
-            
-        embedding, position = chat_history.embed_chat()
-        
-        print('adding embedding', embedding.shape, 'position', position)
-        
-        output = model.generate(
-            embedding, 
-            streaming=not args.no_streaming, 
-            max_new_tokens=args.max_new_tokens,
-            kv_cache=chat_history.kv_cache
-        )
-            
-        bot_reply = chat_history.add_entry(role='bot', text='')
-        
-        if args.no_streaming:
-            bot_reply.text = output
-            print(output)
-        else:
-            for token in output:
-                bot_reply.text += token
-                print(token, end='', flush=True)
-                if interrupt_chat:
-                    output.stop()
-                    interrupt_chat = False
-                    break
-                
-        print('')
-        print_table(model.stats)
-
-        chat_history.kv_cache = output.kv_cache
-        bot_reply.text = output.output_text
+    print('adding embedding', embedding.shape, 'position', position)
     
-"""
-for prompt in prompts:
-    cprint(prompt + ' ', 'blue', end='', flush=True)
-
-    output = model.generate(prompt, image=image_features, streaming=args.streaming, max_new_tokens=args.max_new_tokens)
+    # generate bot reply
+    output = model.generate(
+        embedding, 
+        streaming=not args.no_streaming, 
+        max_new_tokens=args.max_new_tokens,
+        kv_cache=chat_history.kv_cache
+    )
+        
+    bot_reply = chat_history.add_entry(role='bot', text='') # placeholder
     
-    if args.streaming:
-        for token in output:
-            print(token, end='', flush=True)
+    if args.no_streaming:
+        bot_reply.text = output
+        cprint(output, 'green')
     else:
-        print(output)
-        
+        for token in output:
+            bot_reply.text += token
+            cprint(token, 'green', end='', flush=True)
+            if interrupt_chat:
+                output.stop()
+                interrupt_chat = False
+                break
+            
     print('')
     print_table(model.stats)
-"""   
+
+    chat_history.kv_cache = output.kv_cache   # save the kv_cache 
+    bot_reply.text = output.output_text  # sync the text once more
+ 
 print('exiting...')
