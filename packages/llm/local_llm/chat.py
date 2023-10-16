@@ -180,9 +180,7 @@ class ChatHistory():
             
         if type not in self.embedding_functions:
             raise ValueError(f"type '{type}' did not have an embedding registered")
-        
-        print('embedding_type', type, input)
-        
+            
         if self.embedding_functions[type].uses_template:
             return self.embedding_functions[type].func(input, template)
         else:
@@ -194,8 +192,10 @@ class ChatHistory():
         """
         if template:
             text = replace_text(template, {'${MESSAGE}': text})
-        print(f"```{text}```")
-        return self.model.embed_text(text, use_cache=use_cache)
+        #print(f"```{text}```")
+        embedding = self.model.embed_text(text, use_cache=use_cache)
+        print(f"embedding text {embedding.shape} {embedding.dtype} -> \n```{text}```")
+        return embedding
     
     def embed_dict(self, dict, template=None):
         """
@@ -230,11 +230,14 @@ class ChatHistory():
         
         if template:
             template = template.split("${MESSAGE}")[0]
-            
+        
+        print(f"image template:  ```{template}```")
+        
         if template:
             template = self.embed_text(template, use_cache=True)
             embedding = np.concatenate((template, embedding), axis=1)
         
+        print(f"embedding image {embedding.shape} {embedding.dtype}")
         return embedding
         
     def embed_chat(self, use_cache=True):
@@ -247,24 +250,28 @@ class ChatHistory():
         embeddings = []
         position = 0
         open_user_prompt = False
+        num_user_prompts = 0
         
         for i, entry in enumerate(self.entries):
             for key in entry.copy():
                 if key not in self.embedding_functions or entry[key] is None:
                     continue
 
-                if 'first' in self.template and i == (1 if self.entries[0].role == 'system' else 0):
+                if 'first' in self.template and entry['role'] == 'user' and num_user_prompts == 0: #i == (1 if self.entries[0].role == 'system' else 0):
                     role_template = self.template['first']  # if the first non-system message has a different template
                 else:
                     if entry.role not in self.template:
                         raise RuntimeError(f"chat template {self.template_name} didn't have an entry for role={entry.role}")
                     role_template = self.template[entry.role]
                     if open_user_prompt:
-                        role_template = role_template.split('${MESSAGE}')[1]  # user prompt needs closed out from an image
-                        open_user_promt = False
-                        
+                        role_template = role_template[role_template.find('${MESSAGE}'):] #.split('${MESSAGE}')[1]  # user prompt needs closed out from an image
+                        open_user_prompt = False
+                
                 embed_key = key + '_embedding'
-
+                
+                print(f"processing chat entry {i}  role='{entry.role}'  template='{role_template}'  open_user_prompt={open_user_prompt}  cached={'true' if embed_key in entry and use_cache else 'false'}  ")
+                print(f"    {key}=```{entry[key]}```")
+                
                 # TODO reconcile/refactor these together
                 if use_cache:
                     if embed_key not in entry: # TODO  and entry.role != 'bot'  -- only compute bot embeddings when needed
@@ -285,6 +292,8 @@ class ChatHistory():
                             open_user_prompt = True
                     embeddings.append(entry[embed_key])
                 
+                if entry['role'] == 'user' and key == 'text':
+                    num_user_prompts += 1
                 """
                 if embed_key not in entry:
                     embedding = self.embed(entry, type=key, template=role_template)

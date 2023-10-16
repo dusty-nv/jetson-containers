@@ -130,10 +130,9 @@ while True:
     if user_prompt.lower().endswith(('.txt', '.json')):
         user_prompt = ' '.join(load_prompts(user_prompt))
     elif user_prompt.lower() == 'reset' or user_prompt.lower() == 'clear':
-            print('-- resetting chat history')
-            chat_history = []
-            kv_cache = None
-            continue
+        print('-- resetting chat history')
+        chat_history.reset()
+        continue
 
     # add the latest user prompt to the chat history
     entry = chat_history.add_entry(role='user', input=user_prompt)
