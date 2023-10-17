@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import inspect
+import logging
 import numpy as np
 
 from .utils import AttrDict, replace_text, print_table, ImageExtensions
@@ -98,7 +99,8 @@ class ChatHistory():
                     template = 'llava-v0'
             else:
                 raise RuntimeError(f"Couldn't automatically determine model type from {model.config.name}, please set the --chat-template argument")
-            print(f"-- using chat template '{template}' for model {model.config.name}")
+            
+            logging.info(f"using chat template '{template}' for model {model.config.name}")
             
         if isinstance(template, str):
             self.template = ChatTemplates[template].copy()
@@ -200,9 +202,8 @@ class ChatHistory():
         """
         if template:
             text = replace_text(template, {'${MESSAGE}': text})
-        #print(f"```{text}```")
         embedding = self.model.embed_text(text, use_cache=use_cache)
-        print(f"embedding text {embedding.shape} {embedding.dtype} -> ```{text}```".replace('\n', '\\n'))
+        logging.debug(f"embedding text {embedding.shape} {embedding.dtype} -> ```{text}```".replace('\n', '\\n'))
         return embedding
     
     def embed_dict(self, dict, template=None):
@@ -238,7 +239,7 @@ class ChatHistory():
         if template:
             template = template.split("${MESSAGE}")[0]
             embeddings.append(self.embed_text(template, use_cache=True))
-            print(f"image template:  ```{template}```")
+            logging.debug(f"image template:  ```{template}```")
             
         embeddings.append(self.model.embed_image(image, return_tensors='np'))
         embeddings.append(self.embed_text('\n', use_cache=True))
@@ -246,7 +247,7 @@ class ChatHistory():
         embeddings = np.concatenate(embeddings, axis=1)
         
         print_table(self.model.vision.stats)
-        print(f"embedding image {embeddings.shape} {embeddings.dtype}")
+        logging.debug(f"embedding image {embeddings.shape} {embeddings.dtype}")
         
         return embeddings
 
@@ -280,7 +281,8 @@ class ChatHistory():
                 
                 embed_key = key + '_embedding'
 
-                print(f"processing chat entry {i}  role='{entry.role}'  template='{role_template}'  open_user_prompt={open_user_prompt}  cached={'true' if embed_key in entry and use_cache else 'false'}  {key}='{entry[key]}'".replace('\n', '\\n'))
+                if logging.getLogger().isEnabledFor(logging.DEBUG):
+                    logging.debug(f"processing chat entry {i}  role='{entry.role}'  template='{role_template}'  open_user_prompt={open_user_prompt}  cached={'true' if embed_key in entry and use_cache else 'false'}  {key}='{entry[key]}'".replace('\n', '\\n'))
                 
                 if use_cache:
                     if embed_key not in entry: # TODO  and entry.role != 'bot'  -- only compute bot embeddings when needed

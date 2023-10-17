@@ -3,12 +3,13 @@ import os
 import sys
 import time
 import signal
+import logging
 import argparse
 import numpy as np
 
 from termcolor import cprint
 
-from local_llm import LocalLM, ChatHistory, ChatTemplates, CLIPModel, load_image, load_prompts, print_table, ImageExtensions
+from local_llm import LocalLM, ChatHistory, ChatTemplates, ImageExtensions, LogFormatter, load_prompts, print_table 
 
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -27,6 +28,9 @@ parser.add_argument("--chat-template", type=str, default=None, choices=list(Chat
 parser.add_argument("--no-streaming", action="store_true", help="disable streaming output (text output will appear all at once)")
 parser.add_argument("--max-new-tokens", type=int, default=128, help="the maximum number of new tokens to generate, in addition to the prompt")
 
+parser.add_argument("--log-level", type=str, default='info', choices=['debug', 'info', 'warning', 'error', 'critical'], help="the logging level to stdout")
+parser.add_argument("--debug", "--verbose", action="store_true", help="set the logging level to debug/verbose mode")
+                    
 args = parser.parse_args()
 
 if 'chat' in args.model:
@@ -65,8 +69,14 @@ if args.prompt:
 
 if args.system:
     args.system = [x[0] for x in args.system]
+
+if args.debug:
+    args.log_level = "debug"
     
 print(args)
+
+# setup logging
+LogFormatter.config(level=args.log_level)
 
 # load .txt or .json files
 prompts = load_prompts(args.prompt) if args.prompt else None
@@ -102,11 +112,11 @@ def on_interrupt(signum, frame):
     last_interrupt = curr_time
     
     if time_diff > 2.0:
-        print("\n-- Ctrl+C:  interrupting chatbot")
+        logging.warning("Ctrl+C:  interrupting chatbot")
         interrupt_chat = True
     else:
         while True:
-            print("\n-- Ctrl+C:  exiting...")
+            logging.warning("Ctrl+C:  exiting...")
             sys.exit(0)
             time.sleep(0.5)
                
@@ -130,7 +140,7 @@ while True:
     if user_prompt.lower().endswith(('.txt', '.json')):
         user_prompt = ' '.join(load_prompts(user_prompt))
     elif user_prompt.lower() == 'reset' or user_prompt.lower() == 'clear':
-        print('-- resetting chat history')
+        logging.info("resetting chat history")
         chat_history.reset()
         continue
 
@@ -139,14 +149,15 @@ while True:
 
     # images should be followed by text prompts
     if 'image' in entry and 'text' not in entry:
-        print('-- image message, waiting for user prompt')
+        logging.debug("image message, waiting for user prompt")
         continue
         
     # get the latest embeddings from the chat
     embedding, position = chat_history.embed_chat()
     
-    print('adding embedding', embedding.shape, 'position', position)
-    
+    if logging.getLogger().isEnabledFor(logging.DEBUG):
+        logging.debug(f"adding embedding shape={embedding.shape} position={position}")
+
     # generate bot reply
     output = model.generate(
         embedding, 
@@ -175,4 +186,4 @@ while True:
     chat_history.kv_cache = output.kv_cache   # save the kv_cache 
     bot_reply.text = output.output_text  # sync the text once more
  
-print('exiting...')
+logging.warning('exiting...')

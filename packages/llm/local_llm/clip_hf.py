@@ -3,6 +3,7 @@ import os
 import time
 import PIL
 import torch
+import logging
 
 from transformers import CLIPImageProcessor, CLIPVisionModel
 from .utils import AttrDict, load_image, download_model, print_table
@@ -32,13 +33,11 @@ class CLIPImageEmbedding():
         self.config = AttrDict()
         
         self.config.name = model
-        self.extensions = ('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')
-        
         self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
         self.stream = None
         self.dtype = dtype
         
-        print(f'-- loading {model}')
+        logging.info(f'loading {model}')
         
         self.preprocessor = CLIPImageProcessor.from_pretrained(model, torch_dtype=self.dtype)#.to(self.device)
         self.model = CLIPVisionModel.from_pretrained(model, torch_dtype=self.dtype).to(self.device).eval()
@@ -46,7 +45,7 @@ class CLIPImageEmbedding():
         print('CLIPImageProcessor', self.preprocessor)
         print('CLIPVisionModel', self.model)
 
-        print(f'-- {self.config.name} warmup')
+        logging.debug(f'{self.config.name} warmup')
         self.config.input_shape = (self.model.config.image_size, self.model.config.image_size)
         self(PIL.Image.new('RGB', self.config.input_shape, (255,255,255)))
         print_table(self.config)

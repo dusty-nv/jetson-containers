@@ -4,6 +4,7 @@ import re
 import time
 import json
 import torch
+import logging
 
 from transformers import AutoConfig
 
@@ -51,7 +52,7 @@ class LocalLM():
         if not api:
             api = default_model_api(model_path, quant)
             
-        print(f"-- loading {model_path} with {api.upper()}")
+        logging.info(f"loading {model_path} with {api.upper()}")
         load_begin = time.perf_counter()
         
         # doing this imports here avoid circular import, and makes it so these
@@ -109,7 +110,7 @@ class LocalLM():
         with torch.inference_mode():
             embedding = self.mm_projector(embedding[:, 1:])
 
-        print('image_embedding', embedding.shape, embedding.dtype, embedding.device)
+        logging.debug(f"image_embedding  shape={embedding.shape}  dtype={embedding.dtype}  device={embedding.device}")
         
         if return_tensors == 'pt':
             return embedding
@@ -186,15 +187,15 @@ class LocalLM():
                     weights_path = os.path.join(self.model_path, value)
                     break
                     
-            print(f"-- extracting mm_projector weights from {weights_path}")
+            logging.debug(f"extracting mm_projector weights from {weights_path}")
             
             weights = torch.load(weights_path, map_location='cpu')
             weights = {k : v for k, v in weights.items() if 'mm_projector' in k}
             
-            print(f"-- saving mm_projector weights to {self.mm_projector_path}")
+            logging.debug(f"saving mm_projector weights to {self.mm_projector_path}")
             torch.save(weights, self.mm_projector_path)
           
-        print(f"-- loading mm_projector weights from {self.mm_projector_path}")
+        logging.info(f"loading mm_projector weights from {self.mm_projector_path}")
         
         # TODO take out model.mm_projector all together and none of the naming should be needed?
         mm_projector_weights = torch.load(self.mm_projector_path, map_location='cpu')
