@@ -36,7 +36,7 @@ To benchmark the quantized model, run the [`benchmark.py`](benchmark.py) script:
 ```bash
 ./run.sh $(./autotag mlc) \
   python3 /opt/mlc-llm/benchmark.py \
-    --model /data/models/mlc/ft_mqa/Llama-2-7b-chat-hf-q4f16_ft/params \
+    --model /data/models/mlc/dist/Llama-2-7b-chat-hf-q4f16_ft/params \
     --prompt /data/prompts/completion_16.json \
     --max-new-tokens 128
 ```
@@ -45,7 +45,7 @@ The `--prompt` file used controls the number of input tokens (context length) - 
 
 ```
 AVERAGE OVER 10 RUNS:
-/data/models/mlc/ft_mqa/Llama-2-7b-chat-hf-q4f16_ft/params:  prefill_time 0.027 sec, prefill_rate 582.8 tokens/sec, decode_time 2.986 sec, decode_rate 42.9 tokens/sec
+/data/models/mlc/dist/Llama-2-7b-chat-hf-q4f16_ft/params:  prefill_time 0.027 sec, prefill_rate 582.8 tokens/sec, decode_time 2.986 sec, decode_rate 42.9 tokens/sec
 ```
 
 The prefill time is how long the model takes to process the input context before it can start generating output tokens.  The decode rate is the speed at which it generates output tokens.  These results are averaged over the number of prompts, minus the first prompt as a warm-up.
