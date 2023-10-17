@@ -137,8 +137,6 @@ while True:
     # add the latest user prompt to the chat history
     entry = chat_history.add_entry(role='user', input=user_prompt)
 
-    print(f"chat entry {len(chat_history)}:  {entry}")
-
     # images should be followed by text prompts
     if 'image' in entry and 'text' not in entry:
         print('-- image message, waiting for user prompt')

@@ -61,6 +61,8 @@ class ChatHistory():
     model architectures.  In normal 2-turn chat, there are 'user' and 'bot' roles
     defined, but arbitrary roles can be added, each with their own template.
     The system prompt can also be configured through the chat template.
+    
+    TODO:  better caching of system prompt embeddings/ect
     """
     def __init__(self, model, template=None, system_prompt=None):
         """
@@ -113,23 +115,18 @@ class ChatHistory():
         self.register_embedding('image', self.embed_image)
     
         self.reset()
- 
-    @property
-    def system_prompt(self):
+
+    def __len__(self):
         """
-        Get the system prompt, the typically hidden instruction at the beginning
-        of the chat like "You are a curious and helpful AI assistant, ..."
+        Returns the number of entries in the chat history
         """
-        return self.template['system_prompt']
+        return len(self.entries)
         
-    @system_prompt.setter
-    def system_prompt(self, instruction):
+    def __getitem__(self, entry):
         """
-        Set the system prompt instruction string and reset the chat history.
-        TODO make it so this doesn't reset the chat history, but uncaches it.
+        Return the n-th chat entry with the subscript indexing operator
         """
-        self.template['system_prompt'] = instruction
-        self.reset()
+        return self.entries[entry]
         
     def add_entry(self, role='user', input=None, **kwargs):
         """
@@ -161,13 +158,24 @@ class ChatHistory():
         self.kv_cache = None
         if add_system_prompt:
             self.add_entry(role='system', text=self.template['system_prompt'])
-    
-    def __len__(self):
-        return len(self.entries)
+      
+    @property
+    def system_prompt(self):
+        """
+        Get the system prompt, the typically hidden instruction at the beginning
+        of the chat like "You are a curious and helpful AI assistant, ..."
+        """
+        return self.template['system_prompt']
         
-    def __getitem__(self, entry):
-        return self.entries[entry]
-    
+    @system_prompt.setter
+    def system_prompt(self, instruction):
+        """
+        Set the system prompt instruction string and reset the chat history.
+        TODO make it so this doesn't reset the chat history, but uncaches it.
+        """
+        self.template['system_prompt'] = instruction
+        self.reset()
+        
     def embed(self, input, type=None, template=None):
         """
         Get the embedding for a general input (text, image, ect)
@@ -194,7 +202,7 @@ class ChatHistory():
             text = replace_text(template, {'${MESSAGE}': text})
         #print(f"```{text}```")
         embedding = self.model.embed_text(text, use_cache=use_cache)
-        print(f"embedding text {embedding.shape} {embedding.dtype} -> \n```{text}```")
+        print(f"embedding text {embedding.shape} {embedding.dtype} -> ```{text}```".replace('\n', '\\n'))
         return embedding
     
     def embed_dict(self, dict, template=None):
@@ -225,21 +233,23 @@ class ChatHistory():
         This is only applicable to vision VLM's like Llava and Mini-GPT4,
         and will throw an exception if model.has_vision is False.
         """
-        embedding = self.model.embed_image(image, return_tensors='np')
-        print_table(self.model.vision.stats)
-        
+        embeddings = [] 
+
         if template:
             template = template.split("${MESSAGE}")[0]
+            embeddings.append(self.embed_text(template, use_cache=True))
+            print(f"image template:  ```{template}```")
+            
+        embeddings.append(self.model.embed_image(image, return_tensors='np'))
+        embeddings.append(self.embed_text('\n', use_cache=True))
         
-        print(f"image template:  ```{template}```")
+        embeddings = np.concatenate(embeddings, axis=1)
         
-        if template:
-            template = self.embed_text(template, use_cache=True)
-            embedding = np.concatenate((template, embedding), axis=1)
+        print_table(self.model.vision.stats)
+        print(f"embedding image {embeddings.shape} {embeddings.dtype}")
         
-        print(f"embedding image {embedding.shape} {embedding.dtype}")
-        return embedding
-        
+        return embeddings
+
     def embed_chat(self, use_cache=True):
         """
         Assemble the embedding of either the latest or entire chat.
@@ -249,30 +259,29 @@ class ChatHistory():
         """
         embeddings = []
         position = 0
-        open_user_prompt = False
+        
         num_user_prompts = 0
+        open_user_prompt = False
         
         for i, entry in enumerate(self.entries):
             for key in entry.copy():
                 if key not in self.embedding_functions or entry[key] is None:
                     continue
 
-                if 'first' in self.template and entry['role'] == 'user' and num_user_prompts == 0: #i == (1 if self.entries[0].role == 'system' else 0):
+                if 'first' in self.template and entry['role'] == 'user' and num_user_prompts == 0:
                     role_template = self.template['first']  # if the first non-system message has a different template
                 else:
                     if entry.role not in self.template:
                         raise RuntimeError(f"chat template {self.template_name} didn't have an entry for role={entry.role}")
                     role_template = self.template[entry.role]
                     if open_user_prompt:
-                        role_template = role_template[role_template.find('${MESSAGE}'):] #.split('${MESSAGE}')[1]  # user prompt needs closed out from an image
+                        role_template = role_template[role_template.find('${MESSAGE}'):] # user prompt needs closed out from an image
                         open_user_prompt = False
                 
                 embed_key = key + '_embedding'
+
+                print(f"processing chat entry {i}  role='{entry.role}'  template='{role_template}'  open_user_prompt={open_user_prompt}  cached={'true' if embed_key in entry and use_cache else 'false'}  {key}='{entry[key]}'".replace('\n', '\\n'))
                 
-                print(f"processing chat entry {i}  role='{entry.role}'  template='{role_template}'  open_user_prompt={open_user_prompt}  cached={'true' if embed_key in entry and use_cache else 'false'}  ")
-                print(f"    {key}=```{entry[key]}```")
-                
-                # TODO reconcile/refactor these together
                 if use_cache:
                     if embed_key not in entry: # TODO  and entry.role != 'bot'  -- only compute bot embeddings when needed
                         entry[embed_key] = self.embed(entry[key], type=key, template=role_template)
@@ -294,24 +303,11 @@ class ChatHistory():
                 
                 if entry['role'] == 'user' and key == 'text':
                     num_user_prompts += 1
-                """
-                if embed_key not in entry:
-                    embedding = self.embed(entry, type=key, template=role_template)
-                    entry[embed_key] = embedding
-                    if use_cache and entry.role != 'bot': # bot outputs are already included in kv_cache
-                        embeddings.append(embedding)
-                        use_cache = False
-                elif use_cache:
-                    position += entry[embed_key].shape[1]
-                else:
-                    embeddings.append(entry[embed_key])
-                """
                 
         return np.concatenate(embeddings, axis=1), position
 
     def register_embedding(self, type, func):
         params = inspect.signature(func).parameters
-        print(type, ' has template:  ', (len(params) > 1))
         self.embedding_functions[type] = AttrDict(
             func=func,
             uses_template=len(params) > 1 #'role_template' in params
