@@ -36,7 +36,7 @@ If you look at any package's readme (like [`l4t-pytorch`](packages/l4t/l4t-pytor
 
 ## Documentation
 
-<a href="https://nvidia-ai-iot.github.io/jetson-generative-ai-playground/"><img align="right" width="200" height="200" src="https://nvidia-ai-iot.github.io/jetson-generative-ai-playground/images/JON_Gen-AI-panels.png"></a>
+<a href="https://www.jetson-ai-lab.com"><img align="right" width="200" height="200" src="https://nvidia-ai-iot.github.io/jetson-generative-ai-playground/images/JON_Gen-AI-panels.png"></a>
 
 * [Package List](/packages)
 * [Package Definitions](/docs/packages.md)
@@ -44,7 +44,7 @@ If you look at any package's readme (like [`l4t-pytorch`](packages/l4t/l4t-pytor
 * [Building Containers](/docs/build.md)
 * [Running Containers](/docs/run.md)
 
-Check out the tutorials on the [**Jetson Generative AI Playground**](https://nvidia-ai-iot.github.io/jetson-generative-ai-playground)!
+Check out the tutorials in the [**Jetson Generative AI Lab**](https://www.jetson-ai-lab.com)!
 
 ## Getting Started
 
