@@ -135,6 +135,8 @@ while True:
         cprint('>> PROMPT: ', 'blue', end='', flush=True)
         user_prompt = sys.stdin.readline().strip()
     
+    print('')
+    
     # special commands:  load prompts from file
     # 'reset' or 'clear' resets the chat history
     if user_prompt.lower().endswith(('.txt', '.json')):
@@ -180,9 +182,10 @@ while True:
                 interrupt_chat = False
                 break
             
-    print('')
+    print('\n')
     print_table(model.stats)
-
+    print('')
+    
     chat_history.kv_cache = output.kv_cache   # save the kv_cache 
     bot_reply.text = output.output_text  # sync the text once more
  
