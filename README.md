@@ -44,7 +44,7 @@ If you look at any package's readme (like [`l4t-pytorch`](packages/l4t/l4t-pytor
 * [Building Containers](/docs/build.md)
 * [Running Containers](/docs/run.md)
 
-Check out the tutorials in the [**Jetson Generative AI Lab**](https://www.jetson-ai-lab.com)!
+Check out the tutorials at the [**Jetson Generative AI Lab**](https://www.jetson-ai-lab.com)!
 
 ## Getting Started
 
