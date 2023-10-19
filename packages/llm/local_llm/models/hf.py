@@ -6,7 +6,7 @@ import threading
 from transformers import AutoModelForCausalLM, AutoTokenizer, TextIteratorStreamer
 from accelerate import init_empty_weights as init_empty_weights_ctx
 
-from .local_llm import LocalLM
+from local_llm import LocalLM
 
 class HFModel(LocalLM):
     """

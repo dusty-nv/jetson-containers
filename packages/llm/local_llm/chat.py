@@ -202,8 +202,10 @@ class ChatHistory():
         """
         if template:
             text = replace_text(template, {'${MESSAGE}': text})
+
         embedding = self.model.embed_text(text, use_cache=use_cache)
         logging.debug(f"embedding text {embedding.shape} {embedding.dtype} -> ```{text}```".replace('\n', '\\n'))
+        
         return embedding
     
     def embed_dict(self, dict, template=None):
@@ -236,11 +238,13 @@ class ChatHistory():
         """
         embeddings = [] 
 
-        if template:
+        if template: # get the text embedding for the template prefix
             template = template.split("${MESSAGE}")[0]
-            embeddings.append(self.embed_text(template, use_cache=True))
-            logging.debug(f"image template:  ```{template}```")
             
+            if len(template) > 0:
+                embeddings.append(self.embed_text(template, use_cache=True))
+                logging.debug(f"image template:  ```{template}```")
+
         embeddings.append(self.model.embed_image(image, return_tensors='np'))
         embeddings.append(self.embed_text('\n', use_cache=True))
         

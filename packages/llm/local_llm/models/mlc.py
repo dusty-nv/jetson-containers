@@ -16,7 +16,7 @@ import numpy as np
 from tvm.runtime.relax_vm import VirtualMachine
 from transformers import AutoTokenizer, AutoConfig
 
-from .local_llm import LocalLM
+from local_llm import LocalLM
 
 
 class MLCModel(LocalLM):
@@ -177,12 +177,11 @@ class MLCModel(LocalLM):
             tokens = self.tokenizer(text, 
                 add_special_tokens=add_special_tokens, 
                 return_tensors='np').input_ids
-            #print('input_ids', tokens)
             embedding = self.embed_tokens(tokens)
             self.embedding_cache[text] = embedding
             self.device = embedding.device
         else:
-            logging.debug(f'TEXT EMBEDDING CACHE HIT ({text})')
+            logging.debug(f'text embedding cache hit ({text})')
          
         if return_tensors == 'np':
             embedding = embedding.numpy()

@@ -6,7 +6,7 @@ import torch
 import logging
 
 from transformers import CLIPImageProcessor, CLIPVisionModel
-from .utils import AttrDict, load_image, download_model, print_table
+from ..utils import AttrDict, load_image, download_model, print_table
 
 _clip_model_cache = dict(image={}, text={})
 

@@ -8,7 +8,7 @@ import logging
 
 from transformers import AutoConfig
 
-from .clip_hf import CLIPImageEmbedding
+from .vision.clip_hf import CLIPImageEmbedding
 from .utils import download_model, default_model_api, AttrDict
 
 
@@ -58,16 +58,16 @@ class LocalLM():
         # doing this imports here avoid circular import, and makes it so these
         # dependencies are only needed if they are actually used to load a model
         if api == 'auto_gptq':
-            from .auto_gptq import AutoGPTQModel
+            from local_llm.models import AutoGPTQModel
             model = AutoGPTQModel(model_path, **kwargs)
         elif api == 'awq':
-            from .awq import AWQModel
+            from local_llm.models import AWQModel
             model = AWQModel(model_path, **kwargs)
         elif api == 'mlc':
-            from .mlc import MLCModel
+            from local_llm.models import MLCModel
             model = MLCModel(model_path, **kwargs)
         elif api == 'hf':
-            from .hf import HFModel
+            from local_llm.models import HFModel
             model = HFModel(model_path, **kwargs)
         else:
             raise ValueError(f"invalid API: {api}")

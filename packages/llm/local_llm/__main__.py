@@ -9,7 +9,8 @@ import numpy as np
 
 from termcolor import cprint
 
-from local_llm import LocalLM, ChatHistory, ChatTemplates, ImageExtensions, LogFormatter, load_prompts, print_table 
+from local_llm import LocalLM, ChatHistory, ChatTemplates
+from local_llm.utils import ImageExtensions, LogFormatter, load_prompts, print_table 
 
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
