@@ -8,7 +8,7 @@ import logging
 
 from transformers import AutoConfig
 
-from .vision.clip_hf import CLIPImageEmbedding
+from .vision import CLIPImageEmbedding, MMProjector
 from .utils import download_model, default_model_api, AttrDict
 
 
@@ -106,9 +106,7 @@ class LocalLM():
         assert(self.has_vision)
         
         embedding = self.vision(image, crop=crop, hidden_state=self.model_config.mm_vision_select_layer)
-        
-        with torch.inference_mode():
-            embedding = self.mm_projector(embedding[:, 1:])
+        embedding = self.mm_projector(embedding[:, 1:])
 
         logging.debug(f"image_embedding  shape={embedding.shape}  dtype={embedding.dtype}  device={embedding.device}")
         
@@ -156,58 +154,7 @@ class LocalLM():
         ) 
         
         # create image embedding projection model
-        self.mm_projector_type = 'linear'
-        
-        if hasattr(self.model_config, 'mm_projector_type'):
-            self.mm_projector_type = self.model_config.mm_projector_type
-
-        mlp_gelu_match = re.match(r'^mlp(\d+)x_gelu$', self.mm_projector_type)
-        
-        if mlp_gelu_match:
-            mlp_depth = int(mlp_gelu_match.group(1))
-            modules = [torch.nn.Linear(self.model_config.mm_hidden_size, self.model_config.hidden_size)]
-            for _ in range(1, mlp_depth):
-                modules.append(torch.nn.GELU())
-                modules.append(torch.nn.Linear(self.model_config.hidden_size, self.model_config.hidden_size))
-            self.mm_projector = torch.nn.Sequential(*modules)
-        elif self.mm_projector_type == 'linear':
-            self.mm_projector = torch.nn.Linear(self.model_config.mm_hidden_size, self.model_config.hidden_size)
-        else:
-            raise RuntimeError(f"Unknown vision mm_projector type: {self.mm_projector_type}")
-            
-        # load projector weights, extracting from the original model if needed
-        self.mm_projector_path = os.path.join(self.model_path, 'mm_projector.bin')
-        
-        if not os.path.isfile(self.mm_projector_path):
-            with open(os.path.join(self.model_path, 'pytorch_model.bin.index.json'), 'r') as file:
-                weight_map = json.load(file)['weight_map']
-                
-            for key, value in weight_map.items():
-                if 'mm_projector' in key:
-                    weights_path = os.path.join(self.model_path, value)
-                    break
-                    
-            logging.debug(f"extracting mm_projector weights from {weights_path}")
-            
-            weights = torch.load(weights_path, map_location='cpu')
-            weights = {k : v for k, v in weights.items() if 'mm_projector' in k}
-            
-            logging.debug(f"saving mm_projector weights to {self.mm_projector_path}")
-            torch.save(weights, self.mm_projector_path)
-          
-        logging.info(f"loading mm_projector weights from {self.mm_projector_path}")
-        
-        # TODO take out model.mm_projector all together and none of the naming should be needed?
-        mm_projector_weights = torch.load(self.mm_projector_path, map_location='cpu')
-        mm_projector_weights = {k.replace('model.mm_projector.', ''):v for k,v in mm_projector_weights.items()}  
-        
-        #def get_w(weights, keyword):
-        #    return {k.split(keyword + '.')[1]: v for k, v in weights.items() if keyword in k}
-                
-        #mm_projector_weights = get_w(mm_projector_weights, 'mm_projector')
-        
-        self.mm_projector.load_state_dict(mm_projector_weights)
-        self.mm_projector.to(dtype=self.vision.dtype, device=self.vision.device).eval()
-        
-        print("mm_projector", self.mm_projector)
+        self.mm_projector = MMProjector.from_pretrained(
+            self.model_path, self.vision.dtype
+        )
         
