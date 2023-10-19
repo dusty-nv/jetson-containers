@@ -42,9 +42,78 @@ ChatTemplates['llava-llama-2'].update({
 })
 
 for key in ChatTemplates:
-    ChatTemplates[key] = AttrDict(ChatTemplates[key])
+    ChatTemplates[key] = AttrDict(name=key, **ChatTemplates[key])
+
+
+def ChatTemplate(model):
+    """
+    Attempt to automatically determine the chat template from the model name/type.
+    Either returns one of the ChatTemplate dicts from above, or None if undetermined.
+    """
+    if not isinstance(model, str):
+        model = model.config.name.lower()
+    
+    if 'llama-2' in model:
+        if 'llava' in model:
+            chat_template = 'llava-llama-2'
+        else:
+            chat_template = 'llama-2'
+    elif 'vicuna' in model:
+        if 'v1' in model:
+            chat_template = 'vicuna-v1'
+        else:
+            chat_template = 'vicuna-v0'
+    elif 'llava' in model:
+        if 'v1' in model:
+            chat_template = 'llava-v1'
+        else:
+            chat_template = 'llava-v0'
+    else:
+        return None
+        
+    return AttrDict(ChatTemplates[chat_template])  # return a copy
     
 
+def ChatEntry(role='user', msg=None, **kwargs):
+    """
+    Create a chat entry consisting of a text message, image, ect as input.  
+    
+    Parameters:
+    
+      role (str) -- The chat's turn template to apply, typically 'user' or 'bot'.
+                    The role should have a corresponding entry in the active ChatTemplate.
+                    
+      msg (str|image) -- If a string, it should either contain text or a path
+                         to a txt, json, or image file that will be loaded.
+
+                         If an image, can be a np.ndarray, torch.Tensor, or PIL.Image.
+                                  
+                         If a dict, it will be passed through as the ChatEntry.
+                                  
+                         The embedding type of 'message' will attempt to be automatically
+                         determined as text/image/ect, but if not possible, you should
+                         explicitly set its type by passing it in via kwargs instead.
+     
+    kwargs:
+    
+       For messages whose embedding type is unable to be determined automatically, or to create
+       a chat entry containing multiple message types, pass them in via kwargs like this:
+       
+         `entry = ChatEntry(role='user', text='abc', image='xyz.jpg')`
+         
+    Returns:
+    
+       A dict that has keys for 'role', 'text', 'image', ect.  This will return an AttributeDict,
+       so you can access it like entry.role, entry.text, and so on.
+    """    
+    entry = AttrDict(role=role, **kwargs)
+    
+    if msg is not None:
+        entry[ChatHistory.embedding_type(msg)] = msg
+        
+    return entry
+    
+    
 class ChatHistory():
     """
     Multimodal chat history that can contain a mix of media including text/images.
@@ -65,47 +134,32 @@ class ChatHistory():
     
     TODO:  better caching of system prompt embeddings/ect
     """
-    def __init__(self, model, template=None, system_prompt=None):
+    def __init__(self, model, chat_template=None, system_prompt=None):
         """
         Parameters:
            
            model (LocalLM) -- the model instance used for embeddings
            
-           template (str|dict) -- either a chat template dict, or the name of the 
-                                  chat template to use like 'llama-2', 'vicuna-v1'
-                                  If None, will attempt to determine model type.
+           chat_template (str|dict) -- either a chat template dict, or the name of the 
+                                       chat template to use like 'llama-2', 'vicuna-v1'
+                                       If None, will attempt to determine model type.
                                   
            system_prompt (str) -- set the default system prompt
                                   if None, will use system prompt from the template.
         """
         self.model = model
         
-        if not template:
-            name = model.config.name.lower()
-            if 'llama-2' in name:
-                if 'llava' in name:
-                    template = 'llava-llama-2'
-                else:
-                    template = 'llama-2'
-            elif 'vicuna' in name:
-                if 'v1' in name:
-                    template = 'vicuna-v1'
-                else:
-                    template = 'vicuna-v0'
-            elif 'llava' in name:
-                if 'v1' in name:
-                    template = 'llava-v1'
-                else:
-                    template = 'llava-v0'
-            else:
+        if not chat_template:
+            self.template = ChatTemplate(model)
+            if self.template is None:
                 raise RuntimeError(f"Couldn't automatically determine model type from {model.config.name}, please set the --chat-template argument")
-            
-            logging.info(f"using chat template '{template}' for model {model.config.name}")
-            
-        if isinstance(template, str):
-            self.template = ChatTemplates[template].copy()
+            logging.info(f"using chat template '{self.template.name}' for model {model.config.name}")
+        elif isinstance(chat_template, str):
+            self.template = AttrDict(ChatTemplates[chat_template])
+        elif isinstance(chat_template, dict):
+            self.template = AttrDict(template)
         else:
-            self.template = template
+            raise TypeError(f"chat_template should be a str or dict (was {type(chat_template)})")
             
         if system_prompt:
             self.template['system_prompt'] = system_prompt
@@ -130,27 +184,17 @@ class ChatHistory():
         """
         return self.entries[entry]
         
-    def add_entry(self, role='user', input=None, **kwargs):
+    def append(self, role='user', msg=None, **kwargs):
         """
-        Add a chat entry consisting of text, image, ect.  Other inputs
-        can be specified in kwargs that have registered embedding types.
-        Role is the turn template to apply, typically 'user' or 'bot'.
+        Add a chat entry consisting of a text message, image, ect.
+        See the ChatEntry() function for description of arguments.
+        This can also accept an existing ChatEntry dict as msg.
         """
-        self.entries.append(self.create_entry(role, input, **kwargs))
+        if isinstance(msg, dict):
+            self.entries.append(msg)
+        else:
+            self.entries.append(ChatEntry(role, msg, **kwargs))
         return self.entries[-1]
-
-    def create_entry(self, role='user', input=None, **kwargs):
-        """
-        Create a chat entry consisting of text, image, ect.  Other inputs
-        can be specified in kwargs that have registered embedding types.
-        Role is the turn template to apply, typically 'user' or 'bot'.
-        """    
-        entry = AttrDict(role=role, **kwargs)
-        
-        if input is not None:
-            entry[self.embedding_type(input)] = input
-            
-        return entry
 
     def reset(self, add_system_prompt=True):
         """
@@ -159,7 +203,7 @@ class ChatHistory():
         self.entries = []
         self.kv_cache = None
         if add_system_prompt:
-            self.add_entry(role='system', text=self.template['system_prompt'])
+            self.append(role='system', text=self.template['system_prompt'])
       
     @property
     def system_prompt(self):
@@ -270,8 +314,11 @@ class ChatHistory():
         
         for i, entry in enumerate(self.entries):
             for key in entry.copy():
-                if key not in self.embedding_functions or entry[key] is None:
-                    continue
+                if key not in self.embedding_functions:
+                    if key == 'role' or key.endswith('_embedding') or entry[key] is None:
+                        continue
+                    else:
+                        raise RuntimeError(f"chat entry had unrecognized message type '{key}'")
 
                 if 'first' in self.template and entry['role'] == 'user' and num_user_prompts == 0:
                     role_template = self.template['first']  # if the first non-system message has a different template
@@ -319,7 +366,8 @@ class ChatHistory():
             uses_template=len(params) > 1 #'role_template' in params
         )
         
-    def embedding_type(self, input):
+    @staticmethod
+    def embedding_type(input):
         if isinstance(input, str):
             if input.endswith(ImageExtensions):
                 return 'image'

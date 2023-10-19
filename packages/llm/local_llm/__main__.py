@@ -148,7 +148,7 @@ while True:
         continue
 
     # add the latest user prompt to the chat history
-    entry = chat_history.add_entry(role='user', input=user_prompt)
+    entry = chat_history.append(role='user', msg=user_prompt)
 
     # images should be followed by text prompts
     if 'image' in entry and 'text' not in entry:
@@ -169,7 +169,7 @@ while True:
         kv_cache=chat_history.kv_cache
     )
         
-    bot_reply = chat_history.add_entry(role='bot', text='') # placeholder
+    bot_reply = chat_history.append(role='bot', text='') # placeholder
     
     if args.no_streaming:
         bot_reply.text = output
