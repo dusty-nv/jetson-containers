@@ -4,75 +4,9 @@ import inspect
 import logging
 import numpy as np
 
-from .utils import AttrDict, replace_text, print_table, ImageExtensions
+from .templates import ChatTemplate, ChatTemplates
+from .utils import AttributeDict, replace_text, print_table, ImageExtensions
 
-ChatTemplates = {
-
-    # https://huggingface.co/blog/llama2#how-to-prompt-llama-2
-    'llama-2': {
-        'system_prompt': "Answer the questions.",
-        'system': '<s>[INST] <<SYS>>\n${MESSAGE}\n<</SYS>>\n\n',
-        'first': '${MESSAGE} [/INST]',
-        'user': '<s>[INST] ${MESSAGE} [/INST]',
-        'bot': ' ${MESSAGE}'  # llama-2 output already ends in </s>
-    },
-    
-    # https://github.com/lm-sys/FastChat/blob/main/docs/vicuna_weights_version.md#prompt-template
-    'vicuna-v0': {
-        'system_prompt': "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.",
-        'system': '${MESSAGE}\n\n',
-        'user': '### Human: ${MESSAGE}\n',
-        'bot': '### Assistant: ${MESSAGE}\n',
-    },
-    
-    'vicuna-v1': {
-        'system_prompt': "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.",
-        'system': '${MESSAGE}\n\n',
-        'user': 'USER: ${MESSAGE}\n',
-        'bot': 'ASSISTANT: ${MESSAGE}</s>\n', # TODO: does output already end in </s> ?
-    },
-}
-
-ChatTemplates['llava-v0'] = ChatTemplates['vicuna-v0']
-ChatTemplates['llava-v1'] = ChatTemplates['vicuna-v1']
-
-ChatTemplates['llava-llama-2'] = ChatTemplates['llama-2'].copy()
-ChatTemplates['llava-llama-2'].update({
-    'system_prompt': "You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language."
-})
-
-for key in ChatTemplates:
-    ChatTemplates[key] = AttrDict(name=key, **ChatTemplates[key])
-
-
-def ChatTemplate(model):
-    """
-    Attempt to automatically determine the chat template from the model name/type.
-    Either returns one of the ChatTemplate dicts from above, or None if undetermined.
-    """
-    if not isinstance(model, str):
-        model = model.config.name.lower()
-    
-    if 'llama-2' in model:
-        if 'llava' in model:
-            chat_template = 'llava-llama-2'
-        else:
-            chat_template = 'llama-2'
-    elif 'vicuna' in model:
-        if 'v1' in model:
-            chat_template = 'vicuna-v1'
-        else:
-            chat_template = 'vicuna-v0'
-    elif 'llava' in model:
-        if 'v1' in model:
-            chat_template = 'llava-v1'
-        else:
-            chat_template = 'llava-v0'
-    else:
-        return None
-        
-    return AttrDict(ChatTemplates[chat_template])  # return a copy
-    
 
 def ChatEntry(role='user', msg=None, **kwargs):
     """
@@ -106,7 +40,7 @@ def ChatEntry(role='user', msg=None, **kwargs):
        A dict that has keys for 'role', 'text', 'image', ect.  This will return an AttributeDict,
        so you can access it like entry.role, entry.text, and so on.
     """    
-    entry = AttrDict(role=role, **kwargs)
+    entry = AttributeDict(role=role, **kwargs)
     
     if msg is not None:
         entry[ChatHistory.embedding_type(msg)] = msg
@@ -155,9 +89,9 @@ class ChatHistory():
                 raise RuntimeError(f"Couldn't automatically determine model type from {model.config.name}, please set the --chat-template argument")
             logging.info(f"using chat template '{self.template.name}' for model {model.config.name}")
         elif isinstance(chat_template, str):
-            self.template = AttrDict(ChatTemplates[chat_template])
+            self.template = AttributeDict(ChatTemplates[chat_template])
         elif isinstance(chat_template, dict):
-            self.template = AttrDict(template)
+            self.template = AttributeDict(template)
         else:
             raise TypeError(f"chat_template should be a str or dict (was {type(chat_template)})")
             
@@ -361,7 +295,7 @@ class ChatHistory():
 
     def register_embedding(self, type, func):
         params = inspect.signature(func).parameters
-        self.embedding_functions[type] = AttrDict(
+        self.embedding_functions[type] = AttributeDict(
             func=func,
             uses_template=len(params) > 1 #'role_template' in params
         )

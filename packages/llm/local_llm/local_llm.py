@@ -9,7 +9,7 @@ import logging
 from transformers import AutoConfig
 
 from .vision import CLIPImageEmbedding, MMProjector
-from .utils import download_model, default_model_api, AttrDict
+from .utils import download_model, default_model_api, AttributeDict
 
 
 class LocalLM():
@@ -121,8 +121,8 @@ class LocalLM():
         """
         @internal this is down here because it should only be used by inherited classes.
         """
-        self.config = AttrDict()
-        self.stats = AttrDict()
+        self.config = AttributeDict()
+        self.stats = AttributeDict()
         
         self.config.name = ''
         self.config.api = ''

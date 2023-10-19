@@ -6,7 +6,7 @@ import torch
 import logging
 
 from transformers import CLIPImageProcessor, CLIPVisionModel
-from ..utils import AttrDict, load_image, download_model, print_table
+from ..utils import AttributeDict, load_image, download_model, print_table
 
 _clip_model_cache = dict(image={}, text={})
 
@@ -29,8 +29,8 @@ class CLIPImageEmbedding():
         return inst
     
     def __init__(self, model, dtype=torch.float32, **kwargs):
-        self.stats = AttrDict()
-        self.config = AttrDict()
+        self.stats = AttributeDict()
+        self.config = AttributeDict()
         
         self.config.name = model
         self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')

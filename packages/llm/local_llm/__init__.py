@@ -2,4 +2,5 @@
 
 from .local_llm import LocalLM
 
-from .chat import ChatHistory, ChatTemplates
+from .history import ChatHistory, ChatEntry
+from .templates import ChatTemplate, ChatTemplates

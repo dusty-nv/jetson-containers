@@ -5,7 +5,7 @@ import torch
 import PIL
 
 from transformers import CLIPImageProcessor, CLIPVisionModel
-from .utils import AttrDict, load_image, download_model, print_table
+from .utils import AttributeDict, load_image, download_model, print_table
 
 _clip_model_cache = {}
 
@@ -28,10 +28,10 @@ class CLIPModel():
         return instance
     
     def __init__(self, model="openai/clip-vit-large-patch14-336", **kwargs):
-        self.stats = AttrDict()
-        self.config = AttrDict()
-        self.config.name = model
+        self.stats = AttributeDict()
+        self.config = AttributeDict()
         
+        self.config.name = model
         self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
         self.dtype = torch.float16
         
