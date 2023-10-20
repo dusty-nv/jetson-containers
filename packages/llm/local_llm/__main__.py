@@ -95,7 +95,7 @@ while True:
         logging.debug(f"adding embedding shape={embedding.shape} position={position}")
 
     # generate bot reply
-    output = model.generate(
+    reply = model.generate(
         embedding, 
         streaming=not args.no_streaming, 
         kv_cache=chat_history.kv_cache,
@@ -110,14 +110,14 @@ while True:
     bot_reply = chat_history.append(role='bot', text='') # placeholder
     
     if args.no_streaming:
-        bot_reply.text = output
-        cprint(output, 'green')
+        bot_reply.text = reply
+        cprint(reply, 'green')
     else:
-        for token in output:
+        for token in reply:
             bot_reply.text += token
             cprint(token, 'green', end='', flush=True)
             if interrupt_chat:
-                output.stop()
+                reply.stop()
                 interrupt_chat = False
                 break
             
@@ -125,7 +125,7 @@ while True:
     print_table(model.stats)
     print('')
     
-    chat_history.kv_cache = output.kv_cache   # save the kv_cache 
-    bot_reply.text = output.output_text  # sync the text once more
+    chat_history.kv_cache = reply.kv_cache   # save the kv_cache 
+    bot_reply.text = reply.output_text  # sync the text once more
  
 #logging.warning('exiting...')

@@ -102,11 +102,11 @@ class LocalLM():
           stop_tokens (list[int]) -- defaults to EOS token ID
           kv_cache (ndarray) -- previous kv_cache that the inputs will be appended to.  By default, a blank kv_cache 
                                 will be created for each generation (i.e. a new chat).  This generation's kv_cache
-                                will be set in the returned StreamIterator after the request is complete.
+                                will be set in the returned StreamingResponse iterator after the request is complete.
 
         Returns:
-          If streaming is true, an iterator is returned that provides one decoded token string at a time.
-          Otherwise, a string containing the full reply is returned after it's been completed.
+          If streaming is true, a StreamingResponse iterator is returned that outputs one decoded token string at a time.
+          Otherwise, this function blocks and a string containing the full reply is returned after it's been completed.
         """
         raise NotImplementedError("use LLM.from_pretrained() as opposed to instantiating an LLM object directly")
 

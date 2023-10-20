@@ -32,20 +32,25 @@ class ChatAgent(Agent):
         ])
         
         self.model = self.pipeline[ChatQuery].model
+        self.interactive = interactive
         
         self.print_input_prompt()
 
     def on_eos(self, input):
         if input.endswith('</s>'):
-            print_table(self.model.stats)  # find_instance vs [] indexing operator
+            print_table(self.model.stats)
             self.print_input_prompt()
 
     def print_input_prompt(self):
-        cprint('>> PROMPT: ', 'blue', end='', flush=True)
+        if self.interactive:
+            cprint('>> PROMPT: ', 'blue', end='', flush=True)
         
         
 if __name__ == "__main__":
     from local_llm.utils import ArgParser
 
-    args = ArgParser().parse_args()
+    parser = ArgParser()
+    parser.add_argument("-it", "--interactive", action="store_true", help="enable interactive user input from the terminal")
+    args = parser.parse_args()
+    
     agent = ChatAgent(**vars(args)).run() 

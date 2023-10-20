@@ -1,9 +1,21 @@
 #!/usr/bin/env python3
 import threading
 
-class StreamIterator():
+
+class StreamingResponse():
     """
-    Token output iterator from a model's generate() function
+    Asynchronous output token iterator returned from a model's generate() function.
+    Use it to stream the reply from the LLM as they are decoded token-by-token:
+    
+        ```
+        response = model.generate("Once upon a time,")
+        
+        for token in response:
+            print(token, end='', flush=True)
+        ```
+    
+    To terminate processing prematurely, call the .stop() function, which will stop the model
+    from generating additional output tokens.  Otherwise tokens will continue to be filled.
     """
     def __init__(self, model, input, **kwargs):
         super().__init__()

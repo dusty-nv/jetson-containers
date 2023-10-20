@@ -16,7 +16,7 @@ import numpy as np
 from tvm.runtime.relax_vm import VirtualMachine
 from transformers import AutoTokenizer, AutoConfig
 
-from local_llm import LocalLM, StreamIterator
+from local_llm import LocalLM, StreamingResponse
 
 
 #
@@ -223,11 +223,11 @@ class MLCModel(LocalLM):
           stop_tokens (list[int]) -- defaults to EOS token ID
           kv_cache (ndarray) -- previous kv_cache that the inputs will be appended to.  By default, a blank kv_cache 
                                 will be created for each generation (i.e. a new chat).  This generation's kv_cache
-                                will be set in the returned StreamIterator after the request is complete.
+                                will be set in the returned StreamingResponse after the request is complete.
                                 
           TODO start_tokens
         """
-        stream = StreamIterator(self, inputs, **kwargs)
+        stream = StreamingResponse(self, inputs, **kwargs)
         self.queue.put(stream)
         
         if not streaming:
@@ -331,7 +331,7 @@ class MLCModel(LocalLM):
             
     
 """           
-class StreamIterator(DeltaCallback):
+class StreamingResponse(DeltaCallback):
     def __init__(self, model):
         super().__init__()
         

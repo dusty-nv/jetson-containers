@@ -4,7 +4,7 @@ import queue
 import threading
 
 
-class Plugin():
+class Plugin(threading.Thread):
     """
     Base class for plugins that process incoming/outgoing data from connections
     with other plugins, forming a pipeline or graph.  Plugins can run either
@@ -25,15 +25,17 @@ class Plugin():
         """
         Initialize plugin
         """
+        super().__init__(daemon=True)
+        
         self.relay = relay
         self.threaded = threaded
         self.outputs = []
         
         if threaded:
-            self.queue = queue.Queue()
-            self.event = threading.Event()
-            self.thread = threading.Thread(target=self._run, daemon=True)
-            self.thread.start()
+            self.input_queue = queue.Queue()
+            self.input_event = threading.Event()
+            #self.thread = threading.Thread(target=self._run, daemon=True)
+            #self.thread.start()
         
     def process(self, input, **kwargs):
         """
@@ -114,8 +116,8 @@ class Plugin():
         TODO:  multiple input channels?
         """
         if self.threaded:
-            self.queue.put(input)
-            self.event.set()
+            self.input_queue.put(input)
+            self.input_event.set()
         else:
             self.update()
             
@@ -136,18 +138,28 @@ class Plugin():
         """
         Process all items in the queue (use this if created with threaded=False)
         """
-        while not self.queue.empty():
-            input = self.queue.get()
+        while not self.input_queue.empty():
+            input = self.input_queue.get()
             self.output(self.process(input))
             if self.relay:
                 self.output(input)
-                
-    def _run(self):
+     
+    def start(self):
+        """
+        Start threads for all plugins in the graph that have threading enabled.
+        """
+        if self.threaded:
+            super().start()
+            
+        for output in self.outputs:
+            output.start()
+            
+    def run(self):
         """
         @internal processes the queue forever when created with threaded=True
         """
         while True:
-            self.event.wait()
-            self.event.clear()
+            self.input_event.wait()
+            self.input_event.clear()
             self.update()
             

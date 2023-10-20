@@ -2,3 +2,4 @@ websockets
 termcolor
 tabulate
 flask
+tqdm

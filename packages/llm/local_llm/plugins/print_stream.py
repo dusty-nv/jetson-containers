@@ -23,7 +23,7 @@ class PrintStream(Plugin):
         
     def process(self, input, **kwargs):
         """
-        Expects to recieve a string, ChatHistory, or StreamIterator,
+        Expects to recieve a string, ChatHistory, or StreamingResponse iterator,
         and prints the incoming token stream to stdout.
         """
         if isinstance(input, str):
@@ -39,7 +39,7 @@ class PrintStream(Plugin):
             for token in output:
                 self.print(token)
         else:
-            raise TypeError(f"PrintStream plugin expects inputs of type str, ChatHistory, or StreamIterator (was {type(input)})")
+            raise TypeError(f"PrintStream plugin expects inputs of type str, ChatHistory, or StreamingResponse (was {type(input)})")
 
     def print(self, text):
         eos = text.endswith('</s>')

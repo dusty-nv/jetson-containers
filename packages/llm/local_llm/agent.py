@@ -25,11 +25,19 @@ class Agent():
         """
         return self.process(input, **kwargs)
         
+    def start(self):
+        """
+        Start threads for all plugins in the graph that have threading enabled.
+        """
+        self.pipeline.start()
+        return self
+        
     def run(self, timeout=None):
         """
         Run the agent forever or return after the specified timeout (in seconds)
         """
-        self.pipeline.thread.join(timeout)
+        self.start()
+        self.pipeline.join(timeout)
         return self
         
         

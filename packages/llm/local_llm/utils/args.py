@@ -31,7 +31,7 @@ class ArgParser(argparse.ArgumentParser):
                 help="manually select the chat template ('llama-2', 'llava-v1', 'vicuna-v1')")
 
         if 'generation' in extras:
-            self.add_argument("--max-new-tokens", type=int, default=256, 
+            self.add_argument("--max-new-tokens", type=int, default=128, 
                 help="the maximum number of new tokens to generate, in addition to the prompt")
             self.add_argument("--min-new-tokens", type=int, default=-1,
                 help="force the model to generate a minimum number of output tokens")

@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import logging
+
 from local_llm import Plugin, LocalLM, ChatHistory
 from local_llm.utils import print_table
 
@@ -72,6 +74,19 @@ class ChatQuery(Plugin):
           The generated text (token by token), if input was a string or dict.
           If input was a ChatHistory, returns the streaming iterator/generator.
         """
+        if isinstance(input, list):
+            for x in input:
+                self.process(x, **kwargs)
+            return
+            
+        # handle some special commands
+        if isinstance(input, str):
+            x = input.lower()
+            if x == 'clear' or x == 'reset':
+                self.chat_history.reset()
+                return
+        
+        # add prompt to chat history
         if isinstance(input, str) or isinstance(input, dict):
             self.chat_history.append(role='user', msg=input)
             chat_history = self.chat_history
@@ -80,8 +95,15 @@ class ChatQuery(Plugin):
         else:
             raise TypeError(f"LLMQuery plugin expects inputs of type str, dict, or ChatHistory (was {type(input)})")
 
+        # images should be followed by text prompts
+        if 'image' in chat_history[-1] and 'text' not in chat_history[-1]:
+            logging.debug("image message, waiting for user prompt")
+            return
+        
+        # get the latest chat embeddings
         embedding, position = chat_history.embed_chat()
         
+        # start generating output
         output = self.model.generate(
             embedding, 
             streaming=True, 
@@ -95,6 +117,8 @@ class ChatQuery(Plugin):
             **kwargs
         )
         
+        # if input was text, output the text (token-by-token)
+        # if input was history, return the response object
         if not isinstance(input, ChatHistory):
             bot_reply = self.chat_history.append(role='bot', text='')
             
@@ -107,4 +131,4 @@ class ChatQuery(Plugin):
             
             #print_table(self.model.stats)
         else:
-            return output
+            self.output(output)
