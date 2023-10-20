@@ -32,30 +32,36 @@ def pytorch_source(version, dockerfile, build_env_variables, requires, default=F
     
     name_suffix = ''
     for env_var in build_env_variables.split():
+        print(f'################### env_var: {env_var}')
         if bool(re.match('^USE_(.+)=1', env_var)):
+            print(f'################### Matched ^USE_(.+)=1 pattern')
             m = re.match('^USE_(.+)=1', env_var)
-            name_suffix=f'{name_suffix}-{m.group(0).lower()}'
+            name_suffix=f'{name_suffix}-{m.group(1).lower()}'
         elif bool(re.match('^USE_(.+)=0', env_var)):
+            print(f'################### Matched ^USE_(.+)=0 pattern')
             m = re.match('^USE_(.+)=0', env_var)
-            name_suffix=f'{name_suffix}-no-{m.group(0).lower()}'
+            name_suffix=f'{name_suffix}-no-{m.group(1).lower()}'
         else:
+            print(f'################### No match')
             name_suffix=f"{name_suffix}-{env_var.replace('=', '-')}"
+    print(f'################### name_suffix: {name_suffix}')
 
-    pkg['name'] = f'pytorch:{version}+{name_suffix}'
-    pkg['alias'] = [f'torch:{version}+{name_suffix}']
+    pkg['name'] = f'pytorch:{version}{name_suffix}'
+    pkg['alias'] = [f'torch:{version}{name_suffix}']
     
     if default:
         pkg['alias'].extend(['pytorch', 'torch'])
 
     pkg['build_args'] = {
         'PYTORCH_BUILD_VERSION': version,
-        'PYTORCH_BUILD_NUMBER': 1,
+        'PYTORCH_BUILD_NUMBER': '1',
         'PYTORCH_BUILD_EXTRA_ENV': build_env_variables,
     }
 
     pkg['dockerfile'] = dockerfile
 
-    pkg['requires'] = [requires]
+    print(f'######### {requires}')
+    pkg['requires'] = requires
     
     return pkg
     
