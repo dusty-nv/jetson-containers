@@ -16,9 +16,12 @@ import numpy as np
 from tvm.runtime.relax_vm import VirtualMachine
 from transformers import AutoTokenizer, AutoConfig
 
-from local_llm import LocalLM
+from local_llm import LocalLM, StreamIterator
 
 
+#
+# TODO does not respect do_sample=False
+#
 class MLCModel(LocalLM):
     """
     MLC model (https://github.com/mlc-ai/mlc-llm)
@@ -214,9 +217,9 @@ class MLCModel(LocalLM):
           min_new_tokens (int) -- force the model to generate a set number of output tokens (default: -1)
           do_sample (bool) -- if True, temperature/top_p will be used.  Otherwise, greedy search (default: False)
           repetition_penalty -- the parameter for repetition penalty. 1.0 means no penalty (default: 1.0)  
-          temperature (float) -- the value used to modulate the next token probabilities (only used if do_sample=True)
+          temperature (float) -- randomness token sampling parameter (default=0.7, only used if do_sample=True)
           top_p (float) -- if set to float < 1 and do_sample=True, only the smallest set of most probable tokens
-                           with probabilities that add up to top_p or higher are kept for generation.
+                           with probabilities that add up to top_p or higher are kept for generation (default 0.95)
           stop_tokens (list[int]) -- defaults to EOS token ID
           kv_cache (ndarray) -- previous kv_cache that the inputs will be appended to.  By default, a blank kv_cache 
                                 will be created for each generation (i.e. a new chat).  This generation's kv_cache
@@ -240,8 +243,8 @@ class MLCModel(LocalLM):
         min_new_tokens = stream.kwargs.get('min_new_tokens', -1)
         
         do_sample = stream.kwargs.get('do_sample', False)
-        temperature = stream.kwargs.get('temperature', 1.0)
-        top_p = stream.kwargs.get('top_p', 1.0)
+        temperature = stream.kwargs.get('temperature', 0.7)
+        top_p = stream.kwargs.get('top_p', 0.95)
         repetition_penalty = stream.kwargs.get('repetition_penalty', 1.0)
         
         stop_tokens = stream.kwargs.get('stop_tokens', [self.tokenizer.eos_token_id])
@@ -326,41 +329,7 @@ class MLCModel(LocalLM):
             stream = self.queue.get()
             self._generate(stream)
             
-            
-            
-class StreamIterator():
-    def __init__(self, model, input, **kwargs):
-        super().__init__()
-        
-        self.model = model
-        self.input = input
-        #self.queue = queue.Queue()
-        self.event = threading.Event()
-        self.stopped = False
-        self.kwargs = kwargs
-        self.kv_cache = kwargs.get('kv_cache', None)
-        
-        self.output_tokens = []
-        self.output_text = ''
-        
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        self.event.wait()
-        self.event.clear()
-
-        if self.stopped:
-            raise StopIteration
-         
-        text = self.model.tokenizer.decode(self.output_tokens, skip_special_tokens=False) #, clean_up_tokenization_spaces=None
-        latest_text = text[len(self.output_text):]
-        self.output_text = text
-        return latest_text
-        
-    def stop(self):
-        self.stopped = True
-        
+    
 """           
 class StreamIterator(DeltaCallback):
     def __init__(self, model):

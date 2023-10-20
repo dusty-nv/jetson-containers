@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
+from .args import *
 from .image import *
 from .log import *
 from .model import *
-from .prompt import *
+from .prompts import *
 from .table import *
 from .tensor import *
 

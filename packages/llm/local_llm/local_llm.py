@@ -9,7 +9,7 @@ import logging
 from transformers import AutoConfig
 
 from .vision import CLIPImageEmbedding, MMProjector
-from .utils import download_model, default_model_api, AttributeDict
+from .utils import AttributeDict, download_model, default_model_api, print_table
 
 
 class LocalLM():
@@ -78,6 +78,7 @@ class LocalLM():
         model.config.api = api
         model.config.load_time = time.perf_counter() - load_begin
         
+        print_table(model.config)
         return model
      
     def generate(self, inputs, streaming=True, **kwargs):
@@ -88,8 +89,21 @@ class LocalLM():
           inputs (str|list[int]|torch.Tensor|np.ndarray) -- the prompt string or embedding
           streaming (bool) -- if true (default), an iterator will be returned that outputs
                               one token at a time.  Otherwise, return the full response.
-          kwargs -- see https://huggingface.co/docs/transformers/main/en/main_classes/text_generation  
-          
+                              
+        kwargs -- see https://huggingface.co/docs/transformers/main/en/main_classes/text_generation  
+        
+          max_new_tokens (int) -- the number of tokens to output in addition to the prompt (default: 128)
+          min_new_tokens (int) -- force the model to generate a set number of output tokens (default: -1)
+          do_sample (bool) -- if True, temperature/top_p will be used.  Otherwise, greedy search (default: False)
+          repetition_penalty -- the parameter for repetition penalty. 1.0 means no penalty (default: 1.0)  
+          temperature (float) -- randomness token sampling parameter (default=0.7, only used if do_sample=True)
+          top_p (float) -- if set to float < 1 and do_sample=True, only the smallest set of most probable tokens
+                           with probabilities that add up to top_p or higher are kept for generation (default 0.95)
+          stop_tokens (list[int]) -- defaults to EOS token ID
+          kv_cache (ndarray) -- previous kv_cache that the inputs will be appended to.  By default, a blank kv_cache 
+                                will be created for each generation (i.e. a new chat).  This generation's kv_cache
+                                will be set in the returned StreamIterator after the request is complete.
+
         Returns:
           If streaming is true, an iterator is returned that provides one decoded token string at a time.
           Otherwise, a string containing the full reply is returned after it's been completed.

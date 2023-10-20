@@ -29,11 +29,15 @@ DefaultCompletionPrompts = [
     "A recipe for making tabouli is"
 ]
 
+
 def load_prompts(prompts):
     """
     Load prompts from a list of txt or json files
     (or if these are strings, just return the strings)
     """
+    if prompts is None:
+        return None
+        
     if isinstance(prompts, str):
         prompts = [prompts]
         
@@ -59,3 +63,4 @@ def load_prompts(prompts):
             prompt_list.append(prompt)
             
     return prompt_list
+    

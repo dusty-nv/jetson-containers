@@ -68,7 +68,7 @@ class ChatHistory():
     
     TODO:  better caching of system prompt embeddings/ect
     """
-    def __init__(self, model, chat_template=None, system_prompt=None):
+    def __init__(self, model, chat_template=None, system_prompt=None, **kwargs):
         """
         Parameters:
            
