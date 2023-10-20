@@ -19,7 +19,7 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
-# download and install the PyTorch wheel
+# Docker build arguments passed from `config.py`
 ARG PYTORCH_BUILD_VERSION
 ARG PYTORCH_BUILD_NUMBER
 ARG PYTORCH_BUILD_EXTRA_ENV
