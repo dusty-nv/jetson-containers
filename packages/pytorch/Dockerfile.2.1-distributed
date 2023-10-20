@@ -1,5 +1,5 @@
 # 
-# this is the pytorch:2-0_rebuilt container (built in parallel with pytorch:)
+# this is the pytorch:2.1_use_distributed container (built in parallel with pytorch:)
 # see Dockerfile & config.py for package configuration/metadata
 #
 ARG BASE_IMAGE
@@ -19,7 +19,7 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
-RUN git clone --recursive --branch v2.0.1 http://github.com/pytorch/pytorch && \
+RUN git clone --recursive --branch v2.1.0 http://github.com/pytorch/pytorch && \
     cd pytorch && \
     export USE_NCCL=0 && \
     export USE_DISTRIBUTED=1 && \
@@ -27,7 +27,7 @@ RUN git clone --recursive --branch v2.0.1 http://github.com/pytorch/pytorch && \
     export USE_PYTORCH_QNNPACK=0 && \
     export TORCH_CUDA_ARCH_LIST="7.2;8.7" && \
     export USE_NATIVE_ARCH=1 && \
-    export PYTORCH_BUILD_VERSION="2.0.1" && \
+    export PYTORCH_BUILD_VERSION="2.1.0" && \
     export PYTORCH_BUILD_NUMBER=1 && \
     apt-get install python3-pip libopenblas-dev libopenmpi-dev
 RUN cd /opt/pytorch && \    
