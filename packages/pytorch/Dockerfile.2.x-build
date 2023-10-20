@@ -24,7 +24,7 @@ ARG PYTORCH_BUILD_VERSION
 ARG PYTORCH_BUILD_NUMBER
 ARG PYTORCH_BUILD_EXTRA_ENV
 
-RUN git clone --recursive --branch v2.0.1 http://github.com/pytorch/pytorch && \
+RUN git clone --recursive --branch v${PYTORCH_BUILD_VERSION} http://github.com/pytorch/pytorch && \
     cd pytorch && \
     export USE_NCCL=0 && \
     export USE_QNNPACK=0 && \
@@ -35,6 +35,11 @@ RUN git clone --recursive --branch v2.0.1 http://github.com/pytorch/pytorch && \
     export PYTORCH_BUILD_NUMBER=${PYTORCH_BUILD_NUMBER} && \
     export ${PYTORCH_BUILD_EXTRA_ENV} && \
     apt-get install python3-pip libopenblas-dev libopenmpi-dev
+ENV CPP_EXTENSION_PY_FILE=/opt/pytorch/torch/utils/cpp_extension.py
+RUN cd /opt/pytorch && \   
+    sed -z "s|       ('Turing', '7.5+PTX'),\n        ('Ampere', '8.0;8.6+PTX'),|       ('Turing', '7.5+PTX'),\n        ('Ampere+Tegra', '8.7'),('Ampere', '8.0;8.6+PTX'),|" -i ${CPP_EXTENSION_PY_FILE} && \ 
+    sed "s|'8.6', '8.9'|'8.6', '8.7', '8.9'|" -i ${CPP_EXTENSION_PY_FILE} && \ 
+    sed -n 1729,1746p ${CPP_EXTENSION_PY_FILE}
 RUN cd /opt/pytorch && \    
     pip3 install -r requirements.txt && \
     pip3 install scikit-build && \

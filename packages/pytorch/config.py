@@ -32,19 +32,14 @@ def pytorch_source(version, dockerfile, build_env_variables, requires, default=F
     
     name_suffix = ''
     for env_var in build_env_variables.split():
-        print(f'################### env_var: {env_var}')
         if bool(re.match('^USE_(.+)=1', env_var)):
-            print(f'################### Matched ^USE_(.+)=1 pattern')
             m = re.match('^USE_(.+)=1', env_var)
             name_suffix=f'{name_suffix}-{m.group(1).lower()}'
         elif bool(re.match('^USE_(.+)=0', env_var)):
-            print(f'################### Matched ^USE_(.+)=0 pattern')
             m = re.match('^USE_(.+)=0', env_var)
             name_suffix=f'{name_suffix}-no-{m.group(1).lower()}'
         else:
-            print(f'################### No match')
-            name_suffix=f"{name_suffix}-{env_var.replace('=', '-')}"
-    print(f'################### name_suffix: {name_suffix}')
+            name_suffix=f"{name_suffix}-{env_var.replace('=', '-').lower()}"
 
     pkg['name'] = f'pytorch:{version}{name_suffix}'
     pkg['alias'] = [f'torch:{version}{name_suffix}']
@@ -60,8 +55,7 @@ def pytorch_source(version, dockerfile, build_env_variables, requires, default=F
 
     pkg['dockerfile'] = dockerfile
 
-    print(f'######### {requires}')
-    pkg['requires'] = requires
+    pkg['depends'] = requires
     
     return pkg
     
@@ -79,6 +73,9 @@ package = [
     pytorch('1.9', 'torch-1.9.0-cp36-cp36m-linux_aarch64.whl', 'https://nvidia.box.com/shared/static/h1z9sw4bb1ybi0rm3tu8qdj8hs05ljbm.whl', '==32.*'),
 
     # Build from source
+    pytorch_source('2.0.0', 'Dockerfile.2.x-build', 
+                    'USE_DISTRIBUTED=1', 
+                    ['python', 'numpy', 'onnx']),
     pytorch_source('2.1.0', 'Dockerfile.2.x-build', 
                     'USE_DISTRIBUTED=1', 
                     ['python', 'numpy', 'onnx']),
