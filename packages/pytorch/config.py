@@ -24,7 +24,7 @@ def pytorch(version, whl, url, requires, default=False):
     return pkg
 
 
-def pytorch_source(version, dockerfile, build_env_variables, requires, default=False):
+def pytorch_build(version, dockerfile, cuda_arch, build_env_variables, requires, default=False):
     """
     Create a version of PyTorch for the package list
     """
@@ -51,6 +51,7 @@ def pytorch_source(version, dockerfile, build_env_variables, requires, default=F
         'PYTORCH_BUILD_VERSION': version,
         'PYTORCH_BUILD_NUMBER': '1',
         'PYTORCH_BUILD_EXTRA_ENV': build_env_variables,
+        'TORCH_CUDA_ARCH_LIST': cuda_arch,
     }
 
     pkg['dockerfile'] = dockerfile
@@ -73,10 +74,10 @@ package = [
     pytorch('1.9', 'torch-1.9.0-cp36-cp36m-linux_aarch64.whl', 'https://nvidia.box.com/shared/static/h1z9sw4bb1ybi0rm3tu8qdj8hs05ljbm.whl', '==32.*'),
 
     # Build from source
-    pytorch_source('2.0.0', 'Dockerfile.2.x-build', 
+    pytorch_build('2.0.0', 'Dockerfile.2.x-build', "7.2;8.7",
                     'USE_DISTRIBUTED=1', 
                     ['python', 'numpy', 'onnx']),
-    pytorch_source('2.1.0', 'Dockerfile.2.x-build', 
+    pytorch_build('2.1.0', 'Dockerfile.2.x-build', "7.2;8.7",
                     'USE_DISTRIBUTED=1', 
                     ['python', 'numpy', 'onnx']),
 ]
