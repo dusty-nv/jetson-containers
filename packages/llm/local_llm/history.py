@@ -5,7 +5,7 @@ import logging
 import numpy as np
 
 from .templates import ChatTemplate, ChatTemplates
-from .utils import AttributeDict, replace_text, print_table, ImageExtensions
+from .utils import AttributeDict, ImageExtensions, ImageTypes, replace_text, print_table
 
 
 def ChatEntry(role='user', msg=None, **kwargs):
@@ -309,7 +309,7 @@ class ChatHistory():
                 return 'image'
             else:
                 return "text" 
-        elif isinstance(input, PIL.Image.Image):
+        elif isinstance(input, ImageTypes):
             return 'image'
         elif isinstance(input, list) and len(input) > 0 and isinstance(input[0], str):
             return 'text'

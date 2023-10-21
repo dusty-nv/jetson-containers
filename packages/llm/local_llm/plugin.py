@@ -18,18 +18,20 @@ class Plugin(threading.Thread):
       
     Parameters:
     
+      input_channels (int) -- 
       relay (bool) -- if true, will relay any inputs as outputs after processing
       threaded (bool) -- if true, will process queue from independent thread
     """
-    def __init__(self, relay=False, threaded=True, **kwargs):
+    def __init__(self, output_channels=1, relay=False, threaded=True, **kwargs):
         """
         Initialize plugin
         """
         super().__init__(daemon=True)
-        
+
         self.relay = relay
         self.threaded = threaded
-        self.outputs = []
+        self.outputs = [] * output_channels
+        self.output_channels = output_channels
         
         if threaded:
             self.input_queue = queue.Queue()
@@ -52,7 +54,7 @@ class Plugin(threading.Thread):
         """
         raise NotImplementedError(f"plugin {type(self)} has not implemented process()")
     
-    def add(self, plugin, mode='output'):
+    def add(self, plugin, channel=0):
         """
         Connect this plugin with another, as either an input or an output.
         By default, this plugin will output to the specified plugin instance.
@@ -72,13 +74,7 @@ class Plugin(threading.Thread):
             from local_llm.plugins import Callback
             plugin = Callback(plugin)
             
-        if mode == 'output':
-            self.outputs.append(plugin)
-        elif mode == 'input':
-            plugin.outputs.append(self)
-        else:
-            raise ValueError("mode should either be 'input' or 'output'")
-            
+        self.outputs[channel].append(plugin)
         return self
     
     def find(self, type):
@@ -104,13 +100,13 @@ class Plugin(threading.Thread):
         """
         return self.find(type)
         
-    def __call__(self, input, channel=0):
+    def __call__(self, input):
         """
         Callable () operator alias for the input() function
         """
         self.input(input, channel)
         
-    def input(self, input, channel=0):
+    def input(self, input):
         """
         Add data to the plugin's processing queue (or if threaded=False, process it now)
         TODO:  multiple input channels?
@@ -121,7 +117,7 @@ class Plugin(threading.Thread):
         else:
             self.update()
             
-    def output(self, output, channel=-1):
+    def output(self, output, channel=0):
         """
         Output data to the next plugin(s) on the specified channel (-1 for all channels)
         """
@@ -129,10 +125,12 @@ class Plugin(threading.Thread):
             return
             
         if channel >= 0:
-            self.outputs[channel].input(output)
+            for output_plugin in self.outputs[channel]:
+                self.output_plugin.input(output)
         else:
             for output_channel in self.outputs:
-                output_channel.input(output)
+                for output_plugin in output_channel:
+                    output_plugin.input(output)
     
     def update(self):
         """
