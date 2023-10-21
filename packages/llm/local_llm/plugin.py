@@ -30,7 +30,8 @@ class Plugin(threading.Thread):
 
         self.relay = relay
         self.threaded = threaded
-        self.outputs = [] * output_channels
+        
+        self.outputs = [[] for i in range(output_channels)]
         self.output_channels = output_channels
         
         if threaded:
@@ -85,12 +86,13 @@ class Plugin(threading.Thread):
         if isinstance(self, type):
             return self
             
-        for output in self.outputs:
-            if isinstance(output, type):
-                return output
-            plugin = output.find(type)
-            if plugin is not None:
-                return plugin
+        for output_channel in self.outputs:
+            for output in output_channel:
+                if isinstance(output, type):
+                    return output
+                plugin = output.find(type)
+                if plugin is not None:
+                    return plugin
             
         return None
     
@@ -126,7 +128,7 @@ class Plugin(threading.Thread):
             
         if channel >= 0:
             for output_plugin in self.outputs[channel]:
-                self.output_plugin.input(output)
+                output_plugin.input(output)
         else:
             for output_channel in self.outputs:
                 for output_plugin in output_channel:
@@ -149,8 +151,11 @@ class Plugin(threading.Thread):
         if self.threaded:
             super().start()
             
-        for output in self.outputs:
-            output.start()
+        for output_channel in self.outputs:
+            for output in output_channel:
+                output.start()
+                
+        return self
             
     def run(self):
         """

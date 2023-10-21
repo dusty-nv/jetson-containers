@@ -2,6 +2,7 @@
 import time
 import queue
 import logging
+import numpy as np
 
 import riva.client
 import riva.client.audio_io
@@ -22,7 +23,7 @@ class RivaTTS(Plugin):
     """
     def __init__(self, riva_server='localhost:50051', 
                  voice='English-US.Female-1', language_code='en-US', 
-                 sample_rate_hz=44100, **kwargs)
+                 sample_rate_hz=48000, **kwargs):
         """
         The available voices are from:
         https://docs.nvidia.com/deeplearning/riva/user-guide/docs/tts/tts-overview.html#voices
@@ -31,6 +32,7 @@ class RivaTTS(Plugin):
         
         self.server = riva_server
         self.auth = riva.client.Auth(uri=riva_server)
+        self.tts_service = riva.client.SpeechSynthesisService(self.auth)
         
         self.voice = voice   # can be changed mid-stream
         self.muted = False   # will supress TTS outputs
@@ -60,8 +62,8 @@ class RivaTTS(Plugin):
         """
         while True:
             text = ''
-            
-            while True:
+
+            while True:  # accumulate text until its needed to prevent audio gap-out
                 time_to_go = self.needs_text_by - time.perf_counter()
 
                 if time_to_go < 0.01:
@@ -75,8 +77,10 @@ class RivaTTS(Plugin):
             if len(text) == 0:  # there can be extended times of no speaking
                 self.input_event.wait()
                 self.input_event.clear()
-                continue
-                
+                text += self.input_queue.get()
+
+            logging.debug(f"running TTS request '{text}'")
+            
             self.muted = False
             
             responses = self.tts_service.synthesize_online(
@@ -98,3 +102,27 @@ class RivaTTS(Plugin):
                 self.needs_text_by += len(samples) / self.sample_rate
                 
                 self.output(samples)
+                
+                
+if __name__ == "__main__":
+    from local_llm.utils import ArgParser
+    from local_llm.plugins import UserPrompt
+    
+    from termcolor import cprint
+    
+    args = ArgParser(extras=['tts', 'prompt', 'log']).parse_args()
+    
+    def print_prompt():
+        cprint('>> PROMPT: ', 'blue', end='', flush=True)
+            
+    def on_audio(samples, **kwargs):
+        logging.info(f"recieved TTS audio samples {type(samples)}  shape={samples.shape}  dtype={samples.dtype}")
+        print_prompt()
+        
+    pipeline = UserPrompt(interactive=True, **vars(args)).add(
+        RivaTTS(**vars(args)).add(
+        on_audio
+    ))
+    
+    print_prompt()
+    pipeline.start().join()

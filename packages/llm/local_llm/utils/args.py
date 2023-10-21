@@ -10,15 +10,15 @@ class ArgParser(argparse.ArgumentParser):
     """
     Adds selectable extra args that are commonly used by this project
     """
-    DefaultExtras = ['model', 'chat', 'generation', 'log']
+    Defaults = ['model', 'chat', 'generation', 'log']
     Video = ['video_input', 'video_output']
     Riva = ['asr', 'tts']
     
-    def __init__(self, extras=DefaultExtras, **kwargs):
+    def __init__(self, extras=Defaults, **kwargs):
         super().__init__(formatter_class=argparse.ArgumentDefaultsHelpFormatter, **kwargs)
         
         if 'model' in extras:
-            self.add_argument("--model", type=str, required=True, 
+            self.add_argument("--model", type=str, default=None, #required=True, 
                 help="path to the model, or repository on HuggingFace Hub")
             self.add_argument("--quant", type=str, default=None, 
                 help="path to the quantized weights (AWQ uses this)")
@@ -27,9 +27,11 @@ class ArgParser(argparse.ArgumentParser):
             self.add_argument("--vision-model", type=str, default=None, 
                 help="for VLMs, manually select the CLIP vision model to use (e.g. openai/clip-vit-large-patch14-336 for higher-res)")
 
-        if 'chat' in extras:
+        if 'chat' in extras or 'prompt' in extras:
             self.add_argument("--prompt", action='append', nargs='*', 
                 help="add a prompt (can be prompt text or path to .txt, .json, or image file)")
+                
+        if 'chat' in extras:
             self.add_argument("--system-prompt", type=str, default=None, help="override the system prompt instruction")
             self.add_argument("--chat-template", type=str, default=None, #choices=list(ChatTemplates.keys()), 
                 help="manually select the chat template ('llama-2', 'llava-v1', 'vicuna-v1')")
@@ -65,12 +67,12 @@ class ArgParser(argparse.ArgumentParser):
             self.add_argument("--riva-server", default="localhost:50051", help="URI to the Riva GRPC server endpoint.")
             self.add_argument("--sample-rate-hz", default=48000, help="the audio sample rate in Hz")
             self.add_argument("--language-code", default="en-US", help="Language code of the ASR/TTS to be used.")
+            self.add_argument("--list-audio-devices", action="store_true", help="List output audio devices indices.")
             
         if 'tts' in extras:
             self.add_argument("--voice", type=str, default="English-US.Female-1", help="Voice model name to use for TTS")
 
         if 'asr' in extras:
-            self.add_argument("--list-audio-devices", action="store_true", help="List output audio devices indices.")
             self.add_argument("--audio-input", type=int, default=None, help="audio input device/microphone to use for ASR")
             self.add_argument("--audio-chunk", type=int, default=1600, help="A maximum number of frames in a audio chunk sent to server.")
             self.add_argument("--audio-channels", type=int, default=1, help="The number of audio channels to use")

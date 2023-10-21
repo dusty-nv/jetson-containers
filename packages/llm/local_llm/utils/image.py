@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
+import io
+import PIL
 import logging
 import torch
 import numpy as np
-
-from PIL import Image
-from io import BytesIO
 
 from jetson_utils import cudaImage, cudaFromNumpy
 
@@ -23,14 +22,15 @@ def is_image(image):
 def load_image(path):
     """
     Load an image from a local path or URL
+    TODO have this use jetson_utils instead
     """
     if path.startswith('http') or path.startswith('https'):
         logging.debug(f'-- downloading {path}')
         response = requests.get(path)
-        image = Image.open(BytesIO(response.content)).convert('RGB')
+        image = PIL.Image.open(io.BytesIO(response.content)).convert('RGB')
     else:
         logging.debug(f'-- loading {path}')
-        image = Image.open(path).convert('RGB')
+        image = PIL.Image.open(path).convert('RGB')
         
     return image
 
