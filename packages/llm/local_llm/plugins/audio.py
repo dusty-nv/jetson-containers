@@ -54,19 +54,25 @@ class AudioOutputDevice(Plugin):
         Generate mixed audio samples for either the sound device, output file, web audio, ect.
         """
         samples = np.zeros(frame_count * self.channels, dtype=self.sample_type)
-
-        if self.current_buffer is None:
-            if not self.input_queue.empty():
-                self.current_buffer = convert_audio(self.input_queue.get(), dtype=self.sample_type)
-                self.current_buffer_pos = 0
-                
-        if self.current_buffer is not None:
-            num_samples = min(frame_count, len(self.current_buffer) - self.current_buffer_pos)
-            samples[:num_samples] = self.current_buffer[self.current_buffer_pos:self.current_buffer_pos+num_samples]
-            self.current_buffer_pos += num_samples
-            if self.current_buffer_pos >= len(self.current_buffer):  # TODO it should loop back above for more samples
-                self.current_buffer = None
-
+        samples_idx = 0
+        
+        while True:
+            if self.current_buffer is None:
+                if not self.input_queue.empty():
+                    self.current_buffer = convert_audio(self.input_queue.get(), dtype=self.sample_type)
+                    self.current_buffer_pos = 0
+                    
+            if self.current_buffer is not None:
+                num_samples = min(frame_count-samples_idx, len(self.current_buffer) - self.current_buffer_pos)
+                samples[samples_idx:samples_idx+num_samples] = self.current_buffer[self.current_buffer_pos:self.current_buffer_pos+num_samples]
+                self.current_buffer_pos += num_samples
+                samples_idx += num_samples
+                if self.current_buffer_pos >= len(self.current_buffer):  # TODO it should loop back above for more samples
+                    self.current_buffer = None
+                    continue
+                    
+            break
+            
         samples = samples.clip(-self.sample_clip, self.sample_clip)
         samples = samples.astype(self.sample_type)
 
