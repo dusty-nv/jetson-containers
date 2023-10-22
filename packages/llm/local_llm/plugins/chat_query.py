@@ -9,7 +9,19 @@ class ChatQuery(Plugin):
     """
     Plugin that feeds incoming text or ChatHistory to LLM and generates the reply.
     It can either internally manage the ChatHistory, or that can be done externally.
+    
+    Inputs:  (str or list[str]) -- one or more text prompts
+             (dict) -- an existing ChatEntry dict
+             (ChatHistory) -- use latest entry from chat history
+     
+    Outputs:  channel 0 (str) -- the partially-generated output text, token-by-token
+              channel 1 (str) -- the entire final output text, after generation is complete
+              channel 2 (StreamingReponse) -- the stream iterator from generate()    
     """
+    OutputToken = 0
+    OutputFinal = 1
+    OutputStream = 2
+    
     def __init__(self, model, **kwargs):
         """
         Parameters:
@@ -43,7 +55,7 @@ class ChatQuery(Plugin):
           top_p (float) -- if set to float < 1 and do_sample=True, only the smallest set of most probable tokens
                            with probabilities that add up to top_p or higher are kept for generation (default 0.95)          
         """
-        super().__init__(**kwargs)
+        super().__init__(output_channels=3, **kwargs)
 
         if isinstance(model, str):
             self.model = LocalLM.from_pretrained(model, **kwargs)
@@ -117,18 +129,19 @@ class ChatQuery(Plugin):
             **kwargs
         )
         
-        # if input was text, output the text (token-by-token)
-        # if input was history, return the response object
-        if not isinstance(input, ChatHistory):
-            bot_reply = self.chat_history.append(role='bot', text='')
+        # output the stream iterator on channel 2
+        self.output(output, ChatQuery.OutputStream)
+
+        # output the generated tokens on channel 0
+        bot_reply = chat_history.append(role='bot', text='')
+        
+        for token in output:
+            bot_reply.text += token
+            self.output(token, ChatQuery.OutputToken)
             
-            for token in output:
-                bot_reply.text += token
-                self.output(token)
-                
-            bot_reply.text = output.output_text
-            self.chat_history.kv_cache = output.kv_cache
-            
-            #print_table(self.model.stats)
-        else:
-            self.output(output)
+        bot_reply.text = output.output_text
+        self.chat_history.kv_cache = output.kv_cache
+        
+        # output the final generated text on channel 1
+        self.output(bot_reply.text, ChatQuery.OutputFinal)
+        
