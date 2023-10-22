@@ -34,7 +34,7 @@ class RivaASR(Plugin):
         Parameters:
         
           riva_server (str) -- URL of the Riva GRPC server that should be running
-          audio_input (str) -- audio input device number for locally-connected microphone
+          audio_input (int) -- audio input device number for locally-connected microphone
           sample_rate_hz (int) -- sample rate of any incoming audio or device (typically 16000, 44100, 48000)
           audio_chunk (int) -- the audio input buffer length (in samples) to use for input devices
           audio_input_channels (int) -- 1 for mono, 2 for stereo
