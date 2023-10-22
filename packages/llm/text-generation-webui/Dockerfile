@@ -79,6 +79,8 @@ ENV LD_PRELOAD=${LD_PRELOAD}:${LD_PRELOAD_LIBS}
 
 COPY settings.json text-generation-webui/
 
-WORKDIR /
+COPY docker-entrypoint.sh /usr/local/bin
 
-CMD /bin/bash -c "cd /opt/text-generation-webui && python3 server.py --model-dir=/data/models/text-generation-webui --listen --verbose"
+WORKDIR /opt/text-generation-webui
+
+ENTRYPOINT ["docker-entrypoint.sh"]
