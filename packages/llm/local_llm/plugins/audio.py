@@ -77,6 +77,7 @@ class AudioOutputFile(Plugin):
     """
     Output audio to a wav file
     Expects to recieve audio samples as input, np.ndarray with dtype=float or int16
+    TODO:  this doesn't fill in gaps for "realtime playback"
     """
     def __init__(self, audio_output_file='output.wav', audio_output_channels=1, sample_rate_hz=48000, **kwargs):
         """
@@ -107,6 +108,8 @@ class AudioOutputFile(Plugin):
     def process(self, input, **kwargs):
         """
         Save float or int16 audio samples to wav file
+        TODO: append silence before the last number of samples written is less in duration
+              than the time since process() was last called
         """
         input = convert_audio(input, dtype=self.sample_type)
         self.wav.writeframes(input)

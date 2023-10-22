@@ -106,23 +106,28 @@ class RivaTTS(Plugin):
                 
 if __name__ == "__main__":
     from local_llm.utils import ArgParser
-    from local_llm.plugins import UserPrompt
+    from local_llm.plugins import UserPrompt, AudioOutputDevice, AudioOutputFile
     
     from termcolor import cprint
     
-    args = ArgParser(extras=['tts', 'prompt', 'log']).parse_args()
+    args = ArgParser(extras=['tts', 'audio_output', 'prompt', 'log']).parse_args()
     
     def print_prompt():
         cprint('>> PROMPT: ', 'blue', end='', flush=True)
             
-    def on_audio(samples, **kwargs):
-        logging.info(f"recieved TTS audio samples {type(samples)}  shape={samples.shape}  dtype={samples.dtype}")
-        print_prompt()
+    #def on_audio(samples, **kwargs):
+    #    logging.info(f"recieved TTS audio samples {type(samples)}  shape={samples.shape}  dtype={samples.dtype}")
+    #    print_prompt()
         
-    pipeline = UserPrompt(interactive=True, **vars(args)).add(
-        RivaTTS(**vars(args)).add(
-        on_audio
-    ))
+    tts = RivaTTS(**vars(args))
     
+    if args.audio_output_device is not None:
+        tts.add(AudioOutputDevice(**vars(args)))
+
+    if args.audio_output_file is not None:
+        tts.add(AudioOutputFile(**vars(args)))
+ 
+    prompt = UserPrompt(interactive=True, **vars(args)).add(tts)
+
     print_prompt()
-    pipeline.start().join()
+    prompt.start().join()
