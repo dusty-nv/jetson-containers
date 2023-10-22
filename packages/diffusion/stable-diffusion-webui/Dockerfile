@@ -34,6 +34,8 @@ RUN cd /opt/stable-diffusion-webui && \
 # set the cache dir for models
 ENV DIFFUSERS_CACHE=/data/models/diffusers
 
-# default start-up command
-CMD /bin/bash -c "cd /opt/stable-diffusion-webui && python3 launch.py --data=/data/models/stable-diffusion --enable-insecure-extension-access --xformers --listen --port=7860"
+COPY docker-entrypoint.sh /usr/local/bin
 
+WORKDIR /opt/stable-diffusion-webui
+
+ENTRYPOINT ["docker-entrypoint.sh"]
