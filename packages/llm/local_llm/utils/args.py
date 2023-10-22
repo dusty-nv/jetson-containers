@@ -70,7 +70,7 @@ class ArgParser(argparse.ArgumentParser):
             extras += ['audio_input']
             
         if 'audio_input' in extras:
-            self.add_argument("--audio-input", type=int, default=None, help="audio input device/microphone to use for ASR")
+            self.add_argument("--audio-input-device", type=int, default=None, help="audio input device/microphone to use for ASR")
             self.add_argument("--audio-input-channels", type=int, default=1, help="The number of input audio channels to use")
             
         if 'audio_output' in extras:
@@ -98,7 +98,8 @@ class ArgParser(argparse.ArgumentParser):
             self.add_argument("--boosted-lm-score", type=float, default=4.0, help="Value by which to boost words when decoding.")
             self.add_argument("--profanity-filter", action='store_true', help="enable profanity filtering in ASR transcripts")
             self.add_argument("--no-automatic-punctuation", dest='automatic_punctuation', action='store_false', help="disable punctuation in the ASR transcripts")
-
+            self.add_argument("--asr-confidence-threshold", type=float, default=-2.0, help="minimum ASR confidence (only applies to 'final' transcripts)")
+            
         # LOGGING
         if 'log' in extras:
             self.add_argument("--log-level", type=str, default='info', choices=['debug', 'info', 'warning', 'error', 'critical'], help="the logging level to stdout")

@@ -6,10 +6,7 @@ from local_llm.utils import ArgParser, print_table
 
 from termcolor import cprint
 
-#
-# TODO max-new-tokens and other generation args...
-# TODO custom arg parser
-#
+
 class ChatAgent(Agent):
     """
     Agent for two-turn multimodal chat.

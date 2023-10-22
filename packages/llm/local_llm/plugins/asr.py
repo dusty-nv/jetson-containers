@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import threading
 import logging
 
 import riva.client
@@ -25,11 +26,12 @@ class RivaASR(Plugin):
     OutputPartial=1  # output partial transcripts (channel 1)
     
     def __init__(self, riva_server='localhost:50051',
-                 audio_input=None, sample_rate_hz=48000,
+                 audio_input_device=None, sample_rate_hz=48000,
                  audio_chunk=1600, audio_input_channels=1,
                  automatic_punctuation=True, verbatim_transcripts=True, 
                  profanity_filter=False, language_code='en-US', 
-                 boosted_lm_words=None, boosted_lm_score=4.0, **kwargs):
+                 boosted_lm_words=None, boosted_lm_score=4.0, 
+                 asr_confidence_threshold=-2.0, **kwargs):
         """
         Parameters:
         
@@ -39,18 +41,19 @@ class RivaASR(Plugin):
           audio_chunk (int) -- the audio input buffer length (in samples) to use for input devices
           audio_input_channels (int) -- 1 for mono, 2 for stereo
         """
-        super().__init__(plugin_outputs=2, **kwargs)
+        super().__init__(output_channels=2, **kwargs)
         
         self.server = riva_server
         self.auth = riva.client.Auth(uri=riva_server)
         
         self.audio_queue = AudioQueue(self.input_queue, audio_chunk)
         self.audio_chunk = audio_chunk
-        self.input_device = audio_input
+        self.input_device = audio_input_device
         self.language_code = language_code
         self.sample_rate = sample_rate_hz
-
-        self.asr_service = riva.client.ASRService(auth)
+        self.confidence_threshold = asr_confidence_threshold
+        
+        self.asr_service = riva.client.ASRService(self.auth)
         
         self.asr_config = riva.client.StreamingRecognitionConfig(
             config=riva.client.RecognitionConfig(
@@ -94,9 +97,14 @@ class RivaASR(Plugin):
                     continue
 
                 for result in response.results:
-                    self.output(result)  # TODO partial -> channel 0, final -> channel 1
+                    transcript = result.alternatives[0].transcript.strip()
+                    if result.is_final:
+                        if result.alternatives[0].confidence >= self.confidence_threshold:
+                            self.output(transcript, RivaASR.OutputFinal)
+                    else:
+                        self.output(transcript, RivaASR.OutputPartial)
         
-        
+
 class AudioQueue:
     """
     Implement same context manager/iterator interfaces as Riva's MicrophoneStream
@@ -131,4 +139,28 @@ class AudioQueue:
     
     def __iter__(self):
         return self
+
+ 
+if __name__ == "__main__":
+    from local_llm.utils import ArgParser
+    from local_llm.plugins import PrintStream
+    
+    from termcolor import cprint
+    
+    args = ArgParser(extras=['asr', 'log']).parse_args()
+    
+    def print_prompt():
+        cprint('>> PROMPT: ', 'blue', end='', flush=True)
             
+    #def on_audio(samples, **kwargs):
+    #    logging.info(f"recieved TTS audio samples {type(samples)}  shape={samples.shape}  dtype={samples.dtype}")
+    #    print_prompt()
+        
+    asr = RivaASR(**vars(args))
+    
+    asr.add(PrintStream(partial=False, prefix='## ', color='green'), RivaASR.OutputFinal)
+    asr.add(PrintStream(partial=False, prefix='>> ', color='blue'), RivaASR.OutputPartial)
+    
+    asr.start()
+    asr.join()
+    
