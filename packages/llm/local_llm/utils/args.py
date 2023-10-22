@@ -75,6 +75,7 @@ class ArgParser(argparse.ArgumentParser):
             
         if 'audio_output' in extras:
             self.add_argument("--audio-output-device", type=int, default=None, help="audio output interface device index (PortAudio)")
+            self.add_argument("--audio-output-file", type=str, default=None, help="save audio output to wav file using the given path")
             self.add_argument("--audio-output-channels", type=int, default=1, help="the number of output audio channels to use")
             
         if 'audio_input' in extras or 'audio_output' in extras:

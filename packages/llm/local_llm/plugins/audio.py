@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import wave
 import logging
 import pyaudio
 import numpy as np
@@ -56,7 +57,7 @@ class AudioOutputDevice(Plugin):
 
         if self.current_buffer is None:
             if not self.input_queue.empty():
-                self.current_buffer = convert_audio(self.input_queue.get())
+                self.current_buffer = convert_audio(self.input_queue.get(), dtype=self.sample_type)
                 self.current_buffer_pos = 0
                 
         if self.current_buffer is not None:
@@ -72,6 +73,45 @@ class AudioOutputDevice(Plugin):
         return (samples, pyaudio.paContinue)
 
 
+class AudioOutputFile(Plugin):
+    """
+    Output audio to a wav file
+    Expects to recieve audio samples as input, np.ndarray with dtype=float or int16
+    """
+    def __init__(self, audio_output_file='output.wav', audio_output_channels=1, sample_rate_hz=48000, **kwargs):
+        """
+        Parameters:
+        
+          audio_output_file (str) -- path to the output wav file
+          audio_output_channels (int) -- 1 for mono, 2 for stereo
+          sample_rate_hz (int) -- sample rate of any outgoing audio (typically 16000, 44100, 48000)
+        """
+        super().__init__(**kwargs)
+        
+        self.pa = pyaudio.PyAudio()
+        
+        self.output_file = audio_output_file
+        self.channels = audio_output_channels
+        
+        self.sample_type = np.int16
+        self.sample_width = np.dtype(self.sample_type).itemsize
+        self.sample_clip = float(int((2 ** (self.sample_width * 8)) / 2) - 1)  # 32767 for 16-bit
+        self.sample_rate = sample_rate_hz
+        
+        self.wav = wave.open(self.output_file, 'wb')
+        
+        self.wav.setnchannels(self.channels)
+        self.wav.setsampwidth(self.sample_width)
+        self.wav.setframerate(self.sample_rate)
+    
+    def process(self, input, **kwargs):
+        """
+        Save float or int16 audio samples to wav file
+        """
+        input = convert_audio(input, dtype=self.sample_type)
+        self.wav.writeframes(input)
+        
+        
 def convert_audio(samples, dtype=np.int16):
     """
     Convert between audio datatypes like float<->int16 and apply sample re-scaling
@@ -117,9 +157,12 @@ if __name__ == "__main__":
     print(samples)
     print(samples.shape)
     
-    audio_output = AudioOutputDevice(**vars(args)).start()
-    
-    audio_output.input(samples)
+    if args.audio_output_device is not None:
+        device = AudioOutputDevice(**vars(args)).start()
+        device.input(samples)
+        
+    if args.audio_output_file is not None:
+        file = AudioOutputFile(**vars(args)).start()
+        file.input(samples)
+        
     time.sleep(args.length + 1.0)
-    
-    
