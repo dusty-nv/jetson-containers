@@ -47,11 +47,14 @@ class LocalLM():
             model_name = os.path.basename(model_path)
         else:
             model_path = download_model(model)
-            model_name = model
+            model_name = os.path.basename(model)
             
         if not api:
             api = default_model_api(model_path, quant)
-            
+        
+        kwargs['name'] = model_name
+        kwargs['api'] = api
+        
         logging.info(f"loading {model_path} with {api.upper()}")
         load_begin = time.perf_counter()
         
@@ -71,11 +74,7 @@ class LocalLM():
             model = HFModel(model_path, **kwargs)
         else:
             raise ValueError(f"invalid API: {api}")
-        
-        if 'name' not in model.config or not model.config.name:
-            model.config.name = model_name
-            
-        model.config.api = api
+
         model.config.load_time = time.perf_counter() - load_begin
         
         print_table(model.config)
@@ -138,8 +137,8 @@ class LocalLM():
         self.config = AttributeDict()
         self.stats = AttributeDict()
         
-        self.config.name = ''
-        self.config.api = ''
+        self.config.name = kwargs.get('name')
+        self.config.api = kwargs.get('api')
         
         self.model_path = model_path
         self.model_config = AutoConfig.from_pretrained(model_path)

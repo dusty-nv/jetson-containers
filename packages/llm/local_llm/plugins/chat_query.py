@@ -15,14 +15,16 @@ class ChatQuery(Plugin):
              (ChatHistory) -- use latest entry from chat history
      
     Outputs:  channel 0 (str) -- the partially-generated output text, token-by-token
-              channel 1 (str) -- the entire final output text, after generation is complete
+              channel 1 (str) -- the partially-generated output text, word-by-word
+              channel 2 (str) -- the entire final output text, after generation is complete
               channel 2 (StreamingReponse) -- the stream iterator from generate()    
     """
     OutputToken = 0
-    OutputFinal = 1
-    OutputStream = 2
+    OutputWords = 1
+    OutputFinal = 2
+    OutputStream = 3
     
-    def __init__(self, model, **kwargs):
+    def __init__(self, model="meta-llama/Llama-2-7b-chat-hf", **kwargs):
         """
         Parameters:
         
@@ -55,7 +57,7 @@ class ChatQuery(Plugin):
           top_p (float) -- if set to float < 1 and do_sample=True, only the smallest set of most probable tokens
                            with probabilities that add up to top_p or higher are kept for generation (default 0.95)          
         """
-        super().__init__(output_channels=3, **kwargs)
+        super().__init__(output_channels=4, **kwargs)
 
         if isinstance(model, str):
             self.model = LocalLM.from_pretrained(model, **kwargs)
@@ -129,19 +131,41 @@ class ChatQuery(Plugin):
             **kwargs
         )
         
-        # output the stream iterator on channel 2
+        # output the stream iterator on channel 3
         self.output(output, ChatQuery.OutputStream)
 
         # output the generated tokens on channel 0
         bot_reply = chat_history.append(role='bot', text='')
+        words = ''
         
         for token in output:
+            words += token
             bot_reply.text += token
+            
             self.output(token, ChatQuery.OutputToken)
+            
+            # if a space was added, emit new word(s)
+            last_space = words.rfind(' ')
+            
+            if last_space >= 0:
+                self.output(words[:last_space+1], ChatQuery.OutputWords)
+                if last_space < len(words) - 1:
+                    words = words[last_space+1:]
+                else:
+                    words = ''
+                    
+            '''
+            if ' ' in words:  
+                self.output(words, ChatQuery.OutputWords)
+                words = ''
+            '''
+            
+        if len(words) > 0:
+            self.output(words, ChatQuery.OutputWords)
             
         bot_reply.text = output.output_text
         self.chat_history.kv_cache = output.kv_cache
         
-        # output the final generated text on channel 1
+        # output the final generated text on channel 2
         self.output(bot_reply.text, ChatQuery.OutputFinal)
         

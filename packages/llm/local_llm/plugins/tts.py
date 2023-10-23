@@ -22,11 +22,15 @@ class RivaTTS(Plugin):
     Output:  audio samples (np.ndarray, int16)
     """
     def __init__(self, riva_server='localhost:50051', 
-                 voice='English-US.Female-1', language_code='en-US', 
-                 sample_rate_hz=48000, **kwargs):
+                 voice='English-US.Female-1', language_code='en-US', sample_rate_hz=48000, 
+                 voice_rate='default', voice_pitch='default', voice_volume='default',
+                 **kwargs):
         """
         The available voices are from:
-        https://docs.nvidia.com/deeplearning/riva/user-guide/docs/tts/tts-overview.html#voices
+          https://docs.nvidia.com/deeplearning/riva/user-guide/docs/tts/tts-overview.html#voices
+        
+        rate, pitch, and volume are dynamic SSML tags from:
+          https://docs.nvidia.com/deeplearning/riva/user-guide/docs/tutorials/tts-basics-customize-ssml.html#customizing-rate-pitch-and-volume-with-the-prosody-tag
         """
         super().__init__(**kwargs)
         
@@ -36,6 +40,10 @@ class RivaTTS(Plugin):
         
         self.voice = voice   # can be changed mid-stream
         self.muted = False   # will supress TTS outputs
+        
+        self.rate = voice_rate
+        self.pitch = voice_pitch
+        self.volume = voice_volume
         
         self.language_code = language_code
         self.sample_rate = sample_rate_hz
@@ -63,14 +71,15 @@ class RivaTTS(Plugin):
         while True:
             text = ''
 
+            """
             while True:  # accumulate text until its needed to prevent audio gap-out
                 time_to_go = self.needs_text_by - time.perf_counter()
 
-                if time_to_go < 0.01:
+                if time_to_go < 0.1:
                     break
                     
                 try:
-                    text += self.input_queue.get(timeout=time_to_go-0.009)
+                    text += self.input_queue.get(timeout=time_to_go-0.09)
                 except queue.Empty:
                     break
             
@@ -78,11 +87,42 @@ class RivaTTS(Plugin):
                 self.input_event.wait()
                 self.input_event.clear()
                 text += self.input_queue.get()
-
-            logging.debug(f"running TTS request '{text}'")
+            """
             
+            while True:
+                # accumulate text until its needed to prevent audio gap-out
+                timeout = self.needs_text_by - time.perf_counter() - 0.1  # TODO make this RTFX factor adjustable
+
+                try:
+                    text += self.input_queue.get(timeout=timeout if timeout > 0 else None)
+                    while not self.input_queue.empty():  # pull any additional input without waiting
+                        text += self.input_queue.get(block=False)
+                except queue.Empty:
+                    pass
+                    
+                # make sure there are at least N words (or EOS)
+                if '</s>' in text:
+                    break
+                elif timeout <= 0 and len(text.strip().split(' ')) >= 4:  # TODO make 'min_words' adjustable
+                    break
+            
+            # santize inputs (TODO remove emojis, *giggles*, ect)
+            text = text.strip()
+            text = text.replace('</s>', '')
+            text = text.replace('\n', ' ')
+            text = text.replace('  ', ' ')
+            
+            if len(text) == 0:
+                continue
+                
+            # apply SSML tags if enabled
+            if self.rate != 'default' or self.pitch != 'default' or self.volume != 'default':
+                text = f"<speak><prosody rate='{self.rate}' pitch='{self.pitch}' volume='{self.volume}'>{text}</prosody></speak>"
+            
+            logging.debug(f"running TTS request '{text}'")
             self.muted = False
             
+            # generate speech audio samples
             responses = self.tts_service.synthesize_online(
                 text, self.voice, self.language_code, sample_rate_hz=self.sample_rate
             )
@@ -103,7 +143,8 @@ class RivaTTS(Plugin):
                 
                 self.output(samples)
                 
-                
+            #logging.debug(f"done with TTS request '{text}'")
+            
 if __name__ == "__main__":
     from local_llm.utils import ArgParser
     from local_llm.plugins import UserPrompt, AudioOutputDevice, AudioOutputFile

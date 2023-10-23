@@ -144,12 +144,17 @@ class MLCModel(LocalLM):
         Quantize a model with the given method.  It will be saved under the output directory,
         in a subdirectory based on the model name and quant method (Llama-2-7b-chat-hf-q4f16_ft)
         """
-        quant_path = os.path.join(output, os.path.basename(model) + '-' + method)
+        model_name = kwargs.get('name', os.path.basename(model))
+        model_path = os.path.join(output, 'models', model_name)
+        quant_path = os.path.join(output, model_name + '-' + method)
         
         if os.path.isdir(quant_path):
             return quant_path
             
-        cmd = f"python3 -m mlc_llm.build --model {model} --quantization {method} "
+        if not os.path.isdir(model_path):
+            os.symlink(model, model_path, target_is_directory=True)
+            
+        cmd = f"python3 -m mlc_llm.build --model {model_path} --quantization {method} "
         cmd += f"--target cuda --use-cuda-graph --use-flash-attn-mqa --sep-embed "
         cmd += f"--max-seq-len {AutoConfig.from_pretrained(model).max_position_embeddings} "
         cmd += f"--artifact-path {output}"
@@ -282,7 +287,10 @@ class MLCModel(LocalLM):
         time_begin_decode = time.perf_counter()
         
         while True:
+            #time_begin_sample = time.perf_counter()
             token = self._sample(output[0], do_sample, temperature, top_p, repetition_penalty)
+            #sample_time = (time.perf_counter() - time_begin_sample) * 1000
+            #print(f"SAMPLE_TIME:  {sample_time:.2f}  SAMPLE_RATE:  {1000/sample_time:.2f}")
             
             stream.output_tokens.append(token)
             stream.event.set()
@@ -299,10 +307,14 @@ class MLCModel(LocalLM):
             stream.kv_cache.num_tokens += 1
             self.stats.output_tokens += 1
             
+            #time_begin_decode2 = time.perf_counter()
             output = self._decode(
                 tvm.nd.array(np.array([[stream.output_tokens[-1]]], dtype=np.int32), self.device),
                 tvm.runtime.ShapeTuple([stream.kv_cache.num_tokens]), stream.kv_cache, self.params
             )
+            #decode_time = (time.perf_counter() - time_begin_decode2) * 1000
+            #print(f"DECODE_TIME:  {decode_time:.2f}  DECODE_RATE:  {1000/decode_time:.2f}")
+            #time.sleep(0.225)
 
         time_end_decode = time.perf_counter()
         
@@ -315,74 +327,15 @@ class MLCModel(LocalLM):
         self.stats.decode_rate = self.stats.output_tokens / self.stats.decode_time
        
     def _sample(self, logits, do_sample, temperature, top_p, repetition_penalty):
-        """
+        # TODO implement repetition penalty
+        # https://github.com/mlc-ai/mlc-llm/blob/6e40c21fb6433aeffe50ee321f1b589ef846b6fb/cpp/llm_chat.cc#L1044
         if do_sample:
-            # TODO https://github.com/mlc-ai/mlc-llm/blob/6e40c21fb6433aeffe50ee321f1b589ef846b6fb/cpp/llm_chat.cc#L1044
             return self._sample_top_p_from_logits(logits, top_p, temperature, random.random())
         else:
-            return np.argmax(logits)
-        """
-        return self._sample_top_p_from_logits(logits, top_p, temperature, random.random())
-        
+            return np.argmax(logits.numpy()) #, axis=-1)
+
     def _run(self):
         while True:
             stream = self.queue.get()
             self._generate(stream)
             
-    
-"""           
-class StreamingResponse(DeltaCallback):
-    def __init__(self, model):
-        super().__init__()
-        
-        self.model = model
-        self.queue = queue.Queue()
-        self.event = threading.Event()
-        
-        self.stopped = False
-        
-        self.callback_interval = 1
-        self.model.stats.prefill_latency = 0
-        self.model.stats.output_tokens = 0
-
-    def delta_callback(self, delta_message: str):
-        self.queue.put(delta_message)
-        self.event.set()
-        #print(delta_message, end="", flush=True)
-
-    def stopped_callback(self):
-        self.stopped = True
-        self.event.set()
-        
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        if self.model.stats.output_tokens == 0:
-            self.time_begin = time.perf_counter()
-            
-        self.event.wait()
-        self.event.clear()
-
-        if self.stopped:
-            #print(self.model.model.stats())
-            raise StopIteration
-            
-        token = self.queue.get()
-        
-        time_current = time.perf_counter()
-        time_elapsed = time_current - self.time_begin
-        
-        if self.model.stats.output_tokens == 0:
-            self.model.stats.prefill_latency = time_elapsed
-            self.time_begin = time_current
-            #self.model.generate_stats.prefill_rate = 
-            
-        self.model.stats.output_tokens += 1
-        self.model.stats.decode_time = time_elapsed
-        
-        if self.model.stats.output_tokens > 1:
-            self.model.stats.decode_rate = (self.model.stats.output_tokens-1) / time_elapsed
-            
-        return token
-"""       

@@ -28,7 +28,7 @@ class ChatAgent(Agent):
             self.on_eos    
         ])
         
-        self.model = self.pipeline[ChatQuery].model
+        self.model = self.pipeline[0].find(ChatQuery).model
         self.interactive = interactive
         
         self.print_input_prompt()

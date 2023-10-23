@@ -76,6 +76,7 @@ class Plugin(threading.Thread):
             plugin = Callback(plugin)
             
         self.outputs[channel].append(plugin)
+        logging.debug(f"connected plugins {type(self)} -> {type(plugin)}  (channel={channel})")
         return self
     
     def find(self, type):
@@ -96,12 +97,14 @@ class Plugin(threading.Thread):
             
         return None
     
+    '''
     def __getitem__(self, type):
         """
         Subscript indexing [] operator alias for find()
         """
         return self.find(type)
-        
+    '''
+    
     def __call__(self, input):
         """
         Callable () operator alias for the input() function
@@ -149,7 +152,8 @@ class Plugin(threading.Thread):
         Start threads for all plugins in the graph that have threading enabled.
         """
         if self.threaded:
-            super().start()
+            if not self.is_alive():
+                super().start()
             
         for output_channel in self.outputs:
             for output in output_channel:
