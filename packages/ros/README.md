@@ -3,11 +3,12 @@
 > [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 
 > [!NOTE]  
-> <a href="https://github.com/NVIDIA-ISAAC-ROS">NVIDIA Isaac ROS</a></br>
-> <a href="https://github.com/NVIDIA-ISAAC-ROS"><img src="https://media.githubusercontent.com/media/NVIDIA-ISAAC-ROS/.github/main/resources/isaac_ros_docs/isaac_ros_header_roscon_2023.png/"></a></br>
-> See the optimized [Isaac ROS](https://github.com/NVIDIA-ISAAC-ROS) packages and containers for Humble and JetPack 5
+> <a href="https://github.com/NVIDIA-ISAAC-ROS"><b>NVIDIA Isaac ROS</b></a> - see [github.com/NVIDIA-ISAAC-ROS](https://github.com/NVIDIA-ISAAC-ROS) for optimized CV/AI packages and [NITROS](https://nvidia-isaac-ros.github.io/repositories_and_packages/isaac_ros_nitros/index.html)
+> For Isaac ROS containers, use the [Isaac ROS Docker Development Environment](https://nvidia-isaac-ros.github.io/repositories_and_packages/isaac_ros_common/index.html#isaac-ros-docker-development-environment).
 
-Various ROS/ROS2 containers for JetPack.  These build ROS from source to run them on the needed versions of Ubuntu.
+<a href="https://github.com/NVIDIA-ISAAC-ROS"><img src="https://media.githubusercontent.com/media/NVIDIA-ISAAC-ROS/.github/main/resources/isaac_ros_docs/isaac_ros_header_roscon_2023.png/"></a>
+
+Below are ROS/ROS2 base containers for JetPack, with CUDA enabled.  These build ROS from source to run them on the needed versions of Ubuntu.
 
 Supported ROS distros: `melodic` `noetic` `foxy` `galactic` `humble` `iron`
 Supported ROS packages: `ros_base` `ros_core` `desktop`
@@ -37,7 +38,7 @@ Supported ROS packages: `ros_base` `ros_core` `desktop`
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.ros.noetic`](Dockerfile.ros.noetic) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/ros:noetic-desktop-l4t-r32.7.1`](https://hub.docker.com/r/dustynv/ros/tags) `(2023-09-07, 0.6GB)`<br>[`dustynv/ros:noetic-desktop-l4t-r35.2.1`](https://hub.docker.com/r/dustynv/ros/tags) `(2023-09-07, 5.2GB)`<br>[`dustynv/ros:noetic-desktop-l4t-r35.3.1`](https://hub.docker.com/r/dustynv/ros/tags) `(2023-08-29, 5.2GB)`<br>[`dustynv/ros:noetic-desktop-l4t-r35.4.1`](https://hub.docker.com/r/dustynv/ros/tags) `(2023-10-07, 5.2GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/ros:noetic-desktop-l4t-r32.7.1`](https://hub.docker.com/r/dustynv/ros/tags) `(2023-10-24, 0.6GB)`<br>[`dustynv/ros:noetic-desktop-l4t-r35.2.1`](https://hub.docker.com/r/dustynv/ros/tags) `(2023-10-24, 5.2GB)`<br>[`dustynv/ros:noetic-desktop-l4t-r35.3.1`](https://hub.docker.com/r/dustynv/ros/tags) `(2023-08-29, 5.2GB)`<br>[`dustynv/ros:noetic-desktop-l4t-r35.4.1`](https://hub.docker.com/r/dustynv/ros/tags) `(2023-10-07, 5.2GB)` |
 
 | **`ros:foxy-ros-base`** | |
 | :-- | :-- |
@@ -255,8 +256,8 @@ Supported ROS packages: `ros_base` `ros_core` `desktop`
 | &nbsp;&nbsp;[`dustynv/ros:melodic-ros-base-l4t-r32.6.1`](https://hub.docker.com/r/dustynv/ros/tags) | `2022-03-02` | `arm64` | `0.5GB` |
 | &nbsp;&nbsp;[`dustynv/ros:melodic-ros-base-l4t-r32.7.1`](https://hub.docker.com/r/dustynv/ros/tags) | `2023-10-24` | `arm64` | `0.5GB` |
 | &nbsp;&nbsp;[`dustynv/ros:melodic-ros-core-l4t-r32.7.1`](https://hub.docker.com/r/dustynv/ros/tags) | `2023-10-24` | `arm64` | `0.5GB` |
-| &nbsp;&nbsp;[`dustynv/ros:noetic-desktop-l4t-r32.7.1`](https://hub.docker.com/r/dustynv/ros/tags) | `2023-09-07` | `arm64` | `0.6GB` |
-| &nbsp;&nbsp;[`dustynv/ros:noetic-desktop-l4t-r35.2.1`](https://hub.docker.com/r/dustynv/ros/tags) | `2023-09-07` | `arm64` | `5.2GB` |
+| &nbsp;&nbsp;[`dustynv/ros:noetic-desktop-l4t-r32.7.1`](https://hub.docker.com/r/dustynv/ros/tags) | `2023-10-24` | `arm64` | `0.6GB` |
+| &nbsp;&nbsp;[`dustynv/ros:noetic-desktop-l4t-r35.2.1`](https://hub.docker.com/r/dustynv/ros/tags) | `2023-10-24` | `arm64` | `5.2GB` |
 | &nbsp;&nbsp;[`dustynv/ros:noetic-desktop-l4t-r35.3.1`](https://hub.docker.com/r/dustynv/ros/tags) | `2023-08-29` | `arm64` | `5.2GB` |
 | &nbsp;&nbsp;[`dustynv/ros:noetic-desktop-l4t-r35.4.1`](https://hub.docker.com/r/dustynv/ros/tags) | `2023-10-07` | `arm64` | `5.2GB` |
 | &nbsp;&nbsp;[`dustynv/ros:noetic-pytorch-l4t-r32.4.4`](https://hub.docker.com/r/dustynv/ros/tags) | `2021-08-06` | `arm64` | `1.1GB` |
@@ -298,10 +299,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag ros)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/ros:humble-ros-core-l4t-r32.7.1
+./run.sh dustynv/ros:noetic-desktop-l4t-r35.2.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/ros:humble-ros-core-l4t-r32.7.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/ros:noetic-desktop-l4t-r35.2.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

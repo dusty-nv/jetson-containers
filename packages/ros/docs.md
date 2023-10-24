@@ -1,9 +1,10 @@
 > [!NOTE]  
-> <a href="https://github.com/NVIDIA-ISAAC-ROS">NVIDIA Isaac ROS</a></br>
-> <a href="https://github.com/NVIDIA-ISAAC-ROS"><img src="https://media.githubusercontent.com/media/NVIDIA-ISAAC-ROS/.github/main/resources/isaac_ros_docs/isaac_ros_header_roscon_2023.png/"></a></br>
-> See the optimized [Isaac ROS](https://github.com/NVIDIA-ISAAC-ROS) packages and containers for Humble and JetPack 5
+> <a href="https://github.com/NVIDIA-ISAAC-ROS"><b>NVIDIA Isaac ROS</b></a> - see [github.com/NVIDIA-ISAAC-ROS](https://github.com/NVIDIA-ISAAC-ROS) for optimized CV/AI packages and [NITROS](https://nvidia-isaac-ros.github.io/repositories_and_packages/isaac_ros_nitros/index.html)
+> For Isaac ROS containers, use the [Isaac ROS Docker Development Environment](https://nvidia-isaac-ros.github.io/repositories_and_packages/isaac_ros_common/index.html#isaac-ros-docker-development-environment).
 
-Various ROS/ROS2 containers for JetPack.  These build ROS from source to run them on the needed versions of Ubuntu.
+<a href="https://github.com/NVIDIA-ISAAC-ROS"><img src="https://media.githubusercontent.com/media/NVIDIA-ISAAC-ROS/.github/main/resources/isaac_ros_docs/isaac_ros_header_roscon_2023.png/"></a>
+
+Below are ROS/ROS2 base containers for JetPack, with CUDA enabled.  These build ROS from source to run them on the needed versions of Ubuntu.
 
 Supported ROS distros: `melodic` `noetic` `foxy` `galactic` `humble` `iron`
 Supported ROS packages: `ros_base` `ros_core` `desktop`
