@@ -57,13 +57,16 @@ class RivaTTS(Plugin):
         """
         Inputs text, outputs stream of audio samples (np.ndarray, np.int16)
         
-        When used through the input queue, this text is buffered by punctuation
+        The input text is buffered by punctuation/phrases as it sounds better,
         and filtered for emojis/ect, and has SSML tags applied (if enabled) 
-        
-        When calling process() directly or with `threaded=False`, it's raw text.
-        
-        TODO refactor into process() calling buffer_text/ect internally
         """
+        text = self.buffer_text(text)
+        text = self.filter_text(text)
+        text = self.apply_ssml(text)
+        
+        if not text:
+            return
+            
         logging.debug(f"generating TTS for '{text}'")
         
         self.muted = False
@@ -100,34 +103,42 @@ class RivaTTS(Plugin):
         """
         return (time.perf_counter() > self.needs_text_by)
      
-    def buffer_text(self):
+    def buffer_text(self, text):
         """
         Wait for punctuation to occur because that sounds better
         """
-        while True:
-            self.text_buffer += self.input_queue.get()
+        self.text_buffer += text
             
-            if '</s>' in self.text_buffer:
-                output = self.text_buffer
-                self.text_buffer = ''
-                return output
+        # always submit on EOS
+        if '</s>' in self.text_buffer:
+            text = self.text_buffer
+            self.text_buffer = ''
+            return text
+              
+        # look for punctuation
+        punc_pos = -1
+
+        for punc in ('. ', ', ', '! ', '? ', ': ', '\n'):  # the space after has fewer non-sentence uses
+            punc_pos = max(self.text_buffer.rfind(punc), punc_pos)
                 
-            punc_pos = -1
+        if punc_pos < 0:
+            return None
             
-            for punc in ('. ', ', ', '! ', '? '):  # the space after has fewer non-sentence uses
-                punc_pos = max(self.text_buffer.rfind(punc), punc_pos)
-                
-            if punc_pos < 0:
-                continue
+        # see if input is needed to prevent a gap-out
+        timeout = self.needs_text_by - time.perf_counter() - 0.05  # TODO make this RTFX factor adjustable
+        
+        if timeout > 0:
+            return None   # we can keep accumulating text
             
-            output = self.text_buffer[:punc_pos+1]
+        # return the latest phrase/sentence
+        text = self.text_buffer[:punc_pos+1]
+        
+        if len(self.text_buffer) > punc_pos + 1:  # save characters after for next request
+            self.text_buffer = self.text_buffer[punc_pos+1:]
+        else:
+            self.text_buffer = ''
             
-            if len(self.text_buffer) > punc_pos + 1:  # save characters after for next request
-                self.text_buffer = self.text_buffer[punc_pos+1:]
-            else:
-                self.text_buffer = ''
-                
-            return output
+        return text
 
         """
         # accumulate text until its needed to prevent audio gap-out
@@ -152,6 +163,9 @@ class RivaTTS(Plugin):
         """
         Santize inputs (TODO remove emojis, *giggles*, ect)
         """
+        if not text:
+            return None
+            
         # text = text.strip()
         text = text.replace('</s>', '')
         text = text.replace('\n', ' ')
@@ -163,10 +177,15 @@ class RivaTTS(Plugin):
         """
         Apply SSML tags to text (if enabled)
         """
+        if not text:
+            return None
+            
         if self.rate != 'default' or self.pitch != 'default' or self.volume != 'default':
-            text = f"<speak><prosody rate='{self.rate}' pitch='{self.pitch}' volume='{self.volume}'>{text}</prosody></speak>"   
+            text = f"<speak><prosody rate='{self.rate}' pitch='{self.pitch}' volume='{self.volume}'>{text}</prosody></speak>"  
+            
         return text
-      
+    
+    '''
     def run(self):
         """
         TTS sounds better on several words or a sentence at a time,
@@ -182,7 +201,8 @@ class RivaTTS(Plugin):
                 
             text = self.apply_ssml(text)
             self.process(text)
-            
+    '''
+    
 if __name__ == "__main__":
     from local_llm.utils import ArgParser
     from local_llm.plugins import UserPrompt, AudioOutputDevice, AudioOutputFile
