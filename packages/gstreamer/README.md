@@ -11,7 +11,7 @@
 | &nbsp;&nbsp;&nbsp;Builds | [![`gstreamer_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/gstreamer_jp51.yml?label=gstreamer:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/gstreamer_jp51.yml) [![`gstreamer_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/gstreamer_jp46.yml?label=gstreamer:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/gstreamer_jp46.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`deepstream`](/packages/deepstream) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`deepstream`](/packages/deepstream) [`jetson-utils`](/packages/jetson-utils) [`local_llm`](/packages/llm/local_llm) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/gstreamer:r32.7.1`](https://hub.docker.com/r/dustynv/gstreamer/tags) `(2023-09-07, 0.7GB)`<br>[`dustynv/gstreamer:r35.2.1`](https://hub.docker.com/r/dustynv/gstreamer/tags) `(2023-09-07, 5.1GB)`<br>[`dustynv/gstreamer:r35.3.1`](https://hub.docker.com/r/dustynv/gstreamer/tags) `(2023-08-29, 5.1GB)`<br>[`dustynv/gstreamer:r35.4.1`](https://hub.docker.com/r/dustynv/gstreamer/tags) `(2023-10-07, 5.1GB)` |
 
