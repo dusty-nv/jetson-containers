@@ -73,7 +73,7 @@ To feed the live ASR transcript into the TTS and have it speak your words back t
 | &nbsp;&nbsp;&nbsp;Builds | [![`riva-client-python_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/riva-client-python_jp51.yml?label=riva-client-python:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/riva-client-python_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`llamaspeak`](/packages/llm/llamaspeak) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`llamaspeak`](/packages/llm/llamaspeak) [`local_llm`](/packages/llm/local_llm) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.python`](Dockerfile.python) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/riva-client:python-r35.2.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-09-07, 5.0GB)`<br>[`dustynv/riva-client:python-r35.3.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-08-29, 5.0GB)`<br>[`dustynv/riva-client:python-r35.4.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-10-07, 5.0GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/nvidia-riva/python-clients |
