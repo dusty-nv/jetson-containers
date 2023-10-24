@@ -24,13 +24,14 @@ class VoiceChat(Agent):
     
         self.asr.add(PrintStream(partial=False, prefix='## ', color='blue'), RivaASR.OutputFinal)
         self.asr.add(PrintStream(partial=False, prefix='>> ', color='magenta'), RivaASR.OutputPartial)
-    
+        
+        self.asr.add(self.asr_partial, RivaASR.OutputPartial) # pause output when user is speaking
+        self.asr.add(self.asr_final, RivaASR.OutputFinal)     # clear queues on final ASR transcript
+        
         # LLM
         self.llm = ChatQuery(**kwargs)
     
-        self.llm.add(PrintStream(color='green'))
-        self.llm.add(self.on_eos)
-        
+        self.llm.add(PrintStream(color='green', relay=True).add(self.on_eos))
         self.asr.add(self.llm, RivaASR.OutputFinal)  # submit ASR sentences to the LLM
         
         # TTS
@@ -55,8 +56,22 @@ class VoiceChat(Agent):
         
         self.pipeline = [self.cli, self.asr]
 
-    def on_eos(self, input):
-        if input.endswith('</s>'):
+    def asr_partial(self, text):
+        #if len(text.split(' ')) < 2:
+        #    return
+        if self.audio_output_device is not None:
+            self.audio_output_device.pause(0.5)
+
+    def asr_final(self, text):
+        self.llm.interrupt()
+        self.tts.interrupt()
+        
+        if self.audio_output_device is not None:
+            self.audio_output_device.interrupt()
+            self.audio_output_device.unpause()
+            
+    def on_eos(self, text):
+        if text.endswith('</s>'):
             print_table(self.llm.model.stats)
             #self.print_input_prompt()
 

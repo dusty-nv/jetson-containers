@@ -21,6 +21,8 @@ class Plugin(threading.Thread):
       input_channels (int) -- 
       relay (bool) -- if true, will relay any inputs as outputs after processing
       threaded (bool) -- if true, will process queue from independent thread
+      
+    TODO:  use queue.task_done() and queue.join() for external synchronization
     """
     def __init__(self, output_channels=1, relay=False, threaded=True, **kwargs):
         """
@@ -30,6 +32,7 @@ class Plugin(threading.Thread):
 
         self.relay = relay
         self.threaded = threaded
+        self.interrupted = False
         
         self.outputs = [[] for i in range(output_channels)]
         self.output_channels = output_channels
@@ -37,9 +40,7 @@ class Plugin(threading.Thread):
         if threaded:
             self.input_queue = queue.Queue()
             self.input_event = threading.Event()
-            #self.thread = threading.Thread(target=self._run, daemon=True)
-            #self.thread.start()
-        
+
     def process(self, input, **kwargs):
         """
         Abstract process() function that plugin instances should implement.
@@ -116,11 +117,13 @@ class Plugin(threading.Thread):
         Add data to the plugin's processing queue (or if threaded=False, process it now)
         TODO:  multiple input channels?
         """
+        self.interrupted = False
+        
         if self.threaded:
             self.input_queue.put(input)
             self.input_event.set()
         else:
-            self.update()
+            self.dispatch(input)
             
     def output(self, output, channel=0):
         """
@@ -136,17 +139,7 @@ class Plugin(threading.Thread):
             for output_channel in self.outputs:
                 for output_plugin in output_channel:
                     output_plugin.input(output)
-    
-    def update(self):
-        """
-        Process all items in the queue (use this if created with threaded=False)
-        """
-        while not self.input_queue.empty():
-            input = self.input_queue.get()
-            self.output(self.process(input))
-            if self.relay:
-                self.output(input)
-     
+         
     def start(self):
         """
         Start threads for all plugins in the graph that have threading enabled.
@@ -168,5 +161,41 @@ class Plugin(threading.Thread):
         while True:
             self.input_event.wait()
             self.input_event.clear()
-            self.update()
+            
+            while True:
+                try:
+                    self.dispatch(self.input_queue.get(block=False))
+                except queue.Empty:
+                    break
+
+    def dispatch(self, input):
+        """
+        Invoke the process() function on incoming data
+        """
+        if self.interrupted:
+            return
+            
+        self.output(self.process(input))
+        
+        if self.relay:
+            self.output(input)
+   
+    def interrupt(self, clear_inputs=True):
+        """
+        Interrupt any ongoing/pending processing, and optionally clear the input queue.
+        """
+        if clear_inputs:
+            self.clear_inputs()
+                    
+        self.interrupted = True
+ 
+    def clear_inputs(self):
+        """
+        Clear the input queue, dropping any data.
+        """
+        while True:
+            try:
+                self.input_queue.get(block=False)
+            except queue.Empty:
+                return         
             

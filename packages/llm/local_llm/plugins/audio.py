@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import time
 import wave
 import logging
 import pyaudio
@@ -32,9 +33,11 @@ class AudioOutputDevice(Plugin):
         self.sample_width = 2
         self.sample_clip = float(int((2 ** (self.sample_width * 8)) / 2) - 1)  # 32767 for 16-bit
         
+        self.paused = -1
         self.channels = audio_output_channels
         self.current_buffer = None
         self.current_buffer_pos = 0
+        
         
     def run(self):
         """
@@ -55,8 +58,11 @@ class AudioOutputDevice(Plugin):
         """
         samples = np.zeros(frame_count * self.channels, dtype=self.sample_type)
         samples_idx = 0
-        
-        while True:
+
+        if self.interrupted:
+            self.current_buffer = None
+            
+        while not self.is_paused():
             if self.current_buffer is None:
                 if not self.input_queue.empty():
                     self.current_buffer = convert_audio(self.input_queue.get(), dtype=self.sample_type)
@@ -78,7 +84,37 @@ class AudioOutputDevice(Plugin):
 
         return (samples, pyaudio.paContinue)
 
-
+    def pause(self, duration=0):
+        """
+        Pause audio playback for `duration` number of seconds
+        If `duration` is 0, it will be paused until unpaused.
+        If `duration` is negative, it will be unpaused.
+        """
+        if duration <= 0:
+            self.paused = duration
+        else:
+            self.paused = time.perf_counter() + duration
+            logging.debug(f"pausing audio output for {duration} seconds")
+            
+    def unpause(self):
+        """
+        Unpause audio playback
+        """
+        self.pause(-1.0)
+        
+    def is_paused(self):
+        """
+        Returns true if playback is currently paused.
+        """
+        if self.paused < 0:
+            return False
+            
+        if self.paused > 0 and time.perf_counter() >= self.paused:
+            self.paused = -1
+            return False
+            
+        return True
+        
 class AudioOutputFile(Plugin):
     """
     Output audio to a wav file

@@ -24,7 +24,6 @@ class RivaTTS(Plugin):
     def __init__(self, riva_server='localhost:50051', 
                  voice='English-US.Female-1', language_code='en-US', sample_rate_hz=48000, 
                  voice_rate='default', voice_pitch='default', voice_volume='default',
-                 #voice_min_words=4, 
                  **kwargs):
         """
         The available voices are from:
@@ -39,14 +38,11 @@ class RivaTTS(Plugin):
         self.auth = riva.client.Auth(uri=riva_server)
         self.tts_service = riva.client.SpeechSynthesisService(self.auth)
         
-        self.voice = voice   # can be changed mid-stream
-        self.muted = False   # will supress TTS outputs
-        
+        self.voice = voice   # these voice settings be changed at runtime
         self.rate = voice_rate
         self.pitch = voice_pitch
         self.volume = voice_volume
-        #self.min_words = voice_min_words
-        
+
         self.language_code = language_code
         self.sample_rate = sample_rate_hz
         self.request_count = 0
@@ -76,8 +72,8 @@ class RivaTTS(Plugin):
         )
 
         for response in responses:
-            if self.muted:
-                logging.debug(f"-- TTS muted, exiting request early:  {text}")
+            if self.interrupted:
+                logging.debug(f"-- TTS interrupted, terminating request early:  {text}")
                 break
                 
             samples = np.frombuffer(response.audio, dtype=np.int16)
@@ -91,18 +87,19 @@ class RivaTTS(Plugin):
             
         #logging.debug(f"done with TTS request '{text}'")
         
-    def mute(self):
-        """
-        Mutes the TTS until another request comes in
-        """
-        self.muted = True
-        
     def needs_text(self):
         """
         Returns true if the TTS needs text to keep the audio flowing.
         """
         return (time.perf_counter() > self.needs_text_by)
      
+    def interrupt(self, clear_inputs=True):
+        """
+        Interrupt any ongoing/pending processing, and optionally clear the input queue.
+        """
+        super().interrupt(clear_inputs)
+        self.needs_text_by = 0
+        
     def buffer_text(self, text):
         """
         Wait for punctuation to occur because that sounds better

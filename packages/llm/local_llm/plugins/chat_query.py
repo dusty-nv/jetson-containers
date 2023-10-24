@@ -92,6 +92,9 @@ class ChatQuery(Plugin):
             for x in input:
                 self.process(x, **kwargs)
             return
+         
+        if self.interrupted:
+            return
             
         # handle some special commands
         if isinstance(input, str):
@@ -118,7 +121,7 @@ class ChatQuery(Plugin):
         embedding, position = chat_history.embed_chat()
         
         # start generating output
-        output = self.model.generate(
+        stream = self.model.generate(
             embedding, 
             streaming=True, 
             kv_cache=chat_history.kv_cache,
@@ -132,13 +135,17 @@ class ChatQuery(Plugin):
         )
         
         # output the stream iterator on channel 3
-        self.output(output, ChatQuery.OutputStream)
+        self.output(stream, ChatQuery.OutputStream)
 
         # output the generated tokens on channel 0
         bot_reply = chat_history.append(role='bot', text='')
         words = ''
         
-        for token in output:
+        for token in stream:
+            if self.interrupted:
+                logging.debug(f"LLM interrupted, terminating request early")
+                stream.stop()
+                
             words += token
             bot_reply.text += token
             
@@ -163,8 +170,8 @@ class ChatQuery(Plugin):
         if len(words) > 0:
             self.output(words, ChatQuery.OutputWords)
             
-        bot_reply.text = output.output_text
-        self.chat_history.kv_cache = output.kv_cache
+        bot_reply.text = stream.output_text
+        self.chat_history.kv_cache = stream.kv_cache
         
         # output the final generated text on channel 2
         self.output(bot_reply.text, ChatQuery.OutputFinal)
