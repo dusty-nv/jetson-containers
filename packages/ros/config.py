@@ -11,9 +11,9 @@ template['group'] = 'ros'
 template['depends'] = ['cmake', 'python', 'opencv']
 template['postfix'] = f"l4t-r{L4T_VERSION}"
 
-template['docs'] = "Various ROS/ROS2 containers for JetPack.  These build ROS from source to run them on the needed versions of Ubuntu.\n\n"
-template['docs'] += f"Supported ROS distros:   {' '.join([f'`{distro}`' for distro in ROS_DISTROS])}\n<br>\n"
-template['docs'] += f"Supported ROS packages:  {' '.join([f'`{pkg}`' for pkg in ROS_PACKAGES])}\n"
+template['docs'] = "docs.md"
+#template['docs'] += f"Supported ROS distros:   {' '.join([f'`{distro}`' for distro in ROS_DISTROS])}\n<br>\n"
+#template['docs'] += f"Supported ROS packages:  {' '.join([f'`{pkg}`' for pkg in ROS_PACKAGES])}\n"
 
 package = []
 
