@@ -91,9 +91,10 @@ class ArgParser(argparse.ArgumentParser):
 
         if 'tts' in extras:
             self.add_argument("--voice", type=str, default="English-US.Female-1", help="Voice model name to use for TTS")
-            self.add_argument("--voice-rate", type=str, default="default", help="TTS SSML voice speaker rate (between 25-250%)")
+            self.add_argument("--voice-rate", type=str, default="default", help="TTS SSML voice speaker rate (between 25-250%%)")
             self.add_argument("--voice-pitch", type=str, default="default", help="TTS SSML voice pitch shift")
             self.add_argument("--voice-volume", type=str, default="default", help="TTS SSML voice volume attribute")
+            #self.add_argument("--voice-min-words", type=int, default=4, help="the minimum number of words the TTS should wait to speak")
             
         if 'asr' in extras:
             self.add_argument("--audio-chunk", type=int, default=1600, help="A maximum number of frames in a audio chunk sent to server.")

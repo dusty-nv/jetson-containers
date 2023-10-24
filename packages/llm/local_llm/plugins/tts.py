@@ -24,6 +24,7 @@ class RivaTTS(Plugin):
     def __init__(self, riva_server='localhost:50051', 
                  voice='English-US.Female-1', language_code='en-US', sample_rate_hz=48000, 
                  voice_rate='default', voice_pitch='default', voice_volume='default',
+                 #voice_min_words=4, 
                  **kwargs):
         """
         The available voices are from:
@@ -44,12 +45,49 @@ class RivaTTS(Plugin):
         self.rate = voice_rate
         self.pitch = voice_pitch
         self.volume = voice_volume
+        #self.min_words = voice_min_words
         
         self.language_code = language_code
         self.sample_rate = sample_rate_hz
         self.request_count = 0
         self.needs_text_by = 0.0
+        self.text_buffer = ''
     
+    def process(self, text, **kwargs):
+        """
+        Inputs text, outputs stream of audio samples (np.ndarray, np.int16)
+        
+        When used through the input queue, this text is buffered by punctuation
+        and filtered for emojis/ect, and has SSML tags applied (if enabled) 
+        
+        When calling process() directly or with `threaded=False`, it's raw text.
+        
+        TODO refactor into process() calling buffer_text/ect internally
+        """
+        logging.debug(f"generating TTS for '{text}'")
+        
+        self.muted = False
+        
+        responses = self.tts_service.synthesize_online(
+            text, self.voice, self.language_code, sample_rate_hz=self.sample_rate
+        )
+
+        for response in responses:
+            if self.muted:
+                logging.debug(f"-- TTS muted, exiting request early:  {text}")
+                break
+                
+            samples = np.frombuffer(response.audio, dtype=np.int16)
+
+            current_time = time.perf_counter()
+            if current_time > self.needs_text_by:
+                self.needs_text_by = current_time
+            self.needs_text_by += len(samples) / self.sample_rate
+            
+            self.output(samples)
+            
+        #logging.debug(f"done with TTS request '{text}'")
+        
     def mute(self):
         """
         Mutes the TTS until another request comes in
@@ -61,7 +99,74 @@ class RivaTTS(Plugin):
         Returns true if the TTS needs text to keep the audio flowing.
         """
         return (time.perf_counter() > self.needs_text_by)
+     
+    def buffer_text(self):
+        """
+        Wait for punctuation to occur because that sounds better
+        """
+        while True:
+            self.text_buffer += self.input_queue.get()
+            
+            if '</s>' in self.text_buffer:
+                output = self.text_buffer
+                self.text_buffer = ''
+                return output
+                
+            punc_pos = -1
+            
+            for punc in ('. ', ', ', '! ', '? '):  # the space after has fewer non-sentence uses
+                punc_pos = max(self.text_buffer.rfind(punc), punc_pos)
+                
+            if punc_pos < 0:
+                continue
+            
+            output = self.text_buffer[:punc_pos+1]
+            
+            if len(self.text_buffer) > punc_pos + 1:  # save characters after for next request
+                self.text_buffer = self.text_buffer[punc_pos+1:]
+            else:
+                self.text_buffer = ''
+                
+            return output
+
+        """
+        # accumulate text until its needed to prevent audio gap-out
+        while True:
+            timeout = self.needs_text_by - time.perf_counter() - 0.1  # TODO make this RTFX factor adjustable
+
+            try:
+                text += self.input_queue.get(timeout=timeout if timeout > 0 else None)
+                while not self.input_queue.empty():  # pull any additional input without waiting
+                    text += self.input_queue.get(block=False)
+            except queue.Empty:
+                pass
+                
+            # make sure there are at least N words (or EOS)
+            if '</s>' in text:
+                break
+            elif timeout <= 0 and len(text.strip().split(' ')) >= 4:
+                break
+        """
         
+    def filter_text(self, text):
+        """
+        Santize inputs (TODO remove emojis, *giggles*, ect)
+        """
+        # text = text.strip()
+        text = text.replace('</s>', '')
+        text = text.replace('\n', ' ')
+        #text = text.replace('  ', ' ')
+        
+        return text
+    
+    def apply_ssml(self, text):
+        """
+        Apply SSML tags to text (if enabled)
+        """
+        if self.rate != 'default' or self.pitch != 'default' or self.volume != 'default':
+            text = f"<speak><prosody rate='{self.rate}' pitch='{self.pitch}' volume='{self.volume}'>{text}</prosody></speak>"   
+        return text
+      
     def run(self):
         """
         TTS sounds better on several words or a sentence at a time,
@@ -69,81 +174,14 @@ class RivaTTS(Plugin):
         playback time of the previous outgoing audio samples)
         """
         while True:
-            text = ''
-
-            """
-            while True:  # accumulate text until its needed to prevent audio gap-out
-                time_to_go = self.needs_text_by - time.perf_counter()
-
-                if time_to_go < 0.1:
-                    break
-                    
-                try:
-                    text += self.input_queue.get(timeout=time_to_go-0.09)
-                except queue.Empty:
-                    break
-            
-            if len(text) == 0:  # there can be extended times of no speaking
-                self.input_event.wait()
-                self.input_event.clear()
-                text += self.input_queue.get()
-            """
-            
-            while True:
-                # accumulate text until its needed to prevent audio gap-out
-                timeout = self.needs_text_by - time.perf_counter() - 0.1  # TODO make this RTFX factor adjustable
-
-                try:
-                    text += self.input_queue.get(timeout=timeout if timeout > 0 else None)
-                    while not self.input_queue.empty():  # pull any additional input without waiting
-                        text += self.input_queue.get(block=False)
-                except queue.Empty:
-                    pass
-                    
-                # make sure there are at least N words (or EOS)
-                if '</s>' in text:
-                    break
-                elif timeout <= 0 and len(text.strip().split(' ')) >= 4:  # TODO make 'min_words' adjustable
-                    break
-            
-            # santize inputs (TODO remove emojis, *giggles*, ect)
-            text = text.strip()
-            text = text.replace('</s>', '')
-            text = text.replace('\n', ' ')
-            text = text.replace('  ', ' ')
-            
-            if len(text) == 0:
+            text = self.buffer_text()
+            text = self.filter_text(text)
+                
+            if not text:
                 continue
                 
-            # apply SSML tags if enabled
-            if self.rate != 'default' or self.pitch != 'default' or self.volume != 'default':
-                text = f"<speak><prosody rate='{self.rate}' pitch='{self.pitch}' volume='{self.volume}'>{text}</prosody></speak>"
-            
-            logging.debug(f"running TTS request '{text}'")
-            self.muted = False
-            
-            # generate speech audio samples
-            responses = self.tts_service.synthesize_online(
-                text, self.voice, self.language_code, sample_rate_hz=self.sample_rate
-            )
-            
-            num_samples = 0
-
-            for response in responses:
-                if self.muted:
-                    logging.debug(f"-- TTS muted, exiting request early:  {text}")
-                    break
-                    
-                samples = np.frombuffer(response.audio, dtype=np.int16)
-
-                current_time = time.perf_counter()
-                if current_time > self.needs_text_by:
-                    self.needs_text_by = current_time
-                self.needs_text_by += len(samples) / self.sample_rate
-                
-                self.output(samples)
-                
-            #logging.debug(f"done with TTS request '{text}'")
+            text = self.apply_ssml(text)
+            self.process(text)
             
 if __name__ == "__main__":
     from local_llm.utils import ArgParser
