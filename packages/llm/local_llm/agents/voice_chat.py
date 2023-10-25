@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from local_llm import Agent, Pipeline, ChatTemplates
+from local_llm import Agent, Pipeline
 
 from local_llm.plugins import (
     UserPrompt, ChatQuery, PrintStream, 
@@ -50,11 +50,11 @@ class VoiceChat(Agent):
             self.audio_output_file = AudioOutputFile(**kwargs)
             self.tts.add(self.audio_output_file)
         
-        # CLI prompts
-        self.cli = UserPrompt(interactive=True, **kwargs)
-        self.cli.add(self.llm)
+        # text prompts from web UI or CLI
+        self.prompt = UserPrompt(interactive=True, **kwargs)
+        self.prompt.add(self.llm)
         
-        self.pipeline = [self.cli, self.asr]
+        self.pipeline = [self.prompt, self.asr]
 
     def asr_partial(self, text):
         #if len(text.split(' ')) < 2:

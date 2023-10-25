@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import os
 import sys
 import argparse
 import logging
@@ -103,6 +104,14 @@ class ArgParser(argparse.ArgumentParser):
             self.add_argument("--profanity-filter", action='store_true', help="enable profanity filtering in ASR transcripts")
             self.add_argument("--no-automatic-punctuation", dest='automatic_punctuation', action='store_false', help="disable punctuation in the ASR transcripts")
             self.add_argument("--asr-confidence-threshold", type=float, default=-1.0, help="minimum ASR confidence (only applies to 'final' transcripts)")
+         
+        # WEBSERVER
+        if 'web' in extras:
+            self.add_argument("--web-host", type=str, default='0.0.0.0', help="network interface to bind to for hosting the webserver")
+            self.add_argument("--web-port", type=int, default=8050, help="port used for webserver HTTP/HTTPS")
+            self.add_argument("--ws-port", type=int, default=49000, help="port used for websocket communication")
+            self.add_argument("--ssl-key", default=os.getenv('SSL_KEY'), type=str, help="path to PEM-encoded SSL/TLS key file for enabling HTTPS")
+            self.add_argument("--ssl-cert", default=os.getenv('SSL_CERT'), type=str, help="path to PEM-encoded SSL/TLS cert file for enabling HTTPS")
             
         # LOGGING
         if 'log' in extras:
