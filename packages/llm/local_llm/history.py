@@ -138,7 +138,24 @@ class ChatHistory():
         self.kv_cache = None
         if add_system_prompt:
             self.append(role='system', text=self.template['system_prompt'])
-      
+     
+    def to_list(self):
+        """
+        Serialize the history to a list of dicts, where each dict is a chat entry
+        with the non-critical keys removed (suitable for web transport, ect)
+        """
+        history = []
+        
+        for entry in self.entries:
+            keys = self.valid_entry_keys(entry, is_embedding=False)
+            
+            if not keys:
+                continue
+                
+            history.append({key: entry[key] for key in keys})
+            
+        return history
+        
     @property
     def system_prompt(self):
         """
@@ -247,13 +264,13 @@ class ChatHistory():
         open_user_prompt = False
         
         for i, entry in enumerate(self.entries):
-            for key in entry.copy():
-                if key not in self.embedding_functions:
-                    if key == 'role' or key.endswith('_embedding') or entry[key] is None:
-                        continue
-                    else:
-                        raise RuntimeError(f"chat entry had unrecognized message type '{key}'")
-
+            keys = self.valid_entry_keys(entry)
+            
+            if not keys:
+                logging.warning(f"chat entry {i} had no valid/registered keys ({entry.keys()})")
+                continue
+                
+            for key in keys:
                 if 'first' in self.template and entry['role'] == 'user' and num_user_prompts == 0:
                     role_template = self.template['first']  # if the first non-system message has a different template
                 else:
@@ -265,7 +282,6 @@ class ChatHistory():
                         open_user_prompt = False
                 
                 embed_key = key + '_embedding'
-
                 cached = embed_key in entry and use_cache
                 
                 if logging.getLogger().isEnabledFor(logging.DEBUG) and not cached:
@@ -295,6 +311,23 @@ class ChatHistory():
                 
         return np.concatenate(embeddings, axis=1), position
 
+    def valid_entry_keys(self, entry, is_embedding=True):
+        keys = []
+        
+        for key in entry:       
+            if key.endswith('_embedding') or entry[key] is None:
+                continue
+                
+            if is_embedding and key not in self.embedding_functions:
+                continue
+              
+            #if exclude and key in exclude:
+            #    continue
+            
+            keys.append(key)
+            
+        return keys
+        
     def register_embedding(self, type, func):
         params = inspect.signature(func).parameters
         self.embedding_functions[type] = AttributeDict(

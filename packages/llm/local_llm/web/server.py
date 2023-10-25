@@ -1,18 +1,21 @@
 #!/usr/bin/env python3
 import os
 import ssl
+import json
+import time
 import flask
 import queue
+import struct
 import pprint
 import logging
 import threading
 
 from local_llm.utils import ArgParser
-from .voice_chat import VoiceChat
 
 from websockets.sync.server import serve as websocket_serve
+from websockets.exceptions import ConnectionClosed
 
-class WebServer
+class WebServer():
     """
     HTTP/HTTPS Flask webserver with websocket messaging.
     
@@ -20,7 +23,15 @@ class WebServer
     or inherit from it and implement on_message() in a subclass.
     
     You can also add Flask routes to Webserver.app before start() is called.
+    
+    TODO:  multi-client?
+           remove send queue because the connection dropping is messing things up
+           instead, have one master self.websocket that send_message() calls directly
     """
+    MESSAGE_JSON = 0
+    MESSAGE_TEXT = 1
+    MESSAGE_BINARY = 2
+    
     def __init__(self, web_host='0.0.0.0', 
                  web_port=8050, ws_port=49000,
                  ssl_cert=None, ssl_key=None, 
@@ -35,11 +46,13 @@ class WebServer
           ssl_cert (str) -- path to PEM-encoded SSL/TLS cert file for enabling HTTPS
           ssl_key (str) -- path to PEM-encoded SSL/TLS cert key for enabling HTTPS
         """
-        super().__init__(**kwargs)
-
         self.host = web_host
         self.port = web_port
-        self.root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../www'))
+        self.root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../web'))
+
+        self.msg_count_rx = 0
+        self.msg_count_tx = 0
+        self.msg_callback = msg_callback
         
         logging.debug(f"webserver root directory: {self.root}")
         
@@ -49,10 +62,9 @@ class WebServer
             template_folder=os.path.join(self.root, 'templates')
         )
         
+        # setup default index route
         self.app.add_url_rule('/', view_func=self.on_index, methods=['GET'])
-        
         self.index = index
-        self.message_callback = msg_callback
         
         # SSL / HTTPS
         self.ssl_key = ssl_key
@@ -90,22 +102,6 @@ class WebServer
            self.msg_callback(payload, msg_type, timestamp)
         else:
             raise NotImplementedError(f"{type(self)} did not implement on_message or have a msg_callback provided")
-            
-        '''
-        if type == 0:  # JSON
-            if 'chat_history_reset' in msg:
-                self.llm.chat_history.reset()
-                self.send_chat_history(self.llm.chat_history)
-            if 'client_state' in msg:
-                if msg['client_state'] == 'connected':
-                    threading.Timer(1.0, lambda: self.send_chat_history(self.llm.chat_history)).start()
-            if 'tts_voice' in msg:
-                self.tts.voice = msg['tts_voice']
-        elif type == 1:  # text (chat input)
-            self.prompt(msg)
-        elif type == 2:  # web audio (mic)
-            self.asr(msg)
-        '''
      
     def send_message(self, payload, type=None, timestamp=None):
         """
@@ -118,20 +114,20 @@ class WebServer
         
         if type is None:
             if isinstance(payload, str):
-                type = 1
+                type = WebServer.MESSAGE_TEXT
                 encoding = 'utf-8'
             elif isinstance(payload, bytes):
-                type = 2
+                type = WebServer.MESSAGE_BINARY
             else:
-                type = 0
+                type = WebServer.MESSAGE_JSON
                 encoding = 'ascii'
          
-        if self.log_level > 1 or (self.log_level > 0 and type <= 1):
-            print(f"-- sending {Webserver.msg_type_str(type)} websocket message (type={type} size={len(payload)})")
-            if type <= 1:
+        if logging.getLogger().isEnabledFor(logging.DEBUG):
+            logging.debug(f"sending {WebServer.msg_type_str(type)} websocket message (type={type} size={len(payload)})")
+            if type <= WebServer.MESSAGE_TEXT:
                 pprint.pprint(payload)
                     
-        if type == 0 and not isinstance(payload, str):  # json.dumps() might have already been called
+        if type == WebServer.MESSAGE_JSON and not isinstance(payload, str):  # json.dumps() might have already been called
             #print('sending JSON', payload)
             payload = json.dumps(payload)
             
@@ -167,7 +163,8 @@ class WebServer
         self.msg_count_tx += 1
         
     def on_websocket(self, websocket):
-        logging.info(f"-- new websocket connection from {websocket.remote_address}")
+        remote_address = websocket.remote_address
+        logging.info(f"new websocket connection from {remote_address}")
 
         # empty the queue from before the connection was made
         # (otherwise client will be flooded with old messages)
@@ -178,17 +175,21 @@ class WebServer
             except queue.Empty:
                 break
         
-        #if self.msg_callback:
-        #    self.msg_callback({'client_state': 'connected'}, 0, int(time.time()*1000))
+        if self.msg_callback:
+            self.msg_callback({'client_state': 'connected'}, 0, int(time.time()*1000))
             
         listener_thread = threading.Thread(target=self.websocket_listener, args=[websocket], daemon=True)
         listener_thread.start()
 
         while True:
-            websocket.send(self.ws_queue.get()) #json.dumps(self.ws_queue.get()))
-   
+            try:
+                websocket.send(self.ws_queue.get())
+            except ConnectionClosed as closed:
+                logging.info(f"websocket connection with {remote_address} was closed")
+                return
+                
     def websocket_listener(self, websocket):
-        logging.info(f"-- listening on websocket connection from {websocket.remote_address}")
+        logging.info(f"listening on websocket connection from {websocket.remote_address}")
 
         header_size = 32
             
@@ -222,42 +223,26 @@ class WebServer
             
             payload = msg[header_size:]
             
-            if msg_type == 0:  # json
+            if msg_type == WebServer.MESSAGE_JSON:  # json
                 payload = json.loads(payload)
-            elif msg_type == 1:  # text
+            elif msg_type == WebServer.MESSAGE_TEXT:  # text
                 payload = payload.decode('utf-8')
 
             if logging.getLogger().isEnabledFor(logging.DEBUG):
-                logging.debug(f"-- recieved {Webserver.msg_type_str(msg_type)} websocket message from {websocket.remote_address} (type={msg_type} size={payload_size})")
-                if msg_type <= 1:
+                logging.debug(f"recieved {WebServer.msg_type_str(msg_type)} websocket message from {websocket.remote_address} (type={msg_type} size={payload_size})")
+                if msg_type <= WebServer.MESSAGE_TEXT:
                     pprint.pprint(payload)
                 
             self.on_message(payload, msg_type, timestamp)
   
-    @staticmethod
-    def on_index():
+    def on_index(self):
         return flask.render_template(self.index)
-    
-    def send_chat_history(self, history):
-        history = copy.deepcopy(history)
-        
-        def translate_web(text):
-            text = text.replace('\n', '<br/>')
-            return text
-            
-        for n in range(len(history)):
-            for m in range(len(history[n])):
-                history[n][m] = translate_web(history[n][m])
-                
-        #print("-- sending chat history", history)
-        self.send_message({'chat_history': history})
-    
     
     @staticmethod
     def msg_type_str(type):
-        if type == 0:
+        if type == WebServer.MESSAGE_JSON:
             return "json"
-        elif type == 1:
+        elif type == WebServer.MESSAGE_TEXT:
             return "text"
         else:
             return "binary"

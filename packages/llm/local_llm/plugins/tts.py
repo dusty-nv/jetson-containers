@@ -56,6 +56,10 @@ class RivaTTS(Plugin):
         The input text is buffered by punctuation/phrases as it sounds better,
         and filtered for emojis/ect, and has SSML tags applied (if enabled) 
         """
+        if len(self.outputs[0]) == 0:
+            #logging.debug(f"TTS has no output connections, skipping generation")
+            return
+            
         text = self.buffer_text(text)
         text = self.filter_text(text)
         text = self.apply_ssml(text)
@@ -73,7 +77,7 @@ class RivaTTS(Plugin):
 
         for response in responses:
             if self.interrupted:
-                logging.debug(f"-- TTS interrupted, terminating request early:  {text}")
+                logging.debug(f"TTS interrupted, terminating request early:  {text}")
                 break
                 
             samples = np.frombuffer(response.audio, dtype=np.int16)

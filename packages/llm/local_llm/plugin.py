@@ -56,7 +56,7 @@ class Plugin(threading.Thread):
         """
         raise NotImplementedError(f"plugin {type(self)} has not implemented process()")
     
-    def add(self, plugin, channel=0):
+    def add(self, plugin, channel=0, **kwargs):
         """
         Connect this plugin with another, as either an input or an output.
         By default, this plugin will output to the specified plugin instance.
@@ -74,7 +74,7 @@ class Plugin(threading.Thread):
             if not callable(plugin):
                 raise TypeError(f"{type(self)}.add() expects either a Plugin instance or a callable function (was {type(plugin)})")
             from local_llm.plugins import Callback
-            plugin = Callback(plugin)
+            plugin = Callback(plugin, **kwargs)
             
         self.outputs[channel].append(plugin)
         logging.debug(f"connected plugins {type(self)} -> {type(plugin)}  (channel={channel})")
@@ -110,7 +110,7 @@ class Plugin(threading.Thread):
         """
         Callable () operator alias for the input() function
         """
-        self.input(input, channel)
+        self.input(input)
         
     def input(self, input):
         """

@@ -1,2 +1,2 @@
 #!/usr/bin/env python3
-from .server import Webserver
+from .server import WebServer
