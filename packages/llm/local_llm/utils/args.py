@@ -112,6 +112,7 @@ class ArgParser(argparse.ArgumentParser):
             self.add_argument("--ws-port", type=int, default=49000, help="port used for websocket communication")
             self.add_argument("--ssl-key", default=os.getenv('SSL_KEY'), type=str, help="path to PEM-encoded SSL/TLS key file for enabling HTTPS")
             self.add_argument("--ssl-cert", default=os.getenv('SSL_CERT'), type=str, help="path to PEM-encoded SSL/TLS cert file for enabling HTTPS")
+            self.add_argument("--upload-dir", type=str, default='/tmp/uploads', help="the path to save files uploaded from the client")
             
         # LOGGING
         if 'log' in extras:

@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 import os
+import io
+import PIL
 import ssl
 import json
 import time
@@ -8,6 +10,7 @@ import queue
 import struct
 import pprint
 import logging
+import datetime
 import threading
 
 from local_llm.utils import ArgParser
@@ -28,13 +31,16 @@ class WebServer():
            remove send queue because the connection dropping is messing things up
            instead, have one master self.websocket that send_message() calls directly
     """
-    MESSAGE_JSON = 0
-    MESSAGE_TEXT = 1
-    MESSAGE_BINARY = 2
-    
+    MESSAGE_JSON = 0     # json websocket message (dict)
+    MESSAGE_TEXT = 1     # text websocket message (str)
+    MESSAGE_BINARY = 2   # binary websocket message (bytes)
+    MESSAGE_FILE = 3     # file upload from client (bytes)
+    MESSAGE_AUDIO = 4    # audio samples (bytes, int16)
+    MESSAGE_IMAGE = 5    # image message (PIL.Image)
+
     def __init__(self, web_host='0.0.0.0', web_port=8050, ws_port=49000,
-                 ssl_cert=None, ssl_key=None, index='index.html', msg_callback=None,
-                 **kwargs):
+                 ssl_cert=None, ssl_key=None, root=None, index='index.html', 
+                 upload_dir='/tmp/uploads', msg_callback=None, **kwargs):
         """
         Parameters:
         
@@ -43,17 +49,31 @@ class WebServer():
           ws_port (int) -- port to use for websocket communication
           ssl_cert (str) -- path to PEM-encoded SSL/TLS cert file for enabling HTTPS
           ssl_key (str) -- path to PEM-encoded SSL/TLS cert key for enabling HTTPS
+          root (str) -- the root directory for serving site files (should have static/ and template/)
+          index (str) -- the name of the site's index page (should be under web/templates)
+          upload_dir (str) -- the path to save files uploaded from client (or None to disable uploads)
+          msg_callback (callable) -- websocket message handler (see WebServer.on_message() for signature)
         """
         self.host = web_host
         self.port = web_port
-        self.root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../web'))
+        self.root = root
+        
+        self.index = index
+        self.upload_dir = upload_dir
+        self.upload_route = '/uploads'
+        
+        if not self.root:
+            self.root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../web'))
 
+        if self.upload_dir:
+            os.makedirs(self.upload_dir, exist_ok=True)
+            
+        logging.debug(f"webserver root directory: {self.root}   upload directory: {self.upload_dir}")
+        
         self.msg_count_rx = 0
         self.msg_count_tx = 0
         self.msg_callback = msg_callback
-        
-        logging.debug(f"webserver root directory: {self.root}")
-        
+
         # flask server
         self.app = flask.Flask(__name__, 
             static_folder=os.path.join(self.root, 'static'),
@@ -61,9 +81,11 @@ class WebServer():
         )
         
         # setup default index route
-        self.app.add_url_rule('/', view_func=self.on_index, methods=['GET'])
-        self.index = index
-        
+        self.app.add_url_rule('/', view_func=self.send_index, methods=['GET'])
+
+        if self.upload_dir:
+            self.app.add_url_rule('/uploads/<path:path>', view_func=self.send_upload, methods=['GET'])
+            
         # SSL / HTTPS
         self.ssl_key = ssl_key
         self.ssl_cert = ssl_cert
@@ -91,7 +113,7 @@ class WebServer():
         self.ws_thread.start()
         self.web_thread.start()
 
-    def on_message(self, payload, payload_size=None, msg_type=MESSAGE_JSON, msg_id=None, metadata=None, timestamp=None, **kwargs):
+    def on_message(self, payload, payload_size=None, msg_type=MESSAGE_JSON, msg_id=None, metadata=None, timestamp=None, path=None, **kwargs):
         """
         Handler for recieved websocket messages. Implement this in a subclass to process messages,
         otherwise msg_callback needs to be provided during initialization.
@@ -107,9 +129,11 @@ class WebServer():
           msg_id (int) -- the monotonically-increasing message ID number
           metadata (str) -- message-specific string or other data
           timestamp (int) -- time that the message was sent
+          path (str) -- if this is a file or image upload, the file path on the server
         """
         if self.msg_callback is not None:
-           self.msg_callback(payload, payload_size=payload_size, msg_type=msg_type, msg_id=msg_id, metadata=metadata, timestamp=timestamp, **kwargs)
+           self.msg_callback(payload, payload_size=payload_size, msg_type=msg_type, msg_id=msg_id, 
+                             metadata=metadata, timestamp=timestamp, path=path, **kwargs)
         else:
             raise NotImplementedError(f"{type(self)} did not implement on_message or have a msg_callback provided")
      
@@ -234,7 +258,7 @@ class WebServer():
             msg_id, timestamp, magic_number, msg_type, payload_size = \
                 struct.unpack_from('!QQHHI', msg)
             
-            metadata = msg[24:32].decode()
+            metadata = msg[24:32].split(b'\x00')[0].decode()
             
             if magic_number != 42:
                 logging.warning(f"dropping invalid websocket message from {websocket.remote_address} (magic_number={magic_number} size={len(msg)})")
@@ -262,9 +286,35 @@ class WebServer():
                 if msg_type <= WebServer.MESSAGE_TEXT:
                     pprint.pprint(payload)
                 
-            self.on_message(payload, payload_size=payload_size, msg_type=msg_type, msg_id=msg_id, metadata=metadata, timestamp=timestamp)
+            # save uploaded files/images to the upload dir
+            filename = None
+                
+            if self.upload_dir and metadata and (msg_type == WebServer.MESSAGE_FILE or msg_type == WebServer.MESSAGE_IMAGE):
+                filename = f"{datetime.datetime.utcfromtimestamp(timestamp/1000).strftime('%Y%m%d_%H%M%S')}.{metadata}"
+                filename = os.path.join(self.upload_dir, filename)
+                threading.Thread(target=self.save_upload, args=[payload, filename]).start()
+             
+            # decode images in-memory
+            if msg_type == WebServer.MESSAGE_IMAGE:
+                try:
+                    payload = PIL.Image.open(io.BytesIO(payload))
+                    if filename:
+                        payload.filename = filename
+                except Exception as err:
+                    print(err)
+                    logging.error(f"failed to load invalid/corrupted {metadata} image uploaded from client")
+                    
+            self.on_message(payload, payload_size=payload_size, msg_type=msg_type, msg_id=msg_id, metadata=metadata, timestamp=timestamp, path=filename)
   
-    def on_index(self):
+    def save_upload(self, payload, path):
+        logging.debug(f"saving client upload to {path}")
+        with open(path, 'wb') as file:
+            file.write(payload)
+     
+    def send_upload(self, path):
+        return flask.send_from_directory(self.upload_dir, path)
+        
+    def send_index(self):
         return flask.render_template(self.index)
     
     @staticmethod
@@ -273,6 +323,15 @@ class WebServer():
             return "json"
         elif type == WebServer.MESSAGE_TEXT:
             return "text"
-        else:
+        elif type == WebServer.MESSAGE_BINARY:
             return "binary"
+        elif type == WebServer.MESSAGE_FILE:
+            return "file"
+        elif type == WebServer.MESSAGE_AUDIO:
+            return "audio"
+        elif type == WebServer.MESSAGE_IMAGE:
+            return "image"
+        else:
+            return ValueError(f"unknown message type {type}")
+            
     

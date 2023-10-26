@@ -13,10 +13,7 @@ class WebChat(VoiceChat):
     """
     Adds webserver to ASR/TTS voice chat agent.
     """
-    MESSAGE_AUDIO = 2
-    MESSAGE_IMAGE = 3
-    
-    def __init__(self, upload_dir='/tmp', **kwargs):
+    def __init__(self, **kwargs):
         """
         Parameters:
         
@@ -26,8 +23,6 @@ class WebChat(VoiceChat):
         """
         super().__init__(**kwargs)
 
-        self.upload_dir = upload_dir
-        
         self.llm.add(self.on_llm, threaded=True)
         self.tts.add(self.on_tts, threaded=True)
         
@@ -45,15 +40,13 @@ class WebChat(VoiceChat):
                 self.tts.voice = msg['tts_voice']
         elif msg_type == WebServer.MESSAGE_TEXT:  # chat input
             self.prompt(msg.strip('"'))
-        elif msg_type == WebChat.MESSAGE_AUDIO:  # web audio (mic)
+        elif msg_type == WebServer.MESSAGE_AUDIO:  # web audio (mic)
             self.asr(msg)
-        elif msg_type == WebChat.MESSAGE_IMAGE:
-            logging.info(f"recieved {metadata} image message")
+        elif msg_type == WebServer.MESSAGE_IMAGE:
+            logging.info(f"recieved {metadata} image message {msg.size} -> {msg.filename}")
         else:
             logging.warning(f"ignoring websocket message with unknown type={msg_type}")
     
-    #def save_upload(data):
-        
     def on_llm(self, text):
         self.send_chat_history(self.llm.chat_history)
         
@@ -86,7 +79,6 @@ if __name__ == "__main__":
     from local_llm.utils import ArgParser
 
     parser = ArgParser(extras=ArgParser.Defaults+['asr', 'tts', 'audio_output', 'web'])
-    parser.add_argument("--upload-dir", type=str, default='/tmp', help="the path to save files uploaded from the client")
     args = parser.parse_args()
     
     agent = WebChat(**vars(args)).run() 
