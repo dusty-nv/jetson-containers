@@ -32,10 +32,8 @@ class WebServer():
     MESSAGE_TEXT = 1
     MESSAGE_BINARY = 2
     
-    def __init__(self, web_host='0.0.0.0', 
-                 web_port=8050, ws_port=49000,
-                 ssl_cert=None, ssl_key=None, 
-                 index='index.html', msg_callback=None,
+    def __init__(self, web_host='0.0.0.0', web_port=8050, ws_port=49000,
+                 ssl_cert=None, ssl_key=None, index='index.html', msg_callback=None,
                  **kwargs):
         """
         Parameters:
@@ -79,9 +77,9 @@ class WebServer():
             
         # websocket
         self.ws_port = ws_port
-        self.ws_queue = queue.Queue()
-        
-        self.ws_server = websocket_serve(self.on_websocket, host=self.host, port=self.ws_port, ssl_context=self.ssl_context)
+        self.websocket = None
+
+        self.ws_server = websocket_serve(self.on_websocket, host=self.host, port=self.ws_port, ssl_context=self.ssl_context, max_size=None)
         self.ws_thread = threading.Thread(target=lambda: self.ws_server.serve_forever(), daemon=True)
         self.web_thread = threading.Thread(target=lambda: self.app.run(host=self.host, port=self.port, ssl_context=self.ssl_context, debug=True, use_reloader=False), daemon=True)
           
@@ -93,13 +91,25 @@ class WebServer():
         self.ws_thread.start()
         self.web_thread.start()
 
-    def on_message(self, payload, msg_type, timestamp):
+    def on_message(self, payload, payload_size=None, msg_type=MESSAGE_JSON, msg_id=None, metadata=None, timestamp=None, **kwargs):
         """
-        Implement this function in a subclass to process messages
-        Otherwise, msg_callback needs to be provided during initialization
+        Handler for recieved websocket messages. Implement this in a subclass to process messages,
+        otherwise msg_callback needs to be provided during initialization.
+        
+        Parameters:
+        
+          payload (dict|str|bytes) -- If this is a JSON message, will be a dict.
+                                      If this is a text message, will be a string.
+                                      If this is a binary message, will be a bytes array.  
+                                      
+          payload_size (int) -- size of the payload (in bytes)              
+          msg_type (int) -- MESSAGE_JSON (0), MESSAGE_TEXT (1), MESSAGE_BINARY (2)
+          msg_id (int) -- the monotonically-increasing message ID number
+          metadata (str) -- message-specific string or other data
+          timestamp (int) -- time that the message was sent
         """
         if self.msg_callback is not None:
-           self.msg_callback(payload, msg_type, timestamp)
+           self.msg_callback(payload, payload_size=payload_size, msg_type=msg_type, msg_id=msg_id, metadata=metadata, timestamp=timestamp, **kwargs)
         else:
             raise NotImplementedError(f"{type(self)} did not implement on_message or have a msg_callback provided")
      
@@ -107,6 +117,10 @@ class WebServer():
         """
         Send a websocket message to client
         """
+        if self.websocket is None:
+            logging.debug(f"send_message() - no websocket clients connected, dropping {self.msg_type_str(type)} message")
+            return
+            
         if timestamp is None:
             timestamp = time.time() * 1000
          
@@ -138,7 +152,7 @@ class WebServer():
                 payload = bytes(payload)
                 
         # do we even need this queue at all and can the websocket just send straight away?
-        self.ws_queue.put(b''.join([
+        self.websocket.send(b''.join([
             #
             # 32-byte message header format:
             #
@@ -163,9 +177,12 @@ class WebServer():
         self.msg_count_tx += 1
         
     def on_websocket(self, websocket):
+        self.websocket = websocket  # TODO handle multiple clients
         remote_address = websocket.remote_address
+        
         logging.info(f"new websocket connection from {remote_address}")
 
+        '''
         # empty the queue from before the connection was made
         # (otherwise client will be flooded with old messages)
         # TODO implement self.connected so the ws_queue doesn't grow so large without webclient connected...
@@ -174,20 +191,30 @@ class WebServer():
                 self.ws_queue.get(block=False)
             except queue.Empty:
                 break
+        '''
         
         if self.msg_callback:
             self.msg_callback({'client_state': 'connected'}, 0, int(time.time()*1000))
             
-        listener_thread = threading.Thread(target=self.websocket_listener, args=[websocket], daemon=True)
-        listener_thread.start()
+        #listener_thread = threading.Thread(target=self.websocket_listener, args=[websocket], daemon=True)
+        #listener_thread.start()
 
+        try:
+            self.websocket_listener(websocket)
+        except ConnectionClosed as closed:
+            logging.info(f"websocket connection with {remote_address} was closed")
+            if self.websocket == websocket: # if the client refreshed, the new websocket may already be created
+                self.websocket = None
+              
+        '''
         while True:
             try:
                 websocket.send(self.ws_queue.get())
             except ConnectionClosed as closed:
                 logging.info(f"websocket connection with {remote_address} was closed")
                 return
-                
+        '''
+        
     def websocket_listener(self, websocket):
         logging.info(f"listening on websocket connection from {websocket.remote_address}")
 
@@ -204,9 +231,11 @@ class WebServer():
                 logging.warning(f"dropping invalid websocket message from {websocket.remote_address} (size={len(msg)})")
                 continue
                 
-            msg_id, timestamp, magic_number, msg_type, payload_size, _, _ = \
-                struct.unpack_from('!QQHHIII', msg)
-                
+            msg_id, timestamp, magic_number, msg_type, payload_size = \
+                struct.unpack_from('!QQHHI', msg)
+            
+            metadata = msg[24:32].decode()
+            
             if magic_number != 42:
                 logging.warning(f"dropping invalid websocket message from {websocket.remote_address} (magic_number={magic_number} size={len(msg)})")
                 continue
@@ -233,7 +262,7 @@ class WebServer():
                 if msg_type <= WebServer.MESSAGE_TEXT:
                     pprint.pprint(payload)
                 
-            self.on_message(payload, msg_type, timestamp)
+            self.on_message(payload, payload_size=payload_size, msg_type=msg_type, msg_id=msg_id, metadata=metadata, timestamp=timestamp)
   
     def on_index(self):
         return flask.render_template(self.index)

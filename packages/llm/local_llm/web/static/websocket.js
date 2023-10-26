@@ -44,15 +44,15 @@ function connectWebsocket(msgCallback) {
 	websocket.addEventListener('message', websocketListener);
 }
 
-function sendWebsocket(payload, type=MESSAGE_JSON) {
+function sendWebsocket(payload, type=MESSAGE_JSON, metadata='') {
   const timestamp = Date.now();	
-	let header = new DataView(new ArrayBuffer(32));
+	let header = new DataView(new ArrayBuffer(24));
 		
 	header.setBigUint64(0, BigInt(msg_count_tx));
 	header.setBigUint64(8, BigInt(timestamp));
 	header.setUint16(16, 42);
 	header.setUint16(18, type);
-	
+
 	msg_count_tx++;
 	
 	let payloadSize;
@@ -69,9 +69,20 @@ function sendWebsocket(payload, type=MESSAGE_JSON) {
 	}
 	
 	header.setUint32(20, payloadSize);
+
+	var metadata_buffer = new Uint8Array(8);
 	
+	if( metadata ) {
+		console.log(metadata);
+		const metadata_utf8 = new TextEncoder().encode(metadata);
+		
+		for( let i=0; i < metadata_buffer.length && i < metadata_utf8.length; i++ )
+			metadata_buffer[i] = metadata_utf8[i];
+	}
+	
+  console.log(metadata_buffer);
 	console.log(`sending ${typeof payload} websocket message (type=${type} timestamp=${timestamp} payload_size=${payloadSize})`);
-	websocket.send(new Blob([header, payload]));
+	websocket.send(new Blob([header, metadata_buffer, payload]));
 }
 
 function websocketListener(event) {

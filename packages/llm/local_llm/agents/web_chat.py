@@ -3,8 +3,8 @@ import os
 import logging
 import threading
 
-from local_llm.utils import ArgParser
 from local_llm.web import WebServer
+from local_llm.utils import ArgParser
 
 from .voice_chat import VoiceChat
 
@@ -16,24 +16,25 @@ class WebChat(VoiceChat):
     MESSAGE_AUDIO = 2
     MESSAGE_IMAGE = 3
     
-    def __init__(self, **kwargs):
+    def __init__(self, upload_dir='/tmp', **kwargs):
         """
         Parameters:
         
-          web_host (str) -- network interface to bind to (0.0.0.0 for all)
-          web_port (int) -- port to serve HTTP/HTTPS webpages on
-          ws_port (int) -- port to use for websocket communication
-          ssl_cert (str) -- path to PEM-encoded SSL/TLS cert file for enabling HTTPS
-          ssl_key (str) -- path to PEM-encoded SSL/TLS cert key for enabling HTTPS
+          upload_dir (str) -- the path to save files uploaded from the client
+          
+        See VoiceChat and WebServer for inherited arguments.
         """
         super().__init__(**kwargs)
 
+        self.upload_dir = upload_dir
+        
         self.llm.add(self.on_llm, threaded=True)
+        self.tts.add(self.on_tts, threaded=True)
         
         self.server = WebServer(msg_callback=self.on_message, **kwargs)
         
-    def on_message(self, msg, type, timestamp):
-        if type == WebServer.MESSAGE_JSON:
+    def on_message(self, msg, msg_type=0, metadata='', **kwargs):
+        if msg_type == WebServer.MESSAGE_JSON:
             if 'chat_history_reset' in msg:
                 self.llm.chat_history.reset()
                 self.send_chat_history(self.llm.chat_history)
@@ -42,11 +43,17 @@ class WebChat(VoiceChat):
                     threading.Timer(1.0, lambda: self.send_chat_history(self.llm.chat_history)).start()
             if 'tts_voice' in msg:
                 self.tts.voice = msg['tts_voice']
-        elif type == WebServer.MESSAGE_TEXT:  # chat input
-            self.prompt(msg)
-        elif type == WebChat.MESSAGE_AUDIO:  # web audio (mic)
+        elif msg_type == WebServer.MESSAGE_TEXT:  # chat input
+            self.prompt(msg.strip('"'))
+        elif msg_type == WebChat.MESSAGE_AUDIO:  # web audio (mic)
             self.asr(msg)
-     
+        elif msg_type == WebChat.MESSAGE_IMAGE:
+            logging.info(f"recieved {metadata} image message")
+        else:
+            logging.warning(f"ignoring websocket message with unknown type={msg_type}")
+    
+    #def save_upload(data):
+        
     def on_llm(self, text):
         self.send_chat_history(self.llm.chat_history)
         
@@ -79,6 +86,7 @@ if __name__ == "__main__":
     from local_llm.utils import ArgParser
 
     parser = ArgParser(extras=ArgParser.Defaults+['asr', 'tts', 'audio_output', 'web'])
+    parser.add_argument("--upload-dir", type=str, default='/tmp', help="the path to save files uploaded from the client")
     args = parser.parse_args()
     
     agent = WebChat(**vars(args)).run() 

@@ -77,7 +77,7 @@ class Plugin(threading.Thread):
             plugin = Callback(plugin, **kwargs)
             
         self.outputs[channel].append(plugin)
-        logging.debug(f"connected plugins {type(self)} -> {type(plugin)}  (channel={channel})")
+        logging.debug(f"connected plugin {type(self)} to {type(plugin)} on channel={channel}")
         return self
     
     def find(self, type):

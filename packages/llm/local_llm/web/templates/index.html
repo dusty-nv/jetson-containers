@@ -66,6 +66,47 @@
         sendWebsocket({'tts_voice': voice});
       }
       
+      function onFileDrag(ev) {
+        console.log("File(s) in drop zone");
+        ev.preventDefault();  // prevent file from being opened in browser tab
+      }
+      
+      function onFileDrop(ev) {
+        console.log("File(s) dropped");
+
+        // prevent file from being opened in the browser
+        ev.preventDefault();
+
+        if (ev.dataTransfer.items) {
+          // Use DataTransferItemList interface to access the file(s)
+          [...ev.dataTransfer.items].forEach((item, i) => {
+            // If dropped items aren't files, reject them
+            if( item.kind != "file" )
+              return;
+
+            const file = item.getAsFile();
+            const ext = file.name.split('.').pop().toLowerCase();
+            const img_exts = ['png', 'jpg', 'jpeg', 'tiff', 'bmp', 'gif', 'webm'];
+            
+            console.log(`DataTransferItemList file[${i}].name=${file.name}  ext=${ext}  mime=${file.type}`);
+
+            if( !img_exts.some(img_ext => ext == img_ext) )
+              return;
+
+            file.arrayBuffer().then((fileBuffer) => {
+              console.log('uploading image');
+              sendWebsocket(fileBuffer, type=MESSAGE_IMAGE, metadata=ext);
+            });
+            
+          });
+        } else {
+          // Use DataTransfer interface to access the file(s)
+          [...ev.dataTransfer.files].forEach((file, i) => {
+            console.log(`DataTransfer file[${i}].name = ${file.name}`);
+          });
+        }
+      }
+
       function onWebsocketMsg(payload, type) {
         if( type == MESSAGE_JSON ) { 
           if( 'chat_history' in payload ) {
@@ -157,7 +198,7 @@
         </div>
       </nav>
       
-      <div id="chat-history-container" class="flex-grow-1 bg-medium-gray p-2 m-3" style="overflow-y: scroll;">
+      <div id="chat-history-container" class="flex-grow-1 bg-medium-gray p-2 m-3" style="overflow-y: scroll;" ondrop="onFileDrop(event)" ondragover="onFileDrag(event)">
         <!--<h3>Conversation</h3>-->
       </div>
 
