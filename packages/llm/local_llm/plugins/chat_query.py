@@ -146,12 +146,15 @@ class ChatQuery(Plugin):
                 logging.debug(f"LLM interrupted, terminating request early")
                 stream.stop()
                 
-            words += token
-            bot_reply.text += token
+            # sync the reply with the entire text, so that multi-token
+            # unicode unicode sequences are detokenized and decoded together
+            bot_reply.text = stream.output_text
             
+            # output stream of raw tokens
             self.output(token, ChatQuery.OutputToken)
             
             # if a space was added, emit new word(s)
+            words += token
             last_space = words.rfind(' ')
             
             if last_space >= 0:
@@ -160,12 +163,6 @@ class ChatQuery(Plugin):
                     words = words[last_space+1:]
                 else:
                     words = ''
-                    
-            '''
-            if ' ' in words:  
-                self.output(words, ChatQuery.OutputWords)
-                words = ''
-            '''
             
         if len(words) > 0:
             self.output(words, ChatQuery.OutputWords)

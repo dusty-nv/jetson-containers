@@ -87,6 +87,7 @@ class RivaTTS(Plugin):
                 self.needs_text_by = current_time
             self.needs_text_by += len(samples) / self.sample_rate
             
+            #logging.debug(f"TTS outputting {len(samples)} audio samples")
             self.output(samples)
             
         #logging.debug(f"done with TTS request '{text}'")
@@ -172,6 +173,9 @@ class RivaTTS(Plugin):
         text = text.replace('\n', ' ')
         #text = text.replace('  ', ' ')
         
+        if len(text.strip()) == 0:
+            return None
+            
         return text
     
     def apply_ssml(self, text):

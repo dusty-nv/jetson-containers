@@ -37,21 +37,23 @@ class RateLimit(Plugin):
         """
         while True:
             if self.interrupted:
+                #logging.debug(f"RateLimit interrupted (input={len(input)})")
                 return
             
             pause_duration = self.pause_duration()
             
             if pause_duration > 0:
-                logging.debug(f"RateLimit pausing for {pause_duration} seconds")
+                #logging.debug(f"RateLimit pausing for {pause_duration} seconds (input={len(input)})")
                 time.sleep(pause_duration)
                 continue
                
             if self.chunk > 0:
-                logging.debug(f"RateLimit chunk {len(input)}  {self.chunk}  {time.perf_counter()}")
+                #logging.debug(f"RateLimit chunk {len(input)}  {self.chunk}  {time.perf_counter()}")
                 if len(input) > self.chunk:
                     self.output(input[:self.chunk])
                     input = input[self.chunk:]
                     time.sleep(self.chunk/self.rate*0.95)
+                    new=False
                     continue
                 else:
                     self.output(input)

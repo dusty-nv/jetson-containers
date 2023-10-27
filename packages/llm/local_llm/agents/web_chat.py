@@ -24,11 +24,11 @@ class WebChat(VoiceChat):
         """
         super().__init__(**kwargs)
 
-        self.asr.add(self.on_asr_partial, RivaASR.OutputPartial, threaded=True)
-        #self.asr.add(self.on_asr_final, RivaASR.OutputFinal, threaded=True)
+        self.asr.add(self.on_asr_partial, RivaASR.OutputPartial)
+        #self.asr.add(self.on_asr_final, RivaASR.OutputFinal)
         
-        self.llm.add(self.on_llm_reply, threaded=True)
-        self.tts_output.add(self.on_tts_samples, threaded=True)
+        self.llm.add(self.on_llm_reply)
+        self.tts_output.add(self.on_tts_samples)
         
         self.server = WebServer(msg_callback=self.on_message, **kwargs)
         
@@ -78,15 +78,16 @@ class WebChat(VoiceChat):
         if asr:
             history.append({'role': 'user', 'text': asr})
             
-        #def translate_web(text):
-        #    text = text.replace('\n', '<br/>')
-        #    return text
+        def translate_web(text):
+            text = text.replace('\n', '<br/>')
+            text = text.replace('<s>', '')
+            text = text.replace('</s>', '')
+            return text
             
-        #for n in range(len(history)):
-        #    for m in range(len(history[n])):
-        #        history[n][m] = translate_web(history[n][m])
-                
-        #logging.debug(f"sending chat history {history}")
+        for entry in history:
+            if 'text' in entry:
+                entry['text'] = translate_web(entry['text'])
+
         self.server.send_message({'chat_history': history})
  
     def start(self):

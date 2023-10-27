@@ -61,6 +61,7 @@ class AudioOutputDevice(Plugin):
 
         if self.interrupted:
             self.current_buffer = None
+            self.interrupted = False
             
         while not self.is_paused():
             if self.current_buffer is None:

@@ -7,7 +7,7 @@ import termcolor
 
 from local_llm import Agent, Pipeline
 
-from local_llm.plugins import UserPrompt, ChatQuery, PrintStream
+from local_llm.plugins import UserPrompt, ChatQuery, PrintStream, Callback
 from local_llm.utils import ArgParser, print_table
 
 

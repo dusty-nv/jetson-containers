@@ -141,10 +141,6 @@ class WebServer():
         """
         Send a websocket message to client
         """
-        if self.websocket is None:
-            logging.debug(f"send_message() - no websocket clients connected, dropping {self.msg_type_str(type)} message")
-            return
-            
         if timestamp is None:
             timestamp = time.time() * 1000
          
@@ -159,7 +155,11 @@ class WebServer():
             else:
                 type = WebServer.MESSAGE_JSON
                 encoding = 'ascii'
-         
+        
+        if self.websocket is None:
+            logging.debug(f"send_message() - no websocket clients connected, dropping {self.msg_type_str(type)} message")
+            return
+            
         if logging.getLogger().isEnabledFor(logging.DEBUG):
             logging.debug(f"sending {WebServer.msg_type_str(type)} websocket message (type={type} size={len(payload)})")
             if type <= WebServer.MESSAGE_TEXT:
@@ -332,6 +332,6 @@ class WebServer():
         elif type == WebServer.MESSAGE_IMAGE:
             return "image"
         else:
-            return ValueError(f"unknown message type {type}")
+            raise ValueError(f"unknown message type {type}")
             
     

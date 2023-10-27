@@ -72,7 +72,7 @@ class VoiceChat(Agent):
         self.tts.interrupt()
         
         self.tts_output.interrupt()
-        self.tts_output.unpause()
+        #self.tts_output.unpause()
             
     def on_eos(self, text):
         if text.endswith('</s>'):

@@ -119,8 +119,6 @@ class Plugin(threading.Thread):
         Add data to the plugin's processing queue (or if threaded=False, process it now)
         TODO:  multiple input channels?
         """
-        self.interrupted = False
-        
         if self.threaded:
             if self.drop_inputs:
                 self.clear_inputs()
@@ -177,7 +175,8 @@ class Plugin(threading.Thread):
         Invoke the process() function on incoming data
         """
         if self.interrupted:
-            return
+            #logging.debug(f"{type(self)} resetting interrupted=False")
+            self.interrupted = False
             
         self.output(self.process(input))
         
