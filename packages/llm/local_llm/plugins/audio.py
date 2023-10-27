@@ -114,6 +114,7 @@ class AudioOutputDevice(Plugin):
             return False
             
         return True
+
         
 class AudioOutputFile(Plugin):
     """

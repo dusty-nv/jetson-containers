@@ -18,19 +18,21 @@ class Plugin(threading.Thread):
       
     Parameters:
     
-      input_channels (int) -- 
+      output_channels (int) -- the number of sets of output connections the plugin has
       relay (bool) -- if true, will relay any inputs as outputs after processing
-      threaded (bool) -- if true, will process queue from independent thread
+      drop_inputs (bool) -- if true, only the most recent input in the queue will be used
+      threaded (bool) -- if true, will spawn independent thread for processing the queue.
       
     TODO:  use queue.task_done() and queue.join() for external synchronization
     """
-    def __init__(self, output_channels=1, relay=False, threaded=True, **kwargs):
+    def __init__(self, output_channels=1, relay=False, drop_inputs=False, threaded=True, **kwargs):
         """
         Initialize plugin
         """
         super().__init__(daemon=True)
 
         self.relay = relay
+        self.drop_inputs = drop_inputs
         self.threaded = threaded
         self.interrupted = False
         
@@ -120,6 +122,8 @@ class Plugin(threading.Thread):
         self.interrupted = False
         
         if self.threaded:
+            if self.drop_inputs:
+                self.clear_inputs()
             self.input_queue.put(input)
             self.input_event.set()
         else:

@@ -5,6 +5,7 @@ import threading
 
 from local_llm.web import WebServer
 from local_llm.utils import ArgParser
+from local_llm.plugins import RivaASR
 
 from .voice_chat import VoiceChat
 
@@ -23,8 +24,11 @@ class WebChat(VoiceChat):
         """
         super().__init__(**kwargs)
 
-        self.llm.add(self.on_llm, threaded=True)
-        self.tts.add(self.on_tts, threaded=True)
+        self.asr.add(self.on_asr_partial, RivaASR.OutputPartial, threaded=True)
+        #self.asr.add(self.on_asr_final, RivaASR.OutputFinal, threaded=True)
+        
+        self.llm.add(self.on_llm_reply, threaded=True)
+        self.tts_output.add(self.on_tts_samples, threaded=True)
         
         self.server = WebServer(msg_callback=self.on_message, **kwargs)
         
@@ -32,10 +36,10 @@ class WebChat(VoiceChat):
         if msg_type == WebServer.MESSAGE_JSON:
             if 'chat_history_reset' in msg:
                 self.llm.chat_history.reset()
-                self.send_chat_history(self.llm.chat_history)
+                self.send_chat_history()
             if 'client_state' in msg:
                 if msg['client_state'] == 'connected':
-                    threading.Timer(1.0, lambda: self.send_chat_history(self.llm.chat_history)).start()
+                    threading.Timer(1.0, lambda: self.send_chat_history()).start()
             if 'tts_voice' in msg:
                 self.tts.voice = msg['tts_voice']
         elif msg_type == WebServer.MESSAGE_TEXT:  # chat input
@@ -45,19 +49,35 @@ class WebChat(VoiceChat):
         elif msg_type == WebServer.MESSAGE_IMAGE:
             logging.info(f"recieved {metadata} image message {msg.size} -> {msg.filename}")
         else:
-            logging.warning(f"ignoring websocket message with unknown type={msg_type}")
+            logging.warning(f"WebChat agent ignoring websocket message with unknown type={msg_type}")
     
-    def on_llm(self, text):
+    def on_asr_partial(self, text):
+        self.send_chat_history(asr=text)
+        threading.Timer(1.5, self.on_asr_waiting, args=[text]).start()
+        
+    def on_asr_waiting(self, transcript):
+        if self.asr_history == transcript:  # if the partial transcript hasn't changed, probably a misrecognized sound or echo
+            logging.warning(f"ASR partial transcript has stagnated, dropping from chat ({self.asr_history})")
+            self.asr_history = None
+            self.send_chat_history() # drop the rejected ASR from the client
+
+    def on_llm_reply(self, text):
         self.send_chat_history(self.llm.chat_history)
         
-    def on_tts(self, audio):
-        self.server.send_message(audio, type=WebChat.MESSAGE_AUDIO)
+    def on_tts_samples(self, audio):
+        self.server.send_message(audio, type=WebServer.MESSAGE_AUDIO)
         
-    def send_chat_history(self, history):
+    def send_chat_history(self, history=None, asr=None):
         # TODO convert images to filenames
         # TODO sanitize text for HTML
+        if history is None:
+            history = self.llm.chat_history
+            
         history = history.to_list()
         
+        if asr:
+            history.append({'role': 'user', 'text': asr})
+            
         #def translate_web(text):
         #    text = text.replace('\n', '<br/>')
         #    return text

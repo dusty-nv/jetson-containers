@@ -31,7 +31,7 @@ class RivaASR(Plugin):
                  automatic_punctuation=True, verbatim_transcripts=True, 
                  profanity_filter=False, language_code='en-US', 
                  boosted_lm_words=None, boosted_lm_score=4.0, 
-                 asr_confidence_threshold=-1.0, **kwargs):
+                 asr_confidence_threshold=-2.0, **kwargs):
         """
         Parameters:
         
@@ -99,10 +99,12 @@ class RivaASR(Plugin):
                 for result in response.results:
                     transcript = result.alternatives[0].transcript.strip()
                     if result.is_final:
-                        drop = result.alternatives[0].confidence < self.confidence_threshold
-                        logging.debug(f"{'dropping' if drop else 'submitting'} ASR transcript (confidence={result.alternatives[0].confidence:.3f}) -> '{transcript}'")
-                        if not drop:
+                        score = result.alternatives[0].confidence
+                        if score >= self.confidence_threshold:
+                            logging.debug(f"submitting ASR transcript (confidence={score:.3f}) -> '{transcript}'")
                             self.output(transcript, RivaASR.OutputFinal)
+                        else:
+                            logging.warning(f"dropping ASR transcript (confidence={score:.3f} < {self.confidence_threshold:.3f}) -> '{transcript}'")
                     else:
                         self.output(transcript, RivaASR.OutputPartial)
         

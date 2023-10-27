@@ -103,7 +103,7 @@ class ArgParser(argparse.ArgumentParser):
             self.add_argument("--boosted-lm-score", type=float, default=4.0, help="Value by which to boost words when decoding.")
             self.add_argument("--profanity-filter", action='store_true', help="enable profanity filtering in ASR transcripts")
             self.add_argument("--no-automatic-punctuation", dest='automatic_punctuation', action='store_false', help="disable punctuation in the ASR transcripts")
-            self.add_argument("--asr-confidence-threshold", type=float, default=-1.0, help="minimum ASR confidence (only applies to 'final' transcripts)")
+            self.add_argument("--asr-confidence-threshold", type=float, default=-2.0, help="minimum ASR confidence (only applies to 'final' transcripts)")
          
         # WEBSERVER
         if 'web' in extras:
