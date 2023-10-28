@@ -2,6 +2,7 @@
 import os
 import logging
 import threading
+import numpy as np
 
 from local_llm.web import WebServer
 from local_llm.utils import ArgParser
@@ -48,11 +49,14 @@ class WebChat(VoiceChat):
             self.asr(msg)
         elif msg_type == WebServer.MESSAGE_IMAGE:
             logging.info(f"recieved {metadata} image message {msg.size} -> {msg.filename}")
+            self.llm.chat_history.reset()
+            self.llm.chat_history.append(role='user', image=msg)
+            self.send_chat_history()
         else:
             logging.warning(f"WebChat agent ignoring websocket message with unknown type={msg_type}")
     
     def on_asr_partial(self, text):
-        self.send_chat_history(asr=text)
+        self.send_chat_history()
         threading.Timer(1.5, self.on_asr_waiting, args=[text]).start()
         
     def on_asr_waiting(self, transcript):
@@ -62,12 +66,12 @@ class WebChat(VoiceChat):
             self.send_chat_history() # drop the rejected ASR from the client
 
     def on_llm_reply(self, text):
-        self.send_chat_history(self.llm.chat_history)
+        self.send_chat_history()
         
     def on_tts_samples(self, audio):
         self.server.send_message(audio, type=WebServer.MESSAGE_AUDIO)
         
-    def send_chat_history(self, history=None, asr=None):
+    def send_chat_history(self, history=None):
         # TODO convert images to filenames
         # TODO sanitize text for HTML
         if history is None:
@@ -75,19 +79,30 @@ class WebChat(VoiceChat):
             
         history = history.to_list()
         
-        if asr:
-            history.append({'role': 'user', 'text': asr})
+        if self.asr_history:
+            history.append({'role': 'user', 'text': self.asr_history})
             
-        def translate_web(text):
+        def web_text(text):
+            text = text.strip()
+            text = text.strip('\n')
             text = text.replace('\n', '<br/>')
             text = text.replace('<s>', '')
             text = text.replace('</s>', '')
             return text
+          
+        def web_image(image):
+            if not isinstance(image, str):
+                if not hasattr(image, 'filename'):
+                    return None
+                image = image.filename
+            return os.path.join(self.server.upload_route, os.path.basename(image))
             
         for entry in history:
             if 'text' in entry:
-                entry['text'] = translate_web(entry['text'])
-
+                entry['text'] = web_text(entry['text'])
+            if 'image' in entry:
+                entry['image'] = web_image(entry['image'])
+                
         self.server.send_message({'chat_history': history})
  
     def start(self):

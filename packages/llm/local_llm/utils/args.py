@@ -98,13 +98,15 @@ class ArgParser(argparse.ArgumentParser):
             #self.add_argument("--voice-min-words", type=int, default=4, help="the minimum number of words the TTS should wait to speak")
             
         if 'asr' in extras:
-            self.add_argument("--audio-chunk", type=int, default=1600, help="A maximum number of frames in a audio chunk sent to server.")
+            self.add_argument("--asr-confidence", type=float, default=-2.5, help="minimum ASR confidence (only applies to 'final' transcripts)")
+            self.add_argument("--asr-silence", type=float, default=-1.0, help="audio with RMS equal to or below this amount will be considered silent (negative will disable silence detection)")
+            self.add_argument("--asr-chunk", type=int, default=1600, help="the number of audio samples to buffer as input to ASR")
             self.add_argument("--boosted-lm-words", action='append', help="Words to boost when decoding.")
             self.add_argument("--boosted-lm-score", type=float, default=4.0, help="Value by which to boost words when decoding.")
             self.add_argument("--profanity-filter", action='store_true', help="enable profanity filtering in ASR transcripts")
+            self.add_argument("--inverse-text-normalization", action='store_true', help="apply Inverse Text Normalization to convert numbers to digits/ect")
             self.add_argument("--no-automatic-punctuation", dest='automatic_punctuation', action='store_false', help="disable punctuation in the ASR transcripts")
-            self.add_argument("--asr-confidence-threshold", type=float, default=-2.0, help="minimum ASR confidence (only applies to 'final' transcripts)")
-         
+            
         # WEBSERVER
         if 'web' in extras:
             self.add_argument("--web-host", type=str, default='0.0.0.0', help="network interface to bind to for hosting the webserver")
@@ -113,6 +115,7 @@ class ArgParser(argparse.ArgumentParser):
             self.add_argument("--ssl-key", default=os.getenv('SSL_KEY'), type=str, help="path to PEM-encoded SSL/TLS key file for enabling HTTPS")
             self.add_argument("--ssl-cert", default=os.getenv('SSL_CERT'), type=str, help="path to PEM-encoded SSL/TLS cert file for enabling HTTPS")
             self.add_argument("--upload-dir", type=str, default='/tmp/uploads', help="the path to save files uploaded from the client")
+            self.add_argument("--web-trace", action="store_true", help="output websocket message logs when --log-level=debug")
             
         # LOGGING
         if 'log' in extras:

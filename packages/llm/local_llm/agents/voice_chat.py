@@ -16,7 +16,7 @@ class VoiceChat(Agent):
     """
     Uses ASR + TTS to chat with LLM
     """
-    def __init__(self, **kwargs):
+    def __init__(self, interactive=False, **kwargs):
         super().__init__()
 
         # ASR
@@ -25,17 +25,17 @@ class VoiceChat(Agent):
         self.asr.add(PrintStream(partial=False, prefix='## ', color='blue'), RivaASR.OutputFinal)
         self.asr.add(PrintStream(partial=False, prefix='>> ', color='magenta'), RivaASR.OutputPartial)
         
-        self.asr.add(self.asr_partial, RivaASR.OutputPartial) # pause output when user is speaking
-        self.asr.add(self.asr_final, RivaASR.OutputFinal)     # clear queues on final ASR transcript
+        self.asr.add(self.asr_partial, RivaASR.OutputPartial, threaded=False) # pause output when user is speaking
+        self.asr.add(self.asr_final, RivaASR.OutputFinal, threaded=False)     # clear queues on final ASR transcript
         
-        self.asr_history = None
+        self.asr_history = None  # store the partial ASR transcript
         
         # LLM
         self.llm = ChatQuery(**kwargs)
     
         self.llm.add(PrintStream(color='green', relay=True).add(self.on_eos))
-        self.asr.add(self.llm, RivaASR.OutputFinal)  # submit ASR sentences to the LLM
-        
+        self.asr.add(self.llm, RivaASR.OutputFinal)  # runs after asr_final() and any interruptions occur
+
         # TTS
         self.tts = RivaTTS(**kwargs)
         self.tts_output = RateLimit(kwargs['sample_rate_hz'], chunk=9600) # slow down TTS to realtime and be able to pause it
@@ -56,13 +56,17 @@ class VoiceChat(Agent):
             self.tts_output.add(self.audio_output_file)
         
         # text prompts from web UI or CLI
-        self.prompt = UserPrompt(interactive=True, **kwargs)
-        self.prompt.add(self.llm)
-        
-        self.pipeline = [self.prompt, self.asr]
-
+        if interactive:
+            self.prompt = UserPrompt(interactive=True, **kwargs)
+            self.prompt.add(self.llm)
+            self.pipeline = [self.prompt, self.asr]
+        else:
+            self.pipeline = [self.asr]
+            
     def asr_partial(self, text):
         self.asr_history = text
+        if len(text.split(' ')) < 2:
+            return
         self.tts_output.pause(1.0)
 
     def asr_final(self, text):
@@ -71,9 +75,8 @@ class VoiceChat(Agent):
         self.llm.interrupt()
         self.tts.interrupt()
         
-        self.tts_output.interrupt()
-        #self.tts_output.unpause()
-            
+        self.tts_output.interrupt(block=False) # might be paused/asleep
+
     def on_eos(self, text):
         if text.endswith('</s>'):
             print_table(self.llm.model.stats)
@@ -89,6 +92,7 @@ if __name__ == "__main__":
     from local_llm.utils import ArgParser
 
     parser = ArgParser(extras=ArgParser.Defaults+['asr', 'tts', 'audio_output'])
+    parser.add_argument("-it", "--interactive", action="store_true", help="enable interactive user input from the terminal")
     args = parser.parse_args()
     
     agent = VoiceChat(**vars(args)).run() 

@@ -40,7 +40,8 @@ class WebServer():
 
     def __init__(self, web_host='0.0.0.0', web_port=8050, ws_port=49000,
                  ssl_cert=None, ssl_key=None, root=None, index='index.html', 
-                 upload_dir='/tmp/uploads', msg_callback=None, **kwargs):
+                 upload_dir='/tmp/uploads', msg_callback=None, web_trace=False,
+                 **kwargs):
         """
         Parameters:
         
@@ -53,15 +54,18 @@ class WebServer():
           index (str) -- the name of the site's index page (should be under web/templates)
           upload_dir (str) -- the path to save files uploaded from client (or None to disable uploads)
           msg_callback (callable) -- websocket message handler (see WebServer.on_message() for signature)
+          web_trace (bool) -- if true, additional debug messages will be printed when --log-level=debug
         """
         self.host = web_host
         self.port = web_port
         self.root = root
         
+        self.trace = web_trace
         self.index = index
+        
         self.upload_dir = upload_dir
         self.upload_route = '/uploads'
-        
+
         if not self.root:
             self.root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../web'))
 
@@ -104,7 +108,13 @@ class WebServer():
         self.ws_server = websocket_serve(self.on_websocket, host=self.host, port=self.ws_port, ssl_context=self.ssl_context, max_size=None)
         self.ws_thread = threading.Thread(target=lambda: self.ws_server.serve_forever(), daemon=True)
         self.web_thread = threading.Thread(target=lambda: self.app.run(host=self.host, port=self.port, ssl_context=self.ssl_context, debug=True, use_reloader=False), daemon=True)
-          
+        
+        # https://stackoverflow.com/a/52282788
+        logging.getLogger('asyncio').setLevel(logging.INFO)
+        logging.getLogger('asyncio.coroutines').setLevel(logging.INFO)
+        logging.getLogger('websockets.server').setLevel(logging.INFO)
+        logging.getLogger('websockets.protocol').setLevel(logging.INFO)
+
     def start(self):
         """
         Call this to start the webserver threads
@@ -160,7 +170,7 @@ class WebServer():
             logging.debug(f"send_message() - no websocket clients connected, dropping {self.msg_type_str(type)} message")
             return
             
-        if logging.getLogger().isEnabledFor(logging.DEBUG):
+        if self.trace and logging.getLogger().isEnabledFor(logging.DEBUG):
             logging.debug(f"sending {WebServer.msg_type_str(type)} websocket message (type={type} size={len(payload)})")
             if type <= WebServer.MESSAGE_TEXT:
                 pprint.pprint(payload)
@@ -200,10 +210,10 @@ class WebServer():
 
         self.msg_count_tx += 1
         
-    def on_websocket(self, websocket):
+    def on_websocket(self, websocket):      
         self.websocket = websocket  # TODO handle multiple clients
         remote_address = websocket.remote_address
-        
+
         logging.info(f"new websocket connection from {remote_address}")
 
         '''
@@ -281,7 +291,7 @@ class WebServer():
             elif msg_type == WebServer.MESSAGE_TEXT:  # text
                 payload = payload.decode('utf-8')
 
-            if logging.getLogger().isEnabledFor(logging.DEBUG):
+            if self.trace and logging.getLogger().isEnabledFor(logging.DEBUG):
                 logging.debug(f"recieved {WebServer.msg_type_str(msg_type)} websocket message from {websocket.remote_address} (type={msg_type} size={payload_size})")
                 if msg_type <= WebServer.MESSAGE_TEXT:
                     pprint.pprint(payload)

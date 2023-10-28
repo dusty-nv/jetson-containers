@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from .args import *
+from .audio import *
 from .image import *
 from .log import *
 from .model import *

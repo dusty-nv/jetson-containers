@@ -301,7 +301,7 @@ class MLCModel(LocalLM):
             if len(stream.output_tokens) >= max_new_tokens:
                 break
                 
-            if stream.stopped:
+            if stream.stopping or stream.stopped:
                 break
 
             stream.kv_cache.num_tokens += 1

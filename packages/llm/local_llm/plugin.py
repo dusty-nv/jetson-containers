@@ -35,6 +35,7 @@ class Plugin(threading.Thread):
         self.drop_inputs = drop_inputs
         self.threaded = threaded
         self.interrupted = False
+        self.processing = False
         
         self.outputs = [[] for i in range(output_channels)]
         self.output_channels = output_channels
@@ -178,20 +179,29 @@ class Plugin(threading.Thread):
             #logging.debug(f"{type(self)} resetting interrupted=False")
             self.interrupted = False
             
-        self.output(self.process(input))
+        self.processing = True
+        outputs = self.process(input)
+        self.processing = False
+        
+        self.output(outputs)
         
         if self.relay:
             self.output(input)
    
-    def interrupt(self, clear_inputs=True):
+    def interrupt(self, clear_inputs=True, block=True):
         """
         Interrupt any ongoing/pending processing, and optionally clear the input queue.
+        If block is true, this function will wait until any ongoing processing has finished.
+        This is done so that any lingering outputs don't cascade downstream in the pipeline.
         """
         if clear_inputs:
             self.clear_inputs()
-                    
+          
         self.interrupted = True
- 
+        
+        while block and self.processing:
+            continue  # TODO use an event for this?
+        
     def clear_inputs(self):
         """
         Clear the input queue, dropping any data.

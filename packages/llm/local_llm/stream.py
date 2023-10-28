@@ -22,14 +22,15 @@ class StreamingResponse():
         
         self.model = model
         self.input = input
-        #self.queue = queue.Queue()
         self.event = threading.Event()
-        self.stopped = False
         self.kwargs = kwargs
         self.kv_cache = kwargs.get('kv_cache', None)
         
-        self.output_tokens = []
-        self.output_text = ''
+        self.stopping = False  # set if the user requested early termination
+        self.stopped = False   # set when generation has actually stopped
+        
+        self.output_tokens = []  # accumulated output tokens so far
+        self.output_text = ''    # detokenized output text so far
         
     def __iter__(self):
         return self
@@ -47,7 +48,7 @@ class StreamingResponse():
         return self.get_message_delta()
         
     def stop(self):
-        self.stopped = True
+        self.stopping = True
 
     def get_message_delta(self):
         message = self.model.tokenizer.decode(self.output_tokens, skip_special_tokens=False) #, clean_up_tokenization_spaces=None

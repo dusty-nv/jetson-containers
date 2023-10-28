@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import time
+import queue
 import threading
 import logging
 
@@ -6,6 +8,7 @@ import riva.client
 import riva.client.audio_io
 
 from local_llm import Plugin
+from local_llm.utils import audio_silent
 
 
 class RivaASR(Plugin):
@@ -26,12 +29,11 @@ class RivaASR(Plugin):
     OutputPartial=1  # output partial transcripts (channel 1)
     
     def __init__(self, riva_server='localhost:50051',
-                 audio_input_device=None, sample_rate_hz=48000,
-                 audio_chunk=1600, audio_input_channels=1,
-                 automatic_punctuation=True, verbatim_transcripts=True, 
-                 profanity_filter=False, language_code='en-US', 
-                 boosted_lm_words=None, boosted_lm_score=4.0, 
-                 asr_confidence_threshold=-2.0, **kwargs):
+                 language_code='en-US', sample_rate_hz=48000, 
+                 asr_confidence=-2.5, asr_silence=-1.0, asr_chunk=1600,
+                 automatic_punctuation=True, inverse_text_normalization=False, 
+                 profanity_filter=False, boosted_lm_words=None, boosted_lm_score=4.0, 
+                 audio_input_device=None, audio_input_channels=1, **kwargs):
         """
         Parameters:
         
@@ -40,18 +42,21 @@ class RivaASR(Plugin):
           sample_rate_hz (int) -- sample rate of any incoming audio or device (typically 16000, 44100, 48000)
           audio_chunk (int) -- the audio input buffer length (in samples) to use for input devices
           audio_input_channels (int) -- 1 for mono, 2 for stereo
+          inverse_text_normalization (bool) -- https://developer.nvidia.com/blog/text-normalization-and-inverse-text-normalization-with-nvidia-nemo/
         """
         super().__init__(output_channels=2, **kwargs)
         
         self.server = riva_server
         self.auth = riva.client.Auth(uri=riva_server)
-        
-        self.audio_queue = AudioQueue(self.input_queue, audio_chunk)
-        self.audio_chunk = audio_chunk
+
+        self.audio_queue = AudioQueue(self)
+        self.audio_chunk = asr_chunk
         self.input_device = audio_input_device
         self.language_code = language_code
         self.sample_rate = sample_rate_hz
-        self.confidence_threshold = asr_confidence_threshold
+        self.confidence_threshold = asr_confidence
+        self.silence_threshold = asr_silence
+        self.keep_alive_timeout = 99  # requests timeout after 1000 seconds
         
         self.asr_service = riva.client.ASRService(self.auth)
         
@@ -62,7 +67,7 @@ class RivaASR(Plugin):
                 max_alternatives=1,
                 profanity_filter=profanity_filter,
                 enable_automatic_punctuation=automatic_punctuation,
-                verbatim_transcripts=verbatim_transcripts,
+                verbatim_transcripts=not inverse_text_normalization,
                 sample_rate_hertz=sample_rate_hz,
                 audio_channel_count=audio_input_channels,
             ),
@@ -70,7 +75,7 @@ class RivaASR(Plugin):
         )
         
         riva.client.add_word_boosting_to_config(self.asr_config, boosted_lm_words, boosted_lm_score)
-    
+
     def run(self):
         if self.input_device is not None:
             self.mic_thread = threading.Thread(target=self.run_mic, daemon=True)
@@ -112,10 +117,10 @@ class RivaASR(Plugin):
 class AudioQueue:
     """
     Implement same context manager/iterator interfaces as Riva's MicrophoneStream
+    for ingesting ASR audio samples from external sources via the plugin's input queue.
     """
-    def __init__(self, queue, audio_chunk=1600):
-        self.queue = queue
-        self.audio_chunk = audio_chunk
+    def __init__(self, asr):
+        self.asr = asr
 
     def __enter__(self):
         return self
@@ -126,9 +131,25 @@ class AudioQueue:
     def __next__(self) -> bytes:
         data = []
         size = 0
+        chunk_size = self.asr.audio_chunk * 2  # 2 bytes per int16 sample
+        time_begin = time.perf_counter()
         
-        while size <= self.audio_chunk * 2:
-            data.append(self.queue.get())
+        while size <= chunk_size:  
+            try:
+                input = self.asr.input_queue.get(timeout=self.asr.keep_alive_timeout) 
+            except queue.Empty:
+                logging.debug(f"sending ASR keep-alive silence (idle for {self.asr.keep_alive_timeout} seconds)")
+                return bytes(chunk_size)
+
+            if audio_silent(input, self.asr.silence_threshold):
+                if time.perf_counter() - time_begin >= self.asr.keep_alive_timeout:
+                    return bytes(chunk_size)
+                else: # drop the previous audio, so it doesn't get included later
+                    data = []
+                    size = 0
+                    continue
+                    
+            data.append(input)
             size += len(data[-1])
         
         """
