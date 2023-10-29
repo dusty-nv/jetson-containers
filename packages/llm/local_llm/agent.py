@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import logging
+
 from .plugin import Plugin
 
 class Agent():
@@ -45,6 +47,7 @@ class Agent():
         Run the agent forever or return after the specified timeout (in seconds)
         """
         self.start()
+        logging.success(f"{type(self).__name__} - system ready")
         self.pipeline[0].join(timeout)
         return self
         

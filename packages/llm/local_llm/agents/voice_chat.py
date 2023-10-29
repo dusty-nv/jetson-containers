@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from local_llm import Agent, Pipeline
+from local_llm.utils import ArgParser, print_table
 
 from local_llm.plugins import (
     UserPrompt, ChatQuery, PrintStream, 
@@ -7,16 +8,12 @@ from local_llm.plugins import (
     AudioOutputDevice, AudioOutputFile
 )
 
-from local_llm.utils import ArgParser, print_table
-
-from termcolor import cprint
-
 
 class VoiceChat(Agent):
     """
     Uses ASR + TTS to chat with LLM
     """
-    def __init__(self, interactive=False, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__()
 
         # ASR
@@ -56,12 +53,10 @@ class VoiceChat(Agent):
             self.tts_output.add(self.audio_output_file)
         
         # text prompts from web UI or CLI
-        if interactive:
-            self.prompt = UserPrompt(interactive=True, **kwargs)
-            self.prompt.add(self.llm)
-            self.pipeline = [self.prompt, self.asr]
-        else:
-            self.pipeline = [self.asr]
+        self.prompt = UserPrompt(interactive=True, **kwargs)
+        self.prompt.add(self.llm)
+        
+        self.pipeline = [self.prompt, self.asr]
             
     def asr_partial(self, text):
         self.asr_history = text
@@ -80,19 +75,12 @@ class VoiceChat(Agent):
     def on_eos(self, text):
         if text.endswith('</s>'):
             print_table(self.llm.model.stats)
-            #self.print_input_prompt()
 
-    """
-    def print_input_prompt(self):
-        if self.interactive:
-            cprint('>> PROMPT: ', 'blue', end='', flush=True)
-    """ 
-        
+ 
 if __name__ == "__main__":
     from local_llm.utils import ArgParser
 
     parser = ArgParser(extras=ArgParser.Defaults+['asr', 'tts', 'audio_output'])
-    parser.add_argument("-it", "--interactive", action="store_true", help="enable interactive user input from the terminal")
     args = parser.parse_args()
     
     agent = VoiceChat(**vars(args)).run() 

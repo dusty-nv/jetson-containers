@@ -73,14 +73,20 @@ class Plugin(threading.Thread):
                         
         Returns a reference to this plugin instance (self)
         """
+        from local_llm.plugins import Callback
+        
         if not isinstance(plugin, Plugin):
             if not callable(plugin):
                 raise TypeError(f"{type(self)}.add() expects either a Plugin instance or a callable function (was {type(plugin)})")
-            from local_llm.plugins import Callback
             plugin = Callback(plugin, **kwargs)
             
         self.outputs[channel].append(plugin)
-        logging.debug(f"connected plugin {type(self)} to {type(plugin)} on channel={channel}")
+        
+        if isinstance(plugin, Callback):
+            logging.debug(f"connected {type(self).__name__} to {plugin.function.__name__} on channel={channel}")  # TODO https://stackoverflow.com/a/25959545
+        else:
+            logging.debug(f"connected {type(self).__name__} to {type(plugin).__name__} on channel={channel}")
+            
         return self
     
     def find(self, type):
