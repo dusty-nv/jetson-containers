@@ -14,7 +14,7 @@ class VoiceChat(Agent):
     Uses ASR + TTS to chat with LLM
     """
     def __init__(self, **kwargs):
-        super().__init__()
+        super().__init__(**kwargs)
 
         # ASR
         self.asr = RivaASR(**kwargs)

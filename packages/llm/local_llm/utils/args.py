@@ -33,7 +33,8 @@ class ArgParser(argparse.ArgumentParser):
         if 'chat' in extras or 'prompt' in extras:
             self.add_argument("--prompt", action='append', nargs='*', 
                 help="add a prompt (can be prompt text or path to .txt, .json, or image file)")
-                
+            self.add_argument("--save-mermaid", type=str, default=None, help="save mermaid diagram of the pipeline to this file")
+            
         if 'chat' in extras:
             self.add_argument("--system-prompt", type=str, default=None, help="override the system prompt instruction")
             self.add_argument("--chat-template", type=str, default=None, #choices=list(ChatTemplates.keys()), 
