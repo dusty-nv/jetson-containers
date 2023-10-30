@@ -57,6 +57,14 @@ The prefill time is how long the model takes to process the input context before
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
+| **`mlc:dev`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Builds | [![`mlc-dev_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/mlc-dev_jp51.yml?label=mlc-dev:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/mlc-dev_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`bitsandbytes`](/packages/llm/bitsandbytes) [`auto_gptq`](/packages/llm/auto_gptq) [`transformers`](/packages/llm/transformers) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Notes | [mlc-ai/mlc-llm](https://github.com/mlc-ai/mlc-llm/tree/2193767fa20b9f08a530c29b402bf4237cc84561) commit SHA [`2193767fa20b9f08a530c29b402bf4237cc84561`](https://github.com/mlc-ai/mlc-llm/tree/2193767fa20b9f08a530c29b402bf4237cc84561) |
+
 | **`mlc:9bf5723`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `mlc` |
