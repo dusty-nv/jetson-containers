@@ -12,11 +12,11 @@ FROM ${BASE_IMAGE}
 
 WORKDIR /opt
 
+ARG MLC_REPO
+ARG MLC_VERSION
+
 ARG CUDAARCHS
 ARG TORCH_CUDA_ARCH_LIST
-
-ARG MLC_REPO=mlc-ai/mlc-llm
-ARG MLC_BRANCH=main
 
 # MLC/TVM recommends to use LLVM
 RUN apt-get update && \
@@ -26,21 +26,12 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
     
-#ADD https://api.github.com/repos/${MLC_REPO}/git/refs/heads/${MLC_BRANCH} /tmp/mlc_version.json
+#ADD https://api.github.com/repos/${MLC_REPO}/git/refs/heads/${MLC_VERSION} /tmp/mlc_version.json
 
-# https://github.com/mlc-ai/mlc-llm/issues/906 sha=015414f60e395708345defa2d793df5f3f474e98
-# https://github.com/mlc-ai/mlc-llm/pull/941 sha=5902cc6624b828858060654fbcad3eb7c5158179
-RUN echo "20231001" > /tmp/mlc_version.txt
+RUN git clone --recursive https://github.com/${MLC_REPO} && \
+    cd mlc-llm && \
+    git checkout ${MLC_VERSION}
 
-RUN git clone --branch=${MLC_BRANCH} --depth=1 --recursive https://github.com/${MLC_REPO}
-
-COPY patches/min.diff mlc-llm/
-
-RUN cd mlc-llm && \
-    git apply min.diff && \
-    git status && \
-    git diff
-    
 # https://github.com/Dao-AILab/flash-attention/pull/343
 RUN cd mlc-llm/3rdparty/tvm/3rdparty/libflash_attn && \
     wget https://raw.githubusercontent.com/Dao-AILab/flash-attention/main/csrc/flash_attn/src/static_switch.h -O src/static_switch.h && \
@@ -88,6 +79,14 @@ RUN cd mlc-llm/3rdparty/tvm/python && \
   
 RUN pip3 install --no-cache-dir --verbose tvm*.whl
 RUN pip3 show tvm && python3 -c 'import tvm'
+
+ARG MLC_PATCH
+COPY ${MLC_PATCH} mlc-llm/patch.diff
+
+RUN cd mlc-llm && \
+    git apply patch.diff && \
+    git status && \
+    git diff
 
 RUN cd mlc-llm && \
     python3 setup.py --verbose bdist_wheel && \
