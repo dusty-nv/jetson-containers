@@ -57,20 +57,14 @@ The prefill time is how long the model takes to process the input context before
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`mlc`** | |
+| **`mlc:9bf5723`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`mlc_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/mlc_jp51.yml?label=mlc:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/mlc_jp51.yml) |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`bitsandbytes`](/packages/llm/bitsandbytes) [`auto_gptq`](/packages/llm/auto_gptq) [`transformers`](/packages/llm/transformers) |
-| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/mlc:r35.2.1`](https://hub.docker.com/r/dustynv/mlc/tags) `(2023-10-13, 9.0GB)`<br>[`dustynv/mlc:r35.3.1`](https://hub.docker.com/r/dustynv/mlc/tags) `(2023-10-02, 9.0GB)`<br>[`dustynv/mlc:r35.4.1`](https://hub.docker.com/r/dustynv/mlc/tags) `(2023-09-19, 8.9GB)` |
-
-| **`mlc:dev`** | |
-| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `mlc` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`bitsandbytes`](/packages/llm/bitsandbytes) [`auto_gptq`](/packages/llm/auto_gptq) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`local_llm`](/packages/llm/local_llm) |
-| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.dev`](Dockerfile.dev) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Notes | [mlc-ai/mlc-llm](https://github.com/mlc-ai/mlc-llm/tree/9bf5723) commit SHA [`9bf5723`](https://github.com/mlc-ai/mlc-llm/tree/9bf5723) |
 
 </details>
 
