@@ -1,7 +1,7 @@
 #---
 # name: local_llm
 # group: llm
-# depends: [mlc:dev, jetson-utils, riva-client:python]
+# depends: [mlc, jetson-utils, riva-client:python]
 # requires: '>=34.1.0'
 #---
 # depends: [mlc:dev, awq:dev]
@@ -14,6 +14,13 @@ COPY requirements.txt .
 RUN pip3 install --no-cache-dir --verbose -r requirements.txt
 
 COPY *.py ./
+
+COPY agents agents
+COPY models models
+COPY plugins plugins
+COPY utils utils
+COPY vision vision
+COPY web web
 
 ENV PYTHONPATH=${PYTHONPATH}:/opt/local_llm
 
