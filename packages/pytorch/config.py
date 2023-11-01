@@ -1,6 +1,6 @@
 
 from jetson_containers import L4T_VERSION
-
+import re
 
 def pytorch(version, whl, url, requires, default=False):
     """
@@ -22,11 +22,43 @@ def pytorch(version, whl, url, requires, default=False):
     pkg['requires'] = requires
     
     return pkg
+
+
+def pytorch_build(version, dockerfile, cuda_arch, build_env_variables, requires, default=False):
+    """
+    Create a version of PyTorch for the package list
+    """
+    pkg = package.copy()
     
-extra_pkg = package.copy()
-extra_pkg['name'] = 'pytorch:2.0_use_distributed'
-extra_pkg['dockerfile'] = 'Dockerfile.2.0_use_distributed'
-extra_pkg['depends'] = ['python', 'numpy', 'onnx']
+    name_suffix = ''
+    for env_var in build_env_variables.split():
+        if bool(re.match('^USE_(.+)=1', env_var)):
+            m = re.match('^USE_(.+)=1', env_var)
+            name_suffix=f'{name_suffix}-{m.group(1).lower()}'
+        elif bool(re.match('^USE_(.+)=0', env_var)):
+            m = re.match('^USE_(.+)=0', env_var)
+            name_suffix=f'{name_suffix}-no-{m.group(1).lower()}'
+        else:
+            name_suffix=f"{name_suffix}-{env_var.replace('=', '-').lower()}"
+
+    pkg['name'] = f'pytorch:{version}{name_suffix}'
+    pkg['alias'] = [f'torch:{version}{name_suffix}']
+    
+    if default:
+        pkg['alias'].extend(['pytorch', 'torch'])
+
+    pkg['build_args'] = {
+        'PYTORCH_BUILD_VERSION': version,
+        'PYTORCH_BUILD_NUMBER': '1',
+        'PYTORCH_BUILD_EXTRA_ENV': build_env_variables,
+        'TORCH_CUDA_ARCH_LIST': cuda_arch,
+    }
+
+    pkg['dockerfile'] = dockerfile
+
+    pkg['depends'] = requires
+    
+    return pkg
     
 package = [
     # JetPack 5
@@ -40,5 +72,12 @@ package = [
     #pytorch('1.11', 'torch-1.11.0a0+17540c5-cp36-cp36m-linux_aarch64.whl', 'https://developer.download.nvidia.com/compute/redist/jp/v461/pytorch/torch-1.11.0a0+17540c5+nv22.01-cp36-cp36m-linux_aarch64.whl', '==32.*'),  # (built without LAPACK support)
     pytorch('1.10', 'torch-1.10.0-cp36-cp36m-linux_aarch64.whl', 'https://nvidia.box.com/shared/static/fjtbno0vpo676a25cgvuqc1wty0fkkg6.whl', '==32.*', default=True),
     pytorch('1.9', 'torch-1.9.0-cp36-cp36m-linux_aarch64.whl', 'https://nvidia.box.com/shared/static/h1z9sw4bb1ybi0rm3tu8qdj8hs05ljbm.whl', '==32.*'),
-    extra_pkg
+
+    # Build from source
+    pytorch_build('2.0.0', 'Dockerfile.2.x-build', "7.2;8.7",
+                    'USE_DISTRIBUTED=1', 
+                    ['python', 'numpy', 'onnx']),
+    pytorch_build('2.1.0', 'Dockerfile.2.x-build', "7.2;8.7",
+                    'USE_DISTRIBUTED=1', 
+                    ['python', 'numpy', 'onnx']),
 ]

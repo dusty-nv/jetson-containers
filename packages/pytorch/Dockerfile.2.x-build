@@ -1,5 +1,5 @@
 # 
-# this is the pytorch:2-0_rebuilt container (built in parallel with pytorch:)
+# this is the pytorch:2.x-distributed container (built in parallel with pytorch:)
 # see Dockerfile & config.py for package configuration/metadata
 #
 ARG BASE_IMAGE
@@ -19,21 +19,34 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
-RUN git clone --recursive --branch v2.0.1 http://github.com/pytorch/pytorch && \
-    cd pytorch && \
-    export USE_NCCL=0 && \
-    export USE_DISTRIBUTED=1 && \
-    export USE_QNNPACK=0 && \
-    export USE_PYTORCH_QNNPACK=0 && \
-    export TORCH_CUDA_ARCH_LIST="7.2;8.7" && \
-    export USE_NATIVE_ARCH=1 && \
-    export PYTORCH_BUILD_VERSION="2.0.1" && \
-    export PYTORCH_BUILD_NUMBER=1 && \
-    apt-get install python3-pip libopenblas-dev libopenmpi-dev
+# Docker build arguments passed from `config.py`
+ARG PYTORCH_BUILD_VERSION
+ARG PYTORCH_BUILD_NUMBER
+ARG PYTORCH_BUILD_EXTRA_ENV
+ARG TORCH_CUDA_ARCH_LIST
+
+RUN git clone --recursive --branch v${PYTORCH_BUILD_VERSION} http://github.com/pytorch/pytorch 
+
+# Adding sm_87 (only needed for PyTorch 2.0)
+ENV CPP_EXTENSION_PY_FILE=/opt/pytorch/torch/utils/cpp_extension.py
+RUN cd /opt/pytorch && \   
+    sed -z "s|       ('Turing', '7.5+PTX'),\n        ('Ampere', '8.0;8.6+PTX'),|       ('Turing', '7.5+PTX'),\n        ('Ampere+Tegra', '8.7'),('Ampere', '8.0;8.6+PTX'),|" -i ${CPP_EXTENSION_PY_FILE} && \ 
+    sed "s|'8.6', '8.9'|'8.6', '8.7', '8.9'|" -i ${CPP_EXTENSION_PY_FILE} && \ 
+    sed -n 1729,1746p ${CPP_EXTENSION_PY_FILE}
+
+# Build PyTorch wheel with extra environmental variables for custom feature switch
 RUN cd /opt/pytorch && \    
     pip3 install -r requirements.txt && \
     pip3 install scikit-build && \
     pip3 install ninja && \
+    export USE_NCCL=0 && \
+    export USE_QNNPACK=0 && \
+    export USE_PYTORCH_QNNPACK=0 && \
+    export USE_NATIVE_ARCH=1 && \
+    export PYTORCH_BUILD_VERSION=${PYTORCH_BUILD_VERSION} && \
+    export PYTORCH_BUILD_NUMBER=${PYTORCH_BUILD_NUMBER} && \
+    export ${PYTORCH_BUILD_EXTRA_ENV} && \
+    export TORCH_CUDA_ARCH_LIST=${TORCH_CUDA_ARCH_LIST} && \
     python3 setup.py bdist_wheel 
 RUN cd /opt/pytorch && \    
     ls -lh && \
