@@ -151,9 +151,9 @@ def main():
 
     if not args.images:
         args.images = [
-            "/opt/efficientvit/assets/fig/cat.jpg",
             "/data/images/hoover.jpg",
             "/data/images/lake.jpg",
+            "/opt/efficientvit/assets/fig/cat.jpg",
         ]
 
     print(args)
