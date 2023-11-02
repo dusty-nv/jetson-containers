@@ -138,6 +138,10 @@ def main():
 
     parser.add_argument('-i', '--images', action='append', nargs='*', help="Paths to images to test")
 
+    parser.add_argument("--mode", type=str, default="box", choices=["point", "box", "all"])
+    parser.add_argument("--point", type=str, default=None)
+    parser.add_argument("--box", type=str, default="[150,70,630,400]")
+
     parser.add_argument('-r', '--runs', type=int, default=2, help="Number of inferencing runs to do (for timing)")
     parser.add_argument('-w', '--warmup', type=int, default=1, help='the number of warmup iterations')
     parser.add_argument('-s', '--save', type=str, default='/data/benchmarks/Efficient_ViT.txt', help='CSV file to save benchmarking results to')
@@ -161,6 +165,7 @@ def main():
         efficientvit_sam, **build_kwargs_from_config(opt, EfficientViTSamAutomaticMaskGenerator)
     )
 
+    avg_encoder=0
     avg_latency=0
     pil_image=None
     mask=None
@@ -173,39 +178,112 @@ def main():
             raw_image = np.array(Image.open(image).convert("RGB"))
             H, W, _ = raw_image.shape
             print(f"Image Size: W={W}, H={H}")
+            tmp_file = f".tmp_{time.time()}.png"
 
-            time_begin=time.perf_counter()
+            if args.mode == "all":
+                time_begin=time.perf_counter()
+                masks = efficientvit_mask_generator.generate(raw_image)
+                time_elapsed=time.perf_counter() - time_begin
+                time_encoder=0
 
-            masks = efficientvit_mask_generator.generate(raw_image)
+            elif args.mode == "point":
+                args.point = yaml.safe_load(args.point or f"[[{W // 2},{H // 2},{1}]]")
+                point_coords = [(x, y) for x, y, _ in args.point]
+                point_labels = [l for _, _, l in args.point]
 
-            time_elapsed=time.perf_counter() - time_begin
+                time_begin=time.perf_counter()
+                efficientvit_sam_predictor.set_image(raw_image)
+                time_encoder=time.perf_counter() - time_begin
+                print(f"{image}") 
+                print(f"  encode        :  {time_encoder:.3f} seconds")
+
+                masks, _, _ = efficientvit_sam_predictor.predict(
+                    point_coords=None,
+                    point_labels=None,
+                    box=np.array(args.box),
+                    multimask_output=args.multimask,
+                )
+                time_elapsed=time.perf_counter() - time_begin
+                
+            elif args.mode == "box":
+                bbox = yaml.safe_load(args.box)
+
+                time_begin=time.perf_counter()
+                efficientvit_sam_predictor.set_image(raw_image)
+                time_encoder=time.perf_counter() - time_begin
+                print(f"{image}") 
+                print(f"  encode        :  {time_encoder:.3f} seconds")
+
+                masks, _, _ = efficientvit_sam_predictor.predict(
+                    point_coords=None,
+                    point_labels=None,
+                    box=np.array(bbox),
+                    multimask_output=args.multimask,
+                )
+                time_elapsed=time.perf_counter() - time_begin
+            else:
+                raise NotImplementedError
 
             print(f"  full pipeline :  {time_elapsed:.3f} seconds\n")
 
             if run >= args.warmup:
+                avg_encoder += time_encoder
                 avg_latency += time_elapsed
 
+    avg_encoder /= ( args.runs * len(args.images) )
     avg_latency /= ( args.runs * len(args.images) )
     
     memory_usage=get_max_rss()
 
     print(f"AVERAGE of {args.runs} runs:")
+    print(f"  encoder --- {avg_encoder:.3f} sec")
     print(f"  latency --- {avg_latency:.3f} sec")
     print(f"Memory consumption :  {memory_usage:.2f} MB")
 
-    plt.figure(figsize=(20, 20))
-    plt.imshow(raw_image)
-    show_anns(masks)
-    plt.axis("off")
-    plt.savefig(args.output_path, format="png", dpi=75, bbox_inches="tight", pad_inches=0.0)
 
+    if args.mode == "all":
+        plt.figure(figsize=(20, 20))
+        plt.imshow(raw_image)
+        show_anns(masks)
+        plt.axis("off")
+        plt.savefig(args.output_path, format="png", dpi=75, bbox_inches="tight", pad_inches=0.0)
+
+    elif args.mode == "point":
+        plots = [
+            draw_scatter(
+                draw_binary_mask(raw_image, binary_mask, (0, 0, 255)),
+                point_coords,
+                color=["g" if l == 1 else "r" for l in point_labels],
+                s=10,
+                ew=0.25,
+                tmp_name=tmp_file,
+            )
+            for binary_mask in masks
+        ]
+        plots = cat_images(plots, axis=1)
+        Image.fromarray(plots).save(args.output_path)
+    elif args.mode == "box":
+        plots = [
+            draw_bbox(
+                draw_binary_mask(raw_image, binary_mask, (0, 0, 255)),
+                [bbox],
+                color="g",
+                tmp_name=tmp_file,
+            )
+            for binary_mask in masks
+        ]
+        plots = cat_images(plots, axis=1)
+        Image.fromarray(plots).save(args.output_path)
+    else:
+        raise NotImplementedError
+    
     if args.save:
         if not os.path.isfile(args.save):  # csv header
             with open(args.save, 'w') as file:
-                file.write(f"timestamp, hostname, api, model, weight_url, latency, memory\n")
+                file.write(f"timestamp, hostname, api, model, weight_url, mode, time_encoder, latency, memory\n")
         with open(args.save, 'a') as file:
             file.write(f"{datetime.datetime.now().strftime('%Y%m%d %H:%M:%S')}, {socket.gethostname()}, ")
-            file.write(f"efficientvit-python, {args.model}, {args.weight_url}, {avg_latency}, {memory_usage}\n")
+            file.write(f"efficientvit-python, {args.model}, {args.weight_url}, {args.model}, {args.mode}, {avg_encoder}, {avg_latency}, {memory_usage}\n")
 
 if __name__ == "__main__":
     main()
