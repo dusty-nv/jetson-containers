@@ -5,8 +5,8 @@ class Callback(Plugin):
     """
     Wrapper for calling a function with the same signature as Plugin.process()
     This is automatically used by Plugin.add() so it's typically not needed.
-    Callbacks are unthreaded by default and will be run synchronously,
-    so set threaded=True if this is a long-running function.
+    Callbacks are threaded by default and will be run asynchronously.
+    If it's a lightweight non-blocking function, you can set threaded=False
     """
     def __init__(self, function, threaded=False, **kwargs):
         """

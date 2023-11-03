@@ -64,7 +64,7 @@ class RivaTTS(Plugin):
         text = self.filter_text(text)
         text = self.apply_ssml(text)
         
-        if not text:
+        if not text or self.interrupted:
             return
             
         logging.debug(f"generating TTS for '{text}'")
@@ -87,6 +87,7 @@ class RivaTTS(Plugin):
                 self.needs_text_by = current_time
             self.needs_text_by += len(samples) / self.sample_rate
             
+            #logging.debug(f"TTS outputting {len(samples)} audio samples")
             self.output(samples)
             
         #logging.debug(f"done with TTS request '{text}'")
@@ -97,12 +98,14 @@ class RivaTTS(Plugin):
         """
         return (time.perf_counter() > self.needs_text_by)
      
-    def interrupt(self, clear_inputs=True):
+    def interrupt(self, **kwargs):
         """
         Interrupt any ongoing/pending processing, and optionally clear the input queue.
         """
-        super().interrupt(clear_inputs)
+        super().interrupt(**kwargs)
+        
         self.needs_text_by = 0
+        self.text_buffer = ''
         
     def buffer_text(self, text):
         """
@@ -123,6 +126,9 @@ class RivaTTS(Plugin):
             punc_pos = max(self.text_buffer.rfind(punc), punc_pos)
                 
         if punc_pos < 0:
+            #if len(self.text_buffer.split(' ')) > 6:
+            #    punc_pos = len(self.text_buffer) - 1
+            #else:
             return None
             
         # see if input is needed to prevent a gap-out
@@ -172,6 +178,9 @@ class RivaTTS(Plugin):
         text = text.replace('\n', ' ')
         #text = text.replace('  ', ' ')
         
+        if len(text.strip()) == 0:
+            return None
+            
         return text
     
     def apply_ssml(self, text):
@@ -185,25 +194,8 @@ class RivaTTS(Plugin):
             text = f"<speak><prosody rate='{self.rate}' pitch='{self.pitch}' volume='{self.volume}'>{text}</prosody></speak>"  
             
         return text
-    
-    '''
-    def run(self):
-        """
-        TTS sounds better on several words or a sentence at a time,
-        so buffer incoming text until it is needed (based on the
-        playback time of the previous outgoing audio samples)
-        """
-        while True:
-            text = self.buffer_text()
-            text = self.filter_text(text)
-                
-            if not text:
-                continue
-                
-            text = self.apply_ssml(text)
-            self.process(text)
-    '''
-    
+
+
 if __name__ == "__main__":
     from local_llm.utils import ArgParser
     from local_llm.plugins import UserPrompt, AudioOutputDevice, AudioOutputFile

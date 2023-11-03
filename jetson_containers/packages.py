@@ -276,16 +276,17 @@ def resolve_dependencies(packages, check=True):
         for package in packages_org:
             for dependency in find_package(package).get('depends', []):
                 package_index = packages.index(package)
-                # dependency_index = packages.index(dependency) if dependency in packages else -1
-                if dependency in packages:
-                    dependency_index = packages.index(dependency)
-                else:
-                    # Ignore the tag and matching only by package name
-                    if [i for i, item in enumerate(packages) if item.startswith(f'{dependency}:')]:
-                        dependency_index = [i for i, item in enumerate(packages) if item.startswith(f'{dependency}:')][0]
-                    else:
-                        dependency_index = -1
-                
+                dependency_index = -1
+
+                for i, item in enumerate(packages):
+                    if item == dependency:   # same package names/tags
+                        dependency_index = i
+                    elif item == dependency.split(':')[0]:  # replace with this specific tag
+                        dependency_index = i
+                        packages[i] = dependency
+                    elif item.split(':')[0] == dependency.split(':')[0]:  # a specific tag of this package was already added
+                        dependency_index = i
+       
                 if dependency_index < 0:  # dependency not in list, add it before the package
                     packages.insert(package_index, dependency)
                 elif dependency_index > package_index:  # dependency after current package, move it to before

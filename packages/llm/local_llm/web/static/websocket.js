@@ -25,6 +25,9 @@ var msg_count_tx=0;
 const MESSAGE_JSON = 0;
 const MESSAGE_TEXT = 1;
 const MESSAGE_BINARY = 2;
+const MESSAGE_FILE = 3;
+const MESSAGE_AUDIO = 4;
+const MESSAGE_IMAGE = 5;
 
 function reportError(msg) {
   console.log(msg);
@@ -73,16 +76,43 @@ function sendWebsocket(payload, type=MESSAGE_JSON, metadata='') {
 	var metadata_buffer = new Uint8Array(8);
 	
 	if( metadata ) {
-		console.log(metadata);
 		const metadata_utf8 = new TextEncoder().encode(metadata);
-		
 		for( let i=0; i < metadata_buffer.length && i < metadata_utf8.length; i++ )
 			metadata_buffer[i] = metadata_utf8[i];
 	}
 	
-  console.log(metadata_buffer);
 	console.log(`sending ${typeof payload} websocket message (type=${type} timestamp=${timestamp} payload_size=${payloadSize})`);
 	websocket.send(new Blob([header, metadata_buffer, payload]));
+}
+
+function websocketUpload(dataTransfer) {
+	if (dataTransfer.items) {
+		// Use DataTransferItemList interface to access the file(s)
+		[...dataTransfer.items].forEach((item, i) => { 
+			if( item.kind != "file" ) // If dropped items aren't files, reject them
+				return;
+
+			const file = item.getAsFile();
+			const ext = file.name.split('.').pop().toLowerCase();
+			const img_exts = ['png', 'jpg', 'jpeg', 'tiff', 'bmp', 'gif', 'webm'];
+			
+			console.log(`DataTransferItemList file[${i}].name=${file.name}  ext=${ext}  mime=${file.type}`);
+
+			if( !img_exts.some(img_ext => ext == img_ext) )
+				return;
+
+			file.arrayBuffer().then((fileBuffer) => {
+				sendWebsocket(fileBuffer, type=MESSAGE_IMAGE, metadata=ext);
+			});
+			
+		});
+	} else {
+		// Use DataTransfer interface to access the file(s)
+		[...dataTransfer.files].forEach((file, i) => {
+			console.log(`DataTransfer file[${i}].name = ${file.name}`);
+			console.error('Browser does not support DataTransferItemList');
+		});
+	}
 }
 
 function websocketListener(event) {

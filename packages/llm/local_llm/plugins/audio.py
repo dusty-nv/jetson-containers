@@ -6,6 +6,7 @@ import pyaudio
 import numpy as np
 
 from local_llm import Plugin
+from local_llm.utils import convert_audio
 
 
 class AudioOutputDevice(Plugin):
@@ -61,6 +62,7 @@ class AudioOutputDevice(Plugin):
 
         if self.interrupted:
             self.current_buffer = None
+            self.interrupted = False
             
         while not self.is_paused():
             if self.current_buffer is None:
@@ -114,6 +116,7 @@ class AudioOutputDevice(Plugin):
             return False
             
         return True
+
         
 class AudioOutputFile(Plugin):
     """
@@ -155,29 +158,6 @@ class AudioOutputFile(Plugin):
         """
         input = convert_audio(input, dtype=self.sample_type)
         self.wav.writeframes(input)
-        
-        
-def convert_audio(samples, dtype=np.int16):
-    """
-    Convert between audio datatypes like float<->int16 and apply sample re-scaling
-    """
-    if samples.dtype == dtype:
-        return samples
-        
-    sample_width = np.dtype(dtype).itemsize
-    max_value = float(int((2 ** (sample_width * 8)) / 2) - 1)  # 32767 for 16-bit
-        
-    if samples.dtype == np.float32 or samples.dtype == np.float64:  # float-to-int
-        samples = samples * max_value
-        samples = samples.clip(-max_value, max_value)
-        samples = samples.astype(dtype)
-    elif dtype == np.float32 or dtype == np.float64:  # int-to-float
-        samples = samples.astype(dtype)
-        samples = samples / max_value
-    else:
-        raise TypeError(f"unsupported audio sample dtype={samples.dtype}")
-        
-    return samples
         
         
 if __name__ == "__main__":

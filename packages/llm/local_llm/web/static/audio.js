@@ -105,7 +105,7 @@ function openAudioDevices(inputDeviceId, outputDeviceId) {
 function onAudioInputCapture(event) {
 
 	if( audioInputTrack.enabled )  // unmuted
-		sendWebsocket(event.data, type=MESSAGE_BINARY);  // event.data is a Uint16Array
+		sendWebsocket(event.data, type=MESSAGE_AUDIO);  // event.data is a Uint16Array
 	
   //console.log('onAudioInputCapture()', event.data);
 	

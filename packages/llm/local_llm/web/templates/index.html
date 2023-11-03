@@ -18,9 +18,6 @@
     
 		<script type="text/javascript">
 
-      const MESSAGE_AUDIO = 2;
-      const MESSAGE_IMAGE = 3;
-      
       /*let sampleCount = 0;
       
       function generateAudio() {
@@ -73,66 +70,48 @@
       
       function onFileDrop(ev) {
         console.log("File(s) dropped");
-
-        // prevent file from being opened in the browser
-        ev.preventDefault();
-
-        if (ev.dataTransfer.items) {
-          // Use DataTransferItemList interface to access the file(s)
-          [...ev.dataTransfer.items].forEach((item, i) => {
-            // If dropped items aren't files, reject them
-            if( item.kind != "file" )
-              return;
-
-            const file = item.getAsFile();
-            const ext = file.name.split('.').pop().toLowerCase();
-            const img_exts = ['png', 'jpg', 'jpeg', 'tiff', 'bmp', 'gif', 'webm'];
-            
-            console.log(`DataTransferItemList file[${i}].name=${file.name}  ext=${ext}  mime=${file.type}`);
-
-            if( !img_exts.some(img_ext => ext == img_ext) )
-              return;
-
-            file.arrayBuffer().then((fileBuffer) => {
-              console.log('uploading image');
-              sendWebsocket(fileBuffer, type=MESSAGE_IMAGE, metadata=ext);
-            });
-            
-          });
-        } else {
-          // Use DataTransfer interface to access the file(s)
-          [...ev.dataTransfer.files].forEach((file, i) => {
-            console.log(`DataTransfer file[${i}].name = ${file.name}`);
-          });
-        }
+        ev.preventDefault(); // prevent file from being opened in the browser
+        websocketUpload(ev.dataTransfer);
       }
 
       function onWebsocketMsg(payload, type) {
         if( type == MESSAGE_JSON ) { 
           if( 'chat_history' in payload ) {
             const chat_history = payload['chat_history'];
-            var chc = document.getElementById('chat-history-container');
-            var isScrolledToBottom = chc.scrollHeight - chc.clientHeight <= chc.scrollTop + 1;
             
-            $('#chat-history-container').empty(); // clear because server may remove partial/rejected ASR prompts
+            let chj = $('#chat-history-container');
+            let chc = document.getElementById('chat-history-container');
+            let isScrolledToBottom = chc.scrollHeight - chc.clientHeight <= chc.scrollTop + 1;
+
+            chj.empty(); // clear because server may remove partial/rejected ASR prompts
             
-            /*prev_msg = $(`#chat-history-container #msg_${n}_${m}`);
-            if( prev_msg.length > 0 ) {
-              prev_msg.html(chat_history[n][m]);
-            }*/
-                
             for( let n=0; n < chat_history.length; n++ ) {
               const role = chat_history[n]['role'];
               
-              if( 'text' in chat_history[n] ) {
-                $('#chat-history-container').append(
-                    `<div id="msg_${n}" class="chat-message-${role} mb-3">${chat_history[n]['text']}</div><br/>`
-                );
+              if( role == 'system' )
+                continue;
+                
+              let contents = '';
+              var hasImage = 'image' in chat_history[n];
+              
+              if( hasImage ) {
+                contents += `<img src=${chat_history[n]['image']} width="100%">`;
+                imageAtBottom = true;
               }
+              
+              if( 'text' in chat_history[n] )
+                contents += chat_history[n]['text'];
+
+              if( contents.length > 0 )
+                chj.append(`<div id="msg_${n}" class="chat-message-${role} mb-3">${contents}</div><br/>`);
             }
             
-            if( isScrolledToBottom ) // autoscroll unless the user has scrolled up
-              chc.scrollTop = chc.scrollHeight - chc.clientHeight;
+            if( isScrolledToBottom ) { // autoscroll unless the user has scrolled up
+              if( hasImage )
+                setTimeout(scrollBottom, 50, chc);  // wait for images to load to get right height
+              else
+                scrollBottom(chc);
+            }
           }
 				
           if( 'tegrastats' in payload ) {
@@ -144,6 +123,11 @@
         }
       }
 
+      function scrollBottom(container) {  // https://stackoverflow.com/a/21067431
+        container.scrollTop = container.scrollHeight - container.clientHeight;
+        console.log(`scrolling to bottom ${container.scrollTop} ${container.scrollHeight} ${container.clientHeight}`);
+      }
+      
       window.onload = function() {
       
         connectWebsocket(onWebsocketMsg);
@@ -171,11 +155,11 @@
           </div>
           <div class="collapse navbar-collapse flex-grow-1 text-right" id="navbarToggler">
             <ul class="navbar-nav ms-auto flex-nowrap"> <!-- me-auto mb-2 mb-lg-0 -->
+              <!--<li class="nav-item">
+                <a class="nav-link" href="#">Agent</a>
+              </li>-->
               <li class="nav-item">
                 <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#audioDialog">Audio</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Personality</a>
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarChatHistory" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -183,8 +167,8 @@
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarChatHistory">
                   <li><a class="dropdown-item" href="#" onclick="onChatHistoryReset()">Reset</a></li>
-                  <li><a class="dropdown-item" href="#">Save</a></li>
-                  <li><a class="dropdown-item" href="#">Load</a></li>
+                  <!--<li><a class="dropdown-item" href="#">Save</a></li>
+                  <li><a class="dropdown-item" href="#">Load</a></li>-->
                   <!--<li><hr class="dropdown-divider"></li>
                   <li><a class="dropdown-item" href="#">Something else here</a></li>-->
                 </ul>

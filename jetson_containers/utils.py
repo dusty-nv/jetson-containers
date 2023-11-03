@@ -2,6 +2,8 @@
 import os
 import grp
 import sys
+import json
+import urllib.request
 
 
 def check_dependencies(install=True):
@@ -118,4 +120,15 @@ def sudo_prefix(group='docker'):
     else:
         return ""
         
+        
+def github_latest_commit(repo, branch='main'):
+    """
+    Returns the SHA of the latest commit to the given github user/repo/branch.
+    """
+    url = f"https://api.github.com/repos/{repo}/commits/{branch}"
+    response = urllib.request.urlopen(url)
+    data = response.read()
+    encoding = response.info().get_content_charset('utf-8')
+    msg = json.loads(data.decode(encoding))
+    return msg['sha']
     

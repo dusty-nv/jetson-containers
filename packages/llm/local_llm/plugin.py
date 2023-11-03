@@ -18,21 +18,24 @@ class Plugin(threading.Thread):
       
     Parameters:
     
-      input_channels (int) -- 
+      output_channels (int) -- the number of sets of output connections the plugin has
       relay (bool) -- if true, will relay any inputs as outputs after processing
-      threaded (bool) -- if true, will process queue from independent thread
+      drop_inputs (bool) -- if true, only the most recent input in the queue will be used
+      threaded (bool) -- if true, will spawn independent thread for processing the queue.
       
     TODO:  use queue.task_done() and queue.join() for external synchronization
     """
-    def __init__(self, output_channels=1, relay=False, threaded=True, **kwargs):
+    def __init__(self, output_channels=1, relay=False, drop_inputs=False, threaded=True, **kwargs):
         """
         Initialize plugin
         """
         super().__init__(daemon=True)
 
         self.relay = relay
+        self.drop_inputs = drop_inputs
         self.threaded = threaded
         self.interrupted = False
+        self.processing = False
         
         self.outputs = [[] for i in range(output_channels)]
         self.output_channels = output_channels
@@ -70,14 +73,20 @@ class Plugin(threading.Thread):
                         
         Returns a reference to this plugin instance (self)
         """
+        from local_llm.plugins import Callback
+        
         if not isinstance(plugin, Plugin):
             if not callable(plugin):
                 raise TypeError(f"{type(self)}.add() expects either a Plugin instance or a callable function (was {type(plugin)})")
-            from local_llm.plugins import Callback
             plugin = Callback(plugin, **kwargs)
             
         self.outputs[channel].append(plugin)
-        logging.debug(f"connected plugin {type(self)} to {type(plugin)} on channel={channel}")
+        
+        if isinstance(plugin, Callback):
+            logging.debug(f"connected {type(self).__name__} to {plugin.function.__name__} on channel={channel}")  # TODO https://stackoverflow.com/a/25959545
+        else:
+            logging.debug(f"connected {type(self).__name__} to {type(plugin).__name__} on channel={channel}")
+            
         return self
     
     def find(self, type):
@@ -117,9 +126,9 @@ class Plugin(threading.Thread):
         Add data to the plugin's processing queue (or if threaded=False, process it now)
         TODO:  multiple input channels?
         """
-        self.interrupted = False
-        
         if self.threaded:
+            if self.drop_inputs:
+                self.clear_inputs()
             self.input_queue.put(input)
             self.input_event.set()
         else:
@@ -173,22 +182,32 @@ class Plugin(threading.Thread):
         Invoke the process() function on incoming data
         """
         if self.interrupted:
-            return
+            #logging.debug(f"{type(self)} resetting interrupted=False")
+            self.interrupted = False
             
-        self.output(self.process(input))
+        self.processing = True
+        outputs = self.process(input)
+        self.processing = False
+        
+        self.output(outputs)
         
         if self.relay:
             self.output(input)
    
-    def interrupt(self, clear_inputs=True):
+    def interrupt(self, clear_inputs=True, block=True):
         """
         Interrupt any ongoing/pending processing, and optionally clear the input queue.
+        If block is true, this function will wait until any ongoing processing has finished.
+        This is done so that any lingering outputs don't cascade downstream in the pipeline.
         """
         if clear_inputs:
             self.clear_inputs()
-                    
+          
         self.interrupted = True
- 
+        
+        while block and self.processing:
+            continue  # TODO use an event for this?
+        
     def clear_inputs(self):
         """
         Clear the input queue, dropping any data.
