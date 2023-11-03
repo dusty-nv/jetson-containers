@@ -69,6 +69,7 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
             
         _PACKAGE_SCAN = True  # flag that all dirs have been scanned
         
+        print(f'_PACKAGES: {_PACKAGES}')
         for key in _PACKAGES.copy():  # make sure all dependencies are met
             try:
                 resolve_dependencies(key)
@@ -275,7 +276,16 @@ def resolve_dependencies(packages, check=True):
         for package in packages_org:
             for dependency in find_package(package).get('depends', []):
                 package_index = packages.index(package)
-                dependency_index = packages.index(dependency) if dependency in packages else -1
+                dependency_index = -1
+
+                for i, item in enumerate(packages):
+                    if item == dependency:   # same package names/tags
+                        dependency_index = i
+                    elif item == dependency.split(':')[0]:  # replace with this specific tag
+                        dependency_index = i
+                        packages[i] = dependency
+                    elif item.split(':')[0] == dependency.split(':')[0]:  # a specific tag of this package was already added
+                        dependency_index = i
                 
                 if dependency_index < 0:  # dependency not in list, add it before the package
                     packages.insert(package_index, dependency)
