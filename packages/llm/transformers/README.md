@@ -5,7 +5,7 @@
 
 The HuggingFace [Transformers](https://huggingface.co/docs/transformers/index) library supports a wide variety of NLP and vision models with a convenient API, and is used by many of the other LLM packages.  There are a large number of models that it's compatible with on [HuggingFace Hub](https://huggingface.co/models).
 
-> [!INFO]  
+> [!NOTE]  
 > If you wish to use Transformer's integrated [bitsandbytes](https://huggingface.co/docs/transformers/main_classes/quantization#bitsandbytes-integration) quantization (`load_in_8bit/load_in_4bit`) or [AutoGPTQ](https://huggingface.co/docs/transformers/main_classes/quantization#autogptq-integration) quantization, run these containers instead which include those respective libraries installed on top of Transformers:
 >   * [`auto_gptq`](/packages/llm/auto_gptq) (depends on Transformers)
 >   * [`bitsandbytes`](/packages/llm/bitsandbytes) (depends on Transformers)
