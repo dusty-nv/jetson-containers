@@ -68,8 +68,7 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
             scan_packages(path)
             
         _PACKAGE_SCAN = True  # flag that all dirs have been scanned
-        
-        print(f'_PACKAGES: {_PACKAGES}')
+
         for key in _PACKAGES.copy():  # make sure all dependencies are met
             try:
                 resolve_dependencies(key)
@@ -290,7 +289,7 @@ def resolve_dependencies(packages, check=True):
                 if dependency_index < 0:  # dependency not in list, add it before the package
                     packages.insert(package_index, dependency)
                 elif dependency_index > package_index:  # dependency after current package, move it to before
-                    packages.remove(dependency)
+                    packages.pop(dependency_index) #packages.remove(dependency)
                     packages.insert(package_index, dependency)
       
         if len(packages) == len(packages_org):
