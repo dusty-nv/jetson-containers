@@ -1,6 +1,11 @@
 
 The HuggingFace [Transformers](https://huggingface.co/docs/transformers/index) library supports a wide variety of NLP and vision models with a convenient API, and is used by many of the other LLM packages.  There are a large number of models that it's compatible with on [HuggingFace Hub](https://huggingface.co/models).
 
+> [!IMPORTANT]  
+> If you wish to use Transformer's integrated [bitsandbytes](https://huggingface.co/docs/transformers/main_classes/quantization#bitsandbytes-integration) quantization (`load_in_8bit/load_in_4bit`) or [AutoGPTQ](https://huggingface.co/docs/transformers/main_classes/quantization#autogptq-integration) quantization, run these containers instead which include those respective libraries installed on top of Transformers:
+>   * [`auto_gptq`](/packages/llm/auto_gptq) (depends on Transformers)
+>   * [`bitsandbytes`](/packages/llm/bitsandbytes) (depends on Transformers)
+
 ### Text Generation Benchmark
 
 Substitute the [text-generation model](https://huggingface.co/models?pipeline_tag=text-generation&sort=trending) that you want to run (it should be a CausalLM model like GPT, Llama, ect)
@@ -19,7 +24,7 @@ The prompt can be changed with `--prompt='your prompt here'`
 
 Use the `--precision` argument to enable quantization (options are: `fp32` `fp16` `fp4` `int8`)
 
-On JetPack 5, the [`bitsandbytes`](/packages/llm/bitsandbytes) package is included in the container to enable 4-bit/8-bit quantization through the Transformers API.  It's expected that 4-bit/8-bit quantization is slower through Transformers than FP16 (while consuming less memory).  Other libraries like [`exllama`](/packages/llm/exllama), [`awq`](/packages/llm/awq), and [`AutoGPTQ`](/packages/llm/auto-gptq) have custom CUDA kernels and more efficient quantized performance.  The default precision used is FP16.
+If you're using `fp4` or `int8`, run the [`bitsandbytes`](/packages/llm/bitsandbytes) container as noted above, so that bitsandbytes package is installed to do the quantization.  It's expected that 4-bit/8-bit quantization is slower through Transformers than FP16 (while consuming less memory) - see [here](https://huggingface.co/docs/transformers/main_classes/quantization) for more info.  Other libraries like [`exllama`](/packages/llm/exllama), [`awq`](/packages/llm/awq), and [`AutoGPTQ`](/packages/llm/auto-gptq) have custom CUDA kernels and more efficient quantized performance.  The default precision used is FP16.
 
 #### Llama2
 

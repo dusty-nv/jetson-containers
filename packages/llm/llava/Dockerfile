@@ -2,7 +2,7 @@
 # name: llava
 # group: llm
 # docs: docs.md
-# depends: [pytorch, transformers]
+# depends: [pytorch, transformers, bitsandbytes]
 # requires: '>=34.1.0'
 # test: test.py
 #---

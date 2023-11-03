@@ -46,9 +46,6 @@ on:
       - 'packages/vit/sam/*'
       - '!packages/vit/sam/README.md'
       - '!packages/vit/sam/docs.md'
-      - 'packages/pytorch/*'
-      - '!packages/pytorch/README.md'
-      - '!packages/pytorch/docs.md'
 jobs:
   tam_jp51:
     runs-on: [self-hosted, jetson, jp51]
