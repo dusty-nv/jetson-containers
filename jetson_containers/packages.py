@@ -286,7 +286,7 @@ def resolve_dependencies(packages, check=True):
                         packages[i] = dependency
                     elif item.split(':')[0] == dependency.split(':')[0]:  # a specific tag of this package was already added
                         dependency_index = i
-                
+       
                 if dependency_index < 0:  # dependency not in list, add it before the package
                     packages.insert(package_index, dependency)
                 elif dependency_index > package_index:  # dependency after current package, move it to before
