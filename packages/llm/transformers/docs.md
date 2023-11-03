@@ -22,9 +22,11 @@ The prompt can be changed with `--prompt='your prompt here'`
 
 #### Precision / Quantization
 
-Use the `--precision` argument to enable quantization (options are: `fp32` `fp16` `fp4` `int8`)
+Use the `--precision` argument to enable quantization (options are: `fp32` `fp16` `fp4` `int8`, default is: `fp16`)
 
-If you're using `fp4` or `int8`, run the [`bitsandbytes`](/packages/llm/bitsandbytes) container as noted above, so that bitsandbytes package is installed to do the quantization.  It's expected that 4-bit/8-bit quantization is slower through Transformers than FP16 (while consuming less memory) - see [here](https://huggingface.co/docs/transformers/main_classes/quantization) for more info.  Other libraries like [`exllama`](/packages/llm/exllama), [`awq`](/packages/llm/awq), and [`AutoGPTQ`](/packages/llm/auto-gptq) have custom CUDA kernels and more efficient quantized performance.  The default precision used is FP16.
+If you're using `fp4` or `int8`, run the [`bitsandbytes`](/packages/llm/bitsandbytes) container as noted above, so that bitsandbytes package is installed to do the quantization.  It's expected that 4-bit/8-bit quantization is slower through Transformers than FP16 (while consuming less memory) - see [here](https://huggingface.co/docs/transformers/main_classes/quantization) for more info.
+
+Other libraries like [`exllama`](/packages/llm/exllama), [`awq`](/packages/llm/awq), and [`AutoGPTQ`](/packages/llm/auto-gptq) have custom CUDA kernels and more efficient quantized performance.  The default precision used is FP16.
 
 #### Llama2
 
