@@ -2,7 +2,7 @@
 # name: nanodb
 # group: vectordb
 # docs: docs.md
-# depends: [pytorch, transformers, faiss:lite, torch2trt]
+# depends: [faiss:lite, transformers, torch2trt]
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

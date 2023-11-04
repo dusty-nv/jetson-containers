@@ -1,5 +1,6 @@
 #---
 # name: faiss
+# alias: faiss:main
 # group: vectordb
 # config: config.py
 # depends: [numpy, cmake]
