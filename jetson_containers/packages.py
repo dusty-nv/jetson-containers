@@ -72,7 +72,7 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
         for key in _PACKAGES.copy():  # make sure all dependencies are met
             try:
                 resolve_dependencies(key)
-            except Exception as error:
+            except KeyError as error:
                 print(f"-- Package {key} has missing dependencies, disabling...  ({error})")
                 del _PACKAGES[key]
                 
@@ -146,7 +146,7 @@ def find_package(package, required=True, scan=True):
     """
     Find a package by name or alias, and return it's configuration dict.
     This filters the names with pattern matching using shell-style wildcards.
-    If required is true, an exception will be thrown if the package can't be found.
+    If required is true, a KeyError exception will be raised if any of the packages can't be found.
     """
     if validate_dict(package):
         return package
@@ -161,7 +161,7 @@ def find_package(package, required=True, scan=True):
             return pkg
         
     if required:
-        raise ValueError(f"couldn't find package:  {package}")
+        raise KeyError(f"couldn't find package:  {package}")
     else:
         return None
         
@@ -170,7 +170,7 @@ def find_packages(packages, required=True, scan=True, skip=[]):
     """
     Find a set of packages by name or alias, and return them in a dict.
     This filters the names with pattern matching using shell-style wildcards.
-    If required is true, an exception will be thrown if any of the packages can't be found.
+    If required is true, a KeyError exception will be raised if any of the packages can't be found.
     """
     if scan:
         scan_packages()
@@ -199,7 +199,7 @@ def find_packages(packages, required=True, scan=True, skip=[]):
                 found_package = True
            
         if required and not found_package:
-            raise ValueError(f"couldn't find package:  {search_pattern}")
+            raise KeyError(f"couldn't find package:  {search_pattern}")
             
         """
         matches = fnmatch.filter(list(_PACKAGES.keys()), search_pattern)
@@ -259,47 +259,55 @@ def group_packages(packages, key, default=''):
         
     return grouped
     
-    
+        
 def resolve_dependencies(packages, check=True):
     """
     Recursively expand the list of dependencies to include all sub-dependencies.
     Returns a new list of containers to build which contains all the dependencies.
+    
+    If check is true, then each dependency will be confirmed to exist, otherwise
+    a KeyError exception will be raised with the name of the missing dependency.
     """
     if isinstance(packages, str):
         packages = [packages]
     
-    # iteratively unroll/expand dependencies until the full list is resolved
-    while True:
+    def add_depends(packages):
         packages_org = packages.copy()
         
         for package in packages_org:
             for dependency in find_package(package).get('depends', []):
-                package_index = packages.index(package)
+                package_index = packages.index(package)  
                 dependency_index = -1
 
-                for i, item in enumerate(packages):
-                    if item == dependency:   # same package names/tags
+                for i, existing in enumerate(packages):
+                    if existing == dependency:   # same package names/tags
                         dependency_index = i
-                    elif item == dependency.split(':')[0]:  # replace with this specific tag
+                    elif existing.split(':')[0] == dependency: # a specific tag of this package was already added   #dependency.split(':')[0]
                         dependency_index = i
+                    elif existing == dependency.split(':')[0]:  # replace with this specific tag
                         packages[i] = dependency
-                    elif item.split(':')[0] == dependency.split(':')[0]:  # a specific tag of this package was already added
-                        dependency_index = i
-       
+                        return packages, True
+
                 if dependency_index < 0:  # dependency not in list, add it before the package
                     packages.insert(package_index, dependency)
                 elif dependency_index > package_index:  # dependency after current package, move it to before
-                    packages.pop(dependency_index) #packages.remove(dependency)
+                    packages.pop(dependency_index)
                     packages.insert(package_index, dependency)
-      
-        if len(packages) == len(packages_org):
+                    return packages, True
+
+        return packages, (packages != packages_org)
+    
+    # iteratively unroll/expand dependencies until the full list is resolved
+    while True:
+        packages, changed = add_depends(packages)
+        if not changed:
             break
      
     # make sure all packages can be found
     if check:
         for package in packages:    
             find_package(package)
-        
+
     return packages
 
 
