@@ -14,8 +14,8 @@ Modular container build system that provides various [**AI/ML packages**](packag
 | **VIT** | [`NanoOWL`](packages/vit/nanoowl) [`NanoSAM`](packages/vit/nanosam) [`Segment Anything (SAM)`](packages/vit/sam) [`Track Anything (TAM)`](packages/vit/tam) |
 | **CUDA** | [`cupy`](packages/cupy) [`cuda-python`](packages/cuda-python) [`pycuda`](packages/pycuda) [`numba`](packages/numba) [`cudf`](packages/rapids/cudf) [`cuml`](packages/rapids/cuml) |
 | **Robotics** | [`ros`](packages/ros) [`ros2`](packages/ros) [`opencv:cuda`](packages/opencv) [`realsense`](packages/realsense) [`zed`](packages/zed) |
-| **VectorDB** | [`NanoDB`](packages/vectordb/nanodb) [`FAISS`](packages/vectordb/faiss) [`RAFT`](packages/rapids/raft) |
 | **Audio** | [`whisper`](packages/audio/whisper) [`riva`](packages/audio/riva-client) [`audiocraft`](packages/audio/audiocraft) |
+| **VectorDB** | [`NanoDB`](packages/vectordb/nanodb) [`FAISS`](packages/vectordb/faiss) [`RAFT`](packages/rapids/raft) |
 
 See the [**`packages`**](packages) directory for the full list, including pre-built container images and CI/CD status for JetPack/L4T.
 
