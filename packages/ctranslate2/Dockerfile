@@ -22,7 +22,7 @@ WORKDIR /opt
 RUN git clone --recursive https://github.com/OpenNMT/CTranslate2.git && \
     cd CTranslate2 && \
     mkdir build && cd build && \
-    cmake .. && \
+    cmake .. -DWITH_CUDA=ON -DWITH_CUDNN=ON -DWITH_MKL=OFF -DOPENMP_RUNTIME=COMP && \
     make -j4 && \
     sudo make install && \
     sudo ldconfig

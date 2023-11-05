@@ -1,7 +1,7 @@
 #---
 # name: whisperx
 # group: audio
-# depends: [numba, numpy, pytorch, torchaudio, jupyterlab]
+# depends: [pytorch, torchaudio, faster-whisper, transformers]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---
@@ -24,6 +24,7 @@ RUN python3 -c 'import torch; print(f"PyTorch version: {torch.__version__}"); pr
 RUN git clone https://github.com/m-bain/whisperX.git && \
     cd whisperX && \
     sed 's|^torch.*||' -i requirements.txt && \
+    sed 's|^faster-whisper.*||' -i requirements.txt && \
     sed 's|^transformers.*||' -i requirements.txt && \
     cat requirements.txt && \
     pip3 install .
