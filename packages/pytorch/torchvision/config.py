@@ -12,6 +12,3 @@ package['build_args'] = {
     'TORCHVISION_VERSION': TORCHVISION_VERSION,
     'TORCH_CUDA_ARCH_LIST': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES])
 }
-
-package['group'] = 'ml'
-package['depends'] = ['cmake', 'pytorch']
