@@ -28,9 +28,10 @@ RUN apt-get update && \
     
 #ADD https://api.github.com/repos/${MLC_REPO}/git/refs/heads/${MLC_VERSION} /tmp/mlc_version.json
 
-RUN git clone --recursive https://github.com/${MLC_REPO} && \
+RUN git clone https://github.com/${MLC_REPO} && \
     cd mlc-llm && \
-    git checkout ${MLC_VERSION}
+    git checkout ${MLC_VERSION} && \
+    git submodule update --init --recursive
 
 # https://github.com/Dao-AILab/flash-attention/pull/343
 RUN cd mlc-llm/3rdparty/tvm/3rdparty/libflash_attn && \
