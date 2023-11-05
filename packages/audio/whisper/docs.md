@@ -20,10 +20,10 @@ Open your web browser and access `http://HOSTNAME:8888`.
 
 It is enabling HTTPS (SSL) connection, so you will see a warning message like this.
 
-![](Chrome_ERR_CERT.png)
+<img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/chrome_ssl_cert.png">
 
 Press "**Advanced**" button and then press "**Proceed to <IP_ADDRESS> (unsafe)**" to proceed.
 
-![](Chrome_ERR_CERT_after_advanced.png)
+<img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/chrome_ssl_advanced.png">
 
 HTTPS (SSL) connection is needed to allow `ipywebrtc` widget to have access to the microphone (for `record-and-transcribe.ipynb`).
