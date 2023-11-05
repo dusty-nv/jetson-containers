@@ -33,6 +33,8 @@ RUN git clone --depth=1 https://github.com/basujindal/stable-diffusion stable-di
     cp -r stable-diffusion-optimized/optimizedSD stable-diffusion/ && \
     rm -rf stable-diffusion-optimized
 
+RUN pip3 install --no-cache-dir --verbose scipy
+
 # File "/opt/stable-diffusion/ldm/models/diffusion/ddpm.py", line 19, in <module>
 #   from pytorch_lightning.utilities.distributed import rank_zero_only
 RUN sed 's|from pytorch_lightning.utilities.distributed|#from pytorch_lightning.utilities.distributed|g' -i stable-diffusion/ldm/models/diffusion/ddpm.py && \
