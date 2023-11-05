@@ -1,6 +1,6 @@
 #---
 # name: torch2trt
-# group: ml
+# group: pytorch
 # config: config.py
 # depends: [pytorch, torchvision]
 # test: test.py

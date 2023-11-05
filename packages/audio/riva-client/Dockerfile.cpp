@@ -1,6 +1,6 @@
 #---
 # name: 'riva-client:cpp'
-# group: ml
+# group: audio
 # depends: [bazel]
 # requires: '>=34.1.0'
 # test: [test.sh]

@@ -9,11 +9,12 @@ Modular container build system that provides various [**AI/ML packages**](packag
 | | |
 |---|---|
 | **ML** | [`pytorch`](packages/pytorch) [`tensorflow`](packages/tensorflow) [`onnxruntime`](packages/onnxruntime) [`deepstream`](packages/deepstream) [`tritonserver`](packages/tritonserver) [`jupyterlab`](packages/jupyterlab) [`stable-diffusion`](packages/diffusion/stable-diffusion-webui) |
-| **LLM** | [`transformers`](packages/llm/transformers) [`text-generation-webui`](packages/llm/text-generation-webui) [`text-generation-inference`](packages/llm/text-generation-inference) [`llava`](packages/llm/llava) [`llama.cpp`](packages/llm/llama_cpp) [`exllama`](packages/llm/exllama) [`llamaspeak`](packages/llm/llamaspeak) [`awq`](packages/llm/awq) [`AutoGPTQ`](packages/llm/auto_gptq) [`MiniGPT-4`](packages/llm/minigpt4) [`MLC`](packages/llm/mlc) [`langchain`](packages/llm/langchain) [`optimum`](packages/llm/optimum) [`bitsandbytes`](packages/llm/bitsandbytes) [`nemo`](packages/nemo) [`riva`](packages/riva-client) |
+| **LLM** | [`transformers`](packages/llm/transformers) [`text-generation-webui`](packages/llm/text-generation-webui) [`text-generation-inference`](packages/llm/text-generation-inference) [`llava`](packages/llm/llava) [`llama.cpp`](packages/llm/llama_cpp) [`exllama`](packages/llm/exllama) [`llamaspeak`](packages/llm/llamaspeak) [`awq`](packages/llm/awq) [`AutoGPTQ`](packages/llm/auto_gptq) [`MiniGPT-4`](packages/llm/minigpt4) [`MLC`](packages/llm/mlc) [`langchain`](packages/llm/langchain) [`optimum`](packages/llm/optimum) [`bitsandbytes`](packages/llm/bitsandbytes) [`nemo`](packages/nemo) |
 | **L4T** | [`l4t-pytorch`](packages/l4t/l4t-pytorch) [`l4t-tensorflow`](packages/l4t/l4t-tensorflow) [`l4t-ml`](packages/l4t/l4t-ml) [`l4t-diffusion`](packages/l4t/l4t-diffusion) [`l4t-text-generation`](packages/l4t/l4t-text-generation) |
 | **VIT** | [`NanoOWL`](packages/vit/nanoowl) [`NanoSAM`](packages/vit/nanosam) [`Segment Anything (SAM)`](packages/vit/sam) [`Track Anything (TAM)`](packages/vit/tam) |
 | **CUDA** | [`cupy`](packages/cupy) [`cuda-python`](packages/cuda-python) [`pycuda`](packages/pycuda) [`numba`](packages/numba) [`cudf`](packages/rapids/cudf) [`cuml`](packages/rapids/cuml) |
 | **Robotics** | [`ros`](packages/ros) [`ros2`](packages/ros) [`opencv:cuda`](packages/opencv) [`realsense`](packages/realsense) [`zed`](packages/zed) |
+| **Audio** | [`whisper`](packages/audio/whisper) [`riva`](packages/audio/riva-client) [`audiocraft`](packages/audio/audiocraft) |
 | **VectorDB** | [`NanoDB`](packages/vectordb/nanodb) [`FAISS`](packages/vectordb/faiss) [`RAFT`](packages/rapids/raft) |
 
 See the [**`packages`**](packages) directory for the full list, including pre-built container images and CI/CD status for JetPack/L4T.
