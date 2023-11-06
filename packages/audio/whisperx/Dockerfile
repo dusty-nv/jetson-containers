@@ -17,6 +17,7 @@ RUN apt-get update && \
     && apt-get clean
 
 RUN pip3 install scipy jiwer ipywebrtc
+RUN pip3 install --no-cache-dir --verbose scikit-learn
 
 RUN python3 -c 'import torch; print(f"PyTorch version: {torch.__version__}"); print(f"CUDA available:  {torch.cuda.is_available()}"); print(f"cuDNN version:   {torch.backends.cudnn.version()}"); print(f"torch.distributed:   {torch.distributed.is_available()}"); print(torch.__config__.show());'
 
@@ -30,5 +31,7 @@ RUN git clone https://github.com/m-bain/whisperX.git && \
     pip3 install .
 
 RUN python3 -c 'import torch; print(f"PyTorch version: {torch.__version__}"); print(f"CUDA available:  {torch.cuda.is_available()}"); print(f"cuDNN version:   {torch.backends.cudnn.version()}"); print(f"torch.distributed:   {torch.distributed.is_available()}"); print(torch.__config__.show());'
+
+ENV LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libgomp.so.1
 
 WORKDIR /opt/whisperX/
