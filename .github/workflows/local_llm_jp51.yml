@@ -52,9 +52,9 @@ on:
       - 'packages/jetson-utils/*'
       - '!packages/jetson-utils/README.md'
       - '!packages/jetson-utils/docs.md'
-      - 'packages/riva-client/*'
-      - '!packages/riva-client/README.md'
-      - '!packages/riva-client/docs.md'
+      - 'packages/audio/riva-client/*'
+      - '!packages/audio/riva-client/README.md'
+      - '!packages/audio/riva-client/docs.md'
 jobs:
   local_llm_jp51:
     runs-on: [self-hosted, jetson, jp51]
