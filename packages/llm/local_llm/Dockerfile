@@ -3,6 +3,7 @@
 # group: llm
 # depends: [mlc, jetson-utils, riva-client:python]
 # requires: '>=34.1.0'
+# docs: docs.md
 #---
 # depends: [mlc:dev, awq:dev]
 ARG BASE_IMAGE
