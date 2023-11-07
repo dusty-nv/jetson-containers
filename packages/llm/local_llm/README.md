@@ -74,7 +74,7 @@ If you load a Llava vision-language model, you can enter image files into the pr
 > [!WARNING]  
 > Patch the model's [`config.json`](https://huggingface.co/liuhaotian/llava-v1.5-13b/blob/main/config.json) that was downloaded under `data/models/huggingface/models--liuhaotian--llava-v1.5-13b/snapshots/*`
 >   * modify `"model_type": "llava",`
->   * to `"model_type": "llama",`
+>   * to `"model_type": "llama",` <br/>
 > Then re-run the command above - the quantization tools will then treat it like a Llama model (which it is)
 
 Llava was trained to converse about one image at a time, hence the chat history is reset between images (otherwise the model tends to combine the features of all the images in the chat so far).  Multiple questions can be asked about each image though.
@@ -82,7 +82,7 @@ Llava was trained to converse about one image at a time, hence the chat history 
 ## Voice Chat
 
 <a href="https://www.youtube.com/watch?v=wzLHAgDxMjQ"><img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/llamaspeak_70b_yt.jpg" width="800px"></a>
-> Interactive Voice Chat with Llama-2-70B on NVIDIA Jetson AGX Orin [`youtube.com/watch?v=wzLHAgDxMjQ`](https://www.youtube.com/watch?v=wzLHAgDxMjQ)
+> [Interactive Voice Chat with Llama-2-70B on NVIDIA Jetson AGX Orin](https://www.youtube.com/watch?v=wzLHAgDxMjQ)
 
 To enable the web UI and ASR/TTS for live conversations, follow the steps below.
 
