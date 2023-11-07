@@ -141,4 +141,4 @@ LLaVA:
 * [`liuhaotian/llava-v1.5-7b`](https://huggingface.co/liuhaotian/llava-v1.5-7b)
 * [`liuhaotian/llava-v1.5-13b`](https://huggingface.co/liuhaotian/llava-v1.5-13b)
 
-Any fine-tuned version of Llama or Llava that shares the same architecture (or that is supported by the quantization API you have selected) should be compatible however, like Vicuna, CodeLlama, ect.  See [here](https://github.com/mlc-ai/mlc-llm/tree/main/mlc_llm/relax_model) for the MLC model architectures.
+Any fine-tuned version of Llama or Llava that shares the same architecture (or that is supported by the quantization API you have selected) should be compatible, like Vicuna, CodeLlama, ect.  See [here](https://github.com/mlc-ai/mlc-llm/tree/main/mlc_llm/relax_model) for the MLC model architectures.
