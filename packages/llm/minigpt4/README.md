@@ -41,7 +41,7 @@ Then navigate your browser to `http://HOSTNAME:7860`
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/minigpt4:r35.2.1`](https://hub.docker.com/r/dustynv/minigpt4/tags) `(2023-09-26, 5.8GB)`<br>[`dustynv/minigpt4:r35.3.1`](https://hub.docker.com/r/dustynv/minigpt4/tags) `(2023-09-07, 5.9GB)`<br>[`dustynv/minigpt4:r35.4.1`](https://hub.docker.com/r/dustynv/minigpt4/tags) `(2023-10-07, 5.8GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/minigpt4:r35.2.1`](https://hub.docker.com/r/dustynv/minigpt4/tags) `(2023-09-26, 5.8GB)`<br>[`dustynv/minigpt4:r35.3.1`](https://hub.docker.com/r/dustynv/minigpt4/tags) `(2023-11-05, 5.9GB)`<br>[`dustynv/minigpt4:r35.4.1`](https://hub.docker.com/r/dustynv/minigpt4/tags) `(2023-11-05, 5.8GB)` |
 
 </details>
 
@@ -52,8 +52,8 @@ Then navigate your browser to `http://HOSTNAME:7860`
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/minigpt4:r35.2.1`](https://hub.docker.com/r/dustynv/minigpt4/tags) | `2023-09-26` | `arm64` | `5.8GB` |
-| &nbsp;&nbsp;[`dustynv/minigpt4:r35.3.1`](https://hub.docker.com/r/dustynv/minigpt4/tags) | `2023-09-07` | `arm64` | `5.9GB` |
-| &nbsp;&nbsp;[`dustynv/minigpt4:r35.4.1`](https://hub.docker.com/r/dustynv/minigpt4/tags) | `2023-10-07` | `arm64` | `5.8GB` |
+| &nbsp;&nbsp;[`dustynv/minigpt4:r35.3.1`](https://hub.docker.com/r/dustynv/minigpt4/tags) | `2023-11-05` | `arm64` | `5.9GB` |
+| &nbsp;&nbsp;[`dustynv/minigpt4:r35.4.1`](https://hub.docker.com/r/dustynv/minigpt4/tags) | `2023-11-05` | `arm64` | `5.8GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -70,10 +70,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag minigpt4)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/minigpt4:r35.4.1
+./run.sh dustynv/minigpt4:r35.3.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/minigpt4:r35.4.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/minigpt4:r35.3.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

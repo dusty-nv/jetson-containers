@@ -11,9 +11,9 @@ NVIDIA NeMo for ASR/NLP/TTS https://nvidia.github.io/NeMo/
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`nemo_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nemo_jp46.yml?label=nemo:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nemo_jp46.yml) [![`nemo_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nemo_jp51.yml?label=nemo:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nemo_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`bitsandbytes`](/packages/llm/bitsandbytes) [`auto_gptq`](/packages/llm/auto_gptq) [`transformers`](/packages/llm/transformers) [`torchaudio`](/packages/pytorch/torchaudio) [`numba`](/packages/numba) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) [`torchaudio`](/packages/pytorch/torchaudio) [`numba`](/packages/numba) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/nemo:r32.7.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-09-24, 1.9GB)`<br>[`dustynv/nemo:r35.2.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-09-11, 7.1GB)`<br>[`dustynv/nemo:r35.3.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-09-24, 7.1GB)`<br>[`dustynv/nemo:r35.4.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-08-29, 6.9GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/nemo:r32.7.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-11-05, 1.9GB)`<br>[`dustynv/nemo:r35.2.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-09-11, 7.1GB)`<br>[`dustynv/nemo:r35.3.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-09-24, 7.1GB)`<br>[`dustynv/nemo:r35.4.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-08-29, 6.9GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | this Dockerfile gets switched out for `Dockerfile.jp4` on JetPack 4 |
 
 </details>
@@ -24,7 +24,7 @@ NVIDIA NeMo for ASR/NLP/TTS https://nvidia.github.io/NeMo/
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/nemo:r32.7.1`](https://hub.docker.com/r/dustynv/nemo/tags) | `2023-09-24` | `arm64` | `1.9GB` |
+| &nbsp;&nbsp;[`dustynv/nemo:r32.7.1`](https://hub.docker.com/r/dustynv/nemo/tags) | `2023-11-05` | `arm64` | `1.9GB` |
 | &nbsp;&nbsp;[`dustynv/nemo:r35.2.1`](https://hub.docker.com/r/dustynv/nemo/tags) | `2023-09-11` | `arm64` | `7.1GB` |
 | &nbsp;&nbsp;[`dustynv/nemo:r35.3.1`](https://hub.docker.com/r/dustynv/nemo/tags) | `2023-09-24` | `arm64` | `7.1GB` |
 | &nbsp;&nbsp;[`dustynv/nemo:r35.4.1`](https://hub.docker.com/r/dustynv/nemo/tags) | `2023-08-29` | `arm64` | `6.9GB` |
@@ -44,10 +44,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag nemo)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/nemo:r35.3.1
+./run.sh dustynv/nemo:r32.7.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/nemo:r35.3.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/nemo:r32.7.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

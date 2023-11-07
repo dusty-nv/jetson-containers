@@ -46,15 +46,15 @@ Make sure that you load the output from the quantization steps above with `--qua
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`awq_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/awq_jp51.yml?label=awq:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/awq_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`bitsandbytes`](/packages/llm/bitsandbytes) [`auto_gptq`](/packages/llm/auto_gptq) [`transformers`](/packages/llm/transformers) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/awq:r35.2.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-10-02, 6.1GB)`<br>[`dustynv/awq:r35.3.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-10-05, 6.1GB)`<br>[`dustynv/awq:r35.4.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-10-07, 6.1GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/awq:r35.2.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-11-05, 6.1GB)`<br>[`dustynv/awq:r35.3.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-10-05, 6.1GB)`<br>[`dustynv/awq:r35.4.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-11-05, 6.0GB)` |
 
 | **`awq:dev`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`bitsandbytes`](/packages/llm/bitsandbytes) [`auto_gptq`](/packages/llm/auto_gptq) [`transformers`](/packages/llm/transformers) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 
 </details>
@@ -65,9 +65,9 @@ Make sure that you load the output from the quantization steps above with `--qua
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/awq:r35.2.1`](https://hub.docker.com/r/dustynv/awq/tags) | `2023-10-02` | `arm64` | `6.1GB` |
+| &nbsp;&nbsp;[`dustynv/awq:r35.2.1`](https://hub.docker.com/r/dustynv/awq/tags) | `2023-11-05` | `arm64` | `6.1GB` |
 | &nbsp;&nbsp;[`dustynv/awq:r35.3.1`](https://hub.docker.com/r/dustynv/awq/tags) | `2023-10-05` | `arm64` | `6.1GB` |
-| &nbsp;&nbsp;[`dustynv/awq:r35.4.1`](https://hub.docker.com/r/dustynv/awq/tags) | `2023-10-07` | `arm64` | `6.1GB` |
+| &nbsp;&nbsp;[`dustynv/awq:r35.4.1`](https://hub.docker.com/r/dustynv/awq/tags) | `2023-11-05` | `arm64` | `6.0GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>

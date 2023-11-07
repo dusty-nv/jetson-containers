@@ -54,7 +54,7 @@ Other libraries like [`exllama`](/packages/llm/exllama), [`awq`](/packages/llm/a
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`audiocraft`](/packages/audio/audiocraft) [`auto_gptq`](/packages/llm/auto_gptq) [`awq`](/packages/llm/awq) [`awq:dev`](/packages/llm/awq) [`bitsandbytes`](/packages/llm/bitsandbytes) [`efficientvit`](/packages/vit/efficientvit) [`gptq-for-llama`](/packages/llm/gptq-for-llama) [`l4t-diffusion`](/packages/l4t/l4t-diffusion) [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`llava`](/packages/llm/llava) [`local_llm`](/packages/llm/local_llm) [`mlc:9bf5723`](/packages/llm/mlc) [`mlc:dev`](/packages/llm/mlc) [`nanodb`](/packages/vectordb/nanodb) [`nanoowl`](/packages/vit/nanoowl) [`nanosam`](/packages/vit/nanosam) [`nemo`](/packages/nemo) [`optimum`](/packages/llm/optimum) [`stable-diffusion`](/packages/diffusion/stable-diffusion) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) [`text-generation-inference`](/packages/llm/text-generation-inference) [`text-generation-webui`](/packages/llm/text-generation-webui) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/transformers:git-r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-09-24, 6.0GB)`<br>[`dustynv/transformers:git-r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-10-05, 6.0GB)`<br>[`dustynv/transformers:git-r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-10-07, 6.0GB)`<br>[`dustynv/transformers:nvgpt-r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-09-24, 6.0GB)`<br>[`dustynv/transformers:nvgpt-r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-10-05, 6.0GB)`<br>[`dustynv/transformers:nvgpt-r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-10-07, 6.0GB)`<br>[`dustynv/transformers:r32.7.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-11-03, 1.5GB)`<br>[`dustynv/transformers:r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-09-06, 6.0GB)`<br>[`dustynv/transformers:r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-10-05, 6.0GB)`<br>[`dustynv/transformers:r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-11-03, 6.0GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/transformers:git-r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-11-05, 5.9GB)`<br>[`dustynv/transformers:git-r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-11-05, 5.9GB)`<br>[`dustynv/transformers:git-r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-11-03, 5.8GB)`<br>[`dustynv/transformers:nvgpt-r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-09-24, 6.0GB)`<br>[`dustynv/transformers:nvgpt-r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-11-05, 5.9GB)`<br>[`dustynv/transformers:nvgpt-r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-10-07, 6.0GB)`<br>[`dustynv/transformers:r32.7.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-11-05, 1.4GB)`<br>[`dustynv/transformers:r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-11-04, 5.9GB)`<br>[`dustynv/transformers:r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-11-05, 5.9GB)`<br>[`dustynv/transformers:r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-11-03, 6.0GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | bitsandbytes and auto_gptq dependencies added on JetPack5 for 4-bit/8-bit quantization |
 
 | **`transformers:git`** | |
@@ -63,7 +63,7 @@ Other libraries like [`exllama`](/packages/llm/exllama), [`awq`](/packages/llm/a
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/transformers:git-r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-09-24, 6.0GB)`<br>[`dustynv/transformers:git-r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-10-05, 6.0GB)`<br>[`dustynv/transformers:git-r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-10-07, 6.0GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/transformers:git-r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-11-05, 5.9GB)`<br>[`dustynv/transformers:git-r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-11-05, 5.9GB)`<br>[`dustynv/transformers:git-r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-11-03, 5.8GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | bitsandbytes and auto_gptq dependencies added on JetPack5 for 4-bit/8-bit quantization |
 
 | **`transformers:nvgpt`** | |
@@ -72,7 +72,7 @@ Other libraries like [`exllama`](/packages/llm/exllama), [`awq`](/packages/llm/a
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/transformers:nvgpt-r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-09-24, 6.0GB)`<br>[`dustynv/transformers:nvgpt-r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-10-05, 6.0GB)`<br>[`dustynv/transformers:nvgpt-r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-10-07, 6.0GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/transformers:nvgpt-r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-09-24, 6.0GB)`<br>[`dustynv/transformers:nvgpt-r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-11-05, 5.9GB)`<br>[`dustynv/transformers:nvgpt-r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-10-07, 6.0GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | bitsandbytes and auto_gptq dependencies added on JetPack5 for 4-bit/8-bit quantization |
 
 </details>
@@ -83,15 +83,15 @@ Other libraries like [`exllama`](/packages/llm/exllama), [`awq`](/packages/llm/a
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/transformers:git-r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-09-24` | `arm64` | `6.0GB` |
-| &nbsp;&nbsp;[`dustynv/transformers:git-r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-10-05` | `arm64` | `6.0GB` |
-| &nbsp;&nbsp;[`dustynv/transformers:git-r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-10-07` | `arm64` | `6.0GB` |
+| &nbsp;&nbsp;[`dustynv/transformers:git-r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-11-05` | `arm64` | `5.9GB` |
+| &nbsp;&nbsp;[`dustynv/transformers:git-r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-11-05` | `arm64` | `5.9GB` |
+| &nbsp;&nbsp;[`dustynv/transformers:git-r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-11-03` | `arm64` | `5.8GB` |
 | &nbsp;&nbsp;[`dustynv/transformers:nvgpt-r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-09-24` | `arm64` | `6.0GB` |
-| &nbsp;&nbsp;[`dustynv/transformers:nvgpt-r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-10-05` | `arm64` | `6.0GB` |
+| &nbsp;&nbsp;[`dustynv/transformers:nvgpt-r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-11-05` | `arm64` | `5.9GB` |
 | &nbsp;&nbsp;[`dustynv/transformers:nvgpt-r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-10-07` | `arm64` | `6.0GB` |
-| &nbsp;&nbsp;[`dustynv/transformers:r32.7.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-11-03` | `arm64` | `1.5GB` |
-| &nbsp;&nbsp;[`dustynv/transformers:r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-09-06` | `arm64` | `6.0GB` |
-| &nbsp;&nbsp;[`dustynv/transformers:r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-10-05` | `arm64` | `6.0GB` |
+| &nbsp;&nbsp;[`dustynv/transformers:r32.7.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-11-05` | `arm64` | `1.4GB` |
+| &nbsp;&nbsp;[`dustynv/transformers:r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-11-04` | `arm64` | `5.9GB` |
+| &nbsp;&nbsp;[`dustynv/transformers:r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-11-05` | `arm64` | `5.9GB` |
 | &nbsp;&nbsp;[`dustynv/transformers:r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) | `2023-11-03` | `arm64` | `6.0GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
@@ -109,10 +109,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag transformers)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/transformers:r32.7.1
+./run.sh dustynv/transformers:git-r35.3.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/transformers:r32.7.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/transformers:git-r35.3.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

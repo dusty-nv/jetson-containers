@@ -11,7 +11,7 @@
 | &nbsp;&nbsp;&nbsp;Builds | [![`bazel_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/bazel_jp46.yml?label=bazel:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/bazel_jp46.yml) [![`bazel_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/bazel_jp51.yml?label=bazel:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/bazel_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`riva-client:cpp`](/packages/riva-client) [`torch_tensorrt`](/packages/pytorch/torch_tensorrt) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`riva-client:cpp`](/packages/audio/riva-client) [`torch_tensorrt`](/packages/pytorch/torch_tensorrt) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/bazel:r32.7.1`](https://hub.docker.com/r/dustynv/bazel/tags) `(2023-09-07, 0.4GB)`<br>[`dustynv/bazel:r35.2.1`](https://hub.docker.com/r/dustynv/bazel/tags) `(2023-09-07, 5.1GB)`<br>[`dustynv/bazel:r35.3.1`](https://hub.docker.com/r/dustynv/bazel/tags) `(2023-08-29, 5.1GB)`<br>[`dustynv/bazel:r35.4.1`](https://hub.docker.com/r/dustynv/bazel/tags) `(2023-10-07, 5.1GB)` |
 

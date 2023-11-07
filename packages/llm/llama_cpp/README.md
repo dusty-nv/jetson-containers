@@ -63,7 +63,7 @@ To use the Python API and [`benchmark.py`](/packages/llm/llama_cpp/benchmark.py)
 | &nbsp;&nbsp;&nbsp;Builds | [![`llama_cpp-ggml_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/llama_cpp-ggml_jp51.yml?label=llama_cpp-ggml:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/llama_cpp-ggml_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`huggingface_hub`](/packages/llm/huggingface_hub) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`langchain`](/packages/llm/langchain) [`langchain:samples`](/packages/llm/langchain) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`langchain`](/packages/llm/langchain) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/llama_cpp:ggml-r35.2.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) `(2023-09-15, 5.2GB)`<br>[`dustynv/llama_cpp:ggml-r35.3.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) `(2023-09-11, 5.2GB)`<br>[`dustynv/llama_cpp:ggml-r35.4.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) `(2023-10-07, 5.2GB)` |
 

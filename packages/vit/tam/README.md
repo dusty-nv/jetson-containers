@@ -20,7 +20,7 @@ Use your web browser to access `http://HOSTNAME:12212`
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`onnxruntime`](/packages/onnxruntime) [`rust`](/packages/rust) [`jupyterlab`](/packages/jupyterlab) [`sam`](/packages/vit/sam) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/tam:r35.2.1`](https://hub.docker.com/r/dustynv/tam/tags) `(2023-10-03, 6.9GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/tam:r35.2.1`](https://hub.docker.com/r/dustynv/tam/tags) `(2023-10-03, 6.9GB)`<br>[`dustynv/tam:r35.3.1`](https://hub.docker.com/r/dustynv/tam/tags) `(2023-11-05, 6.9GB)`<br>[`dustynv/tam:r35.4.1`](https://hub.docker.com/r/dustynv/tam/tags) `(2023-11-04, 6.9GB)` |
 
 </details>
 
@@ -31,6 +31,8 @@ Use your web browser to access `http://HOSTNAME:12212`
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/tam:r35.2.1`](https://hub.docker.com/r/dustynv/tam/tags) | `2023-10-03` | `arm64` | `6.9GB` |
+| &nbsp;&nbsp;[`dustynv/tam:r35.3.1`](https://hub.docker.com/r/dustynv/tam/tags) | `2023-11-05` | `arm64` | `6.9GB` |
+| &nbsp;&nbsp;[`dustynv/tam:r35.4.1`](https://hub.docker.com/r/dustynv/tam/tags) | `2023-11-04` | `arm64` | `6.9GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -47,10 +49,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag tam)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/tam:r35.2.1
+./run.sh dustynv/tam:r35.3.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/tam:r35.2.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/tam:r35.3.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

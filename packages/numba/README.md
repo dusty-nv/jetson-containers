@@ -11,7 +11,7 @@
 | &nbsp;&nbsp;&nbsp;Builds | [![`numba_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/numba_jp46.yml?label=numba:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/numba_jp46.yml) [![`numba_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/numba_jp51.yml?label=numba:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/numba_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`cudf`](/packages/rapids/cudf) [`cuml`](/packages/rapids/cuml) [`l4t-ml`](/packages/l4t/l4t-ml) [`nemo`](/packages/nemo) [`raft`](/packages/rapids/raft) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`cudf`](/packages/rapids/cudf) [`cuml`](/packages/rapids/cuml) [`l4t-ml`](/packages/l4t/l4t-ml) [`nemo`](/packages/nemo) [`raft`](/packages/rapids/raft) [`whisper`](/packages/audio/whisper) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/numba:r32.7.1`](https://hub.docker.com/r/dustynv/numba/tags) `(2023-09-07, 0.5GB)`<br>[`dustynv/numba:r35.2.1`](https://hub.docker.com/r/dustynv/numba/tags) `(2023-09-07, 5.1GB)`<br>[`dustynv/numba:r35.3.1`](https://hub.docker.com/r/dustynv/numba/tags) `(2023-08-29, 5.1GB)`<br>[`dustynv/numba:r35.4.1`](https://hub.docker.com/r/dustynv/numba/tags) `(2023-10-07, 5.1GB)` |
 
