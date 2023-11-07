@@ -15,7 +15,7 @@ As an initial example, first test the console-based chat demo from [`__main__.py
 ./run.sh --env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN> $(./autotag local_llm) \
   python3 -m local_llm --api=mlc --model=meta-llama/Llama-2-7b-chat-hf
 ```
-> For Llama-2 models, see [here](packages/llm/transformers/README.md#llama2) to request your access token from HuggingFace
+> For Llama-2 models, see [here](/packages/llm/transformers/README.md#llama2) to request your access token from HuggingFace
 
 The model will automatically be quantized the first time it's loaded (in this case, with MLC W4A16 quantization)
 
@@ -73,14 +73,16 @@ If you load a Llava vision-language model, you can enter image files into the pr
 
 > [!WARNING]  
 > Patch the model's [`config.json`](https://huggingface.co/liuhaotian/llava-v1.5-13b/blob/main/config.json) that was downloaded under `data/models/huggingface/models--liuhaotian--llava-v1.5-13b/snapshots/*`
->   * change:  `"model_type": "llava",`
->   * to: `"model_type": "llama",`
+>   * modify `"model_type": "llava",`
+>   * to `"model_type": "llama",`
+> Then re-run the command above - the quantization tools will then treat it like a Llama model (which it is)
 
 Llava was trained to converse about one image at a time, hence the chat history is reset between images (otherwise the model tends to combine the features of all the images in the chat so far).  Multiple questions can be asked about each image though.
 
 ## Voice Chat
 
 <a href="https://www.youtube.com/watch?v=wzLHAgDxMjQ"><img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/llamaspeak_70b_yt.jpg" width="800px"></a>
+> Interactive Voice Chat with Llama-2-70B on NVIDIA Jetson AGX Orin [`youtube.com/watch?v=wzLHAgDxMjQ`](https://www.youtube.com/watch?v=wzLHAgDxMjQ)
 
 To enable the web UI and ASR/TTS for live conversations, follow the steps below.
 
@@ -122,7 +124,7 @@ You can choose to override this, and it won't re-appear again until you change c
     --api=mlc --verbose
 ```
 
-You can then navigate your web browser to `https://HOSTNAME:8050` and unmute your microphone.  Some tips:
+You can then navigate your web browser to `https://HOSTNAME:8050` and unmute your microphone.
 
 * The default port is 8050, but can be changed with `--web-port` (and `--ws-port` for the websocket port)
 * To debug issues with client/server communication, use `--web-trace` to print incoming/outgoing websocket messages.
@@ -137,12 +139,12 @@ Llama 2:
 * [`meta-llama/Llama-2-13b-chat-hf`](https://huggingface.co/meta-llama/Llama-2-13b-chat-hf)
 * [`meta-llama/Llama-2-70b-chat-hf`](https://huggingface.co/meta-llama/Llama-2-70b-chat-hf)
 
-[Llava](https://llava-vl.github.io/):  
+LLaVA:  
 
 * [`liuhaotian/llava-v1.5-7b`](https://huggingface.co/liuhaotian/llava-v1.5-7b)
 * [`liuhaotian/llava-v1.5-13b`](https://huggingface.co/liuhaotian/llava-v1.5-13b)
 
-Any fine-tuned version of Llama or Llava that shares the same architecture (or that is supported by the quantization API you have selected) should be compatible however.
+Any fine-tuned version of Llama or Llava that shares the same architecture (or that is supported by the quantization API you have selected) should be compatible however, like Vicuna, CodeLlama, ect.  See [here](https://github.com/mlc-ai/mlc-llm/tree/main/mlc_llm/relax_model) for the MLC model architectures.
 
 <details open>
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
