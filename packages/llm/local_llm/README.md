@@ -75,6 +75,7 @@ If you load a Llava vision-language model, you can enter image files into the pr
 > Patch the model's [`config.json`](https://huggingface.co/liuhaotian/llava-v1.5-13b/blob/main/config.json) that was downloaded under `data/models/huggingface/models--liuhaotian--llava-v1.5-13b/snapshots/*`
 >   * modify `"model_type": "llava",`
 >   * to `"model_type": "llama",` <br/>
+>
 > Then re-run the command above - the quantization tools will then treat it like a Llama model (which it is)
 
 Llava was trained to converse about one image at a time, hence the chat history is reset between images (otherwise the model tends to combine the features of all the images in the chat so far).  Multiple questions can be asked about each image though.
