@@ -6,7 +6,7 @@
 <img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/llamaspeak_voice_clip.gif">
 
 > [!NOTE]  
-> For llamaspeak version 2 with multimodal support, see the [`local_llm`](/packages/llm/local_llm) container
+> For llamaspeak version 2 with multimodal support, see the [`local_llm`](https://github.com/dusty-nv/jetson-containers/tree/master/packages/llm/local_llm) container
 
 * Talk live with LLM's using [NVIDIA Riva](/packages/audio/riva-client) ASR and TTS!
 * Requires the [`riva-server`](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/riva/resources/riva_quickstart_arm64) and [`text-generation-webui`](/packages/llm/text-generation-webui) to be running
