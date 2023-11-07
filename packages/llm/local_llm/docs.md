@@ -85,7 +85,7 @@ To enable the web UI and ASR/TTS for live conversations, follow the steps below.
 
 ### Start Riva Server
 
-The ASR and TTS services use NVIDIA Riva with audio transformers and TensorRT.  The Riva server runs locally in it's own container.  Follow the steps from the [`riva-client:python`](/packages/riva-client) package to run and test the Riva server on your Jetson.
+The ASR and TTS services use NVIDIA Riva with audio transformers and TensorRT.  The Riva server runs locally in it's own container.  Follow the steps from the [`riva-client:python`](/packages/audio/riva-client) package to run and test the Riva server on your Jetson.
 
 1. Start the Riva server on your Jetson by following [`riva_quickstart_arm64`](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/riva/resources/riva_quickstart_arm64)
 2. Run some of the Riva ASR examples to confirm that ASR is working:  https://github.com/nvidia-riva/python-clients#asr

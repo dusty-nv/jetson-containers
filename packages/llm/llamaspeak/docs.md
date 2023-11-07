@@ -2,16 +2,16 @@
 <img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/llamaspeak_voice_clip.gif">
 
 > [!NOTE]  
-> For llamaspeak version 2 with multimodal support, see the [`local_llm`](/packages/llm/local_llm) container.
+> For llamaspeak version 2 with multimodal support, see the [`local_llm`](/packages/llm/local_llm) container
 
-* Talk live with LLM's using [NVIDIA Riva](/packages/riva-client) ASR and TTS!
+* Talk live with LLM's using [NVIDIA Riva](/packages/audio/riva-client) ASR and TTS!
 * Requires the [`riva-server`](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/riva/resources/riva_quickstart_arm64) and [`text-generation-webui`](/packages/llm/text-generation-webui) to be running
 
 <img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/llamaspeak_block_diagram.jpg">
 
 ### Start Riva
 
-First, follow the steps from the [`riva-client:python`](/packages/riva-client) package to run and test the Riva server:
+First, follow the steps from the [`riva-client:python`](/packages/audio/riva-client) package to run and test the Riva server:
 
 1. Start the Riva server on your Jetson by following [`riva_quickstart_arm64`](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/riva/resources/riva_quickstart_arm64)
 2. Run some of the Riva ASR examples to confirm that ASR is working:  https://github.com/nvidia-riva/python-clients#asr
