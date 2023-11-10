@@ -3,7 +3,7 @@
 # alias: torch
 # group: pytorch
 # config: config.py
-# depends: [cuda, cudnn, python, numpy, onnx]
+# depends: [cuda, cudnn, tensorrt, numpy, onnx]
 # test: test.py
 # docs: |
 #  Containers for PyTorch with CUDA support.

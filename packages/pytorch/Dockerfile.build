@@ -37,6 +37,7 @@ RUN git clone --branch v${PYTORCH_BUILD_VERSION} --depth=1 --recursive https://g
     export USE_PYTORCH_QNNPACK=0 && \
     export USE_NATIVE_ARCH=1 && \
     export USE_DISTRIBUTED=1 && \
+    export USE_TENSORRT=0 && \
     export ${PYTORCH_BUILD_EXTRA_ENV} && \
     pip3 install -r requirements.txt && \
     pip3 install --no-cache-dir scikit-build ninja && \
