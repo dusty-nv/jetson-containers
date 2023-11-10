@@ -102,7 +102,7 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
         pkg = find_package(package)
         
         if 'dockerfile' in pkg:
-            cmd = f"{sudo_prefix()}docker build --network=host --tag {container_name}" + _NEWLINE_
+            cmd = f"{sudo_prefix()}DOCKER_BUILDKIT=0 docker build --network=host --tag {container_name}" + _NEWLINE_
             if no_github_api:
                 dockerfilepath = os.path.join(pkg['path'], pkg['dockerfile'])
                 with open(dockerfilepath, 'r') as fp:

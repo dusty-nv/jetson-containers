@@ -82,6 +82,10 @@ def get_jetpack_version(l4t_version=get_l4t_version(), default='5.1'):
         l4t_version = Version(l4t_version)
         
     NVIDIA_JETPACK = {
+        # -------- JP6 --------
+        "36.2.0": "6.0 DP",
+        "36.0.0": "6.0 EA",
+        
         # -------- JP5 --------
         "35.4.1": "5.1.2",
         "35.3.1": "5.1.1",
@@ -174,7 +178,9 @@ def get_l4t_base(l4t_version=get_l4t_version()):
     """
     Returns the l4t-base or l4t-jetpack container to use
     """
-    if l4t_version.major >= 34:   # JetPack 5
+    if l4t_version.major >= 36:   # JetPack 6
+        return "ubuntu:22.04" #"nvcr.io/ea-linux4tegra/l4t-jetpack:r36.0.0"
+    elif l4t_version.major >= 34: # JetPack 5
         if l4t_version >= Version('35.4.1'):
             return "nvcr.io/nvidia/l4t-jetpack:r35.4.1"
         else:
@@ -244,9 +250,10 @@ JETPACK_VERSION = get_jetpack_version()
 CUDA_VERSION = get_cuda_version()
 
 # Nano/TX1 = 5.3, TX2 = 6.2, Xavier = 7.2, Orin = 8.7
+if L4T_VERSION.major >= 36:    # JetPack 6
+    CUDA_ARCHITECTURES = [87]
 if L4T_VERSION.major >= 34:    # JetPack 5
     CUDA_ARCHITECTURES = [72, 87]
-    
 elif L4T_VERSION.major == 32:  # JetPack 4
     CUDA_ARCHITECTURES = [53, 62, 72]
 
