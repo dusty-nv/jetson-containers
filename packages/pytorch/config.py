@@ -23,24 +23,27 @@ def pytorch(version, whl, url, requires, default=False):
     return pkg
 
 
-def pytorch_build(version, dockerfile, build_env_variables=None, depends=None, requires=None, suffix=None, default=False):
+def pytorch_build(version, dockerfile='Dockerfile.builder', build_env_variables=None, depends=None, requires=None, suffix=None, default=False):
     """
     Create a version of PyTorch for the package list
     """
     pkg = package.copy()
-
+    
     pkg['name'] = f'pytorch:{version}'
-    pkg['alias'] = [f'torch:{version}']
+    pkg['alias'] = f'torch:{version}'
     
     if suffix:
         pkg['name'] += '-' + suffix
         pkg['alias'] += '-' + suffix
         
     if default:
-        pkg['alias'].extend(['pytorch', 'torch'])
+        pkg['alias'] = [pkg['alias'], 'pytorch', 'torch']
 
     pkg['dockerfile'] = dockerfile
 
+    if len(version.split('.')) < 3:
+        version = version + '.0'
+        
     pkg['build_args'] = {
         'PYTORCH_BUILD_VERSION': version,
         'PYTORCH_BUILD_NUMBER': '1',
@@ -55,8 +58,11 @@ def pytorch_build(version, dockerfile, build_env_variables=None, depends=None, r
         pkg['requires'] = requires
     
     return pkg
-    
+
 package = [
+    # JetPack 6
+    pytorch('2.1', 'torch-2.1.0-cp310-cp310-linux_aarch64.whl', 'https://nvidia.box.com/shared/static/0h6tk4msrl9xz3evft9t0mpwwwkw7a32.whl', '==36.*', default=True),
+    
     # JetPack 5
     pytorch('2.1', 'torch-2.1.0a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl', 'https://developer.download.nvidia.com/compute/redist/jp/v512/pytorch/torch-2.1.0a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl', '==35.*'),
     pytorch('2.0', 'torch-2.0.0+nv23.05-cp38-cp38-linux_aarch64.whl', 'https://nvidia.box.com/shared/static/i8pukc49h3lhak4kkn67tg9j4goqm0m7.whl', '==35.*', default=True),
@@ -70,7 +76,7 @@ package = [
     pytorch('1.9', 'torch-1.9.0-cp36-cp36m-linux_aarch64.whl', 'https://nvidia.box.com/shared/static/h1z9sw4bb1ybi0rm3tu8qdj8hs05ljbm.whl', '==32.*'),
 
     # Build from source
-    pytorch_build('2.0.0', 'Dockerfile.build', suffix='distributed', requires='==35.*'),            
-    pytorch_build('2.1.0', 'Dockerfile.build', suffix='distributed', requires='==35.*'),        
-    pytorch_build('2.1.0', 'Dockerfile.build', requires='==36.*', default=True),
+    pytorch_build('2.0', suffix='distributed', requires='==35.*'),            
+    pytorch_build('2.1', suffix='distributed', requires='==35.*'),        
+    pytorch_build('2.1', suffix='builder', requires='==36.*'),
 ]
