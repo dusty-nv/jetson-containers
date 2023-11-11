@@ -3,7 +3,7 @@
 # group: cuda
 # config: config.py
 # requires: '>=34.1.0'
-# depends: [build-essential, python, numpy]
+# depends: [cuda, build-essential, python, numpy]
 # test: [test_driver.py, test_runtime.py]
 #---
 ARG BASE_IMAGE
@@ -14,6 +14,12 @@ ENV CUDA_HOME=/usr/local/cuda
 
 ENV LANG=en_US.UTF-8 
 ENV PYTHONIOENCODING=utf-8
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends locales \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+    
 RUN locale-gen en_US en_US.UTF-8 && update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 
 RUN git clone --branch ${CUDA_PYTHON_VERSION} --depth=1 https://github.com/NVIDIA/cuda-python && \
