@@ -2,7 +2,7 @@
 # name: torchvision
 # group: pytorch
 # config: config.py
-# depends: [cmake, pytorch]
+# depends: [pytorch, cmake]
 # test: test.py
 #---
 ARG BASE_IMAGE
