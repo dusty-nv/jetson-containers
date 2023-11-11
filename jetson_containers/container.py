@@ -295,7 +295,7 @@ def test_container(name, package, simulate=False):
         cmd += f"--volume {package['path']}:/test" + _NEWLINE_
         cmd += f"--volume {os.path.join(_PACKAGE_ROOT, 'data')}:/data" + _NEWLINE_
         cmd += f"--workdir /test" + _NEWLINE_
-        cmd += f"--entrypoint ''" + _NEWLINE_
+        cmd += f"--entrypoint /usr/bin/env" + _NEWLINE_
         cmd += name + _NEWLINE_
         
         cmd += "/bin/bash -c '"
