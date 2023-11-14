@@ -13,6 +13,16 @@ WORKDIR /opt
 #RUN pip3 install matplotlib pycocotools tqdm
 RUN pip3 install torchmetrics
 
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+                ffmpeg \
+                libavcodec-dev \
+                libavdevice-dev \
+                libavformat-dev \
+                libavresample-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
 RUN python3 -c 'import torch; print(f"PyTorch version: {torch.__version__}"); print(f"CUDA available:  {torch.cuda.is_available()}"); print(f"cuDNN version:   {torch.backends.cudnn.version()}"); print(f"torch.distributed:   {torch.distributed.is_available()}"); print(torch.__config__.show());'
 
 # Clone the repository:
@@ -33,6 +43,6 @@ RUN cd /opt/pytorch && \
 
 RUN python3 -c 'import torch; print(f"PyTorch version: {torch.__version__}"); print(f"CUDA available:  {torch.cuda.is_available()}"); print(f"cuDNN version:   {torch.backends.cudnn.version()}"); print(f"torch.distributed:   {torch.distributed.is_available()}"); print(torch.__config__.show());'
 
-RUN python3 -c 'import torchaudio; print(torchaudio.__version__);'
+RUN python3 -c 'import torchaudio; print(f"torchaudio version: {torchaudio.__version__}"); print(f"FFMPEG_INITIALIZED: {torchaudio._extension._FFMPEG_INITIALIZED}");'
 
 WORKDIR /opt/audiocraft/
