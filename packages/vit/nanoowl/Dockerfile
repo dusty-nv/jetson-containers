@@ -1,7 +1,7 @@
 #---
 # name: nanoowl
 # group: vit
-# depends: [pytorch, torch2trt, transformers, nanosam]
+# depends: [pytorch, torch2trt, transformers, opencv]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---
@@ -11,9 +11,8 @@ FROM ${BASE_IMAGE}
 WORKDIR /opt
 
 # 1. Install the dependencies
-# 
-# PyTorch, torch2trt, transformers and NanoSAM are specified in the header yaml part (under "depends:")
 RUN pip3 install git+https://github.com/openai/CLIP.git
+RUN pip3 install matplotlib
 
 # 2. Install the NanoOWL Python package
 RUN git clone https://github.com/NVIDIA-AI-IOT/nanoowl && \
