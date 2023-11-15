@@ -8,7 +8,7 @@ ROS_PACKAGES = ['ros_base', 'ros_core', 'desktop']
 template = package.copy()
 
 template['group'] = 'ros'
-template['depends'] = ['cmake', 'python', 'opencv']
+template['depends'] = ['opencv', 'cmake']
 template['postfix'] = f"l4t-r{L4T_VERSION}"
 
 template['docs'] = "docs.md"
