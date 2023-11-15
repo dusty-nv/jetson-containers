@@ -2,7 +2,7 @@
 # name: llava
 # group: llm
 # docs: docs.md
-# depends: [pytorch, transformers, bitsandbytes]
+# depends: [pytorch, transformers]
 # requires: '>=34.1.0'
 # test: test.py
 #---
@@ -18,6 +18,7 @@ ADD https://api.github.com/repos/${LLAVA_REPO}/git/refs/heads/${LLAVA_BRANCH} /t
 
 RUN git clone --branch=${LLAVA_BRANCH} --depth=1 https://github.com/${LLAVA_REPO} llava && \
     cd llava && \
+    sed 's|"deepspeed==0.9.5",.*||' -i pyproject.toml && \
     sed 's|"transformers.*"|"transformers"|' -i pyproject.toml && \
     sed 's|"accelerate.*"|"accelerate"|' -i pyproject.toml && \
     sed 's|"bitsandbytes.*"|"bitsandbytes"|' -i pyproject.toml && \
