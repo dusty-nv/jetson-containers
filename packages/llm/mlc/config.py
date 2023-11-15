@@ -31,7 +31,7 @@ def mlc(version, patch, tag=None, default=False):
     
     return pkg
 
-latest_sha = github_latest_commit(repo, branch='main')
+latest_sha = github_latest_commit(repo, branch='main', github_token=github_token)
 print('-- MLC latest commit:', latest_sha)
 
 package = [
