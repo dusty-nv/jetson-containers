@@ -22,7 +22,7 @@ See the [**`packages`**](packages) directory for the full list, including pre-bu
 Using the included tools, you can easily combine packages together for building your own containers.  Want to run ROS2 with PyTorch and Transformers?  No problem - just do the [system setup](/docs/setup.md), and build it on your Jetson like this:
 
 ```bash
-$ ./build.sh --name=my_container ros:humble-desktop pytorch transformers
+$ ./build.sh --name=my_container pytorch transformers ros:humble-desktop
 ```
 
 There are shortcuts for running containers too - this will pull or build a [`l4t-pytorch`](packages/l4t/l4t-pytorch) image that's compatible:
