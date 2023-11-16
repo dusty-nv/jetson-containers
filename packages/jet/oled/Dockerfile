@@ -14,7 +14,7 @@ FROM ${BASE_IMAGE}
 RUN apt-get update && apt-get install -y unzip
 RUN apt install -y python3-smbus python3-pil
 
-RUN pip3 install pillow flask Adafruit_SSD1306
+RUN pip3 install pillow flask Adafruit_SSD1306 smbus2
 
 # oled_display_server.py
 # utils.py
