@@ -25,10 +25,9 @@ RUN git clone --branch ${TORCHVISION_VERSION} --recursive --depth=1 https://gith
     git checkout ${TORCHVISION_VERSION} && \
     python3 setup.py bdist_wheel && \
     cp dist/torchvision*.whl /opt && \
-    pip3 install --no-cache-dir --verbose /opt/torchvision*.whl && \
-    cd ../ && \
-    rm -rf torchvision
+    rm -rf ../torchvision
 
+RUN pip3 install --no-cache-dir --verbose /opt/torchvision*.whl
 RUN python3 -c 'import torchvision; print(torchvision.__version__);'
 
 # note:  this was used on older torchvision versions (~0.4) to workaround a bug,
