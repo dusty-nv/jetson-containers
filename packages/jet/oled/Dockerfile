@@ -1,23 +1,37 @@
 #---
 # name: oled
 # group: jet
-# depends: [python3]
+# depends: []
 # notes: https://github.com/NVIDIA-AI-IOT/jetcard/
 #---
 ARG BASE_IMAGE
-FROM ${BASE_IMAGE}
+FROM ubuntu:22.04
 
+# Avoid warnings by switching to noninteractive
+ARG DEBIAN_FRONTEND=noninteractive
 
 # ============================
 # Enable OLED display
 # ============================
-RUN apt-get update && apt-get install -y unzip
-RUN apt install -y python3-smbus python3-pil
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+		  build-essential \
+		  python3-dev \
+          python3-pip \
+          python3-pil \
+		  python3-smbus \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
 RUN pip3 install pillow flask Adafruit_SSD1306 smbus2
 
-# oled_display_server.py
-# utils.py
+### TODO: 232 MB of disk space should be freed, but not on the resulting container image
+RUN apt-get purge -y \
+		  build-essential \
+		  python3-dev && \
+    apt-get -y autoremove && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get clean -y 
 
 WORKDIR /opt
 
