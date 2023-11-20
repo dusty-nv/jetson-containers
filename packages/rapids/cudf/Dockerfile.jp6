@@ -1,0 +1,100 @@
+#
+# build cuDF from source for JetPack 6 (see config.py for package configuration)
+#
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+ARG CUDF_REPO
+ARG CUDF_VERSION
+ARG CUDF_CMAKE_CUDA_ARCHITECTURES
+
+ARG INSTALL_PREFIX=/usr/local
+ARG BUILD_DIR=/opt/rapids
+
+WORKDIR ${BUILD_DIR}
+
+#
+# cudf bundles many of it's dependencies, but some are still needed 
+# libssl for cudf, boost and liblz4 for ORC extensions
+#
+RUN apt-get update && \    
+    apt-get install -y --no-install-recommends \
+		  libssl-dev \
+		  libboost-system-dev \
+		  libboost-filesystem-dev \
+		  liblz4-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+    
+# set Python3 as default
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+
+
+# 
+# build libcudf (C++)
+#
+ADD https://api.github.com/repos/${CUDF_REPO}/git/refs/heads/${CUDF_VERSION} /tmp/cudf_version.json
+
+RUN git clone --branch ${CUDF_VERSION} --depth=1 --recursive https://github.com/${CUDF_REPO} cudf && \ 
+    cd cudf && \ 
+    ./build.sh libcudf -v
+
+
+#
+# build rmm-python
+#
+RUN pip3 install --no-cache-dir --verbose scikit-build ninja
+RUN pip3 install --no-cache-dir --verbose 'Cython>3'
+
+RUN cd cudf/cpp/build/_deps/rmm-src/python && \ 
+    python3 setup.py bdist_wheel --verbose && \ 
+    cp dist/rmm*.whl /opt && \ 
+    pip3 install --no-cache-dir --verbose /opt/rmm*.whl
+
+RUN pip3 show rmm && python3 -c 'import rmm; print(rmm.__version__)'
+
+
+#
+# build cudf (python)
+#
+RUN cp -r cudf/cpp/build/_deps/dlpack-src/include/dlpack /usr/local/include && \
+    ls /usr/local/include/dlpack 
+
+RUN cd cudf/python/cudf && \
+    sed -i 's|"cubinlinker",||' pyproject.toml && \
+    sed -i 's|"ptxcompiler",||' pyproject.toml && \
+    sed -i 's|"cuda-python.*",||' pyproject.toml && \
+    sed -i 's|"cupy.*",||' pyproject.toml && \
+    cat pyproject.toml
+    
+RUN cd cudf/python/cudf && \
+    SKBUILD_CONFIGURE_OPTIONS="-DCMAKE_PREFIX_PATH=${INSTALL_PREFIX} -DCMAKE_LIBRARY_PATH=${BUILD_DIR}/cudf/cpp/build -DCMAKE_CUDA_ARCHITECTURES=${CUDF_CMAKE_CUDA_ARCHITECTURES} -DFIND_CUDF_CPP=ON" \
+    SKBUILD_BUILD_OPTIONS="-j$(nproc)" \
+    python3 setup.py --verbose bdist_wheel && \
+    cp dist/cudf*.whl /opt && \
+    pip3 install --no-cache-dir --verbose /opt/cudf*.whl 
+
+
+#
+# build dask_cudf
+#
+RUN cd cudf/python/dask_cudf && \
+    sed -i 's|"cupy.*",||' pyproject.toml && \
+    python3 setup.py --verbose bdist_wheel && \
+    cp dist/dask_cudf*.whl /opt && \
+    pip3 install --no-cache-dir --verbose /opt/dask_cudf*.whl 
+
+# a different version of cuda-python gets installed, so restore the one that we built
+RUN pip3 install --no-cache-dir /opt/cuda_python*.whl
+
+# cudf/utils/metadata/orc_column_statistics_pb2.py - your generated code is out of date and must be regenerated with protoc >= 3.19.0
+RUN pip3 install --no-cache-dir --verbose 'protobuf<3.20'
+
+# requests package needed for test_csv.py
+RUN pip3 install --no-cache-dir --verbose requests
+
+# make sure that the cudf modules load okay
+RUN pip3 show cudf && python3 -c 'import cudf; print(cudf.__version__)'
+RUN pip3 show dask_cudf && python3 -c 'import dask_cudf; print(dask_cudf.__version__)'  
+
+WORKDIR /

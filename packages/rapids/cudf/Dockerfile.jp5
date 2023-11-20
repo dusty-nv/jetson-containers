@@ -1,29 +1,18 @@
-#---
-# name: cudf
-# group: rapids
-# config: config.py
-# requires: '>=34.1.0'
-# depends: [cmake, python, cupy, numba, protobuf:apt]
-# test: [test_cudf.py, test_dask.py]
-# notes: installed under /usr/local
-#---
+#
+# build cuDF from source for JetPack 5 (see config.py for package configuration)
+#
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
+ARG CUDF_REPO
 ARG CUDF_VERSION
 ARG CUDF_CMAKE_CUDA_ARCHITECTURES
+
 ARG INSTALL_PREFIX=/usr/local
-
-# force rebuild on new git commits - https://stackoverflow.com/a/56945508
-ADD https://api.github.com/repos/dusty-nv/cudf/git/refs/heads/${CUDF_VERSION} /tmp/cudf_version.json
-
-# build with the script for easier clean-up after
-#COPY build_cudf.sh /tmp/build_cudf.sh
-#RUN cd /tmp && ./build_cudf.sh ${CUDF_VERSION} ${CUDF_CMAKE_CUDA_ARCHITECTURES}
-
-# DEBUG build in dockerfile
 ARG BUILD_DIR=/opt/rapids
+
 WORKDIR ${BUILD_DIR}
+
 
 #
 # cudf bundles many of it's dependencies, but some are still needed 
@@ -49,7 +38,9 @@ RUN pip3 install --no-cache-dir --verbose 'numpy<1.23'
 # 
 # build libcudf (C++)
 #
-RUN git clone --branch ${CUDF_VERSION} --depth=1 https://github.com/dusty-nv/cudf && \ 
+ADD https://api.github.com/repos/${CUDF_REPO}/git/refs/heads/${CUDF_VERSION} /tmp/cudf_version.json
+
+RUN git clone --branch ${CUDF_VERSION} --depth=1 --recursive https://github.com/${CUDF_REPO} cudf && \ 
     cd cudf && \ 
     ./build.sh libcudf -v --cmake-args=\"-DCUDF_ENABLE_ARROW_S3=OFF -DCUDF_ENABLE_ARROW_PYTHON=ON -DCUDF_ENABLE_ARROW_PARQUET=ON -DCUDF_ENABLE_ARROW_ORC=ON\"
 
@@ -95,10 +86,11 @@ RUN cd cudf/python/cudf && \
     cp dist/cudf*.whl /opt && \
     pip3 install --no-cache-dir --verbose /opt/cudf*.whl
     
-# cudf/utils/metadata/orc_column_statistics_pb2.py
-# TypeError: Descriptors cannot not be created directly.
-# If this call came from a _pb2.py file, your generated code is out of date and must be regenerated with protoc >= 3.19.0
+# cudf/utils/metadata/orc_column_statistics_pb2.py - your generated code is out of date and must be regenerated with protoc >= 3.19.0
 RUN pip3 install --no-cache-dir --verbose 'protobuf<3.20'
+
+# requests package needed for test_csv.py
+RUN pip3 install --no-cache-dir --verbose requests
 
 # make sure cudf loads
 RUN pip3 show cudf && python3 -c 'import cudf; print(cudf.__version__)'
