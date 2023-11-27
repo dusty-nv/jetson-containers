@@ -1,5 +1,6 @@
 #---
-# name: exllama
+# name: exllama:v1
+# alias: exllama
 # group: llm
 # config: config.py
 # depends: [pytorch, huggingface_hub]
