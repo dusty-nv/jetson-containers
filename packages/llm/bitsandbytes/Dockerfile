@@ -1,8 +1,8 @@
 #---
 # name: bitsandbytes
 # group: llm
-# requires: '>=34.1.0'
-# depends: [build-essential, pytorch, transformers]
+# requires: '==35.*'
+# depends: [transformers]
 # test: test.py
 # notes: fork of https://github.com/TimDettmers/bitsandbytes for Jetson
 #---

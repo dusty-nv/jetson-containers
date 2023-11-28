@@ -48,6 +48,7 @@ RUN cd minigpt4.cpp/build && \
     cmake --build . --config Release --parallel $(nproc)
     
 RUN pip3 install --no-cache-dir --verbose -r minigpt4.cpp/minigpt4/requirements.txt
+RUN pip3 install --no-cache-dir --verbose gradio==3.38.0
 
 COPY benchmark.py minigpt4.cpp/minigpt4/
 

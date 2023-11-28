@@ -2,7 +2,7 @@
 # name: pycuda
 # group: cuda
 # config: config.py
-# depends: [build-essential, python, numpy]
+# depends: [cuda, build-essential, python, numpy]
 # test: test.py
 #---
 ARG BASE_IMAGE

@@ -30,11 +30,20 @@ RUN ln -s /usr/include/$(uname -i)-linux-gnu/cudnn_version_v8.h /usr/include/$(u
 # architecture-specific build options
 ARG CUDA_ARCH_BIN=""
 ARG ENABLE_NEON="OFF"
+ARG ENABLE_OPENGL="OFF"
 
 # clone and configure OpenCV repo
 RUN git clone --depth 1 --branch ${OPENCV_VERSION} https://github.com/opencv/opencv.git && \
-    git clone --depth 1 --branch ${OPENCV_VERSION} https://github.com/opencv/opencv_contrib.git && \
-    cd opencv && \
+    git clone --depth 1 --branch ${OPENCV_VERSION} https://github.com/opencv/opencv_contrib.git
+    
+# patches for FP16/half casts
+RUN sed -i 's|weight != 1.0|(float)weight != 1.0f|' opencv/modules/dnn/src/cuda4dnn/primitives/normalize_bbox.hpp && \
+    sed -i 's|nms_iou_threshold > 0|(float)nms_iou_threshold > 0.0f|' opencv/modules/dnn/src/cuda4dnn/primitives/region.hpp && \
+    grep 'weight' opencv/modules/dnn/src/cuda4dnn/primitives/normalize_bbox.hpp && \
+    grep 'nms_iou_threshold' opencv/modules/dnn/src/cuda4dnn/primitives/region.hpp
+
+# https://github.com/dusty-nv/jetson-containers/issues/237#issue-1683413279
+RUN cd opencv && \
     mkdir build && \
     cd build && \
     echo "configuring OpenCV ${OPENCV_VERSION}, CUDA_ARCH_BIN=${CUDA_ARCH_BIN}, ENABLE_NEON=${ENABLE_NEON}" && \
@@ -57,12 +66,14 @@ RUN git clone --depth 1 --branch ${OPENCV_VERSION} https://github.com/opencv/ope
         -D OPENCV_ENABLE_NONFREE=ON \
         -D OPENCV_EXTRA_MODULES_PATH=/opt/opencv_contrib/modules \
         -D OPENCV_GENERATE_PKGCONFIG=ON \
+	   -D OpenGL_GL_PREFERENCE=GLVND \
         -D WITH_CUBLAS=ON \
         -D WITH_CUDA=ON \
         -D WITH_CUDNN=ON \
         -D WITH_GSTREAMER=ON \
         -D WITH_LIBV4L=ON \
-        -D WITH_OPENGL=ON \
+	   -D WITH_GTK=ON \
+        -D WITH_OPENGL=${ENABLE_OPENGL} \
 	   -D WITH_OPENCL=OFF \
 	   -D WITH_IPP=OFF \
         -D WITH_TBB=ON \
@@ -75,5 +86,5 @@ RUN cd opencv/build && make -j$(nproc)
 RUN cd opencv/build && make install
 RUN cd opencv/build && make package
 
-RUN cd opencv/build && tar -czvf OpenCV-${OPENCV_VERSION}-$(uname -i).tar.gz *.deb
+RUN cd opencv/build && tar -czvf /opt/OpenCV-${OPENCV_VERSION}-$(uname -i).tar.gz *.deb
     

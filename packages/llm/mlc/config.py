@@ -35,6 +35,6 @@ latest_sha = github_latest_commit(repo, branch='main', github_token=github_token
 print('-- MLC latest commit:', latest_sha)
 
 package = [
-    mlc(latest_sha, 'patches/9166edb.diff', tag='dev'), # patched as of 10/29/2023
+    mlc(latest_sha, 'patches/empty.diff', tag='dev'),
     mlc('9bf5723', 'patches/9bf5723.diff', default=True), # 10/20/2023
 ]
