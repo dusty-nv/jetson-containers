@@ -71,8 +71,10 @@ class DisplayServer(object):
         i2c_bus_number = MODULE_I2CBUS_TABLE.get(jetson_part_number)
         print(f"part_number: {part_number}, jetson_part_number: {jetson_part_number}")
         print(f"i2c_bus_number = {i2c_bus_number}")
+        if not i2c_bus_number:
+            i2c_bus_number = 7  # Default: I2C bus 7 for Jetson AGX Orin
 
-        self.display = Adafruit_SSD1306.SSD1306_128_32(rst=None, i2c_bus=i2c_bus_number, gpio=1) # I2C bus 7 for Jetson AGX Orin
+        self.display = Adafruit_SSD1306.SSD1306_128_32(rst=None, i2c_bus=i2c_bus_number, gpio=1)
         self.display.begin()
         self.display.clear()
         self.display.display()
