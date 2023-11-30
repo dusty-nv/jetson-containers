@@ -2,14 +2,14 @@
 # name: onnxruntime
 # group: ml
 # config: config.py
-# depends: [cmake, python, numpy, onnx]
+# depends: [cuda, cudnn, tensorrt, cmake, python, numpy, onnx]
 # test: test.py
 # notes: the onnxruntime-gpu wheel that's built is saved in the container under /opt
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG ONNXRUNTIME_VERSION=v1.16.1
+ARG ONNXRUNTIME_VERSION=v1.16.3
 ARG ONNXRUNTIME_FLAGS="--allow_running_as_root"
 ARG CUDA_ARCHITECTURES=53;62;72;87
 
