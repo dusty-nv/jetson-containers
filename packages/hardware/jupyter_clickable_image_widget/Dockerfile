@@ -26,6 +26,8 @@ RUN apt-get update && \
     apt-get clean
 RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
 
+WORKDIR /opt
+
 # Install jupyter_clickable_image_widget
 RUN echo "\e[42m Install jupyter_clickable_image_widget \e[0m"
 RUN git clone https://github.com/jaybdub/jupyter_clickable_image_widget && \
