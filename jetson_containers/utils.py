@@ -4,6 +4,7 @@ import grp
 import sys
 import json
 import urllib.request
+from urllib.request import urlopen, Request
 
 
 def check_dependencies(install=True):
@@ -121,12 +122,18 @@ def sudo_prefix(group='docker'):
         return ""
         
         
-def github_latest_commit(repo, branch='main'):
+def github_latest_commit(repo, branch='main', github_token=None):
+    print(f"github_latest_commit({repo}, branch={branch}, github_token={github_token})")
     """
     Returns the SHA of the latest commit to the given github user/repo/branch.
     """
     url = f"https://api.github.com/repos/{repo}/commits/{branch}"
-    response = urllib.request.urlopen(url)
+    if github_token:
+        headers = {'Authorization': 'token %s' % github_token}
+        request = Request(url, headers=headers)
+    else:
+        request = Request(url)
+    response = urlopen(request)
     data = response.read()
     encoding = response.info().get_content_charset('utf-8')
     msg = json.loads(data.decode(encoding))

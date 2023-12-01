@@ -21,7 +21,7 @@ _PACKAGE_KEYS = ['alias', 'build_args', 'build_flags', 'config', 'depends', 'dis
                  'prefix', 'postfix', 'requires', 'test']
                  
 
-def package_search_dirs(package_dirs, scan=False):
+def package_search_dirs(package_dirs, scan=False, github_token=''):
     """
     Add a list of directories to search for packages under.
     If scan is true, these directories will be scanned for packages.
@@ -36,7 +36,7 @@ def package_search_dirs(package_dirs, scan=False):
             _PACKAGE_DIRS.append(package_dirs)
     
     if scan:
-        scan_packages(_PACKAGE_DIRS, rescan=True)
+        scan_packages(_PACKAGE_DIRS, rescan=True, github_token=github_token)
     
     
 def package_scan_options(dict):
@@ -48,7 +48,7 @@ def package_scan_options(dict):
     _PACKAGE_OPTS.update(dict)
     
     
-def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
+def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False, github_token=''):
     """
     Find packages from the list of provided search paths.
     If a path ends in * wildcard, it will be searched recursively.
@@ -65,7 +65,7 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
     # if this is a list of directories, scan each
     if isinstance(package_dirs, list) and len(package_dirs) > 0:
         for path in package_dirs:
-            scan_packages(path)
+            scan_packages(path, github_token=github_token)
             
         _PACKAGE_SCAN = True  # flag that all dirs have been scanned
 
@@ -111,7 +111,7 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
             continue
             
         if os.path.isdir(entry_path) and recursive:
-            scan_packages(os.path.join(entry_path, '*'))
+            scan_packages(os.path.join(entry_path, '*'), github_token=github_token)
         elif os.path.isfile(entry_path):
             if entry.lower() == 'dockerfile': #entry.lower().find('dockerfile') >= 0:
                 package['dockerfile'] = entry
@@ -134,7 +134,7 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
         return _PACKAGES
         
     package['name'] = package_name
-    packages = config_package(package)  # returns a list (including subpackages)
+    packages = config_package(package, github_token)  # returns a list (including subpackages)
 
     for pkg in packages:
         _PACKAGES[pkg['name']] = pkg
@@ -142,7 +142,7 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
     return _PACKAGES
 
     
-def find_package(package, required=True, scan=True):
+def find_package(package, required=True, scan=True, github_token=''):
     """
     Find a package by name or alias, and return it's configuration dict.
     This filters the names with pattern matching using shell-style wildcards.
@@ -152,7 +152,7 @@ def find_package(package, required=True, scan=True):
         return package
         
     if scan:
-        scan_packages()
+        scan_packages(github_token=github_token)
 
     for key, pkg in _PACKAGES.items():
         names = [key, pkg['name']] + pkg.get('alias', [])
@@ -166,14 +166,15 @@ def find_package(package, required=True, scan=True):
         return None
         
         
-def find_packages(packages, required=True, scan=True, skip=[]):
+def find_packages(packages, required=True, scan=True, skip=[], github_token=''):
     """
     Find a set of packages by name or alias, and return them in a dict.
     This filters the names with pattern matching using shell-style wildcards.
     If required is true, a KeyError exception will be raised if any of the packages can't be found.
     """
+    print(f"#### find_packages(packages={packages}, required={required}, scan={scan}, skip={skip}, github_token={github_token})")
     if scan:
-        scan_packages()
+        scan_packages(github_token=github_token)
     
     if isinstance(packages, str):
         if packages == '*' or packages == 'all' or len(packages) == 0:
@@ -260,7 +261,7 @@ def group_packages(packages, key, default=''):
     return grouped
     
         
-def resolve_dependencies(packages, check=True):
+def resolve_dependencies(packages, check=True, github_token=''):
     """
     Recursively expand the list of dependencies to include all sub-dependencies.
     Returns a new list of containers to build which contains all the dependencies.
@@ -275,7 +276,7 @@ def resolve_dependencies(packages, check=True):
         packages_org = packages.copy()
         
         for package in packages_org:
-            for dependency in find_package(package).get('depends', []):
+            for dependency in find_package(package, github_token=github_token).get('depends', []):
                 package_index = packages.index(package)  
                 dependency_index = -1
 
@@ -306,7 +307,7 @@ def resolve_dependencies(packages, check=True):
     # make sure all packages can be found
     if check:
         for package in packages:    
-            find_package(package)
+            find_package(package, github_token=github_token)
 
     return packages
 
@@ -316,7 +317,7 @@ def dependant_packages(package):
     Find the list of all packages that depend on this package.
     """
     if isinstance(package, str):
-        package = find_package(package)
+        package = find_package(package, github_token=github_token)
         
     dependants = []
     
@@ -327,7 +328,7 @@ def dependant_packages(package):
         depends = resolve_dependencies(key, check=False)
         
         for dependency in depends:
-            if package == find_package(dependency):
+            if package == find_package(dependency, github_token=github_token):
                 dependants.append(key)
     
     return dependants
@@ -361,12 +362,12 @@ def apply_config(package, config):
             package[pkg_name] = validate_lists(pkg)
     
                     
-def config_package(package):
+def config_package(package, github_token):
     """
     Run a package's config.py or JSON if it has one
     """
     if isinstance(package, str):
-        package = find_package(package)
+        package = find_package(package, github_token=github_token)
     elif not isinstance(package, dict):
         raise ValueError("package should either be a string or dict")
                
@@ -382,12 +383,13 @@ def config_package(package):
         config_path = os.path.join(package['path'], config_filename)
         
         if config_ext == '.py':
-            print(f"-- Loading {config_path}")
+            print(f"-- Loading {config_path} ({github_token})")
             module_name = f"packages.{package['name']}.config"
             spec = importlib.util.spec_from_file_location(module_name, config_path)
             module = importlib.util.module_from_spec(spec)
             sys.modules[module_name] = module
             module.package = package   # add current package's dict as a global
+            module.github_token = github_token # Try to set github_token arg 
             spec.loader.exec_module(module)
             package = module.package
             if package is None:  # package was disabled in config script

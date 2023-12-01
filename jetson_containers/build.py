@@ -49,6 +49,7 @@ parser.add_argument('--simulate', action='store_true', help="print out the build
 parser.add_argument('--push', type=str, default='', help="repo or user to push built container image to (no push by default)")
 parser.add_argument('--logs', type=str, default='', help="sets the directory to save container build logs to (default: jetson-containers/logs)")
 parser.add_argument('--no-github-api', action='store_true', help="disalbe Github API use to force rebuild on new git commits")
+parser.add_argument('--github-token', type=str, default='', help="supply your GitHub token for GitHub API")
 
 args = parser.parse_args()
 
@@ -71,7 +72,7 @@ print(f"-- LSB_RELEASE={LSB_RELEASE} ({LSB_CODENAME})")
 
 # add package directories
 if args.package_dirs:
-    package_search_dirs(args.package_dirs)
+    package_search_dirs(args.package_dirs, github_token=args.github_token)
 
 # set logging directories
 if args.logs:
@@ -93,6 +94,6 @@ if args.list_packages or args.show_packages:
 # build one multi-stage container from chain of packages
 # or launch multiple independent container builds
 if not args.multiple:
-    build_container(args.name, args.packages, args.base, args.build_flags, args.simulate, args.skip_tests, args.test_only, args.push, args.no_github_api)
+    build_container(args.name, args.packages, args.base, args.build_flags, args.simulate, args.skip_tests, args.test_only, args.push, args.no_github_api, args.github_token)
 else:   
     build_containers(args.name, args.packages, args.base, args.build_flags, args.simulate, args.skip_errors, args.skip_packages, args.skip_tests, args.test_only, args.push)
