@@ -32,7 +32,7 @@ Next, start [`text-generation-webui`](/packages/llm/text-generation-webui) (vers
    python3 server.py --listen --verbose --api \
 	--model-dir=/data/models/text-generation-webui
 ```
-> **note:** `text-generation-webui:1.7` should be used to maintain API compatability
+> **note:** launch the `text-generation-webui:1.7` container to maintain API compatability
 
 Alternatively, you can manually specify the model that you want to load without needing to use the web UI:
 
