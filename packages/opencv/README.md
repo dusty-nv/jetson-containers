@@ -6,15 +6,22 @@
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`opencv`** | |
+| **`opencv:4.8.1`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Aliases | `opencv_cuda` |
-| &nbsp;&nbsp;&nbsp;Builds | [![`opencv_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/opencv_jp46.yml?label=opencv:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/opencv_jp46.yml) [![`opencv_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/opencv_jp51.yml?label=opencv:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/opencv_jp51.yml) |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`audiocraft`](/packages/audio/audiocraft) [`deepstream`](/packages/deepstream) [`efficientvit`](/packages/vit/efficientvit) [`gstreamer`](/packages/gstreamer) [`jetson-utils`](/packages/jetson-utils) [`l4t-diffusion`](/packages/l4t/l4t-diffusion) [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-pytorch`](/packages/l4t/l4t-pytorch) [`l4t-tensorflow:tf1`](/packages/l4t/l4t-tensorflow) [`l4t-tensorflow:tf2`](/packages/l4t/l4t-tensorflow) [`local_llm`](/packages/llm/local_llm) [`ros:foxy-desktop`](/packages/ros) [`ros:foxy-ros-base`](/packages/ros) [`ros:foxy-ros-core`](/packages/ros) [`ros:galactic-desktop`](/packages/ros) [`ros:galactic-ros-base`](/packages/ros) [`ros:galactic-ros-core`](/packages/ros) [`ros:humble-desktop`](/packages/ros) [`ros:humble-ros-base`](/packages/ros) [`ros:humble-ros-core`](/packages/ros) [`ros:iron-desktop`](/packages/ros) [`ros:iron-ros-base`](/packages/ros) [`ros:iron-ros-core`](/packages/ros) [`ros:noetic-desktop`](/packages/ros) [`ros:noetic-ros-base`](/packages/ros) [`ros:noetic-ros-core`](/packages/ros) [`sam`](/packages/vit/sam) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) [`tam`](/packages/vit/tam) |
+| &nbsp;&nbsp;&nbsp;Aliases | `opencv` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ==36.*` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`numpy`](/packages/numpy) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`audiocraft`](/packages/audio/audiocraft) [`deepstream`](/packages/deepstream) [`efficientvit`](/packages/vit/efficientvit) [`gstreamer`](/packages/gstreamer) [`jetson-utils`](/packages/jetson-utils) [`l4t-diffusion`](/packages/l4t/l4t-diffusion) [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-pytorch`](/packages/l4t/l4t-pytorch) [`l4t-tensorflow:tf1`](/packages/l4t/l4t-tensorflow) [`l4t-tensorflow:tf2`](/packages/l4t/l4t-tensorflow) [`local_llm`](/packages/llm/local_llm) [`nanoowl`](/packages/vit/nanoowl) [`ros:foxy-desktop`](/packages/ros) [`ros:foxy-ros-base`](/packages/ros) [`ros:foxy-ros-core`](/packages/ros) [`ros:galactic-desktop`](/packages/ros) [`ros:galactic-ros-base`](/packages/ros) [`ros:galactic-ros-core`](/packages/ros) [`ros:humble-desktop`](/packages/ros) [`ros:humble-ros-base`](/packages/ros) [`ros:humble-ros-core`](/packages/ros) [`ros:iron-desktop`](/packages/ros) [`ros:iron-ros-base`](/packages/ros) [`ros:iron-ros-core`](/packages/ros) [`ros:noetic-desktop`](/packages/ros) [`ros:noetic-ros-base`](/packages/ros) [`ros:noetic-ros-core`](/packages/ros) [`sam`](/packages/vit/sam) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) [`tam`](/packages/vit/tam) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/opencv:r32.7.1`](https://hub.docker.com/r/dustynv/opencv/tags) `(2023-09-07, 0.5GB)`<br>[`dustynv/opencv:r35.2.1`](https://hub.docker.com/r/dustynv/opencv/tags) `(2023-09-07, 5.0GB)`<br>[`dustynv/opencv:r35.3.1`](https://hub.docker.com/r/dustynv/opencv/tags) `(2023-08-29, 5.1GB)`<br>[`dustynv/opencv:r35.4.1`](https://hub.docker.com/r/dustynv/opencv/tags) `(2023-10-07, 5.0GB)` |
+| &nbsp;&nbsp;&nbsp;Notes | install OpenCV (with CUDA) from binaries built by opencv_builder |
+
+| **`opencv:4.5.0`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `opencv` |
+| &nbsp;&nbsp;&nbsp;Builds | [![`opencv-450_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/opencv-450_jp51.yml?label=opencv-450:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/opencv-450_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ==32.*` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`numpy`](/packages/numpy) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Notes | install OpenCV (with CUDA) from binaries built by opencv_builder |
 
 </details>

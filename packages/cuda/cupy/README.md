@@ -10,8 +10,8 @@
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`cupy_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cupy_jp51.yml?label=cupy:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cupy_jp51.yml) [![`cupy_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cupy_jp46.yml?label=cupy:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cupy_jp46.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`cudf`](/packages/rapids/cudf) [`cuml`](/packages/rapids/cuml) [`l4t-ml`](/packages/l4t/l4t-ml) [`raft`](/packages/rapids/raft) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/python) [`numpy`](/packages/numpy) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`cudf:21.10.02`](/packages/rapids/cudf) [`cudf:23.10.03`](/packages/rapids/cudf) [`cuml`](/packages/rapids/cuml) [`l4t-ml`](/packages/l4t/l4t-ml) [`raft`](/packages/rapids/raft) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/cupy:r32.7.1`](https://hub.docker.com/r/dustynv/cupy/tags) `(2023-09-07, 0.5GB)`<br>[`dustynv/cupy:r35.2.1`](https://hub.docker.com/r/dustynv/cupy/tags) `(2023-08-29, 5.1GB)`<br>[`dustynv/cupy:r35.3.1`](https://hub.docker.com/r/dustynv/cupy/tags) `(2023-09-07, 5.1GB)`<br>[`dustynv/cupy:r35.4.1`](https://hub.docker.com/r/dustynv/cupy/tags) `(2023-10-07, 5.1GB)` |
 

@@ -6,13 +6,19 @@
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`opencv_builder`** | |
+| **`opencv:4.8.1-builder`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`opencv_builder_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/opencv_builder_jp46.yml?label=opencv_builder:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/opencv_builder_jp46.yml) [![`opencv_builder_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/opencv_builder_jp51.yml?label=opencv_builder:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/opencv_builder_jp51.yml) |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ==36.*` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/opencv_builder:r32.7.1`](https://hub.docker.com/r/dustynv/opencv_builder/tags) `(2023-09-07, 2.5GB)`<br>[`dustynv/opencv_builder:r35.2.1`](https://hub.docker.com/r/dustynv/opencv_builder/tags) `(2023-09-07, 6.6GB)`<br>[`dustynv/opencv_builder:r35.3.1`](https://hub.docker.com/r/dustynv/opencv_builder/tags) `(2023-08-29, 6.7GB)`<br>[`dustynv/opencv_builder:r35.4.1`](https://hub.docker.com/r/dustynv/opencv_builder/tags) `(2023-10-07, 6.6GB)` |
+| &nbsp;&nbsp;&nbsp;Notes | the built packages are bundled into a .tar.gz under /opt |
+
+| **`opencv:4.5.0-builder`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T <=35` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Notes | the built packages are bundled into a .tar.gz under /opt |
 
 </details>
 

@@ -10,7 +10,7 @@
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`faiss-lite_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/faiss-lite_jp51.yml?label=faiss-lite:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/faiss-lite_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`faiss:main`](/packages/vectordb/faiss) [`cuda-python`](/packages/cuda-python) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`faiss:main`](/packages/vectordb/faiss) [`cuda-python`](/packages/cuda/cuda-python) [`cudnn`](/packages/cuda/cudnn) [`tensorrt`](/packages/tensorrt) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`nanodb`](/packages/vectordb/nanodb) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/faiss:lite-r35.2.1`](https://hub.docker.com/r/dustynv/faiss/tags) `(2023-10-06, 6.4GB)`<br>[`dustynv/faiss:lite-r35.3.1`](https://hub.docker.com/r/dustynv/faiss/tags) `(2023-11-05, 6.4GB)` |
@@ -27,7 +27,7 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag faiss_lite)
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host faiss_lite:35.2.1
+sudo docker run --runtime nvidia -it --rm --network=host faiss_lite:35.4.1
 
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
