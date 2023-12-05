@@ -11,17 +11,14 @@ FROM ${BASE_IMAGE}
 
 WORKDIR /opt
 
-# force rebuild on new commits
-ADD https://api.github.com/repos/oobabooga/text-generation-webui/git/refs/heads/main /tmp/oobabooga_version.json
+ARG OOBABOOGA_REF
+ARG OOBABOOGA_SHA
 
-RUN git clone --depth=1 https://github.com/oobabooga/text-generation-webui
+ADD https://api.github.com/repos/oobabooga/text-generation-webui/git/${OOBABOOGA_REF} /tmp/oobabooga_version.json
 
-#RUN cd text-generation-webui && \
-#    git remote add llava2 https://github.com/haotian-liu/text-generation-webui && \
-#    git fetch llava2 && \
-#    git config user.email "dustinf@nvidia.com" && \
-#    git config user.name "Dustin Franklin" && \
-#    git cherry-pick 9c085ee
+RUN git clone https://github.com/oobabooga/text-generation-webui && \
+    cd text-generation-webui && \
+    git checkout ${OOBABOOGA_SHA}
 
 RUN cd text-generation-webui && \
     #sed 's|^numpy.*|numpy|g' -i requirements.txt && \
@@ -61,10 +58,13 @@ RUN cd text-generation-webui && \
 RUN cp /opt/GPTQ-for-LLaMa/*.py /opt/text-generation-webui
 
 # https://github.com/oobabooga/text-generation-webui/issues/3042#issuecomment-1626160643
-RUN pip3 install --no-cache-dir --verbose 'gradio>=3.36.1'
+#RUN pip3 install --no-cache-dir --verbose 'gradio>=3.36.1'
 RUN pip3 install --no-cache-dir --ignore-installed blinker  # cannot uninstall 'blinker': It is a distutils installed project
 RUN pip3 install --no-cache-dir --verbose -r text-generation-webui/extensions/openai/requirements.txt
-#RUN pip3 install --no-cache-dir --verbose -r text-generation-webui/extensions/api/requirements.txt
+
+RUN if [ -f text-generation-webui/extensions/api/requirements.txt ] ; then \
+	 pip3 install --no-cache-dir --verbose -r text-generation-webui/extensions/api/requirements.txt ; \
+    fi
 
 RUN git clone --depth=1 https://github.com/oobabooga/torch-grammar && \
     cd torch-grammar && \
