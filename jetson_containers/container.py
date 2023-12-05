@@ -12,7 +12,7 @@ import dockerhub_api
 from .packages import find_package, find_packages, resolve_dependencies, validate_dict, _PACKAGE_ROOT
 from .l4t_version import L4T_VERSION, l4t_version_from_tag, l4t_version_compatible, get_l4t_base
 from .utils import split_container_name, query_yes_no, needs_sudo, sudo_prefix
-from .logging import log_dir
+from .logging import log_dir, log_debug, pprint_debug
 
 from packaging.version import Version
 
@@ -382,10 +382,8 @@ def find_local_containers(package, return_dicts=False, **kwargs):
     
     namespace, repo, tag = split_container_name(package)
     local_images = get_local_containers()
-        
-    if kwargs.get('verbose', False):
-        pprint.pprint(local_images)
-        
+    pprint_debug(local_images)
+    
     found_containers = []
     
     for image in local_images:
@@ -422,9 +420,7 @@ def find_registry_containers(package, check_l4t_version=True, return_dicts=False
     
     namespace, repo, tag = split_container_name(package)
     registry_repos = get_registry_containers(**kwargs)
-    
-    if kwargs.get('verbose', False):
-        pprint.pprint(registry_repos)
+    pprint_debug(registry_repos)
 
     found_containers = []
     
@@ -466,13 +462,9 @@ def find_container(package, prefer_sources=['local', 'registry', 'build'], disab
         package = package['name']
      
     namespace, repo, tag = split_container_name(package)
-    
-    verbose = kwargs.get('verbose', False)
+    log_debug(f"-- Finding compatible container image for namespace={namespace} repo={repo} tag={tag}")
     quiet = kwargs.get('quiet', False)
     
-    if verbose:
-        print(f"-- Finding compatible container image for namespace={namespace} repo={repo} tag={tag}")
-
     for source in prefer_sources:
         if source in disable_sources:
             continue
