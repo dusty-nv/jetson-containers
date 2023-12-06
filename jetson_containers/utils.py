@@ -3,6 +3,7 @@ import os
 import grp
 import sys
 import json
+import pprint
 import urllib.request
 
 
@@ -132,3 +133,21 @@ def github_latest_commit(repo, branch='main'):
     msg = json.loads(data.decode(encoding))
     return msg['sha']
     
+    
+def log_debug(*args, **kwargs):
+    """
+    Debug print function that only prints when VERBOSE or DEBUG environment variable is set
+    TODO change this to use python logging APIs or move to logging.py
+    """
+    if os.environ.get('VERBOSE', False) or os.environ.get('DEBUG', False):
+        print(*args, **kwargs)
+        
+        
+def pprint_debug(*args, **kwargs):
+    """
+    Debug print function that only prints when VERBOSE or DEBUG environment variable is set
+    TODO change this to use python logging APIs or move to logging.py
+    """
+    if os.environ.get('VERBOSE', False) or os.environ.get('DEBUG', False):
+        pprint.pprint(*args, **kwargs)
+        

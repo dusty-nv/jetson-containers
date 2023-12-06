@@ -25,8 +25,8 @@ RUN which pip3 && pip3 --version && \
 #RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \
 #    update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
     
-RUN which python && python --version && pip --version && \
-    which python3 && python3 --version && pip3 --version
+RUN which python || python --version || pip --version || \
+    which python3 || python3 --version || pip3 --version
 
 RUN pip3 install --upgrade --no-cache-dir \
 	setuptools \

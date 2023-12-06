@@ -25,21 +25,22 @@ You can also see this helpful video and guide from JetsonHacks for setting up Ri
 
 ### Load LLM
 
-Next, start [`text-generation-webui`](/packages/llm/text-generation-webui) with the `--api` flag and load your chat model of choice through it's web UI on port 7860:
+Next, start [`text-generation-webui`](/packages/llm/text-generation-webui) (version 1.7) with the `--api` flag and load your chat model of choice through it's web UI on port 7860:
 
 ```bash
-./run.sh --workdir /opt/text-generation-webui $(./autotag text-generation-webui) \
+./run.sh --workdir /opt/text-generation-webui $(./autotag text-generation-webui:1.7) \
    python3 server.py --listen --verbose --api \
 	--model-dir=/data/models/text-generation-webui
 ```
+> **note:** launch the `text-generation-webui:1.7` container to maintain API compatability
 
 Alternatively, you can manually specify the model that you want to load without needing to use the web UI:
 
 ```bash
-./run.sh --workdir /opt/text-generation-webui $(./autotag text-generation-webui) \
+./run.sh --workdir /opt/text-generation-webui $(./autotag text-generation-webui:1.7) \
    python3 server.py --listen --verbose --api \
 	--model-dir=/data/models/text-generation-webui \
-	--model=llama-2-13b-chat.ggmlv3.q4_0.bin \
+	--model=llama-2-13b-chat.Q4_K_M.gguf \
 	--loader=llamacpp \
 	--n-gpu-layers=128 \
 	--n_ctx=4096 \

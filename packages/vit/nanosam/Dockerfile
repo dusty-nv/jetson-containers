@@ -25,12 +25,18 @@ RUN git clone https://github.com/NVIDIA-AI-IOT/nanosam && \
 
 # 3. Build the TensorRT engine for the mask decoder
 RUN pip3 install timm
-RUN cd /opt/nanosam && \
-    mkdir data && \
-    python3 -m nanosam.tools.export_sam_mask_decoder_onnx \
-        --model-type=vit_t \
-        --checkpoint=assets/mobile_sam.pt \
-        --output=data/mobile_sam_mask_decoder.onnx
+
+#RUN cd /opt/nanosam && \
+#    mkdir data && \
+#    python3 -m nanosam.tools.export_sam_mask_decoder_onnx \
+#        --model-type=vit_t \
+#        --checkpoint=assets/mobile_sam.pt \
+#        --output=data/mobile_sam_mask_decoder.onnx
+
+RUN mkdir /opt/nanosam/data && \
+    wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate \
+	 https://nvidia.box.com/shared/static/ho09o7ohgp7lsqe0tcxqu5gs2ddojbis.onnx \
+	 -O /opt/nanosam/data/mobile_sam_mask_decoder.onnx
 
 RUN cd /opt/nanosam && \
     /usr/src/tensorrt/bin/trtexec \

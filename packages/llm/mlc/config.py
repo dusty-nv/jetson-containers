@@ -1,7 +1,7 @@
 import os
 import copy
 
-from jetson_containers import CUDA_ARCHITECTURES, github_latest_commit
+from jetson_containers import CUDA_ARCHITECTURES, github_latest_commit, log_debug
 
 repo = 'mlc-ai/mlc-llm'
 
@@ -32,9 +32,9 @@ def mlc(version, patch, tag=None, default=False):
     return pkg
 
 latest_sha = github_latest_commit(repo, branch='main')
-print('-- MLC latest commit:', latest_sha)
+log_debug('-- MLC latest commit:', latest_sha)
 
 package = [
-    mlc(latest_sha, 'patches/9166edb.diff', tag='dev'), # patched as of 10/29/2023
+    mlc(latest_sha, 'patches/empty.diff', tag='dev'),
     mlc('9bf5723', 'patches/9bf5723.diff', default=True), # 10/20/2023
 ]

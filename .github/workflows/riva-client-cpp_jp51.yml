@@ -7,9 +7,9 @@ on:
       - 'dev'
     paths:
       - '.github/workflows/riva-client-cpp_jp51.yml'
-      - 'packages/riva-client/*'
-      - '!packages/riva-client/README.md'
-      - '!packages/riva-client/docs.md'
+      - 'packages/audio/riva-client/*'
+      - '!packages/audio/riva-client/README.md'
+      - '!packages/audio/riva-client/docs.md'
       - 'packages/build-essential/*'
       - '!packages/build-essential/README.md'
       - '!packages/build-essential/docs.md'

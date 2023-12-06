@@ -8,7 +8,7 @@
 
 | **`bazel`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`bazel_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/bazel_jp46.yml?label=bazel:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/bazel_jp46.yml) [![`bazel_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/bazel_jp51.yml?label=bazel:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/bazel_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`bazel_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/bazel_jp51.yml?label=bazel:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/bazel_jp51.yml) [![`bazel_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/bazel_jp46.yml?label=bazel:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/bazel_jp46.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`riva-client:cpp`](/packages/audio/riva-client) [`torch_tensorrt`](/packages/pytorch/torch_tensorrt) |

@@ -10,7 +10,7 @@
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`cuml_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cuml_jp51.yml?label=cuml:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cuml_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`cupy`](/packages/cupy) [`numba`](/packages/numba) [`protobuf:apt`](/packages/protobuf/protobuf_apt) [`cudf`](/packages/rapids/cudf) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`cupy`](/packages/cuda/cupy) [`numba`](/packages/numba) [`protobuf:apt`](/packages/protobuf/protobuf_apt) [`cudf`](/packages/rapids/cudf) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/cuml:r35.2.1`](https://hub.docker.com/r/dustynv/cuml/tags) `(2023-09-07, 7.9GB)`<br>[`dustynv/cuml:r35.3.1`](https://hub.docker.com/r/dustynv/cuml/tags) `(2023-08-29, 8.0GB)`<br>[`dustynv/cuml:r35.4.1`](https://hub.docker.com/r/dustynv/cuml/tags) `(2023-10-07, 7.9GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | installed under `/usr/local` |

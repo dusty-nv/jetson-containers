@@ -25,12 +25,18 @@ on:
       - 'packages/tensorflow/*'
       - '!packages/tensorflow/README.md'
       - '!packages/tensorflow/docs.md'
+      - 'packages/cuda/cuda/*'
+      - '!packages/cuda/cuda/README.md'
+      - '!packages/cuda/cuda/docs.md'
+      - 'packages/cuda/cudnn/*'
+      - '!packages/cuda/cudnn/README.md'
+      - '!packages/cuda/cudnn/docs.md'
       - 'packages/opencv/*'
       - '!packages/opencv/README.md'
       - '!packages/opencv/docs.md'
-      - 'packages/pycuda/*'
-      - '!packages/pycuda/README.md'
-      - '!packages/pycuda/docs.md'
+      - 'packages/cuda/pycuda/*'
+      - '!packages/cuda/pycuda/README.md'
+      - '!packages/cuda/pycuda/docs.md'
 jobs:
   l4t-tensorflow-tf1_jp46:
     runs-on: [self-hosted, jetson, jp46]

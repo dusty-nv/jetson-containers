@@ -13,9 +13,18 @@ on:
       - 'packages/build-essential/*'
       - '!packages/build-essential/README.md'
       - '!packages/build-essential/docs.md'
+      - 'packages/cuda/cuda/*'
+      - '!packages/cuda/cuda/README.md'
+      - '!packages/cuda/cuda/docs.md'
+      - 'packages/cuda/cudnn/*'
+      - '!packages/cuda/cudnn/README.md'
+      - '!packages/cuda/cudnn/docs.md'
       - 'packages/python/*'
       - '!packages/python/README.md'
       - '!packages/python/docs.md'
+      - 'packages/tensorrt/*'
+      - '!packages/tensorrt/README.md'
+      - '!packages/tensorrt/docs.md'
       - 'packages/numpy/*'
       - '!packages/numpy/README.md'
       - '!packages/numpy/docs.md'
@@ -40,9 +49,6 @@ on:
       - 'packages/llm/transformers/*'
       - '!packages/llm/transformers/README.md'
       - '!packages/llm/transformers/docs.md'
-      - 'packages/llm/bitsandbytes/*'
-      - '!packages/llm/bitsandbytes/README.md'
-      - '!packages/llm/bitsandbytes/docs.md'
 jobs:
   llava_jp51:
     runs-on: [self-hosted, jetson, jp51]

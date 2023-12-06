@@ -1,7 +1,7 @@
 #---
 # name: gptq-for-llama
 # group: llm
-# depends: [pytorch, bitsandbytes, transformers]
+# depends: [transformers]
 # test: test.sh
 # notes: https://github.com/oobabooga/GPTQ-for-LLaMa
 #---

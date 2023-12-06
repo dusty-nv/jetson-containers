@@ -26,7 +26,9 @@ RUN apt-get update && \
 		unzip \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
-    
+
+RUN pip3 install --no-cache-dir tzdata
+     
 RUN cd /tmp && \
     wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${PROTOBUF_URL}/$PROTOBUF_DIR.zip && \
     wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${PROTOBUF_URL}/$PROTOC_DIR.zip && \

@@ -19,13 +19,26 @@ ARG CUDAARCHS
 ARG TORCH_CUDA_ARCH_LIST
 
 # MLC/TVM recommends to use LLVM
+RUN wget https://apt.llvm.org/llvm.sh && \
+    chmod +x llvm.sh && \
+    ./llvm.sh all && \
+    ln -s /usr/bin/llvm-config-* /usr/bin/llvm-config
+
+# could NOT find zstd (missing: zstd_LIBRARY zstd_INCLUDE_DIR)
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-		  llvm \
-		  llvm-dev \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
-    
+		  libzstd-dev \
+     && rm -rf /var/lib/apt/lists/* \
+     && apt-get clean
+
+# JP6: https://discourse.llvm.org/t/llvm-15-0-7-missing-libpolly-a/67942    
+#RUN apt-get update && \
+#    apt-get install -y --no-install-recommends \
+#		  llvm \
+#		  llvm-dev \
+#    && rm -rf /var/lib/apt/lists/* \
+#    && apt-get clean
+
 #ADD https://api.github.com/repos/${MLC_REPO}/git/refs/heads/${MLC_VERSION} /tmp/mlc_version.json
 
 RUN git clone https://github.com/${MLC_REPO} && \
@@ -85,7 +98,7 @@ ARG MLC_PATCH
 COPY ${MLC_PATCH} mlc-llm/patch.diff
 
 RUN cd mlc-llm && \
-    git apply patch.diff && \
+    if [ -s patch.diff ]; then git apply patch.diff; fi && \
     git status && \
     git diff
 

@@ -2,13 +2,14 @@
 # name: torchaudio
 # group: pytorch
 # config: config.py
-# depends: [cmake, pytorch]
+# depends: [pytorch, cmake]
 # test: test.py
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG TORCHAUDIO_VERSION
+ARG TORCH_CUDA_ARCH_LIST="5.3;6.2;7.2;8.7"
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \

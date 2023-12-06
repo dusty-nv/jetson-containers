@@ -18,6 +18,11 @@ SHELL ["/bin/bash", "-c"]
 WORKDIR /tmp
 
 # change the locale from POSIX to UTF-8
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends locales \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
 RUN locale-gen en_US en_US.UTF-8 && update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 ENV LANG=en_US.UTF-8
 ENV PYTHONIOENCODING=utf-8

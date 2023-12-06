@@ -219,8 +219,8 @@ def register_runner(token, root, repo, labels=[], simulate=False):
     labels = [x for x in labels if x]
     
     # github runner package
-    run_tar = os.path.join(root, "actions-runner-linux-arm64-2.304.0.tar.gz")
-    run_url = "https://github.com/actions/runner/releases/download/v2.304.0/actions-runner-linux-arm64-2.304.0.tar.gz"
+    run_tar = os.path.join(root, "actions-runner-linux-arm64-2.311.0.tar.gz") #"actions-runner-linux-arm64-2.304.0.tar.gz")
+    run_url = "https://github.com/actions/runner/releases/download/v2.311.0/actions-runner-linux-arm64-2.311.0.tar.gz" #"https://github.com/actions/runner/releases/download/v2.304.0/actions-runner-linux-arm64-2.304.0.tar.gz"
     
     if not os.path.isfile(run_tar) and not simulate:
         print(f"-- Installing self-hosted runner under {root}")
@@ -229,8 +229,8 @@ def register_runner(token, root, repo, labels=[], simulate=False):
         shutil.unpack_archive(run_tar, root)
         
     # github cli package
-    cli_deb = os.path.join(root, "gh_2.32.0_linux_arm64.deb")
-    cli_url = "https://github.com/cli/cli/releases/download/v2.32.0/gh_2.32.0_linux_arm64.deb"
+    cli_deb = os.path.join(root, "gh_2.39.2_linux_arm64.deb") #"gh_2.32.0_linux_arm64.deb")
+    cli_url = "https://github.com/cli/cli/releases/download/v2.39.2/gh_2.39.2_linux_arm64.deb" #"https://github.com/cli/cli/releases/download/v2.32.0/gh_2.32.0_linux_arm64.deb"
     
     if not os.path.isfile(cli_deb) and not simulate:
         print(f"-- Downloading GitHub CLI package to {cli_deb}")

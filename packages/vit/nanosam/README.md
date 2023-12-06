@@ -34,8 +34,7 @@
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`nanosam_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nanosam_jp51.yml?label=nanosam:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nanosam_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`torch2trt`](/packages/pytorch/torch2trt) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`nanoowl`](/packages/vit/nanoowl) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`torch2trt`](/packages/pytorch/torch2trt) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/nanosam:r35.2.1`](https://hub.docker.com/r/dustynv/nanosam/tags) `(2023-11-05, 6.2GB)`<br>[`dustynv/nanosam:r35.4.1`](https://hub.docker.com/r/dustynv/nanosam/tags) `(2023-11-05, 6.2GB)` |
 

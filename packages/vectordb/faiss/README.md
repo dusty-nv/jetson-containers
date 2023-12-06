@@ -11,7 +11,7 @@
 | &nbsp;&nbsp;&nbsp;Aliases | `faiss:main` |
 | &nbsp;&nbsp;&nbsp;Builds | [![`faiss_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/faiss_jp51.yml?label=faiss:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/faiss_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`faiss:lite`](/packages/vectordb/faiss_lite) [`nanodb`](/packages/vectordb/nanodb) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/faiss:lite-r35.2.1`](https://hub.docker.com/r/dustynv/faiss/tags) `(2023-10-06, 6.4GB)`<br>[`dustynv/faiss:lite-r35.3.1`](https://hub.docker.com/r/dustynv/faiss/tags) `(2023-11-05, 6.4GB)`<br>[`dustynv/faiss:r35.2.1`](https://hub.docker.com/r/dustynv/faiss/tags) `(2023-11-04, 6.0GB)` |

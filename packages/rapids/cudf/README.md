@@ -6,15 +6,23 @@
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`cudf`** | |
+| **`cudf:23.10.03`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`cudf_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cudf_jp51.yml?label=cudf:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cudf_jp51.yml) |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`cupy`](/packages/cupy) [`numba`](/packages/numba) [`protobuf:apt`](/packages/protobuf/protobuf_apt) |
+| &nbsp;&nbsp;&nbsp;Aliases | `cudf` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T >=36` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`cupy`](/packages/cuda/cupy) [`numba`](/packages/numba) [`protobuf:apt`](/packages/protobuf/protobuf_apt) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`cuml`](/packages/rapids/cuml) |
-| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/cudf:r35.2.1`](https://hub.docker.com/r/dustynv/cudf/tags) `(2023-09-07, 6.4GB)`<br>[`dustynv/cudf:r35.3.1`](https://hub.docker.com/r/dustynv/cudf/tags) `(2023-08-29, 6.4GB)`<br>[`dustynv/cudf:r35.4.1`](https://hub.docker.com/r/dustynv/cudf/tags) `(2023-10-07, 6.4GB)` |
-| &nbsp;&nbsp;&nbsp;Notes | installed under /usr/local |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.jp5`](Dockerfile.jp5) |
+| &nbsp;&nbsp;&nbsp;Notes | installed under `/usr/local` |
+
+| **`cudf:21.10.02`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `cudf` |
+| &nbsp;&nbsp;&nbsp;Builds | [![`cudf-211002_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cudf-211002_jp51.yml?label=cudf-211002:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cudf-211002_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ==35.*` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`cupy`](/packages/cuda/cupy) [`numba`](/packages/numba) [`protobuf:apt`](/packages/protobuf/protobuf_apt) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.jp5`](Dockerfile.jp5) |
+| &nbsp;&nbsp;&nbsp;Notes | installed under `/usr/local` |
 
 </details>
 

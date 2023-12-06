@@ -1,7 +1,7 @@
 #---
 # name: numba
 # group: cuda
-# depends: [build-essential, python, numpy]
+# depends: [cuda, python, numpy]
 # test: test.py
 #---
 ARG BASE_IMAGE
@@ -9,13 +9,13 @@ FROM ${BASE_IMAGE}
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-		  llvm-9 \
-		  llvm-9-dev \
+		  llvm-dev \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
     
 # https://github.com/numba/llvmlite/issues/621#issuecomment-737100914
-RUN update-alternatives --install /usr/bin/llvm-config llvm-config /usr/bin/llvm-config-9 1
+#RUN update-alternatives --install /usr/bin/llvm-config llvm-config /usr/bin/llvm-config-9 1
+RUN llvm-config --version
 
 RUN pip3 install --no-cache-dir --verbose numba
 

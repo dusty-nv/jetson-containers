@@ -61,16 +61,17 @@ The prefill time is how long the model takes to process the input context before
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`mlc-dev_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/mlc-dev_jp51.yml?label=mlc-dev:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/mlc-dev_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/mlc:dev-r35.3.1`](https://hub.docker.com/r/dustynv/mlc/tags) `(2023-10-30, 9.0GB)` |
-| &nbsp;&nbsp;&nbsp;Notes | [mlc-ai/mlc-llm](https://github.com/mlc-ai/mlc-llm/tree/4042626997c44c486f550b611d8bb904a637e7e3) commit SHA [`4042626997c44c486f550b611d8bb904a637e7e3`](https://github.com/mlc-ai/mlc-llm/tree/4042626997c44c486f550b611d8bb904a637e7e3) |
+| &nbsp;&nbsp;&nbsp;Notes | [mlc-ai/mlc-llm](https://github.com/mlc-ai/mlc-llm/tree/36e3e390098ea3abe28f567bee541c99ad645f37) commit SHA [`36e3e390098ea3abe28f567bee541c99ad645f37`](https://github.com/mlc-ai/mlc-llm/tree/36e3e390098ea3abe28f567bee541c99ad645f37) |
 
 | **`mlc:9bf5723`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `mlc` |
+| &nbsp;&nbsp;&nbsp;Builds | [![`mlc-9bf5723_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/mlc-9bf5723_jp51.yml?label=mlc-9bf5723:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/mlc-9bf5723_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`local_llm`](/packages/llm/local_llm) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Notes | [mlc-ai/mlc-llm](https://github.com/mlc-ai/mlc-llm/tree/9bf5723) commit SHA [`9bf5723`](https://github.com/mlc-ai/mlc-llm/tree/9bf5723) |
