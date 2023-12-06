@@ -1,7 +1,7 @@
 #---
 # name: nanoowl
 # group: vit
-# depends: [pytorch, torch2trt, transformers, opencv]
+# depends: [pytorch, torch2trt, transformers, opencv, gstreamer]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---
