@@ -95,7 +95,7 @@ Then navigate your browser to `http://HOSTNAME:7860?__theme=dark`, and you can e
 
 | **`nanodb`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`nanodb_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nanodb_jp51.yml?label=nanodb:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nanodb_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`nanodb_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nanodb_jp51.yml?label=nanodb:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nanodb_jp51.yml) [![`nanodb_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nanodb_jp60.yml?label=nanodb:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nanodb_jp60.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`faiss:main`](/packages/vectordb/faiss) [`cuda-python`](/packages/cuda/cuda-python) [`cudnn`](/packages/cuda/cudnn) [`tensorrt`](/packages/tensorrt) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`faiss:lite`](/packages/vectordb/faiss_lite) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) [`torch2trt`](/packages/pytorch/torch2trt) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |

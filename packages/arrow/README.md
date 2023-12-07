@@ -9,7 +9,6 @@
 | **`arrow:14.0.1`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `arrow` |
-| &nbsp;&nbsp;&nbsp;Builds | [![`arrow-1401_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/arrow-1401_jp51.yml?label=arrow-1401:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/arrow-1401_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
@@ -17,7 +16,6 @@
 
 | **`arrow:12.0.1`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`arrow-1201_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/arrow-1201_jp51.yml?label=arrow-1201:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/arrow-1201_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
@@ -25,7 +23,6 @@
 
 | **`arrow:5.0.0`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`arrow-500_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/arrow-500_jp51.yml?label=arrow-500:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/arrow-500_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
@@ -43,7 +40,7 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag arrow)
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host arrow:35.4.1
+sudo docker run --runtime nvidia -it --rm --network=host arrow:35.2.1
 
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>

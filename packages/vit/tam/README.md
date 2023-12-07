@@ -16,7 +16,7 @@ Use your web browser to access `http://HOSTNAME:12212`
 
 | **`tam`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`tam_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/tam_jp51.yml?label=tam:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tam_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`tam_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/tam_jp60.yml?label=tam:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tam_jp60.yml) [![`tam_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/tam_jp51.yml?label=tam:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tam_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) [`tensorrt`](/packages/tensorrt) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`onnxruntime`](/packages/onnxruntime) [`rust`](/packages/rust) [`jupyterlab`](/packages/jupyterlab) [`sam`](/packages/vit/sam) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |

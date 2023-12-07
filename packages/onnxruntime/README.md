@@ -8,12 +8,12 @@
 
 | **`onnxruntime`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`onnxruntime_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/onnxruntime_jp46.yml?label=onnxruntime:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/onnxruntime_jp46.yml) [![`onnxruntime_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/onnxruntime_jp51.yml?label=onnxruntime:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/onnxruntime_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`onnxruntime_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/onnxruntime_jp51.yml?label=onnxruntime:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/onnxruntime_jp51.yml) [![`onnxruntime_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/onnxruntime_jp60.yml?label=onnxruntime:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/onnxruntime_jp60.yml) [![`onnxruntime_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/onnxruntime_jp46.yml?label=onnxruntime:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/onnxruntime_jp46.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`efficientvit`](/packages/vit/efficientvit) [`l4t-ml`](/packages/l4t/l4t-ml) [`optimum`](/packages/llm/optimum) [`sam`](/packages/vit/sam) [`tam`](/packages/vit/tam) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/onnxruntime:r32.7.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) `(2023-11-13, 0.5GB)`<br>[`dustynv/onnxruntime:r35.2.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) `(2023-08-29, 5.2GB)`<br>[`dustynv/onnxruntime:r35.3.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) `(2023-11-13, 5.2GB)`<br>[`dustynv/onnxruntime:r35.4.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) `(2023-11-08, 5.1GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/onnxruntime:r32.7.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) `(2023-12-06, 0.5GB)`<br>[`dustynv/onnxruntime:r35.2.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) `(2023-08-29, 5.2GB)`<br>[`dustynv/onnxruntime:r35.3.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) `(2023-11-13, 5.2GB)`<br>[`dustynv/onnxruntime:r35.4.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) `(2023-11-08, 5.1GB)`<br>[`dustynv/onnxruntime:r36.2.0`](https://hub.docker.com/r/dustynv/onnxruntime/tags) `(2023-12-06, 6.9GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | the onnxruntime-gpu wheel that's built is saved in the container under /opt |
 
 </details>
@@ -24,10 +24,11 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/onnxruntime:r32.7.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) | `2023-11-13` | `arm64` | `0.5GB` |
+| &nbsp;&nbsp;[`dustynv/onnxruntime:r32.7.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) | `2023-12-06` | `arm64` | `0.5GB` |
 | &nbsp;&nbsp;[`dustynv/onnxruntime:r35.2.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) | `2023-08-29` | `arm64` | `5.2GB` |
 | &nbsp;&nbsp;[`dustynv/onnxruntime:r35.3.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) | `2023-11-13` | `arm64` | `5.2GB` |
 | &nbsp;&nbsp;[`dustynv/onnxruntime:r35.4.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) | `2023-11-08` | `arm64` | `5.1GB` |
+| &nbsp;&nbsp;[`dustynv/onnxruntime:r36.2.0`](https://hub.docker.com/r/dustynv/onnxruntime/tags) | `2023-12-06` | `arm64` | `6.9GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>

@@ -8,12 +8,12 @@
 
 | **`tritonserver`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`tritonserver_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/tritonserver_jp51.yml?label=tritonserver:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tritonserver_jp51.yml) [![`tritonserver_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/tritonserver_jp46.yml?label=tritonserver:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tritonserver_jp46.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`tritonserver_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/tritonserver_jp46.yml?label=tritonserver:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tritonserver_jp46.yml) [![`tritonserver_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/tritonserver_jp51.yml?label=tritonserver:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tritonserver_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`deepstream`](/packages/deepstream) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/tritonserver:r32.7.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) `(2023-09-07, 1.3GB)`<br>[`dustynv/tritonserver:r35.2.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) `(2023-09-07, 5.9GB)`<br>[`dustynv/tritonserver:r35.3.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) `(2023-08-29, 5.9GB)`<br>[`dustynv/tritonserver:r35.4.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) `(2023-10-07, 5.9GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/tritonserver:r32.7.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) `(2023-12-06, 1.3GB)`<br>[`dustynv/tritonserver:r35.2.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) `(2023-09-07, 5.9GB)`<br>[`dustynv/tritonserver:r35.3.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) `(2023-08-29, 5.9GB)`<br>[`dustynv/tritonserver:r35.4.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) `(2023-10-07, 5.9GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/user_guide/jetson.html |
 
 </details>
@@ -24,7 +24,7 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/tritonserver:r32.7.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) | `2023-09-07` | `arm64` | `1.3GB` |
+| &nbsp;&nbsp;[`dustynv/tritonserver:r32.7.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) | `2023-12-06` | `arm64` | `1.3GB` |
 | &nbsp;&nbsp;[`dustynv/tritonserver:r35.2.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) | `2023-09-07` | `arm64` | `5.9GB` |
 | &nbsp;&nbsp;[`dustynv/tritonserver:r35.3.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) | `2023-08-29` | `arm64` | `5.9GB` |
 | &nbsp;&nbsp;[`dustynv/tritonserver:r35.4.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) | `2023-10-07` | `arm64` | `5.9GB` |
@@ -44,10 +44,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag tritonserver)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/tritonserver:r35.4.1
+./run.sh dustynv/tritonserver:r32.7.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/tritonserver:r35.4.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/tritonserver:r32.7.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

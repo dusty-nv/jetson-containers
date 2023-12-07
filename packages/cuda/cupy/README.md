@@ -8,12 +8,12 @@
 
 | **`cupy`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`cupy_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cupy_jp51.yml?label=cupy:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cupy_jp51.yml) [![`cupy_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cupy_jp46.yml?label=cupy:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cupy_jp46.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`cupy_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cupy_jp60.yml?label=cupy:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cupy_jp60.yml) [![`cupy_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cupy_jp51.yml?label=cupy:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cupy_jp51.yml) [![`cupy_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cupy_jp46.yml?label=cupy:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cupy_jp46.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/python) [`numpy`](/packages/numpy) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`cudf:21.10.02`](/packages/rapids/cudf) [`cudf:23.10.03`](/packages/rapids/cudf) [`cuml`](/packages/rapids/cuml) [`l4t-ml`](/packages/l4t/l4t-ml) [`raft`](/packages/rapids/raft) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/cupy:r32.7.1`](https://hub.docker.com/r/dustynv/cupy/tags) `(2023-09-07, 0.5GB)`<br>[`dustynv/cupy:r35.2.1`](https://hub.docker.com/r/dustynv/cupy/tags) `(2023-08-29, 5.1GB)`<br>[`dustynv/cupy:r35.3.1`](https://hub.docker.com/r/dustynv/cupy/tags) `(2023-09-07, 5.1GB)`<br>[`dustynv/cupy:r35.4.1`](https://hub.docker.com/r/dustynv/cupy/tags) `(2023-10-07, 5.1GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/cupy:r32.7.1`](https://hub.docker.com/r/dustynv/cupy/tags) `(2023-12-06, 0.5GB)`<br>[`dustynv/cupy:r35.2.1`](https://hub.docker.com/r/dustynv/cupy/tags) `(2023-12-05, 5.1GB)`<br>[`dustynv/cupy:r35.3.1`](https://hub.docker.com/r/dustynv/cupy/tags) `(2023-09-07, 5.1GB)`<br>[`dustynv/cupy:r35.4.1`](https://hub.docker.com/r/dustynv/cupy/tags) `(2023-12-06, 5.1GB)`<br>[`dustynv/cupy:r36.2.0`](https://hub.docker.com/r/dustynv/cupy/tags) `(2023-12-06, 3.5GB)` |
 
 </details>
 
@@ -23,10 +23,11 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/cupy:r32.7.1`](https://hub.docker.com/r/dustynv/cupy/tags) | `2023-09-07` | `arm64` | `0.5GB` |
-| &nbsp;&nbsp;[`dustynv/cupy:r35.2.1`](https://hub.docker.com/r/dustynv/cupy/tags) | `2023-08-29` | `arm64` | `5.1GB` |
+| &nbsp;&nbsp;[`dustynv/cupy:r32.7.1`](https://hub.docker.com/r/dustynv/cupy/tags) | `2023-12-06` | `arm64` | `0.5GB` |
+| &nbsp;&nbsp;[`dustynv/cupy:r35.2.1`](https://hub.docker.com/r/dustynv/cupy/tags) | `2023-12-05` | `arm64` | `5.1GB` |
 | &nbsp;&nbsp;[`dustynv/cupy:r35.3.1`](https://hub.docker.com/r/dustynv/cupy/tags) | `2023-09-07` | `arm64` | `5.1GB` |
-| &nbsp;&nbsp;[`dustynv/cupy:r35.4.1`](https://hub.docker.com/r/dustynv/cupy/tags) | `2023-10-07` | `arm64` | `5.1GB` |
+| &nbsp;&nbsp;[`dustynv/cupy:r35.4.1`](https://hub.docker.com/r/dustynv/cupy/tags) | `2023-12-06` | `arm64` | `5.1GB` |
+| &nbsp;&nbsp;[`dustynv/cupy:r36.2.0`](https://hub.docker.com/r/dustynv/cupy/tags) | `2023-12-06` | `arm64` | `3.5GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>

@@ -8,12 +8,12 @@
 
 | **`torchaudio`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`torchaudio_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torchaudio_jp46.yml?label=torchaudio:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torchaudio_jp46.yml) [![`torchaudio_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torchaudio_jp51.yml?label=torchaudio:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torchaudio_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`torchaudio_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torchaudio_jp51.yml?label=torchaudio:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torchaudio_jp51.yml) [![`torchaudio_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torchaudio_jp46.yml?label=torchaudio:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torchaudio_jp46.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`audiocraft`](/packages/audio/audiocraft) [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-pytorch`](/packages/l4t/l4t-pytorch) [`nemo`](/packages/nemo) [`whisper`](/packages/audio/whisper) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/torchaudio:r32.7.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) `(2023-11-05, 1.1GB)`<br>[`dustynv/torchaudio:r35.2.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) `(2023-09-24, 5.4GB)`<br>[`dustynv/torchaudio:r35.3.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) `(2023-11-03, 5.4GB)`<br>[`dustynv/torchaudio:r35.4.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) `(2023-11-05, 5.4GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/torchaudio:r32.7.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) `(2023-12-06, 1.1GB)`<br>[`dustynv/torchaudio:r35.2.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) `(2023-09-24, 5.4GB)`<br>[`dustynv/torchaudio:r35.3.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) `(2023-11-03, 5.4GB)`<br>[`dustynv/torchaudio:r35.4.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) `(2023-12-06, 5.4GB)` |
 
 </details>
 
@@ -23,10 +23,10 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/torchaudio:r32.7.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) | `2023-11-05` | `arm64` | `1.1GB` |
+| &nbsp;&nbsp;[`dustynv/torchaudio:r32.7.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) | `2023-12-06` | `arm64` | `1.1GB` |
 | &nbsp;&nbsp;[`dustynv/torchaudio:r35.2.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) | `2023-09-24` | `arm64` | `5.4GB` |
 | &nbsp;&nbsp;[`dustynv/torchaudio:r35.3.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) | `2023-11-03` | `arm64` | `5.4GB` |
-| &nbsp;&nbsp;[`dustynv/torchaudio:r35.4.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) | `2023-11-05` | `arm64` | `5.4GB` |
+| &nbsp;&nbsp;[`dustynv/torchaudio:r35.4.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) | `2023-12-06` | `arm64` | `5.4GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -43,10 +43,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag torchaudio)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/torchaudio:r35.4.1
+./run.sh dustynv/torchaudio:r32.7.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/torchaudio:r35.4.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/torchaudio:r32.7.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

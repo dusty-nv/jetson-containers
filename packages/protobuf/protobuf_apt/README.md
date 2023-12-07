@@ -13,7 +13,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`cudf:21.10.02`](/packages/rapids/cudf) [`cudf:23.10.03`](/packages/rapids/cudf) [`cuml`](/packages/rapids/cuml) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/protobuf:apt-r32.7.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-09-07, 0.4GB)`<br>[`dustynv/protobuf:apt-r35.2.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-09-07, 5.0GB)`<br>[`dustynv/protobuf:apt-r35.3.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-08-29, 5.0GB)`<br>[`dustynv/protobuf:apt-r35.4.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-10-07, 5.0GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/protobuf:apt-r32.7.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-12-06, 0.4GB)`<br>[`dustynv/protobuf:apt-r35.2.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-12-06, 5.0GB)`<br>[`dustynv/protobuf:apt-r35.3.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-08-29, 5.0GB)`<br>[`dustynv/protobuf:apt-r35.4.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-10-07, 5.0GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | install protobuf from apt repo |
 
 </details>
@@ -28,7 +28,7 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag protobuf_apt)
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host protobuf_apt:35.4.1
+sudo docker run --runtime nvidia -it --rm --network=host protobuf_apt:35.2.1
 
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>

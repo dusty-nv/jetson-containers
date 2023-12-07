@@ -8,11 +8,11 @@
 
 | **`optimum`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`optimum_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/optimum_jp51.yml?label=optimum:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/optimum_jp51.yml) [![`optimum_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/optimum_jp46.yml?label=optimum:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/optimum_jp46.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`optimum_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/optimum_jp46.yml?label=optimum:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/optimum_jp46.yml) [![`optimum_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/optimum_jp51.yml?label=optimum:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/optimum_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) [`onnxruntime`](/packages/onnxruntime) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/optimum:r32.7.1`](https://hub.docker.com/r/dustynv/optimum/tags) `(2023-11-13, 1.6GB)`<br>[`dustynv/optimum:r35.2.1`](https://hub.docker.com/r/dustynv/optimum/tags) `(2023-11-13, 6.1GB)`<br>[`dustynv/optimum:r35.3.1`](https://hub.docker.com/r/dustynv/optimum/tags) `(2023-11-04, 6.1GB)`<br>[`dustynv/optimum:r35.4.1`](https://hub.docker.com/r/dustynv/optimum/tags) `(2023-11-05, 6.1GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/optimum:r32.7.1`](https://hub.docker.com/r/dustynv/optimum/tags) `(2023-12-06, 1.7GB)`<br>[`dustynv/optimum:r35.2.1`](https://hub.docker.com/r/dustynv/optimum/tags) `(2023-11-13, 6.1GB)`<br>[`dustynv/optimum:r35.3.1`](https://hub.docker.com/r/dustynv/optimum/tags) `(2023-11-04, 6.1GB)`<br>[`dustynv/optimum:r35.4.1`](https://hub.docker.com/r/dustynv/optimum/tags) `(2023-11-05, 6.1GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/huggingface/optimum |
 
 </details>
@@ -23,7 +23,7 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/optimum:r32.7.1`](https://hub.docker.com/r/dustynv/optimum/tags) | `2023-11-13` | `arm64` | `1.6GB` |
+| &nbsp;&nbsp;[`dustynv/optimum:r32.7.1`](https://hub.docker.com/r/dustynv/optimum/tags) | `2023-12-06` | `arm64` | `1.7GB` |
 | &nbsp;&nbsp;[`dustynv/optimum:r35.2.1`](https://hub.docker.com/r/dustynv/optimum/tags) | `2023-11-13` | `arm64` | `6.1GB` |
 | &nbsp;&nbsp;[`dustynv/optimum:r35.3.1`](https://hub.docker.com/r/dustynv/optimum/tags) | `2023-11-04` | `arm64` | `6.1GB` |
 | &nbsp;&nbsp;[`dustynv/optimum:r35.4.1`](https://hub.docker.com/r/dustynv/optimum/tags) | `2023-11-05` | `arm64` | `6.1GB` |
