@@ -479,7 +479,6 @@ def find_container(package, prefer_sources=['local', 'registry', 'build'], disab
             registry_images = find_registry_containers(package, return_dicts=True, **kwargs)
             
             if len(registry_images) > 0:
-                print(registry_images[0]['tags'])
                 img = registry_images[0]  # TODO allow use to select image if there are multiple candidates
                 img_tag = img['tags'][0]
                 img_name = f"{img['namespace']}/{img['name']}:{img_tag['name']}"
