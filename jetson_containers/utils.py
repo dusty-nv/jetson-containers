@@ -5,6 +5,7 @@ import sys
 import json
 import pprint
 import urllib.request
+from urllib.request import urlopen, Request
 
 
 def check_dependencies(install=True):
@@ -127,7 +128,14 @@ def github_latest_commit(repo, branch='main'):
     Returns the SHA of the latest commit to the given github user/repo/branch.
     """
     url = f"https://api.github.com/repos/{repo}/commits/{branch}"
-    response = urllib.request.urlopen(url)
+    github_token = os.environ.get('GITHUB_TOKEN')
+    print(f"[ENV] GITHUB_TOKEN: {github_token}")
+    if github_token:
+        headers = {'Authorization': 'token %s' % github_token}
+        request = Request(url, headers=headers)
+    else:
+        request = Request(url)
+    response = urlopen(request)
     data = response.read()
     encoding = response.info().get_content_charset('utf-8')
     msg = json.loads(data.decode(encoding))
