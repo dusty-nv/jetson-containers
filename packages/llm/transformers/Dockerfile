@@ -25,7 +25,7 @@ RUN pip3 install --no-cache-dir --verbose \
 RUN pip3 uninstall -y transformers && \
     pip3 install --no-cache-dir --verbose ${TRANSFORMERS_PACKAGE}
 
-# "/usr/local/lib/python3.8/dist-packages/transformers/modeling_utils.py", line 118
+# "/usr/local/lib/python3.10/dist-packages/transformers/modeling_utils.py", line 118
 # AttributeError: module 'torch.distributed' has no attribute 'is_initialized'
 RUN PYTHON_ROOT=`pip3 show transformers | grep Location: | cut -d' ' -f2` && \
     sed -i 's|torch.distributed.is_initialized|torch.distributed.is_available|g' -i ${PYTHON_ROOT}/transformers/modeling_utils.py
