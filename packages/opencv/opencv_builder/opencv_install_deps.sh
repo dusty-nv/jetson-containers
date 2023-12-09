@@ -13,11 +13,11 @@ fi
 apt-get update
 apt-get install -y --no-install-recommends \
         build-essential \
-	   gfortran \
+	gfortran \
         cmake \
         git \
-	   file \
-	   tar \
+	file \
+	tar \
         libatlas-base-dev \
         libavcodec-dev \
         libavformat-dev \
@@ -38,20 +38,20 @@ apt-get install -y --no-install-recommends \
         libpostproc-dev \
         libswscale-dev \
         libtbb-dev \
-        libtbb2 \
+        libtbb12 \
         libtesseract-dev \
         libtiff-dev \
         libv4l-dev \
         libxine2-dev \
         libxvidcore-dev \
         libx264-dev \
-	   libgtkglext1 \
-	   libgtkglext1-dev \
+	libgtkglext1 \
+	libgtkglext1-dev \
         pkg-config \
         qv4l2 \
         v4l-utils \
         zlib1g-dev \
-	   $EXTRAS
+	$EXTRAS
 
 # on x86, the python dev packages are already installed in the NGC containers under conda
 # and installing them again from apt messes up their proper detection, so skip doing that
