@@ -64,7 +64,7 @@ The prefill time is how long the model takes to process the input context before
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/mlc:dev-r35.3.1`](https://hub.docker.com/r/dustynv/mlc/tags) `(2023-10-30, 9.0GB)` |
-| &nbsp;&nbsp;&nbsp;Notes | [mlc-ai/mlc-llm](https://github.com/mlc-ai/mlc-llm/tree/4e2f4e18768ddf8109e1ccac1b4c9745d55cb4d9) commit SHA [`4e2f4e18768ddf8109e1ccac1b4c9745d55cb4d9`](https://github.com/mlc-ai/mlc-llm/tree/4e2f4e18768ddf8109e1ccac1b4c9745d55cb4d9) |
+| &nbsp;&nbsp;&nbsp;Notes | [mlc-ai/mlc-llm](https://github.com/mlc-ai/mlc-llm/tree/11daf9a6ef514660e1c97da83057c84e629a1aa4) commit SHA [`11daf9a6ef514660e1c97da83057c84e629a1aa4`](https://github.com/mlc-ai/mlc-llm/tree/11daf9a6ef514660e1c97da83057c84e629a1aa4) |
 
 | **`mlc:9bf5723`** | |
 | :-- | :-- |

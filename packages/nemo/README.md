@@ -13,7 +13,7 @@ NVIDIA NeMo for ASR/NLP/TTS https://nvidia.github.io/NeMo/
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) [`torchaudio`](/packages/pytorch/torchaudio) [`numba`](/packages/numba) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/nemo:r32.7.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-11-05, 1.9GB)`<br>[`dustynv/nemo:r35.2.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-09-11, 7.1GB)`<br>[`dustynv/nemo:r35.3.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-09-24, 7.1GB)`<br>[`dustynv/nemo:r35.4.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-08-29, 6.9GB)`<br>[`dustynv/nemo:r36.2.0`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-12-06, 9.2GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/nemo:r32.7.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-11-05, 1.9GB)`<br>[`dustynv/nemo:r35.2.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-09-11, 7.1GB)`<br>[`dustynv/nemo:r35.3.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-09-24, 7.1GB)`<br>[`dustynv/nemo:r35.4.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-08-29, 6.9GB)`<br>[`dustynv/nemo:r36.2.0`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-12-12, 9.2GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | this Dockerfile gets switched out for `Dockerfile.jp4` on JetPack 4 |
 
 </details>
@@ -28,7 +28,7 @@ NVIDIA NeMo for ASR/NLP/TTS https://nvidia.github.io/NeMo/
 | &nbsp;&nbsp;[`dustynv/nemo:r35.2.1`](https://hub.docker.com/r/dustynv/nemo/tags) | `2023-09-11` | `arm64` | `7.1GB` |
 | &nbsp;&nbsp;[`dustynv/nemo:r35.3.1`](https://hub.docker.com/r/dustynv/nemo/tags) | `2023-09-24` | `arm64` | `7.1GB` |
 | &nbsp;&nbsp;[`dustynv/nemo:r35.4.1`](https://hub.docker.com/r/dustynv/nemo/tags) | `2023-08-29` | `arm64` | `6.9GB` |
-| &nbsp;&nbsp;[`dustynv/nemo:r36.2.0`](https://hub.docker.com/r/dustynv/nemo/tags) | `2023-12-06` | `arm64` | `9.2GB` |
+| &nbsp;&nbsp;[`dustynv/nemo:r36.2.0`](https://hub.docker.com/r/dustynv/nemo/tags) | `2023-12-12` | `arm64` | `9.2GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>

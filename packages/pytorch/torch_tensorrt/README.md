@@ -12,7 +12,7 @@
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`bazel`](/packages/bazel) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/torch_tensorrt:r32.7.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) `(2023-12-06, 1.6GB)`<br>[`dustynv/torch_tensorrt:r35.2.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) `(2023-09-24, 5.9GB)`<br>[`dustynv/torch_tensorrt:r35.3.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) `(2023-11-05, 6.0GB)`<br>[`dustynv/torch_tensorrt:r35.4.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) `(2023-10-07, 5.9GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/torch_tensorrt:r32.7.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) `(2023-12-11, 1.5GB)`<br>[`dustynv/torch_tensorrt:r35.2.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) `(2023-12-11, 5.9GB)`<br>[`dustynv/torch_tensorrt:r35.3.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) `(2023-12-12, 5.9GB)`<br>[`dustynv/torch_tensorrt:r35.4.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) `(2023-10-07, 5.9GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://pytorch.org/TensorRT/getting_started/installation.html#installation |
 
 </details>
@@ -23,9 +23,9 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/torch_tensorrt:r32.7.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) | `2023-12-06` | `arm64` | `1.6GB` |
-| &nbsp;&nbsp;[`dustynv/torch_tensorrt:r35.2.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) | `2023-09-24` | `arm64` | `5.9GB` |
-| &nbsp;&nbsp;[`dustynv/torch_tensorrt:r35.3.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) | `2023-11-05` | `arm64` | `6.0GB` |
+| &nbsp;&nbsp;[`dustynv/torch_tensorrt:r32.7.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) | `2023-12-11` | `arm64` | `1.5GB` |
+| &nbsp;&nbsp;[`dustynv/torch_tensorrt:r35.2.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) | `2023-12-11` | `arm64` | `5.9GB` |
+| &nbsp;&nbsp;[`dustynv/torch_tensorrt:r35.3.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) | `2023-12-12` | `arm64` | `5.9GB` |
 | &nbsp;&nbsp;[`dustynv/torch_tensorrt:r35.4.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) | `2023-10-07` | `arm64` | `5.9GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
@@ -43,10 +43,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag torch_tensorrt)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/torch_tensorrt:r32.7.1
+./run.sh dustynv/torch_tensorrt:r35.3.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/torch_tensorrt:r32.7.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/torch_tensorrt:r35.3.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

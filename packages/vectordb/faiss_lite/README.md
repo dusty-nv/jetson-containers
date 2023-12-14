@@ -13,7 +13,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`faiss:main`](/packages/vectordb/faiss) [`cuda-python`](/packages/cuda/cuda-python) [`cudnn`](/packages/cuda/cudnn) [`tensorrt`](/packages/tensorrt) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`nanodb`](/packages/vectordb/nanodb) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/faiss:lite-r35.2.1`](https://hub.docker.com/r/dustynv/faiss/tags) `(2023-10-06, 6.4GB)`<br>[`dustynv/faiss:lite-r35.3.1`](https://hub.docker.com/r/dustynv/faiss/tags) `(2023-11-05, 6.4GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/faiss:lite-r35.2.1`](https://hub.docker.com/r/dustynv/faiss/tags) `(2023-12-11, 6.4GB)`<br>[`dustynv/faiss:lite-r35.3.1`](https://hub.docker.com/r/dustynv/faiss/tags) `(2023-11-05, 6.4GB)`<br>[`dustynv/faiss:lite-r35.4.1`](https://hub.docker.com/r/dustynv/faiss/tags) `(2023-12-12, 6.4GB)` |
 
 </details>
 

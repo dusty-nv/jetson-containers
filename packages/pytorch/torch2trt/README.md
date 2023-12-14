@@ -13,7 +13,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-pytorch`](/packages/l4t/l4t-pytorch) [`nanodb`](/packages/vectordb/nanodb) [`nanoowl`](/packages/vit/nanoowl) [`nanosam`](/packages/vit/nanosam) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/torch2trt:r32.7.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) `(2023-12-06, 1.1GB)`<br>[`dustynv/torch2trt:r35.2.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) `(2023-12-06, 5.5GB)`<br>[`dustynv/torch2trt:r35.3.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) `(2023-08-29, 5.5GB)`<br>[`dustynv/torch2trt:r35.4.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) `(2023-12-05, 5.5GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/torch2trt:r32.7.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) `(2023-12-11, 1.1GB)`<br>[`dustynv/torch2trt:r35.2.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) `(2023-12-11, 5.5GB)`<br>[`dustynv/torch2trt:r35.3.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) `(2023-08-29, 5.5GB)`<br>[`dustynv/torch2trt:r35.4.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) `(2023-12-05, 5.5GB)` |
 
 </details>
 
@@ -23,8 +23,8 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/torch2trt:r32.7.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) | `2023-12-06` | `arm64` | `1.1GB` |
-| &nbsp;&nbsp;[`dustynv/torch2trt:r35.2.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) | `2023-12-06` | `arm64` | `5.5GB` |
+| &nbsp;&nbsp;[`dustynv/torch2trt:r32.7.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) | `2023-12-11` | `arm64` | `1.1GB` |
+| &nbsp;&nbsp;[`dustynv/torch2trt:r35.2.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) | `2023-12-11` | `arm64` | `5.5GB` |
 | &nbsp;&nbsp;[`dustynv/torch2trt:r35.3.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) | `2023-08-29` | `arm64` | `5.5GB` |
 | &nbsp;&nbsp;[`dustynv/torch2trt:r35.4.1`](https://hub.docker.com/r/dustynv/torch2trt/tags) | `2023-12-05` | `arm64` | `5.5GB` |
 
@@ -43,10 +43,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag torch2trt)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/torch2trt:r32.7.1
+./run.sh dustynv/torch2trt:r35.2.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/torch2trt:r32.7.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/torch2trt:r35.2.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

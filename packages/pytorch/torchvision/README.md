@@ -13,7 +13,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`audiocraft`](/packages/audio/audiocraft) [`auto_gptq`](/packages/llm/auto_gptq) [`awq`](/packages/llm/awq) [`awq:dev`](/packages/llm/awq) [`bitsandbytes`](/packages/llm/bitsandbytes) [`efficientvit`](/packages/vit/efficientvit) [`gptq-for-llama`](/packages/llm/gptq-for-llama) [`l4t-diffusion`](/packages/l4t/l4t-diffusion) [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-pytorch`](/packages/l4t/l4t-pytorch) [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`llava`](/packages/llm/llava) [`local_llm`](/packages/llm/local_llm) [`minigpt4`](/packages/llm/minigpt4) [`mlc:9bf5723`](/packages/llm/mlc) [`mlc:dev`](/packages/llm/mlc) [`nanodb`](/packages/vectordb/nanodb) [`nanoowl`](/packages/vit/nanoowl) [`nanosam`](/packages/vit/nanosam) [`nemo`](/packages/nemo) [`optimum`](/packages/llm/optimum) [`sam`](/packages/vit/sam) [`stable-diffusion`](/packages/diffusion/stable-diffusion) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) [`tam`](/packages/vit/tam) [`text-generation-inference`](/packages/llm/text-generation-inference) [`text-generation-webui:1.7`](/packages/llm/text-generation-webui) [`text-generation-webui:6a7cd01`](/packages/llm/text-generation-webui) [`text-generation-webui:main`](/packages/llm/text-generation-webui) [`torch2trt`](/packages/pytorch/torch2trt) [`torch_tensorrt`](/packages/pytorch/torch_tensorrt) [`transformers`](/packages/llm/transformers) [`transformers:git`](/packages/llm/transformers) [`transformers:nvgpt`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/torchvision:r32.7.1`](https://hub.docker.com/r/dustynv/torchvision/tags) `(2023-12-06, 1.1GB)`<br>[`dustynv/torchvision:r35.2.1`](https://hub.docker.com/r/dustynv/torchvision/tags) `(2023-11-05, 5.5GB)`<br>[`dustynv/torchvision:r35.3.1`](https://hub.docker.com/r/dustynv/torchvision/tags) `(2023-11-04, 5.5GB)`<br>[`dustynv/torchvision:r35.4.1`](https://hub.docker.com/r/dustynv/torchvision/tags) `(2023-11-05, 5.4GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/torchvision:r32.7.1`](https://hub.docker.com/r/dustynv/torchvision/tags) `(2023-12-11, 1.1GB)`<br>[`dustynv/torchvision:r35.2.1`](https://hub.docker.com/r/dustynv/torchvision/tags) `(2023-12-11, 5.5GB)`<br>[`dustynv/torchvision:r35.3.1`](https://hub.docker.com/r/dustynv/torchvision/tags) `(2023-12-12, 5.5GB)`<br>[`dustynv/torchvision:r35.4.1`](https://hub.docker.com/r/dustynv/torchvision/tags) `(2023-11-05, 5.4GB)` |
 
 </details>
 
@@ -23,9 +23,9 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/torchvision:r32.7.1`](https://hub.docker.com/r/dustynv/torchvision/tags) | `2023-12-06` | `arm64` | `1.1GB` |
-| &nbsp;&nbsp;[`dustynv/torchvision:r35.2.1`](https://hub.docker.com/r/dustynv/torchvision/tags) | `2023-11-05` | `arm64` | `5.5GB` |
-| &nbsp;&nbsp;[`dustynv/torchvision:r35.3.1`](https://hub.docker.com/r/dustynv/torchvision/tags) | `2023-11-04` | `arm64` | `5.5GB` |
+| &nbsp;&nbsp;[`dustynv/torchvision:r32.7.1`](https://hub.docker.com/r/dustynv/torchvision/tags) | `2023-12-11` | `arm64` | `1.1GB` |
+| &nbsp;&nbsp;[`dustynv/torchvision:r35.2.1`](https://hub.docker.com/r/dustynv/torchvision/tags) | `2023-12-11` | `arm64` | `5.5GB` |
+| &nbsp;&nbsp;[`dustynv/torchvision:r35.3.1`](https://hub.docker.com/r/dustynv/torchvision/tags) | `2023-12-12` | `arm64` | `5.5GB` |
 | &nbsp;&nbsp;[`dustynv/torchvision:r35.4.1`](https://hub.docker.com/r/dustynv/torchvision/tags) | `2023-11-05` | `arm64` | `5.4GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
@@ -43,10 +43,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag torchvision)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/torchvision:r32.7.1
+./run.sh dustynv/torchvision:r35.3.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/torchvision:r32.7.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/torchvision:r35.3.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

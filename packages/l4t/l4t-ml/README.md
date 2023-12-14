@@ -12,7 +12,7 @@
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`torchaudio`](/packages/pytorch/torchaudio) [`protobuf:cpp`](/packages/protobuf/protobuf_cpp) [`tensorflow2`](/packages/tensorflow) [`opencv`](/packages/opencv) [`pycuda`](/packages/cuda/pycuda) [`cupy`](/packages/cuda/cupy) [`onnxruntime`](/packages/onnxruntime) [`numba`](/packages/numba) [`rust`](/packages/rust) [`jupyterlab`](/packages/jupyterlab) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/l4t-ml:r32.7.1`](https://hub.docker.com/r/dustynv/l4t-ml/tags) `(2023-11-13, 2.4GB)`<br>[`dustynv/l4t-ml:r35.2.1`](https://hub.docker.com/r/dustynv/l4t-ml/tags) `(2023-12-05, 7.0GB)`<br>[`dustynv/l4t-ml:r35.3.1`](https://hub.docker.com/r/dustynv/l4t-ml/tags) `(2023-11-05, 7.0GB)`<br>[`dustynv/l4t-ml:r35.4.1`](https://hub.docker.com/r/dustynv/l4t-ml/tags) `(2023-12-06, 7.0GB)`<br>[`dustynv/l4t-ml:r36.2.0`](https://hub.docker.com/r/dustynv/l4t-ml/tags) `(2023-12-06, 8.7GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/l4t-ml:r32.7.1`](https://hub.docker.com/r/dustynv/l4t-ml/tags) `(2023-11-13, 2.4GB)`<br>[`dustynv/l4t-ml:r35.2.1`](https://hub.docker.com/r/dustynv/l4t-ml/tags) `(2023-12-05, 7.0GB)`<br>[`dustynv/l4t-ml:r35.3.1`](https://hub.docker.com/r/dustynv/l4t-ml/tags) `(2023-12-11, 7.0GB)`<br>[`dustynv/l4t-ml:r35.4.1`](https://hub.docker.com/r/dustynv/l4t-ml/tags) `(2023-12-12, 7.0GB)`<br>[`dustynv/l4t-ml:r36.2.0`](https://hub.docker.com/r/dustynv/l4t-ml/tags) `(2023-12-12, 8.7GB)` |
 
 </details>
 
@@ -24,9 +24,9 @@
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/l4t-ml:r32.7.1`](https://hub.docker.com/r/dustynv/l4t-ml/tags) | `2023-11-13` | `arm64` | `2.4GB` |
 | &nbsp;&nbsp;[`dustynv/l4t-ml:r35.2.1`](https://hub.docker.com/r/dustynv/l4t-ml/tags) | `2023-12-05` | `arm64` | `7.0GB` |
-| &nbsp;&nbsp;[`dustynv/l4t-ml:r35.3.1`](https://hub.docker.com/r/dustynv/l4t-ml/tags) | `2023-11-05` | `arm64` | `7.0GB` |
-| &nbsp;&nbsp;[`dustynv/l4t-ml:r35.4.1`](https://hub.docker.com/r/dustynv/l4t-ml/tags) | `2023-12-06` | `arm64` | `7.0GB` |
-| &nbsp;&nbsp;[`dustynv/l4t-ml:r36.2.0`](https://hub.docker.com/r/dustynv/l4t-ml/tags) | `2023-12-06` | `arm64` | `8.7GB` |
+| &nbsp;&nbsp;[`dustynv/l4t-ml:r35.3.1`](https://hub.docker.com/r/dustynv/l4t-ml/tags) | `2023-12-11` | `arm64` | `7.0GB` |
+| &nbsp;&nbsp;[`dustynv/l4t-ml:r35.4.1`](https://hub.docker.com/r/dustynv/l4t-ml/tags) | `2023-12-12` | `arm64` | `7.0GB` |
+| &nbsp;&nbsp;[`dustynv/l4t-ml:r36.2.0`](https://hub.docker.com/r/dustynv/l4t-ml/tags) | `2023-12-12` | `arm64` | `8.7GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
