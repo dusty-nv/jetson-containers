@@ -11,7 +11,7 @@ parser.add_argument('repos', type=str, nargs='+', default=[], help="HuggingFace 
 
 parser.add_argument('--type', type=str, default='model', choices=['model', 'dataset'], help="'model' or 'dataset'")
 parser.add_argument('--token', type=str, default=os.environ.get('HUGGINGFACE_TOKEN', ''), help="HuggingFace account login token from https://huggingface.co/docs/hub/security-tokens (defaults to $HUGGINGFACE_TOKEN)")
-parser.add_argument('--cache-dir', type=str, default=os.environ.get('TRANSFORMERS_CACHE', '/root/.cache/huggingface'), help="Location to download the repo to (defaults to $TRANSFORMERS_CACHE)")
+parser.add_argument('--cache-dir', type=str, default=os.environ.get('HF_HOME', '/root/.cache/huggingface'), help="Location to download the repo to (defaults to $HF_HOME)")
 parser.add_argument('--location-file', type=str, default='/tmp/hf_download', help="file to write the local location/path of the downloaded repo(s) to")
 
 parser.add_argument('--allow-patterns', type=str, default='', help="comma-separated list of file patterns to download (enclose in single quotes if using wildcards)")
