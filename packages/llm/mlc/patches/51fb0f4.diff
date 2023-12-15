@@ -119,23 +119,23 @@ index 7b3b6f4f..9fb29af1 100644
  // Return the number of elements in a mode
  template <int... Is, class A, class O, class B>
 diff --git a/3rdparty/tvm/3rdparty/libflash_attn/src/CMakeLists.txt b/3rdparty/tvm/3rdparty/libflash_attn/src/CMakeLists.txt
-index ba2ac1a..bb837d2 100644
+index ba2ac1a..842d406 100644
 --- a/3rdparty/tvm/3rdparty/libflash_attn/src/CMakeLists.txt
 +++ b/3rdparty/tvm/3rdparty/libflash_attn/src/CMakeLists.txt
-@@ -1,5 +1,6 @@
- set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} --expt-relaxed-constexpr --expt-relaxed-constexpr --use_fast_math -t 8 \
+@@ -1,6 +1,4 @@
+-set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} --expt-relaxed-constexpr --expt-relaxed-constexpr --use_fast_math -t 8 \
 -                      -gencode=arch=compute_80,code=\\\"sm_80,compute_80\\\" \
-+                      -gencode=arch=compute_72,code=\\\"sm_72,compute_72\\\" \
-+                      -gencode=arch=compute_87,code=\\\"sm_87,compute_87\\\" \
-                       ")
+-                      ")
++set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} --expt-relaxed-constexpr --expt-relaxed-constexpr --use_fast_math -t 8)
  
  include_directories(${CUTLASS_DIR}/include)
-@@ -17,4 +18,4 @@ add_library(flash_attn SHARED
+ include_directories(../include)
+@@ -16,5 +14,3 @@ add_library(flash_attn SHARED
+   flash_fwd_hdim64_fp16_sm80.cu
    flash_fwd_hdim96_fp16_sm80.cu
  )
- 
+-
 -set_target_properties(flash_attn PROPERTIES CUDA_ARCHITECTURES "80")
-+set_target_properties(flash_attn PROPERTIES CUDA_ARCHITECTURES "72 87")
 diff --git a/3rdparty/tvm/3rdparty/libflash_attn/src/static_switch.h b/3rdparty/tvm/3rdparty/libflash_attn/src/static_switch.h
 index b4a4b48..a1eef59 100644
 --- a/3rdparty/tvm/3rdparty/libflash_attn/src/static_switch.h
