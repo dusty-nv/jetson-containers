@@ -1,12 +1,12 @@
-name: "mlc-9bf5723_jp60"
-run-name: "Build mlc:9bf5723 (JetPack 6.0)"
+name: "mlc-dev_jp60"
+run-name: "Build mlc:dev (JetPack 6.0)"
 on:
   workflow_dispatch: {}
   push:
     branches:
       - 'dev'
     paths:
-      - '.github/workflows/mlc-9bf5723_jp60.yml'
+      - '.github/workflows/mlc-dev_jp60.yml'
       - 'packages/llm/mlc/*'
       - '!packages/llm/mlc/README.md'
       - '!packages/llm/mlc/docs.md'
@@ -50,7 +50,7 @@ on:
       - '!packages/llm/transformers/README.md'
       - '!packages/llm/transformers/docs.md'
 jobs:
-  mlc-9bf5723_jp60:
+  mlc-dev_jp60:
     runs-on: [self-hosted, jetson, jp60]
     steps:
       - run: |
@@ -67,4 +67,4 @@ jobs:
          git checkout $GITHUB_SHA 
          git status 
          ls -a 
-      - run: ./build.sh --name=runner/ --push=dustynv mlc:9bf5723
+      - run: ./build.sh --name=runner/ --push=dustynv mlc:dev
