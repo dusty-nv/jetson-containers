@@ -37,9 +37,10 @@ def mlc(version, patch, tag=None, requires=None, default=False):
 latest_sha = github_latest_commit(repo, branch='main')
 log_debug('-- MLC latest commit:', latest_sha)
 
-default_dev=(L4T_VERSION.major >= 36)
+#default_dev=(L4T_VERSION.major >= 36)
 
 package = [
-    mlc(latest_sha, 'patches/empty.diff', tag='dev', default=default_dev),
-    mlc('9bf5723', 'patches/9bf5723.diff', requires='==35.*', default=not default_dev), # 10/20/2023
+    mlc(latest_sha, 'patches/empty.diff', tag='dev'), #, default=default_dev),
+    mlc('9bf5723', 'patches/9bf5723.diff', requires='==35.*', default=(L4T_VERSION.major == 35)), # 10/20/2023
+    mlc('51fb0f4', 'patches/51fb0f4.diff', default=(L4T_VERSION.major == 36)), # 12/15/2023
 ]
