@@ -17,6 +17,7 @@ RUN pip3 install --no-cache-dir --verbose dataclasses
 # set the model cache dir
 ENV TRANSFORMERS_CACHE=/data/models/huggingface
 ENV HUGGINGFACE_HUB_CACHE=/data/models/huggingface
+ENV HF_HOME=/data/models/huggingface
 
 # add downloader tool
 COPY huggingface-downloader /usr/local/bin/
