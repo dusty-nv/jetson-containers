@@ -46,7 +46,7 @@ class LocalLM():
             model_path = model
             model_name = os.path.basename(model_path)
         else:
-            model_path = download_model(model)
+            model_path = download_model(model, **kwargs)
             model_name = os.path.basename(model)
             
         if not api:

@@ -4,11 +4,12 @@ import os
 from huggingface_hub import snapshot_download, hf_hub_download, login
 
 
-def download_model(model, type='model', cache_dir='$TRANSFORMERS_CACHE'):
+def download_model(model, type='model', cache_dir='$TRANSFORMERS_CACHE', use_safetensors=False, **kwargs):
     """
     Get the local path to a cached model or file in the cache_dir, or download it from HuggingFace Hub if needed.
     If the asset is private and authentication is required, set the HUGGINGFACE_TOKEN environment variable.
     cache_dir is where the model gets downloaded to - by default, set to $TRANSFORMERS_CACHE (/data/models/huggingface)
+    By default, the PyTorch .bin weights will be downloaded instead of the .safetensors (use_safetensors=False)
     """
     token = os.environ.get('HUGGINGFACE_TOKEN', os.environ.get('HUGGING_FACE_HUB_TOKEN'))
     
@@ -40,7 +41,8 @@ def download_model(model, type='model', cache_dir='$TRANSFORMERS_CACHE'):
         
         repo_path = hf_hub_download(repo_id=repo_id, filename=filename, repo_type=type, cache_dir=cache_dir, resume_download=True)
     else:
-        repo_path = snapshot_download(repo_id=model, repo_type=type, cache_dir=cache_dir, resume_download=True)
+        repo_path = snapshot_download(repo_id=model, repo_type=type, cache_dir=cache_dir, resume_download=True, 
+                                      ignore_patterns=None if use_safetensors else ['*.safetensors'])
         
     return repo_path
     
