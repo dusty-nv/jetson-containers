@@ -1,0 +1,13 @@
+#
+# Dockerfile for building CUDA samples from GitHub
+#
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+ARG CUDA_BRANCH
+
+RUN git clone --branch ${CUDA_BRANCH} --depth=1 https://github.com/NVIDIA/cuda-samples /opt/cuda-samples
+
+WORKDIR /opt/cuda-samples
+
+RUN make -j $(nproc)

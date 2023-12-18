@@ -16,11 +16,11 @@ Use your web browser to access `http://HOSTNAME:12212`
 
 | **`tam`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`tam_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/tam_jp51.yml?label=tam:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tam_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`tam_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/tam_jp60.yml?label=tam:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tam_jp60.yml) [![`tam_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/tam_jp51.yml?label=tam:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tam_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`onnxruntime`](/packages/onnxruntime) [`rust`](/packages/rust) [`jupyterlab`](/packages/jupyterlab) [`sam`](/packages/vit/sam) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) [`tensorrt`](/packages/tensorrt) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`onnxruntime`](/packages/onnxruntime) [`rust`](/packages/rust) [`jupyterlab`](/packages/jupyterlab) [`sam`](/packages/vit/sam) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/tam:r35.2.1`](https://hub.docker.com/r/dustynv/tam/tags) `(2023-10-03, 6.9GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/tam:r35.2.1`](https://hub.docker.com/r/dustynv/tam/tags) `(2023-12-12, 6.9GB)`<br>[`dustynv/tam:r35.3.1`](https://hub.docker.com/r/dustynv/tam/tags) `(2023-11-08, 6.9GB)`<br>[`dustynv/tam:r35.4.1`](https://hub.docker.com/r/dustynv/tam/tags) `(2023-11-04, 6.9GB)` |
 
 </details>
 
@@ -30,7 +30,9 @@ Use your web browser to access `http://HOSTNAME:12212`
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/tam:r35.2.1`](https://hub.docker.com/r/dustynv/tam/tags) | `2023-10-03` | `arm64` | `6.9GB` |
+| &nbsp;&nbsp;[`dustynv/tam:r35.2.1`](https://hub.docker.com/r/dustynv/tam/tags) | `2023-12-12` | `arm64` | `6.9GB` |
+| &nbsp;&nbsp;[`dustynv/tam:r35.3.1`](https://hub.docker.com/r/dustynv/tam/tags) | `2023-11-08` | `arm64` | `6.9GB` |
+| &nbsp;&nbsp;[`dustynv/tam:r35.4.1`](https://hub.docker.com/r/dustynv/tam/tags) | `2023-11-04` | `arm64` | `6.9GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>

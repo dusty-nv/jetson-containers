@@ -8,12 +8,12 @@
 
 | **`jetson-utils`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`jetson-utils_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/jetson-utils_jp46.yml?label=jetson-utils:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/jetson-utils_jp46.yml) [![`jetson-utils_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/jetson-utils_jp51.yml?label=jetson-utils:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/jetson-utils_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`jetson-utils_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/jetson-utils_jp60.yml?label=jetson-utils:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/jetson-utils_jp60.yml) [![`jetson-utils_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/jetson-utils_jp46.yml?label=jetson-utils:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/jetson-utils_jp46.yml) [![`jetson-utils_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/jetson-utils_jp51.yml?label=jetson-utils:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/jetson-utils_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) [`gstreamer`](/packages/gstreamer) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) [`gstreamer`](/packages/gstreamer) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`local_llm`](/packages/llm/local_llm) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/jetson-utils:r32.7.1`](https://hub.docker.com/r/dustynv/jetson-utils/tags) `(2023-10-12, 0.7GB)`<br>[`dustynv/jetson-utils:r35.2.1`](https://hub.docker.com/r/dustynv/jetson-utils/tags) `(2023-10-12, 5.2GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/jetson-utils:r32.7.1`](https://hub.docker.com/r/dustynv/jetson-utils/tags) `(2023-12-06, 0.7GB)`<br>[`dustynv/jetson-utils:r35.2.1`](https://hub.docker.com/r/dustynv/jetson-utils/tags) `(2023-12-05, 5.2GB)`<br>[`dustynv/jetson-utils:r35.3.1`](https://hub.docker.com/r/dustynv/jetson-utils/tags) `(2023-12-06, 5.2GB)`<br>[`dustynv/jetson-utils:r36.2.0`](https://hub.docker.com/r/dustynv/jetson-utils/tags) `(2023-12-06, 7.1GB)` |
 
 </details>
 
@@ -23,8 +23,10 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/jetson-utils:r32.7.1`](https://hub.docker.com/r/dustynv/jetson-utils/tags) | `2023-10-12` | `arm64` | `0.7GB` |
-| &nbsp;&nbsp;[`dustynv/jetson-utils:r35.2.1`](https://hub.docker.com/r/dustynv/jetson-utils/tags) | `2023-10-12` | `arm64` | `5.2GB` |
+| &nbsp;&nbsp;[`dustynv/jetson-utils:r32.7.1`](https://hub.docker.com/r/dustynv/jetson-utils/tags) | `2023-12-06` | `arm64` | `0.7GB` |
+| &nbsp;&nbsp;[`dustynv/jetson-utils:r35.2.1`](https://hub.docker.com/r/dustynv/jetson-utils/tags) | `2023-12-05` | `arm64` | `5.2GB` |
+| &nbsp;&nbsp;[`dustynv/jetson-utils:r35.3.1`](https://hub.docker.com/r/dustynv/jetson-utils/tags) | `2023-12-06` | `arm64` | `5.2GB` |
+| &nbsp;&nbsp;[`dustynv/jetson-utils:r36.2.0`](https://hub.docker.com/r/dustynv/jetson-utils/tags) | `2023-12-06` | `arm64` | `7.1GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>

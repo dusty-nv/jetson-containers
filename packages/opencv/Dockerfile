@@ -1,9 +1,8 @@
 #---
 # name: opencv
-# alias: opencv_cuda
 # group: core
 # config: config.py
-# depends: [python, numpy]
+# depends: [cuda, cudnn, python, numpy]
 # test: test.py
 # notes: install OpenCV (with CUDA) from binaries built by opencv_builder
 #---

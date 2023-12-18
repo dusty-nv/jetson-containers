@@ -3,7 +3,9 @@ import os
 import grp
 import sys
 import json
+import pprint
 import urllib.request
+from urllib.request import urlopen, Request
 
 
 def check_dependencies(install=True):
@@ -126,9 +128,37 @@ def github_latest_commit(repo, branch='main'):
     Returns the SHA of the latest commit to the given github user/repo/branch.
     """
     url = f"https://api.github.com/repos/{repo}/commits/{branch}"
-    response = urllib.request.urlopen(url)
+    github_token = os.environ.get('GITHUB_TOKEN')
+
+    if github_token:
+        log_debug(f"-- GITHUB_TOKEN={github_token}")
+        headers = {'Authorization': 'token %s' % github_token}
+        request = Request(url, headers=headers)
+    else:
+        request = Request(url)
+        
+    response = urlopen(request)
     data = response.read()
     encoding = response.info().get_content_charset('utf-8')
     msg = json.loads(data.decode(encoding))
+    
     return msg['sha']
     
+    
+def log_debug(*args, **kwargs):
+    """
+    Debug print function that only prints when VERBOSE or DEBUG environment variable is set
+    TODO change this to use python logging APIs or move to logging.py
+    """
+    if os.environ.get('VERBOSE', False) or os.environ.get('DEBUG', False):
+        print(*args, **kwargs)
+        
+        
+def pprint_debug(*args, **kwargs):
+    """
+    Debug print function that only prints when VERBOSE or DEBUG environment variable is set
+    TODO change this to use python logging APIs or move to logging.py
+    """
+    if os.environ.get('VERBOSE', False) or os.environ.get('DEBUG', False):
+        pprint.pprint(*args, **kwargs)
+        

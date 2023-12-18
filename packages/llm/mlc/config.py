@@ -1,7 +1,7 @@
 import os
 import copy
 
-from jetson_containers import CUDA_ARCHITECTURES, github_latest_commit
+from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES, github_latest_commit, log_debug
 
 repo = 'mlc-ai/mlc-llm'
 
@@ -11,11 +11,14 @@ package['build_args'] = {
     'TORCH_CUDA_ARCH_LIST': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES])
 }
 
-def mlc(version, patch, tag=None, default=False):
+def mlc(version, patch, tag=None, requires=None, default=False):
     pkg = copy.deepcopy(package)
     
     if default:
         pkg['alias'] = 'mlc'
+        
+    if requires:
+        pkg['requires'] = requires
         
     if not tag:
         tag = version
@@ -32,9 +35,12 @@ def mlc(version, patch, tag=None, default=False):
     return pkg
 
 latest_sha = github_latest_commit(repo, branch='main')
-print('-- MLC latest commit:', latest_sha)
+log_debug('-- MLC latest commit:', latest_sha)
+
+#default_dev=(L4T_VERSION.major >= 36)
 
 package = [
-    mlc(latest_sha, 'patches/9166edb.diff', tag='dev'), # patched as of 10/29/2023
-    mlc('9bf5723', 'patches/9bf5723.diff', default=True), # 10/20/2023
+    mlc(latest_sha, 'patches/51fb0f4.diff', tag='dev'), #, default=default_dev),
+    mlc('9bf5723', 'patches/9bf5723.diff', requires='==35.*'), # 10/20/2023
+    mlc('51fb0f4', 'patches/51fb0f4.diff', default=True), # 12/15/2023
 ]

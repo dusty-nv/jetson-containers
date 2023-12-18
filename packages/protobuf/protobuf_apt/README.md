@@ -11,9 +11,9 @@
 | &nbsp;&nbsp;&nbsp;Builds | [![`protobuf-apt_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/protobuf-apt_jp46.yml?label=protobuf-apt:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/protobuf-apt_jp46.yml) [![`protobuf-apt_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/protobuf-apt_jp51.yml?label=protobuf-apt:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/protobuf-apt_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`cudf`](/packages/rapids/cudf) [`cuml`](/packages/rapids/cuml) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`cudf:21.10.02`](/packages/rapids/cudf) [`cudf:23.10.03`](/packages/rapids/cudf) [`cuml`](/packages/rapids/cuml) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/protobuf:apt-r32.7.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-09-07, 0.4GB)`<br>[`dustynv/protobuf:apt-r35.2.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-09-07, 5.0GB)`<br>[`dustynv/protobuf:apt-r35.3.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-08-29, 5.0GB)`<br>[`dustynv/protobuf:apt-r35.4.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-10-07, 5.0GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/protobuf:apt-r32.7.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-12-06, 0.4GB)`<br>[`dustynv/protobuf:apt-r35.2.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-12-06, 5.0GB)`<br>[`dustynv/protobuf:apt-r35.3.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-08-29, 5.0GB)`<br>[`dustynv/protobuf:apt-r35.4.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-10-07, 5.0GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | install protobuf from apt repo |
 
 </details>

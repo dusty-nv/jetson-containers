@@ -42,6 +42,9 @@ RUN mim install mmcv --verbose --no-cache-dir
 
 RUN cd /opt && ./opencv_install.sh
 
+# https://github.com/dusty-nv/jetson-containers/issues/326
+RUN pip3 install --no-cache-dir --verbose gradio==3.38.0
+
 # patch mmengine and mmcv to not use torch.distributed
 RUN PYTHON_ROOT=`pip3 show mmengine | grep Location: | cut -d' ' -f2` && \
     sed 's|-> torch_dist\.ReduceOp||' -i $PYTHON_ROOT/mmengine/dist/dist.py && \

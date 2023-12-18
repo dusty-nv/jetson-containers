@@ -1,5 +1,6 @@
 #---
-# name: exllama
+# name: exllama:v1
+# alias: exllama
 # group: llm
 # config: config.py
 # depends: [pytorch, huggingface_hub]
@@ -39,7 +40,8 @@ RUN cd exllama && \
 RUN cd exllama && \
     python3 setup.py --verbose bdist_wheel && \
     cp dist/exllama*.whl /opt
-    
+  
+RUN pip3 install --ignore-installed --no-cache-dir blinker  # cannot uninstall 'blinker': It is a distutils installed project
 RUN pip3 install --no-cache-dir --verbose /opt/exllama*.whl
 
 # missing 'safetensors', but it's in the requirements.txt?

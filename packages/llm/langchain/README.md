@@ -16,18 +16,17 @@ Use your web browser to access `http://HOSTNAME:8888`
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`langchain_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/langchain_jp51.yml?label=langchain:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/langchain_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`huggingface_hub`](/packages/llm/huggingface_hub) [`llama_cpp`](/packages/llm/llama_cpp) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`langchain:samples`](/packages/llm/langchain) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`huggingface_hub`](/packages/llm/huggingface_hub) [`llama_cpp`](/packages/llm/llama_cpp) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/langchain:r35.2.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2023-09-24, 5.6GB)`<br>[`dustynv/langchain:r35.3.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2023-09-11, 5.6GB)`<br>[`dustynv/langchain:r35.4.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2023-10-07, 5.6GB)`<br>[`dustynv/langchain:samples-r35.2.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2023-09-24, 5.9GB)`<br>[`dustynv/langchain:samples-r35.3.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2023-09-15, 5.9GB)`<br>[`dustynv/langchain:samples-r35.4.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2023-10-07, 5.9GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/langchain:r35.2.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2023-12-06, 5.6GB)`<br>[`dustynv/langchain:r35.3.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2023-12-12, 5.6GB)`<br>[`dustynv/langchain:r35.4.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2023-10-07, 5.6GB)`<br>[`dustynv/langchain:samples-r35.2.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2023-12-11, 5.3GB)`<br>[`dustynv/langchain:samples-r35.3.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2023-12-11, 5.4GB)`<br>[`dustynv/langchain:samples-r35.4.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2023-10-07, 5.9GB)` |
 
 | **`langchain:samples`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`langchain-samples_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/langchain-samples_jp51.yml?label=langchain-samples:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/langchain-samples_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`huggingface_hub`](/packages/llm/huggingface_hub) [`llama_cpp`](/packages/llm/llama_cpp) [`langchain`](/packages/llm/langchain) [`rust`](/packages/rust) [`jupyterlab`](/packages/jupyterlab) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`huggingface_hub`](/packages/llm/huggingface_hub) [`llama_cpp`](/packages/llm/llama_cpp) [`langchain`](/packages/llm/langchain) [`rust`](/packages/rust) [`jupyterlab`](/packages/jupyterlab) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.samples`](Dockerfile.samples) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/langchain:samples-r35.2.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2023-09-24, 5.9GB)`<br>[`dustynv/langchain:samples-r35.3.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2023-09-15, 5.9GB)`<br>[`dustynv/langchain:samples-r35.4.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2023-10-07, 5.9GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/langchain:samples-r35.2.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2023-12-11, 5.3GB)`<br>[`dustynv/langchain:samples-r35.3.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2023-12-11, 5.4GB)`<br>[`dustynv/langchain:samples-r35.4.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2023-10-07, 5.9GB)` |
 
 </details>
 
@@ -37,11 +36,11 @@ Use your web browser to access `http://HOSTNAME:8888`
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/langchain:r35.2.1`](https://hub.docker.com/r/dustynv/langchain/tags) | `2023-09-24` | `arm64` | `5.6GB` |
-| &nbsp;&nbsp;[`dustynv/langchain:r35.3.1`](https://hub.docker.com/r/dustynv/langchain/tags) | `2023-09-11` | `arm64` | `5.6GB` |
+| &nbsp;&nbsp;[`dustynv/langchain:r35.2.1`](https://hub.docker.com/r/dustynv/langchain/tags) | `2023-12-06` | `arm64` | `5.6GB` |
+| &nbsp;&nbsp;[`dustynv/langchain:r35.3.1`](https://hub.docker.com/r/dustynv/langchain/tags) | `2023-12-12` | `arm64` | `5.6GB` |
 | &nbsp;&nbsp;[`dustynv/langchain:r35.4.1`](https://hub.docker.com/r/dustynv/langchain/tags) | `2023-10-07` | `arm64` | `5.6GB` |
-| &nbsp;&nbsp;[`dustynv/langchain:samples-r35.2.1`](https://hub.docker.com/r/dustynv/langchain/tags) | `2023-09-24` | `arm64` | `5.9GB` |
-| &nbsp;&nbsp;[`dustynv/langchain:samples-r35.3.1`](https://hub.docker.com/r/dustynv/langchain/tags) | `2023-09-15` | `arm64` | `5.9GB` |
+| &nbsp;&nbsp;[`dustynv/langchain:samples-r35.2.1`](https://hub.docker.com/r/dustynv/langchain/tags) | `2023-12-11` | `arm64` | `5.3GB` |
+| &nbsp;&nbsp;[`dustynv/langchain:samples-r35.3.1`](https://hub.docker.com/r/dustynv/langchain/tags) | `2023-12-11` | `arm64` | `5.4GB` |
 | &nbsp;&nbsp;[`dustynv/langchain:samples-r35.4.1`](https://hub.docker.com/r/dustynv/langchain/tags) | `2023-10-07` | `arm64` | `5.9GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
@@ -59,10 +58,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag langchain)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/langchain:samples-r35.4.1
+./run.sh dustynv/langchain:r35.3.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/langchain:samples-r35.4.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/langchain:r35.3.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

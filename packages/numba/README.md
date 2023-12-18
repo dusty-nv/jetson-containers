@@ -8,12 +8,12 @@
 
 | **`numba`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`numba_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/numba_jp46.yml?label=numba:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/numba_jp46.yml) [![`numba_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/numba_jp51.yml?label=numba:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/numba_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`numba_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/numba_jp46.yml?label=numba:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/numba_jp46.yml) [![`numba_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/numba_jp60.yml?label=numba:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/numba_jp60.yml) [![`numba_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/numba_jp51.yml?label=numba:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/numba_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`cudf`](/packages/rapids/cudf) [`cuml`](/packages/rapids/cuml) [`l4t-ml`](/packages/l4t/l4t-ml) [`nemo`](/packages/nemo) [`raft`](/packages/rapids/raft) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/python) [`numpy`](/packages/numpy) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`cudf:21.10.02`](/packages/rapids/cudf) [`cudf:23.10.03`](/packages/rapids/cudf) [`cuml`](/packages/rapids/cuml) [`l4t-ml`](/packages/l4t/l4t-ml) [`nemo`](/packages/nemo) [`raft`](/packages/rapids/raft) [`whisper`](/packages/audio/whisper) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/numba:r32.7.1`](https://hub.docker.com/r/dustynv/numba/tags) `(2023-09-07, 0.5GB)`<br>[`dustynv/numba:r35.2.1`](https://hub.docker.com/r/dustynv/numba/tags) `(2023-09-07, 5.1GB)`<br>[`dustynv/numba:r35.3.1`](https://hub.docker.com/r/dustynv/numba/tags) `(2023-08-29, 5.1GB)`<br>[`dustynv/numba:r35.4.1`](https://hub.docker.com/r/dustynv/numba/tags) `(2023-10-07, 5.1GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/numba:r32.7.1`](https://hub.docker.com/r/dustynv/numba/tags) `(2023-09-07, 0.5GB)`<br>[`dustynv/numba:r35.2.1`](https://hub.docker.com/r/dustynv/numba/tags) `(2023-12-05, 5.1GB)`<br>[`dustynv/numba:r35.3.1`](https://hub.docker.com/r/dustynv/numba/tags) `(2023-12-06, 5.1GB)`<br>[`dustynv/numba:r35.4.1`](https://hub.docker.com/r/dustynv/numba/tags) `(2023-10-07, 5.1GB)`<br>[`dustynv/numba:r36.2.0`](https://hub.docker.com/r/dustynv/numba/tags) `(2023-12-06, 3.6GB)` |
 
 </details>
 
@@ -24,9 +24,10 @@
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/numba:r32.7.1`](https://hub.docker.com/r/dustynv/numba/tags) | `2023-09-07` | `arm64` | `0.5GB` |
-| &nbsp;&nbsp;[`dustynv/numba:r35.2.1`](https://hub.docker.com/r/dustynv/numba/tags) | `2023-09-07` | `arm64` | `5.1GB` |
-| &nbsp;&nbsp;[`dustynv/numba:r35.3.1`](https://hub.docker.com/r/dustynv/numba/tags) | `2023-08-29` | `arm64` | `5.1GB` |
+| &nbsp;&nbsp;[`dustynv/numba:r35.2.1`](https://hub.docker.com/r/dustynv/numba/tags) | `2023-12-05` | `arm64` | `5.1GB` |
+| &nbsp;&nbsp;[`dustynv/numba:r35.3.1`](https://hub.docker.com/r/dustynv/numba/tags) | `2023-12-06` | `arm64` | `5.1GB` |
 | &nbsp;&nbsp;[`dustynv/numba:r35.4.1`](https://hub.docker.com/r/dustynv/numba/tags) | `2023-10-07` | `arm64` | `5.1GB` |
+| &nbsp;&nbsp;[`dustynv/numba:r36.2.0`](https://hub.docker.com/r/dustynv/numba/tags) | `2023-12-06` | `arm64` | `3.6GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -43,10 +44,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag numba)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/numba:r35.4.1
+./run.sh dustynv/numba:r35.3.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/numba:r35.4.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/numba:r35.3.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

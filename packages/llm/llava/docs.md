@@ -1,8 +1,10 @@
 
 * LLaVa vision LLM from https://github.com/haotian-liu/LLaVA 
-* Quantization is WIP :warning: (https://huggingface.co/liuhaotian/llava-llama-2-13b-chat-lightning-gptq)
+* See [jetson-ai-lab.com/tutorial_llava.html](https://www.jetson-ai-lab.com/tutorial_llava.html) to use quantized with text-generation-webui
 
 <img src="https://github.com/dusty-nv/jetson-containers/raw/master/data/images/hoover.jpg" width="400">
+
+These are with `llava-llama-2` models, however `llava-1.5` is now the latest and can be use instead.
 
 ### llava-llama-2-7b-chat
 

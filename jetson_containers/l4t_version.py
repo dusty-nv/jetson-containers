@@ -16,6 +16,7 @@ import sys
 import json
 import platform
 import subprocess
+import glob
 
 from packaging.version import Version
 
@@ -82,6 +83,10 @@ def get_jetpack_version(l4t_version=get_l4t_version(), default='5.1'):
         l4t_version = Version(l4t_version)
         
     NVIDIA_JETPACK = {
+        # -------- JP6 --------
+        "36.2.0": "6.0 DP",
+        "36.0.0": "6.0 EA",
+        
         # -------- JP5 --------
         "35.4.1": "5.1.2",
         "35.3.1": "5.1.1",
@@ -162,7 +167,21 @@ def get_cuda_version(version_file='/usr/local/cuda/version.json'):
         return Version(os.environ['CUDA_VERSION'])
         
     if not os.path.isfile(version_file):
-        raise IOError(f"L4T_VERSION file doesn't exist:  {version_file}")
+        # In case only the CUDA runtime is installed
+        so_file_path = "/usr/local/cuda/targets/aarch64-linux/lib/libcudart.so.*.*.*"
+        files = glob.glob(so_file_path)
+        if files:
+            file_path = files[0]  # Assuming there is only one matching file
+            version_match = re.search(r'libcudart\.so\.(\d+\.\d+\.\d+)', file_path)
+
+            if version_match:
+                version_number = version_match.group(1)
+                return version_number
+            else:
+                print("Unable to extract version number.")
+        else:
+            #raise IOError(f"L4T_VERSION file doesn't exist:  {version_file}")
+            return "0.0.0"    
         
     with open(version_file) as file:
         versions = json.load(file)
@@ -174,7 +193,9 @@ def get_l4t_base(l4t_version=get_l4t_version()):
     """
     Returns the l4t-base or l4t-jetpack container to use
     """
-    if l4t_version.major >= 34:   # JetPack 5
+    if l4t_version.major >= 36:   # JetPack 6
+        return "ubuntu:22.04" #"nvcr.io/ea-linux4tegra/l4t-jetpack:r36.0.0"
+    elif l4t_version.major >= 34: # JetPack 5
         if l4t_version >= Version('35.4.1'):
             return "nvcr.io/nvidia/l4t-jetpack:r35.4.1"
         else:
@@ -214,9 +235,12 @@ def l4t_version_compatible(l4t_version, l4t_version_host=get_l4t_version(), **kw
         
     if not isinstance(l4t_version, Version):
         l4t_version = Version(l4t_version)
-        
-    if l4t_version_host.major >= 35: # JetPack 5.1 can run other JetPack 5.1.x containers
-        if l4t_version.major >= 35:
+
+    if l4t_version_host.major == 36: # JetPack 6 runs containers for JetPack 6
+        if l4t_version.major == 36:
+            return True
+    elif l4t_version_host.major == 35: # JetPack 5.1 can run other JetPack 5.1.x containers
+        if l4t_version.major == 35:
             return True
     elif l4t_version_host.major == 34: # JetPack 5.0 runs other JetPack 5.0.x containers
         if l4t_version.major == 34:
@@ -244,9 +268,10 @@ JETPACK_VERSION = get_jetpack_version()
 CUDA_VERSION = get_cuda_version()
 
 # Nano/TX1 = 5.3, TX2 = 6.2, Xavier = 7.2, Orin = 8.7
-if L4T_VERSION.major >= 34:    # JetPack 5
+if L4T_VERSION.major >= 36:    # JetPack 6
+    CUDA_ARCHITECTURES = [87]
+elif L4T_VERSION.major >= 34:  # JetPack 5
     CUDA_ARCHITECTURES = [72, 87]
-    
 elif L4T_VERSION.major == 32:  # JetPack 4
     CUDA_ARCHITECTURES = [53, 62, 72]
 

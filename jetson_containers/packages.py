@@ -8,7 +8,9 @@ import fnmatch
 import importlib
 
 from packaging.specifiers import SpecifierSet
+
 from .l4t_version import L4T_VERSION
+from .utils import log_debug
 
 _PACKAGES = {}
 
@@ -382,7 +384,7 @@ def config_package(package):
         config_path = os.path.join(package['path'], config_filename)
         
         if config_ext == '.py':
-            print(f"-- Loading {config_path}")
+            log_debug(f"-- Loading {config_path}")
             module_name = f"packages.{package['name']}.config"
             spec = importlib.util.spec_from_file_location(module_name, config_path)
             module = importlib.util.module_from_spec(spec)
@@ -394,7 +396,7 @@ def config_package(package):
                 return []
                 
         elif config_ext == '.json' or config_ext == '.yml' or config_ext == '.yaml':
-            print(f"-- Loading {config_path}")
+            log_debug(f"-- Loading {config_path}")
             config = validate_config(config_path)  # load and validate the config file
             apply_config(package, config)
     
@@ -421,11 +423,11 @@ def validate_package(package):
         pkg['requires'] = SpecifierSet(pkg['requires'])
         
         if _PACKAGE_OPTS['check_l4t_version'] and L4T_VERSION not in pkg['requires']:
-            print(f"-- Package {pkg['name']} isn't compatible with L4T r{L4T_VERSION} (requires L4T {pkg['requires']})")
+            log_debug(f"-- Package {pkg['name']} isn't compatible with L4T r{L4T_VERSION} (requires L4T {pkg['requires']})")
             pkg['disabled'] = True
             
         if pkg.get('disabled', False):
-            print(f"-- Package {pkg['name']} was disabled by its config")
+            log_debug(f"-- Package {pkg['name']} was disabled by its config")
             packages.remove(pkg)
         else:    
             validate_lists(pkg)  # make sure certain entries are lists

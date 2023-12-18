@@ -4,7 +4,7 @@
 # config: config.py
 # depends: [transformers]
 # requires: '>=34.1.0'
-# test: [test.py]
+# test: [test.py, test.sh]
 # docs: docs.md
 #---
 ARG BASE_IMAGE
@@ -14,36 +14,39 @@ WORKDIR /opt
 
 ARG MLC_REPO
 ARG MLC_VERSION
+ARG MLC_PATCH
 
 ARG CUDAARCHS
 ARG TORCH_CUDA_ARCH_LIST
 
-# MLC/TVM recommends to use LLVM
+# install LLVM the upstream way instead of apt because of:
+# https://discourse.llvm.org/t/llvm-15-0-7-missing-libpolly-a/67942 
+RUN wget https://apt.llvm.org/llvm.sh && \
+    chmod +x llvm.sh && \
+    ./llvm.sh all && \
+    ln -s /usr/bin/llvm-config-* /usr/bin/llvm-config
+
+# could NOT find zstd (missing: zstd_LIBRARY zstd_INCLUDE_DIR)
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-		  llvm \
-		  llvm-dev \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
-    
-#ADD https://api.github.com/repos/${MLC_REPO}/git/refs/heads/${MLC_VERSION} /tmp/mlc_version.json
+		  libzstd-dev \
+     && rm -rf /var/lib/apt/lists/* \
+     && apt-get clean
 
-RUN git clone --recursive https://github.com/${MLC_REPO} && \
+# clone the sources
+RUN git clone https://github.com/${MLC_REPO} && \
     cd mlc-llm && \
-    git checkout ${MLC_VERSION}
+    git checkout ${MLC_VERSION} && \
+    git submodule update --init --recursive
 
-# https://github.com/Dao-AILab/flash-attention/pull/343
-RUN cd mlc-llm/3rdparty/tvm/3rdparty/libflash_attn && \
-    wget https://raw.githubusercontent.com/Dao-AILab/flash-attention/main/csrc/flash_attn/src/static_switch.h -O src/static_switch.h && \
-    sed 's|^set_target_properties(flash_attn PROPERTIES CUDA_ARCHITECTURES.*||' -i src/CMakeLists.txt && \
-    sed 's|^.*-gencode.*|\\|' -i src/CMakeLists.txt && \
-    cat src/CMakeLists.txt
+# apply patches to the source
+COPY ${MLC_PATCH} mlc-llm/patch.diff
 
-# mlc currently uses it's own fork of tvm-unity (relax)
-RUN sed 's|set(BUILD_DUMMY_LIBTVM ON)||' -i mlc-llm/CMakeLists.txt && \
-    sed 's|set(USE_GRAPH_EXECUTOR OFF)||' -i mlc-llm/CMakeLists.txt && \
-    cat mlc-llm/CMakeLists.txt
-    
+RUN cd mlc-llm && \
+    if [ -s patch.diff ]; then git apply patch.diff; fi && \
+    git status && \
+    git diff --submodule=diff
+
 # disable pytorch: https://github.com/apache/tvm/issues/9362
 RUN mkdir mlc-llm/build && \
     cd mlc-llm/build && \
@@ -70,6 +73,7 @@ RUN mkdir mlc-llm/build && \
     rm -rf tokenizers/CMakeFiles && \
     rm -rf tokenizers/release
 
+# build TVM python module
 RUN cd mlc-llm/3rdparty/tvm/python && \
     TVM_LIBRARY_PATH=/opt/mlc-llm/build/tvm \
     python3 setup.py --verbose bdist_wheel && \
@@ -80,14 +84,7 @@ RUN cd mlc-llm/3rdparty/tvm/python && \
 RUN pip3 install --no-cache-dir --verbose tvm*.whl
 RUN pip3 show tvm && python3 -c 'import tvm'
 
-ARG MLC_PATCH
-COPY ${MLC_PATCH} mlc-llm/patch.diff
-
-RUN cd mlc-llm && \
-    git apply patch.diff && \
-    git status && \
-    git diff
-
+# build mlc-llm python module
 RUN cd mlc-llm && \
     python3 setup.py --verbose bdist_wheel && \
     cp dist/mlc*.whl /opt 

@@ -1,15 +1,17 @@
 
 <img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/llamaspeak_voice_clip.gif">
 
-* Talk live with LLM's using [NVIDIA Riva](/packages/riva-client) ASR and TTS!
+> [!NOTE]  
+> For llamaspeak version 2 with multimodal support, see the [`local_llm`](https://github.com/dusty-nv/jetson-containers/tree/master/packages/llm/local_llm) container
+
+* Talk live with LLM's using [NVIDIA Riva](/packages/audio/riva-client) ASR and TTS!
 * Requires the [`riva-server`](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/riva/resources/riva_quickstart_arm64) and [`text-generation-webui`](/packages/llm/text-generation-webui) to be running
-* Under active development :warning: (tested on Jetson AGX Orin)
 
 <img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/llamaspeak_block_diagram.jpg">
 
 ### Start Riva
 
-First, follow the steps from the [`riva-client:python`](/packages/riva-client) package to run and test the Riva server:
+First, follow the steps from the [`riva-client:python`](/packages/audio/riva-client) package to run and test the Riva server:
 
 1. Start the Riva server on your Jetson by following [`riva_quickstart_arm64`](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/riva/resources/riva_quickstart_arm64)
 2. Run some of the Riva ASR examples to confirm that ASR is working:  https://github.com/nvidia-riva/python-clients#asr
@@ -19,21 +21,22 @@ You can also see this helpful video and guide from JetsonHacks for setting up Ri
 
 ### Load LLM
 
-Next, start [`text-generation-webui`](/packages/llm/text-generation-webui) with the `--api` flag and load your chat model of choice through it's web UI on port 7860:
+Next, start [`text-generation-webui`](/packages/llm/text-generation-webui) (version 1.7) with the `--api` flag and load your chat model of choice through it's web UI on port 7860:
 
 ```bash
-./run.sh --workdir /opt/text-generation-webui $(./autotag text-generation-webui) \
+./run.sh --workdir /opt/text-generation-webui $(./autotag text-generation-webui:1.7) \
    python3 server.py --listen --verbose --api \
 	--model-dir=/data/models/text-generation-webui
 ```
+> **note:** launch the `text-generation-webui:1.7` container to maintain API compatability
 
 Alternatively, you can manually specify the model that you want to load without needing to use the web UI:
 
 ```bash
-./run.sh --workdir /opt/text-generation-webui $(./autotag text-generation-webui) \
+./run.sh --workdir /opt/text-generation-webui $(./autotag text-generation-webui:1.7) \
    python3 server.py --listen --verbose --api \
 	--model-dir=/data/models/text-generation-webui \
-	--model=llama-2-13b-chat.ggmlv3.q4_0.bin \
+	--model=llama-2-13b-chat.Q4_K_M.gguf \
 	--loader=llamacpp \
 	--n-gpu-layers=128 \
 	--n_ctx=4096 \

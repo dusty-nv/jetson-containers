@@ -10,6 +10,9 @@ FROM ${BASE_IMAGE}
 WORKDIR /opt/nanodb/nanodb
 
 COPY requirements.txt .
+
+# cannot uninstall 'blinker': It is a distutils installed project
+RUN pip3 install --ignore-installed --no-cache-dir blinker  
 RUN pip3 install --no-cache-dir --verbose -r requirements.txt
 
 RUN PYTHON_ROOT=`pip3 show torch | grep Location: | cut -d' ' -f2` && \

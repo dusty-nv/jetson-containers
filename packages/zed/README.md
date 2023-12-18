@@ -10,9 +10,9 @@
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`zed_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/zed_jp46.yml?label=zed:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/zed_jp46.yml) [![`zed_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/zed_jp51.yml?label=zed:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/zed_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/zed:r32.7.1`](https://hub.docker.com/r/dustynv/zed/tags) `(2023-09-07, 0.6GB)`<br>[`dustynv/zed:r35.2.1`](https://hub.docker.com/r/dustynv/zed/tags) `(2023-09-07, 5.1GB)`<br>[`dustynv/zed:r35.3.1`](https://hub.docker.com/r/dustynv/zed/tags) `(2023-08-29, 5.2GB)`<br>[`dustynv/zed:r35.4.1`](https://hub.docker.com/r/dustynv/zed/tags) `(2023-10-07, 5.1GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/zed:r32.7.1`](https://hub.docker.com/r/dustynv/zed/tags) `(2023-09-07, 0.6GB)`<br>[`dustynv/zed:r35.2.1`](https://hub.docker.com/r/dustynv/zed/tags) `(2023-12-11, 5.2GB)`<br>[`dustynv/zed:r35.3.1`](https://hub.docker.com/r/dustynv/zed/tags) `(2023-08-29, 5.2GB)`<br>[`dustynv/zed:r35.4.1`](https://hub.docker.com/r/dustynv/zed/tags) `(2023-10-07, 5.1GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/stereolabs/zed-docker/blob/master/4.X/l4t/py-devel/Dockerfile |
 
 </details>
@@ -24,7 +24,7 @@
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/zed:r32.7.1`](https://hub.docker.com/r/dustynv/zed/tags) | `2023-09-07` | `arm64` | `0.6GB` |
-| &nbsp;&nbsp;[`dustynv/zed:r35.2.1`](https://hub.docker.com/r/dustynv/zed/tags) | `2023-09-07` | `arm64` | `5.1GB` |
+| &nbsp;&nbsp;[`dustynv/zed:r35.2.1`](https://hub.docker.com/r/dustynv/zed/tags) | `2023-12-11` | `arm64` | `5.2GB` |
 | &nbsp;&nbsp;[`dustynv/zed:r35.3.1`](https://hub.docker.com/r/dustynv/zed/tags) | `2023-08-29` | `arm64` | `5.2GB` |
 | &nbsp;&nbsp;[`dustynv/zed:r35.4.1`](https://hub.docker.com/r/dustynv/zed/tags) | `2023-10-07` | `arm64` | `5.1GB` |
 
@@ -43,10 +43,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag zed)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/zed:r35.4.1
+./run.sh dustynv/zed:r35.2.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/zed:r35.4.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/zed:r35.2.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

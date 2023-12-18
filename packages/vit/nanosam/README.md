@@ -32,12 +32,11 @@
 
 | **`nanosam`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`nanosam_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nanosam_jp51.yml?label=nanosam:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nanosam_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`nanosam_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nanosam_jp60.yml?label=nanosam:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nanosam_jp60.yml) [![`nanosam_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nanosam_jp51.yml?label=nanosam:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nanosam_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`torch2trt`](/packages/pytorch/torch2trt) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`bitsandbytes`](/packages/llm/bitsandbytes) [`auto_gptq`](/packages/llm/auto_gptq) [`transformers`](/packages/llm/transformers) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`nanoowl`](/packages/vit/nanoowl) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`torch2trt`](/packages/pytorch/torch2trt) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/nanosam:r35.2.1`](https://hub.docker.com/r/dustynv/nanosam/tags) `(2023-10-05, 6.3GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/nanosam:r35.2.1`](https://hub.docker.com/r/dustynv/nanosam/tags) `(2023-12-12, 6.2GB)`<br>[`dustynv/nanosam:r35.3.1`](https://hub.docker.com/r/dustynv/nanosam/tags) `(2023-12-11, 6.2GB)`<br>[`dustynv/nanosam:r35.4.1`](https://hub.docker.com/r/dustynv/nanosam/tags) `(2023-11-05, 6.2GB)`<br>[`dustynv/nanosam:r36.2.0`](https://hub.docker.com/r/dustynv/nanosam/tags) `(2023-12-12, 7.9GB)` |
 
 </details>
 
@@ -47,7 +46,10 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/nanosam:r35.2.1`](https://hub.docker.com/r/dustynv/nanosam/tags) | `2023-10-05` | `arm64` | `6.3GB` |
+| &nbsp;&nbsp;[`dustynv/nanosam:r35.2.1`](https://hub.docker.com/r/dustynv/nanosam/tags) | `2023-12-12` | `arm64` | `6.2GB` |
+| &nbsp;&nbsp;[`dustynv/nanosam:r35.3.1`](https://hub.docker.com/r/dustynv/nanosam/tags) | `2023-12-11` | `arm64` | `6.2GB` |
+| &nbsp;&nbsp;[`dustynv/nanosam:r35.4.1`](https://hub.docker.com/r/dustynv/nanosam/tags) | `2023-11-05` | `arm64` | `6.2GB` |
+| &nbsp;&nbsp;[`dustynv/nanosam:r36.2.0`](https://hub.docker.com/r/dustynv/nanosam/tags) | `2023-12-12` | `arm64` | `7.9GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -64,10 +66,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag nanosam)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/nanosam:r35.2.1
+./run.sh dustynv/nanosam:r36.2.0
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/nanosam:r35.2.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/nanosam:r36.2.0
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

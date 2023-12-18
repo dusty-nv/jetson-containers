@@ -5,7 +5,11 @@ set -e -x
 
 ARCH=$(uname -i)
 echo "ARCH:  $ARCH"
-	   
+	 
+if [ $(lsb_release --codename --short) != "jammy" ]; then
+	EXTRAS="libavresample-dev libdc1394-22-dev"
+fi
+	 
 apt-get update
 apt-get install -y --no-install-recommends \
         build-essential \
@@ -17,9 +21,7 @@ apt-get install -y --no-install-recommends \
         libatlas-base-dev \
         libavcodec-dev \
         libavformat-dev \
-        libavresample-dev \
         libcanberra-gtk3-module \
-        libdc1394-22-dev \
         libeigen3-dev \
         libglew-dev \
         libgstreamer-plugins-base1.0-dev \
@@ -48,7 +50,8 @@ apt-get install -y --no-install-recommends \
         pkg-config \
         qv4l2 \
         v4l-utils \
-        zlib1g-dev
+        zlib1g-dev \
+	   $EXTRAS
 
 # on x86, the python dev packages are already installed in the NGC containers under conda
 # and installing them again from apt messes up their proper detection, so skip doing that

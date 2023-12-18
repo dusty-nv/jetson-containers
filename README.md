@@ -9,20 +9,20 @@ Modular container build system that provides various [**AI/ML packages**](packag
 | | |
 |---|---|
 | **ML** | [`pytorch`](packages/pytorch) [`tensorflow`](packages/tensorflow) [`onnxruntime`](packages/onnxruntime) [`deepstream`](packages/deepstream) [`tritonserver`](packages/tritonserver) [`jupyterlab`](packages/jupyterlab) [`stable-diffusion`](packages/diffusion/stable-diffusion-webui) |
-| **LLM** | [`transformers`](packages/llm/transformers) [`text-generation-webui`](packages/llm/text-generation-webui) [`text-generation-inference`](packages/llm/text-generation-inference) [`llava`](packages/llm/llava) [`llama.cpp`](packages/llm/llama_cpp) [`exllama`](packages/llm/exllama) [`llamaspeak`](packages/llm/llamaspeak) [`awq`](packages/llm/awq) [`AutoGPTQ`](packages/llm/auto_gptq) [`MiniGPT-4`](packages/llm/minigpt4) [`MLC`](packages/llm/mlc) [`langchain`](packages/llm/langchain) [`optimum`](packages/llm/optimum) [`bitsandbytes`](packages/llm/bitsandbytes) [`nemo`](packages/nemo) |
+| **LLM** | [`transformers`](packages/llm/transformers) [`text-generation-webui`](packages/llm/text-generation-webui) [`text-generation-inference`](packages/llm/text-generation-inference) [`llava`](packages/llm/llava) [`llama.cpp`](packages/llm/llama_cpp) [`exllama`](packages/llm/exllama) [`llamaspeak`](packages/llm/llamaspeak) [`local_llm`](packages/llm/local_llm) [`awq`](packages/llm/awq) [`AutoGPTQ`](packages/llm/auto_gptq) [`MiniGPT-4`](packages/llm/minigpt4) [`MLC`](packages/llm/mlc) [`langchain`](packages/llm/langchain) [`optimum`](packages/llm/optimum) [`nemo`](packages/nemo) |
 | **L4T** | [`l4t-pytorch`](packages/l4t/l4t-pytorch) [`l4t-tensorflow`](packages/l4t/l4t-tensorflow) [`l4t-ml`](packages/l4t/l4t-ml) [`l4t-diffusion`](packages/l4t/l4t-diffusion) [`l4t-text-generation`](packages/l4t/l4t-text-generation) |
 | **VIT** | [`NanoOWL`](packages/vit/nanoowl) [`NanoSAM`](packages/vit/nanosam) [`Segment Anything (SAM)`](packages/vit/sam) [`Track Anything (TAM)`](packages/vit/tam) |
-| **CUDA** | [`cupy`](packages/cupy) [`cuda-python`](packages/cuda-python) [`pycuda`](packages/pycuda) [`numba`](packages/numba) [`cudf`](packages/rapids/cudf) [`cuml`](packages/rapids/cuml) |
+| **CUDA** | [`cupy`](packages/cuda/cupy) [`cuda-python`](packages/cuda/cuda-python) [`pycuda`](packages/cuda/pycuda) [`numba`](packages/numba) [`cudf`](packages/rapids/cudf) [`cuml`](packages/rapids/cuml) |
 | **Robotics** | [`ros`](packages/ros) [`ros2`](packages/ros) [`opencv:cuda`](packages/opencv) [`realsense`](packages/realsense) [`zed`](packages/zed) |
-| **Audio** | [`whisper`](packages/audio/whisper) [`riva`](packages/audio/riva-client) [`audiocraft`](packages/audio/audiocraft) |
 | **VectorDB** | [`NanoDB`](packages/vectordb/nanodb) [`FAISS`](packages/vectordb/faiss) [`RAFT`](packages/rapids/raft) |
+| **Audio** | [`whisper`](packages/audio/whisper) [`riva`](packages/audio/riva-client) [`audiocraft`](packages/audio/audiocraft) |
 
 See the [**`packages`**](packages) directory for the full list, including pre-built container images and CI/CD status for JetPack/L4T.
 
 Using the included tools, you can easily combine packages together for building your own containers.  Want to run ROS2 with PyTorch and Transformers?  No problem - just do the [system setup](/docs/setup.md), and build it on your Jetson like this:
 
 ```bash
-$ ./build.sh --name=my_container ros:humble-desktop pytorch transformers
+$ ./build.sh --name=my_container pytorch transformers ros:humble-desktop
 ```
 
 There are shortcuts for running containers too - this will pull or build a [`l4t-pytorch`](packages/l4t/l4t-pytorch) image that's compatible:
@@ -67,3 +67,17 @@ sudo docker run --runtime nvidia -it --rm --network=host dustynv/l4t-pytorch:r35
 
 Looking for the old jetson-containers?   See the [`legacy`](https://github.com/dusty-nv/jetson-containers/tree/legacy) branch.
 
+## Gallery
+
+<a href="https://www.youtube.com/watch?v=9ObzbbBTbcc"><img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/llamaspeak_llava_clip.gif"></a>
+> [Multimodal Voice Chat with LLaVA-1.5 13B on NVIDIA Jetson AGX Orin](https://www.youtube.com/watch?v=9ObzbbBTbcc) (container: [`local_llm`](/packages/llm/local_llm))  
+
+<br/>
+
+<a href="https://www.youtube.com/watch?v=wzLHAgDxMjQ"><img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/llamaspeak_70b_yt.jpg" width="800px"></a>
+> [Interactive Voice Chat with Llama-2-70B on NVIDIA Jetson AGX Orin](https://www.youtube.com/watch?v=wzLHAgDxMjQ) (container: [`local_llm`](/packages/llm/local_llm))  
+
+<br/>
+
+<a href="https://youtu.be/ayqKpQNd1Jw"><img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/nanodb_tennis.jpg"></a>
+> [Realtime Multimodal VectorDB on NVIDIA Jetson](https://www.youtube.com/watch?v=wzLHAgDxMjQ) (container: [`nanodb`](/packages/vectordb/nanodb))  
