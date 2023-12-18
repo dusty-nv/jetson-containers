@@ -40,7 +40,7 @@ log_debug('-- MLC latest commit:', latest_sha)
 #default_dev=(L4T_VERSION.major >= 36)
 
 package = [
-    mlc(latest_sha, 'patches/empty.diff', tag='dev'), #, default=default_dev),
-    mlc('9bf5723', 'patches/9bf5723.diff', requires='==35.*', default=(L4T_VERSION.major == 35)), # 10/20/2023
-    mlc('51fb0f4', 'patches/51fb0f4.diff', default=(L4T_VERSION.major == 36)), # 12/15/2023
+    mlc(latest_sha, 'patches/51fb0f4.diff', tag='dev'), #, default=default_dev),
+    mlc('9bf5723', 'patches/9bf5723.diff', requires='==35.*'), # 10/20/2023
+    mlc('51fb0f4', 'patches/51fb0f4.diff', default=True), # 12/15/2023
 ]
