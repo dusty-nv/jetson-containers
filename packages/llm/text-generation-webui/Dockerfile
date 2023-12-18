@@ -50,6 +50,10 @@ RUN pip3 install --no-cache-dir --verbose -r text-generation-webui/requirements.
 #    pip3 install --no-cache-dir --verbose -r requirements.txt --constraint /tmp/constraints.txt && \
 #    rm /tmp/constraints.txt
     
+# https://github.com/oobabooga/text-generation-webui/issues/4644
+RUN sed 's|to(self\.projector_device)|to(self\.projector_device,dtype=self\.projector_dtype)|' -i /opt/text-generation-webui/extensions/multimodal/pipelines/llava/llava.py && \
+    cat /opt/text-generation-webui/extensions/multimodal/pipelines/llava/llava.py | grep 'projector_dtype'
+    
 RUN cd text-generation-webui && \
     sed 's|@functools.cache|@functools.lru_cache\(maxsize=None\)|' -i modules/chat.py && \
     sed 's|@functools.cache|@functools.lru_cache\(maxsize=None\)|' -i modules/loaders.py && \
