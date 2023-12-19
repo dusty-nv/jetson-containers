@@ -23,7 +23,7 @@ ggml['test'].extend([
 gguf = copy.deepcopy(package)
 
 gguf['name'] = 'llama_cpp:gguf'
-ggml['alias'] = 'llama_cpp'
+gguf['alias'] = 'llama_cpp'
 
 gguf['build_args']['LLAMA_CPP_PYTHON_REPO'] = 'abetlen/llama-cpp-python'
 gguf['build_args']['LLAMA_CPP_PYTHON_BRANCH'] = 'main'
