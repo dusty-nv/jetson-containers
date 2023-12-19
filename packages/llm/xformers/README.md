@@ -13,7 +13,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`audiocraft`](/packages/audio/audiocraft) [`l4t-diffusion`](/packages/l4t/l4t-diffusion) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/xformers:r35.2.1`](https://hub.docker.com/r/dustynv/xformers/tags) `(2023-12-06, 5.8GB)`<br>[`dustynv/xformers:r35.3.1`](https://hub.docker.com/r/dustynv/xformers/tags) `(2023-12-12, 5.8GB)`<br>[`dustynv/xformers:r35.4.1`](https://hub.docker.com/r/dustynv/xformers/tags) `(2023-12-05, 5.8GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/xformers:r35.2.1`](https://hub.docker.com/r/dustynv/xformers/tags) `(2023-12-06, 5.8GB)`<br>[`dustynv/xformers:r35.3.1`](https://hub.docker.com/r/dustynv/xformers/tags) `(2023-12-14, 5.8GB)`<br>[`dustynv/xformers:r35.4.1`](https://hub.docker.com/r/dustynv/xformers/tags) `(2023-12-05, 5.8GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/facebookresearch/xformers |
 
 </details>
@@ -25,7 +25,7 @@
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/xformers:r35.2.1`](https://hub.docker.com/r/dustynv/xformers/tags) | `2023-12-06` | `arm64` | `5.8GB` |
-| &nbsp;&nbsp;[`dustynv/xformers:r35.3.1`](https://hub.docker.com/r/dustynv/xformers/tags) | `2023-12-12` | `arm64` | `5.8GB` |
+| &nbsp;&nbsp;[`dustynv/xformers:r35.3.1`](https://hub.docker.com/r/dustynv/xformers/tags) | `2023-12-14` | `arm64` | `5.8GB` |
 | &nbsp;&nbsp;[`dustynv/xformers:r35.4.1`](https://hub.docker.com/r/dustynv/xformers/tags) | `2023-12-05` | `arm64` | `5.8GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>

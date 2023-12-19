@@ -49,7 +49,7 @@ Stable Diffusion XL
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) [`xformers`](/packages/llm/xformers) [`pycuda`](/packages/cuda/pycuda) [`opencv`](/packages/opencv) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-diffusion`](/packages/l4t/l4t-diffusion) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/stable-diffusion-webui:r35.2.1`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) `(2023-12-11, 7.1GB)`<br>[`dustynv/stable-diffusion-webui:r35.3.1`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) `(2023-12-11, 7.2GB)`<br>[`dustynv/stable-diffusion-webui:r35.4.1`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) `(2023-11-05, 7.1GB)`<br>[`dustynv/stable-diffusion-webui:r36.2.0`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) `(2023-12-12, 8.8GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/stable-diffusion-webui:r35.2.1`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) `(2023-12-14, 7.1GB)`<br>[`dustynv/stable-diffusion-webui:r35.3.1`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) `(2023-12-11, 7.2GB)`<br>[`dustynv/stable-diffusion-webui:r35.4.1`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) `(2023-12-15, 7.1GB)`<br>[`dustynv/stable-diffusion-webui:r36.2.0`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) `(2023-12-15, 8.8GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | disabled on JetPack 4 |
 
 </details>
@@ -60,10 +60,10 @@ Stable Diffusion XL
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/stable-diffusion-webui:r35.2.1`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) | `2023-12-11` | `arm64` | `7.1GB` |
+| &nbsp;&nbsp;[`dustynv/stable-diffusion-webui:r35.2.1`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) | `2023-12-14` | `arm64` | `7.1GB` |
 | &nbsp;&nbsp;[`dustynv/stable-diffusion-webui:r35.3.1`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) | `2023-12-11` | `arm64` | `7.2GB` |
-| &nbsp;&nbsp;[`dustynv/stable-diffusion-webui:r35.4.1`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) | `2023-11-05` | `arm64` | `7.1GB` |
-| &nbsp;&nbsp;[`dustynv/stable-diffusion-webui:r36.2.0`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) | `2023-12-12` | `arm64` | `8.8GB` |
+| &nbsp;&nbsp;[`dustynv/stable-diffusion-webui:r35.4.1`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) | `2023-12-15` | `arm64` | `7.1GB` |
+| &nbsp;&nbsp;[`dustynv/stable-diffusion-webui:r36.2.0`](https://hub.docker.com/r/dustynv/stable-diffusion-webui/tags) | `2023-12-15` | `arm64` | `8.8GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>

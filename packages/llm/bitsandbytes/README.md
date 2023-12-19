@@ -13,7 +13,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`text-generation-inference`](/packages/llm/text-generation-inference) [`text-generation-webui:1.7`](/packages/llm/text-generation-webui) [`text-generation-webui:6a7cd01`](/packages/llm/text-generation-webui) [`text-generation-webui:main`](/packages/llm/text-generation-webui) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/bitsandbytes:r35.2.1`](https://hub.docker.com/r/dustynv/bitsandbytes/tags) `(2023-12-12, 5.9GB)`<br>[`dustynv/bitsandbytes:r35.3.1`](https://hub.docker.com/r/dustynv/bitsandbytes/tags) `(2023-12-11, 6.0GB)`<br>[`dustynv/bitsandbytes:r35.4.1`](https://hub.docker.com/r/dustynv/bitsandbytes/tags) `(2023-11-05, 5.9GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/bitsandbytes:r35.2.1`](https://hub.docker.com/r/dustynv/bitsandbytes/tags) `(2023-12-15, 5.9GB)`<br>[`dustynv/bitsandbytes:r35.3.1`](https://hub.docker.com/r/dustynv/bitsandbytes/tags) `(2023-12-11, 6.0GB)`<br>[`dustynv/bitsandbytes:r35.4.1`](https://hub.docker.com/r/dustynv/bitsandbytes/tags) `(2023-12-14, 5.9GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | fork of https://github.com/TimDettmers/bitsandbytes for Jetson |
 
 </details>
@@ -24,9 +24,9 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/bitsandbytes:r35.2.1`](https://hub.docker.com/r/dustynv/bitsandbytes/tags) | `2023-12-12` | `arm64` | `5.9GB` |
+| &nbsp;&nbsp;[`dustynv/bitsandbytes:r35.2.1`](https://hub.docker.com/r/dustynv/bitsandbytes/tags) | `2023-12-15` | `arm64` | `5.9GB` |
 | &nbsp;&nbsp;[`dustynv/bitsandbytes:r35.3.1`](https://hub.docker.com/r/dustynv/bitsandbytes/tags) | `2023-12-11` | `arm64` | `6.0GB` |
-| &nbsp;&nbsp;[`dustynv/bitsandbytes:r35.4.1`](https://hub.docker.com/r/dustynv/bitsandbytes/tags) | `2023-11-05` | `arm64` | `5.9GB` |
+| &nbsp;&nbsp;[`dustynv/bitsandbytes:r35.4.1`](https://hub.docker.com/r/dustynv/bitsandbytes/tags) | `2023-12-14` | `arm64` | `5.9GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>

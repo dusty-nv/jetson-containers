@@ -49,7 +49,7 @@ Make sure that you load the output from the quantization steps above with `--qua
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/awq:r35.2.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-11-05, 6.1GB)`<br>[`dustynv/awq:r35.3.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-12-06, 6.1GB)`<br>[`dustynv/awq:r35.4.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-12-12, 6.1GB)`<br>[`dustynv/awq:r36.2.0`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-12-12, 7.8GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/awq:r35.2.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-12-14, 6.1GB)`<br>[`dustynv/awq:r35.3.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-12-15, 6.1GB)`<br>[`dustynv/awq:r35.4.1`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-12-12, 6.1GB)`<br>[`dustynv/awq:r36.2.0`](https://hub.docker.com/r/dustynv/awq/tags) `(2023-12-15, 7.8GB)` |
 
 | **`awq:dev`** | |
 | :-- | :-- |
@@ -65,10 +65,10 @@ Make sure that you load the output from the quantization steps above with `--qua
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/awq:r35.2.1`](https://hub.docker.com/r/dustynv/awq/tags) | `2023-11-05` | `arm64` | `6.1GB` |
-| &nbsp;&nbsp;[`dustynv/awq:r35.3.1`](https://hub.docker.com/r/dustynv/awq/tags) | `2023-12-06` | `arm64` | `6.1GB` |
+| &nbsp;&nbsp;[`dustynv/awq:r35.2.1`](https://hub.docker.com/r/dustynv/awq/tags) | `2023-12-14` | `arm64` | `6.1GB` |
+| &nbsp;&nbsp;[`dustynv/awq:r35.3.1`](https://hub.docker.com/r/dustynv/awq/tags) | `2023-12-15` | `arm64` | `6.1GB` |
 | &nbsp;&nbsp;[`dustynv/awq:r35.4.1`](https://hub.docker.com/r/dustynv/awq/tags) | `2023-12-12` | `arm64` | `6.1GB` |
-| &nbsp;&nbsp;[`dustynv/awq:r36.2.0`](https://hub.docker.com/r/dustynv/awq/tags) | `2023-12-12` | `arm64` | `7.8GB` |
+| &nbsp;&nbsp;[`dustynv/awq:r36.2.0`](https://hub.docker.com/r/dustynv/awq/tags) | `2023-12-15` | `arm64` | `7.8GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -85,10 +85,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag awq)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/awq:r36.2.0
+./run.sh dustynv/awq:r35.3.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/awq:r36.2.0
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/awq:r35.3.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
