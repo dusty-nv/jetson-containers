@@ -77,6 +77,8 @@ If you load a Llava vision-language model, you can enter image files into the pr
 
 Llava was trained to converse about one image at a time, hence the chat history is reset between images (otherwise the model tends to combine the features of all the images in the chat so far).  Multiple questions can be asked about each image though.
 
+By omitting `--prompt`, you can chat interactively from the terminal.  If you enter an image filename, it will load that image, and then asking you for the prompt.  Entering `clear` or `reset` will reset the chat history. 
+
 ## Voice Chat
 
 <a href="https://www.youtube.com/watch?v=wzLHAgDxMjQ"><img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/llamaspeak_70b_yt.jpg" width="800px"></a>
