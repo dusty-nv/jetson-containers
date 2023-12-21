@@ -42,7 +42,7 @@ Substitute the GPTQ model from [HuggingFace Hub](https://huggingface.co/models?s
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`huggingface_hub`](/packages/llm/huggingface_hub) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`text-generation-webui:1.7`](/packages/llm/text-generation-webui) [`text-generation-webui:6a7cd01`](/packages/llm/text-generation-webui) [`text-generation-webui:main`](/packages/llm/text-generation-webui) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/exllama:v1-r36.2.0`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-12-12, 7.2GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/exllama:v1-r36.2.0`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-12-15, 7.2GB)` |
 
 | **`exllama:v2`** | |
 | :-- | :-- |
@@ -52,7 +52,7 @@ Substitute the GPTQ model from [HuggingFace Hub](https://huggingface.co/models?s
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`huggingface_hub`](/packages/llm/huggingface_hub) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`text-generation-webui:1.7`](/packages/llm/text-generation-webui) [`text-generation-webui:6a7cd01`](/packages/llm/text-generation-webui) [`text-generation-webui:main`](/packages/llm/text-generation-webui) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.v2`](Dockerfile.v2) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/exllama:v2-r35.2.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-12-06, 5.5GB)`<br>[`dustynv/exllama:v2-r35.3.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-11-27, 5.5GB)`<br>[`dustynv/exllama:v2-r35.4.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-12-12, 5.5GB)`<br>[`dustynv/exllama:v2-r36.2.0`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-12-12, 7.2GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/exllama:v2-r35.2.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-12-15, 5.5GB)`<br>[`dustynv/exllama:v2-r35.3.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-12-14, 5.5GB)`<br>[`dustynv/exllama:v2-r35.4.1`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-12-12, 5.5GB)`<br>[`dustynv/exllama:v2-r36.2.0`](https://hub.docker.com/r/dustynv/exllama/tags) `(2023-12-15, 7.2GB)` |
 
 </details>
 
@@ -62,14 +62,14 @@ Substitute the GPTQ model from [HuggingFace Hub](https://huggingface.co/models?s
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/exllama:r35.2.1`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-09-24` | `arm64` | `5.4GB` |
+| &nbsp;&nbsp;[`dustynv/exllama:r35.2.1`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-12-15` | `arm64` | `5.5GB` |
 | &nbsp;&nbsp;[`dustynv/exllama:r35.3.1`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-12-11` | `arm64` | `5.5GB` |
-| &nbsp;&nbsp;[`dustynv/exllama:r35.4.1`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-12-12` | `arm64` | `5.4GB` |
-| &nbsp;&nbsp;[`dustynv/exllama:v1-r36.2.0`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-12-12` | `arm64` | `7.2GB` |
-| &nbsp;&nbsp;[`dustynv/exllama:v2-r35.2.1`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-12-06` | `arm64` | `5.5GB` |
-| &nbsp;&nbsp;[`dustynv/exllama:v2-r35.3.1`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-11-27` | `arm64` | `5.5GB` |
+| &nbsp;&nbsp;[`dustynv/exllama:r35.4.1`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-12-14` | `arm64` | `5.4GB` |
+| &nbsp;&nbsp;[`dustynv/exllama:v1-r36.2.0`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-12-15` | `arm64` | `7.2GB` |
+| &nbsp;&nbsp;[`dustynv/exllama:v2-r35.2.1`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-12-15` | `arm64` | `5.5GB` |
+| &nbsp;&nbsp;[`dustynv/exllama:v2-r35.3.1`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-12-14` | `arm64` | `5.5GB` |
 | &nbsp;&nbsp;[`dustynv/exllama:v2-r35.4.1`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-12-12` | `arm64` | `5.5GB` |
-| &nbsp;&nbsp;[`dustynv/exllama:v2-r36.2.0`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-12-12` | `arm64` | `7.2GB` |
+| &nbsp;&nbsp;[`dustynv/exllama:v2-r36.2.0`](https://hub.docker.com/r/dustynv/exllama/tags) | `2023-12-15` | `arm64` | `7.2GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>

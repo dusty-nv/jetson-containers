@@ -12,7 +12,7 @@
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`bazel`](/packages/bazel) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/torch_tensorrt:r32.7.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) `(2023-12-11, 1.5GB)`<br>[`dustynv/torch_tensorrt:r35.2.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) `(2023-12-11, 5.9GB)`<br>[`dustynv/torch_tensorrt:r35.3.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) `(2023-12-12, 5.9GB)`<br>[`dustynv/torch_tensorrt:r35.4.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) `(2023-10-07, 5.9GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/torch_tensorrt:r32.7.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) `(2023-12-14, 1.5GB)`<br>[`dustynv/torch_tensorrt:r35.2.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) `(2023-12-11, 5.9GB)`<br>[`dustynv/torch_tensorrt:r35.3.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) `(2023-12-14, 5.9GB)`<br>[`dustynv/torch_tensorrt:r35.4.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) `(2023-10-07, 5.9GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://pytorch.org/TensorRT/getting_started/installation.html#installation |
 
 </details>
@@ -23,9 +23,9 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/torch_tensorrt:r32.7.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) | `2023-12-11` | `arm64` | `1.5GB` |
+| &nbsp;&nbsp;[`dustynv/torch_tensorrt:r32.7.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) | `2023-12-14` | `arm64` | `1.5GB` |
 | &nbsp;&nbsp;[`dustynv/torch_tensorrt:r35.2.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) | `2023-12-11` | `arm64` | `5.9GB` |
-| &nbsp;&nbsp;[`dustynv/torch_tensorrt:r35.3.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) | `2023-12-12` | `arm64` | `5.9GB` |
+| &nbsp;&nbsp;[`dustynv/torch_tensorrt:r35.3.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) | `2023-12-14` | `arm64` | `5.9GB` |
 | &nbsp;&nbsp;[`dustynv/torch_tensorrt:r35.4.1`](https://hub.docker.com/r/dustynv/torch_tensorrt/tags) | `2023-10-07` | `arm64` | `5.9GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>

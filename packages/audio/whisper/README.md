@@ -42,7 +42,7 @@ HTTPS (SSL) connection is needed to allow `ipywebrtc` widget to have access to t
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/python) [`numpy`](/packages/numpy) [`numba`](/packages/numba) [`cudnn`](/packages/cuda/cudnn) [`tensorrt`](/packages/tensorrt) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchaudio`](/packages/pytorch/torchaudio) [`rust`](/packages/rust) [`jupyterlab`](/packages/jupyterlab) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/whisper:r35.3.1`](https://hub.docker.com/r/dustynv/whisper/tags) `(2023-12-12, 6.1GB)`<br>[`dustynv/whisper:r35.4.1`](https://hub.docker.com/r/dustynv/whisper/tags) `(2023-12-11, 6.1GB)`<br>[`dustynv/whisper:r36.2.0`](https://hub.docker.com/r/dustynv/whisper/tags) `(2023-12-12, 7.9GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/whisper:r35.3.1`](https://hub.docker.com/r/dustynv/whisper/tags) `(2023-12-12, 6.1GB)`<br>[`dustynv/whisper:r35.4.1`](https://hub.docker.com/r/dustynv/whisper/tags) `(2023-12-14, 6.1GB)`<br>[`dustynv/whisper:r36.2.0`](https://hub.docker.com/r/dustynv/whisper/tags) `(2023-12-14, 7.9GB)` |
 
 </details>
 
@@ -53,8 +53,8 @@ HTTPS (SSL) connection is needed to allow `ipywebrtc` widget to have access to t
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/whisper:r35.3.1`](https://hub.docker.com/r/dustynv/whisper/tags) | `2023-12-12` | `arm64` | `6.1GB` |
-| &nbsp;&nbsp;[`dustynv/whisper:r35.4.1`](https://hub.docker.com/r/dustynv/whisper/tags) | `2023-12-11` | `arm64` | `6.1GB` |
-| &nbsp;&nbsp;[`dustynv/whisper:r36.2.0`](https://hub.docker.com/r/dustynv/whisper/tags) | `2023-12-12` | `arm64` | `7.9GB` |
+| &nbsp;&nbsp;[`dustynv/whisper:r35.4.1`](https://hub.docker.com/r/dustynv/whisper/tags) | `2023-12-14` | `arm64` | `6.1GB` |
+| &nbsp;&nbsp;[`dustynv/whisper:r36.2.0`](https://hub.docker.com/r/dustynv/whisper/tags) | `2023-12-14` | `arm64` | `7.9GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
