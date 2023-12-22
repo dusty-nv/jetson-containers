@@ -4,6 +4,7 @@ import re
 import time
 import json
 import torch
+import shutil
 import logging
 
 from transformers import AutoConfig
@@ -150,7 +151,19 @@ class LocalLM():
         Init vision embedding/projection models for VLMs like llava, MiniGPT-4, ect.
         @internal this function is automatically called by LocalLM initializer.
         """
-        self.has_vision = 'llava' in self.model_config._name_or_path.lower()
+        self.has_vision = 'llava' in self.model_config.model_type.lower()
+        
+        if self.has_vision:
+            # the model type needs renamed to 'llama' so the quant tools recognize it
+            cfg_path = os.path.join(self.model_path, 'config.json')
+            shutil.copyfile(cfg_path, cfg_path + '.backup')
+            with open(cfg_path, 'r') as cfg_file:
+                cfg = json.load(cfg_file)
+            cfg['model_type'] = 'llama'
+            with open(cfg_path, 'w') as cfg_file:
+                json.dump(cfg, cfg_file, indent=2)
+        else:
+            self.has_vision = 'llava' in self.model_config._name_or_path.lower()
         
         for arch in self.model_config.architectures:
             if 'llava' in arch.lower():
