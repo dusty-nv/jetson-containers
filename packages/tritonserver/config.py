@@ -7,8 +7,8 @@ TRITON_CLIENTS = 'clients'
 
 if L4T_VERSION >= Version('35.3.1'): # JetPack 5.1.1
     # https://github.com/triton-inference-server/server/releases/tag/v2.35.0
-    TRITON_URL = 'https://github.com/triton-inference-server/server/releases/download/v2.35.0/tritonserver2.35.0-jetpack5.1.2.tgz'
-    TRITON_TAR = 'tritonserver2.35.0-jetpack5.1.2.tgz'
+    TRITON_URL = 'https://github.com/triton-inference-server/server/releases/download/v2.35.0/tritonserver2.35.0-jetpack5.1.2-update-1.tgz'
+    TRITON_TAR = 'tritonserver2.35.0-jetpack5.1.2-update-1.tgz'
     TRITON_CLIENTS = 'tritonserver/clients'  # in 2.35, clients/ dir moved under tritonserver/
 elif L4T_VERSION >= Version('35.2.1'): # JetPack 5.1
     # https://github.com/triton-inference-server/server/releases/tag/v2.34.0
