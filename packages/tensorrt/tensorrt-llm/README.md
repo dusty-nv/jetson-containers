@@ -14,8 +14,7 @@ To simplify the commands below, create a .env file for the containers with the d
 ```bash
 echo -e 'MODEL_REPO=meta-llama/Llama-2-7b-chat-hf
 ENGINE_DIR=/data/models/trt-llm/llama-2-7b-chat-gptq
-HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN>
-CUDA_MODULE_LOADING=LAZY' \
+HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN>' \
  > /tmp/llama-2-7b-chat-gptq.env 
  ```
 

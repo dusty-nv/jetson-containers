@@ -46,4 +46,6 @@ RUN pip3 show tensorrt_llm && python3 -c 'import tensorrt_llm'
 
 RUN pip3 install --no-cache-dir pydantic pynvml
 
+ENV CUDA_MODULE_LOADING=LAZY
+
 WORKDIR /
