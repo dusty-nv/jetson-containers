@@ -4,6 +4,7 @@
 # config: config.py
 # depends: [tensorrt, pytorch, transformers, cuda-python, cmake]
 # test: test.py
+# docs: docs.md
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
