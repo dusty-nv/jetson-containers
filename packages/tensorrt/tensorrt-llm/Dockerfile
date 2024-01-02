@@ -1,6 +1,6 @@
 #---
 # name: tensorrt-llm
-# group: cuda
+# group: llm
 # config: config.py
 # depends: [tensorrt, pytorch, transformers, cuda-python, cmake]
 # test: test.py
