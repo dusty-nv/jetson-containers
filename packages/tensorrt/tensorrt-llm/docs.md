@@ -1,10 +1,7 @@
 
 * TensorRT-LLM 0.5 from [github.com/NVIDIA/TensorRT-LLM](https://github.com/NVIDIA/TensorRT-LLM/tree/v0.5.0/) (found under `/opt/tensorrt-llm`)
 
-> [!NOTE]  
-> Only the v0.5.0 version of TensorRT-LLM is available on JetPack 6 with TensorRT 8.6 at this time.
-
-Below, we adapt the [llama example](https://github.com/NVIDIA/TensorRT-LLM/tree/v0.5.0/examples/llama#gptq) to run llama-2-7b with TensorRT-LLM on Jetson using GTPQ quantization for weights (INT4) and FP16 for activations (W4A16).
+Below, we use this [llama example](https://github.com/NVIDIA/TensorRT-LLM/tree/v0.5.0/examples/llama#gptq) from TensorRT-LLM to run llama-2-7b with 4-bit quantization on Jetson Orin.  JetPack 6.0 is required.
 
 ## Model Config
 
@@ -99,7 +96,7 @@ Then use llama [`build.py`](https://github.com/NVIDIA/TensorRT-LLM/blob/main/exa
       --log_level verbose'
 ```
 
-This typically takes around ~7 minutes to complete on Jetson AGX Orin for 7B.
+This is using INT4 weights and FP16 activations (W4A16) and typically takes around ~7 minutes to complete on Jetson AGX Orin for 7B.
 
 ## Chat
 
