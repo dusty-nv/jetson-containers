@@ -119,8 +119,9 @@ I'm a large language model, so I can play text-based games and answer questions 
 | &nbsp;&nbsp;[`dustynv/text-generation-webui:1.7-r35.4.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) | `2023-12-05` | `arm64` | `6.4GB` |
 | &nbsp;&nbsp;[`dustynv/text-generation-webui:main-r36.2.0`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) | `2023-12-18` | `arm64` | `8.1GB` |
 | &nbsp;&nbsp;[`dustynv/text-generation-webui:r35.2.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) | `2023-12-18` | `arm64` | `6.5GB` |
-| &nbsp;&nbsp;[`dustynv/text-generation-webui:r35.3.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) | `2023-12-18` | `arm64` | `6.5GB` |
-| &nbsp;&nbsp;[`dustynv/text-generation-webui:r35.4.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) | `2023-12-18` | `arm64` | `6.4GB` |
+| &nbsp;&nbsp;[`dustynv/text-generation-webui:r35.3.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) | `2023-12-21` | `arm64` | `6.5GB` |
+| &nbsp;&nbsp;[`dustynv/text-generation-webui:r35.4.1`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) | `2023-12-21` | `arm64` | `6.4GB` |
+| &nbsp;&nbsp;[`dustynv/text-generation-webui:r36.2.0`](https://hub.docker.com/r/dustynv/text-generation-webui/tags) | `2023-12-21` | `arm64` | `8.1GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -137,10 +138,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag text-generation-webui)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/text-generation-webui:r35.3.1
+./run.sh dustynv/text-generation-webui:r36.2.0
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/text-generation-webui:r35.3.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/text-generation-webui:r36.2.0
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
