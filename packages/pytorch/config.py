@@ -84,7 +84,7 @@ package = [
     pytorch('1.9', 'torch-1.9.0-cp36-cp36m-linux_aarch64.whl', 'https://nvidia.box.com/shared/static/h1z9sw4bb1ybi0rm3tu8qdj8hs05ljbm.whl', '==32.*'),
 
     # Build from source
-    pytorch_build('2.0', suffix='distributed', requires='==35.*', alias='pytorch:distributed'),            
-    pytorch_build('2.1', suffix='distributed', requires='==35.*'),        
+    pytorch_build('2.0', suffix='distributed', requires='==35.*'),            
+    pytorch_build('2.1', suffix='distributed', requires='==35.*', alias='pytorch:distributed'),        
     pytorch_build('2.1', suffix='builder', requires='==36.*'),
 ]
