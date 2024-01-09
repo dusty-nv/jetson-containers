@@ -2,7 +2,7 @@
 # name: xformers
 # group: llm
 # config: config.py
-# depends: [pytorch]
+# depends: [pytorch:distributed]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/facebookresearch/xformers
@@ -25,4 +25,5 @@ RUN pip3 list && python3 -c 'import setuptools'
 RUN MAX_JOBS=8 pip3 install --no-cache-dir --verbose 'xformers!=0.0.21'
 RUN pip3 install --force-reinstall --no-cache-dir --verbose /opt/torch*.whl
 
+ENV XFORMERS_MORE_DETAILS=1
 RUN pip3 show xformers && python3 -c 'import xformers.info; xformers.info.print_info()'
