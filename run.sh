@@ -3,6 +3,8 @@
 # https://docs.docker.com/engine/reference/commandline/run/
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
+DATA_VOLUME_PATH="${DATA_VOLUME_PATH:-"$ROOT/data"}"
+
 # check for V4L2 devices
 V4L2_DEVICES=""
 
@@ -51,7 +53,7 @@ if [ $ARCH = "aarch64" ]; then
 		--volume /etc/enctune.conf:/etc/enctune.conf \
 		--volume /etc/nv_tegra_release:/etc/nv_tegra_release \
 		--volume /tmp/nv_jetson_model:/tmp/nv_jetson_model \
-		--volume $ROOT/data:/data \
+		--volume $DATA_VOLUME_PATH:/data \
 		--device /dev/snd \
 		--device /dev/bus/usb \
 		$DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES \
@@ -66,7 +68,7 @@ elif [ $ARCH = "x86_64" ]; then
 		--ulimit memlock=-1 \
 		--ulimit stack=67108864 \
 		--env NVIDIA_DRIVER_CAPABILITIES=all \
-		--volume $ROOT/data:/data \
+		--volume $DATA_VOLUME_PATH:/data \
 		$DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES \
 		"$@"	
 fi

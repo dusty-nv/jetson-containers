@@ -2,8 +2,7 @@
 from jetson_containers import L4T_VERSION
 
 if L4T_VERSION.major >= 34:  # JetPack 5
-    # https://github.com/onnx/onnx/issues/5346
-    package['build_args'] = {'ONNX_VERSION': 'main'}
+    package['build_args'] = {'ONNX_VERSION': 'v1.15.0'}
 else:
     # onnx 1.15:  SyntaxError: future feature annotations is not defined (/onnx/__init__.py", line 5)
 	# onnx 1.14:  onnx/defs/shape_inference.h:828:8: error: 'transform' is not a member of 'std'

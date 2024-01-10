@@ -73,19 +73,19 @@ def load_prompts(prompts):
     return prompt_list
     
 
-def download_model(model, type='model', cache_dir='$TRANSFORMERS_CACHE'):
+def download_model(model, type='model', cache_dir='$HF_HOME'):
     """
     Get the local path to a cached model or file in the cache_dir, or download it from HuggingFace Hub if needed.
     If the asset is private and authentication is required, set the HUGGINGFACE_TOKEN environment variable.
-    cache_dir is where the model gets downloaded to - by default, set to $TRANSFORMERS_CACHE (/data/models/huggingface)
+    cache_dir is where the model gets downloaded to - by default, set to $HF_HOME (/data/models/huggingface)
     """
     token = os.environ.get('HUGGINGFACE_TOKEN', os.environ.get('HUGGING_FACE_HUB_TOKEN'))
     
     if token:
         login(token=token)
        
-    if not cache_dir or cache_dir == '$TRANSFORMERS_CACHE':
-        cache_dir = os.environ.get('TRANSFORMERS_CACHE', '/root/.cache/huggingface')
+    if not cache_dir or cache_dir == '$HF_HOME':
+        cache_dir = os.environ.get('HF_HOME', '/root/.cache/huggingface')
         
     # handle either "org/repo" or individual "org/repo/file"
     # the former has 0-1 slashes, while the later has 2.

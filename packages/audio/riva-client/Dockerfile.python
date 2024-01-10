@@ -39,5 +39,4 @@ RUN pip3 show nvidia-riva-client && python3 -c 'import riva.client; print(riva.c
 COPY list_audio_devices.py python-clients/scripts/
 COPY loopback.py python-clients/scripts/
 
-
 WORKDIR /

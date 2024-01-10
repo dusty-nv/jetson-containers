@@ -33,6 +33,6 @@ def oobabooga(version, branch=None, tag=None, sha=None, build_args=None, default
     
 package = [
     oobabooga('main', branch='main', default=True),
-    oobabooga('1.7', tag='v1.7', build_args=dict(LD_PRELOAD_LIBS='/usr/local/lib/python3.8/dist-packages/sklearn/__check_build/../../scikit_learn.libs/libgomp-d22c30c5.so.1.0.0')),
+    oobabooga('1.7', tag='v1.7', build_args=dict(LD_PRELOAD_LIBS='/usr/local/lib/python3.10/dist-packages/sklearn/__check_build/../../scikit_learn.libs/libgomp-d22c30c5.so.1.0.0')),
     oobabooga('6a7cd01', sha='6a7cd01ebf8021a8ee6da094643f09da41516ccd'), # last commit to support original server API
 ]

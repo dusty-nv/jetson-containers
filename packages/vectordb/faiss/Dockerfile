@@ -23,10 +23,10 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
     
-# workaround for 'Could NOT find Python3 (missing: Python3_NumPy_INCLUDE_DIRS Development'
-# update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \
-RUN apt purge -y python3.9 libpython3.9* || echo "python3.9 not found, skipping removal" && \
-    ls -ll /usr/bin/python*
+# # workaround for 'Could NOT find Python3 (missing: Python3_NumPy_INCLUDE_DIRS Development'
+# # update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \
+# RUN apt purge -y python3.9 libpython3.9* || echo "python3.9 not found, skipping removal" && \
+#     ls -ll /usr/bin/python*
 
 ADD https://api.github.com/repos/${FAISS_REPO}/git/refs/heads/${FAISS_BRANCH} /tmp/faiss_version.json
 

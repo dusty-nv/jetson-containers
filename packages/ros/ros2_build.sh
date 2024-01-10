@@ -65,10 +65,10 @@ pip3 install --upgrade --no-cache-dir --verbose cmake
 cmake --version
 which cmake
 
-# remove other versions of Python3
-# workaround for 'Could NOT find Python3 (missing: Python3_NumPy_INCLUDE_DIRS Development'
-apt purge -y python3.9 libpython3.9* || echo "python3.9 not found, skipping removal"
-ls -ll /usr/bin/python*
+# # remove other versions of Python3
+# # workaround for 'Could NOT find Python3 (missing: Python3_NumPy_INCLUDE_DIRS Development'
+# apt purge -y python3.9 libpython3.9* || echo "python3.9 not found, skipping removal"
+# ls -ll /usr/bin/python*
     
 # create the ROS_ROOT directory
 mkdir -p ${ROS_ROOT}/src

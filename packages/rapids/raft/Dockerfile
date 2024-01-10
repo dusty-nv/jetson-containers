@@ -20,9 +20,9 @@ ARG BUILD_DIR=/opt/rapids
 
 WORKDIR ${BUILD_DIR}
 
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \
-    apt purge -y python3.9 libpython3.9* || echo "python3.9 not found, skipping removal" && \
-    ls -ll /usr/bin/python*
+# RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \
+#     apt purge -y python3.9 libpython3.9* || echo "python3.9 not found, skipping removal" && \
+#     ls -ll /usr/bin/python*
     
 ADD https://api.github.com/repos/${RAFT_REPO}/git/refs/heads/${RAFT_BRANCH} /tmp/raft_version.json
 
