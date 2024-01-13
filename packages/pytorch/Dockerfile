@@ -45,6 +45,11 @@ RUN PYTHON_ROOT=`pip3 show torch | grep Location: | cut -d' ' -f2` && \
 # PyTorch C++ extensions frequently use ninja parallel builds
 RUN pip3 install --no-cache-dir scikit-build && \
     pip3 install --no-cache-dir ninja
-    
+
+# set the CUDA architectures that PyTorch extensions get built for
+ARG TORCH_CUDA_ARCH_ARGS
+ENV TORCH_CUDA_ARCH_LIST=${TORCH_CUDA_ARCH_ARGS}
+RUN echo "TORCH_CUDA_ARCH_LIST=${TORCH_CUDA_ARCH_LIST}"
+   
 # set the torch hub model cache directory to mounted /data volume
 ENV TORCH_HOME=/data/models/torch

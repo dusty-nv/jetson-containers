@@ -19,6 +19,7 @@ def pytorch(version, whl, url, requires, default=False, alias=None):
     pkg['build_args'] = {
         'PYTORCH_WHL': whl,
         'PYTORCH_URL': url,
+        'TORCH_CUDA_ARCH_ARGS': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES]) # retained as $TORCH_CUDA_ARCH_LIST
     }
 
     pkg['requires'] = requires
@@ -56,7 +57,7 @@ def pytorch_build(version, dockerfile='Dockerfile.builder', build_env_variables=
         'PYTORCH_BUILD_VERSION': version,
         'PYTORCH_BUILD_NUMBER': '1',
         'PYTORCH_BUILD_EXTRA_ENV': build_env_variables,
-        'TORCH_CUDA_ARCH_LIST': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES]),
+        'TORCH_CUDA_ARCH_ARGS': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES]), # retained as $TORCH_CUDA_ARCH_LIST
     }
     
     if depends:
