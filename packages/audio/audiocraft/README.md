@@ -13,7 +13,7 @@ docs.md
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:distributed`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`torchaudio`](/packages/pytorch/torchaudio) [`opencv`](/packages/opencv) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) [`xformers`](/packages/llm/xformers) [`protobuf:cpp`](/packages/protobuf/protobuf_cpp) [`jupyterlab`](/packages/jupyterlab) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/audiocraft:r35.2.1`](https://hub.docker.com/r/dustynv/audiocraft/tags) `(2023-11-05, 10.7GB)`<br>[`dustynv/audiocraft:r35.3.1`](https://hub.docker.com/r/dustynv/audiocraft/tags) `(2023-11-04, 10.7GB)`<br>[`dustynv/audiocraft:r35.4.1`](https://hub.docker.com/r/dustynv/audiocraft/tags) `(2023-11-05, 10.7GB)`<br>[`dustynv/audiocraft:r36.2.0`](https://hub.docker.com/r/dustynv/audiocraft/tags) `(2023-12-15, 8.6GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/audiocraft:r35.2.1`](https://hub.docker.com/r/dustynv/audiocraft/tags) `(2023-11-05, 10.7GB)`<br>[`dustynv/audiocraft:r35.3.1`](https://hub.docker.com/r/dustynv/audiocraft/tags) `(2023-11-04, 10.7GB)`<br>[`dustynv/audiocraft:r35.4.1`](https://hub.docker.com/r/dustynv/audiocraft/tags) `(2024-01-09, 7.0GB)`<br>[`dustynv/audiocraft:r36.2.0`](https://hub.docker.com/r/dustynv/audiocraft/tags) `(2024-01-09, 8.6GB)` |
 
 </details>
 
@@ -25,8 +25,8 @@ docs.md
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/audiocraft:r35.2.1`](https://hub.docker.com/r/dustynv/audiocraft/tags) | `2023-11-05` | `arm64` | `10.7GB` |
 | &nbsp;&nbsp;[`dustynv/audiocraft:r35.3.1`](https://hub.docker.com/r/dustynv/audiocraft/tags) | `2023-11-04` | `arm64` | `10.7GB` |
-| &nbsp;&nbsp;[`dustynv/audiocraft:r35.4.1`](https://hub.docker.com/r/dustynv/audiocraft/tags) | `2023-11-05` | `arm64` | `10.7GB` |
-| &nbsp;&nbsp;[`dustynv/audiocraft:r36.2.0`](https://hub.docker.com/r/dustynv/audiocraft/tags) | `2023-12-15` | `arm64` | `8.6GB` |
+| &nbsp;&nbsp;[`dustynv/audiocraft:r35.4.1`](https://hub.docker.com/r/dustynv/audiocraft/tags) | `2024-01-09` | `arm64` | `7.0GB` |
+| &nbsp;&nbsp;[`dustynv/audiocraft:r36.2.0`](https://hub.docker.com/r/dustynv/audiocraft/tags) | `2024-01-09` | `arm64` | `8.6GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>

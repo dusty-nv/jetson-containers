@@ -160,7 +160,7 @@ Any fine-tuned version of Llama or Llava that shares the same architecture (or t
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) [`mlc`](/packages/llm/mlc) [`opencv`](/packages/opencv) [`gstreamer`](/packages/gstreamer) [`jetson-utils`](/packages/jetson-utils) [`riva-client:python`](/packages/audio/riva-client) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/local_llm:r35.2.1`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2023-11-06, 9.2GB)`<br>[`dustynv/local_llm:r35.3.1`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2023-12-16, 9.6GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/local_llm:r35.2.1`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2023-12-22, 9.6GB)`<br>[`dustynv/local_llm:r35.3.1`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2023-12-22, 9.6GB)`<br>[`dustynv/local_llm:r35.4.1`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2023-12-22, 9.6GB)`<br>[`dustynv/local_llm:r36.2.0`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2023-12-22, 10.9GB)` |
 
 </details>
 
@@ -170,8 +170,10 @@ Any fine-tuned version of Llama or Llava that shares the same architecture (or t
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/local_llm:r35.2.1`](https://hub.docker.com/r/dustynv/local_llm/tags) | `2023-11-06` | `arm64` | `9.2GB` |
-| &nbsp;&nbsp;[`dustynv/local_llm:r35.3.1`](https://hub.docker.com/r/dustynv/local_llm/tags) | `2023-12-16` | `arm64` | `9.6GB` |
+| &nbsp;&nbsp;[`dustynv/local_llm:r35.2.1`](https://hub.docker.com/r/dustynv/local_llm/tags) | `2023-12-22` | `arm64` | `9.6GB` |
+| &nbsp;&nbsp;[`dustynv/local_llm:r35.3.1`](https://hub.docker.com/r/dustynv/local_llm/tags) | `2023-12-22` | `arm64` | `9.6GB` |
+| &nbsp;&nbsp;[`dustynv/local_llm:r35.4.1`](https://hub.docker.com/r/dustynv/local_llm/tags) | `2023-12-22` | `arm64` | `9.6GB` |
+| &nbsp;&nbsp;[`dustynv/local_llm:r36.2.0`](https://hub.docker.com/r/dustynv/local_llm/tags) | `2023-12-22` | `arm64` | `10.9GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
