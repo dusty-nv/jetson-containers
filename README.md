@@ -15,7 +15,7 @@ Modular container build system that provides various [**AI/ML packages**](packag
 | **CUDA** | [`cupy`](packages/cuda/cupy) [`cuda-python`](packages/cuda/cuda-python) [`pycuda`](packages/cuda/pycuda) [`numba`](packages/numba) [`cudf`](packages/rapids/cudf) [`cuml`](packages/rapids/cuml) |
 | **Robotics** | [`ros`](packages/ros) [`ros2`](packages/ros) [`opencv:cuda`](packages/opencv) [`realsense`](packages/realsense) [`zed`](packages/zed) |
 | **VectorDB** | [`NanoDB`](packages/vectordb/nanodb) [`FAISS`](packages/vectordb/faiss) [`RAFT`](packages/rapids/raft) |
-| **Audio** | [`whisper`](packages/audio/whisper) [`riva`](packages/audio/riva-client) [`audiocraft`](packages/audio/audiocraft) |
+| **Audio** | [`whisper`](packages/audio/whisper) [`whisperX`](packages/audio/whisperx) [`riva`](packages/audio/riva-client) [`audiocraft`](packages/audio/audiocraft) |
 
 See the [**`packages`**](packages) directory for the full list, including pre-built container images and CI/CD status for JetPack/L4T.
 
