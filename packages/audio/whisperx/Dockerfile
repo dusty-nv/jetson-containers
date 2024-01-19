@@ -19,19 +19,18 @@ RUN apt-get update && \
 RUN pip3 install scipy jiwer ipywebrtc
 RUN pip3 install --no-cache-dir --verbose scikit-learn
 
-RUN python3 -c 'import torch; print(f"PyTorch version: {torch.__version__}"); print(f"CUDA available:  {torch.cuda.is_available()}"); print(f"cuDNN version:   {torch.backends.cudnn.version()}"); print(f"torch.distributed:   {torch.distributed.is_available()}"); print(torch.__config__.show());'
-
-# Clone the repository:
 RUN git clone https://github.com/m-bain/whisperX.git && \
     cd whisperX && \
     sed 's|^torch.*||' -i requirements.txt && \
     sed 's|^faster-whisper.*||' -i requirements.txt && \
     sed 's|^transformers.*||' -i requirements.txt && \
     cat requirements.txt && \
-    pip3 install .
+    pip3 install --no-cache-dir --verbose -r requirements.txt && \
+    python3 setup.py --verbose bdist_wheel
 
-RUN python3 -c 'import torch; print(f"PyTorch version: {torch.__version__}"); print(f"CUDA available:  {torch.cuda.is_available()}"); print(f"cuDNN version:   {torch.backends.cudnn.version()}"); print(f"torch.distributed:   {torch.distributed.is_available()}"); print(torch.__config__.show());'
+RUN cp whisperX/dist/whisperx*.whl /opt && \
+    pip3 install --no-cache-dir --verbose /opt/whisperx*.whl
 
 ENV LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libgomp.so.1
+RUN pip3 show whisperx && python3 -c 'import whisperx'
 
-WORKDIR /opt/whisperX/

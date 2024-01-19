@@ -10,26 +10,19 @@ FROM ${BASE_IMAGE}
 
 WORKDIR /opt
 
-# RUN apt-get update && \
-#     apt-get install -y --no-install-recommends \
-# 		  ffmpeg \
-#     && rm -rf /var/lib/apt/lists/* \
-#     && apt-get clean
-
-# RUN pip3 install scipy jiwer ipywebrtc
-
-# Clone the repository:
 RUN git clone --recursive https://github.com/OpenNMT/CTranslate2.git && \
     cd CTranslate2 && \
     mkdir build && cd build && \
     cmake .. -DWITH_CUDA=ON -DWITH_CUDNN=ON -DWITH_MKL=OFF -DOPENMP_RUNTIME=COMP && \
     make -j4 && \
-    sudo make install && \
-    sudo ldconfig
+    make install && \
+    ldconfig
 
-RUN cd /opt/CTranslate2/python && \
-    pip3 install -r install_requirements.txt && \
-    python3 setup.py bdist_wheel && \
-    pip3 install dist/*.whl
+RUN cd CTranslate2/python && \
+    pip3 install --no-cache-dir --verbose -r install_requirements.txt && \
+    python3 setup.py bdist_wheel
+    
+RUN cp CTranslate2/python/dist/ctranslate2*.whl /opt && \
+    pip3 install --no-cache-dir --verbose /opt/ctranslate2*.whl
 
-WORKDIR /opt/ctranslate2
+RUN pip3 show ctranslate2 && python3 -c 'import ctranslate2'
