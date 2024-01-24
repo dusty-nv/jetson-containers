@@ -1,5 +1,6 @@
 #---
 # name: langchain
+# alias: langchain:main
 # group: llm
 # depends: [pytorch, llama_cpp]
 # requires: '>=34.1.0'

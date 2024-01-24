@@ -3,6 +3,8 @@ samples = package.copy()
 
 samples['name'] = 'langchain:samples'
 samples['dockerfile'] = 'Dockerfile.samples'
-samples['depends'] = ['langchain', 'jupyterlab']
+samples['depends'] = ['langchain:main', 'jupyterlab']
+
+del samples['alias']
 
 package = [package, samples]
