@@ -6,7 +6,7 @@ on:
     branches:
       - 'dev'
     paths:
-      - '.github/workflows/mlc-51fb0f4_jp60.yml'
+      - '.github/workflows/mlc-jp60.yml'
       - 'packages/llm/mlc/*'
       - '!packages/llm/mlc/README.md'
       - '!packages/llm/mlc/docs.md'
