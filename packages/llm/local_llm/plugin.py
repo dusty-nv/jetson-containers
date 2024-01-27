@@ -127,6 +127,7 @@ class Plugin(threading.Thread):
         TODO:  multiple input channels?
         """
         if self.threaded:
+            #self.start() # thread may not be started if plugin only called from a callback
             if self.drop_inputs:
                 self.clear_inputs()
             self.input_queue.put(input)

@@ -11,7 +11,7 @@ package['build_args'] = {
     'TORCH_CUDA_ARCH_LIST': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES])
 }
 
-def mlc(version, patch, tag=None, requires=None, default=False):
+def mlc(version, patch, llvm=17, tag=None, requires=None, default=False):
     pkg = copy.deepcopy(package)
     
     if default:
@@ -28,6 +28,7 @@ def mlc(version, patch, tag=None, requires=None, default=False):
     pkg['build_args'].update({
         'MLC_VERSION': version,
         'MLC_PATCH': patch,
+        'LLVM_VERSION': llvm,
     })
     
     pkg['notes'] = f"[{repo}](https://github.com/{repo}/tree/{version}) commit SHA [`{version}`](https://github.com/{repo}/tree/{version})"
@@ -40,7 +41,7 @@ log_debug('-- MLC latest commit:', latest_sha)
 #default_dev=(L4T_VERSION.major >= 36)
 
 package = [
-    mlc(latest_sha, 'patches/51fb0f4.diff', tag='dev'), #, default=default_dev),
-    mlc('9bf5723', 'patches/9bf5723.diff', requires='==35.*'), # 10/20/2023
-    mlc('51fb0f4', 'patches/51fb0f4.diff', default=True), # 12/15/2023
+    mlc(latest_sha, 'patches/51fb0f4.diff', llvm=18, tag='dev'), #, default=default_dev),
+    mlc('9bf5723', 'patches/9bf5723.diff', llvm=17, requires='==35.*'), # 10/20/2023
+    mlc('51fb0f4', 'patches/51fb0f4.diff', llvm=17, default=True), # 12/15/2023
 ]

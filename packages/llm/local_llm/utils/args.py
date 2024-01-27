@@ -5,6 +5,7 @@ import argparse
 import logging
 
 from .log import LogFormatter
+from .prompts import DefaultChatPrompts, DefaultCompletionPrompts
 
 
 class ArgParser(argparse.ArgumentParser):
@@ -61,12 +62,14 @@ class ArgParser(argparse.ArgumentParser):
             self.add_argument("--video-input-height", type=int, default=None, help="manually set the resolution of the video input")
             self.add_argument("--video-input-codec", type=str, default=None, choices=['h264', 'h265', 'vp8', 'vp9', 'mjpeg'], help="manually set the input video codec to use")
             self.add_argument("--video-input-framerate", type=int, default=None, help="set the desired framerate of input video")
+            self.add_argument("--video-input-save", type=str, default=None, help="path to video file to save the incoming video feed to")
             
         if 'video_output' in extras:
             self.add_argument("--video-output", type=str, default=None, help="display, stream URL, file/dir path")
             self.add_argument("--video-output-codec", type=str, default=None, choices=['h264', 'h265', 'vp8', 'vp9', 'mjpeg'], help="set the output video codec to use")
             self.add_argument("--video-output-bitrate", type=int, default=None, help="set the output bitrate to use")
-         
+            self.add_argument("--video-output-save", type=str, default=None, help="path to video file to save the outgoing video stream to")
+            
         # AUDIO
         if 'audio_input' not in extras and 'asr' in extras:
             extras += ['audio_input']

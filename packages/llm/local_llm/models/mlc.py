@@ -285,13 +285,9 @@ class MLCModel(LocalLM):
 
         # decode until EOS or max_new_tokens
         time_begin_decode = time.perf_counter()
-        
+
         while True:
-            #time_begin_sample = time.perf_counter()
             token = self._sample(output[0], do_sample, temperature, top_p, repetition_penalty)
-            #sample_time = (time.perf_counter() - time_begin_sample) * 1000
-            #print(f"SAMPLE_TIME:  {sample_time:.2f}  SAMPLE_RATE:  {1000/sample_time:.2f}")
-            
             stream.output_tokens.append(token)
             stream.event.set()
             
@@ -306,15 +302,11 @@ class MLCModel(LocalLM):
 
             stream.kv_cache.num_tokens += 1
             self.stats.output_tokens += 1
-            
-            #time_begin_decode2 = time.perf_counter()
+
             output = self._decode(
                 tvm.nd.array(np.array([[stream.output_tokens[-1]]], dtype=np.int32), self.device),
                 tvm.runtime.ShapeTuple([stream.kv_cache.num_tokens]), stream.kv_cache, self.params
             )
-            #decode_time = (time.perf_counter() - time_begin_decode2) * 1000
-            #print(f"DECODE_TIME:  {decode_time:.2f}  DECODE_RATE:  {1000/decode_time:.2f}")
-            #time.sleep(0.225)
 
         time_end_decode = time.perf_counter()
         

@@ -285,7 +285,7 @@ class ChatHistory():
                 cached = embed_key in entry and use_cache
                 
                 if logging.getLogger().isEnabledFor(logging.DEBUG) and not cached:
-                    logging.debug(f"processing chat entry {i}  role='{entry.role}' template='{role_template}' open_user_prompt={open_user_prompt} cached={'true' if cached else 'false'} {key}='{entry[key]}'".replace('\n', '\\n'))
+                    logging.debug(f"processing chat entry {i}  role='{entry.role}' template='{role_template}' open_user_prompt={open_user_prompt} cached={'true' if cached else 'false'} {key}='{entry[key] if isinstance(entry[key], str) else type(entry[key])}'".replace('\n', '\\n'))
                 
                 if use_cache:
                     if embed_key not in entry: # TODO  and entry.role != 'bot'  -- only compute bot embeddings when needed

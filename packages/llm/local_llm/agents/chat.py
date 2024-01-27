@@ -66,8 +66,6 @@ class ChatAgent(Agent):
         
         
 if __name__ == "__main__":
-    from local_llm.utils import ArgParser
-
     parser = ArgParser()
     parser.add_argument("-it", "--interactive", action="store_true", help="enable interactive user input from the terminal")
     args = parser.parse_args()

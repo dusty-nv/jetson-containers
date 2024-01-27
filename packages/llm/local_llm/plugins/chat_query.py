@@ -2,7 +2,7 @@
 import logging
 
 from local_llm import Plugin, LocalLM, ChatHistory
-from local_llm.utils import print_table
+from local_llm.utils import ImageTypes, print_table
 
 
 class ChatQuery(Plugin):
@@ -75,6 +75,10 @@ class ChatQuery(Plugin):
         self.temperature = kwargs.get('temperature', 0.7)
         self.top_p = kwargs.get('top_p', 0.95)
             
+        #warmup_query = '2+2 is '
+        #logging.debug(f"Warming up LLM with query '{warmup_query}'")
+        #logging.debug(f"Warmup response:  '{self.model.generate(warmup_query, streaming=False)}'")
+        
     def process(self, input, **kwargs):
         """
         Generate the reply to a prompt or the latest ChatHistory.
@@ -105,13 +109,13 @@ class ChatQuery(Plugin):
                 return
         
         # add prompt to chat history
-        if isinstance(input, str) or isinstance(input, dict):
+        if isinstance(input, str) or isinstance(input, dict) or isinstance(input, ImageTypes):
             self.chat_history.append(role='user', msg=input)
             chat_history = self.chat_history
         elif isinstance(input, ChatHistory):
             chat_history = input
         else:
-            raise TypeError(f"LLMQuery plugin expects inputs of type str, dict, or ChatHistory (was {type(input)})")
+            raise TypeError(f"LLMQuery plugin expects inputs of type str, dict, image, or ChatHistory (was {type(input)})")
 
         # images should be followed by text prompts
         if 'image' in chat_history[-1] and 'text' not in chat_history[-1]:

@@ -112,8 +112,6 @@ class WebChat(VoiceChat):
 
 
 if __name__ == "__main__":
-    from local_llm.utils import ArgParser
-
     parser = ArgParser(extras=ArgParser.Defaults+['asr', 'tts', 'audio_output', 'web'])
     args = parser.parse_args()
     

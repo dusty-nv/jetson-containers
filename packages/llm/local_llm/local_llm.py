@@ -76,9 +76,11 @@ class LocalLM():
         else:
             raise ValueError(f"invalid API: {api}")
 
+        # moved CLIP to after LLM is loaded because of MLC CUDA errors when running in subprocess
+        model.init_vision()  
         model.config.load_time = time.perf_counter() - load_begin
-        
         print_table(model.config)
+        
         return model
      
     def generate(self, inputs, streaming=True, **kwargs):
@@ -144,7 +146,8 @@ class LocalLM():
         self.model_path = model_path
         self.model_config = AutoConfig.from_pretrained(model_path)
         
-        self.init_vision(**kwargs)
+        # moved CLIP to after LLM is loaded because of MLC CUDA errors when running in subprocess
+        #self.init_vision(**kwargs)
         
     def init_vision(self, **kwargs):
         """

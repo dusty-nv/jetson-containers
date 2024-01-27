@@ -6,7 +6,7 @@ import torch
 import logging
 
 from transformers import CLIPImageProcessor, CLIPVisionModel
-from ..utils import AttributeDict, load_image, download_model, print_table
+from ..utils import AttributeDict, load_image, torch_image, image_size, download_model, print_table
 
 _clip_model_cache = dict(image={}, text={})
 
@@ -56,11 +56,11 @@ class CLIPImageEmbedding():
         """
         if isinstance(image, str):
             image = load_image(image)
-
+        else:
+            image = torch_image(image)
+            
         time_begin_pre = time.perf_counter()
-        
-        image_size = image.size
-        
+
         if not crop:
             image = image.resize(self.config.input_shape, PIL.Image.BILINEAR) # PIL.Image.BICUBIC
             
@@ -85,7 +85,7 @@ class CLIPImageEmbedding():
         self.stats.clip_rate = 1.0 / self.stats.clip_time
         self.stats.preprocess_time = time_begin_enc - time_begin_pre
         self.stats.encode_time = time_end_enc - time_begin_enc
-        self.stats.input_shape = f"{image_size[0]}x{image_size[1]} -> {self.model.config.image_size}x{self.model.config.image_size}"
+        self.stats.input_shape = f"{image_size(image)} -> {self.model.config.image_size}x{self.model.config.image_size}"
         self.stats.output_shape = self.config.output_shape
 
         if return_tensors == 'pt':

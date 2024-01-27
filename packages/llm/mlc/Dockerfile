@@ -18,12 +18,13 @@ ARG MLC_PATCH
 
 ARG CUDAARCHS
 ARG TORCH_CUDA_ARCH_LIST
+ARG LLVM_VERSION
 
 # install LLVM the upstream way instead of apt because of:
 # https://discourse.llvm.org/t/llvm-15-0-7-missing-libpolly-a/67942 
 RUN wget https://apt.llvm.org/llvm.sh && \
     chmod +x llvm.sh && \
-    ./llvm.sh all && \
+    ./llvm.sh ${LLVM_VERSION} all && \
     ln -s /usr/bin/llvm-config-* /usr/bin/llvm-config
 
 # could NOT find zstd (missing: zstd_LIBRARY zstd_INCLUDE_DIR)
