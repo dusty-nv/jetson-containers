@@ -162,7 +162,7 @@ The [`VideoQuery`](agents/video_query.py) agent processes an incoming camera or 
 ```
 > see the [Enabling HTTPS/SSL](#enabling-httpsssl) section above to generate self-signed SSL certificates for enabling client-side browser webcams.
 
-This uses [`jetson_utils`](/packages/jetson_utils) for video I/O, and for options related to camera protocols and streaming, see [Camera Streaming and Multimedia](https://github.com/dusty-nv/jetson-inference/blob/master/docs/aux-streaming.md).  In the example above, it captures a V4L2 USB webcam connected to the Jetson (under the device `/dev/video0`) and outputs a WebRTC stream that can be viewed at `https://HOSTNAME:8554`.  When HTTPS/SSL is enabled, it can also capture from the browser's webcam over WebRTC.
+This uses [`jetson_utils`](https://github.com/dusty-nv/jetson-utils) for video I/O, and for options related to camera protocols and streaming, see [Camera Streaming and Multimedia](https://github.com/dusty-nv/jetson-inference/blob/master/docs/aux-streaming.md).  In the example above, it captures a V4L2 USB webcam connected to the Jetson (under the device `/dev/video0`) and outputs a WebRTC stream that can be viewed at `https://HOSTNAME:8554`.  When HTTPS/SSL is enabled, it can also capture from the browser's webcam over WebRTC.
 
 The `--prompt` can be specified multiple times, and changed at runtime by pressing the number of the prompt followed by enter on the terminal's keyboard (for example, <kbd>1</kbd> + <kbd>Enter</kbd> for the first prompt).  These are the default prompts when no `--prompt` is specified:
 
