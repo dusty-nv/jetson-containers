@@ -143,8 +143,7 @@ You can then navigate your web browser to `https://HOSTNAME:8050` and unmute you
   
 ## Live LLava
 
-<a href="https://youtu.be/X-OXxPiUTuU"><img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/live_llava.gif"></a>
-> [Live Llava on Jetson AGX Orin](https://youtu.be/X-OXxPiUTuU)
+<a href="https://youtu.be/X-OXxPiUTuU" target="_blank"><img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/live_llava.gif"></a>
 
 The [`VideoQuery`](agents/video_query.py) agent processes an incoming camera or video feed on prompts in a closed loop with Llava.  
 
@@ -161,11 +160,18 @@ The [`VideoQuery`](agents/video_query.py) agent processes an incoming camera or 
 	  --video-output webrtc://@:8554/output \
 	  --prompt "How many fingers am I holding up?"
 ```
-> see the [Enabling HTTPS/SSL](#enabling-httpsssl) section above to generate self-signed certificates for using client-side browser webcams.
+> see the [Enabling HTTPS/SSL](#enabling-httpsssl) section above to generate self-signed SSL certificates for enabling client-side browser webcams.
 
-This uses [`jetson_utils`](/packages/jetson_utils) for the video I/O, so for options related to camera protocols and streaming, see [Camera Streaming and Multimedia](https://github.com/dusty-nv/jetson-inference/blob/master/docs/aux-streaming.md).  In the example above, it captures a V4L2 USB webcam connected to the Jetson (under the device `/dev/video0`) and outputs a WebRTC stream that can be viewed at `https://HOSTNAME:8554`.
+This uses [`jetson_utils`](/packages/jetson_utils) for video I/O, and for options related to camera protocols and streaming, see [Camera Streaming and Multimedia](https://github.com/dusty-nv/jetson-inference/blob/master/docs/aux-streaming.md).  In the example above, it captures a V4L2 USB webcam connected to the Jetson (under the device `/dev/video0`) and outputs a WebRTC stream that can be viewed at `https://HOSTNAME:8554`.  When HTTPS/SSL is enabled, it can also capture from the browser's webcam over WebRTC.
 
-The `--prompt` can be specified multiple times, and changed at runtime by pressing the number of the prompt followed by enter (<kbd>1</kbd> + <kbd>Enter</kbd> for the first prompt)
+The `--prompt` can be specified multiple times, and changed at runtime by pressing the number of the prompt followed by enter (for example, <kbd>1</kbd> + <kbd>Enter</kbd> for the first prompt).  These are the default prompts when no `--prompt` is specified:
+
+1. Describe the image concisely.
+2. How many fingers is the person holding up?
+3. What does the text in the image say?
+4. There is a question asked in the image.  What is the answer?
+
+Future versions of this demo will have the prompts dynamically editable over the web UI.
 
 ## Tested Models
 
