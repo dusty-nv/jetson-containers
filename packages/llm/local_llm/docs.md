@@ -3,12 +3,7 @@
 
 * Optimized LLM inference engine with support for AWQ and MLC quantization, multimodal agents, and live ASR/TTS.
 * Web UI server using Flask, WebSockets, WebAudio, HTML5, Bootstrap5.
-
-> Modes to Run:
->  - [Text Chat](#text-chat)
->  - [Multimodal Chat](#multimodal-chat)
->  - [Voice Chat](#voice-chat)
->  - [Live Llava](#live-llava)
+* Modes to run: [Text Chat](#text-chat), [Multimodal Chat](#multimodal-chat), [Voice Chat](#voice-chat), [Live Llava](#live-llava)
 
 ## Text Chat
 
@@ -167,7 +162,7 @@ The `--prompt` can be specified multiple times, and changed at runtime by pressi
 3. What does the text in the image say?
 4. There is a question asked in the image.  What is the answer?
 
-Future versions of this demo will have the prompts dynamically editable in the web UI.
+Future versions of this demo will have the prompts dynamically editable from the web UI.
 
 ## Tested Models
 
