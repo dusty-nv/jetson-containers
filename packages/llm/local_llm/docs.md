@@ -4,6 +4,12 @@
 * Optimized LLM inference engine with support for AWQ and MLC quantization, multimodal agents, and live ASR/TTS.
 * Web UI server using Flask, WebSockets, WebAudio, HTML5, Bootstrap5.
 
+> Modes to Run:
+>  * [Text Chat](#text-chat)
+>  * [Multimodal Chat](#multimodal-chat)
+>  * [Voice Chat](#voice-chat)
+>  * [Live Llava](#live-llava)
+
 ## Text Chat
 
 As an initial example, first test the console-based chat demo from [`__main__.py`](__main__.py)
@@ -119,9 +125,9 @@ You can choose to override this, and it won't re-appear again until you change c
   -e SSL_KEY=/data/key.pem \
   -e SSL_CERT=/data/cert.pem \
   $(./autotag local_llm) \
-  python3 -m local_llm.agents.web_chat \
-    --model meta-llama/Llama-2-7b-chat-hf \
-    --api=mlc --verbose
+    python3 -m local_llm.agents.web_chat \
+      --model meta-llama/Llama-2-7b-chat-hf \
+      --api=mlc --verbose
 ```
 
 You can then navigate your web browser to `https://HOSTNAME:8050` and unmute your microphone.
@@ -131,6 +137,32 @@ You can then navigate your web browser to `https://HOSTNAME:8050` and unmute you
 * During bot replies, the TTS model will pause output if you speak a few words in the mic to interrupt it.
 * If you loaded a multimodal Llava model instead, you can drag-and-drop images from the client. 
   
+## Live LLava
+
+<a href="https://youtu.be/X-OXxPiUTuU"><img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/live_llava.gif"></a>
+> [Live Llava on Jetson AGX Orin](https://youtu.be/X-OXxPiUTuU)
+
+The [`VideoQuery`](agents/video_query.py) agent processes an incoming camera or video feed on prompts in a closed loop with Llava.  
+
+```bash
+./run.sh \
+  -e HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN> \
+  -e SSL_KEY=/data/key.pem \
+  -e SSL_CERT=/data/cert.pem \
+  $(./autotag local_llm) \
+	python3 -m local_llm.agents.video_query --api=mlc --verbose \
+	  --model liuhaotian/llava-v1.5-7b \
+	  --max-new-tokens 32 \
+	  --video-input /dev/video0 \
+	  --video-output webrtc://@:8554/output \
+	  --prompt "How many fingers am I holding up?"
+```
+> see the [Enabling HTTPS/SSL](#enabling-httpsssl) section above to generate self-signed certificates for using client-side browser webcams.
+
+This uses [`jetson_utils`](/packages/jetson_utils) for the video I/O, so for options related to camera protocols and streaming, see [Camera Streaming and Multimedia](https://github.com/dusty-nv/jetson-inference/blob/master/docs/aux-streaming.md).  In the example above, it captures a V4L2 USB webcam connected to the Jetson (under the device `/dev/video0`) and outputs a WebRTC stream that can be viewed at `https://HOSTNAME:8554`.
+
+The `--prompt` can be specified multiple times, and changed at runtime by pressing the number of the prompt followed by enter (<kbd>1</kbd> + <kbd>Enter</kbd> for the first prompt)
+
 ## Tested Models
 
 Llama 2:
