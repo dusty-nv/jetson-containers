@@ -9,10 +9,10 @@
 * Web UI server using Flask, WebSockets, WebAudio, HTML5, Bootstrap5.
 
 > Modes to Run:
->  * [Text Chat](#text-chat)
->  * [Multimodal Chat](#multimodal-chat)
->  * [Voice Chat](#voice-chat)
->  * [Live Llava](#live-llava)
+>  - [Text Chat](#text-chat)
+>  - [Multimodal Chat](#multimodal-chat)
+>  - [Voice Chat](#voice-chat)
+>  - [Live Llava](#live-llava)
 
 ## Text Chat
 
