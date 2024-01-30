@@ -140,9 +140,7 @@ The [`VideoQuery`](agents/video_query.py) agent processes an incoming camera or 
 
 ```bash
 ./run.sh \
-  -e HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN> \
-  -e SSL_KEY=/data/key.pem \
-  -e SSL_CERT=/data/cert.pem \
+  -e SSL_KEY=/data/key.pem -e SSL_CERT=/data/cert.pem \
   $(./autotag local_llm) \
 	python3 -m local_llm.agents.video_query --api=mlc --verbose \
 	  --model liuhaotian/llava-v1.5-7b \
