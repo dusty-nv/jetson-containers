@@ -13,9 +13,15 @@ As an initial example, first test the console-based chat demo from [`__main__.py
 ./run.sh --env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN> $(./autotag local_llm) \
   python3 -m local_llm --api=mlc --model=meta-llama/Llama-2-7b-chat-hf
 ```
+
+> [!INFO]  
+> Tested models:
+>   * [`meta-llama/Llama-2-7b-chat-hf`](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf)
+>   * [`meta-llama/Llama-2-13b-chat-hf`](https://huggingface.co/meta-llama/Llama-2-13b-chat-hf)
+>   * [`meta-llama/Llama-2-70b-chat-hf`](https://huggingface.co/meta-llama/Llama-2-70b-chat-hf)
 > For Llama-2 models, see [here](/packages/llm/transformers/README.md#llama2) to request your access token from HuggingFace
 
-The model will automatically be quantized the first time it's loaded (in this case, with MLC W4A16 quantization)
+The model will automatically be quantized the first time it's loaded (in this case, with MLC W4A16 quantization).  Other fine-tuned versions of Llama that share the same architecture (or that is supported by the quantization API you have selected) should be compatible.  See [here](https://github.com/mlc-ai/mlc-llm/tree/main/mlc_llm/relax_model) for the MLC model architectures.
 
 ### Command-Line Options
 
@@ -52,16 +58,6 @@ During testing, you can specify prompts on the command-line that will run sequen
     --prompt 'can I get a recipie for french onion soup?'
 ```
 
-### Tested Models
-
-Llama 2:
-
-* [`meta-llama/Llama-2-7b-chat-hf`](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf)
-* [`meta-llama/Llama-2-13b-chat-hf`](https://huggingface.co/meta-llama/Llama-2-13b-chat-hf)
-* [`meta-llama/Llama-2-70b-chat-hf`](https://huggingface.co/meta-llama/Llama-2-70b-chat-hf)
-
-Any fine-tuned version of Llama that shares the same architecture (or that is supported by the quantization API you have selected) should be compatible, like Vicuna, CodeLlama, ect.  See [here](https://github.com/mlc-ai/mlc-llm/tree/main/mlc_llm/relax_model) for the MLC model architectures.
-
 ## Multimodal Chat
 
 If you load a Llava vision-language model, you can enter image files into the prompt, followed by questions about them:
@@ -79,25 +75,14 @@ If you load a Llava vision-language model, you can enter image files into the pr
     --prompt 'what does the sign say?'
 ```
 
-> [!WARNING]  
-> Patch the model's [`config.json`](https://huggingface.co/liuhaotian/llava-v1.5-13b/blob/main/config.json) that was downloaded under `data/models/huggingface/models--liuhaotian--llava-v1.5-13b/snapshots/*`
->   * modify `"model_type": "llava",`
->   * to `"model_type": "llama",` <br/>
->
-> Then re-run the command above - the quantization tools will then treat it like a Llama model (which it is)
+> [!INFO]  
+> Tested models:
+>   * [`liuhaotian/llava-v1.5-7b`](https://huggingface.co/liuhaotian/llava-v1.5-7b)
+>   * [`liuhaotian/llava-v1.5-13b`](https://huggingface.co/liuhaotian/llava-v1.5-13b)
 
 Llava was trained to converse about one image at a time, hence the chat history is reset between images (otherwise the model tends to combine the features of all the images in the chat so far).  Multiple questions can be asked about each image though.
 
 By omitting `--prompt`, you can chat interactively from the terminal.  If you enter an image filename, it will load that image, and then asking you for the prompt.  Entering `clear` or `reset` will reset the chat history. 
-
-### Tested Models
-
-Llava-1.5:  
-
-* [`liuhaotian/llava-v1.5-7b`](https://huggingface.co/liuhaotian/llava-v1.5-7b)
-* [`liuhaotian/llava-v1.5-13b`](https://huggingface.co/liuhaotian/llava-v1.5-13b)
-
-Llava-Llama-2 had been used prior, but was superceeded by Llava-1.5.
 
 ## Voice Chat
 
