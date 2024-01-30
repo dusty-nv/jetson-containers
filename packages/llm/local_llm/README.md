@@ -155,7 +155,9 @@ The [`VideoQuery`](agents/video_query.py) agent processes an incoming camera or 
 ```
 > see the [Enabling HTTPS/SSL](#enabling-httpsssl) section above to generate self-signed SSL certificates for enabling client-side browser webcams.
 
-This uses [`jetson_utils`](https://github.com/dusty-nv/jetson-utils) for video I/O, and for options related to camera protocols and streaming, see [Camera Streaming and Multimedia](https://github.com/dusty-nv/jetson-inference/blob/master/docs/aux-streaming.md).  In the example above, it captures a V4L2 USB webcam connected to the Jetson (under the device `/dev/video0`) and outputs a WebRTC stream that can be viewed at `https://HOSTNAME:8554`.  When HTTPS/SSL is enabled, it can also capture from the browser's webcam over WebRTC.
+This uses [`jetson_utils`](https://github.com/dusty-nv/jetson-utils) for video I/O, and for options related to protocols and file formats, see [Camera Streaming and Multimedia](https://github.com/dusty-nv/jetson-inference/blob/master/docs/aux-streaming.md).  In the example above, it captures a V4L2 USB webcam connected to the Jetson (under the device `/dev/video0`) and outputs a WebRTC stream that can be viewed at `https://HOSTNAME:8554`.  When HTTPS/SSL is enabled, it can also capture from the browser's webcam over WebRTC.
+
+### Changing the Prompt 
 
 The `--prompt` can be specified multiple times, and changed at runtime by pressing the number of the prompt followed by enter on the terminal's keyboard (for example, <kbd>1</kbd> + <kbd>Enter</kbd> for the first prompt).  These are the default prompts when no `--prompt` is specified:
 
@@ -165,6 +167,24 @@ The `--prompt` can be specified multiple times, and changed at runtime by pressi
 4. There is a question asked in the image.  What is the answer?
 
 Future versions of this demo will have the prompts dynamically editable from the web UI.
+
+### Processing a Video
+
+The example above was running on a live camera, but you can also read and write a [video file or stream](https://github.com/dusty-nv/jetson-inference/blob/master/docs/aux-streaming.md) by substituting the path or URL to `--video-input` and `--video-output` like this:
+
+```bash
+./run.sh \
+  -v /path/to/your/videos:/mount
+  $(./autotag local_llm) \
+	python3 -m local_llm.agents.video_query --api=mlc --verbose \
+	  --model liuhaotian/llava-v1.5-7b \
+	  --max-new-tokens 32 \
+	  --video-input /mount/my_video.mp4 \
+	  --video-output /mount/output.mp4 \
+	  --prompt "What does the weather look like?"
+```
+
+This example processes and pre-recorded video, but it also can input/output live network streams like RTP, RTSP, and WebRTC using Jetson's hardware-accelerated video codecs.
 
 ## Tested Models
 
