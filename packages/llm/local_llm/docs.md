@@ -17,7 +17,7 @@ As an initial example, first test the console-based chat demo from [`__main__.py
 
 The model will automatically be quantized the first time it's loaded (in this case, with MLC W4A16 quantization)
 
-#### Command-Line Options
+### Command-Line Options
 
 Some of the noteworthy command-line options can be found in [`utils/args.py`](utils/args.py)
 
@@ -39,7 +39,7 @@ Some of the noteworthy command-line options can be found in [`utils/args.py`](ut
 | `--top-p`              | Controls determinism/diversity of output with `--do-sample` (default: 0.95)               |
 | `--repetition-penalty` | Applies a penalty for repetitive outputs (default: 1.0, disabled)                         |
 
-#### Automated Prompts
+### Automated Prompts
 
 During testing, you can specify prompts on the command-line that will run sequentially:
 
@@ -87,7 +87,7 @@ By omitting `--prompt`, you can chat interactively from the terminal.  If you en
 
 To enable the web UI and ASR/TTS for live conversations, follow the steps below.
 
-#### Start Riva Server
+### Start Riva Server
 
 The ASR and TTS services use NVIDIA Riva with audio transformers and TensorRT.  The Riva server runs locally in it's own container.  Follow the steps from the [`riva-client:python`](/packages/audio/riva-client) package to run and test the Riva server on your Jetson.
 
@@ -97,7 +97,7 @@ The ASR and TTS services use NVIDIA Riva with audio transformers and TensorRT.  
 
 You can also see this helpful video and guide from JetsonHacks for setting up Riva:  [**Speech AI on Jetson Tutorial**](https://jetsonhacks.com/2023/08/07/speech-ai-on-nvidia-jetson-tutorial/)
 
-#### Enabling HTTPS/SSL
+### Enabling HTTPS/SSL
 
 Browsers require HTTPS to be used in order to access the client's microphone.  Hence, you'll need to create a self-signed SSL certificate and key:
 
@@ -112,7 +112,7 @@ You'll want to place these in your [`jetson-containers/data`](/data) directory, 
 
 You can choose to override this, and it won't re-appear again until you change certificates or your device's hostname/IP changes.
 
-#### Start Web Agent
+### Start Web Agent
 
 ```bash
 ./run.sh \
@@ -153,7 +153,7 @@ The [`VideoQuery`](agents/video_query.py) agent processes an incoming camera or 
 
 This uses [`jetson_utils`](https://github.com/dusty-nv/jetson-utils) for video I/O, and for options related to protocols and file formats, see [Camera Streaming and Multimedia](https://github.com/dusty-nv/jetson-inference/blob/master/docs/aux-streaming.md).  In the example above, it captures a V4L2 USB webcam connected to the Jetson (under the device `/dev/video0`) and outputs a WebRTC stream that can be viewed at `https://HOSTNAME:8554`.  When HTTPS/SSL is enabled, it can also capture from the browser's webcam over WebRTC.
 
-#### Changing the Prompt 
+### Changing the Prompt 
 
 The `--prompt` can be specified multiple times, and changed at runtime by pressing the number of the prompt followed by enter on the terminal's keyboard (for example, <kbd>1</kbd> + <kbd>Enter</kbd> for the first prompt).  These are the default prompts when no `--prompt` is specified:
 
@@ -164,7 +164,7 @@ The `--prompt` can be specified multiple times, and changed at runtime by pressi
 
 Future versions of this demo will have the prompts dynamically editable from the web UI.
 
-#### Processing a Video
+### Processing a Video
 
 The example above was running on a live camera, but you can also read and write a [video file or stream](https://github.com/dusty-nv/jetson-inference/blob/master/docs/aux-streaming.md) by substituting the path or URL to the `--video-input` and `--video-output` command-line arguments like this:
 
