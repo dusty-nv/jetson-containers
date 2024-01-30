@@ -18,7 +18,7 @@ As an initial example, first test the console-based chat demo from [`__main__.py
   python3 -m local_llm --api=mlc --model=meta-llama/Llama-2-7b-chat-hf
 ```
 
-> [!INFO]  
+> [!NOTE]  
 > Tested models:
 >   * [`meta-llama/Llama-2-7b-chat-hf`](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf)
 >   * [`meta-llama/Llama-2-13b-chat-hf`](https://huggingface.co/meta-llama/Llama-2-13b-chat-hf)
@@ -79,7 +79,7 @@ If you load a Llava vision-language model, you can enter image files into the pr
     --prompt 'what does the sign say?'
 ```
 
-> [!INFO]  
+> [!NOTE]  
 > Tested models:
 >   * [`liuhaotian/llava-v1.5-7b`](https://huggingface.co/liuhaotian/llava-v1.5-7b)
 >   * [`liuhaotian/llava-v1.5-13b`](https://huggingface.co/liuhaotian/llava-v1.5-13b)
