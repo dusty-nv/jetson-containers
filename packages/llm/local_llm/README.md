@@ -157,7 +157,7 @@ The [`VideoQuery`](agents/video_query.py) agent processes an incoming camera or 
 
 This uses [`jetson_utils`](https://github.com/dusty-nv/jetson-utils) for video I/O, and for options related to protocols and file formats, see [Camera Streaming and Multimedia](https://github.com/dusty-nv/jetson-inference/blob/master/docs/aux-streaming.md).  In the example above, it captures a V4L2 USB webcam connected to the Jetson (under the device `/dev/video0`) and outputs a WebRTC stream that can be viewed at `https://HOSTNAME:8554`.  When HTTPS/SSL is enabled, it can also capture from the browser's webcam over WebRTC.
 
-### Changing the Prompt 
+#### Changing the Prompt 
 
 The `--prompt` can be specified multiple times, and changed at runtime by pressing the number of the prompt followed by enter on the terminal's keyboard (for example, <kbd>1</kbd> + <kbd>Enter</kbd> for the first prompt).  These are the default prompts when no `--prompt` is specified:
 
@@ -168,9 +168,9 @@ The `--prompt` can be specified multiple times, and changed at runtime by pressi
 
 Future versions of this demo will have the prompts dynamically editable from the web UI.
 
-### Processing a Video
+#### Processing a Video
 
-The example above was running on a live camera, but you can also read and write a [video file or stream](https://github.com/dusty-nv/jetson-inference/blob/master/docs/aux-streaming.md) by substituting the path or URL to `--video-input` and `--video-output` like this:
+The example above was running on a live camera, but you can also read and write a [video file or stream](https://github.com/dusty-nv/jetson-inference/blob/master/docs/aux-streaming.md) by substituting the path or URL to the `--video-input` and `--video-output` command-line arguments like this:
 
 ```bash
 ./run.sh \
@@ -184,7 +184,7 @@ The example above was running on a live camera, but you can also read and write 
 	  --prompt "What does the weather look like?"
 ```
 
-This example processes and pre-recorded video, but it also can input/output live network streams like RTP, RTSP, and WebRTC using Jetson's hardware-accelerated video codecs.
+This example processes and pre-recorded video (in MP4, MKV, AVI, FLV formats with H.264/H.265 encoding), but it also can input/output live network streams like [RTP](https://github.com/dusty-nv/jetson-inference/blob/master/docs/aux-streaming.md#rtp), [RTSP](https://github.com/dusty-nv/jetson-inference/blob/master/docs/aux-streaming.md#rtsp), and [WebRTC](https://github.com/dusty-nv/jetson-inference/blob/master/docs/aux-streaming.md#webrtc) using Jetson's hardware-accelerated video codecs.
 
 ## Tested Models
 
