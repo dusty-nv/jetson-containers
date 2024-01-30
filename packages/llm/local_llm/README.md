@@ -168,7 +168,7 @@ The `--prompt` can be specified multiple times, and changed at runtime by pressi
 
 Future versions of this demo will have the prompts dynamically editable from the web UI.
 
-### Processing a Video
+### Processing a Video File or Stream
 
 The example above was running on a live camera, but you can also read and write a [video file or stream](https://github.com/dusty-nv/jetson-inference/blob/master/docs/aux-streaming.md) by substituting the path or URL to the `--video-input` and `--video-output` command-line arguments like this:
 
