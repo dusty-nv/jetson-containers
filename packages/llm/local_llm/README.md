@@ -24,9 +24,9 @@ As an initial example, first test the console-based chat demo from [`__main__.py
 >   * [`meta-llama/Llama-2-13b-chat-hf`](https://huggingface.co/meta-llama/Llama-2-13b-chat-hf)
 >   * [`meta-llama/Llama-2-70b-chat-hf`](https://huggingface.co/meta-llama/Llama-2-70b-chat-hf)
 >
-> For Llama-2 models, see [here](/packages/llm/transformers/README.md#llama2) to request your access token from HuggingFace
+> For Llama-2 models, see [here](/packages/llm/transformers/README.md#llama2) to request your access token from HuggingFace.
 
-The model will automatically be quantized the first time it's loaded (in this case, with MLC W4A16 quantization).  Other fine-tuned versions of Llama that share the same architecture (or that is supported by the quantization API you have selected) should be compatible.  See [here](https://github.com/mlc-ai/mlc-llm/tree/main/mlc_llm/relax_model) for the MLC model architectures.
+The model will automatically be quantized the first time it's loaded (in this case, with MLC W4A16 quantization).  Other fine-tuned versions of Llama that share the same architecture (or that is supported by the quantization API you have selected) should be compatible - see [here](https://github.com/mlc-ai/mlc-llm/tree/main/mlc_llm/relax_model) for the MLC model architectures.
 
 ### Command-Line Options
 
