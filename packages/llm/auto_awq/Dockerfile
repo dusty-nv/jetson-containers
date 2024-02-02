@@ -3,7 +3,7 @@
 # group: llm
 # config: config.py
 # depends: [transformers]
-# requires: '>=34.1.0'
+# requires: '>=36'
 # test: test.py
 #---
 ARG BASE_IMAGE
