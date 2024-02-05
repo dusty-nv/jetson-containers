@@ -1,7 +1,7 @@
 import os
 import copy
 
-from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES, github_latest_commit, log_debug
+from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES, find_container, github_latest_commit, log_debug
 
 repo = 'mlc-ai/mlc-llm'
 
@@ -12,28 +12,42 @@ package['build_args'] = {
 }
 
 def mlc(version, patch, llvm=17, tag=None, requires=None, default=False):
-    pkg = copy.deepcopy(package)
+    build = package.copy()
+    deploy = package.copy()
     
     if default:
-        pkg['alias'] = 'mlc'
+        build['alias'] = 'mlc:builder'
+        deploy['alias'] = 'mlc'
         
     if requires:
-        pkg['requires'] = requires
+        build['requires'] = requires
+        deploy['requires'] = requires   
         
     if not tag:
         tag = version
-        
-    pkg['name'] = f'mlc:{tag}'
 
-    pkg['build_args'].update({
+    build['name'] = f'mlc:{tag}-builder'
+    deploy['name'] = f'mlc:{tag}'
+    
+    build['dockerfile'] = 'Dockerfile.builder'
+    
+    build['build_args'] = {
+        'MLC_REPO': repo,
         'MLC_VERSION': version,
         'MLC_PATCH': patch,
         'LLVM_VERSION': llvm,
-    })
+        'CUDAARCHS': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
+        'TORCH_CUDA_ARCH_LIST': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES])
+    }
     
-    pkg['notes'] = f"[{repo}](https://github.com/{repo}/tree/{version}) commit SHA [`{version}`](https://github.com/{repo}/tree/{version})"
+    deploy['build_args'] = {
+        'BUILD_IMAGE': find_container(build['name'])
+    }
     
-    return pkg
+    build['notes'] = f"[{repo}](https://github.com/{repo}/tree/{version}) commit SHA [`{version}`](https://github.com/{repo}/tree/{version})"
+    deploy['notes'] = build['notes']
+    
+    return build, deploy
 
 latest_sha = github_latest_commit(repo, branch='main')
 log_debug('-- MLC latest commit:', latest_sha)
