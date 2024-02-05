@@ -1,7 +1,7 @@
 import os
 import copy
 
-from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES, find_container, github_latest_commit, log_debug
+from jetson_containers import L4T_VERSION, PYTHON_VERSION, CUDA_ARCHITECTURES, find_container, github_latest_commit, log_debug
 
 repo = 'mlc-ai/mlc-llm'
 
@@ -41,7 +41,8 @@ def mlc(version, patch, llvm=17, tag=None, requires=None, default=False):
     }
     
     deploy['build_args'] = {
-        'BUILD_IMAGE': find_container(build['name'])
+        'BUILD_IMAGE': find_container(build['name']),
+        'PYTHON_VERSION': str(PYTHON_VERSION),
     }
     
     build['notes'] = f"[{repo}](https://github.com/{repo}/tree/{version}) commit SHA [`{version}`](https://github.com/{repo}/tree/{version})"

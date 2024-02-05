@@ -33,7 +33,8 @@ RUN pip3 install --no-cache-dir --verbose /opt/tvm*.whl
 RUN pip3 install --no-cache-dir --verbose /opt/mlc*.whl
 
 #ENV TVM_HOME=/opt/mlc-llm/3rdparty/tvm
-ENV LD_LIBRARY_PATH="/usr/local/lib/python3.10/dist-packages/tvm:${LD_LIBRARY_PATH}"
+ARG PYTHON_VERSION
+ENV LD_LIBRARY_PATH="/usr/local/lib/python${PYTHON_VERSION}/dist-packages/tvm:${LD_LIBRARY_PATH}"
 
 RUN pip3 show mlc_llm && \
     python3 -m mlc_llm.build --help && \
