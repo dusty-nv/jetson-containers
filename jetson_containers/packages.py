@@ -409,6 +409,9 @@ def validate_package(package):
     """
     packages = []
     
+    if isinstance(package, tuple):
+        package = list(package)
+        
     if isinstance(package, dict):
         for key, value in package.items():  # check for sub-packages
             if validate_dict(value):
@@ -417,10 +420,15 @@ def validate_package(package):
         if len(packages) == 0:  # there were no sub-packages
             packages.append(package)
     elif isinstance(package, list):
-        packages = package  # TODO what if these contain subpackages?
-       
+        for x in package:
+            if validate_dict(x):
+                packages.append(x)
+            else:
+                packages.extend(validate_package(x))
+      
     for pkg in packages.copy():  # check to see if any packages were disabled
-        pkg['requires'] = SpecifierSet(pkg['requires'])
+        if not isinstance(pkg['requires'], SpecifierSet):
+            pkg['requires'] = SpecifierSet(pkg['requires'])
         
         if _PACKAGE_OPTS['check_l4t_version'] and L4T_VERSION not in pkg['requires']:
             log_debug(f"-- Package {pkg['name']} isn't compatible with L4T r{L4T_VERSION} (requires L4T {pkg['requires']})")

@@ -2,6 +2,7 @@
 import os
 import sys
 import copy
+import time
 import json
 import pprint
 import fnmatch
@@ -322,6 +323,10 @@ def test_container(name, package, simulate=False):
     return True
     
     
+_LOCAL_CACHE=[]
+_REGISTRY_CACHE=[]
+
+
 def get_local_containers():
     """
     Get the locally-available container images from the 'docker images' command
@@ -333,6 +338,11 @@ def get_local_containers():
          
     These containers are sorted by most recent created to the oldest.
     """
+    global _LOCAL_CACHE
+    
+    if len(_LOCAL_CACHE) > 0:
+        return _LOCAL_CACHE
+        
     cmd = ["docker", "images", "--format", "'{{json . }}'"]
     
     if needs_sudo():
@@ -342,13 +352,12 @@ def get_local_containers():
                             #capture_output=True, universal_newlines=True, 
                             shell=False, check=True)
 
-    return [json.loads(txt.lstrip("'").rstrip("'"))
-            for txt in status.stdout.decode('ascii').splitlines()]
+    _LOCAL_CACHE = [json.loads(txt.lstrip("'").rstrip("'"))
+        for txt in status.stdout.decode('ascii').splitlines()]
+            
+    return _LOCAL_CACHE
         
 
-_REGISTRY_CACHE=[]  # use this as to not exceed DockerHub API rate limits
-
- 
 def get_registry_containers(user='dustynv', **kwargs):
     """
     Fetch a DockerHub user's public container images/tags.
@@ -361,12 +370,32 @@ def get_registry_containers(user='dustynv', **kwargs):
     
     if len(_REGISTRY_CACHE) > 0:
         return _REGISTRY_CACHE
-        
+    
+    cache_path = kwargs.get('registry_cache',
+        os.environ.get('DOCKERHUB_CACHE', 
+            os.path.join(_PACKAGE_ROOT, 'data/containers.json')
+    ))
+    
+    cache_enabled = (cache_path != "0" and cache_path.lower() != "off")
+
+    if cache_enabled and os.path.isfile(cache_path):
+        if time.time() - os.path.getmtime(cache_path) < 3600:
+            with open(cache_path) as cache_file:
+                try:
+                    _REGISTRY_CACHE = json.load(cache_file)
+                    return _REGISTRY_CACHE
+                except Exception:
+                    pass
+                
     hub = dockerhub_api.DockerHub(return_lists=True)
     _REGISTRY_CACHE = hub.repositories(user)
     
     for repo in _REGISTRY_CACHE:
         repo['tags'] = hub.tags(user, repo['name'])
+
+    if cache_enabled:
+        with open(cache_path, 'w') as cache_file:
+            json.dump(_REGISTRY_CACHE, cache_file, indent=2)
 
     return _REGISTRY_CACHE
     
@@ -452,7 +481,7 @@ def find_registry_containers(package, check_l4t_version=True, return_dicts=False
     return found_containers
     
             
-def find_container(package, prefer_sources=['local', 'registry', 'build'], disable_sources=[], **kwargs):
+def find_container(package, prefer_sources=['local', 'registry', 'build'], disable_sources=[], quiet=True, **kwargs):
     """
     Finds a local or remote container image to run for the given package (returns a string)
     TODO search for other packages that depend on this package if an image isn't available.
@@ -463,8 +492,7 @@ def find_container(package, prefer_sources=['local', 'registry', 'build'], disab
      
     namespace, repo, tag = split_container_name(package)
     log_debug(f"-- Finding compatible container image for namespace={namespace} repo={repo} tag={tag}")
-    quiet = kwargs.get('quiet', False)
-    
+
     for source in prefer_sources:
         if source in disable_sources:
             continue
