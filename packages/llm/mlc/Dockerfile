@@ -10,32 +10,43 @@
 ARG BASE_IMAGE
 ARG BUILD_IMAGE
 
-FROM ${BUILD_IMAGE} as build
-FROM ${BASE_IMAGE} as deploy
-
-ARG BUILD_IMAGE
-RUN env
-RUN echo "1. BASE_IMAGE is ${BASE_IMAGE}"
-RUN echo "2. BUILD_IMAGE is ${BUILD_IMAGE}"
-
-
-RUN env
-RUN echo "3. BUILD_IMAGE is ${BUILD_IMAGE}"
-
-RUN echo "4. BUILD_IMAGE is ${BUILD_IMAGE}"
+FROM ${BUILD_IMAGE} as builder
+FROM ${BASE_IMAGE} as runtime
 
 WORKDIR /opt
 
-COPY --from=build /opt/tvm*.whl /opt/
-COPY --from=build /opt/mlc*.whl /opt/
+# install the wheels from the development image
+COPY --from=builder /opt/tvm*.whl /opt/
+COPY --from=builder /opt/mlc*.whl /opt/
 
 RUN pip3 install --no-cache-dir --verbose /opt/tvm*.whl
 RUN pip3 install --no-cache-dir --verbose /opt/mlc*.whl
 
-#ENV TVM_HOME=/opt/mlc-llm/3rdparty/tvm
-ARG PYTHON_VERSION
-ENV LD_LIBRARY_PATH="/usr/local/lib/python${PYTHON_VERSION}/dist-packages/tvm:${LD_LIBRARY_PATH}"
+# we need the source because the MLC model builder relies on it
+ARG MLC_REPO
+ARG MLC_VERSION
+ARG MLC_PATCH
 
+RUN git clone https://github.com/${MLC_REPO} && \
+    cd mlc-llm && \
+    git checkout ${MLC_VERSION} && \
+    git submodule update --init --recursive
+
+COPY ${MLC_PATCH} mlc-llm/patch.diff
+    
+RUN cd mlc-llm && \
+    if [ -s patch.diff ]; then git apply patch.diff; fi && \
+    git status && \
+    git diff --submodule=diff
+    
+# workarounds to resolve some various dependencies
+ARG PYTHON_VERSION
+RUN ln -s /opt/mlc-llm/3rdparty/tvm/3rdparty /usr/local/lib/python${PYTHON_VERSION}/dist-packages/tvm/3rdparty
+#COPY --from=build /opt/mlc-llm/3rdparty/tvm/3rdparty/cutlass /usr/local/lib/python${PYTHON_VERSION}/dist-packages/tvm/3rdparty/cutlass
+ENV LD_LIBRARY_PATH="/usr/local/lib/python${PYTHON_VERSION}/dist-packages/tvm:${LD_LIBRARY_PATH}"
+ENV TVM_HOME=/opt/mlc-llm/3rdparty/tvm
+
+# make sure it loads
 RUN pip3 show mlc_llm && \
     python3 -m mlc_llm.build --help && \
     python3 -c "from mlc_chat import ChatModule; print(ChatModule)"

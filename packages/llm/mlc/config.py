@@ -12,26 +12,26 @@ package['build_args'] = {
 }
 
 def mlc(version, patch, llvm=17, tag=None, requires=None, default=False):
-    build = package.copy()
-    deploy = package.copy()
+    builder = package.copy()
+    runtime = package.copy()
     
     if default:
-        build['alias'] = 'mlc:builder'
-        deploy['alias'] = 'mlc'
+        builder['alias'] = 'mlc:builder'
+        runtime['alias'] = 'mlc'
         
     if requires:
-        build['requires'] = requires
-        deploy['requires'] = requires   
+        builder['requires'] = requires
+        runtime['requires'] = requires   
         
     if not tag:
         tag = version
 
-    build['name'] = f'mlc:{tag}-builder'
-    deploy['name'] = f'mlc:{tag}'
+    builder['name'] = f'mlc:{tag}-builder'
+    runtime['name'] = f'mlc:{tag}'
     
-    build['dockerfile'] = 'Dockerfile.builder'
+    builder['dockerfile'] = 'Dockerfile.builder'
     
-    build['build_args'] = {
+    builder['build_args'] = {
         'MLC_REPO': repo,
         'MLC_VERSION': version,
         'MLC_PATCH': patch,
@@ -40,15 +40,18 @@ def mlc(version, patch, llvm=17, tag=None, requires=None, default=False):
         'TORCH_CUDA_ARCH_LIST': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES])
     }
     
-    deploy['build_args'] = {
-        'BUILD_IMAGE': find_container(build['name']),
+    runtime['build_args'] = {
+        'BUILD_IMAGE': find_container(builder['name']),
         'PYTHON_VERSION': str(PYTHON_VERSION),
+        'MLC_REPO': repo,
+        'MLC_VERSION': version,
+        'MLC_PATCH': patch,
     }
     
-    build['notes'] = f"[{repo}](https://github.com/{repo}/tree/{version}) commit SHA [`{version}`](https://github.com/{repo}/tree/{version})"
-    deploy['notes'] = build['notes']
+    builder['notes'] = f"[{repo}](https://github.com/{repo}/tree/{version}) commit SHA [`{version}`](https://github.com/{repo}/tree/{version})"
+    runtime['notes'] = builder['notes']
     
-    return build, deploy
+    return builder, runtime
 
 latest_sha = github_latest_commit(repo, branch='main')
 log_debug('-- MLC latest commit:', latest_sha)
