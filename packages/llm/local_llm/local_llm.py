@@ -146,14 +146,7 @@ class LocalLM():
         self.model_path = model_path
         self.model_config = AutoConfig.from_pretrained(model_path)
         
-        # moved CLIP to after LLM is loaded because of MLC CUDA errors when running in subprocess
-        #self.init_vision(**kwargs)
-        
-    def init_vision(self, **kwargs):
-        """
-        Init vision embedding/projection models for VLMs like llava, MiniGPT-4, ect.
-        @internal this function is automatically called by LocalLM initializer.
-        """
+        # patch the config to change llava to llama so the quant tools handle it
         self.has_vision = 'llava' in self.model_config.model_type.lower()
         
         if self.has_vision:
@@ -167,11 +160,19 @@ class LocalLM():
                 json.dump(cfg, cfg_file, indent=2)
         else:
             self.has_vision = 'llava' in self.model_config._name_or_path.lower()
-        
+
         for arch in self.model_config.architectures:
             if 'llava' in arch.lower():
                 self.has_vision = True
 
+        # moved CLIP to after LLM is loaded because of MLC CUDA errors when running in subprocess
+        #self.init_vision(**kwargs)
+        
+    def init_vision(self, **kwargs):
+        """
+        Init vision embedding/projection models for VLMs like llava, MiniGPT-4, ect.
+        @internal this function is automatically called by LocalLM initializer.
+        """
         if not self.has_vision:
             return
            
