@@ -37,5 +37,8 @@ COPY quantize.py awq/
 
 WORKDIR /
 
+# No module named 'lm_eval.base'
+RUN pip3 install --no-cache-dir --verbose 'lm-eval<=0.3.0'
+
 # make sure it loads
 RUN pip3 show awq && python3 -c 'import awq' && python3 -m awq.entry --help
