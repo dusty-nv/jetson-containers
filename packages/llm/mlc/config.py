@@ -62,7 +62,5 @@ package = [
     mlc(latest_sha, 'patches/3feed05.diff', tag='dev'),
     mlc('9bf5723', 'patches/9bf5723.diff', requires='==35.*'), # 10/20/2023
     mlc('51fb0f4', 'patches/51fb0f4.diff', default=True),      # 12/15/2023
-    mlc('d840de5', 'patches/d840de5.diff'),                    # 02/06/2024
-    mlc('006e138', 'patches/d840de5.diff'),                    # 02/07/2024
-    mlc('3feed05', 'patches/3feed05.diff'),                    # 02/08/2024
+    mlc('3feed05', 'patches/3feed05.diff', requires='>=36'),   # 02/08/2024
 ]
