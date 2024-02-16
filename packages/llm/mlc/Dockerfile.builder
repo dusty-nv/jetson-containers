@@ -96,6 +96,9 @@ RUN cd mlc-llm/python && \
 
 RUN pip3 install --no-cache-dir --verbose mlc*.whl
 
+# https://github.com/casper-hansen/AutoAWQ/issues/334
+RUN pip3 install --no-cache-dir --verbose 'transformers<4.36'
+
 RUN pip3 show mlc_llm && \
     python3 -m mlc_llm.build --help && \
     python3 -c "from mlc_chat import ChatModule; print(ChatModule)"
