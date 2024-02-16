@@ -1,7 +1,7 @@
 #---
 # name: local_llm
 # group: llm
-# depends: [mlc, riva-client:python, jetson-inference, torch2trt]
+# depends: [mlc:3feed05-builder, riva-client:python, jetson-inference, torch2trt]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---
