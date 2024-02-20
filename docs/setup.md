@@ -141,7 +141,7 @@ Then close/restart your terminal (or logout) and you should be able to run docke
 
 ## Setting the Power Mode
 
-Depending on the power supply source you have available for your Jetson (i.e. wall power or battery), you may wish to put your Jetson in maximum power mode (MAX-N) to attain the highest performance available from your Jetson device.  You can do this with the [`nvpmodel`](https://docs.nvidia.com/jetson/archives/r36.2/DeveloperGuide/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html#power-mode-controls) command-line tool or from the Ubuntu desktop via the nvpmodel [GUI widget](https://docs.nvidia.com/jetson/archives/r36.2/DeveloperGuide/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html#nvpmodel-gui) (in addition to [`jtop`](https://github.com/rbonghi/jetson_stats) from jetson-stats)
+Depending on the power supply source you have available for your Jetson (i.e. wall power or battery), you may wish to put your Jetson in maximum power mode (MAX-N) to attain the highest performance available from your Jetson device.  You can do this with the [`nvpmodel`](https://docs.nvidia.com/jetson/archives/r36.2/DeveloperGuide/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html#power-mode-controls) command-line tool, or from the Ubuntu desktop via the [nvpmodel GUI widget](https://docs.nvidia.com/jetson/archives/r36.2/DeveloperGuide/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html#nvpmodel-gui) (or by using [`jtop`](https://github.com/rbonghi/jetson_stats) from jetson-stats)
 
 ```bash
 # check the current power mode
