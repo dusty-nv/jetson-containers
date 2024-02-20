@@ -51,6 +51,14 @@ class MLCModel(LocalLM):
             
         self.config.quant = quant.split('-')[-1]  # recover the quant method        
         self.quant_path = quant
+        
+        # the weights location used to be under 'params', but then moved to the model dir
+        self.weight_path = os.path.join(self.quant_path, 'params')
+        
+        if not os.path.isdir(self.weight_path):
+            self.weight_path = self.quant_path
+        
+        # create the tokenizer (TODO use a faster implementation than HF, or MLC's C++ version?)
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_path, use_fast=False)
         
         # initialize tvm device
@@ -59,20 +67,27 @@ class MLCModel(LocalLM):
         logging.info(f"device={self.device}, name={self.device.device_name}, compute={self.device.compute_version}, max_clocks={self.device.max_clock_rate}, multiprocessors={self.device.multi_processor_count}, max_thread_dims={self.device.max_thread_dimensions}, api_version={self.device.api_version}, driver_version={self.device.driver_version}")
 
         # load model config
-        with open(os.path.join(quant, 'params/mlc-chat-config.json'), 'r') as file:
+        with open(os.path.join(self.weight_path, 'mlc-chat-config.json'), 'r') as file:
             config = json.load(file)
         
         #self.config.name = config['local_id']  # model_name
-        self.config.type = config['model_category']  # 'conv_template'
-        self.config.max_length = config['max_window_size']
+        self.config.type = config.get('model_category', config.get('model_type'))  # 'conv_template'
+        self.config.max_length = config.get('max_window_size', config.get('context_window_size'))
         self.config.vocab_size = config['vocab_size']
         
         # load model's dynamic library
-        self.module_path = os.path.join(quant, os.path.basename(quant) + '-cuda.so')
-        
-        if not os.path.isfile(self.module_path):
-            raise IOError(f"MLC couldn't find {self.module_path}")
+        def find_module():
+            module_name = os.path.basename(quant) + '-cuda.so'
+            module_paths = [
+                os.path.join(self.quant_path, module_name),
+                os.path.join(self.weight_path, module_name),
+            ]
+            for module_path in module_paths:
+                if os.path.isfile(module_path):
+                    return module_path
+            raise IOError(f"MLC couldn't find {module_path}")
             
+        self.module_path = find_module()
         logging.info(f"loading {self.config.name} from {self.module_path}")
         load_time_begin = time.perf_counter()
         self.module = tvm.runtime.load_module(self.module_path)
@@ -119,7 +134,7 @@ class MLCModel(LocalLM):
         self._clear_cache = tvm.get_global_func('vm.builtin.ndarray_cache.clear')
 
         # load model weights
-        self._load_cache(os.path.join(self.quant_path, 'params'), self.device.device_type, self.device.device_id)
+        self._load_cache(self.weight_path, self.device.device_type, self.device.device_id)
         self.params = self._load_params('param', -1)
         self._clear_cache() # after we get params, it is safe to simply clear the cached version
         self.config.load_time = time.perf_counter() - load_time_begin

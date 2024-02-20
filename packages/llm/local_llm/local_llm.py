@@ -121,7 +121,7 @@ class LocalLM():
     def embed_image(self, image, crop=True, return_tensors='pt', **kwargs):
         assert(self.has_vision)
         
-        embedding = self.vision(image, crop=crop, hidden_state=self.model_config.mm_vision_select_layer)
+        embedding = self.vision(image, crop=crop, hidden_state=self.config.mm_vision_select_layer)
         embedding = self.mm_projector(embedding[:, 1:])
 
         logging.debug(f"image_embedding  shape={embedding.shape}  dtype={embedding.dtype}  device={embedding.device}")
@@ -137,36 +137,37 @@ class LocalLM():
         """
         @internal this is down here because it should only be used by inherited classes.
         """
-        self.config = AttributeDict()
-        self.stats = AttributeDict()
+        self.model_path = model_path
+        self.config_path = os.path.join(self.model_path, 'config.json')
         
+        if os.path.isfile(self.config_path):
+            with open(self.config_path) as config_file:
+                self.config = AttributeDict(json.load(config_file))
+        else:
+            logging.warning(f"could not find model config file at {self.config_path}")
+            self.config = AttributeDict()
+
         self.config.name = kwargs.get('name')
         self.config.api = kwargs.get('api')
         
-        self.model_path = model_path
-        self.model_config = AutoConfig.from_pretrained(model_path)
-        
         # patch the config to change llava to llama so the quant tools handle it
-        self.has_vision = 'llava' in self.model_config.model_type.lower()
+        self.has_vision = 'llava' in self.config.model_type.lower()
         
         if self.has_vision:
-            # the model type needs renamed to 'llama' so the quant tools recognize it
-            cfg_path = os.path.join(self.model_path, 'config.json')
-            shutil.copyfile(cfg_path, cfg_path + '.backup')
-            with open(cfg_path, 'r') as cfg_file:
-                cfg = json.load(cfg_file)
-            cfg['model_type'] = 'llama'
-            with open(cfg_path, 'w') as cfg_file:
-                json.dump(cfg, cfg_file, indent=2)
+            shutil.copyfile(self.config_path, self.config_path + '.backup')
+            patched_config = self.config.copy()
+            patched_config['model_type'] = 'llama'
+            with open(self.config_path, 'w') as config_file:
+                json.dump(patched_config, config_file, indent=2)
         else:
-            self.has_vision = 'llava' in self.model_config._name_or_path.lower()
+            self.has_vision = 'llava' in self.config.get('_name_or_path', '').lower()
 
-        for arch in self.model_config.architectures:
+        for arch in self.config.get('architectures', []):
             if 'llava' in arch.lower():
                 self.has_vision = True
 
-        # moved CLIP to after LLM is loaded because of MLC CUDA errors when running in subprocess
-        #self.init_vision(**kwargs)
+        self.stats = AttributeDict()
+        
         
     def init_vision(self, **kwargs):
         """
@@ -179,7 +180,7 @@ class LocalLM():
         # load the image embedding model
         self.vision = CLIPImageEmbedding.from_pretrained(
             kwargs.get('vision_model') if kwargs.get('vision_model')
-            else self.model_config.mm_vision_tower,
+            else self.config.mm_vision_tower,
             dtype=torch.float16,
         ) 
         
