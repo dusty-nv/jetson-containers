@@ -138,3 +138,24 @@ sudo usermod -aG docker $USER
 ```
 
 Then close/restart your terminal (or logout) and you should be able to run docker commands (like `docker info`) without needing sudo.
+
+## Setting the Power Mode
+
+Depending on the power supply source you have available for your Jetson (i.e. wall power or battery), you may wish to put your Jetson in maximum power mode (MAX-N) to attain the highest performance on your Jetson device.  You can do this with the [`nvpmodel`](https://docs.nvidia.com/jetson/archives/r36.2/DeveloperGuide/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html#power-mode-controls) command-line tool or from the Ubuntu desktop:
+
+```bash
+# check the current power mode
+$ sudo nvpmodel -q
+NV Power Mode: MODE_30W
+2
+
+# set it to mode 0 (typically the highest)
+$ sudo nvpmodel -m 0
+
+# reboot if necessary, and confirm the changes
+$ sudo nvpmodel -q
+NV Power Mode: MAXN
+0
+```
+
+See [here](https://docs.nvidia.com/jetson/archives/r36.2/DeveloperGuide/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html#supported-modes-and-power-efficiency) for a table of the power modes available for the different Jetson devices, and for documentation on the [`nvpmodel`](https://docs.nvidia.com/jetson/archives/r36.2/DeveloperGuide/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html#power-mode-controls) tool.
