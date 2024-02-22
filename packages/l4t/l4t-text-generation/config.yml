@@ -1,4 +1,4 @@
 name: l4t-text-generation
 group: 'llm'
 requires: '>=34.1.0'
-depends: [pytorch, bitsandbytes, transformers, auto_gptq, gptq-for-llama, exllama, exllama:v2, llama_cpp:gguf, awq]
+depends: [pytorch, bitsandbytes, transformers, auto_gptq, gptq-for-llama, exllama, exllama:v2, llama_cpp:gguf]
