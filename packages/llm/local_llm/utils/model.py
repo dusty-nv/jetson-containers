@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+from glob import glob
 
 from huggingface_hub import snapshot_download, hf_hub_download, login
 
@@ -39,12 +40,14 @@ def download_model(model, type='model', cache_dir='$TRANSFORMERS_CACHE', use_saf
         repo_id = model[:idx]
         filename = model[idx+1:]
         
-        repo_path = hf_hub_download(repo_id=repo_id, filename=filename, repo_type=type, cache_dir=cache_dir, resume_download=True)
+        return hf_hub_download(repo_id=repo_id, filename=filename, repo_type=type, cache_dir=cache_dir, resume_download=True)
     else:
-        repo_path = snapshot_download(repo_id=model, repo_type=type, cache_dir=cache_dir, resume_download=True, 
-                                      ignore_patterns=None if use_safetensors else ['*.safetensors'])
-        
-    return repo_path
+        repo_path = snapshot_download(repo_id=model, repo_type=type, cache_dir=cache_dir, resume_download=True, ignore_patterns=['*.safetensors'])
+                                      
+        if glob(os.path.join(repo_path, '*.pt')) or glob(os.path.join(repo_path, '*.bin')):
+            return repo_path
+            
+        return snapshot_download(repo_id=model, repo_type=type, cache_dir=cache_dir, resume_download=True)
     
     
 def default_model_api(model_path, quant_path=None):

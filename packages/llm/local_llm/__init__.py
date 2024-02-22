@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 from .local_llm import LocalLM
-from .stream import StreamingResponse
 
-from .history import ChatHistory, ChatEntry
-from .templates import ChatTemplate, ChatTemplates
+from .chat.stream import StreamingResponse
+from .chat.history import ChatHistory, ChatEntry
+from .chat.templates import ChatTemplate, ChatTemplates
 
 from .agent import Agent, Pipeline
 from .plugin import Plugin

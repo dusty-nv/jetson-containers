@@ -4,6 +4,7 @@ import tvm
 import time
 import math
 import json
+import glob
 import queue
 import threading
 import subprocess
@@ -47,7 +48,7 @@ class MLCModel(LocalLM):
             quant = 'q4f16_ft'
             
         if not os.path.isdir(quant):
-            quant = MLCModel.quantize(model_path, quant, **kwargs)
+            quant = MLCModel.quantize(model_path, self.config, quant, **kwargs)
             
         self.config.quant = quant.split('-')[-1]  # recover the quant method        
         self.quant_path = quant
@@ -59,8 +60,11 @@ class MLCModel(LocalLM):
             self.weight_path = self.quant_path
         
         # create the tokenizer (TODO use a faster implementation than HF, or MLC's C++ version?)
-        self.tokenizer = AutoTokenizer.from_pretrained(self.model_path, use_fast=False)
-        
+        try:
+            self.tokenizer = AutoTokenizer.from_pretrained(self.model_path, use_fast=True, trust_remote_code=True)
+        except:
+            self.tokenizer = AutoTokenizer.from_pretrained(self.model_path, use_fast=False, trust_remote_code=True)
+            
         # initialize tvm device
         self.device = tvm.runtime.cuda(0)  # tvm.runtime.Device(tvm.runtime.Device.kDLCUDAManaged, 0)
         assert(self.device.exist) # this is needed to initialize CUDA?
@@ -154,7 +158,7 @@ class MLCModel(LocalLM):
 
     
     @staticmethod
-    def quantize(model, method='q4f16_ft', output='/data/models/mlc/dist', **kwargs):
+    def quantize(model, config, method='q4f16_ft', output='/data/models/mlc/dist', **kwargs):
         """
         Quantize a model with the given method.  It will be saved under the output directory,
         in a subdirectory based on the model name and quant method (Llama-2-7b-chat-hf-q4f16_ft)
@@ -163,17 +167,29 @@ class MLCModel(LocalLM):
         model_path = os.path.join(output, 'models', model_name)
         quant_path = os.path.join(output, model_name + '-' + method)
         
-        if os.path.isdir(quant_path):
-            return quant_path
-            
+        config_paths = [
+            os.path.join(quant_path, 'mlc-chat-config.json'),
+            os.path.join(quant_path, 'params/mlc-chat-config.json')
+        ]
+        
+        for config_path in config_paths:
+            if os.path.isfile(config_path):
+                return quant_path
+
         if not os.path.isdir(model_path):
             os.symlink(model, model_path, target_is_directory=True)
-            
+           
         cmd = f"python3 -m mlc_llm.build --model {model_path} --quantization {method} "
         cmd += f"--target cuda --use-cuda-graph --use-flash-attn-mqa --sep-embed "
-        cmd += f"--max-seq-len {AutoConfig.from_pretrained(model).max_position_embeddings} "
-        cmd += f"--artifact-path {output}"
+        cmd += f"--max-seq-len {config.max_position_embeddings} "
+        cmd += f"--artifact-path {output} "
         
+        print('globbing ', os.path.join(model_path, '*.safetensors'))
+        print('glob ', glob.glob(os.path.join(model_path, '*.safetensors')))
+        
+        if len(glob.glob(os.path.join(model_path, '*.safetensors'))) > 0:
+            cmd += "--use-safetensors "
+            
         logging.info(f"running MLC quantization:\n\n{cmd}\n\n")
         subprocess.run(cmd, executable='/bin/bash', shell=True, check=True)  
         

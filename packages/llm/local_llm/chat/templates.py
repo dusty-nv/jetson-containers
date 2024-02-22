@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from .utils import AttributeDict
+from ..utils import AttributeDict
 
 
 ChatTemplates = {
@@ -26,6 +26,14 @@ ChatTemplates = {
         'user': 'USER: ${MESSAGE}\n',
         'bot': 'ASSISTANT: ${MESSAGE}</s>\n', # TODO: does output already end in </s> ?
     },
+    
+    # https://github.com/MicrosoftDocs/azure-docs/blob/main/articles/ai-services/openai/includes/chat-markup-language.md#working-with-chat-markup-language-chatml
+    'chat-ml': {
+        'system_prompt': "You are a helpful AI assistant.",
+        'system': "<|im_start|>system\n${MESSAGE}<|im_end|>\n",
+        'user': "<|im_start|>user\n${MESSAGE}<|im_end|>\n",
+        'bot': "<|im_start|>user\n${MESSAGE}<|im_end|>\n",
+    }
 }
 
 ChatTemplates['llava-v0'] = ChatTemplates['vicuna-v0']
@@ -63,8 +71,10 @@ def ChatTemplate(model):
             chat_template = 'llava-v1'
         else:
             chat_template = 'llava-v0'
+    elif 'zephyr' in model:
+        chat_template = 'chat-ml'
     else:
         return None
         
-    return AttributeDict(ChatTemplates[chat_template])  # return a copy
+    return AttributeDict(ChatTemplates[chat_template])  # return a copy in case user edits it
     

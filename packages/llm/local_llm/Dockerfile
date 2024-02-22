@@ -19,6 +19,7 @@ RUN pip3 install --no-cache-dir --verbose -r requirements.txt
 COPY *.py ./
 
 COPY agents agents
+COPY chat chat
 COPY models models
 COPY plugins plugins
 COPY utils utils

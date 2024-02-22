@@ -5,7 +5,7 @@ import logging
 import numpy as np
 
 from .templates import ChatTemplate, ChatTemplates
-from .utils import AttributeDict, ImageExtensions, ImageTypes, replace_text, print_table
+from ..utils import AttributeDict, ImageExtensions, ImageTypes, replace_text, print_table
 
 
 def ChatEntry(role='user', msg=None, **kwargs):
