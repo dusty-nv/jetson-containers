@@ -19,6 +19,7 @@ RUN apt-get update && \
 		    libsoup2.4-dev \
 		    libjson-glib-dev \
 		    libgstrtspserver-1.0-dev \
+		    avahi-utils \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
     
