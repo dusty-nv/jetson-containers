@@ -61,6 +61,10 @@ log_debug('-- MLC latest commit:', latest_sha)
 package = [
     mlc(latest_sha, 'patches/3feed05.diff', tag='dev'),
     mlc('9bf5723', 'patches/9bf5723.diff', requires='==35.*'), # 10/20/2023
-    mlc('51fb0f4', 'patches/51fb0f4.diff', default=True),      # 12/15/2023
-    mlc('3feed05', 'patches/3feed05.diff', requires='>=36'),   # 02/08/2024
+    mlc('51fb0f4', 'patches/51fb0f4.diff', default=(L4T_VERSION.major == 35)), # 12/15/2023
+    mlc('3feed05', 'patches/3feed05.diff', default=(L4T_VERSION.major >= 36), requires='>=36'), # 02/08/2024
+    #mlc('6cf63bb', 'patches/3feed05.diff', requires='>=36'),  # 02/16/2024
+    #mlc('c30348a', 'patches/3feed05.diff', requires='>=36'),  # 02/19/2024
+    #mlc('a2d9eea', 'patches/3feed05.diff', requires='>=36'),  # 02/19/2024
+    mlc('5584cac', 'patches/3feed05.diff', requires='>=36'),   # 02/21/2024
 ]

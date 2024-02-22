@@ -272,3 +272,18 @@ index 15b7c9a..6114fab 100644
  if (NOT DEFINED TVM_HOME)
    set(TVM_HOME 3rdparty/tvm)
  endif (NOT DEFINED TVM_HOME)
+diff --git a/mlc_llm/core.py b/mlc_llm/core.py
+index 5ced676..9734bc1 100644
+--- a/mlc_llm/core.py
++++ b/mlc_llm/core.py
+@@ -819,8 +819,8 @@ def build_model_from_args(args: argparse.Namespace):
+     cache_path = os.path.join(args.artifact_path, "mod_cache_before_build.pkl")
+     args.raw_params_path = os.path.join(args.artifact_path, "raw_params")
+     use_cache = args.use_cache and os.path.isfile(cache_path)
+-    if args.sep_embed and args.model_category != "llama":
+-        raise ValueError(f"separate embedding not supported on {args.model}")
++    #if args.sep_embed and args.model_category != "llama":
++    #    raise ValueError(f"separate embedding not supported on {args.model}")
+ 
+     if args.model_category == "minigpt":
+         # Special case for minigpt, which neither provides nor requires a configuration.
