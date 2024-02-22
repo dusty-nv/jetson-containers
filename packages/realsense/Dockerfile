@@ -17,7 +17,8 @@ RUN apt-get update && \
             libglfw3-dev \
 		  libgl1-mesa-dev \
 		  libglu1-mesa-dev \
-		  qtcreator && \
+		  qtcreator \
+		  udev && \
     if [ $(lsb_release -cs) = "bionic" ]; then \
         apt-get install -y --no-install-recommends python-dev; \
     else \
@@ -27,7 +28,10 @@ RUN apt-get update && \
     && apt-get clean
 
 # https://github.com/IntelRealSense/librealsense/issues/11931
-ARG LIBREALSENSE_VERSION=development
+# ARG LIBREALSENSE_VERSION=development
+
+# https://github.com/dusty-nv/jetson-containers/issues/398
+ARG LIBREALSENSE_VERSION=master
 
 RUN git clone --branch ${LIBREALSENSE_VERSION} --depth=1 https://github.com/IntelRealSense/librealsense && \
     cd librealsense && \
