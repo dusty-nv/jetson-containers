@@ -15,7 +15,12 @@ RUN pip3 install git+https://github.com/openai/CLIP.git
 RUN pip3 install matplotlib
 
 # 2. Install the NanoOWL Python package
-RUN git clone https://github.com/NVIDIA-AI-IOT/nanoowl && \
+ARG NANOOWL_REPO=NVIDIA-AI-IOT/nanoowl
+ARG NANOOWL_BRANCH=main
+
+ADD https://api.github.com/repos/${NANOOWL_REPO}/git/refs/heads/${NANOOWL_BRANCH} /tmp/nanoowl_version.json
+
+RUN git clone --branch=${NANOOWL_BRANCH} https://github.com/${NANOOWL_REPO} nanoowl && \
     cd nanoowl && \
     git checkout main && \
     python3 setup.py develop --user
