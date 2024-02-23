@@ -30,7 +30,7 @@ You can refer to them in the steps below by either their device number or name. 
 
 ```bash
 ./run.sh --workdir /opt/riva/python-clients $(./autotag riva-client:python) \
-   python3 scripts/asr/transcribe_mic.py --input-device=24 --sample-rate-hz=44100
+   python3 scripts/asr/transcribe_mic.py --input-device=24 --sample-rate-hz=48000
 ```
 
 You can find more ASR examples to run at https://github.com/nvidia-riva/python-clients#asr
@@ -39,7 +39,7 @@ You can find more ASR examples to run at https://github.com/nvidia-riva/python-c
 
 ```bash
 ./run.sh --workdir /opt/riva/python-clients $(./autotag riva-client:python) \
-   python3 scripts/tts/talk.py --stream --output-device=24 --sample-rate-hz=44100 \
+   python3 scripts/tts/talk.py --stream --output-device=24 --sample-rate-hz=48000 \
      --text "Hello, how are you today? My name is Riva." 
 ```
 
@@ -58,15 +58,6 @@ To feed the live ASR transcript into the TTS and have it speak your words back t
 <details open>
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
-
-| **`riva-client:cpp`** | |
-| :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`riva-client-cpp_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/riva-client-cpp_jp51.yml?label=riva-client-cpp:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/riva-client-cpp_jp51.yml) |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`bazel`](/packages/bazel) |
-| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.cpp`](Dockerfile.cpp) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/riva-client:cpp-r35.2.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-08-29, 6.3GB)`<br>[`dustynv/riva-client:cpp-r35.3.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-12-06, 6.3GB)`<br>[`dustynv/riva-client:cpp-r35.4.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-10-07, 6.3GB)` |
-| &nbsp;&nbsp;&nbsp;Notes | https://github.com/nvidia-riva/cpp-clients |
 
 | **`riva-client:python`** | |
 | :-- | :-- |
