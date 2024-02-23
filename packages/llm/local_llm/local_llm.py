@@ -154,11 +154,7 @@ class LocalLM():
         self.has_vision = 'llava' in self.config.model_type.lower()
         
         if self.has_vision:
-            shutil.copyfile(self.config_path, self.config_path + '.backup')
-            patched_config = self.config.copy()
-            patched_config['model_type'] = 'llama'
-            with open(self.config_path, 'w') as config_file:
-                json.dump(patched_config, config_file, indent=2)
+            self.patch_config(model_type='llama')
         else:
             self.has_vision = 'llava' in self.config.get('_name_or_path', '').lower()
 
@@ -167,8 +163,28 @@ class LocalLM():
                 self.has_vision = True
 
         self.stats = AttributeDict()
+     
+    def patch_config(self, **kwargs):
+        """
+        Update the original HF model's config.json with different settings from the provided kwargs.
+        The original will be saved under the same directory to 'config.json.backup'
+        """
+        backup_path = self.config_path + '.backup'
         
+        if not os.path.isfile(backup_path):
+            logging.info(f"backing up original model config to {backup_path}")
+            shutil.copyfile(self.config_path, backup_path)
+            
+        logging.info(f"patching model config with {kwargs}")
         
+        patched_config = self.config.copy()
+        patched_config.update(kwargs)
+        
+        print('PATCHED CONFIG', patched_config)
+        
+        with open(self.config_path, 'w') as config_file:
+            json.dump(patched_config, config_file, indent=2)
+                
     def init_vision(self, **kwargs):
         """
         Init vision embedding/projection models for VLMs like llava, MiniGPT-4, ect.

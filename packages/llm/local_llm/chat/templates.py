@@ -33,6 +33,14 @@ ChatTemplates = {
         'system': "<|im_start|>system\n${MESSAGE}<|im_end|>\n",
         'user': "<|im_start|>user\n${MESSAGE}<|im_end|>\n",
         'bot': "<|im_start|>user\n${MESSAGE}<|im_end|>\n",
+    },
+    
+    # https://ollama.com/library/stablelm-zephyr:latest
+    'stablelm-zephyr': {
+        'system_prompt': "You are a helpful AI assistant.",
+        'system': "<|system|>\n${MESSAGE}<|endoftext|>\n",
+        'user': "<|user|>\n${MESSAGE}<|endoftext|>\n",
+        'bot': "<|assistant|>\n${MESSAGE}<|endoftext|>\n",
     }
 }
 
@@ -71,8 +79,8 @@ def ChatTemplate(model):
             chat_template = 'llava-v1'
         else:
             chat_template = 'llava-v0'
-    elif 'zephyr' in model:
-        chat_template = 'chat-ml'
+    elif 'stablelm' in model and 'zephyr' in model:
+        chat_template = 'stablelm-zephyr'
     else:
         return None
         

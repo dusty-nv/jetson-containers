@@ -43,6 +43,10 @@ class MLCModel(LocalLM):
         """
         super(MLCModel, self).__init__(model_path, **kwargs)
 
+        # 20240223: the 'stablelm_epoch' model type was re-named in transformers to 'stablelm'
+        if self.config.model_type == 'stablelm':
+            self.patch_config(model_type='stablelm_epoch')
+            
         # perform quantization if needed
         if not quant:
             quant = 'q4f16_ft'
@@ -183,10 +187,7 @@ class MLCModel(LocalLM):
         cmd += f"--target cuda --use-cuda-graph --use-flash-attn-mqa --sep-embed "
         cmd += f"--max-seq-len {config.max_position_embeddings} "
         cmd += f"--artifact-path {output} "
-        
-        print('globbing ', os.path.join(model_path, '*.safetensors'))
-        print('glob ', glob.glob(os.path.join(model_path, '*.safetensors')))
-        
+
         if len(glob.glob(os.path.join(model_path, '*.safetensors'))) > 0:
             cmd += "--use-safetensors "
             
