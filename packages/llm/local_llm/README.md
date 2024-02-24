@@ -201,7 +201,7 @@ This example processes and pre-recorded video (in MP4, MKV, AVI, FLV formats wit
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) [`mlc`](/packages/llm/mlc) [`riva-client:python`](/packages/audio/riva-client) [`opencv`](/packages/opencv) [`gstreamer`](/packages/gstreamer) [`jetson-inference`](/packages/jetson-inference) [`torch2trt`](/packages/pytorch/torch2trt) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/local_llm:r35.2.1`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2023-12-22, 9.6GB)`<br>[`dustynv/local_llm:r35.3.1`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2024-01-27, 10.1GB)`<br>[`dustynv/local_llm:r35.4.1`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2023-12-22, 9.6GB)`<br>[`dustynv/local_llm:r36.2.0`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2024-01-27, 11.3GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/local_llm:r35.2.1`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2024-02-22, 8.8GB)`<br>[`dustynv/local_llm:r35.3.1`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2024-02-22, 8.8GB)`<br>[`dustynv/local_llm:r35.4.1`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2024-02-22, 8.8GB)`<br>[`dustynv/local_llm:r36.2.0`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2024-02-23, 10.3GB)` |
 
 </details>
 
@@ -211,10 +211,10 @@ This example processes and pre-recorded video (in MP4, MKV, AVI, FLV formats wit
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/local_llm:r35.2.1`](https://hub.docker.com/r/dustynv/local_llm/tags) | `2023-12-22` | `arm64` | `9.6GB` |
-| &nbsp;&nbsp;[`dustynv/local_llm:r35.3.1`](https://hub.docker.com/r/dustynv/local_llm/tags) | `2024-01-27` | `arm64` | `10.1GB` |
-| &nbsp;&nbsp;[`dustynv/local_llm:r35.4.1`](https://hub.docker.com/r/dustynv/local_llm/tags) | `2023-12-22` | `arm64` | `9.6GB` |
-| &nbsp;&nbsp;[`dustynv/local_llm:r36.2.0`](https://hub.docker.com/r/dustynv/local_llm/tags) | `2024-01-27` | `arm64` | `11.3GB` |
+| &nbsp;&nbsp;[`dustynv/local_llm:r35.2.1`](https://hub.docker.com/r/dustynv/local_llm/tags) | `2024-02-22` | `arm64` | `8.8GB` |
+| &nbsp;&nbsp;[`dustynv/local_llm:r35.3.1`](https://hub.docker.com/r/dustynv/local_llm/tags) | `2024-02-22` | `arm64` | `8.8GB` |
+| &nbsp;&nbsp;[`dustynv/local_llm:r35.4.1`](https://hub.docker.com/r/dustynv/local_llm/tags) | `2024-02-22` | `arm64` | `8.8GB` |
+| &nbsp;&nbsp;[`dustynv/local_llm:r36.2.0`](https://hub.docker.com/r/dustynv/local_llm/tags) | `2024-02-23` | `arm64` | `10.3GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -231,10 +231,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag local_llm)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/local_llm:r35.3.1
+./run.sh dustynv/local_llm:r36.2.0
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/local_llm:r35.3.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/local_llm:r36.2.0
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

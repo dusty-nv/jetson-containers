@@ -94,6 +94,7 @@ To use the Python API and [`benchmark.py`](/packages/llm/llama_cpp/benchmark.py)
 | &nbsp;&nbsp;[`dustynv/llama_cpp:r35.2.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-08-29` | `arm64` | `5.2GB` |
 | &nbsp;&nbsp;[`dustynv/llama_cpp:r35.3.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-08-15` | `arm64` | `5.2GB` |
 | &nbsp;&nbsp;[`dustynv/llama_cpp:r35.4.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-08-13` | `arm64` | `5.1GB` |
+| &nbsp;&nbsp;[`dustynv/llama_cpp:r36.2.0`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2024-02-22` | `arm64` | `5.3GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -110,10 +111,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag llama_cpp)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/llama_cpp:gguf-r36.2.0
+./run.sh dustynv/llama_cpp:r36.2.0
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/llama_cpp:gguf-r36.2.0
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/llama_cpp:r36.2.0
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
