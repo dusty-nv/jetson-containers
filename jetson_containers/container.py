@@ -387,7 +387,7 @@ def get_registry_containers(user='dustynv', **kwargs):
                 except Exception:
                     pass
                 
-    hub = dockerhub_api.DockerHub(return_lists=True)
+    hub = dockerhub_api.DockerHub(return_lists=True, token=os.environ.get('DOCKERHUB_TOKEN'))
     _REGISTRY_CACHE = hub.repositories(user)
     
     for repo in _REGISTRY_CACHE:
