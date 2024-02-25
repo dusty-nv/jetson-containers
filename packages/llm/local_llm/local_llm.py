@@ -154,7 +154,10 @@ class LocalLM():
         self.has_vision = 'llava' in self.config.model_type.lower()
         
         if self.has_vision:
-            self.patch_config(model_type='llama')
+            if 'stablelm' in self.config.model_type.lower():
+                self.patch_config(model_type='stablelm_epoch')
+            else:
+                self.patch_config(model_type='llama')
         else:
             self.has_vision = 'llava' in self.config.get('_name_or_path', '').lower()
 
@@ -179,9 +182,7 @@ class LocalLM():
         
         patched_config = self.config.copy()
         patched_config.update(kwargs)
-        
-        print('PATCHED CONFIG', patched_config)
-        
+
         with open(self.config_path, 'w') as config_file:
             json.dump(patched_config, config_file, indent=2)
                 
@@ -201,7 +202,5 @@ class LocalLM():
         ) 
         
         # create image embedding projection model
-        self.mm_projector = MMProjector.from_pretrained(
-            self.model_path, self.vision.dtype
-        )
+        self.mm_projector = MMProjector.from_pretrained(self, self.vision.dtype)
         

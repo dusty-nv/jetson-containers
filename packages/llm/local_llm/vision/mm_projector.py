@@ -30,16 +30,26 @@ class MMProjector():
                          
           dtype (dtype) -- use either torch.float32 or torch.float16 weights
         """
-        if not os.path.isdir(model):
-            model = download_model(model)
-
-        return MMProjector(model)
+        from local_llm import LocalLM
         
-    def __init__(self, model_path, dtype=torch.float16):
+        if isinstance(model, LocalLM):
+            return MMProjector(model.model_path, model.config, dtype)
+        elif isinstance(model, str):
+            if not os.path.isdir(model):
+                model = download_model(model)
+            return MMProjector(model)
+        else:
+            raise ValueError(f"model should either be a string containing the path or name of the HuggingFace model, or a LocalLM model instance")
+            
+    def __init__(self, model_path, config=None, dtype=torch.float16):
         """
         Create the mm_projector network and load its weights
         """
-        self.config = AutoConfig.from_pretrained(model_path)
+        if config:
+            self.config = config
+        else:
+            self.config = AutoConfig.from_pretrained(model_path)
+            
         self.model_path = model_path
         self.type = 'linear'
         self.dtype = dtype
