@@ -28,19 +28,30 @@ ChatTemplates = {
     },
     
     # https://github.com/MicrosoftDocs/azure-docs/blob/main/articles/ai-services/openai/includes/chat-markup-language.md#working-with-chat-markup-language-chatml
+    # TODO:  if bot template has prefix prompt before $MESSAGE, prepend generation prompt to the chat
+    #        make a add_reply() function that makes an empty bot placehold ChatMessage 
+    #        make a generate() function that adds the bot reply, calls LLM
     'chat-ml': {
         'system_prompt': "You are a helpful AI assistant.",
         'system': "<|im_start|>system\n${MESSAGE}<|im_end|>\n",
-        'user': "<|im_start|>user\n${MESSAGE}<|im_end|>\n",
-        'bot': "<|im_start|>user\n${MESSAGE}<|im_end|>\n",
+        'user': "<|im_start|>user\n${MESSAGE}<|im_end|>\n<|im_start|>assistant\n",
+        'bot': "${MESSAGE}\n",  # <|im_end|> is after $MESSAGE, but is already included in bot output
+    },
+    
+    # https://github.com/NousResearch/Obsidian/blob/e09c51d88d74657f442a898e3c4607a5b961f0b3/llava/llava/conversation.py#L385
+    'nous-obsidian': {
+        'system_prompt': "You are a helpful AI assistant.",
+        'system': "<|im_start|>system\n${MESSAGE}\n###\n",
+        'user': "<|im_start|>user\n${MESSAGE}\n###\n<|im_start|>assistant\n",
+        'bot': "${MESSAGE}\n###\n",  # ### is after $MESSAGE, but is already included in bot output
     },
     
     # https://ollama.com/library/stablelm-zephyr:latest
     'stablelm-zephyr': {
         'system_prompt': "You are a helpful AI assistant.",
         'system': "<|system|>\n${MESSAGE}<|endoftext|>\n",
-        'user': "<|user|>\n${MESSAGE}<|endoftext|>\n",
-        'bot': "<|assistant|>\n${MESSAGE}<|endoftext|>\n",
+        'user': "<|user|>\n${MESSAGE}<|endoftext|>\n<|assistant|>\n",
+        'bot': "${MESSAGE}\n",  # <|endoftext|> is after $MESSAGE, but is already included in bot output
     }
 }
 
