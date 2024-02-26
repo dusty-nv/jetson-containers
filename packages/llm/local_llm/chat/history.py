@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import json
 import inspect
 import logging
 import numpy as np
@@ -89,12 +90,31 @@ class ChatHistory():
                 raise RuntimeError(f"Couldn't automatically determine model type from {model.config.name}, please set the --chat-template argument")
             logging.info(f"using chat template '{self.template.name}' for model {model.config.name}")
         elif isinstance(chat_template, str):
-            self.template = AttributeDict(ChatTemplates[chat_template])
+            if os.path.isfile(chat_template):
+                with open(chat_template) as template_file:
+                    self.template = AttributeDict(json.load(template_file))
+            else:
+                self.template = AttributeDict(ChatTemplates[chat_template])
         elif isinstance(chat_template, dict):
             self.template = AttributeDict(template)
         else:
             raise TypeError(f"chat_template should be a str or dict (was {type(chat_template)})")
             
+        if 'stop' in self.template:
+            if not isinstance(self.template.stop, list):
+                self.template.stop = [self.template.stop]
+                
+            for i, stop in enumerate(self.template.stop):
+                if isinstance(stop, str):
+                    stop_tokens = self.model.tokenizer(stop, add_special_tokens=False, return_tensors='np').input_ids
+                    if stop_tokens.size != 1:
+                        log.warning(f"chat template '{self.template.name}' had stop token of length {stop_tokens.size}")
+                    self.template.stop[i] = stop_tokens[0]
+        else:
+            self.template.stop = [self.model.tokenizer.eos_token_id]
+         
+        logging.info(f"model '{self.model.config.name}', chat template '{self.template.name}' stop tokens:  {self.template.stop}  {self.model.tokenizer.batch_decode(self.template.stop)}")      
+
         if system_prompt:
             self.template['system_prompt'] = system_prompt
 

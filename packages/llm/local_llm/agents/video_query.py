@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import time
+import logging
 import threading
 
 from local_llm import Agent
@@ -20,12 +21,12 @@ class VideoQuery(Agent):
 
         # load model in another process for smooth streaming
         self.llm = ProcessProxy((lambda **kwargs: ChatQuery(model, drop_inputs=True, **kwargs)), **kwargs)
-        self.llm.add(PrintStream(color='green', relay=True).add(self.on_eos))
+        self.llm.add(PrintStream(color='green', relay=True).add(self.on_text))
         self.llm.start()
 
         # test / warm-up query
         self.warmup = True
-        self.last_text = ""
+        self.text = ""
         self.eos = False
         
         self.llm("What is 2+2?")
@@ -52,6 +53,7 @@ class VideoQuery(Agent):
                 'How many fingers is the person holding up?',
                 'What does the text in the image say?',
                 'There is a question asked in the image.  What is the answer?',
+                'Is there a person in the image?  Answer yes or no.',
             ]
         
         self.keyboard_thread = threading.Thread(target=self.poll_keyboard)
@@ -70,7 +72,7 @@ class VideoQuery(Agent):
             self.prompts[self.prompt],
         ])
         
-        text = self.last_text.replace('\n', '').replace('</s>', '').strip()
+        text = self.text.replace('\n', '').replace('</s>', '').strip()
 
         if text:
             self.font.OverlayText(image, text=text, x=5, y=42, color=self.font.White, background=self.font.Gray40)
@@ -78,18 +80,18 @@ class VideoQuery(Agent):
         self.font.OverlayText(image, text=self.prompts[self.prompt], x=5, y=5, color=(120,215,21), background=self.font.Gray40)
         self.video_output(image)
             
-    def on_eos(self, text):
+    def on_text(self, text):
         if self.eos:
-            self.last_text = text  # new query response
+            self.text = text  # new query response
             self.eos = False
         elif not self.warmup:  # don't view warmup response
-            self.last_text = self.last_text + text
+            self.text = self.text + text
 
-        if text.endswith('</s>'):
-            #print_table(self.llm.model.stats)
+        if text.endswith('</s>') or text.endswith('###') or text.endswith('<|im_end|>'):
+            self.print_stats()
             self.warmup = False
             self.eos = True
-     
+
     def poll_keyboard(self):
         while True:
             try:
@@ -108,6 +110,17 @@ class VideoQuery(Agent):
                     self.prompt = num - 1
             except Exception as err:
                 continue
+     
+    def print_stats(self):
+        #print_table(self.llm.model.stats)
+        curr_time = time.perf_counter()
+            
+        if not hasattr(self, 'start_time'):
+            self.start_time = curr_time
+        else:
+            frame_time = curr_time - self.start_time
+            self.start_time = curr_time
+            logging.info(f'refresh rate:  {1.0 / frame_time:.2f} FPS  ({frame_time*1000:.1f} ms)')
                 
 if __name__ == "__main__":
     parser = ArgParser(extras=ArgParser.Defaults+['video_input', 'video_output'])

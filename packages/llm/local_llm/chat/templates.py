@@ -43,7 +43,8 @@ ChatTemplates = {
         'system_prompt': "You are a helpful AI assistant.",
         'system': "<|im_start|>system\n${MESSAGE}\n###\n",
         'user': "<|im_start|>user\n${MESSAGE}\n###\n<|im_start|>assistant\n",
-        'bot': "${MESSAGE}\n###\n",  # ### is after $MESSAGE, but is already included in bot output
+        'bot': "${MESSAGE}\n",  # ### is after $MESSAGE, but is already included in bot output
+        'stop': ["###", '<|im_end|>'],
     },
     
     # https://ollama.com/library/stablelm-zephyr:latest

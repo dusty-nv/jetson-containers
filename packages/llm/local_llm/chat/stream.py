@@ -37,7 +37,7 @@ class StreamingResponse():
 
     def __next__(self):
         if self.stopped:
-            if len(self.output_tokens) == 0 or self.output_tokens[-1] != self.model.tokenizer.eos_token_id:
+            if len(self.output_tokens) == 0 or self.output_tokens[-1] not in self.kwargs.get('stop_tokens', [self.model.tokenizer.eos_token_id]):
                 self.output_tokens.append(self.model.tokenizer.eos_token_id) # add EOS if necessary
                 return self.get_message_delta()
             raise StopIteration

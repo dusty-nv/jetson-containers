@@ -130,6 +130,7 @@ class ChatQuery(Plugin):
             embedding, 
             streaming=True, 
             kv_cache=chat_history.kv_cache,
+            stop_tokens=chat_history.template.stop,
             max_new_tokens=self.max_new_tokens,
             min_new_tokens=self.min_new_tokens,
             do_sample=self.do_sample,
