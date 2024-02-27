@@ -26,7 +26,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
 		libb64-0d \
 		libre2-* \
-		libssl1.1 \
+		libssl-dev \
 		rapidjson-dev \
 		libopenblas-dev \
 		libarchive-dev \
