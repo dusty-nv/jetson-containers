@@ -6,6 +6,7 @@ import time
 import json
 import pprint
 import fnmatch
+import logging
 import traceback
 import subprocess
 import dockerhub_api 
@@ -365,6 +366,8 @@ def get_registry_containers(user='dustynv', **kwargs):
 
     To view the number of requests remaining within the rate-limit:
       curl -i https://hub.docker.com/v2/namespaces/dustynv/repositories/l4t-pytorch/tags
+      
+    All the caching is to prevent going over the DockerHub API rate limits.
     """
     global _REGISTRY_CACHE
     
@@ -379,13 +382,19 @@ def get_registry_containers(user='dustynv', **kwargs):
     cache_enabled = (cache_path != "0" and cache_path.lower() != "off")
 
     if cache_enabled and os.path.isfile(cache_path):
-        if time.time() - os.path.getmtime(cache_path) < 3600:
-            with open(cache_path) as cache_file:
-                try:
-                    _REGISTRY_CACHE = json.load(cache_file)
-                    return _REGISTRY_CACHE
-                except Exception:
-                    pass
+        if time.time() - os.path.getmtime(cache_path) > 600:
+            cmd = f"cd {_PACKAGE_ROOT} && git fetch origin dev --quiet && git checkout --quiet origin/dev -- {os.path.relpath(cache_path, _PACKAGE_ROOT)}"
+            status = subprocess.run(cmd, executable='/bin/bash', shell=True, check=False)
+            if status.returncode != 0:
+                logging.error(f'failed to update container registry cache from GitHub ({cache_path})')
+                logging.error(f'return code {status.returncode} > {cmd}')
+                
+        with open(cache_path) as cache_file:
+            try:
+                _REGISTRY_CACHE = json.load(cache_file)
+                return _REGISTRY_CACHE
+            except Exception:
+                pass
                 
     hub = dockerhub_api.DockerHub(return_lists=True, token=os.environ.get('DOCKERHUB_TOKEN'))
     _REGISTRY_CACHE = hub.repositories(user)
