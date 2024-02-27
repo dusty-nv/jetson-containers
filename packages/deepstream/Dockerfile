@@ -24,7 +24,7 @@ RUN wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certif
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
 		python-is-python3 \
-    && rm -rf /var/lib/apt/lists/* \
+    || rm -rf /var/lib/apt/lists/* \
     && apt-get clean
     
     
