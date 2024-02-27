@@ -3,7 +3,7 @@
 # group: ml
 # config: config.py
 # requires: '>=32.6'
-# depends: [cmake, python, gstreamer, tritonserver]
+# depends: [cuda, cudnn, tensorrt, cmake, python, gstreamer, tritonserver]
 # test: [test.sh, test.py]
 # notes: https://docs.nvidia.com/metropolis/deepstream/dev-guide/text/DS_Quickstart.html
 #---
@@ -20,6 +20,14 @@ RUN wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certif
     rm ${DEEPSTREAM_TAR}
     
 
+# https://github.com/dusty-nv/jetson-containers/issues/405#issue-2155595703
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+		python-is-python3 \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+    
+    
 # install librdkafka (to enable Kafka protocol adaptor for message broker)
 RUN git clone https://github.com/edenhill/librdkafka && \
     cd librdkafka && \
