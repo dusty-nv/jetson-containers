@@ -62,7 +62,7 @@ The prefill time is how long the model takes to process the input context before
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.builder`](Dockerfile.builder) |
-| &nbsp;&nbsp;&nbsp;Notes | [mlc-ai/mlc-llm](https://github.com/mlc-ai/mlc-llm/tree/e30a457a8369f64cb38de1cc6357db23aacf349b) commit SHA [`e30a457a8369f64cb38de1cc6357db23aacf349b`](https://github.com/mlc-ai/mlc-llm/tree/e30a457a8369f64cb38de1cc6357db23aacf349b) |
+| &nbsp;&nbsp;&nbsp;Notes | [mlc-ai/mlc-llm](https://github.com/mlc-ai/mlc-llm/tree/1cbd67b4eefe8f9cd8f4a1d798221483ec120fe9) commit SHA [`1cbd67b4eefe8f9cd8f4a1d798221483ec120fe9`](https://github.com/mlc-ai/mlc-llm/tree/1cbd67b4eefe8f9cd8f4a1d798221483ec120fe9) |
 
 | **`mlc:dev`** | |
 | :-- | :-- |
@@ -71,7 +71,7 @@ The prefill time is how long the model takes to process the input context before
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/mlc:dev-r35.3.1`](https://hub.docker.com/r/dustynv/mlc/tags) `(2023-10-30, 9.0GB)`<br>[`dustynv/mlc:dev-r35.4.1`](https://hub.docker.com/r/dustynv/mlc/tags) `(2023-12-16, 9.4GB)`<br>[`dustynv/mlc:dev-r36.2.0`](https://hub.docker.com/r/dustynv/mlc/tags) `(2023-12-16, 10.6GB)` |
-| &nbsp;&nbsp;&nbsp;Notes | [mlc-ai/mlc-llm](https://github.com/mlc-ai/mlc-llm/tree/e30a457a8369f64cb38de1cc6357db23aacf349b) commit SHA [`e30a457a8369f64cb38de1cc6357db23aacf349b`](https://github.com/mlc-ai/mlc-llm/tree/e30a457a8369f64cb38de1cc6357db23aacf349b) |
+| &nbsp;&nbsp;&nbsp;Notes | [mlc-ai/mlc-llm](https://github.com/mlc-ai/mlc-llm/tree/1cbd67b4eefe8f9cd8f4a1d798221483ec120fe9) commit SHA [`1cbd67b4eefe8f9cd8f4a1d798221483ec120fe9`](https://github.com/mlc-ai/mlc-llm/tree/1cbd67b4eefe8f9cd8f4a1d798221483ec120fe9) |
 
 | **`mlc:9bf5723-builder`** | |
 | :-- | :-- |
