@@ -1,0 +1,61 @@
+name: "deepstream_jp60"
+run-name: "Build deepstream (JetPack 6.0)"
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - 'dev'
+    paths:
+      - '.github/workflows/deepstream_jp60.yml'
+      - 'packages/deepstream/*'
+      - '!packages/deepstream/README.md'
+      - '!packages/deepstream/docs.md'
+      - 'packages/build-essential/*'
+      - '!packages/build-essential/README.md'
+      - '!packages/build-essential/docs.md'
+      - 'packages/cuda/cuda/*'
+      - '!packages/cuda/cuda/README.md'
+      - '!packages/cuda/cuda/docs.md'
+      - 'packages/cuda/cudnn/*'
+      - '!packages/cuda/cudnn/README.md'
+      - '!packages/cuda/cudnn/docs.md'
+      - 'packages/python/*'
+      - '!packages/python/README.md'
+      - '!packages/python/docs.md'
+      - 'packages/tensorrt/*'
+      - '!packages/tensorrt/README.md'
+      - '!packages/tensorrt/docs.md'
+      - 'packages/cmake/cmake_pip/*'
+      - '!packages/cmake/cmake_pip/README.md'
+      - '!packages/cmake/cmake_pip/docs.md'
+      - 'packages/numpy/*'
+      - '!packages/numpy/README.md'
+      - '!packages/numpy/docs.md'
+      - 'packages/opencv/*'
+      - '!packages/opencv/README.md'
+      - '!packages/opencv/docs.md'
+      - 'packages/gstreamer/*'
+      - '!packages/gstreamer/README.md'
+      - '!packages/gstreamer/docs.md'
+      - 'packages/tritonserver/*'
+      - '!packages/tritonserver/README.md'
+      - '!packages/tritonserver/docs.md'
+jobs:
+  deepstream_jp60:
+    runs-on: [self-hosted, jetson, jp60]
+    steps:
+      - run: |
+         cat /etc/nv_tegra_release 
+      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+        run: |
+         echo "$RUNNER_WORKSPACE" 
+         cd $RUNNER_WORKSPACE 
+         git config --global user.email "dustinf@nvidia.com" 
+         git config --global user.name "Dustin Franklin" 
+         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+         cd jetson-containers 
+         git fetch origin 
+         git checkout $GITHUB_SHA 
+         git status 
+         ls -a 
+      - run: ./build.sh --name=runner/ --push=dustynv deepstream
