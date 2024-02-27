@@ -3,7 +3,7 @@
 # group: ml
 # config: config.py
 # requires: '>=32.6'
-# depends: [python]
+# depends: [cuda, cudnn, tensorrt, python]
 # test: test.py
 # notes: https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/user_guide/jetson.html
 #---
