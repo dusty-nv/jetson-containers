@@ -18,11 +18,9 @@ from tvm.runtime.relax_vm import VirtualMachine
 from transformers import AutoTokenizer, AutoConfig
 
 from local_llm import LocalLM, StreamingResponse
+from local_llm.utils import AttributeDict
 
 
-#
-# TODO does not respect do_sample=False
-#
 class MLCModel(LocalLM):
     """
     MLC model (https://github.com/mlc-ai/mlc-llm)
@@ -51,8 +49,7 @@ class MLCModel(LocalLM):
         if not quant:
             quant = 'q4f16_ft'
             
-        if not os.path.isdir(quant):
-            quant = MLCModel.quantize(model_path, self.config, quant, **kwargs)
+        quant = MLCModel.quantize(model_path, self.config, quant, **kwargs)
             
         self.config.quant = quant.split('-')[-1]  # recover the quant method        
         self.quant_path = quant
@@ -81,6 +78,7 @@ class MLCModel(LocalLM):
         #self.config.name = config['local_id']  # model_name
         self.config.type = config.get('model_category', config.get('model_type'))  # 'conv_template'
         self.config.max_length = config.get('max_window_size', config.get('context_window_size'))
+        self.config.prefill_chunk_size = config.get('prefill_chunk_size', -1)
         self.config.vocab_size = config['vocab_size']
         
         # load model's dynamic library
@@ -101,6 +99,7 @@ class MLCModel(LocalLM):
         self.module = tvm.runtime.load_module(self.module_path)
         
         self.vm = self.module['vm_load_executable']()
+        
         self.vm['vm_initialization'](
             self.device.device_type, self.device.device_id,
             VirtualMachine.POOLED_ALLOCATOR,
@@ -108,34 +107,88 @@ class MLCModel(LocalLM):
             VirtualMachine.POOLED_ALLOCATOR
         )    
         
-        # embedding/generation functions
-        self._embed = self.vm['embed']
-        self._decode = self.vm['decode']
-        self._prefill_with_embed = self.vm['prefill_with_embed']
+        # model metadata (optional)
+        self.metadata = None
         
-        # KV cache manipulation functions
-        self._create_kv_cache = self.vm['create_kv_cache']
-
-        if self.vm.implements_function('reset_kv_cache'):
-            self._clear_kv_cache = self.vm['reset_kv_cache']
-            self.backtracking_kv = False
+        if self.vm.implements_function('_metadata'):
+            self.metadata = json.loads(self.vm['_metadata']())
+            logging.debug(f"{self.config.name} memory usage:  {self.metadata['memory_usage']}")
         else:
-            self._clear_kv_cache = tvm.get_global_func('vm.builtin.attention_kv_cache_array_clear')
-            self.backtracking_kv = True
-            
-        self._pop_kv_cache = tvm.get_global_func('vm.builtin.attention_kv_cache_array_popn')
-        self._append_kv_cache = tvm.get_global_func('vm.builtin.attention_kv_cache_append')
-        self._update_kv_cache = tvm.get_global_func('vm.builtin.attention_kv_cache_update')
-        self._view_kv_cache = tvm.get_global_func('vm.builtin.attention_kv_cache_view')
+            logging.warning(f"model library {self.module_path} was missing metadata")
         
+        # embedding/generation functions
+        if self.vm.implements_function('embed'):
+            self._embed = self.vm['embed']
+        else:
+            self._embed = None
+            logging.warning(f"{self.config.name} is missing embed() function in {self.module_path}")
+            
+        self._decode = self.vm['decode']
+        
+        # prefill functions
+        prefill_functions = [
+            'prefill_with_embed',
+            'prefill',
+        ]
+        
+        for prefill_func in prefill_functions:
+            if self.vm.implements_function(prefill_func):
+                self._prefill = self.vm[prefill_func]
+                self.prefill_type = prefill_func
+                break
+                
+        if not hasattr(self, '_prefill'):
+            raise RuntimeError(f"couldn't find any of the following functions in {self.module_path} - {prefill_functions}")
+        
+        logging.debug(f"using {self.prefill_type}() from {self.module_path}")
+
+        # KV cache manipulation functions
+        create_kv_cache_functions = [
+            'create_kv_cache',
+            'create_flashinfer_paged_kv_cache',
+            'create_tir_paged_kv_cache',
+            '_initialize_effect'
+        ]
+        
+        for kv_cache_func in create_kv_cache_functions:
+            if self.vm.implements_function(kv_cache_func):
+                self._kv_cache_create = self.vm[kv_cache_func]
+                self.kv_cache_type = kv_cache_func #[len('create_'):]
+                self.kv_cache_paged = 'paged' in self.kv_cache_type
+                break
+        
+        if not hasattr(self, '_kv_cache_create'):
+            raise RuntimeError(f"couldn't find any of the following functions in {self.module_path} - {create_kv_cache_functions}")
+
+        logging.debug(f"using {self.kv_cache_type}() from {self.module_path}")
+ 
+        if self.kv_cache_paged:
+            self._kv_cache_clear = tvm.get_global_func('vm.builtin.attention_kv_cache_array_clear')
+            self._kv_cache_pop = tvm.get_global_func('vm.builtin.kv_state_popn')  # 'vm.builtin.paged_attention_kv_cache_popn')
+            self._kv_cache_add_sequence = tvm.get_global_func('vm.builtin.kv_state_add_sequence')  # 'vm.builtin.paged_attention_kv_cache_add_sequence')
+            self._kv_cache_remove_sequence = tvm.get_global_func('vm.builtin.kv_state_remove_sequence')  # 'vm.builtin.paged_attention_kv_cache_remove_sequence')   
+            self._kv_cache_begin_forward = tvm.get_global_func('vm.builtin.kv_state_begin_forward')  # 'vm.builtin.paged_attention_kv_cache_begin_forward')
+            self._kv_cache_end_forward = tvm.get_global_func('vm.builtin.kv_state_end_forward')  # 'vm.builtin.paged_attention_kv_cache_end_forward')
+            self.backtracking_kv = True
+        else:
+            if self.vm.implements_function('reset_kv_cache'):
+                self._kv_cache_clear = self.vm['reset_kv_cache']
+                self.backtracking_kv = False
+            else:
+                self._kv_cache_clear = tvm.get_global_func('vm.builtin.attention_kv_cache_array_clear')
+                self.backtracking_kv = True
+                
+            self._kv_cache_pop = tvm.get_global_func('vm.builtin.attention_kv_cache_array_popn')
+            self._kv_cache_append = tvm.get_global_func('vm.builtin.attention_kv_cache_append')
+            self._kv_cache_update = tvm.get_global_func('vm.builtin.attention_kv_cache_update')
+            self._kv_cache_view = tvm.get_global_func('vm.builtin.attention_kv_cache_view')
+
         self._sample_top_p_from_prob = tvm.get_global_func('vm.builtin.sample_top_p_from_prob')
         self._sample_top_p_from_logits = tvm.get_global_func('vm.builtin.sample_top_p_from_logits')
         
         self._apply_repetition_penalty = tvm.get_global_func('vm.builtin.apply_repetition_penalty')
         self._apply_softmax_with_temperature = tvm.get_global_func('vm.builtin.apply_softmax_with_temperature')
 
-        #self.kv_cache = None #create_kv_cache()
-        
         # param loading functions
         self._load_cache = tvm.get_global_func('vm.builtin.ndarray_cache.load')
         self._load_params = tvm.get_global_func('vm.builtin.param_array_from_cache')
@@ -143,7 +196,13 @@ class MLCModel(LocalLM):
 
         # load model weights
         self._load_cache(self.weight_path, self.device.device_type, self.device.device_id)
-        self.params = self._load_params('param', -1)
+        
+        if self.metadata:
+            self._load_params_by_name = tvm.get_global_func('vm.builtin.param_array_from_cache_by_name')
+            self.params = self._load_params_by_name([param['name'] for param in self.metadata['params']])
+        else:
+            self.params = self._load_params('param', -1)
+            
         self._clear_cache() # after we get params, it is safe to simply clear the cached version
         self.config.load_time = time.perf_counter() - load_time_begin
         
@@ -162,7 +221,7 @@ class MLCModel(LocalLM):
 
     
     @staticmethod
-    def quantize(model, config, method='q4f16_ft', output='/data/models/mlc/dist', **kwargs):
+    def quantize(model, config, method='q4f16_ft', builder='mlc_chat', output='/data/models/mlc/dist', **kwargs):
         """
         Quantize a model with the given method.  It will be saved under the output directory,
         in a subdirectory based on the model name and quant method (Llama-2-7b-chat-hf-q4f16_ft)
@@ -182,16 +241,22 @@ class MLCModel(LocalLM):
 
         if not os.path.isdir(model_path):
             os.symlink(model, model_path, target_is_directory=True)
-           
-        cmd = f"python3 -m mlc_llm.build --model {model_path} --quantization {method} "
-        cmd += f"--target cuda --use-cuda-graph --use-flash-attn-mqa --sep-embed "
-        cmd += f"--max-seq-len {config.max_position_embeddings} "
-        cmd += f"--artifact-path {output} "
+                
+        if builder == 'mlc_llm':
+            cmd = f"python3 -m mlc_llm.build --model {model_path} --quantization {method} "
+            cmd += f"--target cuda --use-cuda-graph --use-flash-attn-mqa --sep-embed "
+            cmd += f"--max-seq-len {config.max_position_embeddings} "
+            cmd += f"--artifact-path {output} "
 
-        if len(glob.glob(os.path.join(model_path, '*.safetensors'))) > 0:
-            cmd += "--use-safetensors "
+            if len(glob.glob(os.path.join(model_path, '*.safetensors'))) > 0:
+                cmd += "--use-safetensors "
+                
+        elif builder == 'mlc_chat':
+            cmd = f"mlc_chat convert_weight {model} --quantization {method} --output {quant_path} && "
+            cmd += f"mlc_chat gen_config {model} --quantization {method} --conv-template LM --max-batch-size 1 --output {quant_path} && "
+            cmd += f"mlc_chat compile {quant_path} --device cuda --opt O3 --output {quant_path}/{model_name + '-' + method}-cuda.so"
             
-        logging.info(f"running MLC quantization:\n\n{cmd}\n\n")
+        logging.info(f"running MLC quantization with {builder}:\n\n{cmd}\n\n")
         subprocess.run(cmd, executable='/bin/bash', shell=True, check=True)  
         
         return quant_path
@@ -201,7 +266,6 @@ class MLCModel(LocalLM):
         size = 0
         for n in range(len(kv_cache)):
             view = view_kv_cache(kv_cache[n])
-            #print(f"kv_cache {n}  {view.shape} {view.dtype}")
             if length is None:
                 length = view.shape[0]
             size += length * view.shape[1] * view.shape[2] * np.dtype(view.dtype).itemsize
@@ -302,18 +366,37 @@ class MLCModel(LocalLM):
         
         # create a kv_cache if needed
         if stream.kv_cache is None:
-            stream.kv_cache = self._create_kv_cache()
-            stream.kv_cache.num_tokens = 0
+            if self.kv_cache_paged:
+                kv_cache = self._kv_cache_create(
+                    tvm.runtime.ShapeTuple([1]),  # max sequences
+                    tvm.runtime.ShapeTuple([self.config.max_length]),  # max window size
+                    tvm.runtime.ShapeTuple([self.config.prefill_chunk_size]),  # prefill chunk size
+                    tvm.runtime.ShapeTuple([16])  # page size
+                )
+                self._kv_cache_add_sequence(kv_cache, 0)
+            else:
+                kv_cache = self._kv_cache_create()
+             
+            stream.kv_cache = AttributeDict(state=kv_cache, num_tokens=0)
 
         stream.kv_cache.num_tokens += embedding.shape[1]
 
         # returns a list[logits, [kv_cache]] - logits are [1,1,32000] float32 (on the GPU)
         time_begin_prefill = time.perf_counter()
         
-        output = self._prefill_with_embed(embedding, 
-            tvm.runtime.ShapeTuple([stream.kv_cache.num_tokens]), 
-            stream.kv_cache, self.params
-        )
+        if self.kv_cache_paged:
+            self._kv_cache_begin_forward(
+                stream.kv_cache.state, 
+                tvm.runtime.ShapeTuple([0]),  # sequence ID
+                tvm.runtime.ShapeTuple([embedding.shape[1]]),  # input length
+            )
+            output = self._prefill(embedding, stream.kv_cache.state, self.params)
+            self._kv_cache_end_forward(stream.kv_cache.state)
+        else:  
+            output = self._prefill(embedding,  # prefill_with_embed
+                tvm.runtime.ShapeTuple([stream.kv_cache.num_tokens]), 
+                stream.kv_cache.state, self.params
+            )
 
         # decode until EOS or max_new_tokens
         time_begin_decode = time.perf_counter()
@@ -322,7 +405,7 @@ class MLCModel(LocalLM):
             token = self._sample(output[0], do_sample, temperature, top_p, repetition_penalty)
             stream.output_tokens.append(token)
             stream.event.set()
-            
+
             if token in stop_tokens and len(stream.output_tokens) > min_new_tokens:
                 break
 
@@ -335,10 +418,24 @@ class MLCModel(LocalLM):
             stream.kv_cache.num_tokens += 1
             self.stats.output_tokens += 1
 
-            output = self._decode(
-                tvm.nd.array(np.array([[stream.output_tokens[-1]]], dtype=np.int32), self.device),
-                tvm.runtime.ShapeTuple([stream.kv_cache.num_tokens]), stream.kv_cache, self.params
-            )
+            if self.kv_cache_paged:
+                self._kv_cache_begin_forward(
+                    stream.kv_cache.state, 
+                    tvm.runtime.ShapeTuple([0]),  # sequence ID (always 0)
+                    tvm.runtime.ShapeTuple([1]),  # append single-token for decode
+                )
+                embedding = self._embed(tvm.nd.array(np.array([[stream.output_tokens[-1]]], dtype=np.int32), self.device), self.params)
+                
+                output = self._decode(
+                    embedding,
+                    stream.kv_cache.state, self.params
+                )
+                self._kv_cache_end_forward(stream.kv_cache.state)
+            else:
+                output = self._decode(
+                    tvm.nd.array(np.array([[stream.output_tokens[-1]]], dtype=np.int32), self.device),
+                    tvm.runtime.ShapeTuple([stream.kv_cache.num_tokens]), stream.kv_cache.state, self.params
+                )
 
         time_end_decode = time.perf_counter()
         
