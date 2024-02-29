@@ -44,7 +44,7 @@ def download_model(model, type='model', cache_dir='$TRANSFORMERS_CACHE', use_saf
     else:
         repo_path = snapshot_download(repo_id=model, repo_type=type, cache_dir=cache_dir, resume_download=True, ignore_patterns=['*.safetensors'])
                                       
-        if glob(os.path.join(repo_path, '*.pt')) or glob(os.path.join(repo_path, '*.bin')):
+        if glob(os.path.join(repo_path, '*model*.pt')) or glob(os.path.join(repo_path, '*model*.bin')):
             return repo_path
             
         return snapshot_download(repo_id=model, repo_type=type, cache_dir=cache_dir, resume_download=True)
