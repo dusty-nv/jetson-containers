@@ -79,7 +79,9 @@ class LocalLM():
         # moved CLIP to after LLM is loaded because of MLC CUDA errors when running in subprocess
         model.init_vision()  
         model.config.load_time = time.perf_counter() - load_begin
+        
         print_table(model.config)
+        print('')
         
         return model
      

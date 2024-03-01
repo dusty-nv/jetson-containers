@@ -2,6 +2,7 @@
 from .args import *
 from .audio import *
 from .image import *
+from .keyboard import *
 from .log import *
 from .model import *
 from .prompts import *

@@ -64,6 +64,8 @@ ChatTemplates['llava-llama-2'].update({
     'system_prompt': "You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language."
 })
 
+StopTokens = ['</s>', '<|endoftext|>', '<|im_end|>', '<eos>']
+
 for key in ChatTemplates:
     ChatTemplates[key] = AttributeDict(name=key, **ChatTemplates[key])
 
