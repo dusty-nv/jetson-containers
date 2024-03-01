@@ -119,8 +119,9 @@ class MLCModel(LocalLM):
         # embedding/generation functions
         if self.vm.implements_function('embed'):
             self._embed = self.vm['embed']
+            self.has_embed = True
         else:
-            self._embed = None
+            self.has_embed = False
             logging.warning(f"{self.config.name} is missing embed() function in {self.module_path}")
             
         self._decode = self.vm['decode']
@@ -221,7 +222,7 @@ class MLCModel(LocalLM):
 
     
     @staticmethod
-    def quantize(model, config, method='q4f16_ft', builder='mlc_chat', output='/data/models/mlc/dist', **kwargs):
+    def quantize(model, config, method='q4f16_ft', output='/data/models/mlc/dist', **kwargs):
         """
         Quantize a model with the given method.  It will be saved under the output directory,
         in a subdirectory based on the model name and quant method (Llama-2-7b-chat-hf-q4f16_ft)
@@ -242,7 +243,11 @@ class MLCModel(LocalLM):
         if not os.path.isdir(model_path):
             os.symlink(model, model_path, target_is_directory=True)
                 
-        if builder == 'mlc_llm':
+        if config.model_type == 'phi' or config.model_type == 'gemma':
+            cmd = f"mlc_chat convert_weight {model} --quantization {method} --output {quant_path} && "
+            cmd += f"mlc_chat gen_config {model} --quantization {method} --conv-template LM --max-batch-size 1 --output {quant_path} && "
+            cmd += f"mlc_chat compile {quant_path} --device cuda --opt O3 --output {quant_path}/{model_name + '-' + method}-cuda.so"
+        else:
             cmd = f"python3 -m mlc_llm.build --model {model_path} --quantization {method} "
             cmd += f"--target cuda --use-cuda-graph --use-flash-attn-mqa --sep-embed "
             cmd += f"--max-seq-len {config.max_position_embeddings} "
@@ -251,12 +256,7 @@ class MLCModel(LocalLM):
             if len(glob.glob(os.path.join(model_path, '*.safetensors'))) > 0:
                 cmd += "--use-safetensors "
                 
-        elif builder == 'mlc_chat':
-            cmd = f"mlc_chat convert_weight {model} --quantization {method} --output {quant_path} && "
-            cmd += f"mlc_chat gen_config {model} --quantization {method} --conv-template LM --max-batch-size 1 --output {quant_path} && "
-            cmd += f"mlc_chat compile {quant_path} --device cuda --opt O3 --output {quant_path}/{model_name + '-' + method}-cuda.so"
-            
-        logging.info(f"running MLC quantization with {builder}:\n\n{cmd}\n\n")
+        logging.info(f"running MLC quantization:\n\n{cmd}\n\n")
         subprocess.run(cmd, executable='/bin/bash', shell=True, check=True)  
         
         return quant_path
@@ -272,15 +272,16 @@ class MLCModel(LocalLM):
         return size
     
     def embed_text(self, text, return_tensors='np', add_special_tokens=False, use_cache=False):  # pt, np, tvm
+        if not self.has_embed:
+            raise RuntimeError(f"{self.config.name} does not have embed() in {self.module_path}")
+            
         if use_cache:
             embedding = self.embedding_cache.get(text)
         else:
             embedding = None
             
         if embedding is None:
-            tokens = self.tokenizer(text, 
-                add_special_tokens=add_special_tokens, 
-                return_tensors='np').input_ids
+            tokens = self.tokenize(text)
             embedding = self.embed_tokens(tokens)
             self.embedding_cache[text] = embedding
             self.device = embedding.device
@@ -293,6 +294,9 @@ class MLCModel(LocalLM):
         return embedding
     
     def embed_tokens(self, tokens, return_tensors='np'):  # pt, np, tvm
+        if not self.has_embed:
+            raise RuntimeError(f"{self.config.name} does not have embed() in {self.module_path}")
+            
         if isinstance(tokens, torch.Tensor):
             tokens = tokens.numpy()
             
@@ -303,6 +307,13 @@ class MLCModel(LocalLM):
         embedding = self._embed(tokens, self.params)
         self.stats.embed_time = time.perf_counter() - time_begin
         return embedding
+     
+    def tokenize(self, text, add_special_tokens=False, dtype=np.int32, return_tensors='np'):
+        return self.tokenizer(
+            text, 
+            add_special_tokens=add_special_tokens, 
+            return_tensors=return_tensors,
+        ).input_ids.astype(dtype, copy=False)
         
     def generate(self, inputs, streaming=True, **kwargs):
         """
@@ -348,21 +359,44 @@ class MLCModel(LocalLM):
         top_p = stream.kwargs.get('top_p', 0.95)
         repetition_penalty = stream.kwargs.get('repetition_penalty', 1.0)
         
+        # if the stop tokens are strings, tokenize them
         stop_tokens = stream.kwargs.get('stop_tokens', [self.tokenizer.eos_token_id])
         
         if isinstance(stop_tokens, int):
             stop_tokens = [stop_tokens]
 
+        for i, stop in enumerate(stop_tokens):
+            if isinstance(stop, str):
+                tokens = self.tokenize(stop)
+                if tokens.size == 1:
+                    stop_tokens[i] = tokens[0]
+                else:
+                    #logging.warning(f"stop_token '{stop}' had token length {tokens.size} (ignoring)")
+                    stop_tokens[i] = -1
+                    
+        # convert inputs to tokens or embeddings
         if isinstance(stream.input, str):
-            embedding = self.embed_text(stream.input, return_tensors='tvm')
+            if self.has_embed:
+                input = self.embed_text(stream.input, return_tensors='tvm')
+            else:
+                input = self.tokenize(stream.input)
         else:
-            embedding = stream.input
-            
-        if not isinstance(embedding, tvm.runtime.ndarray.NDArray):
-            embedding = tvm.nd.array(embedding, device=self.device)
-       
-        self.stats.input_tokens = embedding.shape[1]
+            input = stream.input
+        
+        if not isinstance(input, tvm.runtime.ndarray.NDArray):
+            input = tvm.nd.array(input, device=self.device)
+
+        self.stats.input_tokens = input.shape[1]
         self.stats.output_tokens = 0
+        
+        if input.dtype.startswith('int'):
+            if self.has_embed:
+                input = self.embed_tokens(input, return_tensors='tvm')
+        elif input.dtype.startswith('float'):
+            if not self.has_embed:
+                raise RuntimeError(f"{self.config.name} doesn't have embedding support in {self.module_path} and was passed {input.dtype} input, but can only process int token inputs")
+        else:
+            raise TypeError(f"expected input of type int or float, but got {input.dtype}")
         
         # create a kv_cache if needed
         if stream.kv_cache is None:
@@ -379,7 +413,7 @@ class MLCModel(LocalLM):
              
             stream.kv_cache = AttributeDict(state=kv_cache, num_tokens=0)
 
-        stream.kv_cache.num_tokens += embedding.shape[1]
+        stream.kv_cache.num_tokens += input.shape[1]
 
         # returns a list[logits, [kv_cache]] - logits are [1,1,32000] float32 (on the GPU)
         time_begin_prefill = time.perf_counter()
@@ -388,12 +422,12 @@ class MLCModel(LocalLM):
             self._kv_cache_begin_forward(
                 stream.kv_cache.state, 
                 tvm.runtime.ShapeTuple([0]),  # sequence ID
-                tvm.runtime.ShapeTuple([embedding.shape[1]]),  # input length
+                tvm.runtime.ShapeTuple([input.shape[1]]),  # input length
             )
-            output = self._prefill(embedding, stream.kv_cache.state, self.params)
+            output = self._prefill(input, stream.kv_cache.state, self.params)
             self._kv_cache_end_forward(stream.kv_cache.state)
         else:  
-            output = self._prefill(embedding,  # prefill_with_embed
+            output = self._prefill(input,  # prefill_with_embed
                 tvm.runtime.ShapeTuple([stream.kv_cache.num_tokens]), 
                 stream.kv_cache.state, self.params
             )
