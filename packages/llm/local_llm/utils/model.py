@@ -42,12 +42,12 @@ def download_model(model, type='model', cache_dir='$TRANSFORMERS_CACHE', use_saf
         
         return hf_hub_download(repo_id=repo_id, filename=filename, repo_type=type, cache_dir=cache_dir, resume_download=True)
     else:
-        repo_path = snapshot_download(repo_id=model, repo_type=type, cache_dir=cache_dir, resume_download=True, ignore_patterns=['*.safetensors'])
+        repo_path = snapshot_download(repo_id=model, repo_type=type, cache_dir=cache_dir, resume_download=True, ignore_patterns=['*.safetensors', '*.gguf'])
                                       
         if glob(os.path.join(repo_path, '*model*.pt')) or glob(os.path.join(repo_path, '*model*.bin')):
             return repo_path
             
-        return snapshot_download(repo_id=model, repo_type=type, cache_dir=cache_dir, resume_download=True)
+        return snapshot_download(repo_id=model, repo_type=type, cache_dir=cache_dir, resume_download=True, ignore_patterns=['*.gguf'])
     
     
 def default_model_api(model_path, quant_path=None):
