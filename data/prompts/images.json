@@ -1,0 +1,16 @@
+[
+    "/data/images/dogs.jpg",
+    "What breed of dog is in the image?",
+    "What kind of tree is in the background?",
+    "reset",
+    "/data/images/hoover.jpg",
+    "what does the road sign say?",
+    "what kind of environment is it?",
+    "reset",
+    "/data/images/path.jpg",
+    "what does the sign say?",
+    "reset",
+    "/data/images/lake.jpg",
+    "please describe the scene.",
+    "are there any hazards to be aware of?"
+]
