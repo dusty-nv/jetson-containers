@@ -48,3 +48,40 @@ def get_class_that_defined_method(meth):
         if isinstance(cls, type):
             return cls
     return None  # not required since None would have been implicitly returned anyway
+    
+    
+def ends_with_tokens(input, tokens, tokenizer=None):
+    """
+    Check to see if the list of input tokens ends with any of the list of stop tokens.
+    This is typically used to check if the model produces a stop token like </s> or <eos>
+    """
+    if not isinstance(input, list):
+        input = [input]
+        
+    if not isinstance(tokens, list):
+        tokens = [tokens]
+     
+    if len(input) == 0 or len(tokens) == 0:
+        return False
+        
+    for stop_token in tokens:
+        if isinstance(stop_token, list):
+            if len(stop_token) == 1:
+                if input[-1] == stop_token[0]:
+                    return True
+            elif len(input) >= len(stop_token):
+                if tokenizer:
+                    input_text = tokenizer.decode(input, skip_special_tokens=False, clean_up_tokenization_spaces=False)
+                    stop_text = tokenizer.decode(stop_token, skip_special_tokens=False, clean_up_tokenization_spaces=False)
+                    #print('input_text', input_text, 'stop_text', f"'{stop_text}'")
+                    if input_text.endswith(stop_text):
+                        #print('STOPPING TEXT')
+                        return True
+                else:
+                    if input[-len(stop_token):] == stop_token:
+                        return True
+        elif input[-1] == stop_token:
+            return True
+            
+    return False
+        

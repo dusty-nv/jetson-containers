@@ -5,7 +5,7 @@ import PIL
 import torch
 import logging
 
-from transformers import CLIPImageProcessor, CLIPVisionModel
+from transformers import CLIPImageProcessor, CLIPVisionModel, SiglipImageProcessor, SiglipVisionModel
 from ..utils import AttributeDict, load_image, torch_image, image_size, download_model, print_table
 
 _clip_model_cache = dict(image={}, text={})
@@ -37,35 +37,52 @@ class CLIPImageEmbedding():
         self.stream = None
         self.dtype = dtype
         
-        logging.info(f'loading {model}')
+        self.model_types = {
+            'clip':  dict(preprocessor=CLIPImageProcessor, model=CLIPVisionModel),
+            'siglip': dict(preprocessor=SiglipImageProcessor, model=SiglipVisionModel),
+        }
         
-        self.preprocessor = CLIPImageProcessor.from_pretrained(model, torch_dtype=self.dtype)#.to(self.device)
-        self.model = CLIPVisionModel.from_pretrained(model, torch_dtype=self.dtype).to(self.device).eval()
-        
-        print('CLIPImageProcessor', self.preprocessor)
-        print('CLIPVisionModel', self.model)
+        for key, model_type in self.model_types.items():
+            if key in model.lower():
+                self.model_type = key
+                break
+                
+        if not hasattr(self, 'model_type'):
+            raise ValueError(f"tried loading vision model {model} - supported model types are CLIP and SigLIP")
+            
+        logging.info(f'loading {self.model_type} vision model {model}')
+
+        self.preprocessor = model_type['preprocessor'].from_pretrained(model, torch_dtype=self.dtype)#.to(self.device)
+        self.model = model_type['model'].from_pretrained(model, torch_dtype=self.dtype).to(self.device).eval()
+
+        print(type(self.preprocessor), model, self.preprocessor)
+        print(type(self.model), model, self.model)
 
         logging.debug(f'{self.config.name} warmup')
         self.config.input_shape = (self.model.config.image_size, self.model.config.image_size)
         self(PIL.Image.new('RGB', self.config.input_shape, (255,255,255)))
         print_table(self.config)
         
-    def __call__(self, image, crop=False, hidden_state=None, return_tensors='pt', **kwargs):
+    def embed_image(self, image, crop=False, hidden_state=None, return_tensors='pt', stream=None, **kwargs):
         """
+        Return the encoded features from the given image in the embedding (or whatever the model output is)
         TODO:  return 'pooled', 'hidden', 'projected' in a dict
         """
         if isinstance(image, str):
             image = load_image(image)
         else:
             image = torch_image(image)
-            
+        
         time_begin_pre = time.perf_counter()
 
         if not crop:
+            logging.debug(f"resizing image from {image.size} -> {self.config.input_shape}")
             image = image.resize(self.config.input_shape, PIL.Image.BILINEAR) # PIL.Image.BICUBIC
+        else:
+            logging.debug(f"cropping image from {image.size} -> {self.config.input_shape}")
             
-        with torch.cuda.StreamContext(self.stream), torch.inference_mode():
-            image = self.preprocessor(image, do_center_crop=crop, do_resize=crop, return_tensors='pt')['pixel_values']  # 
+        with torch.cuda.StreamContext(stream), torch.inference_mode():
+            image = self.preprocessor(image, do_center_crop=crop, do_resize=crop, return_tensors='pt')['pixel_values']
             image = image.to(self.device, dtype=self.dtype)
             
             time_begin_enc = time.perf_counter()
@@ -94,4 +111,7 @@ class CLIPImageEmbedding():
             return output.detach().cpu().numpy()
         else:
             raise ValueError(f"return_tensors should be 'np' or 'pt' (was '{return_tensors}')")
+        
+    def __call__(self, image, crop=False, hidden_state=None, return_tensors='pt', **kwargs):
+        return self.embed_image(image, crop=crop, hidden_state=hidden_state, return_tensors='pt', **kwargs)
         

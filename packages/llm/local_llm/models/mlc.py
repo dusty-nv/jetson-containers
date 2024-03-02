@@ -18,7 +18,7 @@ from tvm.runtime.relax_vm import VirtualMachine
 from transformers import AutoTokenizer, AutoConfig
 
 from local_llm import LocalLM, StreamingResponse
-from local_llm.utils import AttributeDict
+from local_llm.utils import AttributeDict, ends_with_tokens
 
 
 class MLCModel(LocalLM):
@@ -43,7 +43,7 @@ class MLCModel(LocalLM):
 
         # 20240223: the 'stablelm_epoch' model type was re-named in transformers to 'stablelm'
         if self.config.model_type == 'stablelm':
-            self.patch_config(model_type='stablelm_epoch')
+            self.patch_config(model_type='stablelm_epoch', norm_eps=1e-05, rope_pct=0.25)
             
         # perform quantization if needed
         if not quant:
@@ -165,11 +165,11 @@ class MLCModel(LocalLM):
  
         if self.kv_cache_paged:
             self._kv_cache_clear = tvm.get_global_func('vm.builtin.attention_kv_cache_array_clear')
-            self._kv_cache_pop = tvm.get_global_func('vm.builtin.kv_state_popn')  # 'vm.builtin.paged_attention_kv_cache_popn')
-            self._kv_cache_add_sequence = tvm.get_global_func('vm.builtin.kv_state_add_sequence')  # 'vm.builtin.paged_attention_kv_cache_add_sequence')
-            self._kv_cache_remove_sequence = tvm.get_global_func('vm.builtin.kv_state_remove_sequence')  # 'vm.builtin.paged_attention_kv_cache_remove_sequence')   
-            self._kv_cache_begin_forward = tvm.get_global_func('vm.builtin.kv_state_begin_forward')  # 'vm.builtin.paged_attention_kv_cache_begin_forward')
-            self._kv_cache_end_forward = tvm.get_global_func('vm.builtin.kv_state_end_forward')  # 'vm.builtin.paged_attention_kv_cache_end_forward')
+            self._kv_cache_pop = tvm.get_global_func('vm.builtin.paged_attention_kv_cache_popn')  # 'vm.builtin.kv_state_popn')
+            self._kv_cache_add_sequence = tvm.get_global_func('vm.builtin.paged_attention_kv_cache_add_sequence')  # 'vm.builtin.kv_state_add_sequence') 
+            self._kv_cache_remove_sequence = tvm.get_global_func('vm.builtin.paged_attention_kv_cache_remove_sequence')  # 'vm.builtin.kv_state_remove_sequence')    
+            self._kv_cache_begin_forward = tvm.get_global_func('vm.builtin.paged_attention_kv_cache_begin_forward')  # 'vm.builtin.kv_state_begin_forward')
+            self._kv_cache_end_forward = tvm.get_global_func('vm.builtin.paged_attention_kv_cache_end_forward')  # 'vm.builtin.kv_state_end_forward')
             self.backtracking_kv = True
         else:
             if self.vm.implements_function('reset_kv_cache'):
@@ -367,12 +367,7 @@ class MLCModel(LocalLM):
 
         for i, stop in enumerate(stop_tokens):
             if isinstance(stop, str):
-                tokens = self.tokenize(stop)
-                if tokens.size == 1:
-                    stop_tokens[i] = tokens[0]
-                else:
-                    #logging.warning(f"stop_token '{stop}' had token length {tokens.size} (ignoring)")
-                    stop_tokens[i] = -1
+                stop_tokens[i] = self.tokenize(stop).squeeze().tolist()
                     
         # convert inputs to tokens or embeddings
         if isinstance(stream.input, str):
@@ -440,7 +435,7 @@ class MLCModel(LocalLM):
             stream.output_tokens.append(token)
             stream.event.set()
 
-            if token in stop_tokens and len(stream.output_tokens) > min_new_tokens:
+            if len(stream.output_tokens) >= min_new_tokens and ends_with_tokens(stream.output_tokens, stop_tokens, self.tokenizer):
                 break
 
             if len(stream.output_tokens) >= max_new_tokens:

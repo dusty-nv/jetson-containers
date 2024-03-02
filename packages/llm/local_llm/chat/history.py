@@ -106,14 +106,12 @@ class ChatHistory():
                 
             for i, stop in enumerate(self.template.stop):
                 if isinstance(stop, str):
-                    stop_tokens = self.model.tokenizer(stop, add_special_tokens=False, return_tensors='np').input_ids
-                    if stop_tokens.size != 1:
-                        log.warning(f"chat template '{self.template.name}' had stop token of length {stop_tokens.size}")
-                    self.template.stop[i] = stop_tokens[0]
+                    self.template.stop[i] = self.model.tokenizer(stop, add_special_tokens=False, return_tensors='np').input_ids.squeeze().tolist()
         else:
             self.template.stop = [self.model.tokenizer.eos_token_id]
          
-        logging.info(f"model '{self.model.config.name}', chat template '{self.template.name}' stop tokens:  {self.template.stop}  {self.model.tokenizer.batch_decode(self.template.stop)}")      
+        #self.template.stop = [x for x in self.template.stop if x >= 0]  # filter out ignored stop tokens
+        logging.info(f"model '{self.model.config.name}', chat template '{self.template.name}' stop tokens:  {self.model.tokenizer.batch_decode(self.template.stop)} -> {self.template.stop}")      
 
         if system_prompt:
             self.template['system_prompt'] = system_prompt
@@ -156,7 +154,7 @@ class ChatHistory():
         """
         self.entries = []
         self.kv_cache = None
-        if add_system_prompt:
+        if add_system_prompt and 'system' in self.template:
             self.append(role='system', text=self.template['system_prompt'])
      
     def to_list(self):
@@ -182,7 +180,7 @@ class ChatHistory():
         Get the system prompt, the typically hidden instruction at the beginning
         of the chat like "You are a curious and helpful AI assistant, ..."
         """
-        return self.template['system_prompt']
+        return self.template.get('system_prompt', '')
         
     @system_prompt.setter
     def system_prompt(self, instruction):
@@ -193,12 +191,16 @@ class ChatHistory():
         self.template['system_prompt'] = instruction
         self.reset()
         
-    def embed(self, input, type=None, template=None):
+    def embed(self, input, type=None, **kwargs):
         """
         Get the embedding for a general input (text, image, ect)
-        The embedding type will attempt to be determined automatically
-        if it isn't explicitly specified. Paths that end in image extensions
-        are assumed to be an image, otherwise strings are treated as text.
+        
+        The embedding type is typically 'text', 'image', and will attempted
+        to be determined automatically if it isn't explicitly specified. 
+        Paths that end in image extensions are assumed to be an image, 
+        otherwise strings are treated as text.
+        
+        The kwargs are passed through to the input type's embedding function.
         """
         if not type:
             type = self.embedding_type(input)
@@ -206,24 +208,25 @@ class ChatHistory():
         if type not in self.embedding_functions:
             raise ValueError(f"type '{type}' did not have an embedding registered")
             
-        if self.embedding_functions[type].uses_template:
-            return self.embedding_functions[type].func(input, template)
-        else:
-            return self.embedding_functions[type].func(input)
+        return self.embedding_functions[type].func(input, **kwargs)
         
-    def embed_text(self, text, template=None, use_cache=False):
+    def embed_text(self, text, template=None, use_cache=False, return_tokens=False, **kwargs):
         """
         Get the text embedding after applying the template for 'user', 'bot', ect.
         """
         if template:
             text = replace_text(template, {'${MESSAGE}': text})
 
-        embedding = self.model.embed_text(text, use_cache=use_cache)
+        if return_tokens:
+            embedding = self.model.tokenize(text)
+        else:
+            embedding = self.model.embed_text(text, use_cache=use_cache)
+            
         logging.debug(f"embedding text {embedding.shape} {embedding.dtype} -> ```{text}```".replace('\n', '\\n'))
         
         return embedding
     
-    def embed_dict(self, dict, template=None):
+    def embed_dict(self, dict, **kwargs):
         """
         Get the embedding of a chat entry dict that can contain multiple embedding types.
         """
@@ -233,7 +236,7 @@ class ChatHistory():
             if value is None:
                 continue
             if key in self.embedding_functions:
-                embeddings.append(self.embed(value, type=key, template=template))
+                embeddings.append(self.embed(value, type=key, **kwargs))
                 
         if len(embeddings) == 0:
             raise ValueError("dict did not contain any entries with valid embedding types")
@@ -242,7 +245,7 @@ class ChatHistory():
         else:
             return np.concatenate(embeddings, axis=1)
                 
-    def embed_image(self, image, template=None):
+    def embed_image(self, image, template=None, **kwargs):
         """
         Given an image, extract features and perfom the image embedding.
         This uses the CLIP encoder and a projection model that
@@ -270,19 +273,26 @@ class ChatHistory():
         
         return embeddings
 
-    def embed_chat(self, use_cache=True):
+    def embed_chat(self, use_cache=True, **kwargs):
         """
         Assemble the embedding of either the latest or entire chat.
+        
         If use_cache is true (the default), and only the new embeddings will be returned.
         If use_cache is set to false, then the entire chat history will be returned.
-        Returns the embedding and its token position in the history.
+        
+        The kwargs are passed to the embedding functions - for example, return_tokens=True
+        will return tokens for text inputs rather than embeddings.
+        
+        This function returns an (embedding, position) tuple, where the embedding array
+        contains the new embeddings (or tokens) from the chat, and position is the current
+        overall position in the history (up to the model's context window length)
         """
         embeddings = []
         position = 0
         
         num_user_prompts = 0
         open_user_prompt = False
-        
+
         for i, entry in enumerate(self.entries):
             keys = self.valid_entry_keys(entry)
             
@@ -309,8 +319,11 @@ class ChatHistory():
                 
                 if use_cache:
                     if embed_key not in entry: # TODO  and entry.role != 'bot'  -- only compute bot embeddings when needed
-                        entry[embed_key] = self.embed(entry[key], type=key, template=role_template)
-                        if entry.role != 'bot':  # bot outputs are already included in kv_cache
+                        entry[embed_key] = self.embed(entry[key], type=key, template=role_template, **kwargs)
+                        
+                        # bot message already included in kv_cache, except trailing template
+                        # TODO handle bot generation prompt and trailing template
+                        if entry.role != 'bot':
                             embeddings.append(entry[embed_key])
                             use_cache = False  # all entries after this need to be included
                             if key == 'image':
@@ -321,7 +334,7 @@ class ChatHistory():
                         position += entry[embed_key].shape[1]
                 else:
                     if embed_key not in entry:
-                        entry[embed_key] = self.embed(entry[key], type=key, template=role_template)
+                        entry[embed_key] = self.embed(entry[key], type=key, template=role_template, **kwargs)
                         if key == 'image':
                             open_user_prompt = True
                     embeddings.append(entry[embed_key])
@@ -331,6 +344,9 @@ class ChatHistory():
                 
         return np.concatenate(embeddings, axis=1), position
 
+    def tokenize(self, use_cache=True, **kwargs):
+        return self.embed_chat(use_cache=use_cache, return_tokens=True, **kwargs)
+        
     def valid_entry_keys(self, entry, is_embedding=True):
         keys = []
         

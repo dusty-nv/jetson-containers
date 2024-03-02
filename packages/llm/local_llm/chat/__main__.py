@@ -9,7 +9,7 @@ import numpy as np
 from termcolor import cprint
 
 from local_llm import LocalLM, ChatHistory, ChatTemplates
-from local_llm.utils import ImageExtensions, ArgParser, load_prompts, print_table 
+from local_llm.utils import ImageExtensions, ArgParser, KeyboardInterrupt, load_prompts, print_table 
 
 # see utils/args.py for options
 parser = ArgParser()
@@ -17,6 +17,7 @@ parser.add_argument("--no-streaming", action="store_true", help="wait to output 
 args = parser.parse_args()
 
 prompts = load_prompts(args.prompt)
+interrupt = KeyboardInterrupt()
 
 # load model
 model = LocalLM.from_pretrained(
@@ -28,33 +29,6 @@ model = LocalLM.from_pretrained(
 
 # create the chat history
 chat_history = ChatHistory(model, args.chat_template, args.system_prompt)
-
-# make an interrupt handler for muting the bot output
-last_interrupt = 0.0
-interrupt_chat = False
-
-def on_interrupt(signum, frame):
-    """
-    Ctrl+C handler - if done once, interrupts the LLM
-    If done twice in succession, exits the program
-    """
-    global last_interrupt
-    global interrupt_chat
-    
-    curr_time = time.perf_counter()
-    time_diff = curr_time - last_interrupt
-    last_interrupt = curr_time
-    
-    if time_diff > 2.0:
-        logging.warning("Ctrl+C:  interrupting chatbot")
-        interrupt_chat = True
-    else:
-        while True:
-            logging.warning("Ctrl+C:  exiting...")
-            sys.exit(0)
-            time.sleep(0.5)
-               
-signal.signal(signal.SIGINT, on_interrupt)
 
 
 while True: 
@@ -88,8 +62,8 @@ while True:
         logging.debug("image message, waiting for user prompt")
         continue
         
-    # get the latest embeddings from the chat
-    embedding, position = chat_history.embed_chat()
+    # get the latest embeddings (or tokens) from the chat
+    embedding, position = chat_history.embed_chat(return_tokens=not model.has_embed)
     
     if logging.getLogger().isEnabledFor(logging.DEBUG):
         logging.debug(f"adding embedding shape={embedding.shape} position={position}")
@@ -117,9 +91,9 @@ while True:
         for token in reply:
             bot_reply.text += token
             cprint(token, 'green', end='', flush=True)
-            if interrupt_chat:
+            if interrupt:
                 reply.stop()
-                interrupt_chat = False
+                interrupt.reset()
                 break
             
     print('\n')

@@ -37,10 +37,10 @@ class ArgParser(argparse.ArgumentParser):
             self.add_argument("--save-mermaid", type=str, default=None, help="save mermaid diagram of the pipeline to this file")
             
         if 'chat' in extras:
-            self.add_argument("--system-prompt", type=str, default=None, help="override the system prompt instruction")
-            self.add_argument("--chat-template", type=str, default=None, #choices=list(ChatTemplates.keys()), 
-                help="manually select the chat template ('llama-2', 'llava-v1', 'vicuna-v1')")
-
+            from local_llm import ChatTemplates
+            self.add_argument("--chat-template", type=str, default=None, choices=list(ChatTemplates.keys()), help="manually select the chat template")
+            self.add_argument("--system-prompt", type=str, default=None, help="override the default system prompt instruction")
+            
         if 'generation' in extras:
             self.add_argument("--max-new-tokens", type=int, default=128, 
                 help="the maximum number of new tokens to generate, in addition to the prompt")
