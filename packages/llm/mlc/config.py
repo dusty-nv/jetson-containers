@@ -67,6 +67,6 @@ package = [
     #mlc('c30348a', 'patches/3feed05.diff', requires='>=36'),  # 02/19/2024
     #mlc('a2d9eea', 'patches/3feed05.diff', requires='>=36'),  # 02/19/2024
     mlc('5584cac', 'patches/3feed05.diff', requires='>=36'),   # 02/21/2024
-    mlc('607dc5a', 'patches/607dc5a.diff', requires='>=36'),  # 02/27/2024
-    mlc('1f70d71', 'patches/1f70d71.diff', default=(L4T_VERSION.major >= 36), requires='>=36'),   # 02/29/2024
+    mlc('607dc5a', 'patches/607dc5a.diff', default=(L4T_VERSION.major >= 36), requires='>=36'),  # 02/27/2024
+    mlc('1f70d71', 'patches/1f70d71.diff', requires='>=36'),   # 02/29/2024
 ]

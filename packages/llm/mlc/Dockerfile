@@ -47,7 +47,7 @@ ENV LD_LIBRARY_PATH="/usr/local/lib/python${PYTHON_VERSION}/dist-packages/tvm:${
 ENV TVM_HOME=/opt/mlc-llm/3rdparty/tvm
 
 # https://github.com/casper-hansen/AutoAWQ/issues/334
-RUN pip3 install --no-cache-dir --verbose 'transformers<4.36'
+#RUN pip3 install --no-cache-dir --verbose 'transformers<4.36'
 
 # make sure it loads
 RUN pip3 show mlc_llm && \
