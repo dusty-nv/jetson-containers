@@ -24,10 +24,12 @@ As an initial example, first test the console-based chat demo from [`chat/__main
 >   * [`meta-llama/Llama-2-7b-chat-hf`](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf)
 >   * [`meta-llama/Llama-2-13b-chat-hf`](https://huggingface.co/meta-llama/Llama-2-13b-chat-hf)
 >   * [`meta-llama/Llama-2-70b-chat-hf`](https://huggingface.co/meta-llama/Llama-2-70b-chat-hf)
->   * [`TinyLlama/TinyLlama-1.1B-Chat-v1.0`])(https://huggingface.co/TinyLlama/TinyLlama-1.1B-Chat-v1.0)
->   * [`princeton-nlp/Sheared-LLaMA-2.7B-ShareGPT`])(https://huggingface.co/princeton-nlp/Sheared-LLaMA-2.7B-ShareGPT)
+>
+> [Small Language Models (SLMs)](https://www.jetson-ai-lab.com/tutorial_slm.html)
 >   * [`stabilityai/stablelm-2-zephyr-1_6b`](https://huggingface.co/stabilityai/stablelm-2-zephyr-1_6b)
 >   * [`stabilityai/stablelm-zephyr-3b`](https://huggingface.co/stabilityai/stablelm-zephyr-3b)
+>   * [`TinyLlama/TinyLlama-1.1B-Chat-v1.0`](https://huggingface.co/TinyLlama/TinyLlama-1.1B-Chat-v1.0)
+>   * [`princeton-nlp/Sheared-LLaMA-2.7B-ShareGPT`](https://huggingface.co/princeton-nlp/Sheared-LLaMA-2.7B-ShareGPT)
 >   * [`microsoft/phi-2`](https://huggingface.co/microsoft/phi-2)
 >   * [`google/gemma-2b-it`](https://huggingface.co/google/gemma-2b-it)
 >
