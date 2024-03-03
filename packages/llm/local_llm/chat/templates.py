@@ -97,6 +97,11 @@ ChatTemplates = {
         'user': "<end_of_turn>\n<start_of_turn>user\n${MESSAGE}<end_of_turn>\n<start_of_turn>model\n",
         'bot': "${MESSAGE}",
     },
+    
+    'bunny': {
+        'user': 'USER: ${MESSAGE}\n',
+        'bot': 'ASSISTANT: ${MESSAGE}\n', # TODO: does output already end in </s> ?
+    },
 }
 
 ChatTemplates['llava-v0'] = ChatTemplates['vicuna-v0']
