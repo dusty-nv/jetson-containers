@@ -14,10 +14,11 @@ from local_llm.utils import ImageExtensions, ArgParser, KeyboardInterrupt, load_
 # see utils/args.py for options
 parser = ArgParser()
 
-parser.add_argument("--disable-streaming", action="store_true", help="wait to output entire reply instead of token by token")
-parser.add_argument("--hide-stats", action="store_true", help="suppress the printing of generation performance stats")
 parser.add_argument("--prompt-color", type=str, default='blue', help="color to print user prompts (see https://github.com/termcolor/termcolor)")
 parser.add_argument("--reply-color", type=str, default='green', help="color to print user prompts (see https://github.com/termcolor/termcolor)")
+
+parser.add_argument("--disable-streaming", action="store_true", help="wait to output entire reply instead of token by token")
+parser.add_argument("--disable-stats", action="store_true", help="suppress the printing of generation performance stats")
 
 args = parser.parse_args()
 
@@ -103,7 +104,7 @@ while True:
             
     print('\n')
     
-    if not args.hide_stats:
+    if not args.disable_stats:
         print_table(model.stats)
         print('')
     
