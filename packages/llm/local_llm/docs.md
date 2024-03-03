@@ -7,11 +7,12 @@
 
 ## Text Chat
 
-As an initial example, first test the console-based chat demo from [`__main__.py`](__main__.py)
+As an initial example, first test the console-based chat demo from [`chat/__main__.py`](chat/__main__.py)
 
 ```bash
 ./run.sh --env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN> $(./autotag local_llm) \
-  python3 -m local_llm --api=mlc --model=meta-llama/Llama-2-7b-chat-hf
+  python3 -m local_llm.chat --api=mlc \
+    --model=meta-llama/Llama-2-7b-chat-hf
 ```
 
 > [!NOTE]  
@@ -19,6 +20,12 @@ As an initial example, first test the console-based chat demo from [`__main__.py
 >   * [`meta-llama/Llama-2-7b-chat-hf`](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf)
 >   * [`meta-llama/Llama-2-13b-chat-hf`](https://huggingface.co/meta-llama/Llama-2-13b-chat-hf)
 >   * [`meta-llama/Llama-2-70b-chat-hf`](https://huggingface.co/meta-llama/Llama-2-70b-chat-hf)
+>   * [`TinyLlama/TinyLlama-1.1B-Chat-v1.0`])(https://huggingface.co/TinyLlama/TinyLlama-1.1B-Chat-v1.0)
+>   * [`princeton-nlp/Sheared-LLaMA-2.7B-ShareGPT`])(https://huggingface.co/princeton-nlp/Sheared-LLaMA-2.7B-ShareGPT)
+>   * [`stabilityai/stablelm-2-zephyr-1_6b`](https://huggingface.co/stabilityai/stablelm-2-zephyr-1_6b)
+>   * [`stabilityai/stablelm-zephyr-3b`](https://huggingface.co/stabilityai/stablelm-zephyr-3b)
+>   * [`microsoft/phi-2`](https://huggingface.co/microsoft/phi-2)
+>   * [`google/gemma-2b-it`](https://huggingface.co/google/gemma-2b-it)
 >
 > For Llama-2 models, see [here](/packages/llm/transformers/README.md#llama2) to request your access token from HuggingFace.
 
@@ -39,6 +46,7 @@ Some of the noteworthy command-line options can be found in [`utils/args.py`](ut
 | `--system-prompt`      | Sets the system instruction used at the beginning of the chat sequence                    |
 | `--chat-template`      | Manually set the chat template (`llama-2`, `llava-1`, `vicuna-v1`)                        |
 | **Generation**         |                                                                                           |
+| `--max-context-len`    | The maximum chat history context length (in tokens), lower to reduce memory usage         |
 | `--max-new-tokens`     | The maximum number of output tokens to generate for each response (default: 128)          |
 | `--min-new-tokens`     | The minimum number of output tokens to generate (default: -1, disabled)                   |
 | `--do-sample`          | Use token sampling during output with `--temperature` and `--top-p` settings              |
@@ -52,12 +60,15 @@ During testing, you can specify prompts on the command-line that will run sequen
 
 ```bash
 ./run.sh --env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN> $(./autotag local_llm) \
-  python3 -m local_llm.chat --api=mlc --model=meta-llama/Llama-2-7b-chat-hf \
+  python3 -m local_llm.chat --api=mlc \
+    --model=meta-llama/Llama-2-7b-chat-hf \
     --prompt 'hi, how are you?' \
     --prompt 'whats the square root of 900?' \
     --prompt 'whats the previous answer times 4?' \
     --prompt 'can I get a recipie for french onion soup?'
 ```
+
+You can also load JSON files containing prompt sequences, like from [`/data/prompts/qa.json`](/data/prompts/qa.json)
 
 ## Multimodal Chat
 
