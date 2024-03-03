@@ -25,7 +25,7 @@ class MLCModel(LocalLM):
     """
     MLC model (https://github.com/mlc-ai/mlc-llm)
     """
-    def __init__(self, model_path, quant='q4f16_ft', **kwargs):
+    def __init__(self, model_path, quant='q4f16_ft', max_context_len=None, **kwargs):
         """
         Parameters:
         
@@ -38,6 +38,11 @@ class MLCModel(LocalLM):
                          or the quantization method to use (q4f16_1, q4f16_ft, ect)          
                          If a path, there should be a .so in this dir, with params/ 
                          directory under it containing the weights and MLC config.
+                         
+          max_context_len (int) -- override the model's default context window length (in tokens)
+                                   This should include space for model output (up to --max-new-tokens)
+                                   Lowering this from the default (e.g. 4096 for Llama) will reduce 
+                                   memory usage. If None, it's inherited from the model's max length.
         """
         super(MLCModel, self).__init__(model_path, **kwargs)
 
@@ -49,7 +54,7 @@ class MLCModel(LocalLM):
         if not quant:
             quant = 'q4f16_ft'
             
-        quant = MLCModel.quantize(model_path, self.config, quant, **kwargs)
+        quant = MLCModel.quantize(model_path, self.config, method=quant, max_context_len=max_context_len, **kwargs)
             
         self.config.quant = quant.split('-')[-1]  # recover the quant method        
         self.quant_path = quant
@@ -222,7 +227,7 @@ class MLCModel(LocalLM):
 
     
     @staticmethod
-    def quantize(model, config, method='q4f16_ft', output='/data/models/mlc/dist', **kwargs):
+    def quantize(model, config, method='q4f16_ft', max_context_len=None, output='/data/models/mlc/dist', **kwargs):
         """
         Quantize a model with the given method.  It will be saved under the output directory,
         in a subdirectory based on the model name and quant method (Llama-2-7b-chat-hf-q4f16_ft)
@@ -238,19 +243,32 @@ class MLCModel(LocalLM):
         
         for config_path in config_paths:
             if os.path.isfile(config_path):
-                return quant_path
-
+                if not max_context_len:
+                    return quant_path
+                try:
+                    with open(config_path) as config_file:
+                        config_json = json.load(config_file)
+                    default_context_len = config_json.get('max_window_size', config.json.get('context_window_size'))
+                    if default_context_len and default_context_len == max_context_len:
+                        return quant_path
+                    logging.warning(f"Rebuilding {model_name} with context length {max_context_len} (was {default_context_len})")
+                except Exception as err:
+                    logging.warning(f"Rebuilding {model_name} after exception occurred trying to load {config_path}\n{err}")
+                    pass
+                    
         if not os.path.isdir(model_path):
             os.symlink(model, model_path, target_is_directory=True)
                 
         if config.model_type == 'phi' or config.model_type == 'gemma':
             cmd = f"mlc_chat convert_weight {model} --quantization {method} --output {quant_path} && "
-            cmd += f"mlc_chat gen_config {model} --quantization {method} --conv-template LM --max-batch-size 1 --output {quant_path} && "
-            cmd += f"mlc_chat compile {quant_path} --device cuda --opt O3 --output {quant_path}/{model_name + '-' + method}-cuda.so"
+            cmd += f"mlc_chat gen_config {model} --quantization {method} --conv-template LM --max-batch-size 1 --output {quant_path} "
+            if max_context_len:
+                cmd += "--context-window-size {max_context_len} "
+            cmd += f"&& mlc_chat compile {quant_path} --device cuda --opt O3 --output {quant_path}/{model_name + '-' + method}-cuda.so"
         else:
             cmd = f"python3 -m mlc_llm.build --model {model_path} --quantization {method} "
             cmd += f"--target cuda --use-cuda-graph --use-flash-attn-mqa --sep-embed "
-            cmd += f"--max-seq-len {config.max_position_embeddings} "
+            cmd += f"--max-seq-len {max_context_len if max_context_len else config.max_position_embeddings} "
             cmd += f"--artifact-path {output} "
 
             if len(glob.glob(os.path.join(model_path, '*.safetensors'))) > 0:
