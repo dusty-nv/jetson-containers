@@ -13,7 +13,12 @@ from local_llm.utils import ImageExtensions, ArgParser, KeyboardInterrupt, load_
 
 # see utils/args.py for options
 parser = ArgParser()
-parser.add_argument("--no-streaming", action="store_true", help="wait to output entire reply instead of token by token")
+
+parser.add_argument("--disable-streaming", action="store_true", help="wait to output entire reply instead of token by token")
+parser.add_argument("--hide-stats", action="store_true", help="suppress the printing of generation performance stats")
+parser.add_argument("--prompt-color", type=str, default='blue', help="color to print user prompts (see https://github.com/termcolor/termcolor)")
+parser.add_argument("--reply-color", type=str, default='green', help="color to print user prompts (see https://github.com/termcolor/termcolor)")
+
 args = parser.parse_args()
 
 prompts = load_prompts(args.prompt)
@@ -36,11 +41,11 @@ while True:
     if isinstance(prompts, list):
         if len(prompts) > 0:
             user_prompt = prompts.pop(0)
-            cprint(f'>> PROMPT: {user_prompt}', 'blue')
+            cprint(f'>> PROMPT: {user_prompt}', args.prompt_color)
         else:
             break
     else:
-        cprint('>> PROMPT: ', 'blue', end='', flush=True)
+        cprint('>> PROMPT: ', args.prompt_color, end='', flush=True)
         user_prompt = sys.stdin.readline().strip()
     
     print('')
@@ -71,7 +76,7 @@ while True:
     # generate bot reply
     reply = model.generate(
         embedding, 
-        streaming=not args.no_streaming, 
+        streaming=not args.disable_streaming, 
         kv_cache=chat_history.kv_cache,
         stop_tokens=chat_history.template.stop,
         max_new_tokens=args.max_new_tokens,
@@ -84,23 +89,23 @@ while True:
         
     bot_reply = chat_history.append(role='bot', text='') # placeholder
     
-    if args.no_streaming:
+    if args.disable_streaming:
         bot_reply.text = reply
-        cprint(reply, 'green')
+        cprint(reply, args.reply_color)
     else:
         for token in reply:
             bot_reply.text += token
-            cprint(token, 'green', end='', flush=True)
+            cprint(token, args.reply_color, end='', flush=True)
             if interrupt:
                 reply.stop()
                 interrupt.reset()
                 break
             
     print('\n')
-    print_table(model.stats)
-    print('')
+    
+    if not args.hide_stats:
+        print_table(model.stats)
+        print('')
     
     chat_history.kv_cache = reply.kv_cache   # save the kv_cache 
     bot_reply.text = reply.output_text  # sync the text once more
- 
-#logging.warning('exiting...')
