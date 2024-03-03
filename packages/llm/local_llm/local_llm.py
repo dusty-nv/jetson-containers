@@ -164,9 +164,14 @@ class LocalLM():
             self.has_vision = 'llava' in self.config.get('_name_or_path', '').lower()
 
         for arch in self.config.get('architectures', []):
-            if 'llava' in arch.lower():
+            if 'llava' in arch.lower() or 'bunny' in arch.lower():
                 self.has_vision = True
 
+        if self.config.model_type == 'bunny-stablelm':
+            self.patch_config(model_type='stablelm_epoch')
+        elif self.config.model_type == 'bunny-phi':
+            self.patch_config(model_type='phi')
+            
         self.stats = AttributeDict()
      
     def patch_config(self, **kwargs):
