@@ -16,7 +16,7 @@ ARG TRITON_DIR="/opt/triton" \
     TRITON_CUOBJDUMP_PATH="$CUDA_HOME/bin/cuobjdump" \
     TRITON_NVDISASM_PATH="$CUDA_HOME/bin/nvdisasm"
 
-ADD https://api.github.com/repos/openai/AutoAWQ/git/refs/heads/main /tmp/triton_version.json
+ADD https://api.github.com/repos/openai/triton/git/refs/heads/main /tmp/triton_version.json
 
 # Install triton
 # https://github.com/openai/triton
