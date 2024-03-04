@@ -12,9 +12,9 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG TRITON_DIR="/opt/triton" \
-    TRITON_PTXAS_PATH="$CUDA_TOOLKIT_ROOT_DIR/bin/ptxas" \
-    TRITON_CUOBJDUMP_PATH="$CUDA_TOOLKIT_ROOT_DIR/bin/cuobjdump" \
-    TRITON_NVDISASM_PATH="$CUDA_TOOLKIT_ROOT_DIR/bin/nvdisasm"
+    TRITON_PTXAS_PATH="$CUDA_HOME/bin/ptxas" \
+    TRITON_CUOBJDUMP_PATH="$CUDA_HOME/bin/cuobjdump" \
+    TRITON_NVDISASM_PATH="$CUDA_HOME/bin/nvdisasm"
 
 ADD https://api.github.com/repos/openai/AutoAWQ/git/refs/heads/main /tmp/triton_version.json
 
