@@ -20,9 +20,7 @@ ADD https://api.github.com/repos/openai/AutoAWQ/git/refs/heads/main /tmp/triton_
 
 # Install triton
 # https://github.com/openai/triton
-# Note: We need to install pybind11[global] as global
 RUN set -ex \
-    # && pip3 install --no-cache-dir --verbose ninja pybind11[global] \
     && git clone --depth=1 https://github.com/openai/triton $TRITON_DIR \
     && git -C "$TRITON_DIR/third_party" submodule update --init nvidia \
     && sed 's|LLVMAMDGPUCodeGen||g' -i $TRITON_DIR/CMakeLists.txt \
