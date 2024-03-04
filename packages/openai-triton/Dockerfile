@@ -11,8 +11,9 @@ ARG BASE_IMAGE
 
 FROM ${BASE_IMAGE}
 
-ARG TRITON_DIR="/opt/triton" \
-    TRITON_PTXAS_PATH="$CUDA_HOME/bin/ptxas" \
+ARG TRITON_DIR="/opt/triton"
+
+ENV TRITON_PTXAS_PATH="$CUDA_HOME/bin/ptxas" \
     TRITON_CUOBJDUMP_PATH="$CUDA_HOME/bin/cuobjdump" \
     TRITON_NVDISASM_PATH="$CUDA_HOME/bin/nvdisasm"
 
