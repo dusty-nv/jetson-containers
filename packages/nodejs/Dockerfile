@@ -9,9 +9,8 @@ ARG BASE_IMAGE
 
 FROM ${BASE_IMAGE}
 
-ENV NODE_MAJOR=20
+ARG NODE_MAJOR=20
 
-# install prerequisites
 RUN set -ex \
     && mkdir -p /etc/apt/keyrings \
     && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
