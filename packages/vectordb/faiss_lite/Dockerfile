@@ -1,8 +1,8 @@
 #---
-# name: faiss:lite
+# name: faiss_lite
 # group: vectordb
 # config: config.py
-# depends: [faiss:main, cuda-python, pytorch]
+# depends: [pytorch, cuda-python, faiss]
 # test: test.sh
 #---
 ARG BASE_IMAGE
