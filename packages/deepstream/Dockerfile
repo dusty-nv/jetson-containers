@@ -62,7 +62,7 @@ ARG PYDS_VERSION
 ARG PYTHON_VERSION_MAJOR
 ARG PYTHON_VERSION_MINOR
 
-RUN cd /opt/nvidia/deepstream/deepstream && \
+RUN cd /opt/nvidia/deepstream/deepstream/sources && \
     git clone --branch ${PYDS_VERSION} --recursive --depth=1 https://github.com/NVIDIA-AI-IOT/deepstream_python_apps && \
     cd deepstream_python_apps/bindings && \
     mkdir build && \
