@@ -53,13 +53,11 @@ def mlc(version, patch, llvm=17, tag=None, requires=None, default=False):
     
     return builder, runtime
 
-latest_sha = github_latest_commit(repo, branch='main')
-log_debug('-- MLC latest commit:', latest_sha)
-
-#default_dev=(L4T_VERSION.major >= 36)
+#latest_sha = github_latest_commit(repo, branch='main')
+#log_debug('-- MLC latest commit:', latest_sha)
 
 package = [
-    mlc(latest_sha, 'patches/3feed05.diff', tag='dev'),
+    mlc('731616e', 'patches/3feed05.diff', tag='dev'),
     mlc('9bf5723', 'patches/9bf5723.diff', requires='==35.*'), # 10/20/2023
     mlc('51fb0f4', 'patches/51fb0f4.diff', default=(L4T_VERSION.major == 35)), # 12/15/2023
     mlc('3feed05', 'patches/3feed05.diff', requires='>=36'), # 02/08/2024
@@ -69,4 +67,5 @@ package = [
     mlc('5584cac', 'patches/3feed05.diff', requires='>=36'),   # 02/21/2024
     mlc('607dc5a', 'patches/607dc5a.diff', default=(L4T_VERSION.major >= 36), requires='>=36'),  # 02/27/2024
     mlc('1f70d71', 'patches/1f70d71.diff', requires='>=36'),   # 02/29/2024
+    mlc('731616e', 'patches/1f70d71.diff', requires='>=36'),   # 03/03/2024
 ]
