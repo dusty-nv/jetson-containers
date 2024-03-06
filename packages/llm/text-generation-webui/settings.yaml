@@ -1,0 +1,17 @@
+mode: chat-instruct
+chat_style: cai-chat
+prompt-default: QA
+prompt-notebook: QA
+preset: Divine Intellect
+seed: -1
+stream: true
+name1: You
+name2: AI
+character: Assistant
+autoload_model: false
+default_extensions:
+  - gallery
+  - openai
+openai-embedding_device: cuda
+multimodal-vision_bits: 16
+multimodal-projector_bits: 16
