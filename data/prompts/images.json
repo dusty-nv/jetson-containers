@@ -1,16 +1,21 @@
 [
     "/data/images/dogs.jpg",
-    "What breed of dog is in the image?",
-    "What kind of tree is in the background?",
+    "What breeds of dogs are in the image?",
+    "reset",
+    "/data/images/fruit.jpg",
+    "What kinds of fruit are in the image?",
+    "How much do the peaches cost?",
     "reset",
     "/data/images/hoover.jpg",
-    "what does the road sign say?",
-    "what kind of environment is it?",
+    "What does the road sign say?",
+    "How many miles away is the exit?",
+    "What kind of environment is in the background?",
     "reset",
     "/data/images/path.jpg",
-    "what does the sign say?",
+    "What does the sign say?",
+    "What kind of trees are in the background?",
     "reset",
     "/data/images/lake.jpg",
-    "please describe the scene.",
-    "are there any hazards to be aware of?"
+    "Please describe the scene.",
+    "Are there any hazards to be aware of?"
 ]
