@@ -54,44 +54,6 @@
       
       function onWebsocketMsg(payload, type) {
         if( type == MESSAGE_JSON ) { 
-          /*if( 'chat_history' in payload ) {
-            const chat_history = payload['chat_history'];
-            
-            let chj = $('#chat-history-container');
-            let chc = document.getElementById('chat-history-container');
-            let isScrolledToBottom = chc.scrollHeight - chc.clientHeight <= chc.scrollTop + 1;
-
-            chj.empty(); // clear because server may remove partial/rejected ASR prompts
-            
-            for( let n=0; n < chat_history.length; n++ ) {
-              const role = chat_history[n]['role'];
-              
-              if( role == 'system' )
-                continue;
-                
-              let contents = '';
-              var hasImage = 'image' in chat_history[n];
-              
-              if( hasImage ) {
-                contents += `<img src=${chat_history[n]['image']} width="100%">`;
-                imageAtBottom = true;
-              }
-              
-              if( 'text' in chat_history[n] )
-                contents += chat_history[n]['text'];
-
-              if( contents.length > 0 )
-                chj.append(`<div id="msg_${n}" class="chat-message-${role} mb-3">${contents}</div><br/>`);
-            }
-            
-            if( isScrolledToBottom ) { // autoscroll unless the user has scrolled up
-              if( hasImage )
-                setTimeout(scrollBottom, 50, chc);  // wait for images to load to get right height
-              else
-                scrollBottom(chc);
-            }
-          }*/
-				
           if( 'search_results' in payload ) {
             const search_results = payload['search_results'];
             
@@ -180,6 +142,7 @@
               {column: "id", dir: "desc"}
             ],
             layout: "fitDataStretch",
+            placeholder: "No events have been detected.",
             //pagination: true,
             //paginationSize: 3,
         });

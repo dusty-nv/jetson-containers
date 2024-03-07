@@ -32,10 +32,17 @@ class NanoDB:
         if isinstance(dtype, str):
             dtype = np.dtype(dtype)
      
-        self.model = CLIPEmbedding(model, dtype=dtype, **kwargs) #AutoEmbedding(dtype=dtype) if model is None else model
-        dim = self.model.config.output_shape[-1]
+        if model:
+            self.model = CLIPEmbedding(model, dtype=dtype, **kwargs) #AutoEmbedding(dtype=dtype) if model is None else model
+            dim = self.model.config.output_shape[-1]
+        else:
+            self.model = None
+            dim = 768
+            
         self.index = cudaVectorIndex(dim, dtype, **kwargs)
-        self.model.stream = self.index.torch_stream
+        
+        if model:
+            self.model.stream = self.index.torch_stream
         
         if path and self.get_paths(path, check_exists=True):
             self.load(path)
@@ -48,16 +55,26 @@ class NanoDB:
         Queries can be text (str or list[str]), tokens (list[int], ndarray[int] or torch.Tensor[int])
         or images (filename or list of filenames, PIL image or a list of PIL images)
         """
-        embedding = self.embed(query)
+        if isinstance(query, (np.ndarray, torch.Tensor)) and len(query.shape) == 2 and query.shape[1] == self.index.shape[1]:
+            embedding = query
+        else:
+            embedding = self.embed(query)
+            
         indexes, distances = self.index.search(embedding, k=k)
         print_table(self.index.stats)
         return indexes, distances
      
     def add(self, data, metadata=None, **kwargs):
-        embedding = self.embed(data, **kwargs)
+        if isinstance(data, (np.ndarray, torch.Tensor)) and len(data.shape) == 2 and data.shape[1] == self.index.shape[1]:
+            embedding = data
+        else:
+            embedding = self.embed(data, **kwargs)
+            
         index = self.index.add(embedding, sync=True)
+        
         if metadata:
             self.metadata.insert(index, metadata)
+            
         return index
                 
     def scan(self, path, max_items=None, **kwargs):
@@ -171,10 +188,12 @@ class NanoDB:
             'reserve':  self.index.reserved_size,
             'autosave': self.autosave,
             'scans':    self.scans,
-            'model':    self.model.config.name,
             'metric':   self.index.metric,
-            'crop':     self.model.config.crop,
         }
+        
+        if self.model:
+            config['model'] = self.model.config.name
+            config['crop'] = self.model.config.crop
 
         time_begin = time.perf_counter()
         
@@ -220,7 +239,10 @@ class NanoDB:
         if type is None:
             type = self.embedding_type(data)
             #print(f"-- generating embedding for {data} with type={type}")
-                
+         
+        if self.model is None:
+            raise RuntimeError("nanodb was created without an embedding model")
+            
         if type == 'image':
             embedding = self.model.embed_image(data)
             print_table(self.model.image_stats)

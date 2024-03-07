@@ -13,7 +13,7 @@ from termcolor import cprint
 from local_llm import Agent, StopTokens
 
 from local_llm.web import WebServer
-from local_llm.plugins import VideoSource, VideoOutput, ChatQuery, PrintStream, ProcessProxy, NanoDB
+from local_llm.plugins import VideoSource, VideoOutput, ChatQuery, PrintStream, ProcessProxy, EventFilter, NanoDB
 from local_llm.utils import ArgParser, print_table
 
 from jetson_utils import cudaFont, cudaMemcpy, cudaToNumpy, cudaDeviceSynchronize, saveImage
@@ -29,6 +29,7 @@ class VideoQuery(Agent):
         # load model in another process for smooth streaming
         self.llm = ProcessProxy('ChatQuery', model=model, drop_inputs=True, **kwargs) #ProcessProxy((lambda **kwargs: ChatQuery(model, drop_inputs=True, **kwargs)), **kwargs)
         self.llm.add(PrintStream(color='green', relay=True).add(self.on_text))
+        self.llm.add(self.on_image_embedding, channel=ChatQuery.OutputImageEmbedding)
         self.llm.start()
 
         # test / warm-up query
@@ -52,9 +53,9 @@ class VideoQuery(Agent):
         
         self.pause_video = False
         self.pause_image = None
-        self.num_frames = 0
+        self.last_image = None
         self.tag_image = None
-        
+
         self.pipeline = [self.video_source]
         
         # setup prompts
@@ -79,17 +80,11 @@ class VideoQuery(Agent):
         self.keyboard_thread = threading.Thread(target=self.poll_keyboard)
         self.keyboard_thread.start()
 
-        # event filters
-        self.filter_type = None
-        self.event_tags = None
-        self.event_filters = None
-        self.event_history = []
-
         # nanoDB
         if nanodb:
             self.db = NanoDB(
                 path=nanodb, 
-                model=kwargs.get('nanodb_model'), 
+                model=None, #kwargs.get('nanodb_model'), 
                 reserve=kwargs.get('nanodb_reserve'), 
                 k=8, drop_inputs=True,
             ).start().add(self.on_search)
@@ -114,6 +109,9 @@ class VideoQuery(Agent):
             nanodb=nanodb,
             **kwargs
         )
+        
+        # event filters
+        self.events = EventFilter(server=self.server)
    
     def on_video(self, image):
         if self.pause_video:
@@ -126,26 +124,9 @@ class VideoQuery(Agent):
             cudaDeviceSynchronize()
             self.llm(['reset', np_image, self.prompt])
             self.last_prompt = self.prompt
+            if self.db:
+                self.last_image = cudaMemcpy(image)
 
-        if self.db and self.tag_image:
-            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-            filename = f"/data/datasets/uploads/{timestamp}.jpg"
-            metadata = dict(path=filename, time=timestamp, tags=self.tag_image)
-            save_image = cudaMemcpy(image)
-            cudaDeviceSynchronize()
-            self.db(cudaToNumpy(save_image), add=True, metadata=metadata)
-            threading.Thread(target=lambda: saveImage(filename, save_image)).start()
-            logging.info(f"added incoming image to database with tags '{self.tag_image}' ({filename})")
-            self.tag_image = None
-            
-        if self.db and self.auto_refresh_db and self.num_frames % 15 == 0:
-            np_image = cudaToNumpy(image)
-            cudaDeviceSynchronize()
-            np_image = np_image.copy()
-            self.db(np_image) #cudaToNumpy(image).copy()) #cudaMemcpy(image))
-        
-        self.num_frames = self.num_frames + 1
-        
         text = self.text.replace('\n', '').replace('</s>', '').strip()
 
         if text:
@@ -166,11 +147,27 @@ class VideoQuery(Agent):
             self.print_stats()
             
             if not self.warmup:
-                self.detect_event(self.text)
+                self.events(self.text, prompt=self.prompt)
                 
             self.warmup = False
             self.eos = True
 
+    def on_image_embedding(self, embedding):
+        if self.tag_image and self.last_image:
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            filename = f"/data/datasets/uploads/{timestamp}.jpg"
+            metadata = dict(path=filename, time=timestamp, tags=self.tag_image)
+            self.tag_image = None 
+            
+            def save_image(filename, image, embedding, metadata):
+                saveImage(filename, image)
+                self.db(embedding, add=True, metadata=metadata)
+                logging.info(f"added incoming image to database with tags '{self.tag_image}' ({filename})")
+        
+            threading.Thread(target=save_image, args=(filename, self.last_image, embedding, metadata)).start()
+            
+        self.db(embedding)
+        
     def on_search(self, results):
         html = []
         
@@ -199,11 +196,6 @@ class VideoQuery(Agent):
                 self.pause_video = msg['pause_video']
                 self.pause_image = None
                 logging.info(f"{'pausing' if self.pause_video else 'resuming'} processing of incoming video stream")
-            elif 'event_filters' in msg:
-                self.set_filters(msg['event_filters'])
-                logging.info(f'set event filters to "{msg["event_filters"]}" {self.event_filters}')
-            elif 'event_tags' in msg:
-                self.event_tags = msg['event_tags']
             elif 'auto_refresh' in msg:
                 self.auto_refresh = msg['auto_refresh']
                 logging.info(f"{'enabling' if self.auto_refresh else 'disabling'} auto-refresh of model output with prior query")
@@ -216,111 +208,7 @@ class VideoQuery(Agent):
             elif 'tag_image' in msg:
                 self.tag_image = msg['tag_image']
                 print('TAG IMAGE', self.tag_image)
-    
-    def detect_event(self, text):
-        filters = self.filter_text(text, self.event_filters, op=self.filter_type)
-        
-        if not text or not filters:
-            if self.event_history and 'end' not in self.event_history[-1]:
-                self.on_event_end(self.event_history[-1])
-            return
-            
-        new_event = False
-        
-        if not self.event_history:
-            new_event = True
-        elif 'end' in self.event_history[-1]:
-            new_event = True
-        elif self.event_history[-1]['filters'] != filters:
-            new_event = True
-            self.on_event_end(self.event_history[-1])
-            
-        if new_event:
-            self.on_event_begin(text, filters)
-        else:
-            self.event_history[-1]['last'] = time.time()
-            self.send_events(self.event_history)
-            
-    def on_event_begin(self, text, filters):
-        event = {
-            'id': len(self.event_history),
-            'text': text.strip(),
-            'prompt': self.prompt,
-            'filters': filters,
-            'begin': time.time(),
-            'last': time.time(),
-        }
-        
-        if self.event_tags:
-            event['tags'] = self.event_tags
-            alert_text = f"EVENT OCCURRED  {event['tags']}"
-        else:
-            alert_text = f"EVENT OCCURRED  {event['filters']}"
-
-        event['alert'] = self.server.send_alert(alert_text, category='event_begin', level='warning')
-        
-        self.event_history.append(event)
-        self.send_events(self.event_history)
-        
-        return event
-        
-    def on_event_end(self, event):
-        event['end'] = time.time()
-        self.server.send_message({'end_alert': event['alert']['id']})
-        alert_text = f"EVENT FINISHED  {event.get('tags', event['filters'])}  (duration {event['end']-event['begin']:.1f} seconds)"
-        self.server.send_alert(alert_text, category='event_end', level='success')
-        self.send_events(self.event_history)
-        
-    def set_filters(self, filters):
-        filters = filters.split('+')
-        
-        if len(filters) > 1:
-            self.filter_type = 'and'
-        else:
-            filters = filters[0].split(',')
-            self.filter_type = 'or'
-            
-        self.event_filters = [x.strip().lower() for x in filters]
- 
-    def filter_text(self, text, filters, op='or'):
-        if not text:
-            return []
-        if not filters:
-            return []
-        
-        matches = [x for x in filters if x in text.lower()]
-        
-        if op == 'and' and len(matches) != len(filters):
-            return []
-            
-        return matches
-
-    def format_event(self, event):
-        event = event.copy()
-        time_format = '%-I:%M:%S'
-        
-        event['begin'] = datetime.fromtimestamp(event['begin']).strftime(time_format)
-        event['last'] = datetime.fromtimestamp(event['last']).strftime(time_format)
-        
-        if 'end' in event:
-            event['end'] = datetime.fromtimestamp(event['end']).strftime(time_format)
-        else:
-            event['end'] = event['last']
-            
-        event['filters'] = str(event['filters'])
-        
-        for stop in StopTokens:
-            event['text'] = event['text'].replace(stop, '')
-            
-        del event['alert']
-        return event
-        
-    def send_events(self, events, max_events=10):
-        if max_events and len(events) > max_events:
-            events = events[-max_events:]
-        events = [self.format_event(event) for event in events]
-        self.server.send_message({'events': events})
-        
+   
     def poll_keyboard(self):
         while True:
             try:

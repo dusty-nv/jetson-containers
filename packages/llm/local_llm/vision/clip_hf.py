@@ -5,8 +5,8 @@ import PIL
 import torch
 import logging
 
-from transformers import CLIPImageProcessor, CLIPVisionModel, SiglipImageProcessor, SiglipVisionModel
-from ..utils import AttributeDict, load_image, torch_image, image_size, download_model, print_table
+from transformers import CLIPImageProcessor, CLIPVisionModelWithProjection, SiglipImageProcessor, SiglipVisionModel
+from ..utils import AttributeDict, load_image, torch_image, image_size, convert_tensor, download_model, print_table
 
 _clip_model_cache = dict(image={}, text={})
 
@@ -38,7 +38,7 @@ class CLIPImageEmbedding():
         self.dtype = dtype
         
         self.model_types = {
-            'clip':  dict(preprocessor=CLIPImageProcessor, model=CLIPVisionModel),
+            'clip':  dict(preprocessor=CLIPImageProcessor, model=CLIPVisionModelWithProjection),
             'siglip': dict(preprocessor=SiglipImageProcessor, model=SiglipVisionModel),
         }
         
@@ -63,7 +63,7 @@ class CLIPImageEmbedding():
         self(PIL.Image.new('RGB', self.config.input_shape, (255,255,255)))
         print_table(self.config)
         
-    def embed_image(self, image, crop=False, hidden_state=None, return_tensors='pt', stream=None, **kwargs):
+    def embed_image(self, image, crop=False, hidden_state=None, return_tensors='pt', return_dict=False, stream=None, **kwargs):
         """
         Return the encoded features from the given image in the embedding (or whatever the model output is)
         TODO:  return 'pooled', 'hidden', 'projected' in a dict
@@ -81,22 +81,32 @@ class CLIPImageEmbedding():
         else:
             logging.debug(f"cropping image from {image.size} -> {self.config.input_shape}")
             
+        output = AttributeDict() if return_dict else None
+        
         with torch.cuda.StreamContext(stream), torch.inference_mode():
             image = self.preprocessor(image, do_center_crop=crop, do_resize=crop, return_tensors='pt')['pixel_values']
             image = image.to(self.device, dtype=self.dtype)
             
             time_begin_enc = time.perf_counter()
-            
-            outputs = self.model(image, output_hidden_states=hidden_state is not None)   #.pooler_output  .last_hidden_state
-            
+            model_output = self.model(image, output_hidden_states=hidden_state is not None)   #.pooler_output  .last_hidden_state
+
             if hidden_state is not None:
-                output = outputs.hidden_states[hidden_state].to(self.device, dtype=self.dtype)
+                hidden_tensor = convert_tensor(model_output.hidden_states[hidden_state], return_tensors=return_tensors, device=self.device, dtype=self.dtype)
+                if return_dict:
+                    output.hidden_state = hidden_tensor
+                else:
+                    output = hidden_tensor
+                self.config.output_shape = hidden_tensor.shape
             else:
-                output = outputs.pooler_output.to(dtype=self.dtype)
+                self.config.output_shape = model_output.image_embeds.shape
                 
-            self.config.output_shape = output.shape
-            
-            time_end_enc = time.perf_counter()
+            if return_dict:
+                #output.pooler_output = convert_tensor(model_output.pooler_output, return_tensors=return_tensors, device=self.device, dtype=self.dtype) 
+                output.image_embeds = convert_tensor(model_output.image_embeds, return_tensors=return_tensors, device=self.device, dtype=self.dtype) 
+            elif hidden_state is None:
+                output = convert_tensor(model_output.image_embeds, return_tensors=return_tensors, device=self.device, dtype=self.dtype) 
+
+        time_end_enc = time.perf_counter()
         
         self.stats.clip_time = time_end_enc - time_begin_pre
         self.stats.clip_rate = 1.0 / self.stats.clip_time
@@ -105,12 +115,7 @@ class CLIPImageEmbedding():
         self.stats.input_shape = f"{image_size(image)} -> {self.model.config.image_size}x{self.model.config.image_size}"
         self.stats.output_shape = self.config.output_shape
 
-        if return_tensors == 'pt':
-            return output
-        elif return_tensors == 'np':
-            return output.detach().cpu().numpy()
-        else:
-            raise ValueError(f"return_tensors should be 'np' or 'pt' (was '{return_tensors}')")
+        return output
         
     def __call__(self, image, crop=False, hidden_state=None, return_tensors='pt', **kwargs):
         return self.embed_image(image, crop=crop, hidden_state=hidden_state, return_tensors='pt', **kwargs)

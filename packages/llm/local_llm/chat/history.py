@@ -154,6 +154,8 @@ class ChatHistory():
         """
         self.entries = []
         self.kv_cache = None
+        self.image_embedding = None
+        
         if add_system_prompt and 'system' in self.template:
             self.append(role='system', text=self.template['system_prompt'])
      
@@ -263,7 +265,10 @@ class ChatHistory():
                 embeddings.append(self.embed_text(template, use_cache=True))
                 logging.debug(f"image template:  ```{template}```")
 
-        embeddings.append(self.model.embed_image(image, return_tensors='np'))
+        image_outputs = self.model.embed_image(image, return_tensors='np', return_dict=True)
+        self.image_embedding = image_outputs.image_embeds
+        
+        embeddings.append(image_outputs.embedding)
         embeddings.append(self.embed_text('\n', use_cache=True))
         
         embeddings = np.concatenate(embeddings, axis=1)

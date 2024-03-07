@@ -28,7 +28,7 @@ class NanoDB(Plugin):
         self.scans = self.db.scans
         self.k = k
         
-    def process(self, input, add=False, metadata=None, k=None):
+    def process(self, input, add=False, metadata=None, k=None, **kwargs):
         """
         Search the database for the closest matches to the input.
         
@@ -46,8 +46,11 @@ class NanoDB(Plugin):
         if add:
             self.db.add(input, metadata=metadata)
         else:
+            if len(self.db) == 0:
+                return None
+                
             indexes, similarity = self.db.search(input, k=k)
             
             return [dict(index=indexes[n], similarity=float(similarity[n]), metadata=self.db.metadata[indexes[n]])
-                    for n in range(k)]
+                    for n in range(k) if indexes[n] >= 0]
         

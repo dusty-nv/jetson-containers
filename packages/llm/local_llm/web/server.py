@@ -76,6 +76,9 @@ class WebServer():
         self.msg_count_tx = 0
         self.msg_callback = msg_callback
 
+        if self.msg_callback and not isinstance(self.msg_callback, list):
+            self.msg_callback = [self.msg_callback]
+            
         # flask server
         self.app = flask.Flask(__name__, 
             static_folder=os.path.join(self.root, 'static'),
@@ -129,6 +132,13 @@ class WebServer():
         self.ws_thread.start()
         self.web_thread.start()
 
+    def add_message_handler(self, callback):
+        """
+        Register a message handler that will be called when new websocket messages are recieved
+        """
+        if callback:
+            self.msg_callback.append(callback)
+            
     def on_message(self, payload, payload_size=None, msg_type=MESSAGE_JSON, msg_id=None, metadata=None, timestamp=None, path=None, **kwargs):
         """
         Handler for recieved websocket messages. Implement this in a subclass to process messages,
@@ -147,9 +157,10 @@ class WebServer():
           timestamp (int) -- time that the message was sent
           path (str) -- if this is a file or image upload, the file path on the server
         """
-        if self.msg_callback is not None:
-           self.msg_callback(payload, payload_size=payload_size, msg_type=msg_type, msg_id=msg_id, 
-                             metadata=metadata, timestamp=timestamp, path=path, **kwargs)
+        if self.msg_callback:
+            for callback in self.msg_callback:
+                callback(payload, payload_size=payload_size, msg_type=msg_type, msg_id=msg_id, 
+                         metadata=metadata, timestamp=timestamp, path=path, **kwargs)
         else:
             raise NotImplementedError(f"{type(self)} did not implement on_message or have a msg_callback provided")
      
@@ -247,7 +258,8 @@ class WebServer():
         '''
         
         if self.msg_callback:
-            self.msg_callback({'client_state': 'connected'}, 0, int(time.time()*1000))
+            for callback in self.msg_callback:
+                callback({'client_state': 'connected'}, 0, int(time.time()*1000))
             
         #listener_thread = threading.Thread(target=self.websocket_listener, args=[websocket], daemon=True)
         #listener_thread.start()
