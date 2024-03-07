@@ -29,7 +29,7 @@ if [ -n "$DISPLAY" ]; then
 fi
 
 # check if sudo is needed
-if id -nG "$USER" | grep -qw "docker"; then
+if [ $(id -u) -eq 0 ] || id -nG "$USER" | grep -qw "docker"; then
 	SUDO=""
 else
 	SUDO="sudo"

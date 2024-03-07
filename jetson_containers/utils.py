@@ -106,11 +106,21 @@ def user_in_group(group):
     return (group.gr_gid in os.getgroups())
   
 
+def is_root_user():
+    """
+    Returns true if this is the root user running
+    """
+    return os.geteuid() == 0
+    
+    
 def needs_sudo(group='docker'):
     """
     Returns true if sudo is needed to use the docker engine (if user isn't in the docker group)
     """
-    return not user_in_group(group)
+    if is_root_user():
+        return False
+    else:
+        return not user_in_group(group)
     
 
 def sudo_prefix(group='docker'):
@@ -118,6 +128,7 @@ def sudo_prefix(group='docker'):
     Returns a sudo prefix for command strings if the user needs sudo for accessing docker
     """
     if needs_sudo(group):
+        print('USER NEEDS SUDO')
         return "sudo "
     else:
         return ""
