@@ -114,6 +114,12 @@ class ArgParser(argparse.ArgumentParser):
             self.add_argument("--inverse-text-normalization", action='store_true', help="apply Inverse Text Normalization to convert numbers to digits/ect")
             self.add_argument("--no-automatic-punctuation", dest='automatic_punctuation', action='store_false', help="disable punctuation in the ASR transcripts")
             
+        # NANODB
+        if 'nanodb' in extras:
+            self.add_argument('--nanodb', type=str, default=None, help="path to load or create the database")
+            self.add_argument('--nanodb-model', type=str, default='ViT-L/14@336px', help="the embedding model to use for the database")
+            self.add_argument('--nanodb-reserve', type=int, default=1024, help="the memory to reserve for the database in MB")
+            
         # WEBSERVER
         if 'web' in extras:
             self.add_argument("--web-host", type=str, default='0.0.0.0', help="network interface to bind to for hosting the webserver")

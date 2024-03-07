@@ -50,7 +50,7 @@ def get_class_that_defined_method(meth):
     return None  # not required since None would have been implicitly returned anyway
     
     
-def ends_with_tokens(input, tokens, tokenizer=None):
+def ends_with_token(input, tokens, tokenizer=None):
     """
     Check to see if the list of input tokens ends with any of the list of stop tokens.
     This is typically used to check if the model produces a stop token like </s> or <eos>

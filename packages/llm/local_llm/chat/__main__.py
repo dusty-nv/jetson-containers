@@ -30,7 +30,9 @@ model = LocalLM.from_pretrained(
     args.model, 
     quant=args.quant, 
     api=args.api,
-    vision_model=args.vision_model
+    max_context_len=args.max_context_len,
+    vision_model=args.vision_model,
+    vision_scaling=args.vision_scaling, 
 )
 
 # create the chat history

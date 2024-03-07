@@ -152,12 +152,16 @@ class LocalLM():
         self.config.name = kwargs.get('name')
         self.config.api = kwargs.get('api')
         
+        model_type = self.config.model_type.lower()
+        
         # patch the config to change llava to llama so the quant tools handle it
-        self.has_vision = 'llava' in self.config.model_type.lower()
+        self.has_vision = 'llava' in model_type
         
         if self.has_vision:
-            if 'stablelm' in self.config.model_type.lower():
+            if 'stablelm' in model_type:
                 self.patch_config(model_type='stablelm_epoch')
+            elif 'phi' in model_type:
+                self.patch_config(model_type='phi')
             else:
                 self.patch_config(model_type='llama')
         else:
@@ -187,7 +191,7 @@ class LocalLM():
             
         logging.info(f"patching model config with {kwargs}")
         
-        patched_config = self.config.copy()
+        patched_config = self.config #.copy()
         patched_config.update(kwargs)
 
         with open(self.config_path, 'w') as config_file:

@@ -49,7 +49,7 @@ ChatTemplates = {
         'system_prompt': "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.",
         'system': '${MESSAGE}\n\n',
         'user': 'USER: ${MESSAGE}\n',
-        'bot': 'ASSISTANT: ${MESSAGE}</s>\n', # TODO: does output already end in </s> ?
+        'bot': 'ASSISTANT: ${MESSAGE}\n', # TODO: does output already end in </s> ?
     },
     
     # https://github.com/MicrosoftDocs/azure-docs/blob/main/articles/ai-services/openai/includes/chat-markup-language.md#working-with-chat-markup-language-chatml
@@ -140,6 +140,8 @@ def ChatTemplate(model):
         chat_template = 'sheared-llama'
     elif 'open_llama' in model:
         chat_template = 'open-llama'
+    elif 'vila' in model:
+        chat_template = 'vicuna-v1'
     elif 'llama-2' in model:
         if 'llava' in model:
             chat_template = 'llava-llama-2'

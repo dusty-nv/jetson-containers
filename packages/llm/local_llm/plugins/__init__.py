@@ -12,3 +12,5 @@ from .video import VideoSource, VideoOutput
 
 from .asr import RivaASR
 from .tts import RivaTTS
+
+from .nanodb import NanoDB
