@@ -7,6 +7,7 @@ import tqdm
 import json
 import PIL
 import pprint
+import torch
 import numpy as np
 
 from .clip import CLIPEmbedding
@@ -51,7 +52,14 @@ class NanoDB:
         indexes, distances = self.index.search(embedding, k=k)
         print_table(self.index.stats)
         return indexes, distances
-        
+     
+    def add(self, data, metadata=None, **kwargs):
+        embedding = self.embed(data, **kwargs)
+        index = self.index.add(embedding, sync=True)
+        if metadata:
+            self.metadata.insert(index, metadata)
+        return index
+                
     def scan(self, path, max_items=None, **kwargs):
         time_begin = time.perf_counter()
         
@@ -207,7 +215,7 @@ class NanoDB:
                         return None
                     
         return paths
-        
+
     def embed(self, data, type=None, **kwargs):
         if type is None:
             type = self.embedding_type(data)
@@ -233,10 +241,12 @@ class NanoDB:
                 raise ValueError(f"-- file {str} has unsupported extension for embeddings")
             else:
                 return "text" 
-        elif isinstance(data, PIL.Image.Image):
-            return 'image'
         elif isinstance(data, list) and len(data) > 0 and isinstance(data[0], str):
             return 'text'
+        elif isinstance(data, (PIL.Image.Image, np.ndarray, torch.Tensor)):
+            return 'image'
+        elif hasattr(data, '__cuda_array_interface__'):
+            return 'image'
         else:
             raise ValueError(f"couldn't find type of embedding for {type(data)}, please specify the 'type' argument")
             
