@@ -402,9 +402,11 @@ def get_registry_containers(user='dustynv', **kwargs):
     for repo in _REGISTRY_CACHE:
         repo['tags'] = hub.tags(user, repo['name'])
 
-    if cache_enabled:
-        with open(cache_path, 'w') as cache_file:
-            json.dump(_REGISTRY_CACHE, cache_file, indent=2)
+    if not cache_enabled:
+        cache_path = 'data/containers.json'
+        
+    with open(cache_path, 'w') as cache_file:
+        json.dump(_REGISTRY_CACHE, cache_file, indent=2)
 
     return _REGISTRY_CACHE
     
