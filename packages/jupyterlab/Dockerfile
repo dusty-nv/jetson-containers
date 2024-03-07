@@ -7,6 +7,13 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
+# https://stackoverflow.com/questions/61553491/how-to-make-jupyter-terminal-fully-functional
+ENV SHELL /bin/bash
+SHELL ["/bin/bash", "-c"] 
+
+# enable colors in the jupyterlab terminal
+RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /root/.bashrc
+
 # jupyterlab<4 -- ModuleNotFoundError: No module named 'notebook.auth'
 RUN pip3 install --no-cache-dir --verbose jupyter 'jupyterlab<4' && \
     pip3 install --no-cache-dir --verbose jupyterlab_widgets
