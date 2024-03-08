@@ -1,46 +1,65 @@
 #---
 # name: stable-diffusion-webui
 # group: diffusion
-# depends: [pytorch, torchvision, transformers, xformers, pycuda, opencv]
+# depends: [pytorch, torchvision, transformers, xformers, pycuda, opencv, onnxruntime]
 # requires: '>=34.1.0'
 # docs: docs.md
 # notes: disabled on JetPack 4
 #---
 ARG BASE_IMAGE
+
 FROM ${BASE_IMAGE}
 
-ARG STABLE_DIFFUSION_WEBUI_REF
-ARG STABLE_DIFFUSION_WEBUI_SHA
+ARG STABLE_DIFFUSION_WEBUI_REF \
+    STABLE_DIFFUSION_WEBUI_SHA \
+    AUTOMATIC1111_ROOT_DIR="/opt/stable-diffusion-webui"
 
 ADD https://api.github.com/repos/AUTOMATIC1111/stable-diffusion-webui/git/${STABLE_DIFFUSION_WEBUI_REF} /tmp/stable_diffusion_webui_version.json
 
-RUN cd /opt && \
-    git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui && \
-    cd stable-diffusion-webui && \
-    git checkout ${STABLE_DIFFUSION_WEBUI_SHA} && \
-    git clone https://github.com/dusty-nv/stable-diffusion-webui-tensorrt extensions-builtin/stable-diffusion-webui-tensorrt && \
-    python3 -c 'from modules import launch_utils; launch_utils.args.skip_python_version_check=True; launch_utils.prepare_environment()'
+COPY install_sd_extensions.sh /tmp/
 
-# partially initialized module 'cv2' has no attribute 'gapi_wip_gst_GStreamerPipeline'
-RUN cd /opt && ./opencv_install.sh
-
-# TypeError: 'type' object is not subscriptable
-RUN cd /opt/stable-diffusion-webui && \
-    sed 's|dict\[str, OptionInfo\]|dict|g' -i modules/options.py && \
-    sed 's|dict\[.*\]|dict|g' -i modules/processing.py && \
-    sed 's|list\[.*\]|list|g' -i modules/processing.py && \
-    sed 's|dict\[.*\]|dict|g' -i modules/script_callbacks.py && \
-    sed 's|list\[.*\]|list|g' -i modules/script_callbacks.py
-
-# https://github.com/AUTOMATIC1111/stable-diffusion-webui/issues/13236
-RUN pip3 install --no-cache-dir httpx==0.24.1
-
-# test that it loads
-RUN cd /opt/stable-diffusion-webui && python3 launch.py --help
+RUN set -ex \
+    && git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui /opt/stable-diffusion-webui \
+    && git -C /opt/stable-diffusion-webui checkout ${STABLE_DIFFUSION_WEBUI_SHA} \
+    # FIX: \
+    # ControlNet init warning: Unable to install insightface automatically. Please try run `pip install insightface` manually. \
+    && PYTHONPATH="$AUTOMATIC1111_ROOT_DIR" pip3 install --no-cache-dir --verbose insightface GitPython \
+    && chmod +x /tmp/install_sd_extensions.sh \
+    && PYTHONPATH="$AUTOMATIC1111_ROOT_DIR" /tmp/install_sd_extensions.sh \
+        https://github.com/dusty-nv/stable-diffusion-webui-tensorrt \
+        https://github.com/Mikubill/sd-webui-controlnet \
+        https://github.com/zanllp/sd-webui-infinite-image-browsing \
+        https://github.com/ahgsql/StyleSelectorXL \
+        https://github.com/thomasasfk/sd-webui-aspect-ratio-helper \
+        https://github.com/BlafKing/sd-civitai-browser-plus \
+    && PYTHONPATH="$AUTOMATIC1111_ROOT_DIR" python3 -c 'from modules import launch_utils; launch_utils.args.skip_python_version_check=True; launch_utils.prepare_environment()' \
+    # partially initialized module 'cv2' has no attribute 'gapi_wip_gst_GStreamerPipeline' \
+    && PYTHONPATH="$AUTOMATIC1111_ROOT_DIR" /opt/opencv_install.sh \
+    # TypeError: 'type' object is not subscriptable \
+    && sed 's|dict\[str, OptionInfo\]|dict|g' -i $AUTOMATIC1111_ROOT_DIR/modules/options.py \
+    && sed 's|dict\[.*\]|dict|g' -i $AUTOMATIC1111_ROOT_DIR/modules/processing.py \
+    && sed 's|list\[.*\]|list|g' -i $AUTOMATIC1111_ROOT_DIR/modules/processing.py \
+    && sed 's|dict\[.*\]|dict|g' -i $AUTOMATIC1111_ROOT_DIR/modules/script_callbacks.py \
+    && sed 's|list\[.*\]|list|g' -i $AUTOMATIC1111_ROOT_DIR/modules/script_callbacks.py \
+    # https://github.com/AUTOMATIC1111/stable-diffusion-webui/issues/13236 \
+    && PYTHONPATH="$AUTOMATIC1111_ROOT_DIR" pip3 install --no-cache-dir httpx==0.24.1 insightface \
+    # Fix: ModuleNotFoundError: No module named 'onnxruntime' \
+    && PYTHONPATH="$AUTOMATIC1111_ROOT_DIR" pip3 install --no-cache-dir --verbose /opt/onnxruntime_gpu-*.whl \
+    # test that it loads \
+    && cd /opt/stable-diffusion-webui \
+    && PYTHONPATH="$AUTOMATIC1111_ROOT_DIR" python3 launch.py --help \
+    && PYTHONPATH="$AUTOMATIC1111_ROOT_DIR" pip3 show insightface \
+    && PYTHONPATH="$AUTOMATIC1111_ROOT_DIR" python3 -c 'import insightface; print(insightface.__version__);' \
+    # Cleanup \
+    && rm -rf \
+        /opt/flash-attention \
+        /var/lib/apt/lists/* \
+        "/opt/stable-diffusion-webui/.github" \
+        /tmp/* \
+    && apt-get clean
     
 # set the cache dir for models
 ENV DIFFUSERS_CACHE=/data/models/diffusers
 
 # default start-up command
-CMD /bin/bash -c "cd /opt/stable-diffusion-webui && python3 launch.py --data=/data/models/stable-diffusion --enable-insecure-extension-access --xformers --listen --port=7860"
-
+CMD ["/bin/bash", "-c", "cd /opt/stable-diffusion-webui && python3 launch.py --data=/data/models/stable-diffusion --enable-insecure-extension-access --xformers --listen --port=7860"]
