@@ -6,31 +6,33 @@
 # test: test.py
 #---
 ARG BASE_IMAGE
-FROM ${BASE_IMAGE}
 
-ARG TORCHVISION_VERSION
-ARG TORCH_CUDA_ARCH_LIST="5.3;6.2;7.2;8.7"
+# Build Stage
+FROM ${BASE_IMAGE} AS build
 
-RUN printenv && echo "torchvision version = $TORCHVISION_VERSION" && echo "TORCH_CUDA_ARCH_LIST = $TORCH_CUDA_ARCH_LIST"
+ARG TORCHVISION_VERSION \
+    TORCH_CUDA_ARCH_LIST="5.3;6.2;7.2;8.7"
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-            libjpeg-dev \
-		  zlib1g-dev \
+RUN set -ex \
+    && echo "torchvision version = $TORCHVISION_VERSION" \
+    && echo "TORCH_CUDA_ARCH_LIST = $TORCH_CUDA_ARCH_LIST" \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+        libjpeg-dev \
+        zlib1g-dev \
     && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
+    && apt-get clean \
+    && git clone --branch ${TORCHVISION_VERSION} --recursive --depth=1 https://github.com/pytorch/vision /opt/torchvision \
+    && cd /opt/torchvision \
+    && git checkout ${TORCHVISION_VERSION} \
+    && python3 setup.py --verbose bdist_wheel --dist-dir /opt \
+    && rm -rf /opt/torchvision
 
-RUN git clone --branch ${TORCHVISION_VERSION} --recursive --depth=1 https://github.com/pytorch/vision torchvision && \
-    cd torchvision && \
-    git checkout ${TORCHVISION_VERSION} && \
-    python3 setup.py bdist_wheel && \
-    cp dist/torchvision*.whl /opt && \
-    rm -rf ../torchvision
+# Install Stage
+FROM ${BASE_IMAGE} AS install
 
-RUN pip3 install --no-cache-dir --verbose /opt/torchvision*.whl
-RUN python3 -c 'import torchvision; print(torchvision.__version__);'
+COPY --from=build /opt/torchvision*.whl /opt/
 
-# note:  this was used on older torchvision versions (~0.4) to workaround a bug,
-#        but has since started causing another bug as of torchvision 0.11.1
-# ARG PILLOW_VERSION=pillow<7    
-# pip3 install --no-cache-dir "${PILLOW_VERSION}"
+RUN set -ex \
+    && pip3 install --no-cache-dir --verbose /opt/torchvision*.whl \
+    && python3 -c 'import torchvision; print(torchvision.__version__);'
