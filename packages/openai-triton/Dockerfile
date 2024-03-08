@@ -1,6 +1,6 @@
 #---
 # name: openai-triton
-# group: openai
+# group: ml
 # depends: [build-essential, cmake, python, pytorch]
 # requires: '>=35'
 # test: test.py
@@ -9,11 +9,11 @@
 
 ARG BASE_IMAGE
 
-FROM ${BASE_IMAGE}
+# Build Stage
+FROM ${BASE_IMAGE} AS build
 
-ARG TRITON_DIR="/opt/triton"
-
-ENV TRITON_PTXAS_PATH="$CUDA_HOME/bin/ptxas" \
+ARG TRITON_DIR="/opt/triton" \
+    TRITON_PTXAS_PATH="$CUDA_HOME/bin/ptxas" \
     TRITON_CUOBJDUMP_PATH="$CUDA_HOME/bin/cuobjdump" \
     TRITON_NVDISASM_PATH="$CUDA_HOME/bin/nvdisasm"
 
@@ -28,10 +28,20 @@ RUN set -ex \
     && sed 's|LLVMAMDGPUAsmParser||g' -i $TRITON_DIR/CMakeLists.txt \
     && sed 's|-Werror|-Wno-error|g' -i $TRITON_DIR/CMakeLists.txt \
     && pip3 wheel --wheel-dir=/opt --no-deps --verbose $TRITON_DIR/python \
-    && pip3 install --no-cache-dir --verbose /opt/triton*.whl \
     && rm -rf $TRITON_DIR
 
-# test triton
+# Install Stage
+FROM ${BASE_IMAGE} AS install
+
+COPY --from=build /opt/triton*.whl /opt/
+
+ENV TRITON_PTXAS_PATH="$CUDA_HOME/bin/ptxas" \
+    TRITON_CUOBJDUMP_PATH="$CUDA_HOME/bin/cuobjdump" \
+    TRITON_NVDISASM_PATH="$CUDA_HOME/bin/nvdisasm"
+
 RUN set -ex \
+    # install triton \
+    && pip3 install --no-cache-dir --verbose /opt/triton*.whl \
+    # test triton \
     && pip3 show triton \
     && python3 -c 'import triton'
