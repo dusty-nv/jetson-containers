@@ -20,7 +20,7 @@ NanoDB can recursively scan directories of images, compute their CLIP embeddings
     --path /my_dataset/nanodb \
     --autosave --validate 
 ```
-> To download a pre-indexed database and skip this step, see the [**NanoDB**](https://www.jetson-ai-lab.com/tutorial_nanodb.html) tutorial on Jetson AI Lab
+> To download a pre-indexed database and skip this step, see the [**NanoDB tutorial**](https://www.jetson-ai-lab.com/tutorial_nanodb.html) on Jetson AI Lab
 
 * `--scan` optionally specifies a directory to recursively scan for images
   * Supported image extensions are:  `'.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif'`
