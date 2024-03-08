@@ -203,29 +203,31 @@ class WebServer():
                 payload = bytes(payload)
                 
         # do we even need this queue at all and can the websocket just send straight away?
-        self.websocket.send(b''.join([
-            #
-            # 32-byte message header format:
-            #
-            #   0   uint64  message_id    (message_count_tx)
-            #   8   uint64  timestamp     (milliseconds since Unix epoch)
-            #   16  uint16  magic_number  (42)
-            #   18  uint16  message_type  (0=json, 1=text, >=2 binary)
-            #   20  uint32  payload_size  (in bytes)
-            #   24  uint32  unused        (padding)
-            #   28  uint32  unused        (padding)
-            #
-            struct.pack('!QQHHIII',
-                self.msg_count_tx,
-                int(timestamp),
-                42, type,
-                len(payload),
-                0, 0,
-            ),
-            payload
-        ]))
-
-        self.msg_count_tx += 1
+        try:
+            self.websocket.send(b''.join([
+                #
+                # 32-byte message header format:
+                #
+                #   0   uint64  message_id    (message_count_tx)
+                #   8   uint64  timestamp     (milliseconds since Unix epoch)
+                #   16  uint16  magic_number  (42)
+                #   18  uint16  message_type  (0=json, 1=text, >=2 binary)
+                #   20  uint32  payload_size  (in bytes)
+                #   24  uint32  unused        (padding)
+                #   28  uint32  unused        (padding)
+                #
+                struct.pack('!QQHHIII',
+                    self.msg_count_tx,
+                    int(timestamp),
+                    42, type,
+                    len(payload),
+                    0, 0,
+                ),
+                payload
+            ]))
+            self.msg_count_tx += 1
+        except Exception as err:
+            logging.warning(f"failed to send websocket message to client ({err})")
     
     def send_alert(self, message, level='warning', category='', timeout=3.5):
         alert = {

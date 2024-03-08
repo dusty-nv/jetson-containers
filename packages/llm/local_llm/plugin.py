@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-import logging
 import queue
 import threading
+import logging
+import traceback
 
 
 class Plugin(threading.Thread):
@@ -171,16 +172,20 @@ class Plugin(threading.Thread):
         @internal processes the queue forever when created with threaded=True
         """
         while True:
-            self.input_event.wait()
-            self.input_event.clear()
-            
-            while True:
-                try:
-                    input, kwargs = self.input_queue.get(block=False)
-                    self.dispatch(input, **kwargs)
-                except queue.Empty:
-                    break
-
+            try:
+                self.input_event.wait()
+                self.input_event.clear()
+                
+                while True:
+                    try:
+                        input, kwargs = self.input_queue.get(block=False)
+                        self.dispatch(input, **kwargs)
+                    except queue.Empty:
+                        break
+            except Exception as error:
+                logging.error(f"exception occurred in {type(self)} ({error})")
+                traceback.print_exception(error)
+                
     def dispatch(self, input, **kwargs):
         """
         Invoke the process() function on incoming data

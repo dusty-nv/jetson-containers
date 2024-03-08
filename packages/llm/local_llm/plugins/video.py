@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+import time
+import logging
+
 import torch
 import numpy as np
 
@@ -46,18 +49,25 @@ class VideoSource(Plugin):
             options['save'] = video_input_save
             
         self.stream = videoSource(video_input, options=options)
+        self.options = options
         self.resource = video_input  # self.stream.GetOptions().resource['string']
         self.return_tensors = return_tensors
-
-    def run(self):
+        
+    def capture(self):
         """
         Capture images from the video source as long as it's streaming
         """
-        while True:
-            image = self.stream.Capture(format='rgb8', timeout=-1)
+        retries = 0
+        
+        while retries < 8:
+            image = self.stream.Capture(format='rgb8', timeout=2500)
 
             if image is None:
+                logging.warning(f"video source {self.resource} timed out during capture, re-trying...")
+                retries = retries + 1
                 continue
+            else:
+                retries = 0
 
             if self.return_tensors == 'pt':
                 image = torch.as_tensor(image, device='cuda')
@@ -68,8 +78,41 @@ class VideoSource(Plugin):
                 raise ValueError(f"return_tensors should be 'np', 'pt', or 'cuda' (was '{self.return_tensors}')")
                 
             self.output(image)             
+    
+    def reconnect(self):
+        """
+        Attempt to re-open the stream if the connection fails
+        """
+        while True:
+            try:
+                if self.stream is not None:
+                    self.stream.Close()
+                    self.stream = None
+            except Exception as error:
+                logging.error(f"exception occurred closing video source {self.resource} ({error})")
+
+            try:
+                self.stream = videoSource(self.resource, options=self.options)
+                return
+            except Exception as error:
+                logging.error(f"failed to create video source {self.resource} ({error})")
+                time.sleep(2.5)
             
-        
+    def run(self):
+        """
+        Run capture continuously and attempt to handle disconnections
+        """
+        while True:
+            try:
+                self.capture()
+            except Exception as error:
+                logging.error(f"exception occurred with video source {self.resource} ({error})")
+                
+            logging.error(f"re-initializing video source {self.resource}")
+            self.reconnect()
+                
+                    
+                    
 class VideoOutput(Plugin):
     """
     Saves images to a compressed video or directory of individual images, the display, or a network stream.

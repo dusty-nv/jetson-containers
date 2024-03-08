@@ -207,7 +207,6 @@ class VideoQuery(Agent):
                     self.db.db.save()
             elif 'tag_image' in msg:
                 self.tag_image = msg['tag_image']
-                print('TAG IMAGE', self.tag_image)
    
     def poll_keyboard(self):
         while True:
