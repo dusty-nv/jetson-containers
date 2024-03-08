@@ -168,7 +168,9 @@ class LocalLM():
             else:
                 self.patch_config(model_type='llama')
         else:
-            self.has_vision = 'llava' in self.config.get('_name_or_path', '').lower()
+            name_or_path = self.config.get('_name_or_path')
+            if name_or_path:
+                self.has_vision = 'llava' in name_or_path.lower()
 
         for arch in self.config.get('architectures', []):
             if 'llava' in arch.lower() or 'bunny' in arch.lower():
