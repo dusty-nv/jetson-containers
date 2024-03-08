@@ -20,7 +20,7 @@ NanoDB can recursively scan directories of images, compute their CLIP embeddings
     --path /my_dataset/nanodb \
     --autosave --validate 
 ```
-> In the MS COCO example above, the images were ingested at a rate of ~15 images/second on Jetson AGX Orin.
+> To download a pre-indexed database and skip this step, see the [**NanoDB**](https://www.jetson-ai-lab.com/tutorial_nanodb.html) tutorial on Jetson AI Lab
 
 * `--scan` optionally specifies a directory to recursively scan for images
   * Supported image extensions are:  `'.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif'`
@@ -97,9 +97,10 @@ Then navigate your browser to `http://HOSTNAME:7860?__theme=dark`, and you can e
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`nanodb_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nanodb_jp51.yml?label=nanodb:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nanodb_jp51.yml) [![`nanodb_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nanodb_jp60.yml?label=nanodb:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nanodb_jp60.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`faiss:main`](/packages/vectordb/faiss) [`cuda-python`](/packages/cuda/cuda-python) [`cudnn`](/packages/cuda/cudnn) [`tensorrt`](/packages/tensorrt) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`faiss:lite`](/packages/vectordb/faiss_lite) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) [`torch2trt`](/packages/pytorch/torch2trt) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`cuda-python`](/packages/cuda/cuda-python) [`faiss`](/packages/vectordb/faiss) [`faiss_lite`](/packages/vectordb/faiss_lite) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) [`torch2trt`](/packages/pytorch/torch2trt) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`local_llm`](/packages/llm/local_llm) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/nanodb:r35.2.1`](https://hub.docker.com/r/dustynv/nanodb/tags) `(2023-12-14, 6.9GB)`<br>[`dustynv/nanodb:r35.3.1`](https://hub.docker.com/r/dustynv/nanodb/tags) `(2023-12-15, 7.0GB)`<br>[`dustynv/nanodb:r35.4.1`](https://hub.docker.com/r/dustynv/nanodb/tags) `(2023-12-12, 6.9GB)`<br>[`dustynv/nanodb:r36.2.0`](https://hub.docker.com/r/dustynv/nanodb/tags) `(2023-12-15, 8.2GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/nanodb:r35.2.1`](https://hub.docker.com/r/dustynv/nanodb/tags) `(2023-12-14, 6.9GB)`<br>[`dustynv/nanodb:r35.3.1`](https://hub.docker.com/r/dustynv/nanodb/tags) `(2023-12-15, 7.0GB)`<br>[`dustynv/nanodb:r35.4.1`](https://hub.docker.com/r/dustynv/nanodb/tags) `(2023-12-12, 6.9GB)`<br>[`dustynv/nanodb:r36.2.0`](https://hub.docker.com/r/dustynv/nanodb/tags) `(2024-03-07, 7.8GB)` |
 
 </details>
 
@@ -112,7 +113,7 @@ Then navigate your browser to `http://HOSTNAME:7860?__theme=dark`, and you can e
 | &nbsp;&nbsp;[`dustynv/nanodb:r35.2.1`](https://hub.docker.com/r/dustynv/nanodb/tags) | `2023-12-14` | `arm64` | `6.9GB` |
 | &nbsp;&nbsp;[`dustynv/nanodb:r35.3.1`](https://hub.docker.com/r/dustynv/nanodb/tags) | `2023-12-15` | `arm64` | `7.0GB` |
 | &nbsp;&nbsp;[`dustynv/nanodb:r35.4.1`](https://hub.docker.com/r/dustynv/nanodb/tags) | `2023-12-12` | `arm64` | `6.9GB` |
-| &nbsp;&nbsp;[`dustynv/nanodb:r36.2.0`](https://hub.docker.com/r/dustynv/nanodb/tags) | `2023-12-15` | `arm64` | `8.2GB` |
+| &nbsp;&nbsp;[`dustynv/nanodb:r36.2.0`](https://hub.docker.com/r/dustynv/nanodb/tags) | `2024-03-07` | `arm64` | `7.8GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
