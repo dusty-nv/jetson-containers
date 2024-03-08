@@ -12,7 +12,7 @@ ggml = copy.deepcopy(package)
 ggml['name'] = 'llama_cpp:ggml'
 
 ggml['build_args']['LLAMA_CPP_PYTHON_REPO'] = 'dusty-nv/llama-cpp-python'
-ggml['build_args']['LLAMA_CPP_PYTHON_BRANCH'] = 'v0.1.78a'
+ggml['build_args']['LLAMA_CPP_PYTHON_BRANCH'] = 'main'
 
 ggml['test'].extend([
     "test_model.py --model $(huggingface-downloader TheBloke/Llama-2-7B-GGML/llama-2-7b.ggmlv3.q4_0.bin)",
