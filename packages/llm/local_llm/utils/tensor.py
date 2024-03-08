@@ -45,3 +45,27 @@ def torch_dtype(dtype):
     Convert numpy.dtype or str to torch.dtype
     """
     return torch_dtype_dict[str(dtype)]
+    
+
+def convert_tensor(tensor, return_tensors='pt', device=None, dtype=None, **kwargs):
+    """
+    Convert tensors between numpy/torch/ect
+    """
+    if tensor is None:
+        return None
+        
+    if isinstance(tensor, np.ndarray):
+        if return_tensors == 'np':
+            return tensor
+        elif return_tensors == 'pt':
+            return torch.from_numpy(tensor).to(device=device, dtype=dtype, **kwargs)
+    elif isinstance(tensor, torch.Tensor):
+        if return_tensors == 'np':
+            if dtype:
+                tensor = tensor.to(dtype=dtype)
+            return tensor.detach().cpu().numpy()
+        elif return_tensors == 'pt':
+            if device or dtype:
+                return tensor.to(device=device, dtype=dtype, **kwargs)
+            
+    raise ValueError(f"unsupported tensor input/output type (in={type(tensor)} out={return_tensors})")

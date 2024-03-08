@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-import logging
 import queue
 import threading
+import logging
+import traceback
 
 
 class Plugin(threading.Thread):
@@ -115,13 +116,13 @@ class Plugin(threading.Thread):
         return self.find(type)
     '''
     
-    def __call__(self, input):
+    def __call__(self, input, **kwargs):
         """
         Callable () operator alias for the input() function
         """
-        self.input(input)
+        self.input(input, **kwargs)
         
-    def input(self, input):
+    def input(self, input, **kwargs):
         """
         Add data to the plugin's processing queue (or if threaded=False, process it now)
         TODO:  multiple input channels?
@@ -130,12 +131,12 @@ class Plugin(threading.Thread):
             #self.start() # thread may not be started if plugin only called from a callback
             if self.drop_inputs:
                 self.clear_inputs()
-            self.input_queue.put(input)
+            self.input_queue.put((input,kwargs))
             self.input_event.set()
         else:
-            self.dispatch(input)
+            self.dispatch(input, **kwargs)
             
-    def output(self, output, channel=0):
+    def output(self, output, channel=0, **kwargs):
         """
         Output data to the next plugin(s) on the specified channel (-1 for all channels)
         """
@@ -144,12 +145,14 @@ class Plugin(threading.Thread):
             
         if channel >= 0:
             for output_plugin in self.outputs[channel]:
-                output_plugin.input(output)
+                output_plugin.input(output, **kwargs)
         else:
             for output_channel in self.outputs:
                 for output_plugin in output_channel:
-                    output_plugin.input(output)
-         
+                    output_plugin.input(output, **kwargs)
+                    
+        return output
+        
     def start(self):
         """
         Start threads for all plugins in the graph that have threading enabled.
@@ -169,16 +172,21 @@ class Plugin(threading.Thread):
         @internal processes the queue forever when created with threaded=True
         """
         while True:
-            self.input_event.wait()
-            self.input_event.clear()
-            
-            while True:
-                try:
-                    self.dispatch(self.input_queue.get(block=False))
-                except queue.Empty:
-                    break
-
-    def dispatch(self, input):
+            try:
+                self.input_event.wait()
+                self.input_event.clear()
+                
+                while True:
+                    try:
+                        input, kwargs = self.input_queue.get(block=False)
+                        self.dispatch(input, **kwargs)
+                    except queue.Empty:
+                        break
+            except Exception as error:
+                logging.error(f"exception occurred in {type(self)} ({error})")
+                traceback.print_exception(error)
+                
+    def dispatch(self, input, **kwargs):
         """
         Invoke the process() function on incoming data
         """
@@ -187,7 +195,7 @@ class Plugin(threading.Thread):
             self.interrupted = False
             
         self.processing = True
-        outputs = self.process(input)
+        outputs = self.process(input, **kwargs)
         self.processing = False
         
         self.output(outputs)

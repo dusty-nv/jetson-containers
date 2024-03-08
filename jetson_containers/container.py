@@ -382,7 +382,7 @@ def get_registry_containers(user='dustynv', **kwargs):
     cache_enabled = (cache_path != "0" and cache_path.lower() != "off")
 
     if cache_enabled and os.path.isfile(cache_path):
-        if time.time() - os.path.getmtime(cache_path) > 600:
+        if time.time() - os.path.getmtime(cache_path) > 600 and os.geteuid() != 0:
             cmd = f"cd {_PACKAGE_ROOT} && git fetch origin dev --quiet && git checkout --quiet origin/dev -- {os.path.relpath(cache_path, _PACKAGE_ROOT)}"
             status = subprocess.run(cmd, executable='/bin/bash', shell=True, check=False)
             if status.returncode != 0:
@@ -402,9 +402,11 @@ def get_registry_containers(user='dustynv', **kwargs):
     for repo in _REGISTRY_CACHE:
         repo['tags'] = hub.tags(user, repo['name'])
 
-    if cache_enabled:
-        with open(cache_path, 'w') as cache_file:
-            json.dump(_REGISTRY_CACHE, cache_file, indent=2)
+    if not cache_enabled:
+        cache_path = 'data/containers.json'
+        
+    with open(cache_path, 'w') as cache_file:
+        json.dump(_REGISTRY_CACHE, cache_file, indent=2)
 
     return _REGISTRY_CACHE
     

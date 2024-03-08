@@ -37,13 +37,9 @@ function getWebsocketProtocol() {
   return window.location.protocol == 'https:' ? 'wss://' : 'ws://';
 }
 
-function getWebsocketURL(port=49000) {  // wss://192.168.1.2:49000
-  return `${getWebsocketProtocol()}${window.location.hostname}:${port}/${name}`;
-}
-
-function connectWebsocket(msgCallback) {
+function connectWebsocket(msgCallback, port=49000) {
 	websocketCallback = msgCallback;
-	websocket = new WebSocket(getWebsocketURL());
+	websocket = new WebSocket(`${getWebsocketProtocol()}${window.location.hostname}:${port}`);
 	websocket.addEventListener('message', websocketListener);
 }
 

@@ -10,7 +10,7 @@ import logging
 from transformers import AutoConfig
 
 from .vision import CLIPImageEmbedding, MMProjector
-from .utils import AttributeDict, download_model, default_model_api, print_table
+from .utils import AttributeDict, convert_tensor, download_model, default_model_api, print_table
 
 
 class LocalLM():
@@ -120,20 +120,23 @@ class LocalLM():
     def embed_tokens(self, tokens, **kwargs):
         raise NotImplementedError("embed_tokens() not implemented for this model")
        
-    def embed_image(self, image, crop=True, return_tensors='pt', **kwargs):
+    def embed_image(self, image, crop=True, return_tensors='pt', return_dict=False, **kwargs):
         assert(self.has_vision)
         
-        embedding = self.vision(image, crop=crop, hidden_state=self.config.mm_vision_select_layer)
+        output = self.vision(image, crop=crop, hidden_state=self.config.mm_vision_select_layer, return_dict=return_dict)
+        
+        embedding = output.hidden_state if return_dict else output
         embedding = self.mm_projector(embedding[:, 1:])
 
         logging.debug(f"image_embedding  shape={embedding.shape}  dtype={embedding.dtype}  device={embedding.device}")
         
-        if return_tensors == 'pt':
-            return embedding
-        elif return_tensors == 'np':
-            return embedding.detach().cpu().numpy()
+        if return_dict:
+            output.embedding = embedding
+            for key in output:
+                output[key] = convert_tensor(output[key], return_tensors=return_tensors)
+            return output
         else:
-            raise ValueError(f"return_tensors should be 'np' or 'pt' (was '{return_tensors}')")
+            return convert_tensor(embedding, return_tensors=return_tensors)
         
     def __init__(self, model_path, **kwargs):
         """
@@ -152,16 +155,22 @@ class LocalLM():
         self.config.name = kwargs.get('name')
         self.config.api = kwargs.get('api')
         
+        model_type = self.config.model_type.lower()
+        
         # patch the config to change llava to llama so the quant tools handle it
-        self.has_vision = 'llava' in self.config.model_type.lower()
+        self.has_vision = 'llava' in model_type
         
         if self.has_vision:
-            if 'stablelm' in self.config.model_type.lower():
+            if 'stablelm' in model_type:
                 self.patch_config(model_type='stablelm_epoch')
+            elif 'phi' in model_type:
+                self.patch_config(model_type='phi')
             else:
                 self.patch_config(model_type='llama')
         else:
-            self.has_vision = 'llava' in self.config.get('_name_or_path', '').lower()
+            name_or_path = self.config.get('_name_or_path')
+            if name_or_path:
+                self.has_vision = 'llava' in name_or_path.lower()
 
         for arch in self.config.get('architectures', []):
             if 'llava' in arch.lower() or 'bunny' in arch.lower():
@@ -187,7 +196,7 @@ class LocalLM():
             
         logging.info(f"patching model config with {kwargs}")
         
-        patched_config = self.config.copy()
+        patched_config = self.config #.copy()
         patched_config.update(kwargs)
 
         with open(self.config_path, 'w') as config_file:

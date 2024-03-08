@@ -136,7 +136,7 @@ class AudioQueue:
         
         while size <= chunk_size:  
             try:
-                input = self.asr.input_queue.get(timeout=self.asr.keep_alive_timeout) 
+                input, _ = self.asr.input_queue.get(timeout=self.asr.keep_alive_timeout) 
             except queue.Empty:
                 logging.debug(f"sending ASR keep-alive silence (idle for {self.asr.keep_alive_timeout} seconds)")
                 return bytes(chunk_size)

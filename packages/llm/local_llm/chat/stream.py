@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import threading
 
-from local_llm.utils import ends_with_tokens
+from local_llm.utils import ends_with_token
 
 
 class StreamingResponse():
@@ -40,7 +40,7 @@ class StreamingResponse():
     def __next__(self):
         if self.stopped:
             stop_tokens = self.kwargs.get('stop_tokens', [self.model.tokenizer.eos_token_id])
-            if not ends_with_tokens(self.output_tokens, stop_tokens, self.model.tokenizer):
+            if not ends_with_token(self.output_tokens, stop_tokens, self.model.tokenizer):
                 self.output_tokens.append(self.model.tokenizer.eos_token_id) # add EOS if necessary
                 return self.get_message_delta()
             raise StopIteration

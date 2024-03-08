@@ -24,10 +24,21 @@ As an initial example, first test the console-based chat demo from [`chat/__main
 > Small Language Models ([SLMs](https://www.jetson-ai-lab.com/tutorial_slm.html))
 >   * [`stabilityai/stablelm-2-zephyr-1_6b`](https://huggingface.co/stabilityai/stablelm-2-zephyr-1_6b)
 >   * [`stabilityai/stablelm-zephyr-3b`](https://huggingface.co/stabilityai/stablelm-zephyr-3b)
+>   * [`NousResearch/Nous-Capybara-3B-V1.9`](https://huggingface.co/NousResearch/Nous-Capybara-3B-V1.9)
 >   * [`TinyLlama/TinyLlama-1.1B-Chat-v1.0`](https://huggingface.co/TinyLlama/TinyLlama-1.1B-Chat-v1.0)
 >   * [`princeton-nlp/Sheared-LLaMA-2.7B-ShareGPT`](https://huggingface.co/princeton-nlp/Sheared-LLaMA-2.7B-ShareGPT)
 >   * [`google/gemma-2b-it`](https://huggingface.co/google/gemma-2b-it)
 >   * [`microsoft/phi-2`](https://huggingface.co/microsoft/phi-2)
+>
+> Vision Language Models ([VLMs](https://www.jetson-ai-lab.com/tutorial_llava.html))
+>   * [`liuhaotian/llava-v1.5-7b`](https://huggingface.co/liuhaotian/llava-v1.5-7b)
+>   * [`liuhaotian/llava-v1.5-13b`](https://huggingface.co/liuhaotian/llava-v1.5-13b)
+>   * [`liuhaotian/llava-v1.6-vicuna-7b`](https://huggingface.co/liuhaotian/llava-v1.6-vicuna-7b)
+>   * [`liuhaotian/llava-v1.6-vicuna-13b`](https://huggingface.co/liuhaotian/llava-v1.6-vicuna-13b)
+>   * [`Efficient-Large-Model/VILA-2.7b`](https://huggingface.co/Efficient-Large-Model/VILA-2.7b)
+>   * [`Efficient-Large-Model/VILA-7b`](https://huggingface.co/Efficient-Large-Model/VILA-7b)
+>   * [`Efficient-Large-Model/VILA-13b`](https://huggingface.co/Efficient-Large-Model/VILA-13b)
+>   * [`NousResearch/Obsidian-3B-V0.5`](https://huggingface.co/NousResearch/Obsidian-3B-V0.5)
 >
 > For Llama-2 models, see [here](/packages/llm/transformers/README.md#llama2) to request your access token from HuggingFace.
 

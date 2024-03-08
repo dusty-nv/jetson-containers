@@ -18,7 +18,7 @@ from tvm.runtime.relax_vm import VirtualMachine
 from transformers import AutoTokenizer, AutoConfig
 
 from local_llm import LocalLM, StreamingResponse
-from local_llm.utils import AttributeDict, ends_with_tokens
+from local_llm.utils import AttributeDict, ends_with_token
 
 
 class MLCModel(LocalLM):
@@ -248,7 +248,7 @@ class MLCModel(LocalLM):
                 try:
                     with open(config_path) as config_file:
                         config_json = json.load(config_file)
-                    default_context_len = config_json.get('max_window_size', config.json.get('context_window_size'))
+                    default_context_len = config_json.get('max_window_size', config_json.get('context_window_size'))
                     if default_context_len and default_context_len == max_context_len:
                         return quant_path
                     logging.warning(f"Rebuilding {model_name} with context length {max_context_len} (was {default_context_len})")
@@ -453,7 +453,7 @@ class MLCModel(LocalLM):
             stream.output_tokens.append(token)
             stream.event.set()
 
-            if len(stream.output_tokens) >= min_new_tokens and ends_with_tokens(stream.output_tokens, stop_tokens, self.tokenizer):
+            if len(stream.output_tokens) >= min_new_tokens and ends_with_token(stream.output_tokens, stop_tokens, self.tokenizer):
                 break
 
             if len(stream.output_tokens) >= max_new_tokens:

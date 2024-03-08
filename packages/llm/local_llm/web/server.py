@@ -39,8 +39,8 @@ class WebServer():
     MESSAGE_IMAGE = 5    # image message (PIL.Image)
 
     def __init__(self, web_host='0.0.0.0', web_port=8050, ws_port=49000,
-                 ssl_cert=None, ssl_key=None, root=None, index='index.html', 
-                 upload_dir='/tmp/uploads', msg_callback=None, web_trace=False,
+                 ssl_cert=None, ssl_key=None, root=None, index='index.html',
+                 mounts={'/tmp/uploads':'/uploads'}, msg_callback=None, web_trace=False,
                  **kwargs):
         """
         Parameters:
@@ -55,6 +55,8 @@ class WebServer():
           upload_dir (str) -- the path to save files uploaded from client (or None to disable uploads)
           msg_callback (callable) -- websocket message handler (see WebServer.on_message() for signature)
           web_trace (bool) -- if true, additional debug messages will be printed when --log-level=debug
+          
+        The kwargs are passed as variables to the Jinja render_template() used in the index file.
         """
         self.host = web_host
         self.port = web_port
@@ -62,22 +64,21 @@ class WebServer():
         
         self.trace = web_trace
         self.index = index
+        self.kwargs = kwargs
+        self.mounts = mounts
+        self.upload_dir = None
+        self.alert_count = 0
         
-        self.upload_dir = upload_dir
-        self.upload_route = '/uploads'
-
         if not self.root:
             self.root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../web'))
-
-        if self.upload_dir:
-            os.makedirs(self.upload_dir, exist_ok=True)
             
-        logging.debug(f"webserver root directory: {self.root}   upload directory: {self.upload_dir}")
-        
         self.msg_count_rx = 0
         self.msg_count_tx = 0
         self.msg_callback = msg_callback
 
+        if self.msg_callback and not isinstance(self.msg_callback, list):
+            self.msg_callback = [self.msg_callback]
+            
         # flask server
         self.app = flask.Flask(__name__, 
             static_folder=os.path.join(self.root, 'static'),
@@ -86,10 +87,18 @@ class WebServer():
         
         # setup default index route
         self.app.add_url_rule('/', view_func=self.send_index, methods=['GET'])
-
-        if self.upload_dir:
-            self.app.add_url_rule('/uploads/<path:path>', view_func=self.send_upload, methods=['GET'])
+        
+        # setup mounted paths
+        for path, mount in self.mounts.items():
+            if path.startswith('/tmp'):
+                os.makedirs(path, exist_ok=True)
+            if 'upload' in path or 'upload' in mount:
+                self.upload_dir = path
+            logging.info(f"mounting webserver path {path} to {mount}")
+            self.app.add_url_rule(f"{mount}/<path:path>", view_func=SendFromDirectory(path).send, endpoint=path, methods=['GET'])
             
+        logging.debug(f"webserver root directory: {self.root}   upload directory: {self.upload_dir}")
+                 
         # SSL / HTTPS
         self.ssl_key = ssl_key
         self.ssl_cert = ssl_cert
@@ -123,6 +132,13 @@ class WebServer():
         self.ws_thread.start()
         self.web_thread.start()
 
+    def add_message_handler(self, callback):
+        """
+        Register a message handler that will be called when new websocket messages are recieved
+        """
+        if callback:
+            self.msg_callback.append(callback)
+            
     def on_message(self, payload, payload_size=None, msg_type=MESSAGE_JSON, msg_id=None, metadata=None, timestamp=None, path=None, **kwargs):
         """
         Handler for recieved websocket messages. Implement this in a subclass to process messages,
@@ -141,9 +157,10 @@ class WebServer():
           timestamp (int) -- time that the message was sent
           path (str) -- if this is a file or image upload, the file path on the server
         """
-        if self.msg_callback is not None:
-           self.msg_callback(payload, payload_size=payload_size, msg_type=msg_type, msg_id=msg_id, 
-                             metadata=metadata, timestamp=timestamp, path=path, **kwargs)
+        if self.msg_callback:
+            for callback in self.msg_callback:
+                callback(payload, payload_size=payload_size, msg_type=msg_type, msg_id=msg_id, 
+                         metadata=metadata, timestamp=timestamp, path=path, **kwargs)
         else:
             raise NotImplementedError(f"{type(self)} did not implement on_message or have a msg_callback provided")
      
@@ -186,29 +203,44 @@ class WebServer():
                 payload = bytes(payload)
                 
         # do we even need this queue at all and can the websocket just send straight away?
-        self.websocket.send(b''.join([
-            #
-            # 32-byte message header format:
-            #
-            #   0   uint64  message_id    (message_count_tx)
-            #   8   uint64  timestamp     (milliseconds since Unix epoch)
-            #   16  uint16  magic_number  (42)
-            #   18  uint16  message_type  (0=json, 1=text, >=2 binary)
-            #   20  uint32  payload_size  (in bytes)
-            #   24  uint32  unused        (padding)
-            #   28  uint32  unused        (padding)
-            #
-            struct.pack('!QQHHIII',
-                self.msg_count_tx,
-                int(timestamp),
-                42, type,
-                len(payload),
-                0, 0,
-            ),
-            payload
-        ]))
-
-        self.msg_count_tx += 1
+        try:
+            self.websocket.send(b''.join([
+                #
+                # 32-byte message header format:
+                #
+                #   0   uint64  message_id    (message_count_tx)
+                #   8   uint64  timestamp     (milliseconds since Unix epoch)
+                #   16  uint16  magic_number  (42)
+                #   18  uint16  message_type  (0=json, 1=text, >=2 binary)
+                #   20  uint32  payload_size  (in bytes)
+                #   24  uint32  unused        (padding)
+                #   28  uint32  unused        (padding)
+                #
+                struct.pack('!QQHHIII',
+                    self.msg_count_tx,
+                    int(timestamp),
+                    42, type,
+                    len(payload),
+                    0, 0,
+                ),
+                payload
+            ]))
+            self.msg_count_tx += 1
+        except Exception as err:
+            logging.warning(f"failed to send websocket message to client ({err})")
+    
+    def send_alert(self, message, level='warning', category='', timeout=3.5):
+        alert = {
+            'id': self.alert_count,
+            'time': datetime.datetime.now().strftime('%-I:%M:%S'),
+            'message': message,
+            'level': level,
+            'category': category,
+            'timeout': int(timeout*1000),
+        }
+        self.send_message({'alert': alert})
+        self.alert_count = self.alert_count + 1
+        return alert
         
     def on_websocket(self, websocket):      
         self.websocket = websocket  # TODO handle multiple clients
@@ -228,7 +260,8 @@ class WebServer():
         '''
         
         if self.msg_callback:
-            self.msg_callback({'client_state': 'connected'}, 0, int(time.time()*1000))
+            for callback in self.msg_callback:
+                callback({'client_state': 'connected'}, 0, int(time.time()*1000))
             
         #listener_thread = threading.Thread(target=self.websocket_listener, args=[websocket], daemon=True)
         #listener_thread.start()
@@ -320,12 +353,9 @@ class WebServer():
         logging.debug(f"saving client upload to {path}")
         with open(path, 'wb') as file:
             file.write(payload)
-     
-    def send_upload(self, path):
-        return flask.send_from_directory(self.upload_dir, path)
-        
+
     def send_index(self):
-        return flask.render_template(self.index)
+        return flask.render_template(self.index, **self.kwargs)
     
     @staticmethod
     def msg_type_str(type):
@@ -344,4 +374,11 @@ class WebServer():
         else:
             raise ValueError(f"unknown message type {type}")
             
+
+class SendFromDirectory():
+    def __init__(self, root):
+        self.root = root
     
+    def send(self, path):
+        return flask.send_from_directory(self.root, path)
+        

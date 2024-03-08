@@ -67,7 +67,7 @@ class AudioOutputDevice(Plugin):
         while not self.is_paused():
             if self.current_buffer is None:
                 if not self.input_queue.empty():
-                    self.current_buffer = convert_audio(self.input_queue.get(), dtype=self.sample_type)
+                    self.current_buffer = convert_audio(self.input_queue.get()[0], dtype=self.sample_type)
                     self.current_buffer_pos = 0
                     
             if self.current_buffer is not None:

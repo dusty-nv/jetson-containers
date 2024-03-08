@@ -1,6 +1,7 @@
 #---
 # name: docker
 # group: core
+# depends: [python]
 # docs: docs.md
 # test: test.sh
 #---
@@ -20,3 +21,7 @@ RUN apt-get update && \
 		  docker-compose-v2 \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
+
+# so that we can run jetson-containers script from within containers
+ADD https://raw.githubusercontent.com/dusty-nv/jetson-containers/master/requirements.txt /tmp/container_requirements.txt
+RUN pip3 install --no-cache-dir --verbose -r /tmp/container_requirements.txt
