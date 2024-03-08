@@ -29,7 +29,6 @@ class VideoQuery(Agent):
         # load model in another process for smooth streaming
         self.llm = ProcessProxy('ChatQuery', model=model, drop_inputs=True, **kwargs) #ProcessProxy((lambda **kwargs: ChatQuery(model, drop_inputs=True, **kwargs)), **kwargs)
         self.llm.add(PrintStream(color='green', relay=True).add(self.on_text))
-        self.llm.add(self.on_image_embedding, channel=ChatQuery.OutputImageEmbedding)
         self.llm.start()
 
         # test / warm-up query
@@ -88,6 +87,7 @@ class VideoQuery(Agent):
                 reserve=kwargs.get('nanodb_reserve'), 
                 k=8, drop_inputs=True,
             ).start().add(self.on_search)
+            self.llm.add(self.on_image_embedding, channel=ChatQuery.OutputImageEmbedding)
         else:
             self.db = None
             
