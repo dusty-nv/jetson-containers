@@ -81,6 +81,9 @@ class ChatHistory():
                                   
            system_prompt (str) -- set the default system prompt
                                   if None, will use system prompt from the template.
+                                  
+           print_stats (bool) -- if True, generation performance will be printed to the terminal after EOS.
+                                 This also gets enabled by default if --debug or --verbose is used.
         """
         self.model = model
         
@@ -122,6 +125,8 @@ class ChatHistory():
         self.register_embedding('dict', self.embed_dict)
         self.register_embedding('image', self.embed_image)
     
+        self.print_stats = kwargs.get('print_stats', kwargs.get('debug', False))
+        
         self.reset()
 
     def __len__(self):
@@ -273,7 +278,9 @@ class ChatHistory():
         
         embeddings = np.concatenate(embeddings, axis=1)
         
-        print_table(self.model.vision.stats)
+        if self.print_stats:
+            print_table(self.model.vision.stats)
+            
         logging.debug(f"embedding image {embeddings.shape} {embeddings.dtype}")
         
         return embeddings
