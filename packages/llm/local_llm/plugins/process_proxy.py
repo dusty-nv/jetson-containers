@@ -7,6 +7,7 @@ import threading
 import multiprocessing as mp
 
 from local_llm import Plugin
+from local_llm.utils import LogFormatter
 
 
 class ProcessProxy(Plugin):
@@ -54,6 +55,13 @@ class ProcessProxy(Plugin):
             self.output(output, channel)
 
     def run_process(self, factory, kwargs):
+        log_level = kwargs.get('log_level', 'info')
+        
+        if kwargs.get('debug') or kwargs.get('verbose'):
+            log_level = "debug"
+            
+        LogFormatter.config(level=log_level)
+            
         logging.debug(f"subprocess {os.getpid()} started")
         
         from cuda.cudart import (
