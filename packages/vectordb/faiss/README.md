@@ -6,15 +6,34 @@
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`faiss`** | |
+| **`faiss:v1.7.3-builder`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Aliases | `faiss:main` |
-| &nbsp;&nbsp;&nbsp;Builds | [![`faiss_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/faiss_jp51.yml?label=faiss:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/faiss_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`faiss:lite`](/packages/vectordb/faiss_lite) [`nanodb`](/packages/vectordb/nanodb) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.builder`](Dockerfile.builder) |
+
+| **`faiss:v1.7.3`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/faiss:lite-r35.2.1`](https://hub.docker.com/r/dustynv/faiss/tags) `(2023-12-11, 6.4GB)`<br>[`dustynv/faiss:lite-r35.3.1`](https://hub.docker.com/r/dustynv/faiss/tags) `(2023-11-05, 6.4GB)`<br>[`dustynv/faiss:lite-r35.4.1`](https://hub.docker.com/r/dustynv/faiss/tags) `(2023-12-14, 6.4GB)`<br>[`dustynv/faiss:r35.2.1`](https://hub.docker.com/r/dustynv/faiss/tags) `(2023-11-04, 6.0GB)` |
+
+| **`faiss:be12427-builder`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `faiss:builder` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.builder`](Dockerfile.builder) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/faiss:be12427-builder`](https://hub.docker.com/r/dustynv/faiss/tags) `(2024-03-05, 4.2GB)` |
+
+| **`faiss:be12427`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `faiss` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`faiss_lite`](/packages/vectordb/faiss_lite) [`local_llm`](/packages/llm/local_llm) [`nanodb`](/packages/vectordb/nanodb) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/faiss:be12427-builder`](https://hub.docker.com/r/dustynv/faiss/tags) `(2024-03-05, 4.2GB)` |
 
 </details>
 
@@ -24,6 +43,7 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
+| &nbsp;&nbsp;[`dustynv/faiss:be12427-builder`](https://hub.docker.com/r/dustynv/faiss/tags) | `2024-03-05` | `arm64` | `4.2GB` |
 | &nbsp;&nbsp;[`dustynv/faiss:lite-r35.2.1`](https://hub.docker.com/r/dustynv/faiss/tags) | `2023-12-11` | `arm64` | `6.4GB` |
 | &nbsp;&nbsp;[`dustynv/faiss:lite-r35.3.1`](https://hub.docker.com/r/dustynv/faiss/tags) | `2023-11-05` | `arm64` | `6.4GB` |
 | &nbsp;&nbsp;[`dustynv/faiss:lite-r35.4.1`](https://hub.docker.com/r/dustynv/faiss/tags) | `2023-12-14` | `arm64` | `6.4GB` |
@@ -44,10 +64,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag faiss)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/faiss:lite-r35.4.1
+./run.sh dustynv/faiss:be12427-builder
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/faiss:lite-r35.4.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/faiss:be12427-builder
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

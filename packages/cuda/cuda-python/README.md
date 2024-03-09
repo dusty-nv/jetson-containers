@@ -11,7 +11,7 @@
 | &nbsp;&nbsp;&nbsp;Builds | [![`cuda-python_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cuda-python_jp60.yml?label=cuda-python:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cuda-python_jp60.yml) [![`cuda-python_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cuda-python_jp51.yml?label=cuda-python:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cuda-python_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/python) [`numpy`](/packages/numpy) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`faiss:lite`](/packages/vectordb/faiss_lite) [`nanodb`](/packages/vectordb/nanodb) [`raft`](/packages/rapids/raft) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`faiss_lite`](/packages/vectordb/faiss_lite) [`local_llm`](/packages/llm/local_llm) [`nanodb`](/packages/vectordb/nanodb) [`raft`](/packages/rapids/raft) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/cuda-python:r35.2.1`](https://hub.docker.com/r/dustynv/cuda-python/tags) `(2023-12-06, 5.0GB)`<br>[`dustynv/cuda-python:r35.3.1`](https://hub.docker.com/r/dustynv/cuda-python/tags) `(2023-08-29, 5.0GB)`<br>[`dustynv/cuda-python:r35.4.1`](https://hub.docker.com/r/dustynv/cuda-python/tags) `(2023-12-06, 5.0GB)`<br>[`dustynv/cuda-python:r36.2.0`](https://hub.docker.com/r/dustynv/cuda-python/tags) `(2023-12-06, 3.5GB)` |
 

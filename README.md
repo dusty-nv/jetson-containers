@@ -90,3 +90,8 @@ Looking for the old jetson-containers?   See the [`legacy`](https://github.com/d
 <a href="https://youtu.be/X-OXxPiUTuU"><img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/live_llava.gif"></a>
 > [Live Llava on Jetson AGX Orin](https://youtu.be/X-OXxPiUTuU) (container: [`local_llm`](/packages/llm/local_llm#live-llava)) 
 
+<a href="https://youtu.be/dRmAGGuupuE"><img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/live_llava_2.jpg"></a>
+> [Live Llava 2.0 - VILA + Multimodal NanoDB on Jetson Orin](https://youtu.be/X-OXxPiUTuU) (container: [`local_llm`](/packages/llm/local_llm#live-llava)) 
+
+<a href="https://www.jetson-ai-lab.com/tutorial_slm.html"><img src="https://www.jetson-ai-lab.com/images/slm_console.gif"></a>
+> [Small Language Models (SLM) on Jetson Orin Nano](https://www.jetson-ai-lab.com/tutorial_slm.html) (container: [`local_llm`](/packages/llm/local_llm#live-llava)) 
