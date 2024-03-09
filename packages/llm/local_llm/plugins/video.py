@@ -47,7 +47,7 @@ class VideoSource(Plugin):
             
         if video_input_save:
             options['save'] = video_input_save
-            
+        
         self.stream = videoSource(video_input, options=options)
         self.options = options
         self.resource = video_input  # self.stream.GetOptions().resource['string']
@@ -142,7 +142,9 @@ class VideoOutput(Plugin):
         if video_output is None:
             video_output = ''
             
-        self.stream = videoOutput(video_output, options=options)
+        args = None if 'display://' in video_output else ['--headless']
+        
+        self.stream = videoOutput(video_output, options=options, argv=args)
         self.resource = video_output
         
     def process(self, input, **kwargs):
