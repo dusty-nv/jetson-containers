@@ -86,6 +86,7 @@ class ChatHistory():
                                  This also gets enabled by default if --debug or --verbose is used.
         """
         self.model = model
+        self.kv_cache = None
         
         if not chat_template:
             self.template = ChatTemplate(model)
