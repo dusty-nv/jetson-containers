@@ -41,9 +41,10 @@
 As an initial example, first test the console-based chat demo from [`chat/__main__.py`](chat/__main__.py)
 
 ```bash
-./run.sh --env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN> $(./autotag local_llm) \
-  python3 -m local_llm.chat --api=mlc \
-    --model=meta-llama/Llama-2-7b-chat-hf
+./run.sh --env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN> \
+  $(./autotag local_llm) \
+    python3 -m local_llm.chat --api=mlc \
+      --model=meta-llama/Llama-2-7b-chat-hf
 ```
 
 The model will automatically be quantized the first time it's loaded (in this case, with MLC and 4-bit).  Other fine-tuned versions of Llama that have the same architecture (or are supported by the quantization API you have selected) should be compatible - see [here](https://github.com/mlc-ai/mlc-llm/tree/main/mlc_llm/relax_model) for MLC.
@@ -76,13 +77,14 @@ Some of the noteworthy command-line options can be found in [`utils/args.py`](ut
 During testing, you can specify prompts on the command-line that will run sequentially:
 
 ```bash
-./run.sh --env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN> $(./autotag local_llm) \
-  python3 -m local_llm.chat --api=mlc \
-    --model=meta-llama/Llama-2-7b-chat-hf \
-    --prompt 'hi, how are you?' \
-    --prompt 'whats the square root of 900?' \
-    --prompt 'whats the previous answer times 4?' \
-    --prompt 'can I get a recipie for french onion soup?'
+./run.sh --env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN> \
+  $(./autotag local_llm) \
+    python3 -m local_llm.chat --api=mlc \
+      --model=meta-llama/Llama-2-7b-chat-hf \
+      --prompt 'hi, how are you?' \
+      --prompt 'whats the square root of 900?' \
+      --prompt 'whats the previous answer times 4?' \
+      --prompt 'can I get a recipie for french onion soup?'
 ```
 
 You can also load JSON files containing prompt sequences, like from [`/data/prompts/qa.json`](/data/prompts/qa.json)
@@ -93,7 +95,8 @@ If you load a Llava vision-language model, you can enter image files into the pr
 
 ```bash
 ./run.sh $(./autotag local_llm) \
-  python3 -m local_llm.chat --api=mlc --model=liuhaotian/llava-v1.5-13b \
+  python3 -m local_llm.chat --api=mlc \
+    --model=liuhaotian/llava-v1.5-13b \
     --prompt '/data/images/fruit.jpg' \
     --prompt 'what kind of fruits do you see?' \
     --prompt 'reset' \
@@ -143,7 +146,7 @@ You can choose to override this, and it won't re-appear again until you change c
 
 ```bash
 ./run.sh \
-  -e HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN> \
+  --env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN> \
   $(./autotag local_llm) \
     python3 -m local_llm.agents.web_chat --api=mlc \
       --model meta-llama/Llama-2-7b-chat-hf
