@@ -132,13 +132,13 @@ You can also see this helpful video and guide from JetsonHacks for setting up Ri
 
 ### Enabling HTTPS/SSL
 
-Browsers require HTTPS to be used in order to access the client's microphone.  A self-signed SSL certificate was already generated inside the container like this:
+Browsers require HTTPS in order to access the client's microphone.  A self-signed SSL certificate was built into the container like this:
 
 ```bash
 openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -sha256 -days 365 -nodes -subj '/CN=localhost'
 ```
 
-The container's built-in certificate is found under `/etc/ssl/private` and is automatically used, so HTTPS/SSL is enabled by default for these web UI's (you can change the PEM certificate/key used by setting the `SSL_KEY` and `SSL_CERT` environment variables).  When you first navigate your browser to a page that uses these self-signed certificates, it will issue you a warning since they don't originate from a trusted authority:
+The container's certificate is found under `/etc/ssl/private` and is automatically used, so HTTPS/SSL is enabled by default for these web UI's (you can change the PEM certificate/key used by setting the `SSL_KEY` and `SSL_CERT` environment variables).  When you first navigate your browser to a page that uses these self-signed certificates, it will issue you a warning since they don't originate from a trusted authority:
 
 <img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/ssl_warning.jpg" width="400">
 
