@@ -73,4 +73,4 @@ RUN pip3 show tvm && python3 -c 'import tvm'
 
 ENV TVM_HOME=/opt/tvm
 
-ln -s /opt/mlc-llm/3rdparty/tvm/3rdparty /usr/local/lib/python3.8/dist-packages/tvm/3rdparty
+RUN ln -s /opt/mlc-llm/3rdparty/tvm/3rdparty /usr/local/lib/python3.8/dist-packages/tvm/3rdparty
