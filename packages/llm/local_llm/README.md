@@ -166,7 +166,7 @@ You can then navigate your web browser to `https://HOSTNAME:8050` and unmute you
 
 <a href="https://youtu.be/X-OXxPiUTuU" target="_blank"><img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/live_llava.gif"></a>
 
-The [`VideoQuery`](agents/video_query.py) agent processes an incoming camera or video feed on prompts in a closed loop with Llava.  Navigate your browser to `https://<IP_ADDRESS>:8050` after launching it, proceed past the [SSL warning](#enabling-httpsssl) and see this [demo walkthrough](https://www.youtube.com/watch?v=dRmAGGuupuE) video for pointers on using the web UI. 
+The [`VideoQuery`](agents/video_query.py) agent processes an incoming camera or video feed on prompts in a closed loop with Llava.  Navigate your browser to `https://<IP_ADDRESS>:8050` after launching it, proceed past the [SSL warning](#enabling-httpsssl) and see this [**demo walkthrough**](https://www.youtube.com/watch?v=dRmAGGuupuE) video on using the web UI. 
 
 ```bash
 ./run.sh $(./autotag local_llm) \
@@ -178,9 +178,9 @@ The [`VideoQuery`](agents/video_query.py) agent processes an incoming camera or 
 	  --video-output webrtc://@:8554/output
 ```
 
-<a href="https://youtu.be/dRmAGGuupuE" target="_blank"><img width="600px" src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/live_llava_espresso.jpg"></a>
+<a href="https://youtu.be/dRmAGGuupuE" target="_blank"><img width="750px" src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/live_llava_espresso.jpg"></a>
 
-This uses [`jetson_utils`](https://github.com/dusty-nv/jetson-utils) for video I/O, and for options related to protocols and file formats, see [Camera Streaming and Multimedia](https://github.com/dusty-nv/jetson-inference/blob/master/docs/aux-streaming.md).  In the example above, it captures a V4L2 USB webcam connected to the Jetson (under the device `/dev/video0`) and outputs a WebRTC stream that can be viewed at `https://HOSTNAME:8554`.  When HTTPS/SSL is enabled, it can also capture from the browser's webcam over WebRTC.
+This uses [`jetson_utils`](https://github.com/dusty-nv/jetson-utils) for video I/O, and for options related to protocols and file formats, see [Camera Streaming and Multimedia](https://github.com/dusty-nv/jetson-inference/blob/master/docs/aux-streaming.md).  In the example above, it captures a V4L2 USB webcam connected to the Jetson (under the device `/dev/video0`) and outputs a WebRTC stream.
 
 ### Processing a Video File or Stream
 
