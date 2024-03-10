@@ -145,9 +145,8 @@ You can choose to override this, and it won't re-appear again until you change c
 ./run.sh \
   -e HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN> \
   $(./autotag local_llm) \
-    python3 -m local_llm.agents.web_chat \
-      --model meta-llama/Llama-2-7b-chat-hf \
-      --api=mlc --verbose
+    python3 -m local_llm.agents.web_chat --api=mlc \
+      --model meta-llama/Llama-2-7b-chat-hf
 ```
 
 You can then navigate your web browser to `https://HOSTNAME:8050` and unmute your microphone.
@@ -165,12 +164,12 @@ The [`VideoQuery`](agents/video_query.py) agent processes an incoming camera or 
 
 ```bash
 ./run.sh $(./autotag local_llm) \
-	python3 -m local_llm.agents.video_query --api=mlc --verbose \
-	  --model Efficient-Large-Model/VILA-2.7b \
-	  --max-context-len 768 \
-	  --max-new-tokens 32 \
-	  --video-input /dev/video0 \
-	  --video-output webrtc://@:8554/output
+  python3 -m local_llm.agents.video_query --api=mlc \
+    --model Efficient-Large-Model/VILA-2.7b \
+    --max-context-len 768 \
+    --max-new-tokens 32 \
+    --video-input /dev/video0 \
+    --video-output webrtc://@:8554/output
 ```
 
 <a href="https://youtu.be/dRmAGGuupuE" target="_blank"><img width="750px" src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/live_llava_espresso.jpg"></a>
@@ -185,13 +184,13 @@ The example above was running on a live camera, but you can also read and write 
 ./run.sh \
   -v /path/to/your/videos:/mount
   $(./autotag local_llm) \
-	python3 -m local_llm.agents.video_query --api=mlc --verbose \
-	  --model Efficient-Large-Model/VILA-2.7b \
-	  --max-context-len 768 \
-	  --max-new-tokens 32 \
-	  --video-input /mount/my_video.mp4 \
-	  --video-output /mount/output.mp4 \
-	  --prompt "What does the weather look like?"
+    python3 -m local_llm.agents.video_query --api=mlc \
+      --model Efficient-Large-Model/VILA-2.7b \
+      --max-context-len 768 \
+      --max-new-tokens 32 \
+      --video-input /mount/my_video.mp4 \
+      --video-output /mount/output.mp4 \
+      --prompt "What does the weather look like?"
 ```
 
 This example processes and pre-recorded video (in MP4, MKV, AVI, FLV formats with H.264/H.265 encoding), but it also can input/output live network streams like [RTP](https://github.com/dusty-nv/jetson-inference/blob/master/docs/aux-streaming.md#rtp), [RTSP](https://github.com/dusty-nv/jetson-inference/blob/master/docs/aux-streaming.md#rtsp), and [WebRTC](https://github.com/dusty-nv/jetson-inference/blob/master/docs/aux-streaming.md#webrtc) using Jetson's hardware-accelerated video codecs.
@@ -204,13 +203,13 @@ To enable this mode, first follow the [NanoDB tutorial](https://www.jetson-ai-la
 
 ```bash
 ./run.sh $(./autotag local_llm) \
-	python3 -m local_llm.agents.video_query --api=mlc --verbose \
-	  --model Efficient-Large-Model/VILA-2.7b \
-	  --max-context-len 768 \
-	  --max-new-tokens 32 \
-	  --video-input /dev/video0 \
-	  --video-output webrtc://@:8554/output \
-	  --nanodb /data/nanodb/coco/2017
+  python3 -m local_llm.agents.video_query --api=mlc \
+    --model Efficient-Large-Model/VILA-2.7b \
+    --max-context-len 768 \
+    --max-new-tokens 32 \
+    --video-input /dev/video0 \
+    --video-output webrtc://@:8554/output \
+    --nanodb /data/nanodb/coco/2017
 ```
 
 You can also tag incoming images and add them to the database using the panel in the web UI:
