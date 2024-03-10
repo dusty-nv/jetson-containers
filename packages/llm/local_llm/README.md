@@ -9,16 +9,6 @@
 * Web UI server using Flask, WebSockets, WebAudio, HTML5, Bootstrap5.
 * Modes to run: [Text Chat](#text-chat), [Multimodal Chat](#multimodal-chat), [Voice Chat](#voice-chat), [Live Llava](#live-llava)
 
-## Text Chat
-
-As an initial example, first test the console-based chat demo from [`chat/__main__.py`](chat/__main__.py)
-
-```bash
-./run.sh --env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN> $(./autotag local_llm) \
-  python3 -m local_llm.chat --api=mlc \
-    --model=meta-llama/Llama-2-7b-chat-hf
-```
-
 > [!NOTE]  
 > Tested models:
 >   * [`meta-llama/Llama-2-7b-chat-hf`](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf)
@@ -45,6 +35,16 @@ As an initial example, first test the console-based chat demo from [`chat/__main
 >   * [`NousResearch/Obsidian-3B-V0.5`](https://huggingface.co/NousResearch/Obsidian-3B-V0.5)
 >
 > For Llama-2 models, see [here](/packages/llm/transformers/README.md#llama2) to request your access token from HuggingFace.
+
+## Text Chat
+
+As an initial example, first test the console-based chat demo from [`chat/__main__.py`](chat/__main__.py)
+
+```bash
+./run.sh --env HUGGINGFACE_TOKEN=<YOUR-ACCESS-TOKEN> $(./autotag local_llm) \
+  python3 -m local_llm.chat --api=mlc \
+    --model=meta-llama/Llama-2-7b-chat-hf
+```
 
 The model will automatically be quantized the first time it's loaded (in this case, with MLC and 4-bit).  Other fine-tuned versions of Llama that have the same architecture (or are supported by the quantization API you have selected) should be compatible - see [here](https://github.com/mlc-ai/mlc-llm/tree/main/mlc_llm/relax_model) for MLC.
 
@@ -103,11 +103,6 @@ If you load a Llava vision-language model, you can enter image files into the pr
     --prompt '/data/images/path.jpg' \
     --prompt 'what does the sign say?'
 ```
-
-> [!NOTE]  
-> Tested models:
->   * [`liuhaotian/llava-v1.5-7b`](https://huggingface.co/liuhaotian/llava-v1.5-7b)
->   * [`liuhaotian/llava-v1.5-13b`](https://huggingface.co/liuhaotian/llava-v1.5-13b)
 
 Llava was trained to converse about one image at a time, hence the chat history is reset between images (otherwise the model tends to combine the features of all the images in the chat so far).  Multiple questions can be asked about each image though.
 
