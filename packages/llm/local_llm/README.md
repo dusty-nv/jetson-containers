@@ -166,7 +166,7 @@ You can then navigate your web browser to `https://HOSTNAME:8050` and unmute you
 
 <a href="https://youtu.be/X-OXxPiUTuU" target="_blank"><img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/live_llava.gif"></a>
 
-The [`VideoQuery`](agents/video_query.py) agent processes an incoming camera or video feed on prompts in a closed loop with Llava.  Navigate your browser to `https://<IP_ADDRESS>:8050` after launching it, proceed past the [SSL warning](#enabling-httpsssl) and see this [**demo walkthrough**](https://www.youtube.com/watch?v=dRmAGGuupuE) video on using the web UI. 
+The [`VideoQuery`](agents/video_query.py) agent processes an incoming camera or video feed on prompts in a closed loop with Llava.  Navigate your browser to `https://<IP_ADDRESS>:8050` after launching it, proceed past the [SSL warning](#enabling-httpsssl), and see this [**demo walkthrough**](https://www.youtube.com/watch?v=dRmAGGuupuE) video on using the web UI. 
 
 ```bash
 ./run.sh $(./autotag local_llm) \
