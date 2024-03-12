@@ -194,9 +194,8 @@ class Plugin(threading.Thread):
                     except queue.Empty:
                         break
             except Exception as error:
-                logging.error(f"exception occurred in {type(self)} ({error})")
-                traceback.print_exception(error)
-                
+                logging.error(f"Exception occurred during processing of {type(self)}\n\n{''.join(traceback.format_exception(error))}")
+
     def dispatch(self, input, **kwargs):
         """
         Invoke the process() function on incoming data

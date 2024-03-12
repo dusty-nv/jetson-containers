@@ -7,7 +7,7 @@ import logging
 from local_llm import Plugin, StopTokens
 
 
-def TTS(tts_model=None, **kwargs):
+def TTS(tts=None, **kwargs):
     """
     Factory function for automatically creating different types of TTS plugins.
     The model should either be 'riva' or 'xtts' (or name/path of XTTS model)
@@ -15,17 +15,17 @@ def TTS(tts_model=None, **kwargs):
     """
     from local_llm.plugins import RivaTTS, FastPitchTTS, XTTS
     
-    if not tts_model or tts_model.lower() == 'none':
+    if not tts or tts.lower() == 'none' or tts.lower().startswith('disable'):
         return None
         
-    if FastPitchTTS.is_model(tts_model):
-        return FastPitchTTS(model=tts_model, **kwargs)
-    elif XTTS.is_model(tts_model):
-        return XTTS(model=tts_model, **kwargs)
-    elif tts_model.lower() == 'riva':
+    if FastPitchTTS.is_model(tts):
+        return FastPitchTTS(model=tts, **kwargs)
+    elif XTTS.is_model(tts):
+        return XTTS(model=tts, **kwargs)
+    elif tts.lower() == 'riva':
         return RivaTTS(**kwargs)
     else:
-        raise ValueError(f"TTS model type should be either Riva or XTTS ({tts_model})")
+        raise ValueError(f"TTS model type should be either Riva or XTTS ({tts})")
        
        
 class TTSPlugin(Plugin):

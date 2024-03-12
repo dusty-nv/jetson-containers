@@ -146,7 +146,7 @@ class XTTS(TTSPlugin):
             self.language,
             self.gpt_cond_latent,
             self.speaker_embedding,
-            enable_text_splitting=False, #True,
+            enable_text_splitting=True,
             #overlap_len=128,
             #stream_chunk_size=20,
             do_sample=True,

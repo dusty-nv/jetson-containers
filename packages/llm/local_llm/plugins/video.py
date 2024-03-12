@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import time
 import logging
+import traceback
 
 import torch
 import numpy as np
@@ -89,13 +90,14 @@ class VideoSource(Plugin):
                     self.stream.Close()
                     self.stream = None
             except Exception as error:
-                logging.error(f"exception occurred closing video source {self.resource} ({error})")
+                logging.error(f"Exception occurred closing video source \"{self.resource}\"\n\n{''.join(traceback.format_exception(error))}")
 
             try:
                 self.stream = videoSource(self.resource, options=self.options)
                 return
             except Exception as error:
-                logging.error(f"failed to create video source {self.resource} ({error})")
+                logging.error(f"Failed to create video source \"{self.resource}\"\n\n{''.join(traceback.format_exception(error))}")
+                traceback.print_exception(error)
                 time.sleep(2.5)
             
     def run(self):
@@ -106,9 +108,9 @@ class VideoSource(Plugin):
             try:
                 self.capture()
             except Exception as error:
-                logging.error(f"exception occurred with video source {self.resource} ({error})")
+                logging.error(f"Exception occurred during video source capture of \"{self.resource}\"\n\n{''.join(traceback.format_exception(error))}")
                 
-            logging.error(f"re-initializing video source {self.resource}")
+            logging.error(f"Re-initializing video source \"{self.resource}\"")
             self.reconnect()
                 
                     

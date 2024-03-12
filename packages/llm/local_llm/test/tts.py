@@ -1,4 +1,23 @@
 #!/usr/bin/env python3
+#
+# Interactively test streaming TTS models, with support for live output and writing to wav files.
+# See the print_help() function below for a description of the commands you can enter this program.
+# Here is an example of starting it with XTTS model and sound output:
+#
+#    python3 -m local_llm.test.tts --verbose \
+#	    --tts xtts \
+#	    --voice 'Damien Black' \
+#	    --sample-rate-hz 44100 \
+#       --audio-output-device 25 \
+#	    --audio-output-file /data/audio/tts/test.wav
+#
+# The sample rate should be set to one that the audio output device supports (like 16000, 44100,
+# 48000, ect).  This command will list the connected audio devices available:
+#
+#    python3 -m local_llm.test.tts --list-audio-devices
+#
+# The TTS output is automatically resampled to match the sampling rate of the audio device.
+#
 import sys
 
 from local_llm.utils import ArgParser, KeyboardInterrupt
@@ -30,9 +49,9 @@ def commands(text):
     try:
         cmd = text.lower().strip()
         if cmd.startswith('/default'):
-            tts("Hello there, how are you today?")
-            tts("The weather is 76 degrees out and sunny.")
-            tts("Your first meeting is in an hour downtown, with normal traffic.")
+            tts("Hello there, how are you today? ")
+            tts("The weather is 76 degrees out and sunny. ")
+            tts("Your first meeting is in an hour downtown, with normal traffic. ")
             tts("Can I interest you in anything quick for breakfast?")
         elif cmd.startswith('/voices'):
             print(tts.voices)
