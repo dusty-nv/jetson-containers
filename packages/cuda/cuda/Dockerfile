@@ -12,6 +12,8 @@ FROM ${BASE_IMAGE}
 ARG CUDA_URL \
     CUDA_DEB \
     CUDA_PACKAGES \
+    CUDA_TEMP_DIR="/tmp/cuda" \
+    UBUNTU_VERSION="2004" \
     DEBIAN_FRONTEND=noninteractive
 
 RUN set -ex \
@@ -26,9 +28,9 @@ RUN set -ex \
     && apt-get clean \
     \
     && echo "Downloading ${CUDA_DEB}" \
-    && mkdir -p /tmp/cuda \
-    && cd /tmp/cuda \
-    && wget --quiet --show-progress --progress=bar:force:noscroll https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/sbsa/cuda-ubuntu2204.pin -O /etc/apt/preferences.d/cuda-repository-pin-600 \
+    && mkdir -p ${CUDA_TEMP_DIR} \
+    && cd ${CUDA_TEMP_DIR} \
+    && wget --quiet --show-progress --progress=bar:force:noscroll https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION}/arm64/cuda-ubuntu${UBUNTU_VERSION}.pin -O /etc/apt/preferences.d/cuda-repository-pin-600 \
     && wget --quiet --show-progress --progress=bar:force:noscroll ${CUDA_URL} \
     && dpkg -i *.deb \
     && cp /var/cuda-tegra-repo-ubuntu*-local/cuda-tegra-*-keyring.gpg /usr/share/keyrings/ \
@@ -40,7 +42,7 @@ RUN set -ex \
     && apt-get clean \
     && dpkg --list | grep cuda \
     && dpkg -P ${CUDA_DEB} \
-    && rm -rf /tmp/cuda
+    && rm -rf ${CUDA_TEMP_DIR}
 
 ENV CUDA_HOME="/usr/local/cuda"
 ENV NVCC_PATH="$CUDA_HOME/bin/nvcc"

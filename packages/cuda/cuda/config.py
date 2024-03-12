@@ -3,7 +3,7 @@ import os
 from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES, CUDA_VERSION
 
 
-def cuda_package(version, url, deb, packages=None, requires=None, default=False):
+def cuda_package(version, url, deb, packages=None, requires=None, default=False) -> list:
     """
     Generate containers for a particular version of CUDA installed from debian packages
     This will download & install the specified packages (by default the full CUDA Toolkit) 
@@ -21,6 +21,7 @@ def cuda_package(version, url, deb, packages=None, requires=None, default=False)
         'CUDA_DEB': deb,
         'CUDA_PACKAGES': packages,
         'CUDA_ARCH_LIST': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
+        'UBUNTU_VERSION': '2204' if L4T_VERSION.major >= 36 else '2004'
     }
 
     if default:
@@ -35,7 +36,7 @@ def cuda_package(version, url, deb, packages=None, requires=None, default=False)
     return cuda
 
 
-def cuda_builtin(version, requires=None, default=False):
+def cuda_builtin(version, requires=None, default=False) -> list:
     """
     Backwards-compatability for when CUDA already installed in base container (like l4t-jetpack)
     This will just retag the base, marking CUDA dependency as satisfied in any downstream containers.
@@ -63,7 +64,7 @@ def cuda_builtin(version, requires=None, default=False):
     return passthrough
 
 
-def cuda_samples(version, requires, default=False):
+def cuda_samples(version, requires, default=False) -> list:
     """
     Generates container that installs/builds the CUDA samples
     """
