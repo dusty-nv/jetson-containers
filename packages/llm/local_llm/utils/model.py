@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 import os
+import logging
+
+import numpy as np
+import onnxruntime as ort
+
 from glob import glob
+from packaging.version import Version
 
 from huggingface_hub import snapshot_download, hf_hub_download, login
 
@@ -73,3 +79,94 @@ def default_model_api(model_path, quant_path=None):
         return 'mlc'
     else:
         return 'hf'
+        
+        
+class ONNXRuntimeModel:
+    """
+    Base class for OnnxRuntime models.
+    """
+    def __init__(self, model, providers='CUDAExecutionProvider', debug=False, **kwargs):
+        """
+        Load an ONNX Runtime model.
+        """
+        self.model_path = model
+        
+        if isinstance(providers, str):
+            providers = [providers]
+        
+        provider_options = []
+        
+        for provider in providers:
+            if provider == 'TensorrtExecutionProvider':
+                trt_cache_path = os.path.join(os.path.dirname(self.model_path), 'trt_cache')
+                os.makedirs(trt_cache_path, exist_ok=True)
+                
+                options = {
+                    'trt_fp16_enable': True,
+                    'trt_engine_cache_enable': True,
+                    'trt_engine_cache_path': trt_cache_path
+                }
+                
+                if ort_version >= Version('1.15'):
+                    options['trt_detailed_build_log'] = True
+                    options['trt_timing_cache_enable'] = True
+        
+                provider_options.append(options)
+            else:
+                provider_options.append({})
+                
+        session_options = ort.SessionOptions()
+        session_options.log_severity_level = 0 if debug else 3  # 0:Verbose, 1:Info, 2:Warning. 3:Error, 4:Fatal. Default is 2
+    
+        logging.info(f"loading ONNX model '{self.model_path}' with onnxruntime ({provider})")
+        self.model = ort.InferenceSession(model, sess_options=session_options, providers=providers, provider_options=provider_options)
+        logging.info(f"loaded ONNX model '{self.model_path}' with onnxruntime ({provider})")
+        
+        self.inputs = self.model.get_inputs()
+        self.outputs = self.model.get_outputs()
+        
+        for idx, binding in enumerate(self.inputs):
+            print('')
+            print(f"input {idx} - {binding.name}")
+            print(f"   shape: {binding.shape}")
+            print(f"   type:  {binding.type}")
+            print('')
+ 
+    def execute(self, inputs, return_dict=False, **kwargs):
+        """
+        Run the DNN model in ONNXRuntime.  The inputs are provided as numpy arrays in a list/tuple/dict.
+        Note that run() doesn't perform any pre/post-processing - this is typically done in subclasses.
+        
+        Parameters:
+          inputs (array, list[array], dict[array]) -- the network inputs as numpy array(s).
+                         If there is only one input, it can be provided as a single numpy array.
+                         If there are multiple inputs, they can be provided as numpy arrays in a
+                         list, tuple, or dict.  Inputs in lists and tuples are assumed to be in the
+                         same order as the input bindings.  Inputs in dicts should have keys with the
+                         same names as the input bindings.
+          return_dict (bool) -- If True, the results will be returned in a dict of numpy arrays, where the
+                                keys are the names of the output binding names. By default, the results will 
+                                be returned in a list of numpy arrays, in the same order as the output bindings.
+          
+        Returns the model output as a numpy array (if only one output), list[ndarray], or dict[ndarray].
+        """
+        if isinstance(inputs, np.ndarray):
+            inputs = [inputs]
+        
+        assert len(inputs) == len(self.inputs)
+        
+        if isinstance(inputs, (list,tuple)):
+            inputs = {self.inputs[i].name : input for i, input in enumerate(inputs)}
+        elif not isinstance(inputs, dict):        
+            raise ValueError(f"inputs must be a list, tuple, or dict (instead got type '{type(inputs).__name__}')")
+            
+        outputs = self.model.run(None, inputs)
+        
+        if return_dict:
+            return {self.outputs[i].name : output for i, output in enumerate(outputs)}
+            
+        if len(outputs) == 1:
+            return outputs[0]
+        
+        return outputs
+        

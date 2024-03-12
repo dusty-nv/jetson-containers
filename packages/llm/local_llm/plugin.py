@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import time
 import queue
 import threading
 import logging
@@ -152,6 +153,16 @@ class Plugin(threading.Thread):
                     output_plugin.input(output, **kwargs)
                     
         return output
+     
+    @property
+    def num_outputs(self):
+        """
+        Return the total number of output connections across all channels
+        """
+        count = 0
+        for output_channel in self.outputs:
+            count += len(output_channel) 
+        return count
         
     def start(self):
         """
@@ -191,32 +202,48 @@ class Plugin(threading.Thread):
         Invoke the process() function on incoming data
         """
         if self.interrupted:
-            #logging.debug(f"{type(self)} resetting interrupted=False")
+            #logging.debug(f"{type(self)} resetting interrupted flag to false")
             self.interrupted = False
-            
+          
         self.processing = True
         outputs = self.process(input, **kwargs)
         self.processing = False
-        
+
         self.output(outputs)
         
         if self.relay:
             self.output(input)
    
-    def interrupt(self, clear_inputs=True, block=True):
+    def interrupt(self, clear_inputs=True, recursive=True, block=None):
         """
         Interrupt any ongoing/pending processing, and optionally clear the input queue.
+        If recursive is true, then any downstream plugins will also be interrupted.
         If block is true, this function will wait until any ongoing processing has finished.
         This is done so that any lingering outputs don't cascade downstream in the pipeline.
+        If block is None, it will automatically be set to true if this plugin has outputs.
         """
+        #logging.debug(f"interrupting plugin {type(self)}  clear_inputs={clear_inputs} recursive={recursive} block={block}")
+        
         if clear_inputs:
             self.clear_inputs()
           
         self.interrupted = True
         
-        while block and self.processing:
-            continue  # TODO use an event for this?
+        num_outputs = self.num_outputs
+        block_other = block
         
+        if block is None and num_outputs > 0:
+            block = True
+            
+        while block and self.processing:
+            #logging.debug(f"interrupt waiting for {type(self)} to complete processing")
+            time.sleep(0.01) # TODO use an event for this?
+        
+        if recursive and num_outputs > 0:
+            for output_channel in self.outputs:
+                for output in output_channel:
+                    output.interrupt(clear_inputs=clear_inputs, recursive=recursive, block=block_other)
+                    
     def clear_inputs(self):
         """
         Clear the input queue, dropping any data.

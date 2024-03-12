@@ -46,7 +46,25 @@ def torch_dtype(dtype):
     """
     return torch_dtype_dict[str(dtype)]
     
-
+def convert_dtype(dtype, to='np'):
+    """
+    Convert a string, numpy type, or torch.dtype to either numpy or PyTorch
+    """
+    if to == 'pt':
+        if isinstance(dtype, torch.dtype):
+            return dtype
+        else:
+            return torch_dtype(dtype)
+    elif to == 'np':
+        if isinstance(dtype, type):
+            return dtype
+        elif isinstance(dtype, torch.dtype):
+            return np.dtype(str(dtype).split('.')[-1]) # remove the torch.* prefix
+        else:
+            return np.dtype(dtype)
+            
+    raise TypeError(f"expected dtype as a string, type, or torch.dtype (was {type(dtype)}) and with to='np' or to='pt'")
+    
 def convert_tensor(tensor, return_tensors='pt', device=None, dtype=None, **kwargs):
     """
     Convert tensors between numpy/torch/ect

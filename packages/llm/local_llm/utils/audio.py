@@ -2,6 +2,7 @@
 import torch
 import numpy as np
 
+from .tensor import convert_dtype
 
 def convert_audio(samples, dtype=np.int16):
     """
@@ -17,8 +18,9 @@ def convert_audio(samples, dtype=np.int16):
         
     if samples.dtype == dtype:
         return samples
-        
-    sample_width = np.dtype(str(dtype).split('.')[-1]).itemsize
+
+    #sample_width = np.dtype(str(dtype).split('.')[-1]).itemsize
+    sample_width = np.dtype(convert_dtype(dtype, to='np')).itemsize
     max_value = float(int((2 ** (sample_width * 8)) / 2) - 1)  # 32767 for 16-bit
         
     if isinstance(samples, np.ndarray):

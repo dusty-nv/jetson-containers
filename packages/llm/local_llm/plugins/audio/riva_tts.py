@@ -57,19 +57,18 @@ class RivaTTS(TTSPlugin):
         
         self.process("This is a test of Riva text to speech.", flush=True)
     
-    def process(self, text, flush=False, **kwargs):
+    def process(self, text, **kwargs):
         """
         Inputs text, outputs stream of audio samples (np.ndarray, np.int16)
         
         The input text is buffered by punctuation/phrases as it sounds better,
         and filtered for emojis/ect, and has SSML tags applied (if enabled) 
         """
-        if not flush:
-            if len(self.outputs[0]) == 0:
-                #logging.debug(f"TTS has no output connections, skipping generation")
-                return
-            text = self.buffer_text(text)
+        if len(self.outputs[0]) == 0:
+            #logging.debug(f"TTS has no output connections, skipping generation")
+            return
             
+        text = self.buffer_text(text)
         text = self.filter_text(text)
         text = self.apply_ssml(text)
         

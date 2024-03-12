@@ -6,3 +6,5 @@ from .xtts import XTTS
 
 from .riva_asr import RivaASR
 from .riva_tts import RivaTTS
+
+from .fastpitch_tts import FastPitchTTS
