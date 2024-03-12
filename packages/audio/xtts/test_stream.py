@@ -45,12 +45,10 @@ gpt_cond_latent.to(device)
 speaker_embedding.to(device)
 
 prompts = [
-    "Hello world!", 
-    "How are you today?", 
-    "The weather is 53 degrees out and rainy.", 
-    "What is your favorite food to eat for breakfast?", 
-    "Mine is a French toast with maple syrup and sausages.", 
-    "I'm a big fan of Sunday brunch and taking an early afternoon nap afterwards, of course."
+    "Hello there, how are you today?", 
+    "The weather is 76 degrees out and sunny.", 
+    "Your first meeting is in an hour downtown, with normal traffic.",
+    "Can I interest you in anything quick for breakfast?",
 ]
 
 prompts = [' '.join(prompts)] + prompts

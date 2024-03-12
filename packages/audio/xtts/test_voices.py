@@ -35,11 +35,11 @@ prompts = [
 ]
     
 if tts.is_multi_speaker:
-    prompts = [' '.join(prompts)] + prompts
+    prompts = [' '.join(prompts)] #+ prompts
 
 for speaker in tts.synthesizer.tts_model.speaker_manager.speakers:
     for prompt_idx, prompt in enumerate(prompts):
-        wav = f"/data/audio/tts/{os.path.basename(model)}_offline_{speaker.lower().replace(' ', '_')}_{prompt_idx}.wav"
+        wav = f"/data/audio/tts/{os.path.basename(model)}_offline_{speaker.lower().replace(' ', '_')}.wav"
         print(f'\ngenerating "{prompt}"  speaker="{speaker}"  lang="{language}"  wav="{wav}"\n')
         if tts.is_multi_speaker:
             tts.tts_to_file(text=prompt, speaker=speaker, language=language, file_path=wav)
