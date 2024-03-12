@@ -23,6 +23,5 @@ COPY --from=builder /usr/local/lib/libfaiss.a /usr/local/lib/libfaiss.a
 COPY --from=builder /usr/local/include/faiss /usr/local/include/faiss
 COPY --from=builder /usr/local/share/faiss /usr/local/share/faiss
 
-RUN pip3 install --no-cache-dir --verbose /opt/faiss*.whl
-
-RUN pip3 show faiss && python3 -c 'import faiss'
+RUN pip3 install --no-cache-dir --verbose /opt/faiss*.whl && \
+    pip3 show faiss && python3 -c 'import faiss'

@@ -1,5 +1,5 @@
 
-from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES
+from jetson_containers import L4T_VERSION
 
 if L4T_VERSION.major >= 36:    # JetPack 6.0
     TORCHVISION_VERSION = 'v0.16.0'
@@ -12,5 +12,4 @@ elif L4T_VERSION.major == 32:  # JetPack 4
 
 package['build_args'] = {
     'TORCHVISION_VERSION': TORCHVISION_VERSION,
-    'TORCH_CUDA_ARCH_LIST': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES])
 }

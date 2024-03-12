@@ -20,6 +20,7 @@ def cuda_package(version, url, deb, packages=None, requires=None, default=False)
         'CUDA_URL': url,
         'CUDA_DEB': deb,
         'CUDA_PACKAGES': packages,
+        'CUDA_ARCH_LIST': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
     }
 
     if default:
@@ -45,8 +46,11 @@ def cuda_builtin(version, requires=None, default=False):
         version = f'{version.major}.{version.minor}'
  
     passthrough['name'] = f'cuda:{version}'
+    passthrough['dockerfile'] = 'Dockerfile.builtin'
 
-    del passthrough['dockerfile']
+    passthrough['build_args'] = {
+        'CUDA_ARCH_LIST': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
+    }
     
     if default:
         passthrough['alias'] = 'cuda'

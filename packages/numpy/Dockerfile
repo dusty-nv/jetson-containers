@@ -16,6 +16,6 @@ RUN apt-get update && \
 # https://github.com/numpy/numpy/issues/18131#issuecomment-755438271
 ENV OPENBLAS_CORETYPE=ARMV8
 
-RUN pip3 show numpy && python3 -c 'import numpy; print(numpy.__version__)'
-RUN pip3 install --upgrade --no-cache-dir --verbose numpy
-RUN pip3 show numpy && python3 -c 'import numpy; print(numpy.__version__)'
+RUN pip3 show numpy && python3 -c 'import numpy; print(numpy.__version__)' && \
+    pip3 install --upgrade --no-cache-dir --verbose numpy && \
+    pip3 show numpy && python3 -c 'import numpy; print(numpy.__version__)'
