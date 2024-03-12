@@ -10,7 +10,7 @@
 ARG BASE_IMAGE
 
 # Build Stage
-FROM ${BASE_IMAGE} AS build
+FROM ${BASE_IMAGE}
 
 # upstream version is https://github.com/TimDettmers/bitsandbytes (the fork below includes some patches for Jetson) 
 ARG BITSANDBYTES_REPO=dusty-nv/bitsandbytes
@@ -31,17 +31,11 @@ RUN set -ex \
     && cd /opt/bitsandbytes \
     && python3 setup.py --verbose build_ext --inplace -j$(nproc) bdist_wheel --dist-dir /opt \
     && cd ../ \
-    && rm -rf /opt/bitsandbytes
-
-# Install Stage
-FROM ${BASE_IMAGE} AS install
-
-COPY --from=build /opt/bitsandbytes*.whl /opt/
-
-RUN set -ex \
+    && rm -rf /opt/bitsandbytes \
+    \
     && pip3 install --no-cache-dir --verbose \
         scipy \
         /opt/bitsandbytes*.whl \
-    # make sure it loads
+    \
     && pip3 show bitsandbytes \
     && python3 -c 'import bitsandbytes'

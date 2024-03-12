@@ -9,7 +9,7 @@
 ARG BASE_IMAGE
 
 # Build Stage
-FROM ${BASE_IMAGE} AS build
+FROM ${BASE_IMAGE}
 
 ARG AUTOAWQ_BRANCH \
     AUTOAWQ_CUDA_ARCH
@@ -35,17 +35,11 @@ RUN set -ex \
     && python3 setup.py --verbose bdist_wheel --dist-dir /opt \
     && rm -rf \
         /opt/AutoAWQ_kernels \
-        /opt/AutoAWQ
-
-# Install Stage
-FROM ${BASE_IMAGE} AS install
-
-COPY --from=build /opt/autoawq_kernels*.whl /opt/
-COPY --from=build /opt/autoawq*.whl /opt/
-    
-RUN set -ex \
+        /opt/AutoAWQ \
+    \
     && pip3 install --no-cache-dir --verbose \
         /opt/autoawq_kernels*.whl \
         /opt/autoawq*.whl \
+    \
     && pip3 show autoawq \
     && python3 -c 'import awq'

@@ -10,9 +10,9 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 # set the model cache dir
-ENV TRANSFORMERS_CACHE=/data/models/huggingface
-ENV HUGGINGFACE_HUB_CACHE=/data/models/huggingface
-ENV HF_HOME=/data/models/huggingface
+ENV TRANSFORMERS_CACHE=/data/models/huggingface \
+    HUGGINGFACE_HUB_CACHE=/data/models/huggingface \
+    HF_HOME=/data/models/huggingface
 
 # add downloader tool
 COPY huggingface-downloader /usr/local/bin/
@@ -33,3 +33,4 @@ RUN set -ex \
     && apt-get install -y --no-install-recommends time \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
+

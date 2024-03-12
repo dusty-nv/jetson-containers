@@ -18,6 +18,7 @@ RUN set -ex \
     && if [ `lsb_release --codename --short` != 'bionic' ]; then \
         pip3 install --no-cache-dir --verbose protobuf==4.22.3; \
     fi \
+    \
     && pip3 install --no-cache-dir --verbose git+https://github.com/onnx/onnx@${ONNX_VERSION} \
     && pip3 show onnx \
     && python3 -c 'import onnx; print(onnx.__version__)'

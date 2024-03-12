@@ -42,7 +42,7 @@ HTTPS (SSL) connection is needed to allow `ipywebrtc` widget to have access to t
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/python) [`numpy`](/packages/numpy) [`numba`](/packages/numba) [`cudnn`](/packages/cuda/cudnn) [`tensorrt`](/packages/tensorrt) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchaudio`](/packages/pytorch/torchaudio) [`rust`](/packages/rust) [`jupyterlab`](/packages/jupyterlab) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/whisper:r35.3.1`](https://hub.docker.com/r/dustynv/whisper/tags) `(2023-12-12, 6.1GB)`<br>[`dustynv/whisper:r35.4.1`](https://hub.docker.com/r/dustynv/whisper/tags) `(2023-12-14, 6.1GB)`<br>[`dustynv/whisper:r36.2.0`](https://hub.docker.com/r/dustynv/whisper/tags) `(2023-12-14, 7.9GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/whisper:r35.3.1`](https://hub.docker.com/r/dustynv/whisper/tags) `(2024-03-03, 6.0GB)`<br>[`dustynv/whisper:r35.4.1`](https://hub.docker.com/r/dustynv/whisper/tags) `(2023-12-14, 6.1GB)`<br>[`dustynv/whisper:r36.2.0`](https://hub.docker.com/r/dustynv/whisper/tags) `(2024-03-03, 7.9GB)` |
 
 </details>
 
@@ -52,9 +52,9 @@ HTTPS (SSL) connection is needed to allow `ipywebrtc` widget to have access to t
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/whisper:r35.3.1`](https://hub.docker.com/r/dustynv/whisper/tags) | `2023-12-12` | `arm64` | `6.1GB` |
+| &nbsp;&nbsp;[`dustynv/whisper:r35.3.1`](https://hub.docker.com/r/dustynv/whisper/tags) | `2024-03-03` | `arm64` | `6.0GB` |
 | &nbsp;&nbsp;[`dustynv/whisper:r35.4.1`](https://hub.docker.com/r/dustynv/whisper/tags) | `2023-12-14` | `arm64` | `6.1GB` |
-| &nbsp;&nbsp;[`dustynv/whisper:r36.2.0`](https://hub.docker.com/r/dustynv/whisper/tags) | `2023-12-14` | `arm64` | `7.9GB` |
+| &nbsp;&nbsp;[`dustynv/whisper:r36.2.0`](https://hub.docker.com/r/dustynv/whisper/tags) | `2024-03-03` | `arm64` | `7.9GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -71,10 +71,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag whisper)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/whisper:r36.2.0
+./run.sh dustynv/whisper:r35.3.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/whisper:r36.2.0
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/whisper:r35.3.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

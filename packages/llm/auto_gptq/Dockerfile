@@ -10,11 +10,11 @@
 ARG BASE_IMAGE
 
 # Build Stage
-FROM ${BASE_IMAGE} AS build
+FROM ${BASE_IMAGE}
 
-ARG AUTOGPTQ_BRANCH
-ARG TORCH_CUDA_ARCH_LIST
-ARG BUILD_CUDA_EXT=1
+ARG AUTOGPTQ_BRANCH \
+    TORCH_CUDA_ARCH_LIST \
+    BUILD_CUDA_EXT=1
 
 ADD https://api.github.com/repos/PanQiWei/AutoGPTQ/git/refs/heads/${AUTOGPTQ_BRANCH} /tmp/autogptq_version.json
 
@@ -24,15 +24,9 @@ RUN set -ex \
     && cd /opt/AutoGPTQ \
     && python3 setup.py --verbose bdist_wheel --dist-dir /opt \
     && cd ../ \
-    && rm -rf /opt/AutoGPTQ
-
-# Install Stage
-FROM ${BASE_IMAGE} AS install
-
-COPY --from=build /opt/auto_gptq*.whl /opt/
-
-RUN set -ex \
+    && rm -rf /opt/AutoGPTQ \
+    \
     && pip3 install --no-cache-dir --verbose /opt/auto_gptq*.whl \
-    # make sure it loads
+    \
     && pip3 show auto-gptq \
     && python3 -c 'import auto_gptq'

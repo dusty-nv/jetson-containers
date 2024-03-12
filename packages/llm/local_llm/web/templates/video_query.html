@@ -65,7 +65,7 @@
                 //contents = '<div style="position: relative; text-align: center; color: white" width="50%">';
                 let contents = '<div class="me-1" style="position: relative; color: white; display: inline;">';
                 contents += `<img src=${search_results[n]['image']} style="aspect-ratio: 1.47; width: 49%;" title="&quot;METADATA&quot; : ${search_results[n]['metadata']}">`;
-                contents += `<div class="ps-1 pe-1" style="position: absolute; top: 0%; right: 0%; transform: translate(0%, -332%); background-color: rgba(0,0,0,0.5)">${search_results[n]['similarity']}</div></div>`;
+                contents += `<div class="ps-1 pe-1" style="position: absolute; top: 0%; right: 0%; transform: translate(0%, -288%); background-color: rgba(0,0,0,0.5)">${search_results[n]['similarity']}</div></div>`;
                 //contents += '</div>';
                 obj.append(contents);
               }
@@ -259,7 +259,7 @@
       <div style="display: inline-block; vertical-align: top;">
         <!-- NanoDB -->
         {% if nanodb %}
-        <div class="card ms-1 mt-1" style="width: 36rem; margin: 0px;">
+        <div class="card ms-1 mt-1" style="width: 32rem; margin: 0px;">
           <div class="card-body">
             <div class="card-title" data-bs-toggle="collapse" href="nanodb_card" role="button">
               <h5 class="d-inline">NanoDB</h5>
@@ -315,13 +315,13 @@
         {% endif %}
         
         <!-- Stream Controls -->
-        <div class="card ms-1 mt-1" style="width: 36rem; margin: 0px;">
+        <div class="card ms-1 mt-1" style="width: 32rem; margin: 0px;">
           <div class="card-body">
             {{ card_header('stream_controls', 'Streaming', arrow='down') }}
             <div class="collapse show" id="stream_controls">
             {% if send_webrtc %}
               <div class="row">
-                <label for="send-stream" class="col-2">Webcam:</label>
+                <label for="send-stream" class="col-2" style="width: 6rem;">Webcam:</label>
                 <div class="col-6">
                   <select id="send-stream" name="send-stream"></select>
                 </div>
@@ -331,27 +331,27 @@
               </div>
             {% else %}
               <div class="row">
-                <label for="input-stream" class="col-2">Input:</label>
-                <div id="input-stream" class="col-10">
+                <label for="input-stream" class="col-2" style="width: 6rem;">Input:</label>
+                <div id="input-stream" class="col-8">
                   {{ video_input }}
                 </div>
               </div>
             {% endif %}
               <div class="row">
-                <label for="play-stream" class="col-2">Playback:</label>
-                <div class="col-6">
-                  <input id="play-stream" name="play-stream" type="text" size="32">
+                <label for="play-stream" class="col-2" style="width: 6rem;">Playback:</label>
+                <div class="col-5">
+                  <input id="play-stream" name="play-stream" type="text" size="24">
                 </div>
-                <div class="col-4">
+                <div class="col-4 ms-3">
                   <button id="play-button" onclick="playWebRTC()">Play</button>
                 </div>
               </div>
               <div class="row">
-                <label for="refresh_rate" class="col-2 me-0">Refresh:</label>
+                <label for="refresh_rate" class="col-2 me-0" style="width: 6rem;">Refresh:</label>
                 <div id="refresh_rate" class="col-4 ms-0">0.0 FPS (0.0 ms)</div>
               </div>
               <div class="row">
-                <label for="connection-stats-show" class="col-2">Statistics:</label>
+                <label for="connection-stats-show" class="col-2" style="width: 6rem;">Statistics:</label>
                 <div class="col-2">
                   <input id="connection-stats-show" type="checkbox" class="form-checkbox" oninput="onConnectionStats()" checked>
                 </div>

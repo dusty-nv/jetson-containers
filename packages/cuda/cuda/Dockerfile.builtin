@@ -1,0 +1,17 @@
+#---
+# name: cuda
+# group: cuda
+# config: config.py
+# depends: [build-essential]
+# test: test.sh
+#---
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+ARG CUDA_ARCH_LIST
+
+ENV CUDAARCHS=${CUDA_ARCH_LIST} \
+    CUDA_ARCHITECTURES=${CUDA_ARCH_LIST} \
+    CUDA_HOME="/usr/local/cuda"
+
+ENV DEBIAN_FRONTEND=noninteractive

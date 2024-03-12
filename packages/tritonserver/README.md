@@ -13,7 +13,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`deepstream`](/packages/deepstream) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/tritonserver:r32.7.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) `(2023-12-22, 1.3GB)`<br>[`dustynv/tritonserver:r35.2.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) `(2023-09-07, 5.9GB)`<br>[`dustynv/tritonserver:r35.3.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) `(2023-12-22, 5.9GB)`<br>[`dustynv/tritonserver:r35.4.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) `(2023-10-07, 5.9GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/tritonserver:r32.7.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) `(2024-02-27, 1.3GB)`<br>[`dustynv/tritonserver:r35.2.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) `(2023-09-07, 5.9GB)`<br>[`dustynv/tritonserver:r35.3.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) `(2024-02-27, 5.9GB)`<br>[`dustynv/tritonserver:r35.4.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) `(2024-02-27, 5.9GB)`<br>[`dustynv/tritonserver:r36.2.0`](https://hub.docker.com/r/dustynv/tritonserver/tags) `(2024-02-27, 8.4GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/user_guide/jetson.html |
 
 </details>
@@ -24,10 +24,11 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/tritonserver:r32.7.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) | `2023-12-22` | `arm64` | `1.3GB` |
+| &nbsp;&nbsp;[`dustynv/tritonserver:r32.7.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) | `2024-02-27` | `arm64` | `1.3GB` |
 | &nbsp;&nbsp;[`dustynv/tritonserver:r35.2.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) | `2023-09-07` | `arm64` | `5.9GB` |
-| &nbsp;&nbsp;[`dustynv/tritonserver:r35.3.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) | `2023-12-22` | `arm64` | `5.9GB` |
-| &nbsp;&nbsp;[`dustynv/tritonserver:r35.4.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) | `2023-10-07` | `arm64` | `5.9GB` |
+| &nbsp;&nbsp;[`dustynv/tritonserver:r35.3.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) | `2024-02-27` | `arm64` | `5.9GB` |
+| &nbsp;&nbsp;[`dustynv/tritonserver:r35.4.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) | `2024-02-27` | `arm64` | `5.9GB` |
+| &nbsp;&nbsp;[`dustynv/tritonserver:r36.2.0`](https://hub.docker.com/r/dustynv/tritonserver/tags) | `2024-02-27` | `arm64` | `8.4GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -44,10 +45,10 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 ./run.sh $(./autotag tritonserver)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/tritonserver:r32.7.1
+./run.sh dustynv/tritonserver:r35.4.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/tritonserver:r32.7.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/tritonserver:r35.4.1
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

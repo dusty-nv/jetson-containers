@@ -57,7 +57,12 @@ class ChatQuery(Plugin):
           repetition_penalty -- the parameter for repetition penalty. 1.0 means no penalty (default: 1.0)  
           temperature (float) -- randomness token sampling parameter (default=0.7, only used if do_sample=True)
           top_p (float) -- if set to float < 1 and do_sample=True, only the smallest set of most probable tokens
-                           with probabilities that add up to top_p or higher are kept for generation (default 0.95)          
+                           with probabilities that add up to top_p or higher are kept for generation (default 0.95)  
+
+        kwargs (other)
+
+          print_stats (bool) -- if True, generation performance will be printed to the terminal after EOS.
+                                This also gets enabled if --debug or --verbose is used, and passed to ChatHistory.          
         """
         super().__init__(output_channels=5, **kwargs)
 
@@ -77,6 +82,8 @@ class ChatQuery(Plugin):
         self.temperature = kwargs.get('temperature', 0.7)
         self.top_p = kwargs.get('top_p', 0.95)
             
+        self.print_stats = kwargs.get('print_stats', kwargs.get('debug', False))
+        
         #warmup_query = '2+2 is '
         #logging.debug(f"Warming up LLM with query '{warmup_query}'")
         #logging.debug(f"Warmup response:  '{self.model.generate(warmup_query, streaming=False)}'")
@@ -186,6 +193,8 @@ class ChatQuery(Plugin):
         # output the final generated text on channel 2
         self.output(bot_reply.text, ChatQuery.OutputFinal)
     
+        if self.print_stats:
+            print_table(self.model.stats)
     '''
     def interrupt(self, clear_inputs=True, block=True):
         """

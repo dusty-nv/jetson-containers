@@ -83,7 +83,7 @@ class VideoQuery(Agent):
         if nanodb:
             self.db = NanoDB(
                 path=nanodb, 
-                model=None, #kwargs.get('nanodb_model'), 
+                model=None, # disable DB's model because VLM's CLIP is used 
                 reserve=kwargs.get('nanodb_reserve'), 
                 k=8, drop_inputs=True,
             ).start().add(self.on_search)
@@ -166,7 +166,8 @@ class VideoQuery(Agent):
         
             threading.Thread(target=save_image, args=(filename, self.last_image, embedding, metadata)).start()
             
-        self.db(embedding)
+        if self.auto_refresh_db:
+            self.db(embedding)
         
     def on_search(self, results):
         html = []

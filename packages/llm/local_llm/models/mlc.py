@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import sys
 import tvm
 import time
 import math
@@ -195,6 +196,8 @@ class MLCModel(LocalLM):
         self._apply_repetition_penalty = tvm.get_global_func('vm.builtin.apply_repetition_penalty')
         self._apply_softmax_with_temperature = tvm.get_global_func('vm.builtin.apply_softmax_with_temperature')
 
+        self.kv_caches = []  # cache of KV caches to reuse because they take ~100ms to allocate
+        
         # param loading functions
         self._load_cache = tvm.get_global_func('vm.builtin.ndarray_cache.load')
         self._load_params = tvm.get_global_func('vm.builtin.param_array_from_cache')
@@ -281,6 +284,10 @@ class MLCModel(LocalLM):
         
     @staticmethod
     def get_kv_cache_size(kv_cache, length=None):
+        """
+        Calculate the size (in bytes) that the KV cache consumes for the given token length
+        (or by default for the maximum window size if length is None)
+        """
         size = 0
         for n in range(len(kv_cache)):
             view = view_kv_cache(kv_cache[n])
@@ -289,6 +296,35 @@ class MLCModel(LocalLM):
             size += length * view.shape[1] * view.shape[2] * np.dtype(view.dtype).itemsize
         return size
     
+    def create_kv_cache(self, use_cache=True):
+        """
+        Allocate or return a free KV cache available to use. If use_cache is true, then an existing
+        KV cache that isn't in use is returned, because KV caches take ~100ms to allocate.
+        Otherwise, a new cache is allocated and returned (which can take considerable time)
+        """
+        if use_cache:
+            for kv_cache in self.kv_caches:
+                if sys.getrefcount(kv_cache) <= 3:  # existing references from this call, loop, and list
+                    self._kv_cache_clear(kv_cache)  # clearing is much faster than allocating (<0.1ms)
+                    return kv_cache
+
+        time_begin = time.perf_counter()
+        
+        if self.kv_cache_paged:
+            kv_cache = self._kv_cache_create(
+                tvm.runtime.ShapeTuple([1]),  # max sequences
+                tvm.runtime.ShapeTuple([self.config.max_length]),  # max window size
+                tvm.runtime.ShapeTuple([self.config.prefill_chunk_size]),  # prefill chunk size
+                tvm.runtime.ShapeTuple([16])  # page size
+            )
+            self._kv_cache_add_sequence(kv_cache, 0)
+        else:
+            kv_cache = self._kv_cache_create()
+        
+        logging.debug(f"allocated new KV cache in {(time.perf_counter()-time_begin)*1000:.1f} ms  (existing cache refcounts={[sys.getrefcount(k) for k in self.kv_caches]})")
+        self.kv_caches.append(kv_cache)
+        return kv_cache
+        
     def embed_text(self, text, return_tensors='np', add_special_tokens=False, use_cache=False):  # pt, np, tvm
         if not self.has_embed:
             raise RuntimeError(f"{self.config.name} does not have embed() in {self.module_path}")
@@ -413,18 +449,7 @@ class MLCModel(LocalLM):
         
         # create a kv_cache if needed
         if stream.kv_cache is None:
-            if self.kv_cache_paged:
-                kv_cache = self._kv_cache_create(
-                    tvm.runtime.ShapeTuple([1]),  # max sequences
-                    tvm.runtime.ShapeTuple([self.config.max_length]),  # max window size
-                    tvm.runtime.ShapeTuple([self.config.prefill_chunk_size]),  # prefill chunk size
-                    tvm.runtime.ShapeTuple([16])  # page size
-                )
-                self._kv_cache_add_sequence(kv_cache, 0)
-            else:
-                kv_cache = self._kv_cache_create()
-             
-            stream.kv_cache = AttributeDict(state=kv_cache, num_tokens=0)
+            stream.kv_cache = AttributeDict(state=self.create_kv_cache(), num_tokens=0)
 
         stream.kv_cache.num_tokens += input.shape[1]
 

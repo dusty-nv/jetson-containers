@@ -2,6 +2,7 @@
 # name: cuda
 # group: cuda
 # config: config.py
+# depends: [build-essential]
 # test: test.sh
 #---
 ARG BASE_IMAGE
@@ -11,16 +12,11 @@ FROM ${BASE_IMAGE}
 ARG CUDA_URL \
     CUDA_DEB \
     CUDA_PACKAGES \
-    DEBIAN_FRONTEND=noninteractive \
-    MIN_GCC_VERSION=6.0 \
-    MAX_GCC_VERSION=12.2 \
-    GCC_TO_INSTALL=11
+    DEBIAN_FRONTEND=noninteractive
 
 RUN set -ex \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
-        gcc-$GCC_TO_INSTALL \
-		g++-$GCC_TO_INSTALL \
         wget \
         git \
         binutils \
@@ -28,6 +24,7 @@ RUN set -ex \
         ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean \
+    \
     && echo "Downloading ${CUDA_DEB}" \
     && mkdir -p /tmp/cuda \
     && cd /tmp/cuda \
@@ -43,9 +40,7 @@ RUN set -ex \
     && apt-get clean \
     && dpkg --list | grep cuda \
     && dpkg -P ${CUDA_DEB} \
-    && rm -rf /tmp/cuda \
-    && ln -s /usr/bin/gcc-$GCC_TO_INSTALL /usr/local/cuda/bin/gcc \
-    && ln -s /usr/bin/g++-$GCC_TO_INSTALL /usr/local/cuda/bin/g++
+    && rm -rf /tmp/cuda
 
 ENV CUDA_HOME="/usr/local/cuda"
 ENV NVCC_PATH="$CUDA_HOME/bin/nvcc"

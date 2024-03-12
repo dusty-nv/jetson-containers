@@ -2,7 +2,7 @@
 # name: python
 # alias: python3
 # group: build
-# depends: build-essential
+# depends: [build-essential]
 # notes: installs core python3 packages and pip
 #---
 ARG BASE_IMAGE
@@ -17,7 +17,8 @@ ENV DEBIAN_FRONTEND=noninteractive \
 	PYTHONHASHSEED=random \
 	PIP_NO_CACHE_DIR=off \
 	PIP_CACHE_PURGE=true \
-	PIP_ROOT_USER_ACTION=ignore
+	PIP_ROOT_USER_ACTION=ignore \
+	PYTHONIOENCODING=utf-8
 
 RUN set -ex \
 	&& apt-get update \
@@ -31,11 +32,13 @@ RUN set -ex \
 	&& which pip3 \
 	&& pip3 --version \
     && python3 -m pip install --upgrade pip \
+	\
 	# this was causing issues downstream (e.g. Python2.7 still around in Ubuntu 18.04, \
 	# and in cmake python enumeration where some packages expect that 'python' is 2.7) \
 	#RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \  \
 	#    update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1 \
     && which python || python --version || pip --version || which python3 || python3 --version || pip3 --version \
+	\
 	&& pip3 install --upgrade --no-cache-dir \
 		setuptools \
 		packaging \

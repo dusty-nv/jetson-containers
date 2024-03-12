@@ -76,10 +76,10 @@ class CLIPImageEmbedding():
         time_begin_pre = time.perf_counter()
 
         if not crop:
-            logging.debug(f"resizing image from {image.size} -> {self.config.input_shape}")
+            logging.debug(f"resizing image from {image.shape if hasattr(image, 'shape') else image.size} -> {self.config.input_shape}")
             image = image.resize(self.config.input_shape, PIL.Image.BILINEAR) # PIL.Image.BICUBIC
         else:
-            logging.debug(f"cropping image from {image.size} -> {self.config.input_shape}")
+            logging.debug(f"cropping image from {image.shape if hasattr(image, 'shape') else image.size} -> {self.config.input_shape}")
             
         output = AttributeDict() if return_dict else None
         

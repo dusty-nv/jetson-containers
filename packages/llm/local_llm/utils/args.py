@@ -90,7 +90,7 @@ class ArgParser(argparse.ArgumentParser):
             self.add_argument("--list-audio-devices", action="store_true", help="List output audio devices indices.")
          
         if any(x in extras for x in ('audio_input', 'audio_output', 'asr', 'tts')):       
-            self.add_argument("--sample-rate-hz", default=48000, help="the audio sample rate in Hz")
+            self.add_argument("--sample-rate-hz", type=int, default=48000, help="the audio sample rate in Hz")
             
         # ASR/TTS
         if 'asr' in extras or 'tts' in extras:
@@ -98,8 +98,9 @@ class ArgParser(argparse.ArgumentParser):
             self.add_argument("--language-code", default="en-US", help="Language code of the ASR/TTS to be used.")
 
         if 'tts' in extras:
+            self.add_argument("--tts-model", type=str, default="riva", help="the name of path of the TTS model to use (e.g. 'riva', 'xtts')")
             self.add_argument("--voice", type=str, default="English-US.Female-1", help="Voice model name to use for TTS")
-            self.add_argument("--voice-rate", type=str, default="default", help="TTS SSML voice speaker rate (between 25-250%%)")
+            self.add_argument("--voice-rate", type=float, default=1.0, help="TTS SSML voice speaker rate (between 25-250%%)")
             self.add_argument("--voice-pitch", type=str, default="default", help="TTS SSML voice pitch shift")
             self.add_argument("--voice-volume", type=str, default="default", help="TTS SSML voice volume attribute")
             #self.add_argument("--voice-min-words", type=int, default=4, help="the minimum number of words the TTS should wait to speak")

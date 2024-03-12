@@ -10,37 +10,27 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-
-WORKDIR /opt/riva
-
-
 # install prerequisites
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
 		  portaudio*-dev \
     && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
-  
-# install pyaudio from pip instead of apt (python3-pyaudio)  
-# https://bugs.launchpad.net/ubuntu/+source/python-pyaudio/+bug/1970912
-RUN pip3 install --upgrade --no-cache-dir --verbose pyaudio
+    && apt-get clean && \
+    \
+    # install pyaudio from pip instead of apt (python3-pyaudio)  
+    # https://bugs.launchpad.net/ubuntu/+source/python-pyaudio/+bug/1970912
+    pip3 install --upgrade --no-cache-dir --verbose pyaudio
 
 # Riva Python client
 ADD https://api.github.com/repos/nvidia-riva/python-clients/git/refs/heads/main /tmp/riva_python_version.json
 
-RUN git clone --depth=1 --recursive https://github.com/nvidia-riva/python-clients && \
-    cd python-clients && \
+RUN git clone --depth=1 --recursive https://github.com/nvidia-riva/python-clients /opt/riva/python-clients && \
+    cd /opt/riva/python-clients && \
     pip3 install --no-cache-dir --verbose -r requirements.txt && \
     python3 setup.py --verbose bdist_wheel && \
     cp dist/nvidia_riva_client*.whl /opt
     
-RUN pip3 install --no-cache-dir --verbose /opt/nvidia_riva_client*.whl
-RUN pip3 show nvidia-riva-client && python3 -c 'import riva.client; print(riva.client.__version__)'
+RUN pip3 install --no-cache-dir --verbose /opt/nvidia_riva_client*.whl && \
+    pip3 show nvidia-riva-client && python3 -c 'import riva.client; print(riva.client.__version__)'
 
-
-# add extra scripts
-COPY list_audio_devices.py python-clients/scripts/
-COPY loopback.py python-clients/scripts/
-
-
-WORKDIR /
+COPY list_audio_devices.py loopback.py /opt/riva/python-clients/scripts/
