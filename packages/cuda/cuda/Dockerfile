@@ -13,7 +13,7 @@ ARG CUDA_URL \
     CUDA_DEB \
     CUDA_PACKAGES \
     CUDA_TEMP_DIR="/tmp/cuda" \
-    UBUNTU_VERSION="2004" \
+    DISTRO="ubuntu2004" \
     DEBIAN_FRONTEND=noninteractive
 
 RUN set -ex \
@@ -30,7 +30,7 @@ RUN set -ex \
     && echo "Downloading ${CUDA_DEB}" \
     && mkdir -p ${CUDA_TEMP_DIR} \
     && cd ${CUDA_TEMP_DIR} \
-    && wget --quiet --show-progress --progress=bar:force:noscroll https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION}/arm64/cuda-ubuntu${UBUNTU_VERSION}.pin -O /etc/apt/preferences.d/cuda-repository-pin-600 \
+    && wget --quiet --show-progress --progress=bar:force:noscroll https://developer.download.nvidia.com/compute/cuda/repos/${DISTRO}/arm64/cuda-${DISTRO}.pin -O /etc/apt/preferences.d/cuda-repository-pin-600 \
     && wget --quiet --show-progress --progress=bar:force:noscroll ${CUDA_URL} \
     && dpkg -i *.deb \
     && cp /var/cuda-tegra-repo-ubuntu*-local/cuda-tegra-*-keyring.gpg /usr/share/keyrings/ \

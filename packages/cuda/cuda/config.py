@@ -21,7 +21,7 @@ def cuda_package(version, url, deb, packages=None, requires=None, default=False)
         'CUDA_DEB': deb,
         'CUDA_PACKAGES': packages,
         'CUDA_ARCH_LIST': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
-        'UBUNTU_VERSION': '2204' if L4T_VERSION.major >= 36 else '2004'
+        'DISTRO': 'ubuntu2204' if L4T_VERSION.major >= 36 else 'ubuntu2004'
     }
 
     if default:
