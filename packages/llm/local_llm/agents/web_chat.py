@@ -25,11 +25,14 @@ class WebChat(VoiceChat):
         """
         super().__init__(**kwargs)
 
-        self.asr.add(self.on_asr_partial, RivaASR.OutputPartial)
-        #self.asr.add(self.on_asr_final, RivaASR.OutputFinal)
+        if self.asr:
+            self.asr.add(self.on_asr_partial, RivaASR.OutputPartial)
+            #self.asr.add(self.on_asr_final, RivaASR.OutputFinal)
         
         self.llm.add(self.on_llm_reply)
-        self.tts_output.add(self.on_tts_samples)
+        
+        if self.tts:
+            self.tts_output.add(self.on_tts_samples)
         
         self.server = WebServer(msg_callback=self.on_message, **kwargs)
         
@@ -40,13 +43,19 @@ class WebChat(VoiceChat):
                 self.send_chat_history()
             if 'client_state' in msg:
                 if msg['client_state'] == 'connected':
+                    if self.tts:
+                        self.server.send_message({'tts_voices': self.tts.voices, 'tts_voice': self.tts.voice, 'tts_rate': self.tts.rate})
                     threading.Timer(1.0, lambda: self.send_chat_history()).start()
-            if 'tts_voice' in msg:
+            if 'tts_voice' in msg and self.tts:
                 self.tts.voice = msg['tts_voice']
+            if 'tts_rate' in msg and self.tts:
+                self.tts.rate = float(msg['tts_rate'])
         elif msg_type == WebServer.MESSAGE_TEXT:  # chat input
+            self.on_interrupt()
             self.prompt(msg.strip('"'))
         elif msg_type == WebServer.MESSAGE_AUDIO:  # web audio (mic)
-            self.asr(msg)
+            if self.asr:
+                self.asr(msg)
         elif msg_type == WebServer.MESSAGE_IMAGE:
             logging.info(f"recieved {metadata} image message {msg.size} -> {msg.filename}")
             self.llm.chat_history.reset()
@@ -79,7 +88,7 @@ class WebChat(VoiceChat):
             
         history = history.to_list()
         
-        if self.asr_history:
+        if self.asr and self.asr_history:
             history.append({'role': 'user', 'text': self.asr_history})
             
         def web_text(text):

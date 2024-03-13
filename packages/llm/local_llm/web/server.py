@@ -111,8 +111,9 @@ class WebServer():
             self.ssl_context.load_cert_chain(certfile=self.ssl_cert, keyfile=self.ssl_key)
             
         # websocket
-        self.ws_port = ws_port
         self.websocket = None
+        self.ws_port = ws_port
+        self.kwargs['ws_port'] = ws_port
 
         self.ws_server = websocket_serve(self.on_websocket, host=self.host, port=self.ws_port, ssl_context=self.ssl_context, max_size=None)
         self.ws_thread = threading.Thread(target=lambda: self.ws_server.serve_forever(), daemon=True)

@@ -43,7 +43,7 @@ class RivaTTS(AutoTTS):
         self.pitch = voice_pitch
         self.volume = voice_volume
 
-        self.language = language
+        self.language = language_code
         self.sample_rate = sample_rate_hz
         
         # find out how to query these for non-English models

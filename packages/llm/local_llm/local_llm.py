@@ -51,7 +51,7 @@ class LocalLM():
             model_name = os.path.basename(model)
             
         if not api:
-            api = default_model_api(model_path, quant)
+            api = default_model_api(model_path, kwargs.get('quant'))
         
         kwargs['name'] = model_name
         kwargs['api'] = api

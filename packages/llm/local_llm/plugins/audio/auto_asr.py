@@ -40,3 +40,13 @@ class AutoASR(Plugin):
         else:
             raise ValueError(f"ASR model type should be 'riva'")
     
+    def add_punctuation(self, text):
+        """
+        Make sure that the transcript ends in some kind of punctuation
+        """
+        x = text.strip()
+        
+        if not any([x[-1] == y for y in ('.', ',', '?', '!', ':')]):
+            return text + '.'
+            
+        return text

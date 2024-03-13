@@ -53,7 +53,7 @@ class RivaASR(AutoASR):
         self.sample_rate = sample_rate_hz
         self.confidence_threshold = asr_confidence
         self.silence_threshold = asr_silence
-        self.keep_alive_timeout = 99  # requests timeout after 1000 seconds
+        self.keep_alive_timeout = 5  # requests timeout after 1000 seconds
         
         self.asr_service = riva.client.ASRService(self.auth)
         
@@ -104,7 +104,7 @@ class RivaASR(AutoASR):
                         score = result.alternatives[0].confidence
                         if score >= self.confidence_threshold:
                             logging.debug(f"submitting ASR transcript (confidence={score:.3f}) -> '{transcript}'")
-                            self.output(transcript, AutoASR.OutputFinal)
+                            self.output(self.add_punctuation(transcript), AutoASR.OutputFinal)
                         else:
                             logging.warning(f"dropping ASR transcript (confidence={score:.3f} < {self.confidence_threshold:.3f}) -> '{transcript}'")
                     else:

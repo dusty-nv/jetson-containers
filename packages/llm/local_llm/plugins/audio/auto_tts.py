@@ -40,9 +40,9 @@ class AutoTTS(Plugin):
             return None
             
         if FastPitchTTS.is_model(tts):
-            return FastPitchTTS(model=tts, **kwargs)
+            return FastPitchTTS(**{**kwargs, 'model': tts})
         elif XTTS.is_model(tts):
-            return XTTS(model=tts, **kwargs)
+            return XTTS(**{**kwargs, 'model': tts})
         elif tts.lower() == 'riva':
             return RivaTTS(**kwargs)
         else:
@@ -92,7 +92,6 @@ class AutoTTS(Plugin):
         # see if input is needed to prevent a gap-out
         if 'time' in self.buffering:    
             timeout = self.needs_text_by - time.perf_counter() - 0.05  # TODO make this RTFX factor adjustable
-            
             if timeout > 0:
                 return None   # we can keep accumulating text
                 
@@ -111,7 +110,7 @@ class AutoTTS(Plugin):
                 return None
                
             # for commas, make sure there are at least a handful of proceeding words
-            if self.text_buffer[punc_pos] == ',' and len(self.text_buffer[:punc_pos].split(' ')) < 4:
+            if len(self.text_buffer[:punc_pos].split(' ')) < 4: #and self.text_buffer[punc_pos] == ',':
                 return None
                 
             # make sure that the character following the punctuation isn't alphanumeric
@@ -162,10 +161,14 @@ class AutoTTS(Plugin):
             return None
             
         # text = text.strip()
-        text = text.replace('</s>', '')
+        for stop_token in StopTokens:
+            text = text.replace(stop_token, '')
+            
+        #text = text.replace('</s>', '')
         text = text.replace('\n', ' ')
-        #text = text.replace('  ', ' ')
-        
+        text = text.replace('...', ' ')        
+        text = self.filter_chars(text)
+
         if numbers_to_words:
             text = self.numbers_to_words(text)
             
@@ -174,6 +177,26 @@ class AutoTTS(Plugin):
             
         return text
     
+    def filter_chars(self, text):
+        """
+        Filter out non-alphanumeric and non-punctuation characters
+        """
+        def filter_char(input):
+            for idx, char in enumerate(input):
+                if char.isalnum() or any([char == x for x in ('.', ',', '?', '!', ':', ';', '-', "'", '"', ' ', '/')]):
+                    continue
+                else:
+                    return input.replace(char, ' ')
+            return input
+        
+        while True:
+            filtered = filter_char(text)
+            if filtered == text:
+                return text
+            else:
+                text = filtered
+                continue
+                
     def numbers_to_words(self, text):
         """
         Convert instances of numbers to words in the text.

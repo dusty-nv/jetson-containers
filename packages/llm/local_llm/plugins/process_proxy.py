@@ -44,8 +44,9 @@ class ProcessProxy(Plugin):
         self.data_parent.send_bytes(input)
         
     def start(self):
-        self.control_parent.send('start')
-        self.assert_message(self.control_parent.recv(), 'started')
+        if not self.is_alive():
+            self.control_parent.send('start')
+            self.assert_message(self.control_parent.recv(), 'started')
         return super().start()
 
     def run(self):
