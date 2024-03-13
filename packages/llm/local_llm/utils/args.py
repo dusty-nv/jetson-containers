@@ -98,7 +98,8 @@ class ArgParser(argparse.ArgumentParser):
             self.add_argument("--language-code", default="en-US", help="Language code of the ASR/TTS to be used.")
 
         if 'tts' in extras:
-            self.add_argument("--tts-model", type=str, default="riva", help="the name of path of the TTS model to use (e.g. 'riva', 'xtts')")
+            self.add_argument("--tts", type=str, default="riva", help="name of path of the TTS model to use (e.g. 'riva', 'xtts', 'none', 'disabled')")
+            self.add_argument("--tts-buffering", type=str, default="punctuation", help="buffering method for TTS ('none', 'punctuation', 'time', 'punctuation,time')")
             self.add_argument("--voice", type=str, default="English-US.Female-1", help="Voice model name to use for TTS")
             self.add_argument("--voice-rate", type=float, default=1.0, help="TTS SSML voice speaker rate (between 25-250%%)")
             self.add_argument("--voice-pitch", type=str, default="default", help="TTS SSML voice pitch shift")
@@ -106,6 +107,7 @@ class ArgParser(argparse.ArgumentParser):
             #self.add_argument("--voice-min-words", type=int, default=4, help="the minimum number of words the TTS should wait to speak")
             
         if 'asr' in extras:
+            self.add_argument("--asr", type=str, default="riva", help="name or path of the ASR model to use (e.g. 'riva', 'none', 'disabled')")
             self.add_argument("--asr-confidence", type=float, default=-2.5, help="minimum ASR confidence (only applies to 'final' transcripts)")
             self.add_argument("--asr-silence", type=float, default=-1.0, help="audio with RMS equal to or below this amount will be considered silent (negative will disable silence detection)")
             self.add_argument("--asr-chunk", type=int, default=1600, help="the number of audio samples to buffer as input to ASR")

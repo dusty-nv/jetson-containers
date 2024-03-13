@@ -10,6 +10,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 #print(TTS().list_models())
 
 model="tts_models/multilingual/multi-dataset/xtts_v2"  # "tts_models/multilingual/multi-dataset/xtts_v1.1"
+speaker='Sofia Hellen'
 language='en'
 
 print(f"Loading TTS model {model}")
@@ -35,13 +36,12 @@ prompts = [
 ]
     
 if tts.is_multi_speaker:
-    prompts = [' '.join(prompts)] + prompts
+    prompts = [' '.join(prompts)] #+ prompts
 
-for speaker in tts.synthesizer.tts_model.speaker_manager.speakers:
-    for prompt_idx, prompt in enumerate(prompts):
-        wav = f"/data/audio/tts/{os.path.basename(model)}_offline_{speaker.lower().replace(' ', '_')}_{prompt_idx}.wav"
-        print(f'\ngenerating "{prompt}"  speaker="{speaker}"  lang="{language}"  wav="{wav}"\n')
-        if tts.is_multi_speaker:
-            tts.tts_to_file(text=prompt, speaker=speaker, language=language, file_path=wav)
-        else:
-            tts.tts_to_file(text=prompt, speaker_wav=speaker_wav, language=language, file_path=wav)
+for prompt_idx, prompt in enumerate(prompts):
+    wav = f"/data/audio/tts/{os.path.basename(model)}_offline_{speaker.lower().replace(' ', '_')}.wav" #_{prompt_idx}.wav"
+    print(f'\ngenerating "{prompt}"  speaker="{speaker}"  lang="{language}"  wav="{wav}"\n')
+    if tts.is_multi_speaker:
+        tts.tts_to_file(text=prompt, speaker=speaker, language=language, file_path=wav)
+    else:
+        tts.tts_to_file(text=prompt, speaker_wav=speaker_wav, language=language, file_path=wav)

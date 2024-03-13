@@ -7,11 +7,11 @@ import logging
 import riva.client
 import riva.client.audio_io
 
-from local_llm import Plugin
+from .auto_asr import AutoASR
 from local_llm.utils import audio_silent
 
 
-class RivaASR(Plugin):
+class RivaASR(AutoASR):
     """
     Streaming ASR service using NVIDIA Riva
     https://docs.nvidia.com/deeplearning/riva/user-guide/docs/asr/asr-overview.html
@@ -25,9 +25,6 @@ class RivaASR(Plugin):
     Output:  two channels, the first for word-by-word 'partial' transcript strings
              the second is for the full/final sentences
     """
-    OutputFinal=0    # output full transcripts (channel 0)
-    OutputPartial=1  # output partial transcripts (channel 1)
-    
     def __init__(self, riva_server='localhost:50051',
                  language_code='en-US', sample_rate_hz=48000, 
                  asr_confidence=-2.5, asr_silence=-1.0, asr_chunk=1600,
@@ -107,11 +104,11 @@ class RivaASR(Plugin):
                         score = result.alternatives[0].confidence
                         if score >= self.confidence_threshold:
                             logging.debug(f"submitting ASR transcript (confidence={score:.3f}) -> '{transcript}'")
-                            self.output(transcript, RivaASR.OutputFinal)
+                            self.output(transcript, AutoASR.OutputFinal)
                         else:
                             logging.warning(f"dropping ASR transcript (confidence={score:.3f} < {self.confidence_threshold:.3f}) -> '{transcript}'")
                     else:
-                        self.output(transcript, RivaASR.OutputPartial)
+                        self.output(transcript, AutoASR.OutputPartial)
         
 
 class AudioQueue:
@@ -183,8 +180,8 @@ if __name__ == "__main__":
         
     asr = RivaASR(**vars(args))
     
-    asr.add(PrintStream(partial=False, prefix='## ', color='green'), RivaASR.OutputFinal)
-    asr.add(PrintStream(partial=False, prefix='>> ', color='blue'), RivaASR.OutputPartial)
+    asr.add(PrintStream(partial=False, prefix='## ', color='green'), AutoASR.OutputFinal)
+    asr.add(PrintStream(partial=False, prefix='>> ', color='blue'), AutoASR.OutputPartial)
     
     asr.start()
     asr.join()

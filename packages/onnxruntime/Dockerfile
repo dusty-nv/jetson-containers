@@ -10,13 +10,13 @@ ARG BASE_IMAGE
 
 FROM ${BASE_IMAGE}
 
-ARG ONNXRUNTIME_WHEEL \
-    ONNXRUNTIME_WHEEL_FILENAME
+ARG ONNXRUNTIME_URL
+ARG ONNXRUNTIME_WHL
 
-RUN set -ex \
-    # Download pip wheel from location above for your version of JetPack \
-    && wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate \
-        ${ONNXRUNTIME_WHEEL} -O /opt/${ONNXRUNTIME_WHEEL_FILENAME} \
-    && pip3 install --no-cache-dir --verbose /opt/${ONNXRUNTIME_WHEEL_FILENAME} \
-    # This test fails in build stage, we gonna perform it in the test stage \
-    && python3 -c 'import onnxruntime; print(onnxruntime.__version__);'
+# https://elinux.org/Jetson_Zoo#ONNX_Runtime
+RUN cd /opt && \
+    wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${ONNXRUNTIME_URL} -O ${ONNXRUNTIME_WHL} && \
+    pip3 install --verbose ${ONNXRUNTIME_WHL}
+
+# test import and print build info
+RUN python3 -c 'import onnxruntime; print(onnxruntime.__version__);'

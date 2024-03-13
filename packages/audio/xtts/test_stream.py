@@ -15,7 +15,7 @@ logging.basicConfig(format="%(asctime)s | %(levelname)s | %(message)s", level=lo
 model_dir="/data/models/tts/tts_models--multilingual--multi-dataset--xtts_v2"
 model_name=model_dir.split('--')[-1]
 
-speaker="Claribel Dervla"
+speaker='Sofia Hellen'
 language='en'
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
