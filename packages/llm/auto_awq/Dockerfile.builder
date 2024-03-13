@@ -18,7 +18,7 @@ ADD https://api.github.com/repos/casper-hansen/AutoAWQ_kernels/git/refs/heads/${
 RUN set -ex \
     && git clone --branch=${AUTOAWQ_BRANCH} --depth=1 https://github.com/casper-hansen/AutoAWQ_kernels /opt/AutoAWQ_kernels \
     && cd /opt/AutoAWQ_kernels \
-    && echo "AUTOAWQ_CUDA_ARCH: $AUTOAWQ_CUDA_ARCH" \
+    && echo "AUTOAWQ_CUDA_ARCH: ${AUTOAWQ_CUDA_ARCH}" \
     && sed "s|{75, 80, 86, 89, 90}|{${AUTOAWQ_CUDA_ARCH}}|g" -i setup.py \
     && python3 setup.py --verbose bdist_wheel --dist-dir /opt \
     \
