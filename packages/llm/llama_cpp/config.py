@@ -1,34 +1,48 @@
 
 import copy
+from jetson_containers import find_container
 
-# ggml version tracks fork
-ggml = copy.deepcopy(package)
+def create_packages(name, repo, branch, test=None, default=False):
+    builder = copy.deepcopy(package)
+    runtime = copy.deepcopy(package)
 
-ggml['name'] = 'llama_cpp:ggml'
+    builder['name'] = f'${name}:builder'
+    builder['dockerfile'] = 'Dockerfile.builder'
 
-ggml['build_args'] = {
-    'LLAMA_CPP_PYTHON_REPO': 'dusty-nv/llama-cpp-python',
-    'LLAMA_CPP_PYTHON_BRANCH': 'v0.1.78a',
-}
+    if test is not None:
+        builder['test'].extend(test)
+        runtime['test'].extend(test)
 
-ggml['test'].extend([
-    "test_model.py --model $(huggingface-downloader TheBloke/Llama-2-7B-GGML/llama-2-7b.ggmlv3.q4_0.bin)",
-    "test_tokenizer.py --model $(huggingface-downloader TheBloke/Llama-2-7B-GGML/llama-2-7b.ggmlv3.q4_0.bin)"
-])
+    builder['build_args'] = {
+        'LLAMA_CPP_PYTHON_REPO': repo,
+        'LLAMA_CPP_PYTHON_BRANCH': branch,
+    }
 
-# gguf version tracks main
-gguf = copy.deepcopy(package)
+    runtime['build_args'] = {
+        'BUILD_IMAGE': find_container(builder['name']),
+    }
 
-gguf['name'] = 'llama_cpp:gguf'
-gguf['alias'] = 'llama_cpp'
+    if default:
+        runtime['alias'] = 'llama_cpp'
 
-gguf['build_args'] = {
-    'LLAMA_CPP_PYTHON_REPO': 'abetlen/llama-cpp-python',
-    'LLAMA_CPP_PYTHON_BRANCH': 'main',
-}
+    return [builder, runtime]
 
-gguf['test'].extend([
-    "test_model.py --model $(huggingface-downloader TheBloke/Llama-2-7B-GGUF/llama-2-7b.Q4_K_S.gguf)"
-])
+ggml_packages = create_packages(
+    'llama_cpp:ggml',
+    'dusty-nv/llama-cpp-python',
+    'v0.1.78a',
+    test=[
+        "test_model.py --model $(huggingface-downloader TheBloke/Llama-2-7B-GGML/llama-2-7b.ggmlv3.q4_0.bin)",
+        "test_tokenizer.py --model $(huggingface-downloader TheBloke/Llama-2-7B-GGML/llama-2-7b.ggmlv3.q4_0.bin)"
+    ],
+)
 
-package = [ggml, gguf]
+gguf_packages = create_packages(
+    'llama_cpp:gguf',
+    'abetlen/llama-cpp-python',
+    'main',
+    test=['test_model.py --model $(huggingface-downloader TheBloke/Llama-2-7B-GGUF/llama-2-7b.Q4_K_S.gguf)'],
+    default=True
+)
+
+package = [ggml_packages, gguf_packages]
