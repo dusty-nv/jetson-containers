@@ -19,16 +19,15 @@
 # The TTS output is automatically resampled to match the sampling rate of the audio device.
 #
 import sys
+import termcolor
 
 from local_llm.utils import ArgParser, KeyboardInterrupt
-from local_llm.plugins import TTS, UserPrompt, AudioOutputDevice, AudioOutputFile, Callback
-
-from termcolor import cprint
+from local_llm.plugins import AutoTTS, UserPrompt, AudioOutputDevice, AudioOutputFile, Callback
 
 args = ArgParser(extras=['tts', 'audio_output', 'prompt', 'log']).parse_args()
 
 def print_prompt():
-    cprint('\n>> ', 'blue', end='', flush=True)
+    termcolor.cprint('\n>> ', 'blue', end='', flush=True)
 
 def print_help():
     print(f"Enter text to synthesize, or one of these commands:\n")
@@ -42,7 +41,7 @@ def print_help():
     print(f"  /interrupt or /i   Interrupt/mute the TTS output")
     print(f"  /help or /?        Print the help text")  
     print(f"  /quit or /exit     Exit the program\n")
-    print(f"Press Ctrl+C to interrupt output, and Ctrl+C twice to exit")
+    print(f"Press Ctrl+C to interrupt output, and Ctrl+C twice to exit.")
     print_prompt()
 
 def commands(text):
@@ -85,7 +84,7 @@ def on_interrupt():
 
 interrupt = KeyboardInterrupt(callback=on_interrupt)
 
-tts = TTS(**vars(args))
+tts = AutoTTS.from_pretrained(**vars(args))
 
 if args.audio_output_device is not None:
     tts.add(AudioOutputDevice(**vars(args)))

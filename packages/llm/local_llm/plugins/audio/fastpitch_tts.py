@@ -10,13 +10,11 @@ import torch
 import torchaudio
 import numpy as np
 
-from local_llm import Plugin
+from .auto_tts import AutoTTS
 from local_llm.utils import ONNXRuntimeModel, download_model, convert_audio
 
-from .tts import TTSPlugin
 
-
-class FastPitchTTS(TTSPlugin):
+class FastPitchTTS(AutoTTS):
     """
     Streaming TTS service using FastPitch-HiFiGAN model with ONNXRuntime.
     This is a single-speaker model with a female voice in English.

@@ -9,15 +9,14 @@ import torch
 import torchaudio
 import numpy as np
 
-from local_llm import Plugin
-from local_llm.utils import download_model, convert_audio
-
 from TTS.tts.configs.xtts_config import XttsConfig
 from TTS.tts.models.xtts import Xtts
 
-from .tts import TTSPlugin
+from .auto_tts import AutoTTS
+from local_llm.utils import download_model, convert_audio
 
-class XTTS(TTSPlugin):
+
+class XTTS(AutoTTS):
     """
     Streaming TTS service using XTTS model with HiFiGAN decoder in TensorRT.
     

@@ -12,13 +12,13 @@
 #
 #    python3 -m local_llm.test.asr --list-audio-devices
 #
-from local_llm.plugins import RivaASR, PrintStream
+from local_llm.plugins import AutoASR, PrintStream
 from local_llm.utils import ArgParser
 
-args = ArgParser(extras=['asr', 'log']).parse_args()
-asr = RivaASR(**vars(args))
+args = ArgParser(extras=['asr', 'audio_input', 'log']).parse_args()
+asr = AutoASR.from_pretrained(**vars(args))
 
-asr.add(PrintStream(partial=False, prefix='## ', color='green'), RivaASR.OutputFinal)
-asr.add(PrintStream(partial=False, prefix='>> ', color='blue'), RivaASR.OutputPartial)
+asr.add(PrintStream(partial=False, prefix='## ', color='green'), AutoASR.OutputFinal)
+asr.add(PrintStream(partial=False, prefix='>> ', color='blue'), AutoASR.OutputPartial)
 
 asr.start().join()

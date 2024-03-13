@@ -7,11 +7,10 @@ import numpy as np
 import riva.client
 import riva.client.audio_io
 
-from local_llm import Plugin
-from .tts import TTSPlugin
+from .auto_tts import AutoTTS
 
 
-class RivaTTS(TTSPlugin):
+class RivaTTS(AutoTTS):
     """
     Streaming TTS service using NVIDIA Riva
     https://docs.nvidia.com/deeplearning/riva/user-guide/docs/tts/tts-overview.html

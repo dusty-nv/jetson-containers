@@ -6,35 +6,14 @@ import logging
 
 from local_llm import Plugin, StopTokens
 
-
-def TTS(tts=None, **kwargs):
-    """
-    Factory function for automatically creating different types of TTS plugins.
-    The model should either be 'riva' or 'xtts' (or name/path of XTTS model)
-    The kwargs are forwarded to the TTS plugin implementing the model.
-    """
-    from local_llm.plugins import RivaTTS, FastPitchTTS, XTTS
     
-    if not tts or tts.lower() == 'none' or tts.lower().startswith('disable'):
-        return None
-        
-    if FastPitchTTS.is_model(tts):
-        return FastPitchTTS(model=tts, **kwargs)
-    elif XTTS.is_model(tts):
-        return XTTS(model=tts, **kwargs)
-    elif tts.lower() == 'riva':
-        return RivaTTS(**kwargs)
-    else:
-        raise ValueError(f"TTS model type should be either Riva or XTTS ({tts})")
-       
-       
-class TTSPlugin(Plugin):
+class AutoTTS(Plugin):
     """
-    Base class for streaming TTS plugins, providing interruption/muting,
-    text buffering for gapless audio, support for SSML speaker tags, and
-    text filtering (removing of emojis and number-to-text conversion),
+    Base class for TTS model plugins, supporting streaming, interruption/muting,
+    text buffering for gapless audio, injection of SSML speaker tags for pitch/rate,
+    text filtering (removing of emojis and number-to-text conversion), ect.
     
-    It is designed for streaming out chunks of audio as they are generated,
+    It's designed for streaming out chunks of audio as they are generated,
     while recieving a stream of incoming text (usually word-by-word from LLM)
     """
     def __init__(self, tts_buffering='punctuation', **kwargs):
@@ -48,6 +27,27 @@ class TTSPlugin(Plugin):
         self.number_regex = None
         self.number_inflect = None
     
+    @staticmethod
+    def from_pretrained(tts=None, **kwargs):
+        """
+        Factory function for automatically creating different types of TTS models.
+        The `tts` param should either be 'riva' or 'xtts' (or name/path of XTTS model)
+        The kwargs are forwarded to the TTS plugin implementing the model.
+        """
+        from local_llm.plugins import RivaTTS, FastPitchTTS, XTTS
+        
+        if not tts or tts.lower() == 'none' or tts.lower().startswith('disable'):
+            return None
+            
+        if FastPitchTTS.is_model(tts):
+            return FastPitchTTS(model=tts, **kwargs)
+        elif XTTS.is_model(tts):
+            return XTTS(model=tts, **kwargs)
+        elif tts.lower() == 'riva':
+            return RivaTTS(**kwargs)
+        else:
+            raise ValueError(f"TTS model type should be either Riva or XTTS ({tts})")
+        
     @property
     def buffering(self):
         return self._buffering
