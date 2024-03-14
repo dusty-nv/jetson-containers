@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import glob
 import time
 import queue
 import pprint
@@ -66,13 +67,23 @@ class XTTS(AutoTTS):
         
         self.model.cuda()
 
+        # get supported voices and languages
         self.speaker_manager = self.model.speaker_manager
+
         self.voices = list(self.speaker_manager.speakers.keys())
         self.languages = self.model.language_manager.language_names
         
         logging.info(f"XTTS voices for {self.model_name}:\n{self.voices}")
         logging.info(f"XTTS languages for {self.model_name}:\n{self.languages}")
         
+        # clone custom voices from wav files
+        self.cloned_voices = {}
+        clones = glob.glob("/data/audio/tts/voices/*.wav")
+        
+        for clone in clones:
+            self.cloned_voices[os.path.basename(clone)] = self.clone(clone)
+            self.voices.append(os.path.basename(clone))
+            
         try:
             self.voice = voice
         except Exception as error:
@@ -98,19 +109,17 @@ class XTTS(AutoTTS):
         
     @voice.setter
     def voice(self, voice):
-        if voice.endswith('.wav') or os.path.isfile(voice):
-            logging.info(f"{self.model_name} cloning vocal patterns from {voice}")
-            self.gpt_cond_latent, self.speaker_embedding = self.model.get_conditioning_latents(
-                audio_path=voice,
-                max_ref_length=3600,
-                gpt_cond_len=3600,
-                gpt_cond_chunk_len=6,
-                sound_norm_refs=False,
-            )
+        if os.path.isfile(voice):
+            self.gpt_cond_latent, self.speaker_embedding = self.clone(voice)
         else:
-            if voice not in self.voices:
-                raise ValueError(f"'{voice}' was not in the supported list of voices for {self.model_name}\n{self.voices}")
-            self.gpt_cond_latent, self.speaker_embedding = self.speaker_manager.speakers[voice].values()
+            if voice in self.speaker_manager.speakers:
+                self.gpt_cond_latent, self.speaker_embedding = self.speaker_manager.speakers[voice].values()
+            else:
+                if voice in self.cloned_voices:
+                    self.gpt_cond_latent, self.speaker_embedding = self.cloned_voices[voice]
+                else:
+                    raise ValueError(f"'{voice}' was not in the supported list of voices for {self.model_name}\n{self.voices}")
+ 
         self._voice = voice
     
     @property
@@ -130,6 +139,19 @@ class XTTS(AutoTTS):
             return 'xtts' in model.lower()
         model_names = ['xtts', 'xtts2', 'xtts-v2', 'xtts_v2', 'coqui/xtts-v2']
         return any([x == model.lower() for x in model_names])
+      
+    def clone(self, audio):
+        """
+        Clone the speaker's voice in the wav file or audio samples, return the speaker embeddings.
+        """
+        logging.info(f"{self.model_name} cloning voice from {audio}")
+        return self.model.get_conditioning_latents(
+            audio_path=audio,
+            max_ref_length=3600,
+            gpt_cond_len=3600,
+            gpt_cond_chunk_len=6,
+            sound_norm_refs=False,
+        )
         
     def process(self, text, **kwargs):
         """

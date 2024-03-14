@@ -17,7 +17,7 @@ class VoiceChat(Agent):
         super().__init__(**kwargs)
 
         # LLM
-        self.llm = ChatQuery(**kwargs) #ProcessProxy('ChatQuery', **kwargs) # 
+        self.llm = ProcessProxy('ChatQuery', **kwargs)  #ChatQuery(**kwargs) # # 
         self.llm.add(PrintStream(color='green'))
         
         # ASR

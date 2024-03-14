@@ -39,12 +39,16 @@ class WebChat(VoiceChat):
     def on_message(self, msg, msg_type=0, metadata='', **kwargs):
         if msg_type == WebServer.MESSAGE_JSON:
             if 'chat_history_reset' in msg:
-                self.llm.chat_history.reset()
-                self.send_chat_history()
+                self.llm('/reset')
+                threading.Timer(0.1, self.send_chat_history).start()
             if 'client_state' in msg:
                 if msg['client_state'] == 'connected':
                     if self.tts:
-                        self.server.send_message({'tts_voices': self.tts.voices, 'tts_voice': self.tts.voice, 'tts_rate': self.tts.rate})
+                        self.server.send_message({
+                            'tts_voice': self.tts.voice, 
+                            'tts_voices': self.tts.voices, 
+                            'tts_rate': self.tts.rate
+                        })
                     threading.Timer(1.0, lambda: self.send_chat_history()).start()
             if 'tts_voice' in msg and self.tts:
                 self.tts.voice = msg['tts_voice']
@@ -58,9 +62,8 @@ class WebChat(VoiceChat):
                 self.asr(msg)
         elif msg_type == WebServer.MESSAGE_IMAGE:
             logging.info(f"recieved {metadata} image message {msg.size} -> {msg.filename}")
-            self.llm.chat_history.reset()
-            self.llm.chat_history.append(role='user', image=msg)
-            self.send_chat_history()
+            self.llm(['/reset', msg.filename])
+            threading.Timer(0.1, self.send_chat_history).start()
         else:
             logging.warning(f"WebChat agent ignoring websocket message with unknown type={msg_type}")
     
@@ -86,8 +89,6 @@ class WebChat(VoiceChat):
         if history is None:
             history = self.llm.chat_history
             
-        history = history.to_list()
-        
         if self.asr and self.asr_history:
             history.append({'role': 'user', 'text': self.asr_history})
             
@@ -104,7 +105,7 @@ class WebChat(VoiceChat):
                 if not hasattr(image, 'filename'):
                     return None
                 image = image.filename
-            return os.path.join(self.server.upload_route, os.path.basename(image))
+            return os.path.join(self.server.mounts.get(os.path.dirname(image), ''), os.path.basename(image))
             
         for entry in history:
             if 'text' in entry:

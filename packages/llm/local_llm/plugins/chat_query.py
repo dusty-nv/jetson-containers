@@ -72,7 +72,7 @@ class ChatQuery(Plugin):
             self.model = model
          
         self.stream = None
-        self.chat_history = ChatHistory(self.model, **kwargs)
+        self.history = ChatHistory(self.model, **kwargs)
         
         self.max_new_tokens = kwargs.get('max_new_tokens', 128)
         self.min_new_tokens = kwargs.get('min_new_tokens', -1)
@@ -87,6 +87,10 @@ class ChatQuery(Plugin):
         #warmup_query = '2+2 is '
         #logging.debug(f"Warming up LLM with query '{warmup_query}'")
         #logging.debug(f"Warmup response:  '{self.model.generate(warmup_query, streaming=False)}'")
+     
+    @property
+    def chat_history(self):
+        return self.history.to_list()
         
     def process(self, input, **kwargs):
         """
@@ -113,16 +117,16 @@ class ChatQuery(Plugin):
         # handle some special commands
         if isinstance(input, str):
             x = input.lower()
-            if x == 'clear' or x == 'reset':
-                self.chat_history.reset()
+            if any([x == y for y in ('/reset', '/clear', 'reset', 'clear')]):
+                self.history.reset()
                 return
         
         # add prompt to chat history
         if isinstance(input, str) or isinstance(input, dict) or isinstance(input, ImageTypes):
-            self.chat_history.append(role='user', msg=input)
-            chat_history = self.chat_history
+            self.history.append(role='user', msg=input)
+            chat_history = self.history
         elif isinstance(input, ChatHistory):
-            chat_history = input
+            chat_history = input  # TODO also recieve chat history as list for cross-process
         else:
             raise TypeError(f"LLMQuery plugin expects inputs of type str, dict, image, or ChatHistory (was {type(input)})")
 
@@ -187,7 +191,7 @@ class ChatQuery(Plugin):
             self.output(words, ChatQuery.OutputWords)
             
         bot_reply.text = self.stream.output_text
-        self.chat_history.kv_cache = self.stream.kv_cache
+        self.history.kv_cache = self.stream.kv_cache
         self.stream = None
         
         # output the final generated text on channel 2

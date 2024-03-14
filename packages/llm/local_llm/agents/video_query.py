@@ -122,7 +122,7 @@ class VideoQuery(Agent):
         if self.auto_refresh or self.prompt != self.last_prompt:
             np_image = cudaToNumpy(image)
             cudaDeviceSynchronize()
-            self.llm(['reset', np_image, self.prompt])
+            self.llm(['/reset', np_image, self.prompt])
             self.last_prompt = self.prompt
             if self.db:
                 self.last_image = cudaMemcpy(image)
