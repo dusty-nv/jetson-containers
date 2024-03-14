@@ -73,13 +73,13 @@ class XTTS(AutoTTS):
         logging.info(f"XTTS voices for {self.model_name}:\n{self.voices}")
         logging.info(f"XTTS languages for {self.model_name}:\n{self.languages}")
         
-        if voice not in self.voices:
-            logging.warning(f"Voice '{voice}' is not a supported voice in {self.model_name}, defaulting to '{self.voices[0]}'")
-            voice = self.voices[0]
+        try:
+            self.voice = voice
+        except Exception as error:
+            logging.error(f"Error loading voice '{voice}' with {self.model_name} ({error})")
+            self.voice = self.voices[0]
             
-        self.voice = voice
         self.language = language_code
-        
         self.rate = voice_rate
         self.sample_rate = sample_rate_hz
         self.model_sample_rate = self.config.model_args.output_sample_rate
@@ -98,10 +98,20 @@ class XTTS(AutoTTS):
         
     @voice.setter
     def voice(self, voice):
-        if voice not in self.voices:
-            raise ValueError(f"'{voice}' was not in the supported list of voices for {self.model_name}\n{self.voices}")
+        if voice.endswith('.wav') or os.path.isfile(voice):
+            logging.info(f"{self.model_name} cloning vocal patterns from {voice}")
+            self.gpt_cond_latent, self.speaker_embedding = self.model.get_conditioning_latents(
+                audio_path=voice,
+                max_ref_length=3600,
+                gpt_cond_len=3600,
+                gpt_cond_chunk_len=6,
+                sound_norm_refs=False,
+            )
+        else:
+            if voice not in self.voices:
+                raise ValueError(f"'{voice}' was not in the supported list of voices for {self.model_name}\n{self.voices}")
+            self.gpt_cond_latent, self.speaker_embedding = self.speaker_manager.speakers[voice].values()
         self._voice = voice
-        self.gpt_cond_latent, self.speaker_embedding = self.speaker_manager.speakers[voice].values()
     
     @property
     def language(self):

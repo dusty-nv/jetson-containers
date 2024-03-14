@@ -82,9 +82,9 @@ def on_interrupt():
     tts.interrupt()
     print_prompt()
 
-interrupt = KeyboardInterrupt(callback=on_interrupt)
-
 tts = AutoTTS.from_pretrained(**vars(args))
+
+interrupt = KeyboardInterrupt(callback=on_interrupt)
 
 if args.audio_output_device is not None:
     tts.add(AudioOutputDevice(**vars(args)))
