@@ -18,6 +18,8 @@ RUN cd /opt && \
     sed 's|^set(CUDA_ARCHITECTURES.*|#|g' -i CMakeLists.txt && \
     cmake -B build -DCUDA_ARCHITECTURES=${CUDA_ARCHITECTURES} . && \
     cmake --build build --target install && \
-    ldconfig
-
+    ldconfig && \
+    pip3 install --no-cache-dir --verbose nvidia-pyindex && \
+    pip3 install --no-cache-dir --verbose onnx-graphsurgeon
+    
 RUN pip3 show torch2trt && python3 -c 'import torch2trt'
