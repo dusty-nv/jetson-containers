@@ -53,6 +53,42 @@ prompts = [
 
 prompts = [' '.join(prompts)] + prompts
 
+long_prompt = """French onion soup is a classic and delicious dish that is easy to make at home. Here's a simple recipe for French onion soup that you can try:
+
+Ingredients:
+
+* 1 onion, 1/4 cup, chopped
+* 2 tablespoons butter
+* 1/4 cup white wine (optional)
+* 4 cups beef broth
+* 2 tablespoons tomato paste
+* 1 teaspoon dried thyme
+* 1/2 teaspoon dried oregano
+* 1/2 teaspoon salt
+* 1/4 teaspoon black pepper
+* 2 tablespoons all-purpose flour
+* 2 tablespoons butter
+* 1/2 cup grated Gruyère cheese
+* 1/2 cup grated Swiss cheese
+* 1/4 cup chopped fresh parsley
+
+Instructions:
+
+1. Heat 2 tablespoons of butter in a large saucepan over medium heat.
+2. Add the chopped onion and cook until it is softened and translucent, about 5 minutes.
+3. Add the white wine (if using) and 4 cups of beef broth to the saucepan. Bring to a boil, then reduce the heat to low and let it simmer for 10 minutes.
+4. In a small bowl, mix the tomato paste, thyme, oregano, salt, and pepper.
+5. Stir the tomato paste mixture into the broth and let it simmer for 5 more minutes.
+6. In a small bowl, mix the flour and 2 tablespoons of butter.
+7. Stir the flour mixture into the broth and let it cook for 1-2 minutes, or until the soup thickens.
+8. Stir in the Gruyère and Swiss cheese, and let it melt and thicken the soup.
+9. Taste and adjust the seasoning as needed.
+10. Serve the French onion soup hot, garnished with chopped fresh parsley and a side of crusty bread or a salad.
+
+Enjoy your"""
+
+#prompts = [long_prompt[:500]]
+
 for prompt_idx, prompt in enumerate(prompts):
     wav_path = f"/data/audio/tts/{model_name}_streaming_{speaker.lower().replace(' ', '_')}_{prompt_idx}.wav"
     logging.info(f'\nstreaming "{prompt}"  speaker="{speaker}"  lang="{language}"  wav="{wav_path}"\n')
@@ -66,9 +102,9 @@ for prompt_idx, prompt in enumerate(prompts):
         gpt_cond_latent,
         speaker_embedding,
         enable_text_splitting=False, #True,
-        overlap_len=128,
+        #overlap_len=128,
         #stream_chunk_size=20,
-        do_sample=False,
+        #do_sample=False,
         speed=0.9,
     )
 
