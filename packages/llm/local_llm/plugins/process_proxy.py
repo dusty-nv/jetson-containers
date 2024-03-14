@@ -3,6 +3,7 @@ import os
 import time
 import pickle
 import logging
+import traceback
 import threading
 import multiprocessing as mp
 
@@ -22,12 +23,14 @@ class ProcessProxy(Plugin):
         """
         self.data_parent, self.data_child = mp.Pipe(duplex=True)
         self.control_parent, self.control_child = mp.Pipe(duplex=True)
-        
+
         mp.set_start_method('spawn')
         
         self.subprocess = mp.Process(target=self.run_process, args=(plugin_factory, kwargs))
         self.subprocess.start()
         
+        self.control_lock = threading.Lock()
+ 
         init_msg = self.control_parent.recv()
         
         if init_msg['status'] != 'initialized':
@@ -36,6 +39,29 @@ class ProcessProxy(Plugin):
         super().__init__(output_channels=init_msg['output_channels'], **kwargs)
         logging.info(f"ProcessProxy initialized, output_channels={self.output_channels}")
 
+    def __getattr__(self, name):
+        if name.startswith('_'):
+            return super().__getattr__(name)
+            
+        self.control_lock.acquire()
+        self.control_parent.send({'get': name})
+        reply = self.control_parent.recv()
+        self.control_lock.release()
+        
+        if name != reply.get('name') or 'value' not in reply:
+            raise RuntimeError(f"ProcessProxy failed to get attribute {name} from subprocess (reply was malformed)")
+        
+        return reply['value']
+        
+    '''
+    def __setattr__(self, name, value):
+        if self.is_alive():  # this should only be active after ProcessProxy creates all it's internal members
+            self.control_parent.send({'set': {
+                'name': name, 
+                'value': value
+            }})
+    '''
+    
     def input(self, input):
         #time_begin = time.perf_counter()
         #input_type = type(input)
@@ -43,10 +69,19 @@ class ProcessProxy(Plugin):
         #logging.debug(f"ProcessProxy time to pickle {input_type} - {(time.perf_counter()-time_begin)*1000} ms")
         self.data_parent.send_bytes(input)
         
+    def interrupt(self, **kwargs):
+        self.control_lock.acquire()
+        self.control_parent.send({'interrupt': kwargs})
+        self.assert_message(self.control_parent.recv(), 'interrupt_ack')
+        self.control_lock.release()
+        super().interrupt(**kwargs)
+
     def start(self):
         if not self.is_alive():
+            self.control_lock.acquire()
             self.control_parent.send('start')
             self.assert_message(self.control_parent.recv(), 'started')
+            self.control_lock.release()
         return super().start()
 
     def run(self):
@@ -88,7 +123,7 @@ class ProcessProxy(Plugin):
             
             if factory == 'ChatQuery':
                 from local_llm.plugins import ChatQuery
-                plugin = ChatQuery(**kwargs)
+                self.plugin = ChatQuery(**kwargs)
             else:
                 raise TypeError(f"unsupported proxy class type {factory}")
                 
@@ -98,18 +133,18 @@ class ProcessProxy(Plugin):
             
         self.control_child.send({
             'status': 'initialized',
-            'output_channels': plugin.output_channels,
+            'output_channels': self.plugin.output_channels,
         })
         
         # forward outputs back to parent process
-        for i in range(plugin.output_channels):
-            plugin.add(OutputProxy(self.data_child, i), i)
+        for i in range(self.plugin.output_channels):
+            self.plugin.add(OutputProxy(self.data_child, i), i)
             
         # start the plugin processing
         self.assert_message(self.control_child.recv(), 'start')
 
         try:
-            plugin.start()
+            self.plugin.start()
         except Exception as error:
             self.control_child.send(str(type(error)))
             raise error
@@ -122,17 +157,32 @@ class ProcessProxy(Plugin):
         
         # recieve inputs from the parent to process
         while True:
-            #time_begin = time.perf_counter()
-            input = self.data_child.recv_bytes()
-            input = pickle.loads(input)
-            #logging.debug(f"subprocess recieved {str(type(input))} input  (depickle={(time.perf_counter()-time_begin)*1000} ms)")
-            plugin(input)
-    
+            try:
+                #time_begin = time.perf_counter()
+                input = self.data_child.recv_bytes()
+                input = pickle.loads(input)
+                #logging.debug(f"subprocess recieved {str(type(input))} input  (depickle={(time.perf_counter()-time_begin)*1000} ms)")
+                self.plugin(input)
+            except Exception as error:
+                logging.error(f"Exception occurred in {type(self.plugin)} subprocess data thread\n\n{''.join(traceback.format_exception(error))}")
+                
     def run_control(self):
         while True:
-            msg = self.control_child.recv()
-            logging.debug(f"subprocess recieved control msg from parent process ('{msg}')")
-            
+            try:
+                msg = self.control_child.recv()
+                #logging.debug(f"{type(self.plugin)} subprocess recieved control msg from parent process:  {msg}")
+                if not isinstance(msg, dict):
+                    continue
+                if 'get' in msg:
+                    self.control_child.send({'name': msg['get'], 'value': getattr(self.plugin, msg['get'])})
+                if 'set' in msg:
+                    setattr(self.plugin, msg['set']['name'], msg['set']['value'])
+                if 'interrupt' in msg:
+                    self.plugin.interrupt(**msg['interrupt'])
+                    self.control_child.send('interrupt_ack')
+            except Exception as error:
+                logging.error(f"Exception occurred in {type(self.plugin)} subprocess control thread\n\n{''.join(traceback.format_exception(error))}")
+                
     def assert_message(self, msg, expected, verbose=True):
         if msg != expected:
             raise RuntimeError(f"recieved unexpected cross-process message '{msg}' (expected '{expected}'")
