@@ -14,7 +14,7 @@ from local_llm import Agent, StopTokens
 
 from local_llm.web import WebServer
 from local_llm.plugins import VideoSource, VideoOutput, ChatQuery, PrintStream, ProcessProxy, EventFilter, NanoDB
-from local_llm.utils import ArgParser, print_table
+from local_llm.utils import ArgParser, print_table, wrap_text
 
 from jetson_utils import cudaFont, cudaMemcpy, cudaToNumpy, cudaDeviceSynchronize, saveImage
 
@@ -23,11 +23,14 @@ class VideoQuery(Agent):
     """
     Perpetual always-on closed-loop visual agent that applies prompts to a video stream.
     """
-    def __init__(self, model="liuhaotian/llava-v1.5-13b", nanodb=None, **kwargs):
+    def __init__(self, model="liuhaotian/llava-v1.5-13b", nanodb=None, vision_scaling='resize', **kwargs):
         super().__init__()
 
+        if not vision_scaling:
+            vision_scaling = 'resize'
+            
         # load model in another process for smooth streaming
-        self.llm = ProcessProxy('ChatQuery', model=model, drop_inputs=True, **kwargs) #ProcessProxy((lambda **kwargs: ChatQuery(model, drop_inputs=True, **kwargs)), **kwargs)
+        self.llm = ProcessProxy('ChatQuery', model=model, drop_inputs=True, vision_scaling=vision_scaling, **kwargs) #ProcessProxy((lambda **kwargs: ChatQuery(model, drop_inputs=True, **kwargs)), **kwargs)
         self.llm.add(PrintStream(color='green', relay=True).add(self.on_text))
         self.llm.start()
 
@@ -74,6 +77,7 @@ class VideoQuery(Agent):
         self.last_prompt = None
         self.auto_refresh = True
         self.auto_refresh_db = True
+        self.rag_threshold = 1.0
         
         self.keyboard_prompt = 0
         self.keyboard_thread = threading.Thread(target=self.poll_keyboard)
@@ -128,12 +132,12 @@ class VideoQuery(Agent):
                 self.last_image = cudaMemcpy(image)
 
         text = self.text.replace('\n', '').replace('</s>', '').strip()
+        
+        y = wrap_text(self.font, image, text=self.prompt, x=5, y=5, color=(120,215,21), background=self.font.Gray40)
 
         if text:
-            self.font.OverlayText(image, text=text, x=5, y=42, color=self.font.White, background=self.font.Gray40)
-
-        self.font.OverlayText(image, text=self.prompt, x=5, y=5, color=(120,215,21), background=self.font.Gray40)
-
+            y = wrap_text(self.font, image, text=text, x=5, y=y, color=self.font.White, background=self.font.Gray40)
+        
         self.video_output(image)
    
     def on_text(self, text):
@@ -192,7 +196,8 @@ class VideoQuery(Agent):
             #print(f'\n\n###############\n# WEBSOCKET JSON MESSAGE\n#############\n{msg}')
             if 'prompt' in msg:
                 self.prompt = msg['prompt']
-                self.prompt_history.append(self.prompt)
+                if self.prompt not in self.prompt_history:
+                    self.prompt_history.append(self.prompt)
             elif 'pause_video' in msg:
                 self.pause_video = msg['pause_video']
                 self.pause_image = None
@@ -208,6 +213,8 @@ class VideoQuery(Agent):
                     self.db.db.save()
             elif 'tag_image' in msg:
                 self.tag_image = msg['tag_image']
+            elif 'vision_scaling' in msg:
+                self.llm(vision_scaling=msg['vision_scaling'])
    
     def poll_keyboard(self):
         while True:

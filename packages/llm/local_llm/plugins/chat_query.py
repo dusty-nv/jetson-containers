@@ -92,6 +92,14 @@ class ChatQuery(Plugin):
     def chat_history(self):
         return self.history.to_list()
         
+    def config(self, **kwargs):
+        """
+        Config plugin settings from expanded dict
+        """
+        if 'vision_scaling' in kwargs:
+            print('set vision_scaling', kwargs['vision_scaling'])
+            self.model.vision_scaling = kwargs['vision_scaling']
+        
     def process(self, input, **kwargs):
         """
         Generate the reply to a prompt or the latest ChatHistory.
@@ -106,11 +114,16 @@ class ChatQuery(Plugin):
           The generated text (token by token), if input was a string or dict.
           If input was a ChatHistory, returns the streaming iterator/generator.
         """
+        self.config(**kwargs)
+        
+        if input is None:
+            return
+            
         if isinstance(input, list):
             for x in input:
                 self.process(x, **kwargs)
             return
-         
+
         if self.interrupted:
             return
             
@@ -128,7 +141,7 @@ class ChatQuery(Plugin):
         elif isinstance(input, ChatHistory):
             chat_history = input  # TODO also recieve chat history as list for cross-process
         else:
-            raise TypeError(f"LLMQuery plugin expects inputs of type str, dict, image, or ChatHistory (was {type(input)})")
+            raise TypeError(f"ChatQuery plugin expects inputs of type str, dict, image, or ChatHistory (was {type(input)})")
 
         # images should be followed by text prompts
         if 'image' in chat_history[-1] and 'text' not in chat_history[-1]:

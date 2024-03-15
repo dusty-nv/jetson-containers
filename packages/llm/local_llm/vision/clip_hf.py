@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 import os
 import time
+import logging
+
+import cv2
 import PIL
 import torch
-import logging
+import numpy as np
 
 from transformers import CLIPImageProcessor, CLIPVisionModelWithProjection, SiglipImageProcessor, SiglipVisionModel
 from ..utils import AttributeDict, load_image, torch_image, image_size, convert_tensor, download_model, print_table
@@ -77,7 +80,12 @@ class CLIPImageEmbedding():
 
         if not crop:
             logging.debug(f"resizing image from {image.shape if hasattr(image, 'shape') else image.size} -> {self.config.input_shape}")
-            image = image.resize(self.config.input_shape, PIL.Image.BILINEAR) # PIL.Image.BICUBIC
+            if isinstance(image, PIL.Image.Image):
+                image = image.resize(self.config.input_shape, PIL.Image.BILINEAR) # PIL.Image.BICUBIC
+            elif isinstance(image, np.ndarray):
+                image = cv2.resize(image, self.config.input_shape)
+            else:
+                raise TypeError(f"expected either PIL.Image or np.ndarray (was {type(image)})")
         else:
             logging.debug(f"cropping image from {image.shape if hasattr(image, 'shape') else image.size} -> {self.config.input_shape}")
             

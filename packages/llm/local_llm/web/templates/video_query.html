@@ -10,6 +10,7 @@
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     
     <link rel="stylesheet" href="/static/bootstrap.css">
+    <link rel="stylesheet" href="/static/select2.min.css">
     <link rel="stylesheet" href="/static/chat.css">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -26,6 +27,7 @@
      
     <script type='text/javascript' src="/static/jquery-3.6.3.min.js"></script>
     <script type='text/javascript' src='/static/bootstrap.bundle.min.js'></script>
+    <script type='text/javascript' src="/static/select2.min.js"></script>
 
     <script type='text/javascript'>
       function playWebRTC() {
@@ -36,22 +38,7 @@
         if( sendStream(getWebsocketURL('input'), document.getElementById('send-stream').value) )
           play(); // autoplay browser stream
       }
-      
-      function onChatMessageKey(event) {  // https://stackoverflow.com/a/49389811
-        if( event.which === 13 && !event.shiftKey ) {
-          if( !event.repeat )
-            onChatMessageSubmit();
-          event.preventDefault(); // prevents the addition of a new line in the text field
-        }
-      }
-      
-      function onChatMessageSubmit() {
-        const input = document.getElementById('chat-message-input');
-        console.log('submitting chat message:', input.value);
-        sendWebsocket({'prompt': input.value});
-        //input.value = "";
-      }
-      
+
       function onWebsocketMsg(payload, type) {
         if( type == MESSAGE_JSON ) { 
           if( 'search_results' in payload ) {
@@ -158,6 +145,36 @@
         transform:translateX(-100%);
         top:10px;
       }
+      
+      .select2-container--default .select2-selection--multiple, .select2-results
+      {
+        color: #222222;
+        scrollbar-color: #AAAAAA #EEEEEE;
+      }
+      
+      .select2-container--default .select2-selection--single
+      {
+        height: 120%;
+        line-height: 120%;
+        vertical-align : middle;
+      }
+      
+      .select2-selection__arrow
+      {
+        padding-top: 35px;
+        padding-right: 25px;
+      }
+      
+      .select2-selection__rendered
+      {
+        padding-top: 3px;
+      }
+      
+      .select2-search__field
+      {
+        color: #222222;
+        background-color: #EEEEEE;
+      }
     </style>
   </head>
   <body class="bg-dark-gray" data-bs-theme="dark">
@@ -215,9 +232,31 @@
               </div>
               <div>
                 <div class="input-group">
-                  <textarea id="chat-message-input" class="form-control" rows="1" placeholder="Enter to send query (Shift+Enter for newline)" onkeydown="onChatMessageKey(event)" title="Type in video query and press Enter to submit &#013; (or Shift+Enter to insert a line break)"></textarea>
-                  <span class="input-group-text bg-light-gray bi bi-arrow-return-left" style="color: #eeeeee;" onclick="onChatMessageSubmit()"></span>
+                  <select id="video-query-input" class="form-control" onchange="onVideoQuery(this.value)">
+                    <option selected="selected">Describe the image concisely.</option>
+                    <option>Describe the image.</option>
+                    <option>What color shirt am I wearing?</option>
+                    <option>What does the text in the image say?</option>
+                    <option>What sign am I making?</option>
+                    <option>What am I holding up?</option>
+                    <option>How many fingers am I holding up?</option>
+                  </select>
+                  <!--<textarea id="chat-message-input" class="form-control" rows="1" placeholder="Enter to send query (Shift+Enter for newline)" onkeydown="onChatMessageKey(event)" title="Type in video query and press Enter to submit &#013; (or Shift+Enter to insert a line break)"></textarea>
+                  <span class="input-group-text bg-light-gray bi bi-arrow-return-left d-inline-block" style="color: #eeeeee;" onclick="onChatMessageSubmit()"></span>-->
                 </div>
+                <script type='text/javascript'>  
+                  function onVideoQuery(value) {
+                    console.log('changing chat query', value);
+                    sendWebsocket({'prompt': value});
+                  }
+                  
+                  $('#video-query-input').select2({
+                    tags: true,
+                    //theme: "classic",
+                    //tokenSeparators: [''],
+                    placeholder: 'Enter query'
+                  });
+                </script>
               </div>
             </div>
             {{ collapse_handler('webrtc_player') }}
@@ -301,11 +340,23 @@
                   sendWebsocket({'tag_image': tags});
                 }
               }
+              
+              function onRagThreshold(value) {
+                document.getElementById('rag_threshold_label').innerHTML=`${value}%`;
+                sendWebsocket({'rag_threshold': value});
+              }
             </script>
             <div class="collapse show" id="nanodb_card">
               <div class="input-group mb-1">
                 <input class="form-control" id="nanodb_image_tags" onkeydown="onTagEnter(event)" placeholder="Tag incoming feed" title="Enter description of the incoming image to tag and add to vector database"></textarea>
                 <span class="input-group-text bg-light-gray" style="color: #eeeeee;" onclick="onTagImage()">Add</span>
+              </div>
+              <div class="mb-2 w-100">
+                <div class="d-inline-block">Rag Threshold</div>
+                <div class="d-inline-block ms-1" style="width: 65%">
+                  <input id="rag_threshold_slider" type="range" class="form-range" min="0" max="100" value="100" oninput="onRagThreshold(this.value)">
+                </div>
+                <div class="d-inline-block" id="rag_threshold_label">100%</div>
               </div>
               <div id="nanodb_results"></div>
             </div>
@@ -348,8 +399,20 @@
               </div>
               <div class="row">
                 <label for="refresh_rate" class="col-2 me-0" style="width: 6rem;">Refresh:</label>
-                <div id="refresh_rate" class="col-4 ms-0">0.0 FPS (0.0 ms)</div>
+                <div id="refresh_rate" class="col-5 ms-0">0.0 FPS (0.0 ms)</div>
               </div>
+              <div class="row">
+                <label for="crop-toggle" class="col-2" style="width: 6rem;">Cropping:</label>
+                <div class="col-2">
+                  <input id="crop-toggle" type="checkbox" class="form-checkbox" oninput="onCropToggled(this.checked)">
+                </div>
+                <script type='text/javascript'>
+                  function onCropToggled(enabled) {
+                    console.log('onCropToggled', enabled);
+                    sendWebsocket({'vision_scaling': enabled ? 'crop' : 'resize'});
+                  }
+                </script>
+              </div>              
               <div class="row">
                 <label for="connection-stats-show" class="col-2" style="width: 6rem;">Statistics:</label>
                 <div class="col-2">

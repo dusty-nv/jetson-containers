@@ -29,8 +29,9 @@ class ProcessProxy(Plugin):
         self.subprocess = mp.Process(target=self.run_process, args=(plugin_factory, kwargs))
         self.subprocess.start()
         
+        self.data_lock = threading.Lock()
         self.control_lock = threading.Lock()
- 
+        
         init_msg = self.control_parent.recv()
         
         if init_msg['status'] != 'initialized':
@@ -62,12 +63,11 @@ class ProcessProxy(Plugin):
             }})
     '''
     
-    def input(self, input):
-        #time_begin = time.perf_counter()
-        #input_type = type(input)
-        input = pickle.dumps(input, protocol=-1)
-        #logging.debug(f"ProcessProxy time to pickle {input_type} - {(time.perf_counter()-time_begin)*1000} ms")
+    def input(self, input=None, **kwargs):
+        self.data_lock.acquire()
+        input = pickle.dumps((input, kwargs), protocol=-1)
         self.data_parent.send_bytes(input)
+        self.data_lock.release()
         
     def interrupt(self, **kwargs):
         self.control_lock.acquire()
@@ -160,9 +160,9 @@ class ProcessProxy(Plugin):
             try:
                 #time_begin = time.perf_counter()
                 input = self.data_child.recv_bytes()
-                input = pickle.loads(input)
+                input, kwargs = pickle.loads(input)
                 #logging.debug(f"subprocess recieved {str(type(input))} input  (depickle={(time.perf_counter()-time_begin)*1000} ms)")
-                self.plugin(input)
+                self.plugin(input, **kwargs)
             except Exception as error:
                 logging.error(f"Exception occurred in {type(self.plugin)} subprocess data thread\n\n{''.join(traceback.format_exception(error))}")
                 

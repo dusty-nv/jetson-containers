@@ -77,7 +77,7 @@ class LocalLM():
             raise ValueError(f"invalid API: {api}")
 
         # moved CLIP to after LLM is loaded because of MLC CUDA errors when running in subprocess
-        model.init_vision()  
+        model.init_vision(**kwargs)  
         model.config.load_time = time.perf_counter() - load_begin
         
         print_table(model.config)
@@ -120,9 +120,12 @@ class LocalLM():
     def embed_tokens(self, tokens, **kwargs):
         raise NotImplementedError("embed_tokens() not implemented for this model")
        
-    def embed_image(self, image, crop=True, return_tensors='pt', return_dict=False, **kwargs):
+    def embed_image(self, image, crop=None, return_tensors='pt', return_dict=False, **kwargs):
         assert(self.has_vision)
         
+        if crop is None:
+            crop = (self.vision_scaling == 'crop')
+
         output = self.vision(image, crop=crop, hidden_state=self.config.mm_vision_select_layer, return_dict=return_dict)
         
         embedding = output.hidden_state if return_dict else output
@@ -219,4 +222,11 @@ class LocalLM():
         
         # create image embedding projection model
         self.mm_projector = MMProjector.from_pretrained(self, self.vision.dtype)
+        
+        # default to cropping enabled
+        self.vision_scaling = kwargs.get('vision_scaling')
+        
+        if self.vision_scaling is None:
+            self.vision_scaling = 'crop'
+            
         

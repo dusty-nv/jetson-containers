@@ -5,7 +5,7 @@ import threading
 import numpy as np
 
 from local_llm.web import WebServer
-from local_llm.utils import ArgParser
+from local_llm.utils import ArgParser, KeyboardInterrupt
 from local_llm.plugins import RivaASR
 
 from .voice_chat import VoiceChat
@@ -26,13 +26,13 @@ class WebChat(VoiceChat):
         super().__init__(**kwargs)
 
         if self.asr:
-            self.asr.add(self.on_asr_partial, RivaASR.OutputPartial)
+            self.asr.add(self.on_asr_partial, RivaASR.OutputPartial, threaded=True)
             #self.asr.add(self.on_asr_final, RivaASR.OutputFinal)
         
-        self.llm.add(self.on_llm_reply)
+        self.llm.add(self.on_llm_reply, threaded=True)
         
         if self.tts:
-            self.tts_output.add(self.on_tts_samples)
+            self.tts_output.add(self.on_tts_samples, threaded=True)
         
         self.server = WebServer(msg_callback=self.on_message, **kwargs)
         
@@ -125,5 +125,8 @@ if __name__ == "__main__":
     parser = ArgParser(extras=ArgParser.Defaults+['asr', 'tts', 'audio_output', 'web'])
     args = parser.parse_args()
     
-    agent = WebChat(**vars(args)).run() 
+    agent = WebChat(**vars(args))
+    interrupt = KeyboardInterrupt()
+    
+    agent.run() 
     

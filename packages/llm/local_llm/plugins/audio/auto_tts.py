@@ -183,7 +183,7 @@ class AutoTTS(Plugin):
         """
         def filter_char(input):
             for idx, char in enumerate(input):
-                if char.isalnum() or any([char == x for x in ('.', ',', '?', '!', ':', ';', '-', "'", '"', ' ', '/')]):
+                if char.isalnum() or any([char == x for x in ('.', ',', '?', '!', ':', ';', '-', "'", '"', ' ', '/', '+', '-', '*')]):
                     continue
                 else:
                     return input.replace(char, ' ')
