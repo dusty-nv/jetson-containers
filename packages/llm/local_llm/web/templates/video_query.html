@@ -402,7 +402,22 @@
                 <div id="refresh_rate" class="col-5 ms-0">0.0 FPS (0.0 ms)</div>
               </div>
               <div class="row">
+                <label for="max_tokens_slider" class="col-2 me-0" style="width: 115px;">Max Output:</label>
+                <div class="col-4 ms-0 me-0">
+                  <input id="max_tokens_slider" type="range" class="form-range" min="1" max="128" value="32" oninput="onMaxTokens(this.value)">
+                </div>
+                <div class="col-2" id="max_tokens_label">32</div>
+                
+                <script type='text/javascript'>
+                  function onMaxTokens(value) {
+                    document.getElementById('max_tokens_label').innerHTML=`${value}`;
+                    sendWebsocket({'max_new_tokens': value});
+                  }
+                </script>
+              </div>          
+              <div class="row">
                 <label for="crop-toggle" class="col-2" style="width: 6rem;">Cropping:</label>
+                
                 <div class="col-2">
                   <input id="crop-toggle" type="checkbox" class="form-checkbox" oninput="onCropToggled(this.checked)">
                 </div>

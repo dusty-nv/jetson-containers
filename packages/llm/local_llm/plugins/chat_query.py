@@ -96,8 +96,10 @@ class ChatQuery(Plugin):
         """
         Config plugin settings from expanded dict
         """
+        if 'max_new_tokens' in kwargs:
+            self.max_new_tokens = int(kwargs['max_new_tokens'])
+            
         if 'vision_scaling' in kwargs:
-            print('set vision_scaling', kwargs['vision_scaling'])
             self.model.vision_scaling = kwargs['vision_scaling']
         
     def process(self, input, **kwargs):

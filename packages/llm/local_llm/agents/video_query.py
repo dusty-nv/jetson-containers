@@ -215,6 +215,8 @@ class VideoQuery(Agent):
                 self.tag_image = msg['tag_image']
             elif 'vision_scaling' in msg:
                 self.llm(vision_scaling=msg['vision_scaling'])
+            elif 'max_new_tokens' in msg:
+                self.llm(max_new_tokens=msg['max_new_tokens'])
    
     def poll_keyboard(self):
         while True:
