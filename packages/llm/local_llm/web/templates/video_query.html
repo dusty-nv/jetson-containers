@@ -146,34 +146,33 @@
         top:10px;
       }
       
-      .select2-container--default .select2-selection--multiple, .select2-results
-      {
+      .select2-container--default .select2-selection--multiple, .select2-results {
         color: #222222;
         scrollbar-color: #AAAAAA #EEEEEE;
       }
       
-      .select2-container--default .select2-selection--single
-      {
+      .select2-container--default .select2-selection--single {
         height: 120%;
         line-height: 120%;
         vertical-align : middle;
       }
       
-      .select2-selection__arrow
-      {
+      .select2-selection__arrow {
         padding-top: 35px;
         padding-right: 25px;
       }
       
-      .select2-selection__rendered
-      {
+      .select2-selection__rendered {
         padding-top: 3px;
       }
       
-      .select2-search__field
-      {
+      .select2-search__field {
         color: #222222;
         background-color: #EEEEEE;
+      }
+      
+      .form-range::-webkit-slider-runnable-track {
+        background-color: #666666;
       }
     </style>
   </head>
@@ -240,6 +239,7 @@
                     <option>What sign am I making?</option>
                     <option>What am I holding up?</option>
                     <option>How many fingers am I holding up?</option>
+                    <option>What's my name?</option>
                   </select>
                   <!--<textarea id="chat-message-input" class="form-control" rows="1" placeholder="Enter to send query (Shift+Enter for newline)" onkeydown="onChatMessageKey(event)" title="Type in video query and press Enter to submit &#013; (or Shift+Enter to insert a line break)"></textarea>
                   <span class="input-group-text bg-light-gray bi bi-arrow-return-left d-inline-block" style="color: #eeeeee;" onclick="onChatMessageSubmit()"></span>-->
@@ -347,16 +347,16 @@
               }
             </script>
             <div class="collapse show" id="nanodb_card">
-              <div class="input-group mb-1">
-                <input class="form-control" id="nanodb_image_tags" onkeydown="onTagEnter(event)" placeholder="Tag incoming feed" title="Enter description of the incoming image to tag and add to vector database"></textarea>
-                <span class="input-group-text bg-light-gray" style="color: #eeeeee;" onclick="onTagImage()">Add</span>
-              </div>
               <div class="mb-2 w-100">
-                <div class="d-inline-block">Rag Threshold</div>
-                <div class="d-inline-block ms-1" style="width: 65%">
+                <div class="d-inline-block">RAG Threshold</div>
+                <div class="d-inline-block ms-1 align-middle" style="width: 65%">
                   <input id="rag_threshold_slider" type="range" class="form-range" min="0" max="100" value="100" oninput="onRagThreshold(this.value)">
                 </div>
                 <div class="d-inline-block" id="rag_threshold_label">100%</div>
+              </div>
+              <div class="input-group mb-1">
+                <input class="form-control" id="nanodb_image_tags" onkeydown="onTagEnter(event)" placeholder="Tag incoming feed" title="Enter description of the incoming image to tag and add to vector database"></textarea>
+                <span class="input-group-text bg-light-gray" style="color: #eeeeee;" onclick="onTagImage()">Add</span>
               </div>
               <div id="nanodb_results"></div>
             </div>
@@ -402,9 +402,9 @@
                 <div id="refresh_rate" class="col-5 ms-0">0.0 FPS (0.0 ms)</div>
               </div>
               <div class="row">
-                <label for="max_tokens_slider" class="col-2 me-0" style="width: 115px;">Max Output:</label>
+                <label for="max_tokens_slider" class="col-2 me-0" style="width: 115px;" title="The maximum number of new tokens output per query">Max Tokens:</label>
                 <div class="col-4 ms-0 me-0">
-                  <input id="max_tokens_slider" type="range" class="form-range" min="1" max="128" value="32" oninput="onMaxTokens(this.value)">
+                  <input id="max_tokens_slider" type="range" class="form-range" min="1" max="128" value="32" oninput="onMaxTokens(this.value)" title="The maximum number of new tokens output per query">
                 </div>
                 <div class="col-2" id="max_tokens_label">32</div>
                 
@@ -416,10 +416,10 @@
                 </script>
               </div>          
               <div class="row">
-                <label for="crop-toggle" class="col-2" style="width: 6rem;">Cropping:</label>
+                <label for="crop-toggle" class="col-2" style="width: 6rem;" title="Enabling center cropping during pre-processing of the video that maintains aspect ratio (otherwise resized)">Cropping:</label>
                 
                 <div class="col-2">
-                  <input id="crop-toggle" type="checkbox" class="form-checkbox" oninput="onCropToggled(this.checked)">
+                  <input id="crop-toggle" type="checkbox" class="form-checkbox" oninput="onCropToggled(this.checked)" title="Enabling center cropping during pre-processing of the video that maintains aspect ratio (otherwise resized)">
                 </div>
                 <script type='text/javascript'>
                   function onCropToggled(enabled) {

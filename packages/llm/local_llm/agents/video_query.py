@@ -77,7 +77,10 @@ class VideoQuery(Agent):
         self.last_prompt = None
         self.auto_refresh = True
         self.auto_refresh_db = True
+        
         self.rag_threshold = 1.0
+        self.rag_prompt = None
+        self.rag_prompt_last = None
         
         self.keyboard_prompt = 0
         self.keyboard_thread = threading.Thread(target=self.poll_keyboard)
@@ -123,17 +126,31 @@ class VideoQuery(Agent):
                 self.pause_image = cudaMemcpy(image)
             image = cudaMemcpy(self.pause_image)
         
-        if self.auto_refresh or self.prompt != self.last_prompt:
+        if self.auto_refresh or self.prompt != self.last_prompt or self.rag_prompt != self.rag_prompt_last:
             np_image = cudaToNumpy(image)
             cudaDeviceSynchronize()
-            self.llm(['/reset', np_image, self.prompt])
+            
+            if self.rag_prompt:
+                prompt = self.rag_prompt + '. ' + self.prompt
+            else:
+                prompt = self.prompt
+                
+            self.llm(['/reset', np_image, prompt])
+            
             self.last_prompt = self.prompt
+            self.rag_prompt_last = self.rag_prompt
+            
             if self.db:
                 self.last_image = cudaMemcpy(image)
 
+        # draw text overlays
         text = self.text.replace('\n', '').replace('</s>', '').strip()
+        y = 5
         
-        y = wrap_text(self.font, image, text=self.prompt, x=5, y=5, color=(120,215,21), background=self.font.Gray40)
+        if self.rag_prompt:
+            y = wrap_text(self.font, image, text='RAG: ' + self.rag_prompt, x=5, y=y, color=(255,172,28), background=self.font.Gray40)
+            
+        y = wrap_text(self.font, image, text=self.prompt, x=5, y=y, color=(120,215,21), background=self.font.Gray40)
 
         if text:
             y = wrap_text(self.font, image, text=text, x=5, y=y, color=self.font.White, background=self.font.Gray40)
@@ -191,6 +208,17 @@ class VideoQuery(Agent):
             
         cprint(f"nanodb search results:\n{pprint.pformat(results, indent=2)}", color='blue')
         
+        # RAG
+        self.rag_prompt = None
+        
+        if len(results) == 0:    
+            return
+            
+        result = results[0]
+
+        if result['similarity'] > self.rag_threshold and 'tags' in result['metadata']:
+            self.rag_prompt = f"This image is of {result['metadata']['tags']}"
+        
     def on_websocket(self, msg, msg_type=0, metadata='', **kwargs):
         if msg_type == WebServer.MESSAGE_JSON:
             #print(f'\n\n###############\n# WEBSOCKET JSON MESSAGE\n#############\n{msg}')
@@ -216,8 +244,11 @@ class VideoQuery(Agent):
             elif 'vision_scaling' in msg:
                 self.llm(vision_scaling=msg['vision_scaling'])
             elif 'max_new_tokens' in msg:
-                self.llm(max_new_tokens=msg['max_new_tokens'])
-   
+                self.llm(max_new_tokens=int(msg['max_new_tokens']))
+            elif 'rag_threshold' in msg:
+                self.rag_threshold = float(msg['rag_threshold']) / 100.0
+                logging.debug(f"set RAG threshold to {self.rag_threshold}")
+                
     def poll_keyboard(self):
         while True:
             try:
