@@ -92,7 +92,7 @@ class VideoQuery(Agent):
                 path=nanodb, 
                 model=None, # disable DB's model because VLM's CLIP is used 
                 reserve=kwargs.get('nanodb_reserve'), 
-                k=8, drop_inputs=True,
+                k=12, drop_inputs=True,
             ).start().add(self.on_search)
             self.llm.add(self.on_image_embedding, channel=ChatQuery.OutputImageEmbedding)
         else:
@@ -106,14 +106,35 @@ class VideoQuery(Agent):
         
         mounts['/data/datasets/uploads'] = '/images/uploads'
         
+        video_source = self.video_source.stream.GetOptions()['resource']
+        video_output = self.video_output.stream.GetOptions()['resource']
+        
+        webrtc_args = {}
+        
+        if video_source['protocol'] == 'webrtc':
+            webrtc_args.update(dict(webrtc_input_stream=video_source['path'].strip('/'), 
+                                    webrtc_input_port=video_source['port'],
+                                    send_webrtc=True))
+        else:
+            webrtc_args.update(dict(webrtc_input_stream='input', 
+                                    webrtc_input_port=8554,
+                                    send_webrtc=False))
+        
+        if video_output['protocol'] == 'webrtc':
+            webrtc_args.update(dict(webrtc_output_stream=video_output['path'].strip('/'), 
+                                    webrtc_output_port=video_output['port']))
+        else:
+            webrtc_args.update(dict(webrtc_output_stream='output', 
+                                    webrtc_output_port=8554))
+
         self.server = WebServer(
             msg_callback=self.on_websocket, 
             index='video_query.html', 
-            send_webrtc=False, 
             title="LIVE LLAVA", 
             model=os.path.basename(model),
             mounts=mounts,
             nanodb=nanodb,
+            **webrtc_args,
             **kwargs
         )
         

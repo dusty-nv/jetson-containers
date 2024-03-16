@@ -35,7 +35,7 @@
       };
       
       function sendWebRTC() {
-        if( sendStream(getWebsocketURL('input'), document.getElementById('send-stream').value) )
+        if( sendStream(getWebsocketURL("{{ webrtc_input_stream }}", port={{ webrtc_input_port }}), document.getElementById('send-stream').value) )
           play(); // autoplay browser stream
       }
 
@@ -50,9 +50,9 @@
             for( let n=0; n < search_results.length; n++ ) {
               if( 'image' in search_results[n] ) {
                 //contents = '<div style="position: relative; text-align: center; color: white" width="50%">';
-                let contents = '<div class="me-1" style="position: relative; color: white; display: inline;">';
-                contents += `<img src=${search_results[n]['image']} style="aspect-ratio: 1.47; width: 49%;" title="&quot;METADATA&quot; : ${search_results[n]['metadata']}">`;
-                contents += `<div class="ps-1 pe-1" style="position: absolute; top: 0%; right: 0%; transform: translate(0%, -288%); background-color: rgba(0,0,0,0.5)">${search_results[n]['similarity']}</div></div>`;
+                let contents = '<div class="me-1" style="position: relative; color: white; display: inline;">';  // 49% width, -288% translate for 2x4 grid
+                contents += `<img src=${search_results[n]['image']} style="aspect-ratio: 1.47; width: 32%;" title="&quot;METADATA&quot; : ${search_results[n]['metadata']}">`;
+                contents += `<div class="ps-1 pe-1" style="position: absolute; top: 0%; right: 0%; transform: translate(0%, -168%); background-color: rgba(0,0,0,0.5)">${search_results[n]['similarity']}</div></div>`;
                 //contents += '</div>';
                 obj.append(contents);
               }
@@ -82,7 +82,7 @@
         var sendStream = document.getElementById('send-stream');
         var sendButton = document.getElementById('send-button');
 
-        playStream.value = getWebsocketURL('output');
+        playStream.value = getWebsocketURL("{{ webrtc_output_stream }}", port={{ webrtc_output_port }});
     
       {% if send_webrtc %}
         // populate the list of browser video devices (requires HTTPS)
@@ -113,7 +113,7 @@
         playWebRTC();
       {% endif %}
       
-        connectWebsocket(onWebsocketMsg, port=49000);
+        connectWebsocket(onWebsocketMsg, port={{ ws_port }});
         
         event_table = new Tabulator("#event_table", {
             columns: [
@@ -373,10 +373,10 @@
             {% if send_webrtc %}
               <div class="row">
                 <label for="send-stream" class="col-2" style="width: 6rem;">Webcam:</label>
-                <div class="col-6">
+                <div class="col-5">
                   <select id="send-stream" name="send-stream"></select>
                 </div>
-                <div class="col-4">
+                <div class="col-4 ms-3">
                   <button id="send-button" onclick="sendWebRTC()">Send</button>
                 </div>
               </div>
