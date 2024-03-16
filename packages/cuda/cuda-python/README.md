@@ -6,6 +6,12 @@
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
+| **`cuda-python:builder`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/python) [`numpy`](/packages/numpy) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.builder`](Dockerfile.builder) |
+
 | **`cuda-python`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`cuda-python_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cuda-python_jp60.yml?label=cuda-python:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cuda-python_jp60.yml) [![`cuda-python_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cuda-python_jp51.yml?label=cuda-python:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cuda-python_jp51.yml) |
