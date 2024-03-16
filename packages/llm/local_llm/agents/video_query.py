@@ -92,7 +92,7 @@ class VideoQuery(Agent):
                 path=nanodb, 
                 model=None, # disable DB's model because VLM's CLIP is used 
                 reserve=kwargs.get('nanodb_reserve'), 
-                k=12, drop_inputs=True,
+                k=18, drop_inputs=True,
             ).start().add(self.on_search)
             self.llm.add(self.on_image_embedding, channel=ChatQuery.OutputImageEmbedding)
         else:
@@ -226,8 +226,9 @@ class VideoQuery(Agent):
                     
         if html:
             self.server.send_message({'search_results': html})
-            
-        cprint(f"nanodb search results:\n{pprint.pformat(results, indent=2)}", color='blue')
+         
+        if len(results) >= 3:
+            cprint(f"nanodb search results (top 3)\n{pprint.pformat(results[:3], indent=2)}", color='blue')
         
         # RAG
         self.rag_prompt = None
