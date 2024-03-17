@@ -83,11 +83,8 @@ class WebChat(VoiceChat):
     def on_tts_samples(self, audio):
         self.server.send_message(audio, type=WebServer.MESSAGE_AUDIO)
         
-    def send_chat_history(self, history=None):
-        # TODO convert images to filenames
-        # TODO sanitize text for HTML
-        if history is None:
-            history = self.llm.chat_history
+    def send_chat_history(self):
+        history, num_tokens, max_context_len = self.llm.chat_state
             
         if self.asr and self.asr_history:
             history.append({'role': 'user', 'text': self.asr_history})
@@ -113,7 +110,13 @@ class WebChat(VoiceChat):
             if 'image' in entry:
                 entry['image'] = web_image(entry['image'])
                 
-        self.server.send_message({'chat_history': history})
+        self.server.send_message({
+            'chat_history': history,
+            'chat_stats': {
+                'num_tokens': num_tokens,
+                'max_context_len': max_context_len,
+            }
+        })
  
     def start(self):
         super().start()

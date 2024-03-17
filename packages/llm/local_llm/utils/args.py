@@ -41,6 +41,7 @@ class ArgParser(argparse.ArgumentParser):
             from local_llm import ChatTemplates
             self.add_argument("--chat-template", type=str, default=None, choices=list(ChatTemplates.keys()), help="manually select the chat template")
             self.add_argument("--system-prompt", type=str, default=None, help="override the default system prompt instruction")
+            self.add_argument("--wrap-tokens", type=int, default=512, help="the number of most recent tokens in the chat to keep when the chat overflows the max context length")
             
         if 'generation' in extras:
             self.add_argument("--max-context-len", type=int, default=None,
@@ -132,6 +133,7 @@ class ArgParser(argparse.ArgumentParser):
             self.add_argument("--ssl-cert", default=os.getenv('SSL_CERT'), type=str, help="path to PEM-encoded SSL/TLS cert file for enabling HTTPS")
             self.add_argument("--upload-dir", type=str, default='/tmp/uploads', help="the path to save files uploaded from the client")
             self.add_argument("--web-trace", action="store_true", help="output websocket message logs when --log-level=debug")
+            self.add_argument("--web-title", type=str, default=None, help="override the default title of the web template")
             
         # LOGGING
         if 'log' in extras:

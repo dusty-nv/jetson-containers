@@ -127,10 +127,13 @@ class VideoQuery(Agent):
             webrtc_args.update(dict(webrtc_output_stream='output', 
                                     webrtc_output_port=8554))
 
+        web_title = kwargs.get('web_title')
+        web_title = web_title if web_title else 'LIVE LLAVA'
+        
         self.server = WebServer(
             msg_callback=self.on_websocket, 
             index='video_query.html', 
-            title="LIVE LLAVA", 
+            title=web_title, 
             model=os.path.basename(model),
             mounts=mounts,
             nanodb=nanodb,

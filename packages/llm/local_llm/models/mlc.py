@@ -6,6 +6,7 @@ import time
 import math
 import json
 import glob
+import shutil
 import queue
 import threading
 import subprocess
@@ -255,6 +256,7 @@ class MLCModel(LocalLM):
                     if default_context_len and default_context_len == max_context_len:
                         return quant_path
                     logging.warning(f"Rebuilding {model_name} with context length {max_context_len} (was {default_context_len})")
+                    shutil.rmtree(quant_path) # the tools will skip quantization if files already there
                 except Exception as err:
                     logging.warning(f"Rebuilding {model_name} after exception occurred trying to load {config_path}\n{err}")
                     pass

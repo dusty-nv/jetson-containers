@@ -130,6 +130,22 @@ class ChatHistory():
         
         self.reset()
 
+    @property
+    def num_tokens(self):
+        """
+        Return the number of tokens used by the chat so far.
+        embed_chat() needs to have been called for this to be upated,
+        because otherwise the input wouldn't have been tokenized yet.
+        """
+        position = 0
+        for n, entry in enumerate(self.entries):
+            keys = self.valid_entry_keys(entry)
+            for key in keys:
+                embed_key = key + '_embedding'
+                if embed_key in entry:
+                    position += entry[embed_key].shape[1]
+        return position
+        
     def __len__(self):
         """
         Returns the number of entries in the chat history
@@ -154,11 +170,21 @@ class ChatHistory():
             self.entries.append(ChatEntry(role, msg, **kwargs))
         return self.entries[-1]
 
-    def reset(self, add_system_prompt=True):
+    def reset(self, add_system_prompt=True, wrap_tokens=None):
         """
         Reset the chat history, and optionally add the system prompt to the new chat.
         """
-        self.entries = []
+        if wrap_tokens:
+            wrap_entry = self.find_wrap_entry(wrap_tokens)
+            if wrap_entry:
+                logging.warning(f"Wrapping chat to keep the most recent {len(self.entries)-wrap_entry} messages")
+                self.entries = self.entries[wrap_entry:]
+            else:
+                logging.warning(f"Chat history overflow couldn't find previous chat entry to wrap to (clearing chat)")
+                self.entries = []
+        else:
+            self.entries = []
+
         self.kv_cache = None
         self.image_embedding = None
         
@@ -286,7 +312,7 @@ class ChatHistory():
         
         return embeddings
 
-    def embed_chat(self, use_cache=True, **kwargs):
+    def embed_chat(self, use_cache=True, max_tokens=None, wrap_tokens=None, **kwargs):
         """
         Assemble the embedding of either the latest or entire chat.
         
@@ -294,11 +320,16 @@ class ChatHistory():
         If use_cache is set to false, then the entire chat history will be returned.
         
         The kwargs are passed to the embedding functions - for example, return_tokens=True
-        will return tokens for text inputs rather than embeddings.
+        will return tokens for the chat rather than embeddings.
         
         This function returns an (embedding, position) tuple, where the embedding array
         contains the new embeddings (or tokens) from the chat, and position is the current
         overall position in the history (up to the model's context window length)
+        
+        If the number of tokens in the chat history exceeds the length given in `max_tokens` argument
+        (which is typically the model's context window, minus the max generation length),
+        then the chat history will drop all but the latest `wrap_tokens`, starting with a user prompt.
+        If `max_tokens` is provided but `wrap_tokens` is not, then the overflow tokens will be truncated.
         """
         embeddings = []
         position = 0
@@ -355,7 +386,17 @@ class ChatHistory():
                 if entry['role'] == 'user' and key == 'text':
                     num_user_prompts += 1
                 
-        return np.concatenate(embeddings, axis=1), position
+        embeddings = np.concatenate(embeddings, axis=1) #, position
+        
+        if max_tokens and position + embeddings.shape[1] > max_tokens:
+            if wrap_tokens:
+                self.reset(wrap_tokens=wrap_tokens)
+                embeddings, position = self.embed_chat(use_cache=False, max_tokens=max_tokens, wrap_tokens=wrap_tokens, **kwargs)
+                logging.warning(f"Chat overflow, max history lenth {max_tokens} tokens exceeded (keeping the most recent {embeddings.shape[1]} tokens)")
+            else:
+                logging.warning(f"Truncating chat history overflow to {max_tokens} tokens")
+                return embeddings[:,:max_tokens,:], position
+        return embeddings, position      
 
     def tokenize(self, use_cache=True, **kwargs):
         return self.embed_chat(use_cache=use_cache, return_tokens=True, **kwargs)
@@ -397,4 +438,23 @@ class ChatHistory():
             return 'text'
         else:
             raise ValueError(f"couldn't find type of embedding for {type(input)}, please specify the 'type' argument")
+            
+    def find_wrap_entry(self, wrap_tokens):
+        """
+        Find the oldest entry from which the chat doesn't exceed the number of wrap_tokens,
+        and that the entry should be a user query.  This is used to keep those more recent
+        chat entries when the history overflows past the max context window of the model.
+        """
+        position = 0
+        for n in range(len(self.entries)-1, -1, -1):
+            entry = self.entries[n]
+            keys = self.valid_entry_keys(entry)
+            for key in keys:
+                embed_key = key + '_embedding'
+                if embed_key in entry:
+                    position += entry[embed_key].shape[1]
+                    if position >= wrap_tokens:
+                        for i in range(n+1, len(self.entries)):
+                            if self.entries[i].role == 'user':
+                                return i
             

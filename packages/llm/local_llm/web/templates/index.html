@@ -37,7 +37,7 @@
         sendWebsocket({'abc': 123, 'def': 'xyz', 'test_array': [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]});
         sendWebsocket("Hello my name is ABC123", type=1);
       }*/
-
+      
       function onChatMessageKey(event) {  // https://stackoverflow.com/a/49389811
         if( event.which === 13 && !event.shiftKey ) {
           if( !event.repeat )
@@ -125,6 +125,12 @@
             }
           }
 				
+          if( 'chat_stats' in payload ) {
+            let num_tokens=payload['chat_stats']['num_tokens'];
+            let max_context_len=payload['chat_stats']['max_context_len'];
+            document.getElementById('chat_length').innerHTML=`${num_tokens} / ${max_context_len} tokens`;
+          }
+          
           if( 'tts_voices' in payload ) {
             const voiceList = payload['tts_voices'];
             const voiceSelect = document.getElementById('voice-select');
@@ -186,6 +192,7 @@
                   History
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarChatHistory">
+                  <li><a class="dropdown-item" href="#" id="chat_length">0 / 4096 tokens</a></li>
                   <li><a class="dropdown-item" href="#" onclick="onChatHistoryReset()">Reset</a></li>
                   <!--<li><a class="dropdown-item" href="#">Save</a></li>
                   <li><a class="dropdown-item" href="#">Load</a></li>-->
