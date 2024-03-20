@@ -388,6 +388,7 @@ class ChatHistory():
                 
         embeddings = np.concatenate(embeddings, axis=1) #, position
         
+        '''
         if max_tokens and position + embeddings.shape[1] > max_tokens:
             if wrap_tokens:
                 self.reset(wrap_tokens=wrap_tokens)
@@ -396,6 +397,8 @@ class ChatHistory():
             else:
                 logging.warning(f"Truncating chat history overflow to {max_tokens} tokens")
                 return embeddings[:,:max_tokens,:], position
+        '''
+        
         return embeddings, position      
 
     def tokenize(self, use_cache=True, **kwargs):
