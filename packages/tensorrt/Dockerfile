@@ -8,20 +8,24 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG TENSORRT_URL
-ARG TENSORRT_DEB
-ARG TENSORRT_PACKAGES
+ARG TENSORRT_URL \
+    TENSORRT_DEB \
+    TENSORRT_PACKAGES
 
-RUN echo "Downloading ${TENSORRT_DEB}" && \
-    mkdir /tmp/cudnn && cd /tmp/cudnn && \
-    wget --quiet --show-progress --progress=bar:force:noscroll ${TENSORRT_URL} && \
-    dpkg -i *.deb && \
-    cp /var/nv-tensorrt-local-repo-*/nv-tensorrt-local-*-keyring.gpg /usr/share/keyrings/ && \
-    apt-get update && \
-    apt-cache search tensorrt && \
-    apt-get install -y --no-install-recommends ${TENSORRT_PACKAGES} && \
-    rm -rf /var/lib/apt/lists/* && \
-    apt-get clean && \
-    dpkg --list | grep tensorrt && \
-    dpkg -P ${TENSORRT_DEB} && \
-    rm -rf /tmp/tensorrt
+RUN set -ex \
+    && echo "Downloading ${TENSORRT_DEB}" \
+    && mkdir -p /tmp/cudnn \
+    && cd /tmp/cudnn \
+    && wget --quiet --show-progress --progress=bar:force:noscroll ${TENSORRT_URL} \
+    && dpkg -i *.deb \
+    && cp /var/nv-tensorrt-local-repo-*/nv-tensorrt-local-*-keyring.gpg /usr/share/keyrings/ \
+    && apt-get update \
+    && apt-cache search tensorrt \
+    && apt-get install -y --no-install-recommends ${TENSORRT_PACKAGES} \
+    \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean \
+    && dpkg --list | grep tensorrt \
+    && dpkg -P ${TENSORRT_DEB} \
+    && rm -rf /tmp/tensorrt
+    

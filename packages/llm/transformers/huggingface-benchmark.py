@@ -17,7 +17,7 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument('--model', type=str, default='distilgpt2')
 parser.add_argument('--prompt', type=str, default='Once upon a time,')
-parser.add_argument('--precision', type=str, default='fp16', choices=['fp32', 'fp16', 'fp4', 'int8'])
+parser.add_argument('--precision', type=str, default=None, choices=['fp32', 'fp16', 'fp4', 'int8'])
 parser.add_argument('--tokens', type=int, nargs='+', default=[128], help='number of output tokens to generate (not including the input prompt)')
 parser.add_argument('--token', type=str, default=os.environ.get('HUGGINGFACE_TOKEN', ''), help="HuggingFace account login token from https://huggingface.co/docs/hub/security-tokens (defaults to $HUGGINGFACE_TOKEN)")
 parser.add_argument('--runs', type=int, default=2, help='the number of benchmark timing iterations')
@@ -28,7 +28,7 @@ args = parser.parse_args()
 print(args)
 
 # select compute device
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f'Running on device {device}')
 
 # log into huggingface hub
@@ -68,14 +68,14 @@ elif args.precision == 'fp32':
 # load model
 print(f'Loading model {args.model} ({args.precision})')
 
-model = AutoModelForCausalLM.from_pretrained(args.model, **kwargs) #AutoModelForCausalLM.from_pretrained(args.model, **kwargs)
+model = AutoModelForCausalLM.from_pretrained(args.model, device_map=device, **kwargs) #AutoModelForCausalLM.from_pretrained(args.model, **kwargs)
 
-if args.precision == 'fp32' or args.precision == 'fp16':
-    model = model.to(device)   # int8/int4 already sets the device
+#if args.precision == 'fp32' or args.precision == 'fp16':
+#    model = model.to(device)   # int8/int4 already sets the device
     
 # run inference
 for num_tokens in args.tokens:
-    print(f"Generating {num_tokens} tokens with {args.model} {args.precision} on prompt:  {args.prompt}")
+    print(f"Generating {num_tokens} tokens with {args.model} on prompt:  {args.prompt}")
 
     time_avg = 0
 

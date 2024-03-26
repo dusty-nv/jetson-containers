@@ -101,7 +101,7 @@ The prefill time is how long the model takes to process the input context before
 | &nbsp;&nbsp;&nbsp;Aliases | `mlc` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`local_llm`](/packages/llm/local_llm) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`local_llm`](/packages/llm/local_llm) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/mlc:51fb0f4-builder-r35.4.1`](https://hub.docker.com/r/dustynv/mlc/tags) `(2024-02-16, 9.5GB)`<br>[`dustynv/mlc:51fb0f4-builder-r36.2.0`](https://hub.docker.com/r/dustynv/mlc/tags) `(2024-02-16, 10.6GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | [mlc-ai/mlc-llm](https://github.com/mlc-ai/mlc-llm/tree/51fb0f4) commit SHA [`51fb0f4`](https://github.com/mlc-ai/mlc-llm/tree/51fb0f4) |

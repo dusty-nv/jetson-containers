@@ -1,14 +1,25 @@
+from jetson_containers import CUDA_ARCHITECTURES, find_container
 
-from jetson_containers import CUDA_ARCHITECTURES
+def create_packages(name, builder_dockerfile, test='test.sh'):
+    builder = package.copy()
+    runtime = package.copy()
 
-package['build_args'] = {
-    'TORCH_CUDA_ARCH_LIST': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES])
-}
+    builder['name'] = f'${name}:builder'
+    builder['dockerfile'] = builder_dockerfile
+    builder['test'] = test
+    builder['build_args'] = {
+        'TORCH_CUDA_ARCH_LIST': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES])
+    }
 
-exllama_v2 = package.copy()
+    runtime['test'] = test
+    runtime['build_args'] = {
+        'BUILD_IMAGE': find_container(builder['name']),
+    }
 
-exllama_v2['name'] = 'exllama:v2'
-exllama_v2['dockerfile'] = 'Dockerfile.v2'
-exllama_v2['test'] = 'test_v2.sh'
+    return [builder, runtime]
 
-package = [package, exllama_v2]
+
+exllama_v1_packages = create_packages('exllama:v1', 'Dockerfile.builder')
+exllama_v2_packages = create_packages('exllama:v2', 'Dockerfile.v2.builder', test='test_v2.sh')
+
+package = exllama_v1_packages + exllama_v2_packages

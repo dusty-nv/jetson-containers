@@ -5,7 +5,7 @@ import threading
 import numpy as np
 
 from local_llm.web import WebServer
-from local_llm.utils import ArgParser
+from local_llm.utils import ArgParser, KeyboardInterrupt
 from local_llm.plugins import RivaASR
 
 from .voice_chat import VoiceChat
@@ -26,13 +26,13 @@ class WebChat(VoiceChat):
         super().__init__(**kwargs)
 
         if self.asr:
-            self.asr.add(self.on_asr_partial, RivaASR.OutputPartial)
+            self.asr.add(self.on_asr_partial, RivaASR.OutputPartial, threaded=True)
             #self.asr.add(self.on_asr_final, RivaASR.OutputFinal)
         
-        self.llm.add(self.on_llm_reply)
+        self.llm.add(self.on_llm_reply, threaded=True)
         
         if self.tts:
-            self.tts_output.add(self.on_tts_samples)
+            self.tts_output.add(self.on_tts_samples, threaded=True)
         
         self.server = WebServer(msg_callback=self.on_message, **kwargs)
         
@@ -83,11 +83,8 @@ class WebChat(VoiceChat):
     def on_tts_samples(self, audio):
         self.server.send_message(audio, type=WebServer.MESSAGE_AUDIO)
         
-    def send_chat_history(self, history=None):
-        # TODO convert images to filenames
-        # TODO sanitize text for HTML
-        if history is None:
-            history = self.llm.chat_history
+    def send_chat_history(self):
+        history, num_tokens, max_context_len = self.llm.chat_state
             
         if self.asr and self.asr_history:
             history.append({'role': 'user', 'text': self.asr_history})
@@ -113,7 +110,13 @@ class WebChat(VoiceChat):
             if 'image' in entry:
                 entry['image'] = web_image(entry['image'])
                 
-        self.server.send_message({'chat_history': history})
+        self.server.send_message({
+            'chat_history': history,
+            'chat_stats': {
+                'num_tokens': num_tokens,
+                'max_context_len': max_context_len,
+            }
+        })
  
     def start(self):
         super().start()
@@ -125,5 +128,8 @@ if __name__ == "__main__":
     parser = ArgParser(extras=ArgParser.Defaults+['asr', 'tts', 'audio_output', 'web'])
     args = parser.parse_args()
     
-    agent = WebChat(**vars(args)).run() 
+    agent = WebChat(**vars(args))
+    interrupt = KeyboardInterrupt()
+    
+    agent.run() 
     

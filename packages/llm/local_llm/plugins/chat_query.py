@@ -73,9 +73,11 @@ class ChatQuery(Plugin):
          
         self.stream = None
         self.history = ChatHistory(self.model, **kwargs)
-        
+
+        self.max_context_len = self.model.config.max_length
         self.max_new_tokens = kwargs.get('max_new_tokens', 128)
         self.min_new_tokens = kwargs.get('min_new_tokens', -1)
+        self.wrap_tokens = kwargs.get('wrap_tokens', 512)
         
         self.do_sample = kwargs.get('do_sample', False)
         self.repetition_penalty = kwargs.get('repetition_penalty', 1.0)
@@ -92,6 +94,24 @@ class ChatQuery(Plugin):
     def chat_history(self):
         return self.history.to_list()
         
+    @property
+    def chat_tokens(self):
+        return self.history.num_tokens
+        
+    @property
+    def chat_state(self):
+        return self.chat_history, self.chat_tokens, self.max_context_len
+        
+    def config(self, **kwargs):
+        """
+        Config plugin settings from expanded dict
+        """
+        if 'max_new_tokens' in kwargs:
+            self.max_new_tokens = int(kwargs['max_new_tokens'])
+            
+        if 'vision_scaling' in kwargs:
+            self.model.vision_scaling = kwargs['vision_scaling']
+        
     def process(self, input, **kwargs):
         """
         Generate the reply to a prompt or the latest ChatHistory.
@@ -106,11 +126,16 @@ class ChatQuery(Plugin):
           The generated text (token by token), if input was a string or dict.
           If input was a ChatHistory, returns the streaming iterator/generator.
         """
+        self.config(**kwargs)
+        
+        if input is None:
+            return
+            
         if isinstance(input, list):
             for x in input:
                 self.process(x, **kwargs)
             return
-         
+
         if self.interrupted:
             return
             
@@ -128,7 +153,7 @@ class ChatQuery(Plugin):
         elif isinstance(input, ChatHistory):
             chat_history = input  # TODO also recieve chat history as list for cross-process
         else:
-            raise TypeError(f"LLMQuery plugin expects inputs of type str, dict, image, or ChatHistory (was {type(input)})")
+            raise TypeError(f"ChatQuery plugin expects inputs of type str, dict, image, or ChatHistory (was {type(input)})")
 
         # images should be followed by text prompts
         if 'image' in chat_history[-1] and 'text' not in chat_history[-1]:
@@ -136,7 +161,10 @@ class ChatQuery(Plugin):
             return
         
         # get the latest chat embeddings
-        embedding, position = chat_history.embed_chat()
+        embedding, position = chat_history.embed_chat(
+            max_tokens=self.model.config.max_length - self.max_new_tokens,
+            wrap_tokens=self.wrap_tokens
+        )
         
         # output vision features
         if chat_history.image_embedding is not None:

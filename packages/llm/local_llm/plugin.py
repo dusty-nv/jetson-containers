@@ -117,13 +117,13 @@ class Plugin(threading.Thread):
         return self.find(type)
     '''
     
-    def __call__(self, input, **kwargs):
+    def __call__(self, input=None, **kwargs):
         """
         Callable () operator alias for the input() function
         """
         self.input(input, **kwargs)
         
-    def input(self, input, **kwargs):
+    def input(self, input=None, **kwargs):
         """
         Add data to the plugin's processing queue (or if threaded=False, process it now)
         TODO:  multiple input channels?
@@ -131,7 +131,18 @@ class Plugin(threading.Thread):
         if self.threaded:
             #self.start() # thread may not be started if plugin only called from a callback
             if self.drop_inputs:
-                self.clear_inputs()
+                configs = []
+                while True:
+                    try:
+                        config_input, config_kwargs = self.input_queue.get(block=False)
+                        if config_input is None and len(config_kwargs) > 0:  # still apply config
+                            configs.append((config_input, config_kwargs))
+                    except queue.Empty:
+                        break
+                for config in configs:
+                    self.input_queue.put(config)
+                    self.input_event.set()
+
             self.input_queue.put((input,kwargs))
             self.input_event.set()
         else:

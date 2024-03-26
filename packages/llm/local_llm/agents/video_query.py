@@ -14,7 +14,7 @@ from local_llm import Agent, StopTokens
 
 from local_llm.web import WebServer
 from local_llm.plugins import VideoSource, VideoOutput, ChatQuery, PrintStream, ProcessProxy, EventFilter, NanoDB
-from local_llm.utils import ArgParser, print_table
+from local_llm.utils import ArgParser, print_table, wrap_text
 
 from jetson_utils import cudaFont, cudaMemcpy, cudaToNumpy, cudaDeviceSynchronize, saveImage
 
@@ -23,11 +23,14 @@ class VideoQuery(Agent):
     """
     Perpetual always-on closed-loop visual agent that applies prompts to a video stream.
     """
-    def __init__(self, model="liuhaotian/llava-v1.5-13b", nanodb=None, **kwargs):
+    def __init__(self, model="liuhaotian/llava-v1.5-13b", nanodb=None, vision_scaling='resize', **kwargs):
         super().__init__()
 
+        if not vision_scaling:
+            vision_scaling = 'resize'
+            
         # load model in another process for smooth streaming
-        self.llm = ProcessProxy('ChatQuery', model=model, drop_inputs=True, **kwargs) #ProcessProxy((lambda **kwargs: ChatQuery(model, drop_inputs=True, **kwargs)), **kwargs)
+        self.llm = ProcessProxy('ChatQuery', model=model, drop_inputs=True, vision_scaling=vision_scaling, **kwargs) #ProcessProxy((lambda **kwargs: ChatQuery(model, drop_inputs=True, **kwargs)), **kwargs)
         self.llm.add(PrintStream(color='green', relay=True).add(self.on_text))
         self.llm.start()
 
@@ -75,6 +78,10 @@ class VideoQuery(Agent):
         self.auto_refresh = True
         self.auto_refresh_db = True
         
+        self.rag_threshold = 1.0
+        self.rag_prompt = None
+        self.rag_prompt_last = None
+        
         self.keyboard_prompt = 0
         self.keyboard_thread = threading.Thread(target=self.poll_keyboard)
         self.keyboard_thread.start()
@@ -85,7 +92,7 @@ class VideoQuery(Agent):
                 path=nanodb, 
                 model=None, # disable DB's model because VLM's CLIP is used 
                 reserve=kwargs.get('nanodb_reserve'), 
-                k=8, drop_inputs=True,
+                k=18, drop_inputs=True,
             ).start().add(self.on_search)
             self.llm.add(self.on_image_embedding, channel=ChatQuery.OutputImageEmbedding)
         else:
@@ -99,14 +106,38 @@ class VideoQuery(Agent):
         
         mounts['/data/datasets/uploads'] = '/images/uploads'
         
+        video_source = self.video_source.stream.GetOptions()['resource']
+        video_output = self.video_output.stream.GetOptions()['resource']
+        
+        webrtc_args = {}
+        
+        if video_source['protocol'] == 'webrtc':
+            webrtc_args.update(dict(webrtc_input_stream=video_source['path'].strip('/'), 
+                                    webrtc_input_port=video_source['port'],
+                                    send_webrtc=True))
+        else:
+            webrtc_args.update(dict(webrtc_input_stream='input', 
+                                    webrtc_input_port=8554,
+                                    send_webrtc=False))
+        
+        if video_output['protocol'] == 'webrtc':
+            webrtc_args.update(dict(webrtc_output_stream=video_output['path'].strip('/'), 
+                                    webrtc_output_port=video_output['port']))
+        else:
+            webrtc_args.update(dict(webrtc_output_stream='output', 
+                                    webrtc_output_port=8554))
+
+        web_title = kwargs.get('web_title')
+        web_title = web_title if web_title else 'LIVE LLAVA'
+        
         self.server = WebServer(
             msg_callback=self.on_websocket, 
             index='video_query.html', 
-            send_webrtc=False, 
-            title="LIVE LLAVA", 
+            title=web_title, 
             model=os.path.basename(model),
             mounts=mounts,
             nanodb=nanodb,
+            **webrtc_args,
             **kwargs
         )
         
@@ -119,21 +150,35 @@ class VideoQuery(Agent):
                 self.pause_image = cudaMemcpy(image)
             image = cudaMemcpy(self.pause_image)
         
-        if self.auto_refresh or self.prompt != self.last_prompt:
+        if self.auto_refresh or self.prompt != self.last_prompt or self.rag_prompt != self.rag_prompt_last:
             np_image = cudaToNumpy(image)
             cudaDeviceSynchronize()
-            self.llm(['/reset', np_image, self.prompt])
+            
+            if self.rag_prompt:
+                prompt = self.rag_prompt + '. ' + self.prompt
+            else:
+                prompt = self.prompt
+                
+            self.llm(['/reset', np_image, prompt])
+            
             self.last_prompt = self.prompt
+            self.rag_prompt_last = self.rag_prompt
+            
             if self.db:
                 self.last_image = cudaMemcpy(image)
 
+        # draw text overlays
         text = self.text.replace('\n', '').replace('</s>', '').strip()
+        y = 5
+        
+        if self.rag_prompt:
+            y = wrap_text(self.font, image, text='RAG: ' + self.rag_prompt, x=5, y=y, color=(255,172,28), background=self.font.Gray40)
+            
+        y = wrap_text(self.font, image, text=self.prompt, x=5, y=y, color=(120,215,21), background=self.font.Gray40)
 
         if text:
-            self.font.OverlayText(image, text=text, x=5, y=42, color=self.font.White, background=self.font.Gray40)
-
-        self.font.OverlayText(image, text=self.prompt, x=5, y=5, color=(120,215,21), background=self.font.Gray40)
-
+            y = wrap_text(self.font, image, text=text, x=5, y=y, color=self.font.White, background=self.font.Gray40)
+        
         self.video_output(image)
    
     def on_text(self, text):
@@ -184,15 +229,28 @@ class VideoQuery(Agent):
                     
         if html:
             self.server.send_message({'search_results': html})
+         
+        if len(results) >= 3:
+            cprint(f"nanodb search results (top 3)\n{pprint.pformat(results[:3], indent=2)}", color='blue')
+        
+        # RAG
+        self.rag_prompt = None
+        
+        if len(results) == 0:    
+            return
             
-        cprint(f"nanodb search results:\n{pprint.pformat(results, indent=2)}", color='blue')
+        result = results[0]
+
+        if result['similarity'] > self.rag_threshold and 'tags' in result['metadata']:
+            self.rag_prompt = f"This image is of {result['metadata']['tags']}"
         
     def on_websocket(self, msg, msg_type=0, metadata='', **kwargs):
         if msg_type == WebServer.MESSAGE_JSON:
             #print(f'\n\n###############\n# WEBSOCKET JSON MESSAGE\n#############\n{msg}')
             if 'prompt' in msg:
                 self.prompt = msg['prompt']
-                self.prompt_history.append(self.prompt)
+                if self.prompt not in self.prompt_history:
+                    self.prompt_history.append(self.prompt)
             elif 'pause_video' in msg:
                 self.pause_video = msg['pause_video']
                 self.pause_image = None
@@ -208,7 +266,14 @@ class VideoQuery(Agent):
                     self.db.db.save()
             elif 'tag_image' in msg:
                 self.tag_image = msg['tag_image']
-   
+            elif 'vision_scaling' in msg:
+                self.llm(vision_scaling=msg['vision_scaling'])
+            elif 'max_new_tokens' in msg:
+                self.llm(max_new_tokens=int(msg['max_new_tokens']))
+            elif 'rag_threshold' in msg:
+                self.rag_threshold = float(msg['rag_threshold']) / 100.0
+                logging.debug(f"set RAG threshold to {self.rag_threshold}")
+                
     def poll_keyboard(self):
         while True:
             try:

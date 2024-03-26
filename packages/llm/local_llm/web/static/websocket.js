@@ -77,7 +77,7 @@ function sendWebsocket(payload, type=MESSAGE_JSON, metadata='') {
 			metadata_buffer[i] = metadata_utf8[i];
 	}
 	
-	console.log(`sending ${typeof payload} websocket message (type=${type} timestamp=${timestamp} payload_size=${payloadSize})`);
+	//console.log(`sending ${typeof payload} websocket message (type=${type} timestamp=${timestamp} payload_size=${payloadSize})`);
 	websocket.send(new Blob([header, metadata_buffer, payload]));
 }
 
@@ -112,7 +112,7 @@ function websocketUpload(dataTransfer) {
 }
 
 function websocketListener(event) {
-	console.log('recieved websocket msg', event);
+	//console.log('recieved websocket msg', event);
 	const msg = event.data;
 	
 	if( msg.size <= 32 ) {

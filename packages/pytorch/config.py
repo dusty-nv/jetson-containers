@@ -1,5 +1,5 @@
+from jetson_containers import CUDA_ARCHITECTURES
 
-from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES
 
 def pytorch(version, whl, url, requires, default=False, alias=None):
     """
@@ -67,6 +67,7 @@ def pytorch_build(version, dockerfile='Dockerfile.builder', build_env_variables=
         pkg['requires'] = requires
     
     return pkg
+
 
 package = [
     # JetPack 6

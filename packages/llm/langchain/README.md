@@ -20,7 +20,7 @@ Use your web browser to access `http://HOSTNAME:8888`
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`huggingface_hub`](/packages/llm/huggingface_hub) [`llama_cpp`](/packages/llm/llama_cpp) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`langchain:samples`](/packages/llm/langchain) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/langchain:r35.2.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2023-12-06, 5.6GB)`<br>[`dustynv/langchain:r35.3.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2023-12-19, 5.6GB)`<br>[`dustynv/langchain:r35.4.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2024-01-24, 5.6GB)`<br>[`dustynv/langchain:r36.2.0`](https://hub.docker.com/r/dustynv/langchain/tags) `(2024-01-24, 7.3GB)`<br>[`dustynv/langchain:samples-r35.2.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2024-01-24, 6.0GB)`<br>[`dustynv/langchain:samples-r35.3.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2024-01-24, 6.0GB)`<br>[`dustynv/langchain:samples-r35.4.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2024-01-24, 6.0GB)`<br>[`dustynv/langchain:samples-r36.2.0`](https://hub.docker.com/r/dustynv/langchain/tags) `(2024-01-24, 7.7GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/langchain:r35.2.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2023-12-06, 5.6GB)`<br>[`dustynv/langchain:r35.3.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2023-12-19, 5.6GB)`<br>[`dustynv/langchain:r35.4.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2024-01-24, 5.6GB)`<br>[`dustynv/langchain:r36.2.0`](https://hub.docker.com/r/dustynv/langchain/tags) `(2024-01-24, 7.3GB)`<br>[`dustynv/langchain:samples-r35.2.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2024-01-24, 6.0GB)`<br>[`dustynv/langchain:samples-r35.3.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2024-01-24, 6.0GB)`<br>[`dustynv/langchain:samples-r35.4.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2024-03-07, 6.2GB)`<br>[`dustynv/langchain:samples-r36.2.0`](https://hub.docker.com/r/dustynv/langchain/tags) `(2024-03-07, 7.8GB)` |
 
 | **`langchain:samples`** | |
 | :-- | :-- |
@@ -28,7 +28,7 @@ Use your web browser to access `http://HOSTNAME:8888`
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`huggingface_hub`](/packages/llm/huggingface_hub) [`llama_cpp`](/packages/llm/llama_cpp) [`langchain:main`](/packages/llm/langchain) [`rust`](/packages/rust) [`jupyterlab`](/packages/jupyterlab) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.samples`](Dockerfile.samples) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/langchain:samples-r35.2.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2024-01-24, 6.0GB)`<br>[`dustynv/langchain:samples-r35.3.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2024-01-24, 6.0GB)`<br>[`dustynv/langchain:samples-r35.4.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2024-01-24, 6.0GB)`<br>[`dustynv/langchain:samples-r36.2.0`](https://hub.docker.com/r/dustynv/langchain/tags) `(2024-01-24, 7.7GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/langchain:samples-r35.2.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2024-01-24, 6.0GB)`<br>[`dustynv/langchain:samples-r35.3.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2024-01-24, 6.0GB)`<br>[`dustynv/langchain:samples-r35.4.1`](https://hub.docker.com/r/dustynv/langchain/tags) `(2024-03-07, 6.2GB)`<br>[`dustynv/langchain:samples-r36.2.0`](https://hub.docker.com/r/dustynv/langchain/tags) `(2024-03-07, 7.8GB)` |
 
 </details>
 
@@ -44,8 +44,8 @@ Use your web browser to access `http://HOSTNAME:8888`
 | &nbsp;&nbsp;[`dustynv/langchain:r36.2.0`](https://hub.docker.com/r/dustynv/langchain/tags) | `2024-01-24` | `arm64` | `7.3GB` |
 | &nbsp;&nbsp;[`dustynv/langchain:samples-r35.2.1`](https://hub.docker.com/r/dustynv/langchain/tags) | `2024-01-24` | `arm64` | `6.0GB` |
 | &nbsp;&nbsp;[`dustynv/langchain:samples-r35.3.1`](https://hub.docker.com/r/dustynv/langchain/tags) | `2024-01-24` | `arm64` | `6.0GB` |
-| &nbsp;&nbsp;[`dustynv/langchain:samples-r35.4.1`](https://hub.docker.com/r/dustynv/langchain/tags) | `2024-01-24` | `arm64` | `6.0GB` |
-| &nbsp;&nbsp;[`dustynv/langchain:samples-r36.2.0`](https://hub.docker.com/r/dustynv/langchain/tags) | `2024-01-24` | `arm64` | `7.7GB` |
+| &nbsp;&nbsp;[`dustynv/langchain:samples-r35.4.1`](https://hub.docker.com/r/dustynv/langchain/tags) | `2024-03-07` | `arm64` | `6.2GB` |
+| &nbsp;&nbsp;[`dustynv/langchain:samples-r36.2.0`](https://hub.docker.com/r/dustynv/langchain/tags) | `2024-03-07` | `arm64` | `7.8GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>

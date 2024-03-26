@@ -71,7 +71,11 @@ while True:
         continue
         
     # get the latest embeddings (or tokens) from the chat
-    embedding, position = chat_history.embed_chat(return_tokens=not model.has_embed)
+    embedding, position = chat_history.embed_chat(
+        max_tokens=model.config.max_length - args.max_new_tokens,
+        wrap_tokens=args.wrap_tokens,
+        return_tokens=not model.has_embed,
+    )
     
     if logging.getLogger().isEnabledFor(logging.DEBUG):
         logging.debug(f"adding embedding shape={embedding.shape} position={position}")

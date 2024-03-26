@@ -14,6 +14,8 @@ This approach works with `--runtime nvidia` and access to the GPU.  Note that if
 | **`docker`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 
 </details>
