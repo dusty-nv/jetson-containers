@@ -16,7 +16,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONFAULTHANDLER=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONHASHSEED=random \
-    PIP_NO_CACHE_DIR=off \
+    PIP_NO_CACHE_DIR=true \
     PIP_CACHE_PURGE=true \
     PIP_ROOT_USER_ACTION=ignore
 
