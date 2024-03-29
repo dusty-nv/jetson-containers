@@ -1,7 +1,7 @@
 #---
 # name: tam
 # group: vit
-# depends: [pytorch:distributed, sam]
+# depends: [pytorch, sam]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---

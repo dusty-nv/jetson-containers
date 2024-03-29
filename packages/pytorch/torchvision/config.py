@@ -1,26 +1,36 @@
-from jetson_containers import L4T_VERSION, find_container
 
+def torchvision(version, pytorch=None, requires=None, default=False):
+    pkg = package.copy()
+    
+    pkg['name'] = f"torchvision:{version}"
+    
+    if pytorch:
+        pkg['depends'] = [f"pytorch:{pytorch}" if x=='pytorch' else x for x in pkg['depends']]
+        
+    if requires:
+        pkg['requires'] = requires
+        
+    if default:
+        pkg['alias'] = 'torchvision'
+     
+    if len(version.split('.')) < 3:
+        version = version + '.0'
+        
+    pkg['build_args'] = {
+        'TORCHVISION_VERSION': version,
+    }
 
-if L4T_VERSION.major >= 36:    # JetPack 6.0
-    TORCHVISION_VERSION = 'v0.16.0'
-elif L4T_VERSION.major >= 35:  # JetPack 5.0.2 / 5.1.x
-    TORCHVISION_VERSION = 'v0.15.1'
-elif L4T_VERSION.major == 34:  # JetPack 5.0 / 5.0.1
-    TORCHVISION_VERSION = 'v0.12.0'
-elif L4T_VERSION.major == 32:  # JetPack 4
-    TORCHVISION_VERSION = 'v0.11.1'
-
-builder = package.copy()
-runtime = package.copy()
-
-builder['name'] = 'torchvision:builder'
-builder['dockerfile'] = 'Dockerfile.builder'
-builder['build_args'] = {
-    'TORCHVISION_VERSION': TORCHVISION_VERSION,
-}
-
-runtime['build_args'] = {
-    'BUILD_IMAGE': find_container(builder['name']),
-}
-
-package = [builder, runtime]
+    return pkg
+    
+ 
+package = [
+    # JetPack 6
+    torchvision('0.16.2', pytorch='2.1', requires='==36.*', default=True),
+    torchvision('0.17.2', pytorch='2.2', requires='==36.*', default=False),
+    
+    # JetPack 5
+    torchvision('0.15.1', requires='==35.*', default=True),
+    
+    # JetPack 4
+    torchvision('0.11.1', requires='==32.*', default=True),
+]

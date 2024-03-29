@@ -1,15 +1,35 @@
 
-from jetson_containers import L4T_VERSION
+def torchaudio(version, pytorch=None, requires=None, default=False):
+    pkg = package.copy()
+    
+    pkg['name'] = f"torchaudio:{version}"
+    
+    if pytorch:
+        pkg['depends'] = [f"pytorch:{pytorch}" if x=='pytorch' else x for x in pkg['depends']]
+        
+    if requires:
+        pkg['requires'] = requires
+        
+    if default:
+        pkg['alias'] = 'torchaudio'
+     
+    if len(version.split('.')) < 3:
+        version = version + '.0'
+        
+    pkg['build_args'] = {
+        'TORCHAUDIO_VERSION': version,
+    }
 
-if L4T_VERSION.major >= 36:    # JetPack 6.0
-    TORCHAUDIO_VERSION = 'v2.1.0'
-elif L4T_VERSION.major >= 35:  # JetPack 5.0.2 / 5.1.x
-    TORCHAUDIO_VERSION = 'v2.0.1'
-elif L4T_VERSION.major == 34:  # JetPack 5.0 / 5.0.1
-    TORCHAUDIO_VERSION = 'v0.11.0'
-elif L4T_VERSION.major == 32:  # JetPack 4
-    TORCHAUDIO_VERSION = 'v0.10.0'
+    return pkg
 
-package['build_args'] = {
-    'TORCHAUDIO_VERSION': TORCHAUDIO_VERSION,
-}
+package = [
+    # JetPack 6
+    torchaudio('2.1.0', pytorch='2.1', requires='==36.*', default=True),
+    torchaudio('2.2.2', pytorch='2.2', requires='==36.*', default=False),
+    
+    # JetPack 5
+    torchaudio('2.0.1', requires='==35.*', default=True),
+    
+    # JetPack 4
+    torchaudio('0.10.0', requires='==32.*', default=True),
+]

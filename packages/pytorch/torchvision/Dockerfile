@@ -6,15 +6,10 @@
 # test: test.py
 #---
 ARG BASE_IMAGE
-ARG BUILD_IMAGE
+FROM ${BASE_IMAGE}
 
-FROM ${BUILD_IMAGE} as builder
-FROM ${BASE_IMAGE} as runtime
+ARG TORCHVISION_VERSION
 
-COPY --from=builder /opt/torchvision*.whl /opt/
+COPY build.sh /tmp/build_torchvision.sh
 
-RUN set -ex \
-    && pip3 install --no-cache-dir --verbose /opt/torchvision*.whl \
-    \
-    && pip3 show torchvision \
-    && python3 -c 'import torchvision; print(torchvision.__version__);'
+RUN pip3 install --no-cache-dir torchvision==${TORCHVISION_VERSION} || /tmp/build_torchvision.sh

@@ -5,16 +5,11 @@
 # depends: [cuda, build-essential, python, numpy]
 # test: test.py
 #---
-ARG BASE_IMAGE \
-    BUILD_IMAGE
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
 
-FROM ${BUILD_IMAGE} as builder
-FROM ${BASE_IMAGE} as runtime
+ARG PYCUDA_VERSION
 
-COPY --from=builder /opt/pycuda*.whl /opt/
+COPY build.sh /tmp/build_pycuda.sh
 
-RUN set -ex \
-    && pip3 install --no-cache-dir --verbose /opt/pycuda*.whl \
-    \
-    && pip3 show pycuda \
-    && python3 -c 'import pycuda; print(pycuda.VERSION_TEXT)'
+RUN pip3 install --no-cache-dir pycuda || /tmp/build_pycuda.sh

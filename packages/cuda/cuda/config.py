@@ -1,6 +1,6 @@
 import os
 
-from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES, CUDA_VERSION
+from jetson_containers import L4T_VERSION, JETPACK_VERSION, CUDA_ARCHITECTURES, CUDA_VERSION
 
 
 def cuda_package(version, url, deb, packages=None, requires=None, default=False) -> list:
@@ -16,12 +16,20 @@ def cuda_package(version, url, deb, packages=None, requires=None, default=False)
     
     cuda['name'] = f'cuda:{version}'
     
+    CUDA_SHORT_VERSION=f"cu{version.replace('.', '')}"
+    JETPACK_SHORT_VERSION=f"jp{JETPACK_VERSION.major}"
+    
     cuda['build_args'] = {
         'CUDA_URL': url,
         'CUDA_DEB': deb,
         'CUDA_PACKAGES': packages,
         'CUDA_ARCH_LIST': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
-        'DISTRO': 'ubuntu2204' if L4T_VERSION.major >= 36 else 'ubuntu2004'
+        'DISTRO': 'ubuntu2204' if L4T_VERSION.major >= 36 else 'ubuntu2004',
+        'PIP_TRUSTED_HOSTS': "jetson.webredirect.org",
+        'PIP_INDEX_REPO': f"http://jetson.webredirect.org/{JETPACK_SHORT_VERSION}/{CUDA_SHORT_VERSION}",
+        'PIP_UPLOAD_REPO': f"http://jao-51/{JETPACK_SHORT_VERSION}/{CUDA_SHORT_VERSION}",
+        'PIP_UPLOAD_USER': JETPACK_SHORT_VERSION,
+        'PIP_UPLOAD_PASS': 'jetpack',
     }
 
     if default:
@@ -94,7 +102,10 @@ package = [
     
     # JetPack 6
     cuda_package('12.2', 'https://nvidia.box.com/shared/static/uvqtun1sc0bq76egarc8wwuh6c23e76e.deb', 'cuda-tegra-repo-ubuntu2204-12-2-local', requires='==36.*', default=True), 
+    cuda_package('12.4', 'https://developer.download.nvidia.com/compute/cuda/12.4.0/local_installers/cuda-tegra-repo-ubuntu2204-12-4-local_12.4.0-1_arm64.deb', 'cuda-tegra-repo-ubuntu2204-12-4-local', requires='==36.*', default=False), 
+    
     cuda_samples('12.2', requires='==36.*', default=True),
+    cuda_samples('12.4', requires='==36.*', default=False),
     
     # JetPack 5
     cuda_package('12.2', 'https://developer.download.nvidia.com/compute/cuda/12.2.2/local_installers/cuda-tegra-repo-ubuntu2004-12-2-local_12.2.2-1_arm64.deb', 'cuda-tegra-repo-ubuntu2004-12-2-local', requires='==35.*', default=False),
