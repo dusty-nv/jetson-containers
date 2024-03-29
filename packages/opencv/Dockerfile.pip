@@ -1,0 +1,24 @@
+#---
+# name: opencv
+# group: core
+# config: config.py
+# depends: [cuda, cudnn, python, numpy]
+# test: test.py
+# notes: install or build OpenCV (with CUDA) from Jetson pip server
+#---
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+ARG OPENCV_VERSION \
+    OPENCV_PYTHON \
+    CUDA_ARCH_BIN
+
+COPY build.sh \
+     patches.diff \
+	opencv_builder/opencv_install_deps.sh \
+	/tmp/opencv/
+
+RUN /tmp/opencv/opencv_install_deps.sh && \
+    pip3 install --no-cache-dir \
+	 opencv-contrib-python~=${OPENCV_VERSION} \
+    || /tmp/opencv/build.sh

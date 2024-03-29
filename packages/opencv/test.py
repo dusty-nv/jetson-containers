@@ -3,7 +3,7 @@ print('testing OpenCV...')
 
 import cv2
 import sys
-import wget
+import requests
 
 print('OpenCV version:', str(cv2.__version__))
 print(cv2.getBuildInformation())
@@ -19,7 +19,8 @@ except Exception as ex:
 img_url = 'https://raw.githubusercontent.com/dusty-nv/jetson-containers/59f840abbb99f22914a7b2471da829b3dd56122e/test/data/test_0.jpg'
 img_path = '/tmp/test_0.jpg'
 
-wget.download(img_url, img_path)
+request = requests.get(img_url, allow_redirects=True)
+open(img_path, 'wb').write(request.content)
 
 # load image
 img_cpu = cv2.imread(img_path)

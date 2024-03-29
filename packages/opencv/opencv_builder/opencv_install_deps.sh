@@ -66,3 +66,6 @@ if [ $ARCH != "x86_64" ]; then
 		python3-distutils \
 		python3-setuptools
 fi
+
+rm -rf /var/lib/apt/lists/*
+apt-get clean
