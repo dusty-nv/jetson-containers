@@ -355,7 +355,9 @@ def get_local_containers():
 
     _LOCAL_CACHE = [json.loads(txt.lstrip("'").rstrip("'"))
         for txt in status.stdout.decode('ascii').splitlines()]
-            
+       
+    pprint_debug(_LOCAL_CACHE)
+    
     return _LOCAL_CACHE
         
 
@@ -392,6 +394,7 @@ def get_registry_containers(user='dustynv', **kwargs):
         with open(cache_path) as cache_file:
             try:
                 _REGISTRY_CACHE = json.load(cache_file)
+                pprint_debug(_REGISTRY_CACHE)
                 return _REGISTRY_CACHE
             except Exception:
                 pass
@@ -408,6 +411,7 @@ def get_registry_containers(user='dustynv', **kwargs):
     with open(cache_path, 'w') as cache_file:
         json.dump(_REGISTRY_CACHE, cache_file, indent=2)
 
+    pprint_debug(_REGISTRY_CACHE)
     return _REGISTRY_CACHE
     
   
@@ -422,7 +426,6 @@ def find_local_containers(package, return_dicts=False, **kwargs):
     
     namespace, repo, tag = split_container_name(package)
     local_images = get_local_containers()
-    pprint_debug(local_images)
     
     found_containers = []
     
