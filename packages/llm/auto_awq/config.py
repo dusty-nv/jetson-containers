@@ -1,18 +1,21 @@
-from jetson_containers import CUDA_ARCHITECTURES, find_container
+from jetson_containers import CUDA_ARCHITECTURES
 
-builder = package.copy()
-runtime = package.copy()
+def AutoAWQ(version, kernels_version, default=False):
+    pkg = package.copy()
 
-builder['name'] = 'auto_awq:builder'
-builder['dockerfile'] = 'Dockerfile.builder'
+    pkg['name'] = f'auto_awq:{version}'
 
-builder['build_args'] = {
-    'AUTOAWQ_BRANCH': 'main',
-    'AUTOAWQ_CUDA_ARCH': ','.join([str(x) for x in CUDA_ARCHITECTURES])
-}
+    if default:
+        pkg['alias'] = 'auto_awq'
+    
+    pkg['build_args'] = {
+        'AUTOAWQ_VERSION': version,
+        'AUTOAWQ_KERNELS_VERSION': kernels_version,
+        'AUTOAWQ_CUDA_ARCH': ','.join([str(x) for x in CUDA_ARCHITECTURES])
+    }
+    
+    return pkg
 
-runtime['build_args'] = {
-    'BUILD_IMAGE': find_container(builder['name']),
-}
-
-package = [builder, runtime]
+package = [
+    AutoAWQ('0.2.4', '0.0.6', default=True),
+]

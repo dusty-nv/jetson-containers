@@ -1,23 +1,20 @@
 #---
-# name: exllama:v1
-# alias: exllama
+# name: exllama
 # group: llm
 # config: config.py
 # depends: [pytorch, huggingface_hub]
 # requires: '>=34.1.0'
-# test: test.sh
+# test: test_v2.sh
 # docs: docs.md
 #---
 ARG BASE_IMAGE
-ARG BUILD_IMAGE
+FROM ${BASE_IMAGE}
 
-FROM ${BUILD_IMAGE} as builder
-FROM ${BASE_IMAGE} as runtime
+ARG EXLLAMA_VERSION \
+    EXLLAMA_BRANCH
 
-COPY --from=builder /opt/exllama*.whl /opt/
+COPY build.sh /tmp/build_exllama.sh
 
-RUN set -ex \
-    && pip3 install --no-cache-dir --verbose /opt/exllama*.whl \
-    \
-    && pip3 show exllama \
-    && python3 -c 'import exllama'
+RUN git clone --branch=v${EXLLAMA_BRANCH} --depth=1 --recursive https://github.com/turboderp/exllamav2 /opt/exllamav2 && \
+    pip3 install --no-cache-dir --verbose exllamav2==${EXLLAMA_VERSION} || \
+    /tmp/build_exllama.sh

@@ -8,16 +8,15 @@
 # docs: docs.md
 #---
 ARG BASE_IMAGE
-ARG BUILD_IMAGE
+FROM ${BASE_IMAGE}
 
-FROM ${BUILD_IMAGE} as builder
-FROM ${BASE_IMAGE} as runtime
+ARG LLAMA_CPP_VERSION \
+    LLAMA_CPP_BRANCH
 
-COPY --from=builder /opt/llama_cpp_python*.whl /opt/
+COPY build.sh /tmp/build_llama_cpp.sh
+COPY benchmark.py /usr/local/bin/llama_cpp_benchmark.py
 
-RUN set -ex \
-    && pip3 install --no-cache-dir --verbose \
-        /opt/llama_cpp_python*.whl \
+RUN pip3 install --no-cache-dir --verbose \
         typing-extensions \
         uvicorn \
         anyio \
@@ -25,8 +24,7 @@ RUN set -ex \
         sse-starlette \
         starlette-context \
         fastapi \
-        pydantic-settings \
-    \
-    && pip3 show llama-cpp-python | grep llama \
-    && python3 -c 'import llama_cpp' \
-    && python3 -m llama_cpp.server --help
+        pydantic-settings && \
+    pip3 install --no-cache-dir --verbose llama-cpp-python==${LLAMA_CPP_VERSION} || \
+    /tmp/build_llama_cpp.sh
+    

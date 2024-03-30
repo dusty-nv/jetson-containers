@@ -8,15 +8,13 @@
 # docs: docs.md
 #---
 ARG BASE_IMAGE
-ARG BUILD_IMAGE
+FROM ${BASE_IMAGE}
 
-FROM ${BUILD_IMAGE} as builder
-FROM ${BASE_IMAGE} as runtime
+ARG AUTOGPTQ_VERSION \
+    AUTOGPTQ_BRANCH
 
-COPY --from=builder /opt/auto_gptq*.whl /opt/
+COPY build.sh /tmp/build_auto_gptq.sh
 
-RUN set -ex \
-    && pip3 install --no-cache-dir --verbose /opt/auto_gptq*.whl \
-    \
-    && pip3 show autoawq \
-    && python3 -c 'import awq'
+RUN pip3 install --no-cache-dir gekko && \
+    pip3 install --no-cache-dir --verbose auto-gptq==${AUTOGPTQ_VERSION} || \
+    /tmp/build_auto_gptq.sh

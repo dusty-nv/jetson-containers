@@ -7,17 +7,13 @@
 # test: test.py
 #---
 ARG BASE_IMAGE
-ARG BUILD_IMAGE
+FROM ${BASE_IMAGE}
 
-FROM ${BUILD_IMAGE} as builder
-FROM ${BASE_IMAGE} as runtime
+ARG AUTOAWQ_VERSION \
+    AUTOAWQ_KERNELS_VERSION \
+    AUTOAWQ_CUDA_ARCH
 
-COPY --from=builder /opt/autoawq_kernels*.whl /opt/
-COPY --from=builder /opt/autoawq*.whl /opt/
+COPY build.sh /tmp/build_autoawq.sh
 
-RUN set -ex \
-    && pip3 install --no-cache-dir --verbose \
-        /opt/autoawq_kernels*.whl \
-        /opt/autoawq*.whl \
-    && pip3 show autoawq \
-    && python3 -c 'import awq'
+RUN pip3 install --no-cache-dir --verbose autoawq-kernels==${AUTOAWQ_KERNELS_VERSION} autoawq==${AUTOAWQ_VERSION} || \
+    /tmp/build_autoawq.sh
