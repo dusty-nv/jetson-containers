@@ -17,9 +17,8 @@ ARG CUDA_URL \
     PIP_UPLOAD_USER \
     PIP_UPLOAD_PASS \
     PIP_TRUSTED_HOSTS \
-    DISTRO="ubuntu2004" \
-    DEBIAN_FRONTEND=noninteractive
-
+    DISTRO="ubuntu2004"
+    
 COPY install.sh /tmp/install_cuda.sh
 RUN /tmp/install_cuda.sh
 
@@ -30,6 +29,7 @@ ENV NVIDIA_VISIBLE_DEVICES=all \
     NVIDIA_DRIVER_CAPABILITIES=all \
     CUDAARCHS=${CUDA_ARCH_LIST} \
     CUDA_ARCHITECTURES=${CUDA_ARCH_LIST} \
+    CUDA_HOME="/usr/local/cuda" \
     CUDNN_LIB_PATH="/usr/lib/aarch64-linux-gnu" \
     CUDNN_LIB_INCLUDE_PATH="/usr/include" \
     CMAKE_CUDA_COMPILER=${NVCC_PATH} \
@@ -44,6 +44,7 @@ ENV NVIDIA_VISIBLE_DEVICES=all \
     PIP_TRUSTED_HOST=${PIP_TRUSTED_HOSTS} \
     TWINE_REPOSITORY_URL=${PIP_UPLOAD_REPO} \
     TWINE_USERNAME=${PIP_UPLOAD_USER} \
-    TWINE_PASSWORD=${PIP_UPLOAD_PASS}
+    TWINE_PASSWORD=${PIP_UPLOAD_PASS} \
+    DEBIAN_FRONTEND=noninteractive
     
 WORKDIR /

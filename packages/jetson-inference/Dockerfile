@@ -1,7 +1,7 @@
 #---
 # name: jetson-inference
 # group: ml
-# depends: [pytorch, torchvision, cmake, gstreamer]
+# depends: [pytorch, torchvision, tensorrt, cmake, gstreamer]
 # test: [test_utils.sh, test_infer.sh]
 #---
 ARG BASE_IMAGE

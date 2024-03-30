@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # finds the versions of JetPack-L4T and CUDA from the build environment:
 #
-#    L4T_VERSION (packaging.version.Version)
-#    JETPACK_VERSION (packaging.version.Version)
-#    PYTHON_VERSION (packaging.version.Version)
-#    CUDA_VERSION (packaging.version.Version)
+#    L4T_VERSION (packaging.version.Version) -- found in /etc/nv_tegra_release
+#    JETPACK_VERSION (packaging.version.Version) -- derived from L4T_VERSION
+#    PYTHON_VERSION (packaging.version.Version) -- the default for LSB_RELEASE (can override with $PYTHON_VERSION environment var)
+#    CUDA_VERSION (packaging.version.Version) -- found in /usr/local/cuda (can override with $CUDA_VERSION environment var)
 #    CUDA_ARCHITECTURES (list[int]) -- e.g. [53, 62, 72, 87]
 #    SYSTEM_ARCH (str) -- e.g. 'aarch64' or 'x86_64'
-#    LSB_RELEASE (str) -- e.g. '18.04' or '20.04'
-#    LSB_CODENAME (str) -- e.g. 'bionic' or 'focal'
+#    LSB_RELEASE (str) -- e.g. '18.04', '20.04', '22.04'
+#    LSB_CODENAME (str) -- e.g. 'bionic', 'focal', 'jammy'
 #    
 import os
 import re
@@ -163,8 +163,12 @@ def get_cuda_version(version_file='/usr/local/cuda/version.json'):
     Returns the installed version of the CUDA Toolkit in a packaging.version.Version object
     The CUDA_VERSION will either be parsed from /usr/local/cuda/version.json or the $CUDA_VERSION environment variable.
     """
+    def to_version(version):
+        version = Version(version)
+        return Version(f"{version.major}.{version.minor}")
+        
     if 'CUDA_VERSION' in os.environ and len(os.environ['CUDA_VERSION']) > 0:
-        return Version(os.environ['CUDA_VERSION'])
+        return to_version(os.environ['CUDA_VERSION'])
         
     if not os.path.isfile(version_file):
         # In case only the CUDA runtime is installed
@@ -176,17 +180,16 @@ def get_cuda_version(version_file='/usr/local/cuda/version.json'):
 
             if version_match:
                 version_number = version_match.group(1)
-                return version_number
+                return to_version(version_number)
             else:
-                print("Unable to extract version number.")
+                print("-- unable to extract CUDA version number")
         else:
-            #raise IOError(f"L4T_VERSION file doesn't exist:  {version_file}")
-            return "0.0.0"    
+            return '0.0'    
         
     with open(version_file) as file:
         versions = json.load(file)
         
-    return Version(versions['cuda_nvcc']['version'])
+    return to_version(versions['cuda_nvcc']['version'])
 
 
 def get_l4t_base(l4t_version=get_l4t_version()):
@@ -278,8 +281,11 @@ elif L4T_VERSION.major == 32:  # JetPack 4
 # x86_64, aarch64
 SYSTEM_ARCH = platform.machine()
 
-# Python version (3.6, 3.8, ect)
-PYTHON_VERSION = Version(f'{sys.version_info.major}.{sys.version_info.minor}')
+# Python version (3.6, 3.8, 3.10, ect)
+if 'PYTHON_VERSION' in os.environ and len(os.environ['PYTHON_VERSION']) > 0:
+    PYTHON_VERSION = Version(os.environ['PYTHON_VERSION'])
+else:
+    PYTHON_VERSION = Version(f'{sys.version_info.major}.{sys.version_info.minor}')
 
 # LSB release and codename ("20.04", "focal")
 LSB_RELEASE, LSB_CODENAME = get_lsb_release()
