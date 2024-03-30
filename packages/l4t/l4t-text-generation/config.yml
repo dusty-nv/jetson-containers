@@ -1,4 +1,4 @@
 name: l4t-text-generation
 group: 'llm'
 requires: '>=34.1.0'
-depends: [mlc, transformers, auto_gptq, gptq-for-llama, exllama, exllama:v2, llama_cpp:gguf, jupyterlab, docker, openai]
+depends: [mlc, transformers, auto_gptq, exllama, llama_cpp, jupyterlab, docker, openai]

@@ -1,7 +1,7 @@
 #---
 # name: bitsandbytes
 # group: llm
-# requires: '>=35'
+# requires: '==35.*'
 # config: config.py
 # depends: [transformers]
 # test: test.py
