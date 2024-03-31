@@ -2,14 +2,6 @@
 set -ex
 echo "Building torchvision ${TORCHVISION_VERSION}"
    
-apt-get update
-apt-get install -y --no-install-recommends \
-        libjpeg-dev \
-        zlib1g-dev
-
-rm -rf /var/lib/apt/lists/*
-apt-get clean
-
 git clone --branch v${TORCHVISION_VERSION} --recursive --depth=1 https://github.com/pytorch/vision /opt/torchvision
 cd /opt/torchvision
 

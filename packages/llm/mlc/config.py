@@ -1,61 +1,40 @@
-import os
-import copy
 
-from jetson_containers import L4T_VERSION, PYTHON_VERSION, CUDA_ARCHITECTURES, find_container, github_latest_commit, log_debug
+from jetson_containers import L4T_VERSION
 
-repo = 'mlc-ai/mlc-llm'
-
-package['build_args'] = {
-    'MLC_REPO': repo,
-    'CUDAARCHS': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
-    'TORCH_CUDA_ARCH_LIST': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES])
-}
-
-def mlc(version, patch, llvm=17, tag=None, requires=None, default=False):
-    builder = package.copy()
-    runtime = package.copy()
-    
+def mlc(commit, patch=None, version='0.1', tvm='0.15', llvm=17, tag=None, requires=None, default=False):
+    pkg = package.copy()
+  
     if default:
-        builder['alias'] = 'mlc:builder'
-        runtime['alias'] = 'mlc'
+        pkg['alias'] = 'mlc'
         
     if requires:
-        builder['requires'] = requires
-        runtime['requires'] = requires   
+        pkg['requires'] = requires   
         
     if not tag:
-        tag = version
+        tag = commit
 
-    builder['name'] = f'mlc:{tag}-builder'
-    runtime['name'] = f'mlc:{tag}'
+    pkg['name'] = f'mlc:{tag}'
+    pkg['notes'] = f"[mlc-ai/mlc-llm](https://github.com/mlc-ai/mlc-llm/tree/{commit}) commit SHA [`{commit}`](https://github.com/mlc-ai/mlc-llm/tree/{commit})"
     
-    builder['dockerfile'] = 'Dockerfile.builder'
-    
-    builder['build_args'] = {
-        'MLC_REPO': repo,
+    pkg['build_args'] = {
         'MLC_VERSION': version,
+        'MLC_COMMIT': commit,
         'MLC_PATCH': patch,
-        'LLVM_VERSION': llvm,
-        'CUDAARCHS': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
-        'TORCH_CUDA_ARCH_LIST': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES])
+        'TVM_VERSION': tvm,
+        'LLVM_VERSION': llvm
     }
-    
-    runtime['build_args'] = {
-        'BUILD_IMAGE': find_container(builder['name']),
-        'PYTHON_VERSION': str(PYTHON_VERSION),
-        'MLC_REPO': repo,
-        'MLC_VERSION': version,
-        'MLC_PATCH': patch,
-    }
-    
-    builder['notes'] = f"[{repo}](https://github.com/{repo}/tree/{version}) commit SHA [`{version}`](https://github.com/{repo}/tree/{version})"
-    runtime['notes'] = builder['notes']
-    
-    return builder, runtime
+
+    return pkg
+
+package = [
+    mlc('51fb0f4', 'patches/51fb0f4.diff', tvm='0.12', default=(L4T_VERSION.major == 35)), # 12/15/2023
+    mlc('607dc5a', 'patches/607dc5a.diff', tvm='0.15', default=(L4T_VERSION.major >= 36), requires='>=36'),  # 02/27/2024
+]
 
 #latest_sha = github_latest_commit(repo, branch='main')
 #log_debug('-- MLC latest commit:', latest_sha)
 
+'''
 package = [
     mlc('731616e', 'patches/3feed05.diff', tag='dev'),
     mlc('9bf5723', 'patches/9bf5723.diff', requires='==35.*'), # 10/20/2023
@@ -69,3 +48,4 @@ package = [
     mlc('1f70d71', 'patches/1f70d71.diff', requires='>=36'),   # 02/29/2024
     mlc('731616e', 'patches/1f70d71.diff', requires='>=36'),   # 03/03/2024
 ]
+'''
