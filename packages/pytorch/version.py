@@ -12,6 +12,6 @@ else:
         else:
             PYTORCH_VERSION = Version('2.1')
     elif L4T_VERSION.major >= 34:
-        PYTORCH_VERSION = Version('2.0')
+        PYTORCH_VERSION = Version('2.1')
     elif L4T_VERSION.major >= 32:
         PYTORCH_VERSION = Version('1.10')

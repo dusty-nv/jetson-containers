@@ -17,6 +17,9 @@ ARG CUDA_ARCH_LIST \
     DISTRO="ubuntu2004" \
     DEBIAN_FRONTEND=noninteractive
 
+ENV CUDA_HOME="/usr/local/cuda"
+ENV NVCC_PATH="$CUDA_HOME/bin/nvcc"
+
 ENV CUDAARCHS=${CUDA_ARCH_LIST} \
     CUDA_ARCHITECTURES=${CUDA_ARCH_LIST} \
     CUDA_HOME="/usr/local/cuda" \

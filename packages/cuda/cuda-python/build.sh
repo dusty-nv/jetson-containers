@@ -10,13 +10,12 @@ sed 's|^numpy.=.*|numpy|g' -i requirements.txt
 sed 's|^numba.=.*|numba|g' -i requirements.txt
 
 pip3 install --no-cache-dir --verbose -r requirements.txt
-python3 setup.py bdist_wheel --verbose
-cp dist/cuda_python*.whl /opt
+python3 setup.py bdist_wheel --verbose --dist-dir /opt
 
 cd ../
 rm -rf cuda-python
 
-pip3 install --no-cache-dir /opt/cuda_python*.whl
+pip3 install --no-cache-dir /opt/cuda*.whl
 pip3 show cuda-python && python3 -c 'import cuda; print(cuda.__version__)'
 
-twine upload --verbose /opt/cuda_python*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose /opt/cuda*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

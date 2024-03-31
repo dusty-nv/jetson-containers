@@ -44,8 +44,12 @@ package = [
     opencv_pip('4.8.1', '==36.*', default=True),
     opencv_pip('4.9.0', '==36.*', default=False), 
     
+    # JetPack 5
+    opencv_pip('4.8.1', '==35.*', default=True),
+    opencv_pip('4.5.0', '==35.*', default=False),
+    
     # JetPack 4/5
-    opencv_pip('4.5.0', '<36', default=True),
+    opencv_pip('4.5.0', '==32.*', default=True),
 ]
 
 '''
