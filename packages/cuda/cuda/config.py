@@ -11,7 +11,7 @@ def cuda_build_args(version):
         'DISTRO': f"ubuntu{LSB_RELEASE.replace('.','')}",
         'PIP_TRUSTED_HOSTS': "jetson.webredirect.org",
         'PIP_INDEX_REPO': f"http://jetson.webredirect.org/jp{JETPACK_VERSION.major}/{short_version}",
-        'PIP_UPLOAD_REPO': os.environ.get('PIP_UPLOAD_REPO', f"http://jao-51.local/jp{JETPACK_VERSION.major}/{short_version}"),
+        'PIP_UPLOAD_REPO': os.environ.get('PIP_UPLOAD_REPO', f"{os.environ.get('PIP_UPLOAD_HOST', 'http://localhost')}/jp{JETPACK_VERSION.major}/{short_version}"),
         'PIP_UPLOAD_USER': os.environ.get('PIP_UPLOAD_USER', f"jp{JETPACK_VERSION.major}"),
         'PIP_UPLOAD_PASS': os.environ.get('PIP_UPLOAD_PASS', 'none'),
     }
