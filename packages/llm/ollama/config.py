@@ -13,6 +13,5 @@ ollama['build_args'] = {
     'GOLANG_VERSION': '1.22.1',
     'CMAKE_VERSION': '3.22.1',
 }
-ollama['test'].extend(['test.sh'])
 
 package = [ollama]
