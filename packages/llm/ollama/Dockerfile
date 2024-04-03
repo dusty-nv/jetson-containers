@@ -54,6 +54,8 @@ ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
 ENV JETSON_JETPACK=${JETPACK_VERSION}
 
 COPY test.sh /test.sh
+COPY benchmark.py /benchmark.py
+COPY benchmark.sh /benchmark.sh
 
 ENTRYPOINT ["/bin/bash", "-c"]
 
