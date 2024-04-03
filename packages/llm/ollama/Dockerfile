@@ -4,7 +4,6 @@
 # config: config.py
 # depends: [build-essential, cuda]
 # requires: '>=34.1.0'
-# test:
 # docs: docs.md
 #---
 ARG BASE_IMAGE
