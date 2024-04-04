@@ -1,7 +1,7 @@
 #---
 # name: audiocraft
 # group: audio
-# depends: [pytorch:distributed, torchvision, torchaudio, opencv, huggingface_hub, transformers, xformers, protobuf:cpp, jupyterlab]
+# depends: [pytorch, torchvision, torchaudio, opencv, huggingface_hub, transformers, xformers, protobuf:cpp, jupyterlab]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---

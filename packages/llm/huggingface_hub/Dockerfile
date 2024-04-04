@@ -8,10 +8,6 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-# ModuleNotFoundError: No module named 'dataclasses' (on JetPack 4)
-RUN pip3 install --no-cache-dir --verbose huggingface_hub[cli] && \
-    pip3 install --no-cache-dir --verbose dataclasses
-
 # set the model cache dir
 ENV TRANSFORMERS_CACHE=/data/models/huggingface \
     HUGGINGFACE_HUB_CACHE=/data/models/huggingface \
@@ -21,9 +17,20 @@ ENV TRANSFORMERS_CACHE=/data/models/huggingface \
 COPY huggingface-downloader /usr/local/bin/
 COPY huggingface-downloader.py /usr/local/bin/_huggingface-downloader.py
 
-# make sure it loads
-RUN huggingface-cli --help && \
-    huggingface-downloader --help && \
-    pip3 show huggingface_hub && \
-    python3 -c 'import huggingface_hub; print(huggingface_hub.__version__)'
-    
+# install huggingface_hub package (with CLI)
+RUN set -ex \
+    # Fix: ModuleNotFoundError: No module named 'dataclasses' (on JetPack 4) \
+    && pip3 install --no-cache-dir --verbose \
+        huggingface_hub[cli] \
+        dataclasses \
+    \
+    # make sure it loads \
+    && huggingface-cli --help \
+    && huggingface-downloader --help \
+    && pip3 show huggingface_hub \
+    && python3 -c 'import huggingface_hub; print(huggingface_hub.__version__)' \
+    \
+    # for benchmark timing \
+    && apt-get update \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean

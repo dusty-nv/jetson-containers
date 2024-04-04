@@ -26,5 +26,5 @@ RUN echo "Downloading ${CUDNN_DEB}" && \
     dpkg -P ${CUDNN_DEB} && \
     rm -rf /tmp/cudnn
     
-RUN cd /usr/src/cudnn_samples_v8/conv_sample/ && \
+RUN cd /usr/src/cudnn_samples_v*/conv_sample/ && \
     make -j$(nproc)

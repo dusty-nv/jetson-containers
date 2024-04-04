@@ -1,16 +1,22 @@
 
-from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES
+def AutoGPTQ(version, branch=None, default=False):
+    pkg = package.copy()
 
-"""
-if L4T_VERSION.major >= 36:
-    AUTOGPTQ_BRANCH='main'
-else:
-    AUTOGPTQ_BRANCH='v0.4.2'  # 8/28/2023 - build errors in main (v0.4.2 is tag prior)
-"""
+    pkg['name'] = f'auto_gptq:{version}'
 
-AUTOGPTQ_BRANCH = 'main'
+    if default:
+        pkg['alias'] = 'auto_gptq'
     
-package['build_args'] = {
-    'AUTOGPTQ_BRANCH': AUTOGPTQ_BRANCH,
-    'TORCH_CUDA_ARCH_LIST': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES])
-}
+    if not branch:
+        branch = version
+        
+    pkg['build_args'] = {
+        'AUTOGPTQ_VERSION': version,
+        'AUTOGPTQ_BRANCH': branch,
+    }
+    
+    return pkg
+
+package = [
+    AutoGPTQ('0.7.1', default=True),
+]

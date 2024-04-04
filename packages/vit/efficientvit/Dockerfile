@@ -1,7 +1,7 @@
 #---
 # name: efficientvit
 # group: vit
-# depends: [pytorch:distributed, torchvision, opencv, transformers, onnx, sam, jupyterlab]
+# depends: [pytorch, torchvision, opencv, transformers, onnx, sam, jupyterlab]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---

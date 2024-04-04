@@ -300,10 +300,17 @@ def resolve_dependencies(packages, check=True):
         return packages, (packages != packages_org)
     
     # iteratively unroll/expand dependencies until the full list is resolved
+    iterations = 0
+    max_iterations = 250
+    packages_copy = packages.copy()
+    
     while True:
         packages, changed = add_depends(packages)
         if not changed:
             break
+        iterations = iterations + 1
+        if iterations > max_iterations:
+            raise RecursionError(f"infinite recursion detected resolving dependencies for {packages_copy}\n{packages}") 
      
     # make sure all packages can be found
     if check:

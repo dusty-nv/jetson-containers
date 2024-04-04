@@ -1,7 +1,5 @@
 import os
 
-from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES, CUDA_VERSION
-
 
 def tensorrt_package(version, url, deb, packages=None, requires=None, default=False):
     """
@@ -11,9 +9,7 @@ def tensorrt_package(version, url, deb, packages=None, requires=None, default=Fa
         packages = os.environ.get('TENSORRT_PACKAGES', 'tensorrt tensorrt-libs python3-libnvinfer-dev')
     
     tensorrt = package.copy()
-    
     tensorrt['name'] = f'tensorrt:{version}'
-
     tensorrt['build_args'] = {
         'TENSORRT_URL': url,
         'TENSORRT_DEB': deb,
@@ -52,7 +48,6 @@ def tensorrt_builtin(version=None, requires=None, default=False):
 
     
 package = [
-    
     # JetPack 6
     tensorrt_package('8.6', 'https://nvidia.box.com/shared/static/hmwr57hm88bxqrycvlyma34c3k4c53t9.deb', 'nv-tensorrt-local-repo-l4t-8.6.2-cuda-12.2', requires='==36.*', default=True), 
 

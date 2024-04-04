@@ -1,14 +1,23 @@
 
-from jetson_containers import CUDA_ARCHITECTURES
+def exllama(version, branch=None, default=False):
+    pkg = package.copy()
 
-package['build_args'] = {
-    'TORCH_CUDA_ARCH_LIST': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES])
-}
+    pkg['name'] = f'exllama:{version}'
 
-exllama_v2 = package.copy()
+    if default:
+        pkg['alias'] = 'exllama'
+    
+    if not branch:
+        branch = version
+        
+    pkg['build_args'] = {
+        'EXLLAMA_VERSION': version,
+        'EXLLAMA_BRANCH': branch,
+    }
+    
+    return pkg
 
-exllama_v2['name'] = 'exllama:v2'
-exllama_v2['dockerfile'] = 'Dockerfile.v2'
-exllama_v2['test'] = 'test_v2.sh'
-
-package = [package, exllama_v2]
+package = [
+    #exllama('0.0.16', default=True),
+    exllama('0.0.15', default=True),
+]

@@ -26,9 +26,10 @@ def oobabooga(version, branch=None, tag=None, sha=None, build_args=None, default
     if build_args:
         twu['build_args'].update(build_args)
         
-    if L4T_VERSION.major <= 35:
-        twu['depends'] = twu['depends'] + ['bitsandbytes']
-    elif L4T_VERSION.major >= 36:
+    #if L4T_VERSION.major <= 35:
+    #    twu['depends'] = twu['depends'] + ['bitsandbytes']
+    
+    if L4T_VERSION.major >= 36:
         twu['depends'] = twu['depends'] + ['auto_awq']
         
     return twu

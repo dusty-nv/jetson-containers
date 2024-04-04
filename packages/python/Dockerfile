@@ -1,36 +1,26 @@
 #---
 # name: python
-# alias: python3
 # group: build
-# depends: [build-essential]
-# notes: installs core python3 packages and pip
+# depends: build-essential
+# notes: installs core `python3` packages and `pip`
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ENV PYTHONIOENCODING=utf-8
+ARG PYTHON_VERSION_ARG
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-		  python3-dev \
-		  python3-pip \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean && \
-    which pip3 && pip3 --version && \
-    python3 -m pip install --upgrade pip && \
-    \
-    which python || python --version || pip --version || \
-    which python3 || python3 --version || pip3 --version && \
-    \
-    pip3 install --upgrade --no-cache-dir \
-	 setuptools \
-	 packaging \
-	 'Cython<3' \
-	 wheel && \
-    \
-    pip3 install --no-cache-dir --verbose wget psutil
+ENV PYTHON_VERSION=${PYTHON_VERSION_ARG} \
+    PIP_DISABLE_PIP_VERSION_CHECK=on \
+    PIP_DEFAULT_TIMEOUT=100 \
+    PYTHONFAULTHANDLER=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONIOENCODING=utf-8 \
+    PYTHONHASHSEED=random \
+    PIP_NO_CACHE_DIR=off \
+    PIP_CACHE_PURGE=true \
+    PIP_ROOT_USER_ACTION=ignore \
+    TWINE_NON_INTERACTIVE=1 \
+    DEBIAN_FRONTEND=noninteractive
 
-# this was causing issues downstream (e.g. Python2.7 still around in Ubuntu 18.04,
-# and in cmake python enumeration where some packages expect that 'python' is 2.7)
-#RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \
-#    update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
+COPY install.sh /tmp/install_python.sh 
+RUN /tmp/install_python.sh

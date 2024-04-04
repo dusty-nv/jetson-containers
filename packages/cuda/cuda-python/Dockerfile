@@ -7,12 +7,10 @@
 # test: [test_driver.py, test_runtime.py]
 #---
 ARG BASE_IMAGE
-ARG BUILD_IMAGE
+FROM ${BASE_IMAGE}
 
-FROM ${BUILD_IMAGE} as builder
-FROM ${BASE_IMAGE} as runtime
+ARG CUDA_PYTHON_VERSION
 
-COPY --from=builder /opt/cuda*.whl /opt/
+COPY build.sh /tmp/build_cuda_python.sh
 
-RUN pip3 install --no-cache-dir --verbose /opt/cuda*.whl && \
-    pip3 show cuda-python && python3 -c 'import cuda; print(cuda.__version__)'
+RUN pip3 install --no-cache-dir cuda-python==${CUDA_PYTHON_VERSION} || /tmp/build_cuda_python.sh

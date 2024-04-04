@@ -1,34 +1,27 @@
 
-import copy
+def llama_cpp(version, branch=None, test=None, default=False):
+    pkg = package.copy()
 
-# ggml version tracks fork
-ggml = copy.deepcopy(package)
+    pkg['name'] = f'llama_cpp:{version}'
 
-ggml['name'] = 'llama_cpp:ggml'
+    if default:
+        pkg['alias'] = 'llama_cpp'
+    
+    if not test:
+        test = "test_model.py --model $(huggingface-downloader TheBloke/Llama-2-7B-GGUF/llama-2-7b.Q4_K_S.gguf)"
+        
+    pkg['test'] = pkg['test'] + [test]
 
-ggml['build_args'] = {
-    'LLAMA_CPP_PYTHON_REPO': 'dusty-nv/llama-cpp-python',
-    'LLAMA_CPP_PYTHON_BRANCH': 'v0.1.78a',
-}
+    if not branch:
+        branch = version
+        
+    pkg['build_args'] = {
+        'LLAMA_CPP_VERSION': version,
+        'LLAMA_CPP_BRANCH': branch,
+    }
+    
+    return pkg
 
-ggml['test'].extend([
-    "test_model.py --model $(huggingface-downloader TheBloke/Llama-2-7B-GGML/llama-2-7b.ggmlv3.q4_0.bin)",
-    "test_tokenizer.py --model $(huggingface-downloader TheBloke/Llama-2-7B-GGML/llama-2-7b.ggmlv3.q4_0.bin)"
-])
-
-# gguf version tracks main
-gguf = copy.deepcopy(package)
-
-gguf['name'] = 'llama_cpp:gguf'
-gguf['alias'] = 'llama_cpp'
-
-gguf['build_args'] = {
-    'LLAMA_CPP_PYTHON_REPO': 'abetlen/llama-cpp-python',
-    'LLAMA_CPP_PYTHON_BRANCH': 'main',
-}
-
-gguf['test'].extend([
-    "test_model.py --model $(huggingface-downloader TheBloke/Llama-2-7B-GGUF/llama-2-7b.Q4_K_S.gguf)"
-])
-
-package = [ggml, gguf]
+package = [
+    llama_cpp('0.2.57', default=True)
+]
