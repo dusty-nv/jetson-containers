@@ -19,7 +19,7 @@ def get_latest_stable_version(fallback='2024.3.1'):
 def create_package(version, default=False) -> list:
     pkg = package.copy()
     wanted_version = get_latest_stable_version() if version == 'latest' else version
-    pkg['name'] = f'homeassistant:{version}'
+    pkg['name'] = f'homeassistant-core:{version}'
     ha_version = Version(wanted_version)
 
     if ha_version.major >= 2024:
@@ -38,7 +38,7 @@ def create_package(version, default=False) -> list:
     }
 
     if default:
-        pkg['alias'] = 'homeassistant'
+        pkg['alias'] = 'homeassistant-core'
 
     return pkg
 
