@@ -1,3 +1,4 @@
+from jetson_containers import update_dependencies
 from packaging.version import Version
 from ..pytorch.version import PYTORCH_VERSION
 
@@ -7,7 +8,7 @@ def torchaudio(version, pytorch=None, requires=None):
     pkg['name'] = f"torchaudio:{version.split('-')[0]}"  # remove any -rc* suffix
     
     if pytorch:
-        pkg['depends'] = [f"pytorch:{pytorch}" if x=='pytorch' else x for x in pkg['depends']]
+        pkg['depends'] = update_dependencies(pkg['depends'], f"pytorch:{pytorch}")
     else:
         pytorch = PYTORCH_VERSION
         

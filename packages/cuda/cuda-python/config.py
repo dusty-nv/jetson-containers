@@ -1,5 +1,5 @@
 
-from jetson_containers import L4T_VERSION, CUDA_VERSION, find_container
+from jetson_containers import L4T_VERSION, CUDA_VERSION, update_dependencies
 from packaging.version import Version
 
 def cuda_python(version, cuda=None):
@@ -16,7 +16,7 @@ def cuda_python(version, cuda=None):
     if len(cuda.split('.')) > 2:
         cuda = cuda[:-2]
         
-    pkg['depends'] = [f"cuda:{cuda}" if x == 'cuda' else x for x in pkg['depends']]
+    pkg['depends'] = update_dependencies(pkg['depends'], f"cuda:{cuda}")
     
     if len(version.split('.')) < 3:
         version = version + '.0'

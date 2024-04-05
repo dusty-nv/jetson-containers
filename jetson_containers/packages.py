@@ -320,6 +320,31 @@ def resolve_dependencies(packages, check=True):
     return packages
 
 
+def update_dependencies(old, new):
+    """
+    Merge two lists of dependencies, with the new list overriding the old one::
+    
+       update_dependencies(['pytorch', 'transformers'], ['pytorch:2.0']) -> ['pytorch:2.0', 'transformers']
+       
+    The dependencies will be matched by comparing just their name and ignoring any tag.
+    """
+    if not new:
+        return old
+        
+    if isinstance(new, str):
+        new = [new]
+        
+    assert(isinstance(new, list))
+    
+    for dependency in new:
+        old = [dependency if x == dependency.split(':')[0] else x for x in old]
+        
+        if dependency not in old:
+            old.append(dependency)
+            
+    return old
+    
+    
 def dependant_packages(package):
     """
     Find the list of all packages that depend on this package.

@@ -1,5 +1,5 @@
 
-from jetson_containers import L4T_VERSION, CUDA_VERSION
+from jetson_containers import L4T_VERSION, CUDA_VERSION, update_dependencies
 from packaging.version import Version
 
 import os
@@ -19,20 +19,16 @@ else:
 
 #print(f"-- CUDNN_VERSION={CUDNN_VERSION}")
        
-def cudnn_package(version, url, deb, packages=None, depends=None, requires=None):
+def cudnn_package(version, url, deb, packages=None, cuda=None, requires=None):
     """
     Generate containers for a particular version of cuDNN installed from debian packages
     """
     if not packages:
         packages = os.environ.get('CUDNN_PACKAGES', 'libcudnn*-dev libcudnn*-samples')
     
-    if not depends:
-        depends = ['cuda']
-        
     cudnn = package.copy()
     
     cudnn['name'] = f'cudnn:{version}'
-    cudnn['depends'] = depends
     
     cudnn['build_args'] = {
         'CUDNN_URL': url,
@@ -43,6 +39,9 @@ def cudnn_package(version, url, deb, packages=None, depends=None, requires=None)
     if Version(version) == CUDNN_VERSION:
         cudnn['alias'] = 'cudnn'
     
+    if cuda:
+        cudnn['depends'] = update_dependencies(cudnn['depends'], f"cuda:{cuda}")
+        
     if requires:
         cudnn['requires'] = requires
 
@@ -75,8 +74,8 @@ def cudnn_builtin(version=None, requires=None, default=False):
 package = [
     
     # JetPack 6
-    cudnn_package('8.9', 'https://nvidia.box.com/shared/static/ht4li6b0j365ta7b76a6gw29rk5xh8cy.deb', 'cudnn-local-tegra-repo-ubuntu2204-8.9.4.25', requires='==36.*'), 
-    cudnn_package('9.0', 'https://developer.download.nvidia.com/compute/cudnn/9.0.0/local_installers/cudnn-local-tegra-repo-ubuntu2204-9.0.0_1.0-1_arm64.deb', 'cudnn-local-tegra-repo-ubuntu2204-9.0.0', requires='==36.*'),
+    cudnn_package('8.9', 'https://nvidia.box.com/shared/static/ht4li6b0j365ta7b76a6gw29rk5xh8cy.deb', 'cudnn-local-tegra-repo-ubuntu2204-8.9.4.25', cuda='12.2', requires='==36.*'), 
+    cudnn_package('9.0', 'https://developer.download.nvidia.com/compute/cudnn/9.0.0/local_installers/cudnn-local-tegra-repo-ubuntu2204-9.0.0_1.0-1_arm64.deb', 'cudnn-local-tegra-repo-ubuntu2204-9.0.0', cuda='12.4', requires='==36.*'),
 
     # JetPack 4-5 (cuDNN installed in base container)
     cudnn_builtin(requires='<36', default=True),
