@@ -97,8 +97,9 @@ def tensorrt_builtin(version=None, requires=None, default=False):
     
 package = [
     # JetPack 6
-    tensorrt_deb('8.6', 'https://nvidia.box.com/shared/static/hmwr57hm88bxqrycvlyma34c3k4c53t9.deb', 'nv-tensorrt-local-repo-l4t-8.6.2-cuda-12.2', cudnn='8.9', requires='==36.*'), 
-    tensorrt_tar('10.0', 'https://nvidia.box.com/shared/static/n00by5242vvf800jbhzjioj77vd7fqu7.gz', cudnn='9.0', requires='==36.*'), 
+    tensorrt_deb('8.6', 'https://nvidia.box.com/shared/static/hmwr57hm88bxqrycvlyma34c3k4c53t9.deb', 'nv-tensorrt-local-repo-l4t-8.6.2-cuda-12.2', cudnn='8.9', requires=['==r36.*', '==cu122']), 
+    #tensorrt_tar('9.3', 'https://nvidia.box.com/shared/static/fp3o14iq7qbm67qjuqivdrdch7009axu.gz', cudnn='8.9', requires=['==r36.*', '==cu122']), 
+    tensorrt_tar('10.0', 'https://nvidia.box.com/shared/static/n00by5242vvf800jbhzjioj77vd7fqu7.gz', cudnn='9.0', requires=['==r36.*', '==cu124']), 
     
     # JetPack 4-5 (TensorRT installed in base container)
     tensorrt_builtin(requires='<36', default=True),
