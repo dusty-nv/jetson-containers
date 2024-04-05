@@ -7,9 +7,10 @@ import yaml
 import fnmatch
 import importlib
 
+from packaging.version import Version
 from packaging.specifiers import SpecifierSet
 
-from .l4t_version import L4T_VERSION
+from .l4t_version import L4T_VERSION, CUDA_VERSION, PYTHON_VERSION
 from .utils import log_debug
 
 _PACKAGES = {}
@@ -103,6 +104,13 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
         'test': []
     }
     
+    # add CUDA and Python postfixes when they are non-standard versions
+    if len(os.environ.get('CUDA_VERSION','')) > 0:
+        package['postfix'] = package['postfix'] + f"-cu{CUDA_VERSION.major}{CUDA_VERSION.minor}"
+    
+    if len(os.environ.get('PYTHON_VERSION', '')) > 0:
+        package['postfix'] = package['postfix'] + f"-cp{PYTHON_VERSION.major}{PYTHON_VERSION.minor}"
+        
     # search this directory for dockerfiles and config scripts
     entries = os.listdir(path)
     
@@ -434,7 +442,29 @@ def config_package(package):
     
     return validate_package(package)
     
+    
+def check_requirements(package):
+    """
+    Check if the L4T/CUDA versions meet the requirements needed by the package
+    """
+    for r in package['requires']:
+        if not isinstance(r, str):
+            r = str(r)
 
+        r = r.lower()
+        
+        if 'cu' in r:
+            if Version(f"{CUDA_VERSION.major}{CUDA_VERSION.minor}") not in SpecifierSet(r.replace('cu','')):
+                log_debug(f"-- Package {package['name']} isn't compatible with CUDA {CUDA_VERSION} (requires {r})")
+                return False
+        else:
+            if L4T_VERSION not in SpecifierSet(r.replace('r','')):
+                log_debug(f"-- Package {package['name']} isn't compatible with L4T r{L4T_VERSION} (requires L4T {r})")
+                return False
+                
+    return True
+    
+    
 def validate_package(package):
     """
     Validate/check a package's configuration, returning a list (i.e. of subpackages)
@@ -459,10 +489,10 @@ def validate_package(package):
                 packages.extend(validate_package(x))
       
     for pkg in packages.copy():  # check to see if any packages were disabled
-        if not isinstance(pkg['requires'], SpecifierSet):
-            pkg['requires'] = SpecifierSet(pkg['requires'])
-        
-        if _PACKAGE_OPTS['check_l4t_version'] and L4T_VERSION not in pkg['requires']:
+        if not isinstance(pkg['requires'], list):
+            pkg['requires'] = [pkg['requires']]
+
+        if _PACKAGE_OPTS['check_l4t_version'] and not check_requirements(pkg):
             log_debug(f"-- Package {pkg['name']} isn't compatible with L4T r{L4T_VERSION} (requires L4T {pkg['requires']})")
             pkg['disabled'] = True
             
