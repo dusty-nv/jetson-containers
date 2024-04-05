@@ -61,6 +61,7 @@ if [ $ARCH = "aarch64" ]; then
 		--volume /var/run/dbus:/var/run/dbus \
 		--volume /var/run/avahi-daemon/socket:/var/run/avahi-daemon/socket \
 		--volume /var/run/docker.sock:/var/run/docker.sock \
+		--volume $ROOT/packages/llm/local_llm:/opt/local_llm/local_llm \
 		--volume $ROOT/data:/data \
 		--device /dev/snd \
 		--device /dev/bus/usb \
