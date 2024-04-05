@@ -4,23 +4,24 @@
 # config: config.py
 # depends: [build-essential, cuda]
 # requires: '>=34.1.0'
+# test: test.sh
 # docs: docs.md
 #---
-ARG BASE_IMAGE
-ARG CMAKE_CUDA_ARCHITECTURES
-ARG JETPACK_VERSION
-ARG OLLAMA_REPO
-ARG OLLAMA_BRANCH
-ARG GOLANG_VERSION
-ARG CMAKE_VERSION
+ARG BASE_IMAGE \
+    CMAKE_CUDA_ARCHITECTURES \
+    JETPACK_VERSION \
+    OLLAMA_REPO \
+    OLLAMA_BRANCH \
+    GOLANG_VERSION \
+    CMAKE_VERSION
 
 FROM ${BASE_IMAGE} AS ollama-l4t-build
 
-ARG OLLAMA_REPO
-ARG OLLAMA_BRANCH
-ARG GOLANG_VERSION
-ARG CMAKE_VERSION
-ARG CMAKE_CUDA_ARCHITECTURES
+ARG OLLAMA_REPO \
+    OLLAMA_BRANCH \
+    GOLANG_VERSION \
+    CMAKE_VERSION \
+    CMAKE_CUDA_ARCHITECTURES
 
 WORKDIR /opt
 
@@ -32,8 +33,8 @@ RUN CMAKE_VERSION=${CMAKE_VERSION} GOLANG_VERSION=${GOLANG_VERSION} sh /opt/olla
 
 # generate llama.cpp backend to bundle with Ollama
 WORKDIR ollama/llm/generate
-ENV LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/usr/local/nvidia/compat
-ENV CMAKE_CUDA_ARCHITECTURES=${CMAKE_CUDA_ARCHITECTURES}
+ENV LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/usr/local/nvidia/compat:${LD_LIBRARY_PATH} \
+    CMAKE_CUDA_ARCHITECTURES=${CMAKE_CUDA_ARCHITECTURES}
 RUN bash gen_linux.sh
 
 WORKDIR /opt/ollama
@@ -46,16 +47,15 @@ COPY --from=ollama-l4t-build /opt/ollama/ollama /bin/ollama
 ARG JETPACK_VERSION
 
 EXPOSE 11434
-ENV OLLAMA_HOST 0.0.0.0
-ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-ENV LD_LIBRARY_PATH=/usr/local/cuda/lib:/usr/local/cuda/lib64:/usr/local/cuda/include
-ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
-ENV JETSON_JETPACK=${JETPACK_VERSION}
+ENV OLLAMA_HOST=0.0.0.0 \
+    PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
+    LD_LIBRARY_PATH=/usr/local/cuda/lib:/usr/local/cuda/lib64:/usr/local/cuda/include:${LD_LIBRARY_PATH} \
+    JETSON_JETPACK=${JETPACK_VERSION}
 
 COPY test.sh /test.sh
 COPY benchmark.py /benchmark.py
 COPY benchmark.sh /benchmark.sh
 
-ENTRYPOINT ["/bin/bash", "-c"]
+RUN ln -s /data/models/ollama /root/.ollama
 
-CMD ["/bin/ollama serve"]
+CMD ["/bin/ollama", "serve"]

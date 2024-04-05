@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
+echo "testing ollama"
 
--set ex
-file /bin/ollama
+ollama --help
