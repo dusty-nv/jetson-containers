@@ -34,6 +34,7 @@ COPY agents agents
 COPY chat chat
 COPY models models
 COPY plugins plugins
+COPY test test
 COPY utils utils
 COPY vision vision
 COPY web web
