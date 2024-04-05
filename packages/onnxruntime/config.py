@@ -1,26 +1,36 @@
 
-from jetson_containers import L4T_VERSION
+from packaging.version import Version
 
-# https://elinux.org/Jetson_Zoo#ONNX_Runtime
-if L4T_VERSION.major >= 36:
-    ONNXRUNTIME_URL="https://nvidia.box.com/shared/static/i7n40ki3pl2x57vyn4u7e9asyiqlnl7n.whl"
-    ONNXRUNTIME_WHL="onnxruntime_gpu-1.17.0-cp310-cp310-linux_aarch64.whl"
-elif L4T_VERSION.major >= 34:
-    ONNXRUNTIME_URL="https://nvidia.box.com/shared/static/zostg6agm00fb6t5uisw51qi6kpcuwzd.whl"
-    ONNXRUNTIME_WHL="onnxruntime_gpu-1.17.0-cp38-cp38-linux_aarch64.whl"
-else:
-    # onnxruntime >= 1.16 drops support for gcc7/Python 3.6 (JetPack 4)
-    # onnxruntime >= 1.14 too few arguments to function cudaStreamWaitEvent
-    # onnxruntime <= 1.13 doesn't need or support --allow_running_as_root
-    # onnxruntime >= 1.12 error: 'getBuilderPluginRegistry' is not a member of 'nvinfer1'
-    # onnxruntime >= 1.11 error: NvInferSafeRuntime.h: No such file or directory (missing from tensorrt.csv)
-    #if L4T_VERSION.major <= 32:
-    #    package['build_args']['ONNXRUNTIME_VERSION'] = 'v1.10.0'
-    #    package['build_args']['ONNXRUNTIME_FLAGS'] = ''
-    ONNXRUNTIME_URL="https://nvidia.box.com/shared/static/pmsqsiaw4pg9qrbeckcbymho6c01jj4z.whl"
-    ONNXRUNTIME_WHL="onnxruntime_gpu-1.11.0-cp36-cp36m-linux_aarch64.whl"
+def onnxruntime(version, branch=None, requires=None, default=False):
+    pkg = package.copy()
+
+    pkg['name'] = f'onnxruntime:{version}'
+
+    if default:
+        pkg['alias'] = 'onnxruntime'
     
-package['build_args'] = {
-    'ONNXRUNTIME_URL': ONNXRUNTIME_URL,
-    'ONNXRUNTIME_WHL': ONNXRUNTIME_WHL,
-}
+    if requires:
+        pkg['requires'] = requires
+        
+    if len(version.split('.')) < 3:
+        version = version + '.0'
+            
+    if not branch:
+        branch = 'v' + version
+    
+    pkg['build_args'] = {
+        'ONNXRUNTIME_VERSION': version,
+        'ONNXRUNTIME_BRANCH': branch,
+        'ONNXRUNTIME_FLAGS': '', 
+    }
+    
+    if Version(version) >= Version('1.13'):
+        pkg['build_args']['ONNXRUNTIME_FLAGS'] = '--allow_running_as_root'
+    
+    return pkg
+    
+    
+package = [
+    onnxruntime('1.17', requires='>=35', default=True),
+    onnxruntime('1.11', requires='==32.*', default=True),
+]

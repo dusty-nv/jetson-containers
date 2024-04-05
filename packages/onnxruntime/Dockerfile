@@ -9,11 +9,11 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG ONNXRUNTIME_URL \
-    ONNXRUNTIME_WHL
+ARG ONNXRUNTIME_VERSION \
+    ONNXRUNTIME_BRANCH \
+    ONNXRUNTIME_FLAGS
+    
+COPY build.sh /tmp/build_onnxruntime.sh
 
-RUN set -ex \
-    && wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${ONNXRUNTIME_URL} -O /opt/${ONNXRUNTIME_WHL} \
-    && pip3 install --verbose /opt/${ONNXRUNTIME_WHL} \
-    \
-    && python3 -c 'import onnxruntime; print(onnxruntime.__version__);'
+RUN pip3 install --no-cache-dir --verbose onnxruntime-gpu==${ONNXRUNTIME_VERSION} || \
+    /tmp/build_onnxruntime.sh
