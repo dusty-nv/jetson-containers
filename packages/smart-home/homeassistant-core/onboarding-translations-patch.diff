@@ -1,0 +1,19 @@
+diff --git a/homeassistant/components/onboarding/views.py b/homeassistant/components/onboarding/views.py
+index 1ecfc10d97..895b4debbd 100644
+--- a/homeassistant/components/onboarding/views.py
++++ b/homeassistant/components/onboarding/views.py
+@@ -168,7 +168,13 @@ class UserOnboardingView(_BaseOnboardingView):
+             area_registry = ar.async_get(hass)
+ 
+             for area in DEFAULT_AREAS:
+-                name = translations[f"component.onboarding.area.{area}"]
++                # Attempt to retrieve the translated name for the area
++                try:
++                    name = translations[f"component.onboarding.area.{area}"]
++                except KeyError:
++                    # Fallback: If translation is missing, use a default name
++                    name = area
++
+                 # Guard because area might have been created by an automatically
+                 # set up integration.
+                 if not area_registry.async_get_area_by_name(name):

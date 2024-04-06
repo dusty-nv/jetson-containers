@@ -3,7 +3,7 @@
 # group: smart-home
 # config: config.py
 # requires: '>=34.1.0'
-# docs: README.md
+# docs: docs.md
 # depends: [build-essential, ffmpeg]
 # test: [test_ciso8601.py, test_psutil_home_assistant.py, test_homeassistant.py]
 # notes: The `homeassistant-core` wheel that's build is saved in `/usr/src/homeassistant`
@@ -91,6 +91,10 @@ RUN echo "HA_BRANCH: ${HA_BRANCH}" \
     && python3 --version \
     && pip3 install --no-cache-dir --ignore-installed blinker \
     && git clone --branch=${HA_BRANCH} https://github.com/home-assistant/core homeassistant \
+    \
+    # Fix: https://community.home-assistant.io/t/new-install-onboarding-failedkeyerror-component-onboarding-area-living-room/689712 \
+    && git -C homeassistant apply /tmp/onboarding-translations-patch.diff \
+    && git -C homeassistant diff \
     \
     && uv pip --version \
     && uv pip install --no-cache-dir --verbose -r homeassistant/requirements.txt
