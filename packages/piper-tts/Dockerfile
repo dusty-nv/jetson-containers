@@ -36,5 +36,5 @@ RUN git clone https://github.com/rhasspy/piper --depth 1 -b ${PIPER_VERSION} && 
     cmake -Bbuild -DPIPER_PHONEMIZE_DIR=${PIPER_PHONEMIZE_DIR} -DCMAKE_CXX_FLAGS="-I${ONNXRUNTIME_DIR}/include/onnxruntime/" && \
     cmake --build build --config Release && \
     cmake --install build && \
-    cd src/python_run && sed -i 's/piper-phonemize~=/piper-phonemize>=/' requirements.txt && \
-    pip3 install --no-cache-dir --verbose .[gpu,http]
+    cd src/python_run && pip3 install -r requirements_http.txt && \
+    pip3 install --no-cache-dir --verbose --no-deps .[gpu,http]
