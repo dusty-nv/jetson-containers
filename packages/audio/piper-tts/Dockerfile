@@ -1,10 +1,7 @@
 #---
 # name: piper-tts
-# group: ml
-# config: config.py
+# group: audio
 # depends: [cuda, cudnn, tensorrt, cmake, python, numpy, onnx, onnxruntime]
-# test: TODO
-# notes: TODO
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
