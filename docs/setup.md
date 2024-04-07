@@ -10,12 +10,17 @@ Install the latest version of JetPack 4 on Nano/TX1/TX2, JetPack 5 on Xavier, or
 
 ## Clone the Repo
 
+This will download and install the jetson-containers utilities:
+
 ```bash
-sudo apt-get update && sudo apt-get install git python3-pip
-git clone --depth=1 https://github.com/dusty-nv/jetson-containers
-cd jetson-containers
-pip3 install -r requirements.txt
+git clone https://github.com/dusty-nv/jetson-containers
+bash jetson-containers/install.sh
 ```
+
+The installer script will prompt you for your sudo password, and will setup some Python [requirements](/requirements.txt) and add tools like [`autotag`](/docs/run.md#autotag) the `$PATH` by linking them under `/usr/local/bin` (if you move your jetson-containers repo, run this step again)
+
+> [!NOTE]  
+> If you are only running containers and already have enough disk space on your root drive to download them, you may be able to skip the rest of the steps below, but they are recommended best-practices and should be followed when building your own containers.
 
 ## Docker Default Runtime
 
