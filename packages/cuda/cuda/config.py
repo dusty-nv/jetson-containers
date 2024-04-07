@@ -65,11 +65,13 @@ def cuda_builtin(version, requires=None) -> list:
         version = f'{version.major}.{version.minor}'
  
     passthrough['name'] = f'cuda:{version}'
-    passthrough['alias'] = 'cuda'
     
     passthrough['dockerfile'] = 'Dockerfile.builtin'
     passthrough['build_args'] = cuda_build_args(version)
   
+    if Version(version) == CUDA_VERSION:
+        passthrough['alias'] = 'cuda'
+        
     if requires:
         passthrough['requires'] = requires
         
