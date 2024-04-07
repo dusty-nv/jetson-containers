@@ -53,7 +53,7 @@ $ jetson-containers build --base=my_container:latest --name=my_container:pytorch
 ```
 
 > [!NOTE]  
-> On JetPack 4/5, it's assumed that base images have the JetPack components available/installed (i.e. CUDA Toolkit, cuDNN, TensorRT).  On JetPack 6, the CUDA components will automatically be installed on top of your base image if required.
+> On JetPack 4/5, it's assumed that base images already have the JetPack components available/installed (CUDA Toolkit, cuDNN, TensorRT).  On JetPack 6, the CUDA components will automatically be installed on top of your base image if required.
 
 ## Building External Packages
 
