@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Launcher for jetson-containers build.sh, run.sh, and autotag
+ROOT="$(dirname "$(readlink -f "$0")")"
+COMMAND=$1
+
+shift;
+
+if [ "$COMMAND" = "build" ]; then
+	$ROOT/build.sh "$@"
+elif [ "$COMMAND" = "run" ]; then
+	$ROOT/run.sh "$@"
+elif [ "$COMMAND" = "autotag" ]; then
+	$ROOT/autotag "$@"
+else
+	echo "invalid command - options are:  build, run, autotag"
+	exit 1
+fi

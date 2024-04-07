@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # pass-through commands to 'docker run' with some defaults
 # https://docs.docker.com/engine/reference/commandline/run/
-ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+ROOT="$(dirname "$(readlink -f "$0")")"
 
 # check for V4L2 devices
 V4L2_DEVICES=""
