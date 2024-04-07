@@ -31,7 +31,7 @@ $ jetson-containers build --name=my_container pytorch jupyterlab
 
 If you omit a tag from your name, then a default one will be assigned (based on the tag prefix/postfix of the package - typically `$L4T_VERSION`)
 
-You can also build your container under a namespace (ending in `/`), for example `--name=my_builds/` would result in an image like `my_builds/pytorch:r35.2.1` (doing that can help manage/organize your images if you have a lot)
+You can also build your container under a namespace ending in `/` - for example `--name=my_builds/` would result in an image like `my_builds/pytorch:r36.2.0` (doing that can help manage/organize your images if you have a lot)
 
 ## Multiple Containers
 
