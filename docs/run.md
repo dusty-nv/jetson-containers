@@ -11,7 +11,7 @@ That's actually a rather minimal command, and doesn't have support for displays 
 The [`jetson-containers run`](/run.sh) launcher can be run from any directory and forwards its command-line to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), with some added defaults - including the above flags, mounting the `/data` cache, and mounting various devices for display, audio, and video (like V4L2 and CSI cameras)
 
 ``` bash
-$ jetson-containers run CONTAINER:TAG  # run with --runtime=nvidia, default mounts, ect
+$ jetson-containers run CONTAINER:TAG                   # run with --runtime=nvidia, default mounts, ect
 $ jetson-containers run CONTAINER:TAG my_app --abc xyz  # run a command (instead of interactive mode)
 $ jetson-containers run --volume /path/on/host:/path/in/container CONTAINER:TAG  # mount a directory
 ```
