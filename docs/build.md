@@ -1,6 +1,6 @@
 # Building Containers
 
-The [`jetson-containers build`](/jetson-containers) command is a proxy launcher for [`jetson_containers/build.py`](/jetson_containers/build.py).  It can be run from any working directory after you clone the repo and run the installer from the [System Setup](/docs/setup.md) (you should also probably mount additional storage when building containers, as they can get quite large)
+The [`jetson-containers build`](/jetson-containers) command is a proxy launcher for [`jetson_containers/build.py`](/jetson_containers/build.py).  It can be run from any working directory after you clone the repo and run the installer from the [System Setup](/docs/setup.md) (you should also probably mount additional storage when building containers)
 
 To list the packages available to build for your version of JetPack/L4T, you can use `--list-packages` and `--show-packages`:
 

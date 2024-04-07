@@ -6,8 +6,8 @@ Install the latest version of JetPack 4 on Nano/TX1/TX2, JetPack 5 on Xavier, or
 * JetPack 5.1+  (>= L4T R35.2.1)
 * JetPack 6.0 DP (L4T R36.2.0)
 > [!NOTE]  
-> <sup>Building on/for x86 platforms isn't supported at this time (one can typically install/run packages the upstream way there)</sup><br>
-> <sup>The below steps are optional for [pulling/running](/docs/run.md) existing container images from registry, but recommended for building containers locally.</sup>
+> <sup>- Building on/for x86 platforms isn't supported at this time (one can typically install/run packages the upstream way there)</sup><br>
+> <sup>- The below steps are optional for [pulling/running](/docs/run.md) existing container images from registry, but recommended for building containers locally.</sup>
 
 ## Clone the Repo
 
