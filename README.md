@@ -62,8 +62,11 @@ Check out the tutorials at the [**Jetson Generative AI Lab**](https://www.jetson
 Refer to the [System Setup](/docs/setup.md) page for tips about setting up your Docker daemon and memory/storage tuning.
 
 ```bash
+# install the container tools
 git clone https://github.com/dusty-nv/jetson-containers
 bash jetson-containers/install.sh
+
+# automatically pull & run a container
 jetson-containers run $(autotag l4t-pytorch)
 ```
 
