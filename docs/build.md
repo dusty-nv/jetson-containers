@@ -17,7 +17,7 @@ $ jetson-containers build pytorch               # build a container with just Py
 $ jetson-containers build pytorch jupyterlab    # build container with PyTorch and JupyterLab
 ```
 
-The builder will chain together the Dockerfiles of each of packages specified, and use the result of one build stage as the base image of the next.  The initial base image defaults to `l4t-base`, `l4t-jetpack`, or `ubuntu:22.04` (for JetPack 4, 5, and 6, respectively) but can be changed by specifying the `--base-image` argument.
+The builder will chain together the Dockerfiles of each of packages specified, and use the result of one build stage as the base image of the next.  The initial base image defaults to one defined for JetPack, but can be changed by specifying the [`--base` argument](#changing-the-base-image).
 
 The docker commands that get run during the build are printed and also saved to shell scripts under the `jetson-containers/logs` directory.  To see just the commands it would have run without actually running them, use the `--simulate` flag.
 
