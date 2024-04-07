@@ -8,7 +8,7 @@ $ sudo docker run --runtime nvidia -it --rm --network=host CONTAINER:TAG
 
 That's actually a rather minimal command, and doesn't have support for displays or other devices, and it doesn't mount the model/data cache ([`/data`](/data)). Once you add everything in, it can get to be a lot to specify by hand.  Hence, we have some helpers that provide shortcuts.
 
-The [`jetson-containers run`](/run.sh) launcher can be run from any directory and forwards its command-line to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), with some added defaults - including the above flags, mounting the `/data` cache, and mounting various devices for display, audio, and video (like V4L2 and MIPI CSI cameras)
+The [`jetson-containers run`](/run.sh) launcher can be run from any directory and forwards its command-line to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), with some added defaults - including the above flags, mounting the `/data` cache, and mounting various devices for display, audio, and video (like V4L2 and CSI cameras)
 
 ``` bash
 $ jetson-containers run CONTAINER:TAG  # run with --runtime=nvidia, default mounts, ect

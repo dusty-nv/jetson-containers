@@ -43,7 +43,7 @@ You can rebuild the container stack against different versions of CUDA by settin
 CUDA_VERSION=12.4 jetson-containers build llama_cpp
 ```
 
-It will then go off and either pull or build all the dependencies.  You can also explicitly set the version of cuDNN, TensorRT, Python, and PyTorch with similar environment variables - see here for more info.
+It will then go off and either pull or build all the dependencies.  You can also request the version of cuDNN, TensorRT, Python, and PyTorch with similar environment variables - see here for more info.
 
 ## Documentation
 

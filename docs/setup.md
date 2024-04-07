@@ -19,8 +19,7 @@ bash jetson-containers/install.sh
 
 The installer script will prompt you for your sudo password, and will setup some Python [requirements](/requirements.txt) and add tools like [`autotag`](/docs/run.md#autotag) the `$PATH` by linking them under `/usr/local/bin` (if you move your jetson-containers repo, run this step again)
 
-> [!NOTE]  
-> If you are only running containers and already have enough disk space on your root drive to download them, you may be able to skip the rest of the steps below, but they are recommended best-practices and should be followed when building your own containers.
+If you are only running containers and already have enough disk space on your root drive to download them, you may be able to skip the rest of the steps below, but they are recommended best-practices and should be followed when building your own containers.
 
 ## Docker Default Runtime
 
