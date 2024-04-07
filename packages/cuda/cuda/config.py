@@ -6,14 +6,21 @@ import os
 
 def cuda_build_args(version):
     short_version = f"cu{version.replace('.', '')}"
+    repo_path = f"jp{JETPACK_VERSION.major}/{short_version}"
+    index_host = "jetson.webredirect.org"
+    
     return {
         'CUDA_ARCH_LIST': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
         'DISTRO': f"ubuntu{LSB_RELEASE.replace('.','')}",
-        'PIP_TRUSTED_HOSTS': "jetson.webredirect.org",
-        'PIP_INDEX_REPO': f"http://jetson.webredirect.org/jp{JETPACK_VERSION.major}/{short_version}",
-        'PIP_UPLOAD_REPO': os.environ.get('PIP_UPLOAD_REPO', f"{os.environ.get('PIP_UPLOAD_HOST', 'http://localhost')}/jp{JETPACK_VERSION.major}/{short_version}"),
+        'TAR_INDEX_URL': f"http://{index_host}:8000/{repo_path}",
+        'PIP_INDEX_REPO': f"http://{index_host}/{repo_path}",
+        'PIP_TRUSTED_HOSTS': index_host,
+        'PIP_UPLOAD_REPO': os.environ.get('PIP_UPLOAD_REPO', f"{os.environ.get('PIP_UPLOAD_HOST', 'http://localhost')}/{repo_path}"),
         'PIP_UPLOAD_USER': os.environ.get('PIP_UPLOAD_USER', f"jp{JETPACK_VERSION.major}"),
         'PIP_UPLOAD_PASS': os.environ.get('PIP_UPLOAD_PASS', 'none'),
+        'SCP_UPLOAD_URL': os.environ.get('SCP_UPLOAD_URL', f"{os.environ.get('SCP_UPLOAD_HOST', 'localhost:/dist')}/{repo_path}"),
+        'SCP_UPLOAD_USER': os.environ.get('SCP_UPLOAD_USER'),
+        'SCP_UPLOAD_PASS': os.environ.get('SCP_UPLOAD_PASS'),
     }
     
 def cuda_package(version, url, deb, packages=None, requires=None) -> list:

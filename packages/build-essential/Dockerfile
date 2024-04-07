@@ -9,8 +9,8 @@ FROM ${BASE_IMAGE}
 ENV DEBIAN_FRONTEND=noninteractive \
     LANGUAGE=en_US:en \
     LANG=en_US.UTF-8 \
-    LC_ALL=en_US.UTF-8 \
-    TERM=dumb
+    LC_ALL=en_US.UTF-8
+    #TERM=dumb
 
 RUN set -ex \
     && apt-get update \
@@ -38,8 +38,12 @@ RUN set -ex \
         zip \
         unzip \
         time \
+	   sshpass \
+	   ssh-client \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     \
     && gcc --version \
     && g++ --version
+
+COPY tarpack /usr/local/bin/
