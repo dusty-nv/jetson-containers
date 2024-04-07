@@ -11,9 +11,9 @@ FROM ${BASE_IMAGE}
 
 ARG ONNXRUNTIME_VERSION \
     ONNXRUNTIME_BRANCH \
-    ONNXRUNTIME_FLAGS
+    ONNXRUNTIME_FLAGS \
+    FORCE_BUILD=off
     
-COPY build.sh /tmp/build_onnxruntime.sh
+COPY install.sh build.sh /tmp/onnxruntime/
 
-RUN pip3 install --no-cache-dir --verbose onnxruntime-gpu==${ONNXRUNTIME_VERSION} || \
-    /tmp/build_onnxruntime.sh
+RUN /tmp/onnxruntime/install.sh || /tmp/onnxruntime/build.sh

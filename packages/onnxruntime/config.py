@@ -2,15 +2,12 @@
 from packaging.version import Version
 
 def onnxruntime(version, branch=None, requires=None, default=False):
-    pkg = package.copy()
+    ort = package.copy()
 
-    pkg['name'] = f'onnxruntime:{version}'
+    ort['name'] = f'onnxruntime:{version}'
 
-    if default:
-        pkg['alias'] = 'onnxruntime'
-    
     if requires:
-        pkg['requires'] = requires
+        ort['requires'] = requires
         
     if len(version.split('.')) < 3:
         version = version + '.0'
@@ -18,16 +15,24 @@ def onnxruntime(version, branch=None, requires=None, default=False):
     if not branch:
         branch = 'v' + version
     
-    pkg['build_args'] = {
+    ort['build_args'] = {
         'ONNXRUNTIME_VERSION': version,
         'ONNXRUNTIME_BRANCH': branch,
         'ONNXRUNTIME_FLAGS': '', 
     }
     
     if Version(version) >= Version('1.13'):
-        pkg['build_args']['ONNXRUNTIME_FLAGS'] = '--allow_running_as_root'
+        ort['build_args']['ONNXRUNTIME_FLAGS'] = '--allow_running_as_root'
     
-    return pkg
+    builder = ort.copy()
+    builder['name'] = builder['name'] + '-builder'
+    builder['build_args'] = {**builder['build_args'], 'FORCE_BUILD': 'on'}
+    
+    if default:
+        ort['alias'] = 'onnxruntime'
+        builder['alias'] = 'onnxruntime:builder'
+    
+    return ort, builder
     
     
 package = [
