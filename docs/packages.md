@@ -98,7 +98,9 @@ Python configuration scripts (normally called `config.py`) are the most expressi
 ```python
 from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES
 
-if L4T_VERSION.major >= 34:  
+if L4T_VERSION.major >= 36: 
+    MY_PACKAGE_VERSION = 'v6.0'  # on JetPack 6
+elif L4T_VERSION.major == 35:
     MY_PACKAGE_VERSION = 'v5.0'  # on JetPack 5
 else:                        
     MY_PACKAGE_VERSION = 'v4.0'  # on JetPack 4

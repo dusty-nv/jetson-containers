@@ -19,33 +19,31 @@ Modular container build system that provides various [**AI/ML packages**](packag
 
 See the [**`packages`**](packages) directory for the full list, including pre-built container images and CI/CD status for JetPack/L4T.
 
-#### Building Containers
-
 Using the included tools, you can easily combine packages together for building your own containers.  Want to run ROS2 with PyTorch and Transformers?  No problem - just do the [system setup](/docs/setup.md), and build it on your Jetson like this:
 
 ```bash
-jetson-containers build --name=my_container pytorch transformers ros:humble-desktop
+$ jetson-containers build --name=my_container pytorch transformers ros:humble-desktop
 ```
 
 There are shortcuts for running containers too - this will pull or build a [`l4t-pytorch`](packages/l4t/l4t-pytorch) image that's compatible:
 
 ```bash
-jetson-containers run $(autotag l4t-pytorch)
+$ jetson-containers run $(autotag l4t-pytorch)
 ```
-> <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
+> <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some added defaults (like `--runtime nvidia`, mounted `/data` cache and devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
 
 If you look at any package's readme (like [`l4t-pytorch`](packages/l4t/l4t-pytorch)), it will have detailed instructions for running it's container.
 
 #### Changing CUDA Versions
 
-You can rebuild the container stack against different versions of CUDA by setting `CUDA_VERSION` to one of those [available](/packages/cuda/cuda/config.py) for your version of JetPack:
+You can rebuild the container stack against different versions of CUDA by setting the `CUDA_VERSION` in your environment:
 
 ```bash
 CUDA_VERSION=12.4 jetson-containers build llama_cpp
 ```
 
-It will then go off and either pull or build all the dependencies.  You can also explicitly set the version of cuDNN, TensorRT, Python, and PyTorch with similar environment variables.
+It will then go off and either pull or build all the dependencies.  You can also explicitly set the version of cuDNN, TensorRT, Python, and PyTorch with similar environment variables - see here for more info.
 
 ## Documentation
 
