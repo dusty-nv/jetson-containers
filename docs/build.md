@@ -80,9 +80,9 @@ CUDA_VERSION=12.4 PYTHON_VERSION=3.11 PYTORCH_VERSION=2.3 \
   jetson-containers build l4t-text-generation
 ```
 
-The available versions are defined in the package's configuration scripts (some you can simply add new releases to by referring to the new git tag/branch, others need pointed to specific release downloads).  Not all combinations are compatible, as the versioned packages frequently define the minimum version of the others they rely on (for example, TensorRT 10 requires CUDA 12.4).  The
+The available versions are defined in the package's configuration scripts (some you can simply add new releases to by referring to the new git tag/branch, others need pointed to specific release downloads).  Not all combinations are compatible, as the versioned packages frequently define the minimum version of others in the build tree they rely on (for example, TensorRT 10 requires CUDA 12.4).
 
-You can also manually specify the version of a package that your container depends on in the Dockerfile's header under [`depends`](/docs/packages.md), and it will override the default instead (i.e. `depends: pytorch:2.3` instead of `depends: pytorch`)
+For packages that provide different versions but don't have their own environment variable defined, you can specify the desired version of them that your container depends on in the Dockerfile header under [`depends`](/docs/packages.md), and it will override the default (e.g. by using `depends: onnxruntime:1.17` instead of `depends: onnxruntime`)
 
 ## Pip Server
 
