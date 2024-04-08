@@ -40,7 +40,7 @@ The text between `#---` is YAML and is extracted by the build system.  Each pack
 | `requires`    | `str` or `list[str]` | the version(s) of L4T or CUDA the package is compatible with (e.g. `>=35.2.1` for JetPack 5.1+) |
 | `test`        | `str` or `list[str]` | one or more test commands/scripts to run (`.py`, `.sh`, or a shell command)             |
 
-> * These keys can all be accessed by any of the configuration methods below.<br>
+> * These keys can all be accessed by any of the configuration methods below<br>
 > * Any filenames or paths should be relative to the package's `path`<br>
 > * See the [Version Specifiers Specification](https://packaging.pypa.io/en/latest/specifiers.html) for valid syntax around `requires`
 > * `requires` can also check for CUDA version (`>=cu124`) and Python version (`>=py310`) and can be a list (`['>=r36', '>=cu122']`)
