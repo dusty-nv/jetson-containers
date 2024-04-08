@@ -82,13 +82,13 @@ CUDA_VERSION=12.4 PYTHON_VERSION=3.11 PYTORCH_VERSION=2.3 \
 
 The available versions are defined in the package's configuration scripts (some you can simply add new releases to by referring to the new git tag/branch, others need pointed to specific release downloads).  Not all combinations are compatible, as the versioned packages frequently define the minimum version of others in the build tree they rely on (for example, TensorRT 10 requires CUDA 12.4).
 
-For packages that provide different versions but don't have their own environment variable defined, you can specify the desired version of them that your container depends on in the Dockerfile header under [`depends`](/docs/packages.md), and it will override the default and build using them instead (e.g. by using `depends: onnxruntime:1.17` instead of `depends: onnxruntime`).  Like above, these will also cascade across the build.
+For packages that provide different versions but don't have their own environment variable defined, you can specify the desired version of them that your container depends on in the Dockerfile header under [`depends`](/docs/packages.md), and it will override the default and build using them instead (e.g. by using `depends: onnxruntime:1.17` instead of `depends: onnxruntime`).  Like above, these versions will also cascade across the build.
 
 ## Pip Server
 
 Being able to change the versions of CUDA, Python, ect in the build tree will cause all the dependant packages like PyTorch to need rebuilt, and this can be time-consuming to recompile everything from scratch.  In order to cache and re-use the Python wheels compiled during the container builds, there's a [pip server](http://jetson.webredirect.org) running that wheels are uploaded to.  The containers automatically use this pip server via the `PIP_INDEX_URL` environment variable that gets set in the base containers, and there are indexes created for different versions of JetPack/CUDA.  
 
-Then when the containers are built, it will first attempt to install the wheel from the server, and if it's found it builds it from source.  There is another similar server run for caching [tarball releases](http://jetson.webredirect.org:8000) for projects that install C/C++ binaries and headers or other general files outside of pip.  See this [forum post](https://forums.developer.nvidia.com/t/jetson-ai-lab-ml-devops-containers-core-inferencing/288235/3) for more information about the caching infrastructure, and the ability to use the pip server outside of container. 
+Then when the containers are built, it will first attempt to install the wheel from the server, and if it's found it builds it from source.  There is another similar server run for caching [tarball releases](http://jetson.webredirect.org:8000) for projects that install C/C++ binaries and headers or other general files outside of pip.  See this [forum post](https://forums.developer.nvidia.com/t/jetson-ai-lab-ml-devops-containers-core-inferencing/288235/3) for more information about the caching infrastructure, and the ability to use the pip server outside of just containers. 
 
 ## Building External Packages
 
