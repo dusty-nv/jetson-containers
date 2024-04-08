@@ -1,4 +1,4 @@
-![a header for a software project about building containers for AI and machine learning](https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/header.jpg)
+![a header for a software project about building containers for AI and machine learning](https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/header_blueprint_rainbow.jpg)
 
 # Machine Learning Containers for Jetson and JetPack
 
@@ -43,7 +43,7 @@ You can rebuild the container stack against different versions of CUDA by settin
 CUDA_VERSION=12.4 jetson-containers build llama_cpp
 ```
 
-It will then go off and either pull or build all the dependencies needed, including PyTorch and other packages that would be time-consuming to compile manually.  You can also request specific versions of cuDNN, TensorRT, Python, and PyTorch with similar environment variables like here.
+It will then go off and either pull or build all the dependencies needed, including PyTorch and other packages that would be time-consuming to compile manually.  You can also request specific versions of cuDNN, TensorRT, Python, and PyTorch with similar environment variables like [here](/docs/build.md#changing-versions).
 
 ## Documentation
 
@@ -66,7 +66,7 @@ Refer to the [System Setup](/docs/setup.md) page for tips about setting up your 
 git clone https://github.com/dusty-nv/jetson-containers
 bash jetson-containers/install.sh
 
-# automatically pull & run a container
+# automatically pull & run any container
 jetson-containers run $(autotag l4t-pytorch)
 ```
 

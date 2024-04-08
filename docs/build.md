@@ -55,6 +55,39 @@ $ jetson-containers build --base=my_container:latest --name=my_container:pytorch
 > [!NOTE]  
 > On JetPack 4/5, it's assumed that base images already have the JetPack components available/installed (CUDA Toolkit, cuDNN, TensorRT).  On JetPack 6, the CUDA components will automatically be installed on top of your base image if required.
 
+## Changing Versions
+
+Many packages are versioned, and define subpackages like `pytorch:2.0`, `pytorch:2.1`, ect in the package's [configuration](/docs/packages.md).  For some core packages, you can control the default version of these with environment variables like `PYTORCH_VERSION`, `PYTHON_VERSION`, and `CUDA_VERSION`.  Other packages referring to these will then use your desired versions instead of the previous ones.  
+
+```bash
+$ CUDA_VERSION=12.4 jetson-containers build --name=cu124/ pytorch
+```
+
+The dependencies are also able to specify with [`requires`](/docs/packages.md) which versions of L4T, CUDA, and Python they need, so changing the CUDA version has cascading effects downstream and will also change the default version of cuDNN, TensorRT, and PyTorch (similar to how changing the PyTorch version also changes the default version of torchvision and torchaudio).  The reverse also occurs in the other direction, for example changing the TensorRT version will change the default version of CUDA (unless you explicitly specify it otherwise).  
+
+| Package       | Environment Variable | Versions                                                                             |
+|---------------|:--------------------:|-----------------------------------------------------------------------------------------|
+| [`cuda`](/packages/cuda/cuda) | `CUDA_VERSION` | see [`cuda/config.py`](/packages/cuda/cuda/config.py) |
+| [`cudnn`](/packages/cuda/cudnn) | `CUDNN_VERSION` | see [`cudnn/config.py`](/packages/cuda/cudnn/config.py) |
+| [`tensorrt`](/packages/tensorrt) | `TENSORRT_VERSION` | see [`tensorrt/config.py`](/packages/tensorrt/config.py) |
+| [`python`](/packages/python) | `PYTHON_VERSION` | see [`python/config.py`](/packages/python/config.py) |
+| [`pytorch`](/packages/python) | `PYTORCH_VERSION` | see [`pytorch/config.py`](/packages/pytorch/config.py) |
+
+Using this, you can rebuild the container stack for the specific version combination that you want:
+
+```bash
+CUDA_VERSION=12.4 PYTHON_VERSION=3.11 PYTORCH_VERSION=2.3 \
+  jetson-containers build text-generation-webui  
+```
+
+The available versions are defined in the package's configuration scripts (some you can simply add new releases to by referring to the new git tag/branch, others need pointed to specific release downloads).  Not all combinations are possible, as the versioned packages frequently define the minimum version of the others they rely on (for example, TensorRT 10 requires CUDA 12.4).  There are trees of containers consisting of the versions available for each other.
+
+You can also manually specify in the Dockerfile [`depends`](/docs/packages.md) that a package should use a specific version instead of the alias (i.e. `depends: pytorch:2.3` instead of `depends: pytorch`)
+
+## Pip Server
+
+Being able to change the versions of CUDA, Python, ect in the build tree will cause all the dependant packages like PyTorch to need rebuilt also, and this can be time-consuming for everything.  In order to cache and re-use the Python wheels compiled during the container builds, there is a pip server running [here](http://jetson.webredirect.org) that these wheels are uploaded to and mirrors PyPi.  The containers automatically use this pip server via the `PIP_INDEX_URL` environment variable.  There are indexes defined for each major version of JetPack and CUDA.  Then when the containers are built, it will first attempt to install the wheel from the server, and if it can't be found it builds it from source.  There is another similar [server](http://jetson.webredirect.org:8000) run for caching tar releases for projects that install C/C++ binaries and headers or other general files outside of pip.  For more information about these servers for the build cache, see this [forum post](https://forums.developer.nvidia.com/t/jetson-ai-lab-ml-devops-containers-core-inferencing/288235/3)
+
 ## Building External Packages
 
 Let's say that you have a project that you want to build a container for - if you define a [custom package](/docs/packages.md) (i.e. by creating a Dockerfile with a YAML header), you can point `build.sh` to out-of-tree locations using the `--package-dirs` option:
