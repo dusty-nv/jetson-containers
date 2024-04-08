@@ -7,7 +7,7 @@ def get_latest_stable_version(fallback='2024.3.1'):
         response = requests.get('https://version.home-assistant.io/stable.json')
         if response.status_code == 200:
             data = response.json()
-            return data.get('homeassistant', { 'default': fallback }).get('default', fallback)
+            return data.get('homeassistant', { 'default': fallback }).get('default', fallback).strip()
         else:
             print("Failed to fetch version information. Status code:", response.status_code)
             return fallback
