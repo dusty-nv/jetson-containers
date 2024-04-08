@@ -5,9 +5,9 @@ COMMAND=$1
 
 shift;
 
-if [ "$COMMAND" = "build" ]; then
+if [ "$COMMAND" = "build" ] || [ "$COMMAND" = "build.sh" ]; then
 	$ROOT/build.sh "$@"
-elif [ "$COMMAND" = "run" ]; then
+elif [ "$COMMAND" = "run" ] || [ "$COMMAND" = "run.sh" ]; then
 	$ROOT/run.sh "$@"
 elif [ "$COMMAND" = "list" ]; then
 	$ROOT/build.sh --list "$@"
