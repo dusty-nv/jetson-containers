@@ -9,9 +9,22 @@ if [ "$COMMAND" = "build" ]; then
 	$ROOT/build.sh "$@"
 elif [ "$COMMAND" = "run" ]; then
 	$ROOT/run.sh "$@"
+elif [ "$COMMAND" = "list" ]; then
+	$ROOT/build.sh --list "$@"
+elif [ "$COMMAND" = "show" ]; then
+	$ROOT/build.sh --show "$@"
 elif [ "$COMMAND" = "autotag" ]; then
 	$ROOT/autotag "$@"
 else
-	echo "invalid command - options are:  build, run, autotag"
+	echo ''
+	echo 'jetson-containers > Invalid command'
+	echo ''
+	echo '   * build [PACKAGES]'
+	echo '   * run OPTIONS [CONTAINER:TAG] CMD'
+	echo '   * list [PACKAGES|*'
+	echo '   * show [PACKAGES]*'
+	echo '   * autotag [CONTAINER]'
+	echo ''
+	echo 'Run "jetson-containers <CMD> --help" for more info.'
 	exit 1
 fi
