@@ -37,13 +37,13 @@ If you look at any package's readme (like [`l4t-pytorch`](packages/l4t/l4t-pytor
 
 #### Changing CUDA Versions
 
-You can rebuild the container stack against different versions of CUDA by setting the `CUDA_VERSION` in your environment:
+You can rebuild the container stack for different versions of CUDA by setting the `CUDA_VERSION` in your environment:
 
 ```bash
-CUDA_VERSION=12.4 jetson-containers build llama_cpp
+CUDA_VERSION=12.4 jetson-containers build transformers
 ```
 
-It will then go off and either pull or build all the dependencies needed, including PyTorch and other packages that would be time-consuming to compile manually.  You can also request specific versions of cuDNN, TensorRT, Python, and PyTorch with similar environment variables like [here](/docs/build.md#changing-versions).
+It will then go off and either pull or build all the dependencies needed, including PyTorch and other packages that would be time-consuming to compile.  There is a [Pip server](/docs/build.md#pip-server) that caches the wheels to accelerate builds.  You can also request specific versions of cuDNN, TensorRT, Python, and PyTorch with similar environment variables like [here](/docs/build.md#changing-versions).
 
 ## Documentation
 
