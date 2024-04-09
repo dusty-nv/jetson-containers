@@ -1,4 +1,6 @@
 import requests
+
+from jetson_containers import update_dependencies
 from packaging.version import Version
 
 
@@ -32,7 +34,8 @@ def create_package(version, default=False) -> list:
     else:
         required_python = 'python'
 
-    pkg['depends'].extend([required_python])
+    pkg['depends'] = update_dependencies(pkg['depends'], [required_python])
+    
     pkg['build_args'] = {
         'HA_BRANCH': wanted_version,
     }
@@ -46,5 +49,6 @@ package = [
     # latest
     create_package('latest', default=True),
     # specific version
+    create_package('2024.4.2', default=False),
     # create_package('2024.3.1', default=True),
 ]

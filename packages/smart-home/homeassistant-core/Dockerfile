@@ -4,7 +4,7 @@
 # config: config.py
 # requires: '>=34.1.0'
 # docs: docs.md
-# depends: [build-essential, ffmpeg]
+# depends: [python, ffmpeg]
 # test: [test_ciso8601.py, test_psutil_home_assistant.py, test_homeassistant.py]
 # notes: The `homeassistant-core` wheel that's build is saved in `/usr/src/homeassistant`
 #---
