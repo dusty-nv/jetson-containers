@@ -20,6 +20,6 @@ package = [
     python('3.6', '==32.*'),  # JetPack 4
     python('3.8', '<36'),     # JetPack 4 + 5
     python('3.10', '>=34'),   # JetPack 5 + 6
-    python('3.11', '>=36'),   # JetPack 6
-    python('3.12', '>=36'),   # JetPack 6
+    python('3.11', '>=34'),   # JetPack 6
+    python('3.12', '>=34'),   # JetPack 6
 ]
