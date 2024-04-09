@@ -52,11 +52,16 @@ RUN apt-get update \
     && mkdir -p /usr/src/bashio \
     && curl -L -f -s "https://github.com/hassio-addons/bashio/archive/v${BASHIO_VERSION}.tar.gz" \
         | tar -xzf - --strip 1 -C /usr/src/bashio \
+    \
+    # FIX: Remove HA Supervisor from bashio (not used) \
+    && sed -i \
+        -e 's|^# shellcheck source=lib/supervisor.sh||g' \
+        -e 's|source "${__BASHIO_LIB_DIR}/supervisor.sh"||g' \
+        /usr/src/bashio/lib/bashio.sh \
+    \
     && mv /usr/src/bashio/lib /usr/lib/bashio \
     && ln -s /usr/lib/bashio/bashio /usr/bin/bashio \
     \
-    && apt-get purge -y --auto-remove \
-        xz-utils \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /usr/src/*
 
