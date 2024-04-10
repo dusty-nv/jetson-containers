@@ -39,8 +39,9 @@ RUN mkdir faiss/build && \
      -DFAISS_ENABLE_GPU=ON \
 	-DFAISS_ENABLE_PYTHON=ON \
 	-DFAISS_ENABLE_RAFT=OFF \
-	-DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES} \
 	-DPYTHON_EXECUTABLE=/usr/bin/python3 \
+	-DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES} \
+	-DCMAKE_INSTALL_PREFIX=/opt/faiss/install \
 	../ && \
     make -j$(nproc) faiss && \
     make install
