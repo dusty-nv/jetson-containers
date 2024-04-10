@@ -1,5 +1,5 @@
 #---
-# name: homeassistant-base-image
+# name: homeassistant-base
 # group: smart-home
 # config: config.py
 # requires: '>=34.1.0'
