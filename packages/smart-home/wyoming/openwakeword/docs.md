@@ -70,7 +70,7 @@ volumes:
 
 ### Native auto-discovery with Home Assistant
 
-> **TLDR;** *It's didabled, go with manual way...*
+> **TLDR;** *It's disabled, go with manual way...*
 
 The native auto-discovery of add-ons running on the same host/network is disabled due to the requirement of running [`Home Assistant Supervisor`](https://www.home-assistant.io/integrations/hassio/). This has some deep debian system dependencies which are too tidious to port.
 
