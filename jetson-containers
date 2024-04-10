@@ -15,8 +15,13 @@ elif [ "$COMMAND" = "show" ]; then
 	$ROOT/build.sh --show "$@"
 elif [ "$COMMAND" = "autotag" ]; then
 	$ROOT/autotag "$@"
+elif [ "$COMMAND" = "update" ]; then
+	cd $ROOT
+	git pull
 elif [ "$COMMAND" = "root" ]; then
 	echo $ROOT
+elif [ "$COMMAND" = "data" ]; then
+	echo $ROOT/data
 else
 	echo ''
 	echo 'jetson-containers > Invalid command'
@@ -26,7 +31,9 @@ else
 	echo '   * list [PACKAGES|*'
 	echo '   * show [PACKAGES]*'
 	echo '   * autotag [CONTAINER]'
+	echo '   * update (runs git pull)'
 	echo '   * root (prints repo path)'
+	echo '   * data (prints data path)'
 	echo ''
 	echo 'Run "jetson-containers <CMD> --help" for more info.'
 	exit 1
