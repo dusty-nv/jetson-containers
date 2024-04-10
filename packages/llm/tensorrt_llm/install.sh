@@ -2,14 +2,14 @@
 set -ex
 
 apt-get update
-apt-get install -y --no-install-recommends openmpi-bin libopenmpi-dev
+apt-get install -y --no-install-recommends openmpi-bin libopenmpi-dev git-lfs
 rm -rf /var/lib/apt/lists/*
 apt-get clean
 
 pip3 install --no-cache-dir --verbose polygraphy mpi4py
 
 if [ "$FORCE_BUILD" == "on" ]; then
-	echo "Forcing build of TensorRT-LLM ${TRT_LLM_VERSION} (branch=${TRT_LLM_BRANCH})"
+	echo "Forcing build of TensorRT-LLM ${TRT_LLM_VERSION}"
 	exit 1
 fi
 

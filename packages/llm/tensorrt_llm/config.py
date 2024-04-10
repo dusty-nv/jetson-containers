@@ -1,7 +1,7 @@
 from jetson_containers import CUDA_ARCHITECTURES, CUDA_VERSION, update_dependencies
 from packaging.version import Version
    
-def tensorrt_llm(version, branch=None, patch=None, depends=None, requires=None, default=False):
+def tensorrt_llm(version, branch=None, patch=None, src=None, depends=None, requires=None, default=False):
     trt_llm = package.copy()
 
     trt_llm['name'] = f'tensorrt_llm:{version}'
@@ -14,9 +14,13 @@ def tensorrt_llm(version, branch=None, patch=None, depends=None, requires=None, 
     if not patch:
         patch = 'patches/empty.diff'
         
+    if not src:
+        src = 'sources/empty.tar.gz'
+        
     trt_llm['build_args'] = {
         'TRT_LLM_VERSION': version,
         'TRT_LLM_BRANCH': branch,
+        'TRT_LLM_SOURCE': src,
         'TRT_LLM_PATCH': patch,
         'CUDA_ARCHS': ';'.join([f'{x}-real' for x in CUDA_ARCHITECTURES]),
     }
@@ -41,6 +45,7 @@ def tensorrt_llm(version, branch=None, patch=None, depends=None, requires=None, 
     return trt_llm, builder
 
 package = [
-    tensorrt_llm('0.9.dev', '118b3d7', patch='patches/118b3d7.diff', requires=['==r36.*', '>=cu124'], default=True),
+    tensorrt_llm('0.10.dev0', src='sources/tensorrt_llm-0.10.0.dev0.tar.gz', requires=['==r36.*', '>=cu124'], default=True),
+    #tensorrt_llm('0.9.dev', '118b3d7', patch='patches/118b3d7.diff', requires=['==r36.*', '>=cu124'], default=False),
     tensorrt_llm('0.5', patch='patches/0.5.diff', requires=['==r36.*', '==cu122'], default=True),
 ]

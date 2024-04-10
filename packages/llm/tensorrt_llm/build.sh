@@ -1,37 +1,35 @@
 #!/usr/bin/env bash
 set -ex
 
-echo "Building TensorRT-LLM ${TRT_LLM_VERSION} (branch=${TRT_LLM_BRANCH})"
+echo "Building TensorRT-LLM ${TRT_LLM_VERSION}"
 
-# git-lfs is needed
-apt-get update
-apt-get install -y --no-install-recommends git-lfs
-rm -rf /var/lib/apt/lists/*
-apt-get clean
-
-# clone the sources
-git clone https://github.com/NVIDIA/TensorRT-LLM.git ${SRC_DIR}
-cd ${SRC_DIR}
-
-git checkout ${TRT_LLM_BRANCH}
-git status
-
-git submodule update --init --recursive
-git lfs pull
-  
-# apply patches
-if [ -s /tmp/tensorrt_llm/patch.diff ]; then 
-	git apply /tmp/tensorrt_llm/patch.diff
-fi
-
-sed -i 's|tensorrt.*||' requirements.txt
-sed -i 's|torch.*|torch|' requirements.txt
-
-git status
-git diff --submodule=diff
+if [ -s ${SOURCE_TAR} ]; then
+	echo "extracting TensorRT-LLM sources from ${TRT_LLM_SOURCE}"
+	mkdir -p ${SOURCE_DIR}
+	tar -xzf ${SOURCE_TAR} -C ${SOURCE_DIR}
+else
+	echo "cloning TensorRT-LLM sources from git (branch=${TRT_LLM_BRANCH})"
+	git clone https://github.com/NVIDIA/TensorRT-LLM.git ${SOURCE_DIR}
+	cd ${SOURCE_DIR}
+	git checkout ${TRT_LLM_BRANCH}
+	git status
+	git submodule update --init --recursive
+	git lfs pull
 	
-# build C++ and Python  
-python3 ${SRC_DIR}/scripts/build_wheel.py \
+	if [ -s ${GIT_PATCHES} ]; then 
+		echo "applying git patches from ${TRT_LLM_PATCH}"
+		git apply ${GIT_PATCHES}
+	fi
+	
+	sed -i 's|tensorrt.*||' requirements.txt
+	sed -i 's|torch.*|torch|' requirements.txt
+	sed -i 's|nvidia-cudnn.*||' requirements.txt
+	
+	git status
+	git diff --submodule=diff
+fi	
+
+python3 ${SOURCE_DIR}/scripts/build_wheel.py \
         --clean \
         --build_type Release \
         --cuda_architectures "${CUDA_ARCHS}" \
@@ -41,10 +39,9 @@ python3 ${SRC_DIR}/scripts/build_wheel.py \
         --benchmarks \
         --python_bindings
 
-# install wheel
 pip3 install --no-cache-dir --verbose /opt/tensorrt_llm*.whl
 
 pip3 show tensorrt_llm
 python3 -c "import tensorrt_llm; print(tensorrt_llm.__version__)"
 
-twine upload --verbose /opt/tvm*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose /opt/tensorrt_llm*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
