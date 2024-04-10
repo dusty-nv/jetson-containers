@@ -35,5 +35,6 @@ pip3 install --no-cache-dir --verbose /opt/onnxruntime*.whl
 python3 -c 'import onnxruntime; print(onnxruntime.__version__);'
 
 twine upload --verbose /opt/onnxruntime*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
-tarpack upload onnxruntime-gpu-${ONNXRUNTIME_VERSION} ${install_dir}
+tarpack upload onnxruntime-gpu-${ONNXRUNTIME_VERSION} ${install_dir} || echo "failed to upload tarball"
+
 #rm -rf /tmp/onnxruntime
