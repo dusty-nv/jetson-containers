@@ -1,7 +1,8 @@
 #---
 # name: local_llm
 # group: llm
-# depends: [nanodb, mlc, riva-client:python, jetson-inference, torch2trt, xtts, onnxruntime]
+# config: config.py
+# depends: [nanodb, mlc, riva-client:python, jetson-inference, torch2trt, onnxruntime]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---
