@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
 
-cd /opt/exllama
-
-python3 test_benchmark_inference.py --help
+cd /opt/exllamav2
+python3 test_inference.py --help

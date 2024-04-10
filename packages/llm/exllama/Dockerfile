@@ -4,7 +4,7 @@
 # config: config.py
 # depends: [pytorch, huggingface_hub]
 # requires: '>=34.1.0'
-# test: test_v2.sh
+# test: test.sh
 # docs: docs.md
 #---
 ARG BASE_IMAGE
