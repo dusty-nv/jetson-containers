@@ -4,7 +4,7 @@
 # config: config.py
 # requires: '>=34.1.0'
 # docs: docs.md
-# depends: [homeassistant-base-image, ffmpeg]
+# depends: [homeassistant-base, ffmpeg]
 # test: [test_ciso8601.py, test_psutil_home_assistant.py, test_homeassistant.py]
 # notes: The `homeassistant-core` wheel that's build is saved in `/usr/src/homeassistant`
 #---
@@ -17,62 +17,12 @@ ENV S6_SERVICES_READYTIME=50 \
     S6_SERVICES_GRACETIME=240000 \
     UV_SYSTEM_PYTHON=true
 
-# Base system
 WORKDIR /usr/src
 
-COPY *.diff /tmp/
+COPY *.diff build_*.sh /tmp/
 
-# Install dependencies
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        autoconf \
-        libpcap0.8 \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install uv & ruff
-RUN pip3 install --no-cache-dir --verbose uv==0.1.27 ruff
-
-# Install ciso8601
-RUN git clone https://github.com/closeio/ciso8601 /tmp/ciso8601 \
-    && git -C /tmp/ciso8601 apply /tmp/ciso8601-patch.diff \
-    && git -C /tmp/ciso8601 diff \
-    && pip3 wheel --wheel-dir=/opt/ --no-deps --verbose /tmp/ciso8601 \
-    && pip3 install --no-cache-dir --verbose /opt/ciso8601*.whl \
-    && pip3 show ciso8601 \
-    && python3 -c 'import ciso8601; print(ciso8601.__version__);' \
-    && rm -rf /tmp/ciso8601
-
-# Install psutil-home-assistant
-RUN git clone https://github.com/home-assistant-libs/psutil-home-assistant /tmp/psutil-home-assistant \
-    && pip3 wheel --wheel-dir=/opt/ --no-deps --verbose /tmp/psutil-home-assistant \
-    && pip3 install --no-cache-dir --verbose /opt/psutil_home_assistant*.whl \
-    && pip3 show psutil-home-assistant \
-    && python3 -c 'import psutil_home_assistant;' \
-    && rm -rf /tmp/psutil-home-assistant
-
-RUN echo "HA_BRANCH: ${HA_BRANCH}" \
-    && pip3 install --no-cache-dir --ignore-installed blinker \
-    && git clone --branch=${HA_BRANCH} https://github.com/home-assistant/core homeassistant \
-    && uv pip install --no-cache-dir --verbose -r homeassistant/requirements.txt
-
-RUN ln -s /usr/lib/aarch64-linux-gnu/libjemalloc.so.2 /usr/local/lib/libjemalloc.so.2 \
-    && if ls homeassistant/home_assistant_*.whl 1> /dev/null 2>&1; then \
-        uv pip install --no-cache-dir --verbose homeassistant/home_assistant_*.whl; \
-    fi \
-    && LD_PRELOAD="${LD_PRELOAD}:/usr/local/lib/libjemalloc.so.2" \
-        MALLOC_CONF="background_thread:true,metadata_thp:auto,dirty_decay_ms:20000,muzzy_decay_ms:20000" \
-        uv pip install --no-cache-dir --verbose -r homeassistant/requirements_all.txt \
-    && uv pip install -e homeassistant \
-    && python3 -m compileall homeassistant
-
-# Generate languages
-RUN cd homeassistant \
-    && python3 -m script.hassfest \
-    && python3 -m script.translations develop --all
-
-# Home Assistant S6-Overlay
-RUN cp -r homeassistant/rootfs/* /
+RUN /tmp/build_ciso8601.sh && /tmp/build_homeassistant.sh
+RUN ln -s /data/homeassistant /config
 
 WORKDIR /config
 
