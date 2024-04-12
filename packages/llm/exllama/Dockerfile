@@ -11,10 +11,9 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG EXLLAMA_VERSION \
-    EXLLAMA_BRANCH
+    EXLLAMA_BRANCH \
+    FORCE_BUILD=off
 
-COPY build.sh /tmp/build_exllama.sh
+COPY install.sh build.sh /tmp/exllama/
 
-RUN git clone --branch=v${EXLLAMA_BRANCH} --depth=1 --recursive https://github.com/turboderp/exllamav2 /opt/exllamav2 && \
-    pip3 install --no-cache-dir --verbose exllamav2==${EXLLAMA_VERSION} || \
-    /tmp/build_exllama.sh
+RUN /tmp/exllama/install.sh || /tmp/exllama/build.sh
