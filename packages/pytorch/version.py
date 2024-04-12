@@ -1,3 +1,4 @@
+# this is in a different file from config.py so other packages can import it
 from jetson_containers import L4T_VERSION, CUDA_VERSION
 from packaging.version import Version
 
@@ -10,8 +11,8 @@ else:
         if CUDA_VERSION >= Version('12.4'):
             PYTORCH_VERSION = Version('2.3')
         else:
-            PYTORCH_VERSION = Version('2.1')
+            PYTORCH_VERSION = Version('2.2')
     elif L4T_VERSION.major >= 34:
-        PYTORCH_VERSION = Version('2.1')
+        PYTORCH_VERSION = Version('2.2')
     elif L4T_VERSION.major >= 32:
         PYTORCH_VERSION = Version('1.10')
