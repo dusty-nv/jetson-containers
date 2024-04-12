@@ -69,6 +69,7 @@ def pytorch_whl(version, whl, url, requires, alias=None):
 
 package = [
     # JetPack 5/6
+    pytorch_pip('2.0', requires='==35.*'),
     pytorch_pip('2.1', requires='>=35'),
     pytorch_pip('2.2', requires='>=35'),
     pytorch_pip('2.3.0-rc6', requires='==36.*'),
