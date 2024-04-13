@@ -9,7 +9,7 @@
 
 <details>
 <summary><b>ARCHIVED DOCUMENTATION</b></summary>
-
+<br/>
 <a href="https://www.youtube.com/watch?v=9ObzbbBTbcc"><img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/llamaspeak_llava_clip.gif"></a>
 
 * Optimized LLM inference engine with support for AWQ and MLC quantization, multimodal agents, and live ASR/TTS.
