@@ -3,6 +3,11 @@
 > [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 
 
+> [!NOTE]  
+> This source outgrew being hosted within jetson-containers and moved to:
+>   [`github.com/dusty-nv/NanoLLM`](https://github.com/dusty-nv/NanoLLM) repo and [`nano_llm`](/packages/llm/nano_llm) container
+> It will remain here for backwards compatability, but all further updates are being made to NanoLLM.
+
 <a href="https://www.youtube.com/watch?v=9ObzbbBTbcc"><img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/llamaspeak_llava_clip.gif"></a>
 
 * Optimized LLM inference engine with support for AWQ and MLC quantization, multimodal agents, and live ASR/TTS.
@@ -226,10 +231,10 @@ You can also tag incoming images and add them to the database using the panel in
 | **`local_llm`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`local_llm_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/local_llm_jp60.yml?label=local_llm:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/local_llm_jp60.yml) [![`local_llm_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/local_llm_jp51.yml?label=local_llm:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/local_llm_jp51.yml) |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`cuda-python`](/packages/cuda/cuda-python) [`faiss`](/packages/vectordb/faiss) [`faiss_lite`](/packages/vectordb/faiss_lite) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) [`torch2trt`](/packages/pytorch/torch2trt) [`nanodb`](/packages/vectordb/nanodb) [`mlc`](/packages/llm/mlc) [`riva-client:python`](/packages/audio/riva-client) [`opencv`](/packages/opencv) [`gstreamer`](/packages/gstreamer) [`jetson-inference`](/packages/jetson-inference) [`torchaudio`](/packages/pytorch/torchaudio) [`xtts`](/packages/audio/xtts) [`onnxruntime`](/packages/onnxruntime) |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda:12.2`](/packages/cuda/cuda) [`cudnn:8.9`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.2`](/packages/pytorch) [`cuda-python`](/packages/cuda/cuda-python) [`faiss`](/packages/vectordb/faiss) [`faiss_lite`](/packages/vectordb/faiss_lite) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`tensorrt`](/packages/tensorrt) [`torch2trt`](/packages/pytorch/torch2trt) [`nanodb`](/packages/vectordb/nanodb) [`mlc`](/packages/llm/mlc) [`riva-client:python`](/packages/audio/riva-client) [`opencv`](/packages/opencv) [`gstreamer`](/packages/gstreamer) [`jetson-inference`](/packages/jetson-inference) [`onnxruntime`](/packages/onnxruntime) [`torchaudio`](/packages/pytorch/torchaudio) [`xtts`](/packages/audio/xtts) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/local_llm:dev-r36.2.0`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2024-03-03, 10.3GB)`<br>[`dustynv/local_llm:r35.2.1`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2024-02-22, 8.8GB)`<br>[`dustynv/local_llm:r35.3.1`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2024-02-22, 8.8GB)`<br>[`dustynv/local_llm:r35.4.1`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2024-02-22, 8.8GB)`<br>[`dustynv/local_llm:r36.2.0`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2024-03-08, 10.5GB)`<br>[`dustynv/local_llm:r36.2.0-20240127`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2024-03-07, 11.3GB)`<br>[`dustynv/local_llm:r36.2.0-20240303`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2024-03-07, 10.3GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/local_llm:dev-r36.2.0`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2024-03-03, 10.3GB)`<br>[`dustynv/local_llm:r35.2.1`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2024-02-22, 8.8GB)`<br>[`dustynv/local_llm:r35.3.1`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2024-02-22, 8.8GB)`<br>[`dustynv/local_llm:r35.4.1`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2024-02-22, 8.8GB)`<br>[`dustynv/local_llm:r36.2.0`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2024-03-17, 11.3GB)`<br>[`dustynv/local_llm:r36.2.0-20240127`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2024-03-07, 11.3GB)`<br>[`dustynv/local_llm:r36.2.0-20240303`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2024-03-07, 10.3GB)`<br>[`dustynv/local_llm:r36.2.0-20240309`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2024-03-11, 10.5GB)`<br>[`dustynv/local_llm:r36.2.0-20240315`](https://hub.docker.com/r/dustynv/local_llm/tags) `(2024-03-16, 11.3GB)` |
 
 </details>
 
@@ -243,9 +248,11 @@ You can also tag incoming images and add them to the database using the panel in
 | &nbsp;&nbsp;[`dustynv/local_llm:r35.2.1`](https://hub.docker.com/r/dustynv/local_llm/tags) | `2024-02-22` | `arm64` | `8.8GB` |
 | &nbsp;&nbsp;[`dustynv/local_llm:r35.3.1`](https://hub.docker.com/r/dustynv/local_llm/tags) | `2024-02-22` | `arm64` | `8.8GB` |
 | &nbsp;&nbsp;[`dustynv/local_llm:r35.4.1`](https://hub.docker.com/r/dustynv/local_llm/tags) | `2024-02-22` | `arm64` | `8.8GB` |
-| &nbsp;&nbsp;[`dustynv/local_llm:r36.2.0`](https://hub.docker.com/r/dustynv/local_llm/tags) | `2024-03-08` | `arm64` | `10.5GB` |
+| &nbsp;&nbsp;[`dustynv/local_llm:r36.2.0`](https://hub.docker.com/r/dustynv/local_llm/tags) | `2024-03-17` | `arm64` | `11.3GB` |
 | &nbsp;&nbsp;[`dustynv/local_llm:r36.2.0-20240127`](https://hub.docker.com/r/dustynv/local_llm/tags) | `2024-03-07` | `arm64` | `11.3GB` |
 | &nbsp;&nbsp;[`dustynv/local_llm:r36.2.0-20240303`](https://hub.docker.com/r/dustynv/local_llm/tags) | `2024-03-07` | `arm64` | `10.3GB` |
+| &nbsp;&nbsp;[`dustynv/local_llm:r36.2.0-20240309`](https://hub.docker.com/r/dustynv/local_llm/tags) | `2024-03-11` | `arm64` | `10.5GB` |
+| &nbsp;&nbsp;[`dustynv/local_llm:r36.2.0-20240315`](https://hub.docker.com/r/dustynv/local_llm/tags) | `2024-03-16` | `arm64` | `11.3GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
