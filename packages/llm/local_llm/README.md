@@ -4,8 +4,8 @@
 
 
 > [!NOTE]  
-> This source outgrew being hosted within jetson-containers and moved to:
->   [`github.com/dusty-nv/NanoLLM`](https://github.com/dusty-nv/NanoLLM) repo and [`nano_llm`](/packages/llm/nano_llm) container
+> This source outgrew being hosted within jetson-containers and moved to:<br/>  
+>   [`github.com/dusty-nv/NanoLLM`](https://github.com/dusty-nv/NanoLLM) repo and [`nano_llm`](/packages/llm/nano_llm) container<br/>  
 > It will remain here for backwards compatability, but all further updates are being made to NanoLLM.
 
 <a href="https://www.youtube.com/watch?v=9ObzbbBTbcc"><img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/llamaspeak_llava_clip.gif"></a>
