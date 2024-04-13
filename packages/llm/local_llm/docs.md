@@ -8,7 +8,7 @@
 > It will remain here for backwards compatability, but future updates will be made to NanoLLM.
 
 <details>
-<summary>Archived Documentation</summary>
+<summary><b>ARCHIVED DOCUMENTATION</b></summary>
 
 <a href="https://www.youtube.com/watch?v=9ObzbbBTbcc"><img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/llamaspeak_llava_clip.gif"></a>
 
