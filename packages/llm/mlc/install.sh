@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 set -ex
 
-# install the wheels (TODO specific commit)
+# install the wheels (TODO specify commit)
 pip3 install --no-cache-dir --verbose \
-	tvm>=${TVM_VERSION} \
-	mlc-llm>=${MLC_VERSION} \
-	mlc-chat>=${MLC_VERSION} \
+	tvm \
+	mlc-llm \
+	mlc-chat \
 	'pydantic>2'
 
 # we need the source because the MLC model builder relies on it
 git clone https://github.com/mlc-ai/mlc-llm /opt/mlc-llm
-cd /opt/mlc-llm && \
+cd /opt/mlc-llm
 git checkout ${MLC_COMMIT}
 git submodule update --init --recursive
     
