@@ -10,7 +10,7 @@ FROM ${BASE_IMAGE}
 
 ARG FLASH_ATTENTION_VERSION="2.5.6"
 
-COPY build.sh install.sh patch.diff /tmp/flash-attention
+COPY build.sh install.sh patch.diff /tmp/flash-attention/
 
 RUN /tmp/flash-attention/install.sh || /tmp/flash-attention/build.sh
     
