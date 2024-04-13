@@ -7,6 +7,9 @@
 >
 > It will remain here for backwards compatability, but future updates will be made to NanoLLM.
 
+<details>
+<summary>Archived Documentation</summary>
+
 <a href="https://www.youtube.com/watch?v=9ObzbbBTbcc"><img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/llamaspeak_llava_clip.gif"></a>
 
 * Optimized LLM inference engine with support for AWQ and MLC quantization, multimodal agents, and live ASR/TTS.
@@ -223,3 +226,5 @@ You can also tag incoming images and add them to the database using the panel in
 
 <a href="https://youtu.be/dRmAGGuupuE"><img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/live_llava_bear.jpg"></a>
 > [Live Llava 2.0 - VILA + Multimodal NanoDB on Jetson Orin](https://youtu.be/X-OXxPiUTuU) (container: [`local_llm`](/packages/llm/local_llm#live-llava)) 
+
+</details>
