@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+python3 -c 'from nano_llm.plugins import AutoASR, AutoTTS'
 
 python3 -m nano_llm.chat --api mlc \
   --model princeton-nlp/Sheared-LLaMA-2.7B-ShareGPT \
