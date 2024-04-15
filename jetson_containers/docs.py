@@ -171,10 +171,10 @@ def generate_package_docs(packages, root, repo, simulate=False):
         # example commands for running the container
         run_txt = "\n<details open>\n"
         run_txt += '<summary><b><a id="run">RUN CONTAINER</a></b></summary>\n<br>\n\n'
-        run_txt += "To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/docs/run.md#autotag) helpers or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:\n" 
+        run_txt += "To start the container, you can use [`jetson-containers run`](/docs/run.md) and [`autotag`](/docs/run.md#autotag), or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:\n" 
         run_txt += "```bash\n"
         run_txt += "# automatically pull or build a compatible container image\n"
-        run_txt += f"./run.sh $(./autotag {pkg_name})\n"
+        run_txt += f"jetson-containers run $(autotag {pkg_name})\n"
         run_img = f"{pkg_name}:{L4T_VERSION}\n"
         
         # list all the dockerhub images for this group of packages
@@ -185,7 +185,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
             
             run_txt += "\n# or explicitly specify one of the container images above\n"
             run_img = f"{registry[0]['namespace']}/{registry[0]['name']}:{registry[0]['tags'][0]['name']}"
-            run_txt += f"./run.sh {run_img}\n"
+            run_txt += f"jetson-containers run {run_img}\n"
             
             txt += "\n<details open>\n"
             txt += '<summary><b><a id="images">CONTAINER IMAGES</a></b></summary>\n<br>\n\n'
@@ -208,27 +208,27 @@ def generate_package_docs(packages, root, repo, simulate=False):
         run_txt += "\n# or if using 'docker run' (specify image and mounts/ect)\n"
         run_txt += f"sudo docker run --runtime nvidia -it --rm --network=host {run_img}\n"
         run_txt += "```\n"
-        run_txt += "> <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>\n" 
+        run_txt += "> <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>\n" 
         run_txt += "> <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>\n\n"
         
         run_txt += f"To mount your own directories into the container, use the [`-v`](https://docs.docker.com/engine/reference/commandline/run/#volume) or [`--volume`](https://docs.docker.com/engine/reference/commandline/run/#volume) flags:\n"
         run_txt += "```bash\n"
-        run_txt += f"./run.sh -v /path/on/host:/path/in/container $(./autotag {pkg_name})\n"
+        run_txt += f"jetson-containers run -v /path/on/host:/path/in/container $(autotag {pkg_name})\n"
         run_txt += "```\n"
         run_txt += f"To launch the container running a command, as opposed to an interactive shell:\n"
         run_txt += "```bash\n"
-        run_txt += f"./run.sh $(./autotag {pkg_name}) my_app --abc xyz\n"
+        run_txt += f"jetson-containers run $(autotag {pkg_name}) my_app --abc xyz\n"
         run_txt += "```\n"
-        run_txt += "You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.\n"
+        run_txt += "You can pass any options to it that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.\n"
         run_txt += "</details>\n"
         
         run_txt += "<details open>\n"
         run_txt += '<summary><b><a id="build">BUILD CONTAINER</b></summary>\n<br>\n\n'
         run_txt += "If you use [`autotag`](/docs/run.md#autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do the [system setup](/docs/setup.md), then run:\n"
         run_txt += "```bash\n"
-        run_txt += f"./build.sh {pkg_name}\n"
+        run_txt += f"jetson-containers build {pkg_name}\n"
         run_txt += "```\n"
-        run_txt += "The dependencies from above will be built into the container, and it'll be tested during.  See [`./build.sh --help`](/jetson_containers/build.py) for build options.\n"
+        run_txt += "The dependencies from above will be built into the container, and it'll be tested during.  Run it with [`--help`](/jetson_containers/build.py) for build options.\n"
         run_txt += "</details>\n"
         
         #if docs:
