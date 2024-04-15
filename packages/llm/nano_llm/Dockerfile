@@ -2,7 +2,7 @@
 # name: nano_llm
 # group: llm
 # config: config.py
-# depends: [nanodb, mlc, riva-client:python, jetson-inference, torch2trt, onnxruntime]
+# depends: [nanodb, mlc, riva-client:python, jetson-inference, torch2trt, torchaudio, onnxruntime]
 # requires: '>=35'
 # docs: docs.md
 #---
