@@ -8,6 +8,7 @@ python3 -m nano_llm.chat --api mlc \
   
 python3 -m nano_llm.chat --api=mlc --debug \
   --model Efficient-Large-Model/VILA-2.7b \
-  --max-context-len 768 \
   --max-new-tokens 128 \
   --prompt /data/prompts/images.json 
+  
+python3 -m nano_llm.vision.example --debug
