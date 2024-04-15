@@ -23,6 +23,22 @@
 </details>
 
 <details open>
+<summary><b><a id="images">CONTAINER IMAGES</a></b></summary>
+<br>
+
+| Repository/Tag | Date | Arch | Size |
+| :-- | :--: | :--: | :--: |
+| &nbsp;&nbsp;[`dustynv/nano_llm:24.4-r35.4.1`](https://hub.docker.com/r/dustynv/nano_llm/tags) | `2024-04-15` | `arm64` | `8.5GB` |
+| &nbsp;&nbsp;[`dustynv/nano_llm:24.4-r36.2.0`](https://hub.docker.com/r/dustynv/nano_llm/tags) | `2024-04-15` | `arm64` | `9.7GB` |
+| &nbsp;&nbsp;[`dustynv/nano_llm:r35.4.1`](https://hub.docker.com/r/dustynv/nano_llm/tags) | `2024-04-15` | `arm64` | `8.5GB` |
+| &nbsp;&nbsp;[`dustynv/nano_llm:r36.2.0`](https://hub.docker.com/r/dustynv/nano_llm/tags) | `2024-04-15` | `arm64` | `9.7GB` |
+
+> <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
+> <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
+> <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R35.x containers can run on other versions of L4T R35.x (JetPack 5.1+)</sub><br>
+</details>
+
+<details open>
 <summary><b><a id="run">RUN CONTAINER</a></b></summary>
 <br>
 
@@ -31,9 +47,11 @@ To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/do
 # automatically pull or build a compatible container image
 ./run.sh $(./autotag nano_llm)
 
-# or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host nano_llm:36.2.0
+# or explicitly specify one of the container images above
+./run.sh dustynv/nano_llm:24.4-r36.2.0
 
+# or if using 'docker run' (specify image and mounts/ect)
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/nano_llm:24.4-r36.2.0
 ```
 > <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
