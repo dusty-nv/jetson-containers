@@ -6,20 +6,13 @@
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`cuda-python:builder`** | |
+| **`cuda-python:11.4`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/python) [`numpy`](/packages/numpy) |
-| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.builder`](Dockerfile.builder) |
-
-| **`cuda-python`** | |
-| :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`cuda-python_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cuda-python_jp60.yml?label=cuda-python:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cuda-python_jp60.yml) [![`cuda-python_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cuda-python_jp51.yml?label=cuda-python:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cuda-python_jp51.yml) |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/python) [`numpy`](/packages/numpy) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`faiss_lite`](/packages/vectordb/faiss_lite) [`local_llm`](/packages/llm/local_llm) [`nanodb`](/packages/vectordb/nanodb) [`raft`](/packages/rapids/raft) |
+| &nbsp;&nbsp;&nbsp;Aliases | `cuda-python` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda:11.4`](/packages/cuda/cuda) [`python`](/packages/build/python) [`numpy`](/packages/numpy) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`faiss_lite`](/packages/vectordb/faiss_lite) [`local_llm`](/packages/llm/local_llm) [`nano_llm:24.4`](/packages/llm/nano_llm) [`nano_llm:main`](/packages/llm/nano_llm) [`nanodb`](/packages/vectordb/nanodb) [`raft`](/packages/rapids/raft) [`tensorrt_llm:0.10.dev0`](/packages/llm/tensorrt_llm) [`tensorrt_llm:0.10.dev0-builder`](/packages/llm/tensorrt_llm) [`tensorrt_llm:0.5`](/packages/llm/tensorrt_llm) [`tensorrt_llm:0.5-builder`](/packages/llm/tensorrt_llm) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/cuda-python:r35.2.1`](https://hub.docker.com/r/dustynv/cuda-python/tags) `(2023-12-06, 5.0GB)`<br>[`dustynv/cuda-python:r35.3.1`](https://hub.docker.com/r/dustynv/cuda-python/tags) `(2023-08-29, 5.0GB)`<br>[`dustynv/cuda-python:r35.4.1`](https://hub.docker.com/r/dustynv/cuda-python/tags) `(2023-12-06, 5.0GB)`<br>[`dustynv/cuda-python:r36.2.0`](https://hub.docker.com/r/dustynv/cuda-python/tags) `(2023-12-06, 3.5GB)` |
 
 </details>
 
@@ -29,6 +22,8 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
+| &nbsp;&nbsp;[`dustynv/cuda-python:builder-r35.4.1`](https://hub.docker.com/r/dustynv/cuda-python/tags) | `2024-03-26` | `arm64` | `5.1GB` |
+| &nbsp;&nbsp;[`dustynv/cuda-python:builder-r36.2.0`](https://hub.docker.com/r/dustynv/cuda-python/tags) | `2024-03-11` | `arm64` | `3.6GB` |
 | &nbsp;&nbsp;[`dustynv/cuda-python:r35.2.1`](https://hub.docker.com/r/dustynv/cuda-python/tags) | `2023-12-06` | `arm64` | `5.0GB` |
 | &nbsp;&nbsp;[`dustynv/cuda-python:r35.3.1`](https://hub.docker.com/r/dustynv/cuda-python/tags) | `2023-08-29` | `arm64` | `5.0GB` |
 | &nbsp;&nbsp;[`dustynv/cuda-python:r35.4.1`](https://hub.docker.com/r/dustynv/cuda-python/tags) | `2023-12-06` | `arm64` | `5.0GB` |
@@ -43,29 +38,29 @@
 <summary><b><a id="run">RUN CONTAINER</a></b></summary>
 <br>
 
-To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/docs/run.md#autotag) helpers or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
+To start the container, you can use [`jetson-containers run`](/docs/run.md) and [`autotag`](/docs/run.md#autotag), or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
 ```bash
 # automatically pull or build a compatible container image
-./run.sh $(./autotag cuda-python)
+jetson-containers run $(autotag cuda-python)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/cuda-python:r36.2.0
+jetson-containers run dustynv/cuda-python:builder-r35.4.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/cuda-python:r36.2.0
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/cuda-python:builder-r35.4.1
 ```
-> <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
+> <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
 
 To mount your own directories into the container, use the [`-v`](https://docs.docker.com/engine/reference/commandline/run/#volume) or [`--volume`](https://docs.docker.com/engine/reference/commandline/run/#volume) flags:
 ```bash
-./run.sh -v /path/on/host:/path/in/container $(./autotag cuda-python)
+jetson-containers run -v /path/on/host:/path/in/container $(autotag cuda-python)
 ```
 To launch the container running a command, as opposed to an interactive shell:
 ```bash
-./run.sh $(./autotag cuda-python) my_app --abc xyz
+jetson-containers run $(autotag cuda-python) my_app --abc xyz
 ```
-You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
+You can pass any options to it that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
 </details>
 <details open>
 <summary><b><a id="build">BUILD CONTAINER</b></summary>
@@ -73,7 +68,7 @@ You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker 
 
 If you use [`autotag`](/docs/run.md#autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do the [system setup](/docs/setup.md), then run:
 ```bash
-./build.sh cuda-python
+jetson-containers build cuda-python
 ```
-The dependencies from above will be built into the container, and it'll be tested during.  See [`./build.sh --help`](/jetson_containers/build.py) for build options.
+The dependencies from above will be built into the container, and it'll be tested during.  Run it with [`--help`](/jetson_containers/build.py) for build options.
 </details>
