@@ -62,8 +62,8 @@ To feed the live ASR transcript into the TTS and have it speak your words back t
 | **`riva-client:cpp`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`riva-client-cpp_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/riva-client-cpp_jp51.yml?label=riva-client-cpp:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/riva-client-cpp_jp51.yml) |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`bazel`](/packages/bazel) |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`bazel`](/packages/build/bazel) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.cpp`](Dockerfile.cpp) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/riva-client:cpp-r35.2.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-08-29, 6.3GB)`<br>[`dustynv/riva-client:cpp-r35.3.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2024-02-24, 6.3GB)`<br>[`dustynv/riva-client:cpp-r35.4.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-10-07, 6.3GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/nvidia-riva/cpp-clients |
@@ -71,11 +71,11 @@ To feed the live ASR transcript into the TTS and have it speak your words back t
 | **`riva-client:python`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`riva-client-python_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/riva-client-python_jp60.yml?label=riva-client-python:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/riva-client-python_jp60.yml) [![`riva-client-python_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/riva-client-python_jp51.yml?label=riva-client-python:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/riva-client-python_jp51.yml) |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T >=34.1.0` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`llamaspeak`](/packages/llm/llamaspeak) [`local_llm`](/packages/llm/local_llm) |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`python`](/packages/build/python) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`llamaspeak`](/packages/llm/llamaspeak) [`local_llm`](/packages/llm/local_llm) [`nano_llm:24.4`](/packages/llm/nano_llm) [`nano_llm:main`](/packages/llm/nano_llm) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.python`](Dockerfile.python) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/riva-client:python-r35.2.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-09-07, 5.0GB)`<br>[`dustynv/riva-client:python-r35.3.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2024-02-24, 5.0GB)`<br>[`dustynv/riva-client:python-r35.4.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-10-07, 5.0GB)`<br>[`dustynv/riva-client:python-r36.2.0`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2024-02-24, 0.2GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/riva-client:python-r35.2.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-09-07, 5.0GB)`<br>[`dustynv/riva-client:python-r35.3.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2024-02-24, 5.0GB)`<br>[`dustynv/riva-client:python-r35.4.1`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2023-10-07, 5.0GB)`<br>[`dustynv/riva-client:python-r36.2.0`](https://hub.docker.com/r/dustynv/riva-client/tags) `(2024-03-11, 0.3GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/nvidia-riva/python-clients |
 
 </details>
@@ -92,7 +92,7 @@ To feed the live ASR transcript into the TTS and have it speak your words back t
 | &nbsp;&nbsp;[`dustynv/riva-client:python-r35.2.1`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2023-09-07` | `arm64` | `5.0GB` |
 | &nbsp;&nbsp;[`dustynv/riva-client:python-r35.3.1`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2024-02-24` | `arm64` | `5.0GB` |
 | &nbsp;&nbsp;[`dustynv/riva-client:python-r35.4.1`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2023-10-07` | `arm64` | `5.0GB` |
-| &nbsp;&nbsp;[`dustynv/riva-client:python-r36.2.0`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2024-02-24` | `arm64` | `0.2GB` |
+| &nbsp;&nbsp;[`dustynv/riva-client:python-r36.2.0`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2024-03-11` | `arm64` | `0.3GB` |
 | &nbsp;&nbsp;[`dustynv/riva-client:r35.2.1`](https://hub.docker.com/r/dustynv/riva-client/tags) | `2023-08-10` | `arm64` | `6.3GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
@@ -104,29 +104,29 @@ To feed the live ASR transcript into the TTS and have it speak your words back t
 <summary><b><a id="run">RUN CONTAINER</a></b></summary>
 <br>
 
-To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/docs/run.md#autotag) helpers or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
+To start the container, you can use [`jetson-containers run`](/docs/run.md) and [`autotag`](/docs/run.md#autotag), or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
 ```bash
 # automatically pull or build a compatible container image
-./run.sh $(./autotag riva-client)
+jetson-containers run $(autotag riva-client)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/riva-client:cpp-r35.3.1
+jetson-containers run dustynv/riva-client:python-r36.2.0
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/riva-client:cpp-r35.3.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/riva-client:python-r36.2.0
 ```
-> <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
+> <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
 
 To mount your own directories into the container, use the [`-v`](https://docs.docker.com/engine/reference/commandline/run/#volume) or [`--volume`](https://docs.docker.com/engine/reference/commandline/run/#volume) flags:
 ```bash
-./run.sh -v /path/on/host:/path/in/container $(./autotag riva-client)
+jetson-containers run -v /path/on/host:/path/in/container $(autotag riva-client)
 ```
 To launch the container running a command, as opposed to an interactive shell:
 ```bash
-./run.sh $(./autotag riva-client) my_app --abc xyz
+jetson-containers run $(autotag riva-client) my_app --abc xyz
 ```
-You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
+You can pass any options to it that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
 </details>
 <details open>
 <summary><b><a id="build">BUILD CONTAINER</b></summary>
@@ -134,7 +134,7 @@ You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker 
 
 If you use [`autotag`](/docs/run.md#autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do the [system setup](/docs/setup.md), then run:
 ```bash
-./build.sh riva-client
+jetson-containers build riva-client
 ```
-The dependencies from above will be built into the container, and it'll be tested during.  See [`./build.sh --help`](/jetson_containers/build.py) for build options.
+The dependencies from above will be built into the container, and it'll be tested during.  Run it with [`--help`](/jetson_containers/build.py) for build options.
 </details>

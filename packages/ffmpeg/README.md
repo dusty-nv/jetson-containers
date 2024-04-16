@@ -1,4 +1,4 @@
-# protobuf_cpp
+# ffmpeg
 
 > [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 
@@ -6,16 +6,13 @@
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`protobuf:cpp`** | |
+| **`ffmpeg`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Aliases | `protobuf` |
-| &nbsp;&nbsp;&nbsp;Builds | [![`protobuf-cpp_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/protobuf-cpp_jp51.yml?label=protobuf-cpp:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/protobuf-cpp_jp51.yml) [![`protobuf-cpp_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/protobuf-cpp_jp46.yml?label=protobuf-cpp:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/protobuf-cpp_jp46.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`python`](/packages/build/python) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`audiocraft`](/packages/audio/audiocraft) [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-tensorflow:tf1`](/packages/l4t/l4t-tensorflow) [`l4t-tensorflow:tf2`](/packages/l4t/l4t-tensorflow) [`tensorflow`](/packages/tensorflow) [`tensorflow2`](/packages/tensorflow) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`homeassistant-core:2024.4.2`](/packages/smart-home/homeassistant-core) [`homeassistant-core:latest`](/packages/smart-home/homeassistant-core) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/protobuf:cpp-r32.7.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-12-06, 0.5GB)`<br>[`dustynv/protobuf:cpp-r35.2.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-12-06, 5.1GB)`<br>[`dustynv/protobuf:cpp-r35.3.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-08-29, 5.1GB)`<br>[`dustynv/protobuf:cpp-r35.4.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-10-07, 5.1GB)` |
-| &nbsp;&nbsp;&nbsp;Notes | build protobuf using cpp implementation (https://jkjung-avt.github.io/tf-trt-revisited/) |
+| &nbsp;&nbsp;&nbsp;Notes | installs ffmpeg |
 
 </details>
 
@@ -26,10 +23,10 @@
 To start the container, you can use [`jetson-containers run`](/docs/run.md) and [`autotag`](/docs/run.md#autotag), or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
 ```bash
 # automatically pull or build a compatible container image
-jetson-containers run $(autotag protobuf_cpp)
+jetson-containers run $(autotag ffmpeg)
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host protobuf_cpp:35.2.1
+sudo docker run --runtime nvidia -it --rm --network=host ffmpeg:35.2.1
 
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
@@ -37,11 +34,11 @@ sudo docker run --runtime nvidia -it --rm --network=host protobuf_cpp:35.2.1
 
 To mount your own directories into the container, use the [`-v`](https://docs.docker.com/engine/reference/commandline/run/#volume) or [`--volume`](https://docs.docker.com/engine/reference/commandline/run/#volume) flags:
 ```bash
-jetson-containers run -v /path/on/host:/path/in/container $(autotag protobuf_cpp)
+jetson-containers run -v /path/on/host:/path/in/container $(autotag ffmpeg)
 ```
 To launch the container running a command, as opposed to an interactive shell:
 ```bash
-jetson-containers run $(autotag protobuf_cpp) my_app --abc xyz
+jetson-containers run $(autotag ffmpeg) my_app --abc xyz
 ```
 You can pass any options to it that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
 </details>
@@ -51,7 +48,7 @@ You can pass any options to it that you would to [`docker run`](https://docs.doc
 
 If you use [`autotag`](/docs/run.md#autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do the [system setup](/docs/setup.md), then run:
 ```bash
-jetson-containers build protobuf_cpp
+jetson-containers build ffmpeg
 ```
 The dependencies from above will be built into the container, and it'll be tested during.  Run it with [`--help`](/jetson_containers/build.py) for build options.
 </details>

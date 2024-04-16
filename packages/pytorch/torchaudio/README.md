@@ -6,14 +6,43 @@
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`torchaudio`** | |
+| **`torchaudio:2.0.1`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`torchaudio_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torchaudio_jp51.yml?label=torchaudio:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torchaudio_jp51.yml) [![`torchaudio_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/torchaudio_jp46.yml?label=torchaudio:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/torchaudio_jp46.yml) |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`audiocraft`](/packages/audio/audiocraft) [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-pytorch`](/packages/l4t/l4t-pytorch) [`local_llm`](/packages/llm/local_llm) [`nemo`](/packages/nemo) [`whisper`](/packages/audio/whisper) [`whisperx`](/packages/audio/whisperx) [`xtts`](/packages/audio/xtts) |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['==35.*']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.0`](/packages/pytorch) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/torchaudio:r32.7.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) `(2023-12-14, 1.1GB)`<br>[`dustynv/torchaudio:r35.2.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) `(2023-12-14, 5.4GB)`<br>[`dustynv/torchaudio:r35.3.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) `(2023-12-11, 5.5GB)`<br>[`dustynv/torchaudio:r35.4.1`](https://hub.docker.com/r/dustynv/torchaudio/tags) `(2023-12-12, 5.4GB)` |
+
+| **`torchaudio:2.1.0`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=35']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.1`](/packages/pytorch) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+
+| **`torchaudio:2.2.2`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `torchaudio` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=35']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.2`](/packages/pytorch) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`audiocraft`](/packages/audio/audiocraft) [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-pytorch`](/packages/l4t/l4t-pytorch) [`nano_llm:24.4`](/packages/llm/nano_llm) [`nano_llm:main`](/packages/llm/nano_llm) [`nemo`](/packages/nemo) [`whisper`](/packages/audio/whisper) [`whisperx`](/packages/audio/whisperx) [`xtts`](/packages/audio/xtts) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+
+| **`torchaudio:2.3.0`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['==36.*']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.3`](/packages/pytorch) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+
+| **`torchaudio:0.10.0`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['==32.*']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:1.10`](/packages/pytorch) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+
+| **`torchaudio:0.9.0`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['==32.*']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:1.9`](/packages/pytorch) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 
 </details>
 
@@ -37,29 +66,29 @@
 <summary><b><a id="run">RUN CONTAINER</a></b></summary>
 <br>
 
-To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/docs/run.md#autotag) helpers or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
+To start the container, you can use [`jetson-containers run`](/docs/run.md) and [`autotag`](/docs/run.md#autotag), or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
 ```bash
 # automatically pull or build a compatible container image
-./run.sh $(./autotag torchaudio)
+jetson-containers run $(autotag torchaudio)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/torchaudio:r35.2.1
+jetson-containers run dustynv/torchaudio:r35.2.1
 
 # or if using 'docker run' (specify image and mounts/ect)
 sudo docker run --runtime nvidia -it --rm --network=host dustynv/torchaudio:r35.2.1
 ```
-> <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
+> <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
 
 To mount your own directories into the container, use the [`-v`](https://docs.docker.com/engine/reference/commandline/run/#volume) or [`--volume`](https://docs.docker.com/engine/reference/commandline/run/#volume) flags:
 ```bash
-./run.sh -v /path/on/host:/path/in/container $(./autotag torchaudio)
+jetson-containers run -v /path/on/host:/path/in/container $(autotag torchaudio)
 ```
 To launch the container running a command, as opposed to an interactive shell:
 ```bash
-./run.sh $(./autotag torchaudio) my_app --abc xyz
+jetson-containers run $(autotag torchaudio) my_app --abc xyz
 ```
-You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
+You can pass any options to it that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
 </details>
 <details open>
 <summary><b><a id="build">BUILD CONTAINER</b></summary>
@@ -67,7 +96,7 @@ You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker 
 
 If you use [`autotag`](/docs/run.md#autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do the [system setup](/docs/setup.md), then run:
 ```bash
-./build.sh torchaudio
+jetson-containers build torchaudio
 ```
-The dependencies from above will be built into the container, and it'll be tested during.  See [`./build.sh --help`](/jetson_containers/build.py) for build options.
+The dependencies from above will be built into the container, and it'll be tested during.  Run it with [`--help`](/jetson_containers/build.py) for build options.
 </details>

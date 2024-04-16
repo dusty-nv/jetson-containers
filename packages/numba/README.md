@@ -9,8 +9,8 @@
 | **`numba`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`numba_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/numba_jp46.yml?label=numba:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/numba_jp46.yml) [![`numba_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/numba_jp60.yml?label=numba:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/numba_jp60.yml) [![`numba_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/numba_jp51.yml?label=numba:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/numba_jp51.yml) |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/python) [`numpy`](/packages/numpy) |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/build/python) [`numpy`](/packages/numpy) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`cudf:21.10.02`](/packages/rapids/cudf) [`cudf:23.10.03`](/packages/rapids/cudf) [`cuml`](/packages/rapids/cuml) [`l4t-ml`](/packages/l4t/l4t-ml) [`nemo`](/packages/nemo) [`raft`](/packages/rapids/raft) [`whisper`](/packages/audio/whisper) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/numba:r32.7.1`](https://hub.docker.com/r/dustynv/numba/tags) `(2023-09-07, 0.5GB)`<br>[`dustynv/numba:r35.2.1`](https://hub.docker.com/r/dustynv/numba/tags) `(2023-12-05, 5.1GB)`<br>[`dustynv/numba:r35.3.1`](https://hub.docker.com/r/dustynv/numba/tags) `(2023-12-06, 5.1GB)`<br>[`dustynv/numba:r35.4.1`](https://hub.docker.com/r/dustynv/numba/tags) `(2023-10-07, 5.1GB)`<br>[`dustynv/numba:r36.2.0`](https://hub.docker.com/r/dustynv/numba/tags) `(2023-12-06, 3.6GB)` |
@@ -38,29 +38,29 @@
 <summary><b><a id="run">RUN CONTAINER</a></b></summary>
 <br>
 
-To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/docs/run.md#autotag) helpers or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
+To start the container, you can use [`jetson-containers run`](/docs/run.md) and [`autotag`](/docs/run.md#autotag), or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
 ```bash
 # automatically pull or build a compatible container image
-./run.sh $(./autotag numba)
+jetson-containers run $(autotag numba)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/numba:r35.3.1
+jetson-containers run dustynv/numba:r35.3.1
 
 # or if using 'docker run' (specify image and mounts/ect)
 sudo docker run --runtime nvidia -it --rm --network=host dustynv/numba:r35.3.1
 ```
-> <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
+> <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
 
 To mount your own directories into the container, use the [`-v`](https://docs.docker.com/engine/reference/commandline/run/#volume) or [`--volume`](https://docs.docker.com/engine/reference/commandline/run/#volume) flags:
 ```bash
-./run.sh -v /path/on/host:/path/in/container $(./autotag numba)
+jetson-containers run -v /path/on/host:/path/in/container $(autotag numba)
 ```
 To launch the container running a command, as opposed to an interactive shell:
 ```bash
-./run.sh $(./autotag numba) my_app --abc xyz
+jetson-containers run $(autotag numba) my_app --abc xyz
 ```
-You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
+You can pass any options to it that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
 </details>
 <details open>
 <summary><b><a id="build">BUILD CONTAINER</b></summary>
@@ -68,7 +68,7 @@ You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker 
 
 If you use [`autotag`](/docs/run.md#autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do the [system setup](/docs/setup.md), then run:
 ```bash
-./build.sh numba
+jetson-containers build numba
 ```
-The dependencies from above will be built into the container, and it'll be tested during.  See [`./build.sh --help`](/jetson_containers/build.py) for build options.
+The dependencies from above will be built into the container, and it'll be tested during.  Run it with [`--help`](/jetson_containers/build.py) for build options.
 </details>

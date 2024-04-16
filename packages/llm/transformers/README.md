@@ -50,9 +50,9 @@ Other libraries like [`exllama`](/packages/llm/exllama), [`awq`](/packages/llm/a
 | **`transformers`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`transformers_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/transformers_jp60.yml?label=transformers:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/transformers_jp60.yml) [![`transformers_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/transformers_jp51.yml?label=transformers:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/transformers_jp51.yml) [![`transformers_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/transformers_jp46.yml?label=transformers:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/transformers_jp46.yml) |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`audiocraft`](/packages/audio/audiocraft) [`auto_awq`](/packages/llm/auto_awq) [`auto_gptq`](/packages/llm/auto_gptq) [`awq`](/packages/llm/awq) [`awq:dev`](/packages/llm/awq) [`bitsandbytes`](/packages/llm/bitsandbytes) [`efficientvit`](/packages/vit/efficientvit) [`gptq-for-llama`](/packages/llm/gptq-for-llama) [`l4t-diffusion`](/packages/l4t/l4t-diffusion) [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`llava`](/packages/llm/llava) [`local_llm`](/packages/llm/local_llm) [`mlc:1f70d71`](/packages/llm/mlc) [`mlc:1f70d71-builder`](/packages/llm/mlc) [`mlc:3feed05`](/packages/llm/mlc) [`mlc:3feed05-builder`](/packages/llm/mlc) [`mlc:51fb0f4`](/packages/llm/mlc) [`mlc:51fb0f4-builder`](/packages/llm/mlc) [`mlc:5584cac`](/packages/llm/mlc) [`mlc:5584cac-builder`](/packages/llm/mlc) [`mlc:607dc5a`](/packages/llm/mlc) [`mlc:607dc5a-builder`](/packages/llm/mlc) [`mlc:731616e`](/packages/llm/mlc) [`mlc:731616e-builder`](/packages/llm/mlc) [`mlc:9bf5723`](/packages/llm/mlc) [`mlc:9bf5723-builder`](/packages/llm/mlc) [`mlc:dev`](/packages/llm/mlc) [`mlc:dev-builder`](/packages/llm/mlc) [`nanodb`](/packages/vectordb/nanodb) [`nanoowl`](/packages/vit/nanoowl) [`nanosam`](/packages/vit/nanosam) [`nemo`](/packages/nemo) [`optimum`](/packages/llm/optimum) [`stable-diffusion`](/packages/diffusion/stable-diffusion) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) [`text-generation-inference`](/packages/llm/text-generation-inference) [`text-generation-webui:1.7`](/packages/llm/text-generation-webui) [`text-generation-webui:6a7cd01`](/packages/llm/text-generation-webui) [`text-generation-webui:main`](/packages/llm/text-generation-webui) [`whisperx`](/packages/audio/whisperx) [`xtts`](/packages/audio/xtts) |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.2`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`audiocraft`](/packages/audio/audiocraft) [`auto_awq:0.2.4`](/packages/llm/auto_awq) [`auto_gptq:0.7.1`](/packages/llm/auto_gptq) [`awq:0.1.0`](/packages/llm/awq) [`bitsandbytes`](/packages/llm/bitsandbytes) [`bitsandbytes:builder`](/packages/llm/bitsandbytes) [`efficientvit`](/packages/vit/efficientvit) [`gptq-for-llama`](/packages/llm/gptq-for-llama) [`l4t-diffusion`](/packages/l4t/l4t-diffusion) [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`llava`](/packages/llm/llava) [`local_llm`](/packages/llm/local_llm) [`mlc:51fb0f4`](/packages/llm/mlc) [`mlc:607dc5a`](/packages/llm/mlc) [`nano_llm:24.4`](/packages/llm/nano_llm) [`nano_llm:main`](/packages/llm/nano_llm) [`nanodb`](/packages/vectordb/nanodb) [`nanoowl`](/packages/vit/nanoowl) [`nanosam`](/packages/vit/nanosam) [`nemo`](/packages/nemo) [`optimum`](/packages/llm/optimum) [`stable-diffusion`](/packages/diffusion/stable-diffusion) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) [`tensorrt_llm:0.10.dev0`](/packages/llm/tensorrt_llm) [`tensorrt_llm:0.10.dev0-builder`](/packages/llm/tensorrt_llm) [`tensorrt_llm:0.5`](/packages/llm/tensorrt_llm) [`tensorrt_llm:0.5-builder`](/packages/llm/tensorrt_llm) [`text-generation-inference`](/packages/llm/text-generation-inference) [`text-generation-webui:1.7`](/packages/llm/text-generation-webui) [`text-generation-webui:6a7cd01`](/packages/llm/text-generation-webui) [`text-generation-webui:main`](/packages/llm/text-generation-webui) [`whisperx`](/packages/audio/whisperx) [`xtts`](/packages/audio/xtts) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/transformers:git-r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-12-15, 5.9GB)`<br>[`dustynv/transformers:git-r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-12-12, 5.9GB)`<br>[`dustynv/transformers:git-r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-12-11, 5.9GB)`<br>[`dustynv/transformers:nvgpt-r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-12-05, 5.9GB)`<br>[`dustynv/transformers:nvgpt-r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-12-15, 5.9GB)`<br>[`dustynv/transformers:nvgpt-r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-12-14, 5.9GB)`<br>[`dustynv/transformers:r32.7.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-12-15, 1.5GB)`<br>[`dustynv/transformers:r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-12-11, 5.9GB)`<br>[`dustynv/transformers:r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-12-12, 5.9GB)`<br>[`dustynv/transformers:r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-12-15, 5.9GB)`<br>[`dustynv/transformers:r36.2.0`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-12-15, 7.6GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | bitsandbytes and auto_gptq dependencies added on JetPack5 for 4-bit/8-bit quantization |
@@ -60,8 +60,8 @@ Other libraries like [`exllama`](/packages/llm/exllama), [`awq`](/packages/llm/a
 | **`transformers:git`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`transformers-git_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/transformers-git_jp51.yml?label=transformers-git:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/transformers-git_jp51.yml) |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.2`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/transformers:git-r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-12-15, 5.9GB)`<br>[`dustynv/transformers:git-r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-12-12, 5.9GB)`<br>[`dustynv/transformers:git-r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-12-11, 5.9GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | bitsandbytes and auto_gptq dependencies added on JetPack5 for 4-bit/8-bit quantization |
@@ -69,8 +69,8 @@ Other libraries like [`exllama`](/packages/llm/exllama), [`awq`](/packages/llm/a
 | **`transformers:nvgpt`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`transformers-nvgpt_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/transformers-nvgpt_jp51.yml?label=transformers-nvgpt:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/transformers-nvgpt_jp51.yml) |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.2`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/transformers:nvgpt-r35.2.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-12-05, 5.9GB)`<br>[`dustynv/transformers:nvgpt-r35.3.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-12-15, 5.9GB)`<br>[`dustynv/transformers:nvgpt-r35.4.1`](https://hub.docker.com/r/dustynv/transformers/tags) `(2023-12-14, 5.9GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | bitsandbytes and auto_gptq dependencies added on JetPack5 for 4-bit/8-bit quantization |
@@ -104,29 +104,29 @@ Other libraries like [`exllama`](/packages/llm/exllama), [`awq`](/packages/llm/a
 <summary><b><a id="run">RUN CONTAINER</a></b></summary>
 <br>
 
-To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/docs/run.md#autotag) helpers or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
+To start the container, you can use [`jetson-containers run`](/docs/run.md) and [`autotag`](/docs/run.md#autotag), or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
 ```bash
 # automatically pull or build a compatible container image
-./run.sh $(./autotag transformers)
+jetson-containers run $(autotag transformers)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/transformers:nvgpt-r35.3.1
+jetson-containers run dustynv/transformers:nvgpt-r35.3.1
 
 # or if using 'docker run' (specify image and mounts/ect)
 sudo docker run --runtime nvidia -it --rm --network=host dustynv/transformers:nvgpt-r35.3.1
 ```
-> <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
+> <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
 
 To mount your own directories into the container, use the [`-v`](https://docs.docker.com/engine/reference/commandline/run/#volume) or [`--volume`](https://docs.docker.com/engine/reference/commandline/run/#volume) flags:
 ```bash
-./run.sh -v /path/on/host:/path/in/container $(./autotag transformers)
+jetson-containers run -v /path/on/host:/path/in/container $(autotag transformers)
 ```
 To launch the container running a command, as opposed to an interactive shell:
 ```bash
-./run.sh $(./autotag transformers) my_app --abc xyz
+jetson-containers run $(autotag transformers) my_app --abc xyz
 ```
-You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
+You can pass any options to it that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
 </details>
 <details open>
 <summary><b><a id="build">BUILD CONTAINER</b></summary>
@@ -134,7 +134,7 @@ You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker 
 
 If you use [`autotag`](/docs/run.md#autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do the [system setup](/docs/setup.md), then run:
 ```bash
-./build.sh transformers
+jetson-containers build transformers
 ```
-The dependencies from above will be built into the container, and it'll be tested during.  See [`./build.sh --help`](/jetson_containers/build.py) for build options.
+The dependencies from above will be built into the container, and it'll be tested during.  Run it with [`--help`](/jetson_containers/build.py) for build options.
 </details>
