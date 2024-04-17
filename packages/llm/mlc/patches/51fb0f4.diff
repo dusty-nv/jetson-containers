@@ -277,6 +277,42 @@ index b4a4b48..a1eef59 100644
 +      return __VA_ARGS__();                \
 +    }                                      \
 +  }()
+diff --git a/3rdparty/tvm/python/setup.py b/3rdparty/tvm/python/setup.py
+index 6901fbf86..3fd7e7588 100644
+--- a/3rdparty/tvm/python/setup.py
++++ b/3rdparty/tvm/python/setup.py
+@@ -141,7 +141,7 @@ def _remove_path(path):
+ 
+ 
+ LIB_LIST, __version__ = get_lib_path()
+-__version__ = git_describe_version(__version__)
++#__version__ = git_describe_version(__version__)
+ 
+ 
+ def config_cython():
+diff --git a/3rdparty/tvm/python/tvm/_ffi/libinfo.py b/3rdparty/tvm/python/tvm/_ffi/libinfo.py
+index 972e6a475..d3b639685 100644
+--- a/3rdparty/tvm/python/tvm/_ffi/libinfo.py
++++ b/3rdparty/tvm/python/tvm/_ffi/libinfo.py
+@@ -247,4 +247,4 @@ def find_include_path(name=None, search_path=None, optional=False):
+ # We use the version of the incoming release for code
+ # that is under development.
+ # The following line is set by tvm/python/update_version.py
+-__version__ = "0.15.dev0"
++__version__ = "0.15.0"
+diff --git a/3rdparty/tvm/version.py b/3rdparty/tvm/version.py
+index ee4b3507c..cf98057f9 100644
+--- a/3rdparty/tvm/version.py
++++ b/3rdparty/tvm/version.py
+@@ -44,7 +44,7 @@ import subprocess
+ # Two tag formats are supported:
+ # - vMAJ.MIN.PATCH (e.g. v0.8.0) or
+ # - vMAJ.MIN.devN (e.g. v0.8.dev0)
+-__version__ = "0.15.dev0"
++__version__ = "0.15.0"
+ 
+ # ---------------------------------------------------
+ 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index eb09469..7ee7032 100644
 --- a/CMakeLists.txt
@@ -297,3 +333,42 @@ index eb09469..7ee7032 100644
  if (NOT DEFINED TVM_HOME)
    set(TVM_HOME 3rdparty/tvm)
  endif (NOT DEFINED TVM_HOME)
+diff --git a/python/setup.py b/python/setup.py
+index f1fcc6c..d4c3d9b 100644
+--- a/python/setup.py
++++ b/python/setup.py
+@@ -47,7 +47,7 @@ def git_describe_version(original_version):
+ 
+ 
+ LIB_LIST, __version__ = get_lib_path()
+-__version__ = git_describe_version(__version__)
++__version__ = '0.1.0' #git_describe_version(__version__)
+ 
+ 
+ class BinaryDistribution(Distribution):
+diff --git a/setup.py b/setup.py
+index b972149..1175624 100644
+--- a/setup.py
++++ b/setup.py
+@@ -20,7 +20,7 @@ def git_describe_version(original_version):
+     return gd_version
+ 
+ 
+-__version__ = git_describe_version(None)
++__version__ = '0.1.0' #git_describe_version(None)
+ 
+ setup(
+     name="mlc_llm",
+diff --git a/version.py b/version.py
+index c7868f8..f494468 100644
+--- a/version.py
++++ b/version.py
+@@ -20,7 +20,7 @@ import subprocess
+ 
+ # ---------------------------------------------------
+ 
+-__version__ = "0.1.dev0"
++__version__ = "0.1.0"
+ PROJ_ROOT = os.path.dirname(os.path.abspath(os.path.expanduser(__file__)))
+ 
+ 
