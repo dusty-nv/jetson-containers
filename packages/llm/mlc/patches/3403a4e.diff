@@ -321,6 +321,19 @@ index 4c36cab9..6afe6d0c 100644
  MLC_LIBRARY_PATH = os.environ.get("MLC_LIBRARY_PATH", None)
  
  
+diff --git a/python/mlc_llm/quantization/ft_quantization.py b/python/mlc_llm/quantization/ft_quantization.py
+index 4a158460..7cd8fc6a 100644
+--- a/python/mlc_llm/quantization/ft_quantization.py
++++ b/python/mlc_llm/quantization/ft_quantization.py
+@@ -207,7 +207,7 @@ class FTQuantize:  # pylint: disable=too-many-instance-attributes
+                                 relax.call_pure_packed(
+                                     "cutlass.ft_preprocess_weight",
+                                     lv1,
+-                                    detect_cuda_arch_list(target=target)[0],
++                                    int(detect_cuda_arch_list(target=target)[0]),
+                                     DataType(self.quantize_dtype).bits == 4,
+                                     sinfo_args=lv1.struct_info,
+                                 )
 diff --git a/python/setup.py b/python/setup.py
 index 2f1b632b..6c7c2088 100644
 --- a/python/setup.py
