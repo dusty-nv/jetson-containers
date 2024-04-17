@@ -9,10 +9,11 @@ QUANTIZATION=${QUANTIZATION:-"q4f16_ft"}
 QUANTIZATION_PATH="${MODEL_ROOT}/${MODEL_NAME}-${QUANTIZATION}"
 SKIP_QUANTIZATION=${SKIP_QUANTIZATION:-"no"}
 
-USE_CACHE=${USE_CACHE:-1}
 CONV_TEMPLATE=${CONV_TEMPLATE:-"llama-2"}
 MAX_CONTEXT_LEN=${MAX_CONTEXT_LEN:-4096}
 
+USE_CACHE=${USE_CACHE:-1}
+USE_SAFETENSORS=${USE_SAFETENSORS:-"auto"}
 
 quantize() # mlc_llm >= 0.1.1
 {
@@ -30,6 +31,16 @@ quantize() # mlc_llm >= 0.1.1
 quantize_legacy() # mlc_llm == 0.1.0
 {
 	if [ $SKIP_QUANTIZATION != "yes" ]; then
+		MODEL_HF="$MODEL_ROOT/models/$MODEL_NAME"
+		
+		if [ ! -d "$MODEL_HF" ]; then
+			ln -s $MODEL_PATH $MODEL_HF
+		fi
+		
+		if [[ $USE_SAFETENSORS = "yes" ]]; then
+			QUANT_FLAGS="--use-safetensors"
+		fi
+	
 		python3 -m mlc_llm.build \
 			--model $MODEL_NAME \
 			--target cuda \
@@ -38,7 +49,8 @@ quantize_legacy() # mlc_llm == 0.1.0
 			--use-cache $USE_CACHE \
 			--quantization $QUANTIZATION \
 			--artifact-path $MODEL_ROOT \
-			--max-seq-len 4096
+			--max-seq-len 4096 \
+			$QUANT_FLAGS
 			
 		if [ $? != 0 ]; then
 			return 1
