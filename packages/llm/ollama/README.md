@@ -10,17 +10,15 @@
 Run the local Ollama server instance as a daemon in the background:
 
 ```
-jetson-containers run -d -p 11434:11434 --name ollama $(autotag ollama)
+jetson-containers run --detach --name ollama $(autotag ollama)
 ```
 
-* ollama stores models in `/usr/share/ollama/.ollama/models` by default. Create a symlink on the host to sync containers to any binaries run straight from the console
-
-- Ensure the folder doesn't exist, if it does move its content first then remove the folder
+Ollama stores models in `/usr/share/ollama/.ollama/models` by default. Create a symlink on the host to sync containers to any binaries run straight from the console.  Ensure the folder doesn't exist, and if it does move its content first then remove the folder:
 
 ```
-sudo mv /usr/share/ollama/.ollama/* /PATH/TO/jetson-containers/data/models/ollama
+sudo mv /usr/share/ollama/.ollama/* $(jetson-containers data)/models/ollama
 sudo rm -r /usr/share/ollama/.ollama
-sudo ln -s /PATH/TO/jetson-containers/data/models/ollama /usr/share/ollama/.ollama
+sudo ln -s $(jetson-containers data)/models/ollama /usr/share/ollama/.ollama
 ```
 
 ## Ollama Client
@@ -31,7 +29,7 @@ Start the Ollama CLI front-end with your desired model (for example: mistral 7b)
 jetson-containers run $(autotag ollama) /bin/ollama run mistral
 ```
 
-<img src="https://github.com/dusty-nv/jetson-containers/blob/docs/docs/images/ollama_cli.gif?raw=true"></img>
+<img src="https://github.com/dusty-nv/jetson-containers/blob/docs/docs/images/ollama_cli.gif?raw=true" width="750px"></img>
 
 ## Open WebUI
 
@@ -41,7 +39,7 @@ To run [Open WebUI](https://github.com/open-webui/open-webui) server for client 
 docker run -it --rm --network=host --add-host=host.docker.internal:host-gateway ghcr.io/open-webui/open-webui:main
 ```
 
-You can then navigate your browser to `http://JETSON_IP:8080`, and create a fake account to login (these credentials are only stored locally on your Jetson)
+You can then navigate your browser to `http://JETSON_IP:8080`, and create a fake account to login (these credentials are only stored locally)
 
 <img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/ollama_open_webui.jpg"></img>
 
