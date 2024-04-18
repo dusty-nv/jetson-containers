@@ -4,7 +4,7 @@
 # Container Usage
 
 Run the container as a daemon in the background
-`docker run -d --gpus=all -v ollama:/root/.ollama -p 11434:11434 --name ollama dusty-nv/ollama`
+`docker run -d --gpus=all -p 11434:11434 --name ollama dusty-nv/ollama`
 
 Start the Ollama front-end with your desired model (for example: mistral 7b)
 `docker run -it --rm dusty-nv/ollama /bin/ollama run mistral`
