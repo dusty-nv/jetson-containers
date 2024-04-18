@@ -1,7 +1,7 @@
 #---
 # name: ctranslate2
 # group: transformer
-# depends: [cmake]
+# depends: [cmake, cuda, cudnn]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---
