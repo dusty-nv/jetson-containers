@@ -5,23 +5,47 @@
 
 * ollama from https://github.com/ollama/ollama with CUDA enabled (found under `/bin/ollama`)
 
-# Container Usage
+## Ollama Server
 
-Run the container as a daemon in the background
-`docker run -d --gpus=all -p 11434:11434 --name ollama dusty-nv/ollama`
+Run the local Ollama server instance as a daemon in the background:
 
-* ollama stores models in /usr/share/ollama/.ollama/models by default. Create a symlink on the host to sync containers to any binaries run straight from the console
+```
+jetson-containers run -d -p 11434:11434 --name ollama $(autotag ollama)
+```
+
+* ollama stores models in `/usr/share/ollama/.ollama/models` by default. Create a symlink on the host to sync containers to any binaries run straight from the console
+
 - Ensure the folder doesn't exist, if it does move its content first then remove the folder
+
 ```
 sudo mv /usr/share/ollama/.ollama/* /PATH/TO/jetson-containers/data/models/ollama
 sudo rm -r /usr/share/ollama/.ollama
 sudo ln -s /PATH/TO/jetson-containers/data/models/ollama /usr/share/ollama/.ollama
 ```
 
-Start the Ollama front-end with your desired model (for example: mistral 7b)
-`docker run -it --rm dusty-nv/ollama /bin/ollama run mistral`
+## Ollama Client
 
-### Memory Usage
+Start the Ollama CLI front-end with your desired model (for example: mistral 7b)
+
+```
+jetson-containers run $(autotag ollama) /bin/ollama run mistral
+```
+
+<img src="https://github.com/dusty-nv/jetson-containers/blob/docs/docs/images/ollama_cli.gif?raw=true"></img>
+
+## Open WebUI
+
+To run [Open WebUI](https://github.com/open-webui/open-webui) server for client browsers to connect to, use the `open-webui` container:
+
+```
+docker run -it --rm --network=host --add-host=host.docker.internal:host-gateway ghcr.io/open-webui/open-webui:main
+```
+
+You can then navigate your browser to `http://JETSON_IP:8080`, and create a fake account to login (these credentials are only stored locally on your Jetson)
+
+<img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/ollama_open_webui.jpg"></img>
+
+## Memory Usage
 
 | Model                                                                           |          Quantization         | Memory (MB) |
 |---------------------------------------------------------------------------------|:-----------------------------:|:-----------:|
@@ -39,7 +63,7 @@ Start the Ollama front-end with your desired model (for example: mistral 7b)
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/ollama:r35.4.1`](https://hub.docker.com/r/dustynv/ollama/tags) `(2024-04-05, 5.4GB)`<br>[`dustynv/ollama:r36.2.0`](https://hub.docker.com/r/dustynv/ollama/tags) `(2024-04-05, 3.9GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/ollama:r35.4.1`](https://hub.docker.com/r/dustynv/ollama/tags) `(2024-04-05, 5.4GB)`<br>[`dustynv/ollama:r36.2.0`](https://hub.docker.com/r/dustynv/ollama/tags) `(2024-04-18, 3.9GB)` |
 
 </details>
 
@@ -50,7 +74,7 @@ Start the Ollama front-end with your desired model (for example: mistral 7b)
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/ollama:r35.4.1`](https://hub.docker.com/r/dustynv/ollama/tags) | `2024-04-05` | `arm64` | `5.4GB` |
-| &nbsp;&nbsp;[`dustynv/ollama:r36.2.0`](https://hub.docker.com/r/dustynv/ollama/tags) | `2024-04-05` | `arm64` | `3.9GB` |
+| &nbsp;&nbsp;[`dustynv/ollama:r36.2.0`](https://hub.docker.com/r/dustynv/ollama/tags) | `2024-04-18` | `arm64` | `3.9GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -67,10 +91,10 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag ollama)
 
 # or explicitly specify one of the container images above
-jetson-containers run dustynv/ollama:r35.4.1
+jetson-containers run dustynv/ollama:r36.2.0
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/ollama:r35.4.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/ollama:r36.2.0
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
