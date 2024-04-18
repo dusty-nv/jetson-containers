@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # wyoming-openwakeword
-set -ex
+set -euxo pipefail
 
 apt-get update
 apt-get install -y --no-install-recommends \
