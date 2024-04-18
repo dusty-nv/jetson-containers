@@ -9,8 +9,9 @@ FROM ${BASE_IMAGE}
 
 ARG PIPER_VERSION=master \
     PIPER_PHONEMIZE_VERSION=master \
-    PIPER_PHONEMIZE_DIR=/usr/local \
     ONNXRUNTIME_DIR=/usr/local
+
+ENV PIPER_PHONEMIZE_DIR=/usr/local
 
 #ENV LD_LIBRARY_PATH=/usr/local/:$LD_LIBRARY_PATH
 
@@ -29,7 +30,7 @@ RUN git clone --branch ${PIPER_PHONEMIZE_VERSION} --depth 1 https://github.com/r
     CPPFLAGS="-I${ONNXRUNTIME_DIR}/include/onnxruntime/" \
     pip3 install --no-cache-dir --verbose . && \
     ln -s /usr/local/share/espeak-ng-data /usr/share/espeak-ng-data
-
+ 
 # Now we can build piper. In order to avoid it from downloading
 # automatically piper-phonemize, we specify an installation dir.
 RUN git clone --branch ${PIPER_VERSION} --depth 1 https://github.com/rhasspy/piper && \
