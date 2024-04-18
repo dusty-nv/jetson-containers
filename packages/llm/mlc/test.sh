@@ -9,6 +9,7 @@ QUANTIZATION=${QUANTIZATION:-"q4f16_ft"}
 QUANTIZATION_PATH="${MODEL_ROOT}/${MODEL_NAME}-${QUANTIZATION}"
 SKIP_QUANTIZATION=${SKIP_QUANTIZATION:-"no"}
 
+PROMPT=${PROMPT:-"/data/prompts/completion.json"}
 CONV_TEMPLATE=${CONV_TEMPLATE:-"llama-2"}
 MAX_CONTEXT_LEN=${MAX_CONTEXT_LEN:-4096}
 
@@ -55,6 +56,12 @@ quantize_legacy() # mlc_llm == 0.1.0
 		if [ $? != 0 ]; then
 			return 1
 		fi
+	else
+		python3 -m mlc_llm.build --help
+		
+		if [ $? != 0 ]; then
+			return 1
+		fi
 	fi
 	
 	QUANTIZATION_PATH="$QUANTIZATION_PATH/params"
@@ -78,4 +85,4 @@ python3 benchmark.py \
 	--model $QUANTIZATION_PATH $QUANTIZATION_LIB \
 	--max-new-tokens 128 \
 	--max-num-prompts 4 \
-	--prompt /data/prompts/completion.json
+	--prompt $PROMPT
