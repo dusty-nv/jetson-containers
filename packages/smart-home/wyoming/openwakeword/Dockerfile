@@ -3,6 +3,7 @@
 # group: wyoming
 # requires: '>=34.1.0'
 # docs: docs.md
+# config: config.py
 # depends: [homeassistant-base, python:3.11]
 # notes: The `openWakeWord` using the `wyoming` protocol for usage with Home Assistant. Based on `https://github.com/home-assistant/addons/blob/master/openwakeword/Dockerfile`
 #---
