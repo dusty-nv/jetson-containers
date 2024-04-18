@@ -8,7 +8,15 @@
 # Container Usage
 
 Run the container as a daemon in the background
-`docker run -d --gpus=all -v ollama:/root/.ollama -p 11434:11434 --name ollama dusty-nv/ollama`
+`docker run -d --gpus=all -p 11434:11434 --name ollama dusty-nv/ollama`
+
+* ollama stores models in /usr/share/ollama/.ollama/models by default. Create a symlink on the host to sync containers to any binaries run straight from the console
+- Ensure the folder doesn't exist, if it does move its content first then remove the folder
+```
+sudo mv /usr/share/ollama/.ollama/* /PATH/TO/jetson-containers/data/models/ollama
+sudo rm -r /usr/share/ollama/.ollama
+sudo ln -s /PATH/TO/jetson-containers/data/models/ollama /usr/share/ollama/.ollama
+```
 
 Start the Ollama front-end with your desired model (for example: mistral 7b)
 `docker run -it --rm dusty-nv/ollama /bin/ollama run mistral`
