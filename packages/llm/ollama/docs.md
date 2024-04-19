@@ -1,5 +1,6 @@
 
-* ollama from https://github.com/ollama/ollama with CUDA enabled (found under `/bin/ollama`)
+* Ollama from https://github.com/ollama/ollama with CUDA enabled (found under `/bin/ollama`)
+* Thanks to [`@remy415`](https://github.com/dusty-nv/jetson-containers/pull/465) for contributing the working Dockerfile
 
 ## Ollama Server
 
@@ -29,9 +30,9 @@ Start the Ollama CLI front-end with your desired model (for example: mistral 7b)
 jetson-containers run $(autotag ollama) /bin/ollama run mistral
 ```
 
-<img src="https://github.com/dusty-nv/jetson-containers/blob/docs/docs/images/ollama_cli.gif?raw=true" width="750px"></img>
+<img src="https://github.com/dusty-nv/jetson-containers/blob/docs/docs/images/ollama_cli.gif?raw=true" width="600px"></img>
 
-Or you can install Ollama's released binaries for arm64 (without CUDA) outside of container (only the server needs to have been built with CUDA support)
+Or you can install Ollama's released binaries for arm64 (without CUDA, which only the server needs)
 
 ```
 # download the latest ollama release for arm64 into /bin
