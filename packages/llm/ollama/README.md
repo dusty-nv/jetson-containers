@@ -4,7 +4,7 @@
 
 
 * Ollama from https://github.com/ollama/ollama with CUDA enabled (found under `/bin/ollama`)
-* Thanks to [`@remy415`](https://github.com/dusty-nv/jetson-containers/pull/465) for contributing the working Dockerfile
+* Thanks to [`@remy415`](https://github.com/remy415) for getting Ollama working and contributing the Dockerfile [PR #465](https://github.com/dusty-nv/jetson-containers/pull/465)
 
 ## Ollama Server
 
@@ -34,7 +34,7 @@ Start the Ollama CLI front-end with your desired model (for example: mistral 7b)
 jetson-containers run $(autotag ollama) /bin/ollama run mistral
 ```
 
-<img src="https://github.com/dusty-nv/jetson-containers/blob/docs/docs/images/ollama_cli.gif?raw=true" width="600px"></img>
+<img src="https://github.com/dusty-nv/jetson-containers/blob/docs/docs/images/ollama_cli.gif?raw=true" width="750px"></img>
 
 Or you can install Ollama's released binaries for arm64 (without CUDA, which only the server needs)
 
@@ -57,7 +57,7 @@ docker run -it --rm --network=host --add-host=host.docker.internal:host-gateway 
 
 You can then navigate your browser to `http://JETSON_IP:8080`, and create a fake account to login (these credentials are only stored locally)
 
-<img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/ollama_open_webui.jpg"></img>
+<img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/ollama_open_webui.jpg" width="800px"></img>
 
 ## Memory Usage
 
