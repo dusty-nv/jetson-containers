@@ -1,6 +1,6 @@
 
 * Ollama from https://github.com/ollama/ollama with CUDA enabled (found under `/bin/ollama`)
-* Thanks to [`@remy415`](https://github.com/remy415) for getting Ollama working and contributing the Dockerfile [PR #465](https://github.com/dusty-nv/jetson-containers/pull/465)
+* Thanks to [`@remy415`](https://github.com/remy415) for getting Ollama working on Jetson and contributing the Dockerfile ([*PR #465*](https://github.com/dusty-nv/jetson-containers/pull/465))
 
 ## Ollama Server
 
