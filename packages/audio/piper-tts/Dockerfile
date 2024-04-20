@@ -11,7 +11,11 @@ ARG PIPER_VERSION=master \
     PIPER_PHONEMIZE_VERSION=master \
     ONNXRUNTIME_DIR=/usr/local
 
-ENV PIPER_PHONEMIZE_DIR=/usr/local
+# make PIPER_CACHE a default mounted location available for downloading the models
+# this still needs to be explicitly passed to piper.get_voices(), ensure_path_exists(), ect.
+ENV PIPER_CACHE=/data/models/piper \
+    PIPER_PHONEMIZE_DIR=/usr/local \
+    ESPEAK_NG_DATA_DIR=/usr/local/share/espeak-ng-data
 
 #ENV LD_LIBRARY_PATH=/usr/local/:$LD_LIBRARY_PATH
 
@@ -29,7 +33,7 @@ RUN git clone --branch ${PIPER_PHONEMIZE_VERSION} --depth 1 https://github.com/r
     cmake --install build && \
     CPPFLAGS="-I${ONNXRUNTIME_DIR}/include/onnxruntime/" \
     pip3 install --no-cache-dir --verbose . && \
-    ln -s /usr/local/share/espeak-ng-data /usr/share/espeak-ng-data
+    ln -s ${ESPEAK_NG_DATA_DIR} /usr/share/espeak-ng-data
  
 # Now we can build piper. In order to avoid it from downloading
 # automatically piper-phonemize, we specify an installation dir.
@@ -42,9 +46,5 @@ RUN git clone --branch ${PIPER_VERSION} --depth 1 https://github.com/rhasspy/pip
     pip3 install --ignore-installed --no-cache-dir blinker && \
     pip3 install -r requirements_http.txt && \
     pip3 install --no-cache-dir --verbose --no-deps .[gpu,http]
-
-# make a default mounted location available for downloading the models
-# this still needs to be explicitly passed to piper.get_voices(), ensure_path_exists(), ect.
-ENV PIPER_CACHE=/data/models/piper
 
 WORKDIR /
