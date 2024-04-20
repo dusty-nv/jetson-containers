@@ -17,10 +17,9 @@ pip3 install --no-cache-dir -U \
 
 # Clone wyoming-piper layer
 git clone https://github.com/rhasspy/wyoming-piper /tmp/wyoming-piper
-# TODO: Enable CUDA
-# wget https://patch-diff.githubusercontent.com/raw/rhasspy/wyoming-piper/pull/5.diff -O /tmp/cuda_patch.diff
-# git -C /tmp/wyoming-piper apply /tmp/cuda_patch.diff
-# git -C /tmp/wyoming-piper status
+# Enable CUDA
+git -C /tmp/wyoming-piper apply /tmp/wyoming/wyoming-piper_cuda_path.diff
+git -C /tmp/wyoming-piper status
 pip3 install --no-cache-dir --verbose -r /tmp/wyoming-piper/requirements.txt
 pip3 wheel --wheel-dir=/opt/ --no-deps --verbose /tmp/wyoming-piper
 pip3 install --no-cache-dir --verbose /opt/wyoming_piper*.whl
@@ -41,8 +40,16 @@ sed -i \
    -e "s#--noise-w.*#--noise-w \"$PIPER_NOISE_W\" \\\\#g" \
    -e "s#--speaker.*#--speaker \"$PIPER_SPEAKER\" \\\\#g" \
    -e "s#--voice.*#--voice \"$PIPER_VOICE\" \\\\#g" \
+   -e "s#--download-dir /data#--download-dir $PIPER_CACHE#g" \
    -e "s#--max-piper-procs.*#--max-piper-procs \"$PIPER_MAX_PROC\" \\\\#g" \
    /tmp/addons/piper/rootfs/etc/s6-overlay/s6-rc.d/piper/run
+# Add download dir (PIPER_CACHE) to data dirs array
+sed -i "15a\    --data-dir ${PIPER_CACHE} \\\\" /tmp/addons/piper/rootfs/etc/s6-overlay/s6-rc.d/piper/run
+# Enable CUDA
+sed -i '15a\    --cuda \\' /tmp/addons/piper/rootfs/etc/s6-overlay/s6-rc.d/piper/run
+# Set path to espeak-ng data directory
+sed -i "15a\    --espeak-data-dir ${ESPEAK_NG_DATA_DIR} \\\\" /tmp/addons/piper/rootfs/etc/s6-overlay/s6-rc.d/piper/run
+cat /tmp/addons/piper/rootfs/etc/s6-overlay/s6-rc.d/piper/run
 
 # Fix: Disable native Discovery handled by HA Supervisor
 sed -i '$d' /tmp/addons/piper/rootfs/etc/s6-overlay/s6-rc.d/discovery/run

@@ -20,6 +20,7 @@ ENV PIP_BREAK_SYSTEM_PACKAGES=1 \
     PIPER_DEBUG="true"
 
 COPY build.sh /tmp/wyoming/build_wyoming-piper.sh
+COPY *.diff /tmp/wyoming/
 
 WORKDIR /usr/src
 
