@@ -1,0 +1,47 @@
+#!/command/with-contenv bashio
+# shellcheck shell=bash
+# ==============================================================================
+# Start service
+# ==============================================================================
+AUDIO_DEVICE="plughw:CARD=S330,DEV=0"
+SND_COMMAND_CHANNELS=1
+SND_COMMAND_RATE=16000
+SND_PROFILE="S16_LE"
+SND_COMMAND="aplay -D ${AUDIO_DEVICE} -r ${SND_COMMAND_RATE} -c ${SND_COMMAND_CHANNELS} -f ${SND_PROFILE} -t raw"
+
+MIC_COMMAND_CHANNELS=1
+MIC_COMMAND_RATE=16000
+MIC_PROFILE="S16_LE"
+MIC_COMMAND="arecord -D ${AUDIO_DEVICE} -r ${MIC_COMMAND_RATE} -c ${MIC_COMMAND_CHANNELS} -f ${MIC_PROFILE} -t raw"
+
+extra_args=()
+if [[ "${ASSIST_MICROPHONE_DEBUG}" == "true" ]]; then
+    extra_args+=('--debug')
+fi
+
+if [[ "${ASSIST_MICROPHONE_SOUND_ENABLED}" == "true" ]]; then
+    extra_args+=("--snd-command" "${SND_COMMAND}")
+fi
+
+exec python3 -m wyoming_satellite \
+    --name 'assist microphone' \
+    --uri "tcp://0.0.0.0:${ASSIST_MICROPHONE_PORT}" \
+    \
+    --snd-command-rate "${SND_COMMAND_RATE}" \
+    --snd-command-channels "${SND_COMMAND_CHANNELS}" \
+    --snd-volume-multiplier "${ASSIST_MICROPHONE_SND_VOLUME_MULTIPLIER}" \
+    \
+    --mic-command "${MIC_COMMAND}" \
+    --mic-command-rate "${MIC_COMMAND_RATE}" \
+    --mic-command-channels "${MIC_COMMAND_CHANNELS}" \
+    --mic-volume-multiplier "${ASSIST_MICROPHONE_MIC_VOLUME_MULTIPLIER}" \
+    --mic-auto-gain "${ASSIST_MICROPHONE_MIC_AUTO_GAIN}" \
+    --mic-noise-suppression "${ASSIST_MICROPHONE_MIC_NOISE_SUPPRESSION}" \
+    \
+    --vad \
+    --wake-uri tcp://127.0.0.1:10400 \
+    --wake-word-name 'ok_nabu' \
+    \
+    --awake-wav "${ASSIST_MICROPHONE_AWAKE_WAV}" \
+    --done-wav "${ASSIST_MICROPHONE_DONE_WAV}" \
+    --no-zeroconf "${extra_args[@]}"
