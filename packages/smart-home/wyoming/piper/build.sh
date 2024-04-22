@@ -16,7 +16,7 @@ pip3 install --no-cache-dir -U \
 /opt/piper/build/piper --help
 
 # Clone wyoming-piper layer
-git clone https://github.com/rhasspy/wyoming-piper /tmp/wyoming-piper
+git clone --branch=v${WYOMING_PIPER_VERSION} https://github.com/rhasspy/wyoming-piper /tmp/wyoming-piper
 # Enable CUDA
 git -C /tmp/wyoming-piper apply /tmp/wyoming/wyoming-piper_cuda_path.diff
 git -C /tmp/wyoming-piper status
@@ -25,42 +25,5 @@ pip3 wheel --wheel-dir=/opt/ --no-deps --verbose /tmp/wyoming-piper
 pip3 install --no-cache-dir --verbose /opt/wyoming_piper*.whl
 pip3 show wyoming_piper
 rm -rf /tmp/wyoming-piper
-
-# Clone rootfs
-git clone --depth=1 https://github.com/home-assistant/addons /tmp/addons
-git -C /tmp/addons sparse-checkout set --no-cone piper/ '!*/piper'
-
-# Fix: Adjust reading config data from config.yaml file when not using HA Supervisor
-sed -i \
-   -e "s#bashio::config.true 'update_voices'#[[ \"$PIPER_UPDATE_VOICES\" == \"true\" ]]#g" \
-   -e "s#bashio::config.true 'debug_logging'#[[ \"$PIPER_DEBUG\" == \"true\" ]]#g" \
-   -e "s#--piper.*#--piper \"/opt/piper/build/piper\" \\\\#g" \
-   -e "s#--length-scale.*#--length-scale \"$PIPER_LENGTH_SCALE\" \\\\#g" \
-   -e "s#--noise-scale.*#--noise-scale \"$PIPER_NOISE_SCALE\" \\\\#g" \
-   -e "s#--noise-w.*#--noise-w \"$PIPER_NOISE_W\" \\\\#g" \
-   -e "s#--speaker.*#--speaker \"$PIPER_SPEAKER\" \\\\#g" \
-   -e "s#--voice.*#--voice \"$PIPER_VOICE\" \\\\#g" \
-   -e "s#--download-dir /data#--download-dir $PIPER_CACHE#g" \
-   -e "s#--max-piper-procs.*#--max-piper-procs \"$PIPER_MAX_PROC\" \\\\#g" \
-   /tmp/addons/piper/rootfs/etc/s6-overlay/s6-rc.d/piper/run
-# Add download dir (PIPER_CACHE) to data dirs array
-sed -i "15a\    --data-dir ${PIPER_CACHE} \\\\" /tmp/addons/piper/rootfs/etc/s6-overlay/s6-rc.d/piper/run
-# Enable CUDA
-sed -i '15a\    --cuda \\' /tmp/addons/piper/rootfs/etc/s6-overlay/s6-rc.d/piper/run
-# Set path to espeak-ng data directory
-sed -i "15a\    --espeak-data-dir ${ESPEAK_NG_DATA_DIR} \\\\" /tmp/addons/piper/rootfs/etc/s6-overlay/s6-rc.d/piper/run
-cat /tmp/addons/piper/rootfs/etc/s6-overlay/s6-rc.d/piper/run
-
-# Fix: Disable native Discovery handled by HA Supervisor
-sed -i '$d' /tmp/addons/piper/rootfs/etc/s6-overlay/s6-rc.d/discovery/run
-sed -i '$d' /tmp/addons/piper/rootfs/etc/s6-overlay/s6-rc.d/discovery/run
-sed -i '$d' /tmp/addons/piper/rootfs/etc/s6-overlay/s6-rc.d/discovery/run
-sed -i '$d' /tmp/addons/piper/rootfs/etc/s6-overlay/s6-rc.d/discovery/run
-sed -i '$d' /tmp/addons/piper/rootfs/etc/s6-overlay/s6-rc.d/discovery/run
-cat /tmp/addons/piper/rootfs/etc/s6-overlay/s6-rc.d/discovery/run
-
-cp -r /tmp/addons/piper/rootfs/* /
-cp /tmp/addons/piper/config.yaml /etc/s6-overlay/s6-rc.d/piper/config.yaml
-rm -rf /tmp/addons
 
 python3 -c 'import wyoming_piper; print(wyoming_piper.__version__);'
