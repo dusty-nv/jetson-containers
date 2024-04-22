@@ -15,7 +15,7 @@ Run the local Ollama server instance as a daemon in the background, either of th
 jetson-containers run --detach --name ollama $(autotag ollama)
 
 # models cached under your user's home directory
-docker run --runtime nvidia -it --rm --network=host -v ~/ollama:/root/.ollama dustynv/ollama:r36.2.0
+docker run --runtime nvidia -d --rm --network=host -v ~/ollama:/ollama -e OLLAMA_MODELS=/ollama dustynv/ollama:r36.2.0
 ```
 
 Ollama stores models in `/usr/share/ollama/.ollama/models` by default. Create a symlink on the host to sync containers to any binaries run straight from the console.  Ensure the folder doesn't exist, and if it does move its content first then remove the folder:
