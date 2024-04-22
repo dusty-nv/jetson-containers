@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 OPENCV_URL=${1:-"$OPENCV_URL"}
-OPENCV_DEB=${2:-"$OPENCV_DEB"}
+OPENCV_DEB=${2:-"OpenCV-${OPENCV_VERSION}-aarch64.tar.gz"}
 
 echo "OPENCV_URL=$OPENCV_URL"
 echo "OPENCV_DEB=$OPENCV_DEB"
@@ -9,6 +9,16 @@ if [[ -z ${OPENCV_URL} || -z ${OPENCV_DEB} ]]; then
 	echo "OPENCV_URL and OPENCV_DEB must be set as environment variables or as command-line arguments"
 	exit 255
 fi
+
+if [ "$FORCE_BUILD" == "on" ]; then
+	echo "Forcing build of opencv-python ${OPENCV_VERSION}"
+	exit 255
+fi
+
+#sed -i \
+#	-e '2i OPENCV_URL=${OPENCV_URL}' \
+#	-e '3i OPENCV_DEB=${OPENCV_DEB}' \
+#	/tmp/opencv/install_deb.sh \
 
 ARCH=$(uname -i)
 echo "ARCH:  $ARCH"
