@@ -18,7 +18,6 @@ ENV PIP_BREAK_SYSTEM_PACKAGES=1 \
     WHISPER_MODEL="tiny-int8" \
     WHISPER_BEAM_SIZE="1" \
     WHISPER_LANGUAGE="en" \
-    WHISPER_INITIAL_PROMPT="" \
     WHISPER_DEBUG="true"
 
 COPY rootfs/ /
@@ -36,7 +35,4 @@ HEALTHCHECK --start-period=10m \
         | grep -q "faster-whisper" \
         || exit 1
 
-# Disabled due to issues when running `jetson-containers` tests. It's more recomended
-# to use `command: "/init"` when `docker-compose` is used or just `--entrypoint "/init"`
-# when using `docker run`.
-# ENTRYPOINT ["/init"]
+ENTRYPOINT ["/init"]

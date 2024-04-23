@@ -23,15 +23,12 @@ if [[ "${WHISPER_DEBUG}" == "true" ]]; then
     flags+=('--debug')
 fi
 
-# Fix: https://github.com/SYSTRAN/faster-whisper/issues/754
-if [[ -n "${WHISPER_INITIAL_PROMPT}" ]]; then
-    flags+=('--initial-prompt', "${WHISPER_INITIAL_PROMPT}")
-fi
-
 exec python3 -m wyoming_faster_whisper \
     --uri "tcp://0.0.0.0:${WHISPER_PORT}" \
     --model "${model}" \
+    --initial-prompt "" \
     --beam-size "${WHISPER_BEAM_SIZE}" \
     --language "${WHISPER_LANGUAGE}" \
+    --device "cuda" \
     --data-dir /data \
     --download-dir /data ${flags[@]}
