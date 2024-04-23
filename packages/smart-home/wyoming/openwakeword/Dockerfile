@@ -39,7 +39,4 @@ HEALTHCHECK --start-period=10m \
 
 EXPOSE ${OPENWAKEWORD_PORT}/tcp
 
-# Disabled due to issues when running `jetson-containers` tests. It's more recomended
-# to use `command: "/init"` when `docker-compose` is used or just `--entrypoint "/init"`
-# when using `docker run`.
-# ENTRYPOINT ["/init"]
+ENTRYPOINT ["/init"]
