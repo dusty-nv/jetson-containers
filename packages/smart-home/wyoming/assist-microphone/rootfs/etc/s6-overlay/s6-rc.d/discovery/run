@@ -12,10 +12,10 @@ bash -c \
             > /dev/tcp/localhost/10700; do sleep 0.5;
     done" > /dev/null 2>&1 || true;
 
-# config=$(\
-#     bashio::var.json \
-#         uri "tcp://$(hostname):10700" \
-# )
+config=$(\
+    bashio::var.json \
+        uri "tcp://$(hostname):10700" \
+)
 
 # if bashio::discovery "wyoming" "${config}" > /dev/null; then
 #     bashio::log.info "Successfully sent discovery information to Home Assistant."
