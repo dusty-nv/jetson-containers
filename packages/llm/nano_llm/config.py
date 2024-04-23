@@ -13,7 +13,7 @@ def NanoLLM(version, branch=None, requires=None, default=False):
         pkg['requires'] = requires   
 
     if L4T_VERSION.major >= 36:
-        package['depends'] = package['depends'] + ['xtts']
+        pkg['depends'] = pkg['depends'] + ['xtts']
     
     if not branch:
         branch = version
@@ -25,6 +25,7 @@ def NanoLLM(version, branch=None, requires=None, default=False):
 package = [
     NanoLLM('main', default=True),
     NanoLLM('24.4'),
+    NanoLLM('24.4.1'),
 ]
 
 
