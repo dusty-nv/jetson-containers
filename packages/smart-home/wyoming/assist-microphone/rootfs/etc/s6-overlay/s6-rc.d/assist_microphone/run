@@ -1,0 +1,35 @@
+#!/command/with-contenv bashio
+# shellcheck shell=bash
+# ==============================================================================
+# Start service
+# ==============================================================================
+extra_args=()
+if [[ "${ASSIST_MICROPHONE_DEBUG}" == "true" ]]; then
+    extra_args+=('--debug')
+fi
+
+if [[ "${ASSIST_MICROPHONE_SOUND_ENABLED}" == "true" ]]; then
+    extra_args+=("--snd-command" "aplay -D ${AUDIO_DEVICE} -r 16000 -c 1 -f S16_LE -t raw")
+fi
+
+exec python3 -m wyoming_satellite \
+    --name 'assist microphone' \
+    --uri "tcp://0.0.0.0:${ASSIST_MICROPHONE_PORT}" \
+    \
+    --snd-command-rate 16000 \
+    --snd-command-channels 1 \
+    --snd-volume-multiplier "${ASSIST_MICROPHONE_SND_VOLUME_MULTIPLIER}" \
+    \
+    --mic-command "arecord -D ${AUDIO_DEVICE} -r 16000 -c 1 -f S16_LE -t raw" \
+    --mic-command-rate 16000 \
+    --mic-command-channels 1 \
+    --mic-volume-multiplier "${ASSIST_MICROPHONE_MIC_VOLUME_MULTIPLIER}" \
+    --mic-auto-gain "${ASSIST_MICROPHONE_MIC_AUTO_GAIN}" \
+    --mic-noise-suppression "${ASSIST_MICROPHONE_MIC_NOISE_SUPPRESSION}" \
+    \
+    --wake-uri "${WAKEWORD_SERVICE_URI}" \
+    --wake-word-name "${WAKEWORD_NAME}" \
+    \
+    --awake-wav "${ASSIST_MICROPHONE_AWAKE_WAV}" \
+    --done-wav "${ASSIST_MICROPHONE_DONE_WAV}" \
+    --no-zeroconf "${extra_args[@]}"

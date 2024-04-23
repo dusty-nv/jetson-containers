@@ -1,9 +1,9 @@
 import requests
 
 
-def get_latest_stable_version(fallback="1.10.0") -> str:
+def get_latest_stable_version(fallback="2.1.0") -> str:
     try:
-        response = requests.get('https://raw.githubusercontent.com/rhasspy/wyoming-openwakeword/master/wyoming_openwakeword/VERSION')
+        response = requests.get('https://raw.githubusercontent.com/rhasspy/wyoming-faster-whisper/master/wyoming_faster_whisper/VERSION')
         if response.status_code == 200:
             return response.text.strip()
         else:
@@ -17,14 +17,14 @@ def get_latest_stable_version(fallback="1.10.0") -> str:
 def create_package(version, default=False) -> list:
     pkg = package.copy()
     wanted_version = get_latest_stable_version() if version == 'latest' else version
-    pkg['name'] = f'wyoming-openwakeword:{version}'
+    pkg['name'] = f'wyoming-whisper:{version}'
 
     pkg['build_args'] = {
-        'WYOMING_OPENWAKEWORD_VERSION': wanted_version,
+        'WYOMING_WHISPER_VERSION': wanted_version,
     }
 
     if default:
-        pkg['alias'] = 'wyoming-openwakeword'
+        pkg['alias'] = 'wyoming-whisper'
 
     return pkg
 
