@@ -16,7 +16,7 @@ pip3 install --no-cache-dir -U \
 /opt/piper/build/piper --help
 
 # Clone wyoming-piper layer
-git clone --branch=v${WYOMING_PIPER_VERSION} https://github.com/rhasspy/wyoming-piper /tmp/wyoming-piper
+git clone --branch=${WYOMING_PIPER_VERSION} https://github.com/rhasspy/wyoming-piper /tmp/wyoming-piper
 # Enable CUDA
 git -C /tmp/wyoming-piper apply /tmp/wyoming/wyoming-piper_cuda_path.diff
 git -C /tmp/wyoming-piper status

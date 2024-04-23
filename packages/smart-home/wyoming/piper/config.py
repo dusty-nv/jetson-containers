@@ -1,11 +1,11 @@
 import requests
 
 
-def get_latest_stable_version(fallback="1.5.0") -> str:
+def get_latest_stable_version(fallback="v1.5.0") -> str:
     try:
         response = requests.get('https://raw.githubusercontent.com/rhasspy/wyoming-piper/master/wyoming_piper/VERSION')
         if response.status_code == 200:
-            return response.text.strip()
+            return f"v{response.text.strip()}"
         else:
             print("Failed to fetch version information. Status code:", response.status_code)
             return fallback
@@ -29,5 +29,5 @@ def create_package(version, default=False) -> list:
     return pkg
 
 package = [
-    create_package("latest", default=True),
+    create_package("master", default=True),
 ]
