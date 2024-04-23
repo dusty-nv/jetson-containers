@@ -8,7 +8,7 @@ if [[ "${PIPER_UPDATE_VOICES}" == "true" ]]; then
     flags+=('--update-voices')
 fi
 
-if [[ "$PIPER_DEBUG" == "true" ]]; then
+if [[ "${PIPER_DEBUG}" == "true" ]]; then
     flags+=('--debug')
 fi
 
@@ -25,5 +25,5 @@ exec python3 -m wyoming_piper \
     --espeak-data-dir "${ESPEAK_NG_DATA_DIR}" \
     --data-dir /data \
     --data-dir /share/piper \
-    --data-dir "${$PIPER_CACHE}" \
-    --download-dir "${$PIPER_CACHE}" ${flags[@]}
+    --data-dir "${PIPER_CACHE}" \
+    --download-dir "${PIPER_CACHE}" ${flags[@]}
