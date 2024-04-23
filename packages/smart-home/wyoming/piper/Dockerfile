@@ -16,6 +16,7 @@ SHELL ["/bin/bash", "-euxo", "pipefail"]
 
 ENV PIP_BREAK_SYSTEM_PACKAGES=1 \
     WYOMING_PIPER_VERSION="$WYOMING_PIPER_VERSION" \
+    PIPER_CACHE=/data/models/piper \
     PIPER_PORT=10200 \
     PIPER_UPDATE_VOICES="true" \
     PIPER_LENGTH_SCALE="1.0" \
@@ -26,6 +27,7 @@ ENV PIP_BREAK_SYSTEM_PACKAGES=1 \
     PIPER_MAX_PROC="1" \
     PIPER_DEBUG="true"
 
+COPY rootfs/ /
 COPY build.sh /tmp/wyoming/build_wyoming-piper.sh
 COPY *.diff /tmp/wyoming/
 
@@ -41,7 +43,4 @@ HEALTHCHECK --start-period=10m \
         | grep -q "piper" \
         || exit 1
 
-# Disabled due to issues when running `jetson-containers` tests. It's more recomended
-# to use `command: "/init"` when `docker-compose` is used or just `--entrypoint "/init"`
-# when using `docker run`.
-# ENTRYPOINT ["/init"]
+ENTRYPOINT ["/init"]
