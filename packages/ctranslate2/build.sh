@@ -16,6 +16,7 @@ cmake .. -DWITH_CUDA=ON -DWITH_CUDNN=ON -DWITH_MKL=OFF -DOPENMP_RUNTIME=COMP -DC
 make -j$(nproc)
 make install
 
+cp -r ${install_dir}/* /usr/local/
 ldconfig
 
 # build Python packages
@@ -28,6 +29,3 @@ pip3 install --no-cache-dir --verbose /opt/ctranslate2*.whl
 
 twine upload --verbose /opt/ctranslate2*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 tarpack upload ctranslate2-${CTRANSLATE_VERSION} ${install_dir} || echo "failed to upload tarball"
-
-# install local copy
-cp -r ${install_dir}/* /usr/local/
