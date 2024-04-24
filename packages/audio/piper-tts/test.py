@@ -22,8 +22,12 @@ def main(model='en_US-lessac-high', config=None, cache=os.environ.get('PIPER_CAC
 
     if not os.path.isfile(os.path.join(cache, model)):
         # Download voice info
-        voices_info = get_voices(cache, update_voices=True)
-
+        try:
+            voices_info = get_voices(cache, update_voices=True)
+        except Exception as error:
+            print(f"Failed to download Piper voice list  ({error})")
+            voices_info = get_voices(cache)
+            
         # Resolve aliases for backwards compatibility with old voice names
         aliases_info = {}
         for voice_info in voices_info.values():
