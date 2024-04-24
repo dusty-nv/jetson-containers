@@ -35,4 +35,6 @@ HEALTHCHECK --start-period=10m \
         | grep -q "faster-whisper" \
         || exit 1
 
-ENTRYPOINT ["/init"]
+# this makes the tests go boom
+#ENTRYPOINT ["/init"]
+CMD /init

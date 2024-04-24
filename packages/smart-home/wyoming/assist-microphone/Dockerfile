@@ -48,4 +48,4 @@ HEALTHCHECK --start-period=10m \
         | grep -q "assist" \
         || exit 1
 
-ENTRYPOINT ["/init"]
+CMD /init
