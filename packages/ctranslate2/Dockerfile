@@ -1,28 +1,19 @@
 #---
 # name: ctranslate2
 # group: transformer
+# config: config.py
 # depends: [cmake, cuda, cudnn]
 # requires: '>=34.1.0'
-# docs: docs.md
+# test: test.py
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-WORKDIR /opt
+ARG CTRANSLATE_VERSION \
+    CTRANSLATE_BRANCH \
+    CTRANSLATE_SOURCE=/opt/CTranslate2 \
+    FORCE_BUILD=off
 
-RUN git clone --recursive https://github.com/OpenNMT/CTranslate2.git && \
-    cd CTranslate2 && \
-    mkdir build && cd build && \
-    cmake .. -DWITH_CUDA=ON -DWITH_CUDNN=ON -DWITH_MKL=OFF -DOPENMP_RUNTIME=COMP && \
-    make -j4 && \
-    make install && \
-    ldconfig
+COPY build.sh install.sh /tmp/ctranslate/
 
-RUN cd CTranslate2/python && \
-    pip3 install --no-cache-dir --verbose -r install_requirements.txt && \
-    python3 setup.py bdist_wheel
-    
-RUN cp CTranslate2/python/dist/ctranslate2*.whl /opt && \
-    pip3 install --no-cache-dir --verbose /opt/ctranslate2*.whl
-
-RUN pip3 show ctranslate2 && python3 -c 'import ctranslate2'
+RUN /tmp/ctranslate/install.sh || /tmp/ctranslate/build.sh
