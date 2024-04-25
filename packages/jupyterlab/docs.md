@@ -17,4 +17,4 @@ The [`/start_jupyter`](./start_jupyter) script is the default CMD that the conta
 jetson-containers run /bin/bash
 ```
 
-You can then still manually run the `/start_jupyter` script later when desired.
+You can then still manually run the [`/start_jupyter`](./start_jupyter) script later when desired.

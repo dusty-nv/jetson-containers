@@ -8,7 +8,7 @@
 
 ## Ollama Server
 
-Run the local Ollama server instance as a daemon in the background, either of these ways:
+First, start the local Ollama server as a daemon in the background, either of these ways:
 
 ```
 # models cached under jetson-containers/data
@@ -18,13 +18,13 @@ jetson-containers run --name ollama $(autotag ollama)
 docker run --runtime nvidia -it -rm --network=host -v ~/ollama:/ollama -e OLLAMA_MODELS=/ollama dustynv/ollama:r36.2.0
 ```
 
-You can then run the [ollama client](#ollama-client) in the same container (or a different one if desired).  The default docker run CMD of the `ollama` container is [`/start_ollama`](./start_ollama), which will starts the ollama server in the background and returns control to the user. The ollama server logs are saved under your `jetson-containers/data/logs` directory for monitoring them outside the containers.
+You can then run the ollama [client](#ollama-client) in the same container (or a different one if desired).  The default docker run CMD of the `ollama` container is [`/start_ollama`](./start_ollama), which starts the ollama server in the background and returns control to the user. The ollama server logs are saved under your mounted `jetson-containers/data/logs` directory for monitoring them outside the containers.
 
-Setting the `$OLLAMA_MODELS` environment variable will change where ollama downloads the models to - by default, this is under your `jetson-containers/data/models/ollama` directory which is automatically mounted by `jetson-containers run`.  
+Setting the `$OLLAMA_MODELS` environment variable as shown above will change where ollama downloads the models to.  By default, this is under your `jetson-containers/data/models/ollama` directory which is automatically mounted by `jetson-containers run`.  
 
 ## Ollama Client
 
-Start the Ollama CLI front-end with your desired model (for example: mistral 7b)
+Start the Ollama CLI front-end with your desired [model](https://ollama.com/library) (for example: mistral 7b)
 
 ```
 # if running inside the same container as launched above
@@ -36,14 +36,14 @@ jetson-containers run $(autotag ollama) /bin/ollama run mistral
 
 <img src="https://github.com/dusty-nv/jetson-containers/blob/docs/docs/images/ollama_cli.gif?raw=true" width="750px"></img>
 
-Or you can install Ollama's released binaries for arm64 (without CUDA, which only the server needs)
+Or you can run the client outside container by installing Ollama's released binaries for arm64 (without CUDA, which only the server needs)
 
 ```
 # download the latest ollama release for arm64 into /bin
 sudo wget https://github.com/ollama/ollama/releases/download/$(git ls-remote --refs --sort="version:refname" --tags https://github.com/ollama/ollama | cut -d/ -f3- | sed 's/-rc.*//g' | tail -n1)/ollama-linux-arm64 -O /bin/ollama
 sudo chmod +x /bin/ollama
 
-# use the client like normal outside container
+# use the client like normal (outside container)
 /bin/ollama run mistral
 ```
 
