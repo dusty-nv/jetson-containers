@@ -2,12 +2,14 @@
 # This script will start JupyterLab server in the background (https://stackoverflow.com/a/44222911)
 # There are some environment variables that you can set when starting the container to override the defaults:
 #
+#    `--env JUPYTER_ROOT=/home/user`
 #    `--env JUPYTER_PORT=8888`
 #    `--env JUPYTER_PASSWORD=nvidia`
 #    `--env JUPYTER_LOGS=/data/logs/jupyter.log`
 #
 # The `/data` location is automatically mounted to your `jetson-containers/data` directory.
 
+: "${JUPYTER_ROOT:=/}"
 : "${JUPYTER_PORT:=8888}"
 : "${JUPYTER_LOGS:=/data/logs/jupyter.log}"
 : "${JUPYTER_PASSWORD:=nvidia}"
@@ -18,7 +20,7 @@ printf "\nStarting JupyterLab server at $server_url (password \"${JUPYTER_PASSWO
 
 python3 -c "from notebook.auth.security import set_password; set_password(\"${JUPYTER_PASSWORD}\", '/root/.jupyter/jupyter_notebook_config.json')"
 
-/bin/bash -c "jupyter lab --ip 0.0.0.0 --port $JUPYTER_PORT --allow-root &> $JUPYTER_LOGS" &
+/bin/bash -c "jupyter lab --ip 0.0.0.0 --port $JUPYTER_PORT --notebook-dir $JUPYTER_ROOT --allow-root &> $JUPYTER_LOGS" &
 
 timeout 5 tail -f $JUPYTER_LOGS
 
