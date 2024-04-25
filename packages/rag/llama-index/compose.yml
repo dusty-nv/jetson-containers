@@ -1,0 +1,27 @@
+name: llamaindex-ollama
+version: '3.9'
+services:
+  ollama:
+    image: dustynv/ollama:${L4T_VERSION}
+    container_name: ollama
+    restart: unless-stopped
+    runtime: nvidia
+    privileged: true
+    network_mode: host
+    volumes:
+      - ${JETSON_CONTAINERS_DATA_DIR}:/data
+      - ${JETSON_CONTAINERS_DATA_DIR}/models/ollama:/root/.ollama
+    environment:
+      - OLLAMA_MODELS=/data/models/ollama/models 
+  llama-index:
+    image: llama-index:${L4T_VERSION}
+    container_name: llama-index
+    restart: unless-stopped
+    runtime: nvidia
+    privileged: true
+    network_mode: host
+    volumes:
+      - ${JETSON_CONTAINERS_DATA_DIR}:/data
+      - ./samples:/opt/llama-index/samples
+    stdin_open: true
+    tty: true
