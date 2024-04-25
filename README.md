@@ -17,9 +17,9 @@ Modular container build system that provides various [**AI/ML packages**](packag
 | **RAG** | [`llama-index`](packages/rag/llama-index) [`langchain`](packages/rag/langchain) [`NanoDB`](packages/vectordb/nanodb) [`FAISS`](packages/vectordb/faiss) [`RAFT`](packages/rapids/raft) |
 | **Audio** | [`whisper`](packages/audio/whisper) [`whisperX`](packages/audio/whisperx) [`piper`](packages/audio/piper-tts) [`riva`](packages/audio/riva-client) [`XTTS`](packages/audio/xtts)  [`audiocraft`](packages/audio/audiocraft) |
 
-See the [**`packages`**](packages) directory for the full list, including pre-built container images and CI/CD status for JetPack/L4T.
+See the [**`packages`**](packages) directory for the full list, including pre-built container images for JetPack/L4T.
 
-Using the included tools, you can easily combine packages together for building your own containers.  Want to run ROS2 with PyTorch and Transformers?  No problem - just do the [system setup](/docs/setup.md), and build it on your Jetson like this:
+Using the included tools, you can easily combine packages together for building your own containers.  Want to run ROS2 with PyTorch and Transformers?  No problem - just do the [system setup](/docs/setup.md), and build it on your Jetson:
 
 ```bash
 $ jetson-containers build --name=my_container pytorch transformers ros:humble-desktop
@@ -37,7 +37,7 @@ If you look at any package's readme (like [`l4t-pytorch`](packages/l4t/l4t-pytor
 
 #### Changing CUDA Versions
 
-You can rebuild the container stack for different versions of CUDA by setting the `CUDA_VERSION` in your environment:
+You can rebuild the container stack for different versions of CUDA by setting the `CUDA_VERSION` variable:
 
 ```bash
 CUDA_VERSION=12.4 jetson-containers build transformers
