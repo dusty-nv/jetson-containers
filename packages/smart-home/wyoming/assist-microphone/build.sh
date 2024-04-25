@@ -3,7 +3,7 @@
 set -euxo pipefail
 
 apt-get update
-apt-get install -y --no-install-recommends \
+apt-get install -y --no-install-recommends --fix-missing \
    netcat-traditional \
    libasound2-plugins \
    alsa-utils

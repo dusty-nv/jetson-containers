@@ -3,6 +3,7 @@
 # group: wyoming
 # requires: '>=34.1.0'
 # config: config.py
+# docs: docs.md
 # depends: [homeassistant-base, python:3.11]
 # test: [list_audio_devices.sh]
 # notes: The `assist-microphone` using the `wyoming` protocol for usage with Home Assistant. Based on `https://github.com/home-assistant/addons/tree/master/assist_microphone`
@@ -17,12 +18,14 @@ SHELL ["/bin/bash", "-euxo", "pipefail"]
 
 ENV PIP_BREAK_SYSTEM_PACKAGES=1 \
     WYOMING_SATELLITE_VERSION="$WYOMING_SATELLITE_VERSION" \
+    WYOMING_SATELLITE_NAME="assist microphone" \
     ASSIST_MICROPHONE_PORT="10700" \
     ASSIST_MICROPHONE_SOUND_ENABLED="true" \
     ASSIST_MICROPHONE_AWAKE_WAV="/usr/src/sounds/awake.wav" \
     ASSIST_MICROPHONE_DONE_WAV="/usr/src/sounds/done.wav" \
     ASSIST_MICROPHONE_DEBUG="true" \
     \
+    ASSIST_PIPELINE_NAME="Home Assistant" \
     WAKEWORD_SERVICE_URI="tcp://127.0.0.1:10400" \
     WAKEWORD_NAME="ok_nabu" \
     \

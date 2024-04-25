@@ -12,8 +12,10 @@ if [[ "${ASSIST_MICROPHONE_SOUND_ENABLED}" == "true" ]]; then
     extra_args+=("--snd-command" "aplay -D ${AUDIO_DEVICE} -r 16000 -c 1 -f S16_LE -t raw")
 fi
 
+echo "extra_args: ${extra_args[@]}"
+
 exec python3 -m wyoming_satellite \
-    --name 'assist microphone' \
+    --name "${WYOMING_SATELLITE_NAME}" \
     --uri "tcp://0.0.0.0:${ASSIST_MICROPHONE_PORT}" \
     \
     --snd-command-rate 16000 \
@@ -28,7 +30,7 @@ exec python3 -m wyoming_satellite \
     --mic-noise-suppression "${ASSIST_MICROPHONE_MIC_NOISE_SUPPRESSION}" \
     \
     --wake-uri "${WAKEWORD_SERVICE_URI}" \
-    --wake-word-name "${WAKEWORD_NAME}" \
+    --wake-word-name "${WAKEWORD_NAME}" "${ASSIST_PIPELINE_NAME}" \
     \
     --awake-wav "${ASSIST_MICROPHONE_AWAKE_WAV}" \
     --done-wav "${ASSIST_MICROPHONE_DONE_WAV}" \
