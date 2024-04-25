@@ -32,7 +32,7 @@ jetson-containers run $(autotag ollama) /bin/ollama run mistral
 
 <img src="https://github.com/dusty-nv/jetson-containers/blob/docs/docs/images/ollama_cli.gif?raw=true" width="750px"></img>
 
-Or you can run the client outside container by installing Ollama's released binaries for arm64 (without CUDA, which only the server needs)
+Or you can run the client outside container by installing Ollama's binaries for arm64 (without CUDA, which only the server needs)
 
 ```
 # download the latest ollama release for arm64 into /bin
