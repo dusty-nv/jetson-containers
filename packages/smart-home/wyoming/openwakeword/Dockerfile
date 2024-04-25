@@ -5,7 +5,7 @@
 # docs: docs.md
 # config: config.py
 # depends: [homeassistant-base, python:3.11]
-# notes: The `openWakeWord` using the `wyoming` protocol for usage with Home Assistant. Based on `https://github.com/home-assistant/addons/blob/master/openwakeword/Dockerfile`
+# notes: The `openWakeWord` using the `wyoming` protocol for usage with Home Assistant. Based on `https://github.com/home-assistant/addons/blob/master/openwakeword/Dockerfile` and `https://github.com/rhasspy/wyoming-openwakeword`
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
