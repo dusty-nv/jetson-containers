@@ -4,10 +4,12 @@
 ### Starting llama-index container (only)
 
 ```bash
-jetson-containers run $(./autotag llama-index:samples)
+jetson-containers run $(./autotag llama-index)
 ```
 
-### Running a sample with Ollama
+### Running a starter RAG example with Ollama
+
+This is based on the [official tutorial for local models](https://docs.llamaindex.ai/en/stable/getting_started/starter_example_local/).
 
 #### Data set up for the sample
 
@@ -15,6 +17,8 @@ On the Docker host console, copy the L4T-README text files to jetson-container's
 
 ```bash
 cd jetson-containers
+mkdir -p data/documents/paul_grapham
+wget "https://www.dropbox.com/s/f6bmb19xdg0xedm/paul_graham_essay.txt?dl=1" -O data/documents/paul_grapham/paul_graham_essay.txt
 mkdir -p data/documents/L4T-README
 cp /media/jetson/L4T-README/*.txt data/documents/L4T-README/
 ```
@@ -47,11 +51,3 @@ Then, run the sample script to ask Jetson related questions (***"With USB device
 ```bash
 python3 samples/llamaindex_starter.py
 ```
-
-It should answer something like this;
-
-```text
-Based on the context provided, the static IP address assigned to Jetson is 192.168.55.100. To change the IP address assigned to Jetson, you should edit the "Property" section of the "Remote NDIS Compatible Device" interface in the Network Connections settings on your host system. The file that should be edited is /opt/nvidia/l4t-usb-device-mode/nv-l4t-usb-device-mode-config.sh on Jetson.
-```
-
-> The correct answer to the first question is `192.168.55.1`.
