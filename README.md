@@ -9,12 +9,12 @@ Modular container build system that provides various [**AI/ML packages**](packag
 | | |
 |---|---|
 | **ML** | [`pytorch`](packages/pytorch) [`tensorflow`](packages/tensorflow) [`onnxruntime`](packages/onnxruntime) [`deepstream`](packages/deepstream) [`tritonserver`](packages/tritonserver) [`jupyterlab`](packages/jupyterlab) [`stable-diffusion`](packages/diffusion/stable-diffusion-webui) |
-| **LLM** | [`NanoLLM`](packages/llm/nano_llm) [`transformers`](packages/llm/transformers) [`text-generation-webui`](packages/llm/text-generation-webui) [`ollama`](packages/llm/ollama) [`llama.cpp`](packages/llm/llama_cpp) [`exllama`](packages/llm/exllama) [`llava`](packages/llm/llava) [`awq`](packages/llm/awq) [`AutoGPTQ`](packages/llm/auto_gptq) [`MLC`](packages/llm/mlc) [`langchain`](packages/llm/langchain) [`optimum`](packages/llm/optimum) [`nemo`](packages/nemo) |
+| **LLM** | [`NanoLLM`](packages/llm/nano_llm) [`transformers`](packages/llm/transformers) [`text-generation-webui`](packages/llm/text-generation-webui) [`ollama`](packages/llm/ollama) [`llama.cpp`](packages/llm/llama_cpp) [`exllama`](packages/llm/exllama) [`llava`](packages/llm/llava) [`awq`](packages/llm/awq) [`AutoGPTQ`](packages/llm/auto_gptq) [`MLC`](packages/llm/mlc) [`optimum`](packages/llm/optimum) [`nemo`](packages/nemo) |
 | **L4T** | [`l4t-pytorch`](packages/l4t/l4t-pytorch) [`l4t-tensorflow`](packages/l4t/l4t-tensorflow) [`l4t-ml`](packages/l4t/l4t-ml) [`l4t-diffusion`](packages/l4t/l4t-diffusion) [`l4t-text-generation`](packages/l4t/l4t-text-generation) |
 | **VIT** | [`NanoOWL`](packages/vit/nanoowl) [`NanoSAM`](packages/vit/nanosam) [`Segment Anything (SAM)`](packages/vit/sam) [`Track Anything (TAM)`](packages/vit/tam) |
 | **CUDA** | [`cupy`](packages/cuda/cupy) [`cuda-python`](packages/cuda/cuda-python) [`pycuda`](packages/cuda/pycuda) [`numba`](packages/numba) [`cudf`](packages/rapids/cudf) [`cuml`](packages/rapids/cuml) |
 | **Robotics** | [`ros`](packages/ros) [`ros2`](packages/ros) [`opencv:cuda`](packages/opencv) [`realsense`](packages/realsense) [`zed`](packages/zed) |
-| **VectorDB** | [`NanoDB`](packages/vectordb/nanodb) [`FAISS`](packages/vectordb/faiss) [`RAFT`](packages/rapids/raft) |
+| **RAG** | [`llama-index`](packages/rag/llama-index) [`langchain`](packages/rag/langchain) [`NanoDB`](packages/vectordb/nanodb) [`FAISS`](packages/vectordb/faiss) [`RAFT`](packages/rapids/raft) |
 | **Audio** | [`whisper`](packages/audio/whisper) [`whisperX`](packages/audio/whisperx) [`piper`](packages/audio/piper-tts) [`riva`](packages/audio/riva-client) [`XTTS`](packages/audio/xtts)  [`audiocraft`](packages/audio/audiocraft) |
 
 See the [**`packages`**](packages) directory for the full list, including pre-built container images and CI/CD status for JetPack/L4T.
