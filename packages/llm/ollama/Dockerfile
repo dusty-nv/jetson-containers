@@ -53,8 +53,7 @@ ENV OLLAMA_HOST=0.0.0.0 \
     LD_LIBRARY_PATH=/usr/local/cuda/lib:/usr/local/cuda/lib64:/usr/local/cuda/include:${LD_LIBRARY_PATH} \
     JETSON_JETPACK=${JETPACK_VERSION}
 
-COPY test.sh /test.sh
-COPY benchmark.py /benchmark.py
-COPY benchmark.sh /benchmark.sh
+COPY benchmark.py benchmark.sh test.sh /opt/ollama/
+COPY start_ollama /
 
-CMD ["/bin/ollama", "serve"]
+CMD /start_ollama && /bin/bash

@@ -12,25 +12,25 @@ Run the local Ollama server instance as a daemon in the background, either of th
 
 ```
 # models cached under jetson-containers/data
-jetson-containers run --detach --name ollama $(autotag ollama)
+jetson-containers run --name ollama $(autotag ollama)
 
 # models cached under your user's home directory
-docker run --runtime nvidia -d --rm --network=host -v ~/ollama:/ollama -e OLLAMA_MODELS=/ollama dustynv/ollama:r36.2.0
+docker run --runtime nvidia -it -rm --network=host -v ~/ollama:/ollama -e OLLAMA_MODELS=/ollama dustynv/ollama:r36.2.0
 ```
 
-Ollama stores models in `/usr/share/ollama/.ollama/models` by default. Create a symlink on the host to sync containers to any binaries run straight from the console.  Ensure the folder doesn't exist, and if it does move its content first then remove the folder:
+You can then run the [ollama client](#ollama-client) in the same container (or a different one if desired).  The default docker run CMD of the `ollama` container is [`/start_ollama`](./start_ollama), which will starts the ollama server in the background and returns control to the user. The ollama server logs are saved under your `jetson-containers/data/logs` directory for monitoring them outside the containers.
 
-```
-sudo mv /usr/share/ollama/.ollama/* $(jetson-containers data)/models/ollama
-sudo rm -r /usr/share/ollama/.ollama
-sudo ln -s $(jetson-containers data)/models/ollama /usr/share/ollama/.ollama
-```
+Setting the `$OLLAMA_MODELS` environment variable will change where ollama downloads the models to - by default, this is under your `jetson-containers/data/models/ollama` directory which is automatically mounted by `jetson-containers run`.  
 
 ## Ollama Client
 
 Start the Ollama CLI front-end with your desired model (for example: mistral 7b)
 
 ```
+# if running inside the same container as launched above
+/bin/ollama run mistral
+
+# if launching a new container for the client in another terminal
 jetson-containers run $(autotag ollama) /bin/ollama run mistral
 ```
 
