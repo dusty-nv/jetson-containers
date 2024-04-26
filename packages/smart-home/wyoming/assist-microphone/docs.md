@@ -1,6 +1,6 @@
 <p align="center"><img src="images/wyoming-voice-assistant.png" title="Wyoming assist-microphone" alt="Wyoming assist-microphone" /></p>
 
-[`Home Assistant`](https://www.home-assistant.io/) add-on that uses [`wyoming-satellite`](https://github.com/rhasspy/wyoming-satellite) for remote voice [satellite](https://www.home-assistant.io/integrations/wyoming#satellites) using the [`wyoming` protocol](https://www.home-assistant.io/integrations/wyoming/) on **NVIDIA Jetson** devices.
+[`Home Assistant`](https://www.home-assistant.io/) add-on that uses [`wyoming-satellite`](https://github.com/rhasspy/wyoming-satellite) for remote voice [satellite](https://www.home-assistant.io/integrations/wyoming#satellites) using the [`wyoming` protocol](https://www.home-assistant.io/integrations/wyoming/) on **NVIDIA Jetson** devices. Thank you to [**@ms1design**](https://github.com/ms1design) for contributing these Home Assistant & Wyoming containers!
 
 ### Features
 
