@@ -20,7 +20,7 @@ def create_package(version, default=False) -> list:
     pkg['name'] = f'wyoming-assist-microphone:{version}'
 
     pkg['build_args'] = {
-        'WYOMING_SATELLITE_VERSION': wanted_version,
+        'SATELLITE_VERSION': wanted_version,
     }
 
     if default:

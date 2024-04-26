@@ -3,7 +3,7 @@
 set -euxo pipefail
 
 apt-get update
-apt-get install -y --no-install-recommends \
+apt-get install -y --no-install-recommends --fix-missing \
    netcat-traditional \
    libasound2-plugins \
    alsa-utils
@@ -16,7 +16,7 @@ pip3 install --no-cache-dir -U \
    webrtc-noise-gain==1.2.3 \
    pysilero-vad==1.0.0
 pip3 install --no-cache-dir \
-   "wyoming-satellite[webrtc] @ https://github.com/rhasspy/wyoming-satellite/archive/refs/tags/v${WYOMING_SATELLITE_VERSION}.tar.gz"
+   "wyoming-satellite[webrtc] @ https://github.com/rhasspy/wyoming-satellite/archive/refs/tags/v${SATELLITE_VERSION}.tar.gz"
 
 # Clone rootfs & config.aml
 git clone --depth=1 https://github.com/home-assistant/addons /tmp/addons

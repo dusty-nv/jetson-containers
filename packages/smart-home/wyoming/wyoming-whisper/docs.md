@@ -1,11 +1,11 @@
-<p align="center"><img src="images/wyoming-openwakeword.png" title="Wyoming openWakeWord" alt="Wyoming openWakeWord" /></p>
+<p align="center"><img src="whisper.png" title="Wyoming whisper" alt="Wyoming whisper" /></p>
 
-[`Home Assistant`](https://www.home-assistant.io/) add-on that uses [`openWakeWord`](https://github.com/rhasspy/wyoming-openwakeword) for wake word detection over the [`wyoming` protocol](https://www.home-assistant.io/integrations/wyoming/) on **NVIDIA Jetson** devices.
+[`Home Assistant`](https://www.home-assistant.io/) add-on that uses [`wyoming-faster-whisper`](https://github.com/rhasspy/wyoming-faster-whisper) for speech to text system using the [`wyoming` protocol](https://www.home-assistant.io/integrations/wyoming/) on **NVIDIA Jetson** devices.
 
 ### Features
 
 - [x] Works well with [`home-assistant-core`](packages/smart-home/homeassistant-core) container on **Jetson devices** as well as Home Assistant hosted on different host's
-- [ ] `GPU` Accelerated on **Jetson Devices** using `onnx` models [WIP] – *(For now it work's with `CPU` only utilising `tflite` models).*
+- [x] `GPU` Accelerated on **Jetson Devices** thank's to [`faster-whisper` container](packages/audio/faster-whisper)
 
 > Requires **Home Assistant** `2023.9` or later.
 
@@ -34,29 +34,30 @@ services:
     stdin_open: true
     tty: true
 
-  openwakeword:
-    image: dusty-nv/wyoming-openwakeword:latest-r36.2.0-cu122-cp311
+  whisper:
+    image: dusty-nv/wyoming-whisper:latest-r36.2.0-cu122-cp311
     restart: unless-stopped
     runtime: nvidia
     network_mode: host
-    container_name: openwakeword
-    hostname: openwakeword
+    container_name: faster-whisper
+    hostname: faster-whisper
     init: false
     ports:
-      - "10400:10400/tcp"
+      - "10300:10300/tcp"
     volumes:
-      - ha-openwakeword-custom-models:/share/openwakeword
+      - ha-whisper-models:/share/whisper
+      - ha-whisper-data:/data
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
+    environment:
+      TZ: ${ENV_TZ}
     stdin_open: true
     tty: true
-    environment:
-      OPENWAKEWORD_CUSTOM_MODEL_DIR: /share/openwakeword
-      OPENWAKEWORD_PRELOAD_MODEL: ok_nabu
 
 volumes:
   ha-config:
-  ha-openwakeword-custom-models:
+  ha-whisper-models:
+  ha-whisper-data:
 ```
 </details>
 
@@ -64,23 +65,19 @@ volumes:
 
 | Variable | Type | Default | Description
 | - | - | - | - |
-| `OPENWAKEWORD_PORT` | `str` | `10400` | Port number to use on `host` |
-| `OPENWAKEWORD_THRESHOLD` | `float` | `0.5` | Wake word model threshold (`0.0`-`1.0`), where higher means fewer activations. |
-| `OPENWAKEWORD_TRIGGER_LEVEL` | `int` | `1` | Number of activations before a detection is registered. A higher trigger level means fewer detections. |
-| `OPENWAKEWORD_PRELOAD_MODEL`| `str` | `ok_nabu` | Name or path of wake word model(s) to pre-load |
-| `OPENWAKEWORD_CUSTOM_MODEL_DIR` | `str` | `/share/openwakeword` | Path to directory with custom wake word models |
-| `OPENWAKEWORD_DEBUG` | `bool` | `true` | Log `DEBUG` messages |
+| `WHISPER_PORT` | `str` | `10300` | Port number to use on `host` |
+| `WHISPER_MODEL` | `str` | `tiny-int8` | Name of `faster-whisper` model to use from [supported models list](https://github.com/home-assistant/addons/blob/master/whisper/config.yaml#L22) |
+| `WHISPER_BEAM_SIZE` | `int` | `1` | Beam size |
+| `WHISPER_LANGUAGE` | `str` | `en` | Default language to set for transcription from [supported languages list](https://github.com/home-assistant/addons/blob/master/whisper/config.yaml#L25) |
+| `WHISPER_DEBUG` | `bool` | `true` | Log `DEBUG` messages |
 
 ## Configuration
 
-Read more how to configure `wyoming-openwakeword` in the [official documentation](https://www.home-assistant.io/voice_control/install_wake_word_add_on#enabling-wake-word-for-your-voice-assistant):
-
-<p align="center"><img src="images/openwakeword-assist-config.png" title="Wyoming openWakeWord configuration" alt="Wyoming openWakeWord configuration" /></p>
+Read more how to configure `wyoming-whisper` in the [official documentation](https://www.home-assistant.io/voice_control/voice_remote_local_assistant#installing-a-local-assist-pipeline):
 
 ## TODO's
 
-- [ ] Build `openWakeWord` from source based on `onnxruntime` `gpu` enabled container (currently `openWakeWord` is still using `tflite` models instead `onnx`)
-- [ ] Custom Wake Word Models training container using automatic synthetic data creation
+- [ ] Testing
 
 ## Support
 

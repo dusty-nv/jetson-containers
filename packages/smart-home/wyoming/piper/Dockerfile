@@ -4,7 +4,7 @@
 # requires: '>=34.1.0'
 # config: config.py
 # depends: [homeassistant-base, cuda, cudnn, python:3.11, piper-tts]
-# notes: The `piper-tts` using the `wyoming` protocol for usage with Home Assistant. Based on `https://github.com/home-assistant/addons/tree/master/piper`
+# notes: The `piper-tts` using the `wyoming` protocol for usage with Home Assistant. Based on `https://github.com/home-assistant/addons/tree/master/piper` and `https://github.com/rhasspy/wyoming-piper`
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
