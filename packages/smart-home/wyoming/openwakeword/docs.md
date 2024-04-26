@@ -1,8 +1,11 @@
-## Wyoming `openWakeWord`
-
 <p align="center"><img src="images/wyoming-openwakeword.png" title="Wyoming openWakeWord" alt="Wyoming openWakeWord" /></p>
 
 [`Home Assistant`](https://www.home-assistant.io/) add-on that uses [`openWakeWord`](https://github.com/rhasspy/wyoming-openwakeword) for wake word detection over the [`wyoming` protocol](https://www.home-assistant.io/integrations/wyoming/) on **NVIDIA Jetson** devices.
+
+### Features
+
+- [x] Works well with [`home-assistant-core`](packages/smart-home/homeassistant-core) container on **Jetson devices** as well as `Home Assistant` hosted on different host's
+- [ ] `GPU` Accelerated on **Jetson Devices** using `onnx` models [WIP] – *(For now it work's with `CPU` only utilising `tflite` models).*
 
 > Requires **Home Assistant** `2023.9` or later.
 
