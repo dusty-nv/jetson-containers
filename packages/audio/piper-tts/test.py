@@ -18,59 +18,87 @@ The beige hue on the waters of the loch impressed all, including the French quee
 
 def main(model='en_US-lessac-high', config=None, cache=os.environ.get('PIPER_CACHE'),
          speaker=0, length_scale=1.0, noise_scale=0.667, noise_w=0.8, sentence_silence=0.2,
-         prompt=DEFAULT_PROMPT, output='/dev/null', use_cuda=True, runs=5, **kwargs):
+         prompt=DEFAULT_PROMPT, output='/dev/null', use_cuda=True, runs=5, dump=False, **kwargs):
 
+    # Download voice info
+    try:
+        voices_info = get_voices(cache, update_voices=True)
+    except Exception as error:
+        print(f"Failed to download Piper voice list  ({error})")
+        voices_info = get_voices(cache)
+        
+    # Resolve aliases for backwards compatibility with old voice names
+    aliases_info = {}
+    for voice_info in voices_info.values():
+        for voice_alias in voice_info.get("aliases", []):
+            aliases_info[voice_alias] = {"_is_alias": True, **voice_info}
+
+    voices_info.update(aliases_info)
+        
     if not os.path.isfile(os.path.join(cache, model)):
-        # Download voice info
-        try:
-            voices_info = get_voices(cache, update_voices=True)
-        except Exception as error:
-            print(f"Failed to download Piper voice list  ({error})")
-            voices_info = get_voices(cache)
-            
-        # Resolve aliases for backwards compatibility with old voice names
-        aliases_info = {}
-        for voice_info in voices_info.values():
-            for voice_alias in voice_info.get("aliases", []):
-                aliases_info[voice_alias] = {"_is_alias": True, **voice_info}
-
-        voices_info.update(aliases_info)
+        model_name = model
         ensure_voice_exists(model, cache, cache, voices_info)
         model, config = find_voice(model, [cache])
-
+    else:
+        model_name = os.path.splitext(os.path.basename(model))[0]
+      
     # Load model
     print(f"Loading {model}")
-    
     voice = PiperVoice.load(model, config_path=config, use_cuda=True)
     
-    synthesize_args = {
-        "speaker_id": speaker,
-        "length_scale": length_scale,
-        "noise_scale": noise_scale,
-        "noise_w": noise_w,
-        "sentence_silence": sentence_silence,
-    }
+    # get the speaker name->ID mapping
+    speaker_id_map = voices_info[model_name]['speaker_id_map']
+ 
+    if not speaker_id_map:
+        speaker_id_map = {'Default': 0}
+     
+    # get the inverse speakerID->name mapping
+    speaker_id_inv = {}
+    
+    for key, value in speaker_id_map.items():
+        speaker_id_inv[value] = key
+        
+    # optional mode to dump all speakers       
+    if dump:
+        speakers = list(speaker_id_map.values())
+        runs = 1
+        output_dir = output
+        os.makedirs(output_dir, exist_ok=True)
+    else:
+        speakers = [speaker]
+        
+    for speaker in speakers:
+        synthesize_args = {
+            "speaker_id": speaker,
+            "length_scale": length_scale,
+            "noise_scale": noise_scale,
+            "noise_w": noise_w,
+            "sentence_silence": sentence_silence,
+        }
 
-    # Run benchmarking iterations
-    for run in range(runs):
-        with wave.open(output, "wb") as wav_file:
-            wav_file.setnchannels(1)
-            start = time.perf_counter()
-            voice.synthesize(prompt, wav_file, **synthesize_args)
-            end = time.perf_counter()
+        # Run benchmarking iterations
+        for run in range(runs):
+            if dump:
+                output = os.path.join(output_dir, f"{model_name}_{speaker:04d}_{speaker_id_inv[speaker]}.wav")
+                
+            with wave.open(output, "wb") as wav_file:
+                wav_file.setnchannels(1)
+                start = time.perf_counter()
+                voice.synthesize(prompt, wav_file, **synthesize_args)
+                end = time.perf_counter()
 
-            inference_duration = end - start
+                inference_duration = end - start
 
-            frames = wav_file.getnframes()
-            rate = wav_file.getframerate()
-            audio_duration = frames / float(rate)
+                frames = wav_file.getnframes()
+                rate = wav_file.getframerate()
+                audio_duration = frames / float(rate)
 
-        print(f"Piper TTS model:    {os.path.splitext(os.path.basename(model))[0]}")
-        print(f"Output saved to:    {output}")
-        print(f"Inference duration: {inference_duration:.3f} sec")
-        print(f"Audio duration:     {audio_duration:.3f} sec")
-        print(f"Realtime factor:    {inference_duration/audio_duration:.3f}")
-        print(f"Inverse RTF (RTFX): {audio_duration/inference_duration:.3f}\n")
+            print(f"Piper TTS model:    {model_name}")
+            print(f"Output saved to:    {output}")
+            print(f"Inference duration: {inference_duration:.3f} sec")
+            print(f"Audio duration:     {audio_duration:.3f} sec")
+            print(f"Realtime factor:    {inference_duration/audio_duration:.3f}")
+            print(f"Inverse RTF (RTFX): {audio_duration/inference_duration:.3f}\n")
     
 if __name__ == "__main__":
     import argparse
@@ -90,6 +118,7 @@ if __name__ == "__main__":
     parser.add_argument('--prompt', type=str, default=None, help="the test prompt to generate (will be set to a default prompt if left none)")
     parser.add_argument('--output', type=str, default=None, help="path to output audio wav file to save (will be /data/tts/piper-$MODEL.wav by default)")
     parser.add_argument('--runs', type=int, default=5, help="the number of benchmarking iterations to run")
+    parser.add_argument('--dump', action='store_true', help="dump all speaker voices to the output directory")
     parser.add_argument('--disable-cuda', action='store_false', dest='use_cuda', help="disable CUDA and use CPU for inference instead")
     parser.add_argument('--verbose', action='store_true', help="enable onnxruntime debug logging")
     
