@@ -2,6 +2,9 @@
 
 > [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 
+> [!NOTE]  
+> Thank you to [@ms1design](https://github.com/ms1design) for his generous contributions and work in creating the Home Assistant & Wyoming containers for Jetson!
+
 <p align="center"><img src="ha_onboarding.png" title="Home Assistant Core" alt="Home Assistant Core onboarding screen" /></p>
 
 The container image is based on `Home Assistant Core` and spans over below features:
@@ -157,6 +160,7 @@ Got questions? You have several options to get them answered:
 
 
 > *This project was created by [Jetson AI Lab Research Group](https://www.jetson-ai-lab.com/research.html).*
+
 <details open>
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
