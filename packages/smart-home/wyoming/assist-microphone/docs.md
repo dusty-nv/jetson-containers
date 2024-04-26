@@ -1,8 +1,13 @@
-## Wyoming `assist-microphone`
-
 <p align="center"><img src="images/wyoming-voice-assistant.png" title="Wyoming assist-microphone" alt="Wyoming assist-microphone" /></p>
 
-[`Home Assistant`](https://www.home-assistant.io/) add-on that uses [`wyoming-satellite`](https://github.com/rhasspy/wyoming-satellite) for remote voice satellite using the [`wyoming` protocol](https://www.home-assistant.io/integrations/wyoming/) on **NVIDIA Jetson** devices.
+[`Home Assistant`](https://www.home-assistant.io/) add-on that uses [`wyoming-satellite`](https://github.com/rhasspy/wyoming-satellite) for remote voice [satellite](https://www.home-assistant.io/integrations/wyoming#satellites) using the [`wyoming` protocol](https://www.home-assistant.io/integrations/wyoming/) on **NVIDIA Jetson** devices.
+
+### Features
+
+- [x] Works well with [`home-assistant-core`](packages/smart-home/homeassistant-core) container on **Jetson devices** as well as `Home Assistant` hosted on different host's
+- [x] Uses [`wyoming-openwakeword`](packages/smart-home/wyoming/openwakeword) container to detect wake word's
+- [x] Uses [`wyoming-whisper`](packages/smart-home/wyoming/wyoming-whisper) container to handle `STT`
+- [x] Uses [`wyoming-piper`](packages/smart-home/wyoming/piper) container to handle `TTS`
 
 > Requires **Home Assistant** `2023.9` or later.
 
@@ -49,8 +54,8 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
     environment:
-      AUDIO_DEVICE: "plughw:CARD=S330,DEV=0"
-      ASSIST_MICROPHONE_SND_VOLUME_MULTIPLIER: 0.3
+      SATELLITE_AUDIO_DEVICE: "plughw:CARD=S330,DEV=0"
+      SATELLITE_SND_VOLUME_MULTIPLIER: 0.3
       WAKEWORD_NAME: "ok_nabu"
       ASSIST_PIPELINE_NAME: "Home Assistant"
     stdin_open: true
@@ -66,23 +71,61 @@ volumes:
 
 | Variable | Type | Default | Description
 | - | - | - | - |
-| `OPENWAKEWORD_PORT` | `str` | `10400` | Port number to use on `host` |
-| `OPENWAKEWORD_THRESHOLD` | `float` | `0.5` | Wake word model threshold (`0.0`-`1.0`), where higher means fewer activations. |
-| `OPENWAKEWORD_TRIGGER_LEVEL` | `int` | `1` | Number of activations before a detection is registered. A higher trigger level means fewer detections. |
-| `OPENWAKEWORD_PRELOAD_MODEL`| `str` | `ok_nabu` | Name or path of wake word model(s) to pre-load |
-| `OPENWAKEWORD_CUSTOM_MODEL_DIR` | `str` | `/share/openwakeword` | Path to directory with custom wake word models |
-| `OPENWAKEWORD_DEBUG` | `bool` | `true` | Log `DEBUG` messages |
+| `SATELLITE_NAME` | `str` | `assist microphone` | Name of the satellite |
+| `SATELLITE_PORT` | `str` | `10700` | Port of the satellite |
+| `SATELLITE_SOUND_ENABLED` | `bool` | `true` | Enable or disable connected Speaker |
+| `SATELLITE_AWAKE_WAV` | `str` | `/usr/src/sounds/awake.wav` | `WAV` file to play when wake word is detected |
+| `SATELLITE_DONE_WAV` | `str` | `/usr/src/sounds/done.wav` | `WAV` file to play when voice command is done |
+| `ASSIST_PIPELINE_NAME` | `str` | `Home Assistant` | Home Assistant Voice Assistant Pipeline name to run |
+| `WAKEWORD_SERVICE_URI` | `str` | `tcp://127.0.0.1:10400` | `URI` of Wyoming wake word detection service |
+| `WAKEWORD_NAME` | `str` | `ok_nabu` | Name of wake word to listen for |
+| `SATELLITE_SND_VOLUME_MULTIPLIER` | `float` | `1.0` | Sound volume multiplier |
+| `SATELLITE_MIC_VOLUME_MULTIPLIER` | `float` | `1.0` | Mic volume multiplier |
+| `SATELLITE_MIC_AUTO_GAIN` | `int` | `0` | Mic auto gain |
+| `SATELLITE_MIC_NOISE_SUPPRESSION` | `int` | `0` | Mic noise suppression (`0`-`4`) |
+| `SATELLITE_DEBUG` | `bool` | `true` | Log `DEBUG` messages |
 
 ## Configuration
 
-Read more how to configure `wyoming-openwakeword` in the [official documentation](https://www.home-assistant.io/voice_control/voice_remote_local_assistant):
+Read more how to configure `wyoming-assist-microphone` in the [official documentation](https://www.home-assistant.io/voice_control/voice_remote_local_assistant#installing-a-local-assist-pipeline).
 
 <p align="center"><img src="images/configuration.png" title="Wyoming assist-microphone" alt="Wyoming assist-microphone" /></p>
 
+### Determine Audio Devices
+
+Picking the correct microphone/speaker devices is critical for the satellite to work.
+
+List your available microphones with:
+```bash
+arecord -L
+```
+
+List your available speakers with:
+```bash
+aplay -L
+```
+
+You should see similar output to below for both commands:
+```bash
+plughw:CARD=seeed2micvoicec,DEV=0
+    seeed-2mic-voicecard, bcm2835-i2s-wm8960-hifi wm8960-hifi-0
+    Hardware device with all software conversions
+```
+
+Prefer ones that start with `plughw:` or just use `default` if you don't know what to use. It's recommended to choose Microphone and Speaker which has `Hardware device with all software conversions` notation. Set the environment variable `SATELLITE_AUDIO_DEVICE` to:
+
+```bash
+plughw:CARD=seeed2micvoicec,DEV=0
+```
+
+> `wyoming-assist-microphone` uses the same device for Mic as Speaker.
+
+
+
 ## TODO's
 
-- [ ] Build `openWakeWord` from source based on `onnxruntime` `gpu` enabled container (currently `openWakeWord` is still using `tflite` models instead `onnx`)
-- [ ] Custom Wake Word Models training container using automatic synthetic data creation
+- [ ] Investigate if user should see voice command and replies transciption in Home Assistant Assist Chat popup when passing name of Conversational Pipeline as `ASSIST_PIPELINE_NAME`.
+- [ ] Split `SATELLITE_AUDIO_DEVICE` into `SATELLITE_MIC_DEVICE` and `SATELLITE_SND_DEVICE` to allow choosing different audio hardware combinations.
 
 ## Support
 
