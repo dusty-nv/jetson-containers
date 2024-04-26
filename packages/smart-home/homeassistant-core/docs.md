@@ -1,8 +1,6 @@
-## Home Assistant Core
-
 <p align="center"><img src="ha_onboarding.png" title="Home Assistant Core" alt="Home Assistant Core onboarding screen" /></p>
 
-This project was created by [Jetson AI Lab Research Group](https://www.jetson-ai-lab.com/research.html). The container image is based on `Home Assistant Core` and spans over below features:
+The container image is based on `Home Assistant Core` and spans over below features:
 
 | | `HA OS` | `Container` | `Core` | `Supervised` |
 |---|---|---|---|---|
@@ -152,3 +150,6 @@ Got questions? You have several options to get them answered:
 - The NVIDIA Jetson AI Lab [tutorials section](https://www.jetson-ai-lab.com/tutorial-intro.html).
 - The Jetson AI Lab - Home Assistant Integration [thread on NVIDIA's Developers Forum](https://forums.developer.nvidia.com/t/jetson-ai-lab-home-assistant-integration/288225).
 - In case you've found an bug in `jetson-containers`, please [open an issue on our GitHub](https://github.com/dusty-nv/jetson-containers/issues).
+
+
+> *This project was created by [Jetson AI Lab Research Group](https://www.jetson-ai-lab.com/research.html).*
