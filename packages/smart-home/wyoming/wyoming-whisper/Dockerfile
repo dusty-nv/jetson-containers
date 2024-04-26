@@ -1,9 +1,10 @@
 #---
 # name: wyoming-whisper
 # group: wyoming
-# requires: '>=34.1.0'
 # config: config.py
 # depends: [homeassistant-base, cuda, cudnn, python:3.11, faster-whisper]
+# requires: '>=34.1.0'
+# docs: docs.md
 # notes: The `faster-whisper` using the `wyoming` protocol for usage with Home Assistant. Based on `https://github.com/home-assistant/addons/blob/master/whisper/Dockerfile`
 #---
 ARG BASE_IMAGE
