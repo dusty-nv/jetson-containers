@@ -4,7 +4,7 @@
 
 ### Features
 
-- [x] Works well with [`home-assistant-core`](packages/smart-home/homeassistant-core) container on **Jetson devices** as well as `Home Assistant` hosted on different host's
+- [x] Works well with [`home-assistant-core`](packages/smart-home/homeassistant-core) container on **Jetson devices** as well as Home Assistant hosted on different host's
 - [x] `GPU` Accelerated on **Jetson Devices** thank's to [`piper-tts` container](packages/audio/piper-tts)
 
 > Requires **Home Assistant** `2023.9` or later.

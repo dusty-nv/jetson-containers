@@ -4,7 +4,7 @@
 
 ### Features
 
-- [x] Works well with [`home-assistant-core`](packages/smart-home/homeassistant-core) container on **Jetson devices** as well as `Home Assistant` hosted on different host's
+- [x] Works well with [`home-assistant-core`](packages/smart-home/homeassistant-core) container on **Jetson devices** as well as Home Assistant hosted on different host's
 - [x] Uses [`wyoming-openwakeword`](packages/smart-home/wyoming/openwakeword) container to detect wake word's
 - [x] Uses [`wyoming-whisper`](packages/smart-home/wyoming/wyoming-whisper) container to handle `STT`
 - [x] Uses [`wyoming-piper`](packages/smart-home/wyoming/piper) container to handle `TTS`
@@ -37,7 +37,7 @@ services:
     tty: true
 
   assist-microphone:
-    image: ms1design/wyoming-assist-microphone:latest-r36.2.0-cu122-cp311
+    image: dusty-nv/wyoming-assist-microphone:latest-r36.2.0-cu122-cp311
     restart: unless-stopped
     network_mode: host
     container_name: assist-microphone
