@@ -2,36 +2,39 @@
 
 > [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 
-> [!NOTE]  
-> Thank you to [**@ms1design**](https://github.com/ms1design) for his generous contributions and work on the Home Assistant & Wyoming containers for Jetson!
+> [!NOTE]
+> Thank you to [**@ms1design**](https://github.com/ms1design) for his generous contributions and work on the porting Home Assistant & Wyoming containers for Jetson!
 
-<p align="center"><img src="ha_onboarding.png" title="Home Assistant Core" alt="Home Assistant Core onboarding screen" /></p>
+<p align="center"><img src="ha_onboarding.png" style="width:100%;max-width:500px" title="Home Assistant Core" alt="Home Assistant Core onboarding screen" /></p>
 
-The container image is based on `Home Assistant Core` and spans over below features:
+The container image is based on the `Home Assistant Core` with a few modifications:
 
-| | `HA OS` | `Container` | `Core` | `Supervised` |
-|---|---|---|---|---|
-| Automations | ✅ | ✅ | ✅ | ✅ |
-| Dashboards | ✅ | ✅ | ✅ | ✅ |
-| Integrations | ✅ | ✅ | ✅ | ✅ |
-| Blueprints | ✅ | ✅ | ✅ | ✅ |
-| Uses container | ✅ | ✅ | ✅ | ✅ |
-| Supervisor | ✅ | ❌ | ❌ | ✅ |
-| Add-ons | ✅ | ❌ | ✅* | ✅ |
-| Backups | ✅ | ✅ | ✅ | ✅ |
-| Managed Restore | ✅ | ❌ | ❌ | ✅ |
-| Managed OS | ✅ | ❌ | ❌ | ❌ |
+| | `HA OS` | `Container` | `Core` | [`Core` on `Jetson`](/packages/smart-home/homeassistant-core/) | `Supervised` |
+|-|:-:|:-:|:-:|:-:|:-:|
+| Automations | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Dashboards | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Integrations | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Blueprints | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Uses container** | ✅ | ✅ | ❌ | ✅[^1] | ✅ |
+| Supervisor | ✅ | ❌ | ❌ | ❌ | ✅ |
+| **Add-ons** | ✅ | ❌ | ❌ | ✅[^2] | ✅ |
+| Backups | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Managed Restore | ✅ | ❌ | ❌ |  ❌ | ✅ |
+| Managed OS | ✅ | ❌ | ❌ |  ❌ | ❌ |
 
-> \* *Supports only manually installed `wyoming`–enabled Voice Assistant Add-ons from this repository*
+[^1]: **Home Assistant Core** is now containerized.
+[^2]: Supports only manually installed, dockerized and preconfigured [`wyoming` **Local Voice Assistant add-ons**](/packages/smart-home/wyoming/) from this repository. These add-ons are compatible with `Home Assistant Core` hosted on any machine.
 
-### How to run using `docker-compose`
+## `docker-compose` example
+
+If you want to use `docker compose` to run [Home Assistant Core](/packages/smart-home/homeassistant-core/) [Voice Assistant Pipeline](https://www.home-assistant.io/voice_control/) on a **Jetson** device with `cuda` enabled, you can find a full example [`docker-compose.yaml` here](/packages/smart-home/wyoming/docker-compose.yaml).
 
 ```yaml
 name: home-assistant-jetson
 version: "3.9"
 services:
   homeassistant:
-    image: dusty-nv/homeassistant-core:latest-r36.2.0-cu122-cp310
+    image: dustynv/homeassistant-core:latest-r36.2.0
     restart: unless-stopped
     init: false
     privileged: true
@@ -44,20 +47,18 @@ services:
       - ha-config:/config
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-    stdin_open: true
-    tty: true
 
 volumes:
   ha-config:
 ```
 
-### Onboarding
+## Onboarding
 
-The UI can be found at http://your-ip:8123. *(replace with the `hostname` or `IP` of the system)*. Follow the wizard to set up Home Assistant. Feel free to follow [official instructions](https://www.home-assistant.io/getting-started/onboarding/).
+The user interface can be found at http://your-ip:8123. *(replace with the `hostname` or `IP` of the system)*. Follow the wizard to set up Home Assistant. Feel free to follow the [official instructions](https://www.home-assistant.io/getting-started/onboarding/).
 
-### How to's
+## How to's
 
-We encourage to look for help on [official Home Assistant documentation](https://www.home-assistant.io/docs/) and within the [HA Community Forums](https://community.home-assistant.io/) or on a [Jetson Research Group](https://www.jetson-ai-lab.com/research.html) [thread on NVIDIA forum](https://forums.developer.nvidia.com/t/jetson-ai-lab-home-assistant-integration/288225).
+We encourage to look for help in the [official Home Assistant documentation](https://www.home-assistant.io/docs/) and within the [HA Community Forums](https://community.home-assistant.io/) or on a [Jetson Research Group](https://www.jetson-ai-lab.com/research.html) [thread on the NVIDIA forum](https://forums.developer.nvidia.com/t/jetson-ai-lab-home-assistant-integration/288225).
 
 <details>
 <summary><b>Configuration files location</b></summary>
@@ -92,18 +93,18 @@ network_mode: host
 </details>
 
 <details>
-<summary><b>Add-ons auto-discovery</b></summary>
+<summary><b>Add-on auto-discovery</b></summary>
 <hr>
 
 > **TLDR;** *It's disabled, go with manual way...*
 
-The native auto-discovery of add-ons running on the same host/network is disabled due to the requirement of running [`Home Assistant Supervisor`](https://www.home-assistant.io/integrations/hassio/). This has some deep debian system dependencies which ware too tidious to port in this project.
+Native auto-discovery of add-ons running on the same host/network is disabled due to the requirement of running [`Home Assistant Supervisor`](https://www.home-assistant.io/integrations/hassio/). This has some deep debian system dependencies which were too tedious to port in this project.
 
-> Most Home Assistant add-on's are using [`bashio`](https://github.com/hassio-addons/bashio) under the hood so some of the system overlays commands ware adjusted to make it work without `Supervisor`.
+> Most Home Assistant add-ons use [`bashio`](https://github.com/hassio-addons/bashio) under the hood so some of the system overlay commands ware adapted to make them work without `Supervisor`.
 
 #### Manual `wyoming` add-on discovery
 
-To manually add the `wyoming` enabled add-on from this repository to the running Home Assistant Core instance, just follow below steps:
+To manually add the `wyoming` enabled add-on from this repository to the running Home Assistant Core instance, just follow the steps below:
 
 1. Browse to your **Home Assistant** instance (eg.: `homeassistant.local:8123`).
 2. Go to `Settings > Devices & Services`.
@@ -119,7 +120,7 @@ To manually add the `wyoming` enabled add-on from this repository to the running
 <summary><b>Accessing Bluetooth Devices</b></summary>
 <hr>
 
-In order to provide **Home Assistant** with access to the host's `Bluetooth` device(s), Home Assistant Core container uses `BlueZ` on the `host` - add the capabilities `NET_ADMIN` and `NET_RAW` to the container, and map `dbus` as a `volume` as shown in the below examples to enable Bluetooth support:
+To provide **Home Assistant** with access to the host's `Bluetooth` device(s), the Home Assistant Core container uses `BlueZ` on the `host` - add the capabilities `NET_ADMIN` and `NET_RAW` to the container, and map `dbus` as a `volume` as shown in the examples below to enable Bluetooth support:
 
 when using `docker cli`:
 ```sh
@@ -139,11 +140,11 @@ volumes:
 <br>
 </details>
 
-### TODO's
+## TODO's
 
 - [ ] Fix add-ons auto-discovery
 
-### Support
+## Support
 
 Got questions? You have several options to get them answered:
 
@@ -158,8 +159,8 @@ Got questions? You have several options to get them answered:
 - The Jetson AI Lab - Home Assistant Integration [thread on NVIDIA's Developers Forum](https://forums.developer.nvidia.com/t/jetson-ai-lab-home-assistant-integration/288225).
 - In case you've found an bug in `jetson-containers`, please [open an issue on our GitHub](https://github.com/dusty-nv/jetson-containers/issues).
 
-
-> *This project was created by [Jetson AI Lab Research Group](https://www.jetson-ai-lab.com/research.html).*
+> [!NOTE]
+> This project was created by [Jetson AI Lab Research Group](https://www.jetson-ai-lab.com/research.html).
 
 <details open>
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
