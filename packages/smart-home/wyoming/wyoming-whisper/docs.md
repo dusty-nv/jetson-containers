@@ -1,24 +1,24 @@
-<p align="center"><img src="whisper.png" title="Wyoming whisper" alt="Wyoming whisper" /></p>
+<p align="center"><img src="whisper.png" title="Wyoming whisper" alt="Wyoming whisper" style="width:100%;max-width:600px" /></p>
 
-[`Home Assistant`](https://www.home-assistant.io/) add-on that uses [`wyoming-faster-whisper`](https://github.com/rhasspy/wyoming-faster-whisper) for speech to text system using the [`wyoming` protocol](https://www.home-assistant.io/integrations/wyoming/) on **NVIDIA Jetson** devices. Thank you to [**@ms1design**](https://github.com/ms1design) for contributing these Home Assistant & Wyoming containers!
+[`Home Assistant`](https://www.home-assistant.io/) add-on that uses [`wyoming-faster-whisper`](https://github.com/rhasspy/wyoming-faster-whisper) for speech-to-text system using the [`wyoming` protocol](https://www.home-assistant.io/integrations/wyoming/) on **NVIDIA Jetson** devices. Thank you to [**@ms1design**](https://github.com/ms1design) for contributing these Home Assistant & Wyoming containers!
 
-### Features
+## Features
 
-- [x] Works well with [`home-assistant-core`](packages/smart-home/homeassistant-core) container on **Jetson devices** as well as Home Assistant hosted on different host's
-- [x] `GPU` Accelerated on **Jetson Devices** thank's to [`faster-whisper` container](packages/audio/faster-whisper)
+- [x] Works well with [`home-assistant-core`](packages/smart-home/homeassistant-core) container on **Jetson devices** as well as Home Assistant hosted on different hosts
+- [x] `GPU` accelerated on **Jetson Devices** thanks to [`faster-whisper` container](packages/audio/faster-whisper)
 
 > Requires **Home Assistant** `2023.9` or later.
 
-<details open>
-<summary><h3 style="display:inline"><code>docker-compose</code> example</h3></summary>
-<br>
+## `docker-compose` example
+
+If you want to use `docker compose` to run [Home Assistant Core](/packages/smart-home/homeassistant-core/) [Voice Assistant Pipeline](https://www.home-assistant.io/voice_control/) on a **Jetson** device with `cuda` enabled, you can find a full example [`docker-compose.yaml` here](/packages/smart-home/wyoming/docker-compose.yaml).
 
 ```yaml
 name: home-assistant-jetson
 version: "3.9"
 services:
   homeassistant:
-    image: dusty-nv/homeassistant-core:latest-r36.2.0-cu122-cp310
+    image: dustynv/homeassistant-core:latest-r36.2.0
     restart: unless-stopped
     init: false
     privileged: true
@@ -31,11 +31,9 @@ services:
       - ha-config:/config
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-    stdin_open: true
-    tty: true
 
   whisper:
-    image: dusty-nv/wyoming-whisper:latest-r36.2.0-cu122-cp311
+    image: dustynv/wyoming-whisper:latest-r36.2.0
     restart: unless-stopped
     runtime: nvidia
     network_mode: host
@@ -49,19 +47,14 @@ services:
       - ha-whisper-data:/data
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-    environment:
-      TZ: ${ENV_TZ}
-    stdin_open: true
-    tty: true
 
 volumes:
   ha-config:
   ha-whisper-models:
   ha-whisper-data:
 ```
-</details>
 
-### Environment variables
+## Environment variables
 
 | Variable | Type | Default | Description
 | - | - | - | - |
@@ -93,3 +86,6 @@ Got questions? You have several options to get them answered:
 - The NVIDIA Jetson AI Lab [tutorials section](https://www.jetson-ai-lab.com/tutorial-intro.html).
 - The Jetson AI Lab - Home Assistant Integration [thread on NVIDIA's Developers Forum](https://forums.developer.nvidia.com/t/jetson-ai-lab-home-assistant-integration/288225).
 - In case you've found an bug in `jetson-containers`, please [open an issue on our GitHub](https://github.com/dusty-nv/jetson-containers/issues).
+
+> [!NOTE]
+> This project was created by [Jetson AI Lab Research Group](https://www.jetson-ai-lab.com/research.html).
