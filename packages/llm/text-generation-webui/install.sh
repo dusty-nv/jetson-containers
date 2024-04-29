@@ -9,7 +9,7 @@ sed -i \
   -e 's|^bitsandbytes.*|#bitsandbytes|g' \
   -e 's|^llama-cpp-python.*|llama-cpp-python|g' \
   -e 's|^exllamav2.*|exllamav2|g' \
-  -e 's|^autoawq.*||g' \
+  -e 's|^numpy.*|numpy|g' \
   -e 's|^aqlm.*|aqlm|g' \
   -e 's|^transformers.*|transformers|g' \
   -e 's|^https://github.com/turboderp/exllama.*||g' \
@@ -35,7 +35,7 @@ pip3 install --no-cache-dir --verbose -r "$OOBABOOGA_ROOT_DIR/requirements.txt"
 
 # Install text-generation-webui extensions
 cd "$OOBABOOGA_ROOT_DIR"
-python3 -c "from one_click import install_extensions_requirements; install_extensions_requirements()"
+PYTHONPATH="$OOBABOOGA_ROOT_DIR" python3 -c "from one_click import install_extensions_requirements; install_extensions_requirements()"
 
 # Cleanup
 rm -rf \
