@@ -8,7 +8,7 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG FLASH_ATTENTION_VERSION="2.5.6"
+ARG FLASH_ATTENTION_VERSION="2.5.7"
 
 COPY build.sh install.sh patch.diff /tmp/flash-attention/
 
