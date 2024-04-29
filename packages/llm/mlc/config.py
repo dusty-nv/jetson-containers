@@ -1,7 +1,7 @@
 
 from jetson_containers import L4T_VERSION
 
-def mlc(commit, patch=None, version='0.1', tvm='0.15', llvm=17, tag=None, requires=None, default=False):
+def mlc(commit, patch=None, version='0.1', tvm='0.15', llvm=17, requires=None, default=False):
     pkg = package.copy()
   
     if default:
@@ -9,11 +9,8 @@ def mlc(commit, patch=None, version='0.1', tvm='0.15', llvm=17, tag=None, requir
         
     if requires:
         pkg['requires'] = requires   
-        
-    if not tag:
-        tag = commit
 
-    pkg['name'] = f'mlc:{tag}'
+    pkg['name'] = f'mlc:{version}'
     pkg['notes'] = f"[mlc-ai/mlc-llm](https://github.com/mlc-ai/mlc-llm/tree/{commit}) commit SHA [`{commit}`](https://github.com/mlc-ai/mlc-llm/tree/{commit})"
     
     pkg['build_args'] = {
@@ -23,12 +20,18 @@ def mlc(commit, patch=None, version='0.1', tvm='0.15', llvm=17, tag=None, requir
         'TVM_VERSION': tvm,
         'LLVM_VERSION': llvm
     }
+    
+    builder = pkg.copy()
+    
+    builder['name'] = f'mlc:{version}-builder'
+    builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
 
-    return pkg
+    return pkg, builder
 
 package = [
-    mlc('51fb0f4', 'patches/51fb0f4.diff', tvm='0.12', default=(L4T_VERSION.major == 35)), # 12/15/2023
-    mlc('607dc5a', 'patches/607dc5a.diff', tvm='0.15', default=(L4T_VERSION.major >= 36), requires='>=36'),  # 02/27/2024
+    mlc('51fb0f4', 'patches/51fb0f4.diff', version='0.1.0', tvm='0.15.0', default=(L4T_VERSION.major == 35), requires='==35.*'), # 12/15/2023
+    mlc('607dc5a', 'patches/607dc5a.diff', version='0.1.0', tvm='0.15.0', default=(L4T_VERSION.major >= 36), requires='>=36'),  # 02/27/2024
+    mlc('3403a4e', 'patches/3403a4e.diff', version='0.1.1', tvm='0.16.0', requires='>=36')  # 4/15/2024
 ]
 
 #latest_sha = github_latest_commit(repo, branch='main')

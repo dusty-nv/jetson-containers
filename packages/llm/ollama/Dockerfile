@@ -48,14 +48,12 @@ ARG JETPACK_VERSION
 
 EXPOSE 11434
 ENV OLLAMA_HOST=0.0.0.0 \
+    OLLAMA_MODELS=/data/models/ollama/models \
     PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
     LD_LIBRARY_PATH=/usr/local/cuda/lib:/usr/local/cuda/lib64:/usr/local/cuda/include:${LD_LIBRARY_PATH} \
     JETSON_JETPACK=${JETPACK_VERSION}
 
-COPY test.sh /test.sh
-COPY benchmark.py /benchmark.py
-COPY benchmark.sh /benchmark.sh
+COPY benchmark.py benchmark.sh test.sh /opt/ollama/
+COPY start_ollama /
 
-RUN ln -s /data/models/ollama /root/.ollama
-
-CMD ["/bin/ollama", "serve"]
+CMD /start_ollama && /bin/bash

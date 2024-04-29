@@ -6,10 +6,17 @@ import datetime
 import argparse
 import resource
 
-from mlc_chat import ChatModule, ChatConfig
-from mlc_chat.callback import StreamToStdout
+try:
+    from mlc_chat import ChatModule, ChatConfig
+    from mlc_chat.callback import StreamToStdout
+except Exception as error:
+    print(f"failed to import ChatModule from mlc_chat ({error})")
+    print(f"trying to import ChatModule from mlc_llm instead...")
 
-
+    from mlc_llm import ChatModule, ChatConfig
+    from mlc_llm.callback import StreamToStdout
+    
+    
 parser = argparse.ArgumentParser()
 
 parser.add_argument('--model', type=str, default="Llama-2-7b-chat-hf-q4f16_1")

@@ -14,7 +14,8 @@ ARG TVM_VERSION \
     MLC_VERSION \
     MLC_COMMIT \
     MLC_PATCH \
-    LLVM_VERSION=17
+    LLVM_VERSION=17 \
+    FORCE_BUILD=off
 
 ENV LD_LIBRARY_PATH="/usr/local/lib/python${PYTHON_VERSION}/dist-packages/tvm:${LD_LIBRARY_PATH}" \
     TVM_HOME=/opt/mlc-llm/3rdparty/tvm
