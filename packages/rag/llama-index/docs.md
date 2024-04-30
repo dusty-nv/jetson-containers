@@ -28,7 +28,7 @@ Jupyter Lab UI should show up, with [`LlamaIndex_Local-Models.ipynb`](samples/Ll
 
 ####  Python Version
 
-After starting the `llamaindex` container, you should be on `root@<hostname>` console. First, download the Llama2 model using `ollama` command.
+After starting the `llamaindex` container, you should be on `root@<hostname>` console. First, download the Llama2 model using `ollama`
 
 ```bash
 ollama pull llama2
