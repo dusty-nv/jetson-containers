@@ -3,7 +3,7 @@
 > [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 
 > [!NOTE]
-> Thank you to [**@ms1design**](https://github.com/ms1design) for his generous contributions and work on the porting Home Assistant & Wyoming containers for Jetson!
+> Thank you to [**@ms1design**](https://github.com/ms1design) for his generous contributions and work on porting Home Assistant & Wyoming containers for Jetson!
 
 <p align="center"><img src="ha_onboarding.png" style="width:100%;max-width:500px" title="Home Assistant Core" alt="Home Assistant Core onboarding screen" /></p>
 
