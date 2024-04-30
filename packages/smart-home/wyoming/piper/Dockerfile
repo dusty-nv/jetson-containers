@@ -3,6 +3,7 @@
 # group: wyoming
 # config: config.py
 # depends: [homeassistant-base, cuda, cudnn, python:3.11, piper-tts]
+# test: test.sh
 # requires: '>=34.1.0'
 # docs: docs.md
 # notes: The `piper-tts` using the `wyoming` protocol for usage with Home Assistant. Based on `https://github.com/home-assistant/addons/tree/master/piper` and `https://github.com/rhasspy/wyoming-piper`
@@ -44,6 +45,4 @@ HEALTHCHECK --start-period=10m \
         | grep -q "piper" \
         || exit 1
 
-# this makes the tests go boom
-#ENTRYPOINT ["/init"]
 CMD /init
