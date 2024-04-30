@@ -109,19 +109,6 @@ Got questions? You have several options to get them answered:
 </details>
 
 <details open>
-<summary><b><a id="images">CONTAINER IMAGES</a></b></summary>
-<br>
-
-| Repository/Tag | Date | Arch | Size |
-| :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/wyoming-whisper:r36.2.0`](https://hub.docker.com/r/dustynv/wyoming-whisper/tags) | `2024-04-24` | `arm64` | `5.2GB` |
-
-> <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
-> <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
-> <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R35.x containers can run on other versions of L4T R35.x (JetPack 5.1+)</sub><br>
-</details>
-
-<details open>
 <summary><b><a id="run">RUN CONTAINER</a></b></summary>
 <br>
 
@@ -130,11 +117,9 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 # automatically pull or build a compatible container image
 jetson-containers run $(autotag wyoming-whisper)
 
-# or explicitly specify one of the container images above
-jetson-containers run dustynv/wyoming-whisper:r36.2.0
-
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/wyoming-whisper:r36.2.0
+sudo docker run --runtime nvidia -it --rm --network=host wyoming-whisper:36.2.0
+
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
