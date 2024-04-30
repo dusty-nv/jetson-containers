@@ -1,24 +1,24 @@
 
 * llama-index from https://www.llamaindex.ai/
 
-### Starting `llamaindex` container
+## Starting `llamaindex` container
 
 ```bash
-jetson-containers run $(./autotag llama-index)
+jetson-containers run $(autotag llama-index)
 ```
 
 This will start the `ollama` server as well as Jupyter Lab server inside the container.
 
-### Running a starter RAG example with Ollama
+## Running a RAG example with Ollama
 
 This is based on the [official tutorial for local models](https://docs.llamaindex.ai/en/stable/getting_started/starter_example_local/).
 
-#### Jupyter notebook version
+#### Jupyter Notebook Version
 
-When you run start the `llamaindex` container, you should see lines like this on the terminal.
+When you run start the `llama-index` container, you should see lines like this on the terminal.
 
 ```
-JupyterLab URL:   http://10.110.50.241:8888 (password "nvidia")
+JupyterLab URL:   http://192.168.1.10:8888 (password "nvidia")
 JupyterLab logs:  /data/logs/jupyter.log
 ```
 
@@ -32,7 +32,7 @@ Select and open the `LlamaIndex_Local-Models.ipynb`
 
 Follow the guide on the Jupyter notebook.
 
-####  Python script version
+####  Python Version
 
 After starting the `llamaindex` container, you should be on `root@<hostname>` console.
 
@@ -42,10 +42,7 @@ First, download the Llama2 model using `ollama` command.
 ollama pull llama2
 ```
 
-> This downloads the default 7-billion parameter Llama2 model.
-> You can optionally specify `ollma2:13b` and `ollma2:70b` for other variations, and change the Python script (line 13) accordingly.
-
-Type the following to start the sample Python script.
+This downloads the default 7-billion parameter Llama2 model - you can optionally specify `ollma2:13b` and `ollma2:70b` for other variations, and change the Python script (line 13) accordingly. Then type the following to start the sample Python script:
 
 ```bash
 python3 /opt/llama-index/llamaindex_starter.py
