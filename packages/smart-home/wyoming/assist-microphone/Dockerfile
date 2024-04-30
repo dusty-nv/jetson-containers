@@ -5,7 +5,7 @@
 # config: config.py
 # docs: docs.md
 # depends: [homeassistant-base, python:3.11]
-# test: [list_audio_devices.sh]
+# test: list_audio_devices.sh
 # notes: The `assist-microphone` using the `wyoming` protocol for usage with Home Assistant. Based on `https://github.com/home-assistant/addons/tree/master/assist_microphone`
 #---
 ARG BASE_IMAGE
