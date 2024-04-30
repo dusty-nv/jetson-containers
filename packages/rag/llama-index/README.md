@@ -26,15 +26,9 @@ JupyterLab URL:   http://192.168.1.10:8888 (password "nvidia")
 JupyterLab logs:  /data/logs/jupyter.log
 ```
 
-On your Jetson desktop GUI, or on a PC on the same network as Jetson, open your web browser and access the address.
+On your Jetson desktop GUI, or on a PC on the same network as Jetson, open your web browser and access the address. When prompted, type the password `nvidia` and log in.
 
-When prompted, type the password `nvidia` and log in.
-
-Jupyter Lab UI should show up, with `LlamaIndex_Local-Models.ipynb` listed in the left navigator pane.
-
-Select and open the `LlamaIndex_Local-Models.ipynb`
-
-Follow the guide on the Jupyter notebook.
+Jupyter Lab UI should show up, with [`LlamaIndex_Local-Models.ipynb`](samples/LlamaIndex_Local-Models.ipynb) listed in the left navigator pane - open it, and follow the guide in the Jupyter notebook.
 
 ####  Python Version
 
