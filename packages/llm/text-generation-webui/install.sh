@@ -9,6 +9,7 @@ sed -i \
   -e 's|^bitsandbytes.*|#bitsandbytes|g' \
   -e 's|^llama-cpp-python.*|llama-cpp-python|g' \
   -e 's|^exllamav2.*|exllamav2|g' \
+  -e 's|^autoawq.*||g' \
   -e 's|^numpy.*|numpy|g' \
   -e 's|^aqlm.*|aqlm|g' \
   -e 's|^transformers.*|transformers|g' \
