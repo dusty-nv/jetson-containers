@@ -35,7 +35,7 @@ class Agent():
         """
         Operator overload for process()
         """
-        return self.process[channel](input, **kwargs)
+        return self.process(input, channel, **kwargs)
         
     def start(self):
         """

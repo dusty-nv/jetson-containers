@@ -10,4 +10,16 @@ RUN git clone --branch ${CUDA_BRANCH} --depth=1 https://github.com/NVIDIA/cuda-s
 
 WORKDIR /opt/cuda-samples
 
-RUN make -j $(nproc)
+RUN cd Samples/deviceQuery && make && \
+    cd ../bandwidthTest && make && \
+    cd ../matrixMul && make && \
+    cd ../vectorAdd && make || \
+    echo "failed to build CUDA samples"
+
+RUN cd Samples/1_Utilities/deviceQuery && make && \
+    cd ../bandwidthTest && make && \
+    cd ../0_Introduction/matrixMul && make && \
+    cd ../vectorAdd && make || \
+    echo "failed to build CUDA samples"
+    
+RUN make -j $(nproc) || echo "failed to build CUDA samples"

@@ -33,9 +33,10 @@ class Server(threading.Thread):
             self.app.mount(self.mounts[scan], StaticFiles(directory=scan), name=str(n))
             
         self.create_ui()
-    
+        
     def run(self):
         # https://www.uvicorn.org/settings/
+        print(f"-- starting nanodb webserver at {self.server_url}")
         uvicorn.run(self.app, host=self.host, port=self.port, reload=False, log_level='warning')  # 'info'
      
     def get_random_images(self, n):
@@ -59,10 +60,9 @@ class Server(threading.Thread):
             #stats_box {font-family: monospace; font-size: 65%; height: 162px;} 
             footer {visibility: hidden} 
             body {overflow: hidden;}
-            * {scrollbar-color: rebeccapurple green; scrollbar-width: thin;}
         """
         # https://stackoverflow.com/questions/66738872/why-doesnt-the-scrollbar-color-property-work-directly-on-the-body
-
+        # * {scrollbar-color: darkgray lightgray; scrollbar-width: thin;}
         with gr.Blocks(css=css, theme=gr.themes.Monochrome()) as blocks:
             gr.HTML('<h1 style="color: #6aa84f; font-size: 250%;">nanodb</h1>')
             

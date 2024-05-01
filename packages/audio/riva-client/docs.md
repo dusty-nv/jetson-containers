@@ -26,7 +26,7 @@ You can refer to them in the steps below by either their device number or name. 
 
 ```bash
 ./run.sh --workdir /opt/riva/python-clients $(./autotag riva-client:python) \
-   python3 scripts/asr/transcribe_mic.py --input-device=24 --sample-rate-hz=44100
+   python3 scripts/asr/transcribe_mic.py --input-device=24 --sample-rate-hz=48000
 ```
 
 You can find more ASR examples to run at https://github.com/nvidia-riva/python-clients#asr
@@ -35,7 +35,7 @@ You can find more ASR examples to run at https://github.com/nvidia-riva/python-c
 
 ```bash
 ./run.sh --workdir /opt/riva/python-clients $(./autotag riva-client:python) \
-   python3 scripts/tts/talk.py --stream --output-device=24 --sample-rate-hz=44100 \
+   python3 scripts/tts/talk.py --stream --output-device=24 --sample-rate-hz=48000 \
      --text "Hello, how are you today? My name is Riva." 
 ```
 

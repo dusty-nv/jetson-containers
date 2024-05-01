@@ -3,7 +3,7 @@
 # group: ml
 # config: config.py
 # requires: '>=32.6'
-# depends: [python]
+# depends: [cuda, cudnn, tensorrt, python]
 # test: test.py
 # notes: https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/user_guide/jetson.html
 #---
@@ -26,7 +26,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
 		libb64-0d \
 		libre2-* \
-		libssl1.1 \
+		libssl-dev \
 		rapidjson-dev \
 		libopenblas-dev \
 		libarchive-dev \

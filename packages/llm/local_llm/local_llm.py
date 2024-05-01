@@ -4,12 +4,13 @@ import re
 import time
 import json
 import torch
+import shutil
 import logging
 
 from transformers import AutoConfig
 
 from .vision import CLIPImageEmbedding, MMProjector
-from .utils import AttributeDict, download_model, default_model_api, print_table
+from .utils import AttributeDict, convert_tensor, download_model, default_model_api, print_table
 
 
 class LocalLM():
@@ -46,11 +47,11 @@ class LocalLM():
             model_path = model
             model_name = os.path.basename(model_path)
         else:
-            model_path = download_model(model)
+            model_path = download_model(model, **kwargs)
             model_name = os.path.basename(model)
             
         if not api:
-            api = default_model_api(model_path, quant)
+            api = default_model_api(model_path, kwargs.get('quant'))
         
         kwargs['name'] = model_name
         kwargs['api'] = api
@@ -75,9 +76,13 @@ class LocalLM():
         else:
             raise ValueError(f"invalid API: {api}")
 
+        # moved CLIP to after LLM is loaded because of MLC CUDA errors when running in subprocess
+        model.init_vision(**kwargs)  
         model.config.load_time = time.perf_counter() - load_begin
         
         print_table(model.config)
+        print('')
+        
         return model
      
     def generate(self, inputs, streaming=True, **kwargs):
@@ -115,59 +120,113 @@ class LocalLM():
     def embed_tokens(self, tokens, **kwargs):
         raise NotImplementedError("embed_tokens() not implemented for this model")
        
-    def embed_image(self, image, crop=True, return_tensors='pt', **kwargs):
+    def embed_image(self, image, crop=None, return_tensors='pt', return_dict=False, **kwargs):
         assert(self.has_vision)
         
-        embedding = self.vision(image, crop=crop, hidden_state=self.model_config.mm_vision_select_layer)
+        if crop is None:
+            crop = (self.vision_scaling == 'crop')
+
+        output = self.vision(image, crop=crop, hidden_state=self.config.mm_vision_select_layer, return_dict=return_dict)
+        
+        embedding = output.hidden_state if return_dict else output
         embedding = self.mm_projector(embedding[:, 1:])
 
         logging.debug(f"image_embedding  shape={embedding.shape}  dtype={embedding.dtype}  device={embedding.device}")
         
-        if return_tensors == 'pt':
-            return embedding
-        elif return_tensors == 'np':
-            return embedding.detach().cpu().numpy()
+        if return_dict:
+            output.embedding = embedding
+            for key in output:
+                output[key] = convert_tensor(output[key], return_tensors=return_tensors)
+            return output
         else:
-            raise ValueError(f"return_tensors should be 'np' or 'pt' (was '{return_tensors}')")
+            return convert_tensor(embedding, return_tensors=return_tensors)
         
     def __init__(self, model_path, **kwargs):
         """
         @internal this is down here because it should only be used by inherited classes.
         """
-        self.config = AttributeDict()
-        self.stats = AttributeDict()
+        self.model_path = model_path
+        self.config_path = os.path.join(self.model_path, 'config.json')
         
+        if os.path.isfile(self.config_path):
+            with open(self.config_path) as config_file:
+                self.config = AttributeDict(json.load(config_file))
+        else:
+            logging.warning(f"could not find model config file at {self.config_path}")
+            self.config = AttributeDict()
+
         self.config.name = kwargs.get('name')
         self.config.api = kwargs.get('api')
         
-        self.model_path = model_path
-        self.model_config = AutoConfig.from_pretrained(model_path)
+        model_type = self.config.model_type.lower()
         
-        self.init_vision(**kwargs)
+        # patch the config to change llava to llama so the quant tools handle it
+        self.has_vision = 'llava' in model_type
         
+        if self.has_vision:
+            if 'stablelm' in model_type:
+                self.patch_config(model_type='stablelm_epoch')
+            elif 'phi' in model_type:
+                self.patch_config(model_type='phi')
+            else:
+                self.patch_config(model_type='llama')
+        else:
+            name_or_path = self.config.get('_name_or_path')
+            if name_or_path:
+                self.has_vision = 'llava' in name_or_path.lower()
+
+        for arch in self.config.get('architectures', []):
+            if 'llava' in arch.lower() or 'bunny' in arch.lower():
+                self.has_vision = True
+
+        if self.config.model_type == 'bunny-stablelm':
+            self.patch_config(model_type='stablelm_epoch')
+        elif self.config.model_type == 'bunny-phi':
+            self.patch_config(model_type='phi')
+            
+        self.stats = AttributeDict()
+     
+    def patch_config(self, **kwargs):
+        """
+        Update the original HF model's config.json with different settings from the provided kwargs.
+        The original will be saved under the same directory to 'config.json.backup'
+        """
+        backup_path = self.config_path + '.backup'
+        
+        if not os.path.isfile(backup_path):
+            logging.info(f"backing up original model config to {backup_path}")
+            shutil.copyfile(self.config_path, backup_path)
+            
+        logging.info(f"patching model config with {kwargs}")
+        
+        patched_config = self.config #.copy()
+        patched_config.update(kwargs)
+
+        with open(self.config_path, 'w') as config_file:
+            json.dump(patched_config, config_file, indent=2)
+                
     def init_vision(self, **kwargs):
         """
         Init vision embedding/projection models for VLMs like llava, MiniGPT-4, ect.
         @internal this function is automatically called by LocalLM initializer.
         """
-        self.has_vision = 'llava' in self.model_config._name_or_path.lower()
-        
-        for arch in self.model_config.architectures:
-            if 'llava' in arch.lower():
-                self.has_vision = True
-
         if not self.has_vision:
             return
            
         # load the image embedding model
         self.vision = CLIPImageEmbedding.from_pretrained(
             kwargs.get('vision_model') if kwargs.get('vision_model')
-            else self.model_config.mm_vision_tower,
+            else self.config.mm_vision_tower,
             dtype=torch.float16,
         ) 
         
         # create image embedding projection model
-        self.mm_projector = MMProjector.from_pretrained(
-            self.model_path, self.vision.dtype
-        )
+        self.mm_projector = MMProjector.from_pretrained(self, self.vision.dtype)
+        
+        # default to cropping enabled
+        self.vision_scaling = kwargs.get('vision_scaling')
+        
+        if self.vision_scaling is None:
+            self.vision_scaling = 'crop'
+            
         

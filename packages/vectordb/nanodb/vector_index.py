@@ -57,7 +57,7 @@ class cudaVectorIndex:
         self.reserved_size = reserve
         self.reserved = int(self.reserved_size / (dim * self.dsize))
         self.max_search_queries = max_search_queries
-
+        
         err, self.stream = cudaStreamCreateWithFlags(cudaStreamNonBlocking)
         assert_cuda(err)
         self.torch_stream = torch.cuda.ExternalStream(int(self.stream), device='cuda:0')

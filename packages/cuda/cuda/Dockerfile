@@ -2,48 +2,57 @@
 # name: cuda
 # group: cuda
 # config: config.py
+# depends: [build-essential]
 # test: test.sh
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG CUDA_URL
-ARG CUDA_DEB
-ARG CUDA_PACKAGES
-
-ENV DEBIAN_FRONTEND=noninteractive
-
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-            wget \
-		  git \
-		  binutils \
-		  xz-utils \
-		  ca-certificates \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
-
-RUN echo "Downloading ${CUDA_DEB}" && \
-    mkdir /tmp/cuda && cd /tmp/cuda && \
-    wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/arm64/cuda-ubuntu2004.pin -O /etc/apt/preferences.d/cuda-repository-pin-600 && \
-    wget --quiet --show-progress --progress=bar:force:noscroll ${CUDA_URL} && \
-    dpkg -i *.deb && \
-    cp /var/cuda-tegra-repo-*/cuda-tegra-*-keyring.gpg /usr/share/keyrings/ && \
-    ar x /var/cuda-tegra-repo-*/cuda-compat-*.deb && \
-    tar xvf data.tar.xz -C / && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends ${CUDA_PACKAGES} && \
-    rm -rf /var/lib/apt/lists/* && \
-    apt-get clean && \
-    dpkg --list | grep cuda && \
-    dpkg -P ${CUDA_DEB} && \
-    rm -rf /tmp/cuda
-
-ENV NVIDIA_VISIBLE_DEVICES=all
-ENV NVIDIA_DRIVER_CAPABILITIES=all
+ARG CUDA_URL \
+    CUDA_DEB \
+    CUDA_PACKAGES \
+    CUDA_ARCH_LIST \
+    PIP_INDEX_REPO \
+    PIP_UPLOAD_REPO \
+    PIP_UPLOAD_USER \
+    PIP_UPLOAD_PASS \
+    PIP_TRUSTED_HOSTS \
+    TAR_INDEX_URL \
+    SCP_UPLOAD_URL \
+    SCP_UPLOAD_USER \
+    SCP_UPLOAD_PASS \
+    DISTRO="ubuntu2004"
+    
+COPY install.sh /tmp/install_cuda.sh
+RUN /tmp/install_cuda.sh
 
 ENV CUDA_HOME="/usr/local/cuda"
-ENV PATH="/usr/local/cuda/bin:${PATH}"
-ENV LD_LIBRARY_PATH="/usr/local/cuda/compat:/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
+ENV NVCC_PATH="$CUDA_HOME/bin/nvcc"
 
+ENV NVIDIA_VISIBLE_DEVICES=all \
+    NVIDIA_DRIVER_CAPABILITIES=all \
+    CUDAARCHS=${CUDA_ARCH_LIST} \
+    CUDA_ARCHITECTURES=${CUDA_ARCH_LIST} \
+    CUDA_HOME="/usr/local/cuda" \
+    CUDNN_LIB_PATH="/usr/lib/aarch64-linux-gnu" \
+    CUDNN_LIB_INCLUDE_PATH="/usr/include" \
+    CMAKE_CUDA_COMPILER=${NVCC_PATH} \
+    CUDA_NVCC_EXECUTABLE=${NVCC_PATH} \
+    CUDACXX=${NVCC_PATH} \
+    TORCH_NVCC_FLAGS="-Xfatbin -compress-all" \
+    CUDA_BIN_PATH="${CUDA_HOME}/bin" \
+    CUDA_TOOLKIT_ROOT_DIR="${CUDA_HOME}" \
+    PATH="$CUDA_HOME/bin:${PATH}" \
+    LD_LIBRARY_PATH="${CUDA_HOME}/compat:${CUDA_HOME}/lib64:${LD_LIBRARY_PATH}" \
+    TAR_INDEX_URL=${TAR_INDEX_URL} \
+    PIP_INDEX_URL=${PIP_INDEX_REPO} \
+    PIP_TRUSTED_HOST=${PIP_TRUSTED_HOSTS} \
+    TWINE_REPOSITORY_URL=${PIP_UPLOAD_REPO} \
+    TWINE_USERNAME=${PIP_UPLOAD_USER} \
+    TWINE_PASSWORD=${PIP_UPLOAD_PASS} \
+    SCP_UPLOAD_URL=${SCP_UPLOAD_URL} \
+    SCP_UPLOAD_USER=${SCP_UPLOAD_USER} \
+    SCP_UPLOAD_PASS=${SCP_UPLOAD_PASS} \
+    DEBIAN_FRONTEND=noninteractive
+    
 WORKDIR /

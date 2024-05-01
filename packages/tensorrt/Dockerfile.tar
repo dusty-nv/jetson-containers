@@ -1,0 +1,28 @@
+#---
+# name: tensorrt
+# group: cuda
+# depends: [cuda, cudnn, python]
+# config: config.py
+# test: test.sh
+#---
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+ARG TENSORRT_URL
+
+RUN set -ex && \
+    echo "Downloading ${TENSORRT_URL}" && \
+    mkdir -p /tmp/tensorrt && \
+    cd /tmp/tensorrt && \
+    wget --quiet --show-progress --progress=bar:force:noscroll ${TENSORRT_URL} -O TensorRT.tar && \
+    tar -xvf TensorRT.tar -C /usr/src && \
+    mv /usr/src/TensorRT-* /usr/src/tensorrt
+    
+RUN cd /tmp/tensorrt && \
+    cp -r /usr/src/tensorrt/lib/* /usr/lib/$(uname -m)-linux-gnu/ && \
+    cp -r /usr/src/tensorrt/include/* /usr/include/$(uname -m)-linux-gnu/ && \
+    PY_VERSION=$(python3 -c 'import sys; print(f"{sys.version_info.major}{sys.version_info.minor}")') && \
+    pip3 install --verbose --no-cache-dir /usr/src/tensorrt/python/tensorrt-*-cp${PY_VERSION}-*.whl && \
+    rm -rf /tmp/tensorrt
+    
+    

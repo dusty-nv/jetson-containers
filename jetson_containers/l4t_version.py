@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # finds the versions of JetPack-L4T and CUDA from the build environment:
 #
-#    L4T_VERSION (packaging.version.Version)
-#    JETPACK_VERSION (packaging.version.Version)
-#    PYTHON_VERSION (packaging.version.Version)
-#    CUDA_VERSION (packaging.version.Version)
+#    L4T_VERSION (packaging.version.Version) -- found in /etc/nv_tegra_release
+#    JETPACK_VERSION (packaging.version.Version) -- derived from L4T_VERSION
+#    PYTHON_VERSION (packaging.version.Version) -- the default for LSB_RELEASE (can override with $PYTHON_VERSION environment var)
+#    CUDA_VERSION (packaging.version.Version) -- found in /usr/local/cuda (can override with $CUDA_VERSION environment var)
 #    CUDA_ARCHITECTURES (list[int]) -- e.g. [53, 62, 72, 87]
 #    SYSTEM_ARCH (str) -- e.g. 'aarch64' or 'x86_64'
-#    LSB_RELEASE (str) -- e.g. '18.04' or '20.04'
-#    LSB_CODENAME (str) -- e.g. 'bionic' or 'focal'
+#    LSB_RELEASE (str) -- e.g. '18.04', '20.04', '22.04'
+#    LSB_CODENAME (str) -- e.g. 'bionic', 'focal', 'jammy'
 #    
 import os
 import re
@@ -16,6 +16,7 @@ import sys
 import json
 import platform
 import subprocess
+import glob
 
 from packaging.version import Version
 
@@ -162,16 +163,33 @@ def get_cuda_version(version_file='/usr/local/cuda/version.json'):
     Returns the installed version of the CUDA Toolkit in a packaging.version.Version object
     The CUDA_VERSION will either be parsed from /usr/local/cuda/version.json or the $CUDA_VERSION environment variable.
     """
+    def to_version(version):
+        version = Version(version)
+        return Version(f"{version.major}.{version.minor}")
+        
     if 'CUDA_VERSION' in os.environ and len(os.environ['CUDA_VERSION']) > 0:
-        return Version(os.environ['CUDA_VERSION'])
+        return to_version(os.environ['CUDA_VERSION'])
         
     if not os.path.isfile(version_file):
-        raise IOError(f"L4T_VERSION file doesn't exist:  {version_file}")
+        # In case only the CUDA runtime is installed
+        so_file_path = "/usr/local/cuda/targets/aarch64-linux/lib/libcudart.so.*.*.*"
+        files = glob.glob(so_file_path)
+        if files:
+            file_path = files[0]  # Assuming there is only one matching file
+            version_match = re.search(r'libcudart\.so\.(\d+\.\d+\.\d+)', file_path)
+
+            if version_match:
+                version_number = version_match.group(1)
+                return to_version(version_number)
+            else:
+                print("-- unable to extract CUDA version number")
+        else:
+            return '0.0'    
         
     with open(version_file) as file:
         versions = json.load(file)
         
-    return Version(versions['cuda_nvcc']['version'])
+    return to_version(versions['cuda_nvcc']['version'])
 
 
 def get_l4t_base(l4t_version=get_l4t_version()):
@@ -220,9 +238,12 @@ def l4t_version_compatible(l4t_version, l4t_version_host=get_l4t_version(), **kw
         
     if not isinstance(l4t_version, Version):
         l4t_version = Version(l4t_version)
-        
-    if l4t_version_host.major >= 35: # JetPack 5.1 can run other JetPack 5.1.x containers
-        if l4t_version.major >= 35:
+
+    if l4t_version_host.major == 36: # JetPack 6 runs containers for JetPack 6
+        if l4t_version.major == 36:
+            return True
+    elif l4t_version_host.major == 35: # JetPack 5.1 can run other JetPack 5.1.x containers
+        if l4t_version.major == 35:
             return True
     elif l4t_version_host.major == 34: # JetPack 5.0 runs other JetPack 5.0.x containers
         if l4t_version.major == 34:
@@ -260,8 +281,11 @@ elif L4T_VERSION.major == 32:  # JetPack 4
 # x86_64, aarch64
 SYSTEM_ARCH = platform.machine()
 
-# Python version (3.6, 3.8, ect)
-PYTHON_VERSION = Version(f'{sys.version_info.major}.{sys.version_info.minor}')
+# Python version (3.6, 3.8, 3.10, ect)
+if 'PYTHON_VERSION' in os.environ and len(os.environ['PYTHON_VERSION']) > 0:
+    PYTHON_VERSION = Version(os.environ['PYTHON_VERSION'])
+else:
+    PYTHON_VERSION = Version(f'{sys.version_info.major}.{sys.version_info.minor}')
 
 # LSB release and codename ("20.04", "focal")
 LSB_RELEASE, LSB_CODENAME = get_lsb_release()

@@ -37,12 +37,13 @@ The text between `#---` is YAML and is extracted by the build system.  Each pack
 | `path`        | `str`                | path to the package's directory (automatically populated)                               |
 | `prefix`      | `str`                | text prepended to the container tag. not part of the package's name for referencing.    |
 | `postfix`     | `str`                | text appended to the container tag (default is `r$L4T_VERSION`)                         |
-| `requires`    | `str`                | the version(s) of L4T the package is compatible with (e.g. `>=35.2.1` for JetPack 5.1+) |
+| `requires`    | `str` or `list[str]` | the version(s) of L4T or CUDA the package is compatible with (e.g. `>=35.2.1` for JetPack 5.1+) |
 | `test`        | `str` or `list[str]` | one or more test commands/scripts to run (`.py`, `.sh`, or a shell command)             |
 
-> * these keys can all be accessed by any of the configuration methods below<br>
-> * any filenames or paths should be relative to the package's `path`<br>
-> * see the [Version Specifiers Specification](https://packaging.pypa.io/en/latest/specifiers.html) for valid syntax around `requires`
+> * These keys can all be accessed by any of the configuration methods below<br>
+> * Any filenames or paths should be relative to the package's `path`<br>
+> * See the [Version Specifiers Specification](https://packaging.pypa.io/en/latest/specifiers.html) for valid syntax around `requires`
+> * `requires` can also check for CUDA version (`>=cu124`) and Python version (`>=py310`) and can be a list (`['>=r36', '>=cu122']`)
 
 Packages can also include nested sub-packages (for example, all the [ROS variants](/packages/ros)), which are typically generated in a config file.
 
@@ -98,7 +99,9 @@ Python configuration scripts (normally called `config.py`) are the most expressi
 ```python
 from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES
 
-if L4T_VERSION.major >= 34:  
+if L4T_VERSION.major >= 36: 
+    MY_PACKAGE_VERSION = 'v6.0'  # on JetPack 6
+elif L4T_VERSION.major == 35:
     MY_PACKAGE_VERSION = 'v5.0'  # on JetPack 5
 else:                        
     MY_PACKAGE_VERSION = 'v4.0'  # on JetPack 4

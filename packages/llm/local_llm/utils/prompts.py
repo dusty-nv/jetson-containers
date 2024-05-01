@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import json
+import logging
 
 # https://modal.com/docs/guide/ex/vllm_inference
 DefaultChatPrompts = [
@@ -47,6 +48,7 @@ def load_prompts(prompts):
         ext = os.path.splitext(prompt)[1]
         
         if ext == '.json':
+            logging.info(f"loading prompts from {prompt}")
             with open(prompt) as file:
                 json_prompts = json.load(file)
             for json_prompt in json_prompts:

@@ -2,8 +2,8 @@
 import os
 import re
 import time
-import wget
 import shutil
+import requests
 import argparse
 
 print('testing torchvision...')
@@ -59,7 +59,8 @@ def download_data(url, tar, workdir='/data/datasets'):
     
     if not os.path.isfile(filename):
         print(f"Downloading {url} to {filename}")
-        wget.download(url, filename)
+        request = requests.get(url, allow_redirects=True)
+        open(filename, 'wb').write(request.content)
         
     if not os.path.isdir(folder):
         print(f"Extracting {filename} to {folder}")

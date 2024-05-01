@@ -114,6 +114,12 @@ class CLIPEmbedding():
         with torch.cuda.StreamContext(self.stream), torch.inference_mode():
             if isinstance(image, PIL.Image.Image) or isinstance(image, np.ndarray):
                 image = transforms.functional.to_tensor(image)
+            elif isinstance(image, torch.Tensor):
+                pass
+            elif hasattr(image, '__cuda_array_interface__'):
+                image = torch.as_tensor(image, device='cuda')
+            else:
+                raise TypeError(f"image was not PIL.Image, np.ndarray, torch.Tensor, or __cuda_array_interface__ (was {type(image)}")
             #else:
             #    image = image.to(device=self.device, dtype=self.config.dtype) / 255.0  # needed when load_image(api='torchvision')
             

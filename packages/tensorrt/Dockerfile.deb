@@ -1,0 +1,31 @@
+#---
+# name: tensorrt
+# group: cuda
+# depends: [cuda, cudnn, python]
+# config: config.py
+# test: test.sh
+#---
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+ARG TENSORRT_URL \
+    TENSORRT_DEB \
+    TENSORRT_PACKAGES
+
+RUN set -ex && \
+    echo "Downloading ${TENSORRT_DEB}" && \
+    mkdir -p /tmp/tensorrt && \
+    cd /tmp/tensorrt && \
+    wget --quiet --show-progress --progress=bar:force:noscroll ${TENSORRT_URL} && \
+    dpkg -i *.deb && \
+    cp /var/nv-tensorrt-local-repo-*/nv-tensorrt-local-*-keyring.gpg /usr/share/keyrings/ && \
+    apt-get update && \
+    apt-cache search tensorrt && \
+    apt-get install -y --no-install-recommends ${TENSORRT_PACKAGES} && \
+    \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get clean && \
+    dpkg --list | grep tensorrt && \
+    dpkg -P ${TENSORRT_DEB} && \
+    rm -rf /tmp/tensorrt
+    

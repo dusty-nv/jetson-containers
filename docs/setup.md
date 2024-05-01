@@ -1,21 +1,26 @@
 # System Setup
 
-Install the latest version of JetPack 4 if you're on Nano/TX1/TX2, or JetPack 5 if you're on Xavier/Orin.  The following versions are supported:
+Install the latest version of JetPack 4 on Nano/TX1/TX2, JetPack 5 on Xavier, or JetPack 6 on Orin.  The following versions are supported:
 
 * JetPack 4.6.1+ (>= L4T R32.7.1)
 * JetPack 5.1+  (>= L4T R35.2.1)
-
-> <sup>* Building on/for x86 platforms isn't supported at this time (one can typically install/run packages the upstream way there)</sup><br>
-> <sup>* The below steps are optional for [pulling/running](/docs/run.md) existing container images from registry, but recommended for building containers locally.</sup>
+* JetPack 6.0 DP (L4T R36.2.0)
+> [!NOTE]  
+> <sup>- Building on/for x86 platforms isn't supported at this time (one can typically install/run packages the upstream way there)</sup><br>
+> <sup>- The below steps are optional for [pulling/running](/docs/run.md) existing container images from registry, but recommended for building containers locally.</sup>
 
 ## Clone the Repo
 
+This will download and install the jetson-containers utilities:
+
 ```bash
-sudo apt-get update && sudo apt-get install git python3-pip
-git clone --depth=1 https://github.com/dusty-nv/jetson-containers
-cd jetson-containers
-pip3 install -r requirements.txt
+git clone https://github.com/dusty-nv/jetson-containers
+bash jetson-containers/install.sh
 ```
+
+The installer script will prompt you for your sudo password, and will setup some Python [requirements](/requirements.txt) and add tools like [`autotag`](/docs/run.md#autotag) the `$PATH` by linking them under `/usr/local/bin` (if you move your jetson-containers repo, run this step again)
+
+If you are only running containers and already have enough disk space on your root drive to download them, you may be able to skip the rest of the steps below, but they are recommended best-practices and should be followed when building your own containers.
 
 ## Docker Default Runtime
 
@@ -138,3 +143,24 @@ sudo usermod -aG docker $USER
 ```
 
 Then close/restart your terminal (or logout) and you should be able to run docker commands (like `docker info`) without needing sudo.
+
+## Setting the Power Mode
+
+Depending on the power supply source you have available for your Jetson (i.e. wall power or battery), you may wish to put your Jetson in maximum power mode (MAX-N) to attain the highest performance available from your Jetson device.  You can do this with the [`nvpmodel`](https://docs.nvidia.com/jetson/archives/r36.2/DeveloperGuide/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html#power-mode-controls) command-line tool, or from the Ubuntu desktop via the [nvpmodel GUI widget](https://docs.nvidia.com/jetson/archives/r36.2/DeveloperGuide/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html#nvpmodel-gui) (or by using [`jtop`](https://github.com/rbonghi/jetson_stats) from jetson-stats)
+
+```bash
+# check the current power mode
+$ sudo nvpmodel -q
+NV Power Mode: MODE_30W
+2
+
+# set it to mode 0 (typically the highest)
+$ sudo nvpmodel -m 0
+
+# reboot if necessary, and confirm the changes
+$ sudo nvpmodel -q
+NV Power Mode: MAXN
+0
+```
+
+See [here](https://docs.nvidia.com/jetson/archives/r36.2/DeveloperGuide/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html#supported-modes-and-power-efficiency) for a table of the power modes available for the different Jetson devices, and for documentation on the [`nvpmodel`](https://docs.nvidia.com/jetson/archives/r36.2/DeveloperGuide/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html#power-mode-controls) tool.
