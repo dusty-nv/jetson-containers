@@ -16,9 +16,9 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
-RUN pip3 install pandas scipy jiwer ipywebrtc
+RUN pip3 install --no-cache-dir --verbose pandas scipy jiwer ipywebrtc
 
-RUN python3 -c 'import torch; print(f"PyTorch version: {torch.__version__}"); print(f"CUDA available:  {torch.cuda.is_available()}"); print(f"cuDNN version:   {torch.backends.cudnn.version()}"); print(f"torch.distributed:   {torch.distributed.is_available()}"); print(torch.__config__.show());'
+ADD https://api.github.com/repos/openai/whisper/git/refs/heads/main /tmp/whisper_version.json
 
 # Clone the repository:
 RUN git clone https://github.com/openai/whisper/ && \
@@ -27,10 +27,11 @@ RUN git clone https://github.com/openai/whisper/ && \
     sed 's|^numpy.*||' -i requirements.txt && \
     sed 's|^torch.*||' -i requirements.txt && \
     cat requirements.txt && \
-    pip3 install .
+    pip3 wheel --wheel-dir=dist --no-deps --verbose .
 
-RUN python3 -c 'import torch; print(f"PyTorch version: {torch.__version__}"); print(f"CUDA available:  {torch.cuda.is_available()}"); print(f"cuDNN version:   {torch.backends.cudnn.version()}"); print(f"torch.distributed:   {torch.distributed.is_available()}"); print(torch.__config__.show());'
-
+RUN cp whisper/dist/openai_whisper*.whl /opt && \
+    pip3 install --no-cache-dir --verbose /opt/openai_whisper*.whl
+    
 WORKDIR /opt/whisper/
 
 COPY record-and-transcribe.ipynb /opt/whisper/notebooks

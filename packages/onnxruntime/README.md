@@ -6,15 +6,54 @@
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`onnxruntime`** | |
+| **`onnxruntime:1.17`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`onnxruntime_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/onnxruntime_jp51.yml?label=onnxruntime:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/onnxruntime_jp51.yml) [![`onnxruntime_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/onnxruntime_jp46.yml?label=onnxruntime:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/onnxruntime_jp46.yml) |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`cmake`](/packages/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`efficientvit`](/packages/vit/efficientvit) [`l4t-ml`](/packages/l4t/l4t-ml) [`optimum`](/packages/llm/optimum) [`sam`](/packages/vit/sam) [`tam`](/packages/vit/tam) |
+| &nbsp;&nbsp;&nbsp;Aliases | `onnxruntime` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/tensorrt) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`efficientvit`](/packages/vit/efficientvit) [`l4t-diffusion`](/packages/l4t/l4t-diffusion) [`l4t-ml`](/packages/l4t/l4t-ml) [`local_llm`](/packages/llm/local_llm) [`nano_llm:24.4`](/packages/llm/nano_llm) [`nano_llm:main`](/packages/llm/nano_llm) [`optimum`](/packages/llm/optimum) [`piper-tts`](/packages/audio/piper-tts) [`sam`](/packages/vit/sam) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) [`tam`](/packages/vit/tam) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/onnxruntime:r32.7.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) `(2023-11-04, 0.5GB)`<br>[`dustynv/onnxruntime:r35.2.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) `(2023-08-29, 5.2GB)`<br>[`dustynv/onnxruntime:r35.3.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) `(2023-11-04, 5.2GB)`<br>[`dustynv/onnxruntime:r35.4.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) `(2023-10-07, 5.1GB)` |
-| &nbsp;&nbsp;&nbsp;Notes | the onnxruntime-gpu wheel that's built is saved in the container under /opt |
+| &nbsp;&nbsp;&nbsp;Notes | the `onnxruntime-gpu` wheel that's built is saved in the container under `/opt` |
+
+| **`onnxruntime:1.17-builder`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `onnxruntime:builder` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/tensorrt) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Notes | the `onnxruntime-gpu` wheel that's built is saved in the container under `/opt` |
+
+| **`onnxruntime:1.16.3`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `onnxruntime` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['==35.*']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/tensorrt) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Notes | the `onnxruntime-gpu` wheel that's built is saved in the container under `/opt` |
+
+| **`onnxruntime:1.16.3-builder`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `onnxruntime:builder` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['==35.*']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/tensorrt) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Notes | the `onnxruntime-gpu` wheel that's built is saved in the container under `/opt` |
+
+| **`onnxruntime:1.11`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `onnxruntime` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['==32.*']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/tensorrt) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Notes | the `onnxruntime-gpu` wheel that's built is saved in the container under `/opt` |
+
+| **`onnxruntime:1.11-builder`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `onnxruntime:builder` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['==32.*']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/tensorrt) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Notes | the `onnxruntime-gpu` wheel that's built is saved in the container under `/opt` |
 
 </details>
 
@@ -24,10 +63,11 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/onnxruntime:r32.7.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) | `2023-11-04` | `arm64` | `0.5GB` |
-| &nbsp;&nbsp;[`dustynv/onnxruntime:r35.2.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) | `2023-08-29` | `arm64` | `5.2GB` |
-| &nbsp;&nbsp;[`dustynv/onnxruntime:r35.3.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) | `2023-11-04` | `arm64` | `5.2GB` |
-| &nbsp;&nbsp;[`dustynv/onnxruntime:r35.4.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) | `2023-10-07` | `arm64` | `5.1GB` |
+| &nbsp;&nbsp;[`dustynv/onnxruntime:r32.7.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) | `2023-12-11` | `arm64` | `0.5GB` |
+| &nbsp;&nbsp;[`dustynv/onnxruntime:r35.2.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) | `2023-12-12` | `arm64` | `5.2GB` |
+| &nbsp;&nbsp;[`dustynv/onnxruntime:r35.3.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) | `2023-11-13` | `arm64` | `5.2GB` |
+| &nbsp;&nbsp;[`dustynv/onnxruntime:r35.4.1`](https://hub.docker.com/r/dustynv/onnxruntime/tags) | `2023-11-08` | `arm64` | `5.1GB` |
+| &nbsp;&nbsp;[`dustynv/onnxruntime:r36.2.0`](https://hub.docker.com/r/dustynv/onnxruntime/tags) | `2023-12-12` | `arm64` | `6.9GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -38,29 +78,29 @@
 <summary><b><a id="run">RUN CONTAINER</a></b></summary>
 <br>
 
-To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/docs/run.md#autotag) helpers or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
+To start the container, you can use [`jetson-containers run`](/docs/run.md) and [`autotag`](/docs/run.md#autotag), or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
 ```bash
 # automatically pull or build a compatible container image
-./run.sh $(./autotag onnxruntime)
+jetson-containers run $(autotag onnxruntime)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/onnxruntime:r35.3.1
+jetson-containers run dustynv/onnxruntime:r36.2.0
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/onnxruntime:r35.3.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/onnxruntime:r36.2.0
 ```
-> <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
+> <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
 
 To mount your own directories into the container, use the [`-v`](https://docs.docker.com/engine/reference/commandline/run/#volume) or [`--volume`](https://docs.docker.com/engine/reference/commandline/run/#volume) flags:
 ```bash
-./run.sh -v /path/on/host:/path/in/container $(./autotag onnxruntime)
+jetson-containers run -v /path/on/host:/path/in/container $(autotag onnxruntime)
 ```
 To launch the container running a command, as opposed to an interactive shell:
 ```bash
-./run.sh $(./autotag onnxruntime) my_app --abc xyz
+jetson-containers run $(autotag onnxruntime) my_app --abc xyz
 ```
-You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
+You can pass any options to it that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
 </details>
 <details open>
 <summary><b><a id="build">BUILD CONTAINER</b></summary>
@@ -68,7 +108,7 @@ You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker 
 
 If you use [`autotag`](/docs/run.md#autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do the [system setup](/docs/setup.md), then run:
 ```bash
-./build.sh onnxruntime
+jetson-containers build onnxruntime
 ```
-The dependencies from above will be built into the container, and it'll be tested during.  See [`./build.sh --help`](/jetson_containers/build.py) for build options.
+The dependencies from above will be built into the container, and it'll be tested during.  Run it with [`--help`](/jetson_containers/build.py) for build options.
 </details>

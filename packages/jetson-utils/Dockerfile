@@ -1,7 +1,7 @@
 #---
 # name: jetson-utils
 # group: cuda
-# depends: [python, cmake, gstreamer]
+# depends: [cuda, tensorrt, python, cmake, gstreamer]
 # test: [test.sh]
 #---
 ARG BASE_IMAGE
@@ -19,6 +19,7 @@ RUN apt-get update && \
 		    libsoup2.4-dev \
 		    libjson-glib-dev \
 		    libgstrtspserver-1.0-dev \
+		    avahi-utils \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
     

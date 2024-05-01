@@ -3,123 +3,24 @@
 # group: llm
 # config: config.py
 # depends: [transformers]
-# requires: '>=34.1.0'
-# test: [test.py]
+# requires: '>=35'
+# test: [test.py, test.sh]
 # docs: docs.md
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-WORKDIR /opt
+ARG TVM_VERSION \
+    MLC_VERSION \
+    MLC_COMMIT \
+    MLC_PATCH \
+    LLVM_VERSION=17 \
+    FORCE_BUILD=off
 
-ARG MLC_REPO
-ARG MLC_VERSION
-
-ARG CUDAARCHS
-ARG TORCH_CUDA_ARCH_LIST
-
-# MLC/TVM recommends to use LLVM
-RUN wget https://apt.llvm.org/llvm.sh && \
-    chmod +x llvm.sh && \
-    ./llvm.sh all && \
-    ln -s /usr/bin/llvm-config-* /usr/bin/llvm-config
-
-# could NOT find zstd (missing: zstd_LIBRARY zstd_INCLUDE_DIR)
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-		  libzstd-dev \
-     && rm -rf /var/lib/apt/lists/* \
-     && apt-get clean
-
-# JP6: https://discourse.llvm.org/t/llvm-15-0-7-missing-libpolly-a/67942    
-#RUN apt-get update && \
-#    apt-get install -y --no-install-recommends \
-#		  llvm \
-#		  llvm-dev \
-#    && rm -rf /var/lib/apt/lists/* \
-#    && apt-get clean
-
-#ADD https://api.github.com/repos/${MLC_REPO}/git/refs/heads/${MLC_VERSION} /tmp/mlc_version.json
-
-RUN git clone https://github.com/${MLC_REPO} && \
-    cd mlc-llm && \
-    git checkout ${MLC_VERSION} && \
-    git submodule update --init --recursive
-
-# https://github.com/Dao-AILab/flash-attention/pull/343
-RUN cd mlc-llm/3rdparty/tvm/3rdparty/libflash_attn && \
-    wget https://raw.githubusercontent.com/Dao-AILab/flash-attention/main/csrc/flash_attn/src/static_switch.h -O src/static_switch.h && \
-    sed 's|^set_target_properties(flash_attn PROPERTIES CUDA_ARCHITECTURES.*||' -i src/CMakeLists.txt && \
-    sed 's|^.*-gencode.*|\\|' -i src/CMakeLists.txt && \
-    cat src/CMakeLists.txt
-
-# mlc currently uses it's own fork of tvm-unity (relax)
-RUN sed 's|set(BUILD_DUMMY_LIBTVM ON)||' -i mlc-llm/CMakeLists.txt && \
-    sed 's|set(USE_GRAPH_EXECUTOR OFF)||' -i mlc-llm/CMakeLists.txt && \
-    cat mlc-llm/CMakeLists.txt
+ENV LD_LIBRARY_PATH="/usr/local/lib/python${PYTHON_VERSION}/dist-packages/tvm:${LD_LIBRARY_PATH}" \
+    TVM_HOME=/opt/mlc-llm/3rdparty/tvm
     
-# disable pytorch: https://github.com/apache/tvm/issues/9362
-RUN mkdir mlc-llm/build && \
-    cd mlc-llm/build && \
-    cmake -G Ninja \
-     -DCMAKE_CXX_STANDARD=17 \
-	-DCMAKE_CUDA_STANDARD=17 \
-	-DCMAKE_CUDA_ARCHITECTURES=${CUDAARCHS} \
-     -DUSE_CUDA=ON \
-	-DUSE_CUDNN=ON \
-	-DUSE_CUBLAS=ON \
-	-DUSE_CURAND=ON \
-	-DUSE_CUTLASS=ON \
-	-DUSE_THRUST=ON \
-	-DUSE_GRAPH_EXECUTOR_CUDA_GRAPH=ON \
-	-DUSE_STACKVM_RUNTIME=ON \
-	-DUSE_LLVM="/usr/bin/llvm-config --link-static" \
-	-DHIDE_PRIVATE_SYMBOLS=ON \
-	#-DUSE_LIBTORCH=$(pip3 show torch | grep Location: | cut -d' ' -f2)/torch \
-	-DSUMMARIZE=ON \
-	../ && \
-    ninja && \
-    rm -rf CMakeFiles && \
-    rm -rf tvm/CMakeFiles && \
-    rm -rf tokenizers/CMakeFiles && \
-    rm -rf tokenizers/release
+COPY build.sh install.sh benchmark.py /tmp/mlc/
+COPY ${MLC_PATCH} /tmp/mlc/patch.diff
 
-RUN cd mlc-llm/3rdparty/tvm/python && \
-    TVM_LIBRARY_PATH=/opt/mlc-llm/build/tvm \
-    python3 setup.py --verbose bdist_wheel && \
-    cp dist/tvm*.whl /opt && \
-    rm -rf dist && \
-    rm -rf build
-  
-RUN pip3 install --no-cache-dir --verbose tvm*.whl
-RUN pip3 show tvm && python3 -c 'import tvm'
-
-ARG MLC_PATCH
-COPY ${MLC_PATCH} mlc-llm/patch.diff
-
-RUN cd mlc-llm && \
-    if [ -s patch.diff ]; then git apply patch.diff; fi && \
-    git status && \
-    git diff
-
-RUN cd mlc-llm && \
-    python3 setup.py --verbose bdist_wheel && \
-    cp dist/mlc*.whl /opt 
- 
-RUN cd mlc-llm/python && \
-    python3 setup.py --verbose bdist_wheel && \
-    cp dist/mlc*.whl /opt
-
-RUN pip3 install --no-cache-dir --verbose mlc*.whl
-
-RUN pip3 show mlc_llm && \
-    python3 -m mlc_llm.build --help && \
-    python3 -c "from mlc_chat import ChatModule; print(ChatModule)"
-    
-RUN ln -s /opt/mlc-llm/3rdparty/tvm/3rdparty $(pip3 show torch | grep Location: | cut -d' ' -f2)/tvm/3rdparty
-
-ENV TVM_HOME=/opt/mlc-llm/3rdparty/tvm
-
-COPY benchmark.py mlc-llm/
-
-WORKDIR /
+RUN /tmp/mlc/install.sh || /tmp/mlc/build.sh

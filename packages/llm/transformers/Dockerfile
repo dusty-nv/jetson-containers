@@ -3,7 +3,7 @@
 # config: config.py
 # group: llm
 # depends: [pytorch, torchvision, huggingface_hub, rust]
-# test: [test.py, huggingface-benchmark.py]
+# test: [test_version.py, huggingface-benchmark.py]
 # docs: docs.md
 # notes: bitsandbytes and auto_gptq dependencies added on JetPack5 for 4-bit/8-bit quantization
 #---
@@ -19,15 +19,15 @@ ADD ${TRANSFORMERS_VERSION} /tmp/transformers_version.json
 RUN pip3 install --no-cache-dir --verbose \
 	accelerate \
 	optimum \
-	sentencepiece
-
-# install from pypi, git, ect (sometimes other version got installed)
-RUN pip3 uninstall -y transformers && \
-    pip3 install --no-cache-dir --verbose ${TRANSFORMERS_PACKAGE}
-
-# "/usr/local/lib/python3.8/dist-packages/transformers/modeling_utils.py", line 118
-# AttributeError: module 'torch.distributed' has no attribute 'is_initialized'
-RUN PYTHON_ROOT=`pip3 show transformers | grep Location: | cut -d' ' -f2` && \
+	sentencepiece && \
+    \
+    # install from pypi, git, ect (sometimes other version got installed)
+    pip3 uninstall -y transformers && \
+    pip3 install --no-cache-dir --verbose ${TRANSFORMERS_PACKAGE} && \
+    \
+    # "/usr/local/lib/python3.8/dist-packages/transformers/modeling_utils.py", line 118
+    # AttributeError: module 'torch.distributed' has no attribute 'is_initialized'
+    PYTHON_ROOT=`pip3 show transformers | grep Location: | cut -d' ' -f2` && \
     sed -i 's|torch.distributed.is_initialized|torch.distributed.is_available|g' -i ${PYTHON_ROOT}/transformers/modeling_utils.py
     
 # add benchmark script

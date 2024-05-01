@@ -1,0 +1,144 @@
+diff --git a/cpp/include/tensorrt_llm/plugins/api/tllmPlugin.h b/cpp/include/tensorrt_llm/plugins/api/tllmPlugin.h
+index b8831a0..c1127b7 100644
+--- a/cpp/include/tensorrt_llm/plugins/api/tllmPlugin.h
++++ b/cpp/include/tensorrt_llm/plugins/api/tllmPlugin.h
+@@ -23,8 +23,14 @@
+ namespace nvinfer1
+ {
+ class ILoggerFinder;
+-class IPluginCreator;
+ class ILogger;
++
++// NvInferRuntimePlugin.h(1084): error: invalid redeclaration of type name "nvinfer1::IPluginCreator", using IPluginCreator = v_1_0::IPluginCreator;
++namespace v_1_0
++{
++class IPluginCreator;
++}
++	
+ } // namespace nvinfer1
+ 
+ namespace tensorrt_llm::plugins::api
+@@ -63,5 +69,5 @@ extern "C"
+     // The functions below are used by TensorRT to when loading a shared plugin library with automatic registering.
+     // see https://docs.nvidia.com/deeplearning/tensorrt/developer-guide/index.html#generating-plugin-library
+     [[maybe_unused]] void setLoggerFinder([[maybe_unused]] nvinfer1::ILoggerFinder* finder);
+-    [[maybe_unused]] nvinfer1::IPluginCreator* const* getPluginCreators(int32_t& nbCreators);
++    [[maybe_unused]] nvinfer1::v_1_0::IPluginCreator* const* getPluginCreators(int32_t& nbCreators);
+ }
+diff --git a/cpp/include/tensorrt_llm/runtime/iTensor.h b/cpp/include/tensorrt_llm/runtime/iTensor.h
+index 2355115..fe40c21 100644
+--- a/cpp/include/tensorrt_llm/runtime/iTensor.h
++++ b/cpp/include/tensorrt_llm/runtime/iTensor.h
+@@ -68,7 +68,8 @@ public:
+         if (newSize == getSize())
+             return;
+ 
+-        reshape(makeShape({castSize(newSize)}));
++        // error: invalid narrowing conversion from "signed long" to "signed int"
++        reshape(makeShape({(int)castSize(newSize)}));
+     }
+ 
+     //!
+diff --git a/cpp/tensorrt_llm/common/memoryUtils.h b/cpp/tensorrt_llm/common/memoryUtils.h
+index 6d2c18c..2d9e51a 100644
+--- a/cpp/tensorrt_llm/common/memoryUtils.h
++++ b/cpp/tensorrt_llm/common/memoryUtils.h
+@@ -101,7 +101,7 @@ __inline__ __host__ __device__ std::enable_if_t<std::is_pointer<TDim>::value, T>
+     T const& acc, TDim dims, T const& index, TArgs... indices)
+ {
+     assert(index < dims[0]);
+-    return flat_index(acc * dims[0] + index, dims + 1, indices...);
++    return flat_index((int)(acc * dims[0] + index), dims + 1, indices...);
+ }
+ 
+ template <typename TDim, typename T>
+diff --git a/cpp/tensorrt_llm/runtime/gptDecoderBatch.cpp b/cpp/tensorrt_llm/runtime/gptDecoderBatch.cpp
+index eb1a806..8354421 100644
+--- a/cpp/tensorrt_llm/runtime/gptDecoderBatch.cpp
++++ b/cpp/tensorrt_llm/runtime/gptDecoderBatch.cpp
+@@ -407,7 +407,7 @@ void GptDecoderBatch::newRequest(
+                 = bufferCast<SizeType>(*requestWordsList);
+             bufferCast<SizeType>(*constPointerCast(jointWordsLens))[batchIdx] = wordsLen;
+             // FIXME(nkorobov): this is monotonically growing size
+-            maxWordsLen = std::max(wordsLen, maxWordsLen);
++            maxWordsLen = std::max((int)wordsLen, (int)maxWordsLen);
+             if (!fusedDecoder)
+             {
+                 wordsPtrs = ITensor::slice(jointWordsPtrs, batchIdx, localBatchSize);
+diff --git a/cpp/tensorrt_llm/runtime/gptSession.cpp b/cpp/tensorrt_llm/runtime/gptSession.cpp
+index 7cc4623..ff7d2f0 100644
+--- a/cpp/tensorrt_llm/runtime/gptSession.cpp
++++ b/cpp/tensorrt_llm/runtime/gptSession.cpp
+@@ -414,7 +414,7 @@ std::tuple<std::vector<ITensor::SharedPtr>, std::vector<ITensor::SharedPtr>, std
+         auto tokensBegin = 0;
+         for (auto offset = 0; offset < numRequests; offset += microBatchSize)
+         {
+-            auto const batchSize = std::min(microBatchSize, numRequests - offset);
++            auto const batchSize = std::min((int)microBatchSize, (int)(numRequests - offset));
+             auto const numTokens = std::accumulate(
+                 contextLengthsRange.begin() + offset, contextLengthsRange.begin() + offset + batchSize, 0);
+ 
+@@ -433,7 +433,7 @@ std::tuple<std::vector<ITensor::SharedPtr>, std::vector<ITensor::SharedPtr>, std
+     {
+         for (auto offset = 0; offset < numRequests; offset += microBatchSize)
+         {
+-            auto const batchSize = std::min(microBatchSize, numRequests - offset);
++            auto const batchSize = std::min(microBatchSize, (int)(numRequests - offset));
+ 
+             inputIds.emplace_back(ITensor::slice(inputs.ids, offset, batchSize));
+             inputLengths.emplace_back(ITensor::slice(inputs.lengths, offset, batchSize));
+@@ -514,7 +514,7 @@ std::vector<GenerationOutput> splitOutputs(GenerationOutput& outputs, SizeType m
+     std::vector<GenerationOutput> outputBatches;
+     for (auto batchOffset = 0; batchOffset < numRequests; batchOffset += microBatchSize)
+     {
+-        auto const batchSize = std::min(microBatchSize, numRequests - batchOffset);
++        auto const batchSize = std::min((int)microBatchSize, (int)(numRequests - batchOffset));
+ 
+         outputBatches.emplace_back(ITensor::slice(outputs.ids, batchOffset, batchSize),
+             ITensor::slice(outputs.lengths, batchOffset, batchSize));
+diff --git a/cpp/tensorrt_llm/runtime/loraCache.cpp b/cpp/tensorrt_llm/runtime/loraCache.cpp
+index 48c7ec0..a95f037 100644
+--- a/cpp/tensorrt_llm/runtime/loraCache.cpp
++++ b/cpp/tensorrt_llm/runtime/loraCache.cpp
+@@ -502,8 +502,8 @@ void LoraCache::splitTransposeCpuInner(ITensor& output, ITensor const& input, Si
+     {
+         for (SizeType hiddenIdx = 0; hiddenIdx < splitHiddenSize; ++hiddenIdx)
+         {
+-            auto outputIdx = common::flat_index2(adapterIdx, hiddenIdx, splitHiddenSize);
+-            auto inputIdx = common::flat_index2(adapterIdx, hiddenIdx + tpRank * splitHiddenSize, hiddenSize);
++            auto outputIdx = common::flat_index2((int)adapterIdx, (int)hiddenIdx, (int)splitHiddenSize);
++            auto inputIdx = common::flat_index2((int)adapterIdx, (int)(hiddenIdx + tpRank * splitHiddenSize), (int)hiddenSize);
+             outputPtr[outputIdx] = inputPtr[inputIdx];
+         }
+     }
+diff --git a/cpp/tensorrt_llm/runtime/loraManager.cpp b/cpp/tensorrt_llm/runtime/loraManager.cpp
+index bc0e741..9f73214 100644
+--- a/cpp/tensorrt_llm/runtime/loraManager.cpp
++++ b/cpp/tensorrt_llm/runtime/loraManager.cpp
+@@ -93,10 +93,10 @@ void LoraManager::fillInputTensors(TensorPtr weightsPtrs, TensorPtr adapterSizes
+         auto const inWeightsPtr = peftValue.weightsInPointer;
+         auto const outWeightsPtr = peftValue.weightsOutPointer;
+ 
+-        auto weightsPointersPtrOffset = common::flat_index4(modOff, layerIdx - firstLayerId, batchIdx, 0,
+-            weightsPtrs->getShape().d[1], weightsPtrs->getShape().d[2], weightsPtrs->getShape().d[3]);
++        auto weightsPointersPtrOffset = common::flat_index4(modOff, layerIdx - firstLayerId, (int)batchIdx, 0,
++            (int)weightsPtrs->getShape().d[1], (int)weightsPtrs->getShape().d[2], (int)weightsPtrs->getShape().d[3]);
+         auto adapterSizesPtrOffset = common::flat_index3(
+-            modOff, layerIdx - firstLayerId, batchIdx, adapterSizes->getShape().d[1], adapterSizes->getShape().d[2]);
++            modOff, layerIdx - firstLayerId, (int)batchIdx, (int)adapterSizes->getShape().d[1], (int)adapterSizes->getShape().d[2]);
+ 
+         TLLM_CHECK_WITH_INFO(static_cast<SizeType>(weightsPtrs->getSize())
+                 >= weightsPointersPtrOffset + lora::kLORA_NUM_WEIGHTS_POINTERS * beamWidth,
+diff --git a/cpp/tensorrt_llm/runtime/tllmRuntime.cpp b/cpp/tensorrt_llm/runtime/tllmRuntime.cpp
+index 0926169..ef2a3d0 100644
+--- a/cpp/tensorrt_llm/runtime/tllmRuntime.cpp
++++ b/cpp/tensorrt_llm/runtime/tllmRuntime.cpp
+@@ -25,7 +25,7 @@ using namespace tensorrt_llm::runtime;
+ namespace
+ {
+ using DimType = std::remove_reference_t<decltype(std::declval<nvinfer1::Dims>().d[0])>;
+-static_assert(sizeof(SizeType) >= sizeof(DimType), "SizeType is too small");
++//static_assert(sizeof(SizeType) >= sizeof(DimType), "SizeType is too small");
+ static_assert(std::is_signed<SizeType>::value, "SizeType must be signed");
+ 
+ nvinfer1::Dims shapeToDims(std::vector<std::size_t> const& shape)

@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-import logging
+import time
 import queue
 import threading
+import logging
+import traceback
 
 
 class Plugin(threading.Thread):
@@ -115,26 +117,38 @@ class Plugin(threading.Thread):
         return self.find(type)
     '''
     
-    def __call__(self, input):
+    def __call__(self, input=None, **kwargs):
         """
         Callable () operator alias for the input() function
         """
-        self.input(input)
+        self.input(input, **kwargs)
         
-    def input(self, input):
+    def input(self, input=None, **kwargs):
         """
         Add data to the plugin's processing queue (or if threaded=False, process it now)
         TODO:  multiple input channels?
         """
         if self.threaded:
+            #self.start() # thread may not be started if plugin only called from a callback
             if self.drop_inputs:
-                self.clear_inputs()
-            self.input_queue.put(input)
+                configs = []
+                while True:
+                    try:
+                        config_input, config_kwargs = self.input_queue.get(block=False)
+                        if config_input is None and len(config_kwargs) > 0:  # still apply config
+                            configs.append((config_input, config_kwargs))
+                    except queue.Empty:
+                        break
+                for config in configs:
+                    self.input_queue.put(config)
+                    self.input_event.set()
+
+            self.input_queue.put((input,kwargs))
             self.input_event.set()
         else:
-            self.dispatch(input)
+            self.dispatch(input, **kwargs)
             
-    def output(self, output, channel=0):
+    def output(self, output, channel=0, **kwargs):
         """
         Output data to the next plugin(s) on the specified channel (-1 for all channels)
         """
@@ -143,12 +157,24 @@ class Plugin(threading.Thread):
             
         if channel >= 0:
             for output_plugin in self.outputs[channel]:
-                output_plugin.input(output)
+                output_plugin.input(output, **kwargs)
         else:
             for output_channel in self.outputs:
                 for output_plugin in output_channel:
-                    output_plugin.input(output)
-         
+                    output_plugin.input(output, **kwargs)
+                    
+        return output
+     
+    @property
+    def num_outputs(self):
+        """
+        Return the total number of output connections across all channels
+        """
+        count = 0
+        for output_channel in self.outputs:
+            count += len(output_channel) 
+        return count
+        
     def start(self):
         """
         Start threads for all plugins in the graph that have threading enabled.
@@ -168,46 +194,66 @@ class Plugin(threading.Thread):
         @internal processes the queue forever when created with threaded=True
         """
         while True:
-            self.input_event.wait()
-            self.input_event.clear()
-            
-            while True:
-                try:
-                    self.dispatch(self.input_queue.get(block=False))
-                except queue.Empty:
-                    break
+            try:
+                self.input_event.wait()
+                self.input_event.clear()
+                
+                while True:
+                    try:
+                        input, kwargs = self.input_queue.get(block=False)
+                        self.dispatch(input, **kwargs)
+                    except queue.Empty:
+                        break
+            except Exception as error:
+                logging.error(f"Exception occurred during processing of {type(self)}\n\n{''.join(traceback.format_exception(error))}")
 
-    def dispatch(self, input):
+    def dispatch(self, input, **kwargs):
         """
         Invoke the process() function on incoming data
         """
         if self.interrupted:
-            #logging.debug(f"{type(self)} resetting interrupted=False")
+            #logging.debug(f"{type(self)} resetting interrupted flag to false")
             self.interrupted = False
-            
+          
         self.processing = True
-        outputs = self.process(input)
+        outputs = self.process(input, **kwargs)
         self.processing = False
-        
+
         self.output(outputs)
         
         if self.relay:
             self.output(input)
    
-    def interrupt(self, clear_inputs=True, block=True):
+    def interrupt(self, clear_inputs=True, recursive=True, block=None):
         """
         Interrupt any ongoing/pending processing, and optionally clear the input queue.
+        If recursive is true, then any downstream plugins will also be interrupted.
         If block is true, this function will wait until any ongoing processing has finished.
         This is done so that any lingering outputs don't cascade downstream in the pipeline.
+        If block is None, it will automatically be set to true if this plugin has outputs.
         """
+        #logging.debug(f"interrupting plugin {type(self)}  clear_inputs={clear_inputs} recursive={recursive} block={block}")
+        
         if clear_inputs:
             self.clear_inputs()
           
         self.interrupted = True
         
-        while block and self.processing:
-            continue  # TODO use an event for this?
+        num_outputs = self.num_outputs
+        block_other = block
         
+        if block is None and num_outputs > 0:
+            block = True
+            
+        while block and self.processing:
+            #logging.debug(f"interrupt waiting for {type(self)} to complete processing")
+            time.sleep(0.01) # TODO use an event for this?
+        
+        if recursive and num_outputs > 0:
+            for output_channel in self.outputs:
+                for output in output_channel:
+                    output.interrupt(clear_inputs=clear_inputs, recursive=recursive, block=block_other)
+                    
     def clear_inputs(self):
         """
         Clear the input queue, dropping any data.

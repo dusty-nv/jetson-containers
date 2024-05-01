@@ -1,0 +1,37 @@
+name: "riva-client-python_jp60"
+run-name: "Build riva-client:python (JetPack 6.0)"
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - 'dev'
+    paths:
+      - '.github/workflows/riva-client-python_jp60.yml'
+      - 'packages/audio/riva-client/*'
+      - '!packages/audio/riva-client/README.md'
+      - '!packages/audio/riva-client/docs.md'
+      - 'packages/build-essential/*'
+      - '!packages/build-essential/README.md'
+      - '!packages/build-essential/docs.md'
+      - 'packages/python/*'
+      - '!packages/python/README.md'
+      - '!packages/python/docs.md'
+jobs:
+  riva-client-python_jp60:
+    runs-on: [self-hosted, jetson, jp60]
+    steps:
+      - run: |
+         cat /etc/nv_tegra_release 
+      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+        run: |
+         echo "$RUNNER_WORKSPACE" 
+         cd $RUNNER_WORKSPACE 
+         git config --global user.email "dustinf@nvidia.com" 
+         git config --global user.name "Dustin Franklin" 
+         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+         cd jetson-containers 
+         git fetch origin 
+         git checkout $GITHUB_SHA 
+         git status 
+         ls -a 
+      - run: ./build.sh --name=runner/ --push=dustynv riva-client:python

@@ -1,0 +1,91 @@
+x-shared-properties: &shared-properties
+  runtime: nvidia                 # Use NVIDIA runtime
+  init: false                     # Do not use init process
+  restart: unless-stopped         # Restart policy
+  network_mode: host              # Use host network mode, to auto-detect devices in network
+  devices:
+    - /dev/snd:/dev/snd           # to share audio devices
+    - /dev/bus/usb                # to share usb devices
+
+name: home-assistant-jetson
+version: "3.9"
+services:
+  homeassistant:
+    image: dustynv/homeassistant-core:latest-r36.2.0
+    <<: *shared-properties
+    container_name: homeassistant
+    hostname: homeassistant
+    ports:
+      - "8123:8123"
+    volumes:
+      - ha-config:/config
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+
+  assist-microphone:
+    image: dustynv/wyoming-assist-microphone:latest-r36.2.0
+    <<: *shared-properties
+    container_name: assist-microphone
+    hostname: assist-microphone
+    depends_on:
+      - homeassistant
+      - openwakeword
+    ports:
+      - "10700:10700/tcp"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    environment:
+      AUDIO_DEVICE: "plughw:CARD=S330,DEV=0"
+      SATELLITE_SND_VOLUME_MULTIPLIER: 0.3
+      ASSIST_PIPELINE_NAME: "Home Assistant"
+      WAKEWORD_NAME: "ok_nabu"
+
+  openwakeword:
+    image: dustynv/wyoming-openwakeword:latest-r36.2.0
+    <<: *shared-properties
+    container_name: openwakeword
+    hostname: openwakeword
+    depends_on:
+      - faster-whisper
+    ports:
+      - "10400:10400/tcp"
+    volumes:
+      - ha-openwakeword-custom-models:/share/openwakeword
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    environment:
+      OPENWAKEWORD_CUSTOM_MODEL_DIR: /share/openwakeword
+      OPENWAKEWORD_PRELOAD_MODEL: ok_nabu
+
+  faster-whisper:
+    image: dustynv/wyoming-whisper:latest-r36.2.0
+    <<: *shared-properties
+    container_name: faster-whisper
+    hostname: faster-whisper
+    ports:
+      - "10300:10300/tcp"
+    volumes:
+      - ha-whisper-models:/share/whisper
+      - ha-whisper-data:/data
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+
+  piper-tts:
+    image: dustynv/wyoming-piper:master-r36.2.0
+    <<: *shared-properties
+    container_name: piper-tts
+    hostname: piper-tts
+    ports:
+      - "10200:10200/tcp"
+    volumes:
+      - ha-piper-tts-models:/data/models/piper
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+
+volumes:
+  ha-config:                      # Home Assistant configuration volume
+  ha-openwakeword-custom-models:  # Volume for OpenWakeWord custom models
+  ha-piper-tts-models:            # Volume for Piper TTS models
+  ha-whisper-models:              # Volume for Faster Whisper models
+  ha-whisper-data:                # Volume for Faster Whisper data

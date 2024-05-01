@@ -1,0 +1,43 @@
+name: "cuda-python_jp60"
+run-name: "Build cuda-python (JetPack 6.0)"
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - 'dev'
+    paths:
+      - '.github/workflows/cuda-python_jp60.yml'
+      - 'packages/cuda/cuda-python/*'
+      - '!packages/cuda/cuda-python/README.md'
+      - '!packages/cuda/cuda-python/docs.md'
+      - 'packages/build-essential/*'
+      - '!packages/build-essential/README.md'
+      - '!packages/build-essential/docs.md'
+      - 'packages/cuda/cuda/*'
+      - '!packages/cuda/cuda/README.md'
+      - '!packages/cuda/cuda/docs.md'
+      - 'packages/python/*'
+      - '!packages/python/README.md'
+      - '!packages/python/docs.md'
+      - 'packages/numpy/*'
+      - '!packages/numpy/README.md'
+      - '!packages/numpy/docs.md'
+jobs:
+  cuda-python_jp60:
+    runs-on: [self-hosted, jetson, jp60]
+    steps:
+      - run: |
+         cat /etc/nv_tegra_release 
+      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}" 
+        run: |
+         echo "$RUNNER_WORKSPACE" 
+         cd $RUNNER_WORKSPACE 
+         git config --global user.email "dustinf@nvidia.com" 
+         git config --global user.name "Dustin Franklin" 
+         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered' 
+         cd jetson-containers 
+         git fetch origin 
+         git checkout $GITHUB_SHA 
+         git status 
+         ls -a 
+      - run: ./build.sh --name=runner/ --push=dustynv cuda-python

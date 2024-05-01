@@ -1,0 +1,34 @@
+#!/command/with-contenv bashio
+# shellcheck shell=bash
+# ==============================================================================
+# Start Whisper service
+# ==============================================================================
+flags=()
+
+if [ "$(uname -m)" == "x86_64" ] && ! grep -qw 'avx' /proc/cpuinfo; then
+    bashio::log.warning "Your CPU does not support Advanced Vector Extensions (AVX). Whisper will run slower than normal."
+fi
+
+model="${WHISPER_MODEL}"
+# TODO: Refactor custom model routine which still uses HA Supervisor
+if [ "${model}" = 'custom' ]; then
+    # Override with custom model
+    model="$(bashio::config 'custom_model')"
+    if [ -z "${model}" ]; then
+      bashio::exit.nok "Custom model is not set"
+    fi
+fi
+
+if [[ "${WHISPER_DEBUG}" == "true" ]]; then
+    flags+=('--debug')
+fi
+
+exec python3 -m wyoming_faster_whisper \
+    --uri "tcp://0.0.0.0:${WHISPER_PORT}" \
+    --model "${model}" \
+    --initial-prompt "" \
+    --beam-size "${WHISPER_BEAM_SIZE}" \
+    --language "${WHISPER_LANGUAGE}" \
+    --device "cuda" \
+    --data-dir /data \
+    --download-dir /data ${flags[@]}

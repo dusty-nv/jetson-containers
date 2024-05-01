@@ -37,13 +37,9 @@ function getWebsocketProtocol() {
   return window.location.protocol == 'https:' ? 'wss://' : 'ws://';
 }
 
-function getWebsocketURL(port=49000) {  // wss://192.168.1.2:49000
-  return `${getWebsocketProtocol()}${window.location.hostname}:${port}/${name}`;
-}
-
-function connectWebsocket(msgCallback) {
+function connectWebsocket(msgCallback, port=49000) {
 	websocketCallback = msgCallback;
-	websocket = new WebSocket(getWebsocketURL());
+	websocket = new WebSocket(`${getWebsocketProtocol()}${window.location.hostname}:${port}`);
 	websocket.addEventListener('message', websocketListener);
 }
 
@@ -81,7 +77,7 @@ function sendWebsocket(payload, type=MESSAGE_JSON, metadata='') {
 			metadata_buffer[i] = metadata_utf8[i];
 	}
 	
-	console.log(`sending ${typeof payload} websocket message (type=${type} timestamp=${timestamp} payload_size=${payloadSize})`);
+	//console.log(`sending ${typeof payload} websocket message (type=${type} timestamp=${timestamp} payload_size=${payloadSize})`);
 	websocket.send(new Blob([header, metadata_buffer, payload]));
 }
 
@@ -116,7 +112,7 @@ function websocketUpload(dataTransfer) {
 }
 
 function websocketListener(event) {
-	console.log('recieved websocket msg', event);
+	//console.log('recieved websocket msg', event);
 	const msg = event.data;
 	
 	if( msg.size <= 32 ) {

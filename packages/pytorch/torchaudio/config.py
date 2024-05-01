@@ -1,16 +1,43 @@
+from jetson_containers import update_dependencies
+from packaging.version import Version
+from ..pytorch.version import PYTORCH_VERSION
 
-from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES
+def torchaudio(version, pytorch=None, requires=None):
+    pkg = package.copy()
+    
+    pkg['name'] = f"torchaudio:{version.split('-')[0]}"  # remove any -rc* suffix
+    
+    if pytorch:
+        pkg['depends'] = update_dependencies(pkg['depends'], f"pytorch:{pytorch}")
+    else:
+        pytorch = PYTORCH_VERSION
+        
+    if requires:
+        pkg['requires'] = requires
+        
+    if not isinstance(pytorch, Version):
+        pytorch = Version(pytorch)
+        
+    if pytorch == PYTORCH_VERSION:
+        pkg['alias'] = 'torchaudio'
 
-if L4T_VERSION.major >= 36:    # JetPack 6.0
-    TORCHAUDIO_VERSION = 'v2.1.0'
-elif L4T_VERSION.major >= 35:  # JetPack 5.0.2 / 5.1.x
-    TORCHAUDIO_VERSION = 'v2.0.1'
-elif L4T_VERSION.major == 34:  # JetPack 5.0 / 5.0.1
-    TORCHAUDIO_VERSION = 'v0.11.0'
-elif L4T_VERSION.major == 32:  # JetPack 4
-    TORCHAUDIO_VERSION = 'v0.10.0'
+    if len(version.split('.')) < 3:
+        version = version + '.0'
+        
+    pkg['build_args'] = {
+        'TORCHAUDIO_VERSION': version,
+    }
 
-package['build_args'] = {
-    'TORCHAUDIO_VERSION': TORCHAUDIO_VERSION,
-    'TORCH_CUDA_ARCH_LIST': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES]),
-}
+    return pkg
+
+package = [
+    # JetPack 5/6
+    torchaudio('2.0.1', pytorch='2.0', requires='==35.*'),
+    torchaudio('2.1.0', pytorch='2.1', requires='>=35'),
+    torchaudio('2.2.2', pytorch='2.2', requires='>=35'),
+    torchaudio('2.3.0-rc2', pytorch='2.3', requires='==36.*'),
+
+    # JetPack 4
+    torchaudio('0.10.0', pytorch='1.10', requires='==32.*'),
+    torchaudio('0.9.0', pytorch='1.9', requires='==32.*'),
+]

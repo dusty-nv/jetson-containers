@@ -15,13 +15,14 @@ from nemo.collections.nlp.models.question_answering.qa_model import QAModel
 
 # download test dataset (SQuAD)
 import os
-import wget
+import requests
 import subprocess
 
 DATA_DIR='/data/datasets'
 DATA_DOWNLOADER=os.path.join(DATA_DIR, 'get_squad.py')
 
-wget.download("https://raw.githubusercontent.com/NVIDIA/NeMo/main/examples/nlp/question_answering/get_squad.py", DATA_DOWNLOADER)
+request = requests.get("https://raw.githubusercontent.com/NVIDIA/NeMo/main/examples/nlp/question_answering/get_squad.py", allow_redirects=True)
+open(DATA_DOWNLOADER, 'wb').write(request.content)
 subprocess.run(f"python3 {DATA_DOWNLOADER} --destDir={DATA_DIR}", shell=True, check=True)
 
 # parse command-line options

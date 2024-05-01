@@ -37,7 +37,7 @@
         sendWebsocket({'abc': 123, 'def': 'xyz', 'test_array': [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]});
         sendWebsocket("Hello my name is ABC123", type=1);
       }*/
-
+      
       function onChatMessageKey(event) {  // https://stackoverflow.com/a/49389811
         if( event.which === 13 && !event.shiftKey ) {
           if( !event.repeat )
@@ -61,6 +61,17 @@
         const voice = document.getElementById('voice-select').value;
         console.log(`select voice: ${voice}`);
         sendWebsocket({'tts_voice': voice});
+      }
+      
+      function onVoiceRate(rate) {
+        console.log(`set voice rate: ${rate}`);
+        onVoiceRateLabel(rate);
+        sendWebsocket({'tts_rate': rate});
+      }
+      
+      function onVoiceRateLabel(rate) {
+        const voiceLabel = document.getElementById('voice-rate-label');
+        voiceLabel.innerHTML = `Voice Rate (${rate})`;
       }
       
       function onFileDrag(ev) {
@@ -114,6 +125,21 @@
             }
           }
 				
+          if( 'chat_stats' in payload ) {
+            let num_tokens=payload['chat_stats']['num_tokens'];
+            let max_context_len=payload['chat_stats']['max_context_len'];
+            document.getElementById('chat_length').innerHTML=`${num_tokens} / ${max_context_len} tokens`;
+          }
+          
+          if( 'tts_voices' in payload ) {
+            const voiceList = payload['tts_voices'];
+            const voiceSelect = document.getElementById('voice-select');
+            
+            for( let n=0; n < voiceList.length; n++ ) {
+              voiceSelect.add(new Option(voiceList[n], voiceList[n]));
+            }
+          }
+          
           if( 'tegrastats' in payload ) {
             console.log(payload['tegrastats']);
           }
@@ -130,7 +156,7 @@
       
       window.onload = function() {
       
-        connectWebsocket(onWebsocketMsg);
+        connectWebsocket(onWebsocketMsg, port={{ ws_port }});
         enumerateAudioDevices();
         openAudioDevices();
 
@@ -166,6 +192,7 @@
                   History
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarChatHistory">
+                  <li><a class="dropdown-item" href="#" id="chat_length">0 / 4096 tokens</a></li>
                   <li><a class="dropdown-item" href="#" onclick="onChatHistoryReset()">Reset</a></li>
                   <!--<li><a class="dropdown-item" href="#">Save</a></li>
                   <li><a class="dropdown-item" href="#">Load</a></li>-->
@@ -211,13 +238,11 @@
               <label for="audio-output-select" class="form-label">Output Device (Speaker)</label>
               <select id="audio-output-select" name="audio-output-select" class="form-select" onclick="openAudioDevices()"></select>
             </div>
-            <div>
+            <div class="mb-3">
               <label for="voice-select" class="form-label">TTS Voice</label>
               <select id="voice-select" name="voice-select" class="form-select" onclick="onVoiceSelect()">
-                <option value="English-US.Female-1" selected>English-US.Female-1</option>
+                <!--<option value="English-US.Female-1" selected>English-US.Female-1</option>
                 <option value="English-US.Male-1">English-US.Male-1</option>
-                <!--<option value="English-US-RadTTS.Female-1">English-US-RadTTS.Female-1</option>
-                <option value="English-US-RadTTS.Male-1">English-US-RadTTS.Male-1</option>-->
                 <option value="English-US.Female-Calm">English-US.Female-Calm</option>
                 <option value="English-US.Female-Neutral">English-US.Female-Neutral</option>
                 <option value="English-US.Female-Happy">English-US.Female-Happy</option>
@@ -227,8 +252,12 @@
                 <option value="English-US.Male-Calm">English-US.Male-Calm</option>
                 <option value="English-US.Male-Neutral">English-US.Male-Neutral</option>
                 <option value="English-US.Male-Happy">English-US.Male-Happy</option>
-                <option value="English-US.Male-Angry">English-US.Male-Angry</option>
+                <option value="English-US.Male-Angry">English-US.Male-Angry</option>-->
               </select>
+            </div>
+            <div class="mb-3">
+              <label id="voice-rate-label" for="voice-rate-slider" class="form-label">Voice Rate</label>
+              <input id="voice-rate-slider" name="voice-rate-slider" class="form-range" type="range" min="0.1" max="2.0" step="0.01" onclick="onVoiceRate(this.value)" oninput="onVoiceRateLabel(this.value)"></input>
             </div>
           </div>
           <div class="modal-footer">
