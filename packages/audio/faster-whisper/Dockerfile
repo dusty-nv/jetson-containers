@@ -15,6 +15,7 @@ RUN git clone https://github.com/guillaumekln/faster-whisper && \
     # sed 's|^onnxruntime.*||' -i requirements.txt && \
     sed 's|^ctranslate2.*||' -i requirements.txt && \
     sed 's|^huggingface_hub.*||' -i requirements.txt && \
+    sed 's|^tokenizers.*|tokenizers|' -i requirements.txt && \
     cat requirements.txt && \
     pip3 install --no-cache-dir --verbose -r requirements.txt && \
     python3 setup.py bdist_wheel
