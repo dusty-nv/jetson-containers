@@ -1,6 +1,4 @@
 
-from jetson_containers import L4T_VERSION
-
 def flash_attn(version, requires=None, default=False):
     pkg = package.copy()
 
