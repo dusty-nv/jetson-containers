@@ -75,7 +75,7 @@ if [ $ARCH = "aarch64" ]; then
 		--volume $ROOT/data:/data \
 		--device /dev/snd \
 		--device /dev/bus/usb \
-		$DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $EXTRA_FLAGS \
+		$DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $EXTRA_FLAGS \
 		"$@"
 
 elif [ $ARCH = "x86_64" ]; then
@@ -88,6 +88,6 @@ elif [ $ARCH = "x86_64" ]; then
 		--ulimit stack=67108864 \
 		--env NVIDIA_DRIVER_CAPABILITIES=all \
 		--volume $ROOT/data:/data \
-		$DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $EXTRA_FLAGS \
+		$DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $EXTRA_FLAGS \
 		"$@"	
 fi

@@ -35,9 +35,11 @@ RUN apt-get purge -y \
 
 WORKDIR /opt
 
-COPY oled_display_server.py /opt/oled/oled_display_server.py
+COPY oled_server.py /opt/oled/oled_server.py
 COPY utils.py /opt/oled/utils.py
 RUN cd oled  && \
     touch __init__.py 
 
-CMD python3 /opt/oled/oled_display_server.py
+COPY start_oled_server /
+CMD /start_oled_server && /bin/bash
+#CMD /bin/bash

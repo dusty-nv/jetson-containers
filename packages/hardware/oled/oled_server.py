@@ -8,6 +8,9 @@ from flask import Flask
 from utils import ip_address, power_mode, power_usage, cpu_usage, gpu_usage, memory_usage, disk_usage
 
 from smbus2 import SMBus
+import logging
+
+logger = logging.getLogger(__name__)
 
 I2C_EEPROM_BUS = [0, 1, 2, 7]
 MODULE_I2CBUS_TABLE = {
@@ -69,8 +72,8 @@ class DisplayServer(object):
 
         part_number, jetson_part_number = get_part_number()
         i2c_bus_number = MODULE_I2CBUS_TABLE.get(jetson_part_number)
-        print(f"part_number: {part_number}, jetson_part_number: {jetson_part_number}")
-        print(f"i2c_bus_number = {i2c_bus_number}")
+        logger.info(f"part_number: {part_number}, jetson_part_number: {jetson_part_number}")
+        logger.info(f"i2c_bus_number = {i2c_bus_number}")
         if not i2c_bus_number:
             i2c_bus_number = 7  # Default: I2C bus 7 for Jetson AGX Orin
 
@@ -183,5 +186,5 @@ def set_text(text):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port='8000', debug=False)
+    app.run(host='0.0.0.0', port='5005', debug=False)
 
