@@ -26,6 +26,7 @@ package = [
     NanoLLM('main', default=True),
     NanoLLM('24.4'),
     NanoLLM('24.4.1'),
+    NanoLLM('24.5'),
 ]
 
 
