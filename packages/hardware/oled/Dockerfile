@@ -1,6 +1,6 @@
 #---
 # name: oled
-# group: jet
+# group: hardware
 # depends: []
 # notes: https://github.com/NVIDIA-AI-IOT/jetcard/
 #---
