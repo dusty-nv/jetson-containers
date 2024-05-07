@@ -39,6 +39,9 @@ RUN git clone https://github.com/jaybdub/jupyter_clickable_image_widget && \
 
 RUN pip3 install 'ipywidgets<8'
 
+
+COPY *.ipynb /opt/jupyter_clickable_image_widget
+
 # {
 #   "name": "jupyter_clickable_image_widget",
 #   "version": "0.1.0",
