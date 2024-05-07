@@ -20,7 +20,7 @@ NanoDB can recursively scan directories of images, compute their CLIP embeddings
     --path /my_dataset/nanodb \
     --autosave --validate 
 ```
-> In the MS COCO example above, the images were ingested at a rate of ~15 images/second on Jetson AGX Orin.
+> To download a pre-indexed database and skip this step, see the [**NanoDB tutorial**](https://www.jetson-ai-lab.com/tutorial_nanodb.html) on Jetson AI Lab
 
 * `--scan` optionally specifies a directory to recursively scan for images
   * Supported image extensions are:  `'.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif'`
@@ -95,11 +95,12 @@ Then navigate your browser to `http://HOSTNAME:7860?__theme=dark`, and you can e
 
 | **`nanodb`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`nanodb_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nanodb_jp51.yml?label=nanodb:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nanodb_jp51.yml) |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T >=32.6` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build-essential) [`python`](/packages/python) [`numpy`](/packages/numpy) [`cmake`](/packages/cmake/cmake_pip) [`faiss:main`](/packages/vectordb/faiss) [`cuda-python`](/packages/cuda-python) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`faiss:lite`](/packages/vectordb/faiss_lite) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/rust) [`transformers`](/packages/llm/transformers) [`torch2trt`](/packages/pytorch/torch2trt) |
+| &nbsp;&nbsp;&nbsp;Builds | [![`nanodb_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nanodb_jp51.yml?label=nanodb:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nanodb_jp51.yml) [![`nanodb_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nanodb_jp60.yml?label=nanodb:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nanodb_jp60.yml) |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda:11.4`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.2`](/packages/pytorch) [`cuda-python`](/packages/cuda/cuda-python) [`faiss`](/packages/vectordb/faiss) [`faiss_lite`](/packages/vectordb/faiss_lite) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`tensorrt`](/packages/tensorrt) [`torch2trt`](/packages/pytorch/torch2trt) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`local_llm`](/packages/llm/local_llm) [`nano_llm:24.4`](/packages/llm/nano_llm) [`nano_llm:main`](/packages/llm/nano_llm) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/nanodb:r35.2.1`](https://hub.docker.com/r/dustynv/nanodb/tags) `(2023-10-11, 7.0GB)`<br>[`dustynv/nanodb:r35.3.1`](https://hub.docker.com/r/dustynv/nanodb/tags) `(2023-10-11, 7.0GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/nanodb:r35.2.1`](https://hub.docker.com/r/dustynv/nanodb/tags) `(2023-12-14, 6.9GB)`<br>[`dustynv/nanodb:r35.3.1`](https://hub.docker.com/r/dustynv/nanodb/tags) `(2023-12-15, 7.0GB)`<br>[`dustynv/nanodb:r35.4.1`](https://hub.docker.com/r/dustynv/nanodb/tags) `(2023-12-12, 6.9GB)`<br>[`dustynv/nanodb:r36.2.0`](https://hub.docker.com/r/dustynv/nanodb/tags) `(2024-03-08, 7.8GB)` |
 
 </details>
 
@@ -109,8 +110,10 @@ Then navigate your browser to `http://HOSTNAME:7860?__theme=dark`, and you can e
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/nanodb:r35.2.1`](https://hub.docker.com/r/dustynv/nanodb/tags) | `2023-10-11` | `arm64` | `7.0GB` |
-| &nbsp;&nbsp;[`dustynv/nanodb:r35.3.1`](https://hub.docker.com/r/dustynv/nanodb/tags) | `2023-10-11` | `arm64` | `7.0GB` |
+| &nbsp;&nbsp;[`dustynv/nanodb:r35.2.1`](https://hub.docker.com/r/dustynv/nanodb/tags) | `2023-12-14` | `arm64` | `6.9GB` |
+| &nbsp;&nbsp;[`dustynv/nanodb:r35.3.1`](https://hub.docker.com/r/dustynv/nanodb/tags) | `2023-12-15` | `arm64` | `7.0GB` |
+| &nbsp;&nbsp;[`dustynv/nanodb:r35.4.1`](https://hub.docker.com/r/dustynv/nanodb/tags) | `2023-12-12` | `arm64` | `6.9GB` |
+| &nbsp;&nbsp;[`dustynv/nanodb:r36.2.0`](https://hub.docker.com/r/dustynv/nanodb/tags) | `2024-03-08` | `arm64` | `7.8GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -121,29 +124,29 @@ Then navigate your browser to `http://HOSTNAME:7860?__theme=dark`, and you can e
 <summary><b><a id="run">RUN CONTAINER</a></b></summary>
 <br>
 
-To start the container, you can use the [`run.sh`](/docs/run.md)/[`autotag`](/docs/run.md#autotag) helpers or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
+To start the container, you can use [`jetson-containers run`](/docs/run.md) and [`autotag`](/docs/run.md#autotag), or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
 ```bash
 # automatically pull or build a compatible container image
-./run.sh $(./autotag nanodb)
+jetson-containers run $(autotag nanodb)
 
 # or explicitly specify one of the container images above
-./run.sh dustynv/nanodb:r35.2.1
+jetson-containers run dustynv/nanodb:r36.2.0
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/nanodb:r35.2.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/nanodb:r36.2.0
 ```
-> <sup>[`run.sh`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
+> <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
 
 To mount your own directories into the container, use the [`-v`](https://docs.docker.com/engine/reference/commandline/run/#volume) or [`--volume`](https://docs.docker.com/engine/reference/commandline/run/#volume) flags:
 ```bash
-./run.sh -v /path/on/host:/path/in/container $(./autotag nanodb)
+jetson-containers run -v /path/on/host:/path/in/container $(autotag nanodb)
 ```
 To launch the container running a command, as opposed to an interactive shell:
 ```bash
-./run.sh $(./autotag nanodb) my_app --abc xyz
+jetson-containers run $(autotag nanodb) my_app --abc xyz
 ```
-You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
+You can pass any options to it that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
 </details>
 <details open>
 <summary><b><a id="build">BUILD CONTAINER</b></summary>
@@ -151,7 +154,7 @@ You can pass any options to [`run.sh`](/docs/run.md) that you would to [`docker 
 
 If you use [`autotag`](/docs/run.md#autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do the [system setup](/docs/setup.md), then run:
 ```bash
-./build.sh nanodb
+jetson-containers build nanodb
 ```
-The dependencies from above will be built into the container, and it'll be tested during.  See [`./build.sh --help`](/jetson_containers/build.py) for build options.
+The dependencies from above will be built into the container, and it'll be tested during.  Run it with [`--help`](/jetson_containers/build.py) for build options.
 </details>

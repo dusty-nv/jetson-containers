@@ -14,7 +14,23 @@ parser.add_argument('--token', type=str, default=os.environ.get('HUGGINGFACE_TOK
 parser.add_argument('--cache-dir', type=str, default=os.environ.get('TRANSFORMERS_CACHE', '/root/.cache/huggingface'), help="Location to download the repo to (defaults to $TRANSFORMERS_CACHE)")
 parser.add_argument('--location-file', type=str, default='/tmp/hf_download', help="file to write the local location/path of the downloaded repo(s) to")
 
+parser.add_argument('--allow-patterns', type=str, default='', help="comma-separated list of file patterns to download (enclose in single quotes if using wildcards)")
+parser.add_argument('--ignore-patterns', type=str, default='', help="comma-separated list of file patterns to exclude from downloading (enclose in single quotes if using wildcards)")
+parser.add_argument('--skip-safetensors', action='store_true', help="filter out the downloading of .safetensor files")
+
 args = parser.parse_args()
+
+args.allow_patterns = [x for x in args.allow_patterns.split(',') if x]
+args.ignore_patterns = [x for x in args.ignore_patterns.split(',') if x]
+
+if args.skip_safetensors:
+    args.ignore_patterns.append('*.safetensors')
+  
+if len(args.allow_patterns) == 0:
+    args.allow_patterns = None
+    
+if len(args.ignore_patterns) == 0:
+    args.ignore_patterns = None
 
 if args.token:
     print("Logging into HuggingFace Hub...")
@@ -55,7 +71,8 @@ for repo in args.repos:
         
         repo_path = hf_hub_download(repo_id=repo_id, filename=filename, repo_type=args.type, cache_dir=args.cache_dir, resume_download=True)
     else:
-        repo_path = snapshot_download(repo_id=repo, repo_type=args.type, cache_dir=args.cache_dir, resume_download=True)
+        repo_path = snapshot_download(repo_id=repo, repo_type=args.type, cache_dir=args.cache_dir, resume_download=True, 
+                                      allow_patterns=args.allow_patterns, ignore_patterns=args.ignore_patterns)
         
     locations.append(repo_path)
     print(f"\nDownloaded {repo} to: {repo_path}")

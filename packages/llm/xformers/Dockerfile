@@ -10,19 +10,11 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG TORCH_CUDA_ARCH_LIST
+ARG XFORMERS_VERSION \
+    FORCE_BUILD=off
 
-# https://github.com/facebookresearch/xformers/blob/main/docs/source/custom_parts/index.rst#triton-parts
-# could not find a version that satisfies the requirement triton
-#RUN pip3 install --no-cache-dir --verbose triton
+COPY build.sh install.sh /tmp/xformers/
 
-# force rebuild on new releases
-ADD https://pypi.org/pypi/xformers/json /tmp/xformers_version.json
-
-RUN pip3 list && python3 -c 'import setuptools'
-
-# install from pip
-RUN MAX_JOBS=8 pip3 install --no-cache-dir --verbose 'xformers!=0.0.21'
-RUN pip3 install --force-reinstall --no-cache-dir --verbose /opt/torch*.whl
-
-RUN pip3 show xformers && python3 -c 'import xformers.info; xformers.info.print_info()'
+RUN /tmp/xformers/install.sh || /tmp/xformers/build.sh
+    
+    

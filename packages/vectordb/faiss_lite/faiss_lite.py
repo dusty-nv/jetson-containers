@@ -11,6 +11,9 @@ from cuda import cuda, nvrtc
 
 from cuda.cudart import (
     cudaMallocManaged, 
+    cudaHostAlloc,
+    cudaHostAllocMapped,
+    cudaHostGetDevicePointer,
     cudaMemAttachGlobal, 
     cudaGetLastError,
     cudaGetErrorString,
@@ -123,8 +126,10 @@ def cudaAllocMapped(shape, dtype, map_numpy=True, map_torch=True, return_dict=Tr
     
     print(f"-- allocating {size} bytes ({size/(1024*1024):.2f} MB) with cudaMallocManaged()")
     
-    err, ptr = cudaMallocManaged(size, cudaMemAttachGlobal)
+    #err, ptr = cudaMallocManaged(size, cudaMemAttachGlobal)
+    err, ptr = cudaHostAlloc(size, cudaHostAllocMapped)
     assert_cuda(err)
+    err, ptr = cudaHostGetDevicePointer(ptr, 0)
     
     if map_numpy:
         array = cudaToNumpy(ptr, shape, dtype)

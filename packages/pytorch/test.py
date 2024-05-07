@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 print('testing PyTorch...')
+
 import torch
 
 print('PyTorch version: ' + str(torch.__version__))
@@ -13,7 +14,10 @@ assert(torch.cuda.is_available())
 
 # check that version can be parsed
 from packaging import version
-print(version.parse(torch.__version__))
+from os import environ
+
+print('PACKAGING_VERSION=' + str(version.parse(torch.__version__)))
+print('TORCH_CUDA_ARCH_LIST=' + environ.get('TORCH_CUDA_ARCH_LIST', 'None') + '\n')
 
 # quick cuda tensor test
 a = torch.cuda.FloatTensor(2).zero_()

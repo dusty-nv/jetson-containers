@@ -18,6 +18,18 @@ def is_image(image):
     """
     return isinstance(image, ImageTypes)
     
+ 
+def image_size(image):
+    """
+    Returns the dimensions of the image as a tuple (height, width, channels)
+    """
+    if isinstance(image, (cudaImage, np.ndarray, torch.Tensor)):
+        return image.shape
+    elif isinstance(image, PIL.Image.Image):
+        return image.size
+    else:
+        raise TypeError(f"expected an image of type {ImageTypes} (was {type(image)})")
+        
     
 def load_image(path):
     """
@@ -64,6 +76,17 @@ def cuda_image(image):
             height=input.shape[-2], 
             format=torch_image_format(input)
         )
+        
+ 
+def torch_image(image):
+    """
+    Convert the image to a type that is compatible with PyTorch (torch.Tensor, ndarray, PIL.Image)
+    """
+    if isinstance(image, cudaImage):
+        return torch.as_tensor(image, device='cuda')
+    elif is_image(image):
+        return image 
+    raise TypeError(f"expected an image of type {ImageTypes} (was {type(image)})")
         
         
 def torch_image_format(tensor):

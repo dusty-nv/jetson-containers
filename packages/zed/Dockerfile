@@ -2,7 +2,7 @@
 # name: zed
 # group: sensors
 # config: config.py
-# depends: [python]
+# depends: [cuda, cudnn, tensorrt, python]
 # test: test.py
 # notes: https://github.com/stereolabs/zed-docker/blob/master/4.X/l4t/py-devel/Dockerfile
 #---
@@ -34,7 +34,7 @@ RUN apt-get update -y || true ; apt-get install --no-install-recommends python3 
     python3 /usr/local/zed/get_python_api.py && \
     python3 -m pip install cython wheel && \
     python3 -m pip install numpy pyopengl *.whl && \
-    apt-get remove --purge build-essential -y && apt-get autoremove -y && \
+    #apt-get remove --purge build-essential -y && apt-get autoremove -y && \
     rm *.whl ; rm -rf /var/lib/apt/lists/* && apt-get clean
 
 #This symbolic link is needed to use the streaming features on Jetson inside a container

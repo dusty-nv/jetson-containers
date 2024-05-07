@@ -1,14 +1,33 @@
+from jetson_containers import L4T_VERSION
+import os
 
-from jetson_containers import CUDA_ARCHITECTURES
+def exllama(version, branch=None, requires=None, default=False):
+    pkg = package.copy()
 
-package['build_args'] = {
-    'TORCH_CUDA_ARCH_LIST': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES])
-}
+    pkg['name'] = f'exllama:{version}'
 
-exllama_v2 = package.copy()
+    if requires:
+        pkg['requires'] = requires
+        
+    if default:
+        pkg['alias'] = 'exllama'
+    
+    if not branch:
+        branch = version
+        
+    pkg['build_args'] = {
+        'EXLLAMA_VERSION': version,
+        'EXLLAMA_BRANCH': branch,
+        'FORCE_BUILD': os.environ.get('FORCE_BUILD', 'off'),
+    }
 
-exllama_v2['name'] = 'exllama:v2'
-exllama_v2['dockerfile'] = 'Dockerfile.v2'
-exllama_v2['test'] = 'test_v2.sh'
+    if L4T_VERSION.major >= 36:
+        pkg['depends'].append('flash-attention')
+        
+    return pkg
 
-package = [package, exllama_v2]
+package = [
+    #exllama('0.0.16', requires='>=36', default=True),
+    exllama('0.0.15', requires='>=36', default=True),
+    exllama('0.0.14', requires='==35.*', default=True),
+]

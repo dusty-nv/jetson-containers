@@ -1,0 +1,37 @@
+diff --git a/setup.py b/setup.py
+index 766b4bb..c4c2c01 100644
+--- a/setup.py
++++ b/setup.py
+@@ -48,7 +48,8 @@ def main():
+         "\\", "/"
+     )
+ 
+-    if os.path.exists(".git"):
++    # prevent the submodules from being re-synced to their original commit
++    if False: #os.path.exists(".git"):
+         import pip._internal.vcs.git as git
+ 
+         g = git.Git()  # NOTE: pip API's are internal, this has to be refactored
+@@ -131,7 +132,9 @@ def main():
+             r"python/cv2/.*config.*.py"
+         ]
+         +
+-        [ r"python/cv2/py.typed" ] if sys.version_info >= (3, 6) else []
++        # https://github.com/opencv/opencv-python/issues/871
++        #[ r"python/cv2/py.typed" ] if sys.version_info >= (3, 6) else []
++        []
+         ,
+         "cv2.data": [  # OPENCV_OTHER_INSTALL_PATH
+             ("etc" if os.name == "nt" else "share/opencv4") + r"/haarcascades/.*\.xml"
+@@ -150,8 +153,9 @@ def main():
+         ],
+     }
+ 
+-    if sys.version_info >= (3, 6):
+-        rearrange_cmake_output_data["cv2.typing"] = ["python/cv2" + r"/typing/.*\.py"]
++    # https://github.com/opencv/opencv-python/issues/871
++    #if sys.version_info >= (3, 6):
++    #    rearrange_cmake_output_data["cv2.typing"] = ["python/cv2" + r"/typing/.*\.py"]
+ 
+     # Files in sourcetree outside package dir that should be copied to package.
+     # Raw paths relative to sourcetree root.

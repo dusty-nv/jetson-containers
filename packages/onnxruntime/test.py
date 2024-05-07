@@ -2,10 +2,10 @@
 
 import os
 import time
-import wget
 import shutil
 import pprint
 import argparse
+import requests
 import numpy as np
 
 from packaging.version import Version
@@ -117,7 +117,8 @@ if __name__ == '__main__':
         model_tar = os.path.join(model_root, args.model_tar)
         os.makedirs(model_root, exist_ok=True)
         print(f"Downloading {args.model_url} to {model_tar}")
-        wget.download(args.model_url, model_tar)
+        request = requests.get(args.model_url, allow_redirects=True)
+        open(model_tar, 'wb').write(request.content)
         shutil.unpack_archive(model_tar, model_root)
     
     # run model inference tests

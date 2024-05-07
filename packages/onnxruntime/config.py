@@ -1,15 +1,42 @@
 
-from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES
+from packaging.version import Version
 
-package['build_args'] = {
-    'CUDA_ARCHITECTURES': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
-}
+def onnxruntime(version, branch=None, requires=None, default=False):
+    ort = package.copy()
 
-# onnxruntime >= 1.16 drops support for gcc7/Python 3.6 (JetPack 4)
-# onnxruntime >= 1.14 too few arguments to function cudaStreamWaitEvent
-# onnxruntime <= 1.13 doesn't need or support --allow_running_as_root
-# onnxruntime >= 1.12 error: 'getBuilderPluginRegistry' is not a member of 'nvinfer1'
-# onnxruntime >= 1.11 error: NvInferSafeRuntime.h: No such file or directory (missing from tensorrt.csv)
-if L4T_VERSION.major <= 32:
-    package['build_args']['ONNXRUNTIME_VERSION'] = 'v1.10.0'
-    package['build_args']['ONNXRUNTIME_FLAGS'] = ''
+    ort['name'] = f'onnxruntime:{version}'
+
+    if requires:
+        ort['requires'] = requires
+        
+    if len(version.split('.')) < 3:
+        version = version + '.0'
+            
+    if not branch:
+        branch = 'v' + version
+    
+    ort['build_args'] = {
+        'ONNXRUNTIME_VERSION': version,
+        'ONNXRUNTIME_BRANCH': branch,
+        'ONNXRUNTIME_FLAGS': '', 
+    }
+    
+    if Version(version) >= Version('1.13'):
+        ort['build_args']['ONNXRUNTIME_FLAGS'] = '--allow_running_as_root'
+    
+    builder = ort.copy()
+    builder['name'] = builder['name'] + '-builder'
+    builder['build_args'] = {**builder['build_args'], 'FORCE_BUILD': 'on'}
+    
+    if default:
+        ort['alias'] = 'onnxruntime'
+        builder['alias'] = 'onnxruntime:builder'
+    
+    return ort, builder
+    
+    
+package = [
+    onnxruntime('1.17', requires='>=36', default=True),
+    onnxruntime('1.16.3', requires='==35.*', default=True),
+    onnxruntime('1.11', requires='==32.*', default=True),
+]

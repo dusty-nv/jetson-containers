@@ -1,0 +1,52 @@
+diff --git a/.github/workflows/build-wheels.yml b/.github/workflows/build-wheels.yml
+index e38826d..eb3b8b4 100644
+--- a/.github/workflows/build-wheels.yml
++++ b/.github/workflows/build-wheels.yml
+@@ -87,11 +87,13 @@ jobs:
+     steps:
+       - uses: actions/checkout@v3
+ 
+-      - name: Build wheels
+-        uses: closeio/cibuildwheel@v2.16.2
+-        env:
+-          CIBW_SKIP: "pp*-macosx* *-win32 *-manylinux_i686"
+-          CIBW_ARCHS_MACOS: x86_64 arm64 universal2
++      - name: Set up QEMU  # Needed to build aarch64 wheels
++        if: runner.os == 'Linux'
++        uses: docker/setup-qemu-action@v2
++        with:
++          platforms: all
++
++      - uses: closeio/cibuildwheel@v2.16.2
+ 
+       - uses: actions/upload-artifact@v3
+         with:
+diff --git a/pyproject.toml b/pyproject.toml
+index 1178fe6..bb09f33 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -8,3 +8,24 @@ ignore = ["E501"]
+ in-place = true
+ recursive = true
+ aggressive = 3
++
++[tool.cibuildwheel]
++build = [
++    "cp38-*",
++    "cp39-*",
++    "cp310-*",
++    "cp311-*",
++    "cp312-*",
++    "pp38-*",
++    "pp39-*",
++]
++
++[tool.cibuildwheel.linux]
++archs = ["x86_64", "aarch64"]
++
++[tool.cibuildwheel.macos]
++archs = ["x86_64", "universal2", "arm64"]
++environment = { MACOSX_DEPLOYMENT_TARGET="10.15" }
++
++[tool.cibuildwheel.windows]
++archs = ["AMD64"]

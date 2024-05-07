@@ -43,6 +43,9 @@ if __name__ == "__main__":
     args.prefer = re.split(',|;|:', args.prefer)
     args.disable = re.split(',|;|:', args.disable)
     
+    if args.verbose:
+        os.environ['VERBOSE'] = 'ON'
+    
     print(args)
     print(f"-- L4T_VERSION={L4T_VERSION}  JETPACK_VERSION={JETPACK_VERSION}  CUDA_VERSION={CUDA_VERSION}")
 
@@ -52,7 +55,7 @@ if __name__ == "__main__":
         
     print(f"-- Finding compatible container image for {args.packages}")
     
-    image = find_container(args.packages[0], prefer_sources=args.prefer, disable_sources=args.disable, user=args.user, quiet=args.quiet, verbose=args.verbose)
+    image = find_container(args.packages[0], prefer_sources=args.prefer, disable_sources=args.disable, user=args.user, quiet=args.quiet)
     
     if not image:
         print(f"-- Error:  couldn't find a compatible container image for '{args.packages[0]}'")

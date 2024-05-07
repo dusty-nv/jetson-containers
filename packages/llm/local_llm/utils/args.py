@@ -5,6 +5,7 @@ import argparse
 import logging
 
 from .log import LogFormatter
+from .prompts import DefaultChatPrompts, DefaultCompletionPrompts
 
 
 class ArgParser(argparse.ArgumentParser):
@@ -24,23 +25,27 @@ class ArgParser(argparse.ArgumentParser):
             self.add_argument("--model", type=str, default=None, #required=True, 
                 help="path to the model, or repository on HuggingFace Hub")
             self.add_argument("--quant", type=str, default=None, 
-                help="path to the quantized weights (AWQ uses this)")
+                help="for MLC, the type of quantization to apply (default q4f16_ft)  For AWQ, the path to the quantized weights.")
             self.add_argument("--api", type=str, default=None, choices=['auto_gptq', 'awq', 'hf', 'mlc'], 
                 help="specify the API to use (otherwise inferred)")
             self.add_argument("--vision-model", type=str, default=None, 
-                help="for VLMs, manually select the CLIP vision model to use (e.g. openai/clip-vit-large-patch14-336 for higher-res)")
-
+                help="for VLMs, manually select the vision embedding model to use (e.g. openai/clip-vit-large-patch14-336 for higher-res)")
+            self.add_argument("--vision-scaling", type=str, default=None, choices=['crop', 'resize'],
+                help="for VLMs, select the input image scaling method (default is: crop)")
+     
         if 'chat' in extras or 'prompt' in extras:
-            self.add_argument("--prompt", action='append', nargs='*', 
-                help="add a prompt (can be prompt text or path to .txt, .json, or image file)")
+            self.add_argument("--prompt", action='append', nargs='*', help="add a prompt (can be prompt text or path to .txt, .json, or image file)")
             self.add_argument("--save-mermaid", type=str, default=None, help="save mermaid diagram of the pipeline to this file")
             
         if 'chat' in extras:
-            self.add_argument("--system-prompt", type=str, default=None, help="override the system prompt instruction")
-            self.add_argument("--chat-template", type=str, default=None, #choices=list(ChatTemplates.keys()), 
-                help="manually select the chat template ('llama-2', 'llava-v1', 'vicuna-v1')")
-
+            from local_llm import ChatTemplates
+            self.add_argument("--chat-template", type=str, default=None, choices=list(ChatTemplates.keys()), help="manually select the chat template")
+            self.add_argument("--system-prompt", type=str, default=None, help="override the default system prompt instruction")
+            self.add_argument("--wrap-tokens", type=int, default=512, help="the number of most recent tokens in the chat to keep when the chat overflows the max context length")
+            
         if 'generation' in extras:
+            self.add_argument("--max-context-len", type=int, default=None,
+                help="override the model's default context window length (in tokens)  This should include space for model output (up to --max-new-tokens)  Lowering it from the default (e.g. 4096 for Llama) will reduce memory usage.  By default, it's inherited from the model's max length.") 
             self.add_argument("--max-new-tokens", type=int, default=128, 
                 help="the maximum number of new tokens to generate, in addition to the prompt")
             self.add_argument("--min-new-tokens", type=int, default=-1,
@@ -61,12 +66,14 @@ class ArgParser(argparse.ArgumentParser):
             self.add_argument("--video-input-height", type=int, default=None, help="manually set the resolution of the video input")
             self.add_argument("--video-input-codec", type=str, default=None, choices=['h264', 'h265', 'vp8', 'vp9', 'mjpeg'], help="manually set the input video codec to use")
             self.add_argument("--video-input-framerate", type=int, default=None, help="set the desired framerate of input video")
+            self.add_argument("--video-input-save", type=str, default=None, help="path to video file to save the incoming video feed to")
             
         if 'video_output' in extras:
             self.add_argument("--video-output", type=str, default=None, help="display, stream URL, file/dir path")
             self.add_argument("--video-output-codec", type=str, default=None, choices=['h264', 'h265', 'vp8', 'vp9', 'mjpeg'], help="set the output video codec to use")
             self.add_argument("--video-output-bitrate", type=int, default=None, help="set the output bitrate to use")
-         
+            self.add_argument("--video-output-save", type=str, default=None, help="path to video file to save the outgoing video stream to")
+            
         # AUDIO
         if 'audio_input' not in extras and 'asr' in extras:
             extras += ['audio_input']
@@ -84,7 +91,7 @@ class ArgParser(argparse.ArgumentParser):
             self.add_argument("--list-audio-devices", action="store_true", help="List output audio devices indices.")
          
         if any(x in extras for x in ('audio_input', 'audio_output', 'asr', 'tts')):       
-            self.add_argument("--sample-rate-hz", default=48000, help="the audio sample rate in Hz")
+            self.add_argument("--sample-rate-hz", type=int, default=48000, help="the audio sample rate in Hz")
             
         # ASR/TTS
         if 'asr' in extras or 'tts' in extras:
@@ -92,13 +99,16 @@ class ArgParser(argparse.ArgumentParser):
             self.add_argument("--language-code", default="en-US", help="Language code of the ASR/TTS to be used.")
 
         if 'tts' in extras:
+            self.add_argument("--tts", type=str, default=None, help="name of path of the TTS model to use (e.g. 'riva', 'xtts', 'none', 'disabled')")
+            self.add_argument("--tts-buffering", type=str, default="punctuation", help="buffering method for TTS ('none', 'punctuation', 'time', 'punctuation,time')")
             self.add_argument("--voice", type=str, default="English-US.Female-1", help="Voice model name to use for TTS")
-            self.add_argument("--voice-rate", type=str, default="default", help="TTS SSML voice speaker rate (between 25-250%%)")
+            self.add_argument("--voice-rate", type=float, default=1.0, help="TTS SSML voice speaker rate (between 25-250%%)")
             self.add_argument("--voice-pitch", type=str, default="default", help="TTS SSML voice pitch shift")
             self.add_argument("--voice-volume", type=str, default="default", help="TTS SSML voice volume attribute")
             #self.add_argument("--voice-min-words", type=int, default=4, help="the minimum number of words the TTS should wait to speak")
             
         if 'asr' in extras:
+            self.add_argument("--asr", type=str, default=None, help="name or path of the ASR model to use (e.g. 'riva', 'none', 'disabled')")
             self.add_argument("--asr-confidence", type=float, default=-2.5, help="minimum ASR confidence (only applies to 'final' transcripts)")
             self.add_argument("--asr-silence", type=float, default=-1.0, help="audio with RMS equal to or below this amount will be considered silent (negative will disable silence detection)")
             self.add_argument("--asr-chunk", type=int, default=1600, help="the number of audio samples to buffer as input to ASR")
@@ -107,6 +117,12 @@ class ArgParser(argparse.ArgumentParser):
             self.add_argument("--profanity-filter", action='store_true', help="enable profanity filtering in ASR transcripts")
             self.add_argument("--inverse-text-normalization", action='store_true', help="apply Inverse Text Normalization to convert numbers to digits/ect")
             self.add_argument("--no-automatic-punctuation", dest='automatic_punctuation', action='store_false', help="disable punctuation in the ASR transcripts")
+            
+        # NANODB
+        if 'nanodb' in extras:
+            self.add_argument('--nanodb', type=str, default=None, help="path to load or create the database")
+            self.add_argument('--nanodb-model', type=str, default='ViT-L/14@336px', help="the embedding model to use for the database")
+            self.add_argument('--nanodb-reserve', type=int, default=1024, help="the memory to reserve for the database in MB")
             
         # WEBSERVER
         if 'web' in extras:
@@ -117,6 +133,7 @@ class ArgParser(argparse.ArgumentParser):
             self.add_argument("--ssl-cert", default=os.getenv('SSL_CERT'), type=str, help="path to PEM-encoded SSL/TLS cert file for enabling HTTPS")
             self.add_argument("--upload-dir", type=str, default='/tmp/uploads', help="the path to save files uploaded from the client")
             self.add_argument("--web-trace", action="store_true", help="output websocket message logs when --log-level=debug")
+            self.add_argument("--web-title", type=str, default=None, help="override the default title of the web template")
             
         # LOGGING
         if 'log' in extras:

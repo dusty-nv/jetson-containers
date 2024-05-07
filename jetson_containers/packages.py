@@ -7,8 +7,11 @@ import yaml
 import fnmatch
 import importlib
 
+from packaging.version import Version
 from packaging.specifiers import SpecifierSet
-from .l4t_version import L4T_VERSION
+
+from .l4t_version import L4T_VERSION, CUDA_VERSION, PYTHON_VERSION
+from .utils import log_debug
 
 _PACKAGES = {}
 
@@ -101,6 +104,13 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
         'test': []
     }
     
+    # add CUDA and Python postfixes when they are non-standard versions
+    if len(os.environ.get('CUDA_VERSION','')) > 0:
+        package['postfix'] = package['postfix'] + f"-cu{CUDA_VERSION.major}{CUDA_VERSION.minor}"
+    
+    if len(os.environ.get('PYTHON_VERSION', '')) > 0:
+        package['postfix'] = package['postfix'] + f"-cp{PYTHON_VERSION.major}{PYTHON_VERSION.minor}"
+        
     # search this directory for dockerfiles and config scripts
     entries = os.listdir(path)
     
@@ -298,10 +308,17 @@ def resolve_dependencies(packages, check=True):
         return packages, (packages != packages_org)
     
     # iteratively unroll/expand dependencies until the full list is resolved
+    iterations = 0
+    max_iterations = 250
+    packages_copy = packages.copy()
+    
     while True:
         packages, changed = add_depends(packages)
         if not changed:
             break
+        iterations = iterations + 1
+        if iterations > max_iterations:
+            raise RecursionError(f"infinite recursion detected resolving dependencies for {packages_copy}\n{packages}") 
      
     # make sure all packages can be found
     if check:
@@ -311,6 +328,31 @@ def resolve_dependencies(packages, check=True):
     return packages
 
 
+def update_dependencies(old, new):
+    """
+    Merge two lists of dependencies, with the new list overriding the old one::
+    
+       update_dependencies(['pytorch', 'transformers'], ['pytorch:2.0']) -> ['pytorch:2.0', 'transformers']
+       
+    The dependencies will be matched by comparing just their name and ignoring any tag.
+    """
+    if not new:
+        return old
+        
+    if isinstance(new, str):
+        new = [new]
+        
+    assert(isinstance(new, list))
+    
+    for dependency in new:
+        old = [dependency if x == dependency.split(':')[0] else x for x in old]
+        
+        if dependency not in old:
+            old.append(dependency)
+            
+    return old
+    
+    
 def dependant_packages(package):
     """
     Find the list of all packages that depend on this package.
@@ -382,7 +424,7 @@ def config_package(package):
         config_path = os.path.join(package['path'], config_filename)
         
         if config_ext == '.py':
-            print(f"-- Loading {config_path}")
+            log_debug(f"-- Loading {config_path}")
             module_name = f"packages.{package['name']}.config"
             spec = importlib.util.spec_from_file_location(module_name, config_path)
             module = importlib.util.module_from_spec(spec)
@@ -394,19 +436,44 @@ def config_package(package):
                 return []
                 
         elif config_ext == '.json' or config_ext == '.yml' or config_ext == '.yaml':
-            print(f"-- Loading {config_path}")
+            log_debug(f"-- Loading {config_path}")
             config = validate_config(config_path)  # load and validate the config file
             apply_config(package, config)
     
     return validate_package(package)
     
+    
+def check_requirements(package):
+    """
+    Check if the L4T/CUDA versions meet the requirements needed by the package
+    """
+    for r in package['requires']:
+        if not isinstance(r, str):
+            r = str(r)
 
+        r = r.lower()
+        
+        if 'cu' in r:
+            if Version(f"{CUDA_VERSION.major}{CUDA_VERSION.minor}") not in SpecifierSet(r.replace('cu','')):
+                log_debug(f"-- Package {package['name']} isn't compatible with CUDA {CUDA_VERSION} (requires {r})")
+                return False
+        else:
+            if L4T_VERSION not in SpecifierSet(r.replace('r','')):
+                log_debug(f"-- Package {package['name']} isn't compatible with L4T r{L4T_VERSION} (requires L4T {r})")
+                return False
+                
+    return True
+    
+    
 def validate_package(package):
     """
     Validate/check a package's configuration, returning a list (i.e. of subpackages)
     """
     packages = []
     
+    if isinstance(package, tuple):
+        package = list(package)
+        
     if isinstance(package, dict):
         for key, value in package.items():  # check for sub-packages
             if validate_dict(value):
@@ -415,17 +482,22 @@ def validate_package(package):
         if len(packages) == 0:  # there were no sub-packages
             packages.append(package)
     elif isinstance(package, list):
-        packages = package  # TODO what if these contain subpackages?
-       
+        for x in package:
+            if validate_dict(x):
+                packages.append(x)
+            else:
+                packages.extend(validate_package(x))
+      
     for pkg in packages.copy():  # check to see if any packages were disabled
-        pkg['requires'] = SpecifierSet(pkg['requires'])
-        
-        if _PACKAGE_OPTS['check_l4t_version'] and L4T_VERSION not in pkg['requires']:
-            print(f"-- Package {pkg['name']} isn't compatible with L4T r{L4T_VERSION} (requires L4T {pkg['requires']})")
+        if not isinstance(pkg['requires'], list):
+            pkg['requires'] = [pkg['requires']]
+
+        if _PACKAGE_OPTS['check_l4t_version'] and not check_requirements(pkg):
+            log_debug(f"-- Package {pkg['name']} isn't compatible with L4T r{L4T_VERSION} (requires L4T {pkg['requires']})")
             pkg['disabled'] = True
             
         if pkg.get('disabled', False):
-            print(f"-- Package {pkg['name']} was disabled by its config")
+            log_debug(f"-- Package {pkg['name']} was disabled by its config")
             packages.remove(pkg)
         else:    
             validate_lists(pkg)  # make sure certain entries are lists

@@ -4,6 +4,7 @@ import re
 import json
 import torch
 import logging
+import safetensors
 
 from transformers import AutoConfig
 
@@ -30,16 +31,26 @@ class MMProjector():
                          
           dtype (dtype) -- use either torch.float32 or torch.float16 weights
         """
-        if not os.path.isdir(model):
-            model = download_model(model)
-
-        return MMProjector(model)
+        from local_llm import LocalLM
         
-    def __init__(self, model_path, dtype=torch.float16):
+        if isinstance(model, LocalLM):
+            return MMProjector(model.model_path, model.config, dtype)
+        elif isinstance(model, str):
+            if not os.path.isdir(model):
+                model = download_model(model)
+            return MMProjector(model)
+        else:
+            raise ValueError(f"model should either be a string containing the path or name of the HuggingFace model, or a LocalLM model instance")
+            
+    def __init__(self, model_path, config=None, dtype=torch.float16):
         """
         Create the mm_projector network and load its weights
         """
-        self.config = AutoConfig.from_pretrained(model_path)
+        if config:
+            self.config = config
+        else:
+            self.config = AutoConfig.from_pretrained(model_path)
+            
         self.model_path = model_path
         self.type = 'linear'
         self.dtype = dtype
@@ -66,7 +77,19 @@ class MMProjector():
         self.weights_path = os.path.join(self.model_path, 'mm_projector.bin')
         
         if not os.path.isfile(self.weights_path):
-            with open(os.path.join(self.model_path, 'pytorch_model.bin.index.json'), 'r') as file:
+            weight_indexes = [
+                os.path.join(self.model_path, 'pytorch_model.bin.index.json'),
+                os.path.join(self.model_path, 'model.safetensors.index.json'),
+            ]
+            
+            for weight_index in weight_indexes:
+                if os.path.isfile(weight_index):
+                    break
+
+            if not os.path.isfile(weight_index):
+                raise ValueError(f"could not find model weight map at any of these locations:  {weight_indexes}")
+                
+            with open(weight_index, 'r') as file:
                 weight_map = json.load(file)['weight_map']
                 
             for key, value in weight_map.items():
@@ -76,7 +99,11 @@ class MMProjector():
                     
             logging.debug(f"extracting mm_projector weights from {weights_path}")
             
-            weights = torch.load(weights_path, map_location='cpu')
+            if 'safetensors' in weight_index:
+                weights = safetensors.torch.load_file(weights_path, device='cpu')
+            else:
+                weights = torch.load(weights_path, map_location='cpu')
+                
             weights = {k : v for k, v in weights.items() if 'mm_projector' in k}
             
             logging.debug(f"saving mm_projector weights to {self.weights_path}")

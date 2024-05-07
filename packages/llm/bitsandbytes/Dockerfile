@@ -2,31 +2,23 @@
 # name: bitsandbytes
 # group: llm
 # requires: '==35.*'
+# config: config.py
 # depends: [transformers]
 # test: test.py
 # notes: fork of https://github.com/TimDettmers/bitsandbytes for Jetson
 #---
 ARG BASE_IMAGE
-FROM ${BASE_IMAGE}
+ARG BUILD_IMAGE
 
-# upstream version is https://github.com/TimDettmers/bitsandbytes (the fork below includes some patches for Jetson) 
-ARG BITSANDBYTES_REPO=dusty-nv/bitsandbytes
-ARG BITSANDBYTES_BRANCH=main
+FROM ${BUILD_IMAGE} as builder
+FROM ${BASE_IMAGE} as runtime
 
-# force rebuild on new git commits - https://stackoverflow.com/a/56945508
-ADD https://api.github.com/repos/${BITSANDBYTES_REPO}/git/refs/heads/${BITSANDBYTES_BRANCH} /tmp/bitsandbytes_version.json
+COPY --from=builder /opt/bitsandbytes*.whl /opt/
 
-RUN pip3 uninstall -y bitsandbytes && \
-    cd /opt && \
-    git clone --depth=1 https://github.com/${BITSANDBYTES_REPO} bitsandbytes && \
-    cd bitsandbytes && \
-    CUDA_VERSION=114 make -j$(nproc) cuda11x && \
-    CUDA_VERSION=114 make -j$(nproc) cuda11x_nomatmul && \
-    python3 setup.py --verbose build_ext --inplace -j$(nproc) bdist_wheel && \
-    cp dist/bitsandbytes*.whl /opt && \
-    pip3 install --no-cache-dir --verbose /opt/bitsandbytes*.whl  && \
-    cd ../ && \
-    rm -rf bitsandbytes
-
-RUN pip3 install --no-cache-dir --verbose scipy
-RUN pip3 show bitsandbytes && python3 -c 'import bitsandbytes'
+RUN set -ex \
+    && pip3 install --no-cache-dir --verbose \
+        scipy \
+        /opt/bitsandbytes*.whl \
+    \
+    && pip3 show bitsandbytes \
+    && python3 -c 'import bitsandbytes'

@@ -1,31 +1,47 @@
 #!/usr/bin/env python3
+import torch
 import numpy as np
 
+from .tensor import convert_dtype
 
 def convert_audio(samples, dtype=np.int16):
     """
     Convert between audio datatypes like float<->int16 and apply sample re-scaling.
     If the samples are a raw bytes array, it's assumed that they are in int16 format.
+    Supports audio samples as byte buffer, numpy ndarray, and torch.Tensor.  Converted
+    byte buffers will be returned as ndarray, otherwise the same object type as input.
     """
     if isinstance(samples, bytes):
         samples = np.frombuffer(samples, dtype=np.int16)
+    elif not isinstance(samples, (np.ndarray, torch.Tensor)):
+        raise TypeError(f"samples should either be bytes, np.ndarray, or torch.Tensor (was {type(samples)})")
         
     if samples.dtype == dtype:
         return samples
-        
-    sample_width = np.dtype(dtype).itemsize
+
+    #sample_width = np.dtype(str(dtype).split('.')[-1]).itemsize
+    sample_width = np.dtype(convert_dtype(dtype, to='np')).itemsize
     max_value = float(int((2 ** (sample_width * 8)) / 2) - 1)  # 32767 for 16-bit
         
-    if samples.dtype == np.float32 or samples.dtype == np.float64:  # float-to-int
-        samples = samples * max_value
-        samples = samples.clip(-max_value, max_value)
-        samples = samples.astype(dtype)
-    elif dtype == np.float32 or dtype == np.float64:  # int-to-float
-        samples = samples.astype(dtype)
-        samples = samples / max_value
-    else:
-        raise TypeError(f"unsupported audio sample dtype={samples.dtype}")
-        
+    if isinstance(samples, np.ndarray):
+        if samples.dtype == np.float32 or samples.dtype == np.float64:  # float-to-int
+            samples = samples * max_value
+            samples = samples.clip(-max_value, max_value)
+            samples = samples.astype(dtype)
+        elif dtype == np.float32 or dtype == np.float64:  # int-to-float
+            samples = samples.astype(dtype)
+            samples = samples / max_value
+        else:
+            raise TypeError(f"unsupported audio sample dtype={samples.dtype}")
+    elif isinstance(samples, torch.Tensor):
+        if samples.dtype == torch.float32 or samples.dtype == torch.float64:
+            samples = samples * max_value
+            samples = samples.clip(-max_value, max_value).to(dtype=dtype)
+        elif dtype == np.float32 or dtype == np.float64:
+            samples = samples.to(dtype=dtype) / max_value
+        else:
+            raise TypeError(f"unsupported audio sample dtype={samples.dtype}")
+            
     return samples
 
 
