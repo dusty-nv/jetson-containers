@@ -37,10 +37,13 @@ RUN git clone https://github.com/jaybdub/jupyter_clickable_image_widget && \
     jupyter labextension install js && \
     jupyter lab build
 
-RUN pip3 install 'ipywidgets<8'
+RUN pip3 install 'ipywidgets==8.0.2'
+RUN pip3 list
 
+COPY ./examples/ /opt/jupyter_clickable_examples/
+ENV JUPYTER_ROOT=/opt/jupyter_clickable_examples/
 
-COPY *.ipynb /opt/jupyter_clickable_image_widget
+CMD /start_jupyter && /bin/bash
 
 # {
 #   "name": "jupyter_clickable_image_widget",
