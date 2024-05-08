@@ -4,26 +4,28 @@
 # config: config.py
 # requires: '>=34.1.0'
 # docs: docs.md
-# depends: [homeassistant-base, ffmpeg]
-# test: [test_ciso8601.py, test_psutil_home_assistant.py, test_homeassistant.py]
+# depends: [homeassistant-base, ciso8601, psutil-home-assistant, ffmpeg]
+# test: test_homeassistant.py
 # notes: The `homeassistant-core` wheel that's build is saved in `/usr/src/homeassistant`
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG HA_BRANCH
+ARG HA_VERSION
 
-ENV S6_SERVICES_READYTIME=50 \
-    S6_SERVICES_GRACETIME=240000 \
-    UV_SYSTEM_PYTHON=true
+SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
 
 WORKDIR /usr/src
 
-COPY *.diff build_*.sh /tmp/
+ENV S6_SERVICES_READYTIME=50 \
+    S6_SERVICES_GRACETIME=240000 \
+    UV_SYSTEM_PYTHON=true \
+    LD_PRELOAD="${LD_PRELOAD:-}:/usr/local/lib/libjemalloc.so.2" \
+    MALLOC_CONF="background_thread:true,metadata_thp:auto,dirty_decay_ms:20000,muzzy_decay_ms:20000"
 
-RUN /tmp/build_ciso8601.sh && /tmp/build_homeassistant.sh
-RUN ln -s /data/homeassistant /config
+COPY *.sh /tmp/homeassistant/
+
+RUN /tmp/homeassistant/build.sh \
+    && ln -s /data/homeassistant /config
 
 WORKDIR /config
-
-ENTRYPOINT ["/init"]
