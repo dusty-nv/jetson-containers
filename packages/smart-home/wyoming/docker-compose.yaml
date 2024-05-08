@@ -39,7 +39,7 @@ services:
       SATELLITE_AUDIO_DEVICE: "plughw:CARD=S330,DEV=0"
       SATELLITE_SND_VOLUME_MULTIPLIER: 0.3
       ASSIST_PIPELINE_NAME: "Home Assistant"
-      WAKEWORD_NAME: "ok_nabu"
+      WAKEWORD_NAME: ok_nabu
 
   openwakeword:
     image: dustynv/wyoming-openwakeword:latest-r36.2.0
