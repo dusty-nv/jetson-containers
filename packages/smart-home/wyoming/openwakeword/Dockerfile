@@ -40,5 +40,3 @@ HEALTHCHECK --start-period=10m \
         || exit 1
 
 EXPOSE ${OPENWAKEWORD_PORT}/tcp
-
-CMD /init
