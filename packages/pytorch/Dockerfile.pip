@@ -16,7 +16,8 @@ FROM ${BASE_IMAGE}
 # set the torch hub model cache directory to mounted /data volume
 ARG TORCH_CUDA_ARCH_ARGS \
     TORCH_VERSION \
-    PYTORCH_BUILD_VERSION
+    PYTORCH_BUILD_VERSION \
+    FORCE_BUILD=off
     
 ENV TORCH_CUDA_ARCH_LIST=${TORCH_CUDA_ARCH_ARGS} \
     TORCH_HOME=/data/models/torch
