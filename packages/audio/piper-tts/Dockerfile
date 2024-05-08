@@ -2,7 +2,7 @@
 # name: piper-tts
 # group: audio
 # depends: [onnxruntime]
-# test: test.py
+# test: [test_piper_phonemize.sh, test.py]
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
