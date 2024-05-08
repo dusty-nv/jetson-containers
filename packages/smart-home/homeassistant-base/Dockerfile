@@ -11,6 +11,7 @@ FROM ${BASE_IMAGE}
 
 ENV \
     LANG="C.UTF-8" \
+    BUILD_ARCH="aarch64" \
     S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0 \
     S6_CMD_WAIT_FOR_SERVICES=1 \
@@ -20,8 +21,7 @@ ENV \
 SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
 
 # Version
-ARG BUILD_ARCH="aarch64" \
-    S6_ARCH="aarch64" \
+ARG S6_ARCH="aarch64" \
     BASHIO_VERSION \
     TEMPIO_VERSION \
     S6_OVERLAY_VERSION
@@ -33,6 +33,7 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         jq \
         xz-utils \
+        libjemalloc2 \
     \
     && curl -L -f -s "https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${S6_ARCH}.tar.xz" \
         | tar Jxvf - -C / \
@@ -54,10 +55,13 @@ RUN apt-get update \
         | tar -xzf - --strip 1 -C /usr/src/bashio \
     \
     # FIX: Remove HA Supervisor from bashio (not used) \
-    && sed -i \
-        -e 's|^# shellcheck source=lib/supervisor.sh||g' \
-        -e 's|source "${__BASHIO_LIB_DIR}/supervisor.sh"||g' \
-        /usr/src/bashio/lib/bashio.sh \
+    # && sed -i \
+    #     -e 's|^# shellcheck source=lib/supervisor.sh||g' \
+    #     -e 's|source "${__BASHIO_LIB_DIR}/supervisor.sh"||g' \
+    #     /usr/src/bashio/lib/bashio.sh \
+    # \
+    \
+    && ln -s /usr/lib/aarch64-linux-gnu/libjemalloc.so.2 /usr/local/lib/libjemalloc.so.2 \
     \
     && mv /usr/src/bashio/lib /usr/lib/bashio \
     && ln -s /usr/lib/bashio/bashio /usr/bin/bashio \
@@ -67,3 +71,5 @@ RUN apt-get update \
 
 # S6-Overlay
 WORKDIR /
+
+CMD /init
