@@ -1,26 +1,11 @@
-import requests
-
-from jetson_containers import update_dependencies
+from jetson_containers import update_dependencies, get_json_value_from_url
 from packaging.version import Version
-
-
-def get_latest_stable_version(fallback='2024.3.1'):
-    try:
-        response = requests.get('https://version.home-assistant.io/stable.json')
-        if response.status_code == 200:
-            data = response.json()
-            return data.get('homeassistant', { 'default': fallback }).get('default', fallback).strip()
-        else:
-            print("Failed to fetch version information. Status code:", response.status_code)
-            return fallback
-    except Exception as e:
-        print("An error occurred:", e)
-        return fallback
 
 
 def create_package(version, default=False) -> list:
     pkg = package.copy()
-    wanted_version = get_latest_stable_version() if version == 'latest' else version
+    url = 'https://version.home-assistant.io/stable.json'
+    wanted_version = get_json_value_from_url(url, 'homeassistant.default') if version == 'latest' else version
     pkg['name'] = f'homeassistant-core:{version}'
     ha_version = Version(wanted_version)
 
@@ -37,7 +22,7 @@ def create_package(version, default=False) -> list:
     pkg['depends'] = update_dependencies(pkg['depends'], [required_python])
     
     pkg['build_args'] = {
-        'HA_BRANCH': wanted_version,
+        'HA_VERSION': wanted_version,
     }
 
     if default:
@@ -50,5 +35,4 @@ package = [
     create_package('latest', default=True),
     # specific version
     create_package('2024.4.2', default=False),
-    # create_package('2024.3.1', default=True),
 ]
