@@ -70,11 +70,12 @@ quantize_legacy() # mlc_llm == 0.1.0
 if [[ $MODEL_PATH == http* ]]; then
 	MODEL_EXTRACTED="$MODEL_ROOT/models/$MODEL_NAME"
 	if [ ! -d "$MODEL_EXTRACTED" ]; then
-		cd $MODEL_ROOT/models
+		pushd $MODEL_ROOT/models
 		MODEL_TAR="$MODEL_NAME.tar.gz"
 		wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate $MODEL_PATH -O $MODEL_TAR
 		tar -xzvf $MODEL_TAR
 		#rm $MODEL_TAR
+		popd
 	fi
 	MODEL_PATH=$MODEL_EXTRACTED
 fi

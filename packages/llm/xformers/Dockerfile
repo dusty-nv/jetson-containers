@@ -10,16 +10,11 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG TORCH_CUDA_ARCH_LIST
+ARG XFORMERS_VERSION \
+    FORCE_BUILD=off
 
-ADD https://pypi.org/pypi/xformers/json /tmp/xformers_version.json
+COPY build.sh install.sh /tmp/xformers/
 
-RUN set -ex \
-    && pip3 list \
-    && python3 -c 'import setuptools' \
-    # Fix issue with overriden `pytorch` when installing `xformers` \
-    # We install with `--no-deps` flag, because we already have all of \
-    # `xformers` dependencies installed (numpy, pytorch). \
-    && XFORMERS_MORE_DETAILS=1 MAX_JOBS=8 pip3 install --force-reinstall --no-cache-dir --verbose --no-deps 'xformers!=0.0.21' \
-    && pip3 show xformers \
-    && python3 -c 'import xformers.info; xformers.info.print_info()'
+RUN /tmp/xformers/install.sh || /tmp/xformers/build.sh
+    
+    

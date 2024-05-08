@@ -15,6 +15,7 @@ COPY build.sh /tmp/build_torchvision.sh
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         libjpeg-dev \
+        libpng-dev \
         zlib1g-dev \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& apt-get clean

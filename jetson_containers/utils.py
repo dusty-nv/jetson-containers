@@ -128,7 +128,7 @@ def sudo_prefix(group='docker'):
     Returns a sudo prefix for command strings if the user needs sudo for accessing docker
     """
     if needs_sudo(group):
-        print('USER NEEDS SUDO')
+        #print('USER NEEDS SUDO')
         return "sudo "
     else:
         return ""
