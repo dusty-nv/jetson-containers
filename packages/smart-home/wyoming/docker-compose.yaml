@@ -36,7 +36,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
     environment:
-      AUDIO_DEVICE: "plughw:CARD=S330,DEV=0"
+      SATELLITE_AUDIO_DEVICE: "plughw:CARD=S330,DEV=0"
       SATELLITE_SND_VOLUME_MULTIPLIER: 0.3
       ASSIST_PIPELINE_NAME: "Home Assistant"
       WAKEWORD_NAME: "ok_nabu"
@@ -82,6 +82,8 @@ services:
       - ha-piper-tts-models:/data/models/piper
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
+    environment:
+      PIPER_VOICE: "en_US-lessac-high"
 
 volumes:
   ha-config:                      # Home Assistant configuration volume
