@@ -42,12 +42,12 @@ WORKDIR /opt
 
 # Install jupyter_clickable_image_widget
 RUN echo "\e[42m Install jupyter_clickable_image_widget \e[0m"
-# RUN git clone https://github.com/jaybdub/jupyter_clickable_image_widget && \
-#     cd jupyter_clickable_image_widget && \
-#     git checkout tags/v0.1 && \
-RUN git clone https://github.com/tokk-nv/jupyter_clickable_image_widget/ && \
+RUN git clone https://github.com/jaybdub/jupyter_clickable_image_widget && \
     cd jupyter_clickable_image_widget && \
-    git checkout dev-ipywidgets8 && \
+    git checkout b2ee0f4   && \
+# RUN git clone https://github.com/tokk-nv/jupyter_clickable_image_widget/ && \
+#     cd jupyter_clickable_image_widget && \
+#     git checkout dev-ipywidgets8 && \
     pip3 install . && \
     jupyter labextension install js && \
     jupyter lab build
