@@ -172,6 +172,15 @@ Got questions? You have several options to get them answered:
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`homeassistant-base`](/packages/smart-home/homeassistant-base) [`ffmpeg`](/packages/ffmpeg) [`python:3.12`](/packages/build/python) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/homeassistant-core:latest-r36.2.0`](https://hub.docker.com/r/dustynv/homeassistant-core/tags) `(2024-04-26, 1.4GB)` |
+| &nbsp;&nbsp;&nbsp;Notes | The `homeassistant-core` wheel that's build is saved in `/usr/src/homeassistant` |
+
+| **`homeassistant-core:2024.4.2`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`homeassistant-base`](/packages/smart-home/homeassistant-base) [`ffmpeg`](/packages/ffmpeg) [`python:3.12`](/packages/build/python) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/homeassistant-core:2024.4.2-r35.4.1`](https://hub.docker.com/r/dustynv/homeassistant-core/tags) `(2024-04-09, 6.0GB)`<br>[`dustynv/homeassistant-core:2024.4.2-r36.2.0`](https://hub.docker.com/r/dustynv/homeassistant-core/tags) `(2024-04-09, 1.4GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | The `homeassistant-core` wheel that's build is saved in `/usr/src/homeassistant` |
 
 </details>
@@ -184,6 +193,7 @@ Got questions? You have several options to get them answered:
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/homeassistant-core:2024.4.2-r35.4.1`](https://hub.docker.com/r/dustynv/homeassistant-core/tags) | `2024-04-09` | `arm64` | `6.0GB` |
 | &nbsp;&nbsp;[`dustynv/homeassistant-core:2024.4.2-r36.2.0`](https://hub.docker.com/r/dustynv/homeassistant-core/tags) | `2024-04-09` | `arm64` | `1.4GB` |
+| &nbsp;&nbsp;[`dustynv/homeassistant-core:latest-r36.2.0`](https://hub.docker.com/r/dustynv/homeassistant-core/tags) | `2024-04-26` | `arm64` | `1.4GB` |
 | &nbsp;&nbsp;[`dustynv/homeassistant-core:r35.4.1`](https://hub.docker.com/r/dustynv/homeassistant-core/tags) | `2024-04-10` | `arm64` | `6.0GB` |
 | &nbsp;&nbsp;[`dustynv/homeassistant-core:r36.2.0`](https://hub.docker.com/r/dustynv/homeassistant-core/tags) | `2024-04-10` | `arm64` | `1.4GB` |
 
@@ -202,10 +212,10 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag homeassistant-core)
 
 # or explicitly specify one of the container images above
-jetson-containers run dustynv/homeassistant-core:r35.4.1
+jetson-containers run dustynv/homeassistant-core:latest-r36.2.0
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/homeassistant-core:r35.4.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/homeassistant-core:latest-r36.2.0
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

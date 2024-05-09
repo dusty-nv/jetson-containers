@@ -12,8 +12,9 @@ docs.md
 | &nbsp;&nbsp;&nbsp;Builds | [![`audiocraft_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/audiocraft_jp51.yml?label=audiocraft:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/audiocraft_jp51.yml) [![`audiocraft_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/audiocraft_jp60.yml?label=audiocraft:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/audiocraft_jp60.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.2`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`torchaudio`](/packages/pytorch/torchaudio) [`opencv`](/packages/opencv) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`xformers`](/packages/llm/xformers) [`protobuf:cpp`](/packages/build/protobuf/protobuf_cpp) [`jupyterlab`](/packages/jupyterlab) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`voicecraft`](/packages/audio/voicecraft) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/audiocraft:r35.2.1`](https://hub.docker.com/r/dustynv/audiocraft/tags) `(2023-11-05, 10.7GB)`<br>[`dustynv/audiocraft:r35.3.1`](https://hub.docker.com/r/dustynv/audiocraft/tags) `(2024-03-07, 7.1GB)`<br>[`dustynv/audiocraft:r35.4.1`](https://hub.docker.com/r/dustynv/audiocraft/tags) `(2024-01-09, 7.0GB)`<br>[`dustynv/audiocraft:r36.2.0`](https://hub.docker.com/r/dustynv/audiocraft/tags) `(2024-03-07, 8.6GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/audiocraft:r35.2.1`](https://hub.docker.com/r/dustynv/audiocraft/tags) `(2023-11-05, 10.7GB)`<br>[`dustynv/audiocraft:r35.3.1`](https://hub.docker.com/r/dustynv/audiocraft/tags) `(2024-03-07, 7.1GB)`<br>[`dustynv/audiocraft:r35.4.1`](https://hub.docker.com/r/dustynv/audiocraft/tags) `(2024-01-09, 7.0GB)`<br>[`dustynv/audiocraft:r36.2.0`](https://hub.docker.com/r/dustynv/audiocraft/tags) `(2024-05-02, 6.6GB)` |
 
 </details>
 
@@ -26,7 +27,7 @@ docs.md
 | &nbsp;&nbsp;[`dustynv/audiocraft:r35.2.1`](https://hub.docker.com/r/dustynv/audiocraft/tags) | `2023-11-05` | `arm64` | `10.7GB` |
 | &nbsp;&nbsp;[`dustynv/audiocraft:r35.3.1`](https://hub.docker.com/r/dustynv/audiocraft/tags) | `2024-03-07` | `arm64` | `7.1GB` |
 | &nbsp;&nbsp;[`dustynv/audiocraft:r35.4.1`](https://hub.docker.com/r/dustynv/audiocraft/tags) | `2024-01-09` | `arm64` | `7.0GB` |
-| &nbsp;&nbsp;[`dustynv/audiocraft:r36.2.0`](https://hub.docker.com/r/dustynv/audiocraft/tags) | `2024-03-07` | `arm64` | `8.6GB` |
+| &nbsp;&nbsp;[`dustynv/audiocraft:r36.2.0`](https://hub.docker.com/r/dustynv/audiocraft/tags) | `2024-05-02` | `arm64` | `6.6GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -43,10 +44,10 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag audiocraft)
 
 # or explicitly specify one of the container images above
-jetson-containers run dustynv/audiocraft:r35.3.1
+jetson-containers run dustynv/audiocraft:r36.2.0
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/audiocraft:r35.3.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/audiocraft:r36.2.0
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

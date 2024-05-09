@@ -6,14 +6,21 @@
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`xformers`** | |
+| **`xformers:0.0.26`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`xformers_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/xformers_jp51.yml?label=xformers:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/xformers_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Aliases | `xformers` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`audiocraft`](/packages/audio/audiocraft) [`l4t-diffusion`](/packages/l4t/l4t-diffusion) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`audiocraft`](/packages/audio/audiocraft) [`l4t-diffusion`](/packages/l4t/l4t-diffusion) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) [`voicecraft`](/packages/audio/voicecraft) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/xformers:r35.2.1`](https://hub.docker.com/r/dustynv/xformers/tags) `(2023-12-06, 5.8GB)`<br>[`dustynv/xformers:r35.3.1`](https://hub.docker.com/r/dustynv/xformers/tags) `(2023-12-14, 5.8GB)`<br>[`dustynv/xformers:r35.4.1`](https://hub.docker.com/r/dustynv/xformers/tags) `(2024-01-09, 5.9GB)` |
+| &nbsp;&nbsp;&nbsp;Notes | https://github.com/facebookresearch/xformers |
+
+| **`xformers:0.0.26-builder`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `xformers:builder` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/facebookresearch/xformers |
 
 </details>
