@@ -1,6 +1,6 @@
 #---
 # name: realsense
-# group: sensors
+# group: hardware
 # depends: [cuda, python, cmake]
 # test: test.py
 # notes: https://github.com/IntelRealSense/librealsense/blob/master/doc/installation_jetson.md
