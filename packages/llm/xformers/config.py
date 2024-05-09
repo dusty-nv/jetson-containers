@@ -1,6 +1,27 @@
 
-from jetson_containers import CUDA_ARCHITECTURES
+def xformers(version, requires=None, default=False):
+    pkg = package.copy()
 
-package['build_args'] = {
-    'TORCH_CUDA_ARCH_LIST': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES])
-}
+    if requires:
+        pkg['requires'] = requires   
+
+    pkg['name'] = f'xformers:{version}'
+    
+    pkg['build_args'] = {
+        'XFORMERS_VERSION': version,
+    }
+    
+    builder = pkg.copy()
+    
+    builder['name'] = f'xformers:{version}-builder'
+    builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
+
+    if default:
+        pkg['alias'] = 'xformers'
+        builder['alias'] = 'xformers:builder'
+        
+    return pkg, builder
+
+package = [
+    xformers('0.0.26', default=True),
+]

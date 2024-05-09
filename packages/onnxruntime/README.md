@@ -6,19 +6,35 @@
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
+| **`onnxruntime:1.19`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `onnxruntime` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36', '>=cu124']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/tensorrt) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`efficientvit`](/packages/vit/efficientvit) [`l4t-diffusion`](/packages/l4t/l4t-diffusion) [`l4t-ml`](/packages/l4t/l4t-ml) [`optimum`](/packages/llm/optimum) [`piper-tts`](/packages/audio/piper-tts) [`sam`](/packages/vit/sam) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) [`tam`](/packages/vit/tam) [`wyoming-piper:master`](/packages/smart-home/wyoming/piper) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Notes | the `onnxruntime-gpu` wheel that's built is saved in the container under `/opt` |
+
+| **`onnxruntime:1.19-builder`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `onnxruntime:builder` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36', '>=cu124']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/tensorrt) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Notes | the `onnxruntime-gpu` wheel that's built is saved in the container under `/opt` |
+
 | **`onnxruntime:1.17`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `onnxruntime` |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36']` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36', '<=cu122']` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/tensorrt) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`efficientvit`](/packages/vit/efficientvit) [`l4t-diffusion`](/packages/l4t/l4t-diffusion) [`l4t-ml`](/packages/l4t/l4t-ml) [`local_llm`](/packages/llm/local_llm) [`nano_llm:24.4`](/packages/llm/nano_llm) [`nano_llm:main`](/packages/llm/nano_llm) [`optimum`](/packages/llm/optimum) [`piper-tts`](/packages/audio/piper-tts) [`sam`](/packages/vit/sam) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) [`tam`](/packages/vit/tam) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Notes | the `onnxruntime-gpu` wheel that's built is saved in the container under `/opt` |
 
 | **`onnxruntime:1.17-builder`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `onnxruntime:builder` |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36']` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36', '<=cu122']` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/tensorrt) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Notes | the `onnxruntime-gpu` wheel that's built is saved in the container under `/opt` |

@@ -54,6 +54,50 @@ index 30e261c2..bb5f2427 100755
  endif()
  set(CUTLASS_NVCC_ARCHS ${CUTLASS_NVCC_ARCHS_SUPPORTED} CACHE STRING "The SM architectures requested.")
  set(CUTLASS_NVCC_ARCHS_ENABLED ${CUTLASS_NVCC_ARCHS} CACHE STRING "The SM architectures to build code for.")
+Submodule 3rdparty/flashinfer contains modified content
+diff --git a/3rdparty/tvm/3rdparty/flashinfer/cmake/modules/FindThrust.cmake b/3rdparty/tvm/3rdparty/flashinfer/cmake/modules/FindThrust.cmake
+index 5f38d41..a0f8008 100644
+--- a/3rdparty/tvm/3rdparty/flashinfer/cmake/modules/FindThrust.cmake
++++ b/3rdparty/tvm/3rdparty/flashinfer/cmake/modules/FindThrust.cmake
+@@ -51,13 +51,32 @@ if( THRUST_INCLUDE_DIR )
+     version
+     "${version}"
+     )
++
++  file( STRINGS ${THRUST_INCLUDE_DIR}/thrust/version.h
++    major_version
++    REGEX "#define THRUST_MAJOR_VERSION[ \t]+([0-9x]+)"
++    )
++  string( REGEX REPLACE
++    "#define THRUST_MAJOR_VERSION[ \t]+"
++    ""
++    major_version
++    "${major_version}"
++    )
++
++  file( STRINGS ${THRUST_INCLUDE_DIR}/thrust/version.h
++    major_version
++    REGEX "#define THRUST_MINOR_VERSION[ \t]+([0-9x]+)"
++    )
++  string( REGEX REPLACE
++    "#define THRUST_MINOR_VERSION[ \t]+"
++    ""
++    minor_version
++    "${minor_version}"
++    )
+   
+-  math(EXPR major "${version} / 100000")
+-  math(EXPR minor "(${version} / 100) % 1000")
+-  math(EXPR version "${version} % 100")
+-  set( THRUST_VERSION "${major}.${minor}.${version}")
+-  set( THRUST_MAJOR_VERSION "${major}")
+-  set( THRUST_MINOR_VERSION "${minor}")
++  set( THRUST_VERSION "${version}")
++  set( THRUST_MAJOR_VERSION "${major_version}")
++  set( THRUST_MINOR_VERSION "${minor_version}")
+ endif( THRUST_INCLUDE_DIR )
+ 
+ # Check for required components
 Submodule 3rdparty/libflash_attn contains modified content
 Submodule cutlass contains modified content
 diff --git a/3rdparty/tvm/3rdparty/libflash_attn/cutlass/CMakeLists.txt b/3rdparty/tvm/3rdparty/libflash_attn/cutlass/CMakeLists.txt
@@ -252,8 +296,44 @@ index 2186d959b..5d982dc97 100644
  if (USE_FLASHINFER STREQUAL "ON")
    message(STATUS "Build with FlashInfer")
    set(FLASHINFER_TVM_BINDING ON)
+diff --git a/3rdparty/tvm/python/setup.py b/3rdparty/tvm/python/setup.py
+index 594ab5fc8..e9c73593f 100644
+--- a/3rdparty/tvm/python/setup.py
++++ b/3rdparty/tvm/python/setup.py
+@@ -142,7 +142,7 @@ def _remove_path(path):
+ 
+ 
+ LIB_LIST, __version__ = get_lib_path()
+-__version__ = git_describe_version(__version__)
++#__version__ = git_describe_version(__version__)
+ 
+ 
+ def config_cython():
+diff --git a/3rdparty/tvm/python/tvm/_ffi/libinfo.py b/3rdparty/tvm/python/tvm/_ffi/libinfo.py
+index f32493a42..d3b639685 100644
+--- a/3rdparty/tvm/python/tvm/_ffi/libinfo.py
++++ b/3rdparty/tvm/python/tvm/_ffi/libinfo.py
+@@ -247,4 +247,4 @@ def find_include_path(name=None, search_path=None, optional=False):
+ # We use the version of the incoming release for code
+ # that is under development.
+ # The following line is set by tvm/python/update_version.py
+-__version__ = "0.16.dev0"
++__version__ = "0.15.0"
+diff --git a/3rdparty/tvm/version.py b/3rdparty/tvm/version.py
+index b61a34e49..cf98057f9 100644
+--- a/3rdparty/tvm/version.py
++++ b/3rdparty/tvm/version.py
+@@ -44,7 +44,7 @@ import subprocess
+ # Two tag formats are supported:
+ # - vMAJ.MIN.PATCH (e.g. v0.8.0) or
+ # - vMAJ.MIN.devN (e.g. v0.8.dev0)
+-__version__ = "0.16.dev0"
++__version__ = "0.15.0"
+ 
+ # ---------------------------------------------------
+ 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a1644f0..4a21c32 100644
+index a1644f08..4a21c32a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -47,13 +47,13 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -273,7 +353,7 @@ index a1644f0..4a21c32 100644
    set(TVM_HOME 3rdparty/tvm)
  endif (NOT DEFINED TVM_HOME)
 diff --git a/mlc_llm/core.py b/mlc_llm/core.py
-index bd86e0a..4f27346 100644
+index bd86e0a4..4f273462 100644
 --- a/mlc_llm/core.py
 +++ b/mlc_llm/core.py
 @@ -826,8 +826,8 @@ def build_model_from_args(args: argparse.Namespace):
@@ -288,7 +368,7 @@ index bd86e0a..4f27346 100644
      if args.model_category == "minigpt":
          # Special case for minigpt, which neither provides nor requires a configuration.
 diff --git a/mlc_llm/relax_model/stablelm_3b.py b/mlc_llm/relax_model/stablelm_3b.py
-index ac1c9a7..086648d 100644
+index ac1c9a71..086648d1 100644
 --- a/mlc_llm/relax_model/stablelm_3b.py
 +++ b/mlc_llm/relax_model/stablelm_3b.py
 @@ -269,7 +269,8 @@ class StableLM3bAttention(nn.Module):
@@ -342,7 +422,7 @@ index ac1c9a7..086648d 100644
                          )
                      )
 diff --git a/python/mlc_chat/model/gemma/gemma_model.py b/python/mlc_chat/model/gemma/gemma_model.py
-index 0145589..a0b23ee 100644
+index 01455896..a0b23eea 100644
 --- a/python/mlc_chat/model/gemma/gemma_model.py
 +++ b/python/mlc_chat/model/gemma/gemma_model.py
 @@ -197,7 +197,7 @@ class GemmaModel(nn.Module):
@@ -355,7 +435,7 @@ index 0145589..a0b23ee 100644
              [GemmaDecoderLayer(config) for _ in range(config.num_hidden_layers)]
          )
 diff --git a/python/mlc_chat/model/gemma/gemma_quantization.py b/python/mlc_chat/model/gemma/gemma_quantization.py
-index 28b4234..88e9068 100644
+index 28b42343..88e90684 100644
 --- a/python/mlc_chat/model/gemma/gemma_quantization.py
 +++ b/python/mlc_chat/model/gemma/gemma_quantization.py
 @@ -6,7 +6,7 @@ from typing import Tuple
@@ -391,7 +471,7 @@ index 28b4234..88e9068 100644
      model_config: GemmaConfig,
      quantization: NoQuantize,
 diff --git a/python/mlc_chat/model/model.py b/python/mlc_chat/model/model.py
-index 68d052c..f702f8b 100644
+index 68d052c1..f702f8b7 100644
 --- a/python/mlc_chat/model/model.py
 +++ b/python/mlc_chat/model/model.py
 @@ -106,6 +106,7 @@ MODELS: Dict[str, Model] = {
@@ -403,7 +483,7 @@ index 68d052c..f702f8b 100644
      ),
      "gpt2": Model(
 diff --git a/python/mlc_chat/model/phi/phi_model.py b/python/mlc_chat/model/phi/phi_model.py
-index 421876d..4f56976 100644
+index 421876d1..4f569763 100644
 --- a/python/mlc_chat/model/phi/phi_model.py
 +++ b/python/mlc_chat/model/phi/phi_model.py
 @@ -286,7 +286,7 @@ class PhiCausalLMHead(nn.Module):
@@ -423,4 +503,43 @@ index 421876d..4f56976 100644
 +        self.embd = nn.Embedding(config.vocab_size, config.n_embd)
          self.h = nn.ModuleList([PhiParallelBlock(config) for i in range(config.n_layer)])
          self.tensor_parallel_shards = config.tensor_parallel_shards
+ 
+diff --git a/python/setup.py b/python/setup.py
+index f866e9a7..8c74a8e6 100644
+--- a/python/setup.py
++++ b/python/setup.py
+@@ -47,7 +47,7 @@ def git_describe_version(original_version):
+ 
+ 
+ LIB_LIST, __version__ = get_lib_path()
+-__version__ = git_describe_version(__version__)
++__version__ = "0.1.0" #git_describe_version(__version__)
+ 
+ 
+ class BinaryDistribution(Distribution):
+diff --git a/setup.py b/setup.py
+index b9721497..dd63fd62 100644
+--- a/setup.py
++++ b/setup.py
+@@ -20,7 +20,7 @@ def git_describe_version(original_version):
+     return gd_version
+ 
+ 
+-__version__ = git_describe_version(None)
++__version__ = "0.1.0" #git_describe_version(None)
+ 
+ setup(
+     name="mlc_llm",
+diff --git a/version.py b/version.py
+index c7868f84..f4944686 100644
+--- a/version.py
++++ b/version.py
+@@ -20,7 +20,7 @@ import subprocess
+ 
+ # ---------------------------------------------------
+ 
+-__version__ = "0.1.dev0"
++__version__ = "0.1.0"
+ PROJ_ROOT = os.path.dirname(os.path.abspath(os.path.expanduser(__file__)))
+ 
  

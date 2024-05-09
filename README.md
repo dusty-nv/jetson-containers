@@ -8,18 +8,19 @@ Modular container build system that provides various [**AI/ML packages**](packag
 
 | | |
 |---|---|
-| **ML** | [`pytorch`](packages/pytorch) [`tensorflow`](packages/tensorflow) [`onnxruntime`](packages/onnxruntime) [`deepstream`](packages/deepstream) [`tritonserver`](packages/tritonserver) [`jupyterlab`](packages/jupyterlab) [`stable-diffusion`](packages/diffusion/stable-diffusion-webui) |
-| **LLM** | [`NanoLLM`](packages/llm/nano_llm) [`transformers`](packages/llm/transformers) [`text-generation-webui`](packages/llm/text-generation-webui) [`ollama`](packages/llm/ollama) [`llama.cpp`](packages/llm/llama_cpp) [`exllama`](packages/llm/exllama) [`llava`](packages/llm/llava) [`awq`](packages/llm/awq) [`AutoGPTQ`](packages/llm/auto_gptq) [`MLC`](packages/llm/mlc) [`langchain`](packages/llm/langchain) [`optimum`](packages/llm/optimum) [`nemo`](packages/nemo) |
+| **ML** | [`pytorch`](packages/pytorch) [`tensorflow`](packages/tensorflow) [`onnxruntime`](packages/onnxruntime) [`deepstream`](packages/deepstream) [`jupyterlab`](packages/jupyterlab) [`stable-diffusion`](packages/diffusion/stable-diffusion-webui) |
+| **LLM** | [`NanoLLM`](packages/llm/nano_llm) [`transformers`](packages/llm/transformers) [`text-generation-webui`](packages/llm/text-generation-webui) [`ollama`](packages/llm/ollama) [`llama.cpp`](packages/llm/llama_cpp) [`exllama`](packages/llm/exllama) [`llava`](packages/llm/llava) [`awq`](packages/llm/awq) [`AutoGPTQ`](packages/llm/auto_gptq) [`MLC`](packages/llm/mlc) [`optimum`](packages/llm/optimum) [`nemo`](packages/nemo) |
 | **L4T** | [`l4t-pytorch`](packages/l4t/l4t-pytorch) [`l4t-tensorflow`](packages/l4t/l4t-tensorflow) [`l4t-ml`](packages/l4t/l4t-ml) [`l4t-diffusion`](packages/l4t/l4t-diffusion) [`l4t-text-generation`](packages/l4t/l4t-text-generation) |
 | **VIT** | [`NanoOWL`](packages/vit/nanoowl) [`NanoSAM`](packages/vit/nanosam) [`Segment Anything (SAM)`](packages/vit/sam) [`Track Anything (TAM)`](packages/vit/tam) |
 | **CUDA** | [`cupy`](packages/cuda/cupy) [`cuda-python`](packages/cuda/cuda-python) [`pycuda`](packages/cuda/pycuda) [`numba`](packages/numba) [`cudf`](packages/rapids/cudf) [`cuml`](packages/rapids/cuml) |
-| **Robotics** | [`ros`](packages/ros) [`ros2`](packages/ros) [`opencv:cuda`](packages/opencv) [`realsense`](packages/realsense) [`zed`](packages/zed) |
-| **VectorDB** | [`NanoDB`](packages/vectordb/nanodb) [`FAISS`](packages/vectordb/faiss) [`RAFT`](packages/rapids/raft) |
-| **Audio** | [`whisper`](packages/audio/whisper) [`whisperX`](packages/audio/whisperx) [`piper`](packages/audio/piper-tts) [`riva`](packages/audio/riva-client) [`XTTS`](packages/audio/xtts)  [`audiocraft`](packages/audio/audiocraft) |
+| **Robotics** | [`ros`](packages/ros) [`ros2`](packages/ros) [`opencv:cuda`](packages/opencv) [`realsense`](packages/hardware/realsense) [`zed`](packages/hardware/zed) [`oled`](packages/hardware/oled) |
+| **RAG** | [`llama-index`](packages/rag/llama-index) [`langchain`](packages/rag/langchain) [`NanoDB`](packages/vectordb/nanodb) [`FAISS`](packages/vectordb/faiss) [`RAFT`](packages/rapids/raft) |
+| **Audio** | [`whisper`](packages/audio/whisper) [`whisperX`](packages/audio/whisperx) [`piper`](packages/audio/piper-tts) [`riva`](packages/audio/riva-client) [`XTTS`](packages/audio/xtts)  [`audiocraft`](packages/audio/audiocraft) [`voicecraft`](packages/audio/voicecraft) |
+| **Smart Home** | [`homeassistant-core`](packages/smart-home/homeassistant-core) [`homeassistant-base`](packages/smart-home/homeassistant-base) [`wyoming-whisper`](packages/smart-home/wyoming/wyoming-whisper) [`wyoming-openwakeword`](packages/smart-home/wyoming/openwakeword) [`wyoming-piper`](packages/smart-home/wyoming/piper)  [`wyoming-assist-microphone`](packages/smart-home/wyoming/assist-microphone) |
 
-See the [**`packages`**](packages) directory for the full list, including pre-built container images and CI/CD status for JetPack/L4T.
+See the [**`packages`**](packages) directory for the full list, including pre-built container images for JetPack/L4T.
 
-Using the included tools, you can easily combine packages together for building your own containers.  Want to run ROS2 with PyTorch and Transformers?  No problem - just do the [system setup](/docs/setup.md), and build it on your Jetson like this:
+Using the included tools, you can easily combine packages together for building your own containers.  Want to run ROS2 with PyTorch and Transformers?  No problem - just do the [system setup](/docs/setup.md), and build it on your Jetson:
 
 ```bash
 $ jetson-containers build --name=my_container pytorch transformers ros:humble-desktop
@@ -30,14 +31,14 @@ There are shortcuts for running containers too - this will pull or build a [`l4t
 ```bash
 $ jetson-containers run $(autotag l4t-pytorch)
 ```
-> <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some added defaults (like `--runtime nvidia`, mounted `/data` cache and devices)</sup><br>
+> <sup>[`jetson-containers run`](/docs/run.md) launches [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some added defaults (like `--runtime nvidia`, mounted `/data` cache and devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
 
-If you look at any package's readme (like [`l4t-pytorch`](packages/l4t/l4t-pytorch)), it will have detailed instructions for running it's container.
+If you look at any package's readme (like [`l4t-pytorch`](packages/l4t/l4t-pytorch)), it will have detailed instructions for running it.
 
 #### Changing CUDA Versions
 
-You can rebuild the container stack for different versions of CUDA by setting the `CUDA_VERSION` in your environment:
+You can rebuild the container stack for different versions of CUDA by setting the `CUDA_VERSION` variable:
 
 ```bash
 CUDA_VERSION=12.4 jetson-containers build transformers

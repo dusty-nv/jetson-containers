@@ -2,7 +2,7 @@
 set -ex
 echo "Building opencv-python ${OPENCV_VERSION}"
 
-bash /tmp/opencv/opencv_install_deps.sh
+bash /tmp/opencv/install_deps.sh
 
 git clone --branch ${OPENCV_PYTHON} --recursive https://github.com/opencv/opencv-python /opt/opencv-python
 

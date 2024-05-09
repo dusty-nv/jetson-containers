@@ -10,6 +10,7 @@
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/tensorrt) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) [`onnxruntime`](/packages/onnxruntime) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`wyoming-piper:master`](/packages/smart-home/wyoming/piper) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/piper-tts:r35.4.1`](https://hub.docker.com/r/dustynv/piper-tts/tags) `(2024-04-07, 5.5GB)`<br>[`dustynv/piper-tts:r36.2.0`](https://hub.docker.com/r/dustynv/piper-tts/tags) `(2024-04-07, 6.7GB)` |
 

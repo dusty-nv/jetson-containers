@@ -20,7 +20,7 @@ def create_package(version, default=False) -> list:
     pkg['name'] = f'wyoming-openwakeword:{version}'
 
     pkg['build_args'] = {
-        'OPENWAKEWORD_VERSION': wanted_version,
+        'WYOMING_OPENWAKEWORD_VERSION': wanted_version,
     }
 
     if default:
