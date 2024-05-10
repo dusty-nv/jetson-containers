@@ -16,8 +16,7 @@ git clone --branch v${TORCHAUDIO_VERSION} --recursive --depth=1 https://github.c
 cd /opt/torchaudio
 git checkout v${TORCHAUDIO_VERSION}
 
-BUILD_SOX=1 python3 setup.py bdist_wheel
-cp dist/torchaudio*.whl /opt
+BUILD_SOX=1 python3 setup.py bdist_wheel --verbose --dist-dir /opt
 
 cd ../
 rm -rf /opt/torchaudio

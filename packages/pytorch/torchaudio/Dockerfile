@@ -8,9 +8,9 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG TORCHAUDIO_VERSION
+ARG TORCHAUDIO_VERSION \
+    FORCE_BUILD=off
 
-COPY build.sh /tmp/build_torchaudio.sh
+COPY install.sh build.sh /tmp/torchaudio/
 
-RUN pip3 install --no-cache-dir --verbose pysoundfile && \
-    pip3 install --no-cache-dir torchaudio==${TORCHAUDIO_VERSION} || /tmp/build_torchaudio.sh
+RUN /tmp/torchaudio/install.sh || /tmp/torchaudio/build.sh

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+: "${OLED_SERVER_LOGS:=/data/logs/oled_server.log}"
+: "${OLED_SERVER_PORT:=5005}"
+
+server_url="http://$(hostname -I | cut -d' ' -f1):${OLED_SERVER_PORT}"
+
+printf "\nStarting OLED server at $server_url\n\n"
+
+python3 /opt/oled/oled_server.py &> $OLED_SERVER_LOGS &
+
+timeout 5 tail -f $OLED_SERVER_LOGS
+
+printf "OLED_SERVER_LOGS   ${OLED_SERVER_LOGS}\n"
