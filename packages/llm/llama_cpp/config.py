@@ -23,5 +23,6 @@ def llama_cpp(version, branch=None, test=None, default=False):
     return pkg
 
 package = [
-    llama_cpp('0.2.57', default=True)
+    llama_cpp('0.2.57'),
+    llama_cpp('0.2.70', default=True),
 ]
