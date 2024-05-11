@@ -8,10 +8,10 @@
 ### Run the basic usage example and copy the result to host
 
 ```
-./run.sh $(./autotag nanoowl) /bin/bash -c " \
+jetson-containers run $(autotag nanoowl) /bin/bash -c " \
   cd /opt/nanoowl/examples/ && \
   python3 owl_predict.py \
-    --prompt="[an owl, a glove]" \
+    --prompt=\"[an owl, a glove]\" \
     --threshold=0.1 \
     --image_encoder_engine=../data/owl_image_encoder_patch32.engine "
 ```
@@ -23,7 +23,7 @@
 2. Launch the demo
 
 ```
-./run.sh $(./autotag nanoowl) /bin/bash -c " \
+jetson-containers run $(autotag nanoowl) /bin/bash -c " \
   cd /opt/nanoowl/examples/tree_demo/ && \
   python3 tree_demo.py ../../data/owl_image_encoder_patch32.engine "
 ```
