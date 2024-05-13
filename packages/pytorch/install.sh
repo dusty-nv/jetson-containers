@@ -14,6 +14,11 @@ apt-get install -y --no-install-recommends \
 rm -rf /var/lib/apt/lists/*
 apt-get clean
 
+if [ "$FORCE_BUILD" == "on" ]; then
+	echo "Forcing build of PyTorch ${PYTORCH_BUILD_VERSION}"
+	exit 1
+fi
+
 # install from the Jetson pypi server ($PIP_INSTALL_URL)
 pip3 install --verbose --no-cache-dir torch==${TORCH_VERSION}
 

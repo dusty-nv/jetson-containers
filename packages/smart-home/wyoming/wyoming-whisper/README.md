@@ -2,27 +2,27 @@
 
 > [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 
-<p align="center"><img src="whisper.png" title="Wyoming whisper" alt="Wyoming whisper" /></p>
+<p align="center"><img src="whisper.png" title="Wyoming whisper" alt="Wyoming whisper" style="width:100%;max-width:600px" /></p>
 
-[`Home Assistant`](https://www.home-assistant.io/) add-on that uses [`wyoming-faster-whisper`](https://github.com/rhasspy/wyoming-faster-whisper) for speech to text system using the [`wyoming` protocol](https://www.home-assistant.io/integrations/wyoming/) on **NVIDIA Jetson** devices. Thank you to [**@ms1design**](https://github.com/ms1design) for contributing these Home Assistant & Wyoming containers!
+[`Home Assistant`](https://www.home-assistant.io/) add-on that uses [`wyoming-faster-whisper`](https://github.com/rhasspy/wyoming-faster-whisper) for speech-to-text system using the [`wyoming` protocol](https://www.home-assistant.io/integrations/wyoming/) on **NVIDIA Jetson** devices. Thank you to [**@ms1design**](https://github.com/ms1design) for contributing these Home Assistant & Wyoming containers!
 
-### Features
+## Features
 
-- [x] Works well with [`home-assistant-core`](packages/smart-home/homeassistant-core) container on **Jetson devices** as well as Home Assistant hosted on different host's
-- [x] `GPU` Accelerated on **Jetson Devices** thank's to [`faster-whisper` container](packages/audio/faster-whisper)
+- [x] Works well with [`home-assistant-core`](packages/smart-home/homeassistant-core) container on **Jetson devices** as well as Home Assistant hosted on different hosts
+- [x] `GPU` accelerated on **Jetson Devices** thanks to [`faster-whisper` container](packages/audio/faster-whisper)
 
 > Requires **Home Assistant** `2023.9` or later.
 
-<details open>
-<summary><h3 style="display:inline"><code>docker-compose</code> example</h3></summary>
-<br>
+## `docker-compose` example
+
+If you want to use `docker compose` to run [Home Assistant Core](/packages/smart-home/homeassistant-core/) [Voice Assistant Pipeline](https://www.home-assistant.io/voice_control/) on a **Jetson** device with `cuda` enabled, you can find a full example [`docker-compose.yaml` here](/packages/smart-home/wyoming/docker-compose.yaml).
 
 ```yaml
 name: home-assistant-jetson
 version: "3.9"
 services:
   homeassistant:
-    image: dusty-nv/homeassistant-core:latest-r36.2.0-cu122-cp310
+    image: dustynv/homeassistant-core:latest-r36.2.0
     restart: unless-stopped
     init: false
     privileged: true
@@ -35,11 +35,9 @@ services:
       - ha-config:/config
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-    stdin_open: true
-    tty: true
 
   whisper:
-    image: dusty-nv/wyoming-whisper:latest-r36.2.0-cu122-cp311
+    image: dustynv/wyoming-whisper:latest-r36.2.0
     restart: unless-stopped
     runtime: nvidia
     network_mode: host
@@ -53,19 +51,14 @@ services:
       - ha-whisper-data:/data
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-    environment:
-      TZ: ${ENV_TZ}
-    stdin_open: true
-    tty: true
 
 volumes:
   ha-config:
   ha-whisper-models:
   ha-whisper-data:
 ```
-</details>
 
-### Environment variables
+## Environment variables
 
 | Variable | Type | Default | Description
 | - | - | - | - |
@@ -98,6 +91,9 @@ Got questions? You have several options to get them answered:
 - The Jetson AI Lab - Home Assistant Integration [thread on NVIDIA's Developers Forum](https://forums.developer.nvidia.com/t/jetson-ai-lab-home-assistant-integration/288225).
 - In case you've found an bug in `jetson-containers`, please [open an issue on our GitHub](https://github.com/dusty-nv/jetson-containers/issues).
 
+> [!NOTE]
+> This project was created by [Jetson AI Lab Research Group](https://www.jetson-ai-lab.com/research.html).
+
 <details open>
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
@@ -106,8 +102,9 @@ Got questions? You have several options to get them answered:
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `wyoming-whisper` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`homeassistant-base`](/packages/smart-home/homeassistant-base) [`cuda:12.2`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python:3.11`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) [`ctranslate2`](/packages/ctranslate2) [`huggingface_hub`](/packages/llm/huggingface_hub) [`numpy`](/packages/numpy) [`faster-whisper`](/packages/audio/faster-whisper) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`homeassistant-base`](/packages/smart-home/homeassistant-base) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python:3.11`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) [`ctranslate2`](/packages/ctranslate2) [`huggingface_hub`](/packages/llm/huggingface_hub) [`numpy`](/packages/numpy) [`faster-whisper`](/packages/audio/faster-whisper) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/wyoming-whisper:latest-r36.2.0`](https://hub.docker.com/r/dustynv/wyoming-whisper/tags) `(2024-04-30, 5.2GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | The `faster-whisper` using the `wyoming` protocol for usage with Home Assistant. Based on `https://github.com/home-assistant/addons/blob/master/whisper/Dockerfile` |
 
 </details>
@@ -118,6 +115,7 @@ Got questions? You have several options to get them answered:
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
+| &nbsp;&nbsp;[`dustynv/wyoming-whisper:latest-r36.2.0`](https://hub.docker.com/r/dustynv/wyoming-whisper/tags) | `2024-04-30` | `arm64` | `5.2GB` |
 | &nbsp;&nbsp;[`dustynv/wyoming-whisper:r36.2.0`](https://hub.docker.com/r/dustynv/wyoming-whisper/tags) | `2024-04-24` | `arm64` | `5.2GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
@@ -135,10 +133,10 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag wyoming-whisper)
 
 # or explicitly specify one of the container images above
-jetson-containers run dustynv/wyoming-whisper:r36.2.0
+jetson-containers run dustynv/wyoming-whisper:latest-r36.2.0
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/wyoming-whisper:r36.2.0
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/wyoming-whisper:latest-r36.2.0
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

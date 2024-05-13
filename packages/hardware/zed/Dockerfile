@@ -1,6 +1,6 @@
 #---
 # name: zed
-# group: sensors
+# group: hardware
 # config: config.py
 # depends: [cuda, cudnn, tensorrt, python]
 # test: test.py

@@ -12,6 +12,7 @@ docs.md
 | &nbsp;&nbsp;&nbsp;Builds | [![`whisperx_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/whisperx_jp60.yml?label=whisperx:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/whisperx_jp60.yml) [![`whisperx_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/whisperx_jp51.yml?label=whisperx:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/whisperx_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.2`](/packages/pytorch) [`torchaudio`](/packages/pytorch/torchaudio) [`ctranslate2`](/packages/ctranslate2) [`huggingface_hub`](/packages/llm/huggingface_hub) [`faster-whisper`](/packages/audio/faster-whisper) [`torchvision`](/packages/pytorch/torchvision) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`voicecraft`](/packages/audio/voicecraft) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/whisperx:r35.3.1`](https://hub.docker.com/r/dustynv/whisperx/tags) `(2024-01-19, 6.4GB)`<br>[`dustynv/whisperx:r36.2.0`](https://hub.docker.com/r/dustynv/whisperx/tags) `(2024-01-19, 8.1GB)` |
 

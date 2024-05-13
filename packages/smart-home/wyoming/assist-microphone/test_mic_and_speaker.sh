@@ -7,10 +7,10 @@ arecord -D plughw:CARD=S330,DEV=0 -r 16000 -c 1 -f S16_LE -t wav -d 5 /tmp/recor
 
 echo "microphone recording OK"
 
-echo "Playing recording..."
+echo "Testing speaker..."
 
 aplay -D plughw:CARD=S330,DEV=0 /tmp/recording.wav
 
-echo "Playing recording OK"
+echo "Speaker OK"
 
 rm /tmp/recording.wav

@@ -2,16 +2,35 @@
 
 > [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 
-docs.md
 <details open>
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`ctranslate2`** | |
+| **`ctranslate2:master`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`faster-whisper`](/packages/audio/faster-whisper) [`whisperx`](/packages/audio/whisperx) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+
+| **`ctranslate2:master-builder`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+
+| **`ctranslate2:4.2.0`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `ctranslate2` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`faster-whisper`](/packages/audio/faster-whisper) [`voicecraft`](/packages/audio/voicecraft) [`whisperx`](/packages/audio/whisperx) [`wyoming-whisper:latest`](/packages/smart-home/wyoming/wyoming-whisper) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+
+| **`ctranslate2:4.2.0-builder`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `ctranslate2:builder` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 
 </details>

@@ -18,8 +18,7 @@ def torchaudio(version, pytorch=None, requires=None):
     if not isinstance(pytorch, Version):
         pytorch = Version(pytorch)
         
-    if pytorch == PYTORCH_VERSION:
-        pkg['alias'] = 'torchaudio'
+
 
     if len(version.split('.')) < 3:
         version = version + '.0'
@@ -27,15 +26,23 @@ def torchaudio(version, pytorch=None, requires=None):
     pkg['build_args'] = {
         'TORCHAUDIO_VERSION': version,
     }
-
-    return pkg
+    
+    builder = pkg.copy()
+    builder['name'] = builder['name'] + '-builder'
+    builder['build_args'] = {**builder['build_args'], 'FORCE_BUILD': 'on'}
+    
+    if pytorch == PYTORCH_VERSION:
+        pkg['alias'] = 'torchaudio'
+        builder['alias'] = 'torchaudio:builder'
+        
+    return pkg, builder
 
 package = [
     # JetPack 5/6
     torchaudio('2.0.1', pytorch='2.0', requires='==35.*'),
     torchaudio('2.1.0', pytorch='2.1', requires='>=35'),
     torchaudio('2.2.2', pytorch='2.2', requires='>=35'),
-    torchaudio('2.3.0-rc2', pytorch='2.3', requires='==36.*'),
+    torchaudio('2.3.0', pytorch='2.3', requires='==36.*'),
 
     # JetPack 4
     torchaudio('0.10.0', pytorch='1.10', requires='==32.*'),

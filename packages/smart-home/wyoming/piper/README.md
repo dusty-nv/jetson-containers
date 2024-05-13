@@ -2,27 +2,27 @@
 
 > [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 
-<p align="center"><img src="images/piper.png" title="Wyoming piper" alt="Wyoming piper" /></p>
+<p align="center"><img src="images/piper.png" title="Wyoming piper" alt="Wyoming piper" style="width:100%;max-width:600px" /></p>
 
-[`Home Assistant`](https://www.home-assistant.io/) add-on that uses [`wyoming-piper`](https://github.com/rhasspy/wyoming-piper) for text to speech system using the [`wyoming` protocol](https://www.home-assistant.io/integrations/wyoming/) on **NVIDIA Jetson** devices. Thank you to [**@ms1design**](https://github.com/ms1design) for contributing these Home Assistant & Wyoming containers!
+[`Home Assistant`](https://www.home-assistant.io/) add-on that uses [`wyoming-piper`](https://github.com/rhasspy/wyoming-piper) for text-to-speech system using the [`wyoming` protocol](https://www.home-assistant.io/integrations/wyoming/) on **NVIDIA Jetson** devices. Thank you to [**@ms1design**](https://github.com/ms1design) for contributing these Home Assistant & Wyoming containers!
 
-### Features
+## Features
 
-- [x] Works well with [`home-assistant-core`](packages/smart-home/homeassistant-core) container on **Jetson devices** as well as Home Assistant hosted on different host's
-- [x] `GPU` Accelerated on **Jetson Devices** thank's to [`piper-tts` container](packages/audio/piper-tts)
+- [x] Works well with [`home-assistant-core`](packages/smart-home/homeassistant-core) container on **Jetson** devices as well as Home Assistant hosted on different hosts
+- [x] `GPU` accelerated on **Jetson** devices thanks to [`piper-tts` container](packages/audio/piper-tts)
 
 > Requires **Home Assistant** `2023.9` or later.
 
-<details open>
-<summary><h3 style="display:inline"><code>docker-compose</code> example</h3></summary>
-<br>
+## `docker-compose` example
+
+If you want to use `docker compose` to run [Home Assistant Core](/packages/smart-home/homeassistant-core/) [Voice Assistant Pipeline](https://www.home-assistant.io/voice_control/) on a **Jetson** device with `cuda` enabled, you can find a full example [`docker-compose.yaml` here](/packages/smart-home/wyoming/docker-compose.yaml).
 
 ```yaml
 name: home-assistant-jetson
 version: "3.9"
 services:
   homeassistant:
-    image: dusty-nv/homeassistant-core:latest-r36.2.0-cu122-cp310
+    image: dustynv/homeassistant-core:latest-r36.2.0
     restart: unless-stopped
     init: false
     privileged: true
@@ -35,11 +35,9 @@ services:
       - ha-config:/config
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-    stdin_open: true
-    tty: true
 
   piper-tts:
-    image: ms1design/wyoming-piper:master-r36.2.0-cu122-cp311
+    image: dustynv/wyoming-piper:master-r36.2.0
     restart: unless-stopped
     network_mode: host
     container_name: piper-tts
@@ -55,16 +53,11 @@ services:
       - ha-piper-tts-models:/data/models/piper
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-    environment:
-      TZ: ${ENV_TZ}
-    stdin_open: true
-    tty: true
 
 volumes:
   ha-config:
   ha-piper-tts-models:
 ```
-</details>
 
 ### Environment variables
 
@@ -85,7 +78,7 @@ volumes:
 
 Read more how to configure `wyoming-piper` in the [official documentation](https://www.home-assistant.io/voice_control/voice_remote_local_assistant#installing-a-local-assist-pipeline):
 
-<p align="center"><img src="images/piper-playground.png" title="Wyoming assist-microphone" alt="Wyoming assist-microphone" /></p>
+<p align="center"><img src="images/piper-playground.png" title="Wyoming assist-microphone" alt="Wyoming assist-microphone" style="width:100%;max-width:600px" /></p>
 
 ### Available Voices
 
@@ -110,6 +103,8 @@ Got questions? You have several options to get them answered:
 - The Jetson AI Lab - Home Assistant Integration [thread on NVIDIA's Developers Forum](https://forums.developer.nvidia.com/t/jetson-ai-lab-home-assistant-integration/288225).
 - In case you've found an bug in `jetson-containers`, please [open an issue on our GitHub](https://github.com/dusty-nv/jetson-containers/issues).
 
+> [!NOTE]
+> This project was created by [Jetson AI Lab Research Group](https://www.jetson-ai-lab.com/research.html).
 <details open>
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
@@ -118,8 +113,9 @@ Got questions? You have several options to get them answered:
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `wyoming-piper` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`homeassistant-base`](/packages/smart-home/homeassistant-base) [`cuda:12.2`](/packages/cuda/cuda) [`cudnn:8.9`](/packages/cuda/cudnn) [`python:3.11`](/packages/build/python) [`tensorrt`](/packages/tensorrt) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) [`onnxruntime`](/packages/onnxruntime) [`piper-tts`](/packages/audio/piper-tts) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`homeassistant-base`](/packages/smart-home/homeassistant-base) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python:3.11`](/packages/build/python) [`tensorrt`](/packages/tensorrt) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) [`onnxruntime`](/packages/onnxruntime) [`piper-tts`](/packages/audio/piper-tts) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/wyoming-piper:master-r35.4.1`](https://hub.docker.com/r/dustynv/wyoming-piper/tags) `(2024-04-30, 7.4GB)`<br>[`dustynv/wyoming-piper:master-r36.2.0`](https://hub.docker.com/r/dustynv/wyoming-piper/tags) `(2024-04-30, 9.0GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | The `piper-tts` using the `wyoming` protocol for usage with Home Assistant. Based on `https://github.com/home-assistant/addons/tree/master/piper` and `https://github.com/rhasspy/wyoming-piper` |
 
 </details>
@@ -134,7 +130,7 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag piper)
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host piper:36.2.0
+sudo docker run --runtime nvidia -it --rm --network=host piper:35.2.1
 
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>

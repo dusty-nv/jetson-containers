@@ -2,27 +2,29 @@
 
 > [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 
-<p align="center"><img src="images/wyoming-openwakeword.png" title="Wyoming openWakeWord" alt="Wyoming openWakeWord" /></p>
+<p align="center"><img src="images/wyoming-openwakeword.png" title="Wyoming openWakeWord" alt="Wyoming openWakeWord" style="width:100%;max-width:600px" /></p>
 
-[`Home Assistant`](https://www.home-assistant.io/) add-on that uses [`openWakeWord`](https://github.com/rhasspy/wyoming-openwakeword) for wake word detection over the [`wyoming` protocol](https://www.home-assistant.io/integrations/wyoming/) on **NVIDIA Jetson** devices. Thank you to [**@ms1design**](https://github.com/ms1design) for contributing these Home Assistant & Wyoming containers!
+[`Home Assistant`](https://www.home-assistant.io/) add-on that uses [`openWakeWord`](https://github.com/rhasspy/wyoming-openwakeword) ([demo on huggingface](https://huggingface.co/spaces/davidscripka/openWakeWord)) for wake word detection over the [`wyoming` protocol](https://www.home-assistant.io/integrations/wyoming/) on **NVIDIA Jetson** devices. Thank you to [**@ms1design**](https://github.com/ms1design) for contributing these Home Assistant & Wyoming containers!
 
-### Features
+## Features
 
-- [x] Works well with [`home-assistant-core`](packages/smart-home/homeassistant-core) container on **Jetson devices** as well as Home Assistant hosted on different host's
-- [ ] `GPU` Accelerated on **Jetson Devices** using `onnx` models [WIP] – *(For now it work's with `CPU` only utilising `tflite` models).*
+- [x] Works well with [`home-assistant-core`](/packages/smart-home/homeassistant-core) container on **Jetson devices** as well as Home Assistant hosted on different hosts
+- [x] Use [custom wake word's](#training-custom-wake-words), pass model name as `OPENWAKEWORD_PRELOAD_MODEL` to preload custom model. For example you can find `jetson` (*`jets_un`*) wake word model included in `/share/openwakeword` models directory.
+- [x] Supports `*.tflite` `CPU` wake word models
+- [ ] Supports `*.onnx` `CUDA` wake word models [WIP]
 
 > Requires **Home Assistant** `2023.9` or later.
 
-<details open>
-<summary><h3 style="display:inline"><code>docker-compose</code> example</h3></summary>
-<br>
+## `docker-compose` example
+
+If you want to use `docker compose` to run [Home Assistant Core](/packages/smart-home/homeassistant-core/) [Voice Assistant Pipeline](https://www.home-assistant.io/voice_control/) on a **Jetson** device with `cuda` enabled, you can find a full example [`docker-compose.yaml` here](/packages/smart-home/wyoming/docker-compose.yaml).
 
 ```yaml
 name: home-assistant-jetson
 version: "3.9"
 services:
   homeassistant:
-    image: dusty-nv/homeassistant-core:latest-r36.2.0-cu122-cp310
+    image: dustynv/homeassistant-core:latest-r36.2.0
     restart: unless-stopped
     init: false
     privileged: true
@@ -35,11 +37,9 @@ services:
       - ha-config:/config
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-    stdin_open: true
-    tty: true
 
   openwakeword:
-    image: dusty-nv/wyoming-openwakeword:latest-r36.2.0-cu122-cp311
+    image: dustynv/wyoming-openwakeword:latest-r36.2.0
     restart: unless-stopped
     runtime: nvidia
     network_mode: host
@@ -52,8 +52,6 @@ services:
       - ha-openwakeword-custom-models:/share/openwakeword
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-    stdin_open: true
-    tty: true
     environment:
       OPENWAKEWORD_CUSTOM_MODEL_DIR: /share/openwakeword
       OPENWAKEWORD_PRELOAD_MODEL: ok_nabu
@@ -62,24 +60,32 @@ volumes:
   ha-config:
   ha-openwakeword-custom-models:
 ```
-</details>
 
-### Environment variables
+## Environment variables
 
 | Variable | Type | Default | Description
 | - | - | - | - |
 | `OPENWAKEWORD_PORT` | `str` | `10400` | Port number to use on `host` |
 | `OPENWAKEWORD_THRESHOLD` | `float` | `0.5` | Wake word model threshold (`0.0`-`1.0`), where higher means fewer activations. |
 | `OPENWAKEWORD_TRIGGER_LEVEL` | `int` | `1` | Number of activations before a detection is registered. A higher trigger level means fewer detections. |
-| `OPENWAKEWORD_PRELOAD_MODEL`| `str` | `ok_nabu` | Name or path of wake word model(s) to pre-load |
-| `OPENWAKEWORD_CUSTOM_MODEL_DIR` | `str` | `/share/openwakeword` | Path to directory with custom wake word models |
+| `OPENWAKEWORD_PRELOAD_MODEL`| `str` | `ok_nabu` | Name or path of wake word model to pre-load. The name of the model should match with name used during [custom wake word model training](#training-custom-wake-words). When changing this, it's also recommended to set `WAKEWORD_NAME` variable with same value for [`wyoming-assist-microphone`](/packages/smart-home/wyoming/assist-microphone) container |
+| `OPENWAKEWORD_CUSTOM_MODEL_DIR` | `str` | `/share/openwakeword` | Path to directory containing custom wake word models. *Skip the trailing slash (`/`)* |
 | `OPENWAKEWORD_DEBUG` | `bool` | `true` | Log `DEBUG` messages |
 
 ## Configuration
 
 Read more how to configure `wyoming-openwakeword` in the [official documentation](https://www.home-assistant.io/voice_control/install_wake_word_add_on#enabling-wake-word-for-your-voice-assistant):
 
-<p align="center"><img src="images/openwakeword-assist-config.png" title="Wyoming openWakeWord configuration" alt="Wyoming openWakeWord configuration" /></p>
+<p align="center"><img src="images/openwakeword-assist-config.png" title="Wyoming openWakeWord configuration" alt="Wyoming openWakeWord configuration" style="width:100%;max-width:600px" /></p>
+
+## Training custom wake word's
+
+> [!NOTE]
+> You can find a custom trained, example `jetson` (`jets_un`) wake word model in the custom models directory (`/share/openwakeword`). To use it, set `WAKEWORD_NAME` to `jets_un` in appropriate containers.
+
+The Home Assistant Community has [trained numerous wake word models](https://github.com/fwartner/home-assistant-wakewords-collection), as detailed in this GitHub repository. However, these models are specifically designed for use with `CPU`.
+
+To train a new wake word model for `CPU` (`*.tflite`) or `cuda` (`*.onnx`), you can follow [@dscripka](https://github.com/dscripka) [documentation](https://github.com/dscripka/openWakeWord?tab=readme-ov-file#training-new-models) or just jump to the point and use [wake word training environment](https://colab.research.google.com/drive/1q1oe2zOyZp7UsB3jJiQ1IFn8z5YfjwEb).
 
 ## TODO's
 
@@ -101,6 +107,8 @@ Got questions? You have several options to get them answered:
 - The Jetson AI Lab - Home Assistant Integration [thread on NVIDIA's Developers Forum](https://forums.developer.nvidia.com/t/jetson-ai-lab-home-assistant-integration/288225).
 - In case you've found an bug in `jetson-containers`, please [open an issue on our GitHub](https://github.com/dusty-nv/jetson-containers/issues).
 
+> [!NOTE]
+> This project was created by [Jetson AI Lab Research Group](https://www.jetson-ai-lab.com/research.html).
 <details open>
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
@@ -111,6 +119,7 @@ Got questions? You have several options to get them answered:
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`homeassistant-base`](/packages/smart-home/homeassistant-base) [`python:3.11`](/packages/build/python) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/wyoming-openwakeword:latest-r36.2.0`](https://hub.docker.com/r/dustynv/wyoming-openwakeword/tags) `(2024-04-30, 0.3GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | The `openWakeWord` using the `wyoming` protocol for usage with Home Assistant. Based on `https://github.com/home-assistant/addons/blob/master/openwakeword/Dockerfile` and `https://github.com/rhasspy/wyoming-openwakeword` |
 
 </details>
@@ -125,7 +134,7 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag openwakeword)
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host openwakeword:36.2.0
+sudo docker run --runtime nvidia -it --rm --network=host openwakeword:35.2.1
 
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>

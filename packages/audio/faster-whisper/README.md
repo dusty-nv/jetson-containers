@@ -10,8 +10,8 @@ docs.md
 | **`faster-whisper`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) [`ctranslate2`](/packages/ctranslate2) [`huggingface_hub`](/packages/llm/huggingface_hub) [`numpy`](/packages/numpy) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`whisperx`](/packages/audio/whisperx) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`ctranslate2`](/packages/ctranslate2) [`huggingface_hub`](/packages/llm/huggingface_hub) [`numpy`](/packages/numpy) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`voicecraft`](/packages/audio/voicecraft) [`whisperx`](/packages/audio/whisperx) [`wyoming-whisper:latest`](/packages/smart-home/wyoming/wyoming-whisper) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 
 </details>

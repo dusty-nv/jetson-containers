@@ -5,56 +5,46 @@
 
 * llama-index from https://www.llamaindex.ai/
 
-### Starting llama-index container (only)
+## Starting `llamaindex` container
 
 ```bash
-jetson-containers run $(./autotag llama-index)
+jetson-containers run $(autotag llama-index)
 ```
 
-### Running a starter RAG example with Ollama
+This will start the `ollama` server as well as Jupyter Lab server inside the container.
+
+## Running a RAG example with Ollama
 
 This is based on the [official tutorial for local models](https://docs.llamaindex.ai/en/stable/getting_started/starter_example_local/).
 
-#### Data set up for the sample
+#### Jupyter Notebook Version
 
-On the Docker host console, copy the L4T-README text files to jetson-container's `/data` directory.
+When you run start the `llama-index` container, you should see lines like this on the terminal.
 
-```bash
-cd jetson-containers
-mkdir -p data/documents/paul_grapham
-wget "https://www.dropbox.com/s/f6bmb19xdg0xedm/paul_graham_essay.txt?dl=1" -O data/documents/paul_grapham/paul_graham_essay.txt
-mkdir -p data/documents/L4T-README
-cp /media/jetson/L4T-README/*.txt data/documents/L4T-README/
+```
+JupyterLab URL:   http://192.168.1.10:8888 (password "nvidia")
+JupyterLab logs:  /data/logs/jupyter.log
 ```
 
-#### Docker-compose to run llama_index container with ollama container
+On your Jetson desktop GUI, or on a PC on the same network as Jetson, open your web browser and access the address. When prompted, type the password `nvidia` and log in.
 
-> Here assumes we are on JetPack 6.0 DP and have followed the instruction [here](https://www.jetson-ai-lab.com/tips_ssd-docker.html#docker) for installing Docker.
+Jupyter Lab UI should show up, with [`LlamaIndex_Local-Models.ipynb`](samples/LlamaIndex_Local-Models.ipynb) listed in the left navigator pane - open it, and follow the guide in the Jupyter notebook.
 
-Move to the `llama-index` package directory where `compose.yml` is saved, and use docker compose to run two containers.
+####  Python Version
 
-```bash
-cd ./packages/llm/llama-index
-docker compose up
-```
-
-Open a new terminal and attach to the llama_index container.
-
-```bash
-docker exec -it llama-index bash
-```
-
-Once in the llama_index container, first download the Llama2 model using `ollama` command.
+After starting the `llamaindex` container, you should be on `root@<hostname>` console. First, download the Llama2 model using `ollama`
 
 ```bash
 ollama pull llama2
 ```
 
-Then, run the sample script to ask Jetson related questions (***"With USB device mode, what IP address Jetson gets? Which file should be edited in order to change the IP address assigned to Jetson?"***)to let the Llama-2 model answer based on the provided README files.
+This downloads the default 7-billion parameter Llama2 model - you can optionally specify `ollma2:13b` and `ollma2:70b` for other variations, and change the Python script (line 13) accordingly. Then type the following to start the sample Python script:
 
 ```bash
-python3 samples/llamaindex_starter.py
+python3 /opt/llama-index/llamaindex_starter.py
 ```
+
+
 <details open>
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
@@ -62,9 +52,9 @@ python3 samples/llamaindex_starter.py
 | **`llama-index`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda:12.2`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`ollama`](/packages/llm/ollama) [`rust`](/packages/build/rust) [`jupyterlab`](/packages/jupyterlab) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`ollama`](/packages/llm/ollama) [`rust`](/packages/build/rust) [`jupyterlab`](/packages/jupyterlab) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/llama-index:r36.2.0`](https://hub.docker.com/r/dustynv/llama-index/tags) `(2024-04-25, 6.2GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/llama-index:r35.4.1`](https://hub.docker.com/r/dustynv/llama-index/tags) `(2024-04-30, 6.4GB)`<br>[`dustynv/llama-index:r36.2.0`](https://hub.docker.com/r/dustynv/llama-index/tags) `(2024-04-30, 6.2GB)` |
 
 </details>
 
@@ -74,7 +64,8 @@ python3 samples/llamaindex_starter.py
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/llama-index:r36.2.0`](https://hub.docker.com/r/dustynv/llama-index/tags) | `2024-04-25` | `arm64` | `6.2GB` |
+| &nbsp;&nbsp;[`dustynv/llama-index:r35.4.1`](https://hub.docker.com/r/dustynv/llama-index/tags) | `2024-04-30` | `arm64` | `6.4GB` |
+| &nbsp;&nbsp;[`dustynv/llama-index:r36.2.0`](https://hub.docker.com/r/dustynv/llama-index/tags) | `2024-04-30` | `arm64` | `6.2GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -91,10 +82,10 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag llama-index)
 
 # or explicitly specify one of the container images above
-jetson-containers run dustynv/llama-index:r36.2.0
+jetson-containers run dustynv/llama-index:r35.4.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/llama-index:r36.2.0
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/llama-index:r35.4.1
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

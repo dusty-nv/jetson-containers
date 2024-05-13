@@ -56,6 +56,25 @@ index 30e261c2..9410bf6c 100755
  set(CUTLASS_NVCC_ARCHS ${CUTLASS_NVCC_ARCHS_SUPPORTED} CACHE STRING "The SM architectures requested.")
  set(CUTLASS_NVCC_ARCHS_ENABLED ${CUTLASS_NVCC_ARCHS} CACHE STRING "The SM architectures to build code for.")
  
+Submodule 3rdparty/flashinfer contains modified content
+diff --git a/3rdparty/tvm/3rdparty/flashinfer/include/flashinfer/mma.cuh b/3rdparty/tvm/3rdparty/flashinfer/include/flashinfer/mma.cuh
+index c507940..5b02a9b 100644
+--- a/3rdparty/tvm/3rdparty/flashinfer/include/flashinfer/mma.cuh
++++ b/3rdparty/tvm/3rdparty/flashinfer/include/flashinfer/mma.cuh
+@@ -26,11 +26,13 @@ namespace flashinfer {
+ 
+ namespace mma {
+ 
++#if 0
+ #if (__CUDACC_VER_MAJOR__ * 10000 + __CUDACC_VER_MINOR__ * 100 >= 120400)
+ #if (!defined(__CUDA_ARCH__) || (__CUDA_ARCH__ >= 890))
+ #define FLASHINFER_MMA_F8F8F32_M16N8K32_ENABLED
+ #endif
+ #endif
++#endif
+ 
+ #if (__CUDACC_VER_MAJOR__ >= 11)
+ #if (!defined(__CUDA_ARCH__) || (__CUDA_ARCH__ >= 900))
 Submodule 3rdparty/libflash_attn contains modified content
 Submodule cutlass contains modified content
 diff --git a/3rdparty/tvm/3rdparty/libflash_attn/cutlass/CMakeLists.txt b/3rdparty/tvm/3rdparty/libflash_attn/cutlass/CMakeLists.txt
