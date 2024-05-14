@@ -5,7 +5,7 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-RUN pip install chromadb pypdf pytest boto3 jetson-stats
+RUN pip install chromadb pypdf pytest boto3 jetson-stats unstructured
 
 WORKDIR /opt/langchain
 
