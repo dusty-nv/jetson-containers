@@ -5,7 +5,14 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-RUN pip install chromadb pypdf pytest boto3 jetson-stats unstructured
+RUN pip install \
+    chromadb \
+    pypdf \
+    pytest \
+    boto3 \
+    jetson-stats \
+    unstructured \
+    langchain-openai
 
 WORKDIR /opt/langchain
 
