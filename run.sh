@@ -13,6 +13,17 @@ do
 	fi
 done
 
+
+# check for I2C devices
+I2C_DEVICES=""
+
+for i in {0..9}
+do
+	if [ -a "/dev/i2c-$i" ]; then
+		I2C_DEVICES="$I2C_DEVICES --device /dev/i2c-$i "
+	fi
+done
+
 # check for display
 DISPLAY_DEVICE=""
 
@@ -64,7 +75,7 @@ if [ $ARCH = "aarch64" ]; then
 		--volume $ROOT/data:/data \
 		--device /dev/snd \
 		--device /dev/bus/usb \
-		$DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $EXTRA_FLAGS \
+		$DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $EXTRA_FLAGS \
 		"$@"
 
 elif [ $ARCH = "x86_64" ]; then
@@ -77,6 +88,6 @@ elif [ $ARCH = "x86_64" ]; then
 		--ulimit stack=67108864 \
 		--env NVIDIA_DRIVER_CAPABILITIES=all \
 		--volume $ROOT/data:/data \
-		$DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $EXTRA_FLAGS \
+		$DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $EXTRA_FLAGS \
 		"$@"	
 fi
