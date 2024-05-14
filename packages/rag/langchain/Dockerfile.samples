@@ -5,9 +5,15 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
+RUN pip install chromadb pypdf pytest boto3 jetson-stats
+
 WORKDIR /opt/langchain
 
 COPY *.ipynb ./
 # RUN sed 's|^\ \ }|    ,"notebook_dir": "/opt/langchain"\n  }|' -i /root/.jupyter/jupyter_notebook_config.json
 
 WORKDIR /
+
+CMD /start_ollama && \
+    JUPYTER_ROOT=/opt/langchain /start_jupyter && \
+    /bin/bash
