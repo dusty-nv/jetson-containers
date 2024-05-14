@@ -43,7 +43,7 @@ fi
 JTOP_SOCKET=""
 JTOP_SOCKET_FILE="/run/jtop.sock"
 
-if [ -f "$JTOP_SOCKET_FILE" ]; then
+if [ -S "$JTOP_SOCKET_FILE" ]; then
 	JTOP_SOCKET="-v /run/jtop.sock:/run/jtop.sock"
 fi
 
