@@ -39,6 +39,14 @@ if [ -n "$DISPLAY" ]; then
 	DISPLAY_DEVICE="-e DISPLAY=$DISPLAY -v /tmp/.X11-unix/:/tmp/.X11-unix -v $XAUTH:$XAUTH -e XAUTHORITY=$XAUTH"
 fi
 
+# check for jtop
+JTOP_SOCKET=""
+JTOP_SOCKET_FILE="/run/jtop.sock"
+
+if [ -f "$JTOP_SOCKET_FILE" ]; then
+	JTOP_SOCKET="-v /run/jtop.sock:/run/jtop.sock"
+fi
+
 # extra flags
 EXTRA_FLAGS=""
 
@@ -75,7 +83,7 @@ if [ $ARCH = "aarch64" ]; then
 		--volume $ROOT/data:/data \
 		--device /dev/snd \
 		--device /dev/bus/usb \
-		$DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $EXTRA_FLAGS \
+		$DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
 		"$@"
 
 elif [ $ARCH = "x86_64" ]; then
@@ -88,6 +96,6 @@ elif [ $ARCH = "x86_64" ]; then
 		--ulimit stack=67108864 \
 		--env NVIDIA_DRIVER_CAPABILITIES=all \
 		--volume $ROOT/data:/data \
-		$DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $EXTRA_FLAGS \
+		$DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
 		"$@"	
 fi
