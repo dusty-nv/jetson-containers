@@ -50,3 +50,10 @@ HEALTHCHECK --start-period=10m \
         | nc -w 1 localhost ${SATELLITE_PORT} \
         | grep -q "assist" \
         || exit 1
+
+LABEL \
+    io.hass.type="addon" \
+    io.hass.name="assist-microphone" \
+    io.hass.version="${SATELLITE_VERSION}" \
+    io.hass.arch="${BUILD_ARCH}" \
+    io.hass.machine="qemuarm-64"
