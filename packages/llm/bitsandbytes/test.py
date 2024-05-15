@@ -5,16 +5,6 @@ import bitsandbytes
 
 print('bitsandbytes OK\n')
 
-import sys
-import os.path
-if not os.path.isfile('/data/models/huggingface/token'):
-    print("###################################")
-    print("### ATTENTION: TEST DID NOT RUN ###")
-    print("###################################")
-    print("--> This test requires HuggingFace token")
-    print("--> Check if you have saved /data/models/huggingface/token")
-    sys.exit()
-
 from transformers import AutoModelForCausalLM, AutoTokenizer, TextIteratorStreamer
 from threading import Thread
 
@@ -25,9 +15,9 @@ from threading import Thread
 # HF   TinyLlama/TinyLlama-1.1B-Chat-v1.0
 # GPTQ TheBloke/TinyLlama-1.1B-Chat-v1.0-GPTQ
 # AWQ  TheBloke/TinyLlama-1.1B-Chat-v1.0-AWQ
-model_name='meta-llama/Llama-2-7b-chat-hf'
+model_name='microsoft/Phi-3-mini-128k-instruct'
 
-model = AutoModelForCausalLM.from_pretrained(model_name, device_map='cuda', load_in_8bit=True)
+model = AutoModelForCausalLM.from_pretrained(model_name, device_map='cuda', load_in_8bit=True, trust_remote_code=True)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 streamer = TextIteratorStreamer(tokenizer)
 
