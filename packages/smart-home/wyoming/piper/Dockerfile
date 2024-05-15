@@ -44,3 +44,10 @@ HEALTHCHECK --start-period=10m \
         | nc -w 1 localhost ${PIPER_PORT} \
         | grep -q "piper" \
         || exit 1
+
+LABEL \
+    io.hass.type="addon" \
+    io.hass.name="piper-tts" \
+    io.hass.version="${WYOMING_PIPER_VERSION}" \
+    io.hass.arch="${BUILD_ARCH}" \
+    io.hass.machine="qemuarm-64"
