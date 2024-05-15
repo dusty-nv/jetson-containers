@@ -6,6 +6,8 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 RUN pip install \
+            llama-index \
+            llama-index-embeddings-ollama \
             chromadb \
             pypdf \
             pytest \
