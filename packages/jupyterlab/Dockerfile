@@ -1,5 +1,6 @@
 #---
 # name: jupyterlab
+# alias: jupyterlab:main
 # group: core
 # depends: [python, numpy, rust]
 # docs: docs.md
