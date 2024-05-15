@@ -40,3 +40,10 @@ HEALTHCHECK --start-period=10m \
         || exit 1
 
 EXPOSE ${OPENWAKEWORD_PORT}/tcp
+
+LABEL \
+    io.hass.type="addon" \
+    io.hass.name="openWakeWord" \
+    io.hass.version="${WYOMING_OPENWAKEWORD_VERSION}" \
+    io.hass.arch="${BUILD_ARCH}" \
+    io.hass.machine="qemuarm-64"
