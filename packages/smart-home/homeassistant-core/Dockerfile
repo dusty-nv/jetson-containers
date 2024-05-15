@@ -5,7 +5,7 @@
 # requires: '>=34.1.0'
 # docs: docs.md
 # depends: [homeassistant-base, ciso8601, psutil-home-assistant, ffmpeg]
-# test: test_homeassistant.py
+# test: test.py
 # notes: The `homeassistant-core` wheel that's build is saved in `/usr/src/homeassistant`
 #---
 ARG BASE_IMAGE
@@ -29,3 +29,18 @@ RUN /tmp/homeassistant/build.sh \
     && ln -s /data/homeassistant /config
 
 WORKDIR /config
+
+LABEL \
+  io.hass.type="core" \
+  io.hass.version="${HA_VERSION}" \
+  io.hass.arch="${BUILD_ARCH}" \
+  io.hass.machine="qemuarm-64" \
+  org.opencontainers.image.title="Home Assistant" \
+  org.opencontainers.image.description="Open-source home automation platform running on Python 3" \
+  org.opencontainers.image.source="https://github.com/home-assistant/core" \
+  org.opencontainers.image.authors="The Home Assistant Authors" \
+  org.opencontainers.image.url="https://www.home-assistant.io/" \
+  org.opencontainers.image.documentation="https://www.home-assistant.io/docs/" \
+  org.opencontainers.image.licenses="Apache License 2.0"
+
+CMD ["/init"]
