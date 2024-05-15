@@ -1,5 +1,6 @@
 #---
 # name: ollama 
+# alias: ollama:main
 # group: llm
 # config: config.py
 # depends: [build-essential, cuda]

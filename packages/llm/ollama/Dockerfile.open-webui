@@ -1,0 +1,9 @@
+# 
+# this is the ollama:open-webui container (built on top of ollama)
+# see Dockerfile & config.py for package configuration/metadata
+#
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+CMD /start_ollama && \
+    docker run -it --rm --network=host --add-host=host.docker.internal:host-gateway ghcr.io/open-webui/open-webui:main 

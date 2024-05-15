@@ -9,3 +9,13 @@ package['build_args'] = {
     'JETPACK_VERSION': str(JETPACK_VERSION),
     'CMAKE_CUDA_ARCHITECTURES': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
 }
+
+open_webui = package.copy()
+
+open_webui['name'] = 'ollama:open-webui'
+open_webui['dockerfile'] = 'Dockerfile.open-webui'
+open_webui['depends'] = ['ollama:main']
+
+del open_webui['alias']
+
+package = [package, open_webui]
