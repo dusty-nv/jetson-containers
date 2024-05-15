@@ -40,6 +40,9 @@ RUN cd /opt/nanoowl/examples/ && \
         --threshold=0.1 \
         --image_encoder_engine=../data/owl_image_encoder_patch32.engine
 
+RUN mkdir -p /root/.cache && \
+    ln -s /data/models/clip /root/.cache/clip
+
 COPY benchmark.py /opt/nanoowl/
 
 WORKDIR /opt/nanoowl

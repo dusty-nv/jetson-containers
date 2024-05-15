@@ -113,8 +113,9 @@ Got questions? You have several options to get them answered:
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `wyoming-piper` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`homeassistant-base`](/packages/smart-home/homeassistant-base) [`cuda:12.2`](/packages/cuda/cuda) [`cudnn:8.9`](/packages/cuda/cudnn) [`python:3.11`](/packages/build/python) [`tensorrt`](/packages/tensorrt) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) [`onnxruntime`](/packages/onnxruntime) [`piper-tts`](/packages/audio/piper-tts) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`homeassistant-base`](/packages/smart-home/homeassistant-base) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python:3.11`](/packages/build/python) [`tensorrt`](/packages/tensorrt) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) [`onnxruntime`](/packages/onnxruntime) [`piper-tts`](/packages/audio/piper-tts) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/wyoming-piper:master-r35.4.1`](https://hub.docker.com/r/dustynv/wyoming-piper/tags) `(2024-04-30, 7.4GB)`<br>[`dustynv/wyoming-piper:master-r36.2.0`](https://hub.docker.com/r/dustynv/wyoming-piper/tags) `(2024-04-30, 9.0GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | The `piper-tts` using the `wyoming` protocol for usage with Home Assistant. Based on `https://github.com/home-assistant/addons/tree/master/piper` and `https://github.com/rhasspy/wyoming-piper` |
 
 </details>
@@ -129,7 +130,7 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag piper)
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host piper:36.2.0
+sudo docker run --runtime nvidia -it --rm --network=host piper:35.2.1
 
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>

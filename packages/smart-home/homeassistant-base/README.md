@@ -10,7 +10,7 @@
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`homeassistant-core:2024.4.2`](/packages/smart-home/homeassistant-core) [`homeassistant-core:latest`](/packages/smart-home/homeassistant-core) [`wyoming-openwakeword:latest`](/packages/smart-home/wyoming/openwakeword) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`homeassistant-core:2024.4.2`](/packages/smart-home/homeassistant-core) [`homeassistant-core:latest`](/packages/smart-home/homeassistant-core) [`wyoming-assist-microphone:latest`](/packages/smart-home/wyoming/assist-microphone) [`wyoming-openwakeword:latest`](/packages/smart-home/wyoming/openwakeword) [`wyoming-piper:master`](/packages/smart-home/wyoming/piper) [`wyoming-whisper:latest`](/packages/smart-home/wyoming/wyoming-whisper) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Notes | The `homeassistant` base ubuntu image with pre-installed dependencies based on `https://github.com/home-assistant/docker-base/blob/master/ubuntu/Dockerfile` |
 

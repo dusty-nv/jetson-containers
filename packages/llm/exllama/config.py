@@ -22,12 +22,12 @@ def exllama(version, branch=None, requires=None, default=False):
     }
 
     if L4T_VERSION.major >= 36:
-        pkg['depends'].append('flash-attention')
+        pkg['depends'] = pkg['depends'] + ['flash-attention']
         
     return pkg
 
 package = [
-    #exllama('0.0.16', requires='>=36', default=True),
-    exllama('0.0.15', requires='>=36', default=True),
     exllama('0.0.14', requires='==35.*', default=True),
+    exllama('0.0.15', requires='>=36', default=True),
+    #exllama('0.0.16', requires=['>=36', '>=cu124']),
 ]

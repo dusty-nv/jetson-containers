@@ -48,3 +48,11 @@ This is the order in which [`autotag`](/autotag) searches for container images:
 3. Build it from source (it'll ask for confirmation first)
 
 When searching for images, it knows to find containers that are compatible with your version of JetPack-L4T.  For example, if you're on JetPack 4.6.x (L4T R32.7.x), you can run images that were built for other versions of JetPack 4.6.  Or if you're on JetPack 5.1 (L4T R35), you can run images built for other versions of JetPack 5.1 (and likewise for JetPack 6.0 and newer)
+
+## `jtop`
+
+If you have installed [**jetson-stats**](https://github.com/rbonghi/jetson_stats) (or `jtop`) on your host, now a container with jetson-stats (`jtop`) installed can work inside the container by communicating with host server through a socket `/run/jtop.sock` (with `-v /run/jtop.sock:/run/jtop.sock` argument for `docker run`).
+
+Check the [official documentation](https://rnext.it/jetson_stats/docker.html) for the detail.
+
+Make sure you install the same version of jetson-stats (`jtop`) both on your host and in the container.

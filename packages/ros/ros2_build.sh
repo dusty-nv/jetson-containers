@@ -95,6 +95,7 @@ rosinstall_generator --deps --rosdistro ${ROS_DISTRO} ${ROS_PACKAGE} \
 	image_transport \
 	compressed_image_transport \
 	compressed_depth_image_transport \
+ 	rosbag2_storage_mcap \
 > ros2.${ROS_DISTRO}.${ROS_PACKAGE}.rosinstall
 cat ros2.${ROS_DISTRO}.${ROS_PACKAGE}.rosinstall
 vcs import src < ros2.${ROS_DISTRO}.${ROS_PACKAGE}.rosinstall

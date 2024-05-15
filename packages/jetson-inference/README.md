@@ -10,9 +10,8 @@
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.2`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`tensorrt`](/packages/tensorrt) [`opencv`](/packages/opencv) [`gstreamer`](/packages/gstreamer) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`local_llm`](/packages/llm/local_llm) [`nano_llm:24.4`](/packages/llm/nano_llm) [`nano_llm:main`](/packages/llm/nano_llm) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/jetson-inference:22.06`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2022-09-30, 6.5GB)`<br>[`dustynv/jetson-inference:r32.4.3`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2020-10-27, 0.9GB)`<br>[`dustynv/jetson-inference:r32.4.4`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2021-11-16, 0.9GB)`<br>[`dustynv/jetson-inference:r32.5.0`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2021-08-09, 0.9GB)`<br>[`dustynv/jetson-inference:r32.6.1`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2021-08-24, 0.9GB)`<br>[`dustynv/jetson-inference:r32.7.1`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2023-05-15, 1.1GB)`<br>[`dustynv/jetson-inference:r34.1.0`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2022-04-08, 5.9GB)`<br>[`dustynv/jetson-inference:r34.1.1`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2023-03-18, 6.1GB)`<br>[`dustynv/jetson-inference:r35.1.0`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2023-05-15, 6.1GB)`<br>[`dustynv/jetson-inference:r35.2.1`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2023-05-15, 6.0GB)`<br>[`dustynv/jetson-inference:r35.3.1`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2023-05-15, 5.6GB)`<br>[`dustynv/jetson-inference:r35.4.1`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2023-08-30, 5.7GB)`<br>[`dustynv/jetson-inference:r36.2.0`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2023-12-19, 7.9GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/jetson-inference:22.06`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2022-09-30, 6.5GB)`<br>[`dustynv/jetson-inference:r32.4.3`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2020-10-27, 0.9GB)`<br>[`dustynv/jetson-inference:r32.4.4`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2021-11-16, 0.9GB)`<br>[`dustynv/jetson-inference:r32.5.0`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2021-08-09, 0.9GB)`<br>[`dustynv/jetson-inference:r32.6.1`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2021-08-24, 0.9GB)`<br>[`dustynv/jetson-inference:r32.7.1`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2023-05-15, 1.1GB)`<br>[`dustynv/jetson-inference:r34.1.0`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2022-04-08, 5.9GB)`<br>[`dustynv/jetson-inference:r34.1.1`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2023-03-18, 6.1GB)`<br>[`dustynv/jetson-inference:r35.1.0`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2023-05-15, 6.1GB)`<br>[`dustynv/jetson-inference:r35.2.1`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2023-05-15, 6.0GB)`<br>[`dustynv/jetson-inference:r35.3.1`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2023-05-15, 5.6GB)`<br>[`dustynv/jetson-inference:r35.4.1`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2023-08-30, 5.7GB)`<br>[`dustynv/jetson-inference:r36.2.0`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2023-12-19, 7.9GB)`<br>[`dustynv/jetson-inference:r36.3.0`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2024-05-08, 7.2GB)` |
 
 </details>
 
@@ -35,6 +34,7 @@
 | &nbsp;&nbsp;[`dustynv/jetson-inference:r35.3.1`](https://hub.docker.com/r/dustynv/jetson-inference/tags) | `2023-05-15` | `arm64` | `5.6GB` |
 | &nbsp;&nbsp;[`dustynv/jetson-inference:r35.4.1`](https://hub.docker.com/r/dustynv/jetson-inference/tags) | `2023-08-30` | `arm64` | `5.7GB` |
 | &nbsp;&nbsp;[`dustynv/jetson-inference:r36.2.0`](https://hub.docker.com/r/dustynv/jetson-inference/tags) | `2023-12-19` | `arm64` | `7.9GB` |
+| &nbsp;&nbsp;[`dustynv/jetson-inference:r36.3.0`](https://hub.docker.com/r/dustynv/jetson-inference/tags) | `2024-05-08` | `arm64` | `7.2GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -51,10 +51,10 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag jetson-inference)
 
 # or explicitly specify one of the container images above
-jetson-containers run dustynv/jetson-inference:r36.2.0
+jetson-containers run dustynv/jetson-inference:r36.3.0
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/jetson-inference:r36.2.0
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/jetson-inference:r36.3.0
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
