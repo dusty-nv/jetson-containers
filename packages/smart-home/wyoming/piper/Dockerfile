@@ -51,3 +51,5 @@ LABEL \
     io.hass.version="${WYOMING_PIPER_VERSION}" \
     io.hass.arch="${BUILD_ARCH}" \
     io.hass.machine="qemuarm-64"
+
+CMD ["/init"]

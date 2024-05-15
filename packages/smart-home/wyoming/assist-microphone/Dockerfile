@@ -57,3 +57,5 @@ LABEL \
     io.hass.version="${SATELLITE_VERSION}" \
     io.hass.arch="${BUILD_ARCH}" \
     io.hass.machine="qemuarm-64"
+
+CMD ["/init"]
