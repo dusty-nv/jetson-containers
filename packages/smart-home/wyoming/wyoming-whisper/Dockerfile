@@ -36,3 +36,10 @@ HEALTHCHECK --start-period=10m \
         | nc -w 1 localhost ${WHISPER_PORT} \
         | grep -q "faster-whisper" \
         || exit 1
+
+LABEL \
+    io.hass.type="addon" \
+    io.hass.name="whisper" \
+    io.hass.version="${WYOMING_WHISPER_VERSION}" \
+    io.hass.arch="${BUILD_ARCH}" \
+    io.hass.machine="qemuarm-64"
