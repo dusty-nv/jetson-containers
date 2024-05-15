@@ -2,6 +2,7 @@
 # name: eudev
 # group: smart-home
 # config: config.py
+# test: test.sh
 # requires: '>=34.1.0'
 # depends: [build-essential]
 #---
