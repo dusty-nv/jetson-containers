@@ -4,20 +4,20 @@
 set -euxo pipefail
 
 echo "Installing Home Assistant Supervised..."
-echo "Verify system bus: Ensure that the system bus (D-Bus) is running and accessible:"
+# echo "Verify system bus: Ensure that the system bus (D-Bus) is running and accessible:"
 
-systemctl status systemd
-systemctl status dbus
-systemctl status network-manager
-# Make sure dbus is set to start at boot
-systemctl enable systemd
-systemctl enable dbus
-systemctl enable network-manager
+# systemctl status systemd
+# systemctl status dbus
+# systemctl status network-manager
+# # Make sure dbus is set to start at boot
+# systemctl enable systemd
+# systemctl enable dbus
+# systemctl enable network-manager
 
-echo "Check if systemd is running: Verify whether your system is using systemd as its init system:"
-pidof systemd
-pidof dbus
-pidof network-manager
+# echo "Check if systemd is running: Verify whether your system is using systemd as its init system:"
+# pidof systemd
+# pidof dbus
+# pidof network-manager
 
 # check if we have apparmor on system
 # apparmor profile: https://version.home-assistant.io/apparmor.txt
@@ -38,15 +38,15 @@ pidof network-manager
 # 	--privileged \
 # 	my-service-image
 # ```
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-add-apt-repository \
-    "deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/ubuntu \
-    $(lsb_release -cs) stable"
-apt-get update
-apt-get install -y --no-install-recommends \
-	docker-ce \
-	docker-ce-cli \
-	containerd.io
+# curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+# add-apt-repository \
+#     "deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/ubuntu \
+#     $(lsb_release -cs) stable"
+# apt-get update
+# apt-get install -y --no-install-recommends \
+# 	docker-ce \
+# 	docker-ce-cli \
+# 	containerd.io
 
 # Install the Agent for Home Assistant OS - https://github.com/home-assistant/os-agent
 echo "Installing Home Assistant OS-Agent..."
@@ -59,13 +59,12 @@ gdbus introspect --system --dest io.hass.os --object-path /io/hass/os
 rm /tmp/os-agent_*.deb
 
 # Build Home Assistant Supervised
-# SUPERVISED_VERSION
-git clone --branch=${SUPERVISED_VERSION} https://github.com/home-assistant/supervised-installer /tmp/ha-supervised
-cd /tmp/ha-supervised/homeassistant-supervised
+git clone --branch=${SUPERVISED_VERSION} https://github.com/home-assistant/supervised-installer /tmp/supervised-installer
+cd /tmp/supervised-installer/homeassistant-supervised
 dpkg-buildpackage -us -uc
-ls -l /tmp/ha-supervised
-dpkg -i /tmp/ha-supervised/apparmor-deb_*.deb
-# cp -r /tmp/ha-supervised/* /
+ls -l /tmp/supervised-installer
+dpkg -i /tmp/supervised-installer/apparmor-deb_*.deb
+# cp -r /tmp/supervised-installer/* /
 
 # Reconfigure installation if user changed the default path for our $DATA_SHARE from /usr/share/hassio.
 # This path is used to store all home assistant related things.
@@ -73,4 +72,9 @@ dpkg -i /tmp/ha-supervised/apparmor-deb_*.deb
 # 	dpkg --force-confdef --force-confold -i /opt/homeassistant-supervised.deb
 # fi
 
-systemctl enable docker
+# systemctl enable docker
+
+
+# Copy Home Assistant Supervised system overlay
+# cp -r /tmp/supervised-installer/etc/* /etc/
+# cp -r /tmp/supervised-installer/usr/* /usr/
