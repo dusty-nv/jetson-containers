@@ -72,4 +72,4 @@ RUN apt-get update \
 # S6-Overlay
 WORKDIR /
 
-CMD /init
+# CMD ["/init"]
