@@ -1,29 +1,21 @@
 #!/usr/bin/env bash
 # homeassistant-supervisor
 
-set -euxo pipefail
+set -xo pipefail
 
-echo "Installing Home Assistant Supervisor ${SUPERVISOR_VERSION}..."
-
-# Install dependencies
-apt-get update
-apt-get install -y --no-install-recommends \
-	findutils \
-	git \
-	libffi-dev \
-	libpulse-dev \
-	musl-tools \
-	openssl \
-	libyaml-dev
-apt-get clean
-rm -rf /var/lib/apt/lists/*
-
+curl -Lso /usr/bin/yq "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_arm64"
 curl -Lso /usr/bin/cosign "https://github.com/home-assistant/cosign/releases/download/${COSIGN_VERSION}/cosign_${BUILD_ARCH}"
 chmod a+x /usr/bin/cosign
 
+# Install Home Assistant Supervisor
+echo "Installing Home Assistant Supervisor ${SUPERVISOR_VERSION}..."
 git clone --branch=${SUPERVISOR_VERSION} https://github.com/home-assistant/supervisor /usr/src/supervisor
 
-# Do some fixes
+git -C /usr/src/supervisor apply /tmp/homeassistant-supervisor/patch.diff
+git -C /usr/src/supervisor diff
+git -C /usr/src/supervisor status
+
+# Set version
 sed -i \
   -e 's|name = "Supervisor"|name = "supervisor"|g' \
   /usr/src/supervisor/pyproject.toml

@@ -10,6 +10,7 @@ def create_package(version, default=False) -> list:
     pkg['build_args'] = {
         'SUPERVISOR_VERSION': wanted_version,
         'COSIGN_VERSION': '2.2.3',
+        'YQ_VERSION': 'v4.13.2'
     }
 
     if default:
