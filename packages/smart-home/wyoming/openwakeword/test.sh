@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -exo pipefail
+
 echo "Testing wyoming-openwakeword..."
 
 python3 -c 'import wyoming_openwakeword; print(wyoming_openwakeword.__version__);'
