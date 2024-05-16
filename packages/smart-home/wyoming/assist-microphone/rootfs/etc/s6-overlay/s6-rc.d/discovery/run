@@ -17,8 +17,8 @@ config=$(\
         uri "tcp://$(hostname):10700" \
 )
 
-# if bashio::discovery "wyoming" "${config}" > /dev/null; then
-#     bashio::log.info "Successfully sent discovery information to Home Assistant."
-# else
-#     bashio::log.error "Discovery message to Home Assistant failed!"
-# fi
+if bashio::discovery "wyoming" "${config}" > /dev/null; then
+    bashio::log.info "Successfully sent discovery information to Home Assistant."
+else
+    bashio::log.error "Discovery message to Home Assistant failed!"
+fi
