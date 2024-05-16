@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # eudev
+set -exo pipefail
+
 echo "testing eudev..."
 
 dpkg -l | grep udev
 
 which udevd
 
-udev --version
 udevd --version
 
 echo "eudev OK"
