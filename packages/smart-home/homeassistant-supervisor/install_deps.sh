@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # homeassistant-supervisor
 
-set -xo pipefail
+set -exo pipefail
 
 # Install dependencies
 apt-get update

@@ -3,7 +3,7 @@
 # group: smart-home
 # config: config.py
 # requires: '>=34.1.0'
-# depends: [homeassistant-base, homeassistant-os-agent, ciso8601, eudev]
+# depends: [homeassistant-base, ciso8601, eudev]
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
@@ -22,12 +22,11 @@ ENV DEFAULT_PYTHON="3.12" \
   SUPERVISOR_API=http://localhost \
   LD_PRELOAD="${LD_PRELOAD:-}:/usr/local/lib/libjemalloc.so.2" \
   MALLOC_CONF="background_thread:true,metadata_thp:auto" \
-  SUPERVISOR_MACHINE="qemuarm-64" \
   SUPERVISOR_NAME="hassio_supervisor" \
-  SUPERVISOR_SHARE="/usr/share/hassio" \
-  HOME_ASSISTANT_TOKEN=""
+  SUPERVISOR_MACHINE="qemuarm-64" \
+  SUPERVISOR_SHARE="/usr/share/hassio"
 
-COPY *.sh *.diff /tmp/homeassistant-supervisor/
+COPY *.sh /tmp/homeassistant-supervisor/
 
 RUN /tmp/homeassistant-supervisor/install_deps.sh \
   && /tmp/homeassistant-supervisor/build.sh
@@ -44,6 +43,7 @@ LABEL \
   io.hass.version="${SUPERVISOR_VERSION}" \
   io.hass.arch="${BUILD_ARCH}" \
   io.hass.machine="${SUPERVISOR_MACHINE}" \
+  maintainer="Mieszko Syty <https://github.com/ms1design>" \
   org.opencontainers.image.title="Home Assistant Supervisor" \
   org.opencontainers.image.description="Container-based system for managing Home Assistant Core installation" \
   org.opencontainers.image.source="https://github.com/home-assistant/supervisor" \
