@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Docker access for Home Assistant Supervised
 
+set -exo pipefail
+
 echo "Testing Docker access..."
 
 docker info
