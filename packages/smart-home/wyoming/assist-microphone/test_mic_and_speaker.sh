@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # wyoming-assist-microphone
 
+set -exo pipefail
+
 echo "Testing microphone recording..."
 
 arecord -D plughw:CARD=S330,DEV=0 -r 16000 -c 1 -f S16_LE -t wav -d 5 /tmp/recording.wav
