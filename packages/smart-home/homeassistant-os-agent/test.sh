@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 # homeassistant-os-agent
+set -exo pipefail
+
 echo "testing homeassistant-os-agent..."
 
 gdbus introspect --system --dest io.hass.os --object-path /io/hass/os

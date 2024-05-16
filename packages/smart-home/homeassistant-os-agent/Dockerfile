@@ -10,6 +10,7 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG OS_AGENT_VERSION \
+    CGO_ENABLED=0 \
     OS_AGENT_TMP_DIR="/tmp/homeassistant-os-agent"
 
 SHELL ["/bin/bash", "-xo", "pipefail", "-c"]

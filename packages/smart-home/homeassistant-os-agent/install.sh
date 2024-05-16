@@ -19,9 +19,20 @@ rm -rf /var/lib/apt/lists/*
 # 	-O /tmp/os-agent_${OS_AGENT_VERSION}_linux_${BUILD_ARCH}.deb
 # dpkg -i /tmp/os-agent_*.deb
 
+go get github.com/goreleaser/goreleaser
+
 git clone --branch ${OS_AGENT_VERSION} https://github.com/home-assistant/os-agent ${OS_AGENT_TMP_DIR}
 cd ${OS_AGENT_TMP_DIR}
 ls -l
-go build --clean
+go mod tidy
+go generate ./...
+go build -ldflags="-s -w -X 'main.version=${OS_AGENT_VERSION}' -X 'main.board=Supervised'"
 ls -l
 go install
+
+# Copy the entrypoint script
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+
+# Set the entrypoint
+# FIXME: Fix tests
+# ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
