@@ -14,7 +14,7 @@ open_webui = package.copy()
 
 open_webui['name'] = 'ollama:open-webui'
 open_webui['dockerfile'] = 'Dockerfile.open-webui'
-open_webui['depends'] = ['ollama:main']
+open_webui['depends'] = ['ollama:main', 'docker']
 
 del open_webui['alias']
 

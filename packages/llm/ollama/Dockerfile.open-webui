@@ -5,5 +5,11 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-CMD /start_ollama && \
-    docker run -it --rm --network=host --add-host=host.docker.internal:host-gateway ghcr.io/open-webui/open-webui:main 
+COPY start_ollama_openwebui /
+
+# ENTRYPOINT /start_ollama && \
+#     /start_open_webui && \
+#     /stop_open_webui_upon_exit & \
+#     /bin/bash
+
+ENTRYPOINT ["/start_ollama_openwebui"]

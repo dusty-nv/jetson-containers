@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+: "${OLLAMA_LOGS:=/data/logs/ollama.log}"
+: "${OPEN_WEBUI_PORT:=8080}"
+: "${OPEN_WEBUI_LOGS:=/data/logs/openw-webui.log}"
+
+
+stop_container_openwebui() {
+    echo ">>> docker stop open-webui "
+    docker stop open-webui 
+    exit
+}
+
+trap "stop_container_openwebui; echo '[start] SIGTERM received'; exit" TERM
+
+### Ollama server 
+
+printf "\n >>>>>>> Starting ollama server\n\n"
+
+/bin/bash -c "/bin/ollama serve &> $OLLAMA_LOGS" &
+
+timeout 5 tail -f $OLLAMA_LOGS
+
+printf "\nOLLAMA_MODELS ${OLLAMA_MODELS}\n"
+printf "OLLAMA_LOGS   ${OLLAMA_LOGS}\n"
+
+printf "\nollama server is now started, and you can run commands here like 'ollama run llama3'\n\n"
+
+### Open WebUI
+
+server_url="http://$(hostname -I | cut -d' ' -f1):${OPEN_WEBUI_PORT}"
+
+printf "\n >>>>>>> Starting Open WebUI\n\n"
+
+echo "/bin/bash -c \"docker run --rm --network=host -e OLLAMA_BASE_URL=http://127.0.0.1:11434 -e DOCS_DIR=/data/documents -v /home/jetson/jetson-containers_tokknv/data/documents/:/data/documents/ --name open-webui ghcr.io/open-webui/open-webui:dev &> $OPEN_WEBUI_LOGS\" &"
+/bin/bash -c "docker run --rm --network=host -e OLLAMA_BASE_URL=http://127.0.0.1:11434 -e DOCS_DIR=/data/documents -v /home/jetson/jetson-containers_tokknv/data/documents/:/data/documents/ --name open-webui ghcr.io/open-webui/open-webui:dev &> $OPEN_WEBUI_LOGS" &
+
+timeout 5 tail -f $OPEN_WEBUI_LOGS
+
+printf "\nOpen WebUI is now started\n\n"
+printf "Open WebUI URL:   $server_url \n"
+printf "Open WebUI logs:  ${OPEN_WEBUI_LOGS}\n\n"
+
+/bin/bash; stop_container_openwebui
