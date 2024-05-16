@@ -51,11 +51,17 @@ HEALTHCHECK --start-period=10m \
         | grep -q "assist" \
         || exit 1
 
+# https://github.com/home-assistant/developers.home-assistant/blob/master/docs/add-ons/configuration.md?plain=1#L122
 LABEL \
+    io.hass.name="jetson-assist-microphone" \
     io.hass.type="addon" \
-    io.hass.name="assist-microphone" \
     io.hass.version="${SATELLITE_VERSION}" \
     io.hass.arch="${BUILD_ARCH}" \
-    io.hass.machine="qemuarm-64"
+    io.hass.machine="qemuarm-64" \
+    maintainer="Mieszko Syty <https://github.com/ms1design>" \
+    org.opencontainers.image.title="jetson-assist-microphone" \
+    org.opencontainers.image.vendor="Home Assistant Add-ons" \
+    org.opencontainers.image.licenses="MIT" \
+    org.opencontainers.image.version=${SATELLITE_VERSION}
 
 CMD ["/init"]
