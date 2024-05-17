@@ -6,6 +6,9 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install --no-cache-dir --verbose opencv-contrib-python~=${OPENCV_VERSION}
+if [ ! -z "$OPENCV_URL" ]; then
+    echo "Installing opencv from deb packages"
+    exit 1
+fi
 
-python3 -c 'import cv2; print(cv2.getBuildInformation());'
+pip3 install --no-cache-dir --verbose opencv-contrib-python~=${OPENCV_VERSION}
