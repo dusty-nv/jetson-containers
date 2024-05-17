@@ -37,7 +37,7 @@ RUN apt-get update && \
 
 # re-install opencv and make a copy of these gstreamer headers (some of them get purged)
 RUN cp -r /usr/include/gstreamer-1.0 /tmp && \
-    #cd /opt && ./opencv_install.sh && \
+    /tmp/opencv/install.sh && \
     cp -r /tmp/gstreamer-1.0 /usr/include && \
     rm -rf /tmp/gstreamer-1.0 && \
     ln -s /usr/lib/$(uname -m)-linux-gnu/libgstwebrtc-1.0.so.0 /usr/lib/$(uname -m)-linux-gnu/libgstwebrtc-1.0.so || \

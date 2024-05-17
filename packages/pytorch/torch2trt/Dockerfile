@@ -16,6 +16,7 @@ RUN cd /opt && \
     #cat torch2trt/converters/interpolate.py | grep Sequence && \
     pip3 install --verbose . && \
     sed 's|^set(CUDA_ARCHITECTURES.*|#|g' -i CMakeLists.txt && \
+    sed 's|Catch2_FOUND|False|g' -i CMakeLists.txt && \
     cmake -B build -DCUDA_ARCHITECTURES=${CUDA_ARCHITECTURES} . && \
     cmake --build build --target install && \
     ldconfig && \

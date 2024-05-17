@@ -10,16 +10,6 @@ if [[ -z ${OPENCV_URL} || -z ${OPENCV_DEB} ]]; then
 	exit 255
 fi
 
-if [ "$FORCE_BUILD" == "on" ]; then
-	echo "Forcing build of opencv-python ${OPENCV_VERSION}"
-	exit 255
-fi
-
-#sed -i \
-#	-e '2i OPENCV_URL=${OPENCV_URL}' \
-#	-e '3i OPENCV_DEB=${OPENCV_DEB}' \
-#	/tmp/opencv/install_deb.sh \
-
 ARCH=$(uname -i)
 echo "ARCH:  $ARCH"
 
@@ -86,6 +76,3 @@ elif [ $ARCH = "x86_64" ]; then
 	fi
 fi
 
-# test importing cv2
-echo "testing cv2 module under python..."
-python3 -c "import cv2; print('OpenCV version:', str(cv2.__version__)); print(cv2.getBuildInformation())"
