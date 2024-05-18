@@ -8,9 +8,10 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG TORCHVISION_VERSION
+ARG TORCHVISION_VERSION \
+    FORCE_BUILD=off
 
-COPY build.sh /tmp/build_torchvision.sh
+COPY build.sh install.sh /tmp/torchvision/
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -20,4 +21,4 @@ RUN apt-get update && \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& apt-get clean
 
-RUN pip3 install --no-cache-dir torchvision==${TORCHVISION_VERSION} || /tmp/build_torchvision.sh
+RUN /tmp/torchvision/install.sh || /tmp/torchvision/build.sh
