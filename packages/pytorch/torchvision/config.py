@@ -14,21 +14,26 @@ def torchvision(version, pytorch=None, requires=None):
         
     if requires:
         pkg['requires'] = requires
-    
-    if not isinstance(pytorch, Version):
-        pytorch = Version(pytorch)
-
-    if pytorch == PYTORCH_VERSION:
-        pkg['alias'] = 'torchvision'
-     
+   
     if len(version.split('.')) < 3:
         version = version + '.0'
         
     pkg['build_args'] = {
         'TORCHVISION_VERSION': version,
     }
+    
+    builder = pkg.copy()
+    builder['name'] = builder['name'] + '-builder'
+    builder['build_args'] = {**builder['build_args'], 'FORCE_BUILD': 'on'}
+    
+    if not isinstance(pytorch, Version):
+        pytorch = Version(pytorch)
 
-    return pkg
+    if pytorch == PYTORCH_VERSION:
+        pkg['alias'] = 'torchvision'
+        builder['alias'] = 'torchvision:builder'
+
+    return pkg, builder
     
  
 package = [
