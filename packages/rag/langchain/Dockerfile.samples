@@ -12,7 +12,9 @@ RUN pip install \
     boto3 \
     jetson-stats \
     unstructured \
-    langchain-openai
+    langchain-openai \
+    streamlit \
+    chainlit
 
 WORKDIR /opt/langchain
 
