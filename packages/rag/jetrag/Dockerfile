@@ -11,7 +11,9 @@ FROM ${BASE_IMAGE}
 RUN pip3 install --no-cache-dir --verbose \
         llama-index-core \
         llama-index-readers-file \
+        llama-index-llms-openai \
         llama-index-llms-ollama \
+        llama-index-embeddings-openai \
         llama-index-embeddings-ollama \
         chromadb \
         pypdf \
@@ -28,4 +30,4 @@ COPY app.py /opt/jetrag/app.py
 COPY .streamlit/ /opt/jetrag/.streamlit
 COPY static/ /opt/jetrag/static
 
-ENTRYPOINT [ "/start_ollama" ]  
+CMD /start_ollama && /bin/bash

@@ -11,8 +11,10 @@ This will start the `ollama` server and enter into a `bash` terminal.
 
 ## Starting "Jetson Copilot" app inside the container
 
+Once in the container:
+
 ```bash
-jetson-containers run $(autotag jetrag) streamlit run /opt/jetrag/app.py
+streamlit run /opt/jetrag/app.py
 ```
 
 This will start the `ollama` server and `streamlit` app for "Jetson Copilot", an AI assistant to answer any questions based on documents provided in `/data/documents/jetson` directory.
