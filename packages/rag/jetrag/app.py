@@ -6,6 +6,7 @@ from llama_index.llms.ollama import Ollama
 from llama_index.core.memory import ChatMemoryBuffer
 from llama_index.embeddings.ollama import OllamaEmbedding
 from PIL import Image
+import time
 
 # App title
 st.set_page_config(page_title=":airplane: JETRAG", menu_items=None)
@@ -56,7 +57,8 @@ index = load_data()
 # init models
 if "chat_engine" not in st.session_state.keys(): # Initialize the chat engine
     st.session_state.chat_engine = index.as_chat_engine(
-        chat_mode="condense_plus_context", 
+        chat_mode="context", 
+        streaming=True,
         memory=ChatMemoryBuffer.from_defaults(token_limit=3900),
         llm=Settings.llm,
         context_prompt=("""
@@ -67,20 +69,37 @@ if "chat_engine" not in st.session_state.keys(): # Initialize the chat engine
         ),
         verbose=True)
 
-if prompt := st.chat_input("Enter prompt here.."):
-    # add latest message to history in format {role, content}
-    st.session_state.messages.append({"role": "user", "content": prompt, "avatar": AVATAR_USER})
+def model_res_generator(prompt):
+    response_stream = st.session_state.chat_engine.stream_chat(prompt)
+
+    for chunk in response_stream.response_gen:
+        yield chunk
 
 # Display chat messages from history on app rerun
 for message in st.session_state.messages:
     with st.chat_message(message["role"], avatar=message["avatar"]):
         st.markdown(message["content"])
 
-# If last message is not from assistant, generate a new response
-if st.session_state.messages[-1]["role"] != "assistant":
+if prompt := st.chat_input("Enter prompt here.."):
+    # add latest message to history in format {role, content}
+    st.session_state.messages.append({"role": "user", "content": prompt, "avatar": AVATAR_USER})
+
+    with st.chat_message("user", avatar=AVATAR_USER):
+        st.markdown(prompt)
+
     with st.chat_message("assistant", avatar=AVATAR_AI):
         with st.spinner("Thinking..."):
-            response = st.session_state.chat_engine.chat(prompt)
-            st.markdown(response.response)
-            message = {"role": "assistant", "content": response.response, "avatar": AVATAR_AI}
-            st.session_state.messages.append(message) # Add response to message history
+            time.sleep(1)
+            message = st.write_stream(model_res_generator(prompt))
+            st.session_state.messages.append({"role": "assistant", "content": message, "avatar": AVATAR_AI})
+
+
+# If last message is not from assistant, generate a new response
+# if st.session_state.messages[-1]["role"] != "assistant":
+#     with st.chat_message("assistant", avatar=AVATAR_AI):
+#         with st.spinner("Thinking..."):
+#             response = st.session_state.chat_engine.chat(prompt)
+#             st.markdown(response.response)
+#             message = {"role": "assistant", "content": response.response, "avatar": AVATAR_AI}
+#             st.session_state.messages.append(message) # Add response to message history
+
