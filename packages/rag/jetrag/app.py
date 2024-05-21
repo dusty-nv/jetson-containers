@@ -5,53 +5,43 @@ from llama_index.core import VectorStoreIndex, Settings, SimpleDirectoryReader
 from llama_index.llms.ollama import Ollama
 from llama_index.core.memory import ChatMemoryBuffer
 from llama_index.embeddings.ollama import OllamaEmbedding
-
-AVATAR_AI   = 'http://10.110.50.241:8501/app/static/jetson-soc.png'
-AVATAR_USER = 'http://10.110.50.241:8501/app/static/user-purple.png'
+from PIL import Image
 
 # App title
-st.set_page_config(page_title=":airplane: JETRAG")
+st.set_page_config(page_title=":airplane: JETRAG", menu_items=None)
 
-def reset_settings():
-    st.session_state.messages = [
-        {"role": "assistant", "content": "Ask me a question about NVIDIA Jetson embedded AI computer!", "avatar": AVATAR_AI}
-    ]
-    # Llama-Index Settings
-    Settings.embed_model = OllamaEmbedding(model_name="mxbai-embed-large")
-    Settings.llm = Ollama(model=st.session_state.llm, request_timeout=300.0)
-    Settings.chunk_size = 800
-    Settings.chunk_overlap = 50
+AVATAR_AI   = Image.open('./static/jetson-soc.png')
+AVATAR_USER = Image.open('./static/user-purple.png')
 
 @st.cache_resource(show_spinner=False)
 def pull_models():
     models = [model["name"] for model in ollama.list()["models"]]
-    if "llama3:latest" not in models:
+    if "llamaa3:latest" not in models:
         with st.spinner("Downloading llama3 model..."):
             ollama.pull('llama3')
     if "mxbai-embed-large:latest" not in models: 
         with st.spinner("Downloading mxbai-embed-large model..."):
             ollama.pull('mxbai-embed-large')
 
-pull_models()
-
 # Side bar
 with st.sidebar:
+    pull_models()
     st.title(":airplane: Jetson Copilot")
     st.subheader('Your local AI assistant on Jetson', divider='rainbow')
     models = [model["name"] for model in ollama.list()["models"]]
     st.info("Select your models from below", icon="⚙️")
-
-    st.session_state.llm = st.selectbox("Choose your LLM", models, index=models.index("llama3:latest"), on_change=reset_settings)
-    st.session_state.embedding_model = st.selectbox("Choose your embedding model", [k for k in models if 'embed' in k], index=[k for k in models if 'embed' in k].index("mxbai-embed-large:latest"), on_change=reset_settings)
+    Settings.llm = Ollama(model=st.selectbox("Choose your LLM", models, index=models.index("llama3:latest")), request_timeout=300.0)
+    Settings.embed_model = OllamaEmbedding(model_name=st.selectbox("Choose your embedding model", [k for k in models if 'embed' in k], index=[k for k in models if 'embed' in k].index("mxbai-embed-large:latest")))
     extra_config = st.toggle("Show extra configs")
     if extra_config:
         Settings.chunk_size = st.slider("Embedding Chunk Size", 100, 5000, 800)
         Settings.chunk_overlap = st.slider("Embedding Chunk Overlap", 10, 500, 50)
 
-
 # initialize history
 if "messages" not in st.session_state.keys():
-    reset_settings()
+    st.session_state.messages = [
+        {"role": "assistant", "content": "Ask me any question about NVIDIA Jetson embedded AI computer!", "avatar": AVATAR_AI}
+    ]
 
 @st.cache_resource(show_spinner=False)
 def load_data():
@@ -60,13 +50,6 @@ def load_data():
         docs = reader.load_data()
         index = VectorStoreIndex.from_documents(docs)
         return index
-
-
-# Llama-Index Settings
-Settings.embed_model = OllamaEmbedding(model_name="mxbai-embed-large")
-Settings.llm = Ollama(model="llama3:default", request_timeout=300.0)
-Settings.chunk_size = 800
-Settings.chunk_overlap = 50
 
 index = load_data()
 
@@ -83,7 +66,6 @@ if "chat_engine" not in st.session_state.keys(): # Initialize the chat engine
             \nInstruction: Use the previous chat history, or the context above, to interact and help the user."""
         ),
         verbose=True)
-
 
 if prompt := st.chat_input("Enter prompt here.."):
     # add latest message to history in format {role, content}

@@ -17,6 +17,11 @@ Once in the container:
 streamlit run /opt/jetrag/app.py
 ```
 
+> Or you can start the container with additional arguments:
+> ```
+> jetson-containers run $(autotag jetrag) bash -c '/start_ollama && streamlit run app.py'
+> ```
+
 This will start the `ollama` server and `streamlit` app for "Jetson Copilot", an AI assistant to answer any questions based on documents provided in `/data/documents/jetson` directory.
 
 It should show something like this:
