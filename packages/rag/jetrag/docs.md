@@ -11,6 +11,14 @@ This will start the `ollama` server and enter into a `bash` terminal.
 
 ## Starting "Jetson Copilot" app inside the container
 
+First, create a directory on the host side to store Jetson related documents. The `data` directory is mounted on the container.
+
+```
+cd jetson-containers
+mkdir -p ./data/documents/jetson
+```
+
+
 Once in the container:
 
 ```bash

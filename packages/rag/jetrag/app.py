@@ -16,20 +16,20 @@ AVATAR_USER = Image.open('./static/user-purple.png')
 @st.cache_resource(show_spinner=False)
 def pull_models():
     models = [model["name"] for model in ollama.list()["models"]]
-    if "llamaa3:latest" not in models:
-        with st.spinner("Downloading llama3 model..."):
+    if "llama3:latest" not in models:
+        with st.spinner("Downloading llama3 model... (This will take 2-5 mins)"):
             ollama.pull('llama3')
     if "mxbai-embed-large:latest" not in models: 
-        with st.spinner("Downloading mxbai-embed-large model..."):
+        with st.spinner("Downloading mxbai-embed-large model... (This will take 2-5 mins)"):
             ollama.pull('mxbai-embed-large')
 
 # Side bar
 with st.sidebar:
-    pull_models()
     st.title(":airplane: Jetson Copilot")
     st.subheader('Your local AI assistant on Jetson', divider='rainbow')
     models = [model["name"] for model in ollama.list()["models"]]
     st.info("Select your models from below", icon="⚙️")
+    pull_models()
     Settings.llm = Ollama(model=st.selectbox("Choose your LLM", models, index=models.index("llama3:latest")), request_timeout=300.0)
     Settings.embed_model = OllamaEmbedding(model_name=st.selectbox("Choose your embedding model", [k for k in models if 'embed' in k], index=[k for k in models if 'embed' in k].index("mxbai-embed-large:latest")))
     extra_config = st.toggle("Show extra configs")
