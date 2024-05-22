@@ -8,6 +8,6 @@ FROM ${BASE_IMAGE}
 WORKDIR /opt/langchain
 
 COPY *.ipynb ./
-RUN sed 's|^\ \ }|    ,"notebook_dir": "/opt/langchain"\n  }|' -i /root/.jupyter/jupyter_notebook_config.json
+# RUN sed 's|^\ \ }|    ,"notebook_dir": "/opt/langchain"\n  }|' -i /root/.jupyter/jupyter_notebook_config.json
 
 WORKDIR /

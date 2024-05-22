@@ -1,5 +1,6 @@
 #---
 # name: jupyterlab
+# alias: jupyterlab:main
 # group: core
 # depends: [python, numpy, rust]
 # docs: docs.md
@@ -16,12 +17,17 @@ SHELL ["/bin/bash", "-c"]
 RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /root/.bashrc
 
 # jupyterlab<4 -- ModuleNotFoundError: No module named 'notebook.auth'
-RUN pip3 install --no-cache-dir --verbose jupyter 'jupyterlab<4' && \
+RUN pip3 install --no-cache-dir --verbose jupyter 'jupyterlab==4.2.0' && \
     pip3 install --no-cache-dir --verbose jupyterlab_widgets
+
+RUN pip3 list
+RUN jupyter --version
+RUN jupyter labextension list
     
 RUN jupyter lab --version && jupyter lab --generate-config
-RUN python3 -c "from notebook.auth.security import set_password; set_password('nvidia', '/root/.jupyter/jupyter_notebook_config.json')"
+# RUN python3 -c "from notebook.auth.security import set_password; set_password('nvidia', '/root/.jupyter/jupyter_notebook_config.json')"
 
+COPY jupyter_server_config.json /root/.jupyter/
 COPY start_jupyter /
 CMD /start_jupyter && /bin/bash
 
