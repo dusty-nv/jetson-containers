@@ -1,0 +1,24 @@
+# 
+# this is the llama-index:samples container (built on top of llama-index)
+# see Dockerfile & config.py for package configuration/metadata
+#
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+RUN pip install \
+            llama-index \
+            llama-index-embeddings-ollama \
+            chromadb \
+            pypdf \
+            pytest \
+            boto3 \
+            jetson-stats \
+            unstructured 
+
+WORKDIR /opt/llama-index
+
+COPY samples/* /opt/llama-index/
+
+CMD /start_ollama && \
+    JUPYTER_ROOT=/opt/llama-index /start_jupyter && \
+    /bin/bash

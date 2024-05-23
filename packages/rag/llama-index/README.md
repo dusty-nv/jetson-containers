@@ -51,10 +51,12 @@ python3 /opt/llama-index/llamaindex_starter.py
 
 | **`llama-index`** | |
 | :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `llama-index:main` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`ollama`](/packages/llm/ollama) [`rust`](/packages/build/rust) [`jupyterlab`](/packages/jupyterlab) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda:12.2`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`llama-index:samples`](/packages/rag/llama-index) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/llama-index:r35.4.1`](https://hub.docker.com/r/dustynv/llama-index/tags) `(2024-04-30, 6.4GB)`<br>[`dustynv/llama-index:r36.2.0`](https://hub.docker.com/r/dustynv/llama-index/tags) `(2024-04-30, 6.2GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/llama-index:r35.4.1`](https://hub.docker.com/r/dustynv/llama-index/tags) `(2024-05-23, 5.5GB)`<br>[`dustynv/llama-index:r36.2.0`](https://hub.docker.com/r/dustynv/llama-index/tags) `(2024-04-30, 6.2GB)`<br>[`dustynv/llama-index:r36.3.0`](https://hub.docker.com/r/dustynv/llama-index/tags) `(2024-05-23, 5.5GB)` |
 
 </details>
 
@@ -64,8 +66,9 @@ python3 /opt/llama-index/llamaindex_starter.py
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/llama-index:r35.4.1`](https://hub.docker.com/r/dustynv/llama-index/tags) | `2024-04-30` | `arm64` | `6.4GB` |
+| &nbsp;&nbsp;[`dustynv/llama-index:r35.4.1`](https://hub.docker.com/r/dustynv/llama-index/tags) | `2024-05-23` | `arm64` | `5.5GB` |
 | &nbsp;&nbsp;[`dustynv/llama-index:r36.2.0`](https://hub.docker.com/r/dustynv/llama-index/tags) | `2024-04-30` | `arm64` | `6.2GB` |
+| &nbsp;&nbsp;[`dustynv/llama-index:r36.3.0`](https://hub.docker.com/r/dustynv/llama-index/tags) | `2024-05-23` | `arm64` | `5.5GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
