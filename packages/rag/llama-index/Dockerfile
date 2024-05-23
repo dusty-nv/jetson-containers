@@ -1,7 +1,8 @@
 #---
 # name: llama-index
+# alias: llama-index:main
 # group: rag
-# depends: [pytorch, ollama, jupyterlab]
+# depends: [pytorch]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---
@@ -14,8 +15,4 @@ RUN pip3 install --no-cache-dir --verbose \
         llama-index-llms-ollama \
         llama-index-embeddings-huggingface
 
-COPY samples/* /opt/llama-index/
-
-CMD /start_ollama && \
-    JUPYTER_ROOT=/opt/llama-index /start_jupyter && \
-    /bin/bash
+CMD /bin/bash
