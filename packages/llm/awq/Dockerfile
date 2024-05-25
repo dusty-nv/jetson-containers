@@ -10,13 +10,16 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG AWQ_BRANCH \
+ARG AWQ_REPO \
+    AWQ_BRANCH \
     AWQ_VERSION \
-    AWQ_KERNEL_VERSION
+    AWQ_KERNEL_VERSION \
+    FORCE_BUILD="off"
 
-COPY build.sh /tmp/build_awq.sh
+ADD https://api.github.com/repos/${AWQ_REPO}/git/refs/heads/main /tmp/awq_version.json
 
-RUN pip3 install --no-cache-dir --verbose 'lm-eval<=0.3.0' && \
-    pip3 install --no-cache-dir --verbose awq==${AWQ_VERSION} awq-inference-engine==${AWQ_KERNEL_VERSION} || \
-    /tmp/build_awq.sh
+COPY build.sh install.sh /tmp/awq/
+
+RUN /tmp/awq/install.sh || /tmp/awq/build.sh
     
+COPY quantize.py /usr/local/bin/awq_quantize
