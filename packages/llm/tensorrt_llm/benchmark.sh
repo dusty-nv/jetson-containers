@@ -14,7 +14,7 @@ benchmark_python()
 {
 	echo "running tensorrt_llm python benchmark for $MODEL ($QUANTIZATION)"
 	
-	pip3 uninstall pynvml  # workaround for NVML 'not supported' errors on Jetson
+	#pip3 uninstall pynvml  # workaround for NVML 'not supported' errors on Jetson
 	
 	if [ -f $ENGINE_DIR/*.engine ]; then
 		echo "TensorRT engine already exists under $ENGINE_DIR (skipping model builder)"

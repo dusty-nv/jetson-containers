@@ -1,5 +1,4 @@
-print('testing tensorrt_llm...')
 
 import tensorrt_llm
 
-print('tensorrt_llm OK')
+print('tensorrt_llm version:', tensorrt_llm.__version__)

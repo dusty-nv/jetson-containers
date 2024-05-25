@@ -8,6 +8,32 @@ apt-get clean
 
 pip3 install --no-cache-dir --verbose polygraphy mpi4py
 
+if [ -s ${SOURCE_TAR} ]; then
+	echo "extracting TensorRT-LLM sources from ${TRT_LLM_SOURCE}"
+	mkdir -p ${SOURCE_DIR}
+	tar -xzf ${SOURCE_TAR} -C ${SOURCE_DIR}
+else
+	echo "cloning TensorRT-LLM sources from git (branch=${TRT_LLM_BRANCH})"
+	git clone https://github.com/NVIDIA/TensorRT-LLM.git ${SOURCE_DIR}
+	cd ${SOURCE_DIR}
+	git checkout ${TRT_LLM_BRANCH}
+	git status
+	git submodule update --init --recursive
+	git lfs pull
+	
+	if [ -s ${GIT_PATCHES} ]; then 
+		echo "applying git patches from ${TRT_LLM_PATCH}"
+		git apply ${GIT_PATCHES}
+	fi
+	
+	sed -i 's|tensorrt.*||' requirements.txt
+	sed -i 's|torch.*|torch|' requirements.txt
+	sed -i 's|nvidia-cudnn.*||' requirements.txt
+	
+	git status
+	git diff --submodule=diff
+fi	
+
 if [ "$FORCE_BUILD" == "on" ]; then
 	echo "Forcing build of TensorRT-LLM ${TRT_LLM_VERSION}"
 	exit 1
