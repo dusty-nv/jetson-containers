@@ -9,7 +9,7 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ADD https://api.github.com/repos/NVIDIA-AI-IOT/whisper_trt/git/refs/heads/main /tmp/whisper_trt_version.json
+ADD https://api.github.com/repos/dusty-nv/whisper_trt/git/refs/heads/main /tmp/whisper_trt_version.json
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -18,7 +18,7 @@ RUN apt-get update && \
     && apt-get clean
     
 RUN pip3 install --no-cache-dir --verbose openai-whisper && \
-    git clone https://github.com/NVIDIA-AI-IOT/whisper_trt /opt/whisper_trt && \
+    git clone https://github.com/dusty-nv/whisper_trt /opt/whisper_trt && \
     cd /opt/whisper_trt && \
     pip3 install -e . && \
     mkdir -p ~/.cache && \

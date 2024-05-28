@@ -5,9 +5,9 @@ from whisper_trt import load_trt_model
 MODEL="tiny.en"
 AUDIO="/data/audio/dusty.wav"
 
-print(f"Loading whisper {MODEL} with TensorRT (this could take a few minutes at first)")
+print(f"Loading whisper {MODEL} with TensorRT (this could take a few minutes)")
 
-model = load_trt_model("tiny.en")  # base.en small.en
+model = load_trt_model("tiny.en", verbose=True)  # base.en small.en
 
 print(f"Transcribing {AUDIO}")
 
