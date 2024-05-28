@@ -17,6 +17,10 @@ ADD https://api.github.com/repos/AUTOMATIC1111/stable-diffusion-webui/git/${STAB
 
 COPY install_extensions.sh /tmp/
 
+# prevent pip from complaining about opencv-python
+RUN mkdir /usr/local/lib/python3.10/dist-packages/opencv_python-4.8.1.80.dist-info && \
+    echo -e "Name: opencv-python\nVersion: 4.8.1.80" > /usr/local/lib/python3.10/dist-packages/opencv_python-4.8.1.80.dist-info/METADATA
+
 RUN set -ex \
     && git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui /opt/stable-diffusion-webui \
     && git -C /opt/stable-diffusion-webui checkout ${STABLE_DIFFUSION_WEBUI_SHA} \
@@ -32,8 +36,6 @@ RUN set -ex \
         https://github.com/thomasasfk/sd-webui-aspect-ratio-helper \
         https://github.com/BlafKing/sd-civitai-browser-plus \
     && PYTHONPATH="$AUTOMATIC1111_ROOT_DIR" python3 -c 'from modules import launch_utils; launch_utils.args.skip_python_version_check=True; launch_utils.prepare_environment()' \
-    # partially initialized module 'cv2' has no attribute 'gapi_wip_gst_GStreamerPipeline' \
-    && /opt/opencv_install.sh \
     # TypeError: 'type' object is not subscriptable \
     && sed 's|dict\[str, OptionInfo\]|dict|g' -i $AUTOMATIC1111_ROOT_DIR/modules/options.py \
     && sed 's|dict\[.*\]|dict|g' -i $AUTOMATIC1111_ROOT_DIR/modules/processing.py \
