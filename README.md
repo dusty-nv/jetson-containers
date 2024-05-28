@@ -15,7 +15,7 @@ Modular container build system that provides various [**AI/ML packages**](packag
 | **CUDA** | [`cupy`](packages/cuda/cupy) [`cuda-python`](packages/cuda/cuda-python) [`pycuda`](packages/cuda/pycuda) [`numba`](packages/numba) [`cudf`](packages/rapids/cudf) [`cuml`](packages/rapids/cuml) |
 | **Robotics** | [`ros`](packages/ros) [`ros2`](packages/ros) [`opencv:cuda`](packages/opencv) [`realsense`](packages/hardware/realsense) [`zed`](packages/hardware/zed) [`oled`](packages/hardware/oled) |
 | **RAG** | [`llama-index`](packages/rag/llama-index) [`langchain`](packages/rag/langchain) [`jetrag`](packages/rag/jetrag) [`NanoDB`](packages/vectordb/nanodb) [`FAISS`](packages/vectordb/faiss) [`RAFT`](packages/rapids/raft) |
-| **Audio** | [`whisper`](packages/audio/whisper) [`whisperX`](packages/audio/whisperx) [`piper`](packages/audio/piper-tts) [`riva`](packages/audio/riva-client) [`XTTS`](packages/audio/xtts)  [`audiocraft`](packages/audio/audiocraft) [`voicecraft`](packages/audio/voicecraft) |
+| **Audio** | [`whisper`](packages/audio/whisper) [`whisper_trt`](packages/audio/whisper_trt) [`piper`](packages/audio/piper-tts) [`riva`](packages/audio/riva-client) [`audiocraft`](packages/audio/audiocraft) [`voicecraft`](packages/audio/voicecraft) |
 | **Smart Home** | [`homeassistant-core`](packages/smart-home/homeassistant-core) [`homeassistant-base`](packages/smart-home/homeassistant-base) [`wyoming-whisper`](packages/smart-home/wyoming/wyoming-whisper) [`wyoming-openwakeword`](packages/smart-home/wyoming/openwakeword) [`wyoming-piper`](packages/smart-home/wyoming/piper)  [`wyoming-assist-microphone`](packages/smart-home/wyoming/assist-microphone) |
 
 See the [**`packages`**](packages) directory for the full list, including pre-built container images for JetPack/L4T.
@@ -106,4 +106,8 @@ Looking for the old jetson-containers?   See the [`legacy`](https://github.com/d
 > [Live Llava 2.0 - VILA + Multimodal NanoDB on Jetson Orin](https://youtu.be/X-OXxPiUTuU) (container: [`NanoLLM`](https://dusty-nv.github.io/NanoLLM/)) 
 
 <a href="https://www.jetson-ai-lab.com/tutorial_slm.html"><img src="https://www.jetson-ai-lab.com/images/slm_console.gif"></a>
-> [Small Language Models (SLM) on Jetson Orin Nano](https://www.jetson-ai-lab.com/tutorial_slm.html) (container: [`NanoLLM`](https://dusty-nv.github.io/NanoLLM/))  
+> [Small Language Models (SLM) on Jetson Orin Nano](https://www.jetson-ai-lab.com/tutorial_slm.html) (container: [`NanoLLM`](https://dusty-nv.github.io/NanoLLM/))
+
+<a href="https://www.jetson-ai-lab.com/tutorial_nano-vlm.html#video-sequences"><img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/video_vila_wildfire.gif"></a>
+> [Realtime Video Vision/Language Model with VILA1.5-3b](https://www.jetson-ai-lab.com/tutorial_nano-vlm.html#video-sequences) (container: [`NanoLLM`](https://dusty-nv.github.io/NanoLLM/))  
+  
