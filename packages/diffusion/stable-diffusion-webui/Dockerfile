@@ -1,7 +1,7 @@
 #---
 # name: stable-diffusion-webui
 # group: diffusion
-# depends: [pytorch, torchvision, transformers, xformers, pycuda, opencv, onnxruntime]
+# depends: [pytorch, torchvision, transformers, xformers, pycuda, opencv:deb, onnxruntime]
 # requires: '>=34.1.0'
 # docs: docs.md
 # notes: disabled on JetPack 4
@@ -33,7 +33,7 @@ RUN set -ex \
         https://github.com/BlafKing/sd-civitai-browser-plus \
     && PYTHONPATH="$AUTOMATIC1111_ROOT_DIR" python3 -c 'from modules import launch_utils; launch_utils.args.skip_python_version_check=True; launch_utils.prepare_environment()' \
     # partially initialized module 'cv2' has no attribute 'gapi_wip_gst_GStreamerPipeline' \
-    && /opt/opencv_install.sh \
+    && /tmp/opencv/install.sh \
     # TypeError: 'type' object is not subscriptable \
     && sed 's|dict\[str, OptionInfo\]|dict|g' -i $AUTOMATIC1111_ROOT_DIR/modules/options.py \
     && sed 's|dict\[.*\]|dict|g' -i $AUTOMATIC1111_ROOT_DIR/modules/processing.py \
