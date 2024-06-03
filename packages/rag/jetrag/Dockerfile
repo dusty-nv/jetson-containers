@@ -15,6 +15,7 @@ RUN pip3 install --no-cache-dir --verbose \
         llama-index-llms-ollama \
         llama-index-embeddings-openai \
         llama-index-embeddings-ollama \
+        llama-index-readers-web \
         chromadb \
         pypdf \
         pytest \
