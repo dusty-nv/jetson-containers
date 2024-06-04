@@ -35,6 +35,7 @@ RUN CMAKE_VERSION=${CMAKE_VERSION} GOLANG_VERSION=${GOLANG_VERSION} sh /opt/olla
 WORKDIR ollama/llm/generate
 ENV LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/usr/local/nvidia/compat:${LD_LIBRARY_PATH} \
     CMAKE_CUDA_ARCHITECTURES=${CMAKE_CUDA_ARCHITECTURES}
+RUN sed 's|-j8|-j$(nproc)|' -i gen_common.sh
 RUN bash gen_linux.sh
 
 WORKDIR /opt/ollama
