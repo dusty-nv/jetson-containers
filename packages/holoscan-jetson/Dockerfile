@@ -61,4 +61,3 @@ RUN if ! grep -q "VERSION_ID=\"22.04\"" /etc/os-release; then \
     fi
 
 RUN pip install -r benchmarks/holoscan_flow_benchmarking/requirements.txt
-RUN ./run build endoscopy_tool_tracking --buildpath /data/holohub/build/endoscopy_tool_tracking
