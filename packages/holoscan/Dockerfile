@@ -28,14 +28,12 @@ ARG DEBIAN_FRONTEND=noninteractive
 #
 # Holohub run setup 
 #
+WORKDIR /opt/nvidia
 RUN git clone https://github.com/nvidia-holoscan/holohub.git
+WORKDIR /opt/nvidia/holohub
 
-RUN mkdir -p /tmp/scripts
-COPY holohub/run /tmp/scripts/
-RUN mkdir -p /tmp/scripts/utilities
-COPY holohub/utilities/holohub_autocomplete /tmp/scripts/utilities/
-RUN chmod +x /tmp/scripts/run
-RUN /tmp/scripts/run setup
+RUN chmod +x run
+RUN ./run setup
 # - This variable is consumed by all dependencies below as an environment variable (CMake 3.22+)
 # - We use ARG to only set it at docker build time, so it does not affect cmake builds
 #   performed at docker run time in case users want to use a different BUILD_TYPE
@@ -61,5 +59,6 @@ RUN apt update \
 RUN if ! grep -q "VERSION_ID=\"22.04\"" /etc/os-release; then \
         pip install setuptools; \
     fi
-COPY benchmarks/holoscan_flow_benchmarking/requirements.txt /tmp/benchmarking_requirements.txt
-RUN pip install -r /tmp/benchmarking_requirements.txt
+
+RUN pip install -r benchmarks/holoscan_flow_benchmarking/requirements.txt
+RUN ./run build endoscopy_tool_tracking --buildpath /data/holohub/build/endoscopy_tool_tracking
