@@ -24,7 +24,7 @@ To remedy this, you have several options:
 ```bash
 jetson-containers run \
  # Mount Holohub repo directly to this folder
- -v <jetson-containers_dir>/packages/holoscan-jetson/holohub:/opt/nvidia/holohub
+ -v <jetson-containers_dir>/packages/holoscan-jetson/holohub:/opt/nvidia/holohub \
  # Use autotag
  $(autotag holoscan-jetson)
  ```
