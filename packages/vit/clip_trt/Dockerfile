@@ -16,3 +16,5 @@ RUN git clone https://github.com/dusty-nv/clip_trt /opt/clip_trt && \
     pip3 install -e . && \
     mkdir -p ~/.cache && \
     ln -s /data/models/clip ~/.cache/clip_trt
+    
+#ENV PYTHONPATH="${PYTHONPATH}:/opt/clip_trt"
