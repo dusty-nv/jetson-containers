@@ -31,3 +31,5 @@ RUN pip3 install --ignore-installed --no-cache-dir blinker && \
 	-keyout ${SSL_KEY} \
 	-out ${SSL_CERT} \
 	-subj '/CN=localhost'
+	
+RUN pip3 install --upgrade --no-cache-dir --verbose pydantic
