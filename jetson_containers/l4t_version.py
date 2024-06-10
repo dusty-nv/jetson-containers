@@ -81,11 +81,12 @@ def get_jetpack_version(l4t_version=get_l4t_version(), default='5.1'):
     """
     if not isinstance(l4t_version, Version):
         l4t_version = Version(l4t_version)
-        
+
     NVIDIA_JETPACK = {
         # -------- JP6 --------
         "36.3.0": "6.0 GA",
         "36.2.0": "6.0 DP",
+        "36.1.0": "6.0 EA",
         "36.0.0": "6.0 EA",
         
         # -------- JP5 --------
