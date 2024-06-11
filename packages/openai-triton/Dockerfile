@@ -1,7 +1,7 @@
 #---
 # name: openai-triton
 # group: ml
-# depends: [build-essential, cmake, python, pytorch]
+# depends: [pytorch]
 # config: config.py
 # requires: '>=35'
 # test: test.py
@@ -11,7 +11,8 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG OPENAITRIRON_VERSION \
+ARG OPENAITRITON_VERSION \
+    OPENAITRITON_BRANCH \
     FORCE_BUILD=off
 
 COPY build.sh install.sh /tmp/openai-triton/

@@ -20,7 +20,7 @@ WORKDIR /workspace
 #
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-          git \
+        git \
 		cmake \
 		build-essential \
 		curl \
@@ -30,8 +30,14 @@ RUN apt-get update && \
 		ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add -
+
+RUN if [ $(lsb_release --codename --short) != "jammy" ]; then \
+        curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg ; \
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null ; \
+    else \
+        sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' ; \
+        curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add - ; \
+    fi 
 
 
 #
@@ -49,8 +55,10 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # /usr/bin/rosinstall_generator => No module named 'importlib.metadata'
-RUN pip3 install --no-cache-dir --verbose importlib.metadata
-
+RUN pip3 list | grep catkin && pip3 install --no-cache-dir --verbose importlib.metadata catkin && \
+    pip3 list | grep catkin && \
+    python3 -c 'import catkin'
+    
 
 #
 # download/build the ROS source

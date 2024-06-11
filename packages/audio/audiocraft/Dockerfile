@@ -14,7 +14,7 @@ WORKDIR /opt
 RUN git clone https://github.com/libsndfile/libsndfile.git && \
     cd libsndfile && \
     apt-get update && \
-    apt install -y autoconf autogen automake build-essential libasound2-dev libflac-dev libogg-dev libtool libvorbis-dev libopus-dev libmp3lame-dev  libmpg123-dev pkg-config python2 && \
+    apt install -y autoconf autogen automake build-essential ffmpeg libasound2-dev libflac-dev libogg-dev libtool libvorbis-dev libopus-dev libmp3lame-dev  libmpg123-dev pkg-config python2 && \
     autoreconf -vif && \
     ./configure --enable-werror && \
     make -j$(nproc) && \
@@ -43,3 +43,7 @@ RUN python3 -c 'import torch; print(f"PyTorch version: {torch.__version__}"); pr
 RUN python3 -c 'import torch; assert(torch.cuda.is_available()); assert(torch.distributed.is_available())'
 
 WORKDIR /opt/audiocraft/
+
+CMD /start_jupyter && \
+    echo "starting AudioCraft MusicGen gradio server" && \
+    python3 demos/musicgen_app.py --listen 0.0.0.0
