@@ -2,7 +2,7 @@
 # name: nano_llm
 # group: llm
 # config: config.py
-# depends: [nanodb, awq, mlc, riva-client:python, jetson-inference, torch2trt, torchaudio, piper-tts, whisper_trt]
+# depends: [awq, mlc, riva-client:python, jetson-inference, torch2trt, torchaudio, piper-tts, whisper_trt, nanodb]
 # requires: '>=35'
 # docs: docs.md
 #---
@@ -31,3 +31,5 @@ RUN pip3 install --ignore-installed --no-cache-dir blinker && \
 	-keyout ${SSL_KEY} \
 	-out ${SSL_CERT} \
 	-subj '/CN=localhost'
+	
+RUN pip3 install --upgrade --no-cache-dir --verbose pydantic

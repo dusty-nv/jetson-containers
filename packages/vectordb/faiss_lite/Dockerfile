@@ -7,8 +7,6 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-WORKDIR /opt
-
 COPY CMakeLists.txt faiss_lite.cu test.cu faiss_lite.py benchmark.py /opt/faiss_lite/
 
 RUN mkdir /opt/faiss_lite/build && \
