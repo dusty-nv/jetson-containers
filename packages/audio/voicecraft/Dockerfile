@@ -2,7 +2,7 @@
 # name: voicecraft
 # group: audio
 # docs: docs.md
-# depends: [pytorch, torchvision, torchaudio, huggingface_hub, transformers, xformers, audiocraft, whisperx]
+# depends: [audiocraft, whisperx]
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

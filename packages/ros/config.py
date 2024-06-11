@@ -1,7 +1,7 @@
 import copy
 from jetson_containers import L4T_VERSION
 
-ROS_DISTROS = ['melodic', 'noetic', 'foxy', 'galactic', 'humble', 'iron']
+ROS_DISTROS = ['melodic', 'noetic', 'foxy', 'galactic', 'humble', 'iron', 'jazzy']
 ROS_PACKAGES = ['ros_base', 'ros_core', 'desktop']
 
 # add permutations of ROS distros/packages as subpackages
