@@ -2,7 +2,7 @@
 
 This package provides containers for [Holoscan SDK](https://github.com/nvidia-holoscan/holoscan-sdk). The Holoscan SDK can be used to build streaming AI pipelines for a variety of domains, including Medical Devices, High Performance Computing at the Edge, Industrial Inspection and more.
 
-> ⚠️ Note: This package installs the Holoscan SDK python wheel, see the [support matrix](https://docs.nvidia.com/holoscan/sdk-user-guide/sdk_installation.html#not-sure-what-to-choose) to understand which Holoscan features this enables.
+> ⚠️ Note: This package installs the Holoscan SDK python wheel, see the [support matrix](https://docs.nvidia.com/holoscan/sdk-user-guide/sdk_installation.html#not-sure-what-to-choose) to understand which Holoscan SDK features this enables.
 
 ## To run a sample Holoscan app:
 ```bash
