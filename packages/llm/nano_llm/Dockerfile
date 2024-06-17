@@ -32,4 +32,5 @@ RUN pip3 install --ignore-installed --no-cache-dir blinker && \
 	-out ${SSL_CERT} \
 	-subj '/CN=localhost'
 	
-RUN pip3 install --upgrade --no-cache-dir --verbose pydantic
+RUN pip3 install --upgrade --no-cache-dir --verbose pydantic && \
+    pip3 install --force-reinstall 'scipy<1.13' 'numpy<2'
