@@ -12,6 +12,11 @@
 # If a model is not specified, then the default set of models will be benchmarked.
 # See the environment variables below and their defaults for model settings to change.
 #
+# These are the possible quantization methods that can be set like QUANTIZATION=q4f16_ft
+#
+#  (MLC 0.1.0) q4f16_0,q4f16_1,q4f16_2,q4f16_ft,q4f16_ft_group,q4f32_0,q4f32_1,q8f16_ft,q8f16_ft_group,q8f16_1
+#  (MLC 0.1.1) q4f16_0,q4f16_1,q4f32_1,q4f16_2,q4f16_autoawq,q4f16_ft,e5m2_e5m2_f16
+#
 set -ex
 
 : "${HUGGINGFACE_TOKEN:=SET_YOUR_HUGGINGFACE_TOKEN}"
@@ -51,13 +56,15 @@ function benchmark()
         -e CONV_TEMPLATE=${CONV_TEMPLATE} \
         -e PROMPT=${PROMPT} \
         -e OUTPUT_CSV=${OUTPUT_CSV} \
+        -e MODEL_REPO=${model_repo} \
         -e MODEL_ROOT=${model_root} \
         -v $(jetson-containers root)/packages/llm/mlc:/test \
         -w /test \
         $(autotag mlc:$MLC_VERSION) /bin/bash -c "\
-            bash test.sh \
-                $model_name \
-                \$(huggingface-downloader ${download_flags} ${model_repo}) "
+            if [ ! -d \${MODEL_REPO} ]; then \
+                MODEL_REPO=\$(huggingface-downloader ${download_flags} \${MODEL_REPO}) ; \
+            fi ; \
+            bash test.sh $model_name \${MODEL_REPO} "
 }
             
    
