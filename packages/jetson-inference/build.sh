@@ -27,7 +27,7 @@ make -j$(nproc)
 make install
 
 # clean build files
-/bin/bash -O extglob -c "cd /opt/jetson-inference/build; rm -rf -v !($(uname -m)|download-models.*)"
+/bin/bash -O extglob -c "cd $source_dir/build; rm -rf -v !($(uname -m)|download-models.*)"
 
 # the jetson-inference installer calls apt-update
 rm -rf /var/lib/apt/lists/*
@@ -47,4 +47,4 @@ pip3 install --no-cache-dir --verbose -r $source_dir/python/www/flask/requiremen
 pip3 install --no-cache-dir --verbose -r $source_dir/python/www/dash/requirements.txt
 
 # compatability with original jetson-inference location
-ln -s ${JETSON_INFERENCE_SOURCE} /jetson-inference
+ln -s ${source_dir} /jetson-inference
