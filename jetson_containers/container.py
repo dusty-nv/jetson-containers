@@ -164,7 +164,8 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
     # push container
     if push:
         push_container(name, push, simulate)
-            
+     
+    print(f"-- Done building container {name}")        
     return name
     
     
