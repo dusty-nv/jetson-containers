@@ -20,6 +20,6 @@ ENV OPENBLAS_CORETYPE=ARMV8
 #    && apt-get clean \
 #    && pip3 show numpy && python3 -c 'import numpy; print(numpy.__version__)'
 
-RUN pip3 install --upgrade --no-cache-dir --verbose numpy && \
+RUN pip3 install --upgrade --force-reinstall --no-cache-dir --verbose 'numpy<2' && \
     pip3 show numpy && python3 -c 'import numpy; print(numpy.__version__)'
     
