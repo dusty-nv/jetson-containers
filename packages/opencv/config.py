@@ -35,11 +35,13 @@ def opencv(version, requires=None, default=False, url=None):
     
 package = [
     # JetPack 6
-    opencv('4.8.1', '==36.*', default=True),
-    opencv('4.9.0', '==36.*', default=False), 
+    opencv('4.10.0', '==36.*', default=True),
+    opencv('4.9.0', '==36.*', default=False),
+    opencv('4.8.1', '==36.*', default=False), 
     
     # JetPack 5
-    opencv('4.8.1', '==35.*', default=True),
+    opencv('4.10.0','==35.*', default=True),
+    opencv('4.8.1', '==35.*', default=False),
     opencv('4.5.0', '==35.*', default=False),
     
     # JetPack 4
