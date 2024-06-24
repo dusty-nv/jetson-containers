@@ -474,7 +474,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/ros",
     "is_private": false,
     "star_count": 14,
-    "pull_count": 54408,
+    "pull_count": 54412,
     "last_updated": "2024-05-18T16:31:08.644835Z",
     "date_registered": "2021-05-27T15:33:50.988699Z",
     "affiliation": "",
@@ -2868,7 +2868,7 @@
             "os_version": null,
             "size": 6274971544,
             "status": "active",
-            "last_pulled": "2024-06-24T01:30:28.969111Z",
+            "last_pulled": "2024-06-24T03:00:26.385025Z",
             "last_pushed": "2023-05-25T21:01:11.18063Z"
           }
         ],
@@ -2880,7 +2880,7 @@
         "full_size": 6274971544,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2024-06-24T01:30:28.969111Z",
+        "tag_last_pulled": "2024-06-24T03:00:26.385025Z",
         "tag_last_pushed": "2023-05-25T21:01:11.18063Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -4268,7 +4268,7 @@
             "os_version": null,
             "size": 1443489040,
             "status": "active",
-            "last_pulled": "2024-06-22T09:22:29.557002Z",
+            "last_pulled": "2024-06-24T03:01:37.065566Z",
             "last_pushed": "2022-03-02T17:36:57.202746Z"
           }
         ],
@@ -4280,7 +4280,7 @@
         "full_size": 1443489040,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2024-06-22T09:22:29.557002Z",
+        "tag_last_pulled": "2024-06-24T03:01:37.065566Z",
         "tag_last_pushed": "2022-03-02T17:36:57.202746Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image"
@@ -4299,7 +4299,7 @@
             "os_version": null,
             "size": 846253263,
             "status": "active",
-            "last_pulled": "2024-06-23T07:08:44.846768Z",
+            "last_pulled": "2024-06-24T02:14:46.522441Z",
             "last_pushed": "2022-03-02T17:35:01.57124Z"
           }
         ],
@@ -4311,7 +4311,7 @@
         "full_size": 846253263,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2024-06-23T07:08:44.846768Z",
+        "tag_last_pulled": "2024-06-24T02:14:46.522441Z",
         "tag_last_pushed": "2022-03-02T17:35:01.57124Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image"
@@ -5430,7 +5430,7 @@
             "os_version": null,
             "size": 9581328352,
             "status": "active",
-            "last_pulled": "2024-06-23T12:57:04.203762Z",
+            "last_pulled": "2024-06-24T02:25:42.481345Z",
             "last_pushed": "2024-03-07T18:11:41.250709Z"
           }
         ],
@@ -5442,7 +5442,7 @@
         "full_size": 9581328352,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2024-06-23T12:57:04.203762Z",
+        "tag_last_pulled": "2024-06-24T02:25:42.481345Z",
         "tag_last_pushed": "2024-03-07T18:11:41.250709Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -10359,7 +10359,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/pytorch",
     "is_private": false,
     "star_count": 4,
-    "pull_count": 1548,
+    "pull_count": 1549,
     "last_updated": "2023-12-14T21:46:02.622396Z",
     "date_registered": "2023-07-29T15:45:47.232709Z",
     "affiliation": "",
@@ -12024,7 +12024,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/diffusion/stable-diffusion-webui",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 1939,
+    "pull_count": 1944,
     "last_updated": "2024-02-02T17:59:09.266539Z",
     "date_registered": "2023-07-29T16:39:33.03492Z",
     "affiliation": "",
@@ -12114,7 +12114,7 @@
             "os_version": null,
             "size": 9523406556,
             "status": "active",
-            "last_pulled": "2024-06-24T01:06:07.508889Z",
+            "last_pulled": "2024-06-24T02:35:00.526623Z",
             "last_pushed": "2024-02-02T17:46:18.070905Z"
           }
         ],
@@ -12126,7 +12126,7 @@
         "full_size": 9523406556,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2024-06-24T01:06:07.508889Z",
+        "tag_last_pulled": "2024-06-24T02:35:00.526623Z",
         "tag_last_pushed": "2024-02-02T17:46:18.070905Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -13566,7 +13566,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/llm/text-generation-webui",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 2945,
+    "pull_count": 2946,
     "last_updated": "2024-04-12T16:05:12.705996Z",
     "date_registered": "2023-07-29T21:36:00.496269Z",
     "affiliation": "",
@@ -17381,7 +17381,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/vit/sam",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 190,
+    "pull_count": 193,
     "last_updated": "2024-03-07T17:16:31.77315Z",
     "date_registered": "2023-10-01T02:56:05.162788Z",
     "affiliation": "",
@@ -17407,7 +17407,7 @@
             "os_version": null,
             "size": 8459869043,
             "status": "active",
-            "last_pulled": "2024-06-18T18:45:21.680472Z",
+            "last_pulled": "2024-06-24T02:44:38.455912Z",
             "last_pushed": "2024-03-07T17:16:30.849258Z"
           }
         ],
@@ -17419,7 +17419,7 @@
         "full_size": 8459869043,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2024-06-18T18:45:21.680472Z",
+        "tag_last_pulled": "2024-06-24T02:44:38.455912Z",
         "tag_last_pushed": "2024-03-07T17:16:30.849258Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -19224,7 +19224,7 @@
             "os_version": null,
             "size": 4142254099,
             "status": "active",
-            "last_pulled": "2024-06-24T01:06:05.14339Z",
+            "last_pulled": "2024-06-24T03:00:18.026736Z",
             "last_pushed": "2024-05-14T02:45:42.923061Z"
           }
         ],
@@ -19236,7 +19236,7 @@
         "full_size": 4142254099,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2024-06-24T01:06:05.14339Z",
+        "tag_last_pulled": "2024-06-24T03:00:18.026736Z",
         "tag_last_pushed": "2024-05-14T02:45:43.090307Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -20287,7 +20287,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/smart-home/wyoming/assist-microphone",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 32,
+    "pull_count": 33,
     "last_updated": "2024-04-30T15:36:15.022049Z",
     "date_registered": "2024-04-24T07:06:12.107524Z",
     "affiliation": "",
@@ -20345,7 +20345,7 @@
             "os_version": null,
             "size": 366252591,
             "status": "active",
-            "last_pulled": "2024-06-13T22:27:44.692421Z",
+            "last_pulled": "2024-06-24T02:12:19.100903Z",
             "last_pushed": "2024-04-30T15:16:05.778992Z"
           }
         ],
@@ -20357,7 +20357,7 @@
         "full_size": 366252591,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2024-06-13T22:27:44.692421Z",
+        "tag_last_pulled": "2024-06-24T02:12:19.100903Z",
         "tag_last_pushed": "2024-04-30T15:16:05.778992Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -20407,7 +20407,7 @@
     "is_private": false,
     "star_count": 0,
     "pull_count": 30,
-    "last_updated": "2024-06-23T23:33:57.464482Z",
+    "last_updated": "2024-06-24T02:55:10.662628Z",
     "date_registered": "2024-04-25T17:58:48.647975Z",
     "affiliation": "",
     "media_types": [
@@ -20418,6 +20418,38 @@
     ],
     "categories": [],
     "tags": [
+      {
+        "creator": 10706889,
+        "id": 706036678,
+        "images": [
+          {
+            "architecture": "arm64",
+            "features": "",
+            "variant": "v8",
+            "digest": "sha256:631a0600e69ece5898b0b08adebfccf6d11cdd3199371f11175c5c92945ea1e0",
+            "os": "linux",
+            "os_features": "",
+            "os_version": null,
+            "size": 6820755192,
+            "status": "active",
+            "last_pulled": null,
+            "last_pushed": "2024-06-24T02:55:09.930781Z"
+          }
+        ],
+        "last_updated": "2024-06-24T02:55:09.930782Z",
+        "last_updater": 10706889,
+        "last_updater_username": "dustynv",
+        "name": "samples-r36.3.0",
+        "repository": 23936452,
+        "full_size": 6820755192,
+        "v2": true,
+        "tag_status": "active",
+        "tag_last_pulled": null,
+        "tag_last_pushed": "2024-06-24T02:55:09.930782Z",
+        "media_type": "application/vnd.docker.container.image.v1+json",
+        "content_type": "image",
+        "digest": "sha256:631a0600e69ece5898b0b08adebfccf6d11cdd3199371f11175c5c92945ea1e0"
+      },
       {
         "creator": 10706889,
         "id": 705918689,
@@ -20676,7 +20708,7 @@
     "description": "",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 109,
+    "pull_count": 110,
     "last_updated": "2024-06-04T02:58:57.585869Z",
     "date_registered": "2024-05-23T03:25:01.742053Z",
     "affiliation": "",
