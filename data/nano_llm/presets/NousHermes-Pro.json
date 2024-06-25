@@ -1,0 +1,62 @@
+{
+  "version": "24.6.1",
+  "globals": {
+    "GraphEditor": {
+      "layout_grid": {
+        "x": 0,
+        "y": 0,
+        "w": 8,
+        "h": 14
+      }
+    },
+    "TerminalPlugin": {
+      "layout_grid": {
+        "x": 0,
+        "y": 14,
+        "w": 8,
+        "h": 6
+      }
+    }
+  },
+  "plugins": [
+    {
+      "name": "NanoLLM",
+      "type": "NanoLLM",
+      "connections": [
+        {
+          "to": "WebClient",
+          "input": 0,
+          "output": 4
+        }
+      ],
+      "layout_grid": {
+        "x": 8,
+        "y": 0,
+        "w": 4,
+        "h": 14
+      },
+      "layout_node": {
+        "x": 323,
+        "y": 65
+      },
+      "max_new_tokens": 128,
+      "min_new_tokens": -1,
+      "do_sample": false,
+      "temperature": 0.7,
+      "top_p": 0.95,
+      "repetition_penalty": 1.0,
+      "drop_inputs": false,
+      "system_prompt": "You are a function calling AI agent with self-recursion. You are provided with function signatures within <tools></tools> XML tags. Here are the available tools: <tools> ${TOOL_DOCS} </tools> \nFor each function call return a valid json object (using double quotes) with the function name and arguments within <tool_call></tool_call> XML tags as follows:\n<tool_call>\n{\"arguments\": <args-dict>, \"name\": <function-name>}\n</tool_call>\nDon't make assumptions about what values to plug into function arguments, and call other functions first to gather the arguments. \nOnce you have called a function, results will be fed back to you within <tool_response></tool_response> XML tags. Don't make assumptions about tool results if <tool_response> XML tags are not present since function hasn't been executed yet. Analyze the data once you get the results and call another function. Summarize the data and respond concisely to the user's question.\nDo not stop calling functions until the task has been accomplished.   Instead of saying you are going to call functions, just call them within <tool_call></tool_call> XML tags.\nThe current date is: ${DATE}. The current location is: ${GEOLOCATION}.",
+      "model": "NousResearch/Hermes-2-Pro-Llama-3-8B",
+      "init_kwargs": {
+        "model": "NousResearch/Hermes-2-Pro-Llama-3-8B",
+        "api": "MLC",
+        "quantization": "q8f16_ft",
+        "drop_inputs": false,
+        "chat_template": "chat-ml-tools",
+        "system_prompt": "/data/prompts/nous_system.txt",
+        "name": "NanoLLM"
+      }
+    }
+  ]
+}

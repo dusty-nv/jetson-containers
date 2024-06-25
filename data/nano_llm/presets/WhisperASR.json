@@ -1,0 +1,87 @@
+{
+  "version": "24.6.1",
+  "globals": {
+    "GraphEditor": {
+      "layout_grid": {
+        "x": 0,
+        "y": 0,
+        "w": 8,
+        "h": 14
+      }
+    },
+    "TerminalPlugin": {
+      "layout_grid": {
+        "x": 0,
+        "y": 4,
+        "w": 8,
+        "h": 6
+      }
+    },
+    "NanoLLM": {
+      "layout_grid": {}
+    }
+  },
+  "plugins": [
+    {
+      "name": "WebAudioIn",
+      "type": "WebAudioIn",
+      "connections": [
+        {
+          "to": "VADFilter",
+          "input": 0,
+          "output": 0
+        }
+      ],
+      "layout_grid": {},
+      "layout_node": {
+        "x": 33,
+        "y": 37
+      },
+      "init_kwargs": {}
+    },
+    {
+      "name": "VADFilter",
+      "type": "VADFilter",
+      "connections": [
+        {
+          "to": "WhisperASR",
+          "input": 0,
+          "output": 0
+        }
+      ],
+      "layout_grid": {},
+      "layout_node": {
+        "x": 247,
+        "y": 40
+      },
+      "vad_threshold": 0.5,
+      "vad_window": 0.5,
+      "interrupt_after": 0.5,
+      "audio_chunk": 1600,
+      "init_kwargs": {
+        "vad_threshold": 0.5,
+        "vad_window": 0.5,
+        "interrupt_after": 0.5,
+        "audio_chunk": 0.1,
+        "name": "VADFilter"
+      }
+    },
+    {
+      "name": "WhisperASR",
+      "type": "WhisperASR",
+      "connections": [],
+      "layout_grid": {},
+      "layout_node": {
+        "x": 456,
+        "y": 44
+      },
+      "partial_transcripts": 0.25,
+      "init_kwargs": {
+        "model": "base",
+        "language_code": "en_US",
+        "partial_transcripts": 0.25,
+        "name": "WhisperASR"
+      }
+    }
+  ]
+}

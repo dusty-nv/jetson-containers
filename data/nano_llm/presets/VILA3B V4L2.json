@@ -1,0 +1,201 @@
+{
+  "version": "24.6.1",
+  "globals": {
+    "GraphEditor": {
+      "layout_grid": {
+        "x": 0,
+        "y": 0,
+        "w": 8,
+        "h": 14
+      }
+    },
+    "TerminalPlugin": {
+      "layout_grid": {
+        "x": 4,
+        "y": 17,
+        "w": 8,
+        "h": 6
+      }
+    }
+  },
+  "plugins": [
+    {
+      "name": "NanoLLM",
+      "type": "NanoLLM",
+      "connections": [
+        {
+          "to": "VideoOverlay",
+          "input": 0,
+          "output": 1
+        },
+        {
+          "to": "WebClient",
+          "input": 0,
+          "output": 4
+        }
+      ],
+      "layout_grid": {
+        "x": 8,
+        "y": 2,
+        "w": 4,
+        "h": 14
+      },
+      "layout_node": {
+        "x": 639,
+        "y": 70
+      },
+      "max_new_tokens": 128,
+      "min_new_tokens": -1,
+      "do_sample": false,
+      "temperature": 0.7,
+      "top_p": 0.95,
+      "repetition_penalty": 1.0,
+      "drop_inputs": true,
+      "system_prompt": "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.",
+      "model": "Efficient-Large-Model/VILA1.5-3b",
+      "init_kwargs": {
+        "model": "Efficient-Large-Model/VILA1.5-3b",
+        "api": "MLC",
+        "quantization": "q4f16_ft",
+        "max_context_len": 256,
+        "drop_inputs": true,
+        "chat_template": "llava-v1",
+        "name": "NanoLLM"
+      }
+    },
+    {
+      "name": "VideoSource",
+      "type": "VideoSource",
+      "connections": [
+        {
+          "to": "RateLimit",
+          "input": 0,
+          "output": 0
+        },
+        {
+          "to": "VideoOverlay",
+          "input": 0,
+          "output": 0
+        }
+      ],
+      "layout_grid": {},
+      "layout_node": {
+        "x": 26,
+        "y": 64
+      },
+      "init_kwargs": {
+        "video_input": "/dev/video0",
+        "video_input_width": 640,
+        "video_input_height": 480,
+        "return_copy": true,
+        "return_tensors": "cuda",
+        "name": "VideoSource"
+      }
+    },
+    {
+      "name": "RateLimit",
+      "type": "RateLimit",
+      "connections": [
+        {
+          "to": "AutoPrompt",
+          "input": 0,
+          "output": 0
+        }
+      ],
+      "layout_grid": {},
+      "layout_node": {
+        "x": 231,
+        "y": 67
+      },
+      "rate": 8,
+      "chunk": null,
+      "drop_inputs": false,
+      "on_demand": false,
+      "init_kwargs": {
+        "rate": 8,
+        "drop_inputs": false,
+        "on_demand": false,
+        "name": "RateLimit"
+      }
+    },
+    {
+      "name": "AutoPrompt",
+      "type": "AutoPrompt",
+      "connections": [
+        {
+          "to": "NanoLLM",
+          "input": 0,
+          "output": 0
+        }
+      ],
+      "layout_grid": {},
+      "layout_node": {
+        "x": 432,
+        "y": 70
+      },
+      "template": "<image> Describe the image concisely. <reset>",
+      "init_kwargs": {
+        "template": "<image> Describe the image concisely. <reset>",
+        "name": "AutoPrompt"
+      }
+    },
+    {
+      "name": "VideoOverlay",
+      "type": "VideoOverlay",
+      "connections": [
+        {
+          "to": "VideoOutput",
+          "input": 0,
+          "output": 0
+        }
+      ],
+      "layout_grid": {},
+      "layout_node": {
+        "x": 855,
+        "y": 284
+      },
+      "font": "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
+      "font_size": 32,
+      "prefix_text": null,
+      "color": "#78d715",
+      "background": "#000000",
+      "opacity": 0.4,
+      "x": 5,
+      "y": 5,
+      "line_spacing": 38,
+      "line_length": null,
+      "return_copy": true,
+      "init_kwargs": {
+        "font": "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
+        "font_size": 32,
+        "color": "#78d715",
+        "background": "#000000",
+        "opacity": 0.4,
+        "x": 5,
+        "y": 5,
+        "line_spacing": 38,
+        "return_copy": true,
+        "name": "VideoOverlay"
+      }
+    },
+    {
+      "name": "VideoOutput",
+      "type": "VideoOutput",
+      "connections": [],
+      "layout_grid": {
+        "x": 0,
+        "y": 14,
+        "w": 4,
+        "h": 11
+      },
+      "layout_node": {
+        "x": 1053,
+        "y": 305
+      },
+      "init_kwargs": {
+        "video_output": "webrtc://@:8554/output",
+        "name": "VideoOutput"
+      }
+    }
+  ]
+}
