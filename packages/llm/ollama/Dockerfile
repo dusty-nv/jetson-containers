@@ -22,24 +22,26 @@ ARG OLLAMA_REPO \
     GOLANG_VERSION \
     CMAKE_VERSION \
     CMAKE_CUDA_ARCHITECTURES
-
-WORKDIR /opt
-
+    
 ADD https://api.github.com/repos/${OLLAMA_REPO}/git/refs/heads/${OLLAMA_BRANCH} /tmp/ollama_version.json
-RUN git clone --branch=${OLLAMA_BRANCH} --depth=1 --recursive https://github.com/${OLLAMA_REPO}
+RUN git clone --branch=${OLLAMA_BRANCH} --depth=1 --recursive https://github.com/${OLLAMA_REPO} /opt/ollama
 
 COPY ollama_deps.sh /opt/ollama_deps.sh
 RUN CMAKE_VERSION=${CMAKE_VERSION} GOLANG_VERSION=${GOLANG_VERSION} sh /opt/ollama_deps.sh
 
-# generate llama.cpp backend to bundle with Ollama
-WORKDIR ollama/llm/generate
 ENV LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/usr/local/nvidia/compat:${LD_LIBRARY_PATH} \
     CMAKE_CUDA_ARCHITECTURES=${CMAKE_CUDA_ARCHITECTURES}
-RUN sed 's|-j8|-j$(nproc)|' -i gen_common.sh
-RUN bash gen_linux.sh
-
-WORKDIR /opt/ollama
-RUN go build -trimpath .
+    
+# generate llama.cpp backend to bundle with Ollama
+RUN cd /opt/ollama && \
+    export VERSION=$(git describe --tags --first-parent --abbrev=7 --long --dirty --always | sed -e "s/^v//g") && \
+    export GOFLAGS="'-ldflags=-w -s \"-X=github.com/ollama/ollama/version.Version=$VERSION\" \"-X=github.com/ollama/ollama/server.mode=release\"'" && \
+    echo "OLLAMA_VERSION=${VERSION}  GOFLAGS=${GOFLAGS}" && \
+    cd llm/generate && \
+    sed 's|-j8|-j$(nproc)|' -i gen_common.sh && \
+    bash gen_linux.sh && \
+    cd ../../ && \
+    go build -trimpath .
 
 # build the runtime container
 FROM ${BASE_IMAGE}
