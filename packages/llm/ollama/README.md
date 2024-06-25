@@ -76,9 +76,9 @@ You can then navigate your browser to `http://JETSON_IP:8080`, and create a fake
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`llama-index`](/packages/rag/llama-index) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`jetrag`](/packages/rag/jetrag) [`llama-index:samples`](/packages/rag/llama-index) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/ollama:r35.4.1`](https://hub.docker.com/r/dustynv/ollama/tags) `(2024-04-25, 5.4GB)`<br>[`dustynv/ollama:r36.2.0`](https://hub.docker.com/r/dustynv/ollama/tags) `(2024-04-25, 3.9GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/ollama:r35.4.1`](https://hub.docker.com/r/dustynv/ollama/tags) `(2024-06-25, 5.4GB)`<br>[`dustynv/ollama:r36.2.0`](https://hub.docker.com/r/dustynv/ollama/tags) `(2024-06-25, 3.9GB)`<br>[`dustynv/ollama:r36.3.0`](https://hub.docker.com/r/dustynv/ollama/tags) `(2024-05-14, 3.9GB)` |
 
 </details>
 
@@ -88,8 +88,9 @@ You can then navigate your browser to `http://JETSON_IP:8080`, and create a fake
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/ollama:r35.4.1`](https://hub.docker.com/r/dustynv/ollama/tags) | `2024-04-25` | `arm64` | `5.4GB` |
-| &nbsp;&nbsp;[`dustynv/ollama:r36.2.0`](https://hub.docker.com/r/dustynv/ollama/tags) | `2024-04-25` | `arm64` | `3.9GB` |
+| &nbsp;&nbsp;[`dustynv/ollama:r35.4.1`](https://hub.docker.com/r/dustynv/ollama/tags) | `2024-06-25` | `arm64` | `5.4GB` |
+| &nbsp;&nbsp;[`dustynv/ollama:r36.2.0`](https://hub.docker.com/r/dustynv/ollama/tags) | `2024-06-25` | `arm64` | `3.9GB` |
+| &nbsp;&nbsp;[`dustynv/ollama:r36.3.0`](https://hub.docker.com/r/dustynv/ollama/tags) | `2024-05-14` | `arm64` | `3.9GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
