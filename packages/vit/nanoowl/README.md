@@ -8,12 +8,12 @@
 ### Run the basic usage example and copy the result to host
 
 ```
-./run.sh $(./autotag nanoowl) /bin/bash -c " \
-  cd /opt/nanoowl/examples/ && \
-  python3 owl_predict.py \
-    --prompt=\"[an owl, a glove]\" \
-    --threshold=0.1 \
-    --image_encoder_engine=../data/owl_image_encoder_patch32.engine "
+jetson-containers run --workdir /opt/nanoowl/examples \
+  $(autotag nanoowl) \
+    python3 owl_predict.py \
+      --prompt="[an owl, a glove]" \
+      --threshold=0.1 \
+      --image_encoder_engine=../data/owl_image_encoder_patch32.engine
 ```
 
 ### Run the tree prediction example (live camera)
@@ -23,9 +23,9 @@
 2. Launch the demo
 
 ```
-./run.sh $(./autotag nanoowl) /bin/bash -c " \
-  cd /opt/nanoowl/examples/tree_demo/ && \
-  python3 tree_demo.py ../../data/owl_image_encoder_patch32.engine "
+jetson-containers run --workdir /opt/nanoowl/examples/tree_demo \
+  $(autotag nanoowl) \
+    python3 tree_demo.py ../../data/owl_image_encoder_patch32.engine
 ```
 
 3. Second, open your browser to `http://<ip address>:7860`
@@ -34,9 +34,9 @@
 
 4. Type whatever prompt you like to see what works! Here are some examples
 
-  - Example: [a face [a nose, an eye, a mouth]]
-  - Example: [a face (interested, yawning / bored)]
-  - Example: (indoors, outdoors)
+  - Example: `[a face [a nose, an eye, a mouth]]`
+  - Example: `[a face (interested, yawning / bored)]`
+  - Example: `(indoors, outdoors)`
 
 <details open>
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
@@ -46,9 +46,9 @@
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Builds | [![`nanoowl_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nanoowl_jp51.yml?label=nanoowl:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nanoowl_jp51.yml) [![`nanoowl_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nanoowl_jp60.yml?label=nanoowl:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nanoowl_jp60.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda:12.4`](/packages/cuda/cuda) [`cudnn:9.0`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.3`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`tensorrt`](/packages/tensorrt) [`torch2trt`](/packages/pytorch/torch2trt) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`opencv`](/packages/opencv) [`gstreamer`](/packages/gstreamer) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda:12.2`](/packages/cuda/cuda) [`cudnn:8.9`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.2`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`tensorrt`](/packages/tensorrt) [`torch2trt`](/packages/pytorch/torch2trt) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`opencv`](/packages/opencv) [`gstreamer`](/packages/gstreamer) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/nanoowl:r35.2.1`](https://hub.docker.com/r/dustynv/nanoowl/tags) `(2023-12-14, 7.1GB)`<br>[`dustynv/nanoowl:r35.3.1`](https://hub.docker.com/r/dustynv/nanoowl/tags) `(2024-02-22, 7.1GB)`<br>[`dustynv/nanoowl:r35.4.1`](https://hub.docker.com/r/dustynv/nanoowl/tags) `(2023-12-11, 7.1GB)`<br>[`dustynv/nanoowl:r36.2.0`](https://hub.docker.com/r/dustynv/nanoowl/tags) `(2024-02-22, 9.0GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/nanoowl:r35.2.1`](https://hub.docker.com/r/dustynv/nanoowl/tags) `(2023-12-14, 7.1GB)`<br>[`dustynv/nanoowl:r35.3.1`](https://hub.docker.com/r/dustynv/nanoowl/tags) `(2024-02-22, 7.1GB)`<br>[`dustynv/nanoowl:r35.4.1`](https://hub.docker.com/r/dustynv/nanoowl/tags) `(2024-05-11, 7.0GB)`<br>[`dustynv/nanoowl:r36.2.0`](https://hub.docker.com/r/dustynv/nanoowl/tags) `(2024-05-11, 8.3GB)` |
 
 </details>
 
@@ -60,8 +60,8 @@
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/nanoowl:r35.2.1`](https://hub.docker.com/r/dustynv/nanoowl/tags) | `2023-12-14` | `arm64` | `7.1GB` |
 | &nbsp;&nbsp;[`dustynv/nanoowl:r35.3.1`](https://hub.docker.com/r/dustynv/nanoowl/tags) | `2024-02-22` | `arm64` | `7.1GB` |
-| &nbsp;&nbsp;[`dustynv/nanoowl:r35.4.1`](https://hub.docker.com/r/dustynv/nanoowl/tags) | `2023-12-11` | `arm64` | `7.1GB` |
-| &nbsp;&nbsp;[`dustynv/nanoowl:r36.2.0`](https://hub.docker.com/r/dustynv/nanoowl/tags) | `2024-02-22` | `arm64` | `9.0GB` |
+| &nbsp;&nbsp;[`dustynv/nanoowl:r35.4.1`](https://hub.docker.com/r/dustynv/nanoowl/tags) | `2024-05-11` | `arm64` | `7.0GB` |
+| &nbsp;&nbsp;[`dustynv/nanoowl:r36.2.0`](https://hub.docker.com/r/dustynv/nanoowl/tags) | `2024-05-11` | `arm64` | `8.3GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>

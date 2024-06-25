@@ -4,12 +4,12 @@
 ### Run the basic usage example and copy the result to host
 
 ```
-./run.sh $(./autotag nanoowl) /bin/bash -c " \
-  cd /opt/nanoowl/examples/ && \
-  python3 owl_predict.py \
-    --prompt=\"[an owl, a glove]\" \
-    --threshold=0.1 \
-    --image_encoder_engine=../data/owl_image_encoder_patch32.engine "
+jetson-containers run --workdir /opt/nanoowl/examples \
+  $(autotag nanoowl) \
+    python3 owl_predict.py \
+      --prompt="[an owl, a glove]" \
+      --threshold=0.1 \
+      --image_encoder_engine=../data/owl_image_encoder_patch32.engine
 ```
 
 ### Run the tree prediction example (live camera)
@@ -19,9 +19,9 @@
 2. Launch the demo
 
 ```
-./run.sh $(./autotag nanoowl) /bin/bash -c " \
-  cd /opt/nanoowl/examples/tree_demo/ && \
-  python3 tree_demo.py ../../data/owl_image_encoder_patch32.engine "
+jetson-containers run --workdir /opt/nanoowl/examples/tree_demo \
+  $(autotag nanoowl) \
+    python3 tree_demo.py ../../data/owl_image_encoder_patch32.engine
 ```
 
 3. Second, open your browser to `http://<ip address>:7860`
@@ -30,6 +30,6 @@
 
 4. Type whatever prompt you like to see what works! Here are some examples
 
-  - Example: [a face [a nose, an eye, a mouth]]
-  - Example: [a face (interested, yawning / bored)]
-  - Example: (indoors, outdoors)
+  - Example: `[a face [a nose, an eye, a mouth]]`
+  - Example: `[a face (interested, yawning / bored)]`
+  - Example: `(indoors, outdoors)`
