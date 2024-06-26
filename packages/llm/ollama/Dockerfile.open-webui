@@ -1,0 +1,15 @@
+# 
+# this is the ollama:open-webui container (built on top of ollama)
+# see Dockerfile & config.py for package configuration/metadata
+#
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+COPY start_ollama_openwebui /
+
+# ENTRYPOINT /start_ollama && \
+#     /start_open_webui && \
+#     /stop_open_webui_upon_exit & \
+#     /bin/bash
+
+ENTRYPOINT ["/start_ollama_openwebui"]
