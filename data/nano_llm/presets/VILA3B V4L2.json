@@ -109,11 +109,11 @@
       },
       "rate": 8,
       "chunk": null,
-      "drop_inputs": false,
+      "drop_inputs": true,
       "on_demand": false,
       "init_kwargs": {
         "rate": 8,
-        "drop_inputs": false,
+        "drop_inputs": true,
         "on_demand": false,
         "name": "RateLimit"
       }
@@ -133,9 +133,9 @@
         "x": 432,
         "y": 70
       },
-      "template": "<image> Describe the image concisely. <reset>",
+      "template": "<reset><image>Describe the image concisely.",
       "init_kwargs": {
-        "template": "<image> Describe the image concisely. <reset>",
+        "template": "<reset><image>Describe the image concisely.",
         "name": "AutoPrompt"
       }
     },
@@ -163,7 +163,7 @@
       "x": 5,
       "y": 5,
       "line_spacing": 38,
-      "line_length": null,
+      "line_length": 38,
       "return_copy": true,
       "init_kwargs": {
         "font": "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
