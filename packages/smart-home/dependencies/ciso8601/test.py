@@ -1,7 +1,6 @@
-import ciso8601
-
-
 print("testing ciso8601...")
+
+import ciso8601
 
 print(ciso8601.__version__)
 
