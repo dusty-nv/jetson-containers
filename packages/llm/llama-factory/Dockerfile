@@ -2,9 +2,9 @@
 # name: llama-factory
 # group: llm
 # requires: '>=35'
-# depends: [bitsandbytes]
+# depends: [bitsandbytes, flash-attention]
 # test: test.py
-# notes: fork of https://github.com/hiyouga/LLaMA-Factory for Jetson
+# notes: LLaMA-Factory for Jetson - https://github.com/hiyouga/LLaMA-Factory
 #---
 
 ARG BASE_IMAGE
