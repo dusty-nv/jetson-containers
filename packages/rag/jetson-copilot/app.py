@@ -9,7 +9,7 @@ from PIL import Image
 import time
 
 # App title
-st.set_page_config(page_title=":airplane: JETRAG", menu_items=None)
+st.set_page_config(page_title=":airplane: Jetson Copilot", menu_items=None)
 
 AVATAR_AI   = Image.open('./static/jetson-soc.png')
 AVATAR_USER = Image.open('./static/user-purple.png')

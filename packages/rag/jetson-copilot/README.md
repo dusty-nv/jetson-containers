@@ -1,14 +1,14 @@
-# jetrag
+# jetson-copilot
 
 > [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 
 
-* jetrag (temporary name for Ollama-LlamaIndex-based, Streamlit-enabled container)
+* jetson-copilot (temporary name for Ollama-LlamaIndex-based, Streamlit-enabled container)
 
-## Starting `jetrag` container
+## Starting `jetson-copilot` container
 
 ```bash
-jetson-containers run $(autotag jetrag)
+jetson-containers run $(autotag jetson-copilot)
 ```
 
 This will start the `ollama` server and enter into a `bash` terminal.
@@ -26,12 +26,12 @@ mkdir -p ./data/documents/jetson
 Once in the container:
 
 ```bash
-streamlit run /opt/jetrag/app.py
+streamlit run /opt/jetson-copilot/app.py
 ```
 
 > Or you can start the container with additional arguments:
 > ```
-> jetson-containers run $(autotag jetrag) bash -c '/start_ollama && streamlit run app.py'
+> jetson-containers run $(autotag jetson-copilot) bash -c '/start_ollama && streamlit run app.py'
 > ```
 
 This will start the `ollama` server and `streamlit` app for "Jetson Copilot", an AI assistant to answer any questions based on documents provided in `/data/documents/jetson` directory.
@@ -53,7 +53,7 @@ From your browser, open the above Network URL (`http://10.110.50.241:8501`).
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`jetrag`** | |
+| **`jetson-copilot`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda:12.2`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`ollama`](/packages/llm/ollama) |
@@ -84,24 +84,24 @@ From your browser, open the above Network URL (`http://10.110.50.241:8501`).
 To start the container, you can use [`jetson-containers run`](/docs/run.md) and [`autotag`](/docs/run.md#autotag), or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
 ```bash
 # automatically pull or build a compatible container image
-jetson-containers run $(autotag jetrag)
+jetson-containers run $(autotag jetson-copilot)
 
 # or explicitly specify one of the container images above
-jetson-containers run dustynv/jetrag:r36.3.0
+jetson-containers run dustynv/jetson-copilot:r36.3.0
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/jetrag:r36.3.0
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/jetson-copilot:r36.3.0
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
 
 To mount your own directories into the container, use the [`-v`](https://docs.docker.com/engine/reference/commandline/run/#volume) or [`--volume`](https://docs.docker.com/engine/reference/commandline/run/#volume) flags:
 ```bash
-jetson-containers run -v /path/on/host:/path/in/container $(autotag jetrag)
+jetson-containers run -v /path/on/host:/path/in/container $(autotag jetson-copilot)
 ```
 To launch the container running a command, as opposed to an interactive shell:
 ```bash
-jetson-containers run $(autotag jetrag) my_app --abc xyz
+jetson-containers run $(autotag jetson-copilot) my_app --abc xyz
 ```
 You can pass any options to it that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
 </details>
@@ -111,7 +111,7 @@ You can pass any options to it that you would to [`docker run`](https://docs.doc
 
 If you use [`autotag`](/docs/run.md#autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do the [system setup](/docs/setup.md), then run:
 ```bash
-jetson-containers build jetrag
+jetson-containers build jetson-copilot
 ```
 The dependencies from above will be built into the container, and it'll be tested during.  Run it with [`--help`](/jetson_containers/build.py) for build options.
 </details>

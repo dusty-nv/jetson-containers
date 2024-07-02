@@ -1,10 +1,10 @@
 
-* jetrag (temporary name for Ollama-LlamaIndex-based, Streamlit-enabled container)
+* jetson-copilot (temporary name for Ollama-LlamaIndex-based, Streamlit-enabled container)
 
-## Starting `jetrag` container
+## Starting `jetson-copilot` container
 
 ```bash
-jetson-containers run $(autotag jetrag)
+jetson-containers run $(autotag jetson-copilot)
 ```
 
 This will start the `ollama` server and enter into a `bash` terminal.
@@ -22,12 +22,12 @@ mkdir -p ./data/documents/jetson
 Once in the container:
 
 ```bash
-streamlit run /opt/jetrag/app.py
+streamlit run /opt/jetson-copilot/app.py
 ```
 
 > Or you can start the container with additional arguments:
 > ```
-> jetson-containers run $(autotag jetrag) bash -c '/start_ollama && streamlit run app.py'
+> jetson-containers run $(autotag jetson-copilot) bash -c '/start_ollama && streamlit run app.py'
 > ```
 
 This will start the `ollama` server and `streamlit` app for "Jetson Copilot", an AI assistant to answer any questions based on documents provided in `/data/documents/jetson` directory.
