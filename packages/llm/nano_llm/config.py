@@ -12,8 +12,8 @@ def NanoLLM(version, branch=None, requires=None, default=False):
     if requires:
         pkg['requires'] = requires   
 
-    #if L4T_VERSION.major >= 36:
-    #    pkg['depends'] = pkg['depends'] + ['xtts']
+    if L4T_VERSION.major >= 36:
+        pkg['depends'] = ['awq'] + pkg['depends'] + ['whisper_trt']
     
     if not branch:
         branch = version
