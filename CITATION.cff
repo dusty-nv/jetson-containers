@@ -9,7 +9,7 @@ authors:
   - given-names: Dustin
     family-names: Franklin
     affiliation: Nvidia
-repository-code: 'https://github.com/dusty-nv/jetson-utils'
+repository-code: 'https://github.com/dusty-nv/jetson-containers'
 url: 'https://www.jetson-ai-lab.com/'
 abstract: Machine Learning Containers for Jetson and JetPack
 license: MIT
