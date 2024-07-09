@@ -4,8 +4,8 @@ from jetson_containers import L4T_VERSION
 if L4T_VERSION.major >= 36:    # JetPack 6.0
     TENSORFLOW1_URL = None
     TENSORFLOW1_WHL = None
-    TENSORFLOW2_URL = 'https://nvidia.box.com/shared/static/wp43cd8e0lgen2wdqic3irdwagpgn0iz.whl'
-    TENSORFLOW2_WHL = 'tensorflow-2.14.0+nv23.11-cp310-cp310-linux_aarch64.whl'
+    TENSORFLOW2_URL = 'https://developer.download.nvidia.com/compute/redist/jp/v60/tensorflow/tensorflow-2.16.1+nv24.06-cp310-cp310-linux_aarch64.whl' # 'https://nvidia.box.com/shared/static/wp43cd8e0lgen2wdqic3irdwagpgn0iz.whl'
+    TENSORFLOW2_WHL = 'tensorflow-2.16.1+nv24.06-cp310-cp310-linux_aarch64.whl' #'tensorflow-2.14.0+nv23.11-cp310-cp310-linux_aarch64.whl'
 elif L4T_VERSION.major == 35:  # JetPack 5.0.2 / 5.1.x
     TENSORFLOW1_URL = 'https://developer.download.nvidia.com/compute/redist/jp/v51/tensorflow/tensorflow-1.15.5+nv23.03-cp38-cp38-linux_aarch64.whl'
     TENSORFLOW1_WHL = 'tensorflow-1.15.5+nv23.03-cp38-cp38-linux_aarch64.whl'
