@@ -4,44 +4,33 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG ROS_PACKAGE=ros_base
-ARG ROS_VERSION=humble
+ARG ROS_PACKAGE=ros_base \
+    ROS_VERSION=humble
 
-ENV ROS_DISTRO=${ROS_VERSION}
-ENV ROS_ROOT=/opt/ros/${ROS_DISTRO}
-ENV ROS_PYTHON_VERSION=3
-
-ENV DEBIAN_FRONTEND=noninteractive
-ENV SHELL /bin/bash
+ENV ROS_DISTRO=${ROS_VERSION} \
+    ROS_ROOT=/opt/ros/${ROS_DISTRO} \
+    ROS_PYTHON_VERSION=3 \
+    RMW_IMPLEMENTATION=rmw_fastrtps_cpp \
+    DEBIAN_FRONTEND=noninteractive \
+    SHELL=/bin/bash
+    
 SHELL ["/bin/bash", "-c"] 
-
-WORKDIR /tmp
-
-# change the locale from POSIX to UTF-8
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends locales \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
-
-RUN locale-gen en_US en_US.UTF-8 && update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
-ENV LANG=en_US.UTF-8
-ENV PYTHONIOENCODING=utf-8
 
 # set Python3 as default
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
     
 # build ROS from source
-COPY ros2_build.sh ros2_build.sh
-RUN ./ros2_build.sh
+COPY ros2_build.sh /tmp/ros2_build.sh
+RUN /tmp/ros2_build.sh
 
 # Set the default DDS middleware to cyclonedds
 # https://github.com/ros2/rclcpp/issues/1335
-ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+# https://docs.ros.org/en/jazzy/Installation/DDS-Implementations/Working-with-eProsima-Fast-DDS.html
+#ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 
 # commands will be appended/run by the entrypoint which sources the ROS environment
-COPY ros_entrypoint.sh /ros_entrypoint.sh
+COPY ros_entrypoint.sh ros2_install.sh /bin/
 
-ENTRYPOINT ["/ros_entrypoint.sh"]
+ENTRYPOINT ["/bin/ros_entrypoint.sh"]
 CMD ["/bin/bash"]
 
-WORKDIR /
