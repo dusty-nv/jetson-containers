@@ -19,5 +19,4 @@ RUN if [ -z "$(which protoc)" ]; then \
 	   apt-get clean; \
 	   pip3 install --upgrade --no-cache-dir --verbose protobuf; \
     fi
-    
-RUN pip3 show protobuf && protoc --version
+
