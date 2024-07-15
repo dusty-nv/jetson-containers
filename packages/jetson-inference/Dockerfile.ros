@@ -7,4 +7,4 @@ FROM ${BASE_IMAGE}
 
 ADD https://api.github.com/repos/dusty-nv/ros_deep_learning/git/refs/heads/master /tmp/ros_deep_learning_version.json
 
-RUN ros2_install.sh https://github.com/dusty-nv/ros_deep_learning
+RUN /ros2_install.sh https://github.com/dusty-nv/ros_deep_learning

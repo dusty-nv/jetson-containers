@@ -29,7 +29,9 @@ def NanoLLM(version, branch=None, requires=None, default=False, ros=['foxy', 'ga
         r = pkg.copy()
         
         r['name'] = f'nano_llm:{version}-{ros_distro}'
-        r['depends'] = [f'ros:{ros_distro}-desktop'] + r['depends'] + [f'jetson-inference:{ros_distro}']
+        r['depends'] = [f'ros:{ros_distro}-desktop'] + [f'jetson-inference:{ros_distro}'] + [pkg['name']]
+        r['dockerfile'] = 'Dockerfile.ros'
+        r['test'] = 'test_ros.sh'
         
         if default:
             r['alias'] = f'nano_llm:{ros_distro}'
