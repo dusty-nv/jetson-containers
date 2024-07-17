@@ -1,6 +1,7 @@
 #---
 # name: jetson-inference
 # group: ml
+# config: config.py
 # depends: [pytorch, torchvision, tensorrt, cmake, gstreamer]
 # test: [test_utils.sh, test_infer.sh]
 #---

@@ -27,6 +27,9 @@ def pytorch_pip(version, requires=None, alias=None):
         'PYTORCH_BUILD_VERSION': build_version,
     }
 
+    if L4T_VERSION.major >= 36:
+        pkg['build_args']['USE_NCCL'] = 1
+        
     if requires:
         pkg['requires'] = requires
     

@@ -55,10 +55,11 @@ From your browser, open the above Network URL (`http://10.110.50.241:8501`).
 
 | **`jetson-copilot`** | |
 | :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `jetrag` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda:12.2`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`ollama`](/packages/llm/ollama) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda:12.2`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.2`](/packages/pytorch) [`ollama`](/packages/llm/ollama) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/jetrag:r35.4.1`](https://hub.docker.com/r/dustynv/jetrag/tags) `(2024-06-25, 6.0GB)`<br>[`dustynv/jetrag:r36.2.0`](https://hub.docker.com/r/dustynv/jetrag/tags) `(2024-06-25, 6.0GB)`<br>[`dustynv/jetrag:r36.3.0`](https://hub.docker.com/r/dustynv/jetrag/tags) `(2024-06-26, 6.0GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/jetson-copilot:r35.4.1`](https://hub.docker.com/r/dustynv/jetson-copilot/tags) `(2024-07-03, 6.3GB)`<br>[`dustynv/jetson-copilot:r36.2.0`](https://hub.docker.com/r/dustynv/jetson-copilot/tags) `(2024-07-03, 6.3GB)`<br>[`dustynv/jetson-copilot:r36.3.0`](https://hub.docker.com/r/dustynv/jetson-copilot/tags) `(2024-07-03, 6.3GB)` |
 
 </details>
 
@@ -68,9 +69,9 @@ From your browser, open the above Network URL (`http://10.110.50.241:8501`).
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/jetrag:r35.4.1`](https://hub.docker.com/r/dustynv/jetrag/tags) | `2024-06-25` | `arm64` | `6.0GB` |
-| &nbsp;&nbsp;[`dustynv/jetrag:r36.2.0`](https://hub.docker.com/r/dustynv/jetrag/tags) | `2024-06-25` | `arm64` | `6.0GB` |
-| &nbsp;&nbsp;[`dustynv/jetrag:r36.3.0`](https://hub.docker.com/r/dustynv/jetrag/tags) | `2024-06-26` | `arm64` | `6.0GB` |
+| &nbsp;&nbsp;[`dustynv/jetson-copilot:r35.4.1`](https://hub.docker.com/r/dustynv/jetson-copilot/tags) | `2024-07-03` | `arm64` | `6.3GB` |
+| &nbsp;&nbsp;[`dustynv/jetson-copilot:r36.2.0`](https://hub.docker.com/r/dustynv/jetson-copilot/tags) | `2024-07-03` | `arm64` | `6.3GB` |
+| &nbsp;&nbsp;[`dustynv/jetson-copilot:r36.3.0`](https://hub.docker.com/r/dustynv/jetson-copilot/tags) | `2024-07-03` | `arm64` | `6.3GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
