@@ -2,7 +2,7 @@
 # name: nano_llm
 # group: llm
 # config: config.py
-# depends: [mlc, riva-client:python, jetson-inference, torch2trt, torchaudio, piper-tts, nanodb]
+# depends: [mlc, riva-client:python, jetson-inference, torch2trt, torchaudio, piper-tts, nanodb, mimicgen]
 # requires: '>=35'
 # docs: docs.md
 #---
@@ -17,6 +17,7 @@ ENV PYTHONPATH=${PYTHONPATH}:${NANO_LLM_PATH} \
     SSL_CERT=/etc/ssl/private/localhost.cert.pem
     
 ADD https://api.github.com/repos/dusty-nv/NanoLLM/git/refs/heads/${NANO_LLM_BRANCH} /tmp/nano_llm_version.json
+
 COPY install.sh /tmp/nano_llm/install.sh
 
 RUN /tmp/nano_llm/install.sh 
