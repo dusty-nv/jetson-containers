@@ -1,7 +1,7 @@
 #---
 # name: mimicgen
 # group: sim
-# depends: [robosuite, h5py]
+# depends: [robomimic]
 # test: [test.sh, test.py]
 #---
 ARG BASE_IMAGE

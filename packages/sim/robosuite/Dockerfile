@@ -9,11 +9,15 @@ FROM ${BASE_IMAGE}
 
 ADD https://api.github.com/repos/dusty-nv/robosuite/git/refs/heads/master /tmp/robosuite_version.json
 
-RUN git clone --depth=1 --recursive https://github.com/dusty-nv/robosuite /opt/robosuite && \
+RUN git clone https://github.com/dusty-nv/robosuite /opt/robosuite && \
     apt-get update && \
     apt-get install -y --no-install-recommends libhidapi-dev && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean && \
     cd /opt/robosuite && \
     pip3 install --verbose -e . && \
-    pip3 install --verbose --no-cache-dir imageio[ffmpeg] pyspacemouse 
+    pip3 install --verbose --no-cache-dir imageio[ffmpeg] pyspacemouse && \
+    \
+    git clone https://github.com/ARISE-Initiative/robosuite-task-zoo /opt/robosuite-task-zoo && \
+    cd /opt/robosuite-task-zoo && \
+    pip3 install --verbose -e .
