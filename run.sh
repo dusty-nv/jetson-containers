@@ -29,7 +29,7 @@ DISPLAY_DEVICE=""
 
 if [ -n "$DISPLAY" ]; then
 	# give docker root user X11 permissions
-	sudo xhost +si:localuser:root
+	xhost +si:localuser:root || sudo xhost +si:localuser:root
 	
 	# enable SSH X11 forwarding inside container (https://stackoverflow.com/q/48235040)
 	XAUTH=/tmp/.docker.xauth
