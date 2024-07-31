@@ -11,7 +11,8 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG LLAMA_CPP_VERSION \
-    LLAMA_CPP_BRANCH
+    LLAMA_CPP_BRANCH \
+    LLAMA_CPP_FLAGS
 
 COPY build.sh /tmp/build_llama_cpp.sh
 COPY benchmark.py /usr/local/bin/llama_cpp_benchmark.py

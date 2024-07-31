@@ -10,5 +10,6 @@ COPY ros2_nanollm /ros2_workspace/src
 RUN source $ROS_ROOT/install/setup.bash && \
     cd /ros2_workspace && \
     colcon build --symlink-install --base-paths src --event-handlers console_direct+ && \
+    tac /ros_entrypoint.sh | sed -e "3iros_source_env /ros2_workspace/install/setup.bash" && \
     tac /ros_entrypoint.sh | sed -e "3iros_source_env /ros2_workspace/install/setup.bash" | tac | tee /ros_entrypoint.sh && \
-    cat /ros_entrypoint.sh
+    echo "updated contents of /ros_entrypoint.sh" && cat /ros_entrypoint.sh
