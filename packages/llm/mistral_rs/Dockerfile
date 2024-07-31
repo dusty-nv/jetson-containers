@@ -3,8 +3,9 @@
 # alias: mistralrs
 # group: llm
 # config: config.py
-# depends: [cuda, cudnn, rust]
+# depends: [cuda, rust]
 # requires: '>=36.3.0'
+# test: test.sh
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE} as builder
@@ -12,9 +13,11 @@ FROM ${BASE_IMAGE} as builder
 ARG MISTRALRS_REPO \
     MISTRALRS_BRANCH
 
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    libssl-dev \
-    && rm -rf /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+              libssl-dev
 
 WORKDIR /mistralrs
 
@@ -25,14 +28,16 @@ RUN cargo build --release --features "${FEATURES}"
 
 FROM ${BASE_IMAGE}
 
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    libssl-dev \
-    && rm -rf /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+              libssl-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
 RUN mkdir -p ~/.cache && \
     ln -s /data/models/huggingface ~/.cache/huggingface
 
-COPY --from=builder /mistralrs/target/release/mistralrs-bench /usr/local/bin/mistralrs-bench
-RUN chmod +x /usr/local/bin/mistralrs-bench
-COPY --from=builder /mistralrs/target/release/mistralrs-server /usr/local/bin/mistralrs-server
-RUN chmod +x /usr/local/bin/mistralrs-server
+COPY --from=builder /mistralrs/target/release/mistralrs-bench /mistralrs/target/release/mistralrs-server /usr/local/bin/
+RUN chmod +x /usr/local/bin/mistralrs-bench /usr/local/bin/mistralrs-server
