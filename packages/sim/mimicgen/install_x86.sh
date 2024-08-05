@@ -39,6 +39,7 @@ if [ ! -d "robomimic" ]; then
     echo "> INSTALLING robomimic"
     git clone https://github.com/ARISE-Initiative/robomimic/
     cd robomimic
+    pip3 install --verbose cmake ninja torch=2.2
     pip3 install --verbose -e .
     cd ../
 fi
