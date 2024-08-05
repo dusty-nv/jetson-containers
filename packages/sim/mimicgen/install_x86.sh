@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 # this script is for installing openvla on a training server or workstation with dGPU(s)
-#   wget -O - https://raw.githubusercontent.com/dusty-nv/jetson-containers/dev/packages/sim/mimicgen/install_x86.sh | bash
+#   git clone https://github.com/dusty-nv/jetson-containers
+#   bash jetson-containers/packages/sim/mimicgen/install_x86.sh
 set -ex
 
-REPO_URL="https://raw.githubusercontent.com/dusty-nv/jetson-containers/dev"
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 WORKDIR="/workspace"
 mkdir -p $WORKDIR
 cd $WORKDIR
@@ -21,13 +22,12 @@ if [ ! -d "robosuite" ]; then
     echo "> INSTALLING robosuite"
     git clone https://github.com/dusty-nv/robosuite
     apt_update
-    apt-get install -y --no-install-recommends libhidapi-dev
+    apt-get install -y --no-install-recommends libhidapi-dev libglvnd-dev
     cd robosuite
     pip3 install --verbose -e .
-    pip3 install --verbose --no-cache-dir imageio[ffmpeg] pyspacemouse 
+    pip3 install --verbose --no-cache-dir imageio[ffmpeg] pyspacemouse opencv-python
     cd ../
 fi
 
 echo "> TESTING robosuite"
-wget $REPO_URL/packages/sim/robosuite/test.py -O $WORKDIR/robosuite/generate.py
-python3 $WORKDIR/robosuite/generate.py --output $WORKDIR/robosuite/output/test
+python3 $SCRIPT_DIR/../robosuite/test.py --output $WORKDIR/robosuite/output/test
