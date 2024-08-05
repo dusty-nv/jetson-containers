@@ -30,4 +30,18 @@ if [ ! -d "robosuite" ]; then
 fi
 
 echo "> TESTING robosuite"
-python3 $SCRIPT_DIR/../robosuite/test.py --camera-width 224 --camera-height 224 --output $WORKDIR/robosuite/output/test
+python3 $SCRIPT_DIR/../robosuite/test.py \
+    --robots Panda --grippers PandaGripper \
+    --cameras agentview --camera-width 224 --camera-height 224 \
+    --output $WORKDIR/robosuite/output/test
+
+if [ ! -d "robomimic" ]; then
+    echo "> INSTALLING robomimic"
+    git clone https://github.com/ARISE-Initiative/robomimic/
+    cd robomimic
+    pip3 install --verbose -e .
+    cd ../
+fi
+
+python3 -c 'import robomimic;  print("robomimic version: ", robomimic.__version__)'
+python3 -c 'from robomimic.envs.env_robosuite import EnvRobosuite'
