@@ -41,4 +41,11 @@ HEALTHCHECK --start-period=10m \
 
 EXPOSE ${OPENWAKEWORD_PORT}/tcp
 
-CMD /init
+LABEL \
+    io.hass.type="addon" \
+    io.hass.name="openWakeWord" \
+    io.hass.version="${WYOMING_OPENWAKEWORD_VERSION}" \
+    io.hass.arch="${BUILD_ARCH}" \
+    io.hass.machine="qemuarm-64"
+
+CMD ["/init"]

@@ -45,4 +45,11 @@ HEALTHCHECK --start-period=10m \
         | grep -q "piper" \
         || exit 1
 
-CMD /init
+LABEL \
+    io.hass.type="addon" \
+    io.hass.name="piper-tts" \
+    io.hass.version="${WYOMING_PIPER_VERSION}" \
+    io.hass.arch="${BUILD_ARCH}" \
+    io.hass.machine="qemuarm-64"
+
+CMD ["/init"]
