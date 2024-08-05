@@ -46,3 +46,19 @@ fi
 
 python3 -c 'import robomimic;  print("robomimic version: ", robomimic.__version__)'
 python3 -c 'from robomimic.envs.env_robosuite import EnvRobosuite'
+
+if [ ! -d "mimicgen" ]; then
+    echo "> INSTALLING mimicgen"
+    git clone https://github.com/dusty-nv/mimicgen
+    cd mimicgen
+    pip3 install --verbose -e .
+    cd ../
+fi
+
+python3 -c 'import mimicgen;  print("mimicgen version: ", mimicgen.__version__)'
+python3 -c 'import robosuite; print("robosuite version:", robosuite.__version__)'
+
+python3 $SCRIPT_DIR/test.py \
+    --robots Panda --grippers PandaGripper \
+    --cameras agentview --camera-width 224 --camera-height 224 \
+    --output $WORKDIR/mimicgen/output/test
