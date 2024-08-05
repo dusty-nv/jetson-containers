@@ -17,7 +17,7 @@ function apt_update() {
     fi
 }
 
-if [ ! -d "mimicgen" ]; then
+if [ ! -d "robosuite" ]; then
     echo "> INSTALLING robosuite"
     git clone https://github.com/dusty-nv/robosuite
     apt_update
@@ -29,5 +29,5 @@ if [ ! -d "mimicgen" ]; then
 fi
 
 echo "> TESTING robosuite"
-wget $REPO_URL/packages/sim/robosuite/test.py -O $WORKSPACE/robosuite/generate.py
-python3 $WORKSPACE/robosuite/generate.py --output $WORKSPACE/robosuite/output/test
+wget $REPO_URL/packages/sim/robosuite/test.py -O $WORKDIR/robosuite/generate.py
+python3 $WORKDIR/robosuite/generate.py --output $WORKDIR/robosuite/output/test
