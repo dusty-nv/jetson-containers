@@ -3,6 +3,7 @@
 #   wget -O - https://raw.githubusercontent.com/dusty-nv/jetson-containers/dev/packages/sim/mimicgen/install_x86.sh | bash
 set -ex
 
+REPO_URL="https://raw.githubusercontent.com/dusty-nv/jetson-containers/dev"
 WORKDIR="/workspace"
 mkdir -p $WORKDIR
 cd $WORKDIR
@@ -28,5 +29,5 @@ if [ ! -d "mimicgen" ]; then
 fi
 
 echo "> TESTING robosuite"
-wget https://github.com/dusty-nv/jetson-containers/blob/dev/packages/sim/robosuite/test.py -O $WORKSPACE/robosuite/generate.py
+wget $REPO_URL/packages/sim/robosuite/test.py -O $WORKSPACE/robosuite/generate.py
 python3 $WORKSPACE/robosuite/generate.py --output $WORKSPACE/robosuite/output/test
