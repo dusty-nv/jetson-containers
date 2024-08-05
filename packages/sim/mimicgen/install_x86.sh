@@ -22,7 +22,7 @@ if [ ! -d "robosuite" ]; then
     echo "> INSTALLING robosuite"
     git clone https://github.com/dusty-nv/robosuite
     apt_update
-    apt-get install -y --no-install-recommends libhidapi-dev libglvnd-dev
+    apt-get install -y --no-install-recommends libhidapi-dev
     cd robosuite
     pip3 install --verbose -e .
     pip3 install --verbose --no-cache-dir imageio[ffmpeg] pyspacemouse opencv-python
