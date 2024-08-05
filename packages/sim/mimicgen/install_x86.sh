@@ -20,13 +20,14 @@ function apt_update() {
 
 if [ ! -d "robosuite" ]; then
     echo "> INSTALLING robosuite"
+    cd $WORKDIR
     git clone https://github.com/dusty-nv/robosuite
     apt_update
     apt-get install -y --no-install-recommends libhidapi-dev libosmesa6-dev python3-dev python3-pip
     cd robosuite
     pip3 install --verbose -e .
     pip3 install --verbose --no-cache-dir imageio[ffmpeg] pyspacemouse opencv-python
-    cd ../
+    cd /
 fi
 
 echo "> TESTING robosuite"
@@ -37,25 +38,29 @@ echo "> TESTING robosuite"
 
 if [ ! -d "robomimic" ]; then
     echo "> INSTALLING robomimic"
+    cd $WORKDIR
     git clone https://github.com/ARISE-Initiative/robomimic/
     cd robomimic
     pip3 install --verbose cmake ninja torch==2.2
     pip3 install --verbose -e .
-    cd ../
+    cd /
 fi
 
 python3 -c 'import robomimic;  print("robomimic version: ", robomimic.__version__)'
+python3 -c 'import robosuite; print("robosuite version:", robosuite.__version__)'
 python3 -c 'from robomimic.envs.env_robosuite import EnvRobosuite'
 
 if [ ! -d "mimicgen" ]; then
     echo "> INSTALLING mimicgen"
+    cd $WORKDIR
     git clone https://github.com/dusty-nv/mimicgen
     cd mimicgen
     pip3 install --verbose -e .
-    cd ../
+    cd /
 fi
 
 python3 -c 'import mimicgen;  print("mimicgen version: ", mimicgen.__version__)'
+python3 -c 'import robomimic;  print("robomimic version: ", robomimic.__version__)'
 python3 -c 'import robosuite; print("robosuite version:", robosuite.__version__)'
 
 python3 $SCRIPT_DIR/test.py \
