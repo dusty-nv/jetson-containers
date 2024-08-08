@@ -1,6 +1,7 @@
 #---
 # name: openvla
 # group: llm
+# config: config.py
 # depends: [transformers, flash-attention, bitsandbytes, tensorboard, h5py]
 # test: [test.sh, test.py]
 #---
