@@ -8,7 +8,7 @@ ARG ROS_PACKAGE=ros_base \
     ROS_VERSION=humble
 
 ENV ROS_DISTRO=${ROS_VERSION} \
-    ROS_ROOT=/opt/ros/${ROS_DISTRO} \
+    ROS_ROOT=/opt/ros/${ROS_VERSION} \
     ROS_PYTHON_VERSION=3 \
     RMW_IMPLEMENTATION=rmw_fastrtps_cpp \
     DEBIAN_FRONTEND=noninteractive \
