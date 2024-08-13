@@ -21,8 +21,8 @@ print('GRIPPERS    ', list(rs.ALL_GRIPPERS), '\n')
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     
 parser.add_argument('--tasks', type=str, nargs='+', default=['Lift', 'Stack'], choices=list(rs.ALL_ENVIRONMENTS), help="one or more tasks to generate episodes for")
-parser.add_argument('--robots', type=str, nargs='+', default=['Panda', 'IWAA', 'UR5e'], choices=list(rs.ALL_ROBOTS), help="one or more robots to generate episodes for")
-parser.add_argument('--grippers', type=str, nargs='+', default=['PandaGripper', 'RethinkGripper'], choices=list(rs.ALL_GRIPPERS), help="one or more grippers to generate episodes for")
+parser.add_argument('--robots', type=str, nargs='+', default=['Panda'], choices=list(rs.ALL_ROBOTS), help="one or more robots to generate episodes for")
+parser.add_argument('--grippers', type=str, nargs='+', default=['PandaGripper'], choices=list(rs.ALL_GRIPPERS), help="one or more grippers to generate episodes for")
 
 parser.add_argument('--cameras', type=str, nargs='+', default=['agentview', 'frontview', 'robot0_eye_in_hand'], help="one or more camera views to render")
 parser.add_argument('--camera-width', type=int, default=512, help="the width (in pixels) of the camera")

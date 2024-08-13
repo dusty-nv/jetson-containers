@@ -22,8 +22,8 @@ print('GRIPPERS    ', list(rs.ALL_GRIPPERS), '\n')
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     
-parser.add_argument('--tasks', type=str, nargs='+', default=['Stack_D0', 'Stack_D1', 'Square_D0', 'Square_D1'], choices=list(rs.ALL_ENVIRONMENTS), help="one or more tasks to generate episodes for")
-parser.add_argument('--robots', type=str, nargs='+', default=['Panda', 'IIWA', 'UR5e'], choices=list(rs.ALL_ROBOTS), help="one or more robots to generate episodes for")
+parser.add_argument('--tasks', type=str, nargs='+', default=['Stack_D0', 'Stack_D1'], choices=list(rs.ALL_ENVIRONMENTS), help="one or more tasks to generate episodes for")
+parser.add_argument('--robots', type=str, nargs='+', default=['Panda'], choices=list(rs.ALL_ROBOTS), help="one or more robots to generate episodes for")
 parser.add_argument('--grippers', type=str, nargs='+', default=['PandaGripper'], choices=list(rs.ALL_GRIPPERS), help="one or more grippers to generate episodes for")
 
 parser.add_argument('--cameras', type=str, nargs='+', default=['agentview', 'frontview', 'robot0_eye_in_hand'], help="one or more camera views to render")
