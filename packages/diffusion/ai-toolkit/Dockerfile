@@ -1,7 +1,7 @@
 #---
 # name: ai-toolkit
 # group: diffusion
-# depends: [pytorch, torchvision, transformers, bitsandbytes, huggingface_hub]
+# depends: [pytorch, torchvision, transformers, flash-attention, bitsandbytes, huggingface_hub]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---
