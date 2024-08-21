@@ -10,11 +10,10 @@ FROM ${BASE_IMAGE}
 
 WORKDIR /opt
 
-RUN pip3 tqdm
-
 # Clone the repository:
 RUN git clone https://github.com/ostris/ai-toolkit.git && \
     cd ai-toolkit && \
-    pip3 install --no-cache-dir -r requirements.txt
+    pip3 install --no-cache-dir -r requirements.txt && \
+    pip3 install --force-reinstall 'numpy<2'
 
 WORKDIR /opt/ai-toolkit/
