@@ -1,7 +1,7 @@
 #---
 # name: ComfyUI
 # group: diffusion
-# depends: [pytorch, torchvision, onnxruntime, opencv, transformers, bitsandbytes, huggingface_hub]
+# depends: [pytorch, torchvision, torchaudio, onnxruntime, opencv, transformers, bitsandbytes, huggingface_hub]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---
