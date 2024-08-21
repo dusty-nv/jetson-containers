@@ -1,0 +1,21 @@
+#---
+# name: ComfyUI
+# group: diffusion
+# depends: [pytorch, torchvision, onnxruntime, opencv, transformers, bitsandbytes, huggingface_hub]
+# requires: '>=34.1.0'
+# docs: docs.md
+#---
+    ARG BASE_IMAGE
+    FROM ${BASE_IMAGE}
+    
+    WORKDIR /opt
+    
+    # Clone the repository:
+    RUN git clone https://github.com/comfyanonymous/ComfyUI.git && \
+        cd ComfyUI && \
+        pip3 install --no-cache-dir -r requirements.txt && \
+        pip install "numpy<2"
+    
+    WORKDIR /opt/ComfyUI/
+
+    EXPOSE 8188
