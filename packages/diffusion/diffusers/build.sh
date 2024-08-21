@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -ex
 
-echo "Building xformers ${DIFFUSERS_VERSION}"
+echo "Building diffusers ${DIFFUSERS_VERSION}"
 
 git clone --branch=v${DIFFUSERS_VERSION} --depth=1 --recursive https://github.com/huggingface/diffusers /opt/diffusers
 
