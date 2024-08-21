@@ -1,24 +1,20 @@
-# ---
+#---
 # name: ai-toolkit
-# group: flux
-# requires: '>=35'
-# depends: [pytorch, torchvision, transformers, bitsandbytes, huggingface_hub]
-# notes: ai-toolkit for Jetson - https://github.com/ostris/ai-toolkit
-# ---
-
+# group: diffusion
+# depends: [pytorch, torchvision, onnxruntime, opencv, transformers, bitsandbytes, huggingface_hub]
+# requires: '>=34.1.0'
+# docs: docs.md
+#---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 WORKDIR /opt
 
+RUN pip3 tqdm
+
+# Clone the repository:
 RUN git clone https://github.com/ostris/ai-toolkit.git && \
     cd ai-toolkit && \
-    git submodule update --init --recursive
+    pip3 install --no-cache-dir -r requirements.txt
 
-WORKDIR /opt/ai-toolkit
-
-RUN python -m pip install -r requirements.txt
-RUN pip3 install --force-reinstall 'numpy<2'
-
-CMD ["/bin/bash"]
-    
+WORKDIR /opt/ai-toolkit/
