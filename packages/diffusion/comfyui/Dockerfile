@@ -1,5 +1,5 @@
 #---
-# name: ComfyUI
+# name: comfyui
 # group: diffusion
 # depends: [pytorch, torchvision, torchaudio, transformers, flash-attention, bitsandbytes, huggingface_hub]
 # requires: '>=34.1.0'
