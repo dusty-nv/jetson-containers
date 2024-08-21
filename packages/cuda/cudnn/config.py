@@ -8,10 +8,8 @@ if 'CUDNN_VERSION' in os.environ and len(os.environ['CUDNN_VERSION']) > 0:
     CUDNN_VERSION = Version(os.environ['CUDNN_VERSION'])
 else:
     if L4T_VERSION.major >= 36:
-        if CUDA_VERSION >= Version('12.6'):
+        if CUDA_VERSION >= Version('12.4'):
             CUDNN_VERSION = Version('9.3')
-        elif CUDA_VERSION >= Version('12.4'):
-            CUDNN_VERSION = Version('9.0')
         else:
             CUDNN_VERSION = Version('8.9')
     elif L4T_VERSION.major >= 34:
