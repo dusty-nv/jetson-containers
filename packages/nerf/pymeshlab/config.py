@@ -23,3 +23,4 @@ def pymeshlab(version, requires=None, default=False):
 
 package = [
     pymeshlab('2023.12.post1', default=True),
+]
