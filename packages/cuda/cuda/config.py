@@ -114,6 +114,7 @@ package = [
     
     cuda_samples('12.2', requires='==36.*'),
     cuda_samples('12.4', requires='==36.*'),
+    cuda_samples('12.6', requires='==36.*'),
     
     # JetPack 5
     cuda_package('12.2', 'https://developer.download.nvidia.com/compute/cuda/12.2.2/local_installers/cuda-tegra-repo-ubuntu2004-12-2-local_12.2.2-1_arm64.deb', 'cuda-tegra-repo-ubuntu2004-12-2-local', requires='==35.*'),

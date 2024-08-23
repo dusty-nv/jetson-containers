@@ -11,7 +11,7 @@ if 'TENSORRT_VERSION' in os.environ and len(os.environ['TENSORRT_VERSION']) > 0:
 else:
     if L4T_VERSION.major >= 36:
         if CUDA_VERSION >= Version('12.4'):
-            TENSORRT_VERSION = Version('10.0')
+            TENSORRT_VERSION = Version('10.3')
         else:
             TENSORRT_VERSION = Version('8.6')
     elif L4T_VERSION.major >= 34:
