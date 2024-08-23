@@ -33,5 +33,5 @@ RUN cd jetson-utils && \
     cmake ../ && \
     make -j$(nproc) && \
     make install
-    
-RUN python3 -c 'import jetson_utils'
+
+RUN LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib/" python3 -c 'import jetson_utils'
