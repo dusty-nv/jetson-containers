@@ -15,7 +15,7 @@ ARG POLYSCOPE_VERSION \
 
     RUN apt-get update && \
     apt-get install -y --no-install-recommends \ 
-    xorg-dev libglu1-mesa-dev freeglut3-dev mesa-common-dev \
+    xorg-dev libglu1-mesa-dev freeglut3-dev mesa-common-dev libglfw3 xvfb \
     && rm -rf /var/lib/apt/lists/*
 
 COPY build.sh install.sh /tmp/POLYSCOPE/

@@ -2,9 +2,10 @@
 # name: pymeshlab
 # group: nerf
 # config: config.py
-# depends: [cmake, python, numpy]
+# depends: [cmake, python, numpy, polyscope]
 # requires: '>=34.1.0'
 # notes: https://github.com/cnr-isti-vclab/PyMeshLab.git
+# test: test.py
 #---
 
 ARG BASE_IMAGE
