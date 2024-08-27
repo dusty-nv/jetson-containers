@@ -2,7 +2,7 @@
 # name: pymeshlab
 # group: nerf
 # config: config.py
-# depends: [cmake, python, numpy, polyscope]
+# depends: [cmake, ninja, python, numpy, polyscope]
 # requires: '>=34.1.0'
 # notes: https://github.com/cnr-isti-vclab/PyMeshLab.git
 # test: test.py
@@ -15,7 +15,6 @@ ARG PYMESHLAB_VERSION \
     FORCE_BUILD=off
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-ninja-build \
 git \
 python3-pip \
 libeigen3-dev \
@@ -25,8 +24,6 @@ libqt5opengl5-dev \
 mesa-common-dev \
 libglu1-mesa-dev \
 make \
-ccache \
-ninja-build \
 patchelf \
 libgmp-dev \
 libmpfr-dev \
