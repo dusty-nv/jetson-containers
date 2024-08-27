@@ -14,6 +14,16 @@ FROM ${BASE_IMAGE}
 ARG PYMESHLAB_VERSION \
     FORCE_BUILD=off
 
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+cmake \
+ninja-build \
+git \
+python3-pip \
+qtbase5-dev \
+qtbase5-dev-tools \
+libqt5opengl5-dev \
+&& rm -rf /var/lib/apt/lists/*
+
 COPY build.sh install.sh /tmp/PYMESHLAB/
 
 RUN /tmp/PYMESHLAB/install.sh || /tmp/PYMESHLAB/build.sh

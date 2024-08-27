@@ -2,8 +2,6 @@
 print('testing pymeshlab...')
 
 import pymeshlab
-import pymeshlab.info
-
-pymeshlab.info.print_info()
+ms = pymeshlab.MeshSet()
 
 print('pymeshlab OK\n')

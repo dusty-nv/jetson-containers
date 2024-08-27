@@ -7,6 +7,19 @@ git clone --branch=v${PYMESHLAB_VERSION} --depth=1 --recursive https://github.co
 
 cd /opt/pymeshlab
 
+# Create a build directory
+mkdir build
+cd build
+
+# Configure the project with CMake and Ninja
+cmake -GNinja ..
+
+# Build with Ninja
+ninja
+
+# Install the built package
+ninja install
+
 MAX_JOBS=$(nproc) \
 python3 setup.py --verbose bdist_wheel --dist-dir /opt
 
