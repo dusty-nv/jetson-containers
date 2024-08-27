@@ -3,29 +3,20 @@ set -ex
 
 echo "Building pymeshlab ${PYMESHLAB_VERSION}"
 
-git clone --branch=v${PYMESHLAB_VERSION} --depth=1 --recursive https://github.com/cnr-isti-vclab/PyMeshLab /opt/pymeshlab
+git clone --depth=1 --recursive https://github.com/cnr-isti-vclab/PyMeshLab /opt/pymeshlab
 
 cd /opt/pymeshlab
 
-# Create a build directory
-mkdir build
-cd build
+ls -l scripts/Linux/
 
-# Configure the project with CMake and Ninja
-cmake -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-Wno-error" ..
+echo "Setting up environment for pymeshlab ${PYMESHLAB_VERSION}"
 
-# Build with Ninja
-ninja
+echo "Building pymeshlab ${PYMESHLAB_VERSION}"
 
-# Install the built package
-ninja install
+# Run the 1_build.sh script to build PyMeshLab
+sh scripts/Linux/1_build.sh -j$(nproc)
 
-MAX_JOBS=$(nproc) \
-pip3 wheel . -w /opt
-
-ls /opt
-cd /
-
-pip3 install --no-cache-dir --verbose /opt/pymeshlab*.whl
-
-twine upload --verbose /opt/pymeshlab*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+echo "Building Python wheel for pymeshlab ${PYMESHLAB_VERSION}"
+ls -l scripts/Linux/
+# Run the make_wheel.sh script to create a Python wheel
+sh scripts/Linux/make_wheel.sh
