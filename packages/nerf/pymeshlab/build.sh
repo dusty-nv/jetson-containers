@@ -18,3 +18,7 @@ echo "Building Python wheel for pymeshlab ${PYMESHLAB_VERSION}"
 
 # Run the make_wheel.sh script to create a Python wheel
 sh scripts/Linux/make_wheel.sh
+
+cd /
+
+pip3 install --no-cache-dir --verbose /opt/pymeshlab/wheels/*.whl
