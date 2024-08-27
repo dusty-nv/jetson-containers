@@ -12,7 +12,7 @@ mkdir build
 cd build
 
 # Configure the project with CMake and Ninja
-cmake -GNinja ..
+cmake -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-Wno-error" ..
 
 # Build with Ninja
 ninja

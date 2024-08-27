@@ -19,9 +19,25 @@ cmake \
 ninja-build \
 git \
 python3-pip \
+libeigen3-dev \
 qtbase5-dev \
 qtbase5-dev-tools \
 libqt5opengl5-dev \
+mesa-common-dev \
+libglu1-mesa-dev \
+make \
+ninja-build \
+patchelf \
+libgmp-dev \
+libmpfr-dev \
+libxerces-c-dev \
+libtbb-dev \
+libxkbcommon-x11-dev \
+libxcb-icccm4-dev \
+libxcb-image0-dev \
+libxcb-keysyms1-dev \
+libxcb-render-util0-dev \
+libxcb-xinerama0-dev \
 && rm -rf /var/lib/apt/lists/*
 
 COPY build.sh install.sh /tmp/PYMESHLAB/
