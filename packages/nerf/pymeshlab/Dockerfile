@@ -26,6 +26,7 @@ libqt5opengl5-dev \
 mesa-common-dev \
 libglu1-mesa-dev \
 make \
+ccache \
 ninja-build \
 patchelf \
 libgmp-dev \

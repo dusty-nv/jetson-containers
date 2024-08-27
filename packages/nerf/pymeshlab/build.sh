@@ -21,7 +21,7 @@ ninja
 ninja install
 
 MAX_JOBS=$(nproc) \
-python3 setup.py --verbose bdist_wheel --dist-dir /opt
+pip3 wheel . -w /opt
 
 ls /opt
 cd /
