@@ -2,7 +2,7 @@
 print('testing diffusers...')
 
 import diffusers
-import xformers.info
+import diffusers.info
 
 diffusers.info.print_info()
 

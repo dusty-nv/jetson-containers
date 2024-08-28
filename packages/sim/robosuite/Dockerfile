@@ -16,7 +16,7 @@ RUN git clone https://github.com/dusty-nv/robosuite /opt/robosuite && \
     apt-get clean && \
     cd /opt/robosuite && \
     pip3 install --verbose -e . && \
-    pip3 install --verbose --no-cache-dir imageio[ffmpeg] pyspacemouse 
+    pip3 install --verbose --no-cache-dir imageio[ffmpeg] pyspacemouse 'mujoco==3.2.0'
     
     #\
     #git clone https://github.com/ARISE-Initiative/robosuite-task-zoo /opt/robosuite-task-zoo && \

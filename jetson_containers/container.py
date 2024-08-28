@@ -22,7 +22,7 @@ from packaging.version import Version
 _NEWLINE_=" \\\n"  # used when building command strings
 
 
-def build_container(name, packages, base=get_l4t_base(), build_flags='', simulate=False, skip_tests=[], test_only=[], push='', no_github_api=False):
+def build_container(name, packages, base=get_l4t_base(), build_flags='', build_args=None, simulate=False, skip_tests=[], test_only=[], push='', no_github_api=False):
     """
     Multi-stage container build that chains together selected packages into one container image.
     For example, `['pytorch', 'tensorflow']` would build a container that had both pytorch and tensorflow in it.
@@ -122,7 +122,11 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
             
             if 'build_args' in pkg:
                 cmd += ''.join([f"--build-arg {key}=\"{value}\"" + _NEWLINE_ for key, value in pkg['build_args'].items()])
-            
+
+            if build_args:
+                for key, value in build_args.items():
+                    cmd += f"--build-arg {key}={value}" + _NEWLINE_ 
+
             if 'build_flags' in pkg:
                 cmd += pkg['build_flags'] + _NEWLINE_
                 
@@ -169,7 +173,7 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', simulat
     return name
     
     
-def build_containers(name, packages, base=get_l4t_base(), build_flags='', simulate=False, skip_errors=False, skip_packages=[], skip_tests=[], test_only=[], push=''):
+def build_containers(name, packages, base=get_l4t_base(), build_flags='', build_args=None, simulate=False, skip_errors=False, skip_packages=[], skip_tests=[], test_only=[], push=''):
     """
     Build separate container images for each of the requested packages (this is typically used in batch building jobs)
     For example, `['pytorch', 'tensorflow']` would build a pytorch container and a tensorflow container.
@@ -203,7 +207,7 @@ def build_containers(name, packages, base=get_l4t_base(), build_flags='', simula
 
     for package in packages:
         try:
-            container_name = build_container(name, package, base, build_flags, simulate, skip_tests, test_only, push) 
+            container_name = build_container(name, package, base, build_flags, build_args, simulate, skip_tests, test_only, push) 
         except Exception as error:
             print(error)
             if not skip_errors:
