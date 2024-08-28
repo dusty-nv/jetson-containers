@@ -3,7 +3,7 @@ set -ex
 
 echo "Building pymeshlab ${PYMESHLAB_VERSION}"
 
-RUN git clone --depth=1 --recursive https://github.com/cnr-isti-vclab/PyMeshLab /opt/pymeshlab
+git clone --branch=v${PYMESHLAB_VERSION} --depth=1 --recursive https://github.com/cnr-isti-vclab/PyMeshLab /opt/pymeshlab
 
 cd /opt/pymeshlab/src/meshlab/resources/linux
 # remove all content in the linux folder
