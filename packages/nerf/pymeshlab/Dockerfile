@@ -50,7 +50,8 @@ unzip \
 wget \
 && rm -rf /var/lib/apt/lists/*
 
-
 COPY build.sh install.sh /tmp/PYMESHLAB/
+COPY extra/* /tmp/PYMESHLAB/extra/
+
 
 RUN /tmp/PYMESHLAB/install.sh || /tmp/PYMESHLAB/build.sh
