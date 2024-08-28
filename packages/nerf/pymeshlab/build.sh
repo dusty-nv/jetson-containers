@@ -3,12 +3,11 @@ set -ex
 
 echo "Building pymeshlab ${PYMESHLAB_VERSION}"
 
-RUN git clone --branch=v${PYMESHLAB_VERSION} --depth=1 --recursive https://github.com/cnr-isti-vclab/PyMeshLab /opt/pymeshlab
+RUN git clone --depth=1 --recursive https://github.com/cnr-isti-vclab/PyMeshLab /opt/pymeshlab
 
 cd /opt/pymeshlab/src/meshlab/resources/linux
 # remove all content in the linux folder
 rm -rf linuxdeploy linuxdeploy-plugin-appimage linuxdeploy-plugin-qt
-# copy /tmp/PYMESHLAB/extra/ al content in /opt/meshlab/resources/linux
 cp -r /tmp/PYMESHLAB/extra/* /opt/pymeshlab/src/meshlab/resources/linux
 chmod +x linuxdeploy linuxdeploy-plugin-appimage linuxdeploy-plugin-qt
 
