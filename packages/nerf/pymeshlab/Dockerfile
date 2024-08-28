@@ -1,8 +1,8 @@
 #---
 # name: pymeshlab
 # group: nerf
-# config: config.py
-# depends: [python, cmake, ninja, numpy, polyscope, meshlab]
+# config: docker-compose.yaml
+# depends: [python, cmake, ninja, numpy, polyscope]
 # requires: '>=34.1.0'
 # notes: https://github.com/cnr-isti-vclab/PyMeshLab.git
 # test: test.py
@@ -51,7 +51,9 @@ wget \
 && rm -rf /var/lib/apt/lists/*
 
 COPY build.sh install.sh /tmp/PYMESHLAB/
-COPY extra/* /tmp/PYMESHLAB/extra/
 
+RUN mkdir -p /tmp/PYMESHLAB/extra
+COPY extra/ /tmp/PYMESHLAB/extra
+RUN ls -la /tmp/PYMESHLAB/extra*
 
 RUN /tmp/PYMESHLAB/install.sh || /tmp/PYMESHLAB/build.sh

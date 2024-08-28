@@ -298,6 +298,12 @@ def test_container(name, package, simulate=False):
         cmd += f"--volume {package['path']}:/test" + _NEWLINE_
         cmd += f"--volume {os.path.join(_PACKAGE_ROOT, 'data')}:/data" + _NEWLINE_
         cmd += f"--workdir /test" + _NEWLINE_
+        
+        # TODO: MUST BE OPTIONAL
+        cmd += "--device /dev/fuse" + _NEWLINE_
+        cmd += "--cap-add SYS_ADMIN" + _NEWLINE_
+        cmd += "--security-opt apparmor=unconfined" + _NEWLINE_
+
         cmd += name + _NEWLINE_
         
         cmd += "/bin/bash -c '"

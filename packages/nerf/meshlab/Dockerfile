@@ -1,7 +1,7 @@
 #---
 # name: meshlab
 # group: nerf
-# config: config.py
+# config: docker-compose.yaml
 # depends: [python, cmake, ninja, numpy]
 # requires: '>=34.1.0'
 # notes: https://github.com/cnr-isti-vclab/MeshLab.git
@@ -52,5 +52,5 @@ wget \
 
 
 COPY build.sh /tmp/MESHLAB/
-COPY extra/* /tmp/MESHLAB/extra/
+COPY ./extra/* /tmp/MESHLAB/extra/
 RUN /tmp/MESHLAB/build.sh

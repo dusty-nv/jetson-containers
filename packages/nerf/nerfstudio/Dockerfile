@@ -2,7 +2,7 @@
 # name: nerfstudio
 # group: nerf
 # config: config.py
-# depends: [python, cmake, numpy, torch, torchvision, pymeshlab]
+# depends: [cuda, python, ninja, cmake, numpy, torch, torchvision, polyscope, pymeshlab]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/nerfstudio-project/nerfstudio.git

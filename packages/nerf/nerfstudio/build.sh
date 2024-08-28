@@ -8,7 +8,7 @@ if [ ! -d /opt/nerfstudio ]; then
 fi
 
 # Navigate to the directory containing PyMeshLab's setup.py
-cd /opt/pymeshlab
+cd /opt/nerfstudio
 
 # Set the maximum number of jobs to the number of available cores
 MAX_JOBS=$(nproc)
@@ -24,7 +24,9 @@ ls /opt
 cd /
 
 # Install the newly created wheel package
-pip3 install --no-cache-dir --verbose /opt/pymeshlab*.whl
+pip3 install git+https://github.com/NVlabs/tiny-cuda-nn/#subdirectory=bindings/torch
+
+pip3 install --no-cache-dir --verbose /opt/nerfstudio*.whl
 
 # Optionally upload to a repository using Twine
-twine upload --verbose /opt/pymeshlab*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose /opt/nerfstudio*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
