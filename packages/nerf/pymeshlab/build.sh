@@ -21,4 +21,4 @@ sh scripts/Linux/make_wheel.sh
 
 cd /
 
-pip3 install --no-cache-dir --verbose /opt/pymeshlab/wheels/*.whl
+pip3 install --no-cache-dir --verbose /opt/pymeshlab/wheels/pymeshlab*.whl

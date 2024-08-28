@@ -1,17 +1,17 @@
 #---
-# name: pymeshlab
+# name: meshlab
 # group: nerf
 # config: config.py
-# depends: [python, cmake, ninja, numpy, polyscope, meshlab]
+# depends: [python, cmake, ninja, numpy]
 # requires: '>=34.1.0'
-# notes: https://github.com/cnr-isti-vclab/PyMeshLab.git
+# notes: https://github.com/cnr-isti-vclab/MeshLab.git
 # test: test.py
 #---
 
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG PYMESHLAB_VERSION \
+ARG MESHLAB_VERSION \
     FORCE_BUILD=off
 
 RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get -y install \
@@ -51,6 +51,6 @@ wget \
 && rm -rf /var/lib/apt/lists/*
 
 
-COPY build.sh install.sh /tmp/PYMESHLAB/
+COPY build.sh /tmp/MESHLAB/
 
-RUN /tmp/PYMESHLAB/install.sh || /tmp/PYMESHLAB/build.sh
+RUN /tmp/MESHLAB/build.sh
