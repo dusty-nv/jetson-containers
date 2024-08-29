@@ -15,6 +15,5 @@ cmake --build build --config RelWithDebInfo -- -j$(nproc)
 
 cd bindings/torch
 pip3 wheel . -w /opt/tinycudann/wheels
-
 pip3 install --no-cache-dir --verbose /opt/tinycudann/wheels/tinycudann*.whl
 
