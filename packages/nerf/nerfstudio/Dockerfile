@@ -53,23 +53,26 @@ COPY build.sh install.sh /tmp/NERFSTUDIO/
 
 RUN cd /opt/
 RUN pip3 install build wheel
+
 RUN git clone --recurse-submodules https://github.com/elalish/manifold.git /opt/manifold && \
+    if [ ! -d "/opt/manifold" ]; then echo "Failed to clone manifold repo"; exit 1; fi && \
     cd /opt/manifold && \
     mkdir build && \
-    cd build && \ 
-    cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DMANIFOLD_PYBIND=ON -DMANIFOLD_CROSS_SECTION=ON .. && make && \
+    cd build && \
+    cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DMANIFOLD_PYBIND=ON -DMANIFOLD_CROSS_SECTION=ON .. && \
+    make -j $(nproc) && \
     cd /opt/manifold && pip3 wheel . -w dist/ && pip3 install dist/manifold3d-*.whl
 
 RUN git clone --recursive https://github.com/trimesh/vhacdx.git /opt/vhacdx && \
     cd /opt/vhacdx && \
-    pip3 wheel . -w dist/ && pip3 install dist/vhacd-*.whl
+    pip3 wheel . -w dist/ && pip3 install dist/vhacdx-*.whl
 
 RUN git clone --branch v0.6.0 https://github.com/google/glog.git --single-branch /opt/glog && \
-    cd glog && \
+    cd /opt/glog && \
     mkdir build && \
     cd build && \
     cmake .. && \
-    make -j `nproc` && \
+    make -j $(nproc) && \
     make install && \
     cd ../.. && \
     rm -rf glog
@@ -82,7 +85,7 @@ RUN git clone --branch 2.1.0 https://ceres-solver.googlesource.com/ceres-solver.
     mkdir build && \
     cd build && \
     cmake .. -DBUILD_TESTING=OFF -DBUILD_EXAMPLES=OFF && \
-    make -j `nproc` && \
+    make -j $(nproc) && \
     make install && \
     cd ../.. && \
     rm -rf ceres-solver
@@ -92,8 +95,8 @@ RUN git clone --branch 3.8 https://github.com/colmap/colmap.git --single-branch 
     mkdir build && \
     cd build && \
     cmake .. -DCUDA_ENABLED=ON \
-             -DCMAKE_CUDA_ARCHITECTURES=${CUDAARCHS} && \
-    make -j `nproc` && \
+                -DCMAKE_CUDA_ARCHITECTURES=${CUDAARCHS} && \
+    make -j $(nproc) && \
     make install && \
     cd ../.. && \
     rm -rf colmap
@@ -129,4 +132,3 @@ RUN git clone --recursive https://github.com/cvg/pixel-perfect-sfm.git /opt/pixe
 EXPOSE 7007
 
 RUN /tmp/NERFSTUDIO/install.sh || /tmp/NERFSTUDIO/build.sh
-    
