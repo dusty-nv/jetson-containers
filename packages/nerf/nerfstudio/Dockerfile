@@ -51,19 +51,20 @@ RUN apt-get update && \
 
 COPY build.sh install.sh /tmp/NERFSTUDIO/
 
+RUN cd /opt/
 RUN pip3 install build wheel
-RUN git clone --recurse-submodules https://github.com/elalish/manifold.git && \
-    cd manifold && \
+RUN git clone --recurse-submodules https://github.com/elalish/manifold.git /opt/manifold && \
+    cd /opt/manifold && \
     mkdir build && \
     cd build && \ 
     cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DMANIFOLD_PYBIND=ON -DMANIFOLD_CROSS_SECTION=ON .. && make && \
-    pip3 wheel . -w dist/ && pip3 install dist/manifold3d-*.whl
+    cd /opt/manifold && pip3 wheel . -w dist/ && pip3 install dist/manifold3d-*.whl
 
-RUN git clone --recursive https://github.com/trimesh/vhacdx.git && \
-    cd vhacdx && \
+RUN git clone --recursive https://github.com/trimesh/vhacdx.git /opt/vhacdx && \
+    cd /opt/vhacdx && \
     pip3 wheel . -w dist/ && pip3 install dist/vhacd-*.whl
 
-RUN git clone --branch v0.6.0 https://github.com/google/glog.git --single-branch && \
+RUN git clone --branch v0.6.0 https://github.com/google/glog.git --single-branch /opt/glog && \
     cd glog && \
     mkdir build && \
     cd build && \
@@ -75,8 +76,8 @@ RUN git clone --branch v0.6.0 https://github.com/google/glog.git --single-branch
 # Add glog path to LD_LIBRARY_PATH.
 ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib"
 
-RUN git clone --branch 2.1.0 https://ceres-solver.googlesource.com/ceres-solver.git --single-branch && \
-    cd ceres-solver && \
+RUN git clone --branch 2.1.0 https://ceres-solver.googlesource.com/ceres-solver.git --single-branch /opt/ceres-solver && \
+    cd /opt/ceres-solver && \
     git checkout $(git describe --tags) && \
     mkdir build && \
     cd build && \
@@ -86,8 +87,8 @@ RUN git clone --branch 2.1.0 https://ceres-solver.googlesource.com/ceres-solver.
     cd ../.. && \
     rm -rf ceres-solver
 
-RUN git clone --branch 3.8 https://github.com/colmap/colmap.git --single-branch && \
-    cd colmap && \
+RUN git clone --branch 3.8 https://github.com/colmap/colmap.git --single-branch /opt/colmap && \
+    cd /opt/colmap && \
     mkdir build && \
     cd build && \
     cmake .. -DCUDA_ENABLED=ON \
@@ -97,32 +98,32 @@ RUN git clone --branch 3.8 https://github.com/colmap/colmap.git --single-branch 
     cd ../.. && \
     rm -rf colmap
 
-RUN python3 -m pip install --no-cache-dir --upgrade pip setuptools==69.5.1 pathtools promise pybind11 omegaconf
+RUN python3 -m pip3 install --no-cache-dir --upgrade pip3 setuptools==69.5.1 pathtools promise pybind11 omegaconf
 
-RUN git clone --branch v0.4.0 --recursive https://github.com/colmap/pycolmap.git && \
-    cd pycolmap && \
-    python3.10 -m pip install --no-cache-dir . && \
+RUN git clone --branch v0.4.0 --recursive https://github.com/colmap/pycolmap.git /opt/pycolmap && \
+    cd /opt/pycolmap && \
+    python3 -m pip3 install --no-cache-dir . && \
     cd ..
 
 # Install hloc 1.4 as alternative feature detector and matcher option for nerfstudio.
-RUN git clone --branch master --recursive https://github.com/cvg/Hierarchical-Localization.git && \
-    cd Hierarchical-Localization && \
+RUN git clone --branch master --recursive https://github.com/cvg/Hierarchical-Localization.git /opt/Hierarchical-Localization && \
+    cd /opt/Hierarchical-Localization && \
     git checkout v1.4 && \
-    python3.10 -m pip install --no-cache-dir -e . && \
+    python3 -m pip3 install --no-cache-dir -e . && \
     cd ..
 
 # Install pyceres from source
-RUN git clone --branch v1.0 --recursive https://github.com/cvg/pyceres.git && \
-    cd pyceres && \
-    python3.10 -m pip install --no-cache-dir -e . && \
+RUN git clone --branch v1.0 --recursive https://github.com/cvg/pyceres.git /opt/pyceres && \
+    cd /opt/pyceres && \
+    python3 -m pip3 install --no-cache-dir -e . && \
     cd ..
 
 # Install pixel perfect sfm.
-RUN git clone --recursive https://github.com/cvg/pixel-perfect-sfm.git && \
-    cd pixel-perfect-sfm && \
+RUN git clone --recursive https://github.com/cvg/pixel-perfect-sfm.git /opt/pixel-perfect-sfm && \
+    cd /opt/pixel-perfect-sfm && \
     git reset --hard 40f7c1339328b2a0c7cf71f76623fb848e0c0357 && \
     git clean -df && \
-    python3.10 -m pip install --no-cache-dir -e . && \
+    python3 -m pip3 install --no-cache-dir -e . && \
     cd ..
 
 EXPOSE 7007
