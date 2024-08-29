@@ -10,23 +10,17 @@ fi
 # Navigate to the directory containing PyMeshLab's setup.py
 cd /opt/nerfstudio
 
-# Set the maximum number of jobs to the number of available cores
-MAX_JOBS=$(nproc)
-
-# Build the wheel, this should trigger the C++ compilation
-python3 setup.py build_ext --inplace -j${MAX_JOBS}   # Ensure the C++ code is built
-python3 setup.py bdist_wheel --dist-dir /opt         # Create the wheel package
+python3 setup.py bdist_wheel --dist-dir /opt/nerfstudio/wheels         # Create the wheel package
 
 # Verify the contents of the /opt directory
-ls /opt
+ls /opt/nerfstudio/wheels
 
 # Return to the root directory
 cd /
 
-# Install the newly created wheel package
-pip3 install git+https://github.com/NVlabs/tiny-cuda-nn/#subdirectory=bindings/torch
+pip3 install --no-cache-dir --verbose /opt/nerfstudio/wheels/nerfstudio*.whl
 
-pip3 install --no-cache-dir --verbose /opt/nerfstudio*.whl
+ns-install-cli --mode install
 
 # Optionally upload to a repository using Twine
-twine upload --verbose /opt/nerfstudio*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose /opt/nerfstudio/wheels/nerfstudio*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
