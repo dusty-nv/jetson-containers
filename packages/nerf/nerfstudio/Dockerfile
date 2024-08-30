@@ -67,7 +67,7 @@ RUN git clone --recursive https://github.com/trimesh/vhacdx.git /opt/vhacdx && \
     cd /opt/vhacdx && \
     pip3 wheel . -w dist/ && pip3 install dist/vhacdx-*.whl
 
-RUN git clone --branch v0.6.0 https://github.com/google/glog.git --single-branch /opt/glog && \
+RUN git clone --branch v0.7.1 https://github.com/google/glog.git --single-branch /opt/glog && \
     cd /opt/glog && \
     mkdir build && \
     cd build && \
@@ -79,7 +79,7 @@ RUN git clone --branch v0.6.0 https://github.com/google/glog.git --single-branch
 # Add glog path to LD_LIBRARY_PATH.
 ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib"
 
-RUN git clone --branch 2.1.0 https://ceres-solver.googlesource.com/ceres-solver.git --single-branch /opt/ceres-solver && \
+RUN git clone --branch 2.2.0 https://ceres-solver.googlesource.com/ceres-solver.git --single-branch /opt/ceres-solver && \
     cd /opt/ceres-solver && \
     git checkout $(git describe --tags) && \
     mkdir build && \
@@ -90,7 +90,7 @@ RUN git clone --branch 2.1.0 https://ceres-solver.googlesource.com/ceres-solver.
     cd ../.. && \
     rm -rf ceres-solver
 
-RUN git clone --branch 3.8 https://github.com/colmap/colmap.git --single-branch /opt/colmap && \
+RUN git clone --branch 3.10 https://github.com/colmap/colmap.git --single-branch /opt/colmap && \
     cd /opt/colmap && \
     mkdir build && \
     cd build && \
@@ -98,35 +98,28 @@ RUN git clone --branch 3.8 https://github.com/colmap/colmap.git --single-branch 
                 -DCMAKE_CUDA_ARCHITECTURES=${CUDAARCHS} && \
     make -j $(nproc) && \
     make install && \
-    cd ../.. && \
-    rm -rf colmap
+    cd /opt/colmap/pycolmap && \
+    pip3 wheel . -w dist/ && pip3 install dist/pycolmap-*.whl
 
-RUN python3 -m pip3 install --no-cache-dir --upgrade pip3 setuptools==69.5.1 pathtools promise pybind11 omegaconf
-
-RUN git clone --branch v0.4.0 --recursive https://github.com/colmap/pycolmap.git /opt/pycolmap && \
-    cd /opt/pycolmap && \
-    python3 -m pip3 install --no-cache-dir . && \
-    cd ..
+RUN python3 -m pip install --no-cache-dir --upgrade pip setuptools pathtools promise pybind11 omegaconf
 
 # Install hloc 1.4 as alternative feature detector and matcher option for nerfstudio.
 RUN git clone --branch master --recursive https://github.com/cvg/Hierarchical-Localization.git /opt/Hierarchical-Localization && \
     cd /opt/Hierarchical-Localization && \
-    git checkout v1.4 && \
-    python3 -m pip3 install --no-cache-dir -e . && \
+    pip3 wheel --no-deps --use-feature=fast-deps . -w dist/ && pip3 install dist/hloc-*.whl && \
     cd ..
 
 # Install pyceres from source
-RUN git clone --branch v1.0 --recursive https://github.com/cvg/pyceres.git /opt/pyceres && \
+RUN git clone --branch v2.3 --recursive https://github.com/cvg/pyceres.git /opt/pyceres && \
     cd /opt/pyceres && \
-    python3 -m pip3 install --no-cache-dir -e . && \
+    pip3 wheel . -w dist/ && pip3 install dist/pyceres-*.whl && \
     cd ..
 
 # Install pixel perfect sfm.
-RUN git clone --recursive https://github.com/cvg/pixel-perfect-sfm.git /opt/pixel-perfect-sfm && \
+RUN git clone --recursive https://github.com/Dawars/pixel-perfect-sfm.git /opt/pixel-perfect-sfm && \
     cd /opt/pixel-perfect-sfm && \
-    git reset --hard 40f7c1339328b2a0c7cf71f76623fb848e0c0357 && \
-    git clean -df && \
-    python3 -m pip3 install --no-cache-dir -e . && \
+    git checkout colmap-3.9 && \
+    pip3 wheel --no-deps --use-feature=fast-deps . -w dist/ && pip3 install dist/pixsfm-*.whl && \
     cd ..
 
 EXPOSE 7007

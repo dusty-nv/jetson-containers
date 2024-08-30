@@ -8,9 +8,7 @@ git clone --branch=v${POLYSCOPE_VERSION} --depth=1 --recursive https://github.co
 cd /opt/polyscope
 
 MAX_JOBS=$(nproc) \
-python3 setup.py --verbose bdist_wheel --dist-dir /opt
-
-ls /opt
+python3 setup.py --verbose bdist_wheel --dist-dir /opt/wheels/
 cd /
 
 pip3 install --no-cache-dir --verbose /opt/wheels/polyscope*.whl
