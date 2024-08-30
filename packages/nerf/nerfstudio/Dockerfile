@@ -53,8 +53,10 @@ RUN apt-get update && \
 COPY build.sh install.sh /tmp/NERFSTUDIO/
 
 RUN cd /opt/
-RUN pip3 install build wheel tbb
+RUN pip3 install build wheel
+RUN export MAKEFLAGS="-j$(nproc)"
 
+# Necessary
 RUN git clone --recurse-submodules https://github.com/elalish/manifold.git /opt/manifold && \
     if [ ! -d "/opt/manifold" ]; then echo "Failed to clone manifold repo"; exit 1; fi && \
     cd /opt/manifold && \
@@ -62,12 +64,15 @@ RUN git clone --recurse-submodules https://github.com/elalish/manifold.git /opt/
     cd build && \
     cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DMANIFOLD_PYBIND=ON -DMANIFOLD_CROSS_SECTION=ON .. && \
     make -j $(nproc) && \
+    ldconfig && \
     cd /opt/manifold && pip3 wheel . -w dist/ && pip3 install dist/manifold3d-*.whl
 
+# Necessary for hloc
 RUN git clone --recursive https://github.com/trimesh/vhacdx.git /opt/vhacdx && \
     cd /opt/vhacdx && \
     pip3 wheel . -w dist/ && pip3 install dist/vhacdx-*.whl
 
+# Install GLOG (required by ceres).
 RUN git clone --branch v0.7.1 https://github.com/google/glog.git --single-branch /opt/glog && \
     cd /opt/glog && \
     mkdir build && \
@@ -75,11 +80,13 @@ RUN git clone --branch v0.7.1 https://github.com/google/glog.git --single-branch
     cmake .. && \
     make -j $(nproc) && \
     make install && \
+    ldconfig && \
     cd ../.. && \
     rm -rf glog
 # Add glog path to LD_LIBRARY_PATH.
 ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib"
 
+# Install Ceres-solver (required by colmap).
 RUN git clone --branch 2.2.0 https://ceres-solver.googlesource.com/ceres-solver.git --single-branch /opt/ceres-solver && \
     cd /opt/ceres-solver && \
     git checkout $(git describe --tags) && \
@@ -88,9 +95,11 @@ RUN git clone --branch 2.2.0 https://ceres-solver.googlesource.com/ceres-solver.
     cmake .. -DBUILD_TESTING=OFF -DBUILD_EXAMPLES=OFF && \
     make -j $(nproc) && \
     make install && \
+    ldconfig && \
     cd ../.. && \
     rm -rf ceres-solver
 
+# Install colmap. SfM pipeline. # Install pycolmap, required by hloc.
 RUN git clone --branch 3.10 https://github.com/colmap/colmap.git --single-branch /opt/colmap && \
     cd /opt/colmap && \
     mkdir build && \

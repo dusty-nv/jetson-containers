@@ -10,7 +10,7 @@ fi
 # Navigate to the directory containing PyMeshLab's setup.py
 cd /opt/nerfstudio
 
-python3 setup.py bdist_wheel --dist-dir /opt/nerfstudio/wheels         # Create the wheel package
+pip3 wheel . --no-deps --no-build-isolation -w /opt/nerfstudio/wheels  # Create the wheel package
 
 # Verify the contents of the /opt directory
 ls /opt/nerfstudio/wheels
