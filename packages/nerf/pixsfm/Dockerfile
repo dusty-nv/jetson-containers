@@ -1,5 +1,5 @@
 #---
-# name: PIXSFM
+# name: pixsfm
 # group: nerf
 # config: config.py
 # depends: [torch, torchvision, ffmpeg, python, ninja, cmake, numpy, pyceres, pycolmap, hloc]
