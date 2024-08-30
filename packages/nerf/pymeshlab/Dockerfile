@@ -58,7 +58,7 @@ COPY extra/ /tmp/PYMESHLAB/extra
 RUN ls -la /tmp/PYMESHLAB/extra*
 
 # Clone the PyMeshLab repository
-RUN git clone --branch=${PYMESHLAB_VERSION}  --depth=1 --recursive https://github.com/cnr-isti-vclab/PyMeshLab /opt/pymeshlab
+RUN git clone --branch=v${PYMESHLAB_VERSION}  --depth=1 --recursive https://github.com/cnr-isti-vclab/PyMeshLab /opt/pymeshlab
 
 # Navigate to the /opt/pymeshlab/src/meshlab/resources/linux directory
 WORKDIR /opt/pymeshlab/src/meshlab/resources/linux

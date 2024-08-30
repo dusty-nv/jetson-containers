@@ -2,8 +2,8 @@
 set -ex
 
 if [ "$FORCE_BUILD" == "on" ]; then
-	echo "Forcing build of nerfstudio ${NERFSTUDIO}"
+	echo "Forcing build of pymeshlab ${PYMESHLAB}"
 	exit 1
 fi
 
-pip3 install --no-cache-dir --verbose nerfstudio==${NERFSTUDIO_VERSION}
+pip3 install --no-cache-dir --verbose pymeshlab==${PYMESHLAB_VERSION}
