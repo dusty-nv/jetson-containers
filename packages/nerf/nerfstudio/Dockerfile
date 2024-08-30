@@ -116,11 +116,11 @@ RUN git clone --branch v2.3 --recursive https://github.com/cvg/pyceres.git /opt/
     cd ..
 
 # Install pixel perfect sfm.
-RUN git clone --recursive https://github.com/Dawars/pixel-perfect-sfm.git /opt/pixel-perfect-sfm && \
-    cd /opt/pixel-perfect-sfm && \
-    git checkout colmap-3.9 && \
-    pip3 wheel --no-deps --use-feature=fast-deps . -w dist/ && pip3 install dist/pixsfm-*.whl && \
-    cd ..
+# RUN git clone --recursive https://github.com/Dawars/pixel-perfect-sfm.git /opt/pixel-perfect-sfm && \
+#     cd /opt/pixel-perfect-sfm && \
+# git checkout colmap-3.9 && \
+# pip3 wheel --no-deps --use-feature=fast-deps . -w dist/ && pip3 install dist/pixsfm-*.whl && \
+# cd ..
 
 EXPOSE 7007
 
