@@ -42,6 +42,7 @@ RUN apt-get update && \
     libsuitesparse-dev \
     nano \
     protobuf-compiler \
+    libgtest-dev \
     qtbase5-dev \
     sudo \
     vim-tiny \

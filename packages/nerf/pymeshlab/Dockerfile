@@ -44,7 +44,6 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get -y install \
     qtbase5-dev-tools \
     libqt5opengl5-dev \
     mesa-common-dev \
-    libgtest-dev \
     make \
     unzip \
     wget \
