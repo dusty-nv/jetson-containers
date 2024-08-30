@@ -2,7 +2,7 @@
 # name: nerfstudio
 # group: nerf
 # config: config.py
-# depends: [torch, torchvision, diffusers, transformers, bitsandbytes, ffmpeg, python, ninja, cmake, numpy, polyscope, tinycudann]
+# depends: [python, ninja, cmake, numpy, ffmpeg, torch, torchvision, diffusers, transformers, bitsandbytes, polyscope, tinycudann]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/nerfstudio-project/nerfstudio.git

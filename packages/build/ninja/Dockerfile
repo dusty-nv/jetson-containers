@@ -16,7 +16,7 @@ RUN LATEST_VERSION=$(curl -s https://api.github.com/repos/ninja-build/ninja/rele
     unzip -o ninja-linux-aarch64.zip -d /usr/bin/ && \
     rm ninja-linux-aarch64.zip && \
     chmod +x /usr/bin/ninja && \
-    apt-get -y remove wget unzip curl jq && \
+    apt-get -y remove jq && \
     apt-get -y autoremove && \
     apt-get -y clean && \
     rm -rf /var/lib/apt/lists/*
