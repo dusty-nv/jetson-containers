@@ -7,6 +7,8 @@ if [ "$FORCE_BUILD" == "on" ]; then
 fi
 
 pip3 install --no-cache-dir torchvision==${TORCHVISION_VERSION}
+mkdir -p /torch-wheels
+pip3 download --verbose --no-deps -d /torch-wheels torchvision==${TORCHVISION_VERSION}
    
 if [ $(lsb_release --codename --short) = "focal" ]; then
     # https://github.com/conda/conda/issues/13619

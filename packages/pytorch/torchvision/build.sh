@@ -12,6 +12,7 @@ cd ../
 rm -rf /opt/torchvision
 
 pip3 install --no-cache-dir --verbose /opt/torchvision*.whl
+cp /opt/torchvision*.whl /torch-wheels
 pip3 show torchvision && python3 -c 'import torchvision; print(torchvision.__version__);'
 
 twine upload --verbose /opt/torchvision*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

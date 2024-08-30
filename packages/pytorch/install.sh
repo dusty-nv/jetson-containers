@@ -21,6 +21,8 @@ fi
 
 # install from the Jetson pypi server ($PIP_INSTALL_URL)
 pip3 install --verbose --no-cache-dir torch==${TORCH_VERSION}
+mkdir -p /torch-wheels
+pip3 download --verbose --no-deps -d /torch-wheels torch==${TORCH_VERSION}
 
 # make sure it loads
 python3 -c 'import torch; print(f"PyTorch version: {torch.__version__}"); print(f"CUDA available:  {torch.cuda.is_available()}"); print(f"cuDNN version:   {torch.backends.cudnn.version()}"); print(torch.__config__.show());'
