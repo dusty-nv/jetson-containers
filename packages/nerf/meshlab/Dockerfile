@@ -48,6 +48,7 @@ make \
 unzip \
 wget \
 file \
+desktop-file-utils \
 && rm -rf /var/lib/apt/lists/*
 
 # Download and set up appimagetool for aarch64
