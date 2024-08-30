@@ -10,4 +10,4 @@ runner
 *.minus-github-api
 .DS_Store
 .vscode
-ninja.log
+.ninja_log
