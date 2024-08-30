@@ -1,5 +1,5 @@
 #---
-# name: VHACDX
+# name: vhacdx
 # group: nerf
 # config: config.py
 # depends: [torch, torchvision, ffmpeg, python, ninja, cmake, numpy, polyscope, tinycudann]

@@ -63,6 +63,7 @@ RUN git clone --branch 2.2.0 https://ceres-solver.googlesource.com/ceres-solver.
     cmake .. -DBUILD_TESTING=OFF -DBUILD_EXAMPLES=OFF && \
     make -j $(nproc) && \
     make install && \
+    ldconfig && \
     cd ../.. && \
     rm -rf ceres-solver
 

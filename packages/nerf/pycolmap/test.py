@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
-print('testing nerfstudio...')
+print('testing pycolmap...')
 
-import nerfstudio
-import nerfstudio.info
+import pycolmap
 
-nerfstudio.info.print_info()
 
-print('nerfstudio OK\n')
+print('pycolmap OK\n')

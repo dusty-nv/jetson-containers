@@ -1,17 +1,17 @@
 #---
-# name: pycolmap
+# name: hloc
 # group: nerf
 # config: config.py
-# depends: [torch, torchvision, ffmpeg, python, ninja, cmake, numpy, pyceres]
+# depends: [torch, torchvision, ffmpeg, python, ninja, cmake, numpy, pycolmap]
 # requires: '>=34.1.0'
 # test: test.py
-# notes: https://github.com/colmap/colmap.git
+# notes: https://github.com/cvg/Hierarchical-Localization.git
 #---
 
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG PYCOLMAP_VERSION \
+ARG HLOC_VERSION \
 FORCE_BUILD=off
 
 ARG CUDAARCHS
@@ -50,9 +50,9 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 
-COPY build.sh install.sh /tmp/PYCOLMAP/
+COPY build.sh install.sh /tmp/HLOC/
 
 RUN cd /opt/
 RUN pip3 install build wheel
 
-RUN /tmp/PYCOLMAP/install.sh || /tmp/PYCOLMAP/build.sh
+RUN /tmp/HLOC/install.sh || /tmp/HLOC/build.sh
