@@ -2,7 +2,7 @@
 # name: pycolmap
 # group: nerf
 # config: config.py
-# depends: [torch, torchvision, ffmpeg, python, ninja, cmake, numpy]
+# depends: [cuda, torch, torchvision, ffmpeg, python, ninja, cmake, numpy]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/colmap/colmap.git
