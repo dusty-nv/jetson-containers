@@ -1,11 +1,11 @@
 #---
-# name: nerfstudio
+# name: pycolmap
 # group: nerf
 # config: config.py
-# depends: [torch, torchvision, ffmpeg, python, ninja, cmake, numpy, polyscope, tinycudann]
+# depends: [torch, torchvision, ffmpeg, python, ninja, cmake, numpy]
 # requires: '>=34.1.0'
 # test: test.py
-# notes: https://github.com/nerfstudio-project/nerfstudio.git
+# notes: https://github.com/colmap/colmap.git
 #---
 
 ARG BASE_IMAGE
@@ -125,4 +125,4 @@ RUN git clone --branch v2.3 --recursive https://github.com/cvg/pyceres.git /opt/
 
 EXPOSE 7007
 
-RUN /tmp/NERFSTUDIO/install.sh || /tmp/NERFSTUDIO/build.sh
+RUN /tmp/PYCOLMAP/install.sh || /tmp/PYCOLMAP/build.sh
