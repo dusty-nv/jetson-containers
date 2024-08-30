@@ -25,5 +25,6 @@ def nerfstudio(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    nerfstudio('0.3.2', default=True),
+    nerfstudio('1.1.4', default=False),
+    nerfstudio('0.3.2', default=False)
 ]
