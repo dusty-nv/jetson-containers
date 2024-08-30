@@ -23,5 +23,5 @@ def diffusers(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    diffusers('0.31.0', default=True),
+    diffusers('0.30.1', default=True),
 ]
