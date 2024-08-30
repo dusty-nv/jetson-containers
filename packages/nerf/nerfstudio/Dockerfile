@@ -2,7 +2,7 @@
 # name: nerfstudio
 # group: nerf
 # config: config.py
-# depends: [torch, torchvision, ffmpeg, python, ninja, cmake, numpy, polyscope, tinycudann]
+# depends: [torch, torchvision, diffusers, transformers, bitsandbytes, ffmpeg, python, ninja, cmake, numpy, polyscope, tinycudann]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/nerfstudio-project/nerfstudio.git
@@ -53,7 +53,7 @@ RUN apt-get update && \
 COPY build.sh install.sh /tmp/NERFSTUDIO/
 
 RUN cd /opt/
-RUN pip3 install build wheel
+RUN pip3 install build wheel tbb
 
 RUN git clone --recurse-submodules https://github.com/elalish/manifold.git /opt/manifold && \
     if [ ! -d "/opt/manifold" ]; then echo "Failed to clone manifold repo"; exit 1; fi && \
@@ -99,6 +99,7 @@ RUN git clone --branch 3.10 https://github.com/colmap/colmap.git --single-branch
                 -DCMAKE_CUDA_ARCHITECTURES=${CUDAARCHS} && \
     make -j $(nproc) && \
     make install && \
+    ldconfig && \
     cd /opt/colmap/pycolmap && \
     pip3 wheel . -w dist/ && pip3 install dist/pycolmap-*.whl
 
@@ -126,6 +127,6 @@ RUN git clone --branch v2.3 --recursive https://github.com/cvg/pyceres.git /opt/
 EXPOSE 7007
 
 # RUN /tmp/NERFSTUDIO/install.sh || /tmp/NERFSTUDIO/build.sh
-RUN pip3 install nerfstudio==${NERFSTUDIO_VERSION}
+RUN /tmp/NERFSTUDIO/install.sh || /tmp/NERFSTUDIO/build.sh
 
 CMD [ "bin/bash" ]
