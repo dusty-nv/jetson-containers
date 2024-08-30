@@ -25,7 +25,7 @@ pip3 install --no-cache-dir --verbose /opt/pymeshlab/wheels/pymeshlab*.whl
 twine upload --verbose /opt/pymeshlab/wheels/pymeshlab*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
 # run here to test if it works
-python3 -c "import pymeshlab; print(pymeshlab.version())"
+python3 -c "import pymeshlab; ms = pymeshlab.MeshSet()"
 
 echo "Pymeshlab OK\n"
 

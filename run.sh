@@ -54,10 +54,10 @@ if [ -n "$HUGGINGFACE_TOKEN" ]; then
 fi
 
 # additional permission optional run arguments
-OPTIONAL_ARGS=""
+OPTIONAL_PERMISSION_ARGS=""
 
-if [ "$USE_OPTIONAL_ARGS" = "true" ]; then
-	OPTIONAL_ARGS="-v /lib/modules:/lib/modules --device /dev/fuse --cap-add SYS_ADMIN --security-opt apparmor=unconfined"
+if [ "$USE_OPTIONAL_PERMISSION_ARGS" = "true" ]; then
+	OPTIONAL_PERMISSION_ARGS="-v /lib/modules:/lib/modules --device /dev/fuse --cap-add SYS_ADMIN --security-opt apparmor=unconfined"
 fi
 
 # check if sudo is needed
@@ -89,7 +89,7 @@ if [ $ARCH = "aarch64" ]; then
 		--volume $ROOT/data:/data \
 		--device /dev/snd \
 		--device /dev/bus/usb \
-		$OPTIONAL_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
+		$OPTIONAL_PERMISSION_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
 		"$@"
 
 elif [ $ARCH = "x86_64" ]; then
