@@ -135,6 +135,12 @@ RUN git clone --branch v2.3 --recursive https://github.com/cvg/pyceres.git /opt/
 
 EXPOSE 7007
 
+RUN python3 -m pip install --no-cache-dir --upgrade pip setuptools pathtools promise pybind11 omegaconf && \
+    pip3 install --ignore-installed --no-cache-dir --upgrade blinker && \
+    pip3 install --no-cache-dir --upgrade tyro appdirs av comet-ml fpsample gsplat imageio ipywidgets jaxtyping jupyterlab mediapy msgpack msgpack-numpy nerfacc nuscenes-devkit open3d opencv-python-headless pathos pyngrok pyquaternion python-socketio pytorch-msssim rawpy scikit-image splines tensorboard tensorly timm torchmetrics trimesh viser wandb xatlas cryptography==38 protobuf==3.20.3
+
+
 RUN /tmp/NERFSTUDIO/install.sh || /tmp/NERFSTUDIO/build.sh
 
+RUN cd /opt/
 CMD ["/bin/bash"]
