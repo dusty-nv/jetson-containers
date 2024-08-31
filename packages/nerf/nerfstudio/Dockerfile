@@ -134,7 +134,9 @@ RUN git clone --branch v2.3 --recursive https://github.com/cvg/pyceres.git /opt/
 # cd ..
 
 EXPOSE 7007
+EXPOSE 37163
 
 RUN /tmp/NERFSTUDIO/install.sh || /tmp/NERFSTUDIO/build.sh
 
+RUN cd /opt/
 CMD ["/bin/bash"]

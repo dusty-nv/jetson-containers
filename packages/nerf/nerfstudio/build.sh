@@ -22,5 +22,6 @@ pip3 install --no-cache-dir --verbose /opt/nerfstudio/wheels/nerfstudio*.whl
 
 ns-install-cli --mode install
 
+cd /opt/nerfstudio
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/nerfstudio/wheels/nerfstudio*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
