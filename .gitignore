@@ -9,3 +9,5 @@ test/data
 runner
 *.minus-github-api
 .DS_Store
+.vscode
+.ninja_log

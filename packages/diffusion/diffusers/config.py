@@ -8,7 +8,7 @@ def diffusers(version, requires=None, default=False):
     pkg['name'] = f'diffusers:{version}'
     
     pkg['build_args'] = {
-        'diffusers_VERSION': version,
+        'DIFFUSERS_VERSION': version,
     }
     
     builder = pkg.copy()
@@ -23,5 +23,5 @@ def diffusers(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    diffusers('0.31.0', default=True),
+    diffusers('0.30.1', default=True),
 ]
