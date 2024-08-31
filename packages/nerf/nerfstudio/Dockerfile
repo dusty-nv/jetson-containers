@@ -112,10 +112,7 @@ RUN git clone --branch 3.10 https://github.com/colmap/colmap.git --single-branch
     cd /opt/colmap/pycolmap && \
     pip3 wheel . -w dist/ && pip3 install dist/pycolmap-*.whl
 
-RUN python3 -m pip install --no-cache-dir --upgrade pip setuptools pathtools promise pybind11 omegaconf && \
-    pip3 install --ignore-installed --no-cache-dir --upgrade blinker && \
-    pip3 install --no-cache-dir --upgrade tyro appdirs av comet-ml fpsample gsplat imageio ipywidgets jaxtyping jupyterlab mediapy msgpack msgpack-numpy nerfacc nuscenes-devkit open3d opencv-python-headless pathos pyngrok pyquaternion python-socketio pytorch-msssim rawpy scikit-image splines tensorboard tensorly timm torchmetrics trimesh viser wandb xatlas cryptography==38 protobuf==3.20.3
-
+RUN python3 -m pip install --no-cache-dir --upgrade pip setuptools pathtools promise pybind11 omegaconf
 
 # Install hloc 1.4 as alternative feature detector and matcher option for nerfstudio.
 RUN git clone --branch master --recursive https://github.com/cvg/Hierarchical-Localization.git /opt/Hierarchical-Localization && \
@@ -137,7 +134,11 @@ RUN git clone --branch v2.3 --recursive https://github.com/cvg/pyceres.git /opt/
 # cd ..
 
 EXPOSE 7007
-EXPOSE 37163
+
+RUN python3 -m pip install --no-cache-dir --upgrade pip setuptools pathtools promise pybind11 omegaconf && \
+    pip3 install --ignore-installed --no-cache-dir --upgrade blinker && \
+    pip3 install --no-cache-dir --upgrade tyro appdirs av comet-ml fpsample gsplat imageio ipywidgets jaxtyping jupyterlab mediapy msgpack msgpack-numpy nerfacc nuscenes-devkit open3d opencv-python-headless pathos pyngrok pyquaternion python-socketio pytorch-msssim rawpy scikit-image splines tensorboard tensorly timm torchmetrics trimesh viser wandb xatlas cryptography==38 protobuf==3.20.3
+
 
 RUN /tmp/NERFSTUDIO/install.sh || /tmp/NERFSTUDIO/build.sh
 
