@@ -137,4 +137,4 @@ EXPOSE 7007
 
 RUN /tmp/NERFSTUDIO/install.sh || /tmp/NERFSTUDIO/build.sh
 
-CMD [ "bin/bash" ]
+CMD ["/bin/bash"]
