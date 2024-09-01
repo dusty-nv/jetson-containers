@@ -2,4 +2,3 @@ packages/apt/
 test/data/
 .git
 .cache
-.polyscope.ini
