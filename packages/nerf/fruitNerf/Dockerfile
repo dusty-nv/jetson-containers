@@ -28,3 +28,6 @@ RUN cd /opt/
 RUN pip3 install build wheel
 
 RUN /tmp/FRUITNERF/build.sh
+RUN pip3 install --force-reinstall --no-cache-dir 'numpy<2'
+RUN cd /opt/
+CMD ["/bin/bash"]
