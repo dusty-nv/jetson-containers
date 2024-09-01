@@ -2,8 +2,8 @@
 set -ex
 
 # Clone the repository if it doesn't exist
-git clone --branch=${FRUITNERF_VERSION} --depth=1 --recursive https://github.com/meyerls/FruitNeRF /opt/fruitnerf || \
-git clone --depth=1 --recursive https://github.com/meyerls/FruitNeRF /opt/fruitnerf
+git clone --branch=v${FRUITNERF_VERSION} --depth=1 --recursive https://github.com/johnnynunez/FruitNeRF /opt/fruitnerf || \
+git clone --depth=1 --recursive https://github.com/johnnynunez/FruitNeRF /opt/fruitnerf
 
 # Navigate to the directory containing PyMeshLab's setup.py
 cd /opt/fruitnerf 

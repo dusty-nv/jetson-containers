@@ -2,7 +2,7 @@
 # name: fruitnerf
 # group: nerf
 # config: config.py
-# depends: [torch, torchvision, ffmpeg, python, ninja, cmake, numpy, transformers, diffusers, nerfstudio]
+# depends: [python, ninja, cmake, numpy, h5py, ffmpeg, torch, torchvision, diffusers, transformers, bitsandbytes, polyscope, pymeshlab, tinycudann, nerfstudio]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/cvg/Hierarchical-Localization.git
