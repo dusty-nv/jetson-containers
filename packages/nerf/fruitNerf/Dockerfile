@@ -4,8 +4,7 @@
 # config: config.py
 # depends: [python, ninja, cmake, numpy, h5py, ffmpeg, torch, torchvision, diffusers, transformers, bitsandbytes, polyscope, pymeshlab, tinycudann, nerfstudio]
 # requires: '>=34.1.0'
-# test: test.py
-# notes: https://github.com/cvg/Hierarchical-Localization.git
+# notes: https://github.com/meyerls/FruitNeRF
 #---
 
 ARG BASE_IMAGE
@@ -28,6 +27,5 @@ RUN cd /opt/
 RUN pip3 install build wheel
 
 RUN /tmp/FRUITNERF/build.sh
-RUN pip3 install --force-reinstall --no-cache-dir 'numpy<2'
 RUN cd /opt/
 CMD ["/bin/bash"]
