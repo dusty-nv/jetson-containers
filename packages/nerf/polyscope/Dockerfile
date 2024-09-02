@@ -18,7 +18,7 @@ RUN apt-get update && \
     xorg-dev libglu1-mesa-dev freeglut3-dev mesa-common-dev libglfw3 xvfb \
     && rm -rf /var/lib/apt/lists/*
 
-COPY build.sh /tmp/POLYSCOPE/
+COPY build.sh install.sh /tmp/POLYSCOPE/
 
-RUN /tmp/POLYSCOPE/build.sh
+RUN /tmp/POLYSCOPE/install.sh || /tmp/POLYSCOPE/build.sh
     

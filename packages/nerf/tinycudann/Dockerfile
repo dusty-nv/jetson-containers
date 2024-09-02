@@ -2,7 +2,7 @@
 # name: tinycudann
 # group: nerf
 # config: config.py
-# depends: [cuda, python, cmake, pytorch, torchvision, numpy]
+# depends: [pytorch, torchvision]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/cnr-isti-vclab/TINYCUDANN.git

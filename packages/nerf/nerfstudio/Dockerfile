@@ -2,7 +2,7 @@
 # name: nerfstudio
 # group: nerf
 # config: config.py
-# depends: [python, ninja, cmake, numpy, h5py, ffmpeg, torch, torchvision, diffusers, transformers, bitsandbytes, polyscope, pymeshlab, tinycudann]
+# depends: [transformers, bitsandbytes, diffusers, h5py, ninja, ffmpeg, polyscope, pymeshlab, tinycudann]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/nerfstudio-project/nerfstudio.git
@@ -48,9 +48,6 @@ RUN apt-get update && \
     vim-tiny \
     wget && \
     rm -rf /var/lib/apt/lists/*
-
-
-COPY build.sh install.sh /tmp/NERFSTUDIO/
 
 RUN cd /opt/
 RUN pip3 install build wheel
@@ -140,6 +137,8 @@ RUN python3 -m pip install --no-cache-dir --upgrade pip setuptools pathtools pro
     pip3 install --no-cache-dir --upgrade tyro appdirs av comet-ml fpsample gsplat imageio ipywidgets jaxtyping jupyterlab mediapy msgpack msgpack-numpy nerfacc nuscenes-devkit open3d opencv-python-headless pathos pyngrok pyquaternion python-socketio pytorch-msssim rawpy scikit-image splines tensorboard tensorly timm torchmetrics trimesh viser wandb xatlas cryptography==38 protobuf==3.20.3
 
 
+
+COPY build.sh install.sh /tmp/NERFSTUDIO/
 RUN /tmp/NERFSTUDIO/install.sh || /tmp/NERFSTUDIO/build.sh
 
 RUN pip3 install --force-reinstall --no-cache-dir 'numpy<2'
