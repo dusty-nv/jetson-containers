@@ -3,12 +3,15 @@ from jetson_containers import L4T_VERSION, CUDA_VERSION, update_dependencies
 from packaging.version import Version
 
 import os
+from packages.numba.test import C
 
 if 'CUDNN_VERSION' in os.environ and len(os.environ['CUDNN_VERSION']) > 0:
     CUDNN_VERSION = Version(os.environ['CUDNN_VERSION'])
 else:
     if L4T_VERSION.major >= 36:
-        if CUDA_VERSION >= Version('12.4'):
+        if CUDA_VERSION >= Version('12.6'):
+            CUDNN_VERSION = Version('9.3')
+        elif CUDA_VERSION == Version('12.4'):
             CUDNN_VERSION = Version('9.0')
         else:
             CUDNN_VERSION = Version('8.9')
