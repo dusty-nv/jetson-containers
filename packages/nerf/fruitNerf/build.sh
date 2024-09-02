@@ -17,7 +17,7 @@ wget https://huggingface.co/lkeab/hq-sam/resolve/main/sam_hq_vit_h.pth
 pip3 install -e segment_anything 
 pip3 install --no-build-isolation -e GroundingDINO
 pip3 install --upgrade diffusers[torch]
-pip3 install -U opencv-python pycocotools matplotlib onnxruntime onnx onnxruntime-gpu ipykernel
+pip3 install -U opencv-python pycocotools matplotlib onnx onnxruntime-gpu ipykernel
 pip3 install -U segment-anything-hq
 
 cd /opt/fruitnerf
