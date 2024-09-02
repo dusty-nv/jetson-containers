@@ -23,7 +23,3 @@ pip3 install -U segment-anything-hq
 cd /opt/fruitnerf
 pip3 install -e .
 pip3 install 'numpy<2'
-
-wget https://zenodo.org/records/10869455/files/FruitNeRF_Synthetic.zip -P /datasets/
-unzip /datasets/FruitNeRF_Real.zip -d /datasets/FruitNeRF_Real
-unzip /datasets/FruitNeRF_Synthetic.zip -d /datasets/FruitNeRF_Synthetic
