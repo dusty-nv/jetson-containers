@@ -52,6 +52,10 @@ RUN mkdir -p /tmp/PYMESHLAB/extra
 COPY extra/ /tmp/PYMESHLAB/extra
 RUN ls -la /tmp/PYMESHLAB/extra*
 
+RUN wget -qO- "https://github.com/embree/embree/releases/download/v4.3.2/embree-4.3.2.x86_64.linux.tar.gz" \
+    | tar -xz -C /usr/local && \
+    bash /usr/local/embree-vars.sh
+
 # Clone the PyMeshLab repository
 RUN git clone --branch=v${PYMESHLAB_VERSION}  --depth=1 --recursive https://github.com/cnr-isti-vclab/PyMeshLab /opt/pymeshlab
 
