@@ -74,3 +74,5 @@ RUN chmod +x linuxdeploy linuxdeploy-plugin-appimage linuxdeploy-plugin-qt
 
 # Set the command to run the install or build script when the container starts
 CMD ["/bin/bash", "-c", "/tmp/PYMESHLAB/install.sh || /tmp/PYMESHLAB/build.sh"]
+
+RUN cd /opt/

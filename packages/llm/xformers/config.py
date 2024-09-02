@@ -23,5 +23,5 @@ def xformers(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    xformers('0.0.26', default=True),
+    xformers('0.0.27.post2', default=True),
 ]
