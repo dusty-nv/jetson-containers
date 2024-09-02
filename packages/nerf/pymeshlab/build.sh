@@ -27,5 +27,5 @@ twine upload --verbose /opt/pymeshlab/wheels/pymeshlab*.whl || echo "failed to u
 # run here to test if it works
 python3 -c "import pymeshlab; ms = pymeshlab.MeshSet()"
 
-echo "Pymeshlab OK\n"
+echo "pymeshlab OK\n"
 

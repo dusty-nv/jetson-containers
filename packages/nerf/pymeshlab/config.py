@@ -13,6 +13,7 @@ def pymeshlab(version, requires=None, default=False):
     builder = pkg.copy()
 
     builder['name'] = f'pymeshlab:{version}-builder'
+    builder['dockerfile'] = 'Dockerfile.builder'
     builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
 
     if default:
