@@ -147,7 +147,7 @@ package = [
     # JetPack 6
     cuda_package('12.2', 'https://nvidia.box.com/shared/static/uvqtun1sc0bq76egarc8wwuh6c23e76e.deb', 'cuda-tegra-repo-ubuntu2204-12-2-local', requires='==36.*'), 
     cuda_package('12.4', 'https://developer.download.nvidia.com/compute/cuda/12.4.1/local_installers/cuda-tegra-repo-ubuntu2204-12-4-local_12.4.1-1_arm64.deb', 'cuda-tegra-repo-ubuntu2204-12-4-local', requires='==36.*'), 
-    cuda_package('12.6', 'https://developer.download.nvidia.com/compute/cuda/12.6.1/local_installers/cuda-tegra-repo-ubuntu2204-12-6-local_12.6.1-1_arm64.deb', 'cuda-tegra-repo-ubuntu2204-12-4-local', requires='==36.*'), 
+    cuda_package('12.6', 'https://developer.download.nvidia.com/compute/cuda/12.6.1/local_installers/cuda-tegra-repo-ubuntu2204-12-6-local_12.6.1-1_arm64.deb', 'cuda-tegra-repo-ubuntu2204-12-6-local', requires='==36.*'), 
     cuda_samples('12.2', requires='==36.*'),
     cuda_samples('12.4', requires='==36.*'),
     cuda_samples('12.6', requires='==36.*'),
