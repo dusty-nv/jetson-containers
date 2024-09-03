@@ -1,0 +1,18 @@
+#---
+# name: mamba
+# group: mamba
+# config: config.py
+# depends: [ninja, pytorch, torchvision, torchaudio, triton, transformers]
+# requires: '>=34.1.0'
+# test: test.py
+# notes: https://github.com/state-spaces/mamba
+#---
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+ARG MAMBA_VERSION \
+    CUDAARCHS
+
+COPY build.sh install.sh /tmp/MAMBA/
+
+RUN /tmp/MAMBA/install.sh || /tmp/MAMBA/build.sh
