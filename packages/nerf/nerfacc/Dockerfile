@@ -2,7 +2,7 @@
 # name: nerfacc
 # group: nerf
 # config: config.py
-# depends: [nerfstudio]
+# depends: [pytorch, torchvision, torchaudio]
 # requires: '>=34.1.0'
 # notes: https://github.com/nerfstudio-project/nerfacc
 #---
