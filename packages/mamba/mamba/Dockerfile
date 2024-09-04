@@ -15,4 +15,7 @@ ARG MAMBA_VERSION \
 
 COPY build.sh install.sh /tmp/MAMBA/
 
+COPY patches/${MAMBA_VERSION}.diff /tmp/MAMBA/patch.diff
+
+
 RUN /tmp/MAMBA/install.sh || /tmp/MAMBA/build.sh

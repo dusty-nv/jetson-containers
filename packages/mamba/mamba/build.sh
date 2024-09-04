@@ -7,6 +7,10 @@ git clone --depth=1 --recursive https://github.com/state-spaces/mamba /opt/mamba
 
 # Navigate to the directory containing mamba's setup.py
 cd /opt/mamba 
+git apply /tmp/MAMBA/patch.diff
+git diff
+git status
+
 pip3 install causal-conv1d>=1.4.0
 pip3 install lm-eval
 pip3 install --upgrade setuptools einops
