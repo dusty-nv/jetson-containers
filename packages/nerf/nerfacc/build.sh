@@ -15,7 +15,7 @@ export MAX_JOBS=$(nproc)
 pip3 wheel . -w /opt/nerfacc/wheels
 
 pip3 install lpips scipy
-pip3 install --no-cache-dir --verbose /opt/hloc/nerfacc/nerfacc*.whl
+pip3 install --no-cache-dir --verbose /opt/nerfacc/nerfacc*.whl
 
 cd /opt/nerfacc
 pip3 install 'numpy<2'
