@@ -2,7 +2,7 @@
 set -ex
 
 if [ "$FORCE_BUILD" == "on" ]; then
-	echo "Forcing build of mamba ${HLOC}"
+	echo "Forcing build of mamba ${MAMBA}"
 	exit 1
 fi
 
