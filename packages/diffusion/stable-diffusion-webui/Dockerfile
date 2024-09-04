@@ -54,5 +54,8 @@ RUN set -ex \
 # set the cache dir for models
 ENV DIFFUSERS_CACHE=/data/models/diffusers
 
+# Add the correct link for stable diffusion download
+RUN curl -L https://huggingface.co/Comfy-Org/stable-diffusion-v1-5-archive -o /data/models/stable-diffusion
+
 # default start-up command
 CMD ["/bin/bash", "-c", "cd /opt/stable-diffusion-webui && python3 launch.py --data=/data/models/stable-diffusion --enable-insecure-extension-access --xformers --listen --port=7860"]
