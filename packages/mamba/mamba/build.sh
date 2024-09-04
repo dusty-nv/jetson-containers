@@ -16,8 +16,8 @@ pip3 install lm-eval
 pip3 install --upgrade setuptools einops
 export MAMBA_FORCE_BUILD=TRUE
 export MAMBA_SKIP_CUDA_BUILD=FALSE
-pip3 wheel --no-build-isolation --verbose --wheel-dir=/wheels .
-pip3 install --no-cache-dir --verbose /wheels/mamba_ssm*.whl
+pip3 wheel --no-build-isolation --verbose --wheel-dir=/opt/mamba/wheels .
+pip3 install --no-cache-dir --verbose /opt/mamba/wheels/mamba_ssm*.whl
 
 cd /opt/mamba
 

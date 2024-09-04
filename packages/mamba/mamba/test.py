@@ -15,3 +15,5 @@ model = Mamba(
 ).to("cuda")
 y = model(x)
 assert y.shape == x.shape
+
+print('mamba_ssm OK\n')
