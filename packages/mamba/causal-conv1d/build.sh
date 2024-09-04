@@ -13,11 +13,11 @@ git diff
 git status
 
 pip3 wheel --no-build-isolation --wheel-dir=/opt/causalconv1d/wheels .
-pip3 install --no-cache-dir --verbose /opt/causalconv1d/wheels/causal-conv1d*.whl
+pip3 install --no-cache-dir --verbose /opt/causalconv1d/wheels/causal_conv1d*.whl
 
 cd /opt/causalconv1d
 
 pip3 install 'numpy<2'
 
 # Optionally upload to a repository using Twine
-twine upload --verbose /opt/causalconv1d/wheels/causal-conv1d*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose /opt/causalconv1d/wheels/causal_conv1d*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
