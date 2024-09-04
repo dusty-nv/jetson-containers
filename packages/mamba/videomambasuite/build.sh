@@ -6,8 +6,7 @@ git clone --branch=v${VIDEOMAMBASUITE_VERSION} --depth=1 --recursive https://git
 git clone --depth=1 --recursive https://github.com/OpenGVLab/video-mamba-suite /opt/videomambasuite
 
 # Navigate to the directory containing mamba's setup.py
-cd /opt/videomambasuite 
-pip install causal-conv1d>=1.4.0
+cd /opt/videomambasuite
 pip wheel --no-build-isolation --wheel-dir=/wheels .
 pip3 install --no-cache-dir --verbose /opt/videomambasuite /wheels/videomamba*.whl
 

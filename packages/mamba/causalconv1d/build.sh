@@ -12,7 +12,10 @@ git apply /tmp/CASUALCONV1D/patch.diff
 git diff
 git status
 
-pip3 wheel --no-build-isolation --wheel-dir=/opt/causalconv1d/wheels .
+MAX_JOBS=$(nproc) \
+CAUSAL_CONV1D_FORCE_BUILD="TRUE" \
+CAUSAL_CONV1D_SKIP_CUDA_BUILD="FALSE" \
+python3 setup.py bdist_wheel --dist-dir=/opt/causalconv1d/wheels
 pip3 install --no-cache-dir --verbose /opt/causalconv1d/wheels/causal_conv1d*.whl
 
 cd /opt/causalconv1d

@@ -2,8 +2,9 @@
 # name: mambavision
 # group: mamba
 # config: config.py
-# depends: [ninja, pytorch, torchvision, torchaudio, triton, transformers, mamba]
+# depends: [mamba]
 # requires: '>=34.1.0'
+# test: test.py
 # notes: https://github.com/OpenGVLab/video-mamba-suite
 #---
 ARG BASE_IMAGE

@@ -13,6 +13,7 @@ git status
 
 pip3 install lm-eval
 pip3 install --upgrade setuptools einops
+export MAX_JOBS=$(nproc)
 export MAMBA_FORCE_BUILD=TRUE
 export MAMBA_SKIP_CUDA_BUILD=FALSE
 pip3 wheel --no-build-isolation --wheel-dir=/opt/mamba/wheels .

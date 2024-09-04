@@ -2,7 +2,7 @@
 # name: mamba
 # group: mamba
 # config: config.py
-# depends: [ninja, pytorch, torchvision, torchaudio, triton, transformers, causalconv1d]
+# depends: [causalconv1d, triton, transformers]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/state-spaces/mamba

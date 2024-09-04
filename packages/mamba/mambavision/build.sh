@@ -2,13 +2,14 @@
 set -ex
 
 # Clone the repository if it doesn't exist
-git clone --branch=${MAMBA_VISION} --depth=1 --recursive https://github.com/NVlabs/MambaVision opt/mambavision || \
-git clone --depth=1 --recursive https://github.com/NVlabs/MambaVision /opt/mambavision
+git clone --branch=${MAMBA_VISION} --depth=1 --recursive https://github.com/johnnynunez/MambaVision opt/mambavision || \
+git clone --depth=1 --recursive https://github.com/johnnynunez/MambaVision /opt/mambavision
 
 # Navigate to the directory containing mamba's setup.py
 cd /opt/mambavision 
-pip wheel --no-build-isolation --wheel-dir=/wheels .
-pip3 install --no-cache-dir --verbose /wheels/mambavision*.whl
+pip3 install -U einops timm 
+pip3 wheel --no-build-isolation --no-deps --wheel-dir=/opt/mambavision/wheels .
+pip3 install --no-cache-dir --verbose /opt/mambavision/wheels/mambavision*.whl
 
 cd /opt/mamba
 
