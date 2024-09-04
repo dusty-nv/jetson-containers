@@ -2,12 +2,11 @@
 set -ex
 
 # Clone the repository if it doesn't exist
-git clone --branch=v${MAMBA_VISION} --depth=1 --recursive https://github.com/OpenGVLab/video-mamba-suite /opt/mambavision || \
-git clone --depth=1 --recursive https://github.com/OpenGVLab/video-mamba-suite /opt/mambavision
+git clone --branch=${MAMBA_VISION} --depth=1 --recursive https://github.com/NVlabs/MambaVision opt/mambavision || \
+git clone --depth=1 --recursive https://github.com/NVlabs/MambaVision /opt/mambavision
 
 # Navigate to the directory containing mamba's setup.py
 cd /opt/mambavision 
-pip install causal-conv1d>=1.4.0
 pip wheel --no-build-isolation --wheel-dir=/wheels .
 pip3 install --no-cache-dir --verbose /wheels/mambavision*.whl
 
