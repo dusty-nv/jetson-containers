@@ -2,7 +2,7 @@
 # name: videomambasuite
 # group: mamba
 # config: config.py
-# depends: [mamba]
+# depends: [mamba, transformers, huggingface_hub]
 # requires: '>=34.1.0'
 # notes: https://github.com/OpenGVLab/video-mamba-suite
 #---
