@@ -1,6 +1,6 @@
 #---
 # name: mamba
-# group: mamba
+# group: llm
 # config: config.py
 # depends: [causalconv1d, triton, transformers]
 # requires: '>=34.1.0'
