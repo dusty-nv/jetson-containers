@@ -11,9 +11,7 @@ pip3 install -U einops timm
 pip3 wheel --no-build-isolation --no-deps --wheel-dir=/opt/mambavision/wheels .
 pip3 install --no-cache-dir --verbose /opt/mambavision/wheels/mambavision*.whl
 
-cd /opt/mamba
-
-pip3 install -e .
+cd /opt/mambavision
 pip3 install 'numpy<2'
 
 # Optionally upload to a repository using Twine

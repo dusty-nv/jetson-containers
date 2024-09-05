@@ -14,5 +14,5 @@ ARG VIDEOMAMBASUITE_VERSION \
 
 COPY build.sh /tmp/VIDEOMAMBASUITE/
 
-RUN pip3 install build wheel && \
-    /tmp/VIDEOMAMBASUITE/build.sh
+RUN /tmp/VIDEOMAMBASUITE/build.sh
+CMD ["/bin/bash"]
