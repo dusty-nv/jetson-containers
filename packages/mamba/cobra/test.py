@@ -9,14 +9,13 @@ from pathlib import Path
 
 from cobra import load
 
-hf_token = Path(".hf_token").read_text().strip()
 device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 # In case your GPU does not support bf16
 dtype = torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float16
 
-# Load a pretrained VLM (either local path, or ID to auto-download from the HF Hub) 
+# Load a pretrained VLM (either local path, or ID to auto-download from the HF Hub)
 model_id = "cobra+3b"
-vlm = load(model_id, hf_token=hf_token)
+vlm = load(model_id)
 vlm.to(device, dtype=dtype)
 
 # Download an image and specify a prompt

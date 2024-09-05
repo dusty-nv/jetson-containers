@@ -2,7 +2,7 @@
 # name: mamba
 # group: mamba
 # config: config.py
-# depends: [causalconv1d, triton, transformers]
+# depends: [causalconv1d, triton, transformers, huggingface_hub]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/state-spaces/mamba

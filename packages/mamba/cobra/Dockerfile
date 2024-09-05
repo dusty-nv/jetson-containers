@@ -2,7 +2,7 @@
 # name: cobra
 # group: mamba
 # config: config.py
-# depends: [ninja, mamba, transformers, huggingface_hub]
+# depends: [ninja, triton, mamba, transformers, huggingface_hub]
 # requires: '>=34.1.0'
 # notes: https://github.com/h-zhao1997/cobra
 #---

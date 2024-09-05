@@ -1,3 +1,34 @@
+diff --git a/cobra/models/mamba/configuration_mamba.py b/cobra/models/mamba/configuration_mamba.py
+index 10b1f92..96f9e31 100644
+--- a/cobra/models/mamba/configuration_mamba.py
++++ b/cobra/models/mamba/configuration_mamba.py
+@@ -31,7 +31,7 @@ DEFAULT_SSM_CONFIG = {
+ 
+ class MambaConfig(PretrainedConfig):
+ 
+-    model_type = "mamba"
++    model_type = "custom_mamba"
+ 
+     def __init__(
+         self,
+diff --git a/cobra/models/mamba/modeling_mamba.py b/cobra/models/mamba/modeling_mamba.py
+index 1c52a21..510ca7b 100644
+--- a/cobra/models/mamba/modeling_mamba.py
++++ b/cobra/models/mamba/modeling_mamba.py
+@@ -516,5 +516,9 @@ class MambaForCausalLM(MambaPreTrainedModel, GenerationMixin):
+ 
+         return CausalLMOutputWithPast(loss=loss, logits=logits)
+ 
+-AutoConfig.register("mamba", MambaConfig)
+-AutoModelForCausalLM.register(MambaConfig, MambaForCausalLM)
+\ No newline at end of file
++AutoConfig.register("custom_mamba", MambaConfig)
++if MambaConfig not in AutoModelForCausalLM._model_mapping:
++    AutoModelForCausalLM.register(MambaConfig, MambaForCausalLM)
++    print("MambaConfig registered successfully.")
++else:
++    print("MambaConfig is already registered. Skipping registration.")
+\ No newline at end of file
 diff --git a/pyproject.toml b/pyproject.toml
 index 7d1bf1b..89d806e 100644
 --- a/pyproject.toml
