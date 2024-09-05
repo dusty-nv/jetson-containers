@@ -86,7 +86,15 @@ if args.prompt is not None:
 torch.cuda.synchronize()
 start = time.time()
 for _ in range(repeats):
-    fn()
+    out = fn()
 torch.cuda.synchronize()
+end = time.time()
+
+# Calculate total tokens and tokens per second
+total_tokens = sum(len(seq) for seq in out.sequences)
+generation_time = (end - start) / repeats
+tokens_per_sec = total_tokens / generation_time
+
 print(f"Prompt length: {len(input_ids[0])}, generation length: {len(out.sequences[0]) - len(input_ids[0])}")
-print(f"{args.model_name} prompt processing + decoding time: {(time.time() - start) / repeats * 1000:.0f}ms")
+print(f"{args.model_name} prompt processing + decoding time: {generation_time * 1000:.0f}ms")
+print(f"Tokens per second: {tokens_per_sec:.2f} tokens/sec")
