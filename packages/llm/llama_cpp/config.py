@@ -28,6 +28,6 @@ def llama_cpp(version, branch=None, test=None, default=False, flags=None):
 
 package = [
     llama_cpp('0.2.57'),
-    llama_cpp('0.2.70', default=True),
+    llama_cpp('0.2.90', default=True),
     llama_cpp('0.2.83', flags="-DGGML_CUDA=on"),
 ]
