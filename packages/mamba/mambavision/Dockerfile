@@ -1,0 +1,19 @@
+#---
+# name: mambavision
+# group: mamba
+# config: config.py
+# depends: [mamba]
+# requires: '>=34.1.0'
+# test: test.py
+# notes: https://github.com/OpenGVLab/video-mamba-suite
+#---
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+ARG MAMBAVIDEO_VERSION \
+    CUDAARCHS
+
+COPY build.sh /tmp/MAMBAVIDEO_VERSION/
+
+RUN pip3 install build wheel && \
+    /tmp/MAMBAVIDEO_VERSION/build.sh
