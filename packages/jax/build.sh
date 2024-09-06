@@ -34,8 +34,9 @@ CUDA_VERSION=$(nvcc --version | grep -oP "release \K[0-9]+\.[0-9]+")
 echo "Detected CUDA version: $CUDA_VERSION"
 
 # Detect cuDNN version
-CUDNN_VERSION=$(cat /usr/include/cudnn_version.h | grep CUDNN_MAJOR -A 2 | awk '{print $3}' | xargs | sed 's/ /./g')
+CUDNN_VERSION=$(grep -E 'CUDNN_MAJOR|CUDNN_MINOR|CUDNN_PATCHLEVEL' /usr/include/cudnn_version.h | head -n 3 | awk '{print $3}' | paste -sd '.')
 echo "Detected cuDNN version: $CUDNN_VERSION"
+
 
 # Clone JAX repository
 git clone --branch "main" --depth=1 https://github.com/google/jax /opt/jax
@@ -45,7 +46,7 @@ cd /opt/jax
 pip3 install --no-cache-dir jaxlib
 
 # Build jaxlib from source with detected versions
-python3 build/build.py --python_version=$PYTHON_VERSION --enable_cuda --cuda_version=$CUDA_VERSION --cudnn_version=$CUDNN_VERSION
+python3 build/build.py --python_version=$PYTHON_VERSION --enable_cuda --cuda_path /usr/local/cuda-${CUDA_VERSION} --cudnn_path /usr/lib/aarch64-linux-gnu --cuda_version $CUDA_VERSION --cudnn_version $CUDNN_VERSION
 
 # Install the built JAX package
 pip3 install -e .

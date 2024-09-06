@@ -16,14 +16,14 @@ ARG JAX_CUDA_ARCH_ARGS \
     JAX_VERSION \
     JAX_BUILD_VERSION \
     ENABLE_NCCL \
-    FORCE_BUILD=off
+    FORCE_BUILD=on
 
 ENV JAX_CUDA_ARCH_LIST=${JAX_CUDA_ARCH_ARGS} \
     JAX_CACHE_DIR=/data/models/jax
 
 # copy installation and build scripts for JAX
-COPY install.sh build.sh /tmp/JAX/
+COPY build.sh /tmp/JAX/
 
 # attempt to install JAX from pip, and fall back to building it if the installation fails
-RUN /tmp/JAX/install.sh || /tmp/JAX/build.sh
+RUN /tmp/JAX/build.sh
     

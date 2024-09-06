@@ -20,7 +20,7 @@ if [ "$FORCE_BUILD" == "on" ]; then
 fi
 
 # install from the Jetson PyPI server ($PIP_INSTALL_URL)
-pip3 install --verbose --no-cache-dir jax==${JAX_VERSION} jaxlib==${JAX_VERSION}+[cuda]
+pip3 install --verbose --no-cache-dir jax==${JAX_VERSION} jaxlib==${JAX_VERSION}
 
 # ensure JAX is installed correctly
 python3 -c 'import jax; print(f"JAX version: {jax.__version__}"); print(f"CUDA devices: {jax.devices()}");'

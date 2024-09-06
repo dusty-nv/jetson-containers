@@ -15,7 +15,7 @@ def jax_pip(version, requires=None, alias=None, default=False):
         build_version = version
         
     pkg['build_args'] = {
-        'JAX_CUDA_ARCH_ARGS': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES]),  # retained as $JAX_CUDA_ARCH_LIST
+        'JAX_CUDA_ARCH_ARGS': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES]), 
         'JAX_VERSION': version,
         'JAX_BUILD_VERSION': build_version,
     }
@@ -49,7 +49,7 @@ def jax_whl(version, whl, url, requires, alias=None):
     pkg['build_args'] = {
         'JAX_WHL': whl,
         'JAX_URL': url,
-        'JAX_CUDA_ARCH_ARGS': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES])  # retained as $JAX_CUDA_ARCH_LIST
+        'JAX_CUDA_ARCH_ARGS': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES]) 
     }
 
     pkg['requires'] = requires
