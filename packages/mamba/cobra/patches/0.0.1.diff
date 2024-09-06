@@ -12,9 +12,18 @@ index 10b1f92..96f9e31 100644
      def __init__(
          self,
 diff --git a/cobra/models/mamba/modeling_mamba.py b/cobra/models/mamba/modeling_mamba.py
-index 1c52a21..510ca7b 100644
+index 1c52a21..c4cbc72 100644
 --- a/cobra/models/mamba/modeling_mamba.py
 +++ b/cobra/models/mamba/modeling_mamba.py
+@@ -35,7 +35,7 @@ except ImportError:
+     selective_state_update = None
+ 
+ try:
+-    from mamba_ssm.ops.triton.layernorm import RMSNorm, layer_norm_fn, rms_norm_fn
++    from mamba_ssm.ops.triton.layer_norm import RMSNorm, layer_norm_fn, rms_norm_fn
+ except ImportError:
+     RMSNorm, layer_norm_fn, rms_norm_fn = None, None, None
+ 
 @@ -516,5 +516,9 @@ class MambaForCausalLM(MambaPreTrainedModel, GenerationMixin):
  
          return CausalLMOutputWithPast(loss=loss, logits=logits)
