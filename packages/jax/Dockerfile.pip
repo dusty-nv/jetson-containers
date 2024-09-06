@@ -1,6 +1,5 @@
 #---
 # name: jax
-# alias: jax
 # group: jax
 # config: config.py
 # depends: [cuda, cudnn, tensorrt, numpy]
@@ -16,6 +15,7 @@ FROM ${BASE_IMAGE}
 ARG JAX_CUDA_ARCH_ARGS \
     JAX_VERSION \
     JAX_BUILD_VERSION \
+    ENABLE_NCCL \
     FORCE_BUILD=off
 
 ENV JAX_CUDA_ARCH_LIST=${JAX_CUDA_ARCH_ARGS} \

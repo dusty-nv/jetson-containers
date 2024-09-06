@@ -16,7 +16,8 @@ apt-get install -y --no-install-recommends \
         python3-dev \
         clang \
         bazel \
-        python3-pip
+        python3-pip \
+        g++
 
 # Clean up package lists
 rm -rf /var/lib/apt/lists/*

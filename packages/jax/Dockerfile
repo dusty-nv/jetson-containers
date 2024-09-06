@@ -1,6 +1,5 @@
 #---
 # name: jax
-# alias: jax
 # group: jax
 # config: config.py
 # depends: [cuda, cudnn, tensorrt, numpy]
