@@ -113,7 +113,7 @@ def cuda_builtin(version, requires=None) -> list:
     cuda_pip = pip_cache(version, requires)    
     passthrough['depends'].append(cuda_pip['name'])
     
-    return passthrough
+    return passthrough, cuda_pip
 
 
 def cuda_samples(version, requires) -> list:
