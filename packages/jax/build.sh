@@ -43,7 +43,7 @@ pip3 install --no-cache-dir jaxlib
 
 python3 build/build.py --python_version=$PYTHON_VERSION --enable_cuda --cuda_compute_capabilities sm_87 \
 --bazel_options=--repo_env=LOCAL_CUDA_PATH="/usr/local/cuda-12.2" \
---bazel_options=--repo_env=LOCAL_CUDNN_PATH="/usr/lib/aarch64-linux-gnu" \
+--bazel_options=--repo_env=LOCAL_CUDNN_PATH="/usr/lib/aarch64-linux-gnu"
 # --bazel_options=--repo_env=LOCAL_NCCL_PATH="/foo/bar/nvidia/nccl"
 # Install the built JAX package
 pip3 install -e .
