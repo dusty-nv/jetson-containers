@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# JAX builder for Jetson AGX Orin (architecture: ARM64, CUDA support)
+# JAX builder for Jetson AGX (architecture: ARM64, CUDA support)
 set -ex
 
 echo "Building JAX for Jetson AGX Orin"
@@ -29,25 +29,22 @@ pip3 install --no-cache-dir numpy scipy scikit-build ninja
 PYTHON_VERSION=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
 echo "Detected Python version: $PYTHON_VERSION"
 
-# Detect CUDA version
-CUDA_VERSION=$(nvcc --version | grep -oP "release \K[0-9]+\.[0-9]+")
-echo "Detected CUDA version: $CUDA_VERSION"
-
-# Detect cuDNN version
-CUDNN_VERSION=$(grep -E 'CUDNN_MAJOR|CUDNN_MINOR|CUDNN_PATCHLEVEL' /usr/include/cudnn_version.h | head -n 3 | awk '{print $3}' | paste -sd '.')
-echo "Detected cuDNN version: $CUDNN_VERSION"
-
-
 # Clone JAX repository
-git clone --branch "jax-v${JAX_BUILD_VERSION}" --depth=1 --recursive https://github.com/google/jax /opt/jax
+git clone --branch "jax-v${JAX_BUILD_VERSION}" --depth=1 --recursive https://github.com/google/jax /opt/jax || \
+git clone --depth=1 --recursive https://github.com/google/jax /opt/jax
 cd /opt/jax
 
 # Clone and install jaxlib, which is required for building JAX
 pip3 install --no-cache-dir jaxlib
 
 # Build jaxlib from source with detected versions
-python3 build/build.py --python_version=$PYTHON_VERSION --enable_cuda --cuda_version 12.2.0 --cudnn_version 8.6 
+#python3 build/build.py  --enable_cuda --cuda_version 12.2 --cudnn_version 8 --cuda_compute_capabilities sm_87 
+# --cuda_path /usr/local/cuda-12.2 --cudnn_path /usr/lib/aarch64-linux-gnu 
 
+python3 build/build.py --python_version=$PYTHON_VERSION --enable_cuda --cuda_compute_capabilities sm_87 \
+--bazel_options=--repo_env=LOCAL_CUDA_PATH="/usr/local/cuda-12.2" \
+--bazel_options=--repo_env=LOCAL_CUDNN_PATH="/usr/lib/aarch64-linux-gnu" \
+# --bazel_options=--repo_env=LOCAL_NCCL_PATH="/foo/bar/nvidia/nccl"
 # Install the built JAX package
 pip3 install -e .
 

@@ -59,9 +59,9 @@ def jax_whl(version, whl, url, requires, alias=None):
 
 package = [
     # JetPack 5/6
-    jax_pip('0.4.31', requires='==35.*'),
-    jax_pip('0.4.31', requires='>=35'),
-    jax_pip('0.4.31', requires='>=35'),
-    jax_pip('0.4.31', requires='==36.*'),
-    jax_pip('0.4.31', requires='==36.*', default=True),
+    jax_pip('0.4.32', requires='==35.*'),
+    jax_pip('0.4.32', requires='>=35'),
+    jax_pip('0.4.32', requires='>=35'),
+    jax_pip('0.4.32', requires='==36.*'),
+    jax_pip('0.4.32', requires='==36.*', default=True),
 ]
