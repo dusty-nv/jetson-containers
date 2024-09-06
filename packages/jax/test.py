@@ -1,82 +1,94 @@
 #!/usr/bin/env python3
-print('testing PyTorch...')
+print('Testing JAX...')
 
-import torch
+import jax
+import jax.numpy as jnp
+from jax import random
+import os
 
-print('PyTorch version: ' + str(torch.__version__))
-print('CUDA available:  ' + str(torch.cuda.is_available()))
-print('cuDNN version:   ' + str(torch.backends.cudnn.version()))
+# Print JAX version and CUDA device information
+print('JAX version: ' + str(jax.__version__))
+print('CUDA devices: ' + str(jax.devices()))
 
-print(torch.__config__.show())
+# Fail if CUDA isn't available
+assert len(jax.devices()) > 0, 'No CUDA devices found'
 
-# fail if CUDA isn't available
-assert(torch.cuda.is_available())
-
-# check that version can be parsed
+# Check that version can be parsed
 from packaging import version
-from os import environ
 
-print('PACKAGING_VERSION=' + str(version.parse(torch.__version__)))
-print('TORCH_CUDA_ARCH_LIST=' + environ.get('TORCH_CUDA_ARCH_LIST', 'None') + '\n')
+print('PACKAGING_VERSION=' + str(version.parse(jax.__version__)))
+print('JAX_CUDA_ARCH_LIST=' + os.environ.get('JAX_CUDA_ARCH_LIST', 'None') + '\n')
 
-# quick cuda tensor test
-a = torch.cuda.FloatTensor(2).zero_()
+# Quick CUDA tensor test
+key = random.PRNGKey(0)
+a = jnp.zeros(2)
 print('Tensor a = ' + str(a))
 
-b = torch.randn(2).cuda()
+b = random.normal(key, (2,))
 print('Tensor b = ' + str(b))
 
 c = a + b
 print('Tensor c = ' + str(c))
 
 # LAPACK test
-print('testing LAPACK (OpenBLAS)...')
+print('Testing LAPACK (via jax.numpy.linalg)...')
+a = random.normal(key, (4, 4))
+b = random.normal(key, (4, 4))
 
-a = torch.randn(2, 3, 1, 4, 4)
-b = torch.randn(2, 3, 1, 4, 4)
+x = jnp.linalg.solve(b, a)
 
-x, lu = torch.linalg.solve(b, a)
+print('Done testing LAPACK (via jax.numpy.linalg)\n')
 
-print('done testing LAPACK (OpenBLAS)')
+# Neural network test
+print('Testing JAX neural network (using stax from jax.experimental.stax)...')
 
-# torch.nn test
-print('testing torch.nn (cuDNN)...')
+from jax.experimental import stax
 
-import torch.nn
+# Define a simple network
+init_fun, apply_fun = stax.serial(
+    stax.Conv(32, (3, 3)),
+    stax.Relu,
+    stax.MaxPool((2, 2)),
+    stax.Conv(64, (3, 3)),
+    stax.Relu,
+    stax.MaxPool((2, 2)),
+    stax.Flatten,
+    stax.Dense(10),
+    stax.LogSoftmax
+)
 
-model = torch.nn.Conv2d(3,3,3)
-data = torch.zeros(1,3,10,10)
-model = model.cuda()
-data = data.cuda()
-out = model(data)
+_, params = init_fun(key, (-1, 32, 32, 3))
+dummy_input = jnp.zeros((1, 32, 32, 3))
 
-#print(out)
+# Move the model and input to GPU
+output = apply_fun(params, dummy_input)
+print('Neural network output shape: ' + str(output.shape))
 
-print('done testing torch.nn (cuDNN)')
+print('Done testing JAX neural network (cuDNN)\n')
 
-# CPU test (https://github.com/pytorch/pytorch/issues/47098)
-print('testing CPU tensor vector operations...')
+# Test CPU operations
+print('Testing CPU tensor operations...')
+cpu_a = jnp.array([12.345])
+cpu_b = jax.nn.softmax(cpu_a)
 
-import torch.nn.functional as F
-cpu_x = torch.tensor([12.345])
-cpu_y = F.softmax(cpu_x)
+print('Tensor cpu_a = ' + str(cpu_a))
+print('Tensor softmax = ' + str(cpu_b))
 
-print('Tensor cpu_x = ' + str(cpu_x))
-print('Tensor softmax = ' + str(cpu_y))
+if not jnp.isclose(cpu_b.sum(), 1.0):
+    raise ValueError('JAX CPU tensor test failed (softmax)\n')
 
-if cpu_y != 1.0:
-    raise ValueError('PyTorch CPU tensor vector test failed (softmax)\n')
+# Test accuracy of floating-point operations
+print('Testing accuracy of floating-point operations...')
 
-# https://github.com/pytorch/pytorch/issues/61110
-t_32 = torch.ones((3,3), dtype=torch.float32).exp()
-t_64 = torch.ones((3,3), dtype=torch.float64).exp()
-diff = (t_32 - t_64).abs().sum().item()
+t_32 = jnp.ones((3, 3), dtype=jnp.float32).exp()
+t_64 = jnp.ones((3, 3), dtype=jnp.float64).exp()
+diff = jnp.abs(t_32 - t_64).sum()
 
 print('Tensor exp (float32) = ' + str(t_32))
 print('Tensor exp (float64) = ' + str(t_64))
 print('Tensor exp (diff) = ' + str(diff))
 
 if diff > 0.1:
-    raise ValueError(f'PyTorch CPU tensor vector test failed (exp, diff={diff})')
-    
-print('PyTorch OK\n')
+    raise ValueError(f'JAX floating-point accuracy test failed (exp, diff={diff})')
+
+print('JAX OK\n')
