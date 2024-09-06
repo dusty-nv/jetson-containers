@@ -15,7 +15,6 @@ apt-get install -y --no-install-recommends \
         libomp-dev \
         python3-dev \
         clang \
-        bazel \
         python3-pip \
         g++
 

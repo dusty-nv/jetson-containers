@@ -1,10 +1,6 @@
 from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES
-from packaging.version import Version
 
-from .version import JAX_VERSION
-
-
-def jax_pip(version, requires=None, alias=None):
+def jax_pip(version, requires=None, alias=None, default=False):
     """
     Install JAX from pip server with Dockerfile.pip
     """
@@ -30,9 +26,14 @@ def jax_pip(version, requires=None, alias=None):
     if requires:
         pkg['requires'] = requires
     
+    
     builder = pkg.copy()
     builder['name'] = builder['name'] + '-builder'
     builder['build_args'] = {**builder['build_args'], 'FORCE_BUILD': 'on'}
+    
+    if default:
+        pkg['alias'] = 'jax'
+        builder['alias'] = 'jax:builder'
 
     return pkg, builder
 
@@ -62,5 +63,5 @@ package = [
     jax_pip('0.4.31', requires='>=35'),
     jax_pip('0.4.31', requires='>=35'),
     jax_pip('0.4.31', requires='==36.*'),
-    jax_pip('0.4.31', requires='==36.*')
+    jax_pip('0.4.31', requires='==36.*', default=True),
 ]
