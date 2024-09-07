@@ -11,7 +11,7 @@ if 'TENSORRT_VERSION' in os.environ and len(os.environ['TENSORRT_VERSION']) > 0:
 else:
     if L4T_VERSION.major >= 36:
         if CUDA_VERSION >= Version('12.6'):
-            TENSORRT_VERSION = Version('10.3')
+            TENSORRT_VERSION = Version('10.4')
         elif CUDA_VERSION == Version('12.4'):
             TENSORRT_VERSION = Version('10.0')
         else:
@@ -102,7 +102,7 @@ package = [
     tensorrt_deb('8.6', 'https://nvidia.box.com/shared/static/hmwr57hm88bxqrycvlyma34c3k4c53t9.deb', 'nv-tensorrt-local-repo-l4t-8.6.2-cuda-12.2', cudnn='8.9', requires=['==r36.*', '==cu122']), 
     #tensorrt_tar('9.3', 'https://nvidia.box.com/shared/static/fp3o14iq7qbm67qjuqivdrdch7009axu.gz', cudnn='8.9', requires=['==r36.*', '==cu122']), 
     tensorrt_tar('10.0', 'https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/10.0.1/tars/TensorRT-10.0.1.6.l4t.aarch64-gnu.cuda-12.4.tar.gz', cudnn='9.0', requires=['==r36.*', '==cu124']), 
-    tensorrt_tar('10.3', 'https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/10.3.0/tars/TensorRT-10.3.0.26.l4t.aarch64-gnu.cuda-12.6.tar.gz', cudnn='9.3', requires=['==r36.*', '==cu126']), 
+    tensorrt_tar('10.4', 'https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/10.4.0/tars/TensorRT-10.4.0.26.l4t.aarch64-gnu.cuda-12.6.tar.gz', cudnn='9.4', requires=['==r36.*', '==cu126']), 
     # JetPack 4-5 (TensorRT installed in base container)
     tensorrt_builtin(requires='<36', default=True),
 ]
