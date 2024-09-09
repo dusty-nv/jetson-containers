@@ -39,5 +39,18 @@ x = jnp.linalg.solve(b, a)
 
 print('Done testing LAPACK (via jax.numpy.linalg)\n')
 
-# Neural network test
+a = jnp.asarray([[1.0, 2.0, 3.0], [4., 5., 6.]])
+b = jnp.asarray([[1.0, 2.0], [3.0, 4.0], [5., 6.]])
+
+print("Array 'a':")
+print(a)
+print("Array 'b':")
+print(b)
+
+print("where do the arrays live?")
+print(a.device_buffer.device())
+
+print("Result of jnp.dot(a,b)")
+c = jnp.dot(a,b)
+print(c)
 print('JAX OK\n')
