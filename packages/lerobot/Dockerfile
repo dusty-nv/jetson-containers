@@ -2,8 +2,8 @@
 # name: lerobot
 # group: embodiment
 # docs: docs.md
-# depends: [torchvision, opencv, huggingface_hub, ffmpeg, h5py]
-# requires: '>=34.1.0'
+# depends: [torchvision, opencv, huggingface_hub, h5py]
+# requires: '>=36'
 # test: 
 #---
 ARG BASE_IMAGE
@@ -11,18 +11,20 @@ FROM ${BASE_IMAGE}
 
 WORKDIR /opt
 
+## Building FFmpeg for libav*** libraries, which are necessory for PyAV
+
 # Download FFmpeg
-#RUN wget https://www.ffmpeg.org/releases/ffmpeg-4.2.10.tar.gz && \
-#RUN wget https://www.ffmpeg.org/releases/ffmpeg-4.3.8.tar.gz && \
-#RUN wget https://www.ffmpeg.org/releases/ffmpeg-4.4.5.tar.gz && \
-#RUN wget https://www.ffmpeg.org/releases/ffmpeg-5.1.6.tar.gz && \
-#RUN wget https://www.ffmpeg.org/releases/ffmpeg-6.1.2.tar.gz && \
 RUN set -ex && \
+#    wget https://www.ffmpeg.org/releases/ffmpeg-4.2.10.tar.gz && \
+#    wget https://www.ffmpeg.org/releases/ffmpeg-4.3.8.tar.gz && \
+#    wget https://www.ffmpeg.org/releases/ffmpeg-4.4.5.tar.gz && \
+#    wget https://www.ffmpeg.org/releases/ffmpeg-5.1.6.tar.gz && \
+#    wget https://www.ffmpeg.org/releases/ffmpeg-6.1.2.tar.gz && \
     wget https://www.ffmpeg.org/releases/ffmpeg-7.0.2.tar.gz && \
     tar -xvzf ffmpeg*
 RUN rm ffmpeg*.tar.gz
 
-# libaom 
+# libaom for AV1
 RUN cd ffmpeg*  && \
     mkdir -p ./libaom && \
     cd ./libaom && \
@@ -33,7 +35,7 @@ RUN cd ffmpeg*  && \
     PATH="$HOME/bin:$PATH" make && \
     make install
 
-# libsvtav1 
+# libsvtav1 for AV1
 RUN cd ffmpeg*  && \
     git -C SVT-AV1 pull 2> /dev/null || git clone https://gitlab.com/AOMediaCodec/SVT-AV1.git && \
     mkdir -p SVT-AV1/build && \
@@ -42,7 +44,7 @@ RUN cd ffmpeg*  && \
     PATH="$HOME/bin:$PATH" make && \
     make install
 
-# libdav1d 
+# libdav1d for AV1
 RUN set -ex \
 	&& apt-get update \
 	&& apt-get install -y --no-install-recommends libdav1d-dev \
@@ -64,9 +66,10 @@ RUN cd ffmpeg*  && \
     make && \
     make install && \
     ldconfig
-RUN ffmpeg -version
-RUN ffmpeg -decoders && \
-    ffmpeg -decoders | grep av1 || true
+ENV LD_LIBRARY_PATH=/root/ffmpeg_build/lib:$LD_LIBRARY_PATH
+RUN $HOME/bin/ffmpeg -version
+RUN $HOME/bin/ffmpeg -decoders && \
+    $HOME/bin/ffmpeg -decoders | grep av1 || true
 
 ARG LEROBOT_REPO=huggingface/lerobot/
 ARG LEROBOT_BRANCH=main
@@ -89,24 +92,21 @@ RUN git clone --branch=${LEROBOT_BRANCH} --depth=1 https://github.com/${LEROBOT_
 RUN cd lerobot && \
     pip install --ignore-installed -e ".[aloha, pusht]"
 
-# Install the original (jetson) ffmpeg
+# Install the original FFmpeg
 RUN set -ex \
 	&& apt-get update \
 	&& apt-get install -y --no-install-recommends ffmpeg \
 	&& apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Install ffmpeg again
+# Install Jetson-custom FFmpeg 
 # COPY nvidia-l4t-apt-source.list .
 # RUN mv nvidia-l4t-apt-source.list /etc/apt/sources.list.d/ && \
-# apt-key adv --fetch-key https://repo.download.nvidia.com/jetson/jetson-ota-public.asc && \
+#     apt-key adv --fetch-key https://repo.download.nvidia.com/jetson/jetson-ota-public.asc && \
 #     apt update
-
-RUN set -ex \
-	&& apt-get update \
-	&& apt-get install -y --no-install-recommends ffmpeg \
-	&& apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# RUN apt-get install -y --no-install-recommends ffmpeg && \
+# 	  apt-get clean && \
+#     rm -rf /var/lib/apt/lists/*
 
 # Test ffmpeg version
 RUN set -ex \
