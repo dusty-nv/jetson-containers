@@ -1,6 +1,6 @@
 #---
 # name: lerobot
-# group: embodiment
+# group: robots
 # docs: docs.md
 # depends: [torchvision, opencv, huggingface_hub, h5py]
 # requires: '>=36'
