@@ -2,7 +2,7 @@
 # name: nerfstudio
 # group: nerf
 # config: config.py
-# depends: [transformers, bitsandbytes, diffusers, h5py, ninja, ffmpeg, polyscope, pymeshlab, tinycudann]
+# depends: [transformers, bitsandbytes, diffusers, h5py, ninja, ffmpeg, polyscope, pymeshlab, tinycudann, nerfacc, gsplat]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/nerfstudio-project/nerfstudio.git
