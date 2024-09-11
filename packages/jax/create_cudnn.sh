@@ -2,7 +2,7 @@
 
 set -e
 
-CUDNN_MAJOR_VERSION=9
+CUDNN_MAJOR_VERSION=8
 prefix=/opt/nvidia/cudnn
 arch=$(uname -m)-linux-gnu
 
