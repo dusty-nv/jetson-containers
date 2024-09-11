@@ -4,7 +4,6 @@
 # docs: docs.md
 # depends: [torchvision, opencv, huggingface_hub, h5py]
 # requires: '>=36'
-# test: 
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
