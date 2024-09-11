@@ -8,7 +8,6 @@ prefix=/opt/nvidia/cudnn
 arch=$(uname -m)-linux-gnu
 cuda_base_path="/usr/local/cuda-${CUDA_MAJOR_VERSION}"
 
-# Comprobar si la ruta especificada de CUDA existe
 if [[ -d "${cuda_base_path}" ]]; then
   cuda_lib_path="${cuda_base_path}/lib64"
   output_path="/usr/local/cuda-${CUDA_MAJOR_VERSION}/lib"
@@ -17,10 +16,8 @@ else
   output_path="/usr/local/cuda/lib64"
 fi
 
-# Crear enlace simbólico para CUDA
 sudo ln -s "${cuda_lib_path}" "${output_path}"
 
-# Proceso para CUDNN
 for cudnn_file in $(dpkg -L libcudnn${CUDNN_MAJOR_VERSION} libcudnn${CUDNN_MAJOR_VERSION}-dev | sort -u); do
   if [[ -f "${cudnn_file}" || -h "${cudnn_file}" ]]; then
     nosysprefix="${cudnn_file#"/usr/"}"
@@ -28,7 +25,6 @@ for cudnn_file in $(dpkg -L libcudnn${CUDNN_MAJOR_VERSION} libcudnn${CUDNN_MAJOR
     noverheader="${noarchinclude/%"_v${CUDNN_MAJOR_VERSION}.h"/.h}"
     noarchlib="${noverheader/#"lib/${arch}"/lib}"
     
-    # Usar la ruta cuda_base_path o /usr/local/cuda/lib64
     if [[ -d "${cuda_base_path}" ]]; then
       link_name="${cuda_base_path}/${noarchlib}"
     else
