@@ -2,6 +2,8 @@
 
 > [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 
+<img src="https://github.com/user-attachments/assets/6a8967e1-f9dd-463f-906b-d9fd1f44450f">
+
 * lerobot project from https://github.com/huggingface/lerobot/
 * see the tutorial at [**Jetson AI Lab**](https://jetson-ai-lab.com/tutorial_lerobot.html) (Coming scoon)
 
