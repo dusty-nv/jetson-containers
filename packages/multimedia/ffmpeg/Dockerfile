@@ -1,6 +1,6 @@
 #---
 # name: ffmpeg
-# group: core
+# group: multimedia
 # depends: [build-essential]
 # notes: installs ffmpeg
 # test: test.sh

@@ -1,6 +1,6 @@
 #---
 # name: gstreamer
-# group: core
+# group: multimedia
 # depends: opencv
 # test: [test.sh, test.py]
 #---
