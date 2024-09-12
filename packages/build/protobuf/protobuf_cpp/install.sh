@@ -17,6 +17,7 @@ rm -rf /var/lib/apt/lists/*
 apt-get clean
 
 pip3 install --no-cache-dir tzdata
+pip3 install --no-cache-dir 'setuptools<72'  # setup.py invalid command 'test'
 
 cd /tmp 
 
