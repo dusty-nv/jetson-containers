@@ -3,6 +3,7 @@ set -ex
 
 echo "Building llama-cpp-python ${LLAMA_CPP_VERSION}"
  
+cd /opt
 git clone --branch=v${LLAMA_CPP_BRANCH} --depth=1 --recursive https://github.com/abetlen/llama-cpp-python
 
 CMAKE_ARGS="${LLAMA_CPP_FLAGS} -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}" \
@@ -16,3 +17,11 @@ python3 -c 'import llama_cpp'
 python3 -m llama_cpp.server --help
 
 twine upload --verbose /opt/wheels/llama_cpp_python*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+
+# install c++ binaries
+ln -s /opt/llama-cpp-python/vendor/llama.cpp /opt/llama.cpp
+cd /opt/llama.cpp
+
+cmake --build build ${LLAMA_CPP_FLAGS} -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}
+cmake --build build --config Release --parallel $(nproc)
+cmake --install build
