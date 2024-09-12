@@ -28,13 +28,11 @@ git clone --depth=1 --recursive https://github.com/google/jax /opt/jax
 cd /opt/jax
 
 # Build jaxlib from source with detected versions
-#python3 build/build.py  --enable_cuda --cuda_version 12.2 --cudnn_version 9 --cuda_compute_capabilities sm_87 --cuda_path /usr/local/cuda-12.2 --cudnn_path /usr/lib/aarch64-linux-gnu 
-
-python3 build/build.py \
-    --enable_cuda \
-    --cuda_compute_capabilities=sm_87 \
-    --bazel_options=--repo_env=LOCAL_CUDA_PATH="/usr/local/cuda-12.2" \
-    --bazel_options=--repo_env=LOCAL_CUDNN_PATH="/usr/lib/aarch64-linux-gnu"
+python3 build/build.py --enable_cuda --enable_nccl=False \
+        --cuda_compute_capabilities="sm_87" \
+        --cuda_version=12.6.0 --cudnn_version=9.4.0 \
+        --bazel_options=--repo_env=LOCAL_CUDA_PATH="/usr/local/cuda-12.6" \
+        --bazel_options=--repo_env=LOCAL_CUDNN_PATH="/opt/nvidia/cudnn/"
 
 # --bazel_options=--repo_env=LOCAL_NCCL_PATH="/foo/bar/nvidia/nccl"
 # Install the built JAX package

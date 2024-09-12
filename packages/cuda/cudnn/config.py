@@ -9,7 +9,7 @@ if 'CUDNN_VERSION' in os.environ and len(os.environ['CUDNN_VERSION']) > 0:
 else:
     if L4T_VERSION.major >= 36:
         if CUDA_VERSION >= Version('12.6'):
-            CUDNN_VERSION = Version('9.3')
+            CUDNN_VERSION = Version('9.4')
         elif CUDA_VERSION == Version('12.4'):
             CUDNN_VERSION = Version('9.0')
         else:
@@ -78,7 +78,7 @@ package = [
     # JetPack 6
     cudnn_package('8.9', 'https://nvidia.box.com/shared/static/ht4li6b0j365ta7b76a6gw29rk5xh8cy.deb', 'cudnn-local-tegra-repo-ubuntu2204-8.9.4.25', cuda='12.2', requires='==36.*'), 
     cudnn_package('9.0', 'https://developer.download.nvidia.com/compute/cudnn/9.0.0/local_installers/cudnn-local-tegra-repo-ubuntu2204-9.0.0_1.0-1_arm64.deb', 'cudnn-local-tegra-repo-ubuntu2204-9.0.0', cuda='12.4', requires='==36.*'),
-    cudnn_package('9.3', 'https://developer.download.nvidia.com/compute/cudnn/9.3.0/local_installers/cudnn-local-tegra-repo-ubuntu2204-9.3.0_1.0-1_arm64.deb', 'cudnn-local-tegra-repo-ubuntu2204-9.3.0', cuda='12.6', requires='==36.*'),
+    cudnn_package('9.4', 'https://developer.download.nvidia.com/compute/cudnn/9.4.0/local_installers/cudnn-local-tegra-repo-ubuntu2204-9.4.0_1.0-1_arm64.deb', 'cudnn-local-tegra-repo-ubuntu2204-9.4.0', cuda='12.6', requires='==36.*'),
     # JetPack 4-5 (cuDNN installed in base container)
     cudnn_builtin(requires='<36', default=True),
 ]
