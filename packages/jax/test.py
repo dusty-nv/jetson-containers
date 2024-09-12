@@ -6,9 +6,12 @@ import jax.numpy as jnp
 from jax import random
 import os
 
+jax.print_environment_info()
+
 # Print JAX version and CUDA device information
 print('JAX version: ' + str(jax.__version__))
 print('CUDA devices: ' + str(jax.devices()))
+print('Default backend: ' + jax.default_backend())
 
 # Fail if CUDA isn't available
 assert len(jax.devices()) > 0, 'No CUDA devices found'
@@ -48,9 +51,11 @@ print("Array 'b':")
 print(b)
 
 print("where do the arrays live?")
-print(a.device_buffer.device())
+print("Array 'a':", a.device, a.dtype, a.shape)
+print("Array 'b':", b.device, b.dtype, b.shape)
 
 print("Result of jnp.dot(a,b)")
 c = jnp.dot(a,b)
 print(c)
+print("Array 'c':", c.device, c.dtype, c.shape)
 print('JAX OK\n')

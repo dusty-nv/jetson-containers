@@ -1,13 +1,13 @@
 from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES
 
-def jax_pip(version, requires=None, alias=None, default=False):
+def jax(version, requires=None, alias=None, default=False):
     """
-    Install JAX from pip server with Dockerfile.pip
+    Install JAX from pip server or build the wheel from source.
     """
     pkg = package.copy()
         
     pkg['name'] = f'jax:{version}'    
-    pkg['dockerfile'] = 'Dockerfile.pip'
+    pkg['dockerfile'] = 'Dockerfile'
     
     if len(version.split('.')) < 3:
         build_version = version + '.0'
@@ -38,28 +38,8 @@ def jax_pip(version, requires=None, alias=None, default=False):
     return pkg, builder
 
 
-def jax_whl(version, whl, url, requires, alias=None):
-    """
-    Download & install JAX wheel with Dockerfile
-    """
-    pkg = package.copy()
-    
-    pkg['name'] = f'jax:{version}'
-        
-    pkg['build_args'] = {
-        'JAX_WHL': whl,
-        'JAX_URL': url,
-        'JAX_CUDA_ARCH_ARGS': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES]) 
-    }
-
-    pkg['requires'] = requires
-    
-    return pkg
-
-
 package = [
-    # JetPack 5/6
-    jax_pip('0.4.28', requires='>=35'),
-    jax_pip('0.4.30', requires='>=35'),
-    jax_pip('0.4.32', requires='>=35', default=True),
+    jax('0.4.28', requires='>=35'),
+    jax('0.4.30', requires='>=35'),
+    jax('0.4.32', requires='>=35', default=True),
 ]

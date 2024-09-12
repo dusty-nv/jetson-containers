@@ -1,48 +1,37 @@
 #!/usr/bin/env bash
-# JAX builder for Jetson AGX (architecture: ARM64, CUDA support)
+# JAX builder for Jetson (architecture: ARM64, CUDA support)
 set -ex
 
-echo "Building JAX for Jetson AGX Orin"
+# Install LLVM/clang dev packages
+./llvm.sh 18 all
 
-# Install prerequisites
-apt-get update
-apt-get install -y --no-install-recommends \
-        libopenblas-dev \
-        libopenmpi-dev \
-        openmpi-bin \
-        openmpi-common \
-        gfortran \
-        libomp-dev \
-        python3-dev \
-        clang \
-        python3-pip \
-        g++
-
-# Clean up package lists
-rm -rf /var/lib/apt/lists/*
-apt-get clean
+echo "Building JAX for Jetson"
 
 # Clone JAX repository
 git clone --branch "jaxlib-v${JAX_BUILD_VERSION}" --depth=1 --recursive https://github.com/google/jax /opt/jax || \
 git clone --depth=1 --recursive https://github.com/google/jax /opt/jax
+
 cd /opt/jax
 
 # Build jaxlib from source with detected versions
-python3 build/build.py --enable_cuda --enable_nccl=False \
-        --cuda_compute_capabilities="sm_87" \
-        --cuda_version=12.6.0 --cudnn_version=9.4.0 \
-        --bazel_options=--repo_env=LOCAL_CUDA_PATH="/usr/local/cuda-12.6" \
-        --bazel_options=--repo_env=LOCAL_CUDNN_PATH="/opt/nvidia/cudnn/"
+BUILD_FLAGS='--enable_cuda --enable_nccl=False '
+BUILD_FLAGS+='--cuda_compute_capabilities="sm_87" '
+BUILD_FLAGS+='--cuda_version=12.6.0 --cudnn_version=9.4.0 '
+BUILD_FLAGS+='--bazel_options=--repo_env=LOCAL_CUDA_PATH="/usr/local/cuda-12.6" '
+BUILD_FLAGS+='--bazel_options=--repo_env=LOCAL_CUDNN_PATH="/opt/nvidia/cudnn/" '
+BUILD_FLAGS+='--output_path=/opt/wheels '
+    
+python3 build/build.py $BUILD_FLAGS
+python3 build/build.py $BUILD_FLAGS --build_gpu_kernel_plugin=cuda --build_gpu_plugin
 
-# --bazel_options=--repo_env=LOCAL_NCCL_PATH="/foo/bar/nvidia/nccl"
-# Install the built JAX package
-pip3 install -e .
+# Build the jax pip wheels
+pip3 wheel --wheel-dir=/opt/wheels --no-deps --verbose .
 
-# Validate JAX installation
-python3 -c 'import jax; print(f"JAX version: {jax.__version__}"); print(f"CUDA devices: {jax.devices()}")'
+# Upload the wheels to mirror
+twine upload --verbose /opt/wheels/jaxlib-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose /opt/wheels/jax_cuda12_pjrt-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose /opt/wheels/jax_cuda12_plugin-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose /opt/wheels/jax-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
-# Clean up after build
-cd /
-rm -rf /opt/jax
-
-echo "JAX build and installation complete."
+# Install them into the container
+pip3 install --verbose --no-cache-dir /opt/wheels/jax*.whl
