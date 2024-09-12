@@ -7,8 +7,7 @@ def llama_cpp(version, branch=None, test=None, default=False, flags=DEFAULT_FLAG
 
     pkg['name'] = f'llama_cpp:{version}'
 
-    if default:
-        pkg['alias'] = 'llama_cpp'
+    
     
     if not test:
         test = "test_model.py --model $(huggingface-downloader TheBloke/Llama-2-7B-GGUF/llama-2-7b.Q4_K_S.gguf)"
@@ -24,7 +23,15 @@ def llama_cpp(version, branch=None, test=None, default=False, flags=DEFAULT_FLAG
         'LLAMA_CPP_FLAGS': flags,
     }
     
-    return pkg
+    builder = pkg.copy()
+    builder['name'] = builder['name'] + '-builder'
+    builder['build_args'] = {**builder['build_args'], 'FORCE_BUILD': 'on'}
+    
+    if default:
+        pkg['alias'] = 'llama_cpp'
+        builder['alias'] = 'llama_cpp:builder'
+        
+    return pkg, builder
 
 package = [
     llama_cpp('0.2.57', flags=LEGACY_FLAGS),
