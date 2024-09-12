@@ -1,5 +1,8 @@
 
-def llama_cpp(version, branch=None, test=None, default=False, flags=None):
+DEFAULT_FLAGS="-DGGML_CUDA=on -DGGML_CUDA_F16=on"
+LEGACY_FLAGS="-DLLAMA_CUBLAS=on -DLLAMA_CUDA_F16=1"
+
+def llama_cpp(version, branch=None, test=None, default=False, flags=DEFAULT_FLAGS):
     pkg = package.copy()
 
     pkg['name'] = f'llama_cpp:{version}'
@@ -14,10 +17,7 @@ def llama_cpp(version, branch=None, test=None, default=False, flags=None):
 
     if not branch:
         branch = version
-        
-    if not flags:
-        flags = "-DLLAMA_CUBLAS=on -DLLAMA_CUDA_F16=1"
-        
+
     pkg['build_args'] = {
         'LLAMA_CPP_VERSION': version,
         'LLAMA_CPP_BRANCH': branch,
@@ -27,8 +27,8 @@ def llama_cpp(version, branch=None, test=None, default=False, flags=None):
     return pkg
 
 package = [
-    llama_cpp('0.2.57'),
-    llama_cpp('0.2.70'),
+    llama_cpp('0.2.57', flags=LEGACY_FLAGS),
+    llama_cpp('0.2.70', flags=LEGACY_FLAGS),
+    llama_cpp('0.2.83'),
     llama_cpp('0.2.90', default=True),
-    llama_cpp('0.2.83', flags="-DGGML_CUDA=on"),
 ]
