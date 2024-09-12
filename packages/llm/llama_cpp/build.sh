@@ -19,9 +19,10 @@ python3 -m llama_cpp.server --help
 twine upload --verbose /opt/wheels/llama_cpp_python*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
 # install c++ binaries
-ln -s /opt/llama-cpp-python/vendor/llama.cpp /opt/llama.cpp
-cd /opt/llama.cpp
+cd /opt/llama-cpp-python/vendor/llama.cpp
 
 cmake -B build ${LLAMA_CPP_FLAGS} -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}
 cmake --build build --config Release --parallel $(nproc)
 cmake --install build
+
+ln -s /opt/llama-cpp-python/vendor/llama.cpp /opt/llama.cpp

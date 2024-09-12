@@ -1,5 +1,5 @@
 
-DEFAULT_FLAGS="-DGGML_CUDA=on -DGGML_CUDA_F16=on"
+DEFAULT_FLAGS="-DGGML_CUDA=on -DGGML_CUDA_F16=on -DLLAMA_CURL=on"
 LEGACY_FLAGS="-DLLAMA_CUBLAS=on -DLLAMA_CUDA_F16=1"
 
 def llama_cpp(version, branch=None, test=None, default=False, flags=DEFAULT_FLAGS):

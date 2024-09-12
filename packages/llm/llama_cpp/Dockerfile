@@ -19,4 +19,5 @@ COPY build.sh install.sh /tmp/llama_cpp/
 COPY benchmark.py /usr/local/bin/llama_cpp_benchmark.py
 
 RUN /tmp/llama_cpp/install.sh || /tmp/llama_cpp/build.sh
-    
+RUN mkdir -p /root/.cache && \
+    ln -s /data/models/llama.cpp /root/.cache/llama.cpp 
