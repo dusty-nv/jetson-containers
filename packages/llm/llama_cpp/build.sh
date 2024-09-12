@@ -22,6 +22,6 @@ twine upload --verbose /opt/wheels/llama_cpp_python*.whl || echo "failed to uplo
 ln -s /opt/llama-cpp-python/vendor/llama.cpp /opt/llama.cpp
 cd /opt/llama.cpp
 
-cmake --build build ${LLAMA_CPP_FLAGS} -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}
+cmake -B build ${LLAMA_CPP_FLAGS} -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}
 cmake --build build --config Release --parallel $(nproc)
 cmake --install build
