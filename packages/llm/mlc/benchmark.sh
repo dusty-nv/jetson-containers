@@ -59,6 +59,7 @@ function benchmark()
         -e MODEL_REPO=${model_repo} \
         -e MODEL_ROOT=${model_root} \
         -v $(jetson-containers root)/packages/llm/mlc:/test \
+        -v /mnt/NVME/repos/mlc/mlc-llm-20240415-3403a4e-evian3/python/mlc_llm/model/llama:/usr/local/lib/python3.10/dist-packages/mlc_llm/model/llama \
         -w /test \
         $(autotag mlc:$MLC_VERSION) /bin/bash -c "\
             if [ ! -d \${MODEL_REPO} ]; then \
