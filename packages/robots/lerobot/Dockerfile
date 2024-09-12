@@ -21,10 +21,8 @@ RUN git clone --branch=${LEROBOT_BRANCH} --depth=1 https://github.com/${LEROBOT_
     sed 's|^h5py.*||' -i pyproject.toml && \
     sed 's|^pyav.*||' -i pyproject.toml && \
     sed 's|^huggingface-hub.*||' -i pyproject.toml && \
-    echo "########## pyproject.toml ###########" && \
+    echo "######### pyproject.toml ##########" && \
     cat -n pyproject.toml
 
 RUN cd /opt/lerobot && \
     pip3 install --ignore-installed -e ".[aloha, pusht]"
-
-RUN cd /tmp/opencv && ./install.sh
