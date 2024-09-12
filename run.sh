@@ -79,6 +79,7 @@ if [ $ARCH = "aarch64" ]; then
 	set -x
 
 	$SUDO docker run --runtime nvidia -it --rm --network host \
+		--shm-size=8g \
 		--volume /tmp/argus_socket:/tmp/argus_socket \
 		--volume /etc/enctune.conf:/etc/enctune.conf \
 		--volume /etc/nv_tegra_release:/etc/nv_tegra_release \

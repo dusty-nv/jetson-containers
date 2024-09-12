@@ -23,17 +23,15 @@ rm -rf /var/lib/apt/lists/*
 apt-get clean
 
 # Clone JAX repository
-git clone --branch "jax-v${JAX_BUILD_VERSION}" --depth=1 --recursive https://github.com/google/jax /opt/jax || \
+git clone --branch "jaxlib-v${JAX_BUILD_VERSION}" --depth=1 --recursive https://github.com/google/jax /opt/jax || \
 git clone --depth=1 --recursive https://github.com/google/jax /opt/jax
 cd /opt/jax
 
 # Build jaxlib from source with detected versions
-#python3 build/build.py  --enable_cuda --cuda_version 12.2 --cudnn_version 9 --cuda_compute_capabilities sm_87 --cuda_path /usr/local/cuda-12.2 --cudnn_path /usr/lib/aarch64-linux-gnu 
-
 python3 build/build.py --enable_cuda --enable_nccl=False \
         --cuda_compute_capabilities="sm_87" \
-        --cuda_version=12.2.0 --cudnn_version=9.4.0 \
-        --bazel_options=--repo_env=LOCAL_CUDA_PATH="/usr/local/cuda-12.2" \
+        --cuda_version=12.6.0 --cudnn_version=9.4.0 \
+        --bazel_options=--repo_env=LOCAL_CUDA_PATH="/usr/local/cuda-12.6" \
         --bazel_options=--repo_env=LOCAL_CUDNN_PATH="/opt/nvidia/cudnn/"
 
 # --bazel_options=--repo_env=LOCAL_NCCL_PATH="/foo/bar/nvidia/nccl"
