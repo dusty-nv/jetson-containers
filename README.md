@@ -17,7 +17,7 @@ Modular container build system that provides various [**AI/ML packages**](packag
 | **Graphics** | [`stable-diffusion-webui`](packages/diffusion/stable-diffusion-webui) [`comfyui`](packages/diffusion/comfyui) [`nerfstudio`](packages/nerf/nerfstudio) [`pymeshlab`](packages/nerf/pymeshlab) [`ai-toolkit`](packages/diffusion/ai-toolkit) |
 | **RAG** | [`llama-index`](packages/rag/llama-index) [`langchain`](packages/rag/langchain) [`jetrag`](packages/rag/jetrag) [`NanoDB`](packages/vectordb/nanodb) [`FAISS`](packages/vectordb/faiss) [`RAFT`](packages/rapids/raft) |
 | **Audio** | [`whisper`](packages/audio/whisper) [`whisper_trt`](packages/audio/whisper_trt) [`piper`](packages/audio/piper-tts) [`riva`](packages/audio/riva-client) [`audiocraft`](packages/audio/audiocraft) [`voicecraft`](packages/audio/voicecraft) |
-| **Smart Home** | [`homeassistant-core`](packages/smart-home/homeassistant-core) [`homeassistant-base`](packages/smart-home/homeassistant-base) [`wyoming-whisper`](packages/smart-home/wyoming/wyoming-whisper) [`wyoming-openwakeword`](packages/smart-home/wyoming/openwakeword) [`wyoming-piper`](packages/smart-home/wyoming/piper)  [`wyoming-assist-microphone`](packages/smart-home/wyoming/assist-microphone) |
+| **Smart Home** | [`homeassistant-core`](packages/smart-home/homeassistant-core) [`wyoming-whisper`](packages/smart-home/wyoming/wyoming-whisper) [`wyoming-openwakeword`](packages/smart-home/wyoming/openwakeword) [`wyoming-piper`](packages/smart-home/wyoming/piper) |
 
 See the [**`packages`**](packages) directory for the full list, including pre-built container images for JetPack/L4T.
 
