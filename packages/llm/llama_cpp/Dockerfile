@@ -12,20 +12,12 @@ FROM ${BASE_IMAGE}
 
 ARG LLAMA_CPP_VERSION \
     LLAMA_CPP_BRANCH \
-    LLAMA_CPP_FLAGS
+    LLAMA_CPP_FLAGS \
+    FORCE_BUILD=off
 
-COPY build.sh /tmp/build_llama_cpp.sh
+COPY build.sh install.sh /tmp/llama_cpp/
 COPY benchmark.py /usr/local/bin/llama_cpp_benchmark.py
 
-RUN pip3 install --no-cache-dir --verbose \
-        typing-extensions \
-        uvicorn \
-        anyio \
-        starlette \
-        sse-starlette \
-        starlette-context \
-        fastapi \
-        pydantic-settings && \
-    pip3 install --no-cache-dir --verbose llama-cpp-python==${LLAMA_CPP_VERSION} || \
-    /tmp/build_llama_cpp.sh
-    
+RUN /tmp/llama_cpp/install.sh || /tmp/llama_cpp/build.sh
+RUN mkdir -p /root/.cache && \
+    ln -s /data/models/llama.cpp /root/.cache/llama.cpp 

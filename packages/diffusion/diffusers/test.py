@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 print('testing diffusers...')
 
-import diffusers
-import diffusers.info
-
-diffusers.info.print_info()
+from diffusers import DiffusionPipeline
+import torch
 
 print('diffusers OK\n')
 

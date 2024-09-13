@@ -23,7 +23,7 @@ def flash_attn(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    flash_attn('2.5.6', default=False),
+    flash_attn('2.6.3', default=False),
     flash_attn('2.5.7', default=True),
 ]
 

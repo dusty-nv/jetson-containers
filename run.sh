@@ -13,7 +13,6 @@ do
 	fi
 done
 
-
 # check for I2C devices
 I2C_DEVICES=""
 
@@ -54,6 +53,13 @@ if [ -n "$HUGGINGFACE_TOKEN" ]; then
 	EXTRA_FLAGS="$EXTRA_FLAGS --env HUGGINGFACE_TOKEN=$HUGGINGFACE_TOKEN"
 fi
 
+# additional permission optional run arguments
+OPTIONAL_PERMISSION_ARGS=""
+
+if [ "$USE_OPTIONAL_PERMISSION_ARGS" = "true" ]; then
+	OPTIONAL_PERMISSION_ARGS="-v /lib/modules:/lib/modules --device /dev/fuse --cap-add SYS_ADMIN --security-opt apparmor=unconfined"
+fi
+
 # check if sudo is needed
 if [ $(id -u) -eq 0 ] || id -nG "$USER" | grep -qw "docker"; then
 	SUDO=""
@@ -73,6 +79,7 @@ if [ $ARCH = "aarch64" ]; then
 	set -x
 
 	$SUDO docker run --runtime nvidia -it --rm --network host \
+		--shm-size=8g \
 		--volume /tmp/argus_socket:/tmp/argus_socket \
 		--volume /etc/enctune.conf:/etc/enctune.conf \
 		--volume /etc/nv_tegra_release:/etc/nv_tegra_release \
@@ -83,7 +90,7 @@ if [ $ARCH = "aarch64" ]; then
 		--volume $ROOT/data:/data \
 		--device /dev/snd \
 		--device /dev/bus/usb \
-		$DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
+		$OPTIONAL_PERMISSION_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
 		"$@"
 
 elif [ $ARCH = "x86_64" ]; then
@@ -96,6 +103,6 @@ elif [ $ARCH = "x86_64" ]; then
 		--ulimit stack=67108864 \
 		--env NVIDIA_DRIVER_CAPABILITIES=all \
 		--volume $ROOT/data:/data \
-		$DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
+		$OPTIONAL_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
 		"$@"	
 fi
