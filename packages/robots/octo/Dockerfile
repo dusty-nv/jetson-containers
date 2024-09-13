@@ -1,5 +1,5 @@
 #---
-# name: lerobot
+# name: octo
 # group: robots
 # docs: docs.md
 # depends: [transformers, opencv:4.10.0, jax]
