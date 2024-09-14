@@ -12,6 +12,7 @@ FROM ${BASE_IMAGE}
 
 RUN git clone --branch=main --depth=1 https://github.com/octo-models/octo /opt/octo && \
     cd /opt/octo && \
+    sed -i 's/==/>=/g' requirements.txt && \
     pip3 install -U -r requirements.txt && \
     pip3 install mediapy && \
     pip3 install -e .
