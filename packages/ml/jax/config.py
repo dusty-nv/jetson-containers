@@ -41,5 +41,7 @@ def jax(version, requires=None, alias=None, default=False):
 package = [
     jax('0.4.28', requires='>=35'),
     jax('0.4.30', requires='>=35'),
-    jax('0.4.32', requires='>=35', default=True),
+    jax('0.4.32', requires='>=35'),
+    jax('0.4.33', requires='>=35', default=True),
+    
 ]
