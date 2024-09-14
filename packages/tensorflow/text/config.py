@@ -25,5 +25,5 @@ def tensorflow_text(version, requires=None, default=False):
     return pkg #, builder
 
 package = [
-    tensorflow_text('2.16.1', default=True)
+    tensorflow_text('2.18.0', default=True)
 ]
