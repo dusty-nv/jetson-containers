@@ -1,5 +1,5 @@
 #---
-# name: tensorflow
+# name: tensorflow2
 # group: ml
 # depends: [cuda, cudnn, tensorrt, python, numpy, bazel, protobuf:cpp]
 # test: test.py
