@@ -1,7 +1,7 @@
 #---
 # name: tensorflow_text
 # config: config.py
-# depends: [tensorflow2]
+# depends: [bazel, tensorflow2]
 # test: [test.py]
 #---
 ARG BASE_IMAGE
@@ -14,4 +14,4 @@ RUN git clone --recursive --branch=v${TENSORFLOW_VERSION} --depth=1 https://gith
 
 COPY install.sh build.sh /tmp/tensorflow-text/
 
-RUN RUN /tmp/tensorflow-text/install.sh || /tmp/tensorflow-text/build.sh
+RUN /tmp/tensorflow-text/install.sh || /tmp/tensorflow-text/build.sh
