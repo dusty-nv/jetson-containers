@@ -24,9 +24,6 @@ BUILD_FLAGS+='--output_path=/opt/wheels '
     
 bazel build //tensorflow/tools/pip_package:wheel --repo_env=WHEEL_NAME=tensorflow --config=cuda --config=cuda_wheel
 
-# Build the tensorflow pip wheels
-pip3 wheel --wheel-dir=/opt/wheels --no-deps --verbose .
-
 # Upload the wheels to mirror
 twine upload --verbose /opt/tensorflow/bazel-bin/tensorflow/tools/pip_package/wheel_house/tensorflow*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
