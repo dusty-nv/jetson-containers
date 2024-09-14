@@ -1,7 +1,3 @@
-# config.py
-# This file defines the package configurations for TensorFlow,
-# using the variables imported from version.py.
-
 from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES
 from packaging.version import Version
 
@@ -13,41 +9,69 @@ from .version import (
     TENSORFLOW1_WHL,
 )
 
-def tensorflow_whl(version, whl, url, requires=None, alias=None):
-    """
-    Define a package for installing TensorFlow from a wheel file.
-    """
+def tensorflow_pip(version, requires=None, alias=None):
     pkg = package_base.copy()
-    
-    # Extract the short version (e.g., '2.16') from the full version string
-    short_version = Version(version.split('+')[0])  # Remove any '+nv*' suffix
+
+    short_version = Version(version.split('-')[0]) 
     short_version = f"{short_version.major}.{short_version.minor}"
-    
+
     pkg['name'] = f'tensorflow:{short_version}'
+    pkg['dockerfile'] = 'Dockerfile.pip'
+
+    pkg['build_args'] = {
+        'TENSORFLOW_VERSION': version,
+    }
+
+    if requires:
+        if not isinstance(requires, list):
+            requires = [requires]
+        pkg['requires'] = requires
+
+    builder = pkg.copy()
+    builder['name'] = builder['name'] + '-builder'
+    builder['build_args'] = {**builder.get('build_args', {}), 'FORCE_BUILD': 'on'}
+
     pkg['alias'] = [f'tensorflow:{short_version}']
-    pkg['dockerfile'] = 'Dockerfile.whl'  # Use Dockerfile.whl for installing from a wheel
+    builder['alias'] = [f'tensorflow:{short_version}-builder']
+
+    if Version(short_version) == TENSORFLOW_VERSION:
+        pkg['alias'].append('tensorflow')
+        builder['alias'].append('tensorflow:builder')
+
+    if alias:
+        pkg['alias'].append(alias)
+
+    return pkg, builder
+
+def tensorflow_whl(version, whl, url, requires=None, alias=None):
+    pkg = package_base.copy()
+
+    short_version = Version(version.split('+')[0])  
+    short_version = f"{short_version.major}.{short_version.minor}"
+
+    pkg['name'] = f'tensorflow:{short_version}'
+    pkg['dockerfile'] = 'Dockerfile.whl'
 
     pkg['build_args'] = {
         'TENSORFLOW_WHL': whl,
         'TENSORFLOW_URL': url,
     }
-    
+
     if requires:
         if not isinstance(requires, list):
             requires = [requires]
         pkg['requires'] = requires
-    else:
-        pkg['requires'] = []
+
+    pkg['alias'] = [f'tensorflow:{short_version}']
 
     if Version(short_version) == TENSORFLOW_VERSION:
         pkg['alias'].append('tensorflow')
-    
+
     if alias:
         pkg['alias'].append(alias)
-    
+
     return pkg
 
-# Initialize the base package dictionary
 package_base = {
     'name': '',
     'depends': [],
@@ -55,38 +79,34 @@ package_base = {
     'build_args': {},
 }
 
-# Start with an empty package list
 package = []
 
-# Determine the 'requires' field based on L4T_VERSION
 if L4T_VERSION.major >= 36:
     requires = '>=36'
-elif L4T_VERSION.major == 35:
-    requires = '==35.*'
-elif L4T_VERSION.major == 34:
-    requires = '==34.*'
-elif L4T_VERSION.major == 32:
-    requires = '==32.*'
 else:
-    requires = None  # Adjust as needed
+    requires = f'=={L4T_VERSION.major}.*'
 
-# Add TensorFlow 2 package if available
-if TENSORFLOW2_WHL:
-    tf2_pkg = tensorflow_whl(
+if TENSORFLOW2_WHL and TENSORFLOW2_URL:
+    tf_whl_pkg = tensorflow_whl(
         str(TENSORFLOW_VERSION),
         TENSORFLOW2_WHL,
         TENSORFLOW2_URL,
         requires=requires
     )
-    package.append(tf2_pkg)
+    package.append(tf_whl_pkg)
 
-# Add TensorFlow 1 package if available
-if TENSORFLOW1_WHL:
-    tf1_pkg = tensorflow_whl(
-        '1.15.5',  # TF1 version is fixed at 1.15.5
+tf_pip_pkg, tf_pip_builder = tensorflow_pip(
+    str(TENSORFLOW_VERSION),
+    requires=requires
+)
+package.extend([tf_pip_pkg, tf_pip_builder])
+
+if TENSORFLOW1_WHL and TENSORFLOW1_URL:
+    tf1_whl_pkg = tensorflow_whl(
+        '1.15.5',
         TENSORFLOW1_WHL,
         TENSORFLOW1_URL,
         requires=requires,
         alias='tensorflow1'
     )
-    package.append(tf1_pkg)
+    package.append(tf1_whl_pkg)
