@@ -22,13 +22,15 @@ RUN apt-get update && \
 
 # https://github.com/rasterio/rasterio/issues/2333
 # https://github.com/Toblerity/Fiona/issues/1043
-RUN pip3 install --no-cache-dir --verbose 'Cython<0.29.20'
+#RUN pip3 install --no-cache-dir --verbose 'Cython<0.29.15'
     
 RUN env && \
     git clone --recursive --depth=1 https://github.com/OpenDroneMap/ODM ${ODM_HOME} && \
     cd ${ODM_HOME} && \
     sed 's|    check_version||' -i configure.sh && \
+    sed 's|^rasterio==.*|rasterio|g' -i requirements.txt && \
     cat configure.sh | grep 'check_version' && \
+    cat requirements.txt && \
     PORTABLE_INSTALL=YES GPU_INSTALL=YES bash configure.sh install
     
 ENTRYPOINT ["python3", "${ODM_HOME}/run.py"]
