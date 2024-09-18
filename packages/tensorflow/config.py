@@ -1,112 +1,111 @@
-from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES
+from jetson_containers import L4T_VERSION, PYTHON_VERSION
 from packaging.version import Version
-
-from .version import (
-    TENSORFLOW_VERSION,
-    TENSORFLOW2_URL,
-    TENSORFLOW2_WHL,
-    TENSORFLOW1_URL,
-    TENSORFLOW1_WHL,
-)
-
-def tensorflow_pip(version, requires=None, alias=None):
-    pkg = package_base.copy()
-
-    short_version = Version(version.split('-')[0]) 
-    short_version = f"{short_version.major}.{short_version.minor}"
-
-    pkg['name'] = f'tensorflow:{short_version}'
-    pkg['dockerfile'] = 'Dockerfile.pip'
-
-    pkg['build_args'] = {
-        'TENSORFLOW_VERSION': version,
-    }
-
-    if requires:
-        if not isinstance(requires, list):
-            requires = [requires]
-        pkg['requires'] = requires
-
-    builder = pkg.copy()
-    builder['name'] = builder['name'] + '-builder'
-    builder['build_args'] = {**builder.get('build_args', {}), 'FORCE_BUILD': 'on'}
-
-    pkg['alias'] = [f'tensorflow:{short_version}']
-    builder['alias'] = [f'tensorflow:{short_version}-builder']
-
-    if Version(short_version) == TENSORFLOW_VERSION:
-        pkg['alias'].append('tensorflow')
-        builder['alias'].append('tensorflow:builder')
-
-    if alias:
-        pkg['alias'].append(alias)
-
-    return pkg, builder
-
-def tensorflow_whl(version, whl, url, requires=None, alias=None):
-    pkg = package_base.copy()
-
-    short_version = Version(version.split('+')[0])  
-    short_version = f"{short_version.major}.{short_version.minor}"
-
-    pkg['name'] = f'tensorflow:{short_version}'
-    pkg['dockerfile'] = 'Dockerfile.whl'
-
-    pkg['build_args'] = {
-        'TENSORFLOW_WHL': whl,
-        'TENSORFLOW_URL': url,
-    }
-
-    if requires:
-        if not isinstance(requires, list):
-            requires = [requires]
-        pkg['requires'] = requires
-
-    pkg['alias'] = [f'tensorflow:{short_version}']
-
-    if Version(short_version) == TENSORFLOW_VERSION:
-        pkg['alias'].append('tensorflow')
-
-    if alias:
-        pkg['alias'].append(alias)
-
-    return pkg
-
-package_base = {
-    'name': '',
-    'depends': [],
-    'requires': [],
-    'build_args': {},
-}
 
 package = []
 
-if L4T_VERSION.major >= 36:
-    requires = '>=36'
-else:
-    requires = f'=={L4T_VERSION.major}.*'
+def tensorflow(version, tensorflow_version='tf2', requires=None, default=False):
+    pkg = {}
+  
+    if default:
+        pkg['alias'] = 'tensorflow2' if tensorflow_version == 'tf2' else 'tensorflow1'
+        
+    if requires:
+        pkg['requires'] = requires   
 
-if TENSORFLOW2_WHL and TENSORFLOW2_URL:
-    tf_whl_pkg = tensorflow_whl(
-        str(TENSORFLOW_VERSION),
-        TENSORFLOW2_WHL,
-        TENSORFLOW2_URL,
-        requires=requires
-    )
-    package.append(tf_whl_pkg)
+    pkg['name'] = f'tensorflow{"" if tensorflow_version == "2" else "1"}:{version}'
+    pkg['notes'] = f"TensorFlow {tensorflow_version.upper()} version {version}"
+    
+    prebuilt_wheels = {
+        # TensorFlow tf1
+        ('36', '1.15.5', 'tf1'): (None, None),
+        ('35', '1.15.5', 'tf1'): (
+            'https://developer.download.nvidia.com/compute/redist/jp/v51/tensorflow/tensorflow-1.15.5+nv23.03-cp38-cp38-linux_aarch64.whl',
+            'tensorflow-1.15.5+nv23.03-cp38-cp38-linux_aarch64.whl'
+        ),
+        ('34', '1.15.5', 'tf1'): (
+            'https://developer.download.nvidia.com/compute/redist/jp/v50/tensorflow/tensorflow-1.15.5+nv22.4-cp38-cp38-linux_aarch64.whl',
+            'tensorflow-1.15.5+nv22.4-cp38-cp38-linux_aarch64.whl'
+        ),
+        ('32', '1.15.5', 'tf1'): (
+            'https://developer.download.nvidia.com/compute/redist/jp/v461/tensorflow/tensorflow-1.15.5+nv22.1-cp36-cp36m-linux_aarch64.whl',
+            'tensorflow-1.15.5+nv22.1-cp36-cp36m-linux_aarch64.whl'
+        ),
+        # TensorFlow v2
+        ('36', '2.16.1', 'tf2'): (
+            'https://developer.download.nvidia.com/compute/redist/jp/v60/tensorflow/tensorflow-2.16.1+nv24.06-cp310-cp310-linux_aarch64.whl',
+            'tensorflow-2.16.1+nv24.06-cp310-cp310-linux_aarch64.whl'
+        ),
+        ('36', '2.17.1', 'tf2'): (
+            'https://developer.download.nvidia.com/compute/redist/jp/v61/tensorflow/tensorflow-2.17.1+nv24.07-cp310-cp310-linux_aarch64.whl',
+            'tensorflow-2.17.1+nv24.07-cp310-cp310-linux_aarch64.whl'
+        ),
+        ('35', '2.15.0', 'tf2'): (
+            'https://developer.download.nvidia.com/compute/redist/jp/v51/tensorflow/tensorflow-2.15.0+nv23.05-cp38-cp38-linux_aarch64.whl',
+            'tensorflow-2.15.0+nv23.05-cp38-cp38-linux_aarch64.whl'
+        ),
+        ('35', '2.11.0', 'tf2'): (
+            'https://developer.download.nvidia.com/compute/redist/jp/v51/tensorflow/tensorflow-2.11.0+nv23.03-cp38-cp38-linux_aarch64.whl',
+            'tensorflow-2.11.0+nv23.03-cp38-cp38-linux_aarch64.whl'
+        ),
+        ('34', '2.8.0', 'tf2'): (
+            'https://developer.download.nvidia.com/compute/redist/jp/v50/tensorflow/tensorflow-2.8.0+nv22.4-cp38-cp38-linux_aarch64.whl',
+            'tensorflow-2.8.0+nv22.4-cp38-cp38-linux_aarch64.whl'
+        ),
+        ('32', '2.7.0', 'tf2'): (
+            'https://developer.download.nvidia.com/compute/redist/jp/v461/tensorflow/tensorflow-2.7.0+nv22.1-cp36-cp36m-linux_aarch64.whl',
+            'tensorflow-2.7.0+nv22.1-cp36-cp36m-linux_aarch64.whl'
+        ),
+        # Puedes agregar más entradas si hay ruedas precompiladas disponibles
+    }
+    
+    L4T_MAJOR = str(L4T_VERSION.major)
+    wheel_key = (L4T_MAJOR, version, tensorflow_version)
+    
+    if wheel_key in prebuilt_wheels and prebuilt_wheels[wheel_key][0] is not None:
+        url, whl = prebuilt_wheels[wheel_key]
+        pkg['build_args'] = {
+            'TENSORFLOW_VERSION': version,
+            'TENSORFLOW_URL': url,
+            'TENSORFLOW_WHL': whl,
+            'PYTHON_VERSION_MAJOR': PYTHON_VERSION.major,
+            'PYTHON_VERSION_MINOR': PYTHON_VERSION.minor,
+            'BUILD_FROM_SOURCE': 'off'  # Usar rueda precompilada
+        }
+    else:
+        # No hay rueda precompilada disponible, configurar para construir desde el código fuente
+        pkg['build_args'] = {
+            'TENSORFLOW_VERSION': version,
+            'PYTHON_VERSION_MAJOR': PYTHON_VERSION.major,
+            'PYTHON_VERSION_MINOR': PYTHON_VERSION.minor,
+            'BUILD_FROM_SOURCE': 'on',  # Construir desde el código fuente
+            'TENSORFLOW_VERSION_TAG': tensorflow_version  # 'tf1' o 'tf2'
+        }
+        pkg['notes'] += " (will be built from source)"
+    
+    builder = pkg.copy()
+    builder['name'] = f'{pkg["name"]}-builder'
+    builder['build_args'] = {**pkg['build_args'], 'FORCE_BUILD': 'on'}
 
-tf_pip_pkg, tf_pip_builder = tensorflow_pip(
-    str(TENSORFLOW_VERSION),
-    requires=requires
-)
-package.extend([tf_pip_pkg, tf_pip_builder])
+    return [pkg, builder]
 
-if TENSORFLOW1_WHL and TENSORFLOW1_URL:
-    tf1_whl_pkg = tensorflow_whl(
-        '1.15.5',
-        TENSORFLOW1_WHL,
-        TENSORFLOW1_URL,
-        requires=requires,
-        alias='tensorflow1'
-    )
-    package.append(tf1_whl_pkg)
+package = [
+    # TensorFlow tf1
+    *tensorflow(
+        version='1.15.5',
+        tensorflow_version='tf1',
+        default=(L4T_VERSION.major == 35),
+        requires='>=32,<36'
+    ),
+    # TensorFlow tf2 para L4T >=36
+    *tensorflow(
+        version='2.16.1',
+        tensorflow_version='tf2',
+        default=(L4T_VERSION.major >= 36),
+        requires='>=36'
+    ),
+    *tensorflow(
+        version='2.17.1',
+        tensorflow_version='tf2',
+        requires='>=36'
+    ),
+]

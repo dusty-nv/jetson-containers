@@ -5,8 +5,9 @@ set -ex
 # Variables
 TENSORFLOW_VERSION=${TENSORFLOW_BUILD_VERSION}
 
-# Install LLVM/Clang 18
-./llvm.sh 18 all
+# Install LLVM/Clang 17 # Update to 18 when main will be ready. 
+# Tensorflow will support llvm 18 and 19
+./llvm.sh 17 all
 
 echo "Building TensorFlow for Jetson"
 
@@ -28,10 +29,11 @@ export CLANG_COMPILER_PATH=/usr/local/llvm/bin/clang
 export HERMETIC_CUDA_VERSION=12.6.0
 export HERMETIC_CUDNN_VERSION=9.3.0 
 export HERMETIC_CUDA_COMPUTE_CAPABILITIES=8.7
+export HERMETIC_PYTHON_VERSION=${PYTHON_VERSION}
 
 
 # Build the TensorFlow pip package
-bazel build //tensorflow/tools/pip_package:wheel --repo_env=WHEEL_NAME=tensorflow --config=cuda --config=cuda_wheel --copt=-Wno-gnu-offsetof-extensions
+bazel build //tensorflow/tools/pip_package:wheel --repo_env=WHEEL_NAME=tensorflow --config=cuda --config=cuda_wheel --config=nonccl --copt=-Wno-gnu-offsetof-extensions
 
 # Upload the wheels to mirror
 twine upload --verbose /opt/tensorflow/bazel-bin/tensorflow/tools/pip_package/wheel_house/tensorflow*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
