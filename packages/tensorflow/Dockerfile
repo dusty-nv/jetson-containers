@@ -15,7 +15,8 @@ FROM ${BASE_IMAGE}
 ARG TENSORFLOW_URL \
     TENSORFLOW_WHL \
     HDF5_DIR="/usr/lib/aarch64-linux-gnu/hdf5/serial/" \
-    MAKEFLAGS=-j$(nproc)
+    MAKEFLAGS=-j$(nproc) \
+    FORCE_BUILD
 
 COPY install.sh /tmp/tensorflow/
 
