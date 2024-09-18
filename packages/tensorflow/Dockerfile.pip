@@ -1,0 +1,47 @@
+#---
+# name: tensorflow
+# group: ml
+# depends: [cuda, cudnn, tensorrt, python, numpy, h5py, bazel, protobuf:cpp]
+# test: test.py
+# docs: |
+#   Container for TF1/TF2 with CUDA support.
+#   Note that the [`l4t-tensorflow`](/packages/l4t/l4t-tensorflow) containers are similar, with the addition of OpenCV and PyCUDA.  
+#
+#   The TensorFlow wheels used in these are from https://docs.nvidia.com/deeplearning/frameworks/install-tf-jetson-platform
+#---
+
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+# set the CUDA architectures that TENSORFLOW extensions get built for
+# set the TENSORFLOW cache directory to mounted /data volume
+ARG TENSORFLOW_VERSION \
+    PYTHON_VERSION_MAJOR \
+    PYTHON_VERSION_MINOR \
+    FORCE_BUILD
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    liblapack-dev \
+    libblas-dev \
+    libhdf5-serial-dev \
+    hdf5-tools \
+    libhdf5-dev \
+    zlib1g-dev \
+    libjpeg8-dev \
+    libbz2-dev \
+    libffi-dev \
+    libgdbm-dev \
+    libncurses5-dev \
+    libnss3-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    patchelf
+
+RUN rm -rf /var/lib/apt/lists/*
+RUN apt-get clean
+# copy installation and build scripts for TENSORFLOW
+COPY build.sh install.sh link_cuda.sh /tmp/TENSORFLOW/
+
+# attempt to install TENSORFLOW from pip, and fall back to building it if the installation fails
+RUN /tmp/TENSORFLOW/install.sh || /tmp/TENSORFLOW/build.sh
+        
