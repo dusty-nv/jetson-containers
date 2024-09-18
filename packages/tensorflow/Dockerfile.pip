@@ -20,7 +20,7 @@ ARG TENSORFLOW_VERSION \
     PYTHON_VERSION_MINOR \
     FORCE_BUILD
 
-RUN apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     liblapack-dev \
     libblas-dev \
     libhdf5-serial-dev \
@@ -37,6 +37,8 @@ RUN apt-get install -y --no-install-recommends \
     libsqlite3-dev \
     patchelf
 
+RUN rm -rf /var/lib/apt/lists/*
+RUN apt-get clean
 # copy installation and build scripts for TENSORFLOW
 COPY build.sh install.sh link_cuda.sh /tmp/TENSORFLOW/
 

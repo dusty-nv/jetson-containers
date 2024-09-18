@@ -1,29 +1,29 @@
 from jetson_containers import CUDA_ARCHITECTURES
 
-def mamba(version, requires=None, default=False):
+def flax(version, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
         pkg['requires'] = requires   
 
-    pkg['name'] = f'mamba:{version}'
+    pkg['name'] = f'flax:{version}'
 
     pkg['build_args'] = {
         'CUDAARCHS': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
-        'MAMBA_VERSION': version,
+        'FLAX_VERSION': version,
     }
 
     #builder = pkg.copy()
 
-    #builder['name'] = f'mamba:{version}-builder'
+    #builder['name'] = f'flax:{version}-builder'
     #builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
 
     if default:
-        pkg['alias'] = 'mamba'
-        #builder['alias'] = 'mamba:builder'
+        pkg['alias'] = 'flax'
+        #builder['alias'] = 'flax:builder'
 
     return pkg #, builder
 
 package = [
-    mamba('2.2.2', default=True)
+    flax('0.10.0', default=True)
 ]

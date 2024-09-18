@@ -1,22 +1,18 @@
 #---
-# name: mamba
-# group: mamba
+# name: flax
+# group: jax
 # config: config.py
-# depends: [transformers, causalconv1d, triton]
+# depends: [jax]
 # requires: '>=34.1.0'
 # test: test.py
-# notes: https://github.com/state-spaces/mamba
+# notes: https://github.com/google/flax.git
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG MAMBA_VERSION \
+ARG FLAX_VERSION \
     CUDAARCHS
 
-COPY build.sh install.sh /tmp/MAMBA/
+COPY build.sh install.sh /tmp/flax/
 
-COPY patches/${MAMBA_VERSION}.diff /tmp/MAMBA/patch.diff
-
-COPY benchmarks /tmp/MAMBA/benchmarks
-
-RUN /tmp/MAMBA/install.sh || /tmp/MAMBA/build.sh
+RUN /tmp/flax/install.sh || /tmp/flax/build.sh

@@ -1,22 +1,18 @@
 #---
-# name: mamba
-# group: mamba
+# name: tensorflow_addons
+# group: tensorflow
 # config: config.py
-# depends: [transformers, causalconv1d, triton]
+# depends: [tensorflow2]
 # requires: '>=34.1.0'
 # test: test.py
-# notes: https://github.com/state-spaces/mamba
+# notes: https://github.com/tensorflow/addons
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG MAMBA_VERSION \
+ARG TENSORFLOW_ADDONS_VERSION \
     CUDAARCHS
+    
+COPY build.sh install.sh /tmp/addons/
 
-COPY build.sh install.sh /tmp/MAMBA/
-
-COPY patches/${MAMBA_VERSION}.diff /tmp/MAMBA/patch.diff
-
-COPY benchmarks /tmp/MAMBA/benchmarks
-
-RUN /tmp/MAMBA/install.sh || /tmp/MAMBA/build.sh
+RUN /tmp/addons/install.sh || /tmp/addons/build.sh

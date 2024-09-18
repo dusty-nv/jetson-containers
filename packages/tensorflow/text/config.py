@@ -10,7 +10,7 @@ def tensorflow_text(version, requires=None, default=False):
 
     pkg['build_args'] = {
         'CUDAARCHS': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
-        'TENSORFLOW_VERSION': version,
+        'TENSORFLOW_TEXT_VERSION': version,
     }
 
     builder = pkg.copy()

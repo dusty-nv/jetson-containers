@@ -7,7 +7,7 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG TENSORFLOW_VERSION \
+ARG TENSORFLOW_TEXT_VERSION \
     CUDAARCHS
 
 COPY install.sh build.sh /tmp/tensorflow-text/

@@ -1,19 +1,16 @@
 #!/usr/bin/env python3
-print('testing mamba_ssm...')
+print('testing tensorflow_graphics...')
 
-import torch
-from mamba_ssm import Mamba
+import tensorflow_graphics as tfg
+import tensorflow as tf
+import numpy as np
 
-batch, length, dim = 2, 64, 16
-x = torch.randn(batch, length, dim).to("cuda")
-model = Mamba(
-    # This module uses roughly 3 * expand * d_model^2 parameters
-    d_model=dim, # Model dimension d_model
-    d_state=16,  # SSM state expansion factor
-    d_conv=4,    # Local convolution width
-    expand=2,    # Block expansion factor
-).to("cuda")
-y = model(x)
-assert y.shape == x.shape
+# Create a 2D image of a cube
+image = np.zeros((128, 128, 3), dtype=np.float32)
+image = tfg.image.draw_cuboid(image, [32, 32], [96, 96], [0.5, 0.5, 0.5], thickness=1)
 
-print('mamba_ssm OK\n')
+print('image shape:', image.shape)
+print('Tensorflow version:', tf.__version__)
+print('tensorflow.graphics.__version__', tfg.__version__)
+
+print('Tensorflow graphics OK\n')

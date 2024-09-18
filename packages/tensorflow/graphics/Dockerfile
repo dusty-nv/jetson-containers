@@ -1,22 +1,21 @@
 #---
-# name: mamba
-# group: mamba
+# name: tensorflow_graphics
+# group: tensorflow
 # config: config.py
-# depends: [transformers, causalconv1d, triton]
+# depends: [tensorflow2, openexr]
 # requires: '>=34.1.0'
 # test: test.py
-# notes: https://github.com/state-spaces/mamba
+# notes: https://github.com/tensorflow/graphics
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG MAMBA_VERSION \
+ARG TENSORFLOW_GRAPHICS_VERSION \
     CUDAARCHS
 
-COPY build.sh install.sh /tmp/MAMBA/
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libopenexr-dev
+    
+COPY build.sh install.sh /tmp/GRAPHICS/
 
-COPY patches/${MAMBA_VERSION}.diff /tmp/MAMBA/patch.diff
-
-COPY benchmarks /tmp/MAMBA/benchmarks
-
-RUN /tmp/MAMBA/install.sh || /tmp/MAMBA/build.sh
+RUN /tmp/GRAPHICS/install.sh || /tmp/GRAPHICS/build.sh

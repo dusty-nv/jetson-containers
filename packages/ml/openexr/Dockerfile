@@ -1,22 +1,24 @@
 #---
-# name: mamba
-# group: mamba
+# name: openexr
+# group: ml
 # config: config.py
-# depends: [transformers, causalconv1d, triton]
+# depends: [python, numpy]
 # requires: '>=34.1.0'
 # test: test.py
-# notes: https://github.com/state-spaces/mamba
+# notes: https://github.com/state-spaces/openexr
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG MAMBA_VERSION \
+ARG OPENEXR_VERSION \
     CUDAARCHS
 
-COPY build.sh install.sh /tmp/MAMBA/
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libopenexr-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY patches/${MAMBA_VERSION}.diff /tmp/MAMBA/patch.diff
+RUN apt-get clean
 
-COPY benchmarks /tmp/MAMBA/benchmarks
+COPY build.sh install.sh /tmp/openexr/
 
-RUN /tmp/MAMBA/install.sh || /tmp/MAMBA/build.sh
+RUN /tmp/openexr/install.sh || /tmp/openexr/build.sh

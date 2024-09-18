@@ -1,29 +1,29 @@
 from jetson_containers import CUDA_ARCHITECTURES
 
-def mamba(version, requires=None, default=False):
+def tensorflow_addons(version, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
         pkg['requires'] = requires   
 
-    pkg['name'] = f'mamba:{version}'
+    pkg['name'] = f'tensorflow_addons:{version}'
 
     pkg['build_args'] = {
         'CUDAARCHS': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
-        'MAMBA_VERSION': version,
+        'TENSORFLOW_ADDONS_VERSION': version,
     }
 
     #builder = pkg.copy()
 
-    #builder['name'] = f'mamba:{version}-builder'
+    #builder['name'] = f'tensorflow_addons:{version}-builder'
     #builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
 
     if default:
-        pkg['alias'] = 'mamba'
-        #builder['alias'] = 'mamba:builder'
+        pkg['alias'] = 'tensorflow_addons'
+        #builder['alias'] = 'tensorflow_addons:builder'
 
     return pkg #, builder
 
 package = [
-    mamba('2.2.2', default=True)
+    tensorflow_addons('0.24', default=True)
 ]
