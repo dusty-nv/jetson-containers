@@ -7,6 +7,8 @@ echo "Building Tensorflow ${TENSORFLOW_VERSION}"
 # Install LLVM/Clang 17 # Update to 18 when main will be ready. 
 # Tensorflow will support llvm 18 and 19
 ./llvm.sh 17 all
+ln -sf /usr/bin/llvm-config-* /usr/bin/llvm-config
+ln -s /usr/bin/clang-1* /usr/bin/clang
 
 echo "Building TensorFlow for Jetson"
 
@@ -25,9 +27,9 @@ export PYTHON_LIB_PATH="$(python3 -c 'import site; print(site.getsitepackages()[
 export TF_NEED_CUDA=1
 export TF_CUDA_CLANG=1
 # Set Clang path for CUDA
-export CLANG_CUDA_COMPILER_PATH=/usr/local/llvm/bin/clang
+export CLANG_CUDA_COMPILER_PATH=/usr/bin/clang
 # Set Clang path for CPU
-export CLANG_COMPILER_PATH=/usr/local/llvm/bin/clang
+export CLANG_COMPILER_PATH=/usr/bin/clang
 export HERMETIC_CUDA_VERSION=12.6.0
 export HERMETIC_CUDNN_VERSION=9.3.0 
 export HERMETIC_CUDA_COMPUTE_CAPABILITIES=8.7

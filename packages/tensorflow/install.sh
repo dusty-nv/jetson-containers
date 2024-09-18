@@ -5,7 +5,7 @@ bash /tmp/TENSORFLOW/link_cuda.sh
 
 wget https://apt.llvm.org/llvm.sh
 chmod +x llvm.sh
-./llvm.sh 17 all
+./llvm.sh 17
 ln -sf /usr/bin/llvm-config-* /usr/bin/llvm-config
 ln -s /usr/bin/clang-1* /usr/bin/clang
 
