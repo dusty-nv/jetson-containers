@@ -7,8 +7,6 @@ echo "Building Tensorflow ${TENSORFLOW_VERSION}"
 # Install LLVM/Clang 17 # Update to 18 when main will be ready. 
 # Tensorflow will support llvm 18 and 19
 ./llvm.sh 17 all
-ln -sf /usr/bin/llvm-config-* /usr/bin/llvm-config
-ln -s /usr/bin/clang-1* /usr/bin/clang
 
 echo "Building TensorFlow for Jetson"
 
