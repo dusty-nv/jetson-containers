@@ -22,7 +22,15 @@ apt-get install -y --no-install-recommends \
         libhdf5-dev \
         zlib1g-dev \
         libjpeg8-dev \
-        patchelf \
+        libbz2-dev \
+        libffi-dev \
+        libgdbm-dev \
+        libncurses5-dev \
+        libnss3-dev \
+        libreadline-dev \
+        libsqlite3-dev \
+        patchelf
+
 rm -rf /var/lib/apt/lists/*
 apt-get clean
 

@@ -1,7 +1,7 @@
 #---
 # name: tensorflow
 # group: ml
-# depends: [cuda, cudnn, tensorrt, python, numpy, protobuf:cpp]
+# depends: [cuda, cudnn, tensorrt, python, numpy, h5py, bazel, protobuf:cpp]
 # test: test.py
 # docs: |
 #   Container for TF1/TF2 with CUDA support.

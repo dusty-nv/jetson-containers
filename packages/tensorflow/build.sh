@@ -14,6 +14,9 @@ echo "Building TensorFlow for Jetson"
 git clone --branch "v${TENSORFLOW_VERSION}" --depth=1 https://github.com/tensorflow/tensorflow.git /opt/tensorflow || \
 git clone --depth=1 https://github.com/tensorflow/tensorflow.git /opt/tensorflow 
 
+wget https://github.com/bazelbuild/bazelisk/releases/download/v1.21.0/bazelisk-linux-arm64
+chmod +x bazelisk-linux-arm64
+mv bazelisk-linux-arm64 /usr/local/bin/bazel
 cd /opt/tensorflow
 
 # Set up environment variables for the configure script
