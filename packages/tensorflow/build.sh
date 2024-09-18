@@ -2,8 +2,7 @@
 # TensorFlow builder for Jetson (architecture: ARM64, CUDA support)
 set -ex
 
-# Variables
-TENSORFLOW_VERSION=${TENSORFLOW_BUILD_VERSION}
+echo "Building Tensorflow ${TENSORFLOW_VERSION}"
 
 # Install LLVM/Clang 17 # Update to 18 when main will be ready. 
 # Tensorflow will support llvm 18 and 19
@@ -29,7 +28,7 @@ export CLANG_COMPILER_PATH=/usr/local/llvm/bin/clang
 export HERMETIC_CUDA_VERSION=12.6.0
 export HERMETIC_CUDNN_VERSION=9.3.0 
 export HERMETIC_CUDA_COMPUTE_CAPABILITIES=8.7
-export HERMETIC_PYTHON_VERSION=${PYTHON_VERSION}
+export HERMETIC_PYTHON_VERSION="${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}"
 
 
 # Build the TensorFlow pip package

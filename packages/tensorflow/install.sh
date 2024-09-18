@@ -5,7 +5,7 @@ bash /tmp/TENSORFLOW/link_cuda.sh
 
 wget https://apt.llvm.org/llvm.sh
 chmod +x llvm.sh
-./llvm.sh 18
+./llvm.sh 17 all
 ln -sf /usr/bin/llvm-config-* /usr/bin/llvm-config
 ln -s /usr/bin/clang-1* /usr/bin/clang
 
@@ -25,7 +25,7 @@ apt-get install -y --no-install-recommends \
 rm -rf /var/lib/apt/lists/*
 apt-get clean
 
-pip3 install --no-cache-dir 'setuptools==65.5.0'
+pip3 install --no-cache-dir 'setuptools==68.2.2'
 H5PY_SETUP_REQUIRES=0 pip3 install --no-cache-dir --verbose h5py
 pip3 install --no-cache-dir --verbose future==0.18.2 mock==3.0.5 keras_preprocessing==1.1.2 keras_applications==1.0.8 gast==0.4.0 futures pybind11
 

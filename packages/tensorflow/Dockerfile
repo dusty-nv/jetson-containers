@@ -14,21 +14,9 @@ FROM ${BASE_IMAGE}
 
 ARG TENSORFLOW_URL \
     TENSORFLOW_WHL \
-    TENSORFLOW_VERSION \
     HDF5_DIR="/usr/lib/aarch64-linux-gnu/hdf5/serial/" \
-    MAKEFLAGS=-j$(nproc) \
-    FORCE_BUILD=off
+    MAKEFLAGS=-j$(nproc)
 
-ENV PYTHON_VERSION=${PYTHON_VERSION} \
-    TENSORFLOW_URL=${TENSORFLOW_URL} \
-    TENSORFLOW_WHL=${TENSORFLOW_WHL} \
-    TENSORFLOW_VERSION=${TENSORFLOW_VERSION} \
-    HDF5_DIR=${HDF5_DIR} \
-    MAKEFLAGS=${MAKEFLAGS} \
-    FORCE_BUILD=${FORCE_BUILD}
+COPY install.sh /tmp/tensorflow/
 
-# copy installation and build scripts for tensorflow
-COPY build.sh install.sh link_cuda.sh /tmp/tensorflow/
-
-# attempt to install tensorflow from pip, and fall back to building it if the installation fails
-RUN /tmp/tensorflow/install.sh || /tmp/tensorflow/build.sh
+RUN /tmp/tensorflow/install.sh

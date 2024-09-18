@@ -1,10 +1,9 @@
 from jetson_containers import L4T_VERSION, PYTHON_VERSION
 from packaging.version import Version
 
-package = []
 
 def tensorflow(version, tensorflow_version='tf2', requires=None, default=False):
-    pkg = {}
+    pkg = package.copy()
   
     if default:
         pkg['alias'] = 'tensorflow2' if tensorflow_version == 'tf2' else 'tensorflow1'
@@ -12,7 +11,7 @@ def tensorflow(version, tensorflow_version='tf2', requires=None, default=False):
     if requires:
         pkg['requires'] = requires   
 
-    pkg['name'] = f'tensorflow{"" if tensorflow_version == "2" else "1"}:{version}'
+    pkg['name'] = f'tensorflow{"" if tensorflow_version == "tf2" else "1"}:{version}'
     pkg['notes'] = f"TensorFlow {tensorflow_version.upper()} version {version}"
     
     prebuilt_wheels = {
@@ -69,18 +68,18 @@ def tensorflow(version, tensorflow_version='tf2', requires=None, default=False):
             'TENSORFLOW_WHL': whl,
             'PYTHON_VERSION_MAJOR': PYTHON_VERSION.major,
             'PYTHON_VERSION_MINOR': PYTHON_VERSION.minor,
-            'BUILD_FROM_SOURCE': 'off'  # Usar rueda precompilada
+            'FORCE_BUILD': 'off' 
         }
+        pkg['dockerfile'] = 'Dockerfile'
     else:
-        # No hay rueda precompilada disponible, configurar para construir desde el código fuente
         pkg['build_args'] = {
             'TENSORFLOW_VERSION': version,
             'PYTHON_VERSION_MAJOR': PYTHON_VERSION.major,
             'PYTHON_VERSION_MINOR': PYTHON_VERSION.minor,
-            'BUILD_FROM_SOURCE': 'on',  # Construir desde el código fuente
-            'TENSORFLOW_VERSION_TAG': tensorflow_version  # 'tf1' o 'tf2'
+            'FORCE_BUILD': 'on',
         }
         pkg['notes'] += " (will be built from source)"
+        pkg['dockerfile'] = 'Dockerfile.pip'
     
     builder = pkg.copy()
     builder['name'] = f'{pkg["name"]}-builder'
@@ -94,18 +93,18 @@ package = [
         version='1.15.5',
         tensorflow_version='tf1',
         default=(L4T_VERSION.major == 35),
-        requires='>=32,<36'
+        requires='<36'
     ),
     # TensorFlow tf2 para L4T >=36
     *tensorflow(
         version='2.16.1',
         tensorflow_version='tf2',
-        default=(L4T_VERSION.major >= 36),
         requires='>=36'
     ),
     *tensorflow(
-        version='2.17.1',
+        version='2.18.0',
         tensorflow_version='tf2',
-        requires='>=36'
+        requires='>=36',
+        default=(L4T_VERSION.major >= 36),
     ),
 ]
