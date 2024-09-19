@@ -38,3 +38,5 @@ pip3 install --verbose --no-cache-dir /opt/tensorflow/bazel-bin/tensorflow/tools
 
 # Verify the installation
 python3 -c "import tensorflow as tf; print(tf.__version__)"
+
+bazel clean --expunge
