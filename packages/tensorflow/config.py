@@ -1,6 +1,7 @@
 from jetson_containers import L4T_VERSION, PYTHON_VERSION
 from packaging.version import Version
 
+from .version import TENSORFLOW_VERSION
 
 def tensorflow(version, tensorflow_version='tf2', requires=None, default=False):
     pkg = package.copy()
@@ -11,7 +12,7 @@ def tensorflow(version, tensorflow_version='tf2', requires=None, default=False):
     if requires:
         pkg['requires'] = requires   
 
-    pkg['name'] = f'tensorflow{"" if tensorflow_version == "tf2" else "1"}:{version}'
+    pkg['name'] = f'tensorflow{"2" if tensorflow_version == "tf2" else "1"}:{version}'
     pkg['notes'] = f"TensorFlow {tensorflow_version.upper()} version {version}"
     
     prebuilt_wheels = {
@@ -80,10 +81,16 @@ def tensorflow(version, tensorflow_version='tf2', requires=None, default=False):
         }
         pkg['notes'] += " (will be built from source)"
         pkg['dockerfile'] = 'Dockerfile.pip'
+        pkg['alias'] = [f'tensorflow2:{version}' if tensorflow_version == 'tf2' else f'tensorflow1:{version}']
     
     builder = pkg.copy()
     builder['name'] = f'{pkg["name"]}-builder'
     builder['build_args'] = {**pkg['build_args'], 'FORCE_BUILD': 'on'}
+    builder['alias'] = [f'tensorflow2:{version}-builder' if tensorflow_version == 'tf2' else f'tensorflow1:{version}-builder']
+    
+    if Version(version) == TENSORFLOW_VERSION:
+        pkg['alias'].extend(['tensorflow','tensorflow2'])
+        builder['alias'].extend(['tensorflow:builder', 'tensorflow2:builder'])
 
     return [pkg, builder]
 
