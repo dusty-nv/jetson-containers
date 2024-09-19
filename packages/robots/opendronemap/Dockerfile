@@ -1,6 +1,7 @@
 #---
 # name: opendronemap
 # group: robots
+# docs: docs.md
 # depends: [onnxruntime, ffmpeg]
 # requires: '>=35'
 # test: [test.sh]
