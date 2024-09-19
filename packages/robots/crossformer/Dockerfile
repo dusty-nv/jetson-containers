@@ -31,7 +31,7 @@ RUN pip3 install --no-cache-dir --verbose \
         orbax \
         'orbax-checkpoint>=0.6.3'
         
-RUN git clone --branch=main --depth=1 https://github.com/rail-berkeley/crossformer /opt/crossformer && \
+RUN git clone --branch=main --depth=1 https://github.com/dusty-nv/crossformer /opt/crossformer && \
     cd /opt/crossformer && \
     sed -i 's|==|>=|g' requirements.txt && \
     sed -i 's|^jax.*||g' requirements.txt && \
