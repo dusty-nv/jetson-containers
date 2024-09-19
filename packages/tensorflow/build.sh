@@ -36,7 +36,7 @@ twine upload --verbose /opt/tensorflow/bazel-bin/tensorflow/tools/pip_package/wh
 # Install them into the container
 pip3 install --verbose --no-cache-dir /opt/tensorflow/bazel-bin/tensorflow/tools/pip_package/wheel_house/tensorflow*.whl
 
-mv /opt/tensorflow/bazel-bin/tensorflow/tools/pip_package/wheel_house/tensorflow*.whl /opt/tensorflow/tensorflow*.whl
+mv /opt/tensorflow/bazel-bin/tensorflow/tools/pip_package/wheel_house/tensorflow*.whl /opt/tensorflow/
 # Clean up all files and close bazel server
 bazel clean --expunge
 
