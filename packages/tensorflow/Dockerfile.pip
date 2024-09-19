@@ -35,7 +35,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libnss3-dev \
     libreadline-dev \
     libsqlite3-dev \
-    patchelf
+    patchelf \
+    build-essential \
+    gcc \
+    g++
 
 RUN rm -rf /var/lib/apt/lists/*
 RUN apt-get clean

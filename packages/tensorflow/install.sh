@@ -4,13 +4,16 @@ set -ex
 bash /tmp/TENSORFLOW/link_cuda.sh
 
 wget https://apt.llvm.org/llvm.sh
-chmod +x llvm.sh
-./llvm.sh 17
-ln -sf /usr/bin/llvm-config-* /usr/bin/llvm-config
-ln -s /usr/bin/clang-1* /usr/bin/clang
+chmod u+x llvm.sh
+./llvm.sh 17 all
+# TIP is not working with symbolic links
+# ln -sf /usr/bin/llvm-config-* /usr/bin/llvm-config
+#ln -s /usr/bin/clang-1* /usr/bin/clang
+# ln -s /usr/bin/clang++-1* /usr/bin/clang++
+# ln -s /usr/bin/clang-format-1* /usr/bin/clang-format
 
 # TENSORFLOW C++ extensions frequently use ninja for parallel builds
-pip3 install --no-cache-dir scikit-build ninja
+pip3 install --no-cache-dir scikit-build ninja six numpy wheel
 
 # install prerequisites - https://docs.nvidia.com/deeplearning/frameworks/install-tf-jetson-platform/index.html#prereqs
 apt-get update
