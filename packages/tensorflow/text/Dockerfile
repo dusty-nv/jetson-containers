@@ -1,7 +1,7 @@
 #---
 # name: tensorflow_text
 # config: config.py
-# depends: [bazel, tensorflow2]
+# depends: [tensorflow2]
 # test: [test.py]
 #---
 ARG BASE_IMAGE
