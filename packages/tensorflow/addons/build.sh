@@ -10,8 +10,15 @@ git clone --depth=1 --recursive https://github.com/tensorflow/addons /opt/tensor
 cd /opt/tensorflow_addons 
 pip3 install -r requirements.txt
 
-export TF_NEED_CUDA="1"
-python3 configure.py
+export HERMETIC_PYTHON_VERSION="${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}"
+export PYTHON_BIN_PATH="$(which python3)"
+export PYTHON_LIB_PATH="$(python3 -c 'import site; print(site.getsitepackages()[0])')"
+export TF_NEED_CUDA=1
+export TF_CUDA_CLANG=1
+export CLANG_CUDA_COMPILER_PATH="/usr/lib/llvm-17/bin/clang"
+export HERMETIC_CUDA_VERSION=12.6.0
+export HERMETIC_CUDNN_VERSION=9.3.0 
+export HERMETIC_CUDA_COMPUTE_CAPABILITIES=8.7
 
 bazel build build_pip_pkg
 bazel-bin/build_pip_pkg /opt/tensorflow_addons/wheels
