@@ -1,48 +1,3 @@
-diff --git a/WORKSPACE b/WORKSPACE
-index 2cd936b..3d027bb 100644
---- a/WORKSPACE
-+++ b/WORKSPACE
-@@ -17,10 +17,10 @@ http_archive(
- 
- http_archive(
-     name = "com_google_sentencepiece",
--    strip_prefix = "sentencepiece-0.1.96",
--    sha256 = "8409b0126ebd62b256c685d5757150cf7fcb2b92a2f2b98efb3f38fc36719754",
-+    strip_prefix = "sentencepiece-0.2.0",
-+    sha256 = "67c34082deb3d89f589d8614b1ae58aa4af250c79e18737d8103242ec62a28f9",
-     urls = [
--        "https://github.com/google/sentencepiece/archive/refs/tags/v0.1.96.zip"
-+        "https://github.com/google/sentencepiece/archive/refs/tags/v0.2.0.zip"
-     ],
-     build_file = "//third_party/sentencepiece:BUILD",
-     patches = ["//third_party/sentencepiece:sp.patch"],
-@@ -29,9 +29,9 @@ http_archive(
- 
- http_archive(
-     name = "cppitertools",
--    urls = ["https://github.com/ryanhaining/cppitertools/archive/refs/tags/v2.0.zip"],
--    sha256 = "e56741b108d6baced98c4ccd83fd0d5a545937f2845978799c28d0312c0dee3d",
--    strip_prefix = "cppitertools-2.0",
-+    urls = ["https://github.com/ryanhaining/cppitertools/archive/refs/tags/v2.1.zip"],
-+    sha256 = "204fa0c872c0f34c9263862a5f4b93a9858fde9fdae8064febc7683863f1497d",
-+    strip_prefix = "cppitertools-2.1",
- )
- 
- http_archive(
-@@ -65,10 +65,10 @@ http_archive(
- 
- http_archive(
-     name = "org_tensorflow_datasets",
--    sha256 = "c6ff4e2306387f0ca45d4f616d9a1c5e79e02ef16d0a8958230a8049ea07fc98",
--    strip_prefix = "datasets-3.2.0",
-+    sha256 = "b3d6da6d6b62f7e8203010bd23c33fe04f42e8e29850b860353f5b6da30febce",
-+    strip_prefix = "datasets-4.9.6",
-     urls = [
--        "https://github.com/tensorflow/datasets/archive/v3.2.0.zip",
-+        "https://github.com/tensorflow/datasets/archive/v4.9.6.zip",
-     ],
- )
- 
 diff --git a/oss_scripts/configure.sh b/oss_scripts/configure.sh
 index 7ad6424..276d4c9 100755
 --- a/oss_scripts/configure.sh
@@ -64,7 +19,7 @@ index 7ad6424..276d4c9 100755
  fi
  
 diff --git a/oss_scripts/pip_package/setup.py b/oss_scripts/pip_package/setup.py
-index fb4e8ae..244f1fc 100644
+index fb4e8ae..bf9d1b2 100644
 --- a/oss_scripts/pip_package/setup.py
 +++ b/oss_scripts/pip_package/setup.py
 @@ -32,7 +32,7 @@ from setuptools.command.install import install
@@ -81,13 +36,13 @@ index fb4e8ae..244f1fc 100644
      install_requires=[
          (
 -            'tensorflow>=2.16.1, <2.17',
-+            'tensorflow>=2.18.0, <2.20',
++            'tensorflow>=2.16.1, <2.19',
          ),
      ],
      extras_require={
          'tensorflow_cpu': [
 -            'tensorflow-cpu>=2.16.1, <2.17',
-+            'tensorflow-cpu>=2.18.0, <2.20',
++            'tensorflow-cpu>=2.16.1, <2.19',
          ],
          'tests': [
              'absl-py',
