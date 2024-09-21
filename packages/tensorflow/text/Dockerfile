@@ -12,4 +12,6 @@ ARG TENSORFLOW_TEXT_VERSION \
 
 COPY install.sh build.sh /tmp/tensorflow-text/
 
+COPY patches/${TENSORFLOW_TEXT_VERSION}.diff /tmp/tensorflow-text/patch.diff
+
 RUN /tmp/tensorflow-text/install.sh || /tmp/tensorflow-text/build.sh
