@@ -10,7 +10,8 @@ image = np.zeros((128, 128, 3), dtype=np.float32)
 image = tfg.image.draw_cuboid(image, [32, 32], [96, 96], [0.5, 0.5, 0.5], thickness=1)
 
 print('image shape:', image.shape)
-print('Tensorflow version:', tf.__version__)
+print('TensorFlow version: ' + str(tf.__version__))
+print('Num GPUs Available: ', len(tf.config.experimental.list_physical_devices('GPU')))
 print('tensorflow.graphics.__version__', tfg.__version__)
 
 print('Tensorflow graphics OK\n')
