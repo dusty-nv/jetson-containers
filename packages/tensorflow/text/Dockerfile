@@ -8,6 +8,8 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG TENSORFLOW_TEXT_VERSION \
+    PYTHON_VERSION_MAJOR \
+    PYTHON_VERSION_MINOR \
     CUDAARCHS
 
 COPY install.sh build.sh /tmp/tensorflow-text/
