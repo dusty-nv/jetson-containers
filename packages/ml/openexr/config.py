@@ -25,5 +25,5 @@ def openexr(version, requires=None, default=False):
     return pkg #, builder
 
 package = [
-    openexr('2.2.2', default=True)
+    openexr('3.2.4', default=True)
 ]

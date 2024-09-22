@@ -7,6 +7,8 @@ git clone --depth=1 --recursive https://github.com/AcademySoftwareFoundation/ope
 
 cd /opt/openexr
 
+pip3 install scikit_build_core cmake
+
 pip3 wheel --no-build-isolation --wheel-dir=/opt/openexr/wheels .
 pip3 install --no-cache-dir --verbose /opt/openexr/wheels/openexr*.whl
 
