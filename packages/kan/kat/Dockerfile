@@ -13,8 +13,6 @@ FROM ${BASE_IMAGE}
 ARG KAT_VERSION \
     CUDAARCHS
 
-COPY build.sh /tmp/KAT/
+COPY build.sh test.py /tmp/KAT/
 
 RUN /tmp/KAT/build.sh
-
-CMD ["/bin/bash"]

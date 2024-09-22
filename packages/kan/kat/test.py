@@ -1,4 +1,29 @@
 #!/usr/bin/env python3
+import os
+import shutil
+import sys
+
+# Ruta de origen y destino
+source_file = '/opt/kat/katransformer.py'
+destination_dir = '/test/'
+
+# Asegúrate de que el directorio de destino existe
+if not os.path.exists(destination_dir):
+    print(f"Error: Destination directory {destination_dir} does not exist.")
+    sys.exit(1)
+
+# Copiar katransformer.py de /opt/kat/ a /test/
+try:
+    shutil.copy(source_file, destination_dir)
+    print(f"Successfully copied {source_file} to {destination_dir}")
+except FileNotFoundError:
+    print(f"Error: {source_file} not found.")
+    sys.exit(1)
+
+# Cambiar el directorio actual a /test/
+os.chdir(destination_dir)
+print(f"Current working directory: {os.getcwd()}")
+
 print('testing KAT...')
 
 from urllib.request import urlopen
