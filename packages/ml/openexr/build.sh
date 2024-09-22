@@ -2,8 +2,8 @@
 set -ex
 
 # Clone the repository if it doesn't exist
-git clone --branch=v${OPENEXR_VERSION} --depth=1 --recursive https://github.com/state-spaces/openexr /opt/openexr || \
-git clone --depth=1 --recursive https://github.com/state-spaces/openexr /opt/openexr
+git clone --branch=v${OPENEXR_VERSION} --depth=1 --recursive https://github.com/AcademySoftwareFoundation/openexr /opt/openexr || \
+git clone --depth=1 --recursive https://github.com/AcademySoftwareFoundation/openexr /opt/openexr
 
 cd /opt/openexr
 

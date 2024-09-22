@@ -1,4 +1,4 @@
-from jetson_containers import update_dependencies
+from jetson_containers import update_dependencies, PYTHON_VERSION
 from packaging.version import Version
 from ..tensorflow.version import TENSORFLOW_VERSION
 
@@ -20,6 +20,8 @@ def tensorflow_graphics(version, tensorflow=None, requires=None):
         
     pkg['build_args'] = {
         'TENSORFLOW_GRAPHICS_VERSION': version,
+        'PYTHON_VERSION_MAJOR': PYTHON_VERSION.major,
+        'PYTHON_VERSION_MINOR': PYTHON_VERSION.minor,
     }
     
     builder = pkg.copy()

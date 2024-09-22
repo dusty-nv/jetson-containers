@@ -11,6 +11,8 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG TENSORFLOW_GRAPHICS_VERSION \
+    PYTHON_VERSION_MAJOR \
+    PYTHON_VERSION_MINOR \
     CUDAARCHS
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
