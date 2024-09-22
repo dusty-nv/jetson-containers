@@ -17,11 +17,13 @@ export HERMETIC_CUDA_VERSION=12.6.1
 export HERMETIC_CUDNN_VERSION=9.4.0
 export HERMETIC_CUDA_COMPUTE_CAPABILITIES=8.7
 
-pip3 wheel --no-build-isolation --wheel-dir=/opt/tensorflow_graphics/wheels .
-pip3 install --no-cache-dir --verbose /opt/tensorflow_graphics/wheels/tensorflow-graphics*.whl
+pip3 install --no-cache-dir --verbose tensorflow_addons
+
+pip3 wheel --no-build-isolation --no-deps --wheel-dir=/opt/tensorflow_graphics/wheels .
+pip3 install --no-cache-dir --verbose /opt/tensorflow_graphics/wheels/tensorflow_graphics*.whl
 
 cd /opt/tensorflow_graphics
 pip3 install 'numpy<2'
 
 # Optionally upload to a repository using Twine
-twine upload --verbose /opt/tensorflow_graphics/wheels/tensorflow-graphics*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose /opt/tensorflow_graphics/wheels/tensorflow_graphics*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
