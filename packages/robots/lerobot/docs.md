@@ -17,12 +17,8 @@ rerun
 Then, start the docker container to run the visualization script.
 
 ```bash
-<<<<<<< HEAD
 jetson-containers run --shm-size=4g -w /opt/lerobot $(autotag lerobot) \
   python3 lerobot/scripts/visualize_dataset.py \
-=======
-jetson-containers run --shm-size=4g $(autotag lerobot) python3 /opt/lerobot/lerobot/scripts/visualize_dataset.py \
->>>>>>> 59917b7d5e35ff9c262a478186a809f368152f02
     --repo-id lerobot/pusht \
     --episode-index 0
 ```
@@ -32,12 +28,8 @@ jetson-containers run --shm-size=4g $(autotag lerobot) python3 /opt/lerobot/lero
 See the [original instruction on lerobot repo](https://github.com/huggingface/lerobot/?tab=readme-ov-file#evaluate-a-pretrained-policy).
 
 ```bash
-<<<<<<< HEAD
 jetson-containers run --shm-size=4g -w /opt/lerobot $(autotag lerobot) \
   python3 lerobot/scripts/eval.py \
-=======
-jetson-containers run --shm-size=4g $(autotag lerobot) python3 /opt/lerobot/lerobot/scripts/eval.py \
->>>>>>> 59917b7d5e35ff9c262a478186a809f368152f02
     -p lerobot/diffusion_pusht \
     eval.n_episodes=10 \
     eval.batch_size=10
@@ -48,12 +40,8 @@ jetson-containers run --shm-size=4g $(autotag lerobot) python3 /opt/lerobot/lero
 See the [original instruction on lerobot repo](https://github.com/huggingface/lerobot/?tab=readme-ov-file#train-your-own-policy).
 
 ```bash
-<<<<<<< HEAD
 jetson-containers run --shm-size=4g -w /opt/lerobot $(autotag lerobot) \
   python3 lerobot/scripts/train.py \
-=======
-jetson-containers run --shm-size=4g $(autotag lerobot) python3 /opt/lerobot/lerobot/scripts/train.py \
->>>>>>> 59917b7d5e35ff9c262a478186a809f368152f02
     policy=act \
     env=aloha \
     env.task=AlohaInsertion-v0 \
