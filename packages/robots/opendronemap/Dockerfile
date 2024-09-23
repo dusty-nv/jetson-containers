@@ -1,5 +1,6 @@
 #---
 # name: opendronemap
+# alias: opendronemap:latest
 # group: robots
 # docs: docs.md
 # depends: [onnxruntime, ffmpeg]
