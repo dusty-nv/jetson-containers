@@ -23,6 +23,16 @@ do
 	fi
 done
 
+# check for ttyACM devices
+ACM_DEVICES=""
+
+for i in {0..9}
+do
+	if [ -a "/dev/ttyACM-$i" ]; then
+		ACM_DEVICES="$ACM_DEVICES --device /dev/ttyACM$i "
+	fi
+done
+
 # check for display
 DISPLAY_DEVICE=""
 
@@ -90,7 +100,7 @@ if [ $ARCH = "aarch64" ]; then
 		--volume $ROOT/data:/data \
 		--device /dev/snd \
 		--device /dev/bus/usb \
-		$OPTIONAL_PERMISSION_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
+		$OPTIONAL_PERMISSION_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $ACM_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
 		"$@"
 
 elif [ $ARCH = "x86_64" ]; then
@@ -103,6 +113,6 @@ elif [ $ARCH = "x86_64" ]; then
 		--ulimit stack=67108864 \
 		--env NVIDIA_DRIVER_CAPABILITIES=all \
 		--volume $ROOT/data:/data \
-		$OPTIONAL_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
+		$OPTIONAL_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $ACM_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
 		"$@"	
 fi
