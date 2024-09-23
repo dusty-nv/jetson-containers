@@ -17,7 +17,7 @@ rerun
 Then, start the docker container to run the visualization script.
 
 ```bash
-jetson-containers run -w /opt/lerobot $(autotag lerobot) \
+jetson-containers run --shm-size=4g -w /opt/lerobot $(autotag lerobot) \
   python3 lerobot/scripts/visualize_dataset.py \
     --repo-id lerobot/pusht \
     --episode-index 0
@@ -28,7 +28,7 @@ jetson-containers run -w /opt/lerobot $(autotag lerobot) \
 See the [original instruction on lerobot repo](https://github.com/huggingface/lerobot/?tab=readme-ov-file#evaluate-a-pretrained-policy).
 
 ```bash
-jetson-containers run -w /opt/lerobot $(autotag lerobot) \
+jetson-containers run --shm-size=4g -w /opt/lerobot $(autotag lerobot) \
   python3 lerobot/scripts/eval.py \
     -p lerobot/diffusion_pusht \
     eval.n_episodes=10 \
@@ -40,7 +40,7 @@ jetson-containers run -w /opt/lerobot $(autotag lerobot) \
 See the [original instruction on lerobot repo](https://github.com/huggingface/lerobot/?tab=readme-ov-file#train-your-own-policy).
 
 ```bash
-jetson-containers run -w /opt/lerobot $(autotag lerobot) \
+jetson-containers run --shm-size=4g -w /opt/lerobot $(autotag lerobot) \
   python3 lerobot/scripts/train.py \
     policy=act \
     env=aloha \
