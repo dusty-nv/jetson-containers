@@ -16,6 +16,8 @@ RUN git clone https://github.com/comfyanonymous/ComfyUI.git && \
     pip3 install --no-cache-dir -r requirements.txt && \
     pip3 install --force-reinstall 'numpy<2'
 
+RUN cd /opt/ComfyUI/custom_nodes && \
+    git clone --recursive https://github.com/ltdrdata/ComfyUI-Manager.git
 WORKDIR /opt/ComfyUI/
 
 EXPOSE 8188
