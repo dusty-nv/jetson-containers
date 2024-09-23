@@ -151,6 +151,16 @@ do
 	fi
 done
 
+# check for ttyACM devices
+ACM_DEVICES=""
+
+for i in {0..9}
+do
+	if [ -a "/dev/ttyACM-$i" ]; then
+		ACM_DEVICES="$ACM_DEVICES --device /dev/ttyACM$i "
+	fi
+done
+
 # check for display
 DISPLAY_DEVICE=""
 
