@@ -26,3 +26,6 @@ RUN git clone --branch=${LEROBOT_BRANCH} --depth=1 https://github.com/${LEROBOT_
 
 RUN cd /opt/lerobot && \
     pip3 install --ignore-installed -e ".[aloha, pusht]"
+    
+RUN cd /opt/lerobot && \
+    pip install -e ".[dynamixel]"
