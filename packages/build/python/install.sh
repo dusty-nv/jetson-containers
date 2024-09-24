@@ -47,6 +47,8 @@ pip3 install --upgrade --no-cache-dir \
    setuptools \
    packaging \
    'Cython<3' \
-   wheel \
+   wheel 
+
+pip3 install --upgrade --no-cache-dir --index-url https://pypi.org/simple \
    twine
    
