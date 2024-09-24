@@ -12,3 +12,4 @@ runner
 .vscode
 .ninja_log
 .polyscope.ini
+.idea
