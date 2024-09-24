@@ -1,7 +1,7 @@
 #---
 # name: robosuite
 # group: sim
-# depends: [opencv, numba, ffmpeg]
+# depends: [opencv, numba, ffmpeg, mujoco]
 # test: [test.sh, test.py]
 #---
 ARG BASE_IMAGE
