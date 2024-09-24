@@ -7,7 +7,7 @@ git clone --depth=1 --recursive https://github.com/bcmi/libcom  /opt/libcom
 
 cd /opt/libcom/requirements
 
-MAX_JOBS=$(nproc)
+export MAX_JOBS=$(nproc)
 
 cd /opt/libcom/requirements
 # Create a temporary runtime.txt without opencv_python==4.1.2.30
