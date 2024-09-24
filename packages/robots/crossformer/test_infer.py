@@ -44,7 +44,7 @@ task = model.create_tasks(texts=["uncap the pen"])
 # benchmark performance
 print("running inference")
 
-for n in range(20):
+for n in range(5):
     time_begin = time.perf_counter()
     action = model.sample_actions(observation, task, head_name="bimanual", rng=jax.random.PRNGKey(0))
     time_elapsed = time.perf_counter() - time_begin
