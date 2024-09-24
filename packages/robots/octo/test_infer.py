@@ -9,6 +9,8 @@ os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
 import jax
 import jax.numpy as jnp
 import numpy as np
+from PIL import Image
+import requests
 
 jax.print_environment_info()
 
@@ -25,43 +27,17 @@ from octo.model.octo_model import OctoModel
 model = OctoModel.load_pretrained("hf://rail-berkeley/octo-small")
 print(model.get_pretty_spec())
 
-# create a random image
-img = np.random.randint(0, 255, size=(224, 224, 3))
+IMAGE_URL = "https://rail.eecs.berkeley.edu/datasets/bridge_release/raw/bridge_data_v2/datacol2_toykitchen7/drawer_pnp/01/2023-04-19_09-18-15/raw/traj_group0/traj0/images0/im_12.jpg"
+img = np.array(Image.open(requests.get(IMAGE_URL, stream=True).raw).resize((256, 256)))
 
-# add batch and observation history dimension (octo accepts a history of up to 5 time-steps)
-img = img[None, None]
-
-# our bimanual training data has an overhead view and two wrist views
-observation = {
-    "image_high": img,
-    "image_left_wrist": img,
-    "image_right_wrist": img,
-    "timestep_pad_mask": np.array([[True]]),
-}
-
-# create a task dictionary for a language task
-task = model.create_tasks(texts=["uncap the pen"])
-
-# benchmark performance
-print("running inference")
-
-for n in range(20):
-    time_begin = time.perf_counter()
-    action = model.sample_actions(observation, task, head_name="bimanual", rng=jax.random.PRNGKey(0))
-    time_elapsed = time.perf_counter() - time_begin
-    #print(action)  # [batch, action_chunk, action_dim]
-    print(f"frame {n} - {time_elapsed*1000:.2f} ms")
-
-'''
-import jax.experimental.jax2tf as jax2tf
-import tensorflow as tf
-import tf2onnx
-
-print("converting JAX -> TF")
-tf_fn = tf.function(jax2tf.convert(model.sample_actions, enable_xla=False))
-
-tf_args = [tf.TensorSpec(jnp.shape(x), jnp.result_type(x)) for x in [img, task["pad_mask_dict"]["language_instruction"]]]  # pyright: ignore
-print("converting TF -> ONNX")
-onnx_fn = tf2onnx.convert.from_function(tf_fn, input_signature=tf_args)
-print("onnx", onnx_fn)
-'''
+# add batch + time horizon 1
+img = img[np.newaxis,np.newaxis,...]
+observation = {"image_primary": img, "timestep_pad_mask": np.array([[True]])}
+task = model.create_tasks(texts=["pick up the fork"])
+action = model.sample_actions(
+    observation, 
+    task, 
+    unnormalization_statistics=model.dataset_statistics["bridge_dataset"]["action"], 
+    rng=jax.random.PRNGKey(0)
+)
+print(action)
