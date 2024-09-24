@@ -47,3 +47,43 @@ jetson-containers run --shm-size=4g -w /opt/lerobot $(autotag lerobot) \
     env.task=AlohaInsertion-v0 \
     dataset_repo_id=lerobot/aloha_sim_insertion_human 
 ```
+
+## Usage with Real-World Robot (Koch v1.1)
+
+### Before starting the container
+
+On Jetson host side, make sure you see the following device
+
+- `/dev/ttyACM0` : Leader arm
+- `/dev/ttyACM1` : Follower arm
+
+### Start the container
+
+```bash
+./run.sh \
+  -v ${PWD}/data/lerobot/.cache/calibration/koch:/opt/lerobot/.cache/calibration/koch \
+  -v ${PWD}/data/lerobot/lerobot/configs/robot/:/opt/lerobot/lerobot/configs/robot \
+  $(./autotag lerobot)
+```
+
+or
+
+
+```bash
+./run.sh \
+  -v ${PWD}/data/lerobot/.cache/calibration/koch:/opt/lerobot/.cache/calibration/koch \
+  -v ${PWD}/data/lerobot/lerobot/configs/robot/koch.yaml:/opt/lerobot/lerobot/configs/robot/koch.yaml \
+  $(./autotag lerobot)
+```
+
+### Install the dependencies
+
+Once inside the container, install the dependencies.
+
+```bash
+cd /opt/lerobot/
+pip install -e ".[dynamixel]"
+```
+
+### Listing and Configuring Motors
+
