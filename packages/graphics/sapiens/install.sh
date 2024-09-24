@@ -1,5 +1,6 @@
 #!/bin/bash
 
+export MAX_JOBS=$(nproc)
 # Function to install a package via pip with editable mode and verbose output
 pip_install_editable() {
   print_green "Installing $1..."
@@ -28,4 +29,4 @@ pip_install_editable "det"
 # Install seg
 pip_install_editable "seg"
 
-print_green "Installation done!"
+echo "All packages installed successfully."
