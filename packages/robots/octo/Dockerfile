@@ -4,7 +4,7 @@
 # docs: docs.md
 # depends: [transformers, opencv:4.10.0, jax, h5py]
 # requires: '>=36'
-# test: test.py
+# test: test_infer.py
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
@@ -49,6 +49,6 @@ RUN git clone --branch=main --depth=1 https://github.com/johnnynunez/octo /opt/o
 
 RUN pip3 uninstall --verbose -y tensorflow_cpu_aws && \
     pip3 uninstall --verbose -y tensorflow && \
-    pip3 install --index-url https://pypi.org/simple --force-reinstall --no-cache-dir --verbose 'tensorflow==2.15.0'
+    pip3 install --index-url https://pypi.org/simple --force-reinstall --no-cache-dir --verbose 'tensorflow==2.15.0' 'tensorflow_probability==0.23.0'
     
 CMD ["/bin/bash"]

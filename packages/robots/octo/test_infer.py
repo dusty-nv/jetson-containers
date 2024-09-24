@@ -20,15 +20,15 @@ jax.config.update("jax_persistent_cache_min_compile_time_secs", 0)
 #jax.config.update("jax_enable_x64", False)
 
 # load the model
-from octo.model import OctoModel
-model = OctoModel.load_pretrained("hf://rail-berkeley/octo-small-1.5")
-task = model.create_tasks(texts=["pick up the spoon"])
-action = model.sample_actions(observation, task, rng=jax.random.PRNGKey(0))
+from octo.model.octo_model import OctoModel
+
+model = OctoModel.load_pretrained("hf://rail-berkeley/octo-small")
+print(model.get_pretty_spec())
 
 # create a random image
 img = np.random.randint(0, 255, size=(224, 224, 3))
 
-# add batch and observation history dimension (CrossFormer accepts a history of up to 5 time-steps)
+# add batch and observation history dimension (octo accepts a history of up to 5 time-steps)
 img = img[None, None]
 
 # our bimanual training data has an overhead view and two wrist views

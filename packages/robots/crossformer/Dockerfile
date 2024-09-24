@@ -49,6 +49,6 @@ RUN git clone --branch=main --depth=1 https://github.com/dusty-nv/crossformer /o
 
 RUN pip3 uninstall --verbose -y tensorflow_cpu_aws && \
     pip3 uninstall --verbose -y tensorflow && \
-    pip3 install --index-url https://pypi.org/simple --force-reinstall --no-cache-dir --verbose 'tensorflow==2.15.0'
+    pip3 install --index-url https://pypi.org/simple --force-reinstall --no-cache-dir --verbose 'tensorflow==2.15.0' 'tensorflow_probability==0.23.0'
     
 CMD ["/bin/bash"]
