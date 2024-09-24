@@ -2,7 +2,7 @@
 # name: libcom
 # group: graphics
 # config: config.py
-# depends: [ninja, pytorch, torchvision, opencv]
+# depends: [ninja, pytorch, torchvision, opencv:4.10.0]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/bcmi/libcom

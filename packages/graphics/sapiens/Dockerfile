@@ -21,7 +21,7 @@ COPY install.sh /opt/sapiens/install.sh
 
 RUN chmod +x /opt/sapiens/install.sh && /opt/sapiens/install.sh
 
-COPY demo.py models.py /opt/sapiens/demo/
+RUN pip3 install --force-reinstall opencv
 
-CMD ["export", "SAPIENS_ROOT=/opt/sapiens"]
-CMD ["/bin/bash"]
+COPY demo.py models.py /opt/sapiens/demo/
+CMD ["/bin/bash", "-c", "export SAPIENS_ROOT=/opt/sapiens && exec /bin/bash"]
