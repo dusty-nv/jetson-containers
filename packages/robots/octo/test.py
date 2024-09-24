@@ -12,6 +12,6 @@ jax.config.update("jax_compilation_cache_dir", "/tmp/jax_cache")
 jax.config.update("jax_persistent_cache_min_entry_size_bytes", -1)
 jax.config.update("jax_persistent_cache_min_compile_time_secs", 0)
 
-from crossformer.model.crossformer_model import CrossFormerModel
+from octo.model import OctoModel
 #model = CrossFormerModel.load_pretrained("hf://rail-berkeley/crossformer")
 #print(model.get_pretty_spec())
