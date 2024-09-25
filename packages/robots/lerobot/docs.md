@@ -50,40 +50,97 @@ jetson-containers run --shm-size=4g -w /opt/lerobot $(autotag lerobot) \
 
 ## Usage with Real-World Robot (Koch v1.1)
 
-### Before starting the container
+### Before starting the container : Set udev rule
 
-On Jetson host side, make sure you see the following device
+On Jetson host side, we set an udev rule so that arms always get assigned the same device name as following.
 
-- `/dev/ttyACM0` : Leader arm
-- `/dev/ttyACM1` : Follower arm
+- `/dev/ttyACM_kochleader`   : Leader arm
+- `/dev/ttyACM_kochfollower` : Follower arm
+
+First only connect the leader arm to Jetson and record the serial ID by running the following:
+
+```bash
+ll /dev/serial/by-id/
+```
+
+The output should look like this.
+
+```bash
+lrwxrwxrwx 1 root root 13 Sep 24 13:07 usb-ROBOTIS_OpenRB-150_BA98C8C350304A46462E3120FF121B06-if00 -> ../../ttyACM1
+```
+
+Then edit the first line of `./data/lerobot/99-usb-serial.rules` like the following.
+
+```
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2f5d", ATTRS{idProduct}=="2202", ATTRS{serial}=="BA98C8C350304A46462E3120FF121B06", SYMLINK+="ttyACM_kochleader"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2f5d", ATTRS{idProduct}=="2202", ATTRS{serial}=="00000000000000000000000000000000", SYMLINK+="ttyACM_kochfollower"
+```
+
+Now disconnect the leader arm, and then only connect the follower arm to Jetson.
+
+Repeat the same steps to record the serial to edit the second line of `99-usb-serial.rules` file.
+
+```bash
+$ ll /dev/serial/by-id/
+lrwxrwxrwx 1 root root 13 Sep 24 13:07 usb-ROBOTIS_OpenRB-150_483F88DC50304A46462E3120FF0C081A-if00 -> ../../ttyACM0
+$ vi ./data/lerobot/99-usb-serial.rules
+```
+
+You should have `./data/lerobot/99-usb-serial.rules` now looking like this:
+
+```
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2f5d", ATTRS{idProduct}=="2202", ATTRS{serial}=="BA98C8C350304A46462E3120FF121B06", SYMLINK+="ttyACM_kochleader"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2f5d", ATTRS{idProduct}=="2202", ATTRS{serial}=="483F88DC50304A46462E3120FF0C081A", SYMLINK+="ttyACM_kochfollower"
+```
+
+Finally copy this under `/etc/udev/rules.d/`, and restart Jetson.
+
+```
+sudo cp ./data/lerobot/99-usb-serial.rules /etc/udev/rules.d/
+sudo reboot
+```
+
+After reboot, check if we now have achieved the desired fixed simlinks names for the arms.
+
+```bash
+ls -l /dev/ttyACM*
+```
+
+You should get something like this:
+
+```bash
+crw-rw---- 1 root dialout 166, 0 Sep 24 17:20 /dev/ttyACM0
+crw-rw---- 1 root dialout 166, 1 Sep 24 16:13 /dev/ttyACM1
+lrwxrwxrwx 1 root root         7 Sep 24 17:20 /dev/ttyACM_kochfollower -> ttyACM0
+lrwxrwxrwx 1 root root         7 Sep 24 16:13 /dev/ttyACM_kochleader -> ttyACM1
+```
 
 ### Start the container
 
 ```bash
 ./run.sh \
   -v ${PWD}/data/lerobot/.cache/calibration/koch:/opt/lerobot/.cache/calibration/koch \
-  -v ${PWD}/data/lerobot/lerobot/configs/robot/:/opt/lerobot/lerobot/configs/robot \
-  $(./autotag lerobot)
-```
-
-or
-
-
-```bash
-./run.sh \
-  -v ${PWD}/data/lerobot/.cache/calibration/koch:/opt/lerobot/.cache/calibration/koch \
   -v ${PWD}/data/lerobot/lerobot/configs/robot/koch.yaml:/opt/lerobot/lerobot/configs/robot/koch.yaml \
+  -v ${PWD}/data/lerobot/notebooks/:/opt/lerobot/notebooks \
   $(./autotag lerobot)
 ```
 
-### Install the dependencies
+### Test with Koch arms
 
-Once inside the container, install the dependencies.
+You will now use your local PC to access the Jupyter Lab server running on Jetson on the same network.
 
-```bash
-cd /opt/lerobot/
-pip install -e ".[dynamixel]"
+Once the contianer starts, you should see lines like this printed.
+
+```
+JupyterLab URL:   http://10.110.51.21:8888 (password "nvidia")
+JupyterLab logs:  /data/logs/jupyter.log
 ```
 
-### Listing and Configuring Motors
+Copy and paste the address on your web browser and access the Jupyter Lab server.
+
+Navigate to `./notebooks/` and open `7_get_started_with_real_robot.ipynb`.
+
+Now follow the Jupyter notebook contents.
+
+
 
