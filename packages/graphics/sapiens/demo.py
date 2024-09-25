@@ -10,6 +10,7 @@ from jetson_utils import videoSource, videoOutput, cudaFromNumpy, cudaAllocMappe
 from torchvision import transforms
 from PIL import Image
 import urllib.request
+from tqdm import tqdm
 from models import SAPIENS_LITE_MODELS_PATH, SAPIENS_LITE_MODELS_URL, LABELS_TO_IDS
 
 
@@ -41,9 +42,17 @@ def visualize_mask_with_overlay(img_np, mask_np, labels_to_ids, alpha=0.5):
     blended = np.uint8(img_np * (1 - alpha) + overlay * alpha)
     return blended
 
+class DownloadProgressBar(tqdm):
+    def update_to(self, b=1, bsize=1, tsize=None):
+        if tsize is not None:
+            self.total = tsize
+        self.update(b * bsize - self.n)
+        
 def download_model(url, model_path):
     print(f"Downloading model from {url}...")
-    urllib.request.urlretrieve(url, model_path)
+    os.makedirs(os.path.dirname(model_path), exist_ok=True)
+    with DownloadProgressBar(unit='B', unit_scale=True, miniters=1, desc=model_path) as t:
+        urllib.request.urlretrieve(url, model_path, reporthook=t.update_to)
     print(f"Model downloaded and saved at {model_path}")
 
 def load_model(task, version):
