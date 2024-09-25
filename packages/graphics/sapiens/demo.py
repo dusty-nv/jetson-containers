@@ -9,7 +9,8 @@ import matplotlib.colors as mcolors
 from jetson_utils import videoSource, videoOutput, cudaFromNumpy, cudaAllocMapped, cudaDeviceSynchronize
 from torchvision import transforms
 from PIL import Image
-from models import SAPIENS_LITE_MODELS_PATH, LABELS_TO_IDS
+import urllib.request
+from models import SAPIENS_LITE_MODELS_PATH, SAPIENS_LITE_MODELS_URL, LABELS_TO_IDS
 
 
 def get_palette(num_cls):
@@ -40,17 +41,27 @@ def visualize_mask_with_overlay(img_np, mask_np, labels_to_ids, alpha=0.5):
     blended = np.uint8(img_np * (1 - alpha) + overlay * alpha)
     return blended
 
+def download_model(url, model_path):
+    print(f"Downloading model from {url}...")
+    urllib.request.urlretrieve(url, model_path)
+    print(f"Model downloaded and saved at {model_path}")
+
 def load_model(task, version):
     model_path = SAPIENS_LITE_MODELS_PATH[task][version]
+    model_url = SAPIENS_LITE_MODELS_URL[task][version]  # Añadir la URL de descarga
+    
     if not torch.cuda.is_available():
-        print("CUDA no está disponible. Se requiere un dispositivo CUDA para ejecutar este script.")
+        print("CUDA is not available. A CUDA device is required to run this script.")
         sys.exit(1)
+    
     if not os.path.exists(model_path):
-        print(f"El archivo del modelo no existe en {model_path}")
-        sys.exit(1)
+        print(f"Model file does not exist at {model_path}. Downloading...")
+        download_model(model_url, model_path)
+    
     model = torch.jit.load(model_path)
     model.eval().to("cuda")
     return model
+
 
 transform_fn = transforms.Compose([
     transforms.Resize((1024, 768)),
@@ -77,17 +88,17 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Real-time segmentation with jetson_utils",
                                      formatter_class=argparse.RawTextHelpFormatter)
 
-    parser.add_argument("input", type=str, default="/dev/video0", nargs='?', help="URI del stream de entrada")
-    parser.add_argument("output", type=str, default="display://0", nargs='?', help="URI del stream de salida")
+    parser.add_argument("input", type=str, default="/dev/video0", nargs='?', help="Input stream URI")
+    parser.add_argument("output", type=str, default="display://0", nargs='?', help="Output stream URI")
 
     args = parser.parse_args()
 
-    # Crear fuente y salida de video
+    # Create video source and output
     input_stream = videoSource(args.input, argv=sys.argv)
     output_stream = videoOutput(args.output, argv=sys.argv)
 
     while True:
-        # Capturar el siguiente frame
+        # Capture the next frame
         img = input_stream.Capture()
 
         if img is None:  # timeout
@@ -103,7 +114,7 @@ if __name__ == "__main__":
 
         output_stream.Render(output_img)
 
-        output_stream.SetStatus("Segmentación en tiempo real | {:d}x{:d} | {:.1f} FPS".format(
+        output_stream.SetStatus("Real-time segmentation | {:d}x{:d} | {:.1f} FPS".format(
             img.width, img.height, output_stream.GetFrameRate()))
 
         cudaDeviceSynchronize()
