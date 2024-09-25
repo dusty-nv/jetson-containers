@@ -31,7 +31,8 @@ def mlc(commit, patch=None, version='0.1', tvm='0.15', llvm=17, requires=None, d
 package = [
     mlc('51fb0f4', 'patches/51fb0f4.diff', version='0.1.0', tvm='0.15.0', default=(L4T_VERSION.major == 35), requires='==35.*'), # 12/15/2023
     mlc('607dc5a', 'patches/607dc5a.diff', version='0.1.0', tvm='0.15.0', default=(L4T_VERSION.major >= 36), requires='>=36'),  # 02/27/2024
-    mlc('3403a4e', 'patches/3403a4e.diff', version='0.1.1', tvm='0.16.0', requires='>=36')  # 4/15/2024
+    mlc('3403a4e', 'patches/3403a4e.diff', version='0.1.1', tvm='0.16.0', requires='>=36'),  # 4/15/2024
+    mlc('9336b4a', 'patches/9336b4a.diff', version='0.1.2', tvm='0.18.0', requires='>=36'),
 ]
 
 #latest_sha = github_latest_commit(repo, branch='main')
