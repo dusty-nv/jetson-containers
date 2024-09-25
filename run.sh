@@ -26,11 +26,11 @@ done
 # check for ttyACM devices
 ACM_DEVICES=""
 
-for i in {0..9}
-do
-	if [ -a "/dev/ttyACM-$i" ]; then
-		ACM_DEVICES="$ACM_DEVICES --device /dev/ttyACM$i "
-	fi
+# Loop through all matching /dev/ttyACM* devices
+for dev in /dev/ttyACM*; do
+    if [ -e "$dev" ]; then  # Check if the device file exists
+        ACM_DEVICES="$ACM_DEVICES --device $dev "
+    fi
 done
 
 # check for display
