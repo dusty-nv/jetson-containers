@@ -2,7 +2,7 @@
 # name: lerobot
 # group: robots
 # docs: docs.md
-# depends: [transformers, opencv:4.10.0, pyav, h5py]
+# depends: [transformers, opencv:4.10.0, pyav, h5py, jupyterlab:myst]
 # requires: '>=36'
 # test: [test.sh, test.py]
 #---
@@ -29,3 +29,7 @@ RUN cd /opt/lerobot && \
     
 RUN cd /opt/lerobot && \
     pip install -e ".[dynamixel]"
+
+ENV JUPYTER_ROOT=/opt/lerobot
+
+WORKDIR /opt/lerobot
