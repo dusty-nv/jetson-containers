@@ -2,7 +2,7 @@
 # name: dimba
 # group: mamba
 # config: config.py
-# depends: [bitsandbytes, transformers, xformers, mamba]
+# depends: [bitsandbytes, transformers, mamba]
 # requires: '>=34.1.0'
 # notes: https://github.com/feizc/Dimba
 #---
@@ -18,7 +18,9 @@ RUN git clone --branch=${DIMBA_VERSION} --depth=1 --recursive https://github.com
 
 WORKDIR /opt/dimba
 
-RUN sed -i 's/==/>=/g' requirements.txt
+RUN sed -i '/decord==0.6.0/d' requirements.txt && \
+    sed -i '/spacy==3.5.1/d' requirements.txt && \
+    sed -i 's/==/>=/g' requirements.txt
 
 RUN pip3 install -r requirements.txt
 
