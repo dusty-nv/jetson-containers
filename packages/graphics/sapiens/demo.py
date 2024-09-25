@@ -6,7 +6,7 @@ import torch
 import numpy as np
 import colorsys
 import matplotlib.colors as mcolors
-from jetson_utils import videoSource, videoOutput, cudaFromNumpy, cudaAllocMapped, cudaDeviceSynchronize
+from jetson_utils import videoSource, videoOutput, cudaFromNumpy, cudaAllocMapped, cudaDeviceSynchronize, cudaToNumpy
 from torchvision import transforms
 from PIL import Image
 import urllib.request
@@ -113,7 +113,7 @@ if __name__ == "__main__":
         if img is None:  # timeout
             continue
 
-        img_np = img.numpy()
+        img_np = cudaToNumpy(img)
 
         mask_np = segment(img_np, model)
 
