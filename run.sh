@@ -84,12 +84,11 @@ if [[ "$csi_to_webcam_conversion" == true ]]; then
 	sudo modprobe v4l2loopback devices=${#csi_indexes[@]} exclusive_caps=1 card_label="Converted from CSI camera"
 
 	# Get all new /dev/video devices created by v4l2loopback
-	new_devices=($(v4l2-ctl --list-devices | grep -A 1 "v4l2loopback" | grep '/dev/video' | awk '{print $1}'))
-	echo "###### new_devices: ${new_devices[@]}"
+	new_devices=$(v4l2-ctl --list-devices | grep -A 1 "v4l2loopback" | grep '/dev/video' | awk '{print $1}')
 
 	# add the created v4l2loopback devices
-	if [[ -n "${new_devices[@]}" ]]; then
-		for converted_device in ${new_devices[@]}; do
+	if [[ -n "$new_devices" ]]; then
+		for converted_device in $new_devices; do
 			V4L2_DEVICES="$V4L2_DEVICES --device $converted_device "
 		done
 	else
@@ -241,7 +240,7 @@ if [ $ARCH = "aarch64" ]; then
 		--volume $ROOT/data:/data \
 		--device /dev/snd \
 		--device /dev/bus/usb \
-		$OPTIONAL_PERMISSION_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
+		$OPTIONAL_PERMISSION_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $ACM_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
 		--name my_jetson_container \
 		"${filtered_args[@]}"
 
@@ -257,7 +256,7 @@ elif [ $ARCH = "x86_64" ]; then
 		--ulimit stack=67108864 \
 		--env NVIDIA_DRIVER_CAPABILITIES=all \
 		--volume $ROOT/data:/data \
-		$OPTIONAL_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
+		$OPTIONAL_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $ACM_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
 		--name my_jetson_container \
 		"${filtered_args[@]}"
 
