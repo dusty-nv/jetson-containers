@@ -28,7 +28,7 @@ def bitsandbytes(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    bitsandbytes('0.43.3', default=True),
+    bitsandbytes('0.44.0', default=True),
 ]
 
 

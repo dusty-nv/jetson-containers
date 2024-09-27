@@ -2,7 +2,7 @@
 set -ex
 
 # Clone the repository if it doesn't exist
-git clone --branch=${MAMBA_VISION} --depth=1 --recursive https://github.com/johnnynunez/MambaVision opt/mambavision || \
+git clone --branch=${MAMBAVISION_VERSION} --depth=1 --recursive https://github.com/johnnynunez/MambaVision opt/mambavision || \
 git clone --depth=1 --recursive https://github.com/johnnynunez/MambaVision /opt/mambavision
 
 # Navigate to the directory containing mamba's setup.py
