@@ -18,7 +18,7 @@ ADD ${TRANSFORMERS_VERSION} /tmp/transformers_version.json
 # if you want optimum[exporters,onnxruntime] see the optimum package
 RUN pip3 install --no-cache-dir --verbose \
 	accelerate \
-	optimum \
+	#optimum \
 	sentencepiece && \
     \
     # install from pypi, git, ect (sometimes other version got installed)

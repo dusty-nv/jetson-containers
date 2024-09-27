@@ -3,7 +3,9 @@ __pycache__
 *.tar.gz
 *.so
 *.deb
-data
+data/*
+data/lerobot/outputs
+!data/lerobot
 logs
 test/data
 runner
@@ -12,3 +14,4 @@ runner
 .vscode
 .ninja_log
 .polyscope.ini
+.ipynb_checkpoints

@@ -2,7 +2,7 @@
 # name: lerobot
 # group: robots
 # docs: docs.md
-# depends: [transformers, opencv:4.10.0, pyav, h5py]
+# depends: [transformers, opencv:4.10.0, pyav, h5py, jupyterlab:myst]
 # requires: '>=36'
 # test: [test.sh, test.py]
 #---
@@ -26,3 +26,10 @@ RUN git clone --branch=${LEROBOT_BRANCH} --depth=1 https://github.com/${LEROBOT_
 
 RUN cd /opt/lerobot && \
     pip3 install --ignore-installed -e ".[aloha, pusht]"
+    
+RUN cd /opt/lerobot && \
+    pip install -e ".[dynamixel]"
+
+ENV JUPYTER_ROOT=/opt/lerobot
+
+WORKDIR /opt/lerobot
