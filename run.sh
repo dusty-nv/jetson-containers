@@ -70,11 +70,12 @@ if [[ "$csi_to_webcam_conversion" == true ]]; then
 	sudo modprobe v4l2loopback devices=${#csi_indexes[@]} exclusive_caps=1 card_label="Converted from CSI camera"
 
 	# Get all new /dev/video devices created by v4l2loopback
-	new_devices=$(v4l2-ctl --list-devices | grep -A 1 "v4l2loopback" | grep '/dev/video' | awk '{print $1}')
+	new_devices=($(v4l2-ctl --list-devices | grep -A 1 "v4l2loopback" | grep '/dev/video' | awk '{print $1}'))
+	echo "###### new_devices: ${new_devices[@]}"
 
 	# add the created v4l2loopback devices
-	if [[ -n "$new_devices" ]]; then
-		for converted_device in $new_devices; do
+	if [[ -n "${new_devices[@]}" ]]; then
+		for converted_device in ${new_devices[@]}; do
 			V4L2_DEVICES="$V4L2_DEVICES --device $converted_device "
 		done
 	else
@@ -87,6 +88,15 @@ if [[ "$csi_to_webcam_conversion" == true ]]; then
 		echo "Starting background process for CSI camera device number: $csi_index"
 
 		# Run gst-launch-1.0 command in the background, suppressing all output
+		echo "gst-launch-1.0 -v nvarguscamerasrc sensor-id=${csi_index} \
+					! 'video/x-raw(memory:NVMM), format=NV12, width=1640, height=1232, framerate=30/1' \
+					! nvvidconv \
+					! 'video/x-raw, width=1600, height=1200, framerate=30/1', format=I420 \
+					! nvjpegenc \
+					! multipartmux \
+					! multipartdemux single-stream=1 \
+					! \"image/jpeg, width=1600, height=1200, parsed=(boolean)true, colorimetry=(string)2:4:7:1, framerate=(fraction)30/1, sof-marker=(int)0\" \
+					! v4l2sink device=${new_devices[$i]} > /dev/null 2>&1 &"
 		gst-launch-1.0 -v nvarguscamerasrc sensor-id=${csi_index} \
 					! 'video/x-raw(memory:NVMM), format=NV12, width=1640, height=1232, framerate=30/1' \
 					! nvvidconv \
@@ -95,12 +105,12 @@ if [[ "$csi_to_webcam_conversion" == true ]]; then
 					! multipartmux \
 					! multipartdemux single-stream=1 \
 					! "image/jpeg, width=1600, height=1200, parsed=(boolean)true, colorimetry=(string)2:4:7:1, framerate=(fraction)30/1, sof-marker=(int)0" \
-					! v4l2sink device=${new_devices[i]} > /dev/null 2>&1 &
+					! v4l2sink device=${new_devices[$i]} > /dev/null 2>&1 &
 		# ping google.com > /dev/null 2>&1 &
 
 		# Store the PID of the background process if you want to manage it later
 		BG_PIDS+=($!)
-		echo "BG_PIDS: $BG_PIDS"
+		echo "BG_PIDS: ${BG_PIDS[@]}"
 
 		((i++))
 	done
