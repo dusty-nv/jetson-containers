@@ -184,6 +184,12 @@ done
 # Track container ID for `docker wait`
 container_id=""
 
+# Generate a unique container name
+BUILD_DATE_TIME=$(date +%Y%m%d_%H%M%S)
+CONTAINER_IMAGE_NAME=$(basename "${filtered_args[0]}")
+SANITIZED_CONTAINER_IMAGE_NAME=$(echo "$CONTAINER_IMAGE_NAME" | sed 's/[^a-zA-Z0-9_.-]/_/g')
+CONTAINER_NAME="my_jetson_container_${SANITIZED_CONTAINER_IMAGE_NAME}_${BUILD_DATE_TIME}"
+
 # run the container
 ARCH=$(uname -i)
 
@@ -208,7 +214,7 @@ if [ $ARCH = "aarch64" ]; then
 		--device /dev/snd \
 		--device /dev/bus/usb \
 		$OPTIONAL_PERMISSION_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
-		--name my_jetson_container \
+		--name "$CONTAINER_NAME" \
 		"${filtered_args[@]}"
 
 	set +x
@@ -224,7 +230,7 @@ elif [ $ARCH = "x86_64" ]; then
 		--env NVIDIA_DRIVER_CAPABILITIES=all \
 		--volume $ROOT/data:/data \
 		$OPTIONAL_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
-		--name my_jetson_container \
+		--name "$CONTAINER_NAME" \
 		"${filtered_args[@]}"
 
 	set +x
