@@ -1,6 +1,6 @@
 #---
 # name: llava
-# group: llm
+# group: vlm
 # docs: docs.md
 # depends: [pytorch, transformers]
 # requires: '>=34.1.0'

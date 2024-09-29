@@ -1,6 +1,6 @@
 #---
 # name: minigpt4
-# group: llm
+# group: vlm
 # config: config.py
 # depends: [pytorch, torchvision, huggingface_hub]
 # requires: '>=34.1.0'
