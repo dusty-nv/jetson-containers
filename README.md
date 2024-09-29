@@ -10,7 +10,7 @@ Modular container build system that provides various [**AI/ML packages**](packag
 |---|---|
 | **ML** | [`pytorch`](packages/pytorch) [`tensorflow`](packages/tensorflow) [`jax`](packages/ml/jax) [`onnxruntime`](packages/ml/onnxruntime) [`deepstream`](packages/multimedia/deepstream) [`triton`](packages/ml/openai-triton) [`jupyterlab`](packages/jupyterlab) |
 | **LLM** | [`NanoLLM`](packages/llm/nano_llm) [`transformers`](packages/llm/transformers) [`text-generation-webui`](packages/llm/text-generation-webui) [`ollama`](packages/llm/ollama) [`llama.cpp`](packages/llm/llama_cpp) [`exllama`](packages/llm/exllama) [`awq`](packages/llm/awq) [`AutoGPTQ`](packages/llm/auto_gptq) [`MLC`](packages/llm/mlc) [`optimum`](packages/llm/optimum) [`nemo`](packages/nemo) |
-| **VLM** | [`llava`](packages/vlm/llava) [`llama-vision`](packages/vlm/llama-vision) [`MiniGPT4`](packages/vlm/minigpt4)
+| **VLM** | [`llava`](packages/vlm/llava) [`llama-vision`](packages/vlm/llama-vision) [`VILA`](packages/vlm/vila) [`MiniGPT4`](packages/vlm/minigpt4)
 | **RAG** | [`llama-index`](packages/rag/llama-index) [`langchain`](packages/rag/langchain) [`jetson-copilot`](packages/rag/jetson-copilot) [`NanoDB`](packages/vectordb/nanodb) [`FAISS`](packages/vectordb/faiss) [`RAFT`](packages/ml/rapids/raft) |
 | **L4T** | [`l4t-pytorch`](packages/l4t/l4t-pytorch) [`l4t-tensorflow`](packages/l4t/l4t-tensorflow) [`l4t-ml`](packages/l4t/l4t-ml) [`l4t-diffusion`](packages/l4t/l4t-diffusion) [`l4t-text-generation`](packages/l4t/l4t-text-generation) |
 | **VIT** | [`NanoOWL`](packages/vit/nanoowl) [`NanoSAM`](packages/vit/nanosam) [`Segment Anything (SAM)`](packages/vit/sam) [`Track Anything (TAM)`](packages/vit/tam) [`clip_trt`](packages/vit/clip_trt) |
