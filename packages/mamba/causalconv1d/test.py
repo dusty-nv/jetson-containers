@@ -9,6 +9,6 @@ weight = torch.zeros((dim, width)).to('cuda')
 bias = torch.zeros((dim, )).to('cuda')
 
 causal_conv1d_fn(x, weight, bias, None)
-conv1d_out = causal_conv1d_cuda.causal_conv1d_fwd(x, weight, bias, True)
+conv1d_out = causal_conv1d_cuda.causal_conv1d_fwd(x, weight, bias, None, None, None, True)
 
 print('causal_conv1d OK\n')
