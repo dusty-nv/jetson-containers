@@ -1,48 +1,117 @@
+from jetson_containers import L4T_VERSION, PYTHON_VERSION
+from packaging.version import Version
 
-from jetson_containers import L4T_VERSION
+from .version import TENSORFLOW_VERSION
 
-if L4T_VERSION.major >= 36:    # JetPack 6.0
-    TENSORFLOW1_URL = None
-    TENSORFLOW1_WHL = None
-    TENSORFLOW2_URL = 'https://developer.download.nvidia.com/compute/redist/jp/v60/tensorflow/tensorflow-2.16.1+nv24.06-cp310-cp310-linux_aarch64.whl' # 'https://nvidia.box.com/shared/static/wp43cd8e0lgen2wdqic3irdwagpgn0iz.whl'
-    TENSORFLOW2_WHL = 'tensorflow-2.16.1+nv24.06-cp310-cp310-linux_aarch64.whl' #'tensorflow-2.14.0+nv23.11-cp310-cp310-linux_aarch64.whl'
-elif L4T_VERSION.major == 35:  # JetPack 5.0.2 / 5.1.x
-    TENSORFLOW1_URL = 'https://developer.download.nvidia.com/compute/redist/jp/v51/tensorflow/tensorflow-1.15.5+nv23.03-cp38-cp38-linux_aarch64.whl'
-    TENSORFLOW1_WHL = 'tensorflow-1.15.5+nv23.03-cp38-cp38-linux_aarch64.whl'
-    TENSORFLOW2_URL = 'https://developer.download.nvidia.com/compute/redist/jp/v51/tensorflow/tensorflow-2.11.0+nv23.03-cp38-cp38-linux_aarch64.whl'
-    TENSORFLOW2_WHL = 'tensorflow-2.11.0+nv23.03-cp38-cp38-linux_aarch64.whl'
-elif L4T_VERSION.major == 34:  # JetPack 5.0 / 5.0.1
-    TENSORFLOW1_URL = 'https://developer.download.nvidia.com/compute/redist/jp/v50/tensorflow/tensorflow-1.15.5+nv22.4-cp38-cp38-linux_aarch64.whl'
-    TENSORFLOW1_WHL = 'tensorflow-1.15.5+nv22.4-cp38-cp38-linux_aarch64.whl'
-    TENSORFLOW2_URL = 'https://developer.download.nvidia.com/compute/redist/jp/v50/tensorflow/tensorflow-2.8.0+nv22.4-cp38-cp38-linux_aarch64.whl'
-    TENSORFLOW2_WHL = 'tensorflow-2.8.0+nv22.4-cp38-cp38-linux_aarch64.whl'
-elif L4T_VERSION.major == 32:  # JetPack 4
-    TENSORFLOW1_URL = 'https://developer.download.nvidia.com/compute/redist/jp/v461/tensorflow/tensorflow-1.15.5+nv22.1-cp36-cp36m-linux_aarch64.whl'
-    TENSORFLOW1_WHL = 'tensorflow-1.15.5+nv22.1-cp36-cp36m-linux_aarch64.whl'
-    TENSORFLOW2_URL = 'https://developer.download.nvidia.com/compute/redist/jp/v461/tensorflow/tensorflow-2.7.0+nv22.1-cp36-cp36m-linux_aarch64.whl'
-    TENSORFLOW2_WHL = 'tensorflow-2.7.0+nv22.1-cp36-cp36m-linux_aarch64.whl'
+def tensorflow(version, tensorflow_version='tf2', requires=None, default=False):
+    pkg = package.copy()
+  
+    if default:
+        pkg['alias'] = 'tensorflow2' if tensorflow_version == 'tf2' else 'tensorflow1'
+        
+    if requires:
+        pkg['requires'] = requires   
 
-# package templates for separate tf1/tf2 containers
-tf_pack = package
-package = {}
-
-if TENSORFLOW1_WHL:
-    tf1 = tf_pack.copy()
+    pkg['name'] = f'tensorflow{"2" if tensorflow_version == "tf2" else "1"}:{version}'
+    pkg['notes'] = f"TensorFlow {tensorflow_version.upper()} version {version}"
     
-    tf1['build_args'] = {
-        'TENSORFLOW_URL': TENSORFLOW1_URL,
-        'TENSORFLOW_WHL': TENSORFLOW1_WHL
+    prebuilt_wheels = {
+        # TensorFlow tf1
+        ('36', '1.15.5', 'tf1'): (None, None),
+        ('35', '1.15.5', 'tf1'): (
+            'https://developer.download.nvidia.com/compute/redist/jp/v51/tensorflow/tensorflow-1.15.5+nv23.03-cp38-cp38-linux_aarch64.whl',
+            'tensorflow-1.15.5+nv23.03-cp38-cp38-linux_aarch64.whl'
+        ),
+        ('34', '1.15.5', 'tf1'): (
+            'https://developer.download.nvidia.com/compute/redist/jp/v50/tensorflow/tensorflow-1.15.5+nv22.4-cp38-cp38-linux_aarch64.whl',
+            'tensorflow-1.15.5+nv22.4-cp38-cp38-linux_aarch64.whl'
+        ),
+        ('32', '1.15.5', 'tf1'): (
+            'https://developer.download.nvidia.com/compute/redist/jp/v461/tensorflow/tensorflow-1.15.5+nv22.1-cp36-cp36m-linux_aarch64.whl',
+            'tensorflow-1.15.5+nv22.1-cp36-cp36m-linux_aarch64.whl'
+        ),
+        # TensorFlow v2
+        ('36', '2.16.1', 'tf2'): (
+            'https://developer.download.nvidia.com/compute/redist/jp/v60/tensorflow/tensorflow-2.16.1+nv24.06-cp310-cp310-linux_aarch64.whl',
+            'tensorflow-2.16.1+nv24.06-cp310-cp310-linux_aarch64.whl'
+        ),
+        ('36', '2.17.1', 'tf2'): (
+            'https://developer.download.nvidia.com/compute/redist/jp/v61/tensorflow/tensorflow-2.17.1+nv24.07-cp310-cp310-linux_aarch64.whl',
+            'tensorflow-2.17.1+nv24.07-cp310-cp310-linux_aarch64.whl'
+        ),
+        ('35', '2.15.0', 'tf2'): (
+            'https://developer.download.nvidia.com/compute/redist/jp/v51/tensorflow/tensorflow-2.15.0+nv23.05-cp38-cp38-linux_aarch64.whl',
+            'tensorflow-2.15.0+nv23.05-cp38-cp38-linux_aarch64.whl'
+        ),
+        ('35', '2.11.0', 'tf2'): (
+            'https://developer.download.nvidia.com/compute/redist/jp/v51/tensorflow/tensorflow-2.11.0+nv23.03-cp38-cp38-linux_aarch64.whl',
+            'tensorflow-2.11.0+nv23.03-cp38-cp38-linux_aarch64.whl'
+        ),
+        ('34', '2.8.0', 'tf2'): (
+            'https://developer.download.nvidia.com/compute/redist/jp/v50/tensorflow/tensorflow-2.8.0+nv22.4-cp38-cp38-linux_aarch64.whl',
+            'tensorflow-2.8.0+nv22.4-cp38-cp38-linux_aarch64.whl'
+        ),
+        ('32', '2.7.0', 'tf2'): (
+            'https://developer.download.nvidia.com/compute/redist/jp/v461/tensorflow/tensorflow-2.7.0+nv22.1-cp36-cp36m-linux_aarch64.whl',
+            'tensorflow-2.7.0+nv22.1-cp36-cp36m-linux_aarch64.whl'
+        ),
+        # Puedes agregar más entradas si hay ruedas precompiladas disponibles
     }
     
-    package['tensorflow'] = tf1
+    L4T_MAJOR = str(L4T_VERSION.major)
+    wheel_key = (L4T_MAJOR, version, tensorflow_version)
     
-if TENSORFLOW2_WHL:
-    tf2 = tf_pack.copy()
-
-    tf2['build_args'] = {
-        'TENSORFLOW_URL': TENSORFLOW2_URL,
-        'TENSORFLOW_WHL': TENSORFLOW2_WHL
-    }
-
-    package['tensorflow2'] = tf2
+    if wheel_key in prebuilt_wheels and prebuilt_wheels[wheel_key][0] is not None:
+        url, whl = prebuilt_wheels[wheel_key]
+        pkg['build_args'] = {
+            'TENSORFLOW_VERSION': version,
+            'TENSORFLOW_URL': url,
+            'TENSORFLOW_WHL': whl,
+            'PYTHON_VERSION_MAJOR': PYTHON_VERSION.major,
+            'PYTHON_VERSION_MINOR': PYTHON_VERSION.minor,
+            'FORCE_BUILD': 'off' 
+        }
+        pkg['dockerfile'] = 'Dockerfile'
+    else:
+        pkg['build_args'] = {
+            'TENSORFLOW_VERSION': version,
+            'PYTHON_VERSION_MAJOR': PYTHON_VERSION.major,
+            'PYTHON_VERSION_MINOR': PYTHON_VERSION.minor,
+            'FORCE_BUILD': 'on',
+        }
+        pkg['notes'] += " (will be built from source)"
+        pkg['dockerfile'] = 'Dockerfile.pip'
+        pkg['alias'] = [f'tensorflow2:{version}' if tensorflow_version == 'tf2' else f'tensorflow1:{version}']
     
+    builder = pkg.copy()
+    builder['name'] = f'{pkg["name"]}-builder'
+    builder['build_args'] = {**pkg['build_args'], 'FORCE_BUILD': 'on'}
+    builder['alias'] = [f'tensorflow2:{version}-builder' if tensorflow_version == 'tf2' else f'tensorflow1:{version}-builder']
+    
+    if Version(version) == TENSORFLOW_VERSION:
+        pkg['alias'].extend(['tensorflow','tensorflow2'])
+        builder['alias'].extend(['tensorflow:builder', 'tensorflow2:builder'])
+
+    return [pkg, builder]
+
+package = [
+    # TensorFlow tf1
+    *tensorflow(
+        version='1.15.5',
+        tensorflow_version='tf1',
+        default=(L4T_VERSION.major == 35),
+        requires='<36'
+    ),
+    # TensorFlow tf2 para L4T >=36
+    *tensorflow(
+        version='2.16.1',
+        tensorflow_version='tf2',
+        requires='>=36'
+    ),
+    *tensorflow(
+        version='2.18.0',
+        tensorflow_version='tf2',
+        requires='>=36',
+        default=(L4T_VERSION.major >= 36),
+    ),
+]
