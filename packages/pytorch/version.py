@@ -11,7 +11,7 @@ else:
         if CUDA_VERSION >= Version('12.4'):
             PYTORCH_VERSION = Version('2.4')
         else:
-            PYTORCH_VERSION = Version('2.4') # 2.2
+            PYTORCH_VERSION = Version('2.2')
     elif L4T_VERSION.major >= 34:
         PYTORCH_VERSION = Version('2.2')
     elif L4T_VERSION.major >= 32:
