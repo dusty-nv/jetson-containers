@@ -18,6 +18,7 @@ Modular container build system that provides the latest [**AI/ML packages**](htt
 | **Robotics** | [`ROS`](packages/ros) [`LeRobot`](packages/robots/lerobot) [`OpenVLA`](packages/robots/openvla) [`3D Diffusion Policy`](packages/robots/3d_diffusion_policy) [`Crossformer`](packages/robots/crossformer) [`MimicGen`](packages/robots/mimicgen) [`OpenDroneMap`](packages/robots/opendronemap) [`ZED`](packages/hardware/zed) |
 | **Graphics** | [`stable-diffusion-webui`](packages/diffusion/stable-diffusion-webui) [`comfyui`](packages/diffusion/comfyui) [`nerfstudio`](packages/nerf/nerfstudio) [`meshlab`](packages/nerf/meshlab) [`pixsfm`](packages/nerf/pixsfm) [`gsplat`](packages/nerf/gsplat) |
 | **Mamba** | [`mamba`](packages/mamba/mamba) [`mambavision`](packages/mamba/mambavision) [`cobra`](packages/mamba/cobra) [`dimba`](packages/mamba/dimba) [`videomambasuite`](packages/mamba/videomambasuite) |
+| **KAN** | [`kat`](packages/kan/kat) |
 | **Speech** | [`whisper`](packages/speech/whisper) [`whisper_trt`](packages/speech/whisper_trt) [`piper`](packages/speech/piper-tts) [`riva`](packages/speech/riva-client) [`audiocraft`](packages/speech/audiocraft) [`voicecraft`](packages/speech/voicecraft) |
 | **Home/IoT** | [`homeassistant-core`](packages/smart-home/homeassistant-core) [`wyoming-whisper`](packages/smart-home/wyoming/wyoming-whisper) [`wyoming-openwakeword`](packages/smart-home/wyoming/openwakeword) [`wyoming-piper`](packages/smart-home/wyoming/piper) |
 
