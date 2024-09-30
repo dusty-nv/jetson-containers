@@ -12,6 +12,9 @@ git apply /tmp/CASUALCONV1D/patch.diff
 git diff
 git status
 
+export CUDA_HOME="/usr/local/cuda"
+export NVCC_PATH="$CUDA_HOME/bin/nvcc"
+
 MAX_JOBS=$(nproc) \
 CAUSAL_CONV1D_FORCE_BUILD="TRUE" \
 CAUSAL_CONV1D_SKIP_CUDA_BUILD="FALSE" \
