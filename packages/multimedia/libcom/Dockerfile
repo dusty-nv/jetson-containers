@@ -1,8 +1,8 @@
 #---
 # name: libcom
-# group: graphics
+# group: multimedia
 # config: config.py
-# depends: [ninja, pytorch, torchvision, opencv:4.10.0]
+# depends: [ninja, pytorch, torchvision, opencv]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/bcmi/libcom

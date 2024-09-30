@@ -1,9 +1,7 @@
 #---
 # name: sapiens
-# alias: sapiens
-# group: graphics
-# docs: docs.md
-# depends: [jetson-utils, pytorch, torchvision, torchaudio, libcom, opencv:4.10.0]
+# group: vit
+# depends: [jetson-utils, pytorch, torchvision, torchaudio, libcom, opencv]
 # requires: '>=36'
 #---
 ARG BASE_IMAGE

@@ -1,6 +1,6 @@
 #---
 # name: kat
-# group: kan
+# group: vit
 # config: config.py
 # depends: [pytorch, torchvision, transformers]
 # requires: '>=34.1.0'
