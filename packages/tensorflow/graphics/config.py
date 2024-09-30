@@ -2,10 +2,10 @@ from jetson_containers import update_dependencies, PYTHON_VERSION
 from packaging.version import Version
 from ..tensorflow.version import TENSORFLOW_VERSION
 
-def tensorflow_text(version, tensorflow=None, requires=None):
+def tensorflow_graphics(version, tensorflow=None, requires=None):
     pkg = package.copy()
     
-    pkg['name'] = f"tensorflow_text:{version.split('-')[0]}"  # remove any -rc* suffix
+    pkg['name'] = f"tensorflow_graphics:{version.split('-')[0]}"  # remove any -rc* suffix
     
     if tensorflow:
         pkg['depends'] = update_dependencies(pkg['depends'], f"tensorflow2:{tensorflow}")
@@ -19,7 +19,7 @@ def tensorflow_text(version, tensorflow=None, requires=None):
         version = version + '.0'
         
     pkg['build_args'] = {
-        'TENSORFLOW_TEXT_VERSION': version,
+        'TENSORFLOW_GRAPHICS_VERSION': version,
         'PYTHON_VERSION_MAJOR': PYTHON_VERSION.major,
         'PYTHON_VERSION_MINOR': PYTHON_VERSION.minor,
     }
@@ -32,13 +32,13 @@ def tensorflow_text(version, tensorflow=None, requires=None):
         tensorflow = Version(tensorflow)
 
     if tensorflow == TENSORFLOW_VERSION:
-        pkg['alias'] = 'tensorflow_text'
-        builder['alias'] = 'tensorflow_text:builder'
+        pkg['alias'] = 'tensorflow_graphics'
+        builder['alias'] = 'tensorflow_graphics:builder'
 
     return pkg, builder
     
  
 package = [
     # JetPack 5/6
-    tensorflow_text('2.18.0', tensorflow='2.18.0', requires='==36.*'),
+    tensorflow_graphics('2.18.0', tensorflow='2.18.0', requires='==36.*'),
 ]

@@ -13,5 +13,5 @@ jax.config.update("jax_persistent_cache_min_entry_size_bytes", -1)
 jax.config.update("jax_persistent_cache_min_compile_time_secs", 0)
 
 from crossformer.model.crossformer_model import CrossFormerModel
-#model = CrossFormerModel.load_pretrained("hf://rail-berkeley/crossformer")
-#print(model.get_pretty_spec())
+model = CrossFormerModel.load_pretrained("hf://rail-berkeley/crossformer")
+print(model.get_pretty_spec())
