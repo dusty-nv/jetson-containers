@@ -3,7 +3,7 @@ import os
 import time
 import logging
 
-logging.basicConfig(level=logging.DEBUG)
+#logging.basicConfig(level=logging.DEBUG)
 os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
 
 import jax
@@ -42,14 +42,14 @@ observation = {
 task = model.create_tasks(texts=["uncap the pen"])
 
 # benchmark performance
-print("running inference")
+print(f"Running crossformer inference")
 
 for n in range(20):
     time_begin = time.perf_counter()
     action = model.sample_actions(observation, task, head_name="bimanual", rng=jax.random.PRNGKey(0))
     time_elapsed = time.perf_counter() - time_begin
     #print(action)  # [batch, action_chunk, action_dim]
-    print(f"frame {n} - {time_elapsed*1000:.2f} ms")
+    print(f"crossformer  frame={n}  latency={time_elapsed*1000:.2f} ms  action_dims={action.shape}")
 
 '''
 import jax.experimental.jax2tf as jax2tf
