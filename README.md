@@ -17,9 +17,9 @@ Modular container build system that provides various [**AI/ML packages**](packag
 | **CUDA** | [`cupy`](packages/cuda/cupy) [`cuda-python`](packages/cuda/cuda-python) [`pycuda`](packages/cuda/pycuda) [`numba`](packages/numba) [`cudf`](packages/ml/rapids/cudf) [`cuml`](packages/ml/rapids/cuml) |
 | **Robotics** | [`ROS`](packages/ros) [`LeRobot`](packages/robots/lerobot) [`OpenVLA`](packages/robots/openvla) [`3D Diffusion Policy`](packages/robots/3d_diffusion_policy) [`MimicGen`](packages/robots/mimicgen) [`OpenDroneMap`](packages/robots/opendronemap) [`realsense`](packages/hardware/realsense) [`zed`](packages/hardware/zed) |
 | **Graphics** | [`stable-diffusion-webui`](packages/diffusion/stable-diffusion-webui) [`comfyui`](packages/diffusion/comfyui) [`nerfstudio`](packages/nerf/nerfstudio) [`pymeshlab`](packages/nerf/pymeshlab) [`opencv:cuda`](packages/opencv) |
-| **Mamba** | [`mamba`](packages/mamba/mamba) [`mambavision`](packages/mamba/mambavision) [`cobra`](packages/mamba/cobra) [`dimba`](packages/mamba/dimba) [`videomambasuite`](packages/mamba/videomambasuite)
+| **Mamba** | [`mamba`](packages/mamba/mamba) [`mambavision`](packages/mamba/mambavision) [`cobra`](packages/mamba/cobra) [`dimba`](packages/mamba/dimba) [`videomambasuite`](packages/mamba/videomambasuite) |
 | **Speech** | [`whisper`](packages/speech/whisper) [`whisper_trt`](packages/speech/whisper_trt) [`piper`](packages/speech/piper-tts) [`riva`](packages/speech/riva-client) [`audiocraft`](packages/speech/audiocraft) [`voicecraft`](packages/speech/voicecraft) |
-| **Smart Home** | [`homeassistant-core`](packages/smart-home/homeassistant-core) [`wyoming-whisper`](packages/smart-home/wyoming/wyoming-whisper) [`wyoming-openwakeword`](packages/smart-home/wyoming/openwakeword) [`wyoming-piper`](packages/smart-home/wyoming/piper) [`wyoming-assist-microphone`](packages/smart-home/wyoming/assist-microphone) |
+| **Home/IoT** | [`homeassistant-core`](packages/smart-home/homeassistant-core) [`wyoming-whisper`](packages/smart-home/wyoming/wyoming-whisper) [`wyoming-openwakeword`](packages/smart-home/wyoming/openwakeword) [`wyoming-piper`](packages/smart-home/wyoming/piper) |
 
 See the [**`packages`**](packages) directory for the full list, including pre-built container images for JetPack/L4T.
 
