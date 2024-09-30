@@ -11,21 +11,11 @@ FROM ${BASE_IMAGE}
 ADD https://api.github.com/repos/InternLM/xtuner/git/refs/heads/main /tmp/xtuner_version.json
 
 RUN git clone --branch=main --depth=1 --recursive https://github.com/InternLM/xtuner /opt/xtuner && \
-    pip3 install --no-cache-dir --verbose -e '/opt/xtuner[all]'
+    cd /opt/xtuner && \
+    sed -i 's|bitsandbytes.*|bitsandbytes|' requirements/runtime.txt && \
+    sed -i 's|mpi4py-mpich.*||' requirements/deepspeed.txt && \
+    pip3 install --no-cache-dir --verbose -e '.[all]'
     
-    
-    #cd /opt/VILA && \
-    #sed -i 's|torch==.*"|torch"|' pyproject.toml && \
-    #sed -i 's|pytorchvideo==.*"|pytorchvideo"|' pyproject.toml && \
-    #sed -i 's|bitsandbytes==.*"|bitsandbytes"|' pyproject.toml && \
-    #sed -i 's|opencv-python==.*"|opencv-python"|' pyproject.toml && \
-    #cat pyproject.toml | grep torch && \
-    #pip3 install --verbose -e . && \
-    #pip3 install --verbose -e ".[train]" && \
-    #pip3 install --verbose -e ".[eval]"
-    
-#RUN pip3 install --verbose --no-cache-dir 'transformers==4.37.2' && \
-#    site_pkg_path=$(python3 -c 'import site; print(site.getsitepackages()[0])') && \
-#    cp -rv /opt/VILA/llava/train/transformers_replace/* $site_pkg_path/transformers/ && \
-#    cp -rv /opt/VILA/llava/train/deepspeed_replace/* $site_pkg_path/deepspeed/
-
+# mmengine - WARNING - WARNING: command error: '[Errno 2] No such file or directory: 'python''
+RUN ln -s /usr/bin/python3 /usr/bin/python && \
+    ln -s /usr/local/bin/python3 /usr/local/bin/python
