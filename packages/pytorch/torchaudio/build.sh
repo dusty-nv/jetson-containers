@@ -7,7 +7,11 @@ apt-get install -y --no-install-recommends \
 		git \
 		pkg-config \
 		libffi-dev \
-		libsndfile1
+		libsndfile1 \
+		libavcodec-dev \
+		libavutil-dev \
+		libavdevice-dev \
+		libavfilter-dev
 
 rm -rf /var/lib/apt/lists/*
 apt-get clean

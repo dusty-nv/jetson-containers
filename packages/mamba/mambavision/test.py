@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from transformers import AutoModelForImageClassification
 from PIL import Image
 from timm.data.transforms_factory import create_transform
