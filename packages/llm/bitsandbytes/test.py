@@ -11,7 +11,9 @@ from threading import Thread
 # HF   TinyLlama/TinyLlama-1.1B-Chat-v1.0
 # GPTQ TheBloke/TinyLlama-1.1B-Chat-v1.0-GPTQ
 # AWQ  TheBloke/TinyLlama-1.1B-Chat-v1.0-AWQ
-model_name='microsoft/Phi-3-mini-128k-instruct'
+#
+# microsoft/Phi-3-mini-128k-instruct
+model_name='TinyLlama/TinyLlama-1.1B-Chat-v1.0'
 print(f'loading {model_name} with bitsandbytes (8-bit)')
 
 model = AutoModelForCausalLM.from_pretrained(model_name, device_map='cuda', load_in_8bit=True, trust_remote_code=True)
