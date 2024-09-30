@@ -10,6 +10,7 @@ cd /opt/zigma
 pip3 install -U torchdiffeq matplotlib h5py timm diffusers accelerate loguru blobfile ml_collections wandb
 pip3 install -U hydra-core torch-fidelity webdataset einops pytorch_lightning
 pip3 install -U torchmetrics scikit-learn moviepy imageio numpy-hilbert-curve av
+cd dis_causal_conv1d && pip install -e --force-reinstall . && cd ..
 
 cd /opt/zigma
 pip3 install 'numpy<2'
