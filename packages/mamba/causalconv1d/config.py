@@ -13,17 +13,17 @@ def causalconv1d(version, requires=None, default=False):
         'CASUALCONV1D_VERSION': version,
     }
 
-    #builder = pkg.copy()
+    builder = pkg.copy()
 
-    #builder['name'] = f'causalconv1d:{version}-builder'
-    #builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
+    builder['name'] = f'causalconv1d:{version}-builder'
+    builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
 
     if default:
         pkg['alias'] = 'causalconv1d'
-        #builder['alias'] = 'causalconv1d:builder'
+        builder['alias'] = 'causalconv1d:builder'
 
-    return pkg #, builder
+    return pkg, builder
 
 package = [
-    causalconv1d('1.5.0', default=True)
+    causalconv1d('1.4.0', default=True)
 ]
