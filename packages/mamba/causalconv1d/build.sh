@@ -12,6 +12,9 @@ git apply /tmp/CASUALCONV1D/patch.diff
 git diff
 git status
 
+export PATH=/usr/local/nvidia/bin:/usr/local/nvidia/lib64:$PATH
+export LD_LIBRARY_PATH=/usr/local/nvidia/lib64:/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+
 MAX_JOBS=$(nproc) \
 CAUSAL_CONV1D_FORCE_BUILD="TRUE" \
 CAUSAL_CONV1D_SKIP_CUDA_BUILD="FALSE" \
