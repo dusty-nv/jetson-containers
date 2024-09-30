@@ -1,6 +1,6 @@
 #---
 # name: openexr
-# group: ml
+# group: multimedia
 # config: config.py
 # depends: [python, numpy]
 # requires: '>=34.1.0'
