@@ -1,0 +1,102 @@
+diff --git a/oss_scripts/configure.sh b/oss_scripts/configure.sh
+index 7ad6424..276d4c9 100755
+--- a/oss_scripts/configure.sh
++++ b/oss_scripts/configure.sh
+@@ -41,12 +41,12 @@ else
+   if is_macos; then
+     #  Only Apple Silicon will be installed with tensorflow-macos.
+     if [[ x"$(arch)" == x"arm64" ]]; then
+-      pip install tensorflow-macos==2.16.1
++      pip install tensorflow-macos==2.18.0
+     else
+-      pip install tensorflow==2.16.1
++      pip install tensorflow==2.18.0
+     fi
+   else
+-    pip install tensorflow==2.16.1
++    pip install tensorflow==2.18.0
+   fi
+ fi
+ 
+diff --git a/oss_scripts/pip_package/setup.py b/oss_scripts/pip_package/setup.py
+index fb4e8ae..bf9d1b2 100644
+--- a/oss_scripts/pip_package/setup.py
++++ b/oss_scripts/pip_package/setup.py
+@@ -32,7 +32,7 @@ from setuptools.command.install import install
+ from setuptools.dist import Distribution
+ 
+ project_name = 'tensorflow-text'
+-project_version = '2.16.1'
++project_version = '2.18.0'
+ 
+ 
+ class BinaryDistribution(Distribution):
+@@ -74,12 +74,12 @@ setup(
+     distclass=BinaryDistribution,
+     install_requires=[
+         (
+-            'tensorflow>=2.16.1, <2.17',
++            'tensorflow>=2.18.0, <2.20',
+         ),
+     ],
+     extras_require={
+         'tensorflow_cpu': [
+-            'tensorflow-cpu>=2.16.1, <2.17',
++            'tensorflow-cpu>=2.18.0, <2.20',
+         ],
+         'tests': [
+             'absl-py',
+diff --git a/oss_scripts/prepare_tf_dep.sh b/oss_scripts/prepare_tf_dep.sh
+index 5210b35..47e4376 100755
+--- a/oss_scripts/prepare_tf_dep.sh
++++ b/oss_scripts/prepare_tf_dep.sh
+@@ -21,21 +21,47 @@ sed -i $ext "s/project_version = '.*'/project_version = '${tf_version}'/" oss_sc
+ echo "Updating __init__.py to version $tf_version"
+ sed -i $ext "s/__version__ = .*\$/__version__ = \"${tf_version}\"/" tensorflow_text/__init__.py
+ 
++# Function to check if commit SHA corresponds to a release tag
++function is_release_commit() {
++  local commit_sha="$1"
++  # Get the list of tag commit SHAs
++  tag_commit_shas=$(git ls-remote --tags https://github.com/tensorflow/tensorflow.git | grep '\^{}' | awk '{print $1}')
++  if echo "$tag_commit_shas" | grep -q "$commit_sha"; then
++    return 0  # True, it's a release commit
++  else
++    return 1  # False, not a release commit
++  fi
++}
++
+ # Get git commit sha of installed tensorflow.
+ echo "Querying commit SHA"
+ short_commit_sha=$(bazel run  //oss_scripts/pip_package:tensorflow_build_info -- git_version)
++
+ if [[ "$short_commit_sha" == "unknown" ]]; then
+   # Some nightly builds report "unknown" for tf.__git_version.
+   echo 'TF git version "unknown", assuming nightly.'
+-  commit_slug='nightly'
++  # Get latest commit from master
++  commit_slug=$(curl -s "https://api.github.com/repos/tensorflow/tensorflow/commits/master" | grep '"sha"' | head -n 1 | cut -d '"' -f 4)
++  echo "Using latest commit from master: $commit_slug"
+ else
++  # Extract the short commit SHA
+   if [[ "${osname}" == "darwin" ]]; then
+     short_commit_sha=$(echo $short_commit_sha | perl -nle 'print $& while m{(?<=-g)[0-9a-f]*$}g')
+   else
+     short_commit_sha=$(echo $short_commit_sha | grep -oP '(?<=-g)[0-9a-f]*$')
+   fi
+   echo "Found tensorflow commit sha: $short_commit_sha"
+-  commit_slug=$(curl -s "https://api.github.com/repos/tensorflow/tensorflow/commits/$short_commit_sha" | grep "sha" | head -n 1 | cut -d '"' -f 4)
++
++  # Check if commit SHA corresponds to a release tag
++  if is_release_commit "$short_commit_sha"; then
++    echo "Commit SHA corresponds to a release tag."
++    commit_slug="$short_commit_sha"
++  else
++    echo "Commit SHA does not correspond to a release tag."
++    # Get latest commit SHA from master
++    commit_slug=$(curl -s "https://api.github.com/repos/tensorflow/tensorflow/commits/master" | grep '"sha"' | head -n 1 | cut -d '"' -f 4)
++    echo "Using latest commit from master: $commit_slug"
++  fi
+ fi
+ 
+ # Update TF dependency to installed tensorflow.
