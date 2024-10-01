@@ -13,16 +13,16 @@ def zigma(version, requires=None, default=False):
         'ZIGMA_VERSION': version,
     }
 
-    #builder = pkg.copy()
+    builder = pkg.copy()
 
-    #builder['name'] = f'zigma:{version}-builder'
-    #builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
+    builder['name'] = f'zigma:{version}-builder'
+    builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
 
     if default:
         pkg['alias'] = 'zigma'
-        #builder['alias'] = 'zigma:builder'
+        builder['alias'] = 'zigma:builder'
 
-    return pkg #, builder
+    return pkg, builder
 
 package = [
     zigma('1.0', default=True)
