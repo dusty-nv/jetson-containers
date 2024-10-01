@@ -77,8 +77,6 @@ if [[ "$csi_to_webcam_conversion" == true ]]; then
     echo "CSI Capture resolution: ${capture_width}x${capture_height}@${capture_fps}"
     echo "CSI Output resolution : ${output_width}x${output_height}@${output_fps}"
 
-	exit 1
-
 	# Check if v4l2loopback-dkms is installed
 	if dpkg -l | grep -q v4l2loopback-dkms; then
 		echo "( v4l2loopback-dkms is installed. )"
@@ -105,44 +103,6 @@ if [[ "$csi_to_webcam_conversion" == true ]]; then
 		echo " "
 		exit 1
 	fi
-
-	# Parse CSI related arguments
-	while [[ "$#" -gt 0 ]]; do
-		case $1 in
-			--csi2webcam) 
-				csi2webcam=true
-				;;
-			--csi-capture-res=*)
-				capture_res="${1#*=}"
-				# Extract width, height, and fps from capture_res
-				if [[ $capture_res =~ ([0-9]+)x([0-9]+)@([0-9]+) ]]; then
-					capture_width="${BASH_REMATCH[1]}"
-					capture_height="${BASH_REMATCH[2]}"
-					capture_fps="${BASH_REMATCH[3]}"
-				else
-					echo "Invalid format for --csi-capture-res. Expected format: widthxheight@fps"
-					exit 1
-				fi
-				;;
-			--csi-output-res=*)
-				output_res="${1#*=}"
-				# Extract width, height, and fps from output_res
-				if [[ $output_res =~ ([0-9]+)x([0-9]+)@([0-9]+) ]]; then
-					output_width="${BASH_REMATCH[1]}"
-					output_height="${BASH_REMATCH[2]}"
-					output_fps="${BASH_REMATCH[3]}"
-				else
-					echo "Invalid format for --csi-output-res. Expected format: widthxheight@fps"
-					exit 1
-				fi
-				;;
-			*)
-				echo "Unknown parameter: $1"
-				exit 1
-				;;
-		esac
-		shift
-	done
 
 	# Store /dev/video index number for each CSI camera found
 	csi_indexes=()
@@ -186,40 +146,25 @@ if [[ "$csi_to_webcam_conversion" == true ]]; then
 	for csi_index in "${csi_indexes[@]}"; do
 		echo "Starting background process for CSI camera device number: $csi_index"
 
-		# Run gst-launch-1.0 command in the background, suppressing all output
-		# echo "gst-launch-1.0 -v nvarguscamerasrc sensor-id=${csi_index} \
-		# 			! 'video/x-raw(memory:NVMM), format=NV12, width=1640, height=1232, framerate=30/1' \
-		# 			! nvvidconv \
-		# 			! 'video/x-raw, width=1280, height=720, format=I420, framerate=30/1' \
-		# 			! videoconvert \
-		# 			! identity drop-allocation=1 \
-		# 			! 'video/x-raw, width=1280, height=720, format=YUY2, framerate=30/1' \
-		# 			! v4l2sink device=${new_devices[$i]} > /dev/null 2>&1 &"
+    echo "CSI Capture resolution: ${capture_width}x${capture_height}@${capture_fps}"
+    echo "CSI Output resolution : ${output_width}x${output_height}@${output_fps}"
 		echo "gst-launch-1.0 -v nvarguscamerasrc sensor-id=${csi_index} \
-					! 'video/x-raw(memory:NVMM), format=NV12, width=1640, height=1232, framerate=30/1' \
+					! 'video/x-raw(memory:NVMM), format=NV12, width=${capture_width}, height=${capture_height}, framerate=${capture_fps}/1' \
 					! nvvidconv \
-					! 'video/x-raw, width=800, height=600, framerate=30/1', format=I420 \
+					! 'video/x-raw, width=${output_width}, height=${output_height}, framerate=${output_fps}/1', format=I420 \
 					! nvjpegenc \
 					! multipartmux \
 					! multipartdemux single-stream=1 \
-					! \"image/jpeg, width=800, height=600, parsed=(boolean)true, colorimetry=(string)2:4:7:1, framerate=(fraction)30/1, sof-marker=(int)0\" \
+					! \"image/jpeg, width=${output_width}, height=${output_height}, parsed=(boolean)true, colorimetry=(string)2:4:7:1, framerate=(fraction)${output_fps}/1, sof-marker=(int)0\" \
 					! v4l2sink device=${new_devices[$i]} > /dev/null 2>&1 &"
-		# gst-launch-1.0 -v nvarguscamerasrc sensor-id=${csi_index} \
-		# 			! 'video/x-raw(memory:NVMM), format=NV12, width=1640, height=1232, framerate=30/1' \
-		# 			! nvvidconv \
-		# 			! 'video/x-raw, width=1280, height=720, format=I420, framerate=30/1' \
-		# 			! videoconvert \
-		# 			! identity drop-allocation=1 \
-		# 			! 'video/x-raw, width=1280, height=720, format=YUY2, framerate=30/1' \
-		# 			! v4l2sink device=${new_devices[$i]} > /dev/null 2>&1 &
 		gst-launch-1.0 -v nvarguscamerasrc sensor-id=${csi_index} \
-					! 'video/x-raw(memory:NVMM), format=NV12, width=1640, height=1232, framerate=30/1' \
+					! "video/x-raw(memory:NVMM), format=NV12, width=${capture_width}, height=${capture_height}, framerate=${capture_fps}/1" \
 					! nvvidconv \
-					! 'video/x-raw, width=800, height=600, framerate=30/1', format=I420 \
+					! "video/x-raw, width=${output_width}, height=${output_height}, framerate=${output_fps}/1", format=I420 \
 					! nvjpegenc \
 					! multipartmux \
 					! multipartdemux single-stream=1 \
-					! "image/jpeg, width=800, height=600, parsed=(boolean)true, colorimetry=(string)2:4:7:1, framerate=(fraction)30/1, sof-marker=(int)0" \
+					! "image/jpeg, width=${output_width}, height=${output_height}, parsed=(boolean)true, colorimetry=(string)2:4:7:1, framerate=(fraction)${output_fps}/1, sof-marker=(int)0" \
 					! v4l2sink device=${new_devices[$i]} > /dev/null 2>&1 &
 		
 		# Store the PID of the background process if you want to manage it later
@@ -310,7 +255,7 @@ filtered_args=()
 
 # Loop through all provided arguments
 for arg in "$@"; do
-    if [[ "$arg" != "--csi2webcam" ]]; then
+    if [[ "$arg" != "--csi2webcam" && "$arg" != --csi-capture-res=* && "$arg" != --csi-output-res=* ]]; then
         filtered_args+=("$arg")  # Add to the new array if not the argument to remove
     fi
 done
