@@ -18,12 +18,53 @@ cleanup() {
 # Trap signals like INT (Ctrl+C) or TERM to invoke the cleanup function
 trap cleanup INT TERM
 
-# Check for the --csi2webcam option
+# Initialize variables (default for arguments)
 csi_to_webcam_conversion=false
+capture_res="1640x1232@30"
+output_res="1280x720@30"
+capture_width="1640"
+capture_height="1232"
+capture_fps="30"
+output_width="1280"
+output_height="720"
+output_fps="30"
+
+# Loop through arguments
 for arg in "$@"; do
+	# Check for the --csi2webcam option
     if [[ "$arg" == "--csi2webcam" ]]; then
         csi_to_webcam_conversion=true
-        break
+        continue  # Move to next argument
+    fi
+
+    # Check for --csi-capture-res
+    if [[ "$arg" =~ --csi-capture-res= ]]; then
+        csi_capture_res="${arg#*=}"
+        # Extract width, height, and fps from capture_res
+        if [[ $csi_capture_res =~ ([0-9]+)x([0-9]+)@([0-9]+) ]]; then
+            capture_width="${BASH_REMATCH[1]}"
+            capture_height="${BASH_REMATCH[2]}"
+            capture_fps="${BASH_REMATCH[3]}"
+        else
+            echo "Invalid format for --csi-capture-res. Expected format: widthxheight@fps"
+            exit 1
+        fi
+        continue
+    fi
+
+    # Check for --csi-output-res
+    if [[ "$arg" =~ --csi-output-res= ]]; then
+        csi_output_res="${arg#*=}"
+        # Extract width, height, and fps from output_res
+        if [[ $csi_output_res =~ ([0-9]+)x([0-9]+)@([0-9]+) ]]; then
+            output_width="${BASH_REMATCH[1]}"
+            output_height="${BASH_REMATCH[2]}"
+            output_fps="${BASH_REMATCH[3]}"
+        else
+            echo "Invalid format for --csi-output-res. Expected format: widthxheight@fps"
+            exit 1
+        fi
+        continue
     fi
 done
 
@@ -31,6 +72,12 @@ done
 V4L2_DEVICES=""
 
 if [[ "$csi_to_webcam_conversion" == true ]]; then
+
+    echo "CSI to Webcam conversion enabled."
+    echo "CSI Capture resolution: ${capture_width}x${capture_height}@${capture_fps}"
+    echo "CSI Output resolution : ${output_width}x${output_height}@${output_fps}"
+
+	exit 1
 
 	# Check if v4l2loopback-dkms is installed
 	if dpkg -l | grep -q v4l2loopback-dkms; then
@@ -59,6 +106,44 @@ if [[ "$csi_to_webcam_conversion" == true ]]; then
 		exit 1
 	fi
 
+	# Parse CSI related arguments
+	while [[ "$#" -gt 0 ]]; do
+		case $1 in
+			--csi2webcam) 
+				csi2webcam=true
+				;;
+			--csi-capture-res=*)
+				capture_res="${1#*=}"
+				# Extract width, height, and fps from capture_res
+				if [[ $capture_res =~ ([0-9]+)x([0-9]+)@([0-9]+) ]]; then
+					capture_width="${BASH_REMATCH[1]}"
+					capture_height="${BASH_REMATCH[2]}"
+					capture_fps="${BASH_REMATCH[3]}"
+				else
+					echo "Invalid format for --csi-capture-res. Expected format: widthxheight@fps"
+					exit 1
+				fi
+				;;
+			--csi-output-res=*)
+				output_res="${1#*=}"
+				# Extract width, height, and fps from output_res
+				if [[ $output_res =~ ([0-9]+)x([0-9]+)@([0-9]+) ]]; then
+					output_width="${BASH_REMATCH[1]}"
+					output_height="${BASH_REMATCH[2]}"
+					output_fps="${BASH_REMATCH[3]}"
+				else
+					echo "Invalid format for --csi-output-res. Expected format: widthxheight@fps"
+					exit 1
+				fi
+				;;
+			*)
+				echo "Unknown parameter: $1"
+				exit 1
+				;;
+		esac
+		shift
+	done
+
 	# Store /dev/video index number for each CSI camera found
 	csi_indexes=()
 	# Store /dev/video* device name for each CSI camera found
@@ -81,7 +166,7 @@ if [[ "$csi_to_webcam_conversion" == true ]]; then
 	done
 
 	# Load the v4l2loopback module to create as many devices as CSI cameras found in the prior step
-	sudo modprobe v4l2loopback devices=${#csi_indexes[@]} exclusive_caps=1 card_label="Converted from CSI camera"
+	sudo modprobe v4l2loopback devices=${#csi_indexes[@]} exclusive_caps=1 card_label="Cam1,Cam2"
 
 	# Get all new /dev/video devices created by v4l2loopback
 	new_devices=($(v4l2-ctl --list-devices | grep -A 1 "v4l2loopback" | grep '/dev/video' | awk '{print $1}'))
@@ -102,26 +187,41 @@ if [[ "$csi_to_webcam_conversion" == true ]]; then
 		echo "Starting background process for CSI camera device number: $csi_index"
 
 		# Run gst-launch-1.0 command in the background, suppressing all output
+		# echo "gst-launch-1.0 -v nvarguscamerasrc sensor-id=${csi_index} \
+		# 			! 'video/x-raw(memory:NVMM), format=NV12, width=1640, height=1232, framerate=30/1' \
+		# 			! nvvidconv \
+		# 			! 'video/x-raw, width=1280, height=720, format=I420, framerate=30/1' \
+		# 			! videoconvert \
+		# 			! identity drop-allocation=1 \
+		# 			! 'video/x-raw, width=1280, height=720, format=YUY2, framerate=30/1' \
+		# 			! v4l2sink device=${new_devices[$i]} > /dev/null 2>&1 &"
 		echo "gst-launch-1.0 -v nvarguscamerasrc sensor-id=${csi_index} \
 					! 'video/x-raw(memory:NVMM), format=NV12, width=1640, height=1232, framerate=30/1' \
 					! nvvidconv \
-					! 'video/x-raw, width=1600, height=1200, framerate=30/1', format=I420 \
+					! 'video/x-raw, width=800, height=600, framerate=30/1', format=I420 \
 					! nvjpegenc \
 					! multipartmux \
 					! multipartdemux single-stream=1 \
-					! \"image/jpeg, width=1600, height=1200, parsed=(boolean)true, colorimetry=(string)2:4:7:1, framerate=(fraction)30/1, sof-marker=(int)0\" \
+					! \"image/jpeg, width=800, height=600, parsed=(boolean)true, colorimetry=(string)2:4:7:1, framerate=(fraction)30/1, sof-marker=(int)0\" \
 					! v4l2sink device=${new_devices[$i]} > /dev/null 2>&1 &"
+		# gst-launch-1.0 -v nvarguscamerasrc sensor-id=${csi_index} \
+		# 			! 'video/x-raw(memory:NVMM), format=NV12, width=1640, height=1232, framerate=30/1' \
+		# 			! nvvidconv \
+		# 			! 'video/x-raw, width=1280, height=720, format=I420, framerate=30/1' \
+		# 			! videoconvert \
+		# 			! identity drop-allocation=1 \
+		# 			! 'video/x-raw, width=1280, height=720, format=YUY2, framerate=30/1' \
+		# 			! v4l2sink device=${new_devices[$i]} > /dev/null 2>&1 &
 		gst-launch-1.0 -v nvarguscamerasrc sensor-id=${csi_index} \
 					! 'video/x-raw(memory:NVMM), format=NV12, width=1640, height=1232, framerate=30/1' \
 					! nvvidconv \
-					! 'video/x-raw, width=1600, height=1200, framerate=30/1', format=I420 \
+					! 'video/x-raw, width=800, height=600, framerate=30/1', format=I420 \
 					! nvjpegenc \
 					! multipartmux \
 					! multipartdemux single-stream=1 \
-					! "image/jpeg, width=1600, height=1200, parsed=(boolean)true, colorimetry=(string)2:4:7:1, framerate=(fraction)30/1, sof-marker=(int)0" \
+					! "image/jpeg, width=800, height=600, parsed=(boolean)true, colorimetry=(string)2:4:7:1, framerate=(fraction)30/1, sof-marker=(int)0" \
 					! v4l2sink device=${new_devices[$i]} > /dev/null 2>&1 &
-		# ping google.com > /dev/null 2>&1 &
-
+		
 		# Store the PID of the background process if you want to manage it later
 		BG_PIDS+=($!)
 		echo "BG_PIDS: ${BG_PIDS[@]}"
