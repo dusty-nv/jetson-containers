@@ -4,7 +4,7 @@ __pycache__
 *.so
 *.deb
 data/*
-data/lerobot/outputs
+data/lerobot/notebooks/outputs
 !data/lerobot
 logs
 test/data
