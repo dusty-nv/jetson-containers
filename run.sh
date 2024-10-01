@@ -45,6 +45,20 @@ if [[ "$csi_to_webcam_conversion" == true ]]; then
 		exit 1
 	fi
 
+	# Check if v4l2-ctl is installed
+	if command -v v4l2-ctl &> /dev/null
+	then
+		echo "(v4l2-ctl is installed)"
+	else
+		echo "[Error] v4l2-ctl is not installed"
+		echo " "
+		echo "Perform the following command to first install v4l-utils package."
+		echo " "
+		echo "    sudo apt install v4l-utils"
+		echo " "
+		exit 1
+	fi
+
 	# Store /dev/video index number for each CSI camera found
 	csi_indexes=()
 	# Store /dev/video* device name for each CSI camera found
