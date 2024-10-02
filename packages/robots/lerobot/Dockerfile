@@ -30,6 +30,12 @@ RUN cd /opt/lerobot && \
 RUN cd /opt/lerobot && \
     pip install -e ".[dynamixel]"
 
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+            speech-dispatcher ffmpeg \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean \
+
 ENV JUPYTER_ROOT=/opt/lerobot
 
 WORKDIR /opt/lerobot
