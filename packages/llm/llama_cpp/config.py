@@ -7,8 +7,6 @@ def llama_cpp(version, branch=None, test=None, default=False, flags=DEFAULT_FLAG
 
     pkg['name'] = f'llama_cpp:{version}'
 
-    
-    
     if not test:
         test = "test_model.py --model $(huggingface-downloader TheBloke/Llama-2-7B-GGUF/llama-2-7b.Q4_K_S.gguf)"
         
@@ -37,5 +35,6 @@ package = [
     llama_cpp('0.2.57', flags=LEGACY_FLAGS),
     llama_cpp('0.2.70', flags=LEGACY_FLAGS),
     llama_cpp('0.2.83'),
-    llama_cpp('0.2.90', default=True),
+    llama_cpp('0.2.90'),
+    llama_cpp('0.3.1', default=True),
 ]
