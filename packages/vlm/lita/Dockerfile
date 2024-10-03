@@ -11,7 +11,7 @@ FROM ${BASE_IMAGE}
 
 WORKDIR /opt
 
-ARG LITA_REPO=haotian-liu/lita
+ARG LITA_REPO=NVlabs/LITA
 ARG LITA_BRANCH=main
 
 ADD https://api.github.com/repos/${LITA_REPO}/git/refs/heads/${LITA_BRANCH} /tmp/lita_version.json
