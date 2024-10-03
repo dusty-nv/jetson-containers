@@ -69,7 +69,7 @@ The output should look like this.
 lrwxrwxrwx 1 root root 13 Sep 24 13:07 usb-ROBOTIS_OpenRB-150_BA98C8C350304A46462E3120FF121B06-if00 -> ../../ttyACM1
 ```
 
-Then edit the first line of `./data/lerobot/99-usb-serial.rules` like the following.
+Then edit the first line of `./99-usb-serial.rules` like the following.
 
 ```
 SUBSYSTEM=="tty", ATTRS{idVendor}=="2f5d", ATTRS{idProduct}=="2202", ATTRS{serial}=="BA98C8C350304A46462E3120FF121B06", SYMLINK+="ttyACM_kochleader"
@@ -86,17 +86,17 @@ lrwxrwxrwx 1 root root 13 Sep 24 13:07 usb-ROBOTIS_OpenRB-150_483F88DC50304A4646
 $ vi ./data/lerobot/99-usb-serial.rules
 ```
 
-You should have `./data/lerobot/99-usb-serial.rules` now looking like this:
+You should have `./99-usb-serial.rules` now looking like this:
 
 ```
 SUBSYSTEM=="tty", ATTRS{idVendor}=="2f5d", ATTRS{idProduct}=="2202", ATTRS{serial}=="BA98C8C350304A46462E3120FF121B06", SYMLINK+="ttyACM_kochleader"
 SUBSYSTEM=="tty", ATTRS{idVendor}=="2f5d", ATTRS{idProduct}=="2202", ATTRS{serial}=="483F88DC50304A46462E3120FF0C081A", SYMLINK+="ttyACM_kochfollower"
 ```
 
-Finally copy this under `/etc/udev/rules.d/`, and restart Jetson.
+Finally copy this under `/etc/udev/rules.d/` (of host), and restart Jetson.
 
 ```
-sudo cp ./data/lerobot/99-usb-serial.rules /etc/udev/rules.d/
+sudo cp ./99-usb-serial.rules /etc/udev/rules.d/
 sudo reboot
 ```
 
@@ -115,15 +115,20 @@ lrwxrwxrwx 1 root root         7 Sep 24 17:20 /dev/ttyACM_kochfollower -> ttyACM
 lrwxrwxrwx 1 root root         7 Sep 24 16:13 /dev/ttyACM_kochleader -> ttyACM1
 ```
 
-### Start the container
+### Create the local copy of lerobot on host (under `jetson-containers/data` dir)
+
+```bash
+cd jetson-containers
+./packages/robots/lerobot/clone_lerobot_dir_under_data.sh
+./packages/robots/lerobot/copy_overlay_files_in_data_lerobot.sh
+```
+
+### Start the container with local lerobot dir mounted
 
 ```bash
 ./run.sh \
   --csi2webcam --csi-capture-res='1640x1232@30' --csi-output-res='640x480@30' \
-  -v ${PWD}/data/lerobot/.cache/calibration/koch:/opt/lerobot/.cache/calibration/koch \
-  -v ${PWD}/data/lerobot/lerobot/configs/robot/koch.yaml:/opt/lerobot/lerobot/configs/robot/koch.yaml \
-  -v ${PWD}/data/lerobot/notebooks/:/opt/lerobot/notebooks \
-  -v ${PWD}/data/lerobot/data/:/opt/lerobot/data \
+  -v ${PWD}/data/lerobot/:/opt/lerobot/ \
   $(./autotag lerobot)
 ```
 
@@ -140,7 +145,7 @@ JupyterLab logs:  /data/logs/jupyter.log
 
 Copy and paste the address on your web browser and access the Jupyter Lab server.
 
-Navigate to `./notebooks/` and open `7_get_started_with_real_robot.ipynb`.
+Navigate to `./notebooks/` and open the first notebook.
 
 Now follow the Jupyter notebook contents.
 

@@ -4,9 +4,6 @@ __pycache__
 *.so
 *.deb
 data/*
-data/lerobot/notebooks/outputs
-data/lerobot/99-usb-serial.rule
-!data/lerobot
 logs
 test/data
 runner
