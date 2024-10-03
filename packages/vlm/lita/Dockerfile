@@ -2,7 +2,7 @@
 # name: lita
 # group: vlm
 # docs: docs.md
-# depends: [ffmpeg, pytorch, transformers, flash-attention]
+# depends: [decord, pytorch, transformers, flash-attention]
 # requires: '>=34.1.0'
 # test: test.py
 #---
