@@ -34,7 +34,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
             speech-dispatcher ffmpeg \
     && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean \
+    && apt-get clean
 
 ENV JUPYTER_ROOT=/opt/lerobot
 
