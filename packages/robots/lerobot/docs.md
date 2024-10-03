@@ -119,10 +119,11 @@ lrwxrwxrwx 1 root root         7 Sep 24 16:13 /dev/ttyACM_kochleader -> ttyACM1
 
 ```bash
 ./run.sh \
-  --csi2webcam \
+  --csi2webcam --csi-capture-res='1640x1232@30' --csi-output-res='640x480@30' \
   -v ${PWD}/data/lerobot/.cache/calibration/koch:/opt/lerobot/.cache/calibration/koch \
   -v ${PWD}/data/lerobot/lerobot/configs/robot/koch.yaml:/opt/lerobot/lerobot/configs/robot/koch.yaml \
   -v ${PWD}/data/lerobot/notebooks/:/opt/lerobot/notebooks \
+  -v ${PWD}/data/lerobot/data/:/opt/lerobot/data \
   $(./autotag lerobot)
 ```
 
