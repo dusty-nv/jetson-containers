@@ -1,5 +1,21 @@
 #!/usr/bin/env python3
+import argparse
 
+from llava.model.builder import load_pretrained_model
+from llava.mm_utils import get_model_name_from_path
 
+parser = argparse.ArgumentParser()
 
-print("LITA OK\n")
+parser.add_argument('--model-path', type=str, default='deahuang/lita-vicuna-v1-3-13b')
+parser.add_argument('--model-base', type=str, default=None)
+
+args = parser.parse_args()
+print(args)
+
+model = load_pretrained_model(
+    model_path=args.model_path,
+    model_base=args.model_base,
+    model_name=get_model_name_from_path(args.model_path)
+)
+
+print(model)
