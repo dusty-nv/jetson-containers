@@ -38,4 +38,10 @@ RUN apt-get update && \
 
 ENV JUPYTER_ROOT=/opt/lerobot
 
+# Create a symbolic link for python3 to python
+RUN ln -s /usr/bin/python3 /usr/bin/python
+
+# Verify the symlink is created and the version of Python
+RUN python --version
+
 WORKDIR /opt/lerobot
