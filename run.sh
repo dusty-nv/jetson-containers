@@ -148,24 +148,34 @@ if [[ "$csi_to_webcam_conversion" == true ]]; then
 
     echo "CSI Capture resolution: ${capture_width}x${capture_height}@${capture_fps}"
     echo "CSI Output resolution : ${output_width}x${output_height}@${output_fps}"
-		echo "gst-launch-1.0 -v nvarguscamerasrc sensor-id=${csi_index} \
-					! 'video/x-raw(memory:NVMM), format=NV12, width=${capture_width}, height=${capture_height}, framerate=${capture_fps}/1' \
-					! nvvidconv \
-					! 'video/x-raw, width=${output_width}, height=${output_height}, framerate=${output_fps}/1', format=I420 \
-					! nvjpegenc \
-					! multipartmux \
-					! multipartdemux single-stream=1 \
-					! \"image/jpeg, width=${output_width}, height=${output_height}, parsed=(boolean)true, colorimetry=(string)2:4:7:1, framerate=(fraction)${output_fps}/1, sof-marker=(int)0\" \
-					! v4l2sink device=${new_devices[$i]} > /dev/null 2>&1 &"
-		gst-launch-1.0 -v nvarguscamerasrc sensor-id=${csi_index} \
-					! "video/x-raw(memory:NVMM), format=NV12, width=${capture_width}, height=${capture_height}, framerate=${capture_fps}/1" \
-					! nvvidconv \
-					! "video/x-raw, width=${output_width}, height=${output_height}, framerate=${output_fps}/1", format=I420 \
-					! nvjpegenc \
-					! multipartmux \
-					! multipartdemux single-stream=1 \
-					! "image/jpeg, width=${output_width}, height=${output_height}, parsed=(boolean)true, colorimetry=(string)2:4:7:1, framerate=(fraction)${output_fps}/1, sof-marker=(int)0" \
-					! v4l2sink device=${new_devices[$i]} > /dev/null 2>&1 &
+
+	# Unset the DISPLAY env variable because, apparently, some GStreamer components might try to use this display 
+	# for video rendering or processing, which can conflict with other GStreamer elements or hardware device
+
+	# Save the current DISPLAY variable
+	ORIGINAL_DISPLAY=$DISPLAY
+
+	# Temporarily unset DISPLAY for the GStreamer command
+	unset DISPLAY
+	
+	echo "gst-launch-1.0 -v nvarguscamerasrc sensor-id=${csi_index} \
+				! 'video/x-raw(memory:NVMM), format=NV12, width=${capture_width}, height=${capture_height}, framerate=${capture_fps}/1' \
+				! nvvidconv \
+				! 'video/x-raw, width=${output_width}, height=${output_height}, framerate=${output_fps}/1', format=I420 \
+				! nvjpegenc \
+				! multipartmux \
+				! multipartdemux single-stream=1 \
+				! \"image/jpeg, width=${output_width}, height=${output_height}, parsed=(boolean)true, colorimetry=(string)2:4:7:1, framerate=(fraction)${output_fps}/1, sof-marker=(int)0\" \
+				! v4l2sink device=${new_devices[$i]} > /dev/null 2>&1 &"
+	gst-launch-1.0 -v nvarguscamerasrc sensor-id=${csi_index} \
+				! "video/x-raw(memory:NVMM), format=NV12, width=${capture_width}, height=${capture_height}, framerate=${capture_fps}/1" \
+				! nvvidconv \
+				! "video/x-raw, width=${output_width}, height=${output_height}, framerate=${output_fps}/1", format=I420 \
+				! nvjpegenc \
+				! multipartmux \
+				! multipartdemux single-stream=1 \
+				! "image/jpeg, width=${output_width}, height=${output_height}, parsed=(boolean)true, colorimetry=(string)2:4:7:1, framerate=(fraction)${output_fps}/1, sof-marker=(int)0" \
+				! v4l2sink device=${new_devices[$i]} > /dev/null 2>&1 &
 		
 		# Store the PID of the background process if you want to manage it later
 		BG_PIDS+=($!)
@@ -173,6 +183,9 @@ if [[ "$csi_to_webcam_conversion" == true ]]; then
 
 		((i++))
 	done
+
+	# Restore the DISPLAY env variable
+	export DISPLAY=$ORIGINAL_DISPLAY
 
 else
 	# Loop through all matching /dev/video* devices
@@ -285,6 +298,8 @@ if [ $ARCH = "aarch64" ]; then
 		--volume /var/run/docker.sock:/var/run/docker.sock \
 		--volume $ROOT/data:/data \
 		--device /dev/snd \
+		-v /run/user/$(id -u)/pulse:/run/user/$(id -u)/pulse \
+		-e PULSE_SERVER=unix:/run/user/$(id -u)/pulse/native \
 		--device /dev/bus/usb \
 		$OPTIONAL_PERMISSION_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $ACM_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
 		--name my_jetson_container \
