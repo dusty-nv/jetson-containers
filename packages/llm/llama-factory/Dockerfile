@@ -2,7 +2,7 @@
 # name: llama-factory
 # group: llm
 # requires: '>=35'
-# depends: [bitsandbytes, flash-attention, auto-gptq]
+# depends: [bitsandbytes, flash-attention, auto_gptq]
 # test: test.py
 # notes: LLaMA-Factory for Jetson - https://github.com/hiyouga/LLaMA-Factory
 #---
