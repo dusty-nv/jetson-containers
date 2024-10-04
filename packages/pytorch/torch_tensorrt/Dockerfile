@@ -22,7 +22,8 @@ COPY WORKSPACE.jp46 /tmp
 #   pip3 install --no-cache-dir --verbose pyyaml
 #   python3 -m pip wheel --verbose --pre . --config-setting="--jetpack-version=5.0" --config-settings="--use-cxx11-abi=1" -w dist && \
 #
-RUN git clone --branch=${TORCH_TRT_VERSION} --depth=1 https://github.com/pytorch/TensorRT torch_tensorrt && \
+RUN git clone --branch=${TORCH_TRT_VERSION} --depth=1 https://github.com/pytorch/TensorRT torch_tensorrt || \
+    git clone --depth=1 https://github.com/pytorch/TensorRT torch_tensorrt && \
     cd torch_tensorrt && \
     mkdir -p toolchains/jp_workspaces || echo "path already existed" && \
     cp /tmp/WORKSPACE.jp46 toolchains/jp_workspaces && \
