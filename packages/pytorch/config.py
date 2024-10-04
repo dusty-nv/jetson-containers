@@ -83,6 +83,7 @@ package = [
     pytorch_pip('2.2', requires='>=35'),
     pytorch_pip('2.3', requires='==36.*'),
     pytorch_pip('2.4', requires='==36.*'),
+    pytorch_pip('2.5', requires='==36.*'),
 
     # JetPack 4
     pytorch_whl('1.10', 'torch-1.10.0-cp36-cp36m-linux_aarch64.whl', 'https://nvidia.box.com/shared/static/fjtbno0vpo676a25cgvuqc1wty0fkkg6.whl', '==32.*'),
