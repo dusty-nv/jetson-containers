@@ -3,7 +3,8 @@ set -ex
 
 echo "Building AutoGPTQ ${AUTOGPTQ_VERSION}"
  
-git clone --branch=v${AUTOGPTQ_BRANCH} --depth=1 https://github.com/PanQiWei/AutoGPTQ.git
+git clone --branch=v${AUTOGPTQ_BRANCH} --depth=1 https://github.com/PanQiWei/AutoGPTQ.git || \
+git clone --depth=1 https://github.com/PanQiWei/AutoGPTQ.git
 
 cd AutoGPTQ
 python3 setup.py --verbose bdist_wheel --dist-dir /opt/wheels
