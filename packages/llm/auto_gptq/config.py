@@ -18,5 +18,6 @@ def AutoGPTQ(version, branch=None, default=False):
     return pkg
 
 package = [
-    AutoGPTQ('0.7.1', default=True),
+    AutoGPTQ('0.7.1', default=False),
+    AutoGPTQ('0.8.0', default=True),
 ]

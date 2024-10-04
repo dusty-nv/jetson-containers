@@ -16,7 +16,10 @@ if [ ! -z "$OPENCV_URL" ]; then
     $ROOT/install_deb.sh
 else
     echo "Installing opencv ${OPENCV_VERSION} from pip"
-    $ROOT/install_pip.sh
+    export OPENCV_DEB="OpenCV-${OPENCV_VERSION}.tar.gz"
+    export OPENCV_URL=${TAR_INDEX_URL}/${OPENCV_DEB}
+    $ROOT/install_deb.sh
+    pip3 install --no-cache-dir --verbose opencv-contrib-python~=${OPENCV_VERSION}
 fi
 
 python3 -c "import cv2; print('OpenCV version:', str(cv2.__version__)); print(cv2.getBuildInformation())"

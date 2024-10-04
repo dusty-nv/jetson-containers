@@ -10,14 +10,15 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-RUN git clone --depth=1 https://github.com/real-stanford/diffusion_policy /opt/diffusion_policy
-COPY requirements.txt /opt/diffusion_policy/
+WORKDIR /opt/diffusion_policy
 
-RUN pip3 install --no-cache-dir --verbose -r /opt/diffusion_policy/requirements.txt
+RUN git clone --depth=1 https://github.com/real-stanford/diffusion_policy .
+COPY requirements.txt ./
+
+RUN pip3 install --no-cache-dir --verbose -r requirements.txt
 RUN pip3 install --no-cache-dir --verbose git+https://github.com/facebookresearch/pytorch3d.git
 RUN pip3 install --no-cache-dir --verbose 'protobuf==3.20.2' 'accelerate'
-RUN pip3 install --verbose -e /opt/diffusion_policy 
+RUN pip3 install --verbose -e .
 
-COPY *.ipynb /opt/diffusion_policy/notebooks/
+COPY *.ipynb ./notebooks/
 
-CMD /bin/bash
