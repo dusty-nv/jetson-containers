@@ -3,4 +3,4 @@ import argparse
 
 from llava.model.builder import load_pretrained_model
 
-print("tila OK\n")
+print("lita OK\n")
