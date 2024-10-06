@@ -32,7 +32,7 @@ RUN cd /opt/lerobot && \
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-            speech-dispatcher ffmpeg \
+            speech-dispatcher alsa-utils \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
@@ -45,3 +45,5 @@ RUN ln -s /usr/bin/python3 /usr/bin/python
 RUN python --version
 
 WORKDIR /opt/lerobot
+
+CMD speech-dispatcher --spawn  && /bin/bash
