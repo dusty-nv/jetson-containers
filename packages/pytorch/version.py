@@ -9,7 +9,7 @@ if 'PYTORCH_VERSION' in os.environ and len(os.environ['PYTORCH_VERSION']) > 0:
 else:
     if L4T_VERSION.major >= 36:
         if CUDA_VERSION >= Version('12.4'):
-            PYTORCH_VERSION = Version('2.5')
+            PYTORCH_VERSION = Version('2.4')
         else:
             PYTORCH_VERSION = Version('2.2')
     elif L4T_VERSION.major >= 34:
