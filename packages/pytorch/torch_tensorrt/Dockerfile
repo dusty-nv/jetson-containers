@@ -43,4 +43,3 @@ RUN pip3 install --no-cache-dir --verbose /opt/torch_tensorrt*.whl && \
 # ./torchtrtc: error while loading shared libraries: libtorch.so: cannot open shared object file
 ENV LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/lib/python${PYTHON_VERSION}/dist-packages/torch/lib \
     PATH=${PATH}:/usr/local/lib/python${PYTHON_VERSION}/dist-packages/torch_tensorrt/bin
-
