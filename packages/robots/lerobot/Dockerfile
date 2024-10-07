@@ -46,4 +46,4 @@ RUN python --version
 
 WORKDIR /opt/lerobot
 
-CMD speech-dispatcher --spawn  && /bin/bash
+CMD /start_jupyter && speech-dispatcher --spawn  && /bin/bash
