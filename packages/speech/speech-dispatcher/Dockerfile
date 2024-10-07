@@ -12,7 +12,7 @@ FROM ${BASE_IMAGE}
 WORKDIR /opt
 
 RUN apt-get update && \
-    apt install -y speech-dispatcher alsa-utils && \
+    apt install -y speech-dispatcher pulseaudio-utils alsa-utils && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean
 
