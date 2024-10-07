@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-print('testing VLLM...')
-from huggingface_hub import hf_hub_download
+print('testing vLLM...')
 
+from huggingface_hub import hf_hub_download
 from vllm import LLM, SamplingParams
 
 
@@ -38,4 +38,5 @@ if __name__ == "__main__":
     filename = "tinyllama-1.1b-chat-v1.0.Q4_0.gguf"
     model = hf_hub_download(repo_id, filename=filename)
     run_gguf_inference(model)
-print('VLLM OK\n')
+    
+print('vLLM OK\n')
