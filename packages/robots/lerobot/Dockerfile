@@ -32,7 +32,7 @@ RUN cd /opt/lerobot && \
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-            speech-dispatcher speech-dispatcher-espeak-ng alsa-utils \
+            speech-dispatcher speech-dispatcher-espeak-ng pulseaudio-utils alsa-utils \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
