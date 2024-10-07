@@ -7,10 +7,13 @@ git clone --depth=1 --recursive https://github.com/vllm-project/vllm /opt/vllm
 
 # Navigate to the directory containing vllm's setup.py
 cd /opt/vllm
+
 export MAX_JOBS=$(nproc)
 export CUDA_HOME=/usr/local/cuda
 export PATH="${CUDA_HOME}/bin:$PATH"
-python3 use_existing_torch.py
+
+python3 use_existing_torch.py || echo "skipping vllm/use_existing_torch.py"
+
 pip3 install -r requirements-build.txt
 pip3 wheel --no-build-isolation --verbose --wheel-dir=/opt/vllm/wheels .
 pip3 install --no-cache-dir --verbose /opt/vllm/wheels/vllm*.whl

@@ -25,6 +25,5 @@ def vllm(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    vllm('0.6.0', default=True),
-    vllm('0.6.4')
+    vllm('0.6.3', default=True)
 ]

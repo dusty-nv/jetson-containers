@@ -2,7 +2,7 @@
 # name: vllm
 # group: vlm
 # config: config.py
-# depends: [numpy, pytorch, torchvision, torchaudio]
+# depends: [transformers, torchaudio]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/vllm-project/vllm
