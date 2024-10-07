@@ -298,6 +298,8 @@ if [ $ARCH = "aarch64" ]; then
 		--volume /var/run/docker.sock:/var/run/docker.sock \
 		--volume $ROOT/data:/data \
 		--device /dev/snd \
+		-e PULSE_SERVER=unix:${XDG_RUNTIME_DIR}/pulse/native \
+		-v ${XDG_RUNTIME_DIR}/pulse:${XDG_RUNTIME_DIR}/pulse \
 		--device /dev/bus/usb \
 		$OPTIONAL_PERMISSION_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $ACM_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
 		--name my_jetson_container \
