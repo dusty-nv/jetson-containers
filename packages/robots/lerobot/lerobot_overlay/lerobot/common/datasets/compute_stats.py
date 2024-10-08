@@ -68,16 +68,17 @@ def get_stats_einops_patterns(dataset, num_workers=0):
     return stats_patterns
 
 
-def compute_stats(dataset, batch_size=32, num_workers=16, max_num_samples=None):
+def compute_stats(dataset, batch_size=8, num_workers=8, max_num_samples=None, use_gpu=True):
     """Compute mean/std and min/max statistics of all data keys in a LeRobotDataset."""
     if max_num_samples is None:
         max_num_samples = len(dataset)
 
+    # Check if GPU is available
+    device = torch.device("cuda" if use_gpu and torch.cuda.is_available() else "cpu")
+
     # for more info on why we need to set the same number of workers, see `load_from_videos`
     stats_patterns = get_stats_einops_patterns(dataset, num_workers)
 
-    # Check if GPU is available
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # mean and std will be computed incrementally while max and min will track the running value.
     mean, std, max, min = {}, {}, {}, {}
@@ -110,10 +111,15 @@ def compute_stats(dataset, batch_size=32, num_workers=16, max_num_samples=None):
     ):
         this_batch_size = len(batch["index"])
         running_item_count += this_batch_size
+                
+        # Move batch to device
+        for key in stats_patterns:
+            batch[key] = batch[key].float().to(device)
+
         if first_batch is None:
             first_batch = deepcopy(batch)
+
         for key, pattern in stats_patterns.items():
-            batch[key] = batch[key].float()
             # Numerically stable update step for mean computation.
             batch_mean = einops.reduce(batch[key], pattern, "mean")
             # Hint: to update the mean we need x̄ₙ = (Nₙ₋₁x̄ₙ₋₁ + Bₙxₙ) / Nₙ, where the subscript represents
@@ -136,16 +142,20 @@ def compute_stats(dataset, batch_size=32, num_workers=16, max_num_samples=None):
     ):
         this_batch_size = len(batch["index"])
         running_item_count += this_batch_size
+
+        for key in stats_patterns:
+            batch[key] = batch[key].float().to(device)
+
         # Sanity check to make sure the batches are still in the same order as before.
         if first_batch_ is None:
             first_batch_ = deepcopy(batch)
             for key in stats_patterns:
                 assert torch.equal(first_batch_[key], first_batch[key])
+        
         for key, pattern in stats_patterns.items():
-            batch[key] = batch[key].float()
             # Numerically stable update step for mean computation (where the mean is over squared
             # residuals).See notes in the mean computation loop above.
-            batch_std = einops.reduce((batch[key] - mean[key]) ** 2, pattern, "mean")
+            batch_std = einops.reduce((batch[key] - mean[key]) ** 2, pattern, "mean").to(device)
             std[key] = std[key] + this_batch_size * (batch_std - std[key]) / running_item_count
 
         if i == ceil(max_num_samples / batch_size) - 1:
