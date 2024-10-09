@@ -18,7 +18,6 @@ RUN git clone --depth=1 https://github.com/hiyouga/LLaMA-Factory.git LLaMA-Facto
     cd LLaMA-Factory && \
     sed 's|DEFAULT_DATA_DIR = "data"|DEFAULT_DATA_DIR = "/opt/LLaMA-Factory/data"|' -i ./src/llamafactory/webui/common.py && \
     sed 's|DEFAULT_SAVE_DIR = "saves"|DEFAULT_SAVE_DIR = "/data/models/llama-factory"|' -i ./src/llamafactory/webui/common.py && \
-    sed -i 's|"vllm>=0.4.3,<=0.6.2"|"vllm>=0.4.3,<=0.6.4"|' setup.py && \
     pip3 install -e ".[metrics]"
 
 
