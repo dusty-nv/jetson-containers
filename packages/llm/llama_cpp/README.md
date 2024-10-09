@@ -38,17 +38,19 @@ To use the Python API and [`benchmark.py`](/packages/llm/llama_cpp/benchmark.py)
 
 ```bash
 ./run.sh --workdir=/usr/local/bin $(./autotag llama_cpp) /bin/bash -c \
- 'python3 benchmark.py --model $(huggingface-downloader unsloth/Llama-3.2-3B-Instruct-GGUF/Llama-3.2-3B-Instruct-Q4_K_M.gguf) \
+ 'python3 benchmark.py --model $(huggingface-downloader TheBloke/Llama-2-7B-GGUF/llama-2-7b.Q4_K_S.gguf) \
             --prompt "Once upon a time," \
             --n-predict 128 --ctx-size 192 --batch-size 192 \
             --n-gpu-layers 999 --threads $(nproc)'
 ```
 
+To use a more contemporary model, such as `Llama-3.2-3B`, specify e.g. `unsloth/Llama-3.2-3B-Instruct-GGUF/Llama-3.2-3B-Instruct-Q4_K_M.gguf`.
+
 ### Memory Usage
 
 | Model                                                                           |          Quantization         | Memory (MB) |
 |---------------------------------------------------------------------------------|:-----------------------------:|:-----------:|
-| [`TheBloke/Llama-2-7B-GGUF`](https://huggingface.co/TheBloke/Llama-2-7B-GGUF)   |  `llama-2-7b.Q4_K_S.gguf`     |    5,268    |
+| [`TheBloke/Llama-2-7B-GGUF`](https://huggingface.co/TheBloke/Llama-2-7B-GGUF)   | `llama-2-7b.Q4_K_S.gguf`      |    5,268    |
 | [`TheBloke/Llama-2-13B-GGUF`](https://huggingface.co/TheBloke/Llama-2-13B-GGUF) | `llama-2-13b.Q4_K_S.gguf`     |    8,609    |
 | [`TheBloke/LLaMA-30b-GGUF`](https://huggingface.co/TheBloke/LLaMA-30b-GGUF)     | `llama-30b.Q4_K_S.gguf`       |    19,045   |
 | [`TheBloke/Llama-2-70B-GGUF`](https://huggingface.co/TheBloke/Llama-2-70B-GGUF) | `llama-2-70b.Q4_K_S.gguf`     |    37,655   |
