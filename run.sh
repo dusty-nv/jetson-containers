@@ -141,41 +141,41 @@ if [[ "$csi_to_webcam_conversion" == true ]]; then
 		echo "No v4l2loopback devices found."
 	fi
 
+	# Save the current DISPLAY variable
+	ORIGINAL_DISPLAY=$DISPLAY
+
 	# Start background processes for each CSI camera found
 	i=0
 	for csi_index in "${csi_indexes[@]}"; do
 		echo "Starting background process for CSI camera device number: $csi_index"
 
-    echo "CSI Capture resolution: ${capture_width}x${capture_height}@${capture_fps}"
-    echo "CSI Output resolution : ${output_width}x${output_height}@${output_fps}"
+		echo "CSI Capture resolution: ${capture_width}x${capture_height}@${capture_fps}"
+		echo "CSI Output resolution : ${output_width}x${output_height}@${output_fps}"
 
-	# Unset the DISPLAY env variable because, apparently, some GStreamer components might try to use this display 
-	# for video rendering or processing, which can conflict with other GStreamer elements or hardware device
+		# Unset the DISPLAY env variable because, apparently, some GStreamer components might try to use this display 
+		# for video rendering or processing, which can conflict with other GStreamer elements or hardware device
 
-	# Save the current DISPLAY variable
-	ORIGINAL_DISPLAY=$DISPLAY
-
-	# Temporarily unset DISPLAY for the GStreamer command
-	unset DISPLAY
-	
-	echo "gst-launch-1.0 -v nvarguscamerasrc sensor-id=${csi_index} \
-				! 'video/x-raw(memory:NVMM), format=NV12, width=${capture_width}, height=${capture_height}, framerate=${capture_fps}/1' \
-				! nvvidconv \
-				! 'video/x-raw, width=${output_width}, height=${output_height}, framerate=${output_fps}/1', format=I420 \
-				! nvjpegenc \
-				! multipartmux \
-				! multipartdemux single-stream=1 \
-				! \"image/jpeg, width=${output_width}, height=${output_height}, parsed=(boolean)true, colorimetry=(string)2:4:7:1, framerate=(fraction)${output_fps}/1, sof-marker=(int)0\" \
-				! v4l2sink device=${new_devices[$i]} > /dev/null 2>&1 &"
-	gst-launch-1.0 -v nvarguscamerasrc sensor-id=${csi_index} \
-				! "video/x-raw(memory:NVMM), format=NV12, width=${capture_width}, height=${capture_height}, framerate=${capture_fps}/1" \
-				! nvvidconv \
-				! "video/x-raw, width=${output_width}, height=${output_height}, framerate=${output_fps}/1", format=I420 \
-				! nvjpegenc \
-				! multipartmux \
-				! multipartdemux single-stream=1 \
-				! "image/jpeg, width=${output_width}, height=${output_height}, parsed=(boolean)true, colorimetry=(string)2:4:7:1, framerate=(fraction)${output_fps}/1, sof-marker=(int)0" \
-				! v4l2sink device=${new_devices[$i]} > /dev/null 2>&1 &
+		# Temporarily unset DISPLAY for the GStreamer command
+		unset DISPLAY
+		
+		echo "gst-launch-1.0 -v nvarguscamerasrc sensor-id=${csi_index} \
+					! 'video/x-raw(memory:NVMM), format=NV12, width=${capture_width}, height=${capture_height}, framerate=${capture_fps}/1' \
+					! nvvidconv \
+					! 'video/x-raw, width=${output_width}, height=${output_height}, framerate=${output_fps}/1', format=I420 \
+					! nvjpegenc \
+					! multipartmux \
+					! multipartdemux single-stream=1 \
+					! \"image/jpeg, width=${output_width}, height=${output_height}, parsed=(boolean)true, colorimetry=(string)2:4:7:1, framerate=(fraction)${output_fps}/1, sof-marker=(int)0\" \
+					! v4l2sink device=${new_devices[$i]} > /dev/null 2>&1 &"
+		gst-launch-1.0 -v nvarguscamerasrc sensor-id=${csi_index} \
+					! "video/x-raw(memory:NVMM), format=NV12, width=${capture_width}, height=${capture_height}, framerate=${capture_fps}/1" \
+					! nvvidconv \
+					! "video/x-raw, width=${output_width}, height=${output_height}, framerate=${output_fps}/1", format=I420 \
+					! nvjpegenc \
+					! multipartmux \
+					! multipartdemux single-stream=1 \
+					! "image/jpeg, width=${output_width}, height=${output_height}, parsed=(boolean)true, colorimetry=(string)2:4:7:1, framerate=(fraction)${output_fps}/1, sof-marker=(int)0" \
+					! v4l2sink device=${new_devices[$i]} > /dev/null 2>&1 &
 		
 		# Store the PID of the background process if you want to manage it later
 		BG_PIDS+=($!)
@@ -223,6 +223,7 @@ done
 DISPLAY_DEVICE=""
 
 if [ -n "$DISPLAY" ]; then
+	echo "### DISPLAY environmental variable is already set: \"$DISPLAY\""
 	# give docker root user X11 permissions
 	xhost +si:localuser:root || sudo xhost +si:localuser:root
 	
@@ -297,6 +298,7 @@ if [ $ARCH = "aarch64" ]; then
 		--volume /var/run/avahi-daemon/socket:/var/run/avahi-daemon/socket \
 		--volume /var/run/docker.sock:/var/run/docker.sock \
 		--volume $ROOT/data:/data \
+		-v /etc/localtime:/etc/localtime:ro -v /etc/timezone:/etc/timezone:ro \
 		--device /dev/snd \
 		-e PULSE_SERVER=unix:${XDG_RUNTIME_DIR}/pulse/native \
 		-v ${XDG_RUNTIME_DIR}/pulse:${XDG_RUNTIME_DIR}/pulse \
@@ -317,6 +319,7 @@ elif [ $ARCH = "x86_64" ]; then
 		--ulimit stack=67108864 \
 		--env NVIDIA_DRIVER_CAPABILITIES=all \
 		--volume $ROOT/data:/data \
+		-v /etc/localtime:/etc/localtime:ro -v /etc/timezone:/etc/timezone:ro \
 		$OPTIONAL_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $ACM_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
 		--name my_jetson_container \
 		"${filtered_args[@]}"
