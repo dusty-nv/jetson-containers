@@ -211,6 +211,7 @@ if [ $ARCH = "aarch64" ]; then
 		--volume /var/run/avahi-daemon/socket:/var/run/avahi-daemon/socket \
 		--volume /var/run/docker.sock:/var/run/docker.sock \
 		--volume $ROOT/data:/data \
+		-v /etc/localtime:/etc/localtime:ro -v /etc/timezone:/etc/timezone:ro \
 		--device /dev/snd \
 		--device /dev/bus/usb \
 		$OPTIONAL_PERMISSION_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
@@ -229,6 +230,7 @@ elif [ $ARCH = "x86_64" ]; then
 		--ulimit stack=67108864 \
 		--env NVIDIA_DRIVER_CAPABILITIES=all \
 		--volume $ROOT/data:/data \
+		-v /etc/localtime:/etc/localtime:ro -v /etc/timezone:/etc/timezone:ro \
 		$OPTIONAL_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
 		--name "$CONTAINER_NAME" \
 		"${filtered_args[@]}"
