@@ -16,7 +16,7 @@ def onnxruntime(version, branch=None, requires=None, default=False):
         branch = 'v' + version
     
     ort['build_args'] = {
-        'ONNXRUNTIME_VERSION': version,
+        '': version,
         'ONNXRUNTIME_BRANCH': branch,
         'ONNXRUNTIME_FLAGS': '', 
     }
@@ -36,7 +36,7 @@ def onnxruntime(version, branch=None, requires=None, default=False):
     
     
 package = [
-    onnxruntime('1.19.2', requires=['>=36', '>=cu124'], default=True, branch='main'),
+    onnxruntime('1.20', requires=['>=36', '>=cu124'], default=True, branch='main'),
     onnxruntime('1.17', requires=['>=36', '<=cu122'], default=True),
     onnxruntime('1.16.3', requires='==35.*', default=True),
     onnxruntime('1.11', requires='==32.*', default=True),
