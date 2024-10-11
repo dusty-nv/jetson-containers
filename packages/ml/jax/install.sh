@@ -17,7 +17,7 @@ if [ "$FORCE_BUILD" == "on" ]; then
     echo "Forcing build of JAX ${JAX_BUILD_VERSION}"
     exit 1
 fi
-
+exit 1
 # install from the Jetson PyPI server ($PIP_INSTALL_URL)
 #pip3 install --verbose --no-cache-dir jax==${JAX_VERSION} jaxlib==${JAX_VERSION}
 pip3 install --verbose --no-cache-dir jaxlib jax_cuda12_plugin opt_einsum
