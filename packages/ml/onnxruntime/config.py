@@ -16,7 +16,7 @@ def onnxruntime(version, branch=None, requires=None, default=False):
         branch = 'v' + version
     
     ort['build_args'] = {
-        '': version,
+        'ONNXRUNTIME_VERSION': version,
         'ONNXRUNTIME_BRANCH': branch,
         'ONNXRUNTIME_FLAGS': '', 
     }
