@@ -37,3 +37,5 @@ twine upload --verbose /opt/wheels/jax-*.whl || echo "failed to upload wheel to 
 cd /opt/wheels/
 pip3 install --verbose --no-cache-dir jaxlib*.whl jax_cuda12_plugin*.whl opt_einsum*.whl
 pip3 install --verbose --no-cache-dir --no-dependencies jax*.whl
+
+cd /opt/jax
