@@ -34,4 +34,6 @@ twine upload --verbose /opt/wheels/jax_cuda12_plugin-*.whl || echo "failed to up
 twine upload --verbose /opt/wheels/jax-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
 # Install them into the container
-pip3 install --verbose --no-cache-dir /opt/wheels/jax*.whl
+cd /opt/wheels/
+pip3 install --verbose --no-cache-dir jaxlib*.whl jax_cuda12_plugin*.whl opt_einsum*.whl
+pip3 install --verbose --no-cache-dir --no-dependencies jax*.whl
