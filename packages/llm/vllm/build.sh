@@ -8,6 +8,9 @@ git clone --depth=1 --recursive https://github.com/vllm-project/vllm /opt/vllm
 # Navigate to the directory containing vllm's setup.py
 cd /opt/vllm
 
+# Fetch all tags after shallow clone to ensure correct versioning
+git fetch --unshallow --tags || echo "Failed to unshallow, continuing with shallow clone"
+
 export MAX_JOBS=$(nproc)
 export CUDA_HOME=/usr/local/cuda
 export PATH="${CUDA_HOME}/bin:$PATH"
