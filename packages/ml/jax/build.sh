@@ -38,5 +38,3 @@ cd /opt/wheels/
 pip3 install --verbose --no-cache-dir jaxlib*.whl jax_cuda12_plugin*.whl jax_cuda12_pjrt*.whl opt_einsum
 pip3 install --verbose --no-cache-dir --no-dependencies jax*.whl 
 cd /opt/jax
-
-bazel clean --expunge
