@@ -18,8 +18,11 @@ RUN git clone https://github.com/comfyanonymous/ComfyUI.git && \
 RUN cd /opt/ComfyUI/custom_nodes && \
     git clone --recursive https://github.com/ltdrdata/ComfyUI-Manager.git && \
     git clone https://github.com/discus0434/comfyui-flux-accelerator.git && \
+    cd comfyui-flux-accelerator && \
     chmod +x scripts/download_taef1.sh && \
-    bash /scripts/download_taef1.sh
+    bash /scripts/download_taef1.sh && \
+    cd /opt/ComfyUI/
+    
 WORKDIR /opt/ComfyUI/
 
 RUN pip3 install --no-cache-dir torchao triton xformers
