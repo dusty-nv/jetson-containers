@@ -22,7 +22,7 @@ from packaging.version import Version
 _NEWLINE_=" \\\n"  # used when building command strings
 
 
-def build_container(name, packages, base=get_l4t_base(), build_flags='', build_args=None, simulate=False, skip_tests=[], test_only=[], push='', no_github_api=False):
+def build_container(name, packages, base=get_l4t_base(), build_flags='', build_args=None, simulate=False, skip_tests=[], test_only=[], push='', no_github_api=False, skip_packages=[]):
     """
     Multi-stage container build that chains together selected packages into one container image.
     For example, `['pytorch', 'tensorflow']` would build a container that had both pytorch and tensorflow in it.
@@ -63,7 +63,7 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', build_a
         base = get_l4t_base()
         
     # add all dependencies to the build tree
-    packages = resolve_dependencies(packages)
+    packages = resolve_dependencies(packages, skip_packages=skip_packages)
     print('-- Building containers ', packages)
     
     # make sure all packages can be found before building any
