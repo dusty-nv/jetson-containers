@@ -1,8 +1,8 @@
 #---
 # name: comfyui
 # group: diffusion
-# depends: [pytorch, torchvision, torchaudio, torchao, transformers, bitsandbytes, xformers, openai-triton, huggingface_hub]
-# requires: '>=34.1.0'
+# depends: [pytorch, torchvision, torchaudio, transformers, xformers, openai-triton, bitsandbytes, torchao, huggingface_hub]
+# requires: '>=35.0.0'
 # docs: docs.md
 #---
 ARG BASE_IMAGE
@@ -29,6 +29,8 @@ RUN cd /opt/ComfyUI/custom_nodes/comfyui-flux-accelerator/scripts && \
 
 WORKDIR /opt/ComfyUI/
 
+RUN pip3 install --no-cache-dir -U triton xformers
+RUN pip3 install --no-cache-dir -U torchao
 RUN pip3 install --force-reinstall 'numpy<2'
 
 COPY workflow /opt/ComfyUI/workflow
