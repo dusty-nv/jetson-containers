@@ -13,3 +13,4 @@ runner
 .ninja_log
 .polyscope.ini
 .ipynb_checkpoints
+.idea

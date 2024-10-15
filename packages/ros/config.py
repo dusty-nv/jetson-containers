@@ -7,7 +7,7 @@ from .version import ROS_DISTROS, ROS2_DISTROS, ROS_PACKAGES
 template = package.copy()
 
 template['group'] = 'ros'
-template['depends'] = ['cuda', 'cudnn', 'tensorrt', 'opencv:deb', 'cmake']
+template['depends'] = ['cuda', 'cudnn', 'tensorrt', 'opencv', 'cmake']
 template['postfix'] = f"l4t-r{L4T_VERSION}"
 template['docs'] = "docs.md"
 
@@ -29,7 +29,7 @@ for ROS_DISTRO in ROS_DISTROS:
             pkg['test'] = 'test_ros.sh'
             pkg['requires'] = '<34'   # melodic is for 18.04 only
             pkg['notes'] = 'ROS Melodic is for JetPack 4 only'
-            pkg['depends'].remove('opencv:deb')  # melodic apt packages install the ubuntu opencv
+            pkg['depends'].remove('opencv')  # melodic apt packages install the ubuntu opencv
             pkg['depends'][0] = 'cmake:apt'  # melodic (python 2.7) doesn't like pip-based cmake
         elif ROS_DISTRO == 'noetic':
             pkg['dockerfile'] = 'Dockerfile.ros.noetic'

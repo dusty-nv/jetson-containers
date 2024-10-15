@@ -22,9 +22,8 @@ COPY build.sh \
      install.sh \
      install_deps.sh \
      install_deb.sh \
-     install_pip.sh \
      patches.diff \
      /tmp/opencv/
 
-RUN cd /tmp/opencv && ./install.sh || ./build.sh
+RUN cd /tmp/opencv && ./install.sh || ./build.sh || echo "BUILD FAILED (OpenCV ${OPENCV_VERSION})"
 
