@@ -1,4 +1,3 @@
-from jetson_containers import CUDA_ARCHITECTURES
 
 def vllm(version, requires=None, default=False):
     pkg = package.copy()
@@ -9,7 +8,6 @@ def vllm(version, requires=None, default=False):
     pkg['name'] = f'vllm:{version}'
 
     pkg['build_args'] = {
-        'CUDAARCHS': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
         'VLLM_VERSION': version,
     }
 

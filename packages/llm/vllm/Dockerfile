@@ -10,9 +10,8 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG VLLM_VERSION \
-    CUDAARCHS
+ARG VLLM_VERSION
 
-COPY build.sh install.sh /tmp/vllm/
+COPY build.sh install.sh patches /tmp/vllm/
 
 RUN /tmp/vllm/install.sh || /tmp/vllm/build.sh
