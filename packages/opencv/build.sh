@@ -4,7 +4,11 @@ echo "Building opencv-python ${OPENCV_VERSION}"
 
 bash /tmp/opencv/install_deps.sh
 
-git clone --branch ${OPENCV_PYTHON} --recursive https://github.com/opencv/opencv-python /opt/opencv-python
+cd /opt
+
+git clone --branch ${OPENCV_PYTHON} --depth=1 --recursive https://github.com/opencv/opencv
+git clone --branch ${OPENCV_PYTHON} --depth=1 --recursive https://github.com/opencv/opencv-python
+git clone --branch ${OPENCV_PYTHON} --depth=1 --recursive https://github.com/opencv/opencv_contrib
 
 cd /opt/opencv-python/opencv
 git checkout --recurse-submodules ${OPENCV_VERSION}
@@ -33,7 +37,7 @@ grep 'nms_iou_threshold' opencv/modules/dnn/src/cuda4dnn/primitives/region.hpp
     
 export ENABLE_CONTRIB=1
 export CMAKE_BUILD_PARALLEL_LEVEL=$(nproc)
-export CMAKE_ARGS="\
+export OPENCV_BUILD_ARGS="\
    -DCPACK_BINARY_DEB=ON \
    -DBUILD_EXAMPLES=OFF \
    -DBUILD_opencv_python2=OFF \
@@ -50,7 +54,6 @@ export CMAKE_ARGS="\
    -DENABLE_NEON=ON \
    -DOPENCV_DNN_CUDA=ON \
    -DOPENCV_ENABLE_NONFREE=ON \
-   -DOPENCV_EXTRA_MODULES_PATH=/opt/opencv-python/opencv_contrib/modules \
    -DOPENCV_GENERATE_PKGCONFIG=ON \
    -DOpenGL_GL_PREFERENCE=GLVND \
    -DWITH_CUBLAS=ON \
@@ -67,6 +70,8 @@ export CMAKE_ARGS="\
    -DBUILD_PERF_TESTS=OFF \
    -DBUILD_TESTS=OFF"
 
+export CMAKE_ARGS="${OPENCV_BUILD_ARGS} -DOPENCV_EXTRA_MODULES_PATH=/opt/opencv-python/opencv_contrib/modules"
+
 pip3 wheel --wheel-dir=/opt --verbose .
 
 ls /opt
@@ -76,3 +81,25 @@ rm -rf /opt/opencv-python
 pip3 install --no-cache-dir --verbose /opt/opencv*.whl
 python3 -c "import cv2; print('OpenCV version:', str(cv2.__version__)); print(cv2.getBuildInformation())"
 twine upload --verbose /opt/opencv*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+
+unset CMAKE_ARGS
+
+cd /opt/opencv
+mkdir build
+cd build 
+
+cmake \
+    ${OPENCV_BUILD_ARGS} \
+    -DOPENCV_EXTRA_MODULES_PATH=/opt/opencv_contrib/modules \
+    ../
+
+make -j$(nproc)
+make install
+make package
+
+mkdir -p /tmp/debs/
+cp *.deb /tmp/debs/
+
+tarpack upload OpenCV-${OPENCV_VERSION} /tmp/debs/ || echo "failed to upload tarball"
+
+

@@ -5,21 +5,21 @@
 # depends: [pytorch, torchvision, huggingface_hub, rust]
 # test: [test_version.py, huggingface-benchmark.py]
 # docs: docs.md
-# notes: bitsandbytes and auto_gptq dependencies added on JetPack5 for 4-bit/8-bit quantization
+# notes: for quantization support in Transformers, use the bitsandbytes, AutoGPTQ, or AutoAWQ containers.
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG TRANSFORMERS_PACKAGE=transformers
-ARG TRANSFORMERS_VERSION=https://pypi.org/pypi/transformers/json
+ARG TRANSFORMERS_PACKAGE=transformers \
+    TRANSFORMERS_VERSION=https://pypi.org/pypi/transformers/json
 
 ADD ${TRANSFORMERS_VERSION} /tmp/transformers_version.json
 
 # if you want optimum[exporters,onnxruntime] see the optimum package
-RUN pip3 install --no-cache-dir --verbose \
-	accelerate \
-	#optimum \
-	sentencepiece && \
+
+RUN pip3 install --no-cache-dir --verbose accelerate && \
+    pip3 install --no-cache-dir --verbose sentencepiece && \
+    pip3 install --no-cache-dir --verbose optimum && \
     \
     # install from pypi, git, ect (sometimes other version got installed)
     pip3 uninstall -y transformers && \

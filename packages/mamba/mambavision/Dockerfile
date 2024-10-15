@@ -10,10 +10,10 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG MAMBAVIDEO_VERSION \
+ARG MAMBAVISION_VERSION \
     CUDAARCHS
 
-COPY build.sh /tmp/MAMBAVIDEO_VERSION/
+COPY build.sh /tmp/MAMBAVISION/
 
 RUN pip3 install build wheel && \
-    /tmp/MAMBAVIDEO_VERSION/build.sh
+    /tmp/MAMBAVISION/build.sh

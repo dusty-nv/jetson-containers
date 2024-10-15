@@ -1,5 +1,6 @@
 #---
 # name: auto_gptq
+# alias: auto-gptq
 # group: llm
 # config: config.py
 # depends: [transformers]

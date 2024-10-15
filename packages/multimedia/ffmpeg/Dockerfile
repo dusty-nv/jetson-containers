@@ -14,7 +14,12 @@ ARG GOBIN=/opt/go/bin
 # Install ffmpeg
 RUN set -ex \
 	&& apt-get update \
-	&& apt-get install -y --no-install-recommends ffmpeg \
+	&& apt-get install -y --no-install-recommends \
+	    ffmpeg \
+	    libavcodec-dev \
+	    libavfilter-dev \
+	    libavformat-dev \
+	    libavutil-dev \
 	&& apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
