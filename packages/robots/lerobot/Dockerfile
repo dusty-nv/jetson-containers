@@ -46,4 +46,20 @@ RUN python --version
 
 WORKDIR /opt/lerobot
 
+RUN echo "pactl info" >> /root/.bash_history
+RUN echo "pactl list short sinks" >> /root/.bash_history
+RUN echo "pactl set-default-sink 0" >> /root/.bash_history
+RUN echo "wandb login"
+RUN echo "export HF_USER="
+RUN echo "python lerobot/scripts/control_robot.py record \
+  --robot-path lerobot/configs/robot/koch.yaml \
+  --fps 30 \
+  --root data \
+  --repo-id ${HF_USER}/koch_test_$(date +%Y%m%d_%H%M%S) \
+  --tags tutorial eval \
+  --warmup-time-s 5 \
+  --episode-time-s 30 \
+  --reset-time-s 30 \
+  --num-episodes 10"
+
 CMD /start_jupyter && speech-dispatcher --spawn  && /bin/bash
