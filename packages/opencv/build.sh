@@ -6,9 +6,9 @@ bash /tmp/opencv/install_deps.sh
 
 cd /opt
 
-git clone --branch ${OPENCV_PYTHON} --depth=1 --recursive https://github.com/opencv/opencv
-git clone --branch ${OPENCV_PYTHON} --depth=1 --recursive https://github.com/opencv/opencv-python
-git clone --branch ${OPENCV_PYTHON} --depth=1 --recursive https://github.com/opencv/opencv_contrib
+git clone --branch ${OPENCV_VERSION} --recursive https://github.com/opencv/opencv
+git clone --branch ${OPENCV_VERSION} --recursive https://github.com/opencv/opencv_contrib
+git clone --branch ${OPENCV_PYTHON} --recursive https://github.com/opencv/opencv-python
 
 cd /opt/opencv-python/opencv
 git checkout --recurse-submodules ${OPENCV_VERSION}
@@ -30,11 +30,19 @@ git diff
 ln -s /usr/include/$(uname -i)-linux-gnu/cudnn_version_v*.h /usr/include/$(uname -i)-linux-gnu/cudnn_version.h
 
 # patches for FP16/half casts
-sed -i 's|weight != 1.0|(float)weight != 1.0f|' opencv/modules/dnn/src/cuda4dnn/primitives/normalize_bbox.hpp
-sed -i 's|nms_iou_threshold > 0|(float)nms_iou_threshold > 0.0f|' opencv/modules/dnn/src/cuda4dnn/primitives/region.hpp
-grep 'weight' opencv/modules/dnn/src/cuda4dnn/primitives/normalize_bbox.hpp
-grep 'nms_iou_threshold' opencv/modules/dnn/src/cuda4dnn/primitives/region.hpp
-    
+function patch_opencv()
+{
+    sed -i 's|weight != 1.0|(float)weight != 1.0f|' opencv/modules/dnn/src/cuda4dnn/primitives/normalize_bbox.hpp
+    sed -i 's|nms_iou_threshold > 0|(float)nms_iou_threshold > 0.0f|' opencv/modules/dnn/src/cuda4dnn/primitives/region.hpp
+    grep 'weight' opencv/modules/dnn/src/cuda4dnn/primitives/normalize_bbox.hpp
+    grep 'nms_iou_threshold' opencv/modules/dnn/src/cuda4dnn/primitives/region.hpp
+}
+
+patch_opencv
+cd /opt
+patch_opencv
+cd /opt/opencv-python
+   
 export ENABLE_CONTRIB=1
 export CMAKE_BUILD_PARALLEL_LEVEL=$(nproc)
 export OPENCV_BUILD_ARGS="\
@@ -84,9 +92,8 @@ twine upload --verbose /opt/opencv*.whl || echo "failed to upload wheel to ${TWI
 
 unset CMAKE_ARGS
 
-cd /opt/opencv
-mkdir build
-cd build 
+mkdir /opt/opencv/build
+cd /opt/opencv/build
 
 cmake \
     ${OPENCV_BUILD_ARGS} \
