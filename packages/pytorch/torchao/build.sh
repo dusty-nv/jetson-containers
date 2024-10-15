@@ -7,7 +7,7 @@ cd /opt/torchao
 
 git checkout v${TORCHAO_VERSION}
 
-export TORCH_CUDA_ARCH_LIST="8.7"
+#export TORCH_CUDA_ARCH_LIST="8.7"
 export MAX_JOBS=$(nproc)
 python3 setup.py --verbose bdist_wheel --dist-dir /opt
 
