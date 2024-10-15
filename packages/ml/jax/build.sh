@@ -8,7 +8,7 @@ set -ex
 echo "Building JAX for Jetson"
 
 # Clone JAX repository
-git clone --branch "jaxlib-v${JAX_BUILD_VERSION}" --depth=1 --recursive https://github.com/google/jax /opt/jax || \
+git clone --branch "jax-v${JAX_BUILD_VERSION}" --depth=1 --recursive https://github.com/google/jax /opt/jax || \
 git clone --depth=1 --recursive https://github.com/google/jax /opt/jax
 
 cd /opt/jax
@@ -16,9 +16,9 @@ cd /opt/jax
 # Build jaxlib from source with detected versions
 BUILD_FLAGS='--enable_cuda --enable_nccl=False '
 BUILD_FLAGS+='--cuda_compute_capabilities="sm_87" '
-BUILD_FLAGS+='--cuda_version=12.6.0 --cudnn_version=9.4.0 '
-BUILD_FLAGS+='--bazel_options=--repo_env=LOCAL_CUDA_PATH="/usr/local/cuda-12.6" '
-BUILD_FLAGS+='--bazel_options=--repo_env=LOCAL_CUDNN_PATH="/opt/nvidia/cudnn/" '
+BUILD_FLAGS+='--cuda_version=12.6.1 --cudnn_version=9.4.0 '
+# BUILD_FLAGS+='--bazel_options=--repo_env=LOCAL_CUDA_PATH="/usr/local/cuda-12.6" '
+# BUILD_FLAGS+='--bazel_options=--repo_env=LOCAL_CUDNN_PATH="/opt/nvidia/cudnn/" '
 BUILD_FLAGS+='--output_path=/opt/wheels '
     
 python3 build/build.py $BUILD_FLAGS
@@ -34,4 +34,7 @@ twine upload --verbose /opt/wheels/jax_cuda12_plugin-*.whl || echo "failed to up
 twine upload --verbose /opt/wheels/jax-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
 # Install them into the container
-pip3 install --verbose --no-cache-dir /opt/wheels/jax*.whl
+cd /opt/wheels/
+pip3 install --verbose --no-cache-dir jaxlib*.whl jax_cuda12_plugin*.whl jax_cuda12_pjrt*.whl opt_einsum
+pip3 install --verbose --no-cache-dir --no-dependencies jax*.whl 
+cd /opt/jax
