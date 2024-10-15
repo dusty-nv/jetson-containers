@@ -52,6 +52,13 @@ load-module module-esound-protocol-unix auth-anonymous=1
 load-module module-native-protocol-unix auth-anonymous=1
 ```
 
+Retsart Pulse Audio service.
+
+```bash
+pulseaudio --kill
+pulseaudio --start
+```
+
 ## Step 2. Container setup
 
 Inside the container, install `speech-dispatcher` and run its server inside the container (as opposed to running the `speech-dispatcher` server on the host).
@@ -102,6 +109,10 @@ spd-say "Hello world"
 You should here TTS audio coming out from your host audio device.
 
 ## Troubleshooting
+
+### `Connection failure: Access denied` on `pactl info`
+
+
 
 ### Restart PulseAudio with debug output
 
