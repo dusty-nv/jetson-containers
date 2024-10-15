@@ -5,7 +5,7 @@
 # requires: '>=35'
 # depends: [transformers]
 # test: test.py
-# notes: fork of https://github.com/TimDettmers/bitsandbytes for Jetson
+# notes: https://github.com/bitsandbytes-foundation/bitsandbytes
 #---
 
 ARG BASE_IMAGE

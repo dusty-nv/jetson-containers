@@ -5,12 +5,11 @@
 # config: config.py
 # depends: [transformers]
 # test: test.py
-# notes: fork of https://github.com/TimDettmers/bitsandbytes for Jetson
+# notes: https://github.com/bitsandbytes-foundation/bitsandbytes
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-# upstream version is https://github.com/TimDettmers/bitsandbytes (the fork below includes some patches for Jetson) 
 ARG BITSANDBYTES_REPO \
     BITSANDBYTES_BRANCH \
     CUDA_INSTALLED_VERSION \
@@ -23,15 +22,15 @@ RUN set -ex \
     && echo "CUDA_MAKE_LIB: $CUDA_MAKE_LIB" \
     && pip3 uninstall -y bitsandbytes \
     && git clone --depth=1 "https://github.com/$BITSANDBYTES_REPO" /opt/bitsandbytes \
-    && CUDA_VERSION=$CUDA_INSTALLED_VERSION make -C /opt/bitsandbytes -j$(nproc) "${CUDA_MAKE_LIB}" \
-    && CUDA_VERSION=$CUDA_INSTALLED_VERSION make -C /opt/bitsandbytes -j$(nproc) "${CUDA_MAKE_LIB}_nomatmul" \
-    && cd /opt/bitsandbytes \
-    && python3 setup.py --verbose build_ext --inplace -j$(nproc) bdist_wheel --dist-dir /opt \
+    cd /opt/bitsandbytes \
+    && CUDA_VERSION=$CUDA_INSTALLED_VERSION make -C . -j$(nproc) "${CUDA_MAKE_LIB}" \
+    # && CUDA_VERSION=$CUDA_INSTALLED_VERSION make -C . -j$(nproc) "${CUDA_MAKE_LIB}_nomatmul" \
+    && python3 setup.py --verbose build_ext --inplace -j$(nproc) bdist_wheel --dist-dir /opt/wheels/ \
 #    && rm -rf /opt/bitsandbytes \
-    && ls -l /opt/ \
+    && ls -l /opt/wheels/ \
     && pip3 install --no-cache-dir --verbose \
         scipy \
-        /opt/bitsandbytes*.whl \
+        /opt/wheels/bitsandbytes*.whl \
     \
     && pip3 show bitsandbytes \
     && python3 -c 'import bitsandbytes'
