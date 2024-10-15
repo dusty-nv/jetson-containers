@@ -243,7 +243,10 @@ def l4t_version_compatible(l4t_version, l4t_version_host=get_l4t_version(), **kw
 
     if l4t_version_host.major == 36: # JetPack 6 runs containers for JetPack 6
         if l4t_version.major == 36:
-            return True
+            if l4t_version.minor < 4 and l4t_version_host.minor < 4:
+                return True
+            elif l4t_version.minor >= 4 and l4t_version_host.minor >= 4:
+                return True
     elif l4t_version_host.major == 35: # JetPack 5.1 can run other JetPack 5.1.x containers
         if l4t_version.major == 35:
             return True
