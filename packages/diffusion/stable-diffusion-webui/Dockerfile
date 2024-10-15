@@ -1,7 +1,7 @@
 #---
 # name: stable-diffusion-webui
 # group: diffusion
-# depends: [pytorch, torchvision, transformers, xformers, pycuda, opencv:deb, onnxruntime]
+# depends: [pytorch, torchvision, transformers, xformers, pycuda, opencv, onnxruntime]
 # requires: '>=34.1.0'
 # docs: docs.md
 # notes: disabled on JetPack 4

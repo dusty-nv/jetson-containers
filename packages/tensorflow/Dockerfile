@@ -1,7 +1,7 @@
 #---
 # name: tensorflow
 # group: ml
-# depends: [cuda, cudnn, tensorrt, python, numpy, protobuf:cpp]
+# depends: [cuda, cudnn, tensorrt, python, numpy, h5py, bazel, protobuf:cpp]
 # test: test.py
 # docs: |
 #   Container for TF1/TF2 with CUDA support.
@@ -15,7 +15,8 @@ FROM ${BASE_IMAGE}
 ARG TENSORFLOW_URL \
     TENSORFLOW_WHL \
     HDF5_DIR="/usr/lib/aarch64-linux-gnu/hdf5/serial/" \
-    MAKEFLAGS=-j$(nproc)
+    MAKEFLAGS=-j$(nproc) \
+    FORCE_BUILD
 
 COPY install.sh /tmp/tensorflow/
 

@@ -3,7 +3,7 @@ __pycache__
 *.tar.gz
 *.so
 *.deb
-data
+data/*
 logs
 test/data
 runner
@@ -12,3 +12,5 @@ runner
 .vscode
 .ninja_log
 .polyscope.ini
+.ipynb_checkpoints
+.idea

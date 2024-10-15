@@ -1,5 +1,6 @@
 
-from jetson_containers import CUDA_ARCHITECTURES
+from jetson_containers import CUDA_VERSION, CUDA_ARCHITECTURES
+from packaging.version import Version
 
 def opencv(version, requires=None, default=False, url=None):
     cv = package.copy()
@@ -42,8 +43,8 @@ def opencv(version, requires=None, default=False, url=None):
 package = [
     # JetPack 5/6
     opencv('4.5.0', '==35.*', default=False),
-    opencv('4.8.1', '>=35', default=True),
-    opencv('4.10.0', '>=35', default=False), 
+    opencv('4.8.1', '>=35', default=(CUDA_VERSION <= Version('12.2'))),
+    opencv('4.10.0', '>=35', default=(CUDA_VERSION > Version('12.2'))), 
 
     # JetPack 4
     opencv('4.5.0', '==32.*', default=True, url='https://nvidia.box.com/shared/static/5v89u6g5rb62fpz4lh0rz531ajo2t5ef.gz'),

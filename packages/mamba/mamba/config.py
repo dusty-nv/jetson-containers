@@ -13,16 +13,16 @@ def mamba(version, requires=None, default=False):
         'MAMBA_VERSION': version,
     }
 
-    #builder = pkg.copy()
+    builder = pkg.copy()
 
-    #builder['name'] = f'mamba:{version}-builder'
-    #builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
+    builder['name'] = f'mamba:{version}-builder'
+    builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
 
     if default:
         pkg['alias'] = 'mamba'
-        #builder['alias'] = 'mamba:builder'
+        builder['alias'] = 'mamba:builder'
 
-    return pkg #, builder
+    return pkg, builder
 
 package = [
     mamba('2.2.2', default=True)
