@@ -16,6 +16,7 @@ ARG TRANSFORMERS_PACKAGE=transformers \
 ADD ${TRANSFORMERS_VERSION} /tmp/transformers_version.json
 
 # if you want optimum[exporters,onnxruntime] see the optimum package
+
 RUN pip3 install --no-cache-dir --verbose accelerate && \
     pip3 install --no-cache-dir --verbose sentencepiece && \
     pip3 install --no-cache-dir --verbose optimum && \

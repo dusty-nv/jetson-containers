@@ -18,12 +18,53 @@ cleanup() {
 # Trap signals like INT (Ctrl+C) or TERM to invoke the cleanup function
 trap cleanup INT TERM
 
-# Check for the --csi2webcam option
+# Initialize variables (default for arguments)
 csi_to_webcam_conversion=false
+capture_res="1640x1232@30"
+output_res="1280x720@30"
+capture_width="1640"
+capture_height="1232"
+capture_fps="30"
+output_width="1280"
+output_height="720"
+output_fps="30"
+
+# Loop through arguments
 for arg in "$@"; do
+	# Check for the --csi2webcam option
     if [[ "$arg" == "--csi2webcam" ]]; then
         csi_to_webcam_conversion=true
-        break
+        continue  # Move to next argument
+    fi
+
+    # Check for --csi-capture-res
+    if [[ "$arg" =~ --csi-capture-res= ]]; then
+        csi_capture_res="${arg#*=}"
+        # Extract width, height, and fps from capture_res
+        if [[ $csi_capture_res =~ ([0-9]+)x([0-9]+)@([0-9]+) ]]; then
+            capture_width="${BASH_REMATCH[1]}"
+            capture_height="${BASH_REMATCH[2]}"
+            capture_fps="${BASH_REMATCH[3]}"
+        else
+            echo "Invalid format for --csi-capture-res. Expected format: widthxheight@fps"
+            exit 1
+        fi
+        continue
+    fi
+
+    # Check for --csi-output-res
+    if [[ "$arg" =~ --csi-output-res= ]]; then
+        csi_output_res="${arg#*=}"
+        # Extract width, height, and fps from output_res
+        if [[ $csi_output_res =~ ([0-9]+)x([0-9]+)@([0-9]+) ]]; then
+            output_width="${BASH_REMATCH[1]}"
+            output_height="${BASH_REMATCH[2]}"
+            output_fps="${BASH_REMATCH[3]}"
+        else
+            echo "Invalid format for --csi-output-res. Expected format: widthxheight@fps"
+            exit 1
+        fi
+        continue
     fi
 done
 
@@ -31,6 +72,10 @@ done
 V4L2_DEVICES=""
 
 if [[ "$csi_to_webcam_conversion" == true ]]; then
+
+    echo "CSI to Webcam conversion enabled."
+    echo "CSI Capture resolution: ${capture_width}x${capture_height}@${capture_fps}"
+    echo "CSI Output resolution : ${output_width}x${output_height}@${output_fps}"
 
 	# Check if v4l2loopback-dkms is installed
 	if dpkg -l | grep -q v4l2loopback-dkms; then
@@ -41,6 +86,20 @@ if [[ "$csi_to_webcam_conversion" == true ]]; then
 		echo "Perform the following command to first install v4l2loopback moddule."
 		echo " "
 		echo "    sudo apt update && sudo apt install v4l2loopback-dkms"
+		echo " "
+		exit 1
+	fi
+
+	# Check if v4l2-ctl is installed
+	if command -v v4l2-ctl &> /dev/null
+	then
+		echo "(v4l2-ctl is installed)"
+	else
+		echo "[Error] v4l2-ctl is not installed"
+		echo " "
+		echo "Perform the following command to first install v4l-utils package."
+		echo " "
+		echo "    sudo apt install v4l-utils"
 		echo " "
 		exit 1
 	fi
@@ -67,43 +126,66 @@ if [[ "$csi_to_webcam_conversion" == true ]]; then
 	done
 
 	# Load the v4l2loopback module to create as many devices as CSI cameras found in the prior step
-	sudo modprobe v4l2loopback devices=${#csi_indexes[@]} exclusive_caps=1 card_label="Converted from CSI camera"
+	sudo modprobe v4l2loopback devices=${#csi_indexes[@]} exclusive_caps=1 card_label="Cam1,Cam2"
 
 	# Get all new /dev/video devices created by v4l2loopback
-	new_devices=$(v4l2-ctl --list-devices | grep -A 1 "v4l2loopback" | grep '/dev/video' | awk '{print $1}')
+	new_devices=($(v4l2-ctl --list-devices | grep -A 1 "v4l2loopback" | grep '/dev/video' | awk '{print $1}'))
+	echo "###### new_devices: ${new_devices[@]}"
 
 	# add the created v4l2loopback devices
-	if [[ -n "$new_devices" ]]; then
-		for converted_device in $new_devices; do
+	if [[ -n "${new_devices[@]}" ]]; then
+		for converted_device in ${new_devices[@]}; do
 			V4L2_DEVICES="$V4L2_DEVICES --device $converted_device "
 		done
 	else
 		echo "No v4l2loopback devices found."
 	fi
 
+	# Save the current DISPLAY variable
+	ORIGINAL_DISPLAY=$DISPLAY
+
 	# Start background processes for each CSI camera found
 	i=0
 	for csi_index in "${csi_indexes[@]}"; do
 		echo "Starting background process for CSI camera device number: $csi_index"
 
-		# Run gst-launch-1.0 command in the background, suppressing all output
-		gst-launch-1.0 -v nvarguscamerasrc sensor-id=${csi_index} \
-					! 'video/x-raw(memory:NVMM), format=NV12, width=1640, height=1232, framerate=30/1' \
+		echo "CSI Capture resolution: ${capture_width}x${capture_height}@${capture_fps}"
+		echo "CSI Output resolution : ${output_width}x${output_height}@${output_fps}"
+
+		# Unset the DISPLAY env variable because, apparently, some GStreamer components might try to use this display 
+		# for video rendering or processing, which can conflict with other GStreamer elements or hardware device
+
+		# Temporarily unset DISPLAY for the GStreamer command
+		unset DISPLAY
+		
+		echo "gst-launch-1.0 -v nvarguscamerasrc sensor-id=${csi_index} \
+					! 'video/x-raw(memory:NVMM), format=NV12, width=${capture_width}, height=${capture_height}, framerate=${capture_fps}/1' \
 					! nvvidconv \
-					! 'video/x-raw, width=1600, height=1200, framerate=30/1', format=I420 \
+					! 'video/x-raw, width=${output_width}, height=${output_height}, framerate=${output_fps}/1', format=I420 \
 					! nvjpegenc \
 					! multipartmux \
 					! multipartdemux single-stream=1 \
-					! "image/jpeg, width=1600, height=1200, parsed=(boolean)true, colorimetry=(string)2:4:7:1, framerate=(fraction)30/1, sof-marker=(int)0" \
-					! v4l2sink device=${new_devices[i]} > /dev/null 2>&1 &
-		# ping google.com > /dev/null 2>&1 &
-
+					! \"image/jpeg, width=${output_width}, height=${output_height}, parsed=(boolean)true, colorimetry=(string)2:4:7:1, framerate=(fraction)${output_fps}/1, sof-marker=(int)0\" \
+					! v4l2sink device=${new_devices[$i]} > /dev/null 2>&1 &"
+		gst-launch-1.0 -v nvarguscamerasrc sensor-id=${csi_index} \
+					! "video/x-raw(memory:NVMM), format=NV12, width=${capture_width}, height=${capture_height}, framerate=${capture_fps}/1" \
+					! nvvidconv \
+					! "video/x-raw, width=${output_width}, height=${output_height}, framerate=${output_fps}/1", format=I420 \
+					! nvjpegenc \
+					! multipartmux \
+					! multipartdemux single-stream=1 \
+					! "image/jpeg, width=${output_width}, height=${output_height}, parsed=(boolean)true, colorimetry=(string)2:4:7:1, framerate=(fraction)${output_fps}/1, sof-marker=(int)0" \
+					! v4l2sink device=${new_devices[$i]} > /dev/null 2>&1 &
+		
 		# Store the PID of the background process if you want to manage it later
 		BG_PIDS+=($!)
-		echo "BG_PIDS: $BG_PIDS"
+		echo "BG_PIDS: ${BG_PIDS[@]}"
 
 		((i++))
 	done
+
+	# Restore the DISPLAY env variable
+	export DISPLAY=$ORIGINAL_DISPLAY
 
 else
 	# Loop through all matching /dev/video* devices
@@ -127,10 +209,21 @@ do
 	fi
 done
 
+# check for ttyACM devices
+ACM_DEVICES=""
+
+# Loop through all matching /dev/ttyACM* devices
+for dev in /dev/ttyACM*; do
+    if [ -e "$dev" ]; then  # Check if the device file exists
+        ACM_DEVICES="$ACM_DEVICES --device $dev "
+    fi
+done
+
 # check for display
 DISPLAY_DEVICE=""
 
 if [ -n "$DISPLAY" ]; then
+	echo "### DISPLAY environmental variable is already set: \"$DISPLAY\""
 	# give docker root user X11 permissions
 	xhost +si:localuser:root || sudo xhost +si:localuser:root
 	
@@ -176,7 +269,7 @@ filtered_args=()
 
 # Loop through all provided arguments
 for arg in "$@"; do
-    if [[ "$arg" != "--csi2webcam" ]]; then
+    if [[ "$arg" != "--csi2webcam" && "$arg" != --csi-capture-res=* && "$arg" != --csi-output-res=* ]]; then
         filtered_args+=("$arg")  # Add to the new array if not the argument to remove
     fi
 done
@@ -211,9 +304,12 @@ if [ $ARCH = "aarch64" ]; then
 		--volume /var/run/avahi-daemon/socket:/var/run/avahi-daemon/socket \
 		--volume /var/run/docker.sock:/var/run/docker.sock \
 		--volume $ROOT/data:/data \
+		-v /etc/localtime:/etc/localtime:ro -v /etc/timezone:/etc/timezone:ro \
 		--device /dev/snd \
+		-e PULSE_SERVER=unix:${XDG_RUNTIME_DIR}/pulse/native \
+		-v ${XDG_RUNTIME_DIR}/pulse:${XDG_RUNTIME_DIR}/pulse \
 		--device /dev/bus/usb \
-		$OPTIONAL_PERMISSION_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
+		$OPTIONAL_PERMISSION_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $ACM_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
 		--name "$CONTAINER_NAME" \
 		"${filtered_args[@]}"
 
@@ -229,7 +325,8 @@ elif [ $ARCH = "x86_64" ]; then
 		--ulimit stack=67108864 \
 		--env NVIDIA_DRIVER_CAPABILITIES=all \
 		--volume $ROOT/data:/data \
-		$OPTIONAL_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
+		-v /etc/localtime:/etc/localtime:ro -v /etc/timezone:/etc/timezone:ro \
+		$OPTIONAL_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $ACM_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
 		--name "$CONTAINER_NAME" \
 		"${filtered_args[@]}"
 
@@ -239,7 +336,7 @@ fi
 if [[ "$csi_to_webcam_conversion" == true ]]; then
 
 	# Wait for the Docker container to finish (if it exits)
-	docker wait my_jetson_container
+	docker wait "$CONTAINER_NAME"
 
 	# When Docker container exits, cleanup will be called
 	cleanup
