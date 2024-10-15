@@ -49,7 +49,7 @@ fi
 # PulseAudio arguments
 PULSE_AUDIO_ARGS=""
 
-if [ -d "${XDG_RUNTIME_DIR}/pulse"]; then
+if [ -d "${XDG_RUNTIME_DIR}/pulse" ]; then
 	PULSE_AUDIO_ARGS="-e PULSE_SERVER=unix:${XDG_RUNTIME_DIR}/pulse/native  -v ${XDG_RUNTIME_DIR}/pulse:${XDG_RUNTIME_DIR}/pulse"
 fi
 
