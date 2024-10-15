@@ -32,7 +32,7 @@ RUN cd /opt/lerobot && \
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-            speech-dispatcher speech-dispatcher-espeak-ng pulseaudio-utils alsa-utils \
+            speech-dispatcher speech-dispatcher-espeak-ng pulseaudio-utils alsa-utils vim \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
@@ -56,10 +56,12 @@ RUN echo "python lerobot/scripts/control_robot.py record \
   --fps 30 \
   --root data \
   --repo-id ${HF_USER}/koch_test_$(date +%Y%m%d_%H%M%S) \
-  --tags tutorial eval \
+  --tags tutorial \
   --warmup-time-s 5 \
   --episode-time-s 30 \
   --reset-time-s 30 \
   --num-episodes 10"
+
+RUN echo -e "* soft core 0\n* hard core 0" >> /etc/security/limits.conf
 
 CMD /start_jupyter && speech-dispatcher --spawn  && /bin/bash
