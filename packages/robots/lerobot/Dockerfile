@@ -49,8 +49,8 @@ WORKDIR /opt/lerobot
 RUN echo "pactl info" >> /root/.bash_history
 RUN echo "pactl list short sinks" >> /root/.bash_history
 RUN echo "pactl set-default-sink 0" >> /root/.bash_history
-RUN echo "wandb login"
-RUN echo "export HF_USER="
+RUN echo "wandb login" >> /root/.bash_history
+RUN echo "export HF_USER=" >> /root/.bash_history
 RUN echo "python lerobot/scripts/control_robot.py record \
   --robot-path lerobot/configs/robot/koch.yaml \
   --fps 30 \
@@ -60,7 +60,7 @@ RUN echo "python lerobot/scripts/control_robot.py record \
   --warmup-time-s 5 \
   --episode-time-s 30 \
   --reset-time-s 30 \
-  --num-episodes 10"
+  --num-episodes 10" >> /root/.bash_history
 
 RUN echo -e "* soft core 0\n* hard core 0" >> /etc/security/limits.conf
 
