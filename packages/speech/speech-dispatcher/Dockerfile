@@ -16,4 +16,8 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean
 
+RUN echo "pactl info" >> /root/.bash_history
+RUN echo "pactl list short sinks" >> /root/.bash_history
+RUN echo "pactl set-default-sink 0" >> /root/.bash_history
+
 CMD speech-dispatcher --spawn  && /bin/bash
