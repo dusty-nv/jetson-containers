@@ -46,6 +46,11 @@ RUN python --version
 
 WORKDIR /opt/lerobot
 
+## Prevent the Gdk-ERROR by disabling MIT-SHM
+RUN export GDK_BACKEND=x11
+RUN export GDK_USE_X11SHM=0
+RUN export GDK_SYNCHRONIZE=1
+
 RUN echo "pactl info" >> /root/.bash_history
 RUN echo "pactl list short sinks" >> /root/.bash_history
 RUN echo "pactl set-default-sink 0" >> /root/.bash_history
