@@ -19,7 +19,9 @@ git checkout v${TORCHAUDIO_VERSION}
 # https://github.com/pytorch/audio/pull/3811
 sed -i '1i#include <float.h>' src/libtorchaudio/cuctc/src/ctc_prefix_decoder_kernel_v2.cu || echo "warning:  failed to patch ctc_prefix_decoder_kernel_v2.cu"
 
-BUILD_SOX=1 python3 setup.py bdist_wheel --verbose --dist-dir /opt
+BUILD_VERSION=${TORCHAUDIO_VERSION} \
+BUILD_SOX=1 \
+python3 setup.py bdist_wheel --verbose --dist-dir /opt
 
 cd ../
 rm -rf /opt/torchaudio
