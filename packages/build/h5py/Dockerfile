@@ -1,6 +1,6 @@
 #---
 # name: h5py
-# group: core
+# group: build
 # depends: [python]
 # test: [test.sh]
 #---
