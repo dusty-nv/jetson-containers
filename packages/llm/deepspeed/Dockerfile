@@ -11,6 +11,7 @@ FROM ${BASE_IMAGE}
 
 ARG DEEPSPEED_VERSION \
     DEEPSPEED_BRANCH \
+    DS_BUILD_OPS=1 \
     FORCE_BUILD="off"
 
 COPY build.sh install.sh /tmp/deepspeed/
