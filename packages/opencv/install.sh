@@ -3,8 +3,8 @@ set -ex
 
 ROOT="$(dirname "$(readlink -f "$0")")"
 
-echo "Installing dependencies for opencv ${OPENCV_VERSION}"
-$ROOT/install_deps.sh
+#echo "Installing dependencies for opencv ${OPENCV_VERSION}"
+#$ROOT/install_deps.sh
 
 if [ "$FORCE_BUILD" == "on" ]; then
 	echo "Forcing build of opencv-python ${OPENCV_VERSION}"
