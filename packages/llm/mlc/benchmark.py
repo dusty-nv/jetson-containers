@@ -12,9 +12,21 @@ import mlc_llm
 
 from packaging.version import Version
 
+# earlier builds of MLC didn't expose the version
 TVM_VERSION = Version(tvm.__version__)
-MLC_VERSION = Version(mlc_llm.__version__)
 
+try:
+    MLC_VERSION = Version(mlc_llm.__version__)
+except Exception as error:
+    print(f"failed to get MLC version ({error})")
+    if TVM_VERSION == Version('0.15.0'):
+        MLC_VERSION = Version('0.1.0')
+    elif TVM_VERSION == Version('0.16.0'):
+        MLC_VERSION = Version('0.1.1')
+    else:
+        raise ImportError(f"failed to get MLC version ({error}) and unknown TVM version ({TVM_VERSION})")
+    print(f"found TVM version {TVM_VERSION} -> MLC version {MLC_VERSION}\n")
+    
 print(f"TVM version:  {TVM_VERSION}")
 print(f"MLC version:  {MLC_VERSION}\n")
 
@@ -181,7 +193,7 @@ for i, prompt in enumerate(args.prompt):
     stats = {}
     
     if isinstance(prompt, dict):
-        num_input_tokens = prompt['num_tokens']
+        stats['input_tokens'] = prompt['num_tokens']
         prompt = prompt['text']
     elif USE_MLC_CHAT:
         stats['input_tokens'] = model.embed_text(prompt).shape[1]
