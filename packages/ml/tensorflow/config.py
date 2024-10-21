@@ -1,7 +1,7 @@
 from jetson_containers import L4T_VERSION, PYTHON_VERSION
 from packaging.version import Version
 
-from .version import TENSORFLOW_VERSION
+from ..ml.tensorflow.version import TENSORFLOW_VERSION
 
 def tensorflow(version, tensorflow_version='tf2', requires=None, default=False):
     pkg = package.copy()
