@@ -31,34 +31,8 @@ def bitsandbytes(version, requires=None, default=False, branch=None, repo='bitsa
         
     return pkg, builder
 
-cu126 = Version('12.6')
-
 package = [
-    bitsandbytes('0.39.1', default=(CUDA_VERSION<cu126), repo="dusty-nv/bitsandbytes", branch="main"),
-    bitsandbytes('0.44.1', default=(CUDA_VERSION>=cu126)),
+    bitsandbytes('0.39.1', default=(CUDA_VERSION < Version('12.2')), repo="dusty-nv/bitsandbytes", branch="main"),
+    bitsandbytes('0.44.1', default=(CUDA_VERSION >= Version('12.2'))),
 ]
 
-
-# from jetson_containers import CUDA_VERSION, find_container
-
-
-# builder = package.copy()
-# runtime = package.copy()
-
-# builder['name'] = 'bitsandbytes:builder'
-# builder['dockerfile'] = 'Dockerfile.builder'
-
-# builder['build_args'] = {
-#     'BITSANDBYTES_REPO': "dusty-nv/bitsandbytes",
-#     'BITSANDBYTES_BRANCH': "main",
-#     'CUDA_INSTALLED_VERSION': int(str(CUDA_VERSION.major) + str(CUDA_VERSION.minor)),
-#     'CUDA_MAKE_LIB': f"cuda{str(CUDA_VERSION.major)}x"
-# }
-
-# print(" ============== [bitsandbytes/config.py] =============== ")
-
-# runtime['build_args'] = {
-#     'BUILD_IMAGE': find_container(builder['name']),
-# }
-
-# package = [builder, runtime]
