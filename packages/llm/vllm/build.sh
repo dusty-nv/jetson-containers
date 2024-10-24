@@ -10,6 +10,7 @@ git apply /tmp/vllm/${VLLM_VERSION}.diff
 git diff
 
 export MAX_JOBS=$(nproc)
+export USE_CUDNN=1
 export CUDA_HOME=/usr/local/cuda
 export PATH="${CUDA_HOME}/bin:$PATH"
 export SETUPTOOLS_SCM_PRETEND_VERSION="${VLLM_VERSION}"
