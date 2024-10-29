@@ -7,7 +7,7 @@ def tensorflow(version, tensorflow_version='tf2', requires=None, default=False):
     pkg = package.copy()
   
     if default:
-        pkg['alias'] = 'tensorflow2' if tensorflow_version == 'tf2' else 'tensorflow1'
+        pkg['alias'] = ['tensorflow2'] if tensorflow_version == 'tf2' else ['tensorflow1']
         
     if requires:
         pkg['requires'] = requires   
@@ -106,12 +106,13 @@ package = [
     *tensorflow(
         version='2.16.1',
         tensorflow_version='tf2',
-        requires='>=36'
+        requires='>=36',
+        default=(L4T_VERSION <= Version('36.3')),
     ),
     *tensorflow(
         version='2.18.0',
         tensorflow_version='tf2',
         requires='>=36',
-        default=(L4T_VERSION.major >= 36),
+        default=(L4T_VERSION > Version('36.3')),
     ),
 ]
