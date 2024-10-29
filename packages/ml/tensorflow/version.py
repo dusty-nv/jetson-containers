@@ -11,8 +11,8 @@ else:
         if CUDA_VERSION >= Version('12.4'):
             TENSORFLOW_VERSION = Version('2.18.0')
         else:
-            TENSORFLOW_VERSION = Version('2.18.0')
+            TENSORFLOW_VERSION = Version('2.16.1')
     elif L4T_VERSION.major >= 34:
-        TENSORFLOW_VERSION = Version('2.18.0')
+        TENSORFLOW_VERSION = Version('2.16.1')
     elif L4T_VERSION.major >= 32:
         TENSORFLOW_VERSION = Version('1.15.5')
