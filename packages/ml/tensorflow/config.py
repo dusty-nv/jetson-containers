@@ -77,7 +77,7 @@ def tensorflow(version, tensorflow_version='tf2', requires=None, default=False):
             'TENSORFLOW_VERSION': version,
             'PYTHON_VERSION_MAJOR': PYTHON_VERSION.major,
             'PYTHON_VERSION_MINOR': PYTHON_VERSION.minor,
-            'FORCE_BUILD': 'on',
+            'FORCE_BUILD': 'off',
         }
         pkg['notes'] += " (will be built from source)"
         pkg['dockerfile'] = 'Dockerfile.pip'
