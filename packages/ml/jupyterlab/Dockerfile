@@ -1,7 +1,7 @@
 #---
 # name: jupyterlab
 # alias: jupyterlab:main
-# group: core
+# group: ml
 # depends: [python, numpy, rust]
 # docs: docs.md
 # notes: will autostart Jupyter server on port 8888 unless container entry CMD is overridden

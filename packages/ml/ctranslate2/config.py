@@ -25,6 +25,7 @@ def ctranslate2(version, requires=None, default=False):
     return ct, builder
     
 package = [
-    ctranslate2('master', default=False),
-    ctranslate2('4.2.0', default=True)
+    ctranslate2('master'),
+    ctranslate2('4.2.0', requires='<=cu122', default=True),
+    ctranslate2('4.4.0', requires='>=cu124', default=True),
 ]

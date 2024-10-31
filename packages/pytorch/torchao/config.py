@@ -1,17 +1,9 @@
-from jetson_containers import update_dependencies
-from packaging.version import Version
-from ..pytorch.version import PYTORCH_VERSION
 
-def torchao(version, pytorch=None, requires=None):
+def torchao(version, requires=None, default=False):
     pkg = package.copy()
     
     pkg['name'] = f"torchao:{version.split('-')[0]}"  # remove any -rc* suffix
-    
-    if pytorch:
-        pkg['depends'] = update_dependencies(pkg['depends'], f"pytorch:{pytorch}")
-    else:
-        pytorch = PYTORCH_VERSION  
-        
+
     if requires:
         pkg['requires'] = requires
    
@@ -25,11 +17,8 @@ def torchao(version, pytorch=None, requires=None):
     builder = pkg.copy()
     builder['name'] = builder['name'] + '-builder'
     builder['build_args'] = {**builder['build_args'], 'FORCE_BUILD': 'on'}
-    
-    if not isinstance(pytorch, Version):
-        pytorch = Version(pytorch)
 
-    if pytorch == PYTORCH_VERSION:
+    if default:
         pkg['alias'] = 'torchao'
         builder['alias'] = 'torchao:builder'
 
@@ -37,7 +26,5 @@ def torchao(version, pytorch=None, requires=None):
     
  
 package = [
-    # JetPack 5/6
-    torchao('0.6.0', pytorch='2.4', requires='==36.*'),
-    torchao('0.7.0', pytorch='2.5', requires='==36.*'),
+    torchao('0.7.0', requires='==36.*', default=True),
 ]

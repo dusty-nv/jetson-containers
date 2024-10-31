@@ -3,14 +3,19 @@ print('testing PyTorch...')
 
 import torch
 
-print('PyTorch version: ' + str(torch.__version__))
-print('CUDA available:  ' + str(torch.cuda.is_available()))
-print('cuDNN version:   ' + str(torch.backends.cudnn.version()))
+print(f'PyTorch version: {torch.__version__}')
+print(f'CUDA available:  {torch.cuda.is_available()}')
+print(f'cuDNN version:   {torch.backends.cudnn.version()}\n')
 
 print(torch.__config__.show())
 
 # fail if CUDA isn't available
 assert(torch.cuda.is_available())
+
+print(f'torch.distributed: {torch.distributed.is_available()}')
+print(f'  * NCCL backend:  {torch.distributed.is_nccl_available()}')
+print(f'  * GLOO backend:  {torch.distributed.is_gloo_available()}')
+print(f'  * MPI backend:   {torch.distributed.is_mpi_available()}\n')
 
 # check that version can be parsed
 from packaging import version

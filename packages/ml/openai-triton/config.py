@@ -28,23 +28,7 @@ def openai_triton(version, branch=None, requires=None, default=False):
     return pkg, builder
 
 package = [
-    openai_triton('2.1.0'),
-    openai_triton('3.0.0', branch='main', default=True)
+    openai_triton('3.0.0', branch='release/3.0.x'),
+    openai_triton('3.1.0', branch='release/3.1.x', default=True)
 ]
 
-# from jetson_containers import find_container
-
-
-# builder = package.copy()
-# runtime = package.copy()
-
-# builder['name'] = 'openai-triton:builder'
-# builder['dockerfile'] = 'Dockerfile.builder'
-
-# print(" ============== [openai-triton/config.py] =============== ")
-
-# runtime['build_args'] = {
-#     'BUILD_IMAGE': find_container(builder['name']),
-# }
-
-# package = [builder, runtime]

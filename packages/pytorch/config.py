@@ -14,7 +14,7 @@ def pytorch_pip(version, requires=None, alias=None):
     short_version = f"{short_version.major}.{short_version.minor}"
         
     pkg['name'] = f'pytorch:{short_version}'    
-    pkg['dockerfile'] = 'Dockerfile.pip'
+    pkg['dockerfile'] = 'Dockerfile'
     
     if len(version.split('.')) < 3:
         build_version = version + '.0'
@@ -28,7 +28,10 @@ def pytorch_pip(version, requires=None, alias=None):
     }
 
     if L4T_VERSION.major >= 36:
-        pkg['build_args']['USE_NCCL'] = 1
+        pkg['build_args']['USE_NCCL'] = 1  # NCCL building only on JP6 and newer
+        
+    if Version(version) >= Version('2.5'): # begin disabling MPI with JP 6.1 since GLOO/NCCL is working
+        pkg['build_args']['USE_MPI'] = 0   # and to eliminate security vulnerability from MPI packages
         
     if requires:
         pkg['requires'] = requires
@@ -50,7 +53,7 @@ def pytorch_pip(version, requires=None, alias=None):
     return pkg, builder
     
     
-def pytorch_whl(version, whl, url, requires, alias=None):
+def pytorch_wget(version, whl, url, requires, alias=None):
     """
     Download & install PyTorch wheel with Dockerfile
     """
@@ -58,6 +61,7 @@ def pytorch_whl(version, whl, url, requires, alias=None):
     
     pkg['name'] = f'pytorch:{version}'
     pkg['alias'] = [f'torch:{version}']
+    pkg['Dockerfile'] = 'Dockerfile.wget'
     
     if Version(version) == PYTORCH_VERSION:
         pkg['alias'].extend(['pytorch', 'torch'])
@@ -86,6 +90,6 @@ package = [
     pytorch_pip('2.5', requires='==36.*'),
 
     # JetPack 4
-    pytorch_whl('1.10', 'torch-1.10.0-cp36-cp36m-linux_aarch64.whl', 'https://nvidia.box.com/shared/static/fjtbno0vpo676a25cgvuqc1wty0fkkg6.whl', '==32.*'),
-    pytorch_whl('1.9', 'torch-1.9.0-cp36-cp36m-linux_aarch64.whl', 'https://nvidia.box.com/shared/static/h1z9sw4bb1ybi0rm3tu8qdj8hs05ljbm.whl', '==32.*'),
+    pytorch_wget('1.10', 'torch-1.10.0-cp36-cp36m-linux_aarch64.whl', 'https://nvidia.box.com/shared/static/fjtbno0vpo676a25cgvuqc1wty0fkkg6.whl', '==32.*'),
+    pytorch_wget('1.9', 'torch-1.9.0-cp36-cp36m-linux_aarch64.whl', 'https://nvidia.box.com/shared/static/h1z9sw4bb1ybi0rm3tu8qdj8hs05ljbm.whl', '==32.*'),
 ]

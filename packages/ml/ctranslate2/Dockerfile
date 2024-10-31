@@ -2,7 +2,7 @@
 # name: ctranslate2
 # group: transformer
 # config: config.py
-# depends: [cmake, cuda, cudnn]
+# depends: [cuda, cudnn, cmake]
 # requires: '>=34.1.0'
 # test: test.py
 #---

@@ -2,14 +2,15 @@
 set -ex
 echo "Building torchao ${TORCHAO_VERSION}"
    
-git clone --branch v${TORCHAO_VERSION} --recursive --depth=1 https://github.com/pytorch/ao /opt/torchao
-cd /opt/torchao
+git clone --branch v${TORCHAO_VERSION} --recursive --depth=1 https://github.com/pytorch/ao /opt/torchao || \
+git clone --recursive --depth=1 https://github.com/pytorch/ao /opt/torchao 
 
-git checkout v${TORCHAO_VERSION}
+cd /opt/torchao
+#git checkout v${TORCHAO_VERSION}
 
 #export TORCH_CUDA_ARCH_LIST="8.7"
 export MAX_JOBS=$(nproc)
-python3 setup.py --verbose bdist_wheel --dist-dir /opt
+USE_CPP=1 python3 setup.py --verbose bdist_wheel --dist-dir /opt
 
 cd ../
 rm -rf /opt/torchao

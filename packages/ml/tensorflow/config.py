@@ -1,13 +1,13 @@
 from jetson_containers import L4T_VERSION, PYTHON_VERSION
 from packaging.version import Version
 
-from .version import TENSORFLOW_VERSION
+from ..ml.tensorflow.version import TENSORFLOW_VERSION
 
 def tensorflow(version, tensorflow_version='tf2', requires=None, default=False):
     pkg = package.copy()
   
     if default:
-        pkg['alias'] = 'tensorflow2' if tensorflow_version == 'tf2' else 'tensorflow1'
+        pkg['alias'] = ['tensorflow2'] if tensorflow_version == 'tf2' else ['tensorflow1']
         
     if requires:
         pkg['requires'] = requires   
@@ -77,7 +77,7 @@ def tensorflow(version, tensorflow_version='tf2', requires=None, default=False):
             'TENSORFLOW_VERSION': version,
             'PYTHON_VERSION_MAJOR': PYTHON_VERSION.major,
             'PYTHON_VERSION_MINOR': PYTHON_VERSION.minor,
-            'FORCE_BUILD': 'on',
+            'FORCE_BUILD': 'off',
         }
         pkg['notes'] += " (will be built from source)"
         pkg['dockerfile'] = 'Dockerfile.pip'
@@ -106,12 +106,13 @@ package = [
     *tensorflow(
         version='2.16.1',
         tensorflow_version='tf2',
-        requires='>=36'
+        requires='>=36',
+        default=(L4T_VERSION <= Version('36.3')),
     ),
     *tensorflow(
         version='2.18.0',
         tensorflow_version='tf2',
         requires='>=36',
-        default=(L4T_VERSION.major >= 36),
+        default=(L4T_VERSION > Version('36.3')),
     ),
 ]

@@ -2,7 +2,8 @@
 set -ex
 
 # Clone the repository if it doesn't exist
-git clone --branch=v${VLLM_VERSION} --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm
+git clone --branch=v${VLLM_VERSION} --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm || 
+git clone --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm
 cd /opt/vllm
 
 # apply patches
@@ -10,6 +11,7 @@ git apply /tmp/vllm/${VLLM_VERSION}.diff
 git diff
 
 export MAX_JOBS=$(nproc)
+export USE_CUDNN=1
 export CUDA_HOME=/usr/local/cuda
 export PATH="${CUDA_HOME}/bin:$PATH"
 export SETUPTOOLS_SCM_PRETEND_VERSION="${VLLM_VERSION}"
