@@ -30,8 +30,8 @@ RUN cd /opt/ComfyUI/custom_nodes/comfyui-flux-accelerator/scripts && \
 
 WORKDIR /opt/ComfyUI/
 
-RUN pip3 install --no-cache-dir -U xformers onnxruntime-gpu diffusers #triton
-RUN pip3 install --no-cache-dir -U torchao
+RUN pip3 install --no-cache-dir -U xformers onnxruntime-gpu 
+RUN pip3 install --no-cache-dir -U diffusers flash-attn triton torchao
 RUN pip3 install --force-reinstall 'numpy<2'
 
 COPY workflow /opt/ComfyUI/workflow
