@@ -17,6 +17,7 @@ RUN git clone https://github.com/comfyanonymous/ComfyUI.git && \
 
 RUN cd /opt/ComfyUI/custom_nodes && \
     git clone --recursive https://github.com/ltdrdata/ComfyUI-Manager.git && \
+    git clone --recursive https://github.com/ltdrdata/ComfyUI-Impact-Pack.git && \
     git clone --recursive https://github.com/discus0434/comfyui-flux-accelerator.git && \
     git clone --recursive https://github.com/kijai/ComfyUI-MochiWrapper.git
 
