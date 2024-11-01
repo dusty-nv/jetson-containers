@@ -7,7 +7,7 @@ git clone --depth=1 --recursive https://github.com/trimesh/vhacdx /opt/vhacdx
 
 # Navigate to the directory containing PyMeshLab's setup.py
 cd /opt/vhacdx && \
-MAKEFLAGS="-j$(nproc)" pip3 wheel . -w /opt/vhacdx/wheels
+MAKEFLAGS="-j$(nproc)" pip3 wheel . -w /opt/vhacdx/wheels -v
 
 # Verify the contents of the /opt directory
 ls /opt/vhacdx/wheels
