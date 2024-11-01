@@ -36,5 +36,4 @@ RUN pip3 install --force-reinstall 'numpy<2'
 
 COPY workflow /opt/ComfyUI/workflow
 EXPOSE 8188
-
-CMD ["python3", "main.py"]
+CMD ["python3", "main.py", "--listen", "--port", "8188"]

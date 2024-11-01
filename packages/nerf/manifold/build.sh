@@ -3,7 +3,8 @@ set -ex
 
 
 echo "Cloning manifold version ${MANIFOLD_VERSION}"
-git clone --branch=v${MANIFOLD_VERSION} --depth=1 --recursive https://github.com/elalish/manifold.git /opt/manifold
+git clone --branch=v${MANIFOLD_VERSION} --depth=1 --recursive https://github.com/elalish/manifold.git /opt/manifold || 
+git clone --depth=1 --recursive https://github.com/elalish/manifold.git /opt/manifold
 
 # Navigate to the directory containing PyMeshLab's setup.py
 cd /opt/manifold && \
