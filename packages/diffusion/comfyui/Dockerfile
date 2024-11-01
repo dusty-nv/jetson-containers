@@ -30,10 +30,13 @@ RUN cd /opt/ComfyUI/custom_nodes/comfyui-flux-accelerator/scripts && \
 
 WORKDIR /opt/ComfyUI/
 
-RUN pip3 install --no-cache-dir -U xformers onnxruntime-gpu triton
+RUN pip3 install --no-cache-dir -U xformers onnxruntime-gpu triton lm_eval
 RUN pip3 install --no-cache-dir -U diffusers flash-attn sageattention  torchao
 RUN pip3 install --force-reinstall 'numpy<2'
 
 COPY workflow /opt/ComfyUI/workflow
+COPY extra /opt/ComfyUI/extra
 EXPOSE 8188
-CMD ["python3", "main.py", "--listen", "--port", "8188"]
+
+RUN /opt/ComfyUI/extra/init.sh
+CMD python3 main.py --listen 0.0.0.0 --port ${PORT:-8188}
