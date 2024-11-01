@@ -25,5 +25,5 @@ def vhacdx(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    vhacdx('0.0.8.post1', default=True)
+    vhacdx('0.0.9.post1', default=True)
 ]
