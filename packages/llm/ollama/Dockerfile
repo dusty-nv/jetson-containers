@@ -39,10 +39,7 @@ RUN cd /opt/ollama && \
     export GOFLAGS="'-ldflags=-w -s \"-X=github.com/ollama/ollama/version.Version=$VERSION\" \"-X=github.com/ollama/ollama/server.mode=release\"'" && \
     export GOARCH=arm64 && \
     echo "OLLAMA_VERSION=${VERSION}  GOFLAGS=${GOFLAGS}" && \
-    cd llm/generate && \
-    sed 's|-j8|-j$(nproc)|' -i gen_common.sh && \
-    bash gen_linux.sh && \
-    cd ../../ && \
+    make -j$(nproc) && \
     go build -trimpath .
 
 # build the runtime container
