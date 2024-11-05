@@ -89,9 +89,13 @@ def tensorflow(version, tensorflow_version='tf2', requires=None, default=False):
     builder['alias'] = [f'tensorflow2:{version}-builder' if tensorflow_version == 'tf2' else f'tensorflow1:{version}-builder']
     
     if Version(version) == TENSORFLOW_VERSION:
-        pkg['alias'].extend(['tensorflow','tensorflow2'])
-        builder['alias'].extend(['tensorflow:builder', 'tensorflow2:builder'])
+        pkg['alias'].append('tensorflow')
+        builder['alias'].append('tensorflow:builder')
 
+        if tensorflow_version == 'tf2':
+            pkg['alias'].append('tensorflow2')
+            builder['alias'].append('tensorflow2:builder')
+            
     return [pkg, builder]
 
 package = [
@@ -99,8 +103,14 @@ package = [
     *tensorflow(
         version='1.15.5',
         tensorflow_version='tf1',
-        default=(L4T_VERSION.major == 35),
+        default=(L4T_VERSION.major <= 35),
         requires='<36'
+    ),
+    *tensorflow(
+        version='2.7.0',
+        tensorflow_version='tf2',
+        default=(L4T_VERSION.major == 32),
+        requires='<35'
     ),
     # TensorFlow tf2 para L4T >=36
     *tensorflow(
