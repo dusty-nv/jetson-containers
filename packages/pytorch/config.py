@@ -12,7 +12,11 @@ def pytorch_pip(version, requires=None, alias=None):
     
     short_version = Version(version.split('-')[0]) # remove any -rc* suffix
     short_version = f"{short_version.major}.{short_version.minor}"
-        
+    micro_version = Version(version).micro
+    
+    if micro_version > 0:
+        short_version += f".{micro_version}"
+            
     pkg['name'] = f'pytorch:{short_version}'    
     pkg['dockerfile'] = 'Dockerfile'
     
@@ -30,8 +34,8 @@ def pytorch_pip(version, requires=None, alias=None):
     if L4T_VERSION.major >= 36:
         pkg['build_args']['USE_NCCL'] = 1  # NCCL building only on JP6 and newer
         
-    if Version(version) >= Version('2.5'): # begin disabling MPI with JP 6.1 since GLOO/NCCL is working
-        pkg['build_args']['USE_MPI'] = 0   # and to eliminate security vulnerability from MPI packages
+    if Version(version) >= Version('2.3.1'): # begin disabling MPI with JP 6.1 since GLOO/NCCL is working
+        pkg['build_args']['USE_MPI'] = 0     # and to eliminate security vulnerability from MPI packages
         
     if requires:
         pkg['requires'] = requires
@@ -85,9 +89,10 @@ package = [
     pytorch_pip('2.0', requires='==35.*'),
     pytorch_pip('2.1', requires='>=35'),
     pytorch_pip('2.2', requires='>=35'),
-    pytorch_pip('2.3', requires='==36.*'),
+    pytorch_pip('2.3.0', requires='==36.*'),
+    pytorch_pip('2.3.1', requires='==36.*'),  # without OpenMPI
     pytorch_pip('2.4', requires='==36.*'),
-    pytorch_pip('2.5', requires='==36.*'),
+    pytorch_pip('2.5', requires='==36.*'),    # without OpenMPI
 
     # JetPack 4
     pytorch_wget('1.10', 'torch-1.10.0-cp36-cp36m-linux_aarch64.whl', 'https://nvidia.box.com/shared/static/fjtbno0vpo676a25cgvuqc1wty0fkkg6.whl', '==32.*'),
