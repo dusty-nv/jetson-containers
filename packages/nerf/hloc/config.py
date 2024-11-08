@@ -25,5 +25,6 @@ def hloc(version, requires=None, default=False):
     return pkg, builder
 
 package = [
+    hloc('1.4'),
     hloc('1.5', default=True)
 ]

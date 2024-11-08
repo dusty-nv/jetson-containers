@@ -23,5 +23,6 @@ def pymeshlab(version, requires=None, default=False):
     return pkg, builder
 
 package = [
+    pymeshlab('2023.12.post1'),
     pymeshlab('2023.12.post2', default=True),
 ]

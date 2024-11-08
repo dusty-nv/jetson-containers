@@ -1,4 +1,3 @@
-from jetson_containers import CUDA_ARCHITECTURES
 
 def gsplat(version, requires=None, default=False):
     pkg = package.copy()
@@ -9,7 +8,6 @@ def gsplat(version, requires=None, default=False):
     pkg['name'] = f'gsplat:{version}'
 
     pkg['build_args'] = {
-        'CUDAARCHS': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
         'GSPLAT_VERSION': version,
     }
 
@@ -25,5 +23,6 @@ def gsplat(version, requires=None, default=False):
     return pkg, builder
 
 package = [
+    gsplat('1.3.0'),
     gsplat('1.5.0', default=True)
 ]
