@@ -25,5 +25,5 @@ def manifold(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    manifold('2.5.1', default=True),
+    manifold('2.5.2', default=True),
 ]
