@@ -2,13 +2,14 @@
 # name: ollama 
 # group: llm
 # config: config.py
-# depends: [build-essential, cuda]
+# depends: [cuda, python]
 # requires: '>=34.1.0'
 # test: test.sh
 # docs: docs.md
 #---
 ARG BASE_IMAGE \
     CMAKE_CUDA_ARCHITECTURES \
+    CUDA_VERSION_MAJOR \
     JETPACK_VERSION \
     OLLAMA_REPO \
     OLLAMA_BRANCH \
@@ -21,6 +22,7 @@ ARG OLLAMA_REPO \
     OLLAMA_BRANCH \
     GOLANG_VERSION \
     CMAKE_VERSION \
+    CUDA_VERSION_MAJOR \
     CMAKE_CUDA_ARCHITECTURES
     
 ADD https://api.github.com/repos/${OLLAMA_REPO}/git/refs/heads/${OLLAMA_BRANCH} /tmp/ollama_version.json
@@ -44,18 +46,24 @@ RUN cd /opt/ollama && \
 
 # build the runtime container
 FROM ${BASE_IMAGE}
-COPY --from=ollama-l4t-build /opt/ollama/ollama /bin/ollama
 
-ARG JETPACK_VERSION
+COPY --from=ollama-l4t-build /opt/ollama/ollama /bin/ollama
+COPY --from=ollama-l4t-build /opt/ollama/dist/linux-arm64/lib/ollama /usr/lib/ollama
+
+ARG JETPACK_VERSION \
+    CUDA_VERSION_MAJOR
 
 EXPOSE 11434
 ENV OLLAMA_HOST=0.0.0.0 \
     OLLAMA_MODELS=/data/models/ollama/models \
     PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
     LD_LIBRARY_PATH=/usr/local/cuda/lib:/usr/local/cuda/lib64:/usr/local/cuda/include:${LD_LIBRARY_PATH} \
-    JETSON_JETPACK=${JETPACK_VERSION}
+    JETSON_JETPACK=${JETPACK_VERSION} \
+    CUDA_VERSION_MAJOR=${CUDA_VERSION_MAJOR}
 
-COPY benchmark.py benchmark.sh test.sh /opt/ollama/
+RUN python3 -m pip install ollama
+
+COPY benchmark.py benchmark.sh test.sh test.py /opt/ollama/
 COPY start_ollama /
 
 CMD /start_ollama && /bin/bash

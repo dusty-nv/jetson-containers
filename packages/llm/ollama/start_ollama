@@ -3,7 +3,7 @@
 
 printf "\nStarting ollama server\n\n"
 
-/bin/bash -c "/bin/ollama serve &> $OLLAMA_LOGS" &
+/bin/bash -c "OLLAMA_LLM_LIBRARY=cuda_${CUDA_VERSION_MAJOR} /bin/ollama serve &> $OLLAMA_LOGS" &
 
 timeout 5 tail -f $OLLAMA_LOGS
 

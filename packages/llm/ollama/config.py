@@ -1,11 +1,30 @@
 
-from jetson_containers import CUDA_ARCHITECTURES, JETPACK_VERSION
+from jetson_containers import CUDA_ARCHITECTURES, CUDA_VERSION, JETPACK_VERSION
 
-package['build_args'] = {
-    'OLLAMA_REPO': 'ollama/ollama',
-    'OLLAMA_BRANCH': 'main',
-    'GOLANG_VERSION': '1.22.1',
-    'CMAKE_VERSION': '3.22.1',
-    'JETPACK_VERSION': str(JETPACK_VERSION),
-    'CMAKE_CUDA_ARCHITECTURES': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
-}
+def ollama(branch, golang='1.22.8', cmake='3.22.1', requires=None, default=False):
+    pkg = package.copy()
+
+    pkg['name'] = f'ollama:{branch}'
+
+    if branch[0].isnumeric():
+        branch = 'v' + branch
+        
+    package['build_args'] = {
+        'OLLAMA_REPO': 'ollama/ollama',
+        'OLLAMA_BRANCH': branch,
+        'GOLANG_VERSION': golang,
+        'CMAKE_VERSION': cmake,
+        'JETPACK_VERSION': str(JETPACK_VERSION),
+        'CUDA_VERSION_MAJOR' : CUDA_VERSION.major,
+        'CMAKE_CUDA_ARCHITECTURES': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
+    }   
+     
+    if default:
+        pkg['alias'] = 'ollama'
+
+    return pkg
+    
+package = [
+    ollama('main'),
+    ollama('0.4.0', default=True),
+]
