@@ -1,10 +1,18 @@
 #!/usr/bin/env bash
 set -ex
 
+PYTORCH_VERSION=$(python3 -c 'import torch; print(torch.__version__)')
+
 apt-get update
-apt-get install -y --no-install-recommends openmpi-bin libopenmpi-dev git-lfs
+apt-get install -y --no-install-recommends \
+    openmpi-bin \
+    libopenmpi-dev \
+    git-lfs \
+    ccache
 rm -rf /var/lib/apt/lists/*
 apt-get clean
+
+bash ${TMP_DIR}/install_cusparselt.sh
 
 pip3 install --no-cache-dir --verbose polygraphy mpi4py
 
@@ -39,7 +47,10 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install --no-cache-dir --verbose tensorrt_llm
+pip3 install --no-cache-dir --verbose -r ${SOURCE_DIR}/requirements.txt
+pip3 install --no-cache-dir --verbose tensorrt_llm==${TRT_LLM_VERSION}
 
-pip3 show tensorrt_llm
-python3 -c "import tensorrt_llm; print(tensorrt_llm.__version__)"
+pip3 uninstall -y torch && pip3 install --verbose torch==${PYTORCH_VERSION}
+
+#pip3 show tensorrt_llm
+#python3 -c "import tensorrt_llm; print(tensorrt_llm.__version__)"
