@@ -22,7 +22,7 @@ ADD https://api.github.com/repos/${NANOOWL_REPO}/git/refs/heads/${NANOOWL_BRANCH
 RUN git clone --branch=${NANOOWL_BRANCH} https://github.com/${NANOOWL_REPO} /opt/nanoowl && \
     cd /opt/nanoowl && \
     git checkout main && \
-    python3 setup.py develop --user
+    python3 setup.py develop
 
 RUN cd /opt/nanoowl && \
     mkdir data && \
