@@ -36,7 +36,7 @@ def package_search_dirs(package_dirs, scan=False):
         
     for package_dir in package_dirs:
         if len(package_dir) > 0:
-            _PACKAGE_DIRS.append(package_dirs)
+            _PACKAGE_DIRS.append(package_dir)
     
     if scan:
         scan_packages(_PACKAGE_DIRS, rescan=True)
