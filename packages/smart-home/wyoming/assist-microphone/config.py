@@ -1,22 +1,10 @@
-import requests
-
-
-def get_latest_stable_version(fallback="1.2.0") -> str:
-    try:
-        response = requests.get('https://raw.githubusercontent.com/rhasspy/wyoming-satellite/master/wyoming_satellite/VERSION')
-        if response.status_code == 200:
-            return response.text.strip()
-        else:
-            print("Failed to fetch version information. Status code:", response.status_code)
-            return fallback
-    except Exception as e:
-        print("An error occurred:", e)
-        return fallback
+from jetson_containers import handle_text_request
 
 
 def create_package(version, default=False) -> list:
     pkg = package.copy()
-    wanted_version = get_latest_stable_version() if version == 'latest' else version
+    url = 'https://raw.githubusercontent.com/rhasspy/wyoming-satellite/master/wyoming_satellite/VERSION'
+    wanted_version = handle_text_request(url) if version == 'latest' else version
     pkg['name'] = f'wyoming-assist-microphone:{version}'
 
     pkg['build_args'] = {
@@ -29,5 +17,7 @@ def create_package(version, default=False) -> list:
     return pkg
 
 package = [
-    create_package("latest", default=True),
+    create_package("latest", default=False),
+    create_package("1.2.0", default=True),
+    create_package("1.3.0", default=False),
 ]

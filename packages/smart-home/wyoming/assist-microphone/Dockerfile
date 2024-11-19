@@ -50,5 +50,3 @@ HEALTHCHECK --start-period=10m \
         | nc -w 1 localhost ${SATELLITE_PORT} \
         | grep -q "assist" \
         || exit 1
-
-CMD /init
