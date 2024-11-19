@@ -14,7 +14,7 @@ RUN git clone https://github.com/dusty-nv/NanoDB /opt/NanoDB && \
     cd /opt/NanoDB && \
     pip3 install --ignore-installed --no-cache-dir blinker && \
     pip3 install --no-cache-dir --verbose -r requirements.txt && \
-    pip3 install --user -e .
+    pip3 install -e .
     
 RUN PYTHON_ROOT=`pip3 show torch | grep Location: | cut -d' ' -f2` && \
     sed 's|if utils\.validate_url(img)|if False|g' -i $PYTHON_ROOT/gradio/components.py && \
