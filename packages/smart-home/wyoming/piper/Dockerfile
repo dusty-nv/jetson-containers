@@ -44,5 +44,3 @@ HEALTHCHECK --start-period=10m \
         | nc -w 1 localhost ${PIPER_PORT} \
         | grep -q "piper" \
         || exit 1
-
-CMD /init
