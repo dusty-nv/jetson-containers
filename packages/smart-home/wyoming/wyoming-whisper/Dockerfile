@@ -36,5 +36,3 @@ HEALTHCHECK --start-period=10m \
         | nc -w 1 localhost ${WHISPER_PORT} \
         | grep -q "faster-whisper" \
         || exit 1
-
-CMD /init
