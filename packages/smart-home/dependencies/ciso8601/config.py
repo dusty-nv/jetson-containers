@@ -11,7 +11,7 @@ def create_package(version, default=False):
     }
 
     builder = pkg.copy()
-    builder['name'] = f'ciso8601:{version}-builder'
+    builder['name'] = f'ciso8601:{wanted_version}-builder'
     builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
 
     if default:

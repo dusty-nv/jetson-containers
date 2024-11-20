@@ -11,3 +11,5 @@ pip3 install  --no-cache-dir --verbose /opt/wheels/ciso8601*.whl
 rm -rf /opt/ciso8601
 
 twine upload --skip-existing --verbose /opt/wheels/ciso8601*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+
+rm /opt/wheels/ciso8601*.whl
