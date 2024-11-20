@@ -2,11 +2,11 @@ from jetson_containers import update_dependencies, get_json_value_from_url
 from packaging.version import Version
 
 
-def create_package(version, default=False) -> list:
+def create_package(version, sqlite_version='3.40.1', default=False) -> list:
     pkg = package.copy()
     url = 'https://version.home-assistant.io/stable.json'
     wanted_version = get_json_value_from_url(url, 'homeassistant.default') if version == 'latest' else version
-    pkg['name'] = f'homeassistant-core:{version}'
+    pkg['name'] = f'homeassistant-core:{wanted_version}'
     ha_version = Version(wanted_version)
 
     if ha_version.major >= 2024:
@@ -23,6 +23,7 @@ def create_package(version, default=False) -> list:
     
     pkg['build_args'] = {
         'HA_VERSION': wanted_version,
+        'SQLITE_VERSION': sqlite_version
     }
 
     if default:
