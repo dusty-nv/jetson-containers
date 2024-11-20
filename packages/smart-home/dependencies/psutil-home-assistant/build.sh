@@ -8,3 +8,5 @@ pip3 wheel --wheel-dir=/opt/wheels --no-deps --verbose /opt/psutil-home-assistan
 rm -rf /opt/psutil-home-assistant
 
 twine upload --skip-existing --verbose /opt/wheels/psutil_home_assistant*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+
+rm /opt/wheels/psutil_home_assistant*.whl
