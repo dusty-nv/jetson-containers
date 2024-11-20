@@ -11,13 +11,12 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG WYOMING_OPENWAKEWORD_VERSION
-
-# Specify the shell with desired options
-SHELL ["/bin/bash", "-euxo", "pipefail"]
+ARG WYOMING_OPENWAKEWORD_VERSION \
+    WYOMING_OPENWAKEWORD_BRANCH
 
 ENV PIP_BREAK_SYSTEM_PACKAGES=1 \
     WYOMING_OPENWAKEWORD_VERSION="$WYOMING_OPENWAKEWORD_VERSION" \
+    WYOMING_OPENWAKEWORD_BRANCH="$WYOMING_OPENWAKEWORD_BRANCH" \
     OPENWAKEWORD_PORT=10400 \
     OPENWAKEWORD_THRESHOLD=0.5 \
     OPENWAKEWORD_TRIGGER_LEVEL=1 \
@@ -29,9 +28,9 @@ WORKDIR /usr/src
 
 COPY rootfs/ /
 COPY models/ ${OPENWAKEWORD_CUSTOM_MODEL_DIR}/
-COPY build.sh /tmp/wyoming/build_openwakeword.sh
+COPY *.sh /tmp/wyoming/openwakeword/
 
-RUN /tmp/wyoming/build_openwakeword.sh
+RUN /tmp/wyoming/openwakeword/install.sh || /tmp/wyoming/openwakeword/build.sh
 
 HEALTHCHECK --start-period=10m \
     CMD echo '{ "type": "describe" }' \
