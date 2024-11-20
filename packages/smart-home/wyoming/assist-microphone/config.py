@@ -1,23 +1,31 @@
 from jetson_containers import handle_text_request
 
 
-def create_package(version, default=False) -> list:
+def create_package(version, branch=None, default=False) -> list:
     pkg = package.copy()
-    url = 'https://raw.githubusercontent.com/rhasspy/wyoming-satellite/master/wyoming_satellite/VERSION'
-    wanted_version = handle_text_request(url) if version == 'latest' else version
-    pkg['name'] = f'wyoming-assist-microphone:{version}'
+
+    if not branch:
+        branch = f'v{version}'
+
+    wanted_version = handle_text_request(f'https://raw.githubusercontent.com/rhasspy/wyoming-satellite/{branch}/wyoming_satellite/VERSION')
+    pkg['name'] = f'wyoming-assist-microphone:{wanted_version}'
 
     pkg['build_args'] = {
         'SATELLITE_VERSION': wanted_version,
+        'SATELLITE_BRANCH': branch
     }
+
+    builder = pkg.copy()
+    builder['name'] = f'wyoming-assist-microphone:{wanted_version}-builder'
+    builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
 
     if default:
         pkg['alias'] = 'wyoming-assist-microphone'
+        builder['alias'] = 'wyoming-assist-microphone:builder'
 
-    return pkg
+    return pkg, builder
 
 package = [
-    create_package("latest", default=False),
-    create_package("1.2.0", default=True),
-    create_package("1.3.0", default=False),
+    create_package("1.3.0", branch="master", default=True),
+    create_package("1.2.0"),
 ]
