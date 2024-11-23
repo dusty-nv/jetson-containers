@@ -1,5 +1,6 @@
 #---
 # name: auto_gptq
+# alias: auto-gptq
 # group: llm
 # config: config.py
 # depends: [transformers]
@@ -11,7 +12,8 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG AUTOGPTQ_VERSION \
-    AUTOGPTQ_BRANCH
+    AUTOGPTQ_BRANCH \
+    FORCE_BUILD="off"
 
 COPY build.sh /tmp/build_auto_gptq.sh
 

@@ -21,7 +21,7 @@ rerun
 Then, start the docker container to run the visualization script.
 
 ```bash
-jetson-containers run -w /opt/lerobot $(autotag lerobot) \
+jetson-containers run --shm-size=4g -w /opt/lerobot $(autotag lerobot) \
   python3 lerobot/scripts/visualize_dataset.py \
     --repo-id lerobot/pusht \
     --episode-index 0
@@ -32,7 +32,7 @@ jetson-containers run -w /opt/lerobot $(autotag lerobot) \
 See the [original instruction on lerobot repo](https://github.com/huggingface/lerobot/?tab=readme-ov-file#evaluate-a-pretrained-policy).
 
 ```bash
-jetson-containers run -w /opt/lerobot $(autotag lerobot) \
+jetson-containers run --shm-size=4g -w /opt/lerobot $(autotag lerobot) \
   python3 lerobot/scripts/eval.py \
     -p lerobot/diffusion_pusht \
     eval.n_episodes=10 \
@@ -44,13 +44,117 @@ jetson-containers run -w /opt/lerobot $(autotag lerobot) \
 See the [original instruction on lerobot repo](https://github.com/huggingface/lerobot/?tab=readme-ov-file#train-your-own-policy).
 
 ```bash
-jetson-containers run -w /opt/lerobot $(autotag lerobot) \
+jetson-containers run --shm-size=4g -w /opt/lerobot $(autotag lerobot) \
   python3 lerobot/scripts/train.py \
     policy=act \
     env=aloha \
     env.task=AlohaInsertion-v0 \
     dataset_repo_id=lerobot/aloha_sim_insertion_human 
 ```
+
+## Usage with Real-World Robot (Koch v1.1)
+
+### Before starting the container : Set udev rule
+
+On Jetson host side, we set an udev rule so that arms always get assigned the same device name as following.
+
+- `/dev/ttyACM_kochleader`   : Leader arm
+- `/dev/ttyACM_kochfollower` : Follower arm
+
+First only connect the leader arm to Jetson and record the serial ID by running the following:
+
+```bash
+ll /dev/serial/by-id/
+```
+
+The output should look like this.
+
+```bash
+lrwxrwxrwx 1 root root 13 Sep 24 13:07 usb-ROBOTIS_OpenRB-150_BA98C8C350304A46462E3120FF121B06-if00 -> ../../ttyACM1
+```
+
+Then edit the first line of `./99-usb-serial.rules` like the following.
+
+```
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2f5d", ATTRS{idProduct}=="2202", ATTRS{serial}=="BA98C8C350304A46462E3120FF121B06", SYMLINK+="ttyACM_kochleader"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2f5d", ATTRS{idProduct}=="2202", ATTRS{serial}=="00000000000000000000000000000000", SYMLINK+="ttyACM_kochfollower"
+```
+
+Now disconnect the leader arm, and then only connect the follower arm to Jetson.
+
+Repeat the same steps to record the serial to edit the second line of `99-usb-serial.rules` file.
+
+```bash
+$ ll /dev/serial/by-id/
+lrwxrwxrwx 1 root root 13 Sep 24 13:07 usb-ROBOTIS_OpenRB-150_483F88DC50304A46462E3120FF0C081A-if00 -> ../../ttyACM0
+$ vi ./data/lerobot/99-usb-serial.rules
+```
+
+You should have `./99-usb-serial.rules` now looking like this:
+
+```
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2f5d", ATTRS{idProduct}=="2202", ATTRS{serial}=="BA98C8C350304A46462E3120FF121B06", SYMLINK+="ttyACM_kochleader"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2f5d", ATTRS{idProduct}=="2202", ATTRS{serial}=="483F88DC50304A46462E3120FF0C081A", SYMLINK+="ttyACM_kochfollower"
+```
+
+Finally copy this under `/etc/udev/rules.d/` (of host), and restart Jetson.
+
+```
+sudo cp ./99-usb-serial.rules /etc/udev/rules.d/
+sudo reboot
+```
+
+After reboot, check if we now have achieved the desired fixed simlinks names for the arms.
+
+```bash
+ls -l /dev/ttyACM*
+```
+
+You should get something like this:
+
+```bash
+crw-rw---- 1 root dialout 166, 0 Sep 24 17:20 /dev/ttyACM0
+crw-rw---- 1 root dialout 166, 1 Sep 24 16:13 /dev/ttyACM1
+lrwxrwxrwx 1 root root         7 Sep 24 17:20 /dev/ttyACM_kochfollower -> ttyACM0
+lrwxrwxrwx 1 root root         7 Sep 24 16:13 /dev/ttyACM_kochleader -> ttyACM1
+```
+
+### Create the local copy of lerobot on host (under `jetson-containers/data` dir)
+
+```bash
+cd jetson-containers
+./packages/robots/lerobot/clone_lerobot_dir_under_data.sh
+./packages/robots/lerobot/copy_overlay_files_in_data_lerobot.sh
+```
+
+### Start the container with local lerobot dir mounted
+
+```bash
+./run.sh \
+  --csi2webcam --csi-capture-res='1640x1232@30' --csi-output-res='640x480@30' \
+  -v ${PWD}/data/lerobot/:/opt/lerobot/ \
+  $(./autotag lerobot)
+```
+
+### Test with Koch arms
+
+You will now use your local PC to access the Jupyter Lab server running on Jetson on the same network.
+
+Once the contianer starts, you should see lines like this printed.
+
+```
+JupyterLab URL:   http://10.110.51.21:8888 (password "nvidia")
+JupyterLab logs:  /data/logs/jupyter.log
+```
+
+Copy and paste the address on your web browser and access the Jupyter Lab server.
+
+Navigate to `./notebooks/` and open the first notebook.
+
+Now follow the Jupyter notebook contents.
+
+
+
 
 <details open>
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
@@ -59,9 +163,9 @@ jetson-containers run -w /opt/lerobot $(autotag lerobot) \
 | **`lerobot`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu122`](/packages/cuda/cuda) [`cuda:12.2`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.2`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`opencv`](/packages/opencv) [`pyav`](/packages/multimedia/pyav) [`h5py`](/packages/build/h5py) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu122`](/packages/cuda/cuda) [`cuda:12.2`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.2`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`opencv:4.10.0`](/packages/opencv) [`pyav`](/packages/multimedia/pyav) [`h5py`](/packages/build/h5py) [`jupyterlab:main`](/packages/jupyterlab) [`jupyterlab:myst`](/packages/jupyterlab) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/lerobot:r36.3.0`](https://hub.docker.com/r/dustynv/lerobot/tags) `(2024-09-12, 7.3GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/lerobot:r36.3.0`](https://hub.docker.com/r/dustynv/lerobot/tags) `(2024-10-15, 7.6GB)`<br>[`dustynv/lerobot:r36.4.0`](https://hub.docker.com/r/dustynv/lerobot/tags) `(2024-10-15, 6.3GB)` |
 
 </details>
 
@@ -71,7 +175,8 @@ jetson-containers run -w /opt/lerobot $(autotag lerobot) \
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/lerobot:r36.3.0`](https://hub.docker.com/r/dustynv/lerobot/tags) | `2024-09-12` | `arm64` | `7.3GB` |
+| &nbsp;&nbsp;[`dustynv/lerobot:r36.3.0`](https://hub.docker.com/r/dustynv/lerobot/tags) | `2024-10-15` | `arm64` | `7.6GB` |
+| &nbsp;&nbsp;[`dustynv/lerobot:r36.4.0`](https://hub.docker.com/r/dustynv/lerobot/tags) | `2024-10-15` | `arm64` | `6.3GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -88,10 +193,10 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag lerobot)
 
 # or explicitly specify one of the container images above
-jetson-containers run dustynv/lerobot:r36.3.0
+jetson-containers run dustynv/lerobot:r36.4.0
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/lerobot:r36.3.0
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/lerobot:r36.4.0
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

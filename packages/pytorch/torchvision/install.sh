@@ -6,7 +6,7 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install --no-cache-dir torchvision==${TORCHVISION_VERSION}
+pip3 install --no-cache-dir torchvision~=${TORCHVISION_VERSION}
 mkdir -p /torch-wheels
 pip3 download --verbose --no-deps -d /torch-wheels torchvision==${TORCHVISION_VERSION}
    

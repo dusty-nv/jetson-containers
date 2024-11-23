@@ -4,8 +4,9 @@ echo "Building torchvision ${TORCHVISION_VERSION}"
    
 git clone --branch v${TORCHVISION_VERSION} --recursive --depth=1 https://github.com/pytorch/vision /opt/torchvision
 cd /opt/torchvision
-
 git checkout v${TORCHVISION_VERSION}
+
+BUILD_VERSION=${TORCHVISION_VERSION} \
 python3 setup.py --verbose bdist_wheel --dist-dir /opt
 
 cd ../

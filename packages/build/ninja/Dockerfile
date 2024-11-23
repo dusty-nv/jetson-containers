@@ -1,6 +1,6 @@
 #---
 # name: ninja
-# group: core
+# group: build
 # depends: [python]
 # test: [test.sh]
 #---

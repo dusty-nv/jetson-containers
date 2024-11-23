@@ -10,7 +10,7 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install --no-cache-dir torchaudio==${TORCHAUDIO_VERSION}
+pip3 install --no-cache-dir torchaudio~=${TORCHAUDIO_VERSION}
 mkdir -p /torch-wheels
 pip3 download --verbose --no-deps -d /torch-wheels torchaudio==${TORCHAUDIO_VERSION}
    

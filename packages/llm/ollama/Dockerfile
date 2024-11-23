@@ -32,16 +32,14 @@ RUN CMAKE_VERSION=${CMAKE_VERSION} GOLANG_VERSION=${GOLANG_VERSION} sh /opt/olla
 ENV LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/usr/local/nvidia/compat:${LD_LIBRARY_PATH} \
     CMAKE_CUDA_ARCHITECTURES=${CMAKE_CUDA_ARCHITECTURES}
     
-# generate llama.cpp backend to bundle with Ollama
+# https://github.com/dusty-nv/jetson-containers/issues/592#issuecomment-2323177164
+# export VERSION=$(git describe --tags --first-parent --abbrev=7 --long --dirty --always | sed -e "s/^v//g") && \
 RUN cd /opt/ollama && \
-    export VERSION=$(git describe --tags --first-parent --abbrev=7 --long --dirty --always | sed -e "s/^v//g") && \
+    export VERSION="0.0.0" && \
     export GOFLAGS="'-ldflags=-w -s \"-X=github.com/ollama/ollama/version.Version=$VERSION\" \"-X=github.com/ollama/ollama/server.mode=release\"'" && \
     export GOARCH=arm64 && \
     echo "OLLAMA_VERSION=${VERSION}  GOFLAGS=${GOFLAGS}" && \
-    cd llm/generate && \
-    sed 's|-j8|-j$(nproc)|' -i gen_common.sh && \
-    bash gen_linux.sh && \
-    cd ../../ && \
+    make -j$(nproc) && \
     go build -trimpath .
 
 # build the runtime container

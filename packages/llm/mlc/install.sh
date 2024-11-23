@@ -7,8 +7,13 @@ if [ "$FORCE_BUILD" == "on" ]; then
 fi
 
 # install the wheels
-pip3 install --no-cache-dir --verbose tvm==${TVM_VERSION} mlc-llm==${MLC_VERSION}
-pip3 install --no-cache-dir --verbose mlc-chat==${MLC_VERSION} || echo "failed to pip install mlc-chat==${MLC_VERSION} (this is expected for mlc>=0.1.1)"
+if [[ -n "$(ls /tmp/mlc/*.whl)" ]]; then 
+    pip3 install --verbose /tmp/mlc/*.whl
+else
+    pip3 install --no-cache-dir --verbose tvm==${TVM_VERSION} mlc-llm==${MLC_VERSION}
+    pip3 install --no-cache-dir --verbose mlc-chat==${MLC_VERSION} || echo "failed to pip install mlc-chat==${MLC_VERSION} (this is expected for mlc>=0.1.1)"
+fi
+
 pip3 install --no-cache-dir --verbose 'pydantic>2'
 
 # we need the source because the MLC model builder relies on it
@@ -24,7 +29,7 @@ fi
 
 # add extras to the source
 cd /
-cp /tmp/mlc/benchmark.py /opt/mlc-llm/
+cp /tmp/mlc/benchmark*.py /opt/mlc-llm/
 
 # make the CUTLASS sources available for model builder
 ln -s /opt/mlc-llm/3rdparty/tvm/3rdparty /usr/local/lib/python${PYTHON_VERSION}/dist-packages/tvm/3rdparty

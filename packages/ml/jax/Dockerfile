@@ -2,7 +2,7 @@
 # name: jax
 # group: jax
 # config: config.py
-# depends: [cuda:12.6, cudnn:9.4, numpy]
+# depends: [cuda, cudnn, numpy]
 # test: test.py
 # docs: Containers for JAX with CUDA support.
 #---

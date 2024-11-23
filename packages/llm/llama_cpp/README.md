@@ -24,7 +24,7 @@ There are a couple patches applied to the legacy GGML fork:
 You can use llama.cpp's built-in [`main`](https://github.com/ggerganov/llama.cpp/tree/master/examples/main) tool to run GGUF models (from [HuggingFace Hub](https://huggingface.co/models?search=gguf) or elsewhere)
 
 ```bash
-./run.sh --workdir=/opt/llama.cpp/bin $(./autotag llama_cpp) /bin/bash -c \
+./run.sh --workdir=/usr/local/bin $(./autotag llama_cpp) /bin/bash -c \
  './main --model $(huggingface-downloader TheBloke/Llama-2-7B-GGUF/llama-2-7b.Q4_K_S.gguf) \
          --prompt "Once upon a time," \
          --n-predict 128 --ctx-size 192 --batch-size 192 \
@@ -37,18 +37,20 @@ You can use llama.cpp's built-in [`main`](https://github.com/ggerganov/llama.cpp
 To use the Python API and [`benchmark.py`](/packages/llm/llama_cpp/benchmark.py) instead:
 
 ```bash
-./run.sh --workdir=/opt/llama.cpp/bin $(./autotag llama_cpp) /bin/bash -c \
+./run.sh --workdir=/usr/local/bin $(./autotag llama_cpp) /bin/bash -c \
  'python3 benchmark.py --model $(huggingface-downloader TheBloke/Llama-2-7B-GGUF/llama-2-7b.Q4_K_S.gguf) \
             --prompt "Once upon a time," \
             --n-predict 128 --ctx-size 192 --batch-size 192 \
             --n-gpu-layers 999 --threads $(nproc)'
 ```
 
+To use a more contemporary model, such as `Llama-3.2-3B`, specify e.g. `unsloth/Llama-3.2-3B-Instruct-GGUF/Llama-3.2-3B-Instruct-Q4_K_M.gguf`.
+
 ### Memory Usage
 
 | Model                                                                           |          Quantization         | Memory (MB) |
 |---------------------------------------------------------------------------------|:-----------------------------:|:-----------:|
-| [`TheBloke/Llama-2-7B-GGUF`](https://huggingface.co/TheBloke/Llama-2-7B-GGUF)   |  `llama-2-7b.Q4_K_S.gguf`     |    5,268    |
+| [`TheBloke/Llama-2-7B-GGUF`](https://huggingface.co/TheBloke/Llama-2-7B-GGUF)   | `llama-2-7b.Q4_K_S.gguf`      |    5,268    |
 | [`TheBloke/Llama-2-13B-GGUF`](https://huggingface.co/TheBloke/Llama-2-13B-GGUF) | `llama-2-13b.Q4_K_S.gguf`     |    8,609    |
 | [`TheBloke/LLaMA-30b-GGUF`](https://huggingface.co/TheBloke/LLaMA-30b-GGUF)     | `llama-30b.Q4_K_S.gguf`       |    19,045   |
 | [`TheBloke/Llama-2-70B-GGUF`](https://huggingface.co/TheBloke/Llama-2-70B-GGUF) | `llama-2-70b.Q4_K_S.gguf`     |    37,655   |
@@ -57,12 +59,12 @@ To use the Python API and [`benchmark.py`](/packages/llm/llama_cpp/benchmark.py)
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`llama_cpp:0.2.57`** | |
+| **`llama_cpp:0.3.1`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `llama_cpp` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numpy) [`huggingface_hub`](/packages/llm/huggingface_hub) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`langchain`](/packages/rag/langchain) [`langchain:samples`](/packages/rag/langchain) [`text-generation-webui:1.7`](/packages/llm/text-generation-webui) [`text-generation-webui:6a7cd01`](/packages/llm/text-generation-webui) [`text-generation-webui:main`](/packages/llm/text-generation-webui) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu122`](/packages/cuda/cuda) [`cuda:12.2`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numeric/numpy) [`huggingface_hub`](/packages/llm/huggingface_hub) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/l4t/l4t-text-generation) [`langchain`](/packages/rag/langchain) [`langchain:samples`](/packages/rag/langchain) [`text-generation-webui:1.7`](/packages/llm/text-generation-webui) [`text-generation-webui:6a7cd01`](/packages/llm/text-generation-webui) [`text-generation-webui:main`](/packages/llm/text-generation-webui) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 
 </details>
@@ -83,8 +85,9 @@ To use the Python API and [`benchmark.py`](/packages/llm/llama_cpp/benchmark.py)
 | &nbsp;&nbsp;[`dustynv/llama_cpp:gguf-r36.2.0`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-12-19` | `arm64` | `5.1GB` |
 | &nbsp;&nbsp;[`dustynv/llama_cpp:r35.2.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-08-29` | `arm64` | `5.2GB` |
 | &nbsp;&nbsp;[`dustynv/llama_cpp:r35.3.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-08-15` | `arm64` | `5.2GB` |
-| &nbsp;&nbsp;[`dustynv/llama_cpp:r35.4.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2023-08-13` | `arm64` | `5.1GB` |
-| &nbsp;&nbsp;[`dustynv/llama_cpp:r36.2.0`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2024-02-22` | `arm64` | `5.3GB` |
+| &nbsp;&nbsp;[`dustynv/llama_cpp:r35.4.1`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2024-09-12` | `arm64` | `6.0GB` |
+| &nbsp;&nbsp;[`dustynv/llama_cpp:r36.2.0`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2024-09-12` | `arm64` | `5.6GB` |
+| &nbsp;&nbsp;[`dustynv/llama_cpp:r36.4.0`](https://hub.docker.com/r/dustynv/llama_cpp/tags) | `2024-09-30` | `arm64` | `4.5GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -101,10 +104,10 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag llama_cpp)
 
 # or explicitly specify one of the container images above
-jetson-containers run dustynv/llama_cpp:r36.2.0
+jetson-containers run dustynv/llama_cpp:r36.4.0
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/llama_cpp:r36.2.0
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/llama_cpp:r36.4.0
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

@@ -2,7 +2,7 @@
 # JAX installer
 set -ex
 
-bash /tmp/JAX/link_cuda.sh
+# bash /tmp/JAX/link_cuda.sh
 
 wget https://apt.llvm.org/llvm.sh
 chmod +x llvm.sh
