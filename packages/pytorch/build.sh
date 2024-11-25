@@ -27,7 +27,8 @@ python3 setup.py bdist_wheel --dist-dir /opt
 
 cd /
 rm -rf /opt/pytorch
-cp /opt/torch*.whl /torch-wheels
+mkdir -p /torch-wheels
+cp /opt/torch*.whl /torch-wheels/
 
 # install the compiled wheel
 pip3 install /opt/torch*.whl

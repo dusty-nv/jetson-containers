@@ -27,7 +27,8 @@ cd ../
 rm -rf /opt/torchaudio
 
 pip3 install --no-cache-dir --verbose /opt/torchaudio*.whl
-cp /opt/torchaudio*.whl /torch-wheels
+mkdir -p /torch-wheels
+cp /opt/torchaudio*.whl /torch-wheels/
 pip3 show torchaudio && python3 -c 'import torchaudio; print(torchaudio.__version__);'
 
 twine upload --verbose /opt/torchaudio*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
