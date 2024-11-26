@@ -25,5 +25,5 @@ def sana(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    sana('0.1', default=True)
+    sana('1.0', default=True)
 ]

@@ -2,8 +2,8 @@
 set -ex
 
 # Clone the repository if it doesn't exist
-git clone --branch=v${SANA_VERSION} --depth=1 --recursive https://github.com/NVlabs/Sana /opt/sana || \
-git clone --depth=1 --recursive https://github.com/NVlabs/Sana /opt/sana
+git clone --branch=v${SANA_VERSION} --depth=1 --recursive https://github.com/johnnynunez/Sana /opt/sana || \
+git clone --depth=1 --recursive https://github.com/johnnynunez/Sana /opt/sana
 
 # Navigate to the directory containing sana's setup.py
 cd /opt/sana 
@@ -11,8 +11,6 @@ pip install -U pip
 pip install -e .
 
 export MAX_JOBS=$(nproc)
-pip3 wheel --no-build-isolation --wheel-dir=/opt/sana/wheels .
-pip3 install --no-cache-dir --verbose /opt/sana/wheels/sana*.whl
 
 cd /opt/sana
 pip3 install 'numpy<2'
