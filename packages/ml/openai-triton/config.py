@@ -29,6 +29,7 @@ def openai_triton(version, branch=None, requires=None, default=False):
 
 package = [
     openai_triton('3.0.0', branch='release/3.0.x'),
-    openai_triton('3.1.0', branch='release/3.1.x', default=True)
+    openai_triton('3.1.0', branch='release/3.1.x', default=True),
+    openai_triton('3.2.0', branch='release/3.2.x')
 ]
 

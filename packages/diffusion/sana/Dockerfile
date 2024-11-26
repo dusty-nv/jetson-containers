@@ -14,6 +14,4 @@ ARG SANA_VERSION
 
 COPY build.sh install.sh /tmp/SANA/
 
-COPY benchmarks /tmp/SANA/benchmarks
-
 RUN /tmp/SANA/install.sh || /tmp/SANA/build.sh
