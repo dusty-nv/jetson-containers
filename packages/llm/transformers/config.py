@@ -1,30 +1,57 @@
+from jetson_containers import handle_json_request, github_latest_tag
 
-from jetson_containers import L4T_VERSION
+def transformers(version, source=None, requires='>=34', default=False):
+    pkg = package.copy()
 
-if L4T_VERSION.major >= 34:
-    # 11/3/23 - removing these due to circular dependency and increased load times of anything using transformers
-    # if you want to use load_in_8bit/load_in_4bit or AutoGPTQ quantization built-into transformers, use
-    # the 'bitsandbytes' or 'auto_gptq' containers directly instead of transformers container
-    #package['depends'].extend(['bitsandbytes', 'auto_gptq'])
+    if version:
+        pkg['name'] += f':{version}'
 
-    # version installed from source
-    package_git = package.copy()
-    
-    package_git['name'] = 'transformers:git'
-    
-    package_git['build_args'] = {
-        'TRANSFORMERS_PACKAGE': "git+https://github.com/huggingface/transformers",
-        'TRANSFORMERS_VERSION': "https://api.github.com/repos/huggingface/transformers/git/refs/heads/main"
+    pkg['build_args'] = {
+        'TRANSFORMERS_PACKAGE': source,
+        'TRANSFORMERS_VERSION': version
     }
-    
-    # version with nvgpt support
-    package_nvgpt = package.copy()
-    
-    package_nvgpt['name'] = 'transformers:nvgpt'
-    
-    package_nvgpt['build_args'] = {
-        'TRANSFORMERS_PACKAGE': "git+https://github.com/ertkonuk/transformers",
-        'TRANSFORMERS_VERSION': "https://api.github.com/repos/ertkonuk/transformers/git/refs/heads/main"
-    }
-    
-    package = [package, package_git, package_nvgpt]
+
+    if requires:
+        pkg['requires'] = requires
+
+    if default:
+        pkg['alias'] = f'transformers'
+
+    return pkg
+
+
+def transformers_pypi(version, **kwargs):
+    releases = f'https://pypi.org/pypi/transformers/json'
+
+    if version == 'latest':
+        data = handle_json_request(releases)
+        version = data['releases'].keys()[-1]
+
+        print(f'releases: {data['releases'].keys()}')
+        print(f'latest: {version}')
+
+    return transformers(
+        version,
+        source=f'transformers',
+        **kwargs
+    )
+
+
+def transformers_git(version, repo='huggingface/transformers', branch='main', **kwargs):
+    version = github_latest_tag(repo) if version == 'latest' else version
+    return transformers(
+        version,
+        source=f'git+https://github.com/{repo}',
+        **kwargs
+    )
+
+
+# 11/3/23 - removing 'bitsandbytes' and 'auto_gptq' due to circular dependency and increased load times of
+# anything using transformers if you want to use load_in_8bit/load_in_4bit or AutoGPTQ quantization 
+# built-into transformers, use the 'bitsandbytes' or 'auto_gptq' containers directly instead of transformers container
+package = [
+    transformers_pypi('latest', default=True),                  # will always resolve to the latest pypi version
+    transformers_pypi('4.35.0'),                                # For compatibility with AutoAWQ
+    transformers_git('git'),
+    transformers_git('nvgpt', repo='ertkonuk/transformers'),
+]
