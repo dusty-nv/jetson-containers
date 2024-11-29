@@ -2,7 +2,7 @@
 # name: auto_awq
 # group: llm
 # config: config.py
-# depends: [transformers:4.35.0]
+# depends: [transformers]
 # requires: '>=36'
 # test: test.py
 #---
