@@ -55,7 +55,6 @@ def transformers_git(version, repo='huggingface/transformers', branch=None, **kw
 # built-into transformers, use the 'bitsandbytes' or 'auto_gptq' containers directly instead of transformers container
 package = [
     transformers_pypi('latest', default=True),                                  # will always resolve to the latest pypi version
-    transformers_pypi('4.41.2'),                                                # For compatibility with AutoAWQ
     transformers_git('latest', codename='git'),                                                 # will always resolve to the latest git version from huggingface/transformers
     transformers_git('latest', codename='nvgpt', repo='ertkonuk/transformers'),     # will always resolve to the latest git version from ertkonuk/transformers
 ]
