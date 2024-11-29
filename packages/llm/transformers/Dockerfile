@@ -21,7 +21,9 @@ RUN pip3 install --no-cache-dir --verbose accelerate && \
     \
     # install from pypi, git, ect (sometimes other version got installed)
     pip3 uninstall -y transformers && \
-    pip3 install --no-cache-dir --verbose ${TRANSFORMERS_PACKAGE}==${TRANSFORMERS_VERSION} && \
+    \
+    echo "Installing tranformers $TRANSFORMERS_VERSION (from $TRANSFORMERS_PACKAGE)" && \
+    pip3 install --no-cache-dir --verbose ${TRANSFORMERS_PACKAGE} && \
     \
     # "/usr/local/lib/python3.8/dist-packages/transformers/modeling_utils.py", line 118
     # AttributeError: module 'torch.distributed' has no attribute 'is_initialized'
