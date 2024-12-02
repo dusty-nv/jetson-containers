@@ -2,7 +2,7 @@
 # name: zigma
 # group: mamba
 # config: config.py
-# depends: [pytorch, torchvision, opencv:4.10.0, transformers, xformers, openai-triton, causalconv1d, mamba]
+# depends: [pytorch, torchvision, opencv:4.10.0, transformers, xformers, triton, causalconv1d, mamba]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/CompVis/zigma
