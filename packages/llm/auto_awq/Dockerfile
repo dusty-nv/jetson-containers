@@ -11,9 +11,9 @@ FROM ${BASE_IMAGE}
 
 ARG AUTOAWQ_VERSION \
     AUTOAWQ_KERNELS_VERSION \
-    AUTOAWQ_CUDA_ARCH
+    COMPUTE_CAPABILITIES \
+    FORCE_BUILD=off
 
-COPY build.sh /tmp/build_autoawq.sh
+COPY *.sh /tmp/auto_awq/
 
-RUN pip3 install --no-cache-dir --verbose autoawq-kernels==${AUTOAWQ_KERNELS_VERSION} autoawq==${AUTOAWQ_VERSION} || \
-    /tmp/build_autoawq.sh
+RUN /tmp/auto_awq/install.sh || /tmp/auto_awq/build.sh
