@@ -15,13 +15,16 @@ pip3 install --no-cache-dir -U \
 # Clone wyoming-faster-whisper layer
 git clone --branch=${WYOMING_WHISPER_BRANCH} https://github.com/rhasspy/wyoming-faster-whisper /tmp/wyoming-faster-whisper
 
+cd /tmp/wyoming-faster-whisper
+
 sed -i \
    -e 's|^faster-whisper.*||g' \
-   /tmp/wyoming-faster-whisper/requirements.txt
-cat /tmp/wyoming-faster-whisper/requirements.txt
+   requirements.txt
+cat requirements.txt
 
 python3 setup.py sdist bdist_wheel --verbose --dist-dir /opt/wheels
 
+cd /
 rm -rf /tmp/wyoming-faster-whisper
 
 pip3 install --no-cache-dir --verbose /opt/wheels/wyoming_faster_whisper*.whl
