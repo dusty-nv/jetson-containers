@@ -34,7 +34,8 @@ print('\n'.join(f'{k}: {v}' for k, v in tvm.support.libinfo().items()))
 
 # handle API changes between MLC versions
 if MLC_VERSION >= Version('0.1.2'):
-    from mlc_llm import MLCEngine
+    from mlc_llm import MLCEngine 
+    from mlc_llm.serve import EngineConfig
     from mlc_llm.serve.engine_base import _query_engine_metrics
 elif MLC_VERSION >= Version('0.1.1'):
     from mlc_llm import ChatModule, ChatConfig
@@ -55,6 +56,8 @@ parser.add_argument("--chat", action="store_true")
 parser.add_argument("--streaming", action="store_true")
 parser.add_argument("--max-new-tokens", type=int, default=128)
 parser.add_argument("--max-num-prompts", type=int, default=None)
+parser.add_argument("--max-context-len", type=int, default=None)
+parser.add_argument("--prefill-chunk-size", type=int, default=None)
 parser.add_argument('--save', type=str, default='', help='CSV file to save benchmarking results to')
 
 args = parser.parse_args()
@@ -134,7 +137,12 @@ if USE_MLC_CHAT:
         
     model = ChatModule(model=args.model, model_lib_path=args.model_lib_path, chat_config=cfg)
 else:
-    model = MLCEngine(args.model, model_lib=args.model_lib_path, mode='interactive')
+    cfg = EngineConfig(
+        max_num_sequence=1, 
+        max_single_sequence_length=args.max_context_len, 
+        prefill_chunk_size=args.prefill_chunk_size
+    )
+    model = MLCEngine(args.model, model_lib=args.model_lib_path, mode='interactive', engine_config=cfg)
 
 def generate(prompt, stats):
     # MLC <= 0.1.1
@@ -184,7 +192,7 @@ def generate_v2(prompt, stats):
     stats['output_tokens'] = usage['completion_tokens']
     
     stats['prefill_rate'] = usage['prefill_tokens_per_s']
-    stats['decode_rate'] = usage['decode_tokens_per_s'] 
+    stats['decode_rate'] = usage.get('decode_tokens_per_s', -1) 
       
 # benchmark inference
 avg_stats = {}
@@ -206,7 +214,7 @@ for i, prompt in enumerate(args.prompt):
     else:
         while True:  # sometimes stops generation early (on EOS)
             generate_v2(prompt, stats)
-            if stats['output_tokens'] >= args.max_new_tokens:
+            if stats['output_tokens'] >= args.max_new_tokens * 0.5:
                 break
             print(f"\nShort generation ({stats['output_tokens']} of {args.max_new_tokens} tokens) - retrying...")
                 
