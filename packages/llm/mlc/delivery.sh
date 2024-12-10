@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 set -ex
 
+: "${MLC_VERSION:=0.1.4}"
+
 jetson-containers run \
   -e HF_TOKEN=$HF_TOKEN \
   -e MLC_TEMP_DIR=/data/models/mlc/cache \
   -v $(jetson-containers root):/jetson-containers \
-  $(autotag mlc:0.1.3) \
+  $(autotag mlc:${MLC_VERSION}) \
     python3 -m mlc_llm.cli.delivery \
       --username dusty-nv \
       --spec /jetson-containers/packages/llm/mlc/delivery.json \
