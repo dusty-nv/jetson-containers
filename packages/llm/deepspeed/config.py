@@ -30,4 +30,5 @@ def deepspeed(version, branch=None, default=False, build_args=None):
 package = [
     deepspeed('0.9.5', build_args={'DS_BUILD_OPS': 0}),
     deepspeed('0.15.2', default=True),
+    deepspeed('0.16.0'),
 ]

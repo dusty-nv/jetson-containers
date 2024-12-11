@@ -26,5 +26,5 @@ def ollama(branch, golang='1.22.8', cmake='3.22.1', requires=None, default=False
     
 package = [
     ollama('main'),
-    ollama('0.4.0', default=True),
+    ollama('0.4.5', default=True), # 0.4.2 -> ollama supports jetson https://github.com/ollama/ollama/releases/tag/v0.4.2
 ]
