@@ -20,7 +20,7 @@
 set -ex
 
 : "${HUGGINGFACE_TOKEN:=SET_YOUR_HUGGINGFACE_TOKEN}"
-: "${MLC_VERSION:=0.1.0}"
+: "${MLC_VERSION:=0.1.4}"
 
 : "${QUANTIZATION:=q4f16_ft}"
 : "${SKIP_QUANTIZATION:=no}"
@@ -81,7 +81,7 @@ function benchmark()
         bash test.sh $model_name \${MODEL_REPO} "
     fi
     
-    jetson-containers run --pull=always \
+    jetson-containers run \
         -e HUGGINGFACE_TOKEN=${HUGGINGFACE_TOKEN} \
         -e QUANTIZATION=${QUANTIZATION} \
         -e SKIP_QUANTIZATION=${SKIP_QUANTIZATION} \
@@ -95,7 +95,7 @@ function benchmark()
         -e MODEL_ROOT=${model_root} \
         -v $(jetson-containers root)/packages/llm/mlc:/test \
         -w /test \
-        $(autotag mlc:$MLC_VERSION) /bin/bash -c "$run_cmd"
+        dustynv/mlc:0.1.4-r36.4.2 /bin/bash -c "$run_cmd"
 }
             
    
