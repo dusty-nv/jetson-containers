@@ -57,6 +57,8 @@ function benchmark()
         fi
       fi
       
+      mkdir -p $(jetson-containers data)/models/mlc/cache || true ;
+      
       run_cmd="\
         python3 benchmark.py \
           --model HF://${hf_user}/${model_name}-${QUANTIZATION}-MLC \
@@ -73,6 +75,7 @@ function benchmark()
         run_cmd="$run_cmd --prefill-chunk-size $PREFILL_CHUNK_SIZE"
       fi
       
+      run_cmd="$run_cmd ; rm -rf /data/models/mlc/cache/* || true ; "
     else
       run_cmd="\
         if [ ! -d \${MODEL_REPO} ]; then \
