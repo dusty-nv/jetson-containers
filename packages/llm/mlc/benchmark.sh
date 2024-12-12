@@ -121,7 +121,7 @@ MAX_CONTEXT_LEN=4096 PREFILL_CHUNK_SIZE=4096 benchmark "Qwen/Qwen2.5-1.5B-Instru
 MAX_CONTEXT_LEN=2048 PREFILL_CHUNK_SIZE=1024 benchmark "Qwen/Qwen2.5-7B-Instruct"
 
 QUANTIZATION="q4f16_1" benchmark "google/gemma-2-2b-it"
-QUANTIZATION="q4f16_1" benchmark "google/gemma-2-9b-it"
+#QUANTIZATION="q4f16_1" benchmark "google/gemma-2-9b-it"
 
 benchmark "microsoft/Phi-3.5-mini-instruct"
 
