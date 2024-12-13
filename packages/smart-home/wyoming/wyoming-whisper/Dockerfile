@@ -11,10 +11,12 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG WYOMING_WHISPER_VERSION
+ARG WYOMING_WHISPER_VERSION \
+    WYOMING_WHISPER_BRANCH
 
 ENV PIP_BREAK_SYSTEM_PACKAGES=1 \
     WYOMING_WHISPER_VERSION="$WYOMING_WHISPER_VERSION" \
+    WYOMING_WHISPER_BRANCH="$WYOMING_WHISPER_BRANCH" \
     HF_HUB_CACHE=/share/whisper \
     WHISPER_PORT=10300 \
     WHISPER_MODEL="tiny-int8" \
@@ -23,11 +25,11 @@ ENV PIP_BREAK_SYSTEM_PACKAGES=1 \
     WHISPER_DEBUG="true"
 
 COPY rootfs/ /
-COPY build.sh /tmp/wyoming/build_wyoming-faster-whisper.sh
+COPY *.sh /tmp/wyoming/whisper/
 
 WORKDIR /usr/src
 
-RUN /tmp/wyoming/build_wyoming-faster-whisper.sh
+RUN /tmp/wyoming/whisper/install.sh || /tmp/wyoming/whisper/build.sh
 
 EXPOSE ${WHISPER_PORT}/tcp
 
@@ -36,5 +38,3 @@ HEALTHCHECK --start-period=10m \
         | nc -w 1 localhost ${WHISPER_PORT} \
         | grep -q "faster-whisper" \
         || exit 1
-
-CMD /init

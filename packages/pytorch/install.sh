@@ -6,11 +6,16 @@ set -ex
 apt-get update
 apt-get install -y --no-install-recommends \
         libopenblas-dev \
+        libomp-dev
+        
+if [ $USE_MPI == 1 ]; then
+    apt-get install -y --no-install-recommends \
         libopenmpi-dev \
         openmpi-bin \
         openmpi-common \
-        gfortran \
-        libomp-dev
+        gfortran
+fi
+
 rm -rf /var/lib/apt/lists/*
 apt-get clean
 

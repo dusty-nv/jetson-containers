@@ -53,7 +53,10 @@ jetson-containers build --base=my_container:latest --name=my_container:pytorch p
 ```
 
 > [!NOTE]  
-> On JetPack 4/5, it's assumed that base images already have the JetPack components available/installed (CUDA Toolkit, cuDNN, TensorRT).  On JetPack 6, the CUDA components will automatically be installed on top of your base image if required.
+> On JetPack 4/5, it's assumed that base images already have the JetPack components available/installed (CUDA Toolkit, cuDNN, TensorRT).  
+> 
+> On JetPack 6 (L4T r36.x), the CUDA components will automatically be installed on top of your base image if required. 
+> > You can specify the CUDA version by using `CUDA_VERSION` environment variable, otherwise it will pick the CUDA version that was made available to the L4T version.
 
 ## Changing Versions
 
@@ -83,6 +86,13 @@ CUDA_VERSION=12.4 PYTHON_VERSION=3.11 PYTORCH_VERSION=2.3 \
 The available versions are defined in the package's configuration scripts (some you can simply add new releases to by referring to the new git tag/branch, others need pointed to specific release downloads).  Not all combinations are compatible, as the versioned packages frequently define the minimum version of others in the build tree they rely on (for example, TensorRT 10 requires CUDA 12.4).
 
 For packages that provide different versions but don't have their own environment variable defined, you can specify the desired version of them that your container depends on in the Dockerfile header under [`depends`](/docs/packages.md), and it will override the default and build using them instead (e.g. by using `depends: onnxruntime:1.17` instead of `depends: onnxruntime`).  Like above, these versions will also cascade across the build.
+
+> [!NOTE]  
+> On JetPack 6 (L4T r36.x), if you don't have `CUDA_VERSION` specified, it will pick the CUDA version that was packaged with that version of L4T in the JetPack.
+> - L4T r36.2 (JetPack 6.0 DP) --> CUDA `12.2`
+> - L4T r36.3 (JetPack 6.0 GA) --> CUDA `12.4`
+> - L4T r36.4 (JetPack 6.1) --> CUDA `12.6`
+
 
 ## Pip Server
 

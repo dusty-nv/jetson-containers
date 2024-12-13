@@ -13,7 +13,7 @@ To output sound from your Docker container while using the host's sound device, 
 
 We use PulseAudio from within the container. To do this, we need share the PulseAudio socket between the host and the container.
 
-### `jetson-containers`'s `run.sh` modification
+### jetson-containers `run.sh` modification
 
 Expand the `docker run` options for sound like this.
 
@@ -50,6 +50,13 @@ Find the section loading `module-native-protomocl-unix` and add `auth-anonymous=
 load-module module-esound-protocol-unix auth-anonymous=1
 .endif
 load-module module-native-protocol-unix auth-anonymous=1
+```
+
+Restart Pulse Audio service.
+
+```bash
+pulseaudio --kill
+pulseaudio --start
 ```
 
 ## Step 2. Container setup
@@ -90,7 +97,7 @@ pactl set-default-sink [SINK_NAME_OR_INDEX]
 ## Step 4. Run the container
 
 ```bash
-./run.sh $(./autotag speech-dispatcher)
+jetson-containers run $(autotag speech-dispatcher)
 ```
 
 Once inside the container;

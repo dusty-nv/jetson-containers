@@ -16,27 +16,25 @@ ARG TRT_LLM_VERSION \
     TRT_LLM_SOURCE \
     TRT_LLM_PATCH \
     CUDA_ARCHS \
+    CUDA_VERSION \
     FORCE_BUILD="off" \
-    BUILD_DIR="/opt/tensorrt_llm/cpp/build" \
-    SOURCE_DIR="/opt/tensorrt_llm" \
-    SOURCE_TAR="/tmp/tensorrt_llm/source.tar.gz" \
-    GIT_PATCHES="/tmp/tensorrt_llm/patch.diff"
+    BUILD_DIR="/opt/TensorRT-LLM/cpp/build" \
+    SOURCE_DIR="/opt/TensorRT-LLM" \
+    SOURCE_TAR="/tmp/TensorRT-LLM/source.tar.gz" \
+    GIT_PATCHES="/tmp/TensorRT-LLM/patch.diff" \
+    TMP_DIR="/tmp/TensorRT-LLM/"
 
 COPY ${TRT_LLM_PATCH} ${GIT_PATCHES}
-COPY ${TRT_LLM_SOURCE} ${SOURCE_TAR}
+COPY sources/ ${TMP_DIR}
+COPY build.sh install.sh /tmp/setup/
 
-COPY build.sh install.sh /tmp/tensorrt_llm/ 
+RUN /tmp/setup/install.sh || /tmp/setup/build.sh #|| echo "BUILD FAILED!"
 
-RUN /tmp/tensorrt_llm/install.sh || /tmp/tensorrt_llm/build.sh
+RUN pip3 install --upgrade transformers && \
+    pip3 install --verbose --no-cache-dir uvicorn fastapi
 
-# workaround for NVML 'not supported' errors on Jetson
-RUN pip3 uninstall pynvml
+COPY llama.sh ${SOURCE_DIR}/
 
-# this is just temporary to aid in faster builds/patching
-#COPY install.sh /tmp/tensorrt_llm/ 
-#RUN /tmp/tensorrt_llm/install.sh || echo "pip install failed, building from source"
-
-#COPY build.sh /tmp/tensorrt_llm/ 
-#COPY ${TRT_LLM_PATCH} /tmp/tensorrt_llm/patch.diff
-
-#RUN /tmp/tensorrt_llm/build.sh
+# name '_device_get_memory_info_fn' is not defined
+COPY patches/profiler.py /usr/local/lib/python3.10/dist-packages/tensorrt_llm/profiler.py
+COPY patches/convert_utils.py /usr/local/lib/python3.10/dist-packages/tensorrt_llm/models/convert_utils.py

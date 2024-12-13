@@ -186,7 +186,27 @@ def get_cuda_version(version_file='/usr/local/cuda/version.json'):
             else:
                 print("-- unable to extract CUDA version number")
         else:
-            return '0.0'    
+            l4t_version = get_l4t_version()
+            if l4t_version.major >= 36:
+                # L4T r36.x (JP 6.x) and above does not require having CUDA installed on host
+                # When CUDA is not installed on host, users can specify which version of 
+                # CUDA (and matching version cuDNN and TensorRT) in container by 
+                # executing, for example, `export CUDA_VERSION=12.6`.
+                # If the env variable is not set, set the CUDA_VERSION to be the CUDA version
+                # that made available with the release of L4T_VERSION 
+                if l4t_version == Version('36.4'):
+                    cuda_version = '12.6'
+                elif l4t_version == Version('36.3'):
+                    cuda_version = '12.4'
+                elif l4t_version == Version('36.2'):
+                    cuda_version = '12.2'
+                else:
+                    print(f"### [Warn] Unknown L4T_VERSION: {L4T_VERSION}")
+                    cuda_version = '12.2'
+            else:
+                # L4T r35 and below, and don't find CUDA installed on host
+                cuda_version = '0.0' # Note, this get_cuda_version() function used to reutrn '0.0' as str.
+            return Version(cuda_version)
         
     with open(version_file) as file:
         versions = json.load(file)
@@ -243,7 +263,10 @@ def l4t_version_compatible(l4t_version, l4t_version_host=get_l4t_version(), **kw
 
     if l4t_version_host.major == 36: # JetPack 6 runs containers for JetPack 6
         if l4t_version.major == 36:
-            return True
+            if l4t_version.minor < 4 and l4t_version_host.minor < 4:
+                return True
+            elif l4t_version.minor >= 4 and l4t_version_host.minor >= 4:
+                return True
     elif l4t_version_host.major == 35: # JetPack 5.1 can run other JetPack 5.1.x containers
         if l4t_version.major == 35:
             return True

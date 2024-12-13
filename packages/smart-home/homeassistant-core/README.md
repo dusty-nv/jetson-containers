@@ -166,21 +166,12 @@ Got questions? You have several options to get them answered:
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`homeassistant-core:latest`** | |
+| **`homeassistant-core:2024.11.2`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `homeassistant-core` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`homeassistant-base`](/packages/smart-home/homeassistant-base) [`ffmpeg`](/packages/ffmpeg) [`python:3.12`](/packages/build/python) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`homeassistant-base`](/packages/smart-home/homeassistant-base) [`pip_cache`](/packages/cuda/cuda) [`python:3.12`](/packages/build/python) [`ciso8601`](/packages/smart-home/dependencies/ciso8601) [`psutil-home-assistant`](/packages/smart-home/dependencies/psutil-home-assistant) [`ffmpeg`](/packages/multimedia/ffmpeg) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/homeassistant-core:latest-r36.2.0`](https://hub.docker.com/r/dustynv/homeassistant-core/tags) `(2024-04-26, 1.4GB)` |
-| &nbsp;&nbsp;&nbsp;Notes | The `homeassistant-core` wheel that's build is saved in `/usr/src/homeassistant` |
-
-| **`homeassistant-core:2024.4.2`** | |
-| :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`homeassistant-base`](/packages/smart-home/homeassistant-base) [`ffmpeg`](/packages/ffmpeg) [`python:3.12`](/packages/build/python) |
-| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/homeassistant-core:2024.4.2-r35.4.1`](https://hub.docker.com/r/dustynv/homeassistant-core/tags) `(2024-04-09, 6.0GB)`<br>[`dustynv/homeassistant-core:2024.4.2-r36.2.0`](https://hub.docker.com/r/dustynv/homeassistant-core/tags) `(2024-04-09, 1.4GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | The `homeassistant-core` wheel that's build is saved in `/usr/src/homeassistant` |
 
 </details>

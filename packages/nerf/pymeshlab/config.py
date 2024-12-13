@@ -14,7 +14,7 @@ def pymeshlab(version, requires=None, default=False):
 
     builder['name'] = f'pymeshlab:{version}-builder'
     builder['dockerfile'] = 'Dockerfile.builder'
-    builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
+    builder['build_args'] = {**builder['build_args'], **{'FORCE_BUILD': 'on'}}
 
     if default:
         pkg['alias'] = 'pymeshlab'
@@ -23,5 +23,6 @@ def pymeshlab(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    pymeshlab('2023.12.post1', default=True),
+    pymeshlab('2023.12.post1'),
+    pymeshlab('2023.12.post2', default=True),
 ]

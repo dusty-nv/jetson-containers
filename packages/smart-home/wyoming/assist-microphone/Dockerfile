@@ -11,13 +11,12 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG SATELLITE_VERSION
-
-# Specify the shell with desired options
-SHELL ["/bin/bash", "-euxo", "pipefail"]
+ARG SATELLITE_VERSION \
+    SATELLITE_BRANCH
 
 ENV PIP_BREAK_SYSTEM_PACKAGES=1 \
     SATELLITE_VERSION="$SATELLITE_VERSION" \
+    SATELLITE_BRANCH="$SATELLITE_BRANCH" \
     SATELLITE_NAME="assist microphone" \
     SATELLITE_PORT="10700" \
     SATELLITE_SOUND_ENABLED="true" \
@@ -37,11 +36,11 @@ ENV PIP_BREAK_SYSTEM_PACKAGES=1 \
     SATELLITE_AUDIO_DEVICE="plughw:CARD=S330,DEV=0"
 
 COPY rootfs/ /
-COPY build.sh /tmp/wyoming/build_wyoming-assist-microphone.sh
+COPY *.sh /tmp/wyoming/assist-microphone/
 
 WORKDIR /usr/src
 
-RUN /tmp/wyoming/build_wyoming-assist-microphone.sh
+RUN /tmp/wyoming/assist-microphone/install.sh || /tmp/wyoming/assist-microphone/build.sh
 
 EXPOSE ${SATELLITE_PORT}/tcp
 
@@ -50,5 +49,3 @@ HEALTHCHECK --start-period=10m \
         | nc -w 1 localhost ${SATELLITE_PORT} \
         | grep -q "assist" \
         || exit 1
-
-CMD /init

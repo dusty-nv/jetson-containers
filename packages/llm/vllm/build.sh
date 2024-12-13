@@ -2,22 +2,24 @@
 set -ex
 
 # Clone the repository if it doesn't exist
-git clone --branch=v${VLLM_VERSION} --depth=1 --recursive https://github.com/vllm-project/vllm /opt/vllm || \
-git clone --depth=1 --recursive https://github.com/vllm-project/vllm /opt/vllm
-
-# Navigate to the directory containing vllm's setup.py
+git clone --branch=v${VLLM_VERSION} --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm || 
+git clone --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm
 cd /opt/vllm
 
-# Fetch all tags after shallow clone to ensure correct versioning
-git fetch --unshallow --tags || echo "Failed to unshallow, continuing with shallow clone"
+# apply patches
+git apply /tmp/vllm/${VLLM_VERSION}.diff
+git diff
 
 export MAX_JOBS=$(nproc)
+export USE_CUDNN=1
 export CUDA_HOME=/usr/local/cuda
 export PATH="${CUDA_HOME}/bin:$PATH"
+export SETUPTOOLS_SCM_PRETEND_VERSION="${VLLM_VERSION}"
 
 python3 use_existing_torch.py || echo "skipping vllm/use_existing_torch.py"
 
 pip3 install -r requirements-build.txt
+python3 -m setuptools_scm
 pip3 wheel --no-build-isolation --verbose --wheel-dir=/opt/vllm/wheels .
 pip3 install --no-cache-dir --verbose /opt/vllm/wheels/vllm*.whl
 

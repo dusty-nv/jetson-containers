@@ -199,7 +199,10 @@ else
 fi
 
 echo "V4L2_DEVICES: $V4L2_DEVICES"
-echo "csi_indexes: $csi_indexes"
+
+if [ -n "$csi_indexes" ]; then
+    echo "CSI_INDEXES:  $csi_indexes"
+fi
 
 # check for I2C devices
 I2C_DEVICES=""
@@ -245,6 +248,13 @@ if [ -S "$JTOP_SOCKET_FILE" ]; then
 	JTOP_SOCKET="-v /run/jtop.sock:/run/jtop.sock"
 fi
 
+# PulseAudio arguments
+PULSE_AUDIO_ARGS=""
+
+if [ -d "${XDG_RUNTIME_DIR}/pulse" ]; then
+	PULSE_AUDIO_ARGS="-e PULSE_SERVER=unix:${XDG_RUNTIME_DIR}/pulse/native  -v ${XDG_RUNTIME_DIR}/pulse:${XDG_RUNTIME_DIR}/pulse"
+fi
+
 # extra flags
 EXTRA_FLAGS=""
 
@@ -274,16 +284,20 @@ for arg in "$@"; do
     if [[ "$arg" != "--csi2webcam" && "$arg" != --csi-capture-res=* && "$arg" != --csi-output-res=* ]]; then
         filtered_args+=("$arg")  # Add to the new array if not the argument to remove
     fi
+    
+    if [[ "$arg" = "--name" || "$arg" = --name* ]]; then
+        HAS_CONTAINER_NAME=1
+    fi
 done
 
-# Track container ID for `docker wait`
-container_id=""
-
-# Generate a unique container name
-BUILD_DATE_TIME=$(date +%Y%m%d_%H%M%S)
-CONTAINER_IMAGE_NAME=$(basename "${filtered_args[0]}")
-SANITIZED_CONTAINER_IMAGE_NAME=$(echo "$CONTAINER_IMAGE_NAME" | sed 's/[^a-zA-Z0-9_.-]/_/g')
-CONTAINER_NAME="my_jetson_container_${SANITIZED_CONTAINER_IMAGE_NAME}_${BUILD_DATE_TIME}"
+if [ -z "$HAS_CONTAINER_NAME" ]; then
+    # Generate a unique container name so we can wait for it to exit and cleanup the bg processes after
+    BUILD_DATE_TIME=$(date +%Y%m%d_%H%M%S)
+    #CONTAINER_IMAGE_NAME=$(basename "${filtered_args[0]}")  # unfortunately this doesn't work in the general case, and you can't easily parse the container image from the command-line
+    #SANITIZED_CONTAINER_IMAGE_NAME=$(echo "$CONTAINER_IMAGE_NAME" | sed 's/[^a-zA-Z0-9_.-]/_/g')
+    CONTAINER_NAME="jetson_container_${BUILD_DATE_TIME}"
+    CONTAINER_NAME_FLAGS="--name $CONTAINER_NAME"
+fi
 
 # run the container
 ARCH=$(uname -i)
@@ -294,7 +308,8 @@ if [ $ARCH = "aarch64" ]; then
 	# /proc or /sys files aren't mountable into docker
 	cat /proc/device-tree/model > /tmp/nv_jetson_model
 
-	set -x
+    # https://stackoverflow.com/a/19226038
+	( set -x ;
 
 	$SUDO docker run --runtime nvidia -it --rm --network host \
 		--shm-size=8g \
@@ -308,18 +323,16 @@ if [ $ARCH = "aarch64" ]; then
 		--volume $ROOT/data:/data \
 		-v /etc/localtime:/etc/localtime:ro -v /etc/timezone:/etc/timezone:ro \
 		--device /dev/snd \
-		-e PULSE_SERVER=unix:${XDG_RUNTIME_DIR}/pulse/native \
-		-v ${XDG_RUNTIME_DIR}/pulse:${XDG_RUNTIME_DIR}/pulse \
+		$PULSE_AUDIO_ARGS \
 		--device /dev/bus/usb \
 		$OPTIONAL_PERMISSION_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $ACM_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
-		--name "$CONTAINER_NAME" \
+		$CONTAINER_NAME_FLAGS \
 		"${filtered_args[@]}"
-
-	set +x
+	)
 
 elif [ $ARCH = "x86_64" ]; then
 
-	set -x
+	( set -x ;
 
 	$SUDO docker run --gpus all -it --rm --network=host \
 		--shm-size=8g \
@@ -329,10 +342,9 @@ elif [ $ARCH = "x86_64" ]; then
 		--volume $ROOT/data:/data \
 		-v /etc/localtime:/etc/localtime:ro -v /etc/timezone:/etc/timezone:ro \
 		$OPTIONAL_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $ACM_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
-		--name "$CONTAINER_NAME" \
+		$CONTAINER_NAME_FLAGS \
 		"${filtered_args[@]}"
-
-	set +x
+	)
 fi
 
 if [[ "$csi_to_webcam_conversion" == true ]]; then

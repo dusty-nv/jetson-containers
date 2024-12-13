@@ -98,13 +98,12 @@ Got questions? You have several options to get them answered:
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`wyoming-whisper:latest`** | |
+| **`wyoming-whisper:2.2.0`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `wyoming-whisper` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`homeassistant-base`](/packages/smart-home/homeassistant-base) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python:3.11`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) [`ctranslate2`](/packages/ctranslate2) [`huggingface_hub`](/packages/llm/huggingface_hub) [`numpy`](/packages/numpy) [`faster-whisper`](/packages/audio/faster-whisper) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`homeassistant-base`](/packages/smart-home/homeassistant-base) [`pip_cache:cu122`](/packages/cuda/cuda) [`cuda:12.2`](/packages/cuda/cuda) [`cudnn:8.9`](/packages/cuda/cudnn) [`python:3.11`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) [`ctranslate2`](/packages/ml/ctranslate2) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numeric/numpy) [`onnx`](/packages/ml/onnx) [`onnxruntime`](/packages/ml/onnxruntime) [`huggingface_hub`](/packages/llm/huggingface_hub) [`faster-whisper`](/packages/speech/faster-whisper) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/wyoming-whisper:latest-r36.2.0`](https://hub.docker.com/r/dustynv/wyoming-whisper/tags) `(2024-04-30, 5.2GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | The `faster-whisper` using the `wyoming` protocol for usage with Home Assistant. Based on `https://github.com/home-assistant/addons/blob/master/whisper/Dockerfile` |
 
 </details>

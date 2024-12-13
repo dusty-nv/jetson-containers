@@ -1,7 +1,7 @@
 #---
 # name: faster-whisper
 # group: audio
-# depends: [ctranslate2, huggingface_hub, numpy]
+# depends: [ctranslate2, onnxruntime, huggingface_hub, numpy]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---
@@ -12,10 +12,12 @@ WORKDIR /opt
 
 RUN git clone https://github.com/guillaumekln/faster-whisper && \
     cd faster-whisper && \
-    # sed 's|^onnxruntime.*||' -i requirements.txt && \
-    sed 's|^ctranslate2.*||' -i requirements.txt && \
-    sed 's|^huggingface_hub.*||' -i requirements.txt && \
-    sed 's|^tokenizers.*|tokenizers|' -i requirements.txt && \
+    sed -i \
+        -e 's|^onnxruntime.*||g' \
+        -e 's|^ctranslate2.*||g' \
+        -e 's|^huggingface_hub.*||g' \
+        -e 's|^tokenizers.*|tokenizers|g' \
+        requirements.txt && \
     cat requirements.txt && \
     pip3 install --no-cache-dir --verbose -r requirements.txt && \
     python3 setup.py bdist_wheel

@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 set -ex
 
-echo " ================ Building openai_triton ${OPENAITRITON_VERSION} ================"
+echo "============ Building openai_triton ${OPENAITRITON_VERSION} (branch=${OPENAITRITON_BRANCH}) ============"
 
 pip3 uninstall -y triton
 
-git clone --recursive --branch ${OPENAITRITON_BRANCH} --depth=1 https://github.com/openai/triton /opt/triton
+git clone --branch ${OPENAITRITON_BRANCH} --depth=1 --recursive https://github.com/openai/triton /opt/triton
 cd /opt/triton
-#git -C /opt/triton/third_party submodule update --init nvidia
+
+#git checkout ${OPENAITRITON_BRANCH} 
+#git -C third_party submodule update --init nvidia || git submodule update --init --recursive
 
 sed -i \
     -e 's|LLVMAMDGPUCodeGen||g' \

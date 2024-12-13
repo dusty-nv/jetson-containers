@@ -21,6 +21,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     curl \
+    libtbb-dev \
+    libglm-dev  \
     libatlas-base-dev \
     libboost-filesystem-dev \
     libboost-graph-dev \

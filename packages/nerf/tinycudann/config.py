@@ -1,4 +1,3 @@
-from jetson_containers import CUDA_ARCHITECTURES
 
 def tinycudann(version, requires=None, default=False):
     pkg = package.copy()
@@ -9,7 +8,6 @@ def tinycudann(version, requires=None, default=False):
     pkg['name'] = f'tinycudann:{version}'
 
     pkg['build_args'] = {
-        'CUDAARCHS': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
         'TINYCUDANN_VERSION': version,
     }
 

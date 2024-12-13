@@ -14,6 +14,7 @@ if [ -z OLLAMA_PID ]; then
     exit 1
 fi
 
-python3 /benchmark.py --OLLAMA_PID ${OLLAMA_PID}
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+python3 $SCRIPT_DIR/benchmark.py --OLLAMA_PID ${OLLAMA_PID}
 
 kill ${OLLAMA_PID}

@@ -1,6 +1,6 @@
 #---
 # name: docker
-# group: core
+# group: build
 # depends: [python]
 # docs: docs.md
 # test: test.sh

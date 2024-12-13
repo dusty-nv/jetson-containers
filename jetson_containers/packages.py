@@ -36,7 +36,7 @@ def package_search_dirs(package_dirs, scan=False):
         
     for package_dir in package_dirs:
         if len(package_dir) > 0:
-            _PACKAGE_DIRS.append(package_dirs)
+            _PACKAGE_DIRS.append(package_dir)
     
     if scan:
         scan_packages(_PACKAGE_DIRS, rescan=True)
@@ -270,13 +270,15 @@ def group_packages(packages, key, default=''):
     return grouped
     
         
-def resolve_dependencies(packages, check=True):
+def resolve_dependencies(packages, check=True, skip_packages=[]):
     """
     Recursively expand the list of dependencies to include all sub-dependencies.
     Returns a new list of containers to build which contains all the dependencies.
     
     If check is true, then each dependency will be confirmed to exist, otherwise
     a KeyError exception will be raised with the name of the missing dependency.
+    
+    skip_packages is a list of package names to exclude from the dependency resolution.
     """
     if isinstance(packages, str):
         packages = [packages]
@@ -304,7 +306,7 @@ def resolve_dependencies(packages, check=True):
                     packages.pop(dependency_index)
                     packages.insert(package_index, dependency)
                     return packages, True
-
+        packages = [p for p in packages if not any(fnmatch.fnmatch(p, skip) for skip in skip_packages)]
         return packages, (packages != packages_org)
     
     # iteratively unroll/expand dependencies until the full list is resolved
