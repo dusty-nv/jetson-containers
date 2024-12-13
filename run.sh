@@ -104,6 +104,8 @@ if [[ "$csi_to_webcam_conversion" == true ]]; then
 		exit 1
 	fi
 
+	sudo systemctl restart nvargus-daemon.service
+
 	# Store /dev/video index number for each CSI camera found
 	csi_indexes=()
 	# Store /dev/video* device name for each CSI camera found
@@ -160,22 +162,22 @@ if [[ "$csi_to_webcam_conversion" == true ]]; then
 		
 		echo "gst-launch-1.0 -v nvarguscamerasrc sensor-id=${csi_index} \
 					! 'video/x-raw(memory:NVMM), format=NV12, width=${capture_width}, height=${capture_height}, framerate=${capture_fps}/1' \
-					! nvvidconv \
+					! queue max-size-buffers=1 leaky=downstream ! nvvidconv \
 					! 'video/x-raw, width=${output_width}, height=${output_height}, framerate=${output_fps}/1', format=I420 \
-					! nvjpegenc \
-					! multipartmux \
+					! queue max-size-buffers=1 leaky=downstream ! nvjpegenc \
+					! queue max-size-buffers=1 leaky=downstream ! multipartmux \
 					! multipartdemux single-stream=1 \
 					! \"image/jpeg, width=${output_width}, height=${output_height}, parsed=(boolean)true, colorimetry=(string)2:4:7:1, framerate=(fraction)${output_fps}/1, sof-marker=(int)0\" \
-					! v4l2sink device=${new_devices[$i]} > /dev/null 2>&1 &"
+					! v4l2sink device=${new_devices[$i]} sync=false > $ROOT/logs/gst-launch-process_${csi_index}.txt 2>&1 &"
 		gst-launch-1.0 -v nvarguscamerasrc sensor-id=${csi_index} \
 					! "video/x-raw(memory:NVMM), format=NV12, width=${capture_width}, height=${capture_height}, framerate=${capture_fps}/1" \
-					! nvvidconv \
+					! queue max-size-buffers=1 leaky=downstream ! nvvidconv \
 					! "video/x-raw, width=${output_width}, height=${output_height}, framerate=${output_fps}/1", format=I420 \
-					! nvjpegenc \
-					! multipartmux \
+					! queue max-size-buffers=1 leaky=downstream ! nvjpegenc \
+					! queue max-size-buffers=1 leaky=downstream ! multipartmux \
 					! multipartdemux single-stream=1 \
 					! "image/jpeg, width=${output_width}, height=${output_height}, parsed=(boolean)true, colorimetry=(string)2:4:7:1, framerate=(fraction)${output_fps}/1, sof-marker=(int)0" \
-					! v4l2sink device=${new_devices[$i]} > /dev/null 2>&1 &
+					! v4l2sink device=${new_devices[$i]} sync=false  > $ROOT/logs/gst-launch-process_${csi_index}.txt 2>&1 &
 		
 		# Store the PID of the background process if you want to manage it later
 		BG_PIDS+=($!)
