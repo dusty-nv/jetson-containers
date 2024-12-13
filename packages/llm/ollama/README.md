@@ -72,13 +72,14 @@ You can then navigate your browser to `http://JETSON_IP:8080`, and create a fake
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`ollama`** | |
+| **`ollama:0.5.1`** | |
 | :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `ollama` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`jetrag`](/packages/rag/jetrag) [`llama-index:samples`](/packages/rag/llama-index) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda`](/packages/cuda/cuda) [`python`](/packages/build/python) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`jetson-copilot`](/packages/rag/jetson-copilot) [`llama-index:samples`](/packages/rag/llama-index) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/ollama:r35.4.1`](https://hub.docker.com/r/dustynv/ollama/tags) `(2024-06-25, 5.4GB)`<br>[`dustynv/ollama:r36.2.0`](https://hub.docker.com/r/dustynv/ollama/tags) `(2024-06-25, 3.9GB)`<br>[`dustynv/ollama:r36.3.0`](https://hub.docker.com/r/dustynv/ollama/tags) `(2024-05-14, 3.9GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/ollama:0.5.1-r36.4.0`](https://hub.docker.com/r/dustynv/ollama/tags) `(2024-12-12, 3.3GB)` |
 
 </details>
 
@@ -88,9 +89,12 @@ You can then navigate your browser to `http://JETSON_IP:8080`, and create a fake
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
+| &nbsp;&nbsp;[`dustynv/ollama:0.4.0-r36.4.0`](https://hub.docker.com/r/dustynv/ollama/tags) | `2024-11-09` | `arm64` | `3.3GB` |
+| &nbsp;&nbsp;[`dustynv/ollama:0.5.1-r36.4.0`](https://hub.docker.com/r/dustynv/ollama/tags) | `2024-12-12` | `arm64` | `3.3GB` |
 | &nbsp;&nbsp;[`dustynv/ollama:r35.4.1`](https://hub.docker.com/r/dustynv/ollama/tags) | `2024-06-25` | `arm64` | `5.4GB` |
-| &nbsp;&nbsp;[`dustynv/ollama:r36.2.0`](https://hub.docker.com/r/dustynv/ollama/tags) | `2024-06-25` | `arm64` | `3.9GB` |
-| &nbsp;&nbsp;[`dustynv/ollama:r36.3.0`](https://hub.docker.com/r/dustynv/ollama/tags) | `2024-05-14` | `arm64` | `3.9GB` |
+| &nbsp;&nbsp;[`dustynv/ollama:r36.2.0`](https://hub.docker.com/r/dustynv/ollama/tags) | `2024-09-02` | `arm64` | `3.5GB` |
+| &nbsp;&nbsp;[`dustynv/ollama:r36.3.0`](https://hub.docker.com/r/dustynv/ollama/tags) | `2024-09-30` | `arm64` | `3.5GB` |
+| &nbsp;&nbsp;[`dustynv/ollama:r36.4.0`](https://hub.docker.com/r/dustynv/ollama/tags) | `2024-09-30` | `arm64` | `3.4GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -107,10 +111,10 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag ollama)
 
 # or explicitly specify one of the container images above
-jetson-containers run dustynv/ollama:r35.4.1
+jetson-containers run dustynv/ollama:0.5.1-r36.4.0
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/ollama:r35.4.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/ollama:0.5.1-r36.4.0
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
