@@ -46,21 +46,26 @@ RUN python --version
 
 WORKDIR /opt/lerobot
 
+## Prevent the Gdk-ERROR by disabling MIT-SHM
+RUN export GDK_BACKEND=x11
+RUN export GDK_USE_X11SHM=0
+RUN export GDK_SYNCHRONIZE=1
+
 RUN echo "pactl info" >> /root/.bash_history
 RUN echo "pactl list short sinks" >> /root/.bash_history
 RUN echo "pactl set-default-sink 0" >> /root/.bash_history
-RUN echo "wandb login"
-RUN echo "export HF_USER="
+RUN echo "wandb login" >> /root/.bash_history
+RUN echo "export HF_USER=" >> /root/.bash_history
 RUN echo "python lerobot/scripts/control_robot.py record \
   --robot-path lerobot/configs/robot/koch.yaml \
   --fps 30 \
   --root data \
-  --repo-id ${HF_USER}/koch_test_$(date +%Y%m%d_%H%M%S) \
+  --repo-id \${HF_USER}/koch_test_\$(date +%Y%m%d_%H%M%S) \
   --tags tutorial \
   --warmup-time-s 5 \
   --episode-time-s 30 \
   --reset-time-s 30 \
-  --num-episodes 10"
+  --num-episodes 10" >> /root/.bash_history
 
 RUN echo -e "* soft core 0\n* hard core 0" >> /etc/security/limits.conf
 

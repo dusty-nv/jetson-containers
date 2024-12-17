@@ -6,11 +6,12 @@
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`homeassistant-base`** | |
+| **`homeassistant-base:latest`** | |
 | :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `homeassistant-base` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`homeassistant-core:2024.4.2`](/packages/smart-home/homeassistant-core) [`homeassistant-core:latest`](/packages/smart-home/homeassistant-core) [`wyoming-assist-microphone:latest`](/packages/smart-home/wyoming/assist-microphone) [`wyoming-openwakeword:latest`](/packages/smart-home/wyoming/openwakeword) [`wyoming-piper:master`](/packages/smart-home/wyoming/piper) [`wyoming-whisper:latest`](/packages/smart-home/wyoming/wyoming-whisper) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`homeassistant-core:2024.11.2`](/packages/smart-home/homeassistant-core) [`homeassistant-core:2024.4.2`](/packages/smart-home/homeassistant-core) [`wyoming-assist-microphone:1.2.0`](/packages/smart-home/wyoming/assist-microphone) [`wyoming-assist-microphone:1.2.0-builder`](/packages/smart-home/wyoming/assist-microphone) [`wyoming-assist-microphone:1.3.0`](/packages/smart-home/wyoming/assist-microphone) [`wyoming-assist-microphone:1.3.0-builder`](/packages/smart-home/wyoming/assist-microphone) [`wyoming-openwakeword:1.10.0`](/packages/smart-home/wyoming/openwakeword) [`wyoming-openwakeword:1.10.0-builder`](/packages/smart-home/wyoming/openwakeword) [`wyoming-openwakeword:1.10.1`](/packages/smart-home/wyoming/openwakeword) [`wyoming-openwakeword:1.10.1-builder`](/packages/smart-home/wyoming/openwakeword) [`wyoming-piper:1.5.0`](/packages/smart-home/wyoming/piper) [`wyoming-piper:1.5.0-builder`](/packages/smart-home/wyoming/piper) [`wyoming-piper:1.5.2`](/packages/smart-home/wyoming/piper) [`wyoming-piper:1.5.2-builder`](/packages/smart-home/wyoming/piper) [`wyoming-whisper:2.2.0`](/packages/smart-home/wyoming/wyoming-whisper) [`wyoming-whisper:2.2.0-builder`](/packages/smart-home/wyoming/wyoming-whisper) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Notes | The `homeassistant` base ubuntu image with pre-installed dependencies based on `https://github.com/home-assistant/docker-base/blob/master/ubuntu/Dockerfile` |
 
@@ -26,7 +27,7 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag homeassistant-base)
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host homeassistant-base:35.2.1
+sudo docker run --runtime nvidia -it --rm --network=host homeassistant-base:36.2.0
 
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>

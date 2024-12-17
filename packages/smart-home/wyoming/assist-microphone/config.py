@@ -1,33 +1,31 @@
-import requests
+from jetson_containers import handle_text_request
 
 
-def get_latest_stable_version(fallback="1.2.0") -> str:
-    try:
-        response = requests.get('https://raw.githubusercontent.com/rhasspy/wyoming-satellite/master/wyoming_satellite/VERSION')
-        if response.status_code == 200:
-            return response.text.strip()
-        else:
-            print("Failed to fetch version information. Status code:", response.status_code)
-            return fallback
-    except Exception as e:
-        print("An error occurred:", e)
-        return fallback
-
-
-def create_package(version, default=False) -> list:
+def create_package(version, branch=None, default=False) -> list:
     pkg = package.copy()
-    wanted_version = get_latest_stable_version() if version == 'latest' else version
-    pkg['name'] = f'wyoming-assist-microphone:{version}'
+
+    if not branch:
+        branch = f'v{version}'
+
+    wanted_version = handle_text_request(f'https://raw.githubusercontent.com/rhasspy/wyoming-satellite/{branch}/wyoming_satellite/VERSION')
+    pkg['name'] = f'wyoming-assist-microphone:{wanted_version}'
 
     pkg['build_args'] = {
         'SATELLITE_VERSION': wanted_version,
+        'SATELLITE_BRANCH': branch
     }
+
+    builder = pkg.copy()
+    builder['name'] = f'wyoming-assist-microphone:{wanted_version}-builder'
+    builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
 
     if default:
         pkg['alias'] = 'wyoming-assist-microphone'
+        builder['alias'] = 'wyoming-assist-microphone:builder'
 
-    return pkg
+    return pkg, builder
 
 package = [
-    create_package("latest", default=True),
+    create_package("1.3.0", branch="master", default=True),
+    create_package("1.2.0"),
 ]

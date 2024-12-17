@@ -25,7 +25,8 @@ ARG OLLAMA_REPO \
     CUDA_VERSION_MAJOR \
     CMAKE_CUDA_ARCHITECTURES
     
-ADD https://api.github.com/repos/${OLLAMA_REPO}/git/refs/heads/${OLLAMA_BRANCH} /tmp/ollama_version.json
+#ADD https://api.github.com/repos/${OLLAMA_REPO}/git/refs/heads/${OLLAMA_BRANCH} /tmp/ollama_version.json
+ADD https://api.github.com/repos/${OLLAMA_REPO}/git/refs/tags/${OLLAMA_BRANCH} /tmp/ollama_version.json
 RUN git clone --branch=${OLLAMA_BRANCH} --depth=1 --recursive https://github.com/${OLLAMA_REPO} /opt/ollama
 
 COPY ollama_deps.sh /opt/ollama_deps.sh
