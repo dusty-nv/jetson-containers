@@ -22,7 +22,7 @@ def pip_cache(version, requires=None):
     """
     short_version = f"cu{version.replace('.', '')}"
     repo_path = f"jp{JETPACK_VERSION.major}/{short_version}"
-    index_host = "jetson.webredirect.org"
+    index_host = "jetson-ai-lab.dev"
     
     pip_cache = package.copy()
     
@@ -33,9 +33,9 @@ def pip_cache(version, requires=None):
     pip_cache['test'] = []
 
     pip_cache['build_args'] = {
-        'TAR_INDEX_URL': f"http://{index_host}:8000/{repo_path}",
-        'PIP_INDEX_REPO': f"http://{index_host}/{repo_path}",
-        'PIP_TRUSTED_HOSTS': index_host,
+        'TAR_INDEX_URL': f"https://apt.{index_host}:8000/{repo_path}",
+        'PIP_INDEX_REPO': f"https://pypi.{index_host}/{repo_path}",
+        #'PIP_TRUSTED_HOSTS': index_host,
         'PIP_UPLOAD_REPO': os.environ.get('PIP_UPLOAD_REPO', f"{os.environ.get('PIP_UPLOAD_HOST', 'http://localhost')}/{repo_path}"),
         'PIP_UPLOAD_USER': os.environ.get('PIP_UPLOAD_USER', f"jp{JETPACK_VERSION.major}"),
         'PIP_UPLOAD_PASS': os.environ.get('PIP_UPLOAD_PASS', 'none'),
