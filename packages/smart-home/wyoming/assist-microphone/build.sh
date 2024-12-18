@@ -21,7 +21,7 @@ echo "assist_microphone: ${SATELLITE_VERSION} (branch: ${SATELLITE_BRANCH})"
 git clone --branch=${SATELLITE_BRANCH} https://github.com/rhasspy/wyoming-satellite /tmp/wyoming_satellite
 cd /tmp/wyoming_satellite
 
-sed -i "s|version=\"1.1.0\"|version=\"${SATELLITE_VERSION}\"|" setup.py
+sed -i "s|version=\"[^\"]*\"|version=\"${SATELLITE_VERSION}\"|" setup.py
 
 python3 setup.py sdist bdist_wheel --verbose --dist-dir /opt/wheels
 

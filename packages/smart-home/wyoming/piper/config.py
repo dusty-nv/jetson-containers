@@ -13,7 +13,6 @@ def create_package(version, branch=None, default=False) -> list:
 
     # FIXME: wyoming-piper on branch v1.5.2 has incorrect version set in VERSION file.
     if Version(version) != Version(wanted_version):
-        print(f"wyoming-piper versions mismatch ({version} vs {wanted_version}) resolved version: {wanted_version}")
         wanted_version = version
 
     pkg['name'] = f'wyoming-piper:{wanted_version}'
