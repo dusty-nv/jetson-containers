@@ -3,7 +3,7 @@
 # group: llm
 # config: config.py
 # requires: '>=35'
-# depends: [transformers, openai-triton]
+# depends: [transformers, triton]
 # test: test.py
 # notes: fork of https://github.com/TimDettmers/bitsandbytes for Jetson
 #---
