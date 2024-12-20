@@ -2,7 +2,7 @@
 # name: deepspeed
 # group: llm
 # config: config.py
-# depends: [transformers, deepspeed-kernels, openai-triton]
+# depends: [transformers, deepspeed-kernels, triton]
 # requires: '>=35'
 # test: test.sh
 #---
