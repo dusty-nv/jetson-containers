@@ -84,6 +84,7 @@ def get_jetpack_version(l4t_version=get_l4t_version(), default='5.1'):
         
     NVIDIA_JETPACK = {
         # -------- JP6 --------
+        "36.4.2": "6.1.1",
         "36.4.0": "6.1 GA",
         "36.3.0": "6.0 GA",
         "36.2.0": "6.0 DP",
@@ -99,6 +100,7 @@ def get_jetpack_version(l4t_version=get_l4t_version(), default='5.1'):
         "34.1.0": "5.0 DP",
         "34.0.1": "5.0 PRE-DP",
         # -------- JP4 --------
+        "32.7.5": "4.6.5",
         "32.7.4": "4.6.4",
         "32.7.3": "4.6.3",
         "32.7.2": "4.6.2",
