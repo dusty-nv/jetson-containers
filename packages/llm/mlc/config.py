@@ -34,5 +34,6 @@ package = [
     mlc('3403a4e', 'patches/3403a4e.diff', version='0.1.1', tvm='0.16.0', requires='>=36'),  # 4/15/2024
     mlc('9336b4a', 'patches/9336b4a.diff', version='0.1.2', tvm='0.18.0', requires='>=36'),  # 9/25/2024
     mlc('6da6aca', 'patches/6da6aca.diff', version='0.1.3', tvm='0.18.1', requires='>=36'),  # 10/18/2024
+    mlc('1825fed', 'patches/1825fed.diff', version='0.1.4', tvm='0.19.1', requires='>=36'),  # 12/20/2024
 ]
 
