@@ -1,7 +1,7 @@
 #---
 # name: hymba
 # group: llm
-# depends: [pytorch, transformers, xformers, triton]
+# depends: [pytorch, transformers, xformers, flash-attention, mamba_ssm, triton]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/NVlabs/hymba
