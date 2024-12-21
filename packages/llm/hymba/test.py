@@ -462,13 +462,11 @@ class HymbaBlock(nn.Module):
 
         return contextualized_states
 
-
-if __name__ == "__main__":
-    # test the model
-    layer = HymbaBlock().to(torch.bfloat16).to("cuda")
-    input = torch.randn(256, 10, 768).to(torch.bfloat16).to("cuda")
-    output = layer(input)
-    print(output.shape)
+# test the model
+layer = HymbaBlock().to(torch.bfloat16).to("cuda")
+input = torch.randn(256, 10, 768).to(torch.bfloat16).to("cuda")
+output = layer(input)
+print(output.shape)
 
 
 print('hymba OK\n')
