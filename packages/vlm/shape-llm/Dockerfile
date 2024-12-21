@@ -2,7 +2,7 @@
 # name: shape-llm
 # alias: shape_llm
 # group: vlm
-# depends: [transformers, bitsandbytes, flash-attention, opencv:4.10.0]
+# depends: [transformers, bitsandbytes, flash-attention, opencv:4.11.0]
 # requires: '>=35'
 # test: [test.sh, test.py]
 #---

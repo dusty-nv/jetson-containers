@@ -2,7 +2,7 @@
 # name: llama_cpp
 # group: llm
 # config: config.py
-# depends: [cuda, cudnn, cmake, python, numpy, huggingface_hub]
+# depends: [cuda, cudnn, cmake, python, numpy, huggingface_hub, sudonim]
 # requires: '>=34.1.0'
 # test: test_version.py
 # docs: docs.md

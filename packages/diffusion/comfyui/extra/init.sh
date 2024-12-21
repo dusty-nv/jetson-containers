@@ -10,7 +10,7 @@ export COMFYUI_PATH=`pwd`
 
 # Run the Python script with a timeout of 20 seconds
 echo "== Starting ComfyUI Manager to configure automatically config.ini"
-timeout 30s python3 main.py || error_exit "ComfyUI Manager failed to start"
+timeout 60s python3 main.py || error_exit "ComfyUI Manager failed to start"
 echo "-- COMFYUI_PATH: ${COMFYUI_PATH}"
 
 # Install ComfyUI Manager if not already present

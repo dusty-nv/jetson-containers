@@ -34,7 +34,7 @@ def get_l4t_version(version_file='/etc/nv_tegra_release'):
     The L4T_VERSION will either be parsed from /etc/nv_tegra_release or the $L4T_VERSION environment variable.
     """
     if platform.machine() != 'aarch64':
-        raise ValueError(f"L4T_VERSION isn't supported on {ARCH} architecture (aarch64 only)")
+        raise ValueError(f"L4T_VERSION isn't supported on {platform.machine()} architecture (aarch64 only)")
         
     if 'L4T_VERSION' in os.environ and len(os.environ['L4T_VERSION']) > 0:
         return Version(os.environ['L4T_VERSION'].lower().lstrip('r'))
@@ -78,12 +78,19 @@ def get_jetpack_version(l4t_version=get_l4t_version(), default='5.1'):
     """
     Returns the version of JetPack (based on the L4T version)
     https://github.com/rbonghi/jetson_stats/blob/master/jtop/core/jetson_variables.py
+
+    JETPACK_VERSION will be determined based on L4T_VERSION or overridden by the $JETPACK_VERSION environment variable.
     """
+    
     if not isinstance(l4t_version, Version):
         l4t_version = Version(l4t_version)
+
+    if 'JETPACK_VERSION' in os.environ and len(os.environ['JETPACK_VERSION']) > 0:
+        return Version(os.environ['JETPACK_VERSION'].lower().lstrip('r'))
         
     NVIDIA_JETPACK = {
         # -------- JP6 --------
+        "36.4.3": "6.2",
         "36.4.2": "6.1.1",
         "36.4.0": "6.1 GA",
         "36.3.0": "6.0 GA",
@@ -196,7 +203,7 @@ def get_cuda_version(version_file='/usr/local/cuda/version.json'):
                 # executing, for example, `export CUDA_VERSION=12.6`.
                 # If the env variable is not set, set the CUDA_VERSION to be the CUDA version
                 # that made available with the release of L4T_VERSION 
-                if l4t_version == Version('36.4'):
+                if l4t_version == Version('36.4') or l4t_version == Version('36.4.2') or l4t_version == Version('36.4.3'):
                     cuda_version = '12.6'
                 elif l4t_version == Version('36.3'):
                     cuda_version = '12.4'
@@ -316,4 +323,3 @@ else:
 
 # LSB release and codename ("20.04", "focal")
 LSB_RELEASE, LSB_CODENAME = get_lsb_release()
-
