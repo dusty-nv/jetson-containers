@@ -24,7 +24,7 @@ export PYTHON_LIB_PATH="$(python3 -c 'import site; print(site.getsitepackages()[
 export TF_NEED_CUDA=1
 export TF_CUDA_CLANG=1
 export CLANG_CUDA_COMPILER_PATH="/usr/lib/llvm-17/bin/clang"
-export HERMETIC_CUDA_VERSION=12.6.1
+export HERMETIC_CUDA_VERSION=12.6.3
 export HERMETIC_CUDNN_VERSION=9.4.0 
 export HERMETIC_CUDA_COMPUTE_CAPABILITIES=8.7
 

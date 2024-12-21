@@ -42,6 +42,6 @@ package = [
     jax('0.4.28', requires='>=35'),
     jax('0.4.30', requires='>=35'),
     jax('0.4.32', requires='>=35'),
-    jax('0.4.35', requires='>=35', default=True), # It works from jetpack 5 11.8 Cuda & 8.6 Cudnn
+    jax('0.4.38', requires='>=35', default=True), # It works from jetpack 5 11.8 Cuda & 8.6 Cudnn
     
 ]
