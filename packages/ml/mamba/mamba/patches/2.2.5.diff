@@ -1,8 +1,8 @@
 diff --git a/setup.py b/setup.py
-index 3ee9164..f07a4d5 100755
+index 3ee9164..e497800 100755
 --- a/setup.py
 +++ b/setup.py
-@@ -44,20 +44,37 @@ SKIP_CUDA_BUILD = os.getenv("MAMBA_SKIP_CUDA_BUILD", "FALSE") == "TRUE"
+@@ -44,20 +44,36 @@ SKIP_CUDA_BUILD = os.getenv("MAMBA_SKIP_CUDA_BUILD", "FALSE") == "TRUE"
  FORCE_CXX11_ABI = os.getenv("MAMBA_FORCE_CXX11_ABI", "FALSE") == "TRUE"
  
  
@@ -10,21 +10,6 @@ index 3ee9164..f07a4d5 100755
 +def get_system() -> str:
      """
 -    Returns the platform name as used in wheel filenames.
-+    Returns the system name as used in wheel filenames.
-+    """
-+    if platform.system() == "Windows":
-+        return "win"
-+    elif platform.system() == "Darwin":
-+        mac_version = ".".join(platform.mac_ver()[0].split(".")[:1])
-+        return f"macos_{mac_version}"
-+    elif platform.system() == "Linux":
-+        return "linux"
-+    else:
-+        raise ValueError("Unsupported system: {}".format(platform.system()))
-+ 
-+
-+def get_arch():
-+    """
 +    Returns the system name as used in wheel filenames.
      """
 -    if sys.platform.startswith("linux"):
@@ -34,14 +19,28 @@ index 3ee9164..f07a4d5 100755
 -        return f"macosx_{mac_version}_x86_64"
 -    elif sys.platform == "win32":
 -        return "win_amd64"
++    if platform.system() == "Windows":
++        return "win"
++    elif platform.system() == "Darwin":
++        mac_version = ".".join(platform.mac_ver()[0].split(".")[:1])
++        return f"macos_{mac_version}"
++    elif platform.system() == "Linux":
++        return "linux"
+     else:
+-        raise ValueError("Unsupported platform: {}".format(sys.platform))
++        raise ValueError("Unsupported system: {}".format(platform.system()))
+ 
++def get_arch():
++    """
++    Returns the system name as used in wheel filenames.
++    """
 +    if platform.machine() == "x86_64":
 +        return "x86_64"
 +    elif platform.machine() == "arm64" or platform.machine() == "aarch64":
 +        return "aarch64"
-     else:
--        raise ValueError("Unsupported platform: {}".format(sys.platform))
++    else:
 +        raise ValueError("Unsupported arch: {}".format(platform.machine()))
- 
++
 +def get_platform() -> str:
 +    """
 +    Returns the platform name as used in wheel filenames.
@@ -50,11 +49,10 @@ index 3ee9164..f07a4d5 100755
  
  def get_cuda_bare_metal_version(cuda_dir):
      raw_output = subprocess.check_output(
-@@ -171,23 +188,10 @@ if not SKIP_CUDA_BUILD:
-                     f"{PACKAGE_NAME} is only supported on CUDA 11.6 and above.  "
+@@ -172,22 +188,9 @@ if not SKIP_CUDA_BUILD:
                      "Note: make sure nvcc has a supported version by running nvcc -V."
                  )
--
+ 
 -        cc_flag.append("-gencode")
 -        cc_flag.append("arch=compute_53,code=sm_53")
 -        cc_flag.append("-gencode")
@@ -68,7 +66,6 @@ index 3ee9164..f07a4d5 100755
 -        cc_flag.append("-gencode")
 -        cc_flag.append("arch=compute_87,code=sm_87")
 -
-+                
          if bare_metal_version >= Version("11.8"):
              cc_flag.append("-gencode")
 -            cc_flag.append("arch=compute_90,code=sm_90")
@@ -76,7 +73,7 @@ index 3ee9164..f07a4d5 100755
  
  
      # HACK: The compiler flag -D_GLIBCXX_USE_CXX11_ABI is set to be the same as
-@@ -254,7 +258,7 @@ if not SKIP_CUDA_BUILD:
+@@ -254,7 +257,7 @@ if not SKIP_CUDA_BUILD:
      )
  
  
@@ -85,7 +82,7 @@ index 3ee9164..f07a4d5 100755
      with open(Path(this_dir) / PACKAGE_NAME / "__init__.py", "r") as f:
          version_match = re.search(r"^__version__\s*=\s*(.*)$", f.read(), re.MULTILINE)
      public_version = ast.literal_eval(version_match.group(1))
-@@ -265,7 +269,7 @@ def get_package_version():
+@@ -265,7 +268,7 @@ def get_package_version():
          return str(public_version)
  
  
@@ -94,7 +91,7 @@ index 3ee9164..f07a4d5 100755
      # Determine the version numbers that will be used to determine the correct wheel
      torch_version_raw = parse(torch.__version__)
  
-@@ -307,7 +311,7 @@ class CachedWheelsCommand(_bdist_wheel):
+@@ -307,7 +310,7 @@ class CachedWheelsCommand(_bdist_wheel):
      wheel available and short-circuits the standard full build pipeline.
      """
  
