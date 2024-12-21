@@ -2,25 +2,26 @@
 print('testing sana...')
 
 import torch
-from app.sana_pipeline import SanaPipeline
-from torchvision.utils import save_image
+from diffusers import SanaPipeline
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-generator = torch.Generator(device=device).manual_seed(42)
+pipe = SanaPipeline.from_pretrained(
+    "Efficient-Large-Model/Sana_1600M_1024px_diffusers",
+    variant="fp16",
+    torch_dtype=torch.float16,
+)
+pipe.to("cuda")
 
-sana = SanaPipeline("configs/sana_config/1024ms/Sana_1600M_img1024.yaml")
-sana.from_pretrained("hf://Efficient-Large-Model/Sana_1600M_1024px/checkpoints/Sana_1600M_1024px.pth")
+pipe.vae.to(torch.bfloat16)
+pipe.text_encoder.to(torch.bfloat16)
+
 prompt = 'a cyberpunk cat with a neon sign that says "Sana"'
-
-image = sana(
+image = pipe(
     prompt=prompt,
     height=1024,
     width=1024,
     guidance_scale=5.0,
-    pag_guidance_scale=2.0,
-    num_inference_steps=18,
-    generator=generator,
-)
-save_image(image, 'output/sana.png', nrow=1, normalize=True, value_range=(-1, 1))
+    num_inference_steps=20,
+    generator=torch.Generator(device="cuda").manual_seed(42),
+)[0]
 
 print('sana OK\n')

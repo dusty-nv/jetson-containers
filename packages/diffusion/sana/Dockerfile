@@ -2,7 +2,7 @@
 # name: sana
 # group: sana
 # config: config.py
-# depends: [transformers, xformers, triton]
+# depends: [transformers, xformers, diffusers, triton]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/NVlabs/Sana
