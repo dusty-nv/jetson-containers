@@ -1,9 +1,7 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer, StopStringCriteria, StoppingCriteriaList
 import torch
-from local_llm.utils import download_model
 
 repo_name = "nvidia/Hymba-1.5B-Instruct"
-model = download_model(repo_name)
 tokenizer = AutoTokenizer.from_pretrained(repo_name, trust_remote_code=True)
 model = AutoModelForCausalLM.from_pretrained(repo_name, trust_remote_code=True)
 model = model.cuda().to(torch.bfloat16)
