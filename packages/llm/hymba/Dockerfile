@@ -14,6 +14,10 @@ WORKDIR /opt
 RUN pip3 install --no-cache-dir einops
 # Clona el repositorio de Diffusers
 RUN git clone https://github.com/NVlabs/hymba.git && \
-    cd hymba
+    cd hymba \
 
-# RUN python3 chat.py
+WORKDIR /opt/hymba/
+
+COPY chat.py /opt/hymba/
+
+CMD python3 /opt/hymba/chat.py
