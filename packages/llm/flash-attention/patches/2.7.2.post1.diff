@@ -1,5 +1,5 @@
 diff --git a/setup.py b/setup.py
-index a567063..ac0d041 100644
+index a567063..da6ac63 100644
 --- a/setup.py
 +++ b/setup.py
 @@ -63,20 +63,37 @@ SKIP_CUDA_BUILD = os.getenv("FLASH_ATTENTION_SKIP_CUDA_BUILD", "FALSE") == "TRUE
@@ -11,6 +11,19 @@ index a567063..ac0d041 100644
      """
 -    Returns the platform name as used in wheel filenames.
 +    Returns the system name as used in wheel filenames.
++    """
++    if platform.system() == "Windows":
++        return "win"
++    elif platform.system() == "Darwin":
++        mac_version = ".".join(platform.mac_ver()[0].split(".")[:1])
++        return f"macos_{mac_version}"
++    elif platform.system() == "Linux":
++        return "linux"
++    else:
++        raise ValueError("Unsupported system: {}".format(platform.system()))
++
++
++def get_arch():
      """
 -    if sys.platform.startswith("linux"):
 -        return f'linux_{platform.uname().machine}'
@@ -19,29 +32,16 @@ index a567063..ac0d041 100644
 -        return f"macosx_{mac_version}_x86_64"
 -    elif sys.platform == "win32":
 -        return "win_amd64"
-+    if platform.system() == "Windows":
-+        return "win"
-+    elif platform.system() == "Darwin":
-+        mac_version = ".".join(platform.mac_ver()[0].split(".")[:1])
-+        return f"macos_{mac_version}"
-+    elif platform.system() == "Linux":
-+        return "linux"
-     else:
--        raise ValueError("Unsupported platform: {}".format(sys.platform))
-+        raise ValueError("Unsupported system: {}".format(platform.system()))
-+ 
- 
-+def get_arch():
-+    """
 +    Returns the system name as used in wheel filenames.
 +    """
 +    if platform.machine() == "x86_64":
 +        return "x86_64"
 +    elif platform.machine() == "arm64" or platform.machine() == "aarch64":
 +        return "aarch64"
-+    else:
+     else:
+-        raise ValueError("Unsupported platform: {}".format(sys.platform))
 +        raise ValueError("Unsupported arch: {}".format(platform.machine()))
-+
+ 
 +def get_platform() -> str:
 +    """
 +    Returns the platform name as used in wheel filenames.
