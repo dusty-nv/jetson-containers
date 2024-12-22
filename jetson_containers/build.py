@@ -39,6 +39,7 @@ parser.add_argument('--base', type=str, default='', help="the base container to 
 parser.add_argument('--multiple', action='store_true', help="the specified packages should be built independently as opposed to chained together")
 parser.add_argument('--build-flags', type=str, default='', help="extra flags to pass to 'docker build' commands")
 parser.add_argument('--build-args', type=str, default='', help="container build arguments (--build-arg) as a string of comma separated key:value pairs")
+parser.add_argument('--use-proxy', action='store_true', help="use the host's proxy envvars for the container build")
 parser.add_argument('--package-dirs', type=str, default='', help="additional package search directories (comma or colon-separated)")
 
 parser.add_argument('--list-packages', action='store_true', help="show the list of packages that were found under the search directories")
@@ -84,6 +85,15 @@ if args.build_args:
         args.build_args = {pair.split(':')[0]: pair.split(':')[1] for pair in key_value_pairs}
     except(ValueError, IndexError):
         raise argparse.ArgumentTypeError("Invalid dictionary format. Use key1:value1, key2:value2 ...")
+else:
+    args.build_args = {}
+
+# add proxy to build args if flag is set
+if args.use_proxy:
+    proxy_vars = ['http_proxy', 'https_proxy', 'no_proxy', 'HTTP_PROXY', 'HTTPS_PROXY', 'NO_PROXY']
+    for var in proxy_vars:
+        if var in os.environ:
+            args.build_args[var] = os.environ[var]
 
 # add package directories
 if args.package_dirs:
