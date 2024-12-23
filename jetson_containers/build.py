@@ -81,7 +81,7 @@ print(f"-- LSB_RELEASE={LSB_RELEASE} ({LSB_CODENAME})")
 if args.build_args:
     try:
         key_value_pairs = args.build_args.split(',')
-        args.build_args = {pair.split(':')[0]: pair.split(':')[1] for pair in key_value_pairs}
+        args.build_args = {pair.split(':')[0]: pair.split(':', maxsplit=1)[1] for pair in key_value_pairs}
     except(ValueError, IndexError):
         raise argparse.ArgumentTypeError("Invalid dictionary format. Use key1:value1, key2:value2 ...")
 
