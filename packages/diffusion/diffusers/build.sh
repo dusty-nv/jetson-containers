@@ -3,7 +3,8 @@ set -ex
 
 echo "Building diffusers ${DIFFUSERS_VERSION}"
 
-git clone --branch=v${DIFFUSERS_VERSION} --depth=1 --recursive https://github.com/huggingface/diffusers /opt/diffusers
+git clone --branch=v${DIFFUSERS_VERSION} --depth=1 --recursive https://github.com/huggingface/diffusers /opt/diffusers || \
+git clone --recursive https://github.com/huggingface/diffusers /opt/diffusers
 
 cd /opt/diffusers
 
