@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -ex
 
-bash /tmp/TENSORFLOW/link_cuda.sh
+bash /tmp/tensorflow/link_cuda.sh
 
 wget https://apt.llvm.org/llvm.sh
 chmod u+x llvm.sh
@@ -43,7 +43,7 @@ if [ "$FORCE_BUILD" == "on" ]; then
 fi
 
 # if TENSORFLOW_VERSION <= 2.16.1 download the wheel from the mirror if not # install from the Jetson PyPI server ($PIP_INSTALL_URL)
-if [ $(echo "${TENSORFLOW_VERSION} <= 2.16.1" | bc) -eq 1 ]; then
+if dpkg --compare-versions "${TENSORFLOW_VERSION}" le "2.16.1"; then
     pip3 install --no-cache-dir 'setuptools==68.2.2'
     H5PY_SETUP_REQUIRES=0 pip3 install --no-cache-dir --verbose h5py
     pip3 install --no-cache-dir --verbose future==0.18.2 mock==3.0.5 keras_preprocessing==1.1.2 keras_applications==1.0.8 gast==0.4.0 futures pybind11
