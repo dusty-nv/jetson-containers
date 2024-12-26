@@ -18,6 +18,7 @@ ARG TENSORFLOW_URL \
     MAKEFLAGS=-j$(nproc) \
     FORCE_BUILD
 
+COPY link_cuda.sh /tmp/tensorflow/
 COPY install.sh /tmp/tensorflow/
 
 RUN /tmp/tensorflow/install.sh
