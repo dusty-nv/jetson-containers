@@ -78,9 +78,15 @@ def get_jetpack_version(l4t_version=get_l4t_version(), default='5.1'):
     """
     Returns the version of JetPack (based on the L4T version)
     https://github.com/rbonghi/jetson_stats/blob/master/jtop/core/jetson_variables.py
+
+    JETPACK_VERSION will be determined based on L4T_VERSION or overridden by the $JETPACK_VERSION environment variable.
     """
+    
     if not isinstance(l4t_version, Version):
         l4t_version = Version(l4t_version)
+
+    if 'JETPACK_VERSION' in os.environ and len(os.environ['JETPACK_VERSION']) > 0:
+        return Version(os.environ['JETPACK_VERSION'].lower().lstrip('r'))
         
     NVIDIA_JETPACK = {
         # -------- JP6 --------
