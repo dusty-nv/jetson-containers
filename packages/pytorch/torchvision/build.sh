@@ -2,7 +2,8 @@
 set -ex
 echo "Building torchvision ${TORCHVISION_VERSION}"
    
-git clone --branch v${TORCHVISION_VERSION} --recursive --depth=1 https://github.com/pytorch/vision /opt/torchvision
+git clone --branch v${TORCHVISION_VERSION} --recursive --depth=1 https://github.com/pytorch/vision /opt/torchvision ||
+git clone --recursive --depth=1 https://github.com/pytorch/vision /opt/torchvision
 cd /opt/torchvision
 git checkout v${TORCHVISION_VERSION}
 

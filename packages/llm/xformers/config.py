@@ -24,5 +24,5 @@ def xformers(version, requires=None, default=True):
 
 package = [
     xformers('0.0.26', requires='<=cu122'),
-    xformers('0.0.28', requires='>=cu124'),
+    xformers('0.0.29', requires='>=cu124'), # support pytorch 2.5.1
 ]

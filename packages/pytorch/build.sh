@@ -5,7 +5,8 @@ set -ex
 echo "Building PyTorch ${PYTORCH_BUILD_VERSION}"
    
 # build from source
-git clone --branch "v${PYTORCH_BUILD_VERSION}" --depth=1 --recursive https://github.com/pytorch/pytorch /opt/pytorch
+git clone --branch "v${PYTORCH_BUILD_VERSION}" --depth=1 --recursive https://github.com/pytorch/pytorch /opt/pytorch ||
+git clone --depth=1 --recursive https://github.com/pytorch/pytorch /opt/pytorch
 cd /opt/pytorch
 
 # https://github.com/pytorch/pytorch/issues/138333

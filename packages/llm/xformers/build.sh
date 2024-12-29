@@ -3,7 +3,8 @@ set -ex
 
 echo "Building xformers ${XFORMERS_VERSION}"
 
-git clone --branch=v${XFORMERS_VERSION} --depth=1 --recursive https://github.com/facebookresearch/xformers /opt/xformers
+git clone --branch=v${XFORMERS_VERSION} --depth=1 --recursive https://github.com/facebookresearch/xformers /opt/xformers ||
+git clone --depth=1 --recursive https://github.com/facebookresearch/xformers /opt/xformers
 
 cd /opt/xformers
 

@@ -23,7 +23,6 @@ def vllm(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    vllm('0.6.3'),
-    vllm('0.6.3.post1', default=True),
-    vllm('0.6.4')
+    # 0.6.5 compatible with jetson https://github.com/vllm-project/vllm/pull/9735
+    vllm('0.6.7', default=True),
 ]
