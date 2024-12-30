@@ -36,5 +36,6 @@ package = [
     llama_cpp('0.2.70', flags=LEGACY_FLAGS),
     llama_cpp('0.2.83'),
     llama_cpp('0.2.90'),
+    llama_cpp('0.3.1'),
     llama_cpp('0.3.2', default=True),
 ]

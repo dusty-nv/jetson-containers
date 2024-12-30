@@ -26,5 +26,7 @@ def ollama(branch, golang='1.22.8', cmake='3.22.1', requires=None, default=False
     
 package = [
     ollama('main'),
+    ollama('0.4.0'),
+    ollama('0.5.1'),
     ollama('0.5.5', default=True),
 ]
