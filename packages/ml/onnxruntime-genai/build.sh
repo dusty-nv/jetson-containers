@@ -6,23 +6,27 @@ ONNXRUNTIME_VERSION=$(python3 -c "import onnxruntime as ort; print(ort.__version
 
 echo "CUDA Version: ${CUDA_VERSION}"
 echo "Detected ONNX Runtime version: ${ONNXRUNTIME_VERSION}"
-echo "Building onnxruntime-genai ${ONNXRUNTIME_GENAI_VERSION} (branch=${ONNXRUNTIME_GENAI_BRANCH})"
+echo "Building onnxruntime_genai ${ONNXRUNTIME_GENAI_VERSION} (branch=${ONNXRUNTIME_GENAI_BRANCH})"
 
-git clone --branch=rel-${ONNXRUNTIME_GENAI_VERSION} --depth=1 --recursive https://github.com/microsoft/onnxruntime-genai /opt/onnxruntime-genai || \
-git clone --recursive https://github.com/microsoft/onnxruntime-genai /opt/onnxruntime-genai
+git clone --branch=rel-${ONNXRUNTIME_GENAI_VERSION} --depth=1 --recursive https://github.com/microsoft/onnxruntime_genai /opt/onnxruntime_genai || \
+git clone --recursive https://github.com/microsoft/onnxruntime_genai /opt/onnxruntime_genai
 
-cd /opt/onnxruntime-genai
+mkdir -p /opt/onnxruntime_genai/ort/lib/
+mkdir -p /opt/onnxruntime_genai/ort/include/
 
-mkdir -p /opt/onnxruntime-genai/ort/lib/
+cp /usr/local/lib/python3.10/dist-packages/onnxruntime/capi/libonnxruntime*.so* /opt/onnxruntime_genai/ort/lib/
 
-cp /usr/local/lib/python3.10/dist-packages/onnxruntime/capi/libonnxruntime*.so* /opt/onnxruntime-genai/ort/lib/
-
+cd /opt/onnxruntime_genai/ort/include/
 # Use the dynamically detected version for downloading ONNX Runtime headers
 wget https://raw.githubusercontent.com/microsoft/onnxruntime/rel-${ONNXRUNTIME_VERSION}/include/onnxruntime/core/session/onnxruntime_c_api.h
 wget https://raw.githubusercontent.com/microsoft/onnxruntime/rel-${ONNXRUNTIME_VERSION}/include/onnxruntime/core/session/onnxruntime_float16.h
 
 # Use the dynamically detected version for symbolic linking
-ln -s /opt/onnxruntime-genai/ort/lib/libonnxruntime.so.${ONNXRUNTIME_VERSION} /opt/onnxruntime-genai/ort/lib/libonnxruntime.so
+ln -s /opt/onnxruntime_genai/ort/lib/libonnxruntime.so.${ONNXRUNTIME_VERSION} /opt/onnxruntime_genai/ort/lib/libonnxruntime.so
+
+cd /opt/onnxruntime_genai
+
+install_dir="/opt/onnxruntime_genai/install"
 
 ./build.sh --use_cuda --config Release --update --parallel --build \
         --skip_tests ${ONNXRUNTIME_FLAGS} \
@@ -31,7 +35,16 @@ ln -s /opt/onnxruntime-genai/ort/lib/libonnxruntime.so.${ONNXRUNTIME_VERSION} /o
         --cmake_extra_defines CMAKE_INSTALL_PREFIX=${install_dir} \
         --cuda_home /usr/local/cuda --ort_home ./ort
 
-twine upload --verbose /opt/onnxruntime-genai/build/Linux/Release/wheel/onnxruntime-genai*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
-tarpack upload /opt/onnxruntime-genai/build/Linux/Release/wheel/onnxruntime-genai*.whl-${ONNXRUNTIME_GENAI_VERSION} || echo "failed to upload tarball"
+cd build/Linux/Release
+make install
 
-# rm -rf /tmp/onnxruntime
+ls -ll wheel
+cp wheel/onnxruntime_genai*.whl /opt
+cd /
+
+pip3 install --no-cache-dir --verbose /opt/onnxruntime_genai*.whl
+python3 -c 'import onnxruntime_genai; print(onnxruntime_genai.__version__);'
+
+twine upload --verbose /opt/onnxruntime_genai*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+tarpack upload onnxruntime_genai-${ONNXRUNTIME_VERSION} ${install_dir} || echo "failed to upload tarball"
+# rm -rf /tmp/onnxruntime_genai

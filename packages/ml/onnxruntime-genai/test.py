@@ -23,9 +23,9 @@ providers = ort.get_available_providers()
 
 print(f'execution providers:  {providers}')
 
-print('testing onnxruntime-genai...')
+print('testing onnxruntime_genai...')
 import onnxruntime_genai as og
-print('onnxruntime-genai version: ' + str(og.__version__))
+print('onnxruntime_genai version: ' + str(og.__version__))
 
 model = og.Model('cpu_and_mobile/cpu-int4-rtn-block-32-acc-level-4')
 tokenizer = og.Tokenizer(model)
@@ -67,4 +67,4 @@ except KeyboardInterrupt:
 print()
 del generator
 
-print("\nonnxruntime-genai OK\n")
+print("\n onnxruntime_genai OK\n")

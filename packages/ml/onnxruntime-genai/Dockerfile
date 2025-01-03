@@ -1,5 +1,5 @@
 #---
-# name: onnxruntime-genai
+# name: onnxruntime_genai
 # group: ml
 # config: config.py
 # depends: [torch, torchvision, torchaudio, transformers, onnx, onnxruntime]
@@ -13,6 +13,6 @@ ARG ONNXRUNTIME_GENAI_VERSION \
     CUDA_VERSION \
     FORCE_BUILD=off
 
-COPY install.sh build.sh /tmp/onnxruntime-genai/
+COPY install.sh build.sh /tmp/onnxruntime_genai/
 
-RUN /tmp/onnxruntime-genai/install.sh || /tmp/onnxruntime-genai/build.sh
+RUN /tmp/onnxruntime_genai/install.sh || /tmp/onnxruntime_genai/build.sh

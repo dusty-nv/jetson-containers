@@ -4,7 +4,7 @@ from packaging.version import Version
 def onnxruntime_genai(version, branch=None, requires=None, default=False):
     ort = package.copy()
 
-    ort['name'] = f'onnxruntime-genai:{version}'
+    ort['name'] = f'onnxruntime_genai:{version}'
 
     if requires:
         ort['requires'] = requires
@@ -26,8 +26,8 @@ def onnxruntime_genai(version, branch=None, requires=None, default=False):
     builder['build_args'] = {**builder['build_args'], 'FORCE_BUILD': 'on'}
 
     if default:
-        ort['alias'] = 'onnxruntime-genai'
-        builder['alias'] = 'onnxruntime-genai:builder'
+        ort['alias'] = 'onnxruntime_genai'
+        builder['alias'] = 'onnxruntime_genai:builder'
 
     return ort, builder
 
