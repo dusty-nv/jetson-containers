@@ -27,7 +27,7 @@ import onnxruntime_genai as og
 print('onnxruntime_genai version: ' + str(og.__version__))
 
 # Execute Hugging Face CLI
-ios.system("huggingface-cli download microsoft/Phi-3-mini-4k-instruct-onnx --include cpu_and_mobile/cpu-int4-rtn-block-32-acc-level-4/* --local-dir .")
+os.system("huggingface-cli download microsoft/Phi-3-mini-4k-instruct-onnx --include cpu_and_mobile/cpu-int4-rtn-block-32-acc-level-4/* --local-dir .")
 
 # Initialize model and tokenizer
 model = og.Model('cpu_and_mobile/cpu-int4-rtn-block-32-acc-level-4')
@@ -42,7 +42,7 @@ search_options = {
 
 chat_template = '<|user|>\n{input} <|end|>\n<|assistant|>'
 
-text = "Input: Hello, I'm in jetson-containers"
+text = "Input: Hello, I'm in jetson containers"
 if not text:
     print("Error, input cannot be empty")
     exit()
