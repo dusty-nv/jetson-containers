@@ -10,6 +10,19 @@ import numpy as np
 
 from packaging.version import Version
 
+import onnxruntime as ort
+print('onnxruntime version: ' + str(ort.__version__))
+
+ort_version = Version(ort.__version__)
+
+if ort_version > Version('1.10'):
+    print(ort.get_build_info())
+
+# verify execution providers
+providers = ort.get_available_providers()
+
+print(f'execution providers:  {providers}')
+
 print('testing onnxruntime-genai...')
 import onnxruntime_genai as og
 print('onnxruntime-genai version: ' + str(og.__version__))

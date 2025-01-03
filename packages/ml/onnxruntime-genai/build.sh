@@ -4,22 +4,27 @@ set -ex
 # Extract ONNX Runtime version using Python
 ONNXRUNTIME_VERSION=$(python3 -c "import onnxruntime as ort; print(ort.__version__)")
 
+echo "CUDA Version: ${CUDA_VERSION}"
 echo "Detected ONNX Runtime version: ${ONNXRUNTIME_VERSION}"
 echo "Building onnxruntime-genai ${ONNXRUNTIME_GENAI_VERSION} (branch=${ONNXRUNTIME_GENAI_BRANCH})"
 
 git clone --branch=rel-${ONNXRUNTIME_GENAI_VERSION} --depth=1 --recursive https://github.com/microsoft/onnxruntime-genai /opt/onnxruntime-genai || \
 git clone --recursive https://github.com/microsoft/onnxruntime-genai /opt/onnxruntime-genai
 
-cp /opt/.local/lib/python3.10/site-packages/onnxruntime/capi/libonnxruntime*.so* ort/lib/
+cd /opt/onnxruntime-genai
+
+mkdir -p /opt/onnxruntime-genai/ort/lib/
+
+cp /usr/local/lib/python3.10/dist-packages/onnxruntime/capi/libonnxruntime*.so* /opt/onnxruntime-genai/ort/lib/
 
 # Use the dynamically detected version for downloading ONNX Runtime headers
 wget https://raw.githubusercontent.com/microsoft/onnxruntime/rel-${ONNXRUNTIME_VERSION}/include/onnxruntime/core/session/onnxruntime_c_api.h
 wget https://raw.githubusercontent.com/microsoft/onnxruntime/rel-${ONNXRUNTIME_VERSION}/include/onnxruntime/core/session/onnxruntime_float16.h
 
 # Use the dynamically detected version for symbolic linking
-ln -s /home/jetson/Projects/onnxruntime-genai/ort/lib/libonnxruntime.so.${ONNXRUNTIME_VERSION} /home/jetson/Projects/onnxruntime-genai/ort/lib/libonnxruntime.so
+ln -s /opt/onnxruntime-genai/ort/lib/libonnxruntime.so.${ONNXRUNTIME_VERSION} /opt/onnxruntime-genai/ort/lib/libonnxruntime.so
 
-./build.sh --use_cuda --config Release --update --parallel --build --build_wheel \
+./build.sh --use_cuda --config Release --update --parallel --build \
         --skip_tests ${ONNXRUNTIME_FLAGS} \
         --cmake_extra_defines CMAKE_CXX_FLAGS="-Wno-unused-variable -I/usr/local/cuda/include" \
         --cmake_extra_defines CMAKE_CUDA_ARCHITECTURES="${CUDA_ARCHITECTURES}" \

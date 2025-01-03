@@ -1,7 +1,7 @@
 from jetson_containers import L4T_VERSION, CUDA_VERSION, update_dependencies
 from packaging.version import Version
 
-def onnxruntimegenaigenai(version, branch=None, requires=None, default=False):
+def onnxruntime_genai(version, branch=None, requires=None, default=False):
     ort = package.copy()
 
     ort['name'] = f'onnxruntime-genai:{version}'
@@ -33,5 +33,5 @@ def onnxruntimegenaigenai(version, branch=None, requires=None, default=False):
 
 
 package = [
-    onnxruntimegenai('0.6.0', requires=['>=36', '>=cu126'], default=True, branch='main')
+    onnxruntime_genai('0.6.0', requires=['>=36', '>=cu126'], default=True, branch='main')
 ]
