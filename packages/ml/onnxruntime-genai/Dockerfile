@@ -10,6 +10,7 @@ FROM ${BASE_IMAGE}
 
 ARG ONNXRUNTIME_GENAI_VERSION \
     ONNXRUNTIME_GENAI_BRANCH \
+    CUDA_VERSION \
     FORCE_BUILD=off
 
 COPY install.sh build.sh /tmp/onnxruntime-genai/
