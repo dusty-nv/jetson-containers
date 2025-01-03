@@ -1,0 +1,37 @@
+from jetson_containers import L4T_VERSION, CUDA_VERSION, update_dependencies
+from packaging.version import Version
+
+def onnxruntimegenaigenai(version, branch=None, requires=None, default=False):
+    ort = package.copy()
+
+    ort['name'] = f'onnxruntime-genai:{version}'
+
+    if requires:
+        ort['requires'] = requires
+
+    if len(version.split('.')) < 3:
+        version = version + '.0'
+
+    if not branch:
+        branch = 'v' + version
+
+    ort['build_args'] = {
+        'ONNXRUNTIME_GENAI_VERSION': version,
+        'ONNXRUNTIME_GENAI_BRANCH': branch,
+        'CUDA_VERSION': CUDA_VERSION,
+    }
+
+    builder = ort.copy()
+    builder['name'] = builder['name'] + '-builder'
+    builder['build_args'] = {**builder['build_args'], 'FORCE_BUILD': 'on'}
+
+    if default:
+        ort['alias'] = 'onnxruntime-genai'
+        builder['alias'] = 'onnxruntime-genai:builder'
+
+    return ort, builder
+
+
+package = [
+    onnxruntimegenai('0.6.0', requires=['>=36', '>=cu126'], default=True, branch='main')
+]
