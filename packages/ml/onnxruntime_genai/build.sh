@@ -8,8 +8,8 @@ echo "CUDA Version: ${CUDA_VERSION}"
 echo "Detected ONNX Runtime version: ${ONNXRUNTIME_VERSION}"
 echo "Building onnxruntime_genai ${ONNXRUNTIME_GENAI_VERSION} (branch=${ONNXRUNTIME_GENAI_BRANCH})"
 
-git clone --branch=rel-${ONNXRUNTIME_GENAI_VERSION} --depth=1 --recursive https://github.com/microsoft/onnxruntime_genai /opt/onnxruntime_genai || \
-git clone --recursive https://github.com/microsoft/onnxruntime_genai /opt/onnxruntime_genai
+git clone --branch=rel-${ONNXRUNTIME_GENAI_VERSION} --depth=1 --recursive https://github.com/microsoft/onnxruntime-genai /opt/onnxruntime_genai || \
+git clone --recursive https://github.com/microsoft/onnxruntime-genai /opt/onnxruntime_genai
 
 mkdir -p /opt/onnxruntime_genai/ort/lib/
 mkdir -p /opt/onnxruntime_genai/ort/include/
