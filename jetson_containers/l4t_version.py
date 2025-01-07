@@ -34,7 +34,7 @@ def get_l4t_version(version_file='/etc/nv_tegra_release'):
     The L4T_VERSION will either be parsed from /etc/nv_tegra_release or the $L4T_VERSION environment variable.
     """
     if platform.machine() != 'aarch64':
-        raise ValueError(f"L4T_VERSION isn't supported on {ARCH} architecture (aarch64 only)")
+        raise ValueError(f"L4T_VERSION isn't supported on {platform.machine()} architecture (aarch64 only)")
         
     if 'L4T_VERSION' in os.environ and len(os.environ['L4T_VERSION']) > 0:
         return Version(os.environ['L4T_VERSION'].lower().lstrip('r'))
@@ -314,4 +314,3 @@ else:
 
 # LSB release and codename ("20.04", "focal")
 LSB_RELEASE, LSB_CODENAME = get_lsb_release()
-
