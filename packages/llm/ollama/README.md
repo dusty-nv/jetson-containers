@@ -15,7 +15,7 @@ First, start the local Ollama server as a daemon in the background, either of th
 jetson-containers run --name ollama $(autotag ollama)
 
 # models cached under your user's home directory
-docker run --runtime nvidia -it -rm --network=host -v ~/ollama:/ollama -e OLLAMA_MODELS=/ollama dustynv/ollama:r36.2.0
+docker run --runtime nvidia -it --rm --network=host -v ~/ollama:/ollama -e OLLAMA_MODELS=/ollama dustynv/ollama:r36.2.0
 ```
 
 You can then run the ollama [client](#ollama-client) in the same container (or a different one if desired).  The default docker run CMD of the `ollama` container is [`/start_ollama`](./start_ollama), which starts the ollama server in the background and returns control to the user. The ollama server logs are saved under your mounted `jetson-containers/data/logs` directory for monitoring them outside the containers.
