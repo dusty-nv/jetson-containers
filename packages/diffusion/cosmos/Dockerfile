@@ -1,0 +1,19 @@
+#--- 
+# name: cosmos
+# group: diffusion
+# depends: [pytorch, torchvision, torchaudio, transformers, bitsandbytes, transformer-engine, huggingface_hub]
+# requires: '>=34.1.0'
+# docs: https://github.com/NVIDIA/Cosmos
+#---
+
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+WORKDIR /opt
+
+RUN git clone --recursive https://github.com/NVIDIA/Cosmos && \
+    cd Cosmos && \
+    pip3 install --no-cache-dir einops attrs pynvml opencv-python protobuf && \
+    pip3 install --no-cache-dir -r requirements.txt
+
+WORKDIR /opt/cosmos/
