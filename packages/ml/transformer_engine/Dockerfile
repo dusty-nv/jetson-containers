@@ -2,7 +2,7 @@
 # name: transformer-engine
 # group: ml
 # config: config.py
-# depends: [pytorch, flash-attention]
+# depends: [pytorch, torchvision, onnxruntime, flash-attention]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://docs.nvidia.com/deeplearning/transformer-engine/user-guide/index.html
