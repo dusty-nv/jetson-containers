@@ -2,8 +2,8 @@
 set -ex
 
 if [ "$FORCE_BUILD" == "on" ]; then
-	echo "Forcing build of causal-conv1d ${CAUSALCONV1D}"
+	echo "Forcing build of transformer_engine ${TRANSFORMER_ENGINE}"
 	exit 1
 fi
 
-pip3 install --no-cache-dir --verbose causal_conv1d==${CASUALCONV1D_VERSION}
+pip3 install --no-cache-dir --verbose transformer-engine==${TRANSFORMER_ENGINE_VERSION}

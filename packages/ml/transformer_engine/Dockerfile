@@ -1,21 +1,21 @@
 #---
-# name: causalconv1d
-# group: mamba
+# name: transformer-engine
+# group: ml
 # config: config.py
-# depends: [ninja, pytorch, torchvision, torchaudio]
+# depends: [pytorch, flash-attention]
 # requires: '>=34.1.0'
 # test: test.py
-# notes: https://github.com/state-spaces/mamba
+# notes: https://docs.nvidia.com/deeplearning/transformer-engine/user-guide/index.html
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG CASUALCONV1D_VERSION \
+ARG TRANSFORMER_ENGINE_VERSION \
     CUDAARCHS
 
-COPY build.sh install.sh /tmp/CASUALCONV1D/
+# COPY build.sh install.sh /tmp/TRANSFORMER_ENGINE/
 
-COPY patches/${CASUALCONV1D_VERSION}.diff /tmp/CASUALCONV1D/patch.diff
+# COPY patches/${TRANSFORMER_ENGINE_VERSION}.diff /tmp/TRANSFORMER_ENGINE/patch.diff
 
 
-RUN /tmp/CASUALCONV1D/install.sh || /tmp/CASUALCONV1D/build.sh
+RUN /tmp/TRANSFORMER_ENGINE/install.sh || /tmp/TRANSFORMER_ENGINE/build.sh

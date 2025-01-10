@@ -1,14 +1,26 @@
 #!/usr/bin/env python3
+print ('Transformer Engine Test')
 import torch
-from causal_conv1d import causal_conv1d_fn
-import causal_conv1d_cuda
+import transformer_engine.pytorch as te
+from transformer_engine.common import recipe
 
-batch, dim, seq, width = 10, 5, 17, 4
-x = torch.zeros((batch, dim, seq)).to('cuda')
-weight = torch.zeros((dim, width)).to('cuda')
-bias = torch.zeros((dim, )).to('cuda')
+# Set dimensions.
+in_features = 768
+out_features = 3072
+hidden_size = 2048
 
-causal_conv1d_fn(x, weight, bias, None)
-conv1d_out = causal_conv1d_cuda.causal_conv1d_fwd(x, weight, bias, None, None, None, True)
+# Initialize model and inputs.
+model = te.Linear(in_features, out_features, bias=True)
+inp = torch.randn(hidden_size, in_features, device="cuda")
 
-print('causal_conv1d OK\n')
+# Create an FP8 recipe. Note: All input args are optional.
+fp8_recipe = recipe.DelayedScaling(margin=0, fp8_format=recipe.Format.E4M3)
+
+# Enable autocasting for the forward pass
+with te.fp8_autocast(enabled=True, fp8_recipe=fp8_recipe):
+    out = model(inp)
+
+loss = out.sum()
+loss.backward()
+
+print('Transformer Engine OK\n')
