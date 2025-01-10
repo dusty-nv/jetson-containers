@@ -20,5 +20,5 @@ RUN git clone --recursive https://github.com/NVIDIA/Cosmos && \
     pip3 install --no-cache-dir einops attrs pynvml opencv-python protobuf && \
     pip3 install --no-cache-dir -r requirements.txt
 
-WORKDIR /opt/cosmos/
+WORKDIR /opt/Cosmos/
 CMD ["/bin/bash"]
