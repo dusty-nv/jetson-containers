@@ -1,4 +1,4 @@
-from jetson_containers import handle_json_request, github_latest_tag
+from jetson_containers import L4T_VERSION, handle_json_request, github_latest_tag
 from packaging.version import parse
 
 
@@ -54,7 +54,8 @@ def transformers_git(version, repo='huggingface/transformers', branch=None, **kw
 # anything using transformers if you want to use load_in_8bit/load_in_4bit or AutoGPTQ quantization 
 # built-into transformers, use the 'bitsandbytes' or 'auto_gptq' containers directly instead of transformers container
 package = [
-    transformers_pypi('latest', default=True),                                  # will always resolve to the latest pypi version
-    transformers_git('latest', codename='git'),                                                 # will always resolve to the latest git version from huggingface/transformers
-    transformers_git('latest', codename='nvgpt', repo='ertkonuk/transformers'),     # will always resolve to the latest git version from ertkonuk/transformers
+    transformers_pypi('latest', default=(L4T_VERSION.major >= 36), requires='>=36'), # will always resolve to the latest pypi version
+    transformers_pypi('4.46.3', default=(L4T_VERSION.major < 36), requires='<36'),   # 4.46.3 is the last version that supports Python 3.8
+    transformers_git('latest', codename='git'),                                      # will always resolve to the latest git version from huggingface/transformers
+    transformers_git('latest', codename='nvgpt', repo='ertkonuk/transformers'),      # will always resolve to the latest git version from ertkonuk/transformers
 ]

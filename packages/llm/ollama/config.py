@@ -1,10 +1,13 @@
 
 from jetson_containers import CUDA_ARCHITECTURES, CUDA_VERSION, JETPACK_VERSION
 
-def ollama(branch, golang='1.22.8', cmake='3.22.1', requires=None, default=False):
+def ollama(version, golang='1.22.8', cmake='3.22.1', branch=None, requires=None, default=False):
     pkg = package.copy()
 
-    pkg['name'] = f'ollama:{branch}'
+    if not branch:
+        branch = version
+
+    pkg['name'] = f'ollama:{version}'
 
     if branch[0].isnumeric():
         branch = 'v' + branch
@@ -28,5 +31,5 @@ package = [
     ollama('main'),
     ollama('0.4.0'),
     ollama('0.5.1'),
-    ollama('0.5.5', default=True),
+    ollama('0.5.5', branch='0.5.5-rc0', default=True),
 ]
