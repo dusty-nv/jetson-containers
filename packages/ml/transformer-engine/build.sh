@@ -11,9 +11,10 @@ cd /opt/transformer_engine
 # git apply /tmp/TRANSFORMER_ENGINE/patch.diff
 # git diff
 # git status
-export NVTE_FRAMEWORK=pytorch
 
 MAX_JOBS=$(nproc) \
+NVTE_FRAMEWORK=pytorch \
+NVTE_CUDA_ARCHS=${CUDAARCHS} \
 python3 setup.py bdist_wheel --dist-dir=/opt/transformer_engine/wheels
 pip3 install --no-cache-dir --verbose /opt/transformer_engine/wheels/transformer_engine*.whl
 

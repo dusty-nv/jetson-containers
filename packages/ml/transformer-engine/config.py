@@ -25,5 +25,5 @@ def transformer_engine(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    transformer_engine('1.14', default=True)
+    transformer_engine('1.14.0', default=True)
 ]
