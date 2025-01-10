@@ -2,7 +2,7 @@
 # name: octo
 # group: robots
 # docs: docs.md
-# depends: [transformers, opencv:4.10.0, jax, h5py]
+# depends: [transformers, opencv:4.11.0, jax, h5py]
 # requires: '>=36'
 # test: test.py
 #---
