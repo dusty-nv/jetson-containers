@@ -98,7 +98,7 @@ function benchmark()
         -e MODEL_ROOT=${model_root} \
         -v $(jetson-containers root)/packages/llm/mlc:/test \
         -w /test \
-        dustynv/mlc:0.1.4-r36.4.2 /bin/bash -c "$run_cmd"
+        cu126/mlc:0.19.0-builder-r36.4.0 /bin/bash -c "$run_cmd"
 }
             
    
@@ -115,19 +115,19 @@ fi
 #MLC_VERSION="0.1.1" MAX_CONTEXT_LEN=8192 benchmark "meta-llama/Meta-Llama-3-8B"
 
 benchmark "meta-llama/Llama-3.2-1B-Instruct"
-benchmark "meta-llama/Llama-3.2-3B-Instruct"
-benchmark "meta-llama/Llama-3.1-8B-Instruct"
-benchmark "meta-llama/Llama-2-7b-chat-hf"
+#benchmark "meta-llama/Llama-3.2-3B-Instruct"
+#benchmark "meta-llama/Llama-3.1-8B-Instruct"
+#benchmark "meta-llama/Llama-2-7b-chat-hf"
 
-MAX_CONTEXT_LEN=4096 PREFILL_CHUNK_SIZE=4096 benchmark "Qwen/Qwen2.5-0.5B-Instruct"
-MAX_CONTEXT_LEN=4096 PREFILL_CHUNK_SIZE=4096 benchmark "Qwen/Qwen2.5-1.5B-Instruct"
-MAX_CONTEXT_LEN=2048 PREFILL_CHUNK_SIZE=1024 benchmark "Qwen/Qwen2.5-7B-Instruct"
+#MAX_CONTEXT_LEN=4096 PREFILL_CHUNK_SIZE=4096 benchmark "Qwen/Qwen2.5-0.5B-Instruct"
+#MAX_CONTEXT_LEN=4096 PREFILL_CHUNK_SIZE=4096 benchmark "Qwen/Qwen2.5-1.5B-Instruct"
+#MAX_CONTEXT_LEN=2048 PREFILL_CHUNK_SIZE=1024 benchmark "Qwen/Qwen2.5-7B-Instruct"
 
-QUANTIZATION="q4f16_1" benchmark "google/gemma-2-2b-it"
-#QUANTIZATION="q4f16_1" benchmark "google/gemma-2-9b-it"
+#QUANTIZATION="q4f16_1" benchmark "google/gemma-2-2b-it"
+##QUANTIZATION="q4f16_1" benchmark "google/gemma-2-9b-it"
 
-benchmark "microsoft/Phi-3.5-mini-instruct"
+#benchmark "microsoft/Phi-3.5-mini-instruct"
 
-benchmark "HuggingFaceTB/SmolLM2-135M-Instruct"
-benchmark "HuggingFaceTB/SmolLM2-360M-Instruct"
-benchmark "HuggingFaceTB/SmolLM2-1.7B-Instruct"
+#benchmark "HuggingFaceTB/SmolLM2-135M-Instruct"
+#benchmark "HuggingFaceTB/SmolLM2-360M-Instruct"
+#benchmark "HuggingFaceTB/SmolLM2-1.7B-Instruct"
