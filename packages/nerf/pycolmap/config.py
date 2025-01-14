@@ -1,5 +1,4 @@
 from jetson_containers import CUDA_ARCHITECTURES
-from packages.nerf.pycolmap.config import pycolmap
 
 def pycolmap(version, requires=None, default=False):
     pkg = package.copy()
