@@ -40,9 +40,9 @@
 | &nbsp;&nbsp;&nbsp; [`jupyterlab:myst`](/packages/jupyterlab) |  |
 | &nbsp;&nbsp;&nbsp; [`ninja`](/packages/build/ninja) |  |
 | &nbsp;&nbsp;&nbsp; [`numpy`](/packages/numeric/numpy) | [![`numpy_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/numpy_jp46.yml?label=numpy:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/numpy_jp46.yml) [![`numpy_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/numpy_jp51.yml?label=numpy:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/numpy_jp51.yml) [![`numpy_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/numpy_jp60.yml?label=numpy:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/numpy_jp60.yml) |
-| &nbsp;&nbsp;&nbsp; [`opencv:4.10.0`](/packages/opencv) |  |
-| &nbsp;&nbsp;&nbsp; [`opencv:4.10.0-builder`](/packages/opencv) |  |
-| &nbsp;&nbsp;&nbsp; [`opencv:4.10.0-meta`](/packages/opencv) |  |
+| &nbsp;&nbsp;&nbsp; [`opencv:4.11.0`](/packages/opencv) |  |
+| &nbsp;&nbsp;&nbsp; [`opencv:4.11.0-builder`](/packages/opencv) |  |
+| &nbsp;&nbsp;&nbsp; [`opencv:4.11.0-meta`](/packages/opencv) |  |
 | &nbsp;&nbsp;&nbsp; [`opencv:4.8.1`](/packages/opencv) | [![`opencv-481_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/opencv-481_jp60.yml?label=opencv-481:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/opencv-481_jp60.yml) |
 | &nbsp;&nbsp;&nbsp; [`opencv:4.8.1-builder`](/packages/opencv) |  |
 | &nbsp;&nbsp;&nbsp; [`opencv:4.8.1-deb`](/packages/opencv) |  |

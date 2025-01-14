@@ -51,6 +51,7 @@ apt-get install -y --no-install-recommends \
         qv4l2 \
         v4l-utils \
         zlib1g-dev \
+        tesseract-ocr \
 	   $EXTRAS
 
 # on x86, the python dev packages are already installed in the NGC containers under conda
