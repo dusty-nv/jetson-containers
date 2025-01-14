@@ -4,7 +4,7 @@ set -ex
 # Clone the repository if it doesn't exist
 if [ ! -d /opt/pycolmap ]; then
     echo "Cloning pycolmap version ${PYCOLMAP_VERSION}"
-    git clone --branch=v${PYCOLMAP_VERSION} --depth=1 --recursive https://github.com/colmap/colmap /opt/pycolmap || 
+    git clone --branch=v${PYCOLMAP_VERSION} --depth=1 --recursive https://github.com/colmap/colmap /opt/pycolmap || \
     git clone --depth=1 --recursive https://github.com/colmap/colmap /opt/pycolmap
 fi
 

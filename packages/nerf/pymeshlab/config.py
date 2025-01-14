@@ -24,5 +24,6 @@ def pymeshlab(version, requires=None, default=False):
 
 package = [
     pymeshlab('2023.12.post1'),
-    pymeshlab('2023.12.post2', default=True),
+    pymeshlab('2023.12.post2'),
+    pymeshlab('2023.12.post3', default=True),
 ]
