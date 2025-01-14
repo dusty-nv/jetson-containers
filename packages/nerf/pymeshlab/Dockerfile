@@ -38,7 +38,7 @@ RUN apt-get update && \
     unzip \
     wget \
     libqt5opengl5-dev \
-    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY build.sh install.sh /tmp/PYMESHLAB/
 
