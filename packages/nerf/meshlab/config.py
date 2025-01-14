@@ -22,5 +22,5 @@ def meshlab(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    meshlab('MeshLab-2023.12', default=True)
+    meshlab('MeshLab-2023.12', default=True),
 ]

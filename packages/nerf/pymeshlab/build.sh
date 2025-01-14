@@ -5,14 +5,15 @@ echo "Setting up environment for pymeshlab ${PYMESHLAB_VERSION}"
 
 echo "Building pymeshlab ${PYMESHLAB_VERSION}"
 
+git clone --branch=v${PYMESHLAB_VERSION}  --depth=1 --recursive https://github.com/cnr-isti-vclab/PyMeshLab /opt/pymeshlab || \
+git clone --depth=1 --recursive https://github.com/cnr-isti-vclab/PyMeshLab /opt/pymeshlab
+
 cd /opt/pymeshlab
-# Run the 1_build.sh script to build PyMeshLab
-sh scripts/Linux/1_build.sh -j$(nproc)
 
 # Check if make_wheel.sh exists, and use it if available
 if [ -f scripts/Linux/make_wheel.sh ]; then
     echo "Using make_wheel.sh to create the Python wheel"
-    sh scripts/Linux/make_wheel.sh
+    sh scripts/Linux/make_wheel.sh -w /opt/pymeshlab/wheels/
 else
     echo "make_wheel.sh not found, using pip3 wheel as fallback"
     echo "Deploying for pymeshlab ${PYMESHLAB_VERSION}"
