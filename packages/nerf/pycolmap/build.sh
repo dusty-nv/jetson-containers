@@ -17,7 +17,8 @@ cmake .. -DCUDA_ENABLED=ON \
 make -j $(nproc) && \
 make install && \
 cd /opt/colmap/pycolmap && \
-pip3 wheel . -w /opt/pycolmap/wheels && pip3 install /opt/pycolmap/wheels/pycolmap-*.whl
+pip3 wheel . -w /opt/pycolmap/wheels --verbose
+pip3 install /opt/pycolmap/wheels/pycolmap-*.whl
 
 # Verify the contents of the /opt directory
 ls /opt/pycolmap/wheels
