@@ -14,5 +14,5 @@ ARG PYMESHLAB_VERSION \
     FORCE_BUILD=off
 
 COPY build.sh install.sh /tmp/PYMESHLAB/
-RUN /tmp/PYMESHLAB/install.sh
+RUN /tmp/PYMESHLAB/install.sh || /tmp/PYMESHLAB/build.sh
 
