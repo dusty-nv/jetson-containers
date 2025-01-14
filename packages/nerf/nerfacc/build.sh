@@ -2,7 +2,7 @@
 set -ex
 
 # Clone the repository if it doesn't exist
-git clone --branch=v${NERFACC_VERSION} --depth=1 --recursive https://github.com/nerfstudio-project/nerfacc /opt/nerfacc ||
+git clone --branch=v${NERFACC_VERSION} --depth=1 --recursive https://github.com/nerfstudio-project/nerfacc /opt/nerfacc || \
 git clone --depth=1 --recursive https://github.com/nerfstudio-project/nerfacc /opt/nerfacc
 
 # Navigate to the directory containing PyMeshLab's setup.py
