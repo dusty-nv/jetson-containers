@@ -3,7 +3,7 @@ print('testing vLLM...')
 
 from huggingface_hub import hf_hub_download
 from vllm import LLM, SamplingParams
-
+import xgrammar
 
 def run_gguf_inference(model_path):
     PROMPT_TEMPLATE = "<|system|>\n{system_message}</s>\n<|user|>\n{prompt}</s>\n<|assistant|>\n"  # noqa: E501
@@ -38,5 +38,6 @@ if __name__ == "__main__":
     filename = "tinyllama-1.1b-chat-v1.0.Q4_0.gguf"
     model = hf_hub_download(repo_id, filename=filename)
     run_gguf_inference(model)
+    print(xgrammar)
     
 print('vLLM OK\n')
