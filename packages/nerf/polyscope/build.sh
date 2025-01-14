@@ -3,7 +3,7 @@ set -ex
 
 echo "Building polyscope ${POLYSCOPE_VERSION}"
 
-git clone --branch=v${POLYSCOPE_VERSION} --depth=1 --recursive https://github.com/nmwsharp/polyscope-py /opt/polyscope || \ 
+git clone --branch=v${POLYSCOPE_VERSION} --depth=1 --recursive https://github.com/nmwsharp/polyscope-py /opt/polyscope ||
 git clone --depth=1 --recursive https://github.com/nmwsharp/polyscope-py /opt/polyscope
 
 cd /opt/polyscope
