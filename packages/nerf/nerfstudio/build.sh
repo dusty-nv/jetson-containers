@@ -4,7 +4,7 @@ set -ex
 # Clone the repository if it doesn't exist
 if [ ! -d /opt/nerfstudio ]; then
     echo "Cloning Nerfstudio version ${NERFSTUDIO_VERSION}"
-    git clone --branch=v${NERFSTUDIO_VERSION} --depth=1 --recursive https://github.com/nerfstudio-project/nerfstudio /opt/nerfstudio ||
+    git clone --branch=v${NERFSTUDIO_VERSION} --depth=1 --recursive https://github.com/nerfstudio-project/nerfstudio /opt/nerfstudio || \
     git clone --depth=1 --recursive https://github.com/nerfstudio-project/nerfstudio /opt/nerfstudio
 fi
 

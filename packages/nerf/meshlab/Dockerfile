@@ -63,7 +63,7 @@ RUN mkdir -p /tmp/MESHLAB/extra
 COPY extra/ /tmp/MESHLAB/extra
 RUN ls -la /tmp/MESHLAB/extra*
 
-RUN git clone --branch=${MESHLAB_VERSION} --depth=1 --recursive https://github.com/cnr-isti-vclab/meshlab /opt/meshlab || 
+RUN git clone --branch=${MESHLAB_VERSION} --depth=1 --recursive https://github.com/cnr-isti-vclab/meshlab /opt/meshlab || \
     git clone --depth=1 --recursive https://github.com/cnr-isti-vclab/meshlab /opt/meshlab
 
 
