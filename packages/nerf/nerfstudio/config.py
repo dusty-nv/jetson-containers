@@ -1,4 +1,5 @@
 from jetson_containers import CUDA_ARCHITECTURES
+from packages.numeric.numba.test import D
 
 def nerfstudio(version, requires=None, default=False):
     pkg = package.copy()
@@ -25,7 +26,7 @@ def nerfstudio(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    nerfstudio('0.3.2'),
     nerfstudio('1.1.4'),
-    nerfstudio('1.1.5', default=True),
+    nerfstudio('1.1.5'),
+    nerfstudio('1.1.6', default=True)
 ]
