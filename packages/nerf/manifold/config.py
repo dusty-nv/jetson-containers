@@ -1,5 +1,4 @@
 from jetson_containers import CUDA_ARCHITECTURES
-from packages.numeric.numba.test import D
 
 def manifold(version, requires=None, default=False):
     pkg = package.copy()
