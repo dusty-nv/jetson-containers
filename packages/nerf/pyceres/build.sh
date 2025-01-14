@@ -10,6 +10,7 @@ fi
 
 # Navigate to the directory containing PyMeshLab's setup.py
 cd /opt/pyceres
+MAX_JOBS=$(nproc) \
 pip3 wheel . -w /opt/pyceres/wheels/ --verbose
 
 # Verify the contents of the /opt directory
