@@ -5,7 +5,7 @@ set -ex
 pip install pybind11 pre-commit
 
 # Clone the repository if it doesn't exist
-git clone --recursive --depth=1 https://github.com/mlc-ai/xgrammar.git /opt/xgrammar
+git clone --branch=v${XGRAMMAR_VERSION} --recursive --depth=1 https://github.com/mlc-ai/xgrammar.git /opt/xgrammar
 
 # Build and install
 cd /opt/xgrammar
@@ -32,7 +32,7 @@ cd /opt/vllm
 git apply /tmp/vllm/${VLLM_VERSION}.diff
 git diff
 
-export MAX_JOBS=$(nproc)
+export MAX_JOBS=4 # $(nproc) max 4 working on Orin NX
 export USE_CUDNN=1
 export CUDA_HOME=/usr/local/cuda
 export PATH="${CUDA_HOME}/bin:$PATH"
@@ -46,7 +46,7 @@ pip3 wheel --no-build-isolation --verbose --wheel-dir=/opt/vllm/wheels .
 pip3 install --no-cache-dir --verbose /opt/vllm/wheels/vllm*.whl
 
 cd /opt/vllm
-pip3 install 'numpy<2' compressed-tensors transformers
+pip3 install 'numpy<2' compressed-tensors
 
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/vllm/wheels/vllm*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

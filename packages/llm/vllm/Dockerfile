@@ -11,6 +11,7 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG VLLM_VERSION \
+    XGRAMMAR_VERSION \
     FORCE_BUILD=off
 
 RUN apt-get update -y && apt-get install -y libnuma-dev \
