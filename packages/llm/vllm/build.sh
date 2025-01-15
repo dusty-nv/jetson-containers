@@ -28,7 +28,7 @@ git clone --branch=v${VLLM_VERSION} --recursive --depth=1 https://github.com/vll
 git clone --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm
 cd /opt/vllm
 
-# apply patches
+# apply patches: Remove switching to outlines instead of XGrammar
 git apply /tmp/vllm/${VLLM_VERSION}.diff
 git diff
 
@@ -46,7 +46,7 @@ pip3 wheel --no-build-isolation --verbose --wheel-dir=/opt/vllm/wheels .
 pip3 install --no-cache-dir --verbose /opt/vllm/wheels/vllm*.whl
 
 cd /opt/vllm
-pip3 install 'numpy<2' compressed-tensors
+pip3 install 'numpy<2' compressed-tensors bitsandbytes xformers flash-attn
 
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/vllm/wheels/vllm*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
