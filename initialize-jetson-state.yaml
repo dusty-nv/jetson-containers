@@ -1,0 +1,64 @@
+# Jetson Setup Configuration
+# Set to false for automated setup using predefined options
+interactive_mode: true
+
+# System Status - Do not modify, used by script
+system:
+  nvme_status: unknown  # Possible values: unknown, no_nvme, os_on_nvme, nvme_mounted, nvme_available
+
+# NVMe Storage Configuration
+nvme_setup:
+  done: false  # State tracking, do not modify
+  should_run: ask  # Possible values: ask, yes, no
+  options:
+    mount_point: /mnt
+    partition_name: nvme0n1p1
+    filesystem: ext4  # Only ext4 is currently supported
+
+# Docker Runtime Configuration
+docker_runtime:
+  done: false
+  should_run: ask
+  options: {}  # No additional options needed for runtime setup
+
+# Docker Root Directory Configuration
+docker_root:
+  done: false
+  should_run: ask
+  path: ""  # Will be set by script after successful setup
+  options:
+    path: /mnt/docker  # Target path for Docker data
+
+# Swap Configuration
+swap:
+  done: false
+  should_run: ask
+  size: ""  # Will be set by script after successful setup
+  path: ""  # Will be set by script after successful setup
+  options:
+    disable_zram: true  # Whether to disable zram before setting up swap
+    size: "16"  # Swap size in GB
+    path: /mnt/16GB.swap  # Swap file location
+
+# GUI Configuration
+gui_disabled:
+  done: false
+  should_run: ask
+  options: {}  # No additional options needed for GUI setup
+
+# Docker Group Configuration
+docker_group:
+  done: false
+  should_run: ask
+  options: {}  # No additional options needed for group setup
+
+# Power Mode Configuration
+power_mode:
+  done: false
+  should_run: ask
+  options:
+    mode: "1"  # Power mode to set
+    # Available modes:
+    # "0": MAXN - Experimental/Maximum Performance (not recommended)
+    # "1": 25W - Recommended Performance Mode
+    # "2": 15W - Power-Optimized Mode
