@@ -11,8 +11,8 @@ cd /opt/nerfacc
 export BUILD_NO_CUDA=0
 export WITH_SYMBOLS=0
 export LINE_INFO=1
-export MAX_JOBS=$(nproc)
-pip3 wheel . -w /opt/nerfacc/wheels
+MAX_JOBS=$(nproc) \
+pip3 wheel . -w /opt/nerfacc/wheels --verbose
 
 pip3 install lpips scipy
 pip3 install --no-cache-dir --verbose /opt/nerfacc/wheels/nerfacc*.whl

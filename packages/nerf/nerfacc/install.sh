@@ -2,8 +2,8 @@
 set -ex
 
 if [ "$FORCE_BUILD" == "on" ]; then
-	echo "Forcing build of gsplat ${NERFACC}"
+	echo "Forcing build of nerfacc ${NERFACC}"
 	exit 1
 fi
 
-pip3 install --no-cache-dir --verbose gsplat==${NERFACC_VERSION}
+pip3 install --no-cache-dir --verbose nerfacc==${NERFACC_VERSION}

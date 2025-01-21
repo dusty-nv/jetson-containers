@@ -57,7 +57,8 @@ RUN wget -qO- "https://github.com/embree/embree/releases/download/v4.3.2/embree-
     bash /usr/local/embree-vars.sh
 
 # Clone the PyMeshLab repository
-RUN git clone --branch=v${PYMESHLAB_VERSION}  --depth=1 --recursive https://github.com/cnr-isti-vclab/PyMeshLab /opt/pymeshlab
+RUN git clone --branch=v${PYMESHLAB_VERSION}  --depth=1 --recursive https://github.com/cnr-isti-vclab/PyMeshLab /opt/pymeshlab || \
+    git clone --depth=1 --recursive https://github.com/cnr-isti-vclab/PyMeshLab /opt/pymeshlab
 
 # Navigate to the /opt/pymeshlab/src/meshlab/resources/linux directory
 WORKDIR /opt/pymeshlab/src/meshlab/resources/linux
