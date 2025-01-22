@@ -18,7 +18,8 @@ RUN git clone https://github.com/comfyanonymous/ComfyUI.git && \
 RUN cd /opt/ComfyUI/custom_nodes && \
     git clone --recursive https://github.com/ltdrdata/ComfyUI-Manager.git && \
     git clone --recursive https://github.com/discus0434/comfyui-flux-accelerator.git && \
-    git clone --recursive https://github.com/kijai/ComfyUI-MochiWrapper.git
+    git clone --recursive https://github.com/pydn/ComfyUI-to-Python-Extension.git
+    
 
 RUN cd /opt/ComfyUI/custom_nodes/comfyui-flux-accelerator/scripts && \
     if [ -f download_taef1.sh ]; then \
