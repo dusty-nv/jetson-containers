@@ -26,6 +26,7 @@ body:
       multiple: true
       options:
         - "JetPack"
+        - "CUDA"
         - "Install"
         - "Packages"
         - "Run"
