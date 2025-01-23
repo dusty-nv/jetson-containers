@@ -25,10 +25,14 @@ body:
         Please select the jetson-containers component where you found the bug.
       multiple: true
       options:
+        - "JetPack"
+        - "Install"
         - "Packages"
         - "Run"
         - "Build"
-        - "Install"
+        - "Docker"
+        - "Model"
+        - "Other"
     validations:
       required: false
 
