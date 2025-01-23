@@ -1,0 +1,68 @@
+name: Build Package on Pull Request
+
+on:
+  pull_request:
+    paths:
+      - 'packages/**'
+
+jobs:
+  build_package:
+    runs-on: self-hosted
+    labels: [self-hosted, jetson, agx-orin]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Identify changed package
+        id: package
+        run: |
+          CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | tr '\n' ' ')
+          echo "Changed files: $CHANGED_FILES"
+          
+          PACKAGE_DIRS=()
+          
+          for file in $CHANGED_FILES; do
+            if [[ $file == packages/* ]]; then
+              PACKAGE_DIR=$(echo "$file" | cut -d'/' -f1-2)
+              if [[ ! " ${PACKAGE_DIRS[@]} " =~ " ${PACKAGE_DIR} " ]]; then
+                PACKAGE_DIRS+=("$PACKAGE_DIR")
+              fi
+            fi
+          done
+          
+          if ((${#PACKAGE_DIRS[@]}>0)); then
+            echo "PACKAGE_DIRS=$(IFS=,; echo "${PACKAGE_DIRS[*]}")" >> $GITHUB_ENV
+            echo "::set-output name=package_dirs::$(IFS=,; echo "${PACKAGE_DIRS[*]}")"
+          else
+            echo "No package directory found in changed files."
+            echo "::set-output name=package_dirs::''"
+          fi
+
+      - name: Build packages
+        if: ${{ env.PACKAGE_DIRS != '' }}
+        run: |
+          for package in ${{ env.PACKAGE_DIRS }}; do
+            echo "Building package: $package"
+            ./build.sh --name=runner/ --push=dustynv $package
+          done
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          if ! git diff --exit-code --quiet; then
+            echo "::set-output name=changes_detected::true"
+          else:
+            echo "::set-output name=changes_detected::false"
+          fi
+
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.changes_detected == 'true'
+        run: |
+          git config --global user.email "dustinf@nvidia.com" 
+          git config --global user.name "Dustin Franklin"
+          git add .
+          git commit -m "Build packages: ${{ env.PACKAGE_DIRS }}"
+          git push

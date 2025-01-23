@@ -1,0 +1,35 @@
+name: Build All Packages Monthly
+
+on:
+  schedule:
+    - cron: '0 0 1 * *'  # Run at 00:00 UTC on the 1st of every month
+
+jobs:
+  build_all_jp6:
+    runs-on: self-hosted
+    labels: [self-hosted, jetson, jp6]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build all packages on Jetson with JetPack 6
+        run: |
+          ./build.sh --push=dustynv --all
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          if ! git diff --exit-code --quiet; then
+            echo "::set-output name=changes_detected::true"
+          else:
+            echo "::set-output name=changes_detected::false"
+          fi
+
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.changes_detected == 'true'
+        run: |
+          git config --global user.email "dustinf@nvidia.com" 
+          git config --global user.name "Dustin Franklin"
+          git add .
+          git commit -m "Monthly build all packages on JP6"
+          git push
