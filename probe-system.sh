@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Function to check if NVMe is mounted
+# /dev/nvme0n1 on /mnt type ext4 (rw,relatime)
 check_nvme_mount() {
     if mount | grep -q "/dev/nvme0n1"; then
         echo "NVMe is mounted."
@@ -35,8 +36,8 @@ check_docker_root() {
 
 # Function to check swap configuration
 check_swap() {
-    if swapon --show | grep -q "/mnt/16GB.swap"; then
-        echo "Swap is configured at /mnt/16GB.swap."
+    if swapon --show | grep -q "/mnt/"; then
+        echo "Swap is configured at /mnt/."
         return 0
     else
         echo "Swap is not configured at /mnt/16GB.swap."
