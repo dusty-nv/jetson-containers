@@ -3,7 +3,7 @@ set -ex
 
 CUDNN_MAJOR_VERSION=9
 CUDA_MAJOR_VERSION=12
-CUDA_VERSION=12.6
+CUDA_VERSION=12.8
 
 prefix=/opt/nvidia/cudnn
 arch=$(uname -m)-linux-gnu

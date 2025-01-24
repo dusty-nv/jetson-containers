@@ -200,11 +200,11 @@ def get_cuda_version(version_file='/usr/local/cuda/version.json'):
                 # L4T r36.x (JP 6.x) and above does not require having CUDA installed on host
                 # When CUDA is not installed on host, users can specify which version of 
                 # CUDA (and matching version cuDNN and TensorRT) in container by 
-                # executing, for example, `export CUDA_VERSION=12.6`.
+                # executing, for example, `export CUDA_VERSION=12.8`.
                 # If the env variable is not set, set the CUDA_VERSION to be the CUDA version
                 # that made available with the release of L4T_VERSION 
                 if l4t_version == Version('36.4'):
-                    cuda_version = '12.6'
+                    cuda_version = '12.8'
                 elif l4t_version == Version('36.3'):
                     cuda_version = '12.4'
                 elif l4t_version == Version('36.2'):
