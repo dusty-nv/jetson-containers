@@ -52,12 +52,25 @@ check_swap_file() {
 # UNIT FILE                                  STATE           VENDOR PRESET
 # nvzramconfig.service                       disabled        enabled
 check_nvzramconfig_service() {
-    # Check if nvzramconfig service is disabled
+    # Check if nvzramconfig service is installed
     if systemctl list-unit-files | grep -q "${NVZRAMCONFIG_SERVICE}.service"; then
-        echo "Service '${NVZRAMCONFIG_SERVICE}': disabled."
-        return 0
+        # Check if the service is disabled
+        if systemctl is-enabled "${NVZRAMCONFIG_SERVICE}.service" &>/dev/null; then
+            local status
+            status=$(systemctl is-enabled "${NVZRAMCONFIG_SERVICE}.service")
+            if [ "$status" = "disabled" ]; then
+                echo "Service '${NVZRAMCONFIG_SERVICE}' is disabled."
+                return 0
+            else
+                echo "Service '${NVZRAMCONFIG_SERVICE}' is enabled."
+                return 1
+            fi
+        else
+            echo "Service '${NVZRAMCONFIG_SERVICE}' status check failed."
+            return 1
+        fi
     else
-        echo "Service '${NVZRAMCONFIG_SERVICE}': enabled."
+        echo "Service '${NVZRAMCONFIG_SERVICE}' is not installed."
         return 1
     fi
 }
