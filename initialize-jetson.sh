@@ -40,38 +40,6 @@ ask_yes_no() {
     done
 }
 
-# Modify should_run function to check system status
-should_run() {
-    local action=$1
-    local prompt=$2
-
-    case $action in
-        "nvme_setup")
-            # Example: Check if NVMe is mounted
-            if mount | grep -q "/dev/nvme0n1"; then
-                return 1
-            fi
-            ;;
-        "docker_runtime")
-            if grep -q '"default-runtime": "nvidia"' /etc/docker/daemon.json; then
-                return 1
-            fi
-            ;;
-        # Add similar checks for other actions
-        *)
-            return 0
-            ;;
-    esac
-
-    # If not found, decide based on prompt
-    if [ "$interactive_mode" = "true" ]; then
-        ask_yes_no "$2"
-        return $?
-    else
-        return 1
-    fi
-}
-
 # Setup NVMe if available
 setup_nvme() {
     if mount | grep -q "/dev/nvme0n1"; then
@@ -190,16 +158,17 @@ setup_docker_root() {
     return 0
 }
 
-setup_swap() {
-    if swapon --show | grep -q "/mnt/16GB.swap"; then
+# Modify setup_swap to setup_swap_file
+setup_swap_file() {
+    if swapon --show | grep -q "$SWAP_FILE"; then
         echo "Swap already configured, skipping..."
         return 0
     fi
 
-    if should_run "swap" "Would you like to configure swap space?"; then
+    if should_execute_step "swap_file" "Configure swap file"; then
         local disable_zram=true
-        local swap_size="16"
-        local swap_file="/mnt/16GB.swap"
+        local swap_size="32"
+        local swap_file="/mnt/32GB.swap"
 
         echo "Setting up swap with size: ${swap_size}GB at: $swap_file"
 
@@ -227,6 +196,29 @@ setup_swap() {
             return 0
         else
             echo "Failed to setup swap"
+            return 1
+        fi
+    fi
+    return 0
+}
+
+# Add setup_nvzramconfig_service function
+setup_nvzramconfig_service() {
+    if check_nvzramconfig_service; then
+        echo "nvzramconfig service already installed, skipping..."
+        return 0
+    fi
+
+    if should_execute_step "nvzramconfig_service" "Install and configure nvzramconfig service"; then
+        echo "Installing nvzramconfig service..."
+        apt-get update
+        apt-get install -y nvzramconfig
+
+        if systemctl enable nvzramconfig && systemctl start nvzramconfig; then
+            echo "nvzramconfig service installed and started."
+            return 0
+        else
+            echo "Failed to install or start nvzramconfig service."
             return 1
         fi
     fi
@@ -362,6 +354,11 @@ should_execute_step() {
     fi
 }
 
+# Add call to probe-system.sh for system checks
+probe_system() {
+    ./probe-system.sh "$@"
+}
+
 # Main execution
 main() {
     echo "=== Jetson Setup Script ==="
@@ -372,8 +369,8 @@ main() {
     parse_args "$@"
     check_permissions
     check_dependencies
-    detect_nvme_setup
-    
+    probe_system --tests="nvme_mount,docker_runtime,docker_root,swap_file,nvzramconfig_service,gui,docker_group,power_mode"
+
     # NVMe Setup
     if should_execute_step "nvme_setup" "Configure NVMe drive"; then
         setup_nvme
@@ -389,9 +386,14 @@ main() {
         setup_docker_root
     fi
 
-    # Swap Setup
-    if should_execute_step "swap" "Configure swap space"; then
-        setup_swap
+    # Swap Setup File
+    if should_execute_step "swap_file" "Configure swap file"; then
+        setup_swap_file
+    fi
+
+    # nvzramconfig_service Setup
+    if should_execute_step "nvzramconfig_service" "Install and configure nvzramconfig service"; then
+        setup_nvzramconfig_service
     fi
 
     # GUI Setup

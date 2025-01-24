@@ -1,13 +1,17 @@
 #!/bin/bash
 
+# Define mount point, swap file, and nvzramconfig service
+MOUNT_POINT="/mnt"
+SWAP_FILE="/mnt/32GB.swap"
+NVZRAMCONFIG_SERVICE="nvzramconfig"
+
 # Function to check if NVMe is mounted
-# /dev/nvme0n1 on /mnt type ext4 (rw,relatime)
 check_nvme_mount() {
-    if mount | grep -q "/dev/nvme0n1"; then
-        echo "NVMe is mounted."
+    if mount | grep -q "/dev/nvme0n1 on $MOUNT_POINT"; then
+        echo "NVMe is mounted on $MOUNT_POINT."
         return 0
     else
-        echo "NVMe is not mounted."
+        echo "NVMe is not mounted on $MOUNT_POINT."
         return 1
     fi
 }
@@ -34,15 +38,33 @@ check_docker_root() {
     fi
 }
 
-# Function to check swap configuration
-check_swap() {
-    if swapon --show | grep -q "/mnt/"; then
-        echo "Swap is configured at /mnt/."
+check_swap_file() {
+    if swapon --show | grep -q "$SWAP_FILE"; then
+        local swap_size
+        swap_size=$(swapon --show=SIZE --bytes "$SWAP_FILE" | tail -n1)
+        echo "Swap is configured at $SWAP_FILE with size: $swap_size bytes."
         return 0
     else
-        echo "Swap is not configured at /mnt/16GB.swap."
+        echo "Swap is not configured at $SWAP_FILE."
         return 1
     fi
+}
+
+check_nvzramconfig_service() {
+    # Check if nvzramconfig service exists
+    if systemctl list-unit-files | grep -q "${NVZRAMCONFIG_SERVICE}.service"; then
+        echo "Service '${NVZRAMCONFIG_SERVICE}' is installed."
+        return 0
+    else
+        echo "Service '${NVZRAMCONFIG_SERVICE}' is not installed."
+        return 1
+    fi
+}
+
+# Function to check swap configuration
+check_swap() {
+
+    return 1 & check_swap_file() & check_nvzramconfig_service()
 }
 
 # Function to check GUI configuration
@@ -99,6 +121,7 @@ parse_probe_args() {
 # Main function to execute all checks
 main() {
     echo "=== System Probe Script ==="
+    echo "Assuming NVMe mount point is $MOUNT_POINT."
     echo
 
     parse_probe_args "$@"
@@ -141,8 +164,12 @@ main() {
                     check_docker_root
                     echo
                     ;;
-                swap)
-                    check_swap
+                swap_file)
+                    check_swap_file
+                    echo
+                    ;;
+                nvzramconfig_service)
+                    check_nvzramconfig_service
                     echo
                     ;;
                 gui)
