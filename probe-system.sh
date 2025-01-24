@@ -64,7 +64,7 @@ check_nvzramconfig_service() {
 # Function to check swap configuration
 check_swap() {
 
-    return 1 & check_swap_file() & check_nvzramconfig_service()
+    return 1 && check_swap_file && check_nvzramconfig_service
 }
 
 # Function to check GUI configuration
