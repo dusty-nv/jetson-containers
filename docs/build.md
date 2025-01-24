@@ -92,7 +92,7 @@ For packages that provide different versions but don't have their own environmen
 > - L4T r36.2 (JetPack 6.0 DP) --> CUDA `12.2`
 > - L4T r36.3 (JetPack 6.0 GA) --> CUDA `12.4`
 > - L4T r36.4 (JetPack 6.1) --> CUDA `12.6`
-> - L4T r36.4 (JetPack 6.2) --> CUDA `12.8`
+> - L4T r36.4 (JetPack 6.2) --> CUDA `12.6`
 
 
 ## Pip Server
