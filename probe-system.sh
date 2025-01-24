@@ -49,14 +49,15 @@ check_swap_file() {
         return 1
     fi
 }
-
+# UNIT FILE                                  STATE           VENDOR PRESET
+# nvzramconfig.service                       disabled        enabled
 check_nvzramconfig_service() {
-    # Check if nvzramconfig service exists
+    # Check if nvzramconfig service is disabled
     if systemctl list-unit-files | grep -q "${NVZRAMCONFIG_SERVICE}.service"; then
-        echo "Service '${NVZRAMCONFIG_SERVICE}' is installed."
+        echo "Service '${NVZRAMCONFIG_SERVICE}': disabled."
         return 0
     else
-        echo "Service '${NVZRAMCONFIG_SERVICE}' is not installed."
+        echo "Service '${NVZRAMCONFIG_SERVICE}': enabled."
         return 1
     fi
 }
@@ -137,7 +138,10 @@ main() {
         check_docker_root
         echo
 
-        check_swap
+        check_swap_file
+        echo
+
+        check_nvzramconfig_service
         echo
 
         check_gui
