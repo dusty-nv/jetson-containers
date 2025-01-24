@@ -111,6 +111,15 @@ check_power_mode() {
     return 0
 }
 
+# Function to display help information
+print_help() {
+    echo "Usage: probe-system.sh [OPTIONS]"
+    echo
+    echo "Options:"
+    echo "  --tests=<test1,test2,...>    Run specified tests."
+    echo "  --help                       Display this help message and exit."
+}
+
 # Function to parse command-line arguments
 parse_probe_args() {
     TESTS=()
@@ -123,6 +132,10 @@ parse_probe_args() {
             --tests=*)
                 IFS=',' read -ra TESTS <<< "${1#*=}"
                 shift
+                ;;
+            --help)
+                print_help
+                exit 0
                 ;;
             *)
                 echo "Unknown parameter passed: $1"
