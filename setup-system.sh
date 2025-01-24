@@ -49,7 +49,7 @@ setup_nvme() {
 
     if should_run "nvme_setup" "Would you like to setup the NVMe drive?"; then
         local mount_point="/mnt"
-        local partition_name="nvme0n1p1"
+        local partition_name="nvme0n1"
         local filesystem="ext4"
 
         echo "Setting up NVMe drive..."
