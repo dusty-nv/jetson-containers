@@ -418,9 +418,9 @@ main() {
 
     # Use probe-system to check status
     probe-system
-    if [ $? -ne 0 ]; then
-        echo "System probe failed."
-        exit 1
+    if [ $? -ne 1 ]; then
+        echo "Nothing to do; system already configured."
+        exit 0
     fi
 
     # Apply configurations based on YAML settings
