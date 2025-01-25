@@ -373,19 +373,15 @@ probe_system() {
     ./probe-system.sh "$@"
 }
 
-# Custom YAML parsing function
-parse_yaml() {
-    local yaml_file=$1
-    local key=$2
-    awk -F': ' -v key="$key" '
-    $1 == key {
-        gsub(/#.*/, "", $2)         # Remove comments
-        gsub(/^[ \t]+|[ \t]+$/, "", $2)  # Trim spaces
-        gsub(/"/, "", $2)
-        print $2
-    }
-    ' "$yaml_file"
-}
+# Load environment variables from .env
+if [ -f ".env" ]; then
+    set -a
+    source .env
+    set +a
+else
+    echo "Environment file .env not found."
+    exit 1
+fi
 
 # Main execution
 main() {
@@ -399,32 +395,26 @@ main() {
     check_dependencies
     probe_system --tests="nvme_mount,docker_runtime,docker_root,swap_file,nvzramconfig_service,gui,docker_group,power_mode"
 
-    # Read configuration from system-config.yaml using custom parser
-    config_file="system-config.yaml"
-    if [ -f "$config_file" ]; then
-        interactive_mode=$(parse_yaml "$config_file" "interactive_mode")
-        nvme_should_run=$(parse_yaml "$config_file" "nvme_setup.should_run")
-        docker_runtime_should_run=$(parse_yaml "$config_file" "docker_runtime.should_run")
-        docker_root_should_run=$(parse_yaml "$config_file" "docker_root.should_run")
-        swap_should_run=$(parse_yaml "$config_file" "swap.should_run")
-        gui_disabled_should_run=$(parse_yaml "$config_file" "gui_disabled.should_run")
-        docker_group_should_run=$(parse_yaml "$config_file" "docker_group.should_run")
-        power_mode_should_run=$(parse_yaml "$config_file" "power_mode.should_run")
+    # Assign variables from .env
+    interactive_mode="$INTERACTIVE_MODE"
+    nvme_should_run="$NVME_SETUP_SHOULD_RUN"
+    docker_runtime_should_run="$DOCKER_RUNTIME_SHOULD_RUN"
+    docker_root_should_run="$DOCKER_ROOT_SHOULD_RUN"
+    swap_should_run="$SWAP_SHOULD_RUN"
+    gui_disabled_should_run="$GUI_DISABLED_SHOULD_RUN"
+    docker_group_should_run="$DOCKER_GROUP_SHOULD_RUN"
+    power_mode_should_run="$POWER_MODE_SHOULD_RUN"
 
-        MOUNT_POINT=$(parse_yaml "$config_file" "nvme_setup.options.mount_point")
-        SWAP_FILE=$(parse_yaml "$config_file" "swap.options.path")
+    MOUNT_POINT="$NVME_SETUP_OPTIONS_MOUNT_POINT"
+    SWAP_FILE="$SWAP_OPTIONS_PATH"
 
-        partition_name=$(parse_yaml "$config_file" "nvme_setup.options.partition_name")
-        filesystem=$(parse_yaml "$config_file" "nvme_setup.options.filesystem")
-        docker_root_path=$(parse_yaml "$config_file" "docker_root.options.path")
-        disable_zram=$(parse_yaml "$config_file" "swap.options.disable_zram")
-        swap_size=$(parse_yaml "$config_file" "swap.options.size")
-        add_user=$(parse_yaml "$config_file" "docker_group.options.add_user")
-        power_mode=$(parse_yaml "$config_file" "power_mode.options.mode")
-    else
-        echo "Configuration file $config_file not found."
-        exit 1
-    fi
+    partition_name="$NVME_SETUP_OPTIONS_PARTITION_NAME"
+    filesystem="$NVME_SETUP_OPTIONS_FILESYSTEM"
+    docker_root_path="$DOCKER_ROOT_OPTIONS_PATH"
+    disable_zram="$SWAP_OPTIONS_DISABLE_ZRAM"
+    swap_size="$SWAP_OPTIONS_SIZE"
+    add_user="$DOCKER_GROUP_OPTIONS_ADD_USER"
+    power_mode="$POWER_MODE_OPTIONS_MODE"
 
     # Use probe-system to check status
     probe-system

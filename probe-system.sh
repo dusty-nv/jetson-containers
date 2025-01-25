@@ -1,36 +1,24 @@
 #!/bin/bash
 
-# Custom YAML parsing function
-parse_yaml() {
-    local yaml_file=$1
-    local key=$2
-    awk -F': ' -v key="$key" '
-    $1 == key {
-        gsub(/#.*/, "", $2)         # Remove comments
-        gsub(/^[ \t]+|[ \t]+$/, "", $2)  # Trim spaces
-        gsub(/"/, "", $2)
-        print $2
-    }
-    ' "$yaml_file"
-}
-
-# Load configurations from system-config.yaml
-config_file="system-config.yaml"
-if [ -f "$config_file" ]; then
-    mount_point=$(parse_yaml "$config_file" "nvme_setup.options.mount_point")
-    swap_file=$(parse_yaml "$config_file" "swap.options.path")
-    partition_name=$(parse_yaml "$config_file" "nvme_setup.options.partition_name")
-    filesystem=$(parse_yaml "$config_file" "nvme_setup.options.filesystem")
-    docker_root_path=$(parse_yaml "$config_file" "docker_root.options.path")
-    disable_zram=$(parse_yaml "$config_file" "swap.options.disable_zram")
-    swap_size=$(parse_yaml "$config_file" "swap.options.size")
-    add_user=$(parse_yaml "$config_file" "docker_group.options.add_user")
-    power_mode=$(parse_yaml "$config_file" "power_mode.options.mode")
-
+# Load environment variables from .env
+if [ -f ".env" ]; then
+    set -a
+    source .env
+    set +a
 else
-    echo "Configuration file $config_file not found."
+    echo "Environment file .env not found."
     exit 1
 fi
+
+mount_point="$NVME_SETUP_OPTIONS_MOUNT_POINT"
+swap_file="$SWAP_OPTIONS_PATH"
+partition_name="$NVME_SETUP_OPTIONS_PARTITION_NAME"
+filesystem="$NVME_SETUP_OPTIONS_FILESYSTEM"
+docker_root_path="$DOCKER_ROOT_OPTIONS_PATH"
+disable_zram="$SWAP_OPTIONS_DISABLE_ZRAM"
+swap_size="$SWAP_OPTIONS_SIZE"
+add_user="$DOCKER_GROUP_OPTIONS_ADD_USER"
+power_mode="$POWER_MODE_OPTIONS_MODE"
 
 # Define nvzramconfig service
 NVZRAMCONFIG_SERVICE="nvzramconfig"
