@@ -12,8 +12,8 @@ parse_yaml() {
 # Load configurations from system-config.yaml
 config_file="system-config.yaml"
 if [ -f "$config_file" ]; then
-    MOUNT_POINT=$(parse_yaml "$config_file" "nvme_setup.options.mount_point")
-    SWAP_FILE=$(parse_yaml "$config_file" "swap.options.path")
+    mount_point=$(parse_yaml "$config_file" "nvme_setup.options.mount_point")
+    swap_file=$(parse_yaml "$config_file" "swap.options.path")
     partition_name=$(parse_yaml "$config_file" "nvme_setup.options.partition_name")
     filesystem=$(parse_yaml "$config_file" "nvme_setup.options.filesystem")
     docker_root_path=$(parse_yaml "$config_file" "docker_root.options.path")
@@ -32,11 +32,11 @@ NVZRAMCONFIG_SERVICE="nvzramconfig"
 
 # Function to check if NVMe is mounted
 check_nvme_mount() {
-    if mount | grep -q "/dev/$partition_name on $MOUNT_POINT"; then
-        echo "NVMe is mounted on $MOUNT_POINT."
+    if mount | grep -q "/dev/$partition_name on $mount_point"; then
+        echo "NVMe is mounted on $mount_point."
         return 0
     else
-        echo "NVMe is not mounted on $MOUNT_POINT."
+        echo "NVMe is not mounted on $mount_point."
         return 1
     fi
 }
@@ -71,6 +71,7 @@ check_swap_file() {
         return 0
     else
         echo "Swap is not configured at $swap_file."
+        swapon
         return 1
     fi
 }
@@ -177,7 +178,7 @@ probe_system() {
 # Main function to execute all checks
 main() {
     echo "=== System Probe Script ==="
-    echo "Assuming NVMe mount point is $MOUNT_POINT."
+    echo "Assuming NVMe mount point is $mount_point."
     echo
 
     parse_probe_args "$@"
