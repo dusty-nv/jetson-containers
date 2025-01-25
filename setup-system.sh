@@ -373,6 +373,13 @@ probe_system() {
     ./probe-system.sh "$@"
 }
 
+# Custom YAML parsing function
+parse_yaml() {
+    local yaml_file=$1
+    local key=$2
+    grep "^${key}:" "$yaml_file" | awk -F': ' '{print $2}'
+}
+
 # Main execution
 main() {
     echo "=== Jetson Setup Script ==="
@@ -385,30 +392,28 @@ main() {
     check_dependencies
     probe_system --tests="nvme_mount,docker_runtime,docker_root,swap_file,nvzramconfig_service,gui,docker_group,power_mode"
 
-    # Read configuration from system-config.yaml
+    # Read configuration from system-config.yaml using custom parser
     config_file="system-config.yaml"
     if [ -f "$config_file" ]; then
-        interactive_mode=$(yq e '.interactive_mode' "$config_file")
-        nvme_should_run=$(yq e '.nvme_setup.should_run' "$config_file")
-        docker_runtime_should_run=$(yq e '.docker_runtime.should_run' "$config_file")
-        docker_root_should_run=$(yq e '.docker_root.should_run' "$config_file")
-        swap_should_run=$(yq e '.swap.should_run' "$config_file")
-        gui_disabled_should_run=$(yq e '.gui_disabled.should_run' "$config_file")
-        docker_group_should_run=$(yq e '.docker_group.should_run' "$config_file")
-        power_mode_should_run=$(yq e '.power_mode.should_run' "$config_file")
+        interactive_mode=$(parse_yaml "$config_file" "interactive_mode")
+        nvme_should_run=$(parse_yaml "$config_file" "nvme_setup.should_run")
+        docker_runtime_should_run=$(parse_yaml "$config_file" "docker_runtime.should_run")
+        docker_root_should_run=$(parse_yaml "$config_file" "docker_root.should_run")
+        swap_should_run=$(parse_yaml "$config_file" "swap.should_run")
+        gui_disabled_should_run=$(parse_yaml "$config_file" "gui_disabled.should_run")
+        docker_group_should_run=$(parse_yaml "$config_file" "docker_group.should_run")
+        power_mode_should_run=$(parse_yaml "$config_file" "power_mode.should_run")
 
-        MOUNT_POINT=$(yq e '.nvme_setup.options.mount_point' "$config_file")
-        SWAP_FILE=$(yq e '.swap.options.path' "$config_file")
+        MOUNT_POINT=$(parse_yaml "$config_file" "nvme_setup.options.mount_point")
+        SWAP_FILE=$(parse_yaml "$config_file" "swap.options.path")
 
-        partition_name=$(yq e '.nvme_setup.options.partition_name' "$config_file")
-        filesystem=$(yq e '.nvme_setup.options.filesystem' "$config_file")
-        docker_root_path=$(yq e '.docker_root.options.path' "$config_file")
-        disable_zram=$(yq e '.swap.options.disable_zram' "$config_file")
-        swap_size=$(yq e '.swap.options.size' "$config_file")
-        add_user=$(yq e '.docker_group.options.add_user' "$config_file")
-        power_mode=$(yq e '.power_mode.options.mode' "$config_file")
-
-
+        partition_name=$(parse_yaml "$config_file" "nvme_setup.options.partition_name")
+        filesystem=$(parse_yaml "$config_file" "nvme_setup.options.filesystem")
+        docker_root_path=$(parse_yaml "$config_file" "docker_root.options.path")
+        disable_zram=$(parse_yaml "$config_file" "swap.options.disable_zram")
+        swap_size=$(parse_yaml "$config_file" "swap.options.size")
+        add_user=$(parse_yaml "$config_file" "docker_group.options.add_user")
+        power_mode=$(parse_yaml "$config_file" "power_mode.options.mode")
     else
         echo "Configuration file $config_file not found."
         exit 1
