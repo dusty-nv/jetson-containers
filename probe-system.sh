@@ -87,6 +87,17 @@ check_nvzramconfig_service() {
     fi
 }
 
+# Function to check zram (nvzramconfig) status
+check_zram() {
+    if systemctl is-enabled nvzramconfig &> /dev/null; then
+        echo "zram (nvzramconfig) is enabled."
+        return 1
+    else
+        echo "zram (nvzramconfig) is disabled."
+        return 0
+    fi
+}
+
 # Function to check swap configuration
 check_swap() {
 
@@ -164,6 +175,16 @@ probe_system() {
         echo "Docker is not installed."
         return 1
     fi
+    # Check if swap file is configured
+    if ! swapon --show | grep -q "$SWAP_FILE"; then
+        echo "Swap file $swap_file is not configured."
+        return 1
+    fi
+    # Check if zram is disabled
+    if systemctl is-enabled nvzramconfig &> /dev/null; then
+        echo "zram (nvzramconfig) is still enabled."
+        return 1
+    fi
     # ...additional probes...
     return 0
 }
@@ -188,6 +209,9 @@ main() {
         echo
 
         check_swap_file
+        echo
+
+        check_zram
         echo
 
         check_nvzramconfig_service
@@ -219,6 +243,10 @@ main() {
                     ;;
                 swap_file)
                     check_swap_file
+                    echo
+                    ;;
+                disable_zram)
+                    check_zram
                     echo
                     ;;
                 nvzramconfig_service)

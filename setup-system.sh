@@ -167,25 +167,19 @@ setup_docker_root() {
     return 0
 }
 
-# Modify setup_swap to setup_swap_file
+# Modify setup_swap_file to handle only swap file setup
 setup_swap_file() {
     # Replace hard-coded variables with loaded configuration
     swap_size="$swap_size"
     swap_file="$swap_file"
 
-    if swapon --show | grep -q "$SWAP_FILE"; then
+    if swapon --show | grep -q "$swap_file"; then
         echo "Swap already configured, skipping..."
         return 0
     fi
 
     if should_execute_step "swap_file" "Configure swap file"; then
-        local disable_zram=true
-
         echo "Setting up swap with size: ${swap_size}GB at: $swap_file"
-
-        if [ "$disable_zram" = "true" ]; then
-            systemctl disable nvzramconfig
-        fi
 
         # Create parent directory if it doesn't exist
         local swap_dir=$(dirname "$swap_file")
@@ -193,7 +187,7 @@ setup_swap_file() {
             echo "Creating swap parent directory: $swap_dir"
             mkdir -p "$swap_dir"
         fi
-        
+
         echo "Creating swap file..."
         if fallocate -l "${swap_size}G" "$swap_file" && \
            chmod 600 "$swap_file" && \
@@ -204,9 +198,30 @@ setup_swap_file() {
                 echo "$swap_file  none  swap  sw 0  0" >> /etc/fstab
             fi
             
+            echo "Swap file configured successfully."
             return 0
         else
             echo "Failed to setup swap"
+            return 1
+        fi
+    fi
+    return 0
+}
+
+# Add a new function to disable zram
+disable_zram() {
+    if ! systemctl is-enabled nvzramconfig &> /dev/null; then
+        echo "zram is already disabled, skipping..."
+        return 0
+    fi
+
+    if should_execute_step "disable_zram" "Disable zram (nvzramconfig)"; then
+        echo "Disabling zram (nvzramconfig)..."
+        if systemctl disable nvzramconfig && systemctl stop nvzramconfig; then
+            echo "zram disabled successfully."
+            return 0
+        else
+            echo "Failed to disable zram."
             return 1
         fi
     fi
@@ -399,7 +414,7 @@ main() {
     parse_args "$@"
     check_permissions
     check_dependencies
-    probe_system --tests="nvme_mount,docker_runtime,docker_root,swap_file,nvzramconfig_service,gui,docker_group,power_mode"
+    probe_system --tests="nvme_mount,docker_runtime,docker_root,swap_file,disable_zram,nvzramconfig_service,gui,docker_group,power_mode"
 
     # Assign variables from .env
     interactive_mode="$INTERACTIVE_MODE"
@@ -417,7 +432,7 @@ main() {
     partition_name="$NVME_SETUP_OPTIONS_PARTITION_NAME"
     filesystem="$NVME_SETUP_OPTIONS_FILESYSTEM"
     docker_root_path="$DOCKER_ROOT_OPTIONS_PATH"
-    disable_zram="$SWAP_OPTIONS_DISABLE_ZRAM"
+    disable_zram_flag="$SWAP_OPTIONS_DISABLE_ZRAM"
     swap_size="$SWAP_OPTIONS_SIZE"
     add_user="$DOCKER_GROUP_OPTIONS_ADD_USER"
     power_mode="$POWER_MODE_OPTIONS_MODE"
@@ -429,7 +444,7 @@ main() {
         exit 0
     fi
 
-    # Apply configurations based on YAML settings
+    # Apply configurations based on settings
     if [ "$nvme_should_run" = "yes" ]; then
         # NVMe Setup
         if should_execute_step "nvme_setup" "Configure NVMe drive"; then
@@ -448,8 +463,17 @@ main() {
     fi
 
     # Swap Setup File
-    if should_execute_step "swap_file" "Configure swap file"; then
-        setup_swap_file
+    if [ "$swap_should_run" = "yes" ]; then
+        if should_execute_step "swap_file" "Configure swap file"; then
+            setup_swap_file
+        fi
+    fi
+
+    # Disable zram after setting up swap
+    if [ "$disable_zram_flag" = "true" ]; then
+        if should_execute_step "disable_zram" "Disable zram (nvzramconfig)"; then
+            disable_zram
+        fi
     fi
 
     # nvzramconfig_service Setup
