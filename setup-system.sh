@@ -1,5 +1,28 @@
 #!/bin/bash
 
+# Load environment variables from .env
+if [ -f ".env" ]; then
+    set -a
+    source .env
+    set +a
+else
+    echo "Environment file .env not found."
+    exit 1
+fi
+
+mount_point="$NVME_SETUP_OPTIONS_MOUNT_POINT"
+swap_file="$SWAP_OPTIONS_PATH"
+partition_name="$NVME_SETUP_OPTIONS_PARTITION_NAME"
+filesystem="$NVME_SETUP_OPTIONS_FILESYSTEM"
+docker_root_path="$DOCKER_ROOT_OPTIONS_PATH"
+disable_zram="$SWAP_OPTIONS_DISABLE_ZRAM"
+swap_size="$SWAP_OPTIONS_SIZE"
+add_user="$DOCKER_GROUP_OPTIONS_ADD_USER"
+power_mode="$POWER_MODE_OPTIONS_MODE"
+
+# Define nvzramconfig service
+NVZRAMCONFIG_SERVICE="nvzramconfig"
+
 # Check if script is run with sudo
 check_permissions() {
     if [ "$EUID" -ne 0 ]; then 
