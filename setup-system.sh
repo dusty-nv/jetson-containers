@@ -377,7 +377,7 @@ probe_system() {
 parse_yaml() {
     local yaml_file=$1
     local key=$2
-    grep "^${key}:" "$yaml_file" | awk -F': ' '{print $2}'
+    awk -F': ' "/^${key//./\\.}:/ {print \$2}" "$yaml_file"
 }
 
 # Main execution
