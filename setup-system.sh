@@ -311,6 +311,7 @@ setup_power_mode() {
         return 0
     fi
 
+    # Command not found (should run)
     if should_run "power_mode" "Would you like to set the power mode to 25W (recommended performance mode)?"; then
         if nvpmodel -m "$mode"; then
             local mode_name=$(nvpmodel -q | grep "NV Power Mode" | cut -d':' -f2 | xargs)
@@ -418,8 +419,10 @@ main() {
     parse_args "$@"
     check_permissions
     check_dependencies
+    echo "Probing status before working"
     probe_system --tests="nvme_mount,docker_runtime,docker_root,swap_file,disable_zram,nvzramconfig_service,gui,docker_group,power_mode"
 
+    echo "Loading variables"
     # Assign variables from .env
     interactive_mode="$INTERACTIVE_MODE"
     nvme_should_run="$NVME_SETUP_SHOULD_RUN"
@@ -440,13 +443,6 @@ main() {
     swap_size="$SWAP_OPTIONS_SIZE"
     add_user="$DOCKER_GROUP_OPTIONS_ADD_USER"
     power_mode="$POWER_MODE_OPTIONS_MODE"
-
-    # Use probe-system to check status
-    probe-system
-    if [ $? -ne 1 ]; then
-        echo "Nothing to do; system already configured."
-        exit 0
-    fi
 
     # Apply configurations based on settings
     if [ "$nvme_should_run" = "yes" ]; then
