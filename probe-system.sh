@@ -4,38 +4,8 @@
 parse_yaml() {
     local yaml_file=$1
     local key=$2
-    awk -v key="$key" '
-    BEGIN { FS=":"; OFS="" }
-    /^[^#]/ && NF >= 2 {
-        # Calculate indentation level (assuming 2 spaces per indent)
-        indent = int(match($0, /[^ ]/) - 1) / 2
-
-        # Extract key and value
-        keypart = $1
-        gsub(/^[ \t]+|[ \t]+$/, "", keypart)
-        value = substr($0, index($0, ":") + 1)
-        gsub(/^[ \t]+|[ \t]+$/, "", value)
-        gsub(/"/, "", value)
-
-        if (value == "") {
-            # New section
-            path[indent] = keypart
-            # Remove paths deeper than current indent
-            for (i = indent+1; i < 10; i++) { path[i] = "" }
-        } else {
-            # Construct full key path
-            full_key = ""
-            for (i = 0; i < indent; i++) {
-                if (path[i] != "") {
-                    full_key = full_key path[i] "."
-                }
-            }
-            full_key = full_key keypart
-            if (full_key == key) {
-                print value
-            }
-        }
-    }
+    awk -F': ' -v key="$key" '
+    $1 == key { gsub(/"/, "", $2); print $2 }
     ' "$yaml_file"
 }
 
