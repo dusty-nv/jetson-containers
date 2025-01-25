@@ -109,17 +109,23 @@ setup_docker_runtime() {
 
     if should_run "docker_runtime" "Would you like to configure Docker runtime?"; then
         echo "Configuring Docker runtime..."
-        cat > /etc/docker/daemon.json <<EOF
-{
-    "runtimes": {
-        "nvidia": {
-            "path": "nvidia-container-runtime",
-            "runtimeArgs": []
-        }
-    },
-    "default-runtime": "nvidia"
-}
-EOF
+        
+        if grep -q '"default-runtime"' /etc/docker/daemon.json; then
+            # Replace existing default-runtime with "nvidia"
+            sed -i 's/"default-runtime": *"[^"]*"/"default-runtime": "nvidia"/' /etc/docker/daemon.json
+        else
+            # Insert "default-runtime": "nvidia" before the closing }
+            sed -i '/}/i \    "default-runtime": "nvidia"' /etc/docker/daemon.json
+        fi
+
+        # Ensure the JSON is valid by adding a comma if necessary
+        # Check if the line before the inserted/default-runtime line ends with a comma
+        if ! grep -q '"default-runtime": "nvidia"' /etc/docker/daemon.json; then
+            echo "Failed to configure Docker runtime."
+            return 1
+        fi
+
+        echo "Docker runtime configured successfully."
         return 0
     fi
     return 0
