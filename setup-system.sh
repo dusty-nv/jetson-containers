@@ -59,8 +59,8 @@ setup_nvme() {
         if [ ! -b "/dev/$partition_name" ]; then
             if ask_yes_no "No partition found (/dev/$partition_name). Would you like to create a new partition on the NVMe drive? (WARNING: This will erase all data)"; then
                 echo "Creating partition on NVMe drive..."
-                parted /dev/nvme0n1 mklabel gpt
-                parted /dev/nvme0n1 mkpart primary ext4 0% 100%
+                parted /dev/$partition_name mklabel gpt
+                parted /dev/$partition_name mkpart primary ext4 0% 100%
                 sleep 2  # Wait for partition to be recognized
             else
                 echo "Skipping partition creation"
