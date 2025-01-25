@@ -4,7 +4,47 @@
 parse_yaml() {
     local yaml_file=$1
     local key=$2
-    awk -F': ' "/^${key//./\\.}:/ {print \$2}" "$yaml_file"
+    awk '
+    function ltrim(s) { sub(/^[ \t]+/, "", s); return s }
+    function rtrim(s) { sub(/[ \t]+$/, "", s); return s }
+    function trim(s) { return rtrim(ltrim(s)); }
+    BEGIN { FS=":" }
+    {
+        # Skip comments and empty lines
+        if ($0 ~ /^\s*#/ || $0 ~ /^\s*$/) next
+
+        # Determine indentation level
+        indent = match($0, /[^ ]/) - 1
+
+        # Remove leading spaces
+        line = trim($0)
+
+        # Check if it's a key-value pair
+        if (match(line, /^([^:]+):\s*(.*)$/, arr)) {
+            key_part = arr[1]
+            value = arr[2]
+            if (value == "") {
+                # New section
+                path[indent] = key_part
+            } else {
+                # Key-value pair
+                full_key = ""
+                for (i = 0; i <= indent; i++) {
+                    if (path[i] != "") {
+                        if (full_key == "") {
+                            full_key = path[i]
+                        } else {
+                            full_key = full_key "." path[i]
+                        }
+                    }
+                }
+                full_key = full_key "." key_part
+                gsub(/"/, "", value)
+                print full_key "=" value
+            }
+        }
+    }
+    ' "$yaml_file" | grep "^$key=" | cut -d'=' -f2
 }
 
 # Load configurations from system-config.yaml
