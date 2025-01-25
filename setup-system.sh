@@ -371,9 +371,30 @@ main() {
     check_dependencies
     probe_system --tests="nvme_mount,docker_runtime,docker_root,swap_file,nvzramconfig_service,gui,docker_group,power_mode"
 
-    # NVMe Setup
-    if should_execute_step "nvme_setup" "Configure NVMe drive"; then
-        setup_nvme
+    # Read configuration from setup-system.yaml
+    config_file="setup-system.yaml"
+    if [ -f "$config_file" ]; then
+        interactive_mode=$(yq e '.interactive_mode' "$config_file")
+        nvme_should_run=$(yq e '.nvme_setup.should_run' "$config_file")
+        # ...read other configurations as needed...
+    else
+        echo "Configuration file $config_file not found."
+        exit 1
+    fi
+
+    # Use probe-system to check status
+    probe-system
+    if [ $? -ne 0 ]; then
+        echo "System probe failed."
+        exit 1
+    fi
+
+    # Apply configurations based on YAML settings
+    if [ "$nvme_should_run" = "yes" ]; then
+        # NVMe Setup
+        if should_execute_step "nvme_setup" "Configure NVMe drive"; then
+            setup_nvme
+        fi
     fi
 
     # Docker Runtime Setup

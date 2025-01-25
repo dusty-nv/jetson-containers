@@ -138,6 +138,17 @@ parse_probe_args() {
     done
 }
 
+# Function to probe system status
+probe_system() {
+    # Example checks
+    if ! command -v docker &> /dev/null; then
+        echo "Docker is not installed."
+        return 1
+    fi
+    # ...additional probes...
+    return 0
+}
+
 # Main function to execute all checks
 main() {
     echo "=== System Probe Script ==="
@@ -217,3 +228,7 @@ main() {
 
 # Execute main function
 main "$@"
+
+# Execute the probe
+probe_system
+exit $?
