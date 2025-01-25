@@ -485,11 +485,6 @@ main() {
         fi
     fi
 
-    # nvzramconfig_service Setup
-    if should_execute_step "nvzramconfig_service" "Install and configure nvzramconfig service"; then
-        setup_nvzramconfig_service
-    fi
-
     # GUI Setup
     if should_execute_step "gui_disabled" "Configure desktop GUI"; then
         setup_gui

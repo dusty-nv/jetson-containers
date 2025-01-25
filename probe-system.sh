@@ -190,42 +190,6 @@ parse_probe_args() {
     done
 }
 
-# Function to probe system status
-probe_system() {
-    # Example checks
-    if ! command -v docker &> /dev/null; then
-        echo "Docker is not installed."
-        return 1
-    fi
-
-    # Check NVMe partition preparation
-    if ! check_nvme_partition_prepared; then
-        echo "NVMe partition needs preparation."
-        return 1
-    fi
-
-    # Check NVMe drive assignment
-    if ! check_nvme_drive_assigned; then
-        echo "NVMe drive needs to be assigned/mounted."
-        return 1
-    fi
-
-    # Check if swap file is configured
-    if ! swapon --show | grep -q "$SWAP_FILE"; then
-        echo "Swap file $swap_file is not configured."
-        return 1
-    fi
-
-    # Check if zram is disabled
-    if systemctl is-enabled nvzramconfig &> /dev/null; then
-        echo "zram (nvzramconfig) is still enabled."
-        return 1
-    fi
-
-    # ...additional probes...
-    return 0
-}
-
 # Main function to execute all checks
 main() {
     echo "=== System Probe Script ==="
@@ -322,5 +286,4 @@ main() {
 main "$@"
 
 # Execute the probe
-probe_system
 exit $?
