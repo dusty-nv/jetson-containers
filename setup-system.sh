@@ -111,7 +111,7 @@ setup_docker_runtime() {
         return 0
     fi
 
-    if should_run "docker_runtime" "Would you like to configure Docker runtime?"; then
+    if should_execute_step "docker_runtime" "Would you like to configure Docker runtime?"; then
         echo "Configuring Docker runtime..."
         
         if grep -q '"default-runtime"' /etc/docker/daemon.json; then
@@ -145,7 +145,7 @@ setup_docker_root() {
         return 0
     fi
 
-    if should_run "docker_root" "Would you like to relocate Docker data root?"; then
+    if should_execute_step "docker_root" "Would you like to relocate Docker data root?"; then
         echo "Using Docker root path: $docker_root"
         
         if [ ! -d "$docker_root" ]; then
@@ -262,7 +262,7 @@ setup_gui() {
         return 0
     fi
 
-    if should_run "gui_disabled" "Would you like to disable the desktop GUI on boot?"; then
+    if should_execute_step "gui_disabled" "Would you like to disable the desktop GUI on boot?"; then
         if systemctl set-default multi-user.target; then
             return 0
         else
@@ -290,7 +290,7 @@ setup_docker_group() {
         return 0
     fi
 
-    if should_run "docker_group" "Would you like to add $(logname) to the docker group?"; then
+    if should_execute_step "docker_group" "Would you like to add $(logname) to the docker group?"; then
         if usermod -aG docker "$(logname)"; then
             return 0
         else
@@ -312,7 +312,7 @@ setup_power_mode() {
     fi
 
     # Command not found (should run)
-    if should_run "power_mode" "Would you like to set the power mode to 25W (recommended performance mode)?"; then
+    if should_execute_step "power_mode" "Would you like to set the power mode to 25W (recommended performance mode)?"; then
         if nvpmodel -m "$mode"; then
             local mode_name=$(nvpmodel -q | grep "NV Power Mode" | cut -d':' -f2 | xargs)
             echo "Power mode set to: $mode_name"
