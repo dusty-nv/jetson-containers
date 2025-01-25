@@ -380,17 +380,21 @@ parse_yaml() {
     awk -v key="$key" '
     BEGIN { FS=":"; OFS="" }
     /^[^#]/ && NF >= 2 {
-        # Calculate indentation level
-        indent = match($0, /[^ ]/) - 1
+        # Calculate indentation level (assuming 2 spaces per indent)
+        indent = int(match($0, /[^ ]/) - 1) / 2
+
         # Extract key and value
         keypart = $1
         gsub(/^[ \t]+|[ \t]+$/, "", keypart)
         value = substr($0, index($0, ":") + 1)
         gsub(/^[ \t]+|[ \t]+$/, "", value)
         gsub(/"/, "", value)
+
         if (value == "") {
             # New section
             path[indent] = keypart
+            # Remove paths deeper than current indent
+            for (i = indent+1; i < 10; i++) { path[i] = "" }
         } else {
             # Construct full key path
             full_key = ""
@@ -407,7 +411,6 @@ parse_yaml() {
     }
     ' "$yaml_file"
 }
-
 
 # Main execution
 main() {
