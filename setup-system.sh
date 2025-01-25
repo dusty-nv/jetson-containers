@@ -42,16 +42,17 @@ ask_yes_no() {
 
 # Setup NVMe if available
 setup_nvme() {
+    # Replace hard-coded variables with loaded configuration
+    mount_point="$MOUNT_POINT"
+    partition_name="$partition_name"
+    filesystem="$filesystem"
+
     if mount | grep -q "/dev/nvme0n1"; then
         echo "NVMe already configured, skipping..."
         return 0
     fi
 
     if should_run "nvme_setup" "Would you like to setup the NVMe drive?"; then
-        local mount_point="/mnt"
-        local partition_name="nvme0n1"
-        local filesystem="ext4"
-
         echo "Setting up NVMe drive..."
         
         # Check partition and get user confirmation for any changes
@@ -126,13 +127,15 @@ EOF
 
 # Configure Docker data root
 setup_docker_root() {
+    # Replace hard-coded variable with loaded configuration
+    docker_root="$docker_root_path"
+
     if [ -d "/mnt/docker" ]; then
         echo "Docker root already configured, skipping..."
         return 0
     fi
 
     if should_run "docker_root" "Would you like to relocate Docker data root?"; then
-        local docker_root="/mnt/docker"
         echo "Using Docker root path: $docker_root"
         
         if [ ! -d "$docker_root" ]; then
@@ -160,6 +163,10 @@ setup_docker_root() {
 
 # Modify setup_swap to setup_swap_file
 setup_swap_file() {
+    # Replace hard-coded variables with loaded configuration
+    swap_size="$swap_size"
+    swap_file="$swap_file"
+
     if swapon --show | grep -q "$SWAP_FILE"; then
         echo "Swap already configured, skipping..."
         return 0
@@ -167,8 +174,6 @@ setup_swap_file() {
 
     if should_execute_step "swap_file" "Configure swap file"; then
         local disable_zram=true
-        local swap_size="32"
-        local swap_file="/mnt/32GB.swap"
 
         echo "Setting up swap with size: ${swap_size}GB at: $swap_file"
 
@@ -247,6 +252,14 @@ setup_gui() {
 
 # Configure Docker group
 setup_docker_group() {
+    # Replace hard-coded user with loaded configuration
+    if usermod -aG docker "$add_user"; then
+        return 0
+    else
+        echo "Failed to add user to Docker group"
+        return 1
+    fi
+
     if groups $(logname) | grep -q "\bdocker\b"; then
         echo "Docker group already configured, skipping..."
         return 0
@@ -265,14 +278,15 @@ setup_docker_group() {
 
 # Configure power mode
 setup_power_mode() {
+    # Replace hard-coded mode with loaded configuration
+    mode="$power_mode"
+
     if nvpmodel -q | grep -q "NV Power Mode: MAXN"; then
         echo "Power mode already configured, skipping..."
         return 0
     fi
 
     if should_run "power_mode" "Would you like to set the power mode to 25W (recommended performance mode)?"; then
-        local mode="1"  # Default to 25W mode
-
         if nvpmodel -m "$mode"; then
             local mode_name=$(nvpmodel -q | grep "NV Power Mode" | cut -d':' -f2 | xargs)
             echo "Power mode set to: $mode_name"
@@ -376,7 +390,25 @@ main() {
     if [ -f "$config_file" ]; then
         interactive_mode=$(yq e '.interactive_mode' "$config_file")
         nvme_should_run=$(yq e '.nvme_setup.should_run' "$config_file")
-        # ...read other configurations as needed...
+        docker_runtime_should_run=$(yq e '.docker_runtime.should_run' "$config_file")
+        docker_root_should_run=$(yq e '.docker_root.should_run' "$config_file")
+        swap_should_run=$(yq e '.swap.should_run' "$config_file")
+        gui_disabled_should_run=$(yq e '.gui_disabled.should_run' "$config_file")
+        docker_group_should_run=$(yq e '.docker_group.should_run' "$config_file")
+        power_mode_should_run=$(yq e '.power_mode.should_run' "$config_file")
+
+        MOUNT_POINT=$(yq e '.nvme_setup.options.mount_point' "$config_file")
+        SWAP_FILE=$(yq e '.swap.options.path' "$config_file")
+
+        partition_name=$(yq e '.nvme_setup.options.partition_name' "$config_file")
+        filesystem=$(yq e '.nvme_setup.options.filesystem' "$config_file")
+        docker_root_path=$(yq e '.docker_root.options.path' "$config_file")
+        disable_zram=$(yq e '.swap.options.disable_zram' "$config_file")
+        swap_size=$(yq e '.swap.options.size' "$config_file")
+        add_user=$(yq e '.docker_group.options.add_user' "$config_file")
+        power_mode=$(yq e '.power_mode.options.mode' "$config_file")
+
+
     else
         echo "Configuration file $config_file not found."
         exit 1

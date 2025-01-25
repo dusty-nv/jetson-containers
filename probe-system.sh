@@ -1,13 +1,29 @@
 #!/bin/bash
 
-# Define mount point, swap file, and nvzramconfig service
-MOUNT_POINT="/mnt"
-SWAP_FILE="/mnt/32GB.swap"
+# Load configurations from system-config.yaml
+config_file="system-config.yaml"
+if [ -f "$config_file" ]; then
+    MOUNT_POINT=$(yq e '.nvme_setup.options.mount_point' "$config_file")
+    SWAP_FILE=$(yq e '.swap.options.path' "$config_file")
+    partition_name=$(yq e '.nvme_setup.options.partition_name' "$config_file")
+    filesystem=$(yq e '.nvme_setup.options.filesystem' "$config_file")
+    docker_root_path=$(yq e '.docker_root.options.path' "$config_file")
+    disable_zram=$(yq e '.swap.options.disable_zram' "$config_file")
+    swap_size=$(yq e '.swap.options.size' "$config_file")
+    add_user=$(yq e '.docker_group.options.add_user' "$config_file")
+    power_mode=$(yq e '.power_mode.options.mode' "$config_file")
+
+else
+    echo "Configuration file $config_file not found."
+    exit 1
+fi
+
+# Define nvzramconfig service
 NVZRAMCONFIG_SERVICE="nvzramconfig"
 
 # Function to check if NVMe is mounted
 check_nvme_mount() {
-    if mount | grep -q "/dev/nvme0n1 on $MOUNT_POINT"; then
+    if mount | grep -q "/dev/$partition_name on $MOUNT_POINT"; then
         echo "NVMe is mounted on $MOUNT_POINT."
         return 0
     else
@@ -39,13 +55,13 @@ check_docker_root() {
 }
 
 check_swap_file() {
-    if swapon --show | grep -q "$SWAP_FILE"; then
-        local swap_size
-        swap_size=$(swapon --show=SIZE --bytes "$SWAP_FILE" | tail -n1)
-        echo "Swap is configured at $SWAP_FILE with size: $swap_size bytes."
+    if swapon --show | grep -q "$swap_file"; then
+        local swap_size_bytes
+        swap_size_bytes=$(swapon --show=SIZE --bytes "$swap_file" | tail -n1)
+        echo "Swap is configured at $swap_file with size: $swap_size_bytes bytes."
         return 0
     else
-        echo "Swap is not configured at $SWAP_FILE."
+        echo "Swap is not configured at $swap_file."
         return 1
     fi
 }
@@ -87,11 +103,11 @@ check_gui() {
 
 # Function to check Docker group membership
 check_docker_group() {
-    if groups "$(logname)" | grep -q "\bdocker\b"; then
-        echo "User is in the docker group."
+    if groups "$add_user" | grep -q "\bdocker\b"; then
+        echo "User $add_user is in the docker group."
         return 0
     else
-        echo "User is not in the docker group."
+        echo "User $add_user is not in the docker group."
         return 1
     fi
 }
