@@ -371,8 +371,8 @@ main() {
     check_dependencies
     probe_system --tests="nvme_mount,docker_runtime,docker_root,swap_file,nvzramconfig_service,gui,docker_group,power_mode"
 
-    # Read configuration from setup-system.yaml
-    config_file="setup-system.yaml"
+    # Read configuration from system-config.yaml
+    config_file="system-config.yaml"
     if [ -f "$config_file" ]; then
         interactive_mode=$(yq e '.interactive_mode' "$config_file")
         nvme_should_run=$(yq e '.nvme_setup.should_run' "$config_file")
