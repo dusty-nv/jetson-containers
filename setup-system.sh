@@ -378,7 +378,12 @@ parse_yaml() {
     local yaml_file=$1
     local key=$2
     awk -F': ' -v key="$key" '
-    $1 == key { gsub(/"/, "", $2); print $2 }
+    $1 == key {
+        gsub(/#.*/, "", $2)         # Remove comments
+        gsub(/^[ \t]+|[ \t]+$/, "", $2)  # Trim spaces
+        gsub(/"/, "", $2)
+        print $2
+    }
     ' "$yaml_file"
 }
 
