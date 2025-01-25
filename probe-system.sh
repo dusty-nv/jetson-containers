@@ -134,6 +134,28 @@ check_power_mode() {
     return 0
 }
 
+# Function to check if NVMe partition is prepared
+check_nvme_partition_prepared() {
+    if [ -b "/dev/$partition_name" ] && blkid "/dev/$partition_name" | grep -q "$filesystem"; then
+        echo "NVMe partition is prepared."
+        return 0
+    else
+        echo "NVMe partition is not prepared."
+        return 1
+    fi
+}
+
+# Function to check if NVMe drive is assigned/mounted
+check_nvme_drive_assigned() {
+    if mount | grep -q "/dev/$partition_name on $mount_point"; then
+        echo "NVMe drive is already assigned/mounted."
+        return 0
+    else
+        echo "NVMe drive is not assigned/mounted."
+        return 1
+    fi
+}
+
 # Function to display help information
 print_help() {
     echo "Usage: probe-system.sh [OPTIONS]"
@@ -175,16 +197,31 @@ probe_system() {
         echo "Docker is not installed."
         return 1
     fi
+
+    # Check NVMe partition preparation
+    if ! check_nvme_partition_prepared; then
+        echo "NVMe partition needs preparation."
+        return 1
+    fi
+
+    # Check NVMe drive assignment
+    if ! check_nvme_drive_assigned; then
+        echo "NVMe drive needs to be assigned/mounted."
+        return 1
+    fi
+
     # Check if swap file is configured
     if ! swapon --show | grep -q "$SWAP_FILE"; then
         echo "Swap file $swap_file is not configured."
         return 1
     fi
+
     # Check if zram is disabled
     if systemctl is-enabled nvzramconfig &> /dev/null; then
         echo "zram (nvzramconfig) is still enabled."
         return 1
     fi
+
     # ...additional probes...
     return 0
 }
@@ -229,6 +266,14 @@ main() {
         # Run only specified checks
         for test in "${TESTS[@]}"; do
             case $test in
+                prepare_nvme_partition)
+                    check_nvme_partition_prepared
+                    echo
+                    ;;
+                assign_nvme_drive)
+                    check_nvme_drive_assigned
+                    echo
+                    ;;
                 nvme_mount)
                     check_nvme_mount
                     echo
