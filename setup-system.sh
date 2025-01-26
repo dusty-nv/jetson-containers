@@ -391,7 +391,7 @@ main() {
     check_dependencies
     echo "Probing status before working"
     echo "============================="
-    ./probe_system.sh
+    ./probe-system.sh
     echo "============================="
     
 
@@ -481,7 +481,7 @@ main() {
     echo
     echo "Configuration complete!"
     echo "============================="
-    ./probe_system.sh
+    ./probe-system.sh
     echo "============================="
 
     echo "Please reboot your system for all changes to take effect."
