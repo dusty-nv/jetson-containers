@@ -40,39 +40,6 @@ ask_yes_no() {
     done
 }
 
-# Function to prepare NVMe partition
-prepare_nvme_partition() {
-    mount_point="$MOUNT_POINT"
-    partition_name="$partition_name"
-    filesystem="$filesystem"
-
-    if [ ! -b "/dev/$partition_name" ]; then
-        echo "No partition found (/dev/$partition_name)."
-        if ask_yes_no "Would you like to create a new partition on the NVMe drive? (WARNING: This will erase all data)"; then
-            echo "Creating partition on NVMe drive..."
-            parted /dev/$partition_name mklabel gpt
-            parted /dev/$partition_name mkpart primary ext4 0% 100%
-            sleep 2  # Wait for partition to be recognized
-        else
-            echo "Skipping partition creation"
-            return 1
-        fi
-    fi
-
-    if ! blkid "/dev/$partition_name" | grep -q "$filesystem"; then
-        echo "Partition needs formatting."
-        if ask_yes_no "Would you like to format as $filesystem? (WARNING: This will erase all data)"; then
-            echo "Formatting NVMe partition as $filesystem..."
-            mkfs.$filesystem "/dev/$partition_name"
-        else
-            echo "Skipping formatting"
-            return 1
-        fi
-    fi
-
-    return 0
-}
-
 # Function to assign and mount NVMe drive
 assign_nvme_drive() {
     mount_point="$MOUNT_POINT"
@@ -450,11 +417,6 @@ main() {
 
     # Apply configurations based on settings
     if [ "$nvme_should_run" = "yes" ]; then
-        # Prepare NVMe partition
-        if should_execute_step "prepare_nvme_partition" "Prepare NVMe partition"; then
-            prepare_nvme_partition
-        fi
-
         # Assign NVMe drive
         if should_execute_step "assign_nvme_drive" "Assign and mount NVMe drive"; then
             assign_nvme_drive
