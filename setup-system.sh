@@ -78,7 +78,7 @@ setup_docker_runtime() {
         return 0
     fi
 
-    if should_run "docker_runtime" "Would you like to configure Docker runtime?"; then
+    if should_execute_step "docker_runtime" "Would you like to configure Docker runtime?"; then
         echo "Configuring Docker runtime..."
         
         if grep -q '"default-runtime"' /etc/docker/daemon.json; then
@@ -112,7 +112,7 @@ setup_docker_root() {
         return 0
     fi
 
-    if should_run "docker_root" "Would you like to relocate Docker data root?"; then
+    if should_execute_step "docker_root" "Would you like to relocate Docker data root?"; then
         echo "Using Docker root path: $docker_root"
         
         if [ ! -d "$docker_root" ]; then
@@ -229,7 +229,7 @@ setup_gui() {
         return 0
     fi
 
-    if should_run "gui_disabled" "Would you like to disable the desktop GUI on boot?"; then
+    if should_execute_step "gui_disabled" "Would you like to disable the desktop GUI on boot?"; then
         if systemctl set-default multi-user.target; then
             return 0
         else
@@ -257,7 +257,7 @@ setup_docker_group() {
         return 0
     fi
 
-    if should_run "docker_group" "Would you like to add $(logname) to the docker group?"; then
+    if should_execute_step "docker_group" "Would you like to add $(logname) to the docker group?"; then
         if usermod -aG docker "$(logname)"; then
             return 0
         else
@@ -278,7 +278,8 @@ setup_power_mode() {
         return 0
     fi
 
-    if should_run "power_mode" "Would you like to set the power mode to 25W (recommended performance mode)?"; then
+    # Command not found (should run)
+    if should_execute_step "power_mode" "Would you like to set the power mode to 25W (recommended performance mode)?"; then
         if nvpmodel -m "$mode"; then
             local mode_name=$(nvpmodel -q | grep "NV Power Mode" | cut -d':' -f2 | xargs)
             echo "Power mode set to: $mode_name"
@@ -385,8 +386,10 @@ main() {
     parse_args "$@"
     check_permissions
     check_dependencies
+    echo "Probing status before working"
     probe_system --tests="nvme_mount,docker_runtime,docker_root,swap_file,disable_zram,nvzramconfig_service,gui,docker_group,power_mode"
 
+    echo "Loading variables"
     # Assign variables from .env
     interactive_mode="$INTERACTIVE_MODE"
     nvme_should_run="$NVME_SETUP_SHOULD_RUN"
@@ -407,13 +410,6 @@ main() {
     swap_size="$SWAP_OPTIONS_SIZE"
     add_user="$DOCKER_GROUP_OPTIONS_ADD_USER"
     power_mode="$POWER_MODE_OPTIONS_MODE"
-
-    # Use probe-system to check status
-    probe-system
-    if [ $? -ne 1 ]; then
-        echo "Nothing to do; system already configured."
-        exit 0
-    fi
 
     # Apply configurations based on settings
     if [ "$nvme_should_run" = "yes" ]; then
