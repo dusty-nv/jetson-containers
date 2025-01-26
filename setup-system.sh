@@ -56,9 +56,6 @@ check_dependencies() {
     if ! command -v nvpmodel &> /dev/null; then
         missing_deps+=("nvpmodel")
     fi
-    if ! command -v parted &> /dev/null; then
-        missing_deps+=("parted")
-    fi
 
     if [ ${#missing_deps[@]} -ne 0 ]; then
         echo "Error: Missing required dependencies: ${missing_deps[*]}"
@@ -474,10 +471,10 @@ main() {
     
     # Disable zram if needed
     if [ "$disable_zram_flag" = "true" ]; then
-        if ! ./probe-system.sh --tests="disable_zram,nvzramconfig_service"; then
+        if ! ./probe-system.sh --tests="disable_zram"; then
             disable_zram
             # Validate the change
-            ./probe-system.sh --tests="disable_zram,nvzramconfig_service"
+            ./probe-system.sh --tests="disable_zram"
         else
             echo "ZRAM is already properly disabled."
         fi
@@ -514,55 +511,6 @@ main() {
         else
             echo "Power mode is already properly configured."
         fi
-    fi
-    
-    # Setup swap if needed
-    if [ "$swap_should_run" = "yes" ] || [ "$swap_should_run" = "ask" -a "$(ask_yes_no 'Setup swap file?')" = "0" ]; then
-        if ! ./probe-system.sh --tests="swap_file"; then
-            setup_swap_file
-            # Validate the change
-            ./probe-system.sh --tests="swap_file"
-        else
-            echo "Swap file is already properly configured."
-        fi
-    fi
-    
-    # Disable zram if needed
-    if [ "$disable_zram_flag" = "true" ]; then
-        if ! ./probe-system.sh --tests="disable_zram,nvzramconfig_service"; then
-            disable_zram
-            # Validate the change
-            ./probe-system.sh --tests="disable_zram,nvzramconfig_service"
-        else
-            echo "ZRAM is already properly disabled."
-        fi
-    fi
-
-    # Setup GUI if needed
-    if ! ./probe-system.sh --tests="gui"; then
-        setup_gui
-        # Validate the change
-        ./probe-system.sh --tests="gui"
-    else
-        echo "GUI is already properly configured."
-    fi
-
-    # Setup Docker group if needed
-    if ! ./probe-system.sh --tests="docker_group"; then
-        setup_docker_group
-        # Validate the change
-        ./probe-system.sh --tests="docker_group"
-    else
-        echo "Docker group is already properly configured."
-    fi
-
-    # Setup power mode if needed
-    if ! ./probe-system.sh --tests="power_mode"; then
-        setup_power_mode
-        # Validate the change
-        ./probe-system.sh --tests="power_mode"
-    else
-        echo "Power mode is already properly configured."
     fi
     
     # Restart Docker service
