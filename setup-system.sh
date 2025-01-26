@@ -58,7 +58,7 @@ assign_nvme_drive() {
 
     if ! grep -q "/dev/$partition_name" /etc/fstab; then
         echo "Adding NVMe mount to fstab..."
-        echo "/dev/$partition_name $mount_point $filesystem defaults 0 0" >> /etc/docker/daemon.json
+        echo "/dev/$partition_name $mount_point $filesystem defaults 0 0" >> /etc/fstab
     fi
 
     echo "Mounting NVMe drive..."
@@ -199,29 +199,6 @@ disable_zram() {
     return 0
 }
 
-# Add setup_nvzramconfig_service function
-setup_nvzramconfig_service() {
-    if check_nvzramconfig_service; then
-        echo "nvzramconfig service already installed, skipping..."
-        return 0
-    fi
-
-    if should_execute_step "nvzramconfig_service" "Install and configure nvzramconfig service"; then
-        echo "Installing nvzramconfig service..."
-        apt-get update
-        apt-get install -y nvzramconfig
-
-        if systemctl enable nvzramconfig && systemctl start nvzramconfig; then
-            echo "nvzramconfig service installed and started."
-            return 0
-        else
-            echo "Failed to install or start nvzramconfig service."
-            return 1
-        fi
-    fi
-    return 0
-}
-
 # Configure desktop GUI
 setup_gui() {
     if systemctl get-default | grep -q "multi-user.target"; then
@@ -246,7 +223,7 @@ setup_gui() {
 setup_docker_group() {
     # Replace hard-coded user with loaded configuration
     if usermod -aG docker "$add_user"; then
-        return 0
+        echo "Working on $add_user to add to Docker group"
     else
         echo "Failed to add user to Docker group"
         return 1
