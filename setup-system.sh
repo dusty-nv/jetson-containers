@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Enable error handling
+set -euo pipefail
+
 # Check if script is run with sudo
 check_permissions() {
     if [ "$EUID" -ne 0 ]; then 
@@ -53,12 +56,18 @@ assign_nvme_drive() {
 
     echo "Creating mount point if it doesn't exist..."
     if [ ! -d "$mount_point" ]; then
-        mkdir -p "$mount_point"
+        mkdir -p "$mount_point" || {
+            echo "Failed to create mount point"
+            return 1
+        }
     fi
 
     if ! grep -q "/dev/$partition_name" /etc/fstab; then
         echo "Adding NVMe mount to fstab..."
-        echo "/dev/$partition_name $mount_point $filesystem defaults 0 0" >> /etc/fstab
+        echo "/dev/$partition_name $mount_point $filesystem defaults 0 0" >> /etc/fstab || {
+            echo "Failed to update fstab"
+            return 1
+        }
     fi
 
     echo "Mounting NVMe drive..."
@@ -73,26 +82,43 @@ assign_nvme_drive() {
 
 # Configure Docker runtime
 setup_docker_runtime() {
-    if grep -q '"default-runtime": "nvidia"' /etc/docker/daemon.json; then
+    local daemon_json="/etc/docker/daemon.json"
+    local daemon_json_backup="${daemon_json}.bak"
+
+    if grep -q '"default-runtime": "nvidia"' "$daemon_json"; then
         echo "Docker runtime already configured, skipping..."
         return 0
     fi
 
     if should_execute_step "docker_runtime" "Would you like to configure Docker runtime?"; then
+        # Create backup
+        cp "$daemon_json" "$daemon_json_backup" || {
+            echo "Failed to create backup of daemon.json"
+            return 1
+        }
+
         echo "Configuring Docker runtime..."
-        
-        if grep -q '"default-runtime"' /etc/docker/daemon.json; then
-            # Replace existing default-runtime with "nvidia"
-            sed -i 's/"default-runtime": *"[^"]*"/"default-runtime": "nvidia"/' /etc/docker/daemon.json
+        if ! grep -q '"runtimes"' "$daemon_json"; then
+            # Add complete nvidia runtime configuration
+            cat > "$daemon_json" << 'EOF'
+{
+    "runtimes": {
+        "nvidia": {
+            "path": "nvidia-container-runtime",
+            "runtimeArgs": []
+        }
+    },
+    "default-runtime": "nvidia"
+}
+EOF
         else
-            # Insert "default-runtime": "nvidia" before the closing }
-            sed -i '/}/i \    "default-runtime": "nvidia"' /etc/docker/daemon.json
+            # Add only default-runtime if runtimes already exists
+            sed -i '/}/i \    "default-runtime": "nvidia",' "$daemon_json"
         fi
 
-        # Ensure the JSON is valid by adding a comma if necessary
-        # Check if the line before the inserted/default-runtime line ends with a comma
-        if ! grep -q '"default-runtime": "nvidia"' /etc/docker/daemon.json; then
+        if ! grep -q '"default-runtime": "nvidia"' "$daemon_json"; then
             echo "Failed to configure Docker runtime."
+            mv "$daemon_json_backup" "$daemon_json"
             return 1
         fi
 
@@ -104,7 +130,6 @@ setup_docker_runtime() {
 
 # Configure Docker data root
 setup_docker_root() {
-    # Replace hard-coded variable with loaded configuration
     docker_root="$docker_root_path"
 
     if [ -d "/mnt/docker" ]; then
@@ -117,30 +142,32 @@ setup_docker_root() {
         
         if [ ! -d "$docker_root" ]; then
             echo "Creating directory: $docker_root"
-            mkdir -p "$docker_root"
+            mkdir -p "$docker_root" || {
+                echo "Failed to create directory $docker_root"
+                return 1
+            }
         fi
 
-        if [ -d "$docker_root" ]; then
-            echo "Copying existing Docker data..."
-            if cp -r /var/lib/docker/* "$docker_root/"; then
-                # Update daemon.json
-                sed -i 's/}\s*$/,\n    "data-root": "'"$docker_root"'"\n}/' /etc/docker/daemon.json
-                return 0
-            else
-                echo "Failed to copy Docker data"
-                return 1
-            fi
-        else
-            echo "Failed to create directory $docker_root"
+        echo "Copying existing Docker data..."
+        if ! cp -r /var/lib/docker/* "$docker_root/"; then
+            echo "Failed to copy Docker data"
             return 1
         fi
+
+        # Update daemon.json
+        local daemon_json="/etc/docker/daemon.json"
+        if ! sed -i 's/}\s*$/,\n    "data-root": "'"$docker_root"'"\n}/' "$daemon_json"; then
+            echo "Failed to update daemon.json"
+            return 1
+        fi
+
+        return 0
     fi
     return 0
 }
 
-# Modify setup_swap_file to handle only swap file setup
+# Setup swap file
 setup_swap_file() {
-    # Replace hard-coded variables with loaded configuration
     swap_size="$swap_size"
     swap_file="$swap_file"
 
@@ -156,30 +183,35 @@ setup_swap_file() {
         local swap_dir=$(dirname "$swap_file")
         if [ ! -d "$swap_dir" ]; then
             echo "Creating swap parent directory: $swap_dir"
-            mkdir -p "$swap_dir"
+            mkdir -p "$swap_dir" || {
+                echo "Failed to create swap directory"
+                return 1
+            }
         fi
 
         echo "Creating swap file..."
-        if fallocate -l "${swap_size}G" "$swap_file" && \
-           chmod 600 "$swap_file" && \
-           mkswap "$swap_file" && \
-           swapon "$swap_file"; then
-            
-            if ! grep -q "$swap_file" /etc/fstab; then
-                echo "$swap_file  none  swap  sw 0  0" >> /etc/fstab
-            fi
-            
-            echo "Swap file configured successfully."
-            return 0
-        else
+        if ! fallocate -l "${swap_size}G" "$swap_file" || \
+           ! chmod 600 "$swap_file" || \
+           ! mkswap "$swap_file" || \
+           ! swapon "$swap_file"; then
             echo "Failed to setup swap"
             return 1
         fi
+            
+        if ! grep -q "$swap_file" /etc/fstab; then
+            echo "$swap_file  none  swap  sw 0  0" >> /etc/fstab || {
+                echo "Failed to update fstab"
+                return 1
+            }
+        fi
+            
+        echo "Swap file configured successfully."
+        return 0
     fi
     return 0
 }
 
-# Add a new function to disable zram
+# Disable zram
 disable_zram() {
     if ! systemctl is-enabled nvzramconfig &> /dev/null; then
         echo "zram is already disabled, skipping..."
@@ -201,41 +233,38 @@ disable_zram() {
 
 # Configure desktop GUI
 setup_gui() {
-    if systemctl get-default | grep -q "multi-user.target"; then
-        echo "GUI already configured, skipping..."
-        return 0
-    fi
-
     if should_execute_step "gui_disabled" "Would you like to disable the desktop GUI on boot?"; then
         if systemctl set-default multi-user.target; then
+            echo "Desktop GUI disabled successfully."
             return 0
         else
             echo "Failed to configure GUI"
             return 1
         fi
     else
-        systemctl set-default graphical.target
+        if systemctl set-default graphical.target; then
+            echo "Desktop GUI enabled successfully."
+            return 0
+        else
+            echo "Failed to configure GUI"
+            return 1
+        fi
     fi
     return 0
 }
 
 # Configure Docker group
 setup_docker_group() {
-    # Replace hard-coded user with loaded configuration
-    if usermod -aG docker "$add_user"; then
-        echo "Working on $add_user to add to Docker group"
-    else
-        echo "Failed to add user to Docker group"
-        return 1
-    fi
-
-    if groups $(logname) | grep -q "\bdocker\b"; then
-        echo "Docker group already configured, skipping..."
+    local current_user="$add_user"
+    
+    if groups "$current_user" | grep -q "\bdocker\b"; then
+        echo "User $current_user is already in the docker group, skipping..."
         return 0
     fi
 
-    if should_execute_step "docker_group" "Would you like to add $(logname) to the docker group?"; then
-        if usermod -aG docker "$(logname)"; then
+    if should_execute_step "docker_group" "Would you like to add $current_user to the docker group?"; then
+        if usermod -aG docker "$current_user"; then
+            echo "Successfully added $current_user to docker group"
             return 0
         else
             echo "Failed to add user to Docker group"
@@ -247,16 +276,15 @@ setup_docker_group() {
 
 # Configure power mode
 setup_power_mode() {
-    # Replace hard-coded mode with loaded configuration
     mode="$power_mode"
 
-    if nvpmodel -q | grep -q "NV Power Mode: MAXN"; then
-        echo "Power mode already configured, skipping..."
+    current_mode=$(nvpmodel -q | grep "NV Power Mode" | cut -d':' -f2 | xargs)
+    if [ "$current_mode" = "MAXN" ]; then
+        echo "Power mode already set to MAXN, skipping..."
         return 0
     fi
 
-    # Command not found (should run)
-    if should_execute_step "power_mode" "Would you like to set the power mode to 25W (recommended performance mode)?"; then
+    if should_execute_step "power_mode" "Would you like to set the power mode to MAXN (recommended performance mode)?"; then
         if nvpmodel -m "$mode"; then
             local mode_name=$(nvpmodel -q | grep "NV Power Mode" | cut -d':' -f2 | xargs)
             echo "Power mode set to: $mode_name"
@@ -322,25 +350,19 @@ fi
 should_execute_step() {
     local step=$1
     local prompt=$2
-    local mode=$execution_mode
     
-    if [ "$mode" = "specific" ]; then
+    if [ "$execution_mode" = "specific" ]; then
         for test in "${TESTS[@]}"; do
-            if [ "$test" == "$step" ]; then
+            if [ "$test" = "$step" ]; then
                 return 0
             fi
         done
         return 1
-    elif [ "$mode" = "all" ]; then
+    elif [ "$execution_mode" = "all" ]; then
         return 0
     else
-        ask_yes_no "Would you like to run the $step step?"
+        ask_yes_no "$prompt"
     fi
-}
-
-# Add call to probe-system.sh for system checks
-probe_system() {
-    ./probe-system.sh "$@"
 }
 
 # Load environment variables from .env
@@ -364,75 +386,87 @@ main() {
     check_permissions
     check_dependencies
     echo "Probing status before working"
-    probe_system --tests="nvme_mount,docker_runtime,docker_root,swap_file,disable_zram,nvzramconfig_service,gui,docker_group,power_mode"
-
-    echo "Loading variables"
-    # Assign variables from .env
-    interactive_mode="$INTERACTIVE_MODE"
-    nvme_should_run="$NVME_SETUP_SHOULD_RUN"
-    docker_runtime_should_run="$DOCKER_RUNTIME_SHOULD_RUN"
-    docker_root_should_run="$DOCKER_ROOT_SHOULD_RUN"
-    swap_should_run="$SWAP_SHOULD_RUN"
-    gui_disabled_should_run="$GUI_DISABLED_SHOULD_RUN"
-    docker_group_should_run="$DOCKER_GROUP_SHOULD_RUN"
-    power_mode_should_run="$POWER_MODE_SHOULD_RUN"
-
-    MOUNT_POINT="$NVME_SETUP_OPTIONS_MOUNT_POINT"
-    SWAP_FILE="$SWAP_OPTIONS_PATH"
-
-    partition_name="$NVME_SETUP_OPTIONS_PARTITION_NAME"
-    filesystem="$NVME_SETUP_OPTIONS_FILESYSTEM"
-    docker_root_path="$DOCKER_ROOT_OPTIONS_PATH"
-    disable_zram_flag="$SWAP_OPTIONS_DISABLE_ZRAM"
-    swap_size="$SWAP_OPTIONS_SIZE"
-    add_user="$DOCKER_GROUP_OPTIONS_ADD_USER"
-    power_mode="$POWER_MODE_OPTIONS_MODE"
+    echo "============================="
+    probe_system
+    echo "============================="
+    
 
     # Apply configurations based on settings
     if [ "$nvme_should_run" = "yes" ]; then
-        # Assign NVMe drive
-        if should_execute_step "assign_nvme_drive" "Assign and mount NVMe drive"; then
+        if ! ./probe-system.sh --tests="nvme_mount"; then
             assign_nvme_drive
+            # Validate the change
+            ./probe-system.sh --tests="nvme_mount"
+        else
+            echo "NVMe drive is already properly mounted."
         fi
     fi
 
-    # Docker Runtime Setup
-    if should_execute_step "docker_runtime" "Configure Docker runtime"; then
+    # Setup Docker runtime if needed
+    if ! ./probe-system.sh --tests="docker_runtime"; then
         setup_docker_runtime
+        # Validate the change
+        ./probe-system.sh --tests="docker_runtime"
+    else
+        echo "Docker runtime is already properly configured."
     fi
 
-    # Docker Root Setup
-    if should_execute_step "docker_root" "Configure Docker root directory"; then
+    # Setup Docker root if needed
+    if ! ./probe-system.sh --tests="docker_root"; then
         setup_docker_root
+        # Validate the change
+        ./probe-system.sh --tests="docker_root"
+    else
+        echo "Docker root is already properly configured."
     fi
-
-    # Swap Setup File
+    
+    # Setup swap if needed
     if [ "$swap_should_run" = "yes" ]; then
-        if should_execute_step "swap_file" "Configure swap file"; then
+        if ! ./probe-system.sh --tests="swap_file"; then
             setup_swap_file
+            # Validate the change
+            ./probe-system.sh --tests="swap_file"
+        else
+            echo "Swap file is already properly configured."
         fi
     fi
-
-    # Disable zram after setting up swap
+    
+    # Disable zram if needed
     if [ "$disable_zram_flag" = "true" ]; then
-        if should_execute_step "disable_zram" "Disable zram (nvzramconfig)"; then
+        if ! ./probe-system.sh --tests="disable_zram,nvzramconfig_service"; then
             disable_zram
+            # Validate the change
+            ./probe-system.sh --tests="disable_zram,nvzramconfig_service"
+        else
+            echo "ZRAM is already properly disabled."
         fi
     fi
 
-    # GUI Setup
-    if should_execute_step "gui_disabled" "Configure desktop GUI"; then
+    # Setup GUI if needed
+    if ! ./probe-system.sh --tests="gui"; then
         setup_gui
+        # Validate the change
+        ./probe-system.sh --tests="gui"
+    else
+        echo "GUI is already properly configured."
     fi
 
-    # Docker Group Setup
-    if should_execute_step "docker_group" "Configure Docker group"; then
+    # Setup Docker group if needed
+    if ! ./probe-system.sh --tests="docker_group"; then
         setup_docker_group
+        # Validate the change
+        ./probe-system.sh --tests="docker_group"
+    else
+        echo "Docker group is already properly configured."
     fi
 
-    # Power Mode Setup
-    if should_execute_step "power_mode" "Configure power mode"; then
+    # Setup power mode if needed
+    if ! ./probe-system.sh --tests="power_mode"; then
         setup_power_mode
+        # Validate the change
+        ./probe-system.sh --tests="power_mode"
+    else
+        echo "Power mode is already properly configured."
     fi
     
     # Restart Docker service
@@ -442,6 +476,10 @@ main() {
 
     echo
     echo "Configuration complete!"
+    echo "============================="
+    probe_system
+    echo "============================="
+
     echo "Please reboot your system for all changes to take effect."
     if ask_yes_no "Would you like to reboot now?"; then
         reboot
