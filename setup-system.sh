@@ -3,6 +3,10 @@
 # Enable error handling
 set -euo pipefail
 
+# Initialize arrays
+declare -a TESTS=()
+execution_mode=""
+
 # Check if script is run with sudo
 check_permissions() {
     if [ "$EUID" -ne 0 ]; then 
