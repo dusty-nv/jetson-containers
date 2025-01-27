@@ -519,6 +519,10 @@ main() {
     
     echo
     echo "Configuration complete!"
+    echo "============================="
+    ./probesystem.sh
+    echo "============================="
+
     echo "Please reboot your system for all changes to take effect."
     if [ "$interactive_mode" = "true" ] && ask_yes_no "Would you like to reboot now?"; then
         reboot
