@@ -7,13 +7,13 @@ def python(version, requires=None) -> list:
 
     pkg['name'] = f'python:{version}'
     pkg['build_args'] = {'PYTHON_VERSION_ARG': version}
-    
+
     if Version(version) == PYTHON_VERSION:
         pkg['alias'] = 'python'
 
     if requires:
         pkg['requires'] = requires
-        
+
     return pkg
 
 package = [

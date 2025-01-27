@@ -20,7 +20,11 @@ ENV PYTHON_VERSION=${PYTHON_VERSION_ARG} \
     PIP_CACHE_PURGE=true \
     PIP_ROOT_USER_ACTION=ignore \
     TWINE_NON_INTERACTIVE=1 \
-    DEBIAN_FRONTEND=noninteractive
+    DEBIAN_FRONTEND=noninteractive \
+    PATH=/opt/conda/bin:$PATH \
+    CONDA_PREFIX=/opt/conda \
+    MAMBA_ROOT_PREFIX=/opt/conda \
+    MAMBA_EXE=/usr/local/bin/micromamba
 
-COPY install.sh /tmp/install_python.sh 
+COPY install.sh /tmp/install_python.sh
 RUN /tmp/install_python.sh
