@@ -126,7 +126,8 @@ assign_nvme_drive() {
 # Configure Docker runtime
 setup_docker_runtime() {
     local daemon_json="/etc/docker/daemon.json"
-    local daemon_json_backup="${daemon_json}.bak"
+    local dateFileVersionFormat = $(date +"%Y%m%d%H%M%S")
+    local daemon_json_backup="${daemon_json}.${dateFileVersionFormat}.bak"
 
     if grep -q '"default-runtime": "nvidia"' "$daemon_json"; then
         echo "Docker runtime already configured, skipping..."
