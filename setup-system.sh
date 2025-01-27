@@ -5,7 +5,16 @@ set -euo pipefail
 
 # Initialize variables
 declare -a TESTS=()
-execution_mode=""
+
+# Load environment variables from .env
+if [ -f ".env" ]; then
+    set -a
+    source .env
+    set +a
+else
+    echo "Environment file .env not found."
+    exit 1
+fi
 
 # Initialize configuration flags with defaults
 interactive_mode="${INTERACTIVE_MODE:-true}"
@@ -409,6 +418,7 @@ else
     exit 1
 fi
 
+
 # Main execution
 main() {
     echo "=== Jetson Setup Script ==="
@@ -416,7 +426,6 @@ main() {
     echo "You will need to reboot once after completion."
     echo
 
-    parse_args "$@"
     check_permissions
     check_dependencies
     echo "Probing status before working"
@@ -424,104 +433,94 @@ main() {
     ./probe-system.sh
     echo "============================="
 
-
-    # Apply configurations based on settings
-    if [ "$nvme_should_run" = "yes" ] || [ "$nvme_should_run" = "ask" -a "$(ask_yes_no 'Configure NVMe drive?')" = "0" ]; then
+    # NVMe Setup
+    if [ "$nvme_should_run" = "yes" ] || [ "$nvme_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure NVMe drive?"; then
         if ! ./probe-system.sh --tests="nvme_mount"; then
             assign_nvme_drive
-            # Validate the change
             ./probe-system.sh --tests="nvme_mount"
         else
             echo "NVMe drive is already properly mounted."
         fi
     fi
 
-    # Setup Docker runtime if needed
-    if [ "$docker_runtime_should_run" = "yes" ] || [ "$docker_runtime_should_run" = "ask" -a "$(ask_yes_no 'Configure Docker runtime?')" = "0" ]; then
+    # Docker Runtime Setup
+    if [ "$docker_runtime_should_run" = "yes" ] || [ "$docker_runtime_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure Docker runtime?"; then
         if ! ./probe-system.sh --tests="docker_runtime"; then
             setup_docker_runtime
-            # Validate the change
             ./probe-system.sh --tests="docker_runtime"
         else
             echo "Docker runtime is already properly configured."
         fi
     fi
 
-    # Setup Docker root if needed
-    if [ "$docker_root_should_run" = "yes" ] || [ "$docker_root_should_run" = "ask" -a "$(ask_yes_no 'Configure Docker root directory?')" = "0" ]; then
+    # Docker Root Setup
+    if [ "$docker_root_should_run" = "yes" ] || [ "$docker_root_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure Docker root?"; then
         if ! ./probe-system.sh --tests="docker_root"; then
             setup_docker_root
-            # Validate the change
             ./probe-system.sh --tests="docker_root"
         else
             echo "Docker root is already properly configured."
         fi
     fi
 
-    # Setup swap if needed
-    if [ "$swap_should_run" = "yes" ] || [ "$swap_should_run" = "ask" -a "$(ask_yes_no 'Configure swap?')" = "0" ]; then
+    # Swap Setup
+    if [ "$swap_should_run" = "yes" ] || [ "$swap_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure swap?"; then
         if ! ./probe-system.sh --tests="swap_file"; then
             setup_swap_file
-            # Validate the change
             ./probe-system.sh --tests="swap_file"
         else
             echo "Swap file is already properly configured."
         fi
     fi
-    
-    # Disable zram if needed
+
+    # ZRAM Setup
     if [ "$disable_zram_flag" = "true" ]; then
-        if ! ./probe-system.sh --tests="disable_zram"; then
+        if ! ./probe-system.sh --tests="disable_zram,nvzramconfig_service"; then
             disable_zram
-            # Validate the change
-            ./probe-system.sh --tests="disable_zram"
+            ./probe-system.sh --tests="disable_zram,nvzramconfig_service"
         else
             echo "ZRAM is already properly disabled."
         fi
     fi
 
-    # Setup GUI if needed
-    if [ "$gui_disabled_should_run" = "yes" ] || [ "$gui_disabled_should_run" = "ask" -a "$(ask_yes_no 'Configure desktop GUI?')" = "0" ]; then
+    # GUI Setup
+    if [ "$gui_disabled_should_run" = "yes" ] || [ "$gui_disabled_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure desktop GUI?"; then
         if ! ./probe-system.sh --tests="gui"; then
             setup_gui
-            # Validate the change
             ./probe-system.sh --tests="gui"
         else
             echo "GUI is already properly configured."
         fi
     fi
 
-    # Setup Docker group if needed
-    if [ "$docker_group_should_run" = "yes" ] || [ "$docker_group_should_run" = "ask" -a "$(ask_yes_no 'Configure Docker group?')" = "0" ]; then
+    # Docker Group Setup
+    if [ "$docker_group_should_run" = "yes" ] || [ "$docker_group_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure Docker group?"; then
         if ! ./probe-system.sh --tests="docker_group"; then
             setup_docker_group
-            # Validate the change
             ./probe-system.sh --tests="docker_group"
         else
             echo "Docker group is already properly configured."
         fi
     fi
 
-    # Setup power mode if needed
-    if [ "$power_mode_should_run" = "yes" ] || [ "$power_mode_should_run" = "ask" -a "$(ask_yes_no 'Configure power mode?')" = "0" ]; then
+    # Power Mode Setup
+    if [ "$power_mode_should_run" = "yes" ] || [ "$power_mode_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure power mode?"; then
         if ! ./probe-system.sh --tests="power_mode"; then
             setup_power_mode
-            # Validate the change
             ./probe-system.sh --tests="power_mode"
         else
             echo "Power mode is already properly configured."
         fi
     fi
-    
     # Restart Docker service
     if should_execute_step "docker_service" "Restart Docker service"; then
         systemctl restart docker
     fi
-
+    
     echo
     echo "Configuration complete!"
     echo "Please reboot your system for all changes to take effect."
-    if ask_yes_no "Would you like to reboot now?"; then
+    if [ "$interactive_mode" = "true" ] && ask_yes_no "Would you like to reboot now?"; then
         reboot
     fi
 }
