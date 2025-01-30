@@ -34,6 +34,8 @@ RUN apt-get update && \
 
 RUN curl -fsSL https://ollama.com/install.sh | sh 
 
+RUN ln -s /usr/bin/python3 /usr/bin/python 
+
 COPY start_ollama /
 
 CMD /start_ollama && /bin/bash
