@@ -7,13 +7,13 @@ COMMAND=$1
 shift;
 
 if [ "$COMMAND" = "build" ] || [ "$COMMAND" = "build.sh" ]; then
-	$SCRIPTS/build.sh "$@"
+	$ROOT/build.sh "$@"
 elif [ "$COMMAND" = "run" ] || [ "$COMMAND" = "run.sh" ]; then
-	$SCRIPTS/run.sh "$@"
+	$ROOT/run.sh "$@"
 elif [ "$COMMAND" = "list" ]; then
-	$SCRIPTS/build.sh --list "$@"
+	$ROOT/build.sh --list "$@"
 elif [ "$COMMAND" = "show" ]; then
-	$SCRIPTS/build.sh --show "$@"
+	$ROOT/build.sh --show "$@"
 elif [ "$COMMAND" = "autotag" ]; then
 	$ROOT/autotag "$@"
 elif [ "$COMMAND" = "update" ]; then
