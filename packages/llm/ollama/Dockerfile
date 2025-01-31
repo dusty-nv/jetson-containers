@@ -26,11 +26,12 @@ ENV OLLAMA_HOST=0.0.0.0 \
     LD_LIBRARY_PATH=/usr/local/cuda/lib:/usr/local/cuda/lib64:/usr/local/cuda/include:${LD_LIBRARY_PATH} \
     JETSON_JETPACK=${JETPACK_VERSION} \
     CUDA_VERSION_MAJOR=${CUDA_VERSION_MAJOR}
-
 RUN apt-get update && \
     apt install -y curl  && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean
+
+COPY nv_tegra_release /etc/nv_tegra_release    
 
 RUN curl -fsSL https://ollama.com/install.sh | sh 
 
