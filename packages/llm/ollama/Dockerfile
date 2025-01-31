@@ -1,6 +1,7 @@
 #---
 # name: ollama 
 # group: llm
+# config: config.py
 # requires: '>=34.1.0'
 # docs: docs.md
 #---
@@ -31,6 +32,8 @@ RUN apt-get update && \
     apt install -y curl  && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean
+
+COPY nv_tegra_release /etc/nv_tegra_release    
 
 RUN curl -fsSL https://ollama.com/install.sh | sh 
 
