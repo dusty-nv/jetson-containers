@@ -32,6 +32,7 @@ def llama_cpp(version, branch=None, test=None, default=False, flags=DEFAULT_FLAG
     return pkg, builder
 
 package = [
+    #llama_cpp('main', branch='main'),
     llama_cpp('0.2.57', flags=LEGACY_FLAGS),
     llama_cpp('0.2.70', flags=LEGACY_FLAGS),
     llama_cpp('0.2.83'),
@@ -39,5 +40,6 @@ package = [
     llama_cpp('0.3.1'),
     llama_cpp('0.3.2'),
     llama_cpp('0.3.5'),
-    llama_cpp('0.3.6', default=True),
+    llama_cpp('0.3.6'),
+    llama_cpp('0.3.7', default=True)
 ]
