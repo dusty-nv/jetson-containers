@@ -1,6 +1,7 @@
 #---
 # name: ollama 
 # group: llm
+# config: config.py
 # requires: '>=34.1.0'
 # docs: docs.md
 #---
