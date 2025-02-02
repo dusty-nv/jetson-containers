@@ -26,5 +26,6 @@ def manifold(version, requires=None, default=False):
 
 package = [
     manifold('2.5.1'),
-    manifold('2.5.2', default=True),
+    manifold('2.5.2'),
+    manifold('3.0.2', default=True)
 ]
