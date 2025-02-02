@@ -6,7 +6,7 @@
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`vllm:0.6.3.post1`** | |
+| **`vllm:0.6.6.post1`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `vllm` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
@@ -23,7 +23,7 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/vllm:0.6.3-r36.4.0`](https://hub.docker.com/r/dustynv/vllm/tags) | `2024-10-21` | `arm64` | `5.0GB` |
+| &nbsp;&nbsp;[`dustynv/vllm:0.6.6.post1-r36.4.0`](https://hub.docker.com/r/dustynv/vllm/tags) | `2025-01-17` | `arm64` | `6.1GB` |
 | &nbsp;&nbsp;[`dustynv/vllm:r36.4.0`](https://hub.docker.com/r/dustynv/vllm/tags) | `2024-10-15` | `arm64` | `5.7GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
@@ -41,10 +41,10 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag vllm)
 
 # or explicitly specify one of the container images above
-jetson-containers run dustynv/vllm:0.6.3-r36.4.0
+jetson-containers run dustynv/vllm:0.6.6.post1-r36.4.0
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/vllm:0.6.3-r36.4.0
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/vllm:0.6.6.post1-r36.4.0
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
