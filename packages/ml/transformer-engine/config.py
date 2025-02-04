@@ -25,5 +25,6 @@ def transformer_engine(version, requires=None, default=False):
     return pkg, builder
 
 package = [
+    transformer_engine('1.13'),
     transformer_engine('2.0', default=True) # Blackwell support
 ]
