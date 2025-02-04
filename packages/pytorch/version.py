@@ -8,7 +8,9 @@ if 'PYTORCH_VERSION' in os.environ and len(os.environ['PYTORCH_VERSION']) > 0:
     PYTORCH_VERSION = Version(os.environ['PYTORCH_VERSION'])
 else:
     if L4T_VERSION.major >= 36:
-        if CUDA_VERSION >= Version('12.6'):   # JetPack 6.1 (CUDA 12.6)
+        if CUDA_VERSION >= Version('12.8'):   # JetPack 6.1 (CUDA 12.6)
+            PYTORCH_VERSION = Version('2.6')
+        elif CUDA_VERSION == Version('12.6'):   # JetPack 6.1 (CUDA 12.6)
             PYTORCH_VERSION = Version('2.5')
         elif CUDA_VERSION >= Version('12.4'): # JetPack 6.0 (CUDA 12.4)
             PYTORCH_VERSION = Version('2.4')
