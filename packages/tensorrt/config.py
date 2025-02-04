@@ -107,7 +107,7 @@ package = [
     tensorrt_tar('10.4', 'https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/10.4.0/tars/TensorRT-10.4.0.26.l4t.aarch64-gnu.cuda-12.6.tar.gz', cudnn='9.4', requires=['==r36.*', '==cu126']), 
     tensorrt_tar('10.5', 'https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/10.5.0/tars/TensorRT-10.5.0.18.l4t.aarch64-gnu.cuda-12.6.tar.gz', cudnn='9.4', requires=['==r36.*', '==cu126']), 
     tensorrt_tar('10.7', 'https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/10.7.0/tars/TensorRT-10.7.0.23.l4t.aarch64-gnu.cuda-12.6.tar.gz', cudnn='9.4', requires=['==r36.*', '==cu126']),
-    tensorrt_tar('10.8', 'https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/10.8.0/tars/TensorRT-10.8.0.43.l4t.aarch64-gnu.cuda-12.8.tar.gz', cudnn='9.7', requires=['==r36.*', '==cu128']),
+    # tensorrt_tar('10.8', 'https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/10.8.0/tars/TensorRT-10.8.0.43.l4t.aarch64-gnu.cuda-12.8.tar.gz', cudnn='9.7', requires=['==r36.*', '==cu128']),
     # JetPack 4-5 (TensorRT installed in base container)
     tensorrt_builtin(requires='<36', default=True),
 ]
