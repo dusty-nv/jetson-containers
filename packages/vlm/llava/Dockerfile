@@ -2,7 +2,7 @@
 # name: llava
 # group: vlm
 # docs: docs.md
-# depends: [pytorch, transformers]
+# depends: [pytorch, flash-attention, transformers]
 # requires: '>=34.1.0'
 # test: test.py
 #---
@@ -18,9 +18,7 @@ ADD https://api.github.com/repos/${LLAVA_REPO}/git/refs/heads/${LLAVA_BRANCH} /t
 
 RUN git clone --branch=${LLAVA_BRANCH} --depth=1 https://github.com/${LLAVA_REPO} llava && \
     cd llava && \
-#    sed 's|"deepspeed==0.9.5",.*||' -i pyproject.toml && \
-#    sed 's|"transformers.*"|"transformers"|' -i pyproject.toml && \
-#    sed 's|"accelerate.*"|"accelerate"|' -i pyproject.toml && \
+    sed 's|torch==.*"|torch"|' -i pyproject.toml && \
     sed 's|"bitsandbytes.*",||' -i pyproject.toml && \
     cat pyproject.toml
 
@@ -32,7 +30,7 @@ RUN cd llava && \
     
 RUN pip3 install --no-cache-dir --verbose llava*.whl
 
-RUN pip3 install --verbose /opt/torch*.whl
-RUN pip3 install --verbose /opt/torchvision*.whl
+#RUN pip3 install --verbose /opt/torch*.whl
+#RUN pip3 install --verbose /opt/torchvision*.whl
 
 WORKDIR /

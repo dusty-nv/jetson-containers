@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Launcher for jetson-containers build.sh, run.sh, and autotag
 ROOT="$(dirname "$(readlink -f "$0")")"
+SCRIPTS="$ROOT/scripts"
 COMMAND=$1
 
 shift;
