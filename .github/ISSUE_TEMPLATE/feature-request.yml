@@ -1,0 +1,49 @@
+name: 🚀 Feature Request
+description: Suggest an jetson-containers idea
+# title: " "
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for submitting an jetson-containers 🚀 Feature Request!
+
+  - type: checkboxes
+    attributes:
+      label: Search before asking
+      description: >
+        Please search the jetson-containers [Jetson PlayGround](https://www.jetson-ai-lab.com/), [Jetson Forum](https://forums.developer.nvidia.com/c/agx-autonomous-machines/jetson-embedded-systems/70) and [issues](https://github.com/dusty-nv/jetson-containers/issues) to see if a similar feature request already exists.
+      options:
+        - label: >
+            I have searched the jetson-containers [issues](https://github.com/dusty-nv/jetson-containers/issues) and found no similar feature requests.
+          required: true
+
+  - type: textarea
+    attributes:
+      label: Description
+      description: A short description of your feature.
+      placeholder: |
+        What new package would you like to see in jetson-containers?
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Use case
+      description: |
+        Describe the use case of your feature request. It will help us understand and prioritize the feature request.
+      placeholder: |
+        How would this package be used, and who would use it?
+
+  - type: textarea
+    attributes:
+      label: Additional
+      description: Anything else you would like to share?
+
+  - type: checkboxes
+    attributes:
+      label: Are you willing to submit a PR?
+      description: >
+        (Optional) We encourage you to submit a [Pull Request](https://github.com/dusty-nv/jetson-containers/pulls) (PR) to help improve jetson-containers for everyone, especially if you have a good understanding of how to implement a fix or feature.
+      options:
+        - label: Yes I'd like to help by submitting a PR!
