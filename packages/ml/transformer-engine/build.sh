@@ -20,7 +20,7 @@ pip3 install --no-cache-dir --verbose /opt/transformer_engine/wheels/transformer
 
 cd /opt/transformer_engine
 
-pip3 install 'numpy<2'
+
 
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/transformer_engine/wheels/transformer_engine*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

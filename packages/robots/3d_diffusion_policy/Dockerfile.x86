@@ -28,7 +28,6 @@ RUN FORCE_CUDA=1 pip3 install --no-cache-dir --verbose -e third_party/pytorch3d_
 
 RUN pip3 install --ignore-installed --no-cache-dir blinker && \
     pip3 install --no-cache-dir --verbose open3d && \
-    pip3 install --no-cache-dir --verbose 'numpy<2' && \
     pip3 install --no-cache-dir --verbose \
         zarr==2.12.0 \
         wandb \

@@ -20,7 +20,7 @@ pip3 wheel --no-build-isolation --wheel-dir=/opt/decord/wheels .
 pip3 install --no-cache-dir --verbose /opt/decord/wheels/decord*.whl
 
 cd /opt/decord
-pip3 install 'numpy<2'
+
 
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/decord/wheels/decord*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

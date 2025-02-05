@@ -24,7 +24,5 @@ RUN sed -i '/decord==0.6.0/d' requirements.txt && \
 
 RUN pip3 install -r requirements.txt
 
-RUN pip3 install 'numpy<2'
-
 CMD ["/bin/bash"]
 
