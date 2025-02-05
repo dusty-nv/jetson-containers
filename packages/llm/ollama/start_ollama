@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 : "${OLLAMA_LOGS:=/data/logs/ollama.log}"
 
+# Ensure the logs directory exists
+mkdir -p "$(dirname "$OLLAMA_LOGS")"
+
 printf "\nStarting ollama server\n\n"
 
 /bin/bash -c "OLLAMA_LLM_LIBRARY=cuda_${CUDA_VERSION_MAJOR} ollama serve &> $OLLAMA_LOGS" &
