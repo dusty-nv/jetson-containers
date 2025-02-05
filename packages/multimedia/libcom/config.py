@@ -25,5 +25,5 @@ def libcom(version, requires=None, default=False):
     return pkg #, builder
 
 package = [
-    libcom('0.0.4', default=True)
+    libcom('0.1.1', default=True)
 ]
