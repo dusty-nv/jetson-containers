@@ -20,7 +20,5 @@ pip3 install --no-cache-dir --verbose /opt/causalconv1d/wheels/causal_conv1d*.wh
 
 cd /opt/causalconv1d
 
-pip3 install 'numpy<2'
-
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/causalconv1d/wheels/causal_conv1d*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

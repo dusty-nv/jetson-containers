@@ -141,6 +141,5 @@ RUN python3 -m pip install --no-cache-dir --upgrade pip setuptools pathtools pro
 COPY build.sh install.sh /tmp/NERFSTUDIO/
 RUN /tmp/NERFSTUDIO/install.sh || /tmp/NERFSTUDIO/build.sh
 
-RUN pip3 install --force-reinstall --no-cache-dir 'numpy<2'
 RUN cd /opt/
 CMD ["/bin/bash"]

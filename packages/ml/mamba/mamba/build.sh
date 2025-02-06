@@ -20,7 +20,6 @@ pip3 wheel --no-build-isolation --wheel-dir=/opt/mamba/wheels .
 pip3 install --no-cache-dir --verbose /opt/mamba/wheels/mamba_ssm*.whl
 
 cd /opt/mamba
-pip3 install 'numpy<2'
 
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/mamba/wheels/mamba_ssm*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

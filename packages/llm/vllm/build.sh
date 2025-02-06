@@ -46,7 +46,7 @@ pip3 wheel --no-build-isolation --verbose --wheel-dir=/opt/vllm/wheels .
 pip3 install --no-cache-dir --verbose /opt/vllm/wheels/vllm*.whl
 
 cd /opt/vllm
-pip3 install 'numpy<2' compressed-tensors bitsandbytes xformers flash-attn
+pip3 install compressed-tensors bitsandbytes xformers flash-attn
 
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/vllm/wheels/vllm*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

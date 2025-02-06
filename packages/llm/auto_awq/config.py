@@ -26,7 +26,8 @@ def AutoAWQ(version, kernels_version, default=False):
     return pkg, builder
 
 package = [
-    AutoAWQ('0.2.7.post2', '0.0.9', default=True),
+    AutoAWQ('0.2.8', '0.0.9', default=True),
+    AutoAWQ('0.2.7.post2', '0.0.9'),
     AutoAWQ('0.2.6', '0.0.8', default=False),
     AutoAWQ('0.2.4', '0.0.6', default=False),
 ]

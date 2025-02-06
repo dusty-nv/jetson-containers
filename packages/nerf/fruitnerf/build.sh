@@ -24,4 +24,4 @@ pip3 install -U segment-anything-hq
 cd /opt/fruitnerf
 
 pip3 install -e .
-pip3 install 'numpy<2'
+

@@ -24,8 +24,7 @@ RUN pip3 install --no-cache-dir --verbose -r requirements.txt && \
     pip3 install --no-cache-dir --verbose -e visualizer && \
     FORCE_CUDA=1 pip3 install --no-cache-dir --verbose -e third_party/pytorch3d_simplified && \
     pip3 install --ignore-installed --no-cache-dir blinker && \
-    pip3 install --no-cache-dir --verbose open3d && \
-    pip3 install --no-cache-dir --verbose 'numpy<2'
+    pip3 install --no-cache-dir --verbose open3d
  
 ARG ASSET_URL="${TAR_INDEX_URL}/../../assets/3d_diffusion_policy"
 

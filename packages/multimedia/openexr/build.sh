@@ -13,7 +13,7 @@ pip3 wheel --no-build-isolation --wheel-dir=/opt/openexr/wheels .
 pip3 install --no-cache-dir --verbose /opt/openexr/wheels/openexr*.whl
 
 cd /opt/openexr
-pip3 install 'numpy<2'
+
 
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/openexr/wheels/openexr*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

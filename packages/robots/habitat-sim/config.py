@@ -23,5 +23,6 @@ def habitat_sim(version, branch=None, default=False):
     return pkg, builder
 
 package = [
-    habitat_sim('0.3.1', default=True),
+    habitat_sim('0.3.3', default=True),
+    habitat_sim('0.3.1', default=False),
 ]

@@ -32,7 +32,6 @@ WORKDIR /opt/ComfyUI/
 
 RUN pip3 install --no-cache-dir -U xformers onnxruntime-gpu triton lm_eval
 RUN pip3 install --no-cache-dir -U diffusers flash-attn sageattention  torchao
-RUN pip3 install --force-reinstall 'numpy<2'
 
 COPY workflow /opt/ComfyUI/workflow
 COPY extra /opt/ComfyUI/extra
