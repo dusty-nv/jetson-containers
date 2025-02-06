@@ -23,4 +23,5 @@ package = [
     python('3.11', '>=34'),   # JetPack 6
     python('3.12', '>=34'),   # JetPack 6
     python('3.13', '>=34'),   # JetPack 6
+    python('3.14', '>=34'),   # JetPack 6
 ]

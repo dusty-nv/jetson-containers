@@ -12,4 +12,3 @@ pip3 install -U hydra-core torch-fidelity webdataset einops pytorch_lightning
 pip3 install -U torchmetrics scikit-learn moviepy imageio numpy-hilbert-curve av
 
 cd /opt/zigma
-pip3 install 'numpy<2'

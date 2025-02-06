@@ -22,7 +22,7 @@ python3 setup.py install
 
 cd /opt/libcom/
 # python3 setup.py install
-pip3 install 'numpy<2'
+
 
 python3 setup.py bdist_wheel --dist-dir=/opt/libcom/wheels
 pip3 install --no-cache-dir --verbose /opt/libcom/wheels/libcom*.whl

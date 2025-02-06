@@ -36,7 +36,7 @@ RUN git clone https://github.com/${TTS_REPO} ${TTS_PATH} && \
     ln -s /data/models/tts /root/.local/share/tts
 
 # https://github.com/huggingface/transformers/issues/31040
-RUN pip3 install --force-reinstall --no-cache-dir 'scipy<1.13' 'numpy<2' 'transformers<4.41'
+RUN pip3 install --force-reinstall --no-cache-dir 'transformers<4.41'
 
 RUN pip3 install --no-cache-dir --verbose /opt/TTS*.whl && \
     pip3 show TTS && python3 -c 'import TTS'

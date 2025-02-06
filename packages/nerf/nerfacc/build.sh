@@ -18,6 +18,6 @@ pip3 install lpips scipy
 pip3 install --no-cache-dir --verbose /opt/nerfacc/wheels/nerfacc*.whl
 
 cd /opt/nerfacc
-pip3 install 'numpy<2'
+
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/nerfacc/wheels/nerfacc*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
