@@ -14,3 +14,4 @@ runner
 .polyscope.ini
 .ipynb_checkpoints
 .idea
+nv_tegra_release

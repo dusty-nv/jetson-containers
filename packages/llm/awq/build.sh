@@ -5,6 +5,13 @@ echo "Building AWQ ${AWQ_VERSION} (kernels=${AWQ_KERNEL_VERSION})"
 
 git clone --branch=${AWQ_BRANCH} --depth=1 https://github.com/${AWQ_REPO} awq
 
+sed -i \
+  -e 's|torch==.*"|torch"|g' \
+  -e 's|torchvision==.*"|torchvision"|g' \
+  "awq/pyproject.toml"
+
+cat awq/pyproject.toml
+
 pip3 wheel --wheel-dir=/opt/wheels --verbose ./awq
 pip3 wheel --wheel-dir=/opt/wheels --verbose ./awq/awq/kernels
 

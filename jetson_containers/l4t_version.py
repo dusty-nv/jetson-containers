@@ -203,7 +203,7 @@ def get_cuda_version(version_file='/usr/local/cuda/version.json'):
                 # executing, for example, `export CUDA_VERSION=12.6`.
                 # If the env variable is not set, set the CUDA_VERSION to be the CUDA version
                 # that made available with the release of L4T_VERSION 
-                if l4t_version == Version('36.4'):
+                if l4t_version == Version('36.4') or l4t_version == Version('36.4.2') or l4t_version == Version('36.4.3'):
                     cuda_version = '12.6'
                 elif l4t_version == Version('36.3'):
                     cuda_version = '12.4'
