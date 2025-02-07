@@ -62,9 +62,17 @@ if [ $ARCH != "x86_64" ]; then
 	apt-get install -y --no-install-recommends \
 		python3-pip \
 		python3-dev \
-		python3-numpy \
 		python3-distutils \
 		python3-setuptools
+
+	python3 -c 'import numpy; print("NumPy version before installation:", numpy.__version__)' 2>/dev/null
+
+  if [ $? != 0 ]; then
+      echo "NumPy not found. Installing NumPy 2.0..."
+      apt-get update
+      # apt-get install -y --no-install-recommends python3-numpy
+      python3 -m pip install "numpy>=2.0.0" --break-system-packages
+  fi
 fi
 
 rm -rf /var/lib/apt/lists/*

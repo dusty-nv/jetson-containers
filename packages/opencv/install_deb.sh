@@ -16,12 +16,18 @@ echo "ARCH:  $ARCH"
 set -x
 
 # install numpy if needed
-python3 -c 'import numpy'
+# Check if NumPy is installed
+python3 -c 'import numpy; print("NumPy version before installation:", numpy.__version__)' 2>/dev/null
 
 if [ $? != 0 ]; then
-	apt-get update
-	apt-get install -y --no-install-recommends python3-numpy
+    echo "NumPy not found. Installing NumPy 2.0..."
+    apt-get update
+    # apt-get install -y --no-install-recommends python3-numpy
+    python3 -m pip install "numpy>=2.0.0" --break-system-packages
 fi
+
+# Print the installed version after installation
+python3 -c 'import numpy; print("NumPy version after installation:", numpy.__version__)'
 
 set -e
 
