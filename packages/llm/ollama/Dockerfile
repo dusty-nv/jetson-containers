@@ -2,6 +2,7 @@
 # name: ollama
 # group: llm
 # config: config.py
+# depends: cuda
 # requires: '>=34.1.0'
 # docs: docs.md
 #---
