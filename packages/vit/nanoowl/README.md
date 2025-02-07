@@ -25,8 +25,13 @@ jetson-containers run --workdir /opt/nanoowl/examples \
 ```
 jetson-containers run --workdir /opt/nanoowl/examples/tree_demo \
   $(autotag nanoowl) \
-    python3 tree_demo.py ../../data/owl_image_encoder_patch32.engine
+    python3 tree_demo.py --camera 0 --resolution 640x480 ../../data/owl_image_encoder_patch32.engine
 ```
+
+| Options | Explanation | Example |
+| ------- | ----------- | ------- |
+| `--camera` | to specify camera ID | `1` |
+| `--resolution` | to specify camera open resolution (must be supported by your camera) | `640x480` |
 
 3. Second, open your browser to `http://<ip address>:7860`
 
