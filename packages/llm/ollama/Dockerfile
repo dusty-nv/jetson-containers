@@ -35,6 +35,8 @@ RUN apt-get update && \
 
 COPY nv_tegra_release /etc/nv_tegra_release    
 
+ADD https://api.github.com/repos/ollama/ollama/branches/main /tmp/ollama_version.json
+
 RUN curl -fsSL https://ollama.com/install.sh | sh 
 
 RUN ln -s /usr/bin/python3 /usr/bin/python 
