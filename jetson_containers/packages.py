@@ -106,10 +106,10 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
     
     # add CUDA and Python postfixes when they are non-standard versions
     if len(os.environ.get('CUDA_VERSION','')) > 0:
-        package['postfix'] = package['postfix'] + f"-cu{CUDA_VERSION.major}{CUDA_VERSION.minor}"
+        package['postfix'] = package['postfix']
     
     if len(os.environ.get('PYTHON_VERSION', '')) > 0:
-        package['postfix'] = package['postfix'] + f"-cp{PYTHON_VERSION.major}{PYTHON_VERSION.minor}"
+        package['postfix'] = package['postfix']
         
     # search this directory for dockerfiles and config scripts
     entries = os.listdir(path)
