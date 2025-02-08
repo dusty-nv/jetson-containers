@@ -14,4 +14,4 @@ RUN apt-get update && \
         libhdf5-dev && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean && \
-    H5PY_SETUP_REQUIRES=0 pip3 install --no-cache-dir --verbose 'h5py<3.11'
+    H5PY_SETUP_REQUIRES=0 pip3 install --no-cache-dir --verbose 'h5py<3.12' # comptatibility with numpy 2.0 but 3.12 drops with python3.8
