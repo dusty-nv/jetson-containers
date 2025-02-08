@@ -46,7 +46,7 @@ pip3 install --no-cache-dir --verbose --no-binary :all: psutil
 pip3 install --upgrade --no-cache-dir \
    setuptools \
    packaging \
-   'Cython<3' \
+   'Cython' \
    wheel 
 
 pip3 install --upgrade --no-cache-dir --index-url https://pypi.org/simple \
