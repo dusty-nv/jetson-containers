@@ -33,8 +33,13 @@ RUN cd /opt/ffmpeg-${FFMPEG_VERSION}  && \
     make install
 
 # libsvtav1 for AV1
+# temporal version 2.3.0, they breaks ffmpeg build: https://gitlab.com/AOMediaCodec/SVT-AV1/-/commit/988e930c1083ce518ead1d364e3a486e9209bf73#900962ec0dfb11881a5f25ce6fcad8e815c8fd45_1056_1122
+# solution mid-february: https://gitlab.com/AOMediaCodec/SVT-AV1/-/merge_requests/2355#note_2312506245
 RUN cd /opt/ffmpeg-${FFMPEG_VERSION}  && \
-    git -C SVT-AV1 pull 2> /dev/null || git clone https://gitlab.com/AOMediaCodec/SVT-AV1.git && \
+    git -C SVT-AV1 pull 2> /dev/null || git clone --recursive https://gitlab.com/AOMediaCodec/SVT-AV1.git && \
+    cd SVT-AV1 && \
+    git checkout v2.3.0 && \
+    cd .. && \
     mkdir -p SVT-AV1/build
 RUN cd /opt/ffmpeg-${FFMPEG_VERSION}/SVT-AV1/build && \
     PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" \
