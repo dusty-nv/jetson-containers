@@ -5,6 +5,8 @@ import sys
 import pprint
 import requests
 
+from typing import Optional
+
 
 def check_dependencies(install=True):
     """
@@ -132,7 +134,7 @@ def sudo_prefix(group='docker'):
         return ""
 
 
-def handle_text_request(url) -> str | None:
+def handle_text_request(url) -> Optional[str]:
     """
     Handles a request to fetch text data from the given URL.
 
@@ -140,7 +142,7 @@ def handle_text_request(url) -> str | None:
         url (str): The URL from which to fetch text data.
 
     Returns:
-        str or None: The fetched text data, stripped of leading and trailing whitespace, 
+        Optional[str]: The fetched text data, stripped of leading and trailing whitespace, 
                      or None if an error occurs.
     """
     try:
