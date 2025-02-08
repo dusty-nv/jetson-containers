@@ -6,7 +6,7 @@
 #   docker build -f Dockerfile.x86 -t 3d_diffusion_policy .
 #   docker run -it --rm --runtime=nvidia --network=host -v /home/user:/home/user 3d_diffusion_policy
 #
-ARG BASE_IMAGE=nvcr.io/nvidia/pytorch:24.09-py3
+ARG BASE_IMAGE=nvcr.io/nvidia/pytorch:25.01-py3
 FROM ${BASE_IMAGE}
 
 WORKDIR /opt/3D-Diffusion-Policy
@@ -75,7 +75,7 @@ RUN pip3 install opencv-fixer && \
     python3 -c "from opencv_fixer import AutoFix; AutoFix()" && \
     python3 -c "import cv2"
 
-RUN pip3 install 'Cython<3' && \
+RUN pip3 install 'Cython' && \
     apt-get update && \
     apt-get install -y --no-install-recommends libosmesa6-dev && \
     cd third_party/VRL3/src && \

@@ -25,10 +25,10 @@ RUN git clone --branch=${LEROBOT_BRANCH} --depth=1 https://github.com/${LEROBOT_
     cat -n pyproject.toml
 
 RUN cd /opt/lerobot && \
-    pip3 install --ignore-installed -e ".[aloha, pusht]"
+    pip3 install --ignore-installed -e ".[aloha, pusht]" --verbose
     
 RUN cd /opt/lerobot && \
-    pip install -e ".[dynamixel]"
+    pip install -e ".[dynamixel]" --verbose
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
