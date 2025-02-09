@@ -19,7 +19,7 @@ WORKDIR /opt
 RUN git clone https://github.com/thewh1teagle/kokoro-onnx.git && \
     cd kokoro-onnx && \
     sed -i "/onnxruntime/d" pyproject.toml && \
-    sed -i "s/numpy>=2.0.2/numpy<2.0/" pyproject.toml && \
+    # sed -i "s/numpy>=2.0.2/numpy<2.0/" pyproject.toml && \
     sed -i 's/providers = \["CPUExecutionProvider"\]/providers = \["CUDAExecutionProvider", "CPUExecutionProvider"\]/' src/kokoro_onnx/__init__.py && \
     pip install -e . 
 
