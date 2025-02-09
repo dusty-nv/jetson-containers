@@ -26,5 +26,6 @@ def mamba(version, requires=None, default=False):
 
 package = [
     mamba('2.2.2'),
+    mamba('2.2.4'),
     mamba('2.2.5', default=True)
 ]
