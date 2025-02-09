@@ -3,7 +3,8 @@ set -ex
 echo "Building CTranslate2 ${CTRANSLATE_VERSION}"
 
 # clone sources
-git clone --branch=${CTRANSLATE_BRANCH} --recursive https://github.com/OpenNMT/CTranslate2.git ${CTRANSLATE_SOURCE}
+git clone --branch=${CTRANSLATE_BRANCH} --recursive https://github.com/OpenNMT/CTranslate2.git ${CTRANSLATE_SOURCE} ||
+git clone --recursive https://github.com/OpenNMT/CTranslate2.git ${CTRANSLATE_SOURCE}
 
 mkdir -p $CTRANSLATE_SOURCE/build
 cd $CTRANSLATE_SOURCE/build
