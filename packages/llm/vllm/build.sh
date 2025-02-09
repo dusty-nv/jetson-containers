@@ -32,13 +32,17 @@ cd /opt/vllm
 git apply /tmp/vllm/${VLLM_VERSION}.diff
 git diff
 
-export MAX_JOBS=4 # $(nproc) max 4 working on Orin NX
+export MAX_JOBS=6 # $(nproc) max 4 working on Orin NX
 export USE_CUDNN=1
 export CUDA_HOME=/usr/local/cuda
 export PATH="${CUDA_HOME}/bin:$PATH"
 export SETUPTOOLS_SCM_PRETEND_VERSION="${VLLM_VERSION}"
 
 python3 use_existing_torch.py || echo "skipping vllm/use_existing_torch.py"
+
+export TORCH_CUDA_ARCH_LIST="8.7"
+export CUDAARCHS="87"
+export CMAKE_CUDA_ARCHITECTURES="87"
 
 pip3 install -r requirements-build.txt
 python3 -m setuptools_scm
