@@ -1,7 +1,7 @@
 #---
 # name: kokoro-tts
 # group: audio
-# depends: [onnxruntime]
+# depends: [onnxruntime, numba]
 # test: [test.py]
 #---
 ARG BASE_IMAGE
@@ -19,7 +19,7 @@ WORKDIR /opt
 RUN git clone https://github.com/thewh1teagle/kokoro-onnx.git && \
     cd kokoro-onnx && \
     sed -i "/onnxruntime/d" pyproject.toml && \
-    # sed -i "s/numpy>=2.0.2/numpy<2.0/" pyproject.toml && \
+    sed -i "s/numpy>=2.0.2/numpy/" pyproject.toml && \
     sed -i 's/providers = \["CPUExecutionProvider"\]/providers = \["CUDAExecutionProvider", "CPUExecutionProvider"\]/' src/kokoro_onnx/__init__.py && \
     pip install -e . 
 
@@ -31,8 +31,11 @@ RUN wget -P /opt/kokoro-onnx/examples \
     https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/kokoro-v1.0.onnx \
     https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin
 
-# Set the working directory
-WORKDIR /opt/kokoro-onnx
+# Reinstall correct numpy
+RUN bash /tmp/numpy/install.sh
+
+# This dockerfile may get used in others, so restore $WORKDIR
+WORKDIR /
 
 # Default command
 CMD ["bash"]
