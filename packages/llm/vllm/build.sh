@@ -29,6 +29,8 @@ git clone --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm
 cd /opt/vllm
 
 # apply patches: Remove switching to outlines instead of XGrammar
+env
+cp /tmp/vllm/${VLLM_VERSION}.fa.diff /tmp/vllm/fa.diff
 git apply /tmp/vllm/${VLLM_VERSION}.diff
 git diff
 
