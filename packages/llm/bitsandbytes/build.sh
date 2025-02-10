@@ -14,7 +14,6 @@ if [ $CUDA_INSTALLED_VERSION < 126 ]; then
     CUDA_VERSION=$CUDA_INSTALLED_VERSION make -C /opt/bitsandbytes -j$(nproc) "${CUDA_MAKE_LIB}"
     CUDA_VERSION=$CUDA_INSTALLED_VERSION make -C /opt/bitsandbytes -j$(nproc) "${CUDA_MAKE_LIB}_nomatmul"
 else
-    pip3 install -r requirements-dev.txt
     cmake -DCOMPUTE_BACKEND=cuda -S .
     CUDA_VERSION=$CUDA_INSTALLED_VERSION make -C . -j$(nproc)
 fi
