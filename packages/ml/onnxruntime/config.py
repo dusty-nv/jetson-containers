@@ -1,4 +1,5 @@
 
+from jetson_containers import CUDA_VERSION
 from packaging.version import Version
 
 def onnxruntime(version, branch=None, requires=None, default=False):
@@ -36,9 +37,8 @@ def onnxruntime(version, branch=None, requires=None, default=False):
     
     
 package = [
-    onnxruntime('1.22', requires=['>=36', '>=cu128'], default=False, branch='main'),
-    onnxruntime('1.21', requires=['>=36', '>=cu124'], default=True),
-    onnxruntime('1.20.1', requires=['>=36', '>=cu124'], default=False),
+    onnxruntime('1.21', requires=['>=36', '>=cu128'], branch='main', default=(CUDA_VERSION >= Version('12.8'))),
+    onnxruntime('1.20.1', requires=['>=36', '>=cu124'], default=(CUDA_VERSION < Version('12.8'))),
     onnxruntime('1.20', requires=['>=36', '>=cu124'], default=False),
     onnxruntime('1.19.2', requires=['>=36', '>=cu124'], default=False),
     onnxruntime('1.17', requires=['>=36', '<=cu122'], default=True),
