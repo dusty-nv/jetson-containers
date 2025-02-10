@@ -1,17 +1,16 @@
 #---
-# name: pycolmap
+# name: glomap
 # group: nerf
 # config: config.py
-# depends: [torch, torchvision, ffmpeg, python, ninja, cmake, numpy, pyceres]
+# depends: [pycolmap]
 # requires: '>=34.1.0'
-# test: test.py
 # notes: https://github.com/colmap/colmap.git
 #---
 
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG PYCOLMAP_VERSION \
+ARG GLOMAP_VERSION \
 FORCE_BUILD=off
 
 ARG CUDAARCHS
@@ -20,32 +19,39 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    git \
-    cmake \
-    ninja-build \
-    build-essential \
-    libboost-program-options-dev \
+    curl \
+    libatlas-base-dev \
+    libboost-filesystem-dev \
     libboost-graph-dev \
+    libboost-program-options-dev \
     libboost-system-dev \
+    libboost-test-dev \
+    libhdf5-dev \
+    libcgal-dev \
     libeigen3-dev \
     libflann-dev \
     libfreeimage-dev \
-    libmetis-dev \
-    libgoogle-glog-dev \
-    libgtest-dev \
-    libgmock-dev \
-    libsqlite3-dev \
+    libgflags-dev \
     libglew-dev \
-    qtbase5-dev \
+    libgoogle-glog-dev \
+    libmetis-dev \
+    libprotobuf-dev \
     libqt5opengl5-dev \
-    libcgal-dev \
+    libsqlite3-dev \
+    libsuitesparse-dev \
+    nano \
+    protobuf-compiler \
+    libgtest-dev \
+    qtbase5-dev \
+    sudo \
+    vim-tiny \
     wget && \
     rm -rf /var/lib/apt/lists/*
 
 
-COPY build.sh install.sh /tmp/PYCOLMAP/
+COPY build.sh install.sh /tmp/GLOMAP/
 
 RUN cd /opt/
 RUN pip3 install build wheel
 
-RUN /tmp/PYCOLMAP/install.sh || /tmp/PYCOLMAP/build.sh
+RUN /tmp/GLOMAP/install.sh || /tmp/GLOMAP/build.sh
