@@ -10,7 +10,8 @@ fi
 
 # Navigate to the directory containing PyMeshLab's setup.py
 cd /opt/nerfstudio
-
+pip3 install cmake
+pip3 install --no-cache-dir --ignore-installed blinker
 pip3 wheel . --no-deps --no-build-isolation -w /opt/nerfstudio/wheels  # Create the wheel package
 
 # Verify the contents of the /opt directory
