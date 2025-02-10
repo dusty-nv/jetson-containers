@@ -13,3 +13,4 @@ cd build
 mkdir -p /build
 cmake .. -GNinja "-DCMAKE_CUDA_ARCHITECTURES=${CUDAARCHS}" -DCMAKE_INSTALL_PREFIX=/build/glomap
 ninja install -j $(nproc)
+ldconfig
