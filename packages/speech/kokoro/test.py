@@ -10,6 +10,16 @@ import time
 pipeline = KPipeline(lang_code='a')
 print("Pipeline initialized with lang_code='a'")
 
+# Generate audio with logging
+generator = pipeline(
+    'a', 
+    voice='af_heart',
+    speed=1, 
+    split_pattern=r' '
+)
+print("Pipeline ran for initial load")
+
+
 # Sample text
 text = '''
 Kokoro is an open-weight TTS model with 82 million parameters. 
@@ -32,19 +42,19 @@ generator = pipeline(
 
 print("Starting audio generation...")
 
+start_time = time.time()
 for i, (gs, ps, audio) in enumerate(generator):
     current_time = time.time()
     
     # First token
     if i == 0:
-        start_time = current_time
-        print(f"First token: '{gs}'")
+        print(f"First token: '{gs}' [{current_time - start_time:.2f}s]")
     # Second token
     elif i == 1:
-        print(f"Second token: '{gs}'")
+        print(f"Second token: '{gs}' [{current_time - start_time:.2f}s]")
     # Third token
     elif i == 2:
-        print(f"Third token: '{gs}'")
+        print(f"Third token: '{gs}' [{current_time - start_time:.2f}s]")
     
     # Save audio file - audio is already a tensor
     torchaudio.save(
