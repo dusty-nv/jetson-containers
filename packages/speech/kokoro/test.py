@@ -1,6 +1,7 @@
 from kokoro import KPipeline
 from IPython.display import display, Audio
-import soundfile as sf
+import torchaudio
+import torch
 import time
 
 # Big thanks for Shakh and for Kokoro_onnx Dockerfile
@@ -45,8 +46,12 @@ for i, (gs, ps, audio) in enumerate(generator):
     elif i == 2:
         print(f"Third token: '{gs}'")
     
-    # Save audio file
-    sf.write(f'output_{i}.wav', audio, 24000)
+    # Save audio file - audio is already a tensor
+    torchaudio.save(
+        f'output_{i}.wav',
+        audio.unsqueeze(0).float(),  # Add channel dimension and ensure float type
+        sample_rate=24000
+    )
     
     # Display audio (if in Jupyter notebook)
     if i == 0:  # Autoplay first segment only
