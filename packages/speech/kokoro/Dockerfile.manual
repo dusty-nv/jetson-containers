@@ -1,0 +1,32 @@
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+# Install required dependencies
+RUN apt-get update && \
+    apt-get install -y libespeak-ng-dev portaudio19-dev && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install specific versions of Python packages
+RUN pip install \
+    scipy==1.15.1 \
+    loguru==0.7.3 \
+    num2words==0.5.14 \
+    spacy==3.5.0 \
+    phonemizer==3.3.0 \
+    rfc3986==1.5.0 \
+    IPython==8.32.0
+
+RUN pip install misaki --no-deps
+RUN pip install kokoro --no-deps
+    
+# Install additional required packages
+RUN pip install gradio soundfile sounddevice
+
+# Reinstall correct numpy
+RUN bash /tmp/numpy/install.sh
+
+# Restore working directory
+WORKDIR /
+
+# Default command
+CMD ["bash"]

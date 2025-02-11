@@ -1,0 +1,40 @@
+#---
+# name: kokoro
+# group: audio
+# depends: [python]
+# test: [test.py]
+#---
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+# Install required dependencies
+RUN apt-get update &&  \
+    apt-get install -y libespeak-ng-dev portaudio19-dev && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN BLIS_ARCH="generic" pip install spacy --no-binary blis
+
+# Set the working directory
+WORKDIR /opt
+
+# Clone the repository and modify pyproject.toml in one step
+RUN git clone https://github.com/hexgrad/misaki.git 
+RUN cd misaki && \
+    pip install -e . && \
+    cd ..
+# Clone the repository and modify pyproject.toml in one step
+RUN git clone https://github.com/hexgrad/kokoro.git 
+RUN cd kokoro && \
+    pip install -e . 
+
+# Install Python dependencies in one step
+RUN pip install gradio soundfile sounddevice
+    
+# Reinstall correct numpy
+RUN bash /tmp/numpy/install.sh
+
+# This dockerfile may get used in others, so restore $WORKDIR
+WORKDIR /
+
+# Default command
+CMD ["bash"]
