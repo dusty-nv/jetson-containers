@@ -2,12 +2,13 @@
 set -ex
 
 # Clone the repository if it doesn't exist
-git clone --branch=${HLOC_VERSION} --depth=1 --recursive https://github.com/cvg/Hierarchical-Localization /opt/hloc || \
+git clone --branch=${HLOC_VERSION} --depth=1 --recursive https://github.com/cvg/Hierarchical-Localization /opt/hloc ||
 git clone --depth=1 --recursive https://github.com/cvg/Hierarchical-Localization /opt/hloc
 
 # Navigate to the directory containing PyMeshLab's setup.py
-cd /opt/hloc && \
-pip3 wheel . -w /opt/hloc/wheels
+cd /opt/hloc
+sed -i '/pycolmap/d' requirements.txt
+pip3 wheel . -w /opt/hloc/wheels --verbose
 
 # Verify the contents of the /opt directory
 ls /opt/hloc/wheels

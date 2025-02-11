@@ -1,7 +1,7 @@
 #--- 
 # name: cosmos
 # group: diffusion
-# depends: [ffmpeg, pytorch, torchvision, torchaudio, transformer-engine, transformers, opencv:4.11.0, bitsandbytes, huggingface_hub]
+# depends: [pytorch, torchvision, torchaudio, transformer-engine, transformers, opencv:4.11.0, bitsandbytes, huggingface_hub, ffmpeg]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---

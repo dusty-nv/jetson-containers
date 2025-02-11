@@ -4,7 +4,7 @@ set -ex
 # Clone the repository if it doesn't exist
 if [ ! -d /opt/pyceres ]; then
     echo "Cloning pyceres version ${PYCERES_VERSION}"
-    git clone --branch=v${PYCERES_VERSION} --depth=1 --recursive https://github.com/cvg/pyceres /opt/pyceres || \ 
+    git clone --branch=v${PYCERES_VERSION} --depth=1 --recursive https://github.com/cvg/pyceres /opt/pyceres ||
     git clone --depth=1 --recursive https://github.com/cvg/pyceres /opt/pyceres
 fi
 
