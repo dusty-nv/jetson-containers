@@ -76,13 +76,14 @@ index 82f457a..0919eb7 100644
 Submodule 3rdparty/libflash_attn contains modified content
 Submodule cutlass contains modified content
 diff --git a/3rdparty/tvm/3rdparty/libflash_attn/cutlass/CMakeLists.txt b/3rdparty/tvm/3rdparty/libflash_attn/cutlass/CMakeLists.txt
-index 2d4f9cc3..e57ccb1c 100755
+index 2d4f9cc3..21328555 100755
 --- a/3rdparty/tvm/3rdparty/libflash_attn/cutlass/CMakeLists.txt
 +++ b/3rdparty/tvm/3rdparty/libflash_attn/cutlass/CMakeLists.txt
-@@ -122,13 +122,7 @@ endif()
+@@ -121,15 +121,7 @@ endif()
+ ################################################################################
  
  set(CUTLASS_NVCC_ARCHS_SUPPORTED "")
- if (CUDA_VERSION VERSION_GREATER_EQUAL 11.4 AND NOT CUDA_COMPILER MATCHES "[Cc]lang")
+-if (CUDA_VERSION VERSION_GREATER_EQUAL 11.4 AND NOT CUDA_COMPILER MATCHES "[Cc]lang")
 -  list(APPEND CUTLASS_NVCC_ARCHS_SUPPORTED 70 72 75 80 86 87)
 -endif()
 -if (CUDA_VERSION VERSION_GREATER_EQUAL 11.8 AND NOT CUDA_COMPILER MATCHES "[Cc]lang")
@@ -90,10 +91,11 @@ index 2d4f9cc3..e57ccb1c 100755
 -endif()
 -if (CUDA_VERSION VERSION_GREATER_EQUAL 12.0 AND NOT CUDA_COMPILER MATCHES "[Cc]lang")
 -  list(APPEND CUTLASS_NVCC_ARCHS_SUPPORTED 90a)
-+  list(APPEND CUTLASS_NVCC_ARCHS_SUPPORTED 87)
- endif()
+-endif()
++list(APPEND CUTLASS_NVCC_ARCHS_SUPPORTED 87)
  set(CUTLASS_NVCC_ARCHS ${CUTLASS_NVCC_ARCHS_SUPPORTED} CACHE STRING "The SM architectures requested.")
  set(CUTLASS_NVCC_ARCHS_ENABLED ${CUTLASS_NVCC_ARCHS} CACHE STRING "The SM architectures to build code for.")
+ 
 diff --git a/3rdparty/tvm/3rdparty/libflash_attn/cutlass/include/cute/layout_composed.hpp b/3rdparty/tvm/3rdparty/libflash_attn/cutlass/include/cute/layout_composed.hpp
 index 7b3b6f4f..3d0e3efe 100644
 --- a/3rdparty/tvm/3rdparty/libflash_attn/cutlass/include/cute/layout_composed.hpp
@@ -143,7 +145,7 @@ index ba2ac1a..aca2844 100644
 +)
 \ No newline at end of file
 diff --git a/3rdparty/tvm/3rdparty/libflash_attn/src/static_switch.h b/3rdparty/tvm/3rdparty/libflash_attn/src/static_switch.h
-index b4a4b48..e5a0457 100644
+index b4a4b48..ce6181f 100644
 --- a/3rdparty/tvm/3rdparty/libflash_attn/src/static_switch.h
 +++ b/3rdparty/tvm/3rdparty/libflash_attn/src/static_switch.h
 @@ -1,6 +1,7 @@
@@ -259,7 +261,6 @@ index b4a4b48..e5a0457 100644
 +      return __VA_ARGS__();                \
 +    }                                      \
 +  }()
-\ No newline at end of file
 diff --git a/3rdparty/tvm/CMakeLists.txt b/3rdparty/tvm/CMakeLists.txt
 index 09c5104be..3d4be2b57 100644
 --- a/3rdparty/tvm/CMakeLists.txt
@@ -296,6 +297,19 @@ index 3bbc588f4..78cf32628 100644
  # The following line is set by tvm/python/update_version.py
 -__version__ = "0.20.dev0"
 +__version__ = "0.20"
+diff --git a/3rdparty/tvm/version.py b/3rdparty/tvm/version.py
+index c63958b2d..0cfc366dd 100644
+--- a/3rdparty/tvm/version.py
++++ b/3rdparty/tvm/version.py
+@@ -44,7 +44,7 @@ import subprocess
+ # Two tag formats are supported:
+ # - vMAJ.MIN.PATCH (e.g. v0.8.0) or
+ # - vMAJ.MIN.devN (e.g. v0.8.dev0)
+-__version__ = "0.20.dev0"
++__version__ = "0.20.0"
+ 
+ # ---------------------------------------------------
+ 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index a010a051..68476415 100644
 --- a/CMakeLists.txt
