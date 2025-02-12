@@ -13,7 +13,7 @@ else:
         if CUDA_VERSION >= Version('12.8'):
             TENSORRT_VERSION = Version('10.7') # this is temporal, Nvidia removed 10.8.
         elif CUDA_VERSION >= Version('12.6'):
-            TENSORRT_VERSION = Version('10.7')
+            TENSORRT_VERSION = Version('10.4')
         elif CUDA_VERSION == Version('12.4'):
             TENSORRT_VERSION = Version('10.0')
         else:
