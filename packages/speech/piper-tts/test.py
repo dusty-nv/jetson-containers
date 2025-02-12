@@ -2,7 +2,20 @@
 import os
 import time
 import wave
-import onnxruntime
+from packaging.version import Version
+import onnxruntime as ort
+
+print('onnxruntime version: ' + str(ort.__version__))
+
+ort_version = Version(ort.__version__)
+
+if ort_version > Version('1.10'):
+    print(ort.get_build_info())
+
+# verify execution providers
+providers = ort.get_available_providers()
+
+print(f'execution providers:  {providers}')
 
 from piper import PiperVoice
 from piper.download import ensure_voice_exists, find_voice, get_voices
@@ -18,7 +31,7 @@ The beige hue on the waters of the loch impressed all, including the French quee
 
 def main(model='en_US-lessac-high', config=None, cache=os.environ.get('PIPER_CACHE'),
          speaker=0, length_scale=1.0, noise_scale=0.667, noise_w=0.8, sentence_silence=0.2,
-         prompt=DEFAULT_PROMPT, output='/dev/null', use_cuda=True, runs=5, dump=False, **kwargs):
+         prompt=DEFAULT_PROMPT, output='/dev/null', backend='cuda', runs=5, dump=False, **kwargs):
 
     # Download voice info
     try:
@@ -43,7 +56,19 @@ def main(model='en_US-lessac-high', config=None, cache=os.environ.get('PIPER_CAC
         model_name = os.path.splitext(os.path.basename(model))[0]
       
     # Load model
-    print(f"Loading {model}")
+    if backend == 'cpu':
+        providers = ['CPUExecutionProvider']
+        use_cuda = False
+    elif backend == 'cuda':
+        providers = ['CUDAExecutionProvider', 'CPUExecutionProvider']
+        use_cuda = True
+    elif backend == 'tensorrt':
+        # Typically you want to include CUDA as a fallback if TensorRT fails.
+        providers = ['TensorrtExecutionProvider', 'CUDAExecutionProvider', 'CPUExecutionProvider']
+        use_cuda = True
+    else:
+        raise ValueError(f"Unknown backend '{backend}'")
+    print(f"Loading {model} with backend={backend} providers={providers}")
     voice = PiperVoice.load(model, config_path=config, use_cuda=True)
     
     # get the speaker name->ID mapping
@@ -125,7 +150,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
          
     if args.verbose:
-        onnxruntime.set_default_logger_severity(0)
+        ort.set_default_logger_severity(0)
  
     if not args.prompt:
         args.prompt = DEFAULT_PROMPT
