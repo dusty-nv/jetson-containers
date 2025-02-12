@@ -17,5 +17,4 @@ COPY build.sh install.sh /tmp/TRANSFORMER_ENGINE/
 
 # COPY patches/${TRANSFORMER_ENGINE_VERSION}.diff /tmp/TRANSFORMER_ENGINE/patch.diff
 
-
 RUN /tmp/TRANSFORMER_ENGINE/install.sh || /tmp/TRANSFORMER_ENGINE/build.sh

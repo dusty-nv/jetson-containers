@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # pass-through commands to 'docker run' with some defaults
 # https://docs.docker.com/engine/reference/commandline/run/
-ROOT="$(dirname $(dirname "$(readlink -f "$0")") )"
+ROOT="$(dirname "$(readlink -f "$0")")"
 
 # Function to clean up background processes
 cleanup() {
