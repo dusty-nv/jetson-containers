@@ -4,12 +4,13 @@ import json
 import os
 import hashlib
 
+
 def test_tts_api():
     """Simple test for the TTS API's essential endpoints"""
     base_url = "http://localhost:8880"
     print("🧪 Testing TTS API at", base_url)
-    print("\nWaiting for server to start...")
-    time.sleep(3)
+    print("\nWaiting for server to start for 20 seconds...")
+    time.sleep(20)
     
     # Test essential endpoints
     endpoints = {
@@ -119,12 +120,14 @@ def test_tts_api():
             
             if response.status_code == 200 and len(response.content) > 1000:
                 # Save the audio file
-                with open("test_output.mp3", "wb") as f:
+                filename = f'kokoro-{voice_name}-fastapi.mp3'
+
+                with open(filename, "wb") as f:
                     f.write(response.content)
                     
                 file_size = len(response.content)
                 print(f"\n✅ Speech synthesis successful!")
-                print(f"Output saved to: test_output.mp3 ({file_size} bytes)")
+                print(f"Output saved to: {filename} ({file_size} bytes)")
                 print(f"\nPERFORMANCE METRICS:")
                 print(f"Processing time: {duration:.3f}s")
                 print(f"Characters: {char_count}")
