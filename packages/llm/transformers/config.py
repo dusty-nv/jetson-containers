@@ -36,8 +36,13 @@ def transformers_pypi(version, **kwargs):
 
 
 def transformers_git(version, repo='huggingface/transformers', branch=None, **kwargs):
-    version = github_latest_tag(repo) if version == 'latest' else version
 
+    if version == 'latest':
+        version = github_latest_tag(repo) 
+        if not version:
+            print(f'-- Failed to get latest Transformers github tag ({error})')
+            return
+        
     if version.startswith('v'):
         version = version[1:]
 

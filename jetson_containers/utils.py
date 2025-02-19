@@ -171,13 +171,13 @@ def handle_json_request(url, headers=None):
         response.raise_for_status()
         return response.json()
     except requests.HTTPError as e:
-        print(f"HTTP error occurred: {e}")
+        print(f"-- HTTP error occurred ({e})")
         return None
     except requests.RequestException as e:
-        print(f"Error occurred: {e}")
+        print(f"-- Requests error occurred ({e})")
         return None
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+        print(f"-- Unexpected error occurred during request ({e})")
         return None
     
 
