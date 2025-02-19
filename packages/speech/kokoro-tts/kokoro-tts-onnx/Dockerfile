@@ -1,5 +1,5 @@
 #---
-# name: kokoro-tts
+# name: kokoro-tts:onnx
 # group: audio
 # depends: [onnxruntime, numba]
 # test: [test.py]
