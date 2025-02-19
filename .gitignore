@@ -15,3 +15,4 @@ runner
 .ipynb_checkpoints
 .idea
 nv_tegra_release
+kokoro-*-*.wav
