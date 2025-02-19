@@ -4,8 +4,11 @@ import sys
 import copy
 import json
 import yaml
+import time
 import fnmatch
 import importlib
+import threading
+import concurrent.futures
 
 from packaging.version import Version
 from packaging.specifiers import SpecifierSet
@@ -72,12 +75,17 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
 
         _PACKAGE_SCAN = True  # flag that all dirs have been scanned
 
-        for key in _PACKAGES.copy():  # make sure all dependencies are met
+        def resolve_package(key):
             try:
                 resolve_dependencies(key)
             except KeyError as error:
                 print(f"-- Package {key} has missing dependencies, disabling...  ({error})")
                 del _PACKAGES[key]
+
+        with concurrent.futures.ProcessPoolExecutor() as executor: 
+            executor.map(resolve_package, _PACKAGES.copy())       
+        #for key in _PACKAGES.copy():  # make sure all dependencies are met
+            
 
         return _PACKAGES
     elif isinstance(package_dirs, str) and len(package_dirs) > 0:
@@ -113,6 +121,7 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
 
     # search this directory for dockerfiles and config scripts
     entries = os.listdir(path)
+    threads = []
 
     for entry in entries:
         entry_path = os.path.join(path, entry)
@@ -121,7 +130,12 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
             continue
 
         if os.path.isdir(entry_path) and recursive:
-            scan_packages(os.path.join(entry_path, '*'))
+            thread = threading.Thread(
+                target=scan_packages, 
+                kwargs=dict(package_dirs=os.path.join(entry_path, '*'))
+            )
+            threads.append(thread)
+            thread.start()
         elif os.path.isfile(entry_path):
             if entry.lower() == 'dockerfile':  # entry.lower().find('dockerfile') >= 0:
                 package['dockerfile'] = entry
@@ -132,25 +146,30 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
             elif validate_config(entry_path):
                 package['config'].append(entry)
 
-    # skip directories with no dockerfiles or configuration
-    if 'dockerfile' not in package and len(package['config']) == 0:
-        # print(f"-- Skipping '{path}' (didn't find a Dockerfile or package config)")
+    def setup_package(package, path):
+        if 'dockerfile' not in package and len(package['config']) == 0:
+            # print(f"-- Skipping '{path}' (didn't find a Dockerfile or package config)")
+            return _PACKAGES
+
+        package_name = os.path.basename(path)
+
+        if package_name in _PACKAGES:
+            return _PACKAGES
+
+        package['name'] = package_name
+        packages = config_package(package)  # returns a list (including subpackages)
+
+        for pkg in packages:
+            _PACKAGES[pkg['name']] = pkg
+
         return _PACKAGES
 
-    # configure new packages
-    package_name = os.path.basename(path)
+    packages = setup_package(package, path)
 
-    if package_name in _PACKAGES:
-        return _PACKAGES
+    for thread in threads:
+        thread.join()
 
-    package['name'] = package_name
-    packages = config_package(package)  # returns a list (including subpackages)
-
-    for pkg in packages:
-        _PACKAGES[pkg['name']] = pkg
-
-    return _PACKAGES
-
+    return packages
 
 def find_package(package, required=True, scan=True):
     """
