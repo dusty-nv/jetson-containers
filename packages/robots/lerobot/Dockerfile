@@ -25,8 +25,8 @@ RUN git clone --branch=${LEROBOT_BRANCH} --depth=1 https://github.com/${LEROBOT_
     cat -n pyproject.toml
 
 RUN cd /opt/lerobot && \
-    pip3 install --ignore-installed -e ".[aloha, pusht]" --verbose
-    
+    pip3 install --ignore-installed -e ".[aloha, pusht, pi0]" --verbose
+
 RUN cd /opt/lerobot && \
     pip install -e ".[dynamixel]" --verbose
 
@@ -56,16 +56,18 @@ RUN echo "pactl list short sinks" >> /root/.bash_history
 RUN echo "pactl set-default-sink 0" >> /root/.bash_history
 RUN echo "wandb login" >> /root/.bash_history
 RUN echo "export HF_USER=" >> /root/.bash_history
-RUN echo "python lerobot/scripts/control_robot.py record \
-  --robot-path lerobot/configs/robot/koch.yaml \
-  --fps 30 \
-  --root data \
-  --repo-id \${HF_USER}/koch_test_\$(date +%Y%m%d_%H%M%S) \
-  --tags tutorial \
-  --warmup-time-s 5 \
-  --episode-time-s 30 \
-  --reset-time-s 30 \
-  --num-episodes 10" >> /root/.bash_history
+RUN echo "python lerobot/scripts/control_robot.py
+  --robot.type=koch \
+  --control.type=record \
+  --control.single_task="Grasp a lego block and put it in the bin." \
+  --control.fps=30 \
+  --control.repo_id=\${HF_USER}/koch_test_\$(date +%Y%m%d_%H%M%S) \
+  --control.tags='["tutorial"]' \
+  --control.warmup_time_s=5 \
+  --control.episode_time_s=30 \
+  --control.reset_time_s=30 \
+  --control.num_episodes=10 \
+  --control.push_to_hub=true" >> /root/.bash_history
 
 RUN echo -e "* soft core 0\n* hard core 0" >> /etc/security/limits.conf
 
