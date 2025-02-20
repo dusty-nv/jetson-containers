@@ -52,21 +52,21 @@ By default, the base container image used at the start of the build chain will b
 jetson-containers build --base=my_container:latest --name=my_container:pytorch pytorch  # add pytorch to your container
 ```
 
-> [!NOTE]  
-> On JetPack 4/5, it's assumed that base images already have the JetPack components available/installed (CUDA Toolkit, cuDNN, TensorRT).  
-> 
-> On JetPack 6 (L4T r36.x), the CUDA components will automatically be installed on top of your base image if required. 
+> [!NOTE]
+> On JetPack 4/5, it's assumed that base images already have the JetPack components available/installed (CUDA Toolkit, cuDNN, TensorRT).
+>
+> On JetPack 6 (L4T r36.x), the CUDA components will automatically be installed on top of your base image if required.
 > > You can specify the CUDA version by using `CUDA_VERSION` environment variable, otherwise it will pick the CUDA version that was made available to the L4T version.
 
 ## Changing Versions
 
-Many packages are versioned, and define subpackages like `pytorch:2.0`, `pytorch:2.1`, ect in the package's [configuration](/docs/packages.md#python).  For some core packages, you can control the default version of these with environment variables like `PYTORCH_VERSION`, `PYTHON_VERSION`, and `CUDA_VERSION`.  Other packages referring to these will then use your desired versions instead of the previous ones:  
+Many packages are versioned, and define subpackages like `pytorch:2.0`, `pytorch:2.1`, ect in the package's [configuration](/docs/packages.md#python).  For some core packages, you can control the default version of these with environment variables like `PYTORCH_VERSION`, `PYTHON_VERSION`, and `CUDA_VERSION`.  Other packages referring to these will then use your desired versions instead of the previous ones:
 
 ```bash
 CUDA_VERSION=12.4 jetson-containers build --name=cu124/ pytorch  # build PyTorch for CUDA 12.4
 ```
 
-The dependencies are also able to specify with [`requires`](/docs/packages.md) which versions of L4T, CUDA, and Python they need, so changing the CUDA version has cascading effects downstream and will also change the default version of cuDNN, TensorRT, and PyTorch (similar to how changing the PyTorch version also changes the default version of torchvision and torchaudio).  The reverse also occurs in the other direction, for example changing the TensorRT version will change the default version of CUDA (unless you explicitly specify it otherwise).  
+The dependencies are also able to specify with [`requires`](/docs/packages.md) which versions of L4T, CUDA, and Python they need, so changing the CUDA version has cascading effects downstream and will also change the default version of cuDNN, TensorRT, and PyTorch (similar to how changing the PyTorch version also changes the default version of torchvision and torchaudio).  The reverse also occurs in the other direction, for example changing the TensorRT version will change the default version of CUDA (unless you explicitly specify it otherwise).
 
 | Package       | Environment Variable | Versions                                                                             |
 |---------------|----------------------|-----------------------------------------------------------------------------------------|
@@ -87,7 +87,7 @@ The available versions are defined in the package's configuration scripts (some 
 
 For packages that provide different versions but don't have their own environment variable defined, you can specify the desired version of them that your container depends on in the Dockerfile header under [`depends`](/docs/packages.md), and it will override the default and build using them instead (e.g. by using `depends: onnxruntime:1.17` instead of `depends: onnxruntime`).  Like above, these versions will also cascade across the build.
 
-> [!NOTE]  
+> [!NOTE]
 > On JetPack 6 (L4T r36.x), if you don't have `CUDA_VERSION` specified, it will pick the CUDA version that was packaged with that version of L4T in the JetPack.
 > - L4T r36.2 (JetPack 6.0 DP) --> CUDA `12.2`
 > - L4T r36.3 (JetPack 6.0 GA) --> CUDA `12.4`
@@ -96,9 +96,9 @@ For packages that provide different versions but don't have their own environmen
 
 ## Pip Server
 
-Being able to change the versions of CUDA, Python, ect in the build tree will cause all the dependant packages like PyTorch to need rebuilt, and this can be time-consuming to recompile everything from scratch.  In order to cache and re-use the Python wheels compiled during the container builds, there's a [pip server](http://jetson.webredirect.org) running that wheels are uploaded to.  The containers automatically use this pip server via the `PIP_INDEX_URL` environment variable that gets set in the base containers, and there are indexes created for different versions of JetPack/CUDA.  
+Being able to change the versions of CUDA, Python, ect in the build tree will cause all the dependant packages like PyTorch to need rebuilt, and this can be time-consuming to recompile everything from scratch.  In order to cache and re-use the Python wheels compiled during the container builds, there's a [pip server](http://jetson.webredirect.org) running that wheels are uploaded to.  The containers automatically use this pip server via the `PIP_INDEX_URL` environment variable that gets set in the base containers, and there are indexes created for different versions of JetPack/CUDA.
 
-Then when the containers are built, it will first attempt to install the wheel from the server, and if it's found it builds it from source.  There is another similar server run for caching [tarball releases](http://jetson.webredirect.org:8000) for projects that install C/C++ binaries and headers or other general files outside of pip.  See this [forum post](https://forums.developer.nvidia.com/t/jetson-ai-lab-ml-devops-containers-core-inferencing/288235/3) for more information about the caching infrastructure, and the ability to use the pip server outside of just containers. 
+Then when the containers are built, it will first attempt to install the wheel from the server, and if it's found it builds it from source.  There is another similar server run for caching [tarball releases](http://jetson.webredirect.org:8000) for projects that install C/C++ binaries and headers or other general files outside of pip.  See this [forum post](https://forums.developer.nvidia.com/t/jetson-ai-lab-ml-devops-containers-core-inferencing/288235/3) for more information about the caching infrastructure, and the ability to use the pip server outside of just containers.
 
 ## Building External Packages
 
@@ -127,6 +127,14 @@ These flags tend to get used more during development - normally it's good to tho
 ## Running Containers
 
 To launch containers that you've built or pulled, see the [Running Containers](/docs/run.md) documentation or the package's readme page.
+
+## Build cache invalidation
+
+Add `--build-flags="--no-cache"`.
+
+```bash
+$ jetson-containers build --build-flags="--no-cache" lerobot
+```
 
 ## Troubleshooting
 
