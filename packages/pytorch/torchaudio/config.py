@@ -44,6 +44,7 @@ package = [
     torchaudio('2.4.0', pytorch='2.4', requires='==36.*'),
     torchaudio('2.5.0', pytorch='2.5', requires='==36.*'),
     torchaudio('2.6.0', pytorch='2.6', requires='==36.*'),
+    torchaudio('2.7.0', pytorch='2.7', requires='==36.*'),
 
     # JetPack 4
     torchaudio('0.10.0', pytorch='1.10', requires='==32.*'),
