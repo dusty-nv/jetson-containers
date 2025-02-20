@@ -94,6 +94,7 @@ package = [
     pytorch_pip('2.4', requires='==36.*'),
     pytorch_pip('2.5', requires='==36.*'),    # without OpenMPI
     pytorch_pip('2.6', requires='==36.*'),    # without OpenMPI
+    pytorch_pip('2.7', requires='==36.*'),    # without OpenMPI
 
     # JetPack 4
     pytorch_wget('1.10', 'torch-1.10.0-cp36-cp36m-linux_aarch64.whl', 'https://nvidia.box.com/shared/static/fjtbno0vpo676a25cgvuqc1wty0fkkg6.whl', '==32.*'),
