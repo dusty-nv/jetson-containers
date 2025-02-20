@@ -56,7 +56,7 @@ RUN echo "pactl list short sinks" >> /root/.bash_history
 RUN echo "pactl set-default-sink 0" >> /root/.bash_history
 RUN echo "wandb login" >> /root/.bash_history
 RUN echo "export HF_USER=" >> /root/.bash_history
-RUN echo "python lerobot/scripts/control_robot.py
+RUN echo "python lerobot/scripts/control_robot.py \
   --robot.type=koch \
   --control.type=record \
   --control.single_task="Grasp a lego block and put it in the bin." \
