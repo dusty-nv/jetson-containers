@@ -31,7 +31,7 @@ The beige hue on the waters of the loch impressed all, including the French quee
 
 def main(model='en_US-lessac-high', config=None, cache=os.environ.get('PIPER_CACHE'),
          speaker=0, length_scale=1.0, noise_scale=0.667, noise_w=0.8, sentence_silence=0.2,
-         prompt=DEFAULT_PROMPT, output='/dev/null', backend='tensorrt', runs=5, dump=False, **kwargs):
+         prompt=DEFAULT_PROMPT, output='/dev/null', backend='cuda', runs=5, dump=False, **kwargs):
 
     # Download voice info
     try:
@@ -68,7 +68,9 @@ def main(model='en_US-lessac-high', config=None, cache=os.environ.get('PIPER_CAC
         use_cuda = True
     else:
         raise ValueError(f"Unknown backend '{backend}'")
+
     print(f"Loading {model} with backend={backend} providers={providers}")
+
     voice = PiperVoice.load(model, config_path=config, use_cuda=use_cuda)
     
     # get the speaker name->ID mapping
