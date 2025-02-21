@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b99061df..fb2aebc2 100755
+index cd1c2c9..845102b 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -31,7 +31,7 @@ set(ignoreMe "${VLLM_PYTHON_PATH}")
@@ -10,7 +10,7 @@ index b99061df..fb2aebc2 100755
 +set(CUDA_SUPPORTED_ARCHS "8.7")
  
  # Supported AMD GPU architectures.
- set(HIP_SUPPORTED_ARCHS "gfx906;gfx908;gfx90a;gfx940;gfx941;gfx942;gfx1030;gfx1100;gfx1101")
+ set(HIP_SUPPORTED_ARCHS "gfx906;gfx908;gfx90a;gfx942;gfx1030;gfx1100;gfx1101")
 @@ -136,7 +136,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
    # Filter the target architectures by the supported supported archs
    # since for some files we will build for all CUDA_ARCHS.
@@ -20,7 +20,7 @@ index b99061df..fb2aebc2 100755
    message(STATUS "CUDA supported target architectures: ${CUDA_ARCHS}")
  else()
    #
-@@ -275,7 +275,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
+@@ -277,7 +277,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
    # Only build Marlin kernels if we are building for at least some compatible archs.
    # Keep building Marlin for 9.0 as there are some group sizes and shapes that
    # are not supported by Machete yet.
@@ -29,7 +29,7 @@ index b99061df..fb2aebc2 100755
    if (MARLIN_ARCHS)
      set(MARLIN_SRCS
         "csrc/quantization/fp8/fp8_marlin.cu"
-@@ -331,7 +331,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
+@@ -333,7 +333,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
    # For the cutlass_scaled_mm kernels we want to build the c2x (CUTLASS 2.x)
    # kernels for the remaining archs that are not already built for 3x.
    cuda_archs_loose_intersection(SCALED_MM_2X_ARCHS
@@ -38,7 +38,7 @@ index b99061df..fb2aebc2 100755
    # subtract out the archs that are already built for 3x
    list(REMOVE_ITEM SCALED_MM_2X_ARCHS ${SCALED_MM_3X_ARCHS})
    if (SCALED_MM_2X_ARCHS)
-@@ -482,7 +482,7 @@ set_gencode_flags_for_srcs(
+@@ -500,7 +500,7 @@ set_gencode_flags_for_srcs(
    CUDA_ARCHS "${CUDA_ARCHS}")
  
  if(VLLM_GPU_LANG STREQUAL "CUDA")
@@ -47,7 +47,7 @@ index b99061df..fb2aebc2 100755
    if (MARLIN_MOE_ARCHS)
      set(MARLIN_MOE_SRC
          "csrc/moe/marlin_kernels/marlin_moe_kernel.h"
-@@ -571,11 +571,15 @@ if (DEFINED ENV{VLLM_FLASH_ATTN_SRC_DIR})
+@@ -589,11 +589,15 @@ if (DEFINED ENV{VLLM_FLASH_ATTN_SRC_DIR})
    set(VLLM_FLASH_ATTN_SRC_DIR $ENV{VLLM_FLASH_ATTN_SRC_DIR})
  endif()
  
@@ -63,7 +63,7 @@ index b99061df..fb2aebc2 100755
    )
  else()
    FetchContent_Declare(
-@@ -585,6 +589,8 @@ else()
+@@ -603,6 +607,8 @@ else()
            GIT_PROGRESS TRUE
            # Don't share the vllm-flash-attn build between build types
            BINARY_DIR ${CMAKE_BINARY_DIR}/vllm-flash-attn
@@ -73,17 +73,25 @@ index b99061df..fb2aebc2 100755
  endif()
  
 diff --git a/vllm/model_executor/guided_decoding/__init__.py b/vllm/model_executor/guided_decoding/__init__.py
-index cf96461a..e1727348 100644
+index 77212a1..bbabd28 100644
 --- a/vllm/model_executor/guided_decoding/__init__.py
 +++ b/vllm/model_executor/guided_decoding/__init__.py
-@@ -42,10 +42,6 @@ def maybe_backend_fallback(
+@@ -42,12 +42,12 @@ def maybe_backend_fallback(
      if guided_params.backend == "xgrammar":
-         # xgrammar only has x86 wheels for linux, fallback to outlines
-         from vllm.platforms import current_platform
+         from vllm.model_executor.guided_decoding.xgrammar_decoding import (
+             xgr_installed)
+-        # xgrammar only has x86 wheels for linux, fallback to outlines
+-        from vllm.platforms import current_platform
 -        if current_platform.get_cpu_architecture() is not CpuArchEnum.X86:
 -            logger.warning("xgrammar is only supported on x86 CPUs. "
 -                           "Falling back to use outlines instead.")
 -            guided_params.backend = "outlines"
++        # # xgrammar only has x86 wheels for linux, fallback to outlines
++        # from vllm.platforms import current_platform
++        # if current_platform.get_cpu_architecture() is not CpuArchEnum.X86:
++        #     logger.warning("xgrammar is only supported on x86 CPUs. "
++        #                    "Falling back to use outlines instead.")
++        #     guided_params.backend = "outlines"
  
-         # xgrammar doesn't support regex or choice, fallback to outlines
-         if guided_params.regex is not None or guided_params.choice is not None:
+         # xgrammar doesn't support regex, fallback to outlines
+         if guided_params.regex is not None:
