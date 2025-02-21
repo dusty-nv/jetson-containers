@@ -31,15 +31,17 @@ RUN set -ex \
         pkg-config \
         gnupg \
         git \
+        git-lfs \
         gdb \
         wget \
+        wget2 \
         curl \
         nano \
         zip \
         unzip \
         time \
-	   sshpass \
-	   ssh-client \
+        sshpass \
+        ssh-client \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     \

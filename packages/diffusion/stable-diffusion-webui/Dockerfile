@@ -33,7 +33,7 @@ RUN set -ex \
         https://github.com/BlafKing/sd-civitai-browser-plus \
     && PYTHONPATH="$AUTOMATIC1111_ROOT_DIR" python3 -c 'from modules import launch_utils; launch_utils.args.skip_python_version_check=True; launch_utils.prepare_environment()' \
     # partially initialized module 'cv2' has no attribute 'gapi_wip_gst_GStreamerPipeline' \
-    && /opt/opencv_install.sh \
+    && /tmp/opencv/install.sh \
     # TypeError: 'type' object is not subscriptable \
     && sed 's|dict\[str, OptionInfo\]|dict|g' -i $AUTOMATIC1111_ROOT_DIR/modules/options.py \
     && sed 's|dict\[.*\]|dict|g' -i $AUTOMATIC1111_ROOT_DIR/modules/processing.py \
@@ -53,6 +53,9 @@ RUN set -ex \
     
 # set the cache dir for models
 ENV DIFFUSERS_CACHE=/data/models/diffusers
+
+# Add the correct link for stable diffusion download
+RUN curl -L https://huggingface.co/Comfy-Org/stable-diffusion-v1-5-archive -o /data/models/stable-diffusion
 
 # default start-up command
 CMD ["/bin/bash", "-c", "cd /opt/stable-diffusion-webui && python3 launch.py --data=/data/models/stable-diffusion --enable-insecure-extension-access --xformers --listen --port=7860"]

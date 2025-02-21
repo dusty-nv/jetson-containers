@@ -1,0 +1,83 @@
+#
+# This is a dockerfile for 3d_diffusion_policy on x86 to aid in generation dataset,
+# since this project uses the original OpenAI mujoco (not available for Linux aarch64)
+# and efforts to port it to the newer DeepMind mujoco interfaces encountered challenges.
+#
+#   docker build -f Dockerfile.x86 -t 3d_diffusion_policy .
+#   docker run -it --rm --runtime=nvidia --network=host -v /home/user:/home/user 3d_diffusion_policy
+#
+ARG BASE_IMAGE=nvcr.io/nvidia/pytorch:25.01-py3
+FROM ${BASE_IMAGE}
+
+WORKDIR /opt/3D-Diffusion-Policy
+
+ADD https://api.github.com/repos/YanjieZe/3D-Diffusion-Policy/git/refs/heads/master /tmp/dp3_version.json
+
+RUN git clone --recursive --depth=1 https://github.com/YanjieZe/3D-Diffusion-Policy . && \
+    sed -i 's|extras_require.*||g' third_party/gym-0.21.0/setup.py
+
+RUN pip3 install --no-cache-dir --verbose -e 3D-Diffusion-Policy
+RUN pip3 install --no-cache-dir --verbose -e third_party/dexart-release
+RUN pip3 install --no-cache-dir --verbose -e third_party/gym-0.21.0
+RUN pip3 install --no-cache-dir --verbose -e third_party/Metaworld
+RUN pip3 install --no-cache-dir --verbose -e third_party/rrl-dependencies/mj_envs
+RUN pip3 install --no-cache-dir --verbose -e third_party/rrl-dependencies/mjrl
+RUN pip3 install --no-cache-dir --verbose -e visualizer
+
+RUN FORCE_CUDA=1 pip3 install --no-cache-dir --verbose -e third_party/pytorch3d_simplified
+
+RUN pip3 install --ignore-installed --no-cache-dir blinker && \
+    pip3 install --no-cache-dir --verbose open3d && \
+    pip3 install --no-cache-dir --verbose \
+        zarr==2.12.0 \
+        wandb \
+        ipdb \
+        gpustat \
+        dm_env \
+        dm_control \
+        omegaconf \
+        hydra-core==1.2.0 \
+        dill==0.3.5.1 \
+        einops==0.4.1 \
+        diffusers==0.11.1 \
+        numba \
+        moviepy \
+        imageio \
+        av \
+        matplotlib \
+        termcolor \
+        kaleido \
+        plotly
+        
+ARG MUJOCO_DIR=/root/.mujoco
+
+RUN mkdir -p ${MUJOCO_DIR} && \
+    cd ${MUJOCO_DIR} && \
+    wget https://github.com/deepmind/mujoco/releases/download/2.1.0/mujoco210-linux-x86_64.tar.gz -O mujoco210.tar.gz --no-check-certificate && \
+    tar -xvzf mujoco210.tar.gz
+
+RUN cd third_party/VRL3 && \
+    CKPT_URL="http://jetson.webredirect.org:8000/assets/3d_diffusion_policy/vrl3_ckpts.zip" && \
+    wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${CKPT_URL} && \
+    unzip vrl3_ckpts.zip && \
+    mv vrl3_ckpts ckpts && \
+    rm -rf vrl3_ckpts.zip __MACOSX
+    
+ENV HYDRA_FULL_ERROR=1 \
+    MUJOCO_GL=egl \
+    PYTHONPATH=${PYTHONPATH}:/opt/3D-Diffusion-Policy/3D-Diffusion-Policy \
+    LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${MUJOCO_DIR}/mujoco210/bin:/usr/local/lib/python${PYTHON_VERSION}/dist-packages/torch/lib \
+    DP3_DATA=/opt/3D-Diffusion-Policy/3D-Diffusion-Policy/data \
+    VRL3=/opt/3D-Diffusion-Policy/third_party/VRL3
+  
+# https://github.com/facebookresearch/nougat/issues/40#issuecomment-1880072196  
+RUN pip3 install opencv-fixer && \
+    python3 -c "from opencv_fixer import AutoFix; AutoFix()" && \
+    python3 -c "import cv2"
+
+RUN pip3 install 'Cython' && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends libosmesa6-dev && \
+    cd third_party/VRL3/src && \
+    python3 gen_demonstration_expert.py --help
+    

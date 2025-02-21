@@ -3,7 +3,7 @@
 # group: llm
 # config: config.py
 # requires: '>=35'
-# depends: [transformers]
+# depends: [transformers, triton]
 # test: test.py
 # notes: fork of https://github.com/TimDettmers/bitsandbytes for Jetson
 #---
@@ -21,19 +21,3 @@ ARG BITSANDBYTES_VERSION \
 COPY build.sh install.sh /tmp/bitsandbytes/
 
 RUN /tmp/bitsandbytes/install.sh || /tmp/bitsandbytes/build.sh
-
-# ARG BASE_IMAGE
-# ARG BUILD_IMAGE
-
-# FROM ${BUILD_IMAGE} as builder
-# FROM ${BASE_IMAGE} as runtime
-
-# COPY --from=builder /opt/bitsandbytes*.whl /opt/
-
-# RUN set -ex \
-#     && pip3 install --no-cache-dir --verbose \
-#         scipy \
-#         /opt/bitsandbytes*.whl \
-#     \
-#     && pip3 show bitsandbytes \
-#     && python3 -c 'import bitsandbytes'

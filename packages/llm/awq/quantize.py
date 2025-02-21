@@ -28,7 +28,7 @@ os.makedirs(args.output, exist_ok=True)
 prefix_awq = f"w{args.w_bit}-g{args.q_group_size}"
 
 model_search = os.path.join(args.output, f"{prefix_awq}.pt") if not args.load_awq else args.load_awq
-model_quant = os.path.join(args.output, f"{prefix_awq}-awq.pt")
+model_quant = os.path.join(args.output, f"{prefix_awq}-awq-v2.pt")
 
 def run_cmd(cmd):
     print("\nRunning command:\n")

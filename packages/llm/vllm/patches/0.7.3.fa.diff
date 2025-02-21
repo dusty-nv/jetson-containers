@@ -1,0 +1,38 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 759c87f..95658aa 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -22,7 +22,7 @@ set(ignoreMe "${VLLM_PYTHON_PATH}")
+ set(PYTHON_SUPPORTED_VERSIONS "3.8" "3.9" "3.10" "3.11" "3.12")
+ 
+ # Supported NVIDIA architectures.
+-set(CUDA_SUPPORTED_ARCHS "8.0;8.6;8.9;9.0")
++set(CUDA_SUPPORTED_ARCHS "8.7")
+ 
+ # Supported AMD GPU architectures.
+ set(HIP_SUPPORTED_ARCHS "gfx906;gfx908;gfx90a;gfx940;gfx941;gfx942;gfx1030;gfx1100")
+@@ -132,7 +132,7 @@ if (FA2_ENABLED)
+ 
+     # For CUDA we set the architectures on a per file basis
+     if (VLLM_GPU_LANG STREQUAL "CUDA")
+-        cuda_archs_loose_intersection(FA2_ARCHS "8.0;9.0" "${CUDA_ARCHS}")
++        cuda_archs_loose_intersection(FA2_ARCHS "${CUDA_ARCHS}" "${CUDA_ARCHS}")
+         message(STATUS "FA2_ARCHS: ${FA2_ARCHS}")
+ 
+         set_gencode_flags_for_srcs(
+@@ -191,7 +191,7 @@ if (FA3_ENABLED AND ${CMAKE_CUDA_COMPILER_VERSION} GREATER_EQUAL 12.0)
+ 
+     # For CUDA we set the architectures on a per file basis
+     if (VLLM_GPU_LANG STREQUAL "CUDA")
+-        cuda_archs_loose_intersection(FA3_ARCHS "8.0;9.0a" "${CUDA_ARCHS}")
++        cuda_archs_loose_intersection(FA3_ARCHS "${CUDA_ARCHS}" "${CUDA_ARCHS}")
+         message(STATUS "FA3_ARCHS: ${FA3_ARCHS}")
+ 
+         set_gencode_flags_for_srcs(
+diff --git a/csrc/cutlass b/csrc/cutlass
+index c506e16..751eb9a 160000
+--- a/csrc/cutlass
++++ b/csrc/cutlass
+@@ -1 +1 @@
+-Subproject commit c506e16788cb08416a4a57e11a9067beeee29420
++Subproject commit 751eb9a8859ac36bfc77551f9e4a957c31a5a8b1

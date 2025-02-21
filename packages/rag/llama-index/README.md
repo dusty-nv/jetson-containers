@@ -8,7 +8,7 @@
 ## Starting `llamaindex` container
 
 ```bash
-jetson-containers run $(autotag llama-index)
+jetson-containers run $(autotag llama-index:samples)
 ```
 
 This will start the `ollama` server as well as Jupyter Lab server inside the container.
@@ -51,10 +51,12 @@ python3 /opt/llama-index/llamaindex_starter.py
 
 | **`llama-index`** | |
 | :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `llama-index:main` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`ollama`](/packages/llm/ollama) [`rust`](/packages/build/rust) [`jupyterlab`](/packages/jupyterlab) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda:12.2`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`llama-index:samples`](/packages/rag/llama-index) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/llama-index:r35.4.1`](https://hub.docker.com/r/dustynv/llama-index/tags) `(2024-04-30, 6.4GB)`<br>[`dustynv/llama-index:r36.2.0`](https://hub.docker.com/r/dustynv/llama-index/tags) `(2024-04-30, 6.2GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/llama-index:r35.4.1`](https://hub.docker.com/r/dustynv/llama-index/tags) `(2024-05-23, 5.5GB)`<br>[`dustynv/llama-index:r36.2.0`](https://hub.docker.com/r/dustynv/llama-index/tags) `(2024-04-30, 6.2GB)`<br>[`dustynv/llama-index:r36.3.0`](https://hub.docker.com/r/dustynv/llama-index/tags) `(2024-05-23, 5.5GB)`<br>[`dustynv/llama-index:samples-r35.4.1`](https://hub.docker.com/r/dustynv/llama-index/tags) `(2024-06-25, 6.4GB)`<br>[`dustynv/llama-index:samples-r36.2.0`](https://hub.docker.com/r/dustynv/llama-index/tags) `(2024-06-25, 6.4GB)`<br>[`dustynv/llama-index:samples-r36.3.0`](https://hub.docker.com/r/dustynv/llama-index/tags) `(2024-06-24, 6.4GB)` |
 
 </details>
 
@@ -64,8 +66,12 @@ python3 /opt/llama-index/llamaindex_starter.py
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`dustynv/llama-index:r35.4.1`](https://hub.docker.com/r/dustynv/llama-index/tags) | `2024-04-30` | `arm64` | `6.4GB` |
+| &nbsp;&nbsp;[`dustynv/llama-index:r35.4.1`](https://hub.docker.com/r/dustynv/llama-index/tags) | `2024-05-23` | `arm64` | `5.5GB` |
 | &nbsp;&nbsp;[`dustynv/llama-index:r36.2.0`](https://hub.docker.com/r/dustynv/llama-index/tags) | `2024-04-30` | `arm64` | `6.2GB` |
+| &nbsp;&nbsp;[`dustynv/llama-index:r36.3.0`](https://hub.docker.com/r/dustynv/llama-index/tags) | `2024-05-23` | `arm64` | `5.5GB` |
+| &nbsp;&nbsp;[`dustynv/llama-index:samples-r35.4.1`](https://hub.docker.com/r/dustynv/llama-index/tags) | `2024-06-25` | `arm64` | `6.4GB` |
+| &nbsp;&nbsp;[`dustynv/llama-index:samples-r36.2.0`](https://hub.docker.com/r/dustynv/llama-index/tags) | `2024-06-25` | `arm64` | `6.4GB` |
+| &nbsp;&nbsp;[`dustynv/llama-index:samples-r36.3.0`](https://hub.docker.com/r/dustynv/llama-index/tags) | `2024-06-24` | `arm64` | `6.4GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -82,10 +88,10 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag llama-index)
 
 # or explicitly specify one of the container images above
-jetson-containers run dustynv/llama-index:r35.4.1
+jetson-containers run dustynv/llama-index:samples-r36.2.0
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/llama-index:r35.4.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/llama-index:samples-r36.2.0
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

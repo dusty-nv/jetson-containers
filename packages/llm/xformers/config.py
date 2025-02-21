@@ -1,5 +1,5 @@
 
-def xformers(version, requires=None, default=False):
+def xformers(version, requires=None, default=True):
     pkg = package.copy()
 
     if requires:
@@ -23,5 +23,8 @@ def xformers(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    xformers('0.0.26', default=True),
+    xformers('0.0.26', requires='<=cu122'),
+    xformers('0.0.29', requires='<=cu126'), # support pytorch 2.5.1
+    xformers('0.0.29.post2', requires='<=cu126'), # support pytorch 2.6.0
+    xformers('0.0.30', requires='>=cu128'), # support pytorch 2.6.0
 ]

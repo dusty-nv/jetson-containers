@@ -1,0 +1,41 @@
+# Jetson Setup Configuration
+# Set to false for automated setup using predefined options
+interactive_mode: true
+
+# NVMe Storage Configuration
+nvme_setup.should_run: no  # Possible values: ask, yes, no
+nvme_setup.options.mount_point: /mnt
+nvme_setup.options.partition_name: nvme0n1
+nvme_setup.options.filesystem: ext4  # Only ext4 is currently supported
+
+# Docker Runtime Configuration
+docker_runtime.should_run: no
+docker_runtime.options: {}  # No additional options needed for runtime setup
+
+# Docker Root Directory Configuration
+docker_root.should_run: no
+docker_root.options.path: /mnt/docker  # Target path for Docker data
+
+# Swap Configuration
+swap.should_run: no
+swap.options.disable_zram: true  # Whether to disable zram before setting up swap
+swap.options.size: "32"  # Swap size in GB
+swap.options.path: /mnt/32GB.swap  # Swap file location
+
+# GUI Configuration
+gui_disabled.should_run: ask
+gui_disabled.options: {}  # No additional options needed for GUI setup
+
+# Docker Group Configuration
+docker_group.should_run: no
+docker_group.options.add_user: "jetson"  # User to add to the Docker group
+
+# Power Mode Configuration
+power_mode.should_run: ask
+power_mode.options.mode: "1"  # Power mode to set
+# Available modes:
+# "0": MAXN - Experimental/Maximum Performance (not recommended)
+# "1": 25W - Recommended Performance Mode
+# "2": 15W - Power-Optimized Mode
+
+# Add any additional configuration options needed for setup-system.sh

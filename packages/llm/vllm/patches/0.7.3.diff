@@ -1,0 +1,97 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cd1c2c9..845102b 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -31,7 +31,7 @@ set(ignoreMe "${VLLM_PYTHON_PATH}")
+ set(PYTHON_SUPPORTED_VERSIONS "3.9" "3.10" "3.11" "3.12")
+ 
+ # Supported NVIDIA architectures.
+-set(CUDA_SUPPORTED_ARCHS "7.0;7.2;7.5;8.0;8.6;8.7;8.9;9.0")
++set(CUDA_SUPPORTED_ARCHS "8.7")
+ 
+ # Supported AMD GPU architectures.
+ set(HIP_SUPPORTED_ARCHS "gfx906;gfx908;gfx90a;gfx942;gfx1030;gfx1100;gfx1101")
+@@ -136,7 +136,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
+   # Filter the target architectures by the supported supported archs
+   # since for some files we will build for all CUDA_ARCHS.
+   cuda_archs_loose_intersection(CUDA_ARCHS
+-    "${CUDA_SUPPORTED_ARCHS}" "${CUDA_ARCHS}")
++    "${CUDA_ARCHS}" "${CUDA_ARCHS}")
+   message(STATUS "CUDA supported target architectures: ${CUDA_ARCHS}")
+ else()
+   #
+@@ -277,7 +277,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
+   # Only build Marlin kernels if we are building for at least some compatible archs.
+   # Keep building Marlin for 9.0 as there are some group sizes and shapes that
+   # are not supported by Machete yet.
+-  cuda_archs_loose_intersection(MARLIN_ARCHS "8.0;8.6;8.7;8.9;9.0" "${CUDA_ARCHS}")
++  cuda_archs_loose_intersection(MARLIN_ARCHS "${CUDA_ARCHS}" "${CUDA_ARCHS}")
+   if (MARLIN_ARCHS)
+     set(MARLIN_SRCS
+        "csrc/quantization/fp8/fp8_marlin.cu"
+@@ -333,7 +333,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
+   # For the cutlass_scaled_mm kernels we want to build the c2x (CUTLASS 2.x)
+   # kernels for the remaining archs that are not already built for 3x.
+   cuda_archs_loose_intersection(SCALED_MM_2X_ARCHS
+-    "7.5;8.0;8.6;8.7;8.9;9.0" "${CUDA_ARCHS}")
++    "${CUDA_ARCHS}" "${CUDA_ARCHS}")
+   # subtract out the archs that are already built for 3x
+   list(REMOVE_ITEM SCALED_MM_2X_ARCHS ${SCALED_MM_3X_ARCHS})
+   if (SCALED_MM_2X_ARCHS)
+@@ -500,7 +500,7 @@ set_gencode_flags_for_srcs(
+   CUDA_ARCHS "${CUDA_ARCHS}")
+ 
+ if(VLLM_GPU_LANG STREQUAL "CUDA")
+-  cuda_archs_loose_intersection(MARLIN_MOE_ARCHS "8.0;8.6;8.7;8.9;9.0" "${CUDA_ARCHS}")
++  cuda_archs_loose_intersection(MARLIN_MOE_ARCHS "${CUDA_ARCHS}" "${CUDA_ARCHS}")
+   if (MARLIN_MOE_ARCHS)
+     set(MARLIN_MOE_SRC
+         "csrc/moe/marlin_kernels/marlin_moe_kernel.h"
+@@ -589,11 +589,15 @@ if (DEFINED ENV{VLLM_FLASH_ATTN_SRC_DIR})
+   set(VLLM_FLASH_ATTN_SRC_DIR $ENV{VLLM_FLASH_ATTN_SRC_DIR})
+ endif()
+ 
++set(patch_vllm_flash_attn git apply /tmp/vllm/fa.diff)
++
+ if(VLLM_FLASH_ATTN_SRC_DIR)
+   FetchContent_Declare(
+           vllm-flash-attn SOURCE_DIR 
+           ${VLLM_FLASH_ATTN_SRC_DIR}
+           BINARY_DIR ${CMAKE_BINARY_DIR}/vllm-flash-attn
++          PATCH_COMMAND ${patch_vllm_flash_attn}
++          UPDATE_DISCONNECTED 1
+   )
+ else()
+   FetchContent_Declare(
+@@ -603,6 +607,8 @@ else()
+           GIT_PROGRESS TRUE
+           # Don't share the vllm-flash-attn build between build types
+           BINARY_DIR ${CMAKE_BINARY_DIR}/vllm-flash-attn
++          PATCH_COMMAND ${patch_vllm_flash_attn}
++          UPDATE_DISCONNECTED 1
+   )
+ endif()
+ 
+diff --git a/vllm/model_executor/guided_decoding/__init__.py b/vllm/model_executor/guided_decoding/__init__.py
+index 77212a1..bbabd28 100644
+--- a/vllm/model_executor/guided_decoding/__init__.py
++++ b/vllm/model_executor/guided_decoding/__init__.py
+@@ -42,12 +42,12 @@ def maybe_backend_fallback(
+     if guided_params.backend == "xgrammar":
+         from vllm.model_executor.guided_decoding.xgrammar_decoding import (
+             xgr_installed)
+-        # xgrammar only has x86 wheels for linux, fallback to outlines
+-        from vllm.platforms import current_platform
+-        if current_platform.get_cpu_architecture() is not CpuArchEnum.X86:
+-            logger.warning("xgrammar is only supported on x86 CPUs. "
+-                           "Falling back to use outlines instead.")
+-            guided_params.backend = "outlines"
++        # # xgrammar only has x86 wheels for linux, fallback to outlines
++        # from vllm.platforms import current_platform
++        # if current_platform.get_cpu_architecture() is not CpuArchEnum.X86:
++        #     logger.warning("xgrammar is only supported on x86 CPUs. "
++        #                    "Falling back to use outlines instead.")
++        #     guided_params.backend = "outlines"
+ 
+         # xgrammar doesn't support regex, fallback to outlines
+         if guided_params.regex is not None:

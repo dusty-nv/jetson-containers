@@ -17,15 +17,8 @@
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `nano_llm` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=35']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda:11.4`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.2`](/packages/pytorch) [`cuda-python`](/packages/cuda/cuda-python) [`faiss`](/packages/vectordb/faiss) [`faiss_lite`](/packages/vectordb/faiss_lite) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`tensorrt`](/packages/tensorrt) [`torch2trt`](/packages/pytorch/torch2trt) [`nanodb`](/packages/vectordb/nanodb) [`mlc`](/packages/llm/mlc) [`riva-client:python`](/packages/audio/riva-client) [`opencv`](/packages/opencv) [`gstreamer`](/packages/gstreamer) [`jetson-inference`](/packages/jetson-inference) [`torchaudio`](/packages/pytorch/torchaudio) [`onnxruntime`](/packages/onnxruntime) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda:12.2`](/packages/cuda/cuda) [`cudnn:8.9`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.2`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`awq`](/packages/llm/awq) [`mlc`](/packages/llm/mlc) [`riva-client:python`](/packages/audio/riva-client) [`tensorrt`](/packages/tensorrt) [`opencv`](/packages/opencv) [`gstreamer`](/packages/gstreamer) [`jetson-inference`](/packages/jetson-inference) [`torch2trt`](/packages/pytorch/torch2trt) [`torchaudio`](/packages/pytorch/torchaudio) [`onnxruntime`](/packages/onnxruntime) [`piper-tts`](/packages/audio/piper-tts) [`whisper_trt`](/packages/audio/whisper_trt) [`cuda-python`](/packages/cuda/cuda-python) [`faiss`](/packages/vectordb/faiss) [`faiss_lite`](/packages/vectordb/faiss_lite) [`clip_trt`](/packages/vit/clip_trt) [`nanodb`](/packages/vectordb/nanodb) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-
-| **`nano_llm:24.4`** | |
-| :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=35']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda:11.4`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.2`](/packages/pytorch) [`cuda-python`](/packages/cuda/cuda-python) [`faiss`](/packages/vectordb/faiss) [`faiss_lite`](/packages/vectordb/faiss_lite) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`tensorrt`](/packages/tensorrt) [`torch2trt`](/packages/pytorch/torch2trt) [`nanodb`](/packages/vectordb/nanodb) [`mlc`](/packages/llm/mlc) [`riva-client:python`](/packages/audio/riva-client) [`opencv`](/packages/opencv) [`gstreamer`](/packages/gstreamer) [`jetson-inference`](/packages/jetson-inference) [`torchaudio`](/packages/pytorch/torchaudio) [`onnxruntime`](/packages/onnxruntime) |
-| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/nano_llm:24.4-r35.4.1`](https://hub.docker.com/r/dustynv/nano_llm/tags) `(2024-04-15, 8.5GB)`<br>[`dustynv/nano_llm:24.4-r36.2.0`](https://hub.docker.com/r/dustynv/nano_llm/tags) `(2024-04-15, 9.7GB)` |
 
 </details>
 
@@ -37,8 +30,15 @@
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/nano_llm:24.4-r35.4.1`](https://hub.docker.com/r/dustynv/nano_llm/tags) | `2024-04-15` | `arm64` | `8.5GB` |
 | &nbsp;&nbsp;[`dustynv/nano_llm:24.4-r36.2.0`](https://hub.docker.com/r/dustynv/nano_llm/tags) | `2024-04-15` | `arm64` | `9.7GB` |
-| &nbsp;&nbsp;[`dustynv/nano_llm:r35.4.1`](https://hub.docker.com/r/dustynv/nano_llm/tags) | `2024-04-15` | `arm64` | `8.5GB` |
-| &nbsp;&nbsp;[`dustynv/nano_llm:r36.2.0`](https://hub.docker.com/r/dustynv/nano_llm/tags) | `2024-04-15` | `arm64` | `9.7GB` |
+| &nbsp;&nbsp;[`dustynv/nano_llm:24.4.1-r35.4.1`](https://hub.docker.com/r/dustynv/nano_llm/tags) | `2024-04-19` | `arm64` | `10.2GB` |
+| &nbsp;&nbsp;[`dustynv/nano_llm:24.4.1-r36.2.0`](https://hub.docker.com/r/dustynv/nano_llm/tags) | `2024-04-19` | `arm64` | `11.1GB` |
+| &nbsp;&nbsp;[`dustynv/nano_llm:24.5-r35.4.1`](https://hub.docker.com/r/dustynv/nano_llm/tags) | `2024-05-03` | `arm64` | `10.2GB` |
+| &nbsp;&nbsp;[`dustynv/nano_llm:24.5-r36.2.0`](https://hub.docker.com/r/dustynv/nano_llm/tags) | `2024-05-03` | `arm64` | `11.2GB` |
+| &nbsp;&nbsp;[`dustynv/nano_llm:24.5.1-r35.4.1`](https://hub.docker.com/r/dustynv/nano_llm/tags) | `2024-05-19` | `arm64` | `10.0GB` |
+| &nbsp;&nbsp;[`dustynv/nano_llm:24.5.1-r36.2.0`](https://hub.docker.com/r/dustynv/nano_llm/tags) | `2024-05-19` | `arm64` | `10.6GB` |
+| &nbsp;&nbsp;[`dustynv/nano_llm:24.6-r36.2.0`](https://hub.docker.com/r/dustynv/nano_llm/tags) | `2024-06-09` | `arm64` | `10.8GB` |
+| &nbsp;&nbsp;[`dustynv/nano_llm:r35.4.1`](https://hub.docker.com/r/dustynv/nano_llm/tags) | `2024-05-15` | `arm64` | `10.0GB` |
+| &nbsp;&nbsp;[`dustynv/nano_llm:r36.2.0`](https://hub.docker.com/r/dustynv/nano_llm/tags) | `2024-06-29` | `arm64` | `10.8GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -55,10 +55,10 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag nano_llm)
 
 # or explicitly specify one of the container images above
-jetson-containers run dustynv/nano_llm:24.4-r36.2.0
+jetson-containers run dustynv/nano_llm:r36.2.0
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/nano_llm:24.4-r36.2.0
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/nano_llm:r36.2.0
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

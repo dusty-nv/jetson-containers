@@ -2,7 +2,7 @@
 # name: mlc
 # group: llm
 # config: config.py
-# depends: [transformers]
+# depends: [transformers, sudonim]
 # requires: '>=35'
 # test: [test.py, test.sh]
 # docs: docs.md
@@ -20,7 +20,7 @@ ARG TVM_VERSION \
 ENV LD_LIBRARY_PATH="/usr/local/lib/python${PYTHON_VERSION}/dist-packages/tvm:${LD_LIBRARY_PATH}" \
     TVM_HOME=/opt/mlc-llm/3rdparty/tvm
     
-COPY build.sh install.sh benchmark.py /tmp/mlc/
+COPY build.sh install.sh benchmark.py wheels/ /tmp/mlc/
 COPY ${MLC_PATCH} /tmp/mlc/patch.diff
 
-RUN /tmp/mlc/install.sh || /tmp/mlc/build.sh
+RUN /tmp/mlc/install.sh || /tmp/mlc/build.sh || echo "BUILD FAILED (mlc ${MLC_VERSION} ${MLC_COMMIT})"

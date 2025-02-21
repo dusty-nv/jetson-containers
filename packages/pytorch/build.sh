@@ -4,33 +4,26 @@ set -ex
 
 echo "Building PyTorch ${PYTORCH_BUILD_VERSION}"
    
-# install prerequisites
-apt-get update
-apt-get install -y --no-install-recommends \
-        libopenblas-dev \
-        libopenmpi-dev \
-        openmpi-bin \
-        openmpi-common \
-        gfortran \
-        libomp-dev
-rm -rf /var/lib/apt/lists/*
-apt-get clean
-
 # build from source
-git clone --branch "v${PYTORCH_BUILD_VERSION}" --depth=1 --recursive https://github.com/pytorch/pytorch /opt/pytorch
+git clone --branch "v${PYTORCH_BUILD_VERSION}" --depth=1 --recursive https://github.com/pytorch/pytorch /opt/pytorch ||
+git clone --depth=1 --recursive https://github.com/pytorch/pytorch /opt/pytorch
 cd /opt/pytorch
+
+# https://github.com/pytorch/pytorch/issues/138333
+CPUINFO_PATCH=third_party/cpuinfo/src/arm/linux/aarch64-isa.c
+sed -i 's|cpuinfo_log_error|cpuinfo_log_warning|' ${CPUINFO_PATCH}
+grep 'PR_SVE_GET_VL' ${CPUINFO_PATCH} || echo "patched ${CPUINFO_PATCH}"
+tail -20 ${CPUINFO_PATCH}
 
 pip3 install --no-cache-dir -r requirements.txt
 pip3 install --no-cache-dir scikit-build ninja
 
 PYTORCH_BUILD_NUMBER=1 \
 TORCH_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" \
-USE_NCCL=0 \
-USE_QNNPACK=0 \
-USE_PYTORCH_QNNPACK=0 \
 USE_NATIVE_ARCH=1 \
 USE_DISTRIBUTED=1 \
 USE_TENSORRT=0 \
+USE_FBGEMM=0 \
 python3 setup.py bdist_wheel --dist-dir /opt
 
 cd /

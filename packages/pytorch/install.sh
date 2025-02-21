@@ -6,11 +6,16 @@ set -ex
 apt-get update
 apt-get install -y --no-install-recommends \
         libopenblas-dev \
+        libomp-dev
+        
+if [ $USE_MPI == 1 ]; then
+    apt-get install -y --no-install-recommends \
         libopenmpi-dev \
         openmpi-bin \
         openmpi-common \
-        gfortran \
-        libomp-dev
+        gfortran
+fi
+
 rm -rf /var/lib/apt/lists/*
 apt-get clean
 
@@ -21,6 +26,9 @@ fi
 
 # install from the Jetson pypi server ($PIP_INSTALL_URL)
 pip3 install --verbose --no-cache-dir torch==${TORCH_VERSION}
+
+# reinstall numpy<2 on CUDA < 12.8
+bash /tmp/numpy/install.sh
 
 # make sure it loads
 python3 -c 'import torch; print(f"PyTorch version: {torch.__version__}"); print(f"CUDA available:  {torch.cuda.is_available()}"); print(f"cuDNN version:   {torch.backends.cudnn.version()}"); print(torch.__config__.show());'

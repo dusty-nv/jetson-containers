@@ -1,0 +1,204 @@
+{
+  "version": "24.7.1",
+  "globals": {
+    "GraphEditor": {
+      "layout_grid": {
+        "x": 0,
+        "y": 0,
+        "w": 8,
+        "h": 14
+      }
+    }
+  },
+  "plugins": [
+    {
+      "name": "MimicGen",
+      "type": "MimicGen",
+      "connections": [
+        {
+          "to": "AutoPrompt",
+          "input": 0,
+          "output": 0
+        },
+        {
+          "to": "AutoPrompt",
+          "input": 0,
+          "output": 1
+        },
+        {
+          "to": "TextOverlay",
+          "input": 0,
+          "output": 0
+        },
+        {
+          "to": "TextOverlay",
+          "input": 0,
+          "output": 1
+        }
+      ],
+      "layout_grid": {
+        "x": 8,
+        "y": 12,
+        "w": 2,
+        "h": 4
+      },
+      "layout_node": {
+        "x": 39,
+        "y": 221
+      },
+      "environment": "Stack_D2",
+      "robot": "Panda",
+      "gripper": "PandaGripper",
+      "camera": "agentview",
+      "camera_width": 512,
+      "camera_height": 512,
+      "framerate": 2,
+      "genlock": true,
+      "horizon": 200,
+      "repeat_actions": false,
+      "action_scale": 1,
+      "motion_select": "agent",
+      "init_kwargs": {
+        "environment": "Stack_D2",
+        "robot": "Panda",
+        "gripper": "PandaGripper",
+        "camera": "agentview",
+        "camera_width": 512,
+        "camera_height": 512,
+        "framerate": 2,
+        "genlock": true,
+        "horizon": 200,
+        "repeat_actions": false,
+        "name": "MimicGen"
+      }
+    },
+    {
+      "name": "VideoOutput",
+      "type": "VideoOutput",
+      "connections": [],
+      "layout_grid": {
+        "x": 8,
+        "y": 0,
+        "w": 4,
+        "h": 12
+      },
+      "layout_node": {
+        "x": 707,
+        "y": 233
+      },
+      "init_kwargs": {
+        "video_output": "webrtc://@:8554/output",
+        "name": "VideoOutput"
+      }
+    },
+    {
+      "name": "NanoVLA",
+      "type": "NanoVLA",
+      "connections": [
+        {
+          "to": "MimicGen",
+          "input": 0,
+          "output": 0
+        },
+        {
+          "to": "TextOverlay",
+          "input": 0,
+          "output": 0
+        }
+      ],
+      "layout_grid": {},
+      "layout_node": {
+        "x": 555,
+        "y": 145
+      },
+      "max_new_tokens": 128,
+      "min_new_tokens": -1,
+      "do_sample": false,
+      "temperature": 0.7,
+      "top_p": 0.95,
+      "repetition_penalty": 1,
+      "drop_inputs": true,
+      "system_prompt": "",
+      "action_space": "stack_d4_ep2500",
+      "model": "dusty-nv/openvla-7b-mimicgen",
+      "init_kwargs": {
+        "model": "dusty-nv/openvla-7b-mimicgen",
+        "api": "MLC",
+        "quantization": "q8f16_ft",
+        "max_context_len": 384,
+        "drop_inputs": true,
+        "chat_template": "auto",
+        "name": "NanoVLA"
+      }
+    },
+    {
+      "name": "AutoPrompt",
+      "type": "AutoPrompt",
+      "connections": [],
+      "layout_grid": {},
+      "layout_node": {
+        "x": 292,
+        "y": 147
+      },
+      "template": "<text><image>",
+      "init_kwargs": {
+        "template": "<text><image>",
+        "name": "AutoPrompt"
+      }
+    },
+    {
+      "name": "TextOverlay",
+      "type": "TextOverlay",
+      "connections": [
+        {
+          "to": "VideoOutput",
+          "input": 0,
+          "output": 0
+        }
+      ],
+      "layout_grid": {},
+      "layout_node": {
+        "x": 399,
+        "y": 41
+      },
+      "font": "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
+      "font_size": 22,
+      "prefix_text": null,
+      "color": "#78d715",
+      "background": "#000000",
+      "opacity": 0.4,
+      "x": 5,
+      "y": 5,
+      "line_spacing": 30,
+      "line_length": -1,
+      "multiple_inputs": true,
+      "partial_refresh": true,
+      "return_copy": true,
+      "init_kwargs": {
+        "font": "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
+        "font_size": 22,
+        "color": "#78d715",
+        "background": "#000000",
+        "opacity": 0.4,
+        "x": 5,
+        "y": 5,
+        "line_spacing": 30,
+        "multiple_inputs": true,
+        "partial_refresh": true,
+        "return_copy": true,
+        "name": "TextOverlay"
+      }
+    },
+    {
+      "name": "UserPrompt",
+      "type": "UserPrompt",
+      "connections": [],
+      "layout_grid": {},
+      "layout_node": {
+        "x": 178,
+        "y": 41
+      },
+      "init_kwargs": {}
+    }
+  ]
+}

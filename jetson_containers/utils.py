@@ -2,10 +2,8 @@
 import os
 import grp
 import sys
-import json
 import pprint
-import urllib.request
-from urllib.request import urlopen, Request
+import requests
 
 
 def check_dependencies(install=True):
@@ -132,28 +130,131 @@ def sudo_prefix(group='docker'):
         return "sudo "
     else:
         return ""
-        
-        
+
+
+def handle_text_request(url) -> str | None:
+    """
+    Handles a request to fetch text data from the given URL.
+
+    Args:
+        url (str): The URL from which to fetch text data.
+
+    Returns:
+        str or None: The fetched text data, stripped of leading and trailing whitespace, 
+                     or None if an error occurs.
+    """
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            return response.text.strip()
+        else:
+            print("Failed to fetch version information. Status code:", response.status_code)
+            return None
+    except Exception as e:
+        print("An error occurred:", e)
+        return None
+    
+
+def handle_json_request(url, headers=None):
+    """
+    Handles a JSON request from the given URL with optional headers and returns the parsed JSON data.
+
+    Args:
+        url (str): The URL from which to fetch the JSON data.
+        headers (dict, optional): Headers to include in the request. Defaults to None.
+
+    Returns:
+        dict or None: The parsed JSON data as a dictionary, or None if an error occurs.
+    """
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        return response.json()
+    except requests.HTTPError as e:
+        print(f"-- HTTP error occurred ({e})")
+        return None
+    except requests.RequestException as e:
+        print(f"-- Requests error occurred ({e})")
+        return None
+    except Exception as e:
+        print(f"-- Unexpected error occurred during request ({e})")
+        return None
+    
+
+def github_api(url):
+    """
+    Sends a request to the GitHub API using the specified URL, including authorization headers if available.
+
+    Args:
+        url (str): The GitHub API URL endpoint relative to the base URL.
+
+    Returns:
+        dict or None: The parsed JSON response data as a dictionary, or None if an error occurs.
+    """
+    github_token = os.environ.get('GITHUB_TOKEN')
+    headers = {'Authorization': f'token {github_token}'} if github_token else None
+    request_url = f'https://api.github.com/{url}'
+    
+    return handle_json_request(request_url, headers)
+
+
 def github_latest_commit(repo, branch='main'):
     """
-    Returns the SHA of the latest commit to the given github user/repo/branch.
-    """
-    url = f"https://api.github.com/repos/{repo}/commits/{branch}"
-    github_token = os.environ.get('GITHUB_TOKEN')
+    Retrieves the latest commit SHA from the specified branch of a GitHub repository.
 
-    if github_token:
-        log_debug(f"-- GITHUB_TOKEN={github_token}")
-        headers = {'Authorization': 'token %s' % github_token}
-        request = Request(url, headers=headers)
-    else:
-        request = Request(url)
+    Args:
+        repo (str): The full name of the GitHub repository in the format 'owner/repo'.
+        branch (str, optional): The branch name. Defaults to 'main'.
+
+    Returns:
+        str or None: The SHA (hash) of the latest commit, or None if no commit is found.
+    """
+    commit_info = github_api(f"repos/{repo}/commits/{branch}")
+    return commit_info.get('sha') if commit_info else None
+
+
+def github_latest_tag(repo):
+    """
+    Retrieves the latest tag name from the specified GitHub repository.
+
+    Args:
+        repo (str): The full name of the GitHub repository in the format 'owner/repo'.
+
+    Returns:
+        str or None: The name of the latest tag, or None if no tags are found.
+    """
+    tags = github_api(f"repos/{repo}/tags")
+    return tags[0].get('name') if tags else None
+
+
+def get_json_value_from_url(url, notation=None):
+    """
+    Retrieves JSON data from the given URL and returns either the whole data or a specified nested value using a dot notation string.
+
+    Args:
+        url (str): The URL from which to fetch the JSON data.
+        notation (str, optional): A dot notation string specifying the nested property to retrieve.
+                                  If None or an empty string is provided, the entire JSON data is returned.
+
+    Returns:
+        str or dict: The value of the specified nested property or the whole data if `notation` is None.
+                     Returns None if the specified property does not exist.
+    """
+    data = handle_json_request(url)
+
+    if notation and data is not None:
+        keys = notation.split('.') if '.' in notation else [notation]
+        current = data
         
-    response = urlopen(request)
-    data = response.read()
-    encoding = response.info().get_content_charset('utf-8')
-    msg = json.loads(data.decode(encoding))
-    
-    return msg['sha']
+        try:
+            for key in keys:
+                current = current[key]
+            return str(current).strip()
+        except KeyError as e:
+            print(f'ERROR: Failed to get the value for {notation}: {e}')
+            return None
+        
+    return data
     
     
 def log_debug(*args, **kwargs):

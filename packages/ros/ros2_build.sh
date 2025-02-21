@@ -30,7 +30,6 @@ apt-get install -y --no-install-recommends \
 		python3-colcon-common-extensions \
 		python3-flake8 \
 		python3-pip \
-		python3-numpy \
 		python3-pytest-cov \
 		python3-rosdep \
 		python3-setuptools \
@@ -65,6 +64,17 @@ pip3 install --upgrade --no-cache-dir --verbose cmake
 cmake --version
 which cmake
 
+python3 -c 'import numpy; print("NumPy version before installation:", numpy.__version__)' 2>/dev/null
+
+if [ $? != 0 ]; then
+    echo "NumPy not found. Installing NumPy 2.0..."
+    apt-get update
+    # apt-get install -y --no-install-recommends python3-numpy
+    python3 -m pip install "numpy>=2.0.0" --break-system-packages
+fi
+
+python3 -c 'import numpy; print("NumPy version after installation:", numpy.__version__)' 2>/dev/null
+
 # remove other versions of Python3
 # workaround for 'Could NOT find Python3 (missing: Python3_NumPy_INCLUDE_DIRS Development'
 apt purge -y python3.9 libpython3.9* || echo "python3.9 not found, skipping removal"
@@ -96,6 +106,7 @@ rosinstall_generator --deps --rosdistro ${ROS_DISTRO} ${ROS_PACKAGE} \
 	compressed_image_transport \
 	compressed_depth_image_transport \
  	rosbag2_storage_mcap \
+ 	rmw_fastrtps \
 > ros2.${ROS_DISTRO}.${ROS_PACKAGE}.rosinstall
 cat ros2.${ROS_DISTRO}.${ROS_PACKAGE}.rosinstall
 vcs import src < ros2.${ROS_DISTRO}.${ROS_PACKAGE}.rosinstall

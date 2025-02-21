@@ -3,7 +3,7 @@ set -ex
 
 MODEL_NAME=${1:-"Llama-2-7b-hf"}
 MODEL_PATH=${2:-"https://nvidia.box.com/shared/static/i3jtp8jdmdlsq4qkjof8v4muth8ar7fo.gz"}
-MODEL_ROOT="/data/models/mlc/dist"
+MODEL_ROOT=${MODEL_ROOT:-"/data/models/mlc/dist"}
 
 QUANTIZATION=${QUANTIZATION:-"q4f16_ft"}
 QUANTIZATION_PATH="${MODEL_ROOT}/${MODEL_NAME}-${QUANTIZATION}"
@@ -12,9 +12,12 @@ SKIP_QUANTIZATION=${SKIP_QUANTIZATION:-"no"}
 PROMPT=${PROMPT:-"/data/prompts/completion.json"}
 CONV_TEMPLATE=${CONV_TEMPLATE:-"llama-2"}
 MAX_CONTEXT_LEN=${MAX_CONTEXT_LEN:-4096}
+MAX_NUM_PROMPTS=${MAX_NUM_PROMPTS:-4}
 
 USE_CACHE=${USE_CACHE:-1}
 USE_SAFETENSORS=${USE_SAFETENSORS:-"auto"}
+
+OUTPUT_CSV=${OUTPUT_CSV:-"/data/benchmarks/mlc.csv"}
 
 quantize() # mlc_llm >= 0.1.1
 {
@@ -50,7 +53,7 @@ quantize_legacy() # mlc_llm == 0.1.0
 			--use-cache $USE_CACHE \
 			--quantization $QUANTIZATION \
 			--artifact-path $MODEL_ROOT \
-			--max-seq-len 4096 \
+			--max-seq-len $MAX_CONTEXT_LEN \
 			$QUANT_FLAGS
 			
 		if [ $? != 0 ]; then
@@ -80,10 +83,14 @@ if [[ $MODEL_PATH == http* ]]; then
 	MODEL_PATH=$MODEL_EXTRACTED
 fi
 
+mkdir -p $MODEL_ROOT/models || echo "$MODEL_ROOT already exists"
+
 quantize_legacy || quantize
 
 python3 benchmark.py \
 	--model $QUANTIZATION_PATH $QUANTIZATION_LIB \
 	--max-new-tokens 128 \
 	--max-num-prompts 4 \
-	--prompt $PROMPT
+	--prompt $PROMPT \
+	--save ${OUTPUT_CSV} 
+	

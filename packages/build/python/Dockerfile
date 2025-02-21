@@ -1,7 +1,7 @@
 #---
 # name: python
 # group: build
-# depends: build-essential
+# depends: [build-essential, pip_cache]
 # notes: installs core `python3` packages and `pip`
 #---
 ARG BASE_IMAGE

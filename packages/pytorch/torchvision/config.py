@@ -41,10 +41,13 @@ package = [
     torchvision('0.15.1', pytorch='2.0', requires='==35.*'),
     torchvision('0.16.2', pytorch='2.1', requires='>=35'),
     torchvision('0.17.2', pytorch='2.2', requires='>=35'),
-    torchvision('0.18.0', pytorch='2.3', requires='>=35'),
+    torchvision('0.18.0', pytorch='2.3', requires='==36.*'),
+    torchvision('0.19.1', pytorch='2.4', requires='==36.*'),
+    torchvision('0.20.0', pytorch='2.5', requires='==36.*'),
+    torchvision('0.21.0', pytorch='2.6', requires='==36.*'),
+    torchvision('0.22.0', pytorch='2.7', requires='==36.*'),
     #torchvision('0.17.2', pytorch='2.2', requires='==36.*'),
     #torchvision('0.18.0-rc1', pytorch='2.3', requires='==36.*'),
-
     # JetPack 4
     torchvision('0.11.1', pytorch='1.10', requires='==32.*'),
     torchvision('0.10.0', pytorch='1.9', requires='==32.*'),

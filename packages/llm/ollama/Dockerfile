@@ -1,60 +1,50 @@
 #---
-# name: ollama 
+# name: ollama
 # group: llm
 # config: config.py
-# depends: [build-essential, cuda]
+# depends: cuda
 # requires: '>=34.1.0'
-# test: test.sh
 # docs: docs.md
 #---
 ARG BASE_IMAGE \
     CMAKE_CUDA_ARCHITECTURES \
+    CUDA_VERSION_MAJOR \
     JETPACK_VERSION \
     OLLAMA_REPO \
     OLLAMA_BRANCH \
     GOLANG_VERSION \
     CMAKE_VERSION
 
-FROM ${BASE_IMAGE} AS ollama-l4t-build
-
-ARG OLLAMA_REPO \
-    OLLAMA_BRANCH \
-    GOLANG_VERSION \
-    CMAKE_VERSION \
-    CMAKE_CUDA_ARCHITECTURES
-
-WORKDIR /opt
-
-ADD https://api.github.com/repos/${OLLAMA_REPO}/git/refs/heads/${OLLAMA_BRANCH} /tmp/ollama_version.json
-RUN git clone --branch=${OLLAMA_BRANCH} --depth=1 --recursive https://github.com/${OLLAMA_REPO}
-
-COPY ollama_deps.sh /opt/ollama_deps.sh
-RUN CMAKE_VERSION=${CMAKE_VERSION} GOLANG_VERSION=${GOLANG_VERSION} sh /opt/ollama_deps.sh
-
-# generate llama.cpp backend to bundle with Ollama
-WORKDIR ollama/llm/generate
-ENV LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/usr/local/nvidia/compat:${LD_LIBRARY_PATH} \
-    CMAKE_CUDA_ARCHITECTURES=${CMAKE_CUDA_ARCHITECTURES}
-RUN sed 's|-j8|-j$(nproc)|' -i gen_common.sh && cat gen_common.sh
-RUN bash gen_linux.sh
-
-WORKDIR /opt/ollama
-RUN go build -trimpath .
-
 # build the runtime container
 FROM ${BASE_IMAGE}
-COPY --from=ollama-l4t-build /opt/ollama/ollama /bin/ollama
 
-ARG JETPACK_VERSION
+ARG JETPACK_VERSION \
+    CUDA_VERSION_MAJOR
 
 EXPOSE 11434
 ENV OLLAMA_HOST=0.0.0.0 \
     OLLAMA_MODELS=/data/models/ollama/models \
     PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
     LD_LIBRARY_PATH=/usr/local/cuda/lib:/usr/local/cuda/lib64:/usr/local/cuda/include:${LD_LIBRARY_PATH} \
-    JETSON_JETPACK=${JETPACK_VERSION}
+    JETSON_JETPACK=${JETPACK_VERSION} \
+    CUDA_VERSION_MAJOR=${CUDA_VERSION_MAJOR}
 
-COPY benchmark.py benchmark.sh test.sh /opt/ollama/
+RUN apt-get update && \
+    apt install -y curl  && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get clean
+
+COPY nv_tegra_release /etc/nv_tegra_release
+
+#ADD https://api.github.com/repos/ollama/ollama/branches/main /tmp/ollama_version.json
+RUN curl -H "Authorization: token ${GITHUB_TOKEN}" \
+    -o /tmp/ollama_version.json \
+    https://api.github.com/repos/ollama/ollama/branches/main
+
+RUN curl -fsSL https://ollama.com/install.sh | sh
+
+RUN ln -s /usr/bin/python3 /usr/bin/python
+
 COPY start_ollama /
 
 CMD /start_ollama && /bin/bash

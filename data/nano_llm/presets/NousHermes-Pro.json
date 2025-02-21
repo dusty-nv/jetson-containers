@@ -1,0 +1,77 @@
+{
+  "version": "24.6.1",
+  "globals": {
+    "GraphEditor": {
+      "layout_grid": {
+        "x": 0,
+        "y": 0,
+        "w": 8,
+        "h": 14
+      }
+    },
+    "TerminalPlugin": {
+      "layout_grid": {
+        "x": 0,
+        "y": 14,
+        "w": 8,
+        "h": 6
+      }
+    }
+  },
+  "plugins": [
+    {
+      "name": "NanoLLM",
+      "type": "NanoLLM",
+      "connections": [],
+      "layout_grid": {
+        "x": 8,
+        "y": 0,
+        "w": 4,
+        "h": 8
+      },
+      "layout_node": {
+        "x": 200,
+        "y": 57.5
+      },
+      "max_new_tokens": 128,
+      "min_new_tokens": -1,
+      "do_sample": false,
+      "temperature": 0.7,
+      "top_p": 0.95,
+      "repetition_penalty": 1,
+      "drop_inputs": true,
+      "system_prompt": "You are a function calling AI agent responsible for reviewing event logs for a home security system. You are provided with function signatures within <tools></tools> XML tags. Here are the available tools: <tools> ${TOOL_DOCS} </tools> \nFor each function call return a valid json object (using double quotes) with the function name and arguments within <tool_call></tool_call> XML tags as follows:\n<tool_call>\n{\"arguments\": <args-dict>, \"name\": <function-name>}\n</tool_call>\nOnly call functions when necessary, and don't make assumptions about what values to plug into function arguments.\nOnce you have called a function, results will be fed back to you within <tool_response></tool_response> XML tags. \nAnalyze the latest results, and perform the actions as requested by the user.\n",
+      "model": "NousResearch/Hermes-2-Pro-Llama-3-8B",
+      "init_kwargs": {
+        "model": "NousResearch/Hermes-2-Pro-Llama-3-8B",
+        "api": "MLC",
+        "quantization": "q4f16_ft",
+        "drop_inputs": true,
+        "chat_template": "chat-ml-tools",
+        "system_prompt": "/data/prompts/nous_system.txt",
+        "name": "NanoLLM"
+      }
+    },
+    {
+      "name": "AutoPrompt",
+      "type": "AutoPrompt",
+      "connections": [
+        {
+          "to": "NanoLLM",
+          "input": 0,
+          "output": 0
+        }
+      ],
+      "layout_grid": {},
+      "layout_node": {
+        "x": 5,
+        "y": 57.5
+      },
+      "template": "<reset>These are the recent descriptions of the scene, from oldest to most recent.  Send me a warning when the school bus is here.\n\n- <text>\n- <text>\n- <text>",
+      "init_kwargs": {
+        "template": "<reset>These are the last few descriptions of the scene, from oldest to most recent.  Summarize any noteworthy changes, and if necessary, alert the user.\n\n- <text>\n- <text>\n- <text>\n- <text>\n- <text>",
+        "name": "AutoPrompt"
+      }
+    }
+  ]
+}

@@ -6,9 +6,10 @@ function ros_source_env()
 	if [ -f "$1" ]; then
 		echo "sourcing   $1"
 		source "$1"
-	else
-		echo "notfound   $1"
-	fi	
+    fi
+	#else
+	#	echo "notfound   $1"
+	#fi	
 }
 
 if [[ "$ROS_DISTRO" == "melodic" || "$ROS_DISTRO" == "noetic" ]]; then
@@ -25,4 +26,5 @@ fi
 echo "ROS_DISTRO $ROS_DISTRO"
 echo "ROS_ROOT   $ROS_ROOT"
 
+export AMENT_PREFIX_PATH=${AMENT_PREFIX_PATH}:${CMAKE_PREFIX_PATH}
 exec "$@"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # wyoming-assist-microphone
-set -euxo pipefail
+set -ex
 
 apt-get update
 apt-get install -y --no-install-recommends --fix-missing \
@@ -15,8 +15,27 @@ pip3 install --no-cache-dir -U \
    wheel \
    webrtc-noise-gain==1.2.3 \
    pysilero-vad==1.0.0
-pip3 install --no-cache-dir \
-   "wyoming-satellite[webrtc] @ https://github.com/rhasspy/wyoming-satellite/archive/refs/tags/v${SATELLITE_VERSION}.tar.gz"
+
+echo "assist_microphone: ${SATELLITE_VERSION} (branch: ${SATELLITE_BRANCH})"
+
+git clone --branch=${SATELLITE_BRANCH} https://github.com/rhasspy/wyoming-satellite /tmp/wyoming_satellite
+cd /tmp/wyoming_satellite
+
+sed -i "s|version=\"[^\"]*\"|version=\"${SATELLITE_VERSION}\"|" setup.py
+
+python3 setup.py sdist bdist_wheel --verbose --dist-dir /opt/wheels
+
+cd /
+rm -rf /tmp/wyoming_satellite
+
+pip3 install --no-cache-dir /opt/wheels/wyoming_satellite*.whl
+
+pip3 show wyoming_satellite
+python3 -c 'import wyoming_satellite; print(wyoming_satellite.__version__);'
+
+twine upload --skip-existing --verbose /opt/wheels/wyoming_satellite*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+
+rm /opt/wheels/wyoming_satellite*.whl
 
 # Clone rootfs & config.aml
 git clone --depth=1 https://github.com/home-assistant/addons /tmp/addons

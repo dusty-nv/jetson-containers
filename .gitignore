@@ -3,9 +3,16 @@ __pycache__
 *.tar.gz
 *.so
 *.deb
-data
+data/*
 logs
 test/data
 runner
 *.minus-github-api
 .DS_Store
+.vscode
+.ninja_log
+.polyscope.ini
+.ipynb_checkpoints
+.idea
+nv_tegra_release
+kokoro-*-*.wav

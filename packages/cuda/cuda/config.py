@@ -4,17 +4,38 @@ from packaging.version import Version
 
 import os
 
+
 def cuda_build_args(version):
-    short_version = f"cu{version.replace('.', '')}"
-    repo_path = f"jp{JETPACK_VERSION.major}/{short_version}"
-    index_host = "jetson.webredirect.org"
-    
+    """
+    Return some common environment settings used between variants of the CUDA containers.
+    """
     return {
         'CUDA_ARCH_LIST': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
         'DISTRO': f"ubuntu{LSB_RELEASE.replace('.','')}",
-        'TAR_INDEX_URL': f"http://{index_host}:8000/{repo_path}",
-        'PIP_INDEX_REPO': f"http://{index_host}/{repo_path}",
-        'PIP_TRUSTED_HOSTS': index_host,
+    }
+
+
+def pip_cache(version, requires=None):
+    """
+    Defines a container that just sets the environment for using the pip caching server.
+    https://github.com/dusty-nv/jetson-containers/blob/master/docs/build.md#pip-server
+    """
+    short_version = f"cu{version.replace('.', '')}"
+    repo_path = f"jp{JETPACK_VERSION.major}/{short_version}"
+    index_host = "jetson-ai-lab.dev"
+    
+    pip_cache = package.copy()
+    
+    pip_cache['name'] = f'pip_cache:{short_version}'
+    pip_cache['group'] = 'build'
+    pip_cache['dockerfile'] = 'Dockerfile.pip'
+    pip_cache['depends'] = []
+    pip_cache['test'] = []
+
+    pip_cache['build_args'] = {
+        'TAR_INDEX_URL': f"https://apt.{index_host}/{repo_path}",
+        'PIP_INDEX_REPO': f"https://pypi.{index_host}/{repo_path}",
+        #'PIP_TRUSTED_HOSTS': index_host,
         'PIP_UPLOAD_REPO': os.environ.get('PIP_UPLOAD_REPO', f"{os.environ.get('PIP_UPLOAD_HOST', 'http://localhost')}/{repo_path}"),
         'PIP_UPLOAD_USER': os.environ.get('PIP_UPLOAD_USER', f"jp{JETPACK_VERSION.major}"),
         'PIP_UPLOAD_PASS': os.environ.get('PIP_UPLOAD_PASS', 'none'),
@@ -23,6 +44,15 @@ def cuda_build_args(version):
         'SCP_UPLOAD_PASS': os.environ.get('SCP_UPLOAD_PASS'),
     }
     
+    if requires:
+        pip_cache['requires'] = requires
+        
+    if Version(version) == CUDA_VERSION:
+        pip_cache['alias'] = 'pip_cache'  
+        
+    return pip_cache
+    
+      
 def cuda_package(version, url, deb, packages=None, requires=None) -> list:
     """
     Generate containers for a particular version of CUDA installed from debian packages
@@ -31,7 +61,7 @@ def cuda_package(version, url, deb, packages=None, requires=None) -> list:
     """
     if not packages:
         packages = os.environ.get('CUDA_PACKAGES', 'cuda-toolkit*')
-    
+
     cuda = package.copy()
     
     cuda['name'] = f'cuda:{version}'
@@ -42,16 +72,19 @@ def cuda_package(version, url, deb, packages=None, requires=None) -> list:
         'CUDA_PACKAGES': packages,
     }, **cuda_build_args(version) }
 
-    if Version(version) == CUDA_VERSION:
-        cuda['alias'] = 'cuda'
-    
     if requires:
         cuda['requires'] = requires
         
     if 'toolkit' in packages or 'dev' in packages:
         cuda['depends'] = ['build-essential']
-        
-    return cuda
+
+    if Version(version) == CUDA_VERSION:
+        cuda['alias'] = 'cuda'
+    
+    cuda_pip = pip_cache(version, requires)    
+    cuda['depends'].append(cuda_pip['name'])
+    
+    return cuda, cuda_pip
 
 
 def cuda_builtin(version, requires=None) -> list:
@@ -77,10 +110,13 @@ def cuda_builtin(version, requires=None) -> list:
         
     passthrough['depends'] = ['build-essential']
     
-    return passthrough
+    cuda_pip = pip_cache(version, requires)    
+    passthrough['depends'].append(cuda_pip['name'])
+    
+    return passthrough, cuda_pip
 
 
-def cuda_samples(version, requires) -> list:
+def cuda_samples(version, requires, branch=None) -> list:
     """
     Generates container that installs/builds the CUDA samples
     """
@@ -95,7 +131,10 @@ def cuda_samples(version, requires) -> list:
     samples['test'] = 'test_samples.sh'
     samples['depends'] = [f'cuda:{version}', 'cmake']
     
-    samples['build_args'] = {'CUDA_BRANCH': 'v' + version}
+    if not branch:
+        branch = version
+        
+    samples['build_args'] = {'CUDA_BRANCH': 'v' + branch}
     
     if Version(version) == CUDA_VERSION:
         samples['alias'] = 'cuda:samples'
@@ -110,11 +149,14 @@ package = [
     
     # JetPack 6
     cuda_package('12.2', 'https://nvidia.box.com/shared/static/uvqtun1sc0bq76egarc8wwuh6c23e76e.deb', 'cuda-tegra-repo-ubuntu2204-12-2-local', requires='==36.*'), 
-    cuda_package('12.4', 'https://developer.download.nvidia.com/compute/cuda/12.4.0/local_installers/cuda-tegra-repo-ubuntu2204-12-4-local_12.4.0-1_arm64.deb', 'cuda-tegra-repo-ubuntu2204-12-4-local', requires='==36.*'), 
-    
+    cuda_package('12.4', 'https://developer.download.nvidia.com/compute/cuda/12.4.1/local_installers/cuda-tegra-repo-ubuntu2204-12-4-local_12.4.1-1_arm64.deb', 'cuda-tegra-repo-ubuntu2204-12-4-local', requires='==36.*'), 
+    cuda_package('12.6', 'https://developer.download.nvidia.com/compute/cuda/12.6.3/local_installers/cuda-tegra-repo-ubuntu2204-12-6-local_12.6.3-1_arm64.deb', 'cuda-tegra-repo-ubuntu2204-12-6-local', requires='==36.*'),
+    cuda_package('12.8', 'https://developer.download.nvidia.com/compute/cuda/12.8.0/local_installers/cuda-tegra-repo-ubuntu2204-12-8-local_12.8.0-1_arm64.deb', 'cuda-tegra-repo-ubuntu2204-12-8-local', requires='==36.*'),
     cuda_samples('12.2', requires='==36.*'),
     cuda_samples('12.4', requires='==36.*'),
-    
+    cuda_samples('12.6', branch='12.5', requires='==36.*'),
+    cuda_samples('12.8', requires='==36.*'),
+
     # JetPack 5
     cuda_package('12.2', 'https://developer.download.nvidia.com/compute/cuda/12.2.2/local_installers/cuda-tegra-repo-ubuntu2004-12-2-local_12.2.2-1_arm64.deb', 'cuda-tegra-repo-ubuntu2004-12-2-local', requires='==35.*'),
     cuda_package('11.8', 'https://developer.download.nvidia.com/compute/cuda/11.8.0/local_installers/cuda-tegra-repo-ubuntu2004-11-8-local_11.8.0-1_arm64.deb', 'cuda-tegra-repo-ubuntu2004-11-8-local', requires='==35.*'),

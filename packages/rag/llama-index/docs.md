@@ -4,7 +4,7 @@
 ## Starting `llamaindex` container
 
 ```bash
-jetson-containers run $(autotag llama-index)
+jetson-containers run $(autotag llama-index:samples)
 ```
 
 This will start the `ollama` server as well as Jupyter Lab server inside the container.

@@ -319,6 +319,19 @@ index f32493a42..d3b639685 100644
  # The following line is set by tvm/python/update_version.py
 -__version__ = "0.16.dev0"
 +__version__ = "0.15.0"
+diff --git a/3rdparty/tvm/src/runtime/graph_executor/cuda_graph/graph_runtime_cuda_graph.cc b/3rdparty/tvm/src/runtime/graph_executor/cuda_graph/graph_runtime_cuda_graph.cc
+index 5cd331807..3c0c98d44 100644
+--- a/3rdparty/tvm/src/runtime/graph_executor/cuda_graph/graph_runtime_cuda_graph.cc
++++ b/3rdparty/tvm/src/runtime/graph_executor/cuda_graph/graph_runtime_cuda_graph.cc
+@@ -51,7 +51,7 @@ class GraphExecutorCudaGraph : public GraphExecutor {
+     TVMSetStream(dev.device_type, dev.device_id, capture_stream_);
+ 
+     CUDA_CALL(cudaStreamBeginCapture(static_cast<cudaStream_t>(capture_stream_),
+-                                     cudaStreamCaptureModeGlobal));
++                                     cudaStreamCaptureModeRelaxed));
+   }
+ 
+   /*!
 diff --git a/3rdparty/tvm/version.py b/3rdparty/tvm/version.py
 index b61a34e49..cf98057f9 100644
 --- a/3rdparty/tvm/version.py

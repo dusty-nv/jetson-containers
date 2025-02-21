@@ -3,14 +3,35 @@ print('testing PyTorch...')
 
 import torch
 
-print('PyTorch version: ' + str(torch.__version__))
-print('CUDA available:  ' + str(torch.cuda.is_available()))
-print('cuDNN version:   ' + str(torch.backends.cudnn.version()))
+print(f'PyTorch version: {torch.__version__}')
+print(f'CUDA available:  {torch.cuda.is_available()}')
+print(f'cuDNN version:   {torch.backends.cudnn.version()}\n')
 
 print(torch.__config__.show())
 
 # fail if CUDA isn't available
 assert(torch.cuda.is_available())
+
+print(f'\nPyTorch {torch.__version__} built with:')
+
+try:
+    print(f'  * CUDA {torch.version.cuda} ({torch.cuda.get_device_name()})')
+    print(f'  * cuDNN {torch.backends.cudnn.version()}')
+    print(f'  * CUDA BLAS       {torch.backends.cuda.preferred_blas_library()}')
+    print(f'  * CUDA linalg     {torch.backends.cuda.preferred_blas_library()}')
+    print(f'  * CUDA flash_attn {torch.backends.cuda.is_flash_attention_available()}')
+    print(f'  * CUDA flash_sdp  {torch.backends.cuda.flash_sdp_enabled()}')
+    print(f'  * CUDA cudnn_sdp  {torch.backends.cuda.cudnn_sdp_enabled()}')
+    print(f'  * CUDA math_sdp   {torch.backends.cuda.math_sdp_enabled()}')
+    print(f'  * CUDA mem_efficient_sdp_enabled    {torch.backends.cuda.mem_efficient_sdp_enabled()}')
+    print(f'  * CUDA fp16_bf16_reduction_math_sdp {torch.backends.cuda.fp16_bf16_reduction_math_sdp_allowed()}')
+except Exception as error:
+    print(f'Exception trying to read PyTorch {torch.__version__} CUDA versions (this may be expected on older versions of PyTorch)\n{error}')
+    
+print(f'torch.distributed: {torch.distributed.is_available()}')
+print(f'  * NCCL backend:  {torch.distributed.is_nccl_available()}')
+print(f'  * GLOO backend:  {torch.distributed.is_gloo_available()}')
+print(f'  * MPI backend:   {torch.distributed.is_mpi_available()}\n')
 
 # check that version can be parsed
 from packaging import version

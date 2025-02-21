@@ -30,7 +30,7 @@ ENV LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libgomp.so.1
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/python3.8/dist-packages/opencv_python.libs/
 
 RUN mim install mmcv --verbose --no-cache-dir
-RUN cd /opt && ./opencv_install.sh
+RUN /tmp/opencv/install.sh
 
 # https://github.com/dusty-nv/jetson-containers/issues/326
 RUN pip3 install --no-cache-dir --verbose gradio==3.38.0
