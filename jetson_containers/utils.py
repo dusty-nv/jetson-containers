@@ -4,6 +4,7 @@ import grp
 import sys
 import pprint
 import requests
+import functools
 
 
 def check_dependencies(install=True):
@@ -180,7 +181,7 @@ def handle_json_request(url, headers=None):
         print(f"-- Unexpected error occurred during request ({e})")
         return None
     
-
+@functools.cache
 def github_api(url):
     """
     Sends a request to the GitHub API using the specified URL, including authorization headers if available.
