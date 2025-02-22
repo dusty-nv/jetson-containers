@@ -23,6 +23,12 @@ parse_args() {
 
     for arg in "$@"; do
         case "$arg" in
+            --enable-gui)
+                ENABLE_GUI="true"
+                ;;
+            --disable-gui)
+                DISABLE_GUI="true"
+                ;;
             --test=*)
                 TEST_FUNCTION="${arg#*=}"
                 ;;
@@ -73,6 +79,23 @@ toggle_gui_mode() {
         gui_status="ENABLED"
         suggested_action="Disable"
         new_target="multi-user.target"
+    fi
+
+    # Handle --enable/disable-gui argument
+    if [[ "$1" == "--enable-gui" ]]; then
+        if [[ "$gui_status" == "ENABLED" ]]; then
+            echo "✅ GUI is already enabled. No changes needed."
+            return 0
+        fi
+        new_target="graphical.target"
+        suggested_action="Enable"
+    elif [[ "$1" == "--disable-gui" ]]; then
+        if [[ "$gui_status" == "DISABLED" ]]; then
+            echo "✅ GUI is already disabled. No changes needed."
+            return 0
+        fi
+        new_target="multi-user.target"
+        suggested_action="Disable"
     fi
 
     # Display current status
@@ -159,11 +182,20 @@ main() {
         fi
     fi
 
+    # Handle --enable/disable-gui for toggle_gui_mode
+    if [[ "$ENABLE_GUI" == "true" ]]; then
+        toggle_gui_mode --enable-gui
+        exit 0
+    elif [[ "$DISABLE_GUI" == "true" ]]; then
+        toggle_gui_mode --disable-gui
+        exit 0
+    else
+        toggle_gui_mode
+    fi
+
     # Normal execution flow if no --test flag is supplied
     log INFO "Running full setup..."
-
     toggle_gui_mode
-
 }
 
 # Execute main function
