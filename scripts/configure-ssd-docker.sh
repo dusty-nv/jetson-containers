@@ -244,8 +244,7 @@ setup_docker() {
     log INFO "Moving the existing Docker data directory (/var/lib/docker/)..."
     sudo du -csh /var/lib/docker/
     log WARN "⚠️ This may take time if you were operating on eMMC/SD"
-    sudo du -csh /var/lib/docker/ && \
-        sudo mkdir $selected_mount_point_docker_root_dir && \
+    sudo mkdir $selected_mount_point_docker_root_dir && \
         sudo rsync -axPS /var/lib/docker/ $selected_mount_point_docker_root_dir && \
         sudo du -csh  $selected_mount_point_docker_root_dir
 
@@ -268,8 +267,7 @@ setup_docker() {
 
     # Restart the docker daemon
     sudo systemctl daemon-reload && \
-        sudo systemctl restart docker && \
-        sudo journalctl -u docker
+        sudo systemctl restart docker
 
 }
 
