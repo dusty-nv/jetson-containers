@@ -33,7 +33,7 @@ check_l4t_installed_on_nvme() {
     fi
 }
 
-check_nvme_should_mount() {
+check_nvme_to_be_mounted() {
     local nvme_present=false
     local nvme_mounted=false
 
@@ -68,8 +68,10 @@ add_nvme_to_fstab() {
     sudo blkid -c /dev/null > /dev/null
 
     # Get UUID of the NVMe device
+    blkid -s UUID -o value "$nvme_device"
     local uuid
     uuid=$(blkid -s UUID -o value "$nvme_device")
+    log INFO "------> UUID: $uuid"
 
     # Ensure the UUID was found
     if [[ -z "$uuid" ]]; then
@@ -93,11 +95,11 @@ add_nvme_to_fstab() {
 }
 
 mount_nvme() {
-    # Step 2: List available NVMe devices
+    # Step 1-1: List available NVMe devices
     log INFO "Available NVMe devices:"
     lsblk -d -o NAME,SIZE,TYPE | grep "nvme"
 
-    # Step 3: Detect the first NVMe device automatically
+    # Step 1-2: Detect the first NVMe device automatically
     first_nvme=$(lsblk -d -o NAME,TYPE | grep "nvme" | awk '{print $1}' | head -n1)
 
     # Prompt user with pre-filled NVMe device (default: first detected NVMe)
@@ -110,12 +112,12 @@ mount_nvme() {
         exit 1
     fi
 
-    # Step 4: Ask the user where to mount (default: /mnt)
-    echo -n "Enter the mount point [default: /mnt]                 : "
+    # Step 1-3: Ask the user where to mount (default: /mnt)
+    echo -n "Enter the mount point           [Default: /mnt]   : "
     read -e -i "/mnt" mount_point
     mount_point=${mount_point:-/mnt}
 
-    # Step 5: Format the NVMe device
+    # Step 1-4: Format the NVMe device
     log WARN "⚠️ WARNING: This will format /dev/$nvme_device as EXT4!"
     read -p "Are you sure you want to proceed? (y/N): " confirm
     if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
@@ -126,24 +128,27 @@ mount_nvme() {
     log INFO "Formatting /dev/$nvme_device..."
     sudo mkfs.ext4 "/dev/$nvme_device"
 
-    # Step 6: Create mount directory
+    # Step 1-5: Create mount directory
     log INFO "Creating mount directory at $mount_point..."
     sudo mkdir -p "$mount_point"
 
-    # Step 7: Mount the NVMe device
+    # Step 1-6: Mount the NVMe device
     log INFO "Mounting /dev/$nvme_device to $mount_point..."
     sudo mount "/dev/$nvme_device" "$mount_point"
 
-    # Step 8: Display filesystem info
+    # Step 1-7: Display filesystem info
     log INFO "Updated Filesystem Info:"
     lsblk -f
 
-    # Step 9-11: Get the UUID and add that to /etc/fstab
+    # Step 1-8: Get the UUID and add that to /etc/fstab
     add_nvme_to_fstab "/dev/$nvme_device" "$mount_point"
+    log INFO "Showing the current /etc/fstab"
+    cat /etc/fstab
 
-    # Step 11: Change ownership to current user
+    # Step 1-9: Change ownership to current user
     log IFNO "Setting ownership for $mount_point to ${USER}:${USER}..."
     sudo chown "${USER}:${USER}" "$mount_point"
+    ls -la $mount_point
 
     log INFO "✅ NVMe setup completed successfully!"
 }
@@ -159,8 +164,8 @@ check_docker_is_installed() {
 }
 
 install_docker() {
-    log INFO "⚠️  Docker and NVIDIA container runtime will be installed."
-    log INFO "   This process requires internet access and may take a few minutes."
+    log INFO "⚠️ Docker and NVIDIA container runtime will be installed."
+    log INFO "⚠️ This process requires internet access and may take a few minutes."
     echo
 
     # Ask for user confirmation
@@ -202,17 +207,8 @@ setup_docker() {
     if check_l4t_installed_on_nvme; then
         log WARN "No need to data-root for Docker config"
     else
-        log INFO "Migrate Docker directory to SSD"
-        sudo systemctl stop docker
-
-        log INFO "Moving the existing Docker directory..."
-        sudo du -csh /var/lib/docker/ && \
-            sudo mkdir /ssd/docker && \
-            sudo rsync -axPS /var/lib/docker/ /ssd/docker/ && \
-            sudo du -csh  /ssd/docker/
-
         log INFO "List all NVMe mount points"
-        nvme_mount_points=($(awk '/^\/dev\/nvme/ {print $2}' /etc/fstab))
+        nvme_mount_points=($(awk '$1 ~ /^UUID=/ {print $2}' /etc/fstab))
         if [[ ${#nvme_mount_points[@]} -eq 0 ]]; then
             echo "❌ No NVMe mount points found in /etc/fstab. Exiting."
             exit 1
@@ -226,6 +222,15 @@ setup_docker() {
         default_mount_point_docker_root_dir="${nvme_mount_points[0]}/docker"
         echo -n "Enter the Docker data-root dir [Default: $default_mount_point_docker_root_dir]: "
         read -e -i "$default_mount_point_docker_root_dir" selected_mount_point_docker_root_dir
+
+        log INFO "Migrate Docker directory to SSD"
+        sudo systemctl stop docker
+
+        log INFO "Moving the existing Docker directory..."
+        sudo du -csh /var/lib/docker/ && \
+            sudo mkdir $selected_mount_point_docker_root_dir && \
+            sudo rsync -axPS /var/lib/docker/ $selected_mount_point_docker_root_dir && \
+            sudo du -csh  $selected_mount_point_docker_root_dir
 
         # Insert Docker data-root entry in daemon.json safely
         sudo jq --arg dataroot "$selected_mount_point_docker_root_dir" \
@@ -290,34 +295,29 @@ main() {
     # Normal execution flow if no --test flag is supplied
     log INFO "Running full setup..."
 
-    print_section "Check and install Docker (if not installed)"
-    if command -v docker &> /dev/null; then
-        log INFO "Docker is already installed."
-    else
-        log WARN "Docker is NOT yet installed."
-        install_docker
-    fi
-
-    # Step 0:
+    # Step 0: Check L4T is installed entirely on NVMe (or eMMC)
+    print_section "Step 0: Check L4T is installed entirely on NVMe (or installed on eMMC/SD)"
     if check_l4t_installed_on_nvme; then
         log INFO "No need to mount SSD, no need to set Docker data-root dir."
     else
         log INFO "Checking if NVMe is present and to be mounted"
-
-        # Step 1: Check if NVMe needs mounting
-        if check_nvme_should_mount; then
+        # Step 1: Mount NVMe if there is one exists and to be mounted
+        print_section "Step 1: Mount NVMe if there is one exists and to be mounted"
+        if check_nvme_to_be_mounted; then
             mount_nvme
         else
-            log NVME "NVMe is either missing or already mounted. Exiting."
+            log WARN "NVMe is either missing or already mounted."
         fi
     fi
 
-    # Check if Docker is installed and install Docker if not installed
+    # Step 2: Install Docker if not installed
+    print_section "Step 2: Install Docker if not installed"
     if ! check_docker_is_installed; then
         install_docker
     fi
 
-    # If eMMC + NVMe, migrate Docker directory to SSD
+    # Step 3: If eMMC + NVMe, migrate Docker directory to SSD
+    print_section "Step 3: If eMMC + NVMe, migrate Docker directory to SSD"
     setup_docker
 
 }
