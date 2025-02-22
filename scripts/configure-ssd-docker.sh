@@ -59,6 +59,39 @@ check_nvme_should_mount() {
     fi
 }
 
+add_nvme_to_fstab() {
+    local nvme_device="$1"    # e.g., /dev/nvme0n1
+    local mount_point="$2"    # e.g., /mnt
+    local filesystem="ext4"
+
+    # Refresh blkid cache to prevent missing UUID issue
+    sudo blkid -c /dev/null > /dev/null
+
+    # Get UUID of the NVMe device
+    local uuid
+    uuid=$(blkid -s UUID -o value "$nvme_device")
+
+    # Ensure the UUID was found
+    if [[ -z "$uuid" ]]; then
+        echo "❌ Failed to retrieve UUID for $nvme_device. Is it formatted?"
+        return 1
+    fi
+
+    # Check if the entry already exists in /etc/fstab
+    if grep -q "$uuid" /etc/fstab; then
+        echo "✅ UUID $uuid already exists in /etc/fstab. No changes needed."
+        return 0
+    fi
+
+    # Append entry to /etc/fstab
+    echo "UUID=$uuid $mount_point $filesystem defaults 0 2" | sudo tee -a /etc/fstab
+
+    # Apply changes
+    sudo mount -a
+
+    echo "✅ Successfully added $nvme_device to /etc/fstab and mounted it."
+}
+
 mount_nvme() {
     # Step 2: List available NVMe devices
     log INFO "Available NVMe devices:"
@@ -105,17 +138,8 @@ mount_nvme() {
     log INFO "Updated Filesystem Info:"
     lsblk -f
 
-    # Step 9: Get UUID of the new filesystem
-    uuid=$(blkid -s UUID -o value "/dev/$nvme_device")
-
-    # Step 10: Append fstab entry
-    fstab_entry="UUID=$uuid $mount_point ext4 defaults 0 2"
-
-    log INFO "Adding the following entry to /etc/fstab:"
-    echo "$fstab_entry"
-
-    # Open fstab for editing
-    sudo bash -c "echo '$fstab_entry' >> /etc/fstab"
+    # Step 9-11: Get the UUID and add that to /etc/fstab
+    add_nvme_to_fstab "/dev/$nvme_device" "$mount_point"
 
     # Step 11: Change ownership to current user
     log IFNO "Setting ownership for $mount_point to ${USER}:${USER}..."
