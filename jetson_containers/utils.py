@@ -6,8 +6,10 @@ import pprint
 import requests
 import functools
 
+from typing import Dict, Literal
 
-def check_dependencies(install=True):
+
+def check_dependencies(install: bool = True):
     """
     Check if the required pip packages are available, and install them if needed.
     """
@@ -36,7 +38,7 @@ def check_dependencies(install=True):
         subprocess.run(cmd, shell=False, check=True)
         
 
-def query_yes_no(question, default="no"):
+def query_yes_no(question: str, default: Literal["no", "yes"] = "no") -> bool:
     """
     Ask a yes/no question via raw_input() and return their answer.
 
@@ -92,7 +94,7 @@ def split_container_name(name):
     return namespace, repo, tag
     
     
-def user_in_group(group):
+def user_in_group(group) -> bool:
     """
     Returns true if the user running the current process is in the specified user group.
     Equivalent to this bash command:   id -nGz "$USER" | grep -qzxF "$GROUP"
@@ -105,14 +107,14 @@ def user_in_group(group):
     return (group.gr_gid in os.getgroups())
   
 
-def is_root_user():
+def is_root_user() -> bool:
     """
     Returns true if this is the root user running
     """
     return os.geteuid() == 0
     
     
-def needs_sudo(group='docker'):
+def needs_sudo(group: str = 'docker') -> bool:
     """
     Returns true if sudo is needed to use the docker engine (if user isn't in the docker group)
     """
@@ -122,7 +124,7 @@ def needs_sudo(group='docker'):
         return not user_in_group(group)
     
 
-def sudo_prefix(group='docker'):
+def sudo_prefix(group: str = 'docker'):
     """
     Returns a sudo prefix for command strings if the user needs sudo for accessing docker
     """
@@ -133,7 +135,7 @@ def sudo_prefix(group='docker'):
         return ""
 
 
-def handle_text_request(url) -> str | None:
+def handle_text_request(url: str) :
     """
     Handles a request to fetch text data from the given URL.
 
@@ -156,7 +158,7 @@ def handle_text_request(url) -> str | None:
         return None
     
 
-def handle_json_request(url, headers=None):
+def handle_json_request(url: str, headers: Dict[str, str] = None):
     """
     Handles a JSON request from the given URL with optional headers and returns the parsed JSON data.
 
@@ -182,7 +184,7 @@ def handle_json_request(url, headers=None):
         return None
     
 @functools.cache
-def github_api(url):
+def github_api(url: str):
     """
     Sends a request to the GitHub API using the specified URL, including authorization headers if available.
 
@@ -199,7 +201,7 @@ def github_api(url):
     return handle_json_request(request_url, headers)
 
 
-def github_latest_commit(repo, branch='main'):
+def github_latest_commit(repo: str, branch: str = 'main'):
     """
     Retrieves the latest commit SHA from the specified branch of a GitHub repository.
 
@@ -214,7 +216,7 @@ def github_latest_commit(repo, branch='main'):
     return commit_info.get('sha') if commit_info else None
 
 
-def github_latest_tag(repo):
+def github_latest_tag(repo: str):
     """
     Retrieves the latest tag name from the specified GitHub repository.
 
@@ -228,7 +230,7 @@ def github_latest_tag(repo):
     return tags[0].get('name') if tags else None
 
 
-def get_json_value_from_url(url, notation=None):
+def get_json_value_from_url(url: str, notation: str = None):
     """
     Retrieves JSON data from the given URL and returns either the whole data or a specified nested value using a dot notation string.
 
