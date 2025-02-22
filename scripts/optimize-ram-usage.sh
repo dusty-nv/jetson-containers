@@ -245,11 +245,11 @@ toggle_swap() {
 
     # Step 1: Get a list of NVMe-backed mount points
     nvme_mounts=($(lsblk -nr -o NAME,MOUNTPOINT | awk '/^nvme/ && $2 != "" {print $2}'))
-    log INFO $nvme_mounts
+    log INFO "nvme_mounts: $nvme_mounts"
 
     # Step 2: Find all active swap files
     all_swap=$(swapon --show --noheadings | awk '$1 !~ /\/dev\/zram/ {print $1}')
-    log INFO $all_swap
+    log INFO "all_swap: $all_swap"
 
     # Step 3: Exclude swap files that are inside an NVMe-backed filesystem
     non_zram_non_nvme_swap=()
