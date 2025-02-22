@@ -155,7 +155,7 @@ mount_nvme() {
 
 check_docker_is_installed() {
     if command -v docker &> /dev/null; then
-        log INFO "✅ Docker is installed."
+        log INFO "✅ Docker is already installed."
         return 0
     else
         log WARN "❌ Docker is NOT installed."
@@ -194,66 +194,83 @@ setup_docker() {
         exit 1
     fi
 
-    log INFO "Going to restart docker service..."
-    sudo systemctl restart docker
-    sudo usermod -aG docker $USER
-    log WARN "⚠️ Please log out and log back in for Docker group changes to take effect."
+    # Step 3-1: Add default-runtime (if needed)
+    if grep -q '"default-runtime": "nvidia"' /etc/docker/daemon.json; then
+        log INFO "✅ NVIDIA runtime is set as default"
+    else
+        log WARN "❌ NVIDIA runtime is NOT set"
+        log INFO "Going to restart docker service..."
+        sudo systemctl restart docker
+        sudo usermod -aG docker $USER
+        log WARN "⚠️ Please log out and log back in for Docker group changes to take effect."
 
-    sudo apt install -y jq
-    sudo jq '. + {"default-runtime": "nvidia"}' /etc/docker/daemon.json | \
-        sudo tee /etc/docker/daemon.json.tmp && \
-        sudo mv /etc/docker/daemon.json.tmp /etc/docker/daemon.json
+        sudo apt install -y jq
+        sudo jq '. + {"default-runtime": "nvidia"}' /etc/docker/daemon.json | \
+            sudo tee /etc/docker/daemon.json.tmp && \
+            sudo mv /etc/docker/daemon.json.tmp /etc/docker/daemon.json
+    fi
 
     if check_l4t_installed_on_nvme; then
-        log WARN "No need to data-root for Docker config"
-    else
-        log INFO "List all NVMe mount points"
-        nvme_mount_points=($(awk '$1 ~ /^UUID=/ {print $2}' /etc/fstab))
-        if [[ ${#nvme_mount_points[@]} -eq 0 ]]; then
-            echo "❌ No NVMe mount points found in /etc/fstab. Exiting."
-            exit 1
-        fi
-        # List all NVMe mount points
-        for mp in "${nvme_mount_points[@]}"; do
-            echo "Mounted NVMe: $mp"
-        done
-
-        # Set default to the first NVMe mount point
-        default_mount_point_docker_root_dir="${nvme_mount_points[0]}/docker"
-        echo -n "Enter the Docker data-root dir [Default: $default_mount_point_docker_root_dir]: "
-        read -e -i "$default_mount_point_docker_root_dir" selected_mount_point_docker_root_dir
-
-        log INFO "Migrate Docker directory to SSD"
-        sudo systemctl stop docker
-
-        log INFO "Moving the existing Docker directory..."
-        sudo du -csh /var/lib/docker/ && \
-            sudo mkdir $selected_mount_point_docker_root_dir && \
-            sudo rsync -axPS /var/lib/docker/ $selected_mount_point_docker_root_dir && \
-            sudo du -csh  $selected_mount_point_docker_root_dir
-
-        # Insert Docker data-root entry in daemon.json safely
-        sudo jq --arg dataroot "$selected_mount_point_docker_root_dir" \
-            '. + {"data-root": $dataroot}' /etc/docker/daemon.json | \
-            sudo tee /etc/docker/daemon.json.tmp > /dev/null
-
-        # Validate JSON before replacing daemon.json
-        if sudo jq empty /etc/docker/daemon.json.tmp >/dev/null 2>&1; then
-            sudo mv /etc/docker/daemon.json.tmp /etc/docker/daemon.json
-            echo "✅ Docker data-root updated to: $selected_mount_point_docker_root_dir"
-        else
-            echo "❌ JSON validation failed. Aborting update."
-            rm /etc/docker/daemon.json.tmp
-        fi
-
-        # Rename the old Docker data directory
-        sudo mv /var/lib/docker /var/lib/docker.old
-
-        # Restart the docker daemon
-        sudo systemctl daemon-reload && \
-            sudo systemctl restart docker && \
-            sudo journalctl -u docker
+        log WARN "✅ No need to migrate Docker data as you entire system is on NVMe SSD"
+        exit 1
     fi
+
+    if grep -q '"data-root"' /etc/docker/daemon.json; then
+        log INFO "✅ Docker data-root dir is already set"
+        exit 1
+    fi
+
+    # L4T is installed on eMMC and Docker data-root to be migrated to SSD
+    log INFO "List all NVMe mount points"
+    nvme_mount_points=($(awk '$1 ~ /^UUID=/ {print $2}' /etc/fstab))
+    if [[ ${#nvme_mount_points[@]} -eq 0 ]]; then
+        echo "❌ No NVMe mount points found in /etc/fstab. Exiting."
+        exit 1
+    fi
+    # List all NVMe mount points
+    for mp in "${nvme_mount_points[@]}"; do
+        echo "Mounted NVMe: $mp"
+    done
+
+    # Set default to the first NVMe mount point
+    default_mount_point_docker_root_dir="${nvme_mount_points[0]}/docker"
+    echo -n "Enter the Docker data-root dir [Default: $default_mount_point_docker_root_dir]: "
+    read -e -i "$default_mount_point_docker_root_dir" selected_mount_point_docker_root_dir
+
+    # Step 3-2: Migrate Docker data-root directory to SSD (if needed)
+    log INFO "Migrate Docker directory to SSD"
+    sudo systemctl stop docker
+
+    log INFO "Moving the existing Docker data directory (/var/lib/docker/)..."
+    sudo du -csh /var/lib/docker/
+    log WARN "⚠️ This may take time if you were operating on eMMC/SD"
+    sudo du -csh /var/lib/docker/ && \
+        sudo mkdir $selected_mount_point_docker_root_dir && \
+        sudo rsync -axPS /var/lib/docker/ $selected_mount_point_docker_root_dir && \
+        sudo du -csh  $selected_mount_point_docker_root_dir
+
+    # Insert Docker data-root entry in daemon.json safely
+    sudo jq --arg dataroot "$selected_mount_point_docker_root_dir" \
+        '. + {"data-root": $dataroot}' /etc/docker/daemon.json | \
+        sudo tee /etc/docker/daemon.json.tmp > /dev/null
+
+    # Validate JSON before replacing daemon.json
+    if sudo jq empty /etc/docker/daemon.json.tmp >/dev/null 2>&1; then
+        sudo mv /etc/docker/daemon.json.tmp /etc/docker/daemon.json
+        echo "✅ Docker data-root updated to: $selected_mount_point_docker_root_dir"
+    else
+        echo "❌ JSON validation failed. Aborting update."
+        rm /etc/docker/daemon.json.tmp
+    fi
+
+    # Rename the old Docker data directory
+    sudo mv /var/lib/docker /var/lib/docker.old
+
+    # Restart the docker daemon
+    sudo systemctl daemon-reload && \
+        sudo systemctl restart docker && \
+        sudo journalctl -u docker
+
 }
 
 parse_args() {
@@ -320,6 +337,7 @@ main() {
     print_section "Step 3: If eMMC + NVMe, migrate Docker directory to SSD"
     setup_docker
 
+    print_section "=== COMPLETED ==="
 }
 
 # Execute main function
