@@ -271,10 +271,7 @@ main() {
         log INFO "Docker is already installed."
     else
         log WARN "Docker is NOT yet installed."
-        sudo apt update
-        sudo apt install -y nvidia-container curl
-        curl https://get.docker.com | sh && sudo systemctl --now enable docker
-        sudo nvidia-ctk runtime configure --runtime=docker
+        install_docker
     fi
 
     # Step 0:
