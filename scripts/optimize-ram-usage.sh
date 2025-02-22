@@ -279,7 +279,7 @@ toggle_swap() {
         printf "%s\n" "${non_zram_non_nvme_swap[@]}"
 
         # Step 5. Disable and remove each non-ZRAM swap file
-        echo "⚠️  Disabling and deleting non-ZRAM swap files (not on NVMe) ..."
+        echo "⚠️  Disabling and deleting non-ZRAM, non-NVMe swap files🐌 ..."
         for swap in $non_zram_non_nvme_swap; do
             echo "🚫 Disabling swap: $swap"
             sudo swapoff "$swap"
@@ -360,7 +360,7 @@ toggle_swap() {
         total_mem_gb=$(awk '/MemTotal/ {print int($2/1024/1024)}' /proc/meminfo)
 
         # Calculate default swap size (half of total memory, rounded)
-        default_swap_size=$(( (total_mem_gb + 3) / 2 ))  # Ensure rounding up for odd numbers
+        default_swap_size=$(( (total_mem_gb + 2) / 2 ))  # Ensure rounding up for odd numbers
 
         # Ask the user for swap size (default: 4GB)
         echo -n "Enter swap file size in GB [Default: $default_swap_size]: "
