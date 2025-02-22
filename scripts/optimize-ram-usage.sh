@@ -190,12 +190,11 @@ main() {
         toggle_gui_mode --disable-gui
         exit 0
     else
+        # Step 1. Toggle GUI mode (graphical <-> multi-user)
         toggle_gui_mode
     fi
 
-    # Normal execution flow if no --test flag is supplied
-    log INFO "Running full setup..."
-    toggle_gui_mode
+
 }
 
 # Execute main function
