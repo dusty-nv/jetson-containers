@@ -18,7 +18,11 @@ SHELL ["/bin/bash", "-c"]
 
 # set Python3 as default
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
-    
+
+# Numpy 2.0
+RUN python3 -m pip install --no-cache-dir "numpy>=2.0.0"
+RUN python3 -c "import numpy; print('NumPy version:', numpy.__version__)"
+
 # build ROS from source
 COPY ros2_build.sh /tmp/ros2_build.sh
 RUN /tmp/ros2_build.sh
