@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -ex
+
+# Clone the repository if it doesn't exist
+git clone --branch=v${FAST_GAUSIAN_VERSION} --depth=1 --recursive https://github.com/dendenxu/fast-gaussian-rasterization /opt/fast_gauss || \
+git clone --depth=1 --recursive https://github.com/dendenxu/fast-gaussian-rasterization /opt/fast_gauss
+
+# Navigate to the directory containing PyMeshLab's setup.py
+cd /opt/fast_gauss
+
+MAX_JOBS=$(nproc) \
+pip3 wheel . -w /opt/fast_gauss/wheels --verbose
+
+pip3 install --no-cache-dir --verbose /opt/fast_gauss/wheels/fast_gauss*.whl
+
+cd /opt/fast_gauss
+
+# Optionally upload to a repository using Twine
+twine upload --verbose /opt/fast_gauss/wheels/fast_gauss*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

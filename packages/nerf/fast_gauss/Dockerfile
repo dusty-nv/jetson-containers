@@ -1,5 +1,5 @@
 #---
-# name: gsplat
+# name: fast_gauss
 # group: nerf
 # config: config.py
 # depends: [pytorch, torchvision, torchaudio, tinycudann]
@@ -9,7 +9,7 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG FAST_GAUSIAN_VERSION \
+ARG FAST_GAUSS_VERSION \
     FORCE_BUILD=off
 
 RUN apt-get update && \
@@ -18,6 +18,6 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
     
-COPY build.sh install.sh /tmp/GSPLAT/
+COPY build.sh install.sh /tmp/FAST_GAUSS/
 
-RUN /tmp/GSPLAT/install.sh || /tmp/GSPLAT/build.sh
+RUN /tmp/FAST_GAUSS/install.sh || /tmp/FAST_GAUSS/build.sh
