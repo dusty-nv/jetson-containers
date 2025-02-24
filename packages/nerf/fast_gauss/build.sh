@@ -11,6 +11,7 @@ cd /opt/fast_gauss
 MAX_JOBS=$(nproc) \
 pip3 wheel . -w /opt/wheels --verbose
 
+pip3 install PyOpenGL PyOpenGL_accelerate
 pip3 install --no-cache-dir --verbose /opt/wheels/fast_gauss*.whl
 
 cd /opt/fast_gauss
