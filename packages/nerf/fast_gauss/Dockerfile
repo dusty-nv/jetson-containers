@@ -16,6 +16,13 @@ ARG FAST_GAUSS_VERSION \
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         unzip \
+        libgl1 \
+        libglu1-mesa-dev \
+        freeglut3-dev  \
+        mesa-common-dev \
+        libgl1-mesa-glx \
+        libegl-dev \
+        libxrender1 \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
     

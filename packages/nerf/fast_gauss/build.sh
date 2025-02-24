@@ -7,11 +7,11 @@ git clone --depth=1 --recursive https://github.com/dendenxu/fast-gaussian-raster
 
 # Navigate to the directory containing PyMeshLab's setup.py
 cd /opt/fast_gauss
-
+pip3 install PyOpenGL PyOpenGL_accelerate pdbr tqdm ujson ruamel.yaml
 MAX_JOBS=$(nproc) \
 pip3 wheel . -w /opt/wheels --verbose
 
-pip3 install PyOpenGL PyOpenGL_accelerate
+
 pip3 install --no-cache-dir --verbose /opt/wheels/fast_gauss*.whl
 
 cd /opt/fast_gauss
