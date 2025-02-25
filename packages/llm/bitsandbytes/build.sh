@@ -7,7 +7,8 @@ echo "### CUDA_INSTALLED_VERSION: $CUDA_INSTALLED_VERSION"
 echo "### CUDA_MAKE_LIB: $CUDA_MAKE_LIB" 
 pip3 uninstall -y bitsandbytes || echo "previous bitsandbytes installation not found"
 
-git clone --branch=$BITSANDBYTES_BRANCH --recursive --depth=1 "https://github.com/$BITSANDBYTES_REPO" /opt/bitsandbytes
+git clone --branch=$BITSANDBYTES_BRANCH --recursive --depth=1 "https://github.com/$BITSANDBYTES_REPO" /opt/bitsandbytes || \
+git clone --recursive --depth=1 "https://github.com/$BITSANDBYTES_REPO" /opt/bitsandbytes
 cd /opt/bitsandbytes
 
 if [ $CUDA_INSTALLED_VERSION < 126 ]; then
