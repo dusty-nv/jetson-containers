@@ -28,11 +28,9 @@ git clone --branch=v${VLLM_VERSION} --recursive --depth=1 https://github.com/vll
 git clone --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm
 cd /opt/vllm
 
-# apply patches: Remove switching to outlines instead of XGrammar
-env
-cp /tmp/vllm/${VLLM_VERSION}.fa.diff /tmp/vllm/fa.diff
 git apply /tmp/vllm/${VLLM_VERSION}.diff
 git diff
+git status
 
 export MAX_JOBS=$(nproc) # this is for AGX (max 4 working on Orin NX)
 export USE_CUDNN=1
@@ -49,7 +47,7 @@ pip3 wheel --no-build-isolation -v -v -v --wheel-dir=/opt/vllm/wheels .
 pip3 install --no-cache-dir --verbose /opt/vllm/wheels/vllm*.whl
 
 cd /opt/vllm
-pip3 install compressed-tensors bitsandbytes xformers flash-attn triton==3.1.0
+pip3 install compressed-tensors
 
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/vllm/wheels/vllm*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
