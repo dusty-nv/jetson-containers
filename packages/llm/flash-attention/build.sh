@@ -3,7 +3,8 @@ set -ex
 
 echo "Building FlashAttention ${FLASH_ATTENTION_VERSION}"
 
-git clone --depth=1 --branch=v${FLASH_ATTENTION_VERSION} https://github.com/Dao-AILab/flash-attention /opt/flash-attention
+git clone --depth=1 --branch=v${FLASH_ATTENTION_VERSION} https://github.com/Dao-AILab/flash-attention /opt/flash-attention ||
+git clone --depth=1 https://github.com/Dao-AILab/flash-attention /opt/flash-attention
 
 cd /opt/flash-attention
 
