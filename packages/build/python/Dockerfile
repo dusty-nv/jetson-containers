@@ -20,7 +20,9 @@ ENV PYTHON_VERSION=${PYTHON_VERSION_ARG} \
     PIP_CACHE_PURGE=true \
     PIP_ROOT_USER_ACTION=ignore \
     TWINE_NON_INTERACTIVE=1 \
-    DEBIAN_FRONTEND=noninteractive
+    DEBIAN_FRONTEND=noninteractive \
+    VIRTUAL_ENV=/opt/venv \
+    PATH=/opt/venv/bin:$PATH
 
 COPY install.sh /tmp/install_python.sh 
 RUN /tmp/install_python.sh

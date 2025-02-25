@@ -20,11 +20,17 @@ if [ $return_code != 0 ]; then
 	  python${PYTHON_VERSION}-dev
 fi
 
+# path 1:  Python 3.8-3.10 for JP5/6
+# path 2:  Python 3.6 for JP4
+# path 3:  Python 3.12 for 24.04
+curl -sS https://bootstrap.pypa.io/get-pip.py | python${PYTHON_VERSION} || \
+curl -sS https://bootstrap.pypa.io/pip/3.6/get-pip.py | python3.6 || \
+apt-get install -y --no-install-recommends python3-venv && \
+python3 -m venv ${VIRTUAL_ENV} && source ${VIRTUAL_ENV}/bin/activate && \
+curl -sS https://bootstrap.pypa.io/get-pip.py | python${PYTHON_VERSION}
+
 rm -rf /var/lib/apt/lists/*
 apt-get clean
-
-curl -sS https://bootstrap.pypa.io/get-pip.py | python${PYTHON_VERSION} || \
-curl -sS https://bootstrap.pypa.io/pip/3.6/get-pip.py | python3.6
 
 ln -s /usr/bin/python${PYTHON_VERSION} /usr/local/bin/python3
 #ln -s /usr/bin/pip${PYTHON_VERSION} /usr/local/bin/pip3
