@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -ex
 
+pip3 install compressed-tensors decord
 # Clone the repository if it doesn't exist
 echo "FLASH INFER ${SGLANG_VERSION}"
 git clone --branch=v${SGLANG_VERSION} --recursive --depth=1 https://github.com/flashinfer-ai/flashinfer /opt/flashinfer ||
@@ -31,7 +32,7 @@ pip3 wheel -v --wheel-dir=/opt/sglang/wheels .
 pip3 install --no-cache-dir --verbose /opt/sglang/wheels/sglang*.whl
 
 cd /opt/sglang
-pip3 install compressed-tensors
+
 
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/flashinfer/wheels/flashinfer*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
