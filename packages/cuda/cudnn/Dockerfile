@@ -22,7 +22,6 @@ RUN echo "Downloading ${CUDNN_DEB}" && \
     dpkg -i *.deb && \
     cp /var/cudnn-local-tegra-repo-*/cudnn-local-tegra-*-keyring.gpg /usr/share/keyrings/ && \
     apt-get update && \
-    apt-mark hold libcudnn-frontend-dev nvidia-cudnn && \
     apt-cache search cudnn && \
     apt list --installed | grep 'cuda\|cudnn\|cublas' && \
     apt-get install -y --no-install-recommends ${CUDNN_PACKAGES} && \
