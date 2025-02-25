@@ -17,8 +17,8 @@ cmake .. -G Ninja
 ninja
 
 # Create the wheel
-cd ../python
-python3 setup.py bdist_wheel --dist-dir ../wheels
+cd /opt/xgrammar
+pip3 wheel . --wheel-dir /opt/xgrammar/wheels/ --verbose
 
 # Install the wheel
 # Warning: version number is 0.1.5 even if actual version is 0.1.8, or 0.1.9 due to version.py not being adapted yet: https://github.com/mlc-ai/xgrammar/blob/main/python/xgrammar/version.py
@@ -44,7 +44,7 @@ export SETUPTOOLS_SCM_PRETEND_VERSION="${VLLM_VERSION}"
 
 python3 use_existing_torch.py || echo "skipping vllm/use_existing_torch.py"
 
-pip3 install -r --verbose requirements-build.txt
+pip3 install -r requirements-build.txt -v
 python3 -m setuptools_scm
 pip3 wheel --no-build-isolation -v --wheel-dir=/opt/vllm/wheels .
 pip3 install --no-cache-dir --verbose /opt/vllm/wheels/vllm*.whl
