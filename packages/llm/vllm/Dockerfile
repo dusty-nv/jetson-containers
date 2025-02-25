@@ -2,7 +2,7 @@
 # name: vllm
 # group: vlm
 # config: config.py
-# depends: [pytorch, torchvision, torchaudio, transformers, triton:3.1.0]
+# depends: [pytorch, torchvision, torchaudio, transformers, triton:3.1.0, bitsandbytes, xformers, flash-attention]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/vllm-project/vllm
@@ -12,6 +12,7 @@ FROM ${BASE_IMAGE}
 
 ARG VLLM_VERSION \
     XGRAMMAR_VERSION \
+    CUDAARCHS \
     FORCE_BUILD=off
 
 RUN apt-get update -y && apt-get install -y libnuma-dev \

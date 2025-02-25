@@ -2,10 +2,11 @@
 set -ex
 
 # Install dependencies of XGrammar
-pip install pybind11 pre-commit
+pip3 install "pybind11[global]" pre-commit
 
 # Clone the repository if it doesn't exist
-git clone --branch=v${XGRAMMAR_VERSION} --recursive --depth=1 https://github.com/mlc-ai/xgrammar.git /opt/xgrammar
+git clone --branch=v${XGRAMMAR_VERSION} --recursive --depth=1 https://github.com/mlc-ai/xgrammar /opt/xgrammar ||
+git clone --recursive --depth=1 https://github.com/mlc-ai/xgrammar /opt/xgrammar
 
 # Build and install
 cd /opt/xgrammar
@@ -21,13 +22,15 @@ python3 setup.py bdist_wheel --dist-dir ../wheels
 
 # Install the wheel
 # Warning: version number is 0.1.5 even if actual version is 0.1.8, or 0.1.9 due to version.py not being adapted yet: https://github.com/mlc-ai/xgrammar/blob/main/python/xgrammar/version.py
-pip install /opt/xgrammar/wheels/xgrammar*.whl
+pip3 install /opt/xgrammar/wheels/xgrammar*.whl
 
 # Clone the repository if it doesn't exist
 git clone --branch=v${VLLM_VERSION} --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm || 
 git clone --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm
 cd /opt/vllm
 
+env
+cp /tmp/vllm/${VLLM_VERSION}.fa.diff /tmp/vllm/fa.diff
 git apply /tmp/vllm/${VLLM_VERSION}.diff
 git diff
 git status
@@ -41,9 +44,9 @@ export SETUPTOOLS_SCM_PRETEND_VERSION="${VLLM_VERSION}"
 
 python3 use_existing_torch.py || echo "skipping vllm/use_existing_torch.py"
 
-pip3 install -r requirements-build.txt
+pip3 install -r --verbose requirements-build.txt
 python3 -m setuptools_scm
-pip3 wheel --no-build-isolation -v -v -v --wheel-dir=/opt/vllm/wheels .
+pip3 wheel --no-build-isolation -v --wheel-dir=/opt/vllm/wheels .
 pip3 install --no-cache-dir --verbose /opt/vllm/wheels/vllm*.whl
 
 cd /opt/vllm

@@ -6,4 +6,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install --no-cache-dir --verbose compressed-tensors triton==3.1.0 xgrammar bitsandbytes xformers flash-attn vllm==${VLLM_VERSION}
+pip3 install --no-cache-dir --verbose compressed-tensors vllm==${VLLM_VERSION}
