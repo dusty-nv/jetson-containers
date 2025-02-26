@@ -25,9 +25,9 @@ fi
 # path 3:  Python 3.12 for 24.04
 curl -sS https://bootstrap.pypa.io/get-pip.py | python${PYTHON_VERSION} || \
 curl -sS https://bootstrap.pypa.io/pip/3.6/get-pip.py | python3.6 || \
-apt-get install -y --no-install-recommends python3-venv && \
+( apt-get install -y --no-install-recommends python3-venv && \
 python3 -m venv /opt/venv && source /opt/venv/bin/activate && \
-curl -sS https://bootstrap.pypa.io/get-pip.py | python${PYTHON_VERSION}
+curl -sS https://bootstrap.pypa.io/get-pip.py | python${PYTHON_VERSION} )
 
 rm -rf /var/lib/apt/lists/*
 apt-get clean
