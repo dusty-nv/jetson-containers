@@ -1,4 +1,4 @@
-from jetson_containers import CUDA_ARCHITECTURES
+from jetson_containers import CUDA_ARCHITECTURES, CUDA_VERSION
 
 def sglang(sglang_version, flashinfer_version, requires=None, default=False):
     pkg = package.copy()
@@ -9,6 +9,7 @@ def sglang(sglang_version, flashinfer_version, requires=None, default=False):
     pkg['name'] = f'sglang:{sglang_version}'
 
     pkg['build_args'] = {
+        'CUDA_VERSION': CUDA_VERSION,
         'CUDAARCHS': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
         'SGLANG_VERSION': sglang_version,
         'FLASHINFER_VERSION': flashinfer_version,
