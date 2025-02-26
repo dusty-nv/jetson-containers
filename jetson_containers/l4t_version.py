@@ -228,7 +228,7 @@ def get_l4t_base(l4t_version=get_l4t_version()):
     Returns the l4t-base or l4t-jetpack container to use
     """
     if l4t_version.major >= 36:   # JetPack 6
-        return "ubuntu:22.04" #"nvcr.io/ea-linux4tegra/l4t-jetpack:r36.0.0"
+        return f"ubuntu:{LSB_RELEASE}" #"nvcr.io/ea-linux4tegra/l4t-jetpack:r36.0.0"
     elif l4t_version.major >= 34: # JetPack 5
         if l4t_version >= Version('35.4.1'):
             return "nvcr.io/nvidia/l4t-jetpack:r35.4.1"
@@ -295,8 +295,10 @@ def get_lsb_release():
        ("18.04", "bionic")
        ("20.04", "focal")
     """
-    return (subprocess.run(["lsb_release", "-rs"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True).stdout.strip(),
-           subprocess.run(["lsb_release", "-cs"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True).stdout.strip())
+    def lsb(type):
+        return subprocess.run(["lsb_release", f"-{type}s"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True).stdout.strip()
+    
+    return (os.environ.get('LSB_RELEASE', lsb('r')), lsb('c'))
 
             
 # set L4T_VERSION and CUDA_VERSION globals        

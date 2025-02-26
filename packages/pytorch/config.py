@@ -1,4 +1,4 @@
-from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES
+from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES, LSB_RELEASE
 from packaging.version import Version
 
 from .version import PYTORCH_VERSION
@@ -24,12 +24,15 @@ def pytorch_pip(version, requires=None, alias=None):
         build_version = version + '.0'
     else:
         build_version = version
-        
+
     pkg['build_args'] = {
         'TORCH_CUDA_ARCH_ARGS': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES]), # retained as $TORCH_CUDA_ARCH_LIST
         'TORCH_VERSION': version,
         'PYTORCH_BUILD_VERSION': build_version,
     }
+
+    if Version(LSB_RELEASE) >= Version('24.04'):
+        pkg['build_args']['USE_XNNPACK'] = 0
 
     if L4T_VERSION.major >= 36:
         pkg['build_args']['USE_NCCL'] = 1  # NCCL building only on JP6 and newer
