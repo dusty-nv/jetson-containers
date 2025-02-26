@@ -13,7 +13,7 @@ import concurrent.futures
 from packaging.version import Version
 from packaging.specifiers import SpecifierSet
 
-from .l4t_version import L4T_VERSION, CUDA_VERSION, PYTHON_VERSION
+from .l4t_version import L4T_VERSION, CUDA_VERSION, PYTHON_VERSION, LSB_RELEASE
 from .utils import log_debug
 
 _PACKAGES = {}
@@ -118,6 +118,9 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
 
     if len(os.environ.get('PYTHON_VERSION', '')) > 0:
         package['postfix'] = package['postfix'] + f"-cp{PYTHON_VERSION.major}{PYTHON_VERSION.minor}"
+
+    if len(os.environ.get('LSB_RELEASE', '')) > 0:
+        package['postfix'] = package['postfix'] + f"-{LSB_RELEASE}"
 
     # search this directory for dockerfiles and config scripts
     entries = os.listdir(path)
