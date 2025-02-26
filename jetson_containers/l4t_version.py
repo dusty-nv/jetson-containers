@@ -325,3 +325,7 @@ else:
 
 # LSB release and codename ("20.04", "focal")
 LSB_RELEASE, LSB_CODENAME = get_lsb_release()
+
+if 'LSB_RELEASE' in os.environ and not 'PYTHON_VERSION' in os.environ:
+    if LSB_RELEASE == '24.04':
+        PYTHON_VERSION=Version('3.12')
