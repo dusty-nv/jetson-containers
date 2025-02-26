@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 82ad7b88..35b2b189 100755
+index 02a60c0e..cdc54166 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -31,7 +31,7 @@ set(ignoreMe "${VLLM_PYTHON_PATH}")
@@ -54,7 +54,7 @@ index 82ad7b88..35b2b189 100755
 +set(patch_vllm_flash_attn git apply /tmp/vllm/fa.diff)
  if(VLLM_FLASH_ATTN_SRC_DIR)
    FetchContent_Declare(
-           vllm-flash-attn SOURCE_DIR 
+           vllm-flash-attn SOURCE_DIR
            ${VLLM_FLASH_ATTN_SRC_DIR}
            BINARY_DIR ${CMAKE_BINARY_DIR}/vllm-flash-attn
 +          PATCH_COMMAND ${patch_vllm_flash_attn}
@@ -72,17 +72,20 @@ index 82ad7b88..35b2b189 100755
  endif()
  
 diff --git a/vllm/model_executor/guided_decoding/__init__.py b/vllm/model_executor/guided_decoding/__init__.py
-index 1522e340..cc9da292 100644
+index 1522e340..5b0254f1 100644
 --- a/vllm/model_executor/guided_decoding/__init__.py
 +++ b/vllm/model_executor/guided_decoding/__init__.py
-@@ -54,10 +54,6 @@ def maybe_backend_fallback(
+@@ -52,13 +52,6 @@ def maybe_backend_fallback(
+     if guided_params.backend_name == "xgrammar":
+         from vllm.model_executor.guided_decoding.xgrammar_decoding import (
              xgr_installed)
-         # xgrammar only has x86 wheels for linux, fallback to outlines
-         from vllm.platforms import current_platform
+-        # xgrammar only has x86 wheels for linux, fallback to outlines
+-        from vllm.platforms import current_platform
 -        if current_platform.get_cpu_architecture() is not CpuArchEnum.X86:
 -            fallback_or_error(guided_params,
 -                              "xgrammar is only supported on x86 CPUs.",
 -                              "outlines")
- 
+-
          # xgrammar doesn't support regex, fallback to outlines
          if guided_params.regex is not None:
+             fallback_or_error(
