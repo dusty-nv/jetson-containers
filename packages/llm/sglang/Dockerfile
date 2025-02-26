@@ -19,6 +19,7 @@ RUN apt-get update -y && apt-get install -y libnuma-dev \
     libsndfile1 libsndfile1-dev libprotobuf-dev libsm6 libxext6 libgl1 libavformat58 libavfilter7 && \
     rm -rf /var/lib/apt/lists/*
 
+COPY build.sh install.sh /tmp/SGLANG/
 RUN /tmp/SGLANG/install.sh || /tmp/SGLANG/build.sh
 
 # Default command
