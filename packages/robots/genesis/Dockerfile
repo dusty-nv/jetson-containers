@@ -5,7 +5,7 @@
 # depends: [rust, cmake, torch, torchvision, torchaudio, vtk, openexr, pymeshlab, taichi, splashsurf]
 # requires: '>=36.0.0'
 # test: test.sh
-# notes: https://github.com/Genesis-Embodied-AI/Genesis.git
+# notes: https://github.com/Genesis-Embodied-AI/Genesis
 #---
 
 ARG BASE_IMAGE
@@ -44,7 +44,7 @@ RUN pip3 install "pybind11[global]"
 # BUILD LUISA RENDER (STILL NOT WORKS)
 # ===============================================================
 WORKDIR /workspace
-RUN git clone --recursive https://github.com/johnnynunez/Genesis /opt/genesis && \
+RUN git clone --recursive https://github.com/Genesis-Embodied-AI/Genesis /opt/genesis && \
     cd /opt/genesis
 COPY build_luisa.sh /workspace/build_luisa.sh
 # RUN chmod +x ./build_luisa.sh && ./build_luisa.sh ${PYTHON_VERSION}
