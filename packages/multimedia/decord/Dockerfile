@@ -11,7 +11,6 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG DECORD_VERSION \
-    CUDA_VERSION \
     CUDAARCHS
 
 COPY build.sh install.sh /tmp/decord/

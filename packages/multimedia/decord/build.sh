@@ -6,7 +6,7 @@ git clone --branch=v${DECORD_VERSION} --depth=1 --recursive https://github.com/d
 git clone --depth=1 --recursive https://github.com/dmlc/decord /opt/decord
 
 cd /opt/decord
-export CUDA_HOME="/usr/local/cuda-${CUDA_VERSION}"
+export CUDA_HOME="/usr/local/cuda"
 export NVCC_PATH="${CUDA_HOME}/bin/nvcc"
 # -DCUDAToolkit_ROOT=$NVCC_PATH
 
