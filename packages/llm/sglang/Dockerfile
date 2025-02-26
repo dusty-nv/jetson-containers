@@ -2,7 +2,7 @@
 # name: sglang
 # group: llm
 # config: config.py
-# depends: [pytorch, torchvision, torchaudio, transformers, triton:3.1.0, vllm, decord]
+# depends: [decord, pytorch, torchvision, torchaudio, transformers, triton:3.1.0, vllm]
 # requires: '>=34.1.0'
 # test: test.sh
 # notes: https://github.com/sgl-project/sglang
