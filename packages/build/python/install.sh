@@ -23,11 +23,18 @@ fi
 # path 1:  Python 3.8-3.10 for JP5/6
 # path 2:  Python 3.6 for JP4
 # path 3:  Python 3.12 for 24.04
-curl -sS https://bootstrap.pypa.io/get-pip.py | python${PYTHON_VERSION} || \
-curl -sS https://bootstrap.pypa.io/pip/3.6/get-pip.py | python3.6 || \
-apt-get install -y --no-install-recommends python3-venv && \
-python3 -m venv /opt/venv && source /opt/venv/bin/activate && \
 curl -sS https://bootstrap.pypa.io/get-pip.py | python${PYTHON_VERSION}
+
+if [ $? -ne 0 ]; then
+   curl -sS https://bootstrap.pypa.io/pip/3.6/get-pip.py | python3.6
+fi
+
+if [ $? -ne 0 ]; then
+   apt-get install -y --no-install-recommends python3-venv
+   python3 -m venv /opt/venv
+   source /opt/venv/bin/activate
+   curl -sS https://bootstrap.pypa.io/get-pip.py | python${PYTHON_VERSION}
+fi
 
 rm -rf /var/lib/apt/lists/*
 apt-get clean
