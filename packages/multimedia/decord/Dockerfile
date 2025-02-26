@@ -5,12 +5,13 @@
 # depends: [cuda, cudnn, numpy, ffmpeg, cmake]
 # requires: '>=34.1.0'
 # test: test.py
-# notes: https://github.com/state-spaces/decord
+# notes: https://github.com/dmlc/decord
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG DECORD_VERSION \
+    CUDA_VERSION \
     CUDAARCHS
 
 COPY build.sh install.sh /tmp/decord/
