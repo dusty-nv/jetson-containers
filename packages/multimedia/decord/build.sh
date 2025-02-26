@@ -6,11 +6,8 @@ git clone --branch=v${DECORD_VERSION} --depth=1 --recursive https://github.com/d
 git clone --depth=1 --recursive https://github.com/dmlc/decord /opt/decord
 
 cd /opt/decord
-export CUDA_HOME="/usr/local/cuda"
-export NVCC_PATH="${CUDA_HOME}/bin/nvcc"
-# -DCUDAToolkit_ROOT=$NVCC_PATH
-
-mkdir build && cd build
+CUDA_HOME="/usr/local/cuda" \
+NVCC_PATH="${CUDA_HOME}/bin/nvcc" \
 cmake .. -DUSE_CUDA=0 -DCMAKE_BUILD_TYPE=Release
 make
 
