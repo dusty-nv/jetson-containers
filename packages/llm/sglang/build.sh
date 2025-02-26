@@ -9,7 +9,7 @@ git clone --recursive --depth=1 https://github.com/flashinfer-ai/flashinfer /opt
 cd /opt/flashinfer
 
 python3 setup.py --verbose bdist_wheel --dist-dir /opt/flashinfer/wheels/ && \
-pip3 install --verbose /opt/flashinfer/wheels/flashinfer-*.whl
+pip3 install --verbose /opt/flashinfer/wheels/flashinfer_python-*.whl
 
 
 echo "SG LANG ${SGLANG_VERSION}"
@@ -35,5 +35,5 @@ cd /opt/sglang
 
 
 # Optionally upload to a repository using Twine
-twine upload --verbose /opt/flashinfer/wheels/flashinfer*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose /opt/flashinfer/wheels/flashinfer_python*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 twine upload --verbose /opt/sglang/wheels/sglang*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
