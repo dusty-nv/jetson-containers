@@ -37,7 +37,7 @@ RUN apt-get update && \
     && apt-get clean
 
 RUN pip3 install --upgrade --no-cache-dir --verbose wheel setuptools && \
-    pip3 install --upgrade --no-cache-dir --verbose grpcio-tools numpy attrdict pillow
+    pip3 install --upgrade --no-cache-dir --verbose grpcio-tools "numpy<2" attrdict pillow
  
 ENV PATH="$PATH:/opt/tritonserver/bin" 
 ENV LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib/llvm-8/lib:/opt/tritonserver/lib"
