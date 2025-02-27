@@ -15,6 +15,11 @@ ARG DEEPSTREAM_URL
 ARG DEEPSTREAM_TAR
 ARG DEEPSTREAM_VERSION
 
+# Migrate glib to newer version (2.76.6), as suggested in Deepstream Installation guide:
+#   https://docs.nvidia.com/metropolis/deepstream/dev-guide/text/DS_Installation.html#migrate-glib-to-newer-version
+COPY upgrade_glib.sh /tmp/upgrade_glib.sh 
+RUN /tmp/upgrade_glib.sh
+
 RUN wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${DEEPSTREAM_URL} -O ${DEEPSTREAM_TAR} && \
     tar -xvf ${DEEPSTREAM_TAR} -C / && \
     rm ${DEEPSTREAM_TAR}
@@ -62,18 +67,43 @@ ARG PYDS_VERSION
 ARG PYTHON_VERSION_MAJOR
 ARG PYTHON_VERSION_MINOR
 
-RUN cd /opt/nvidia/deepstream/deepstream/sources && \
-    git clone --branch ${PYDS_VERSION} --recursive --depth=1 https://github.com/NVIDIA-AI-IOT/deepstream_python_apps && \
-    cd deepstream_python_apps/bindings && \
-    mkdir build && \
-    cd build && \
-    cmake ../ \
-        -DDS_PATH=/opt/nvidia/deepstream/deepstream \
-	   -DPIP_PLATFORM=linux_aarch64 \
-	   -DPYTHON_MAJOR_VERSION=${PYTHON_VERSION_MAJOR} \
-	   -DPYTHON_MINOR_VERSION=${PYTHON_VERSION_MINOR} && \
-    make -j$(nproc) && \
-    pip3 install --verbose ./pyds-*-py3-none*.whl
+# The repo https://github.com/NVIDIA-AI-IOT/deepstream_python_apps no longer support deepstream version below 7.1,
+# and the recommended method for building the python binding is to use "python3 -m build", according to:
+#    https://github.com/NVIDIA-AI-IOT/deepstream_python_apps/blob/master/bindings/README.md
+# For previous deepstream versions, we need to download from the "releases" section.
+RUN if [ "${PYDS_VERSION}" = "1.2.0" ]; then \
+        apt-get update && \
+        apt-get install -y --no-install-recommends \
+            python3-dev \
+            python-gi-dev \
+            meson \
+            python3-pip \
+            cmake \
+            autoconf \
+            automake \
+            libgirepository1.0-dev  \
+        && rm -rf /var/lib/apt/lists/* \
+        && apt-get clean && \
+        pip3 install build && \
+        cd /opt/nvidia/deepstream/deepstream/sources && \
+        git clone https://github.com/NVIDIA-AI-IOT/deepstream_python_apps && \
+        cd /opt/nvidia/deepstream/deepstream/sources/deepstream_python_apps && \
+        git submodule update --init && \
+        python3 bindings/3rdparty/git-partial-submodule/git-partial-submodule.py restore-sparse && \
+        cd bindings/3rdparty/gstreamer/subprojects/gst-python/ && \
+        meson setup build && \
+        cd build && \
+        ninja && \
+        ninja install && \
+        cd /opt/nvidia/deepstream/deepstream/sources/deepstream_python_apps/bindings && \
+        export CMAKE_BUILD_PARALLEL_LEVEL=$(nproc) && \
+        python3 -m build && \
+        pip3 install --verbose ./dist/pyds-*.whl; \
+    else \
+        cd /tmp && \
+        wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate https://github.com/NVIDIA-AI-IOT/deepstream_python_apps/releases/download/v${PYDS_VERSION}/pyds-${PYDS_VERSION}-py3-none-linux_aarch64.whl && \
+        pip3 install --verbose ./pyds-*.whl; \
+    fi
 
 # make sure it loads
 RUN deepstream-app --version && python3 -c 'import pyds'
