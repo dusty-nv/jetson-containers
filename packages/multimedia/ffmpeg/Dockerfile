@@ -20,6 +20,7 @@ RUN set -ex \
 	    libavfilter-dev \
 	    libavformat-dev \
 	    libavutil-dev \
+	    libavdevice-dev \
 	&& apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
