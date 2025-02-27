@@ -24,7 +24,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
     bash-completion \
     libgl1 \
-    libgl1-mesa-glx \
     libegl-dev \
     libegl1 \
     libxrender1 \
