@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 02a60c0e..cdc54166 100755
+index 0dd350c9..29995def 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -31,7 +31,7 @@ set(ignoreMe "${VLLM_PYTHON_PATH}")
@@ -47,14 +47,18 @@ index 02a60c0e..cdc54166 100755
    if (MARLIN_MOE_ARCHS)
      set(MARLIN_MOE_SRC
          "csrc/moe/marlin_kernels/marlin_moe_kernel.h"
-@@ -610,11 +610,14 @@ if (DEFINED ENV{VLLM_FLASH_ATTN_SRC_DIR})
+diff --git a/cmake/external_projects/vllm_flash_attn.cmake b/cmake/external_projects/vllm_flash_attn.cmake
+index ef6261fa..acc67560 100644
+--- a/cmake/external_projects/vllm_flash_attn.cmake
++++ b/cmake/external_projects/vllm_flash_attn.cmake
+@@ -28,11 +28,14 @@ if (DEFINED ENV{VLLM_FLASH_ATTN_SRC_DIR})
    set(VLLM_FLASH_ATTN_SRC_DIR $ENV{VLLM_FLASH_ATTN_SRC_DIR})
  endif()
  
 +set(patch_vllm_flash_attn git apply /tmp/vllm/fa.diff)
  if(VLLM_FLASH_ATTN_SRC_DIR)
    FetchContent_Declare(
-           vllm-flash-attn SOURCE_DIR
+           vllm-flash-attn SOURCE_DIR 
            ${VLLM_FLASH_ATTN_SRC_DIR}
            BINARY_DIR ${CMAKE_BINARY_DIR}/vllm-flash-attn
 +          PATCH_COMMAND ${patch_vllm_flash_attn}
@@ -62,7 +66,7 @@ index 02a60c0e..cdc54166 100755
    )
  else()
    FetchContent_Declare(
-@@ -624,6 +627,8 @@ else()
+@@ -42,6 +45,8 @@ else()
            GIT_PROGRESS TRUE
            # Don't share the vllm-flash-attn build between build types
            BINARY_DIR ${CMAKE_BINARY_DIR}/vllm-flash-attn
@@ -72,10 +76,10 @@ index 02a60c0e..cdc54166 100755
  endif()
  
 diff --git a/vllm/model_executor/guided_decoding/__init__.py b/vllm/model_executor/guided_decoding/__init__.py
-index 1522e340..5b0254f1 100644
+index 1522e340..099198b4 100644
 --- a/vllm/model_executor/guided_decoding/__init__.py
 +++ b/vllm/model_executor/guided_decoding/__init__.py
-@@ -52,13 +52,6 @@ def maybe_backend_fallback(
+@@ -52,12 +52,6 @@ def maybe_backend_fallback(
      if guided_params.backend_name == "xgrammar":
          from vllm.model_executor.guided_decoding.xgrammar_decoding import (
              xgr_installed)
@@ -85,7 +89,6 @@ index 1522e340..5b0254f1 100644
 -            fallback_or_error(guided_params,
 -                              "xgrammar is only supported on x86 CPUs.",
 -                              "outlines")
--
+ 
          # xgrammar doesn't support regex, fallback to outlines
          if guided_params.regex is not None:
-             fallback_or_error(
