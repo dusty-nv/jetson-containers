@@ -23,6 +23,9 @@ power_mode="$POWER_MODE_OPTIONS_MODE"
 # Define nvzramconfig service
 NVZRAMCONFIG_SERVICE="nvzramconfig"
 
+# Global background flag
+BG=false
+
 # Function to check if NVMe is mounted
 check_nvme_mount() {
     if mount | grep -q "/dev/$partition_name on $mount_point"; then
@@ -47,11 +50,11 @@ check_docker_runtime() {
 
 # Function to check Docker data root
 check_docker_root() {
-    if grep -q '"data-root": "/mnt/docker"' /etc/docker/daemon.json; then
-        echo "Docker data root is set to /mnt/docker."
+    if grep -q "\"data-root\": \"$docker_root_path\"" /etc/docker/daemon.json; then
+        echo "Docker data root is set to $docker_root_path."
         return 0
     else
-        echo "Docker data root is not set to /mnt/docker."
+        echo "Docker data root is not set to $docker_root_path."
         return 1
     fi
 }
@@ -162,6 +165,7 @@ print_help() {
     echo
     echo "Options:"
     echo "  --tests=<test1,test2,...>    Run specified tests."
+    echo "  --bg                         Run in background mode."
     echo "  --help                       Display this help message and exit."
 }
 
@@ -178,6 +182,10 @@ parse_probe_args() {
                 IFS=',' read -ra TESTS <<< "${1#*=}"
                 shift
                 ;;
+            --bg)
+                BG=true
+                shift
+                ;;
             --help)
                 print_help
                 exit 0
@@ -190,16 +198,19 @@ parse_probe_args() {
     done
 }
 
-# Main function to execute all checks
+# Main function to execute checks
 main() {
-    echo "=== System Probe Script ==="
-    echo "Assuming NVMe mount point is $mount_point."
-    echo
+    # Print header only if not running in background mode
+    if [ "$BG" = false ]; then
+        echo "=== System Probe Script ==="
+        echo "Assuming NVMe mount point is $mount_point."
+        echo
+    fi
 
     parse_probe_args "$@"
 
+    # If no tests provided, run all checks normally
     if [ ${#TESTS[@]} -eq 0 ]; then
-        # Run all checks
         check_nvme_mount
         echo
 
@@ -227,63 +238,67 @@ main() {
         check_power_mode
         echo
     else
-        # Run only specified checks
+        # Run only specified tests and aggregate exit codes
+        rc=0
         for test in "${TESTS[@]}"; do
             case $test in
                 prepare_nvme_partition)
-                    check_nvme_partition_prepared
+                    check_nvme_partition_prepared || rc=1
                     echo
                     ;;
                 assign_nvme_drive)
-                    check_nvme_drive_assigned
+                    check_nvme_drive_assigned || rc=1
                     echo
                     ;;
                 nvme_mount)
-                    check_nvme_mount
+                    check_nvme_mount || rc=1
                     echo
                     ;;
                 docker_runtime)
-                    check_docker_runtime
+                    check_docker_runtime || rc=1
                     echo
                     ;;
                 docker_root)
-                    check_docker_root
+                    check_docker_root || rc=1
                     echo
                     ;;
                 swap_file)
-                    check_swap_file
+                    check_swap_file || rc=1
                     echo
                     ;;
                 disable_zram)
-                    check_zram
+                    check_zram || rc=1
                     echo
                     ;;
                 nvzramconfig_service)
-                    check_nvzramconfig_service
+                    check_nvzramconfig_service || rc=1
                     echo
                     ;;
                 gui)
-                    check_gui
+                    check_gui || rc=1
                     echo
                     ;;
                 docker_group)
-                    check_docker_group
+                    check_docker_group || rc=1
                     echo
                     ;;
                 power_mode)
-                    check_power_mode
+                    check_power_mode || rc=1
                     echo
                     ;;
                 *)
                     echo "Unknown test: $test"
+                    rc=1
                     ;;
             esac
         done
+        # If background flag set, exit silently with aggregated result
+        if [ "$BG" = true ]; then
+            exit $rc
+        fi
     fi
 }
 
-# Execute main function
+# Execute main function and exit with its code
 main "$@"
-
-# Execute the probe
 exit $?

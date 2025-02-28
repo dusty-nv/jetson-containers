@@ -126,7 +126,7 @@ assign_nvme_drive() {
 # Configure Docker runtime
 setup_docker_runtime() {
     local daemon_json="/etc/docker/daemon.json"
-    local dateFileVersionFormat = $(date +"%Y%m%d%H%M%S")
+    local dateFileVersionFormat=$(date +"%Y%m%d%H%M%S")
     local daemon_json_backup="${daemon_json}.${dateFileVersionFormat}.bak"
 
     if grep -q '"default-runtime": "nvidia"' "$daemon_json"; then
@@ -257,8 +257,9 @@ setup_swap_file() {
 
 # Disable zram
 disable_zram() {
-    if ! systemctl is-enabled nvzramconfig &> /dev/null; then
-        echo "zram is already disabled, skipping..."
+    # Use probe to check zram status; if already disabled, skip disabling
+    if ./probe-system.sh --tests="disable_zram,nvzramconfig_service" --bg &>/dev/null; then
+        echo "zram is already properly disabled, skipping..."
         return 0
     fi
 
@@ -436,7 +437,7 @@ main() {
 
     # NVMe Setup
     if [ "$nvme_should_run" = "yes" ] || [ "$nvme_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure NVMe drive?"; then
-        if ! ./probe-system.sh --tests="nvme_mount"; then
+        if ! ./probe-system.sh --tests="nvme_mount" --bg; then
             assign_nvme_drive
             ./probe-system.sh --tests="nvme_mount"
         else
@@ -446,7 +447,7 @@ main() {
 
     # Docker Runtime Setup
     if [ "$docker_runtime_should_run" = "yes" ] || [ "$docker_runtime_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure Docker runtime?"; then
-        if ! ./probe-system.sh --tests="docker_runtime"; then
+        if ! ./probe-system.sh --tests="docker_runtime" --bg; then
             setup_docker_runtime
             ./probe-system.sh --tests="docker_runtime"
         else
@@ -456,7 +457,7 @@ main() {
 
     # Docker Root Setup
     if [ "$docker_root_should_run" = "yes" ] || [ "$docker_root_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure Docker root?"; then
-        if ! ./probe-system.sh --tests="docker_root"; then
+        if ! ./probe-system.sh --tests="docker_root" --bg; then
             setup_docker_root
             ./probe-system.sh --tests="docker_root"
         else
@@ -466,7 +467,7 @@ main() {
 
     # Swap Setup
     if [ "$swap_should_run" = "yes" ] || [ "$swap_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure swap?"; then
-        if ! ./probe-system.sh --tests="swap_file"; then
+        if ! ./probe-system.sh --tests="swap_file" --bg; then
             setup_swap_file
             ./probe-system.sh --tests="swap_file"
         else
@@ -476,7 +477,7 @@ main() {
 
     # ZRAM Setup
     if [ "$disable_zram_flag" = "true" ]; then
-        if ! ./probe-system.sh --tests="disable_zram,nvzramconfig_service"; then
+        if ! ./probe-system.sh --tests="disable_zram,nvzramconfig_service" --bg; then
             disable_zram
             ./probe-system.sh --tests="disable_zram,nvzramconfig_service"
         else
@@ -486,7 +487,7 @@ main() {
 
     # GUI Setup
     if [ "$gui_disabled_should_run" = "yes" ] || [ "$gui_disabled_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure desktop GUI?"; then
-        if ! ./probe-system.sh --tests="gui"; then
+        if ! ./probe-system.sh --tests="gui" --bg; then
             setup_gui
             ./probe-system.sh --tests="gui"
         else
@@ -496,7 +497,7 @@ main() {
 
     # Docker Group Setup
     if [ "$docker_group_should_run" = "yes" ] || [ "$docker_group_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure Docker group?"; then
-        if ! ./probe-system.sh --tests="docker_group"; then
+        if ! ./probe-system.sh --tests="docker_group" --bg; then
             setup_docker_group
             ./probe-system.sh --tests="docker_group"
         else
@@ -506,7 +507,7 @@ main() {
 
     # Power Mode Setup
     if [ "$power_mode_should_run" = "yes" ] || [ "$power_mode_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure power mode?"; then
-        if ! ./probe-system.sh --tests="power_mode"; then
+        if ! ./probe-system.sh --tests="power_mode" --bg; then
             setup_power_mode
             ./probe-system.sh --tests="power_mode"
         else
@@ -521,7 +522,7 @@ main() {
     echo
     echo "Configuration complete!"
     echo "============================="
-    ./probesystem.sh
+    ./probe-system.sh
     echo "============================="
 
     echo "Please reboot your system for all changes to take effect."
