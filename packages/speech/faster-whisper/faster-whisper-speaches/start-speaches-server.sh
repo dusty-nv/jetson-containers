@@ -17,20 +17,6 @@ echo "===== Using global packages directly with Python's site-packages ====="
 echo "Using global Python installation with all system packages"
 echo "Python info: $(which python3) - $(python3 --version)"
 
-# Install the custom faster-whisper wheel
-WHEEL_PATH=$(find /opt/wheels -name "faster_whisper*.whl" | head -n 1)
-if [ -z "$WHEEL_PATH" ]; then
-    echo "Error: faster-whisper wheel not found"
-    exit 1
-else
-    echo "Installing wheel: $WHEEL_PATH"
-    pip3 install --no-cache "$WHEEL_PATH"
-fi
-
-# Verify faster-whisper installation
-#uv pip show faster_whisper && python3 -c 'import faster_whisper; print(f"faster-whisper version: {faster_whisper.__version__}")'
-
-
 # Verify global packages are available
 echo "Verifying required packages..."
 python3 -c "import numpy; print(f'NumPy version: {numpy.__version__}')" || echo "Warning: NumPy not available"
@@ -62,11 +48,14 @@ python3 -c "import gradio; print(f'Gradio version: {gradio.__version__}')"
 
 # Start the server
 echo "Starting the speaches server..."
-python3 -m uvicorn speaches.main:create_app --host 0.0.0.0 --factory
+#python3 -m uvicorn speaches.main:create_app --host 0.0.0.0 --factory
+
+# Get the port from environment variable or use default
+PORT=${SERVER_PORT:-8000}
+echo "Using port: $PORT"
 
 
-
-SPEACHES_DEFAULT_CMD="python3 -m uvicorn speaches.main:create_app --host 0.0.0.0 --factory"
+SPEACHES_DEFAULT_CMD="python3 -m uvicorn speaches.main:create_app --host 0.0.0.0 --port $PORT --factory"
 SPEACHES_STARTUP_LAG=1
 
 printf "Starting Speaches STT server:\n\n"

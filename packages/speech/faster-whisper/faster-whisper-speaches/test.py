@@ -1,10 +1,10 @@
 import os
 import requests
 import json
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 
 # Load environment variables from .env file
-load_dotenv()
+#load_dotenv()
 
 def transcribe_file(file_path, model, language, response_format, temperature):
     """
