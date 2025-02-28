@@ -12,16 +12,15 @@ FROM ${BASE_IMAGE}
 
 ARG SGLANG_VERSION \
     FLASHINFER_VERSION \
-    CUDA_VERSION \
     CUDAARCHS \
     FORCE_BUILD=off
 
 ENV DEBIAN_FRONTEND=noninteractive \
     TORCH_CUDA_ARCH_LIST="${CUDAARCHS}" \
     MAX_JOBS="$(nproc)" \
-    CUDA_HOME="/usr/local/cuda-${CUDA_VERSION}/" \
+    CUDA_HOME="/usr/local/cuda/" \
     PATH="${CUDA_HOME}/bin:${PATH}" \
-    LD_LIBRARY_PATH="/usr/local/cuda-${CUDA_VERSION}/lib64:${LD_LIBRARY_PATH}"
+    LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
 
 RUN apt-get update -y && apt-get install -y libnuma-dev \
     libsndfile1 libsndfile1-dev libprotobuf-dev libsm6 libxext6 libgl1 libavformat58 libavfilter7 && \
