@@ -30,9 +30,9 @@ index e229b6f..224849e 100644
  
          set_gencode_flags_for_srcs(
 diff --git a/csrc/cutlass b/csrc/cutlass
-index 833f699..eefa171 160000
+index e9627ce..df18f5e 160000
 --- a/csrc/cutlass
 +++ b/csrc/cutlass
 @@ -1 +1 @@
--Subproject commit 833f6990e031b48b4cd2fcf55e0849c51ef6bac2
-+Subproject commit eefa171318b79cbe2e78514d4cce5cd0fe919d0c
+-Subproject commit e9627ce55b42fd2599f58cd4396da9380954def0
++Subproject commit df18f5e4f5de76bed8be1de8e4c245f2f5ec3020
