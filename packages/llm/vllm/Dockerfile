@@ -1,6 +1,6 @@
 #---
 # name: vllm
-# group: vlm
+# group: llm
 # config: config.py
 # depends: [pytorch, torchvision, torchaudio, transformers, triton:3.1.0, bitsandbytes, xformers, flash-attention]
 # requires: '>=34.1.0'
@@ -13,7 +13,7 @@ FROM ${BASE_IMAGE}
 ARG VLLM_VERSION \
     XGRAMMAR_VERSION \
     CUDAARCHS \
-    FORCE_BUILD=off
+    FORCE_BUILD=on
 
 RUN apt-get update -y && apt-get install -y libnuma-dev \
     libsndfile1 libsndfile1-dev libprotobuf-dev libsm6 libxext6 libgl1
