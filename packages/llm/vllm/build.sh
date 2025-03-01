@@ -31,7 +31,8 @@ cd /opt/vllm
 
 env
 cp /tmp/vllm/${VLLM_VERSION}.fa.diff /tmp/vllm/fa.diff
-git apply /tmp/vllm/${VLLM_VERSION}.diff
+# git apply /tmp/vllm/${VLLM_VERSION}.diff
+sh /tmp/vllm/patch.sh
 git diff
 git status
 
