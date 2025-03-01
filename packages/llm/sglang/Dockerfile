@@ -23,7 +23,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
 
 RUN apt-get update -y && apt-get install -y libnuma-dev \
-    libsndfile1 libsndfile1-dev libprotobuf-dev libsm6 libxext6 libgl1 libavformat58 libavfilter7 && \
+    libsndfile1 libsndfile1-dev libprotobuf-dev libsm6 libxext6 libgl1 && \
     rm -rf /var/lib/apt/lists/*
 
 COPY build.sh install.sh /tmp/SGLANG/

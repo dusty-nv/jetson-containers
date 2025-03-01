@@ -20,7 +20,7 @@ RUN apt-get update && \
         libglu1-mesa-dev \
         freeglut3-dev  \
         mesa-common-dev \
-        libgl1-mesa-glx \
+        libglx-mesa0 \
         libegl-dev \
         libxrender1 \
     && rm -rf /var/lib/apt/lists/* \
