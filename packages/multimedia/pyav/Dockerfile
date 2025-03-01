@@ -37,7 +37,7 @@ RUN cd /opt/ffmpeg-${FFMPEG_VERSION}  && \
 # solution mid-february: https://gitlab.com/AOMediaCodec/SVT-AV1/-/merge_requests/2355#note_2312506245
 # solved https://gitlab.com/AOMediaCodec/SVT-AV1/-/merge_requests/2387
 RUN cd /opt/ffmpeg-${FFMPEG_VERSION}  && \
-    git -C SVT-AV1 pull 2> /dev/null || git clone --recursive https://gitlab.com/AOMediaCodec/SVT-AV1.git && \
+    git -C SVT-AV1 pull 2> /dev/null || git clone --recursive https://gitlab.com/AOMediaCodec/SVT-AV1.git -b v2.3.0 && \
     mkdir -p SVT-AV1/build
 RUN cd /opt/ffmpeg-${FFMPEG_VERSION}/SVT-AV1/build && \
     PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" \
