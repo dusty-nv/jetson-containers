@@ -30,9 +30,13 @@ git clone --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm
 cd /opt/vllm
 
 env
-cp /tmp/vllm/${VLLM_VERSION}.fa.diff /tmp/vllm/fa.diff
+# cp /tmp/vllm/${VLLM_VERSION}.fa.diff /tmp/vllm/fa.diff
 # git apply /tmp/vllm/${VLLM_VERSION}.diff
-sh /tmp/vllm/patch.sh
+python3 /tmp/vllm/generate_diff.py
+
+git apply /tmp/vllm/CMakeLists.txt.diff
+git apply /tmp/vllm/__init__.py.diff
+git apply /tmp/vllm/vllm_flash_attn.cmake.diff
 git diff
 git status
 
