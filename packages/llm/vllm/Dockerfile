@@ -13,7 +13,7 @@ FROM ${BASE_IMAGE}
 ARG VLLM_VERSION \
     XGRAMMAR_VERSION \
     CUDAARCHS \
-    FORCE_BUILD=on
+    FORCE_BUILD=off
 
 RUN apt-get update -y && apt-get install -y libnuma-dev \
     libsndfile1 libsndfile1-dev libprotobuf-dev libsm6 libxext6 libgl1
