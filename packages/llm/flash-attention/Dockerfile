@@ -12,8 +12,7 @@ FROM ${BASE_IMAGE}
 ARG FLASH_ATTENTION_VERSION \
     FORCE_BUILD=off
 
-COPY build.sh install.sh /tmp/flash-attention/
-COPY patches/${FLASH_ATTENTION_VERSION}.diff /tmp/flash-attention/patch.diff
+COPY build.sh install.sh patches /tmp/flash-attention/
 
 RUN /tmp/flash-attention/install.sh || /tmp/flash-attention/build.sh
     

@@ -24,14 +24,20 @@ pip3 wheel . --wheel-dir /opt/xgrammar/wheels/ --verbose
 # Warning: version number is 0.1.5 even if actual version is 0.1.8, or 0.1.9 due to version.py not being adapted yet: https://github.com/mlc-ai/xgrammar/blob/main/python/xgrammar/version.py
 pip3 install /opt/xgrammar/wheels/xgrammar*.whl
 
+
 # Clone the repository if it doesn't exist
 git clone --branch=v${VLLM_VERSION} --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm || 
 git clone --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm
 cd /opt/vllm
 
 env
-cp /tmp/vllm/${VLLM_VERSION}.fa.diff /tmp/vllm/fa.diff
-git apply /tmp/vllm/${VLLM_VERSION}.diff
+# cp /tmp/vllm/${VLLM_VERSION}.fa.diff /tmp/vllm/fa.diff
+# git apply /tmp/vllm/${VLLM_VERSION}.diff
+python3 /tmp/vllm/generate_diff.py
+git apply -p1 /tmp/vllm/CMakeLists.txt.diff
+git apply -p1 /tmp/vllm/vllm_flash_attn.cmake.diff
+git apply -p1 /tmp/vllm/vllm_model_executor_guided_decoding___init__.py.diff
+
 git diff
 git status
 

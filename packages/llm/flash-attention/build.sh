@@ -8,6 +8,8 @@ git clone --depth=1 https://github.com/Dao-AILab/flash-attention /opt/flash-atte
 
 cd /opt/flash-attention
 
+# Generate the diff dynamically
+python3 /tmp/flash-attention/generate_diff.py
 git apply /tmp/flash-attention/patch.diff
 git diff
 git status
