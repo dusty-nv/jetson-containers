@@ -7,7 +7,8 @@ apt-get install -y --no-install-recommends \
     build-essential \
     libjpeg-dev \
     libglm-dev \
-    libgl1-mesa-glx \
+    libgl1 \
+    libglx-mesa0 \
     libegl1-mesa-dev \
     mesa-utils \
     xorg-dev \
