@@ -277,3 +277,34 @@ def pprint_debug(*args, **kwargs):
     if os.environ.get('VERBOSE', False) or os.environ.get('DEBUG', False):
         pprint.pprint(*args, **kwargs)
         
+
+def cprint(text, color):
+    """
+    Print string to terminal in the specified color.  The recognized colors are found below.
+    """
+    print(colorized(text, color))
+
+
+def colorized(text, color):
+    """
+    Return string encased with ANSI terminal color codes.  The recognized colors are found below.
+    """
+    colors = {
+        'red': 91,
+        'green': 92,
+        'yellow': 93,
+        'magenta': 94,
+        'purple': 95,
+        'cyan': 96,
+        'grey': 97,
+        'black': 98,
+    }
+
+    color = color.lower()
+
+    if color not in colors:
+        return text
+
+    return f"\033[{colors[color]}m{text}\033[00m"
+
+
