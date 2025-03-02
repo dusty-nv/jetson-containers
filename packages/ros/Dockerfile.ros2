@@ -33,6 +33,11 @@ RUN if [ -f /tmp/.ros.build.failed ]; then \
       exit 1; \
     fi
 
+# on 24.04, the older colcon-argcomplete that ROS installs conflicts with the venv one
+RUN if [ $(lsb_release -rs) = '24.04' ]; then \ 
+      echo "#!/usr/bin/env bash" > "/opt/venv/bin/register-python-argcomplete" ; \
+    fi
+
 # Set the default DDS middleware to cyclonedds
 # https://github.com/ros2/rclcpp/issues/1335
 # https://docs.ros.org/en/jazzy/Installation/DDS-Implementations/Working-with-eProsima-Fast-DDS.html
