@@ -18,9 +18,9 @@ install_dir="/opt/onnxruntime/install"
 ./build.sh --config Release --update --parallel --build --build_wheel --build_shared_lib \
         --skip_tests --skip_submodule_sync ${ONNXRUNTIME_FLAGS} \
         --cmake_extra_defines CMAKE_CXX_FLAGS="-Wno-unused-variable -I/usr/local/cuda/include" \
-	   --cmake_extra_defines CMAKE_CUDA_ARCHITECTURES="${CUDA_ARCHITECTURES}" \
-	   --cmake_extra_defines CMAKE_INSTALL_PREFIX=${install_dir} \
-	   --cmake_extra_defines onnxruntime_BUILD_UNIT_TESTS=OFF \
+        --cmake_extra_defines CMAKE_CUDA_ARCHITECTURES="${CUDA_ARCHITECTURES}" \
+        --cmake_extra_defines CMAKE_INSTALL_PREFIX=${install_dir} \
+        --cmake_extra_defines onnxruntime_BUILD_UNIT_TESTS=OFF \
         --cuda_home /usr/local/cuda --cudnn_home /usr/lib/$(uname -m)-linux-gnu \
         --use_tensorrt --tensorrt_home /usr/lib/$(uname -m)-linux-gnu
 	   
@@ -36,5 +36,8 @@ python3 -c 'import onnxruntime; print(onnxruntime.__version__);'
 
 twine upload --verbose /opt/onnxruntime*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 tarpack upload onnxruntime-gpu-${ONNXRUNTIME_VERSION} ${install_dir} || echo "failed to upload tarball"
+
+cd ${install_dir}
+cp -r * /usr/local/
 
 #rm -rf /tmp/onnxruntime
