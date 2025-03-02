@@ -83,7 +83,7 @@ ls -ll /usr/bin/python*
 # create the ROS_ROOT directory
 mkdir -p ${ROS_ROOT}/src
 cd ${ROS_ROOT}
-    
+
 # download ROS sources
 # https://answers.ros.org/question/325245/minimal-ros2-installation/?answer=325249#post-id-325249
 rosinstall_generator --deps --rosdistro ${ROS_DISTRO} ${ROS_PACKAGE} \
