@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -ex
-echo "Building CTranslate2 ${CTRANSLATE_VERSION}"
+echo "Building CTranslate2 ${CTRANSLATE_VERSION} (${CTRANSLATE_BRANCH})"
 
 # clone sources
 git clone --branch=${CTRANSLATE_BRANCH} --recursive https://github.com/OpenNMT/CTranslate2.git ${CTRANSLATE_SOURCE} ||

@@ -7,4 +7,6 @@ if [ "$FORCE_BUILD" == "on" ]; then
 fi
 
 tarpack install ctranslate2-${CTRANSLATE_VERSION}
-pip3 install --no-cache-dir --verbose ctranslate2==${CTRANSLATE_VERSION}
+
+pip3 install --no-cache-dir --verbose ctranslate2==${CTRANSLATE_VERSION} || \
+pip3 install --no-cache-dir --verbose ctranslate2==4.5.0  # bump this to last released version
