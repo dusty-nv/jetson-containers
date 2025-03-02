@@ -181,6 +181,9 @@ def get_cuda_version(version_file='/usr/local/cuda/version.json'):
     if 'CUDA_VERSION' in os.environ and len(os.environ['CUDA_VERSION']) > 0:
         return to_version(os.environ['CUDA_VERSION'])
         
+    if LSB_RELEASE == '24.04' and L4T_VERSION.major <= 36:
+        return Version('12.8') # default to CUDA 12.8 for 24.04 containers on JP6
+
     if not os.path.isfile(version_file):
         # In case only the CUDA runtime is installed
         so_file_path = "/usr/local/cuda/targets/aarch64-linux/lib/libcudart.so.*.*.*"
@@ -300,7 +303,14 @@ def get_lsb_release():
     
     return (os.environ.get('LSB_RELEASE', lsb('r')), lsb('c'))
 
-            
+
+# LSB release and codename ("20.04", "focal")
+LSB_RELEASE, LSB_CODENAME = get_lsb_release()
+
+if 'LSB_RELEASE' in os.environ and not 'PYTHON_VERSION' in os.environ:
+    if LSB_RELEASE == '24.04':
+        PYTHON_VERSION=Version('3.12')
+
 # set L4T_VERSION and CUDA_VERSION globals        
 L4T_VERSION = get_l4t_version()
 JETPACK_VERSION = get_jetpack_version()
@@ -318,14 +328,16 @@ elif L4T_VERSION.major == 32:  # JetPack 4
 SYSTEM_ARCH = platform.machine()
 
 # Python version (3.6, 3.8, 3.10, ect)
+DEFAULT_PYTHON_VERSIONS = {
+    '18.04': Version('3.6'),
+    '20.04': Version('3.8'),
+    '22.04': Version('3.10'),
+    '24.04': Version('3.12'),
+}
+
 if 'PYTHON_VERSION' in os.environ and len(os.environ['PYTHON_VERSION']) > 0:
     PYTHON_VERSION = Version(os.environ['PYTHON_VERSION'])
+elif LSB_RELEASE in DEFAULT_PYTHON_VERSIONS:
+    PYTHON_VERSION = DEFAULT_PYTHON_VERSIONS[LSB_RELEASE]
 else:
     PYTHON_VERSION = Version(f'{sys.version_info.major}.{sys.version_info.minor}')
-
-# LSB release and codename ("20.04", "focal")
-LSB_RELEASE, LSB_CODENAME = get_lsb_release()
-
-if 'LSB_RELEASE' in os.environ and not 'PYTHON_VERSION' in os.environ:
-    if LSB_RELEASE == '24.04':
-        PYTHON_VERSION=Version('3.12')

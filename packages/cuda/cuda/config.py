@@ -21,9 +21,11 @@ def pip_cache(version, requires=None):
     https://github.com/dusty-nv/jetson-containers/blob/master/docs/build.md#pip-server
     """
     short_version = f"cu{version.replace('.', '')}"
-    repo_path = f"jp{JETPACK_VERSION.major}/{short_version}"
     index_host = "jetson-ai-lab.dev"
-    
+
+    pip_path = f"jp{JETPACK_VERSION.major}/{short_version}"
+    apt_path = pip_path if Version(LSB_RELEASE).major < 24 else f"{pip_path}/{LSB_RELEASE}"
+
     pip_cache = package.copy()
     
     pip_cache['name'] = f'pip_cache:{short_version}'
@@ -33,13 +35,13 @@ def pip_cache(version, requires=None):
     pip_cache['test'] = []
 
     pip_cache['build_args'] = {
-        'TAR_INDEX_URL': f"https://apt.{index_host}/{repo_path}",
-        'PIP_INDEX_REPO': f"https://pypi.{index_host}/{repo_path}",
+        'TAR_INDEX_URL': f"https://apt.{index_host}/{apt_path}",
+        'PIP_INDEX_REPO': f"https://pypi.{index_host}/{pip_path}",
         #'PIP_TRUSTED_HOSTS': index_host,
-        'PIP_UPLOAD_REPO': os.environ.get('PIP_UPLOAD_REPO', f"{os.environ.get('PIP_UPLOAD_HOST', 'http://localhost')}/{repo_path}"),
+        'PIP_UPLOAD_REPO': os.environ.get('PIP_UPLOAD_REPO', f"{os.environ.get('PIP_UPLOAD_HOST', 'http://localhost')}/{pip_path}"),
         'PIP_UPLOAD_USER': os.environ.get('PIP_UPLOAD_USER', f"jp{JETPACK_VERSION.major}"),
         'PIP_UPLOAD_PASS': os.environ.get('PIP_UPLOAD_PASS', 'none'),
-        'SCP_UPLOAD_URL': os.environ.get('SCP_UPLOAD_URL', f"{os.environ.get('SCP_UPLOAD_HOST', 'localhost:/dist')}/{repo_path}"),
+        'SCP_UPLOAD_URL': os.environ.get('SCP_UPLOAD_URL', f"{os.environ.get('SCP_UPLOAD_HOST', 'localhost:/dist')}/{apt_path}"),
         'SCP_UPLOAD_USER': os.environ.get('SCP_UPLOAD_USER'),
         'SCP_UPLOAD_PASS': os.environ.get('SCP_UPLOAD_PASS'),
     }
