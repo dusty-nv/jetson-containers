@@ -21,6 +21,7 @@ ENV PYTHON_VERSION=${PYTHON_VERSION_ARG} \
     PIP_ROOT_USER_ACTION=ignore \
     TWINE_NON_INTERACTIVE=1 \
     DEBIAN_FRONTEND=noninteractive \
+    PYTHONPATH=/usr/lib/python3/dist-packages:$PYTHONPATH \
     PATH=/opt/venv/bin:$PATH
 
 COPY install.sh /tmp/install_python.sh 
