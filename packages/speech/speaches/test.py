@@ -59,7 +59,7 @@ def transcribe_file(file_path, model, language, response_format, temperature):
 
 def main():
     # File path - adjusted to where you copied the file
-    file_path = "./InigoMontoya.wav"  # Update this to wherever you copied the file
+    file_path = "/data/audio/inigo-montoya.wav"  # mounted under jetson-containers/data
     
     # Default parameters
     model = "guillaumekln/faster-whisper-tiny" 
@@ -80,7 +80,7 @@ def main():
             print(result)
             
     except Exception as e:
-        print(f"Error during transcription: {e}")
+        print(f"Error during transcription: {type(e)} - {e}")
 
 if __name__ == "__main__":
     main()
