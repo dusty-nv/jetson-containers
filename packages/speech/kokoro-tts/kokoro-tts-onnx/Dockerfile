@@ -1,7 +1,7 @@
 #---
 # name: kokoro-tts:onnx
 # group: audio
-# depends: [onnxruntime, numba]
+# depends: [onnxruntime, numba, espeak]
 # test: [test.py]
 #---
 ARG BASE_IMAGE
@@ -9,7 +9,7 @@ FROM ${BASE_IMAGE}
 
 # Install required dependencies
 RUN apt-get update &&  \
-    apt-get install -y libespeak-ng-dev portaudio19-dev && \
+    apt-get install -y portaudio19-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory

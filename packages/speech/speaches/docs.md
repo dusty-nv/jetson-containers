@@ -9,11 +9,10 @@ It is important when processing speech because by identifying when someone is ac
 
 ## Important Notes on TTS Implementation
 
-At this time of adding support to Speaches, TTS uses ONNX for KokoroTTS.  
-**Do not use it** - for OpenAI API TTS, use `kokoro-tts:fastapi` or `kokoro-tts:hf` / `kokoro-tts:onnx` instead.  
+At this time of adding support to Speaches, Kokoro uses `onnxruntime` and `kokoro-onnx` for TTS.
 
-Since we already have KokoroTTS on onnx support (`kokoro-tts:onnx`), it was not supported here and using TTS Endpoints will default to CPU.  
-Adding support for these endpoints is TBD, but not currently prioritized.  
+This backend is currently slower than `kokoro-tts:fastapi`, which also implements the OpenAI protocol, and can be used separately.
+
 
 ## Contributing
 

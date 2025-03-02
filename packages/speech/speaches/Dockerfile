@@ -4,7 +4,6 @@
 # depends: [faster-whisper, piper-tts, kokoro-tts:onnx]
 # requires: '>=34.1.0'
 # docs: docs.md
-# notes: run with cuda12.6
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
@@ -23,9 +22,14 @@ RUN git clone https://github.com/speaches-ai/speaches /opt/speaches && \
     sed -i 's|"numpy.*",|"numpy",|g' pyproject.toml && \
     cat pyproject.toml && \
     pip3 install --verbose -e '.[ui]'
+    #sed -i 's|enable_ui: bool = True|enable_ui: bool = False|g' src/speaches/config.py
+    #pip3 install gradio==5.13.0 gradio-client==1.6.0
 
 ARG PORT=8000
 ENV PORT=${PORT}
 EXPOSE ${PORT}
 
-CMD ["python3 -m uvicorn speaches.main:create_app --host 0.0.0.0 --port $PORT --factory"]
+COPY start-server.sh /opt/speaches
+RUN chmod +x /opt/speaches/start-server.sh
+
+ENTRYPOINT ["/opt/speaches/start-server.sh"]
