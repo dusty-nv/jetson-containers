@@ -137,8 +137,8 @@ def export_db(user: str=None, requires: str=None, blacklist: str=None, output: s
             continue
         rows.append(row)
                 
-    table = format_table(rows, header=[fields[x] for x in fields], tablefmt='github', colalign='center')
-    #table = table.replace('|-', '|:-').replace('-|', '-:|')
+    table = format_table(rows, headers=[fields[x] for x in fields], tablefmt='github')
+    table = table.replace('|--', '|:-').replace('--|', '-:|')
 
     print(f"\n{table}\n")
     
