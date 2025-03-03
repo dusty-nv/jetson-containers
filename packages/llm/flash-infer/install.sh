@@ -6,5 +6,7 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install flashinfer==${FLASHINFER_VERSION}
-pip3 show flashinfer && python3 -c 'import flashinfer'
+pip3 install flashinfer-python==${FLASHINFER_VERSION} || \
+pip3 install flashinfer-python==${FLASHINFER_VERSION_SPEC}
+
+pip3 show flashinfer_python && python3 -c 'import flashinfer'
