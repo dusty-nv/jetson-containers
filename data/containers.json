@@ -8,7 +8,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/jetson-inference",
     "is_private": false,
     "star_count": 15,
-    "pull_count": 71137,
+    "pull_count": 71141,
     "last_updated": "2024-06-20T18:13:48.684248Z",
     "last_modified": "2024-10-16T13:48:34.145251Z",
     "date_registered": "2020-08-21T19:12:58.932679Z",
@@ -68,7 +68,7 @@
             "os_version": null,
             "size": 7688608833,
             "status": "active",
-            "last_pulled": "2025-03-03T10:52:45.140833755Z",
+            "last_pulled": "2025-03-03T17:36:48.056197292Z",
             "last_pushed": "2024-06-20T17:56:20Z"
           }
         ],
@@ -80,7 +80,7 @@
         "full_size": 7688608833,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T10:52:45.140833755Z",
+        "tag_last_pulled": "2025-03-03T17:36:48.056197292Z",
         "tag_last_pushed": "2024-06-20T17:56:19.764211Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -476,7 +476,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/ros",
     "is_private": false,
     "star_count": 17,
-    "pull_count": 82272,
+    "pull_count": 82290,
     "last_updated": "2025-03-03T01:21:32.463097Z",
     "last_modified": "2024-10-16T13:48:34.145251Z",
     "date_registered": "2021-05-27T15:33:50.988699Z",
@@ -504,7 +504,7 @@
             "os_version": null,
             "size": 5527584233,
             "status": "active",
-            "last_pulled": "2025-03-03T02:10:26.714751055Z",
+            "last_pulled": "2025-03-03T17:30:38.983083065Z",
             "last_pushed": "2025-03-03T01:21:31.188974276Z"
           }
         ],
@@ -516,7 +516,7 @@
         "full_size": 5527584233,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T02:10:26.714751055Z",
+        "tag_last_pulled": "2025-03-03T17:30:38.983083065Z",
         "tag_last_pushed": "2025-03-03T01:21:31.683796Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -536,7 +536,7 @@
             "os_version": null,
             "size": 6288238037,
             "status": "active",
-            "last_pulled": "2025-03-03T01:18:48.287479486Z",
+            "last_pulled": "2025-03-03T17:30:55.884200962Z",
             "last_pushed": "2025-03-02T08:26:25.881531318Z"
           }
         ],
@@ -548,7 +548,7 @@
         "full_size": 6288238037,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T01:18:48.287479486Z",
+        "tag_last_pulled": "2025-03-03T17:30:55.884200962Z",
         "tag_last_pushed": "2025-03-03T01:18:38.168252Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -856,7 +856,7 @@
             "os_version": null,
             "size": 5541929396,
             "status": "active",
-            "last_pulled": "2025-03-03T14:50:15.754848248Z",
+            "last_pulled": "2025-03-03T16:25:58.000863187Z",
             "last_pushed": "2023-12-06T00:03:27Z"
           }
         ],
@@ -868,7 +868,7 @@
         "full_size": 5541929396,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T14:50:15.754848248Z",
+        "tag_last_pulled": "2025-03-03T16:25:58.000863187Z",
         "tag_last_pushed": "2023-12-07T04:26:37.255305Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -920,7 +920,7 @@
             "os_version": null,
             "size": 8207890715,
             "status": "active",
-            "last_pulled": "2025-03-03T14:40:45.794239755Z",
+            "last_pulled": "2025-03-03T17:14:19.314885128Z",
             "last_pushed": "2023-12-07T04:12:44Z"
           }
         ],
@@ -932,7 +932,7 @@
         "full_size": 8207890715,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T14:40:45.794239755Z",
+        "tag_last_pulled": "2025-03-03T17:14:19.314885128Z",
         "tag_last_pushed": "2023-12-07T04:12:43.459097Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -1880,7 +1880,7 @@
             "os_version": null,
             "size": 6374545915,
             "status": "active",
-            "last_pulled": "2025-03-02T21:17:52.10005455Z",
+            "last_pulled": "2025-03-03T20:10:13.067016206Z",
             "last_pushed": "2023-12-05T21:43:32Z"
           }
         ],
@@ -1892,7 +1892,7 @@
         "full_size": 6374545915,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-02T21:17:52.10005455Z",
+        "tag_last_pulled": "2025-03-03T20:10:13.067016206Z",
         "tag_last_pushed": "2023-12-05T21:43:31.346242Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -3000,7 +3000,7 @@
             "os_version": null,
             "size": 6274971544,
             "status": "active",
-            "last_pulled": "2025-03-02T13:38:55.652586856Z",
+            "last_pulled": "2025-03-03T20:08:56.53999861Z",
             "last_pushed": "2023-05-25T16:54:28Z"
           }
         ],
@@ -3012,7 +3012,7 @@
         "full_size": 6274971544,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-02T13:38:55.652586856Z",
+        "tag_last_pulled": "2025-03-03T20:08:56.53999861Z",
         "tag_last_pushed": "2023-05-25T21:01:11.18063Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -3192,7 +3192,7 @@
             "os_version": null,
             "size": 6249627587,
             "status": "active",
-            "last_pulled": "2025-03-02T08:09:56.954660452Z",
+            "last_pulled": "2025-03-03T19:11:05.71615242Z",
             "last_pushed": "2023-05-02T14:06:01Z"
           }
         ],
@@ -3204,7 +3204,7 @@
         "full_size": 6249627587,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-02T08:09:56.954660452Z",
+        "tag_last_pulled": "2025-03-03T19:11:05.71615242Z",
         "tag_last_pushed": "2023-05-02T21:04:31.1183Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -3288,7 +3288,7 @@
             "os_version": null,
             "size": 6191584382,
             "status": "active",
-            "last_pulled": "2025-03-03T10:11:34.34279972Z",
+            "last_pulled": "2025-03-03T16:22:22.134578157Z",
             "last_pushed": "2023-05-02T13:58:37Z"
           }
         ],
@@ -3300,7 +3300,7 @@
         "full_size": 6191584382,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T10:11:34.34279972Z",
+        "tag_last_pulled": "2025-03-03T16:22:22.134578157Z",
         "tag_last_pushed": "2023-05-02T20:49:22.627437Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -3608,7 +3608,7 @@
             "os_version": null,
             "size": 6727181790,
             "status": "active",
-            "last_pulled": "2025-03-03T15:27:06.120366313Z",
+            "last_pulled": "2025-03-03T19:34:26.639876472Z",
             "last_pushed": "2022-08-19T11:58:30Z"
           }
         ],
@@ -3620,7 +3620,7 @@
         "full_size": 6727181790,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T15:27:06.120366313Z",
+        "tag_last_pulled": "2025-03-03T19:34:26.639876472Z",
         "tag_last_pushed": "2023-04-29T03:05:43.976973Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -3768,7 +3768,7 @@
             "os_version": null,
             "size": 6542821390,
             "status": "active",
-            "last_pulled": "2025-02-28T15:49:39.191004379Z",
+            "last_pulled": "2025-03-03T16:02:22.64637995Z",
             "last_pushed": "2023-03-28T14:50:45Z"
           }
         ],
@@ -3780,7 +3780,7 @@
         "full_size": 6542821390,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-02-28T15:49:39.191004379Z",
+        "tag_last_pulled": "2025-03-03T16:02:22.64637995Z",
         "tag_last_pushed": "2023-03-28T14:50:44.175043Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -5538,7 +5538,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/l4t/l4t-ml",
     "is_private": false,
     "star_count": 1,
-    "pull_count": 5251,
+    "pull_count": 5264,
     "last_updated": "2024-03-07T18:11:42.24451Z",
     "last_modified": "2024-10-16T13:48:34.145251Z",
     "date_registered": "2021-06-29T16:47:41.794285Z",
@@ -5566,7 +5566,7 @@
             "os_version": null,
             "size": 9581328352,
             "status": "active",
-            "last_pulled": "2025-03-03T12:46:44.133850989Z",
+            "last_pulled": "2025-03-03T16:54:26.752468697Z",
             "last_pushed": "2024-03-07T18:11:42Z"
           }
         ],
@@ -5578,7 +5578,7 @@
         "full_size": 9581328352,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T12:46:44.133850989Z",
+        "tag_last_pulled": "2025-03-03T16:54:26.752468697Z",
         "tag_last_pushed": "2024-03-07T18:11:41.250709Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -5598,7 +5598,7 @@
             "os_version": null,
             "size": 7580434941,
             "status": "active",
-            "last_pulled": "2025-03-03T01:56:05.923738818Z",
+            "last_pulled": "2025-03-03T16:29:21.11125913Z",
             "last_pushed": "2024-03-07T18:03:46Z"
           }
         ],
@@ -5610,7 +5610,7 @@
         "full_size": 7580434941,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T01:56:05.923738818Z",
+        "tag_last_pulled": "2025-03-03T16:29:21.11125913Z",
         "tag_last_pushed": "2024-03-07T18:03:45.275034Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -5694,7 +5694,7 @@
             "os_version": null,
             "size": 2546094872,
             "status": "active",
-            "last_pulled": "2025-03-02T23:40:44.652398386Z",
+            "last_pulled": "2025-03-03T19:38:57.780268372Z",
             "last_pushed": "2023-11-13T17:49:08Z"
           }
         ],
@@ -5706,7 +5706,7 @@
         "full_size": 2546094872,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-02T23:40:44.652398386Z",
+        "tag_last_pulled": "2025-03-03T19:38:57.780268372Z",
         "tag_last_pushed": "2023-11-13T17:49:08.040993Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -6077,7 +6077,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/l4t/l4t-pytorch",
     "is_private": false,
     "star_count": 4,
-    "pull_count": 24016,
+    "pull_count": 24028,
     "last_updated": "2024-12-18T16:34:53.913375Z",
     "last_modified": "2024-10-16T13:48:34.145251Z",
     "date_registered": "2022-09-20T16:32:06.539013Z",
@@ -6105,7 +6105,7 @@
             "os_version": null,
             "size": 8356354434,
             "status": "active",
-            "last_pulled": "2025-03-03T12:43:10.159791482Z",
+            "last_pulled": "2025-03-03T16:30:09.665760187Z",
             "last_pushed": "2024-12-18T16:34:54Z"
           }
         ],
@@ -6117,7 +6117,7 @@
         "full_size": 8356354434,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T12:43:10.159791482Z",
+        "tag_last_pulled": "2025-03-03T16:30:09.665760187Z",
         "tag_last_pushed": "2024-12-18T16:34:53.431664Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -6137,7 +6137,7 @@
             "os_version": null,
             "size": 6732208331,
             "status": "active",
-            "last_pulled": "2025-03-03T11:34:23.191286772Z",
+            "last_pulled": "2025-03-03T19:13:17.330137449Z",
             "last_pushed": "2024-09-30T11:47:02Z"
           }
         ],
@@ -6149,7 +6149,7 @@
         "full_size": 6732208331,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T11:34:23.191286772Z",
+        "tag_last_pulled": "2025-03-03T19:13:17.330137449Z",
         "tag_last_pushed": "2024-09-30T11:47:02.072518Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -6169,7 +6169,7 @@
             "os_version": null,
             "size": 7186349002,
             "status": "active",
-            "last_pulled": "2025-03-03T15:16:09.892317531Z",
+            "last_pulled": "2025-03-03T19:13:14.822960177Z",
             "last_pushed": "2024-05-16T13:51:49Z"
           }
         ],
@@ -6181,7 +6181,7 @@
         "full_size": 7186349002,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T15:16:09.892317531Z",
+        "tag_last_pulled": "2025-03-03T19:13:14.822960177Z",
         "tag_last_pushed": "2024-05-16T13:51:48.309411Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -6201,7 +6201,7 @@
             "os_version": null,
             "size": 6743330802,
             "status": "active",
-            "last_pulled": "2025-03-03T15:00:30.195821755Z",
+            "last_pulled": "2025-03-03T15:41:50.264744924Z",
             "last_pushed": "2024-05-14T14:36:41Z"
           }
         ],
@@ -6213,7 +6213,7 @@
         "full_size": 6743330802,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T15:00:30.195821755Z",
+        "tag_last_pulled": "2025-03-03T15:41:50.264744924Z",
         "tag_last_pushed": "2024-05-14T14:36:40.275597Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -6817,7 +6817,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/llm/bitsandbytes",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 540,
+    "pull_count": 542,
     "last_updated": "2025-03-03T14:05:19.851283Z",
     "last_modified": "2024-10-16T13:48:34.145251Z",
     "date_registered": "2023-07-29T14:46:19.365274Z",
@@ -6845,7 +6845,7 @@
             "os_version": null,
             "size": 4749005879,
             "status": "active",
-            "last_pulled": "2025-03-03T14:05:31.447796478Z",
+            "last_pulled": "2025-03-03T17:36:55.76668446Z",
             "last_pushed": "2025-03-03T14:05:18.242388496Z"
           }
         ],
@@ -6857,7 +6857,7 @@
         "full_size": 4749005879,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T14:05:31.447796478Z",
+        "tag_last_pulled": "2025-03-03T17:36:55.76668446Z",
         "tag_last_pushed": "2025-03-03T14:05:18.780013Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -7187,7 +7187,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/pytorch/torch2trt",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 182,
+    "pull_count": 183,
     "last_updated": "2025-03-03T01:13:53.408779Z",
     "last_modified": "2024-10-16T13:48:34.145251Z",
     "date_registered": "2023-07-29T14:51:50.0513Z",
@@ -7215,7 +7215,7 @@
             "os_version": null,
             "size": 5537476490,
             "status": "active",
-            "last_pulled": "2025-03-03T01:14:10.886560579Z",
+            "last_pulled": "2025-03-03T17:31:39.754889548Z",
             "last_pushed": "2025-03-02T08:57:03.460891867Z"
           }
         ],
@@ -7227,7 +7227,7 @@
         "full_size": 5537476490,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T01:14:10.886560579Z",
+        "tag_last_pulled": "2025-03-03T17:31:39.754889548Z",
         "tag_last_pushed": "2025-03-03T01:13:52.315204Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -7247,7 +7247,7 @@
             "os_version": null,
             "size": 6137387686,
             "status": "active",
-            "last_pulled": "2025-03-02T23:07:37.215988926Z",
+            "last_pulled": "2025-03-03T19:26:17.530512805Z",
             "last_pushed": "2024-10-04T10:29:14Z"
           }
         ],
@@ -7259,7 +7259,7 @@
         "full_size": 6137387686,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-02T23:07:37.215988926Z",
+        "tag_last_pulled": "2025-03-03T19:26:17.530512805Z",
         "tag_last_pushed": "2024-10-04T10:29:13.240001Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -8297,7 +8297,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/opencv",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 1546,
+    "pull_count": 1547,
     "last_updated": "2025-03-02T04:29:49.154177Z",
     "last_modified": "2024-10-16T13:48:34.145251Z",
     "date_registered": "2023-07-29T15:09:26.544492Z",
@@ -8325,7 +8325,7 @@
             "os_version": null,
             "size": 3512057312,
             "status": "active",
-            "last_pulled": "2025-03-02T13:40:41.423167438Z",
+            "last_pulled": "2025-03-03T17:32:27.942074991Z",
             "last_pushed": "2025-03-02T04:29:47.666231466Z"
           }
         ],
@@ -8337,7 +8337,7 @@
         "full_size": 3512057312,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-02T13:40:41.423167438Z",
+        "tag_last_pulled": "2025-03-03T17:32:27.942074991Z",
         "tag_last_pushed": "2025-03-02T04:29:48.082352Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -8546,7 +8546,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/jupyterlab",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 394,
+    "pull_count": 397,
     "last_updated": "2025-03-03T10:22:30.062372Z",
     "last_modified": "2024-10-16T13:48:34.145251Z",
     "date_registered": "2023-07-29T15:11:21.482992Z",
@@ -8574,7 +8574,7 @@
             "os_version": null,
             "size": 5527144413,
             "status": "active",
-            "last_pulled": "2025-03-03T14:41:51.755439052Z",
+            "last_pulled": "2025-03-03T19:31:44.909663378Z",
             "last_pushed": "2025-03-03T10:22:28.426589699Z"
           }
         ],
@@ -8586,7 +8586,7 @@
         "full_size": 5527144413,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T14:41:51.755439052Z",
+        "tag_last_pulled": "2025-03-03T19:31:44.909663378Z",
         "tag_last_pushed": "2025-03-03T10:22:28.983769Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -8638,7 +8638,7 @@
             "os_version": null,
             "size": 802003165,
             "status": "active",
-            "last_pulled": "2025-02-25T12:14:04.757934983Z",
+            "last_pulled": "2025-03-03T19:18:45.063891891Z",
             "last_pushed": "2024-03-07T17:45:38Z"
           }
         ],
@@ -8650,7 +8650,7 @@
         "full_size": 802003165,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-02-25T12:14:04.757934983Z",
+        "tag_last_pulled": "2025-03-03T19:18:45.063891891Z",
         "tag_last_pushed": "2024-03-07T17:45:37.109383Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -8733,7 +8733,7 @@
             "os_features": "",
             "os_version": null,
             "size": 5706107611,
-            "status": "active",
+            "status": "inactive",
             "last_pulled": "2025-02-03T16:45:26Z",
             "last_pushed": "2023-08-04T20:57:46Z"
           }
@@ -8745,7 +8745,7 @@
         "repository": 20608422,
         "full_size": 5706107611,
         "v2": true,
-        "tag_status": "active",
+        "tag_status": "inactive",
         "tag_last_pulled": "2025-02-03T16:45:26Z",
         "tag_last_pushed": "2023-10-07T13:55:57.476389Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
@@ -9140,7 +9140,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/cuda/cupy",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 139,
+    "pull_count": 140,
     "last_updated": "2025-03-03T03:16:12.753031Z",
     "last_modified": "2024-10-16T13:48:34.145251Z",
     "date_registered": "2023-07-29T15:15:20.180515Z",
@@ -9168,7 +9168,7 @@
             "os_version": null,
             "size": 2493720116,
             "status": "active",
-            "last_pulled": "2025-03-03T13:24:38.80925062Z",
+            "last_pulled": "2025-03-03T17:27:00.729247826Z",
             "last_pushed": "2025-03-03T03:16:11.222186747Z"
           }
         ],
@@ -9180,7 +9180,7 @@
         "full_size": 2493720116,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T13:24:38.80925062Z",
+        "tag_last_pulled": "2025-03-03T17:27:00.729247826Z",
         "tag_last_pushed": "2025-03-03T03:16:11.676879Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -9944,7 +9944,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/deepstream",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 903,
+    "pull_count": 904,
     "last_updated": "2024-03-06T18:31:59.759224Z",
     "last_modified": "2024-10-16T13:48:34.145251Z",
     "date_registered": "2023-07-29T15:38:04.767778Z",
@@ -9972,7 +9972,7 @@
             "os_version": null,
             "size": 2502966560,
             "status": "active",
-            "last_pulled": "2025-02-27T10:12:27.621366231Z",
+            "last_pulled": "2025-03-03T15:59:52.499337496Z",
             "last_pushed": "2024-03-06T18:31:59Z"
           }
         ],
@@ -9984,7 +9984,7 @@
         "full_size": 2502966560,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-02-27T10:12:27.621366231Z",
+        "tag_last_pulled": "2025-03-03T15:59:52.499337496Z",
         "tag_last_pushed": "2024-03-06T18:31:59.03182Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -10004,7 +10004,7 @@
             "os_version": null,
             "size": 10574199210,
             "status": "active",
-            "last_pulled": "2025-03-03T15:37:29.820190022Z",
+            "last_pulled": "2025-03-03T15:53:03.244291826Z",
             "last_pushed": "2024-03-05T21:50:37Z"
           }
         ],
@@ -10016,7 +10016,7 @@
         "full_size": 10574199210,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T15:37:29.820190022Z",
+        "tag_last_pulled": "2025-03-03T15:53:03.244291826Z",
         "tag_last_pushed": "2024-03-05T21:50:36.340033Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -10595,7 +10595,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/cuda/pycuda",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 270,
+    "pull_count": 271,
     "last_updated": "2025-03-03T03:15:23.712389Z",
     "last_modified": "2024-10-16T13:48:34.145251Z",
     "date_registered": "2023-07-29T15:40:25.183933Z",
@@ -10623,7 +10623,7 @@
             "os_version": null,
             "size": 2456622175,
             "status": "active",
-            "last_pulled": "2025-03-03T13:22:05.644087015Z",
+            "last_pulled": "2025-03-03T17:27:58.424101283Z",
             "last_pushed": "2025-03-03T03:15:22.336223638Z"
           }
         ],
@@ -10635,7 +10635,7 @@
         "full_size": 2456622175,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T13:22:05.644087015Z",
+        "tag_last_pulled": "2025-03-03T17:27:58.424101283Z",
         "tag_last_pushed": "2025-03-03T03:15:22.649458Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -10997,7 +10997,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/pytorch",
     "is_private": false,
     "star_count": 5,
-    "pull_count": 4187,
+    "pull_count": 4193,
     "last_updated": "2025-02-26T03:45:30.747429Z",
     "last_modified": "2024-10-16T13:48:34.145251Z",
     "date_registered": "2023-07-29T15:45:47.232709Z",
@@ -11089,7 +11089,7 @@
             "os_version": null,
             "size": 7704037430,
             "status": "active",
-            "last_pulled": "2025-03-02T08:33:33.630158198Z",
+            "last_pulled": "2025-03-03T19:32:50.542757935Z",
             "last_pushed": "2023-12-12T00:56:41Z"
           }
         ],
@@ -11101,7 +11101,7 @@
         "full_size": 7704037430,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-02T08:33:33.630158198Z",
+        "tag_last_pulled": "2025-03-03T19:32:50.542757935Z",
         "tag_last_pushed": "2023-12-14T21:46:02.424368Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -11281,7 +11281,7 @@
             "os_version": null,
             "size": 1139435930,
             "status": "active",
-            "last_pulled": "2025-02-26T04:03:58.98549192Z",
+            "last_pulled": "2025-03-03T19:30:48.388948268Z",
             "last_pushed": "2023-12-11T17:14:16Z"
           }
         ],
@@ -11293,7 +11293,7 @@
         "full_size": 1139435930,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-02-26T04:03:58.98549192Z",
+        "tag_last_pulled": "2025-03-03T19:30:48.388948268Z",
         "tag_last_pushed": "2023-12-14T18:03:05.066232Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -11536,7 +11536,7 @@
             "os_features": "",
             "os_version": null,
             "size": 5881729862,
-            "status": "active",
+            "status": "inactive",
             "last_pulled": "2025-02-03T16:15:15Z",
             "last_pushed": "2023-08-04T22:03:51Z"
           }
@@ -11548,7 +11548,7 @@
         "repository": 20608580,
         "full_size": 5881729862,
         "v2": true,
-        "tag_status": "active",
+        "tag_status": "inactive",
         "tag_last_pulled": "2025-02-03T16:15:15Z",
         "tag_last_pushed": "2023-11-03T16:12:27.178797Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
@@ -12832,7 +12832,7 @@
             "os_version": null,
             "size": 9523406556,
             "status": "active",
-            "last_pulled": "2025-03-03T14:50:30.770405144Z",
+            "last_pulled": "2025-03-03T19:50:31.012921659Z",
             "last_pushed": "2024-02-02T17:46:18Z"
           }
         ],
@@ -12844,7 +12844,7 @@
         "full_size": 9523406556,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T14:50:30.770405144Z",
+        "tag_last_pulled": "2025-03-03T19:50:31.012921659Z",
         "tag_last_pushed": "2024-02-02T17:46:18.070905Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -12864,7 +12864,7 @@
             "os_version": null,
             "size": 7862005794,
             "status": "active",
-            "last_pulled": "2025-03-02T17:39:04.409457815Z",
+            "last_pulled": "2025-03-03T17:38:59.51758697Z",
             "last_pushed": "2024-02-02T17:05:11Z"
           }
         ],
@@ -12876,7 +12876,7 @@
         "full_size": 7862005794,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-02T17:39:04.409457815Z",
+        "tag_last_pulled": "2025-03-03T17:38:59.51758697Z",
         "tag_last_pushed": "2024-02-02T17:05:10.457139Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -12893,7 +12893,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/onnxruntime",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 958,
+    "pull_count": 959,
     "last_updated": "2025-03-03T03:26:08.003281Z",
     "last_modified": "2024-10-16T13:48:34.145251Z",
     "date_registered": "2023-07-29T17:11:01.693711Z",
@@ -12921,7 +12921,7 @@
             "os_version": null,
             "size": 5585661470,
             "status": "active",
-            "last_pulled": "2025-03-03T07:15:55.682728738Z",
+            "last_pulled": "2025-03-03T17:26:38.132780864Z",
             "last_pushed": "2025-03-03T03:26:06.3415976Z"
           }
         ],
@@ -12933,7 +12933,7 @@
         "full_size": 5585661470,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T07:15:55.682728738Z",
+        "tag_last_pulled": "2025-03-03T17:26:38.132780864Z",
         "tag_last_pushed": "2025-03-03T03:26:06.901292Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -13174,7 +13174,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/cuda/cuda-python",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 532,
+    "pull_count": 533,
     "last_updated": "2025-03-03T03:14:19.516641Z",
     "last_modified": "2024-10-16T13:48:34.145251Z",
     "date_registered": "2023-07-29T18:05:10.627452Z",
@@ -13202,7 +13202,7 @@
             "os_version": null,
             "size": 2466170562,
             "status": "active",
-            "last_pulled": "2025-03-03T13:19:31.950462135Z",
+            "last_pulled": "2025-03-03T17:28:40.612835871Z",
             "last_pushed": "2025-03-03T03:14:18.098037452Z"
           }
         ],
@@ -13214,7 +13214,7 @@
         "full_size": 2466170562,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T13:19:31.950462135Z",
+        "tag_last_pulled": "2025-03-03T17:28:40.612835871Z",
         "tag_last_pushed": "2025-03-03T03:14:18.445643Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -15878,7 +15878,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/llm/llama_cpp",
     "is_private": false,
     "star_count": 1,
-    "pull_count": 60347,
+    "pull_count": 60349,
     "last_updated": "2025-03-03T06:08:19.73201Z",
     "last_modified": "2024-10-16T13:48:34.145251Z",
     "date_registered": "2023-08-10T04:50:42.507902Z",
@@ -15906,7 +15906,7 @@
             "os_version": null,
             "size": 3387167049,
             "status": "active",
-            "last_pulled": "2025-03-03T09:12:48.372088151Z",
+            "last_pulled": "2025-03-03T19:38:57.472030949Z",
             "last_pushed": "2025-03-03T04:41:32.711879661Z"
           }
         ],
@@ -15918,7 +15918,7 @@
         "full_size": 3387167049,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T09:12:48.372088151Z",
+        "tag_last_pulled": "2025-03-03T19:38:57.472030949Z",
         "tag_last_pushed": "2025-03-03T06:08:18.646008Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -17436,7 +17436,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/llm/mlc",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 3552,
+    "pull_count": 3557,
     "last_updated": "2025-02-13T08:26:19.791936Z",
     "last_modified": "2024-10-16T13:48:34.145251Z",
     "date_registered": "2023-09-15T00:32:47.97793Z",
@@ -17464,7 +17464,7 @@
             "os_version": null,
             "size": 6628619620,
             "status": "active",
-            "last_pulled": "2025-03-03T13:36:42.344480661Z",
+            "last_pulled": "2025-03-03T17:46:59.166097662Z",
             "last_pushed": "2025-02-13T08:25:39.638725532Z"
           }
         ],
@@ -17476,7 +17476,7 @@
         "full_size": 6628619620,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T13:36:42.344480661Z",
+        "tag_last_pulled": "2025-03-03T17:46:59.166097662Z",
         "tag_last_pushed": "2025-02-13T08:26:19.46543Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -17496,7 +17496,7 @@
             "os_version": null,
             "size": 6628619620,
             "status": "active",
-            "last_pulled": "2025-03-03T13:36:42.344480661Z",
+            "last_pulled": "2025-03-03T17:46:59.166097662Z",
             "last_pushed": "2025-02-13T08:25:39.638725532Z"
           }
         ],
@@ -17508,7 +17508,7 @@
         "full_size": 6628619620,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T13:36:42.344480661Z",
+        "tag_last_pulled": "2025-03-03T17:46:59.166097662Z",
         "tag_last_pushed": "2025-02-13T08:25:40.081218Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -18698,7 +18698,7 @@
             "os_version": null,
             "size": 6681569923,
             "status": "active",
-            "last_pulled": "2025-03-03T14:57:20.977657997Z",
+            "last_pulled": "2025-03-03T16:21:53.028034319Z",
             "last_pushed": "2023-12-15T18:44:54Z"
           }
         ],
@@ -18710,7 +18710,7 @@
         "full_size": 6681569923,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T14:57:20.977657997Z",
+        "tag_last_pulled": "2025-03-03T16:21:53.028034319Z",
         "tag_last_pushed": "2023-12-15T18:44:53.191071Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -19563,7 +19563,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/vit/nanoowl",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 4184,
+    "pull_count": 4186,
     "last_updated": "2025-02-07T23:33:09.288472Z",
     "last_modified": "2024-10-16T13:48:34.145251Z",
     "date_registered": "2023-10-12T01:50:32.533221Z",
@@ -19623,7 +19623,7 @@
             "os_version": null,
             "size": 8896438900,
             "status": "active",
-            "last_pulled": "2025-03-03T05:15:40.550214024Z",
+            "last_pulled": "2025-03-03T16:43:27.179752076Z",
             "last_pushed": "2024-06-25T03:22:49Z"
           }
         ],
@@ -19635,7 +19635,7 @@
         "full_size": 8896438900,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T05:15:40.550214024Z",
+        "tag_last_pulled": "2025-03-03T16:43:27.179752076Z",
         "tag_last_pushed": "2024-06-25T03:22:48.945322Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -19750,7 +19750,7 @@
             "os_features": "",
             "os_version": null,
             "size": 7656341055,
-            "status": "active",
+            "status": "inactive",
             "last_pulled": "2025-02-03T20:03:58Z",
             "last_pushed": "2023-12-14T17:48:11Z"
           }
@@ -19762,7 +19762,7 @@
         "repository": 22172408,
         "full_size": 7656341055,
         "v2": true,
-        "tag_status": "active",
+        "tag_status": "inactive",
         "tag_last_pulled": "2025-02-03T20:03:58Z",
         "tag_last_pushed": "2023-12-14T17:48:10.339624Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
@@ -20331,7 +20331,7 @@
             "os_version": null,
             "size": 6507057796,
             "status": "active",
-            "last_pulled": "2025-03-03T15:37:16.200301297Z",
+            "last_pulled": "2025-03-03T19:16:16.608702624Z",
             "last_pushed": "2023-12-14T17:53:32Z"
           }
         ],
@@ -20343,7 +20343,7 @@
         "full_size": 6507057796,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T15:37:16.200301297Z",
+        "tag_last_pulled": "2025-03-03T19:16:16.608702624Z",
         "tag_last_pushed": "2023-12-14T17:53:31.760668Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -20798,7 +20798,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/llm/ollama",
     "is_private": false,
     "star_count": 2,
-    "pull_count": 12085,
+    "pull_count": 12120,
     "last_updated": "2025-02-07T10:07:50.402083Z",
     "last_modified": "2024-10-16T13:48:34.145251Z",
     "date_registered": "2024-04-05T17:57:29.015737Z",
@@ -20826,7 +20826,7 @@
             "os_version": null,
             "size": 5340360609,
             "status": "active",
-            "last_pulled": "2025-03-03T15:07:03.393454652Z",
+            "last_pulled": "2025-03-03T19:07:08.285457308Z",
             "last_pushed": "2025-02-07T10:07:49.123031064Z"
           }
         ],
@@ -20838,7 +20838,7 @@
         "full_size": 5340360609,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T15:07:03.393454652Z",
+        "tag_last_pulled": "2025-03-03T19:07:08.285457308Z",
         "tag_last_pushed": "2025-02-07T10:07:49.587959Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -21018,7 +21018,7 @@
             "os_version": null,
             "size": 3787320121,
             "status": "active",
-            "last_pulled": "2025-03-03T13:00:01.213437348Z",
+            "last_pulled": "2025-03-03T17:37:04.005847811Z",
             "last_pushed": "2024-09-02T05:47:18Z"
           }
         ],
@@ -21030,7 +21030,7 @@
         "full_size": 3787320121,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T13:00:01.213437348Z",
+        "tag_last_pulled": "2025-03-03T17:37:04.005847811Z",
         "tag_last_pushed": "2024-09-02T07:38:31.714088Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -21050,7 +21050,7 @@
             "os_version": null,
             "size": 5800678802,
             "status": "active",
-            "last_pulled": "2025-03-03T10:22:02.406256508Z",
+            "last_pulled": "2025-03-03T20:11:41.29198101Z",
             "last_pushed": "2024-06-25T21:22:35Z"
           }
         ],
@@ -21062,7 +21062,7 @@
         "full_size": 5800678802,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T10:22:02.406256508Z",
+        "tag_last_pulled": "2025-03-03T20:11:41.29198101Z",
         "tag_last_pushed": "2024-06-25T21:22:34.8969Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -21079,7 +21079,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/audio/piper-tts",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 432,
+    "pull_count": 433,
     "last_updated": "2025-03-03T03:31:16.535949Z",
     "last_modified": "2024-10-16T13:48:34.145251Z",
     "date_registered": "2024-04-07T20:37:31.304566Z",
@@ -21107,7 +21107,7 @@
             "os_version": null,
             "size": 6052279379,
             "status": "active",
-            "last_pulled": "2025-03-03T07:30:25.355346608Z",
+            "last_pulled": "2025-03-03T17:25:36.528931641Z",
             "last_pushed": "2025-03-03T03:31:14.94180322Z"
           }
         ],
@@ -21119,7 +21119,7 @@
         "full_size": 6052279379,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T07:30:25.355346608Z",
+        "tag_last_pulled": "2025-03-03T17:25:36.528931641Z",
         "tag_last_pushed": "2025-03-03T03:31:15.462835Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -21171,7 +21171,7 @@
             "os_version": null,
             "size": 7158037382,
             "status": "active",
-            "last_pulled": "2025-03-03T15:31:37.386409151Z",
+            "last_pulled": "2025-03-03T20:10:05.836032867Z",
             "last_pushed": "2024-04-07T20:41:43Z"
           }
         ],
@@ -21183,7 +21183,7 @@
         "full_size": 7158037382,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T15:31:37.386409151Z",
+        "tag_last_pulled": "2025-03-03T20:10:05.836032867Z",
         "tag_last_pushed": "2024-04-07T20:41:43.467773Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -21449,7 +21449,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/smart-home/wyoming/openwakeword",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 386,
+    "pull_count": 387,
     "last_updated": "2024-04-30T15:16:53.137145Z",
     "last_modified": "2024-10-16T13:48:34.145251Z",
     "date_registered": "2024-04-10T04:03:40.711311Z",
@@ -21477,7 +21477,7 @@
             "os_version": null,
             "size": 344880564,
             "status": "active",
-            "last_pulled": "2025-03-03T13:00:01.600353813Z",
+            "last_pulled": "2025-03-03T18:57:11.159839526Z",
             "last_pushed": "2024-04-30T15:16:52Z"
           }
         ],
@@ -21489,7 +21489,7 @@
         "full_size": 344880564,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T13:00:01.600353813Z",
+        "tag_last_pulled": "2025-03-03T18:57:11.159839526Z",
         "tag_last_pushed": "2024-04-30T15:16:52.034351Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -21570,7 +21570,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/llm/nano_llm",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 19034,
+    "pull_count": 19044,
     "last_updated": "2024-10-15T04:03:34.382399Z",
     "last_modified": "2024-10-16T13:48:34.145251Z",
     "date_registered": "2024-04-13T19:51:14.342744Z",
@@ -21598,7 +21598,7 @@
             "os_version": null,
             "size": 13636982201,
             "status": "active",
-            "last_pulled": "2025-03-03T14:17:29.41149596Z",
+            "last_pulled": "2025-03-03T18:21:17.975132688Z",
             "last_pushed": "2024-10-15T04:03:35Z"
           }
         ],
@@ -21610,7 +21610,7 @@
         "full_size": 13636982201,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T14:17:29.41149596Z",
+        "tag_last_pulled": "2025-03-03T18:21:17.975132688Z",
         "tag_last_pushed": "2024-10-15T04:03:34.127172Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -22263,7 +22263,7 @@
             "os_version": null,
             "size": 9622009491,
             "status": "active",
-            "last_pulled": "2025-03-03T13:00:03.954250657Z",
+            "last_pulled": "2025-03-03T18:19:02.243181725Z",
             "last_pushed": "2024-04-23T21:30:09Z"
           }
         ],
@@ -22275,7 +22275,7 @@
         "full_size": 9622009491,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T13:00:03.954250657Z",
+        "tag_last_pulled": "2025-03-03T18:19:02.243181725Z",
         "tag_last_pushed": "2024-04-30T15:18:04.923858Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -22295,7 +22295,7 @@
             "os_version": null,
             "size": 9622009491,
             "status": "active",
-            "last_pulled": "2025-03-03T13:00:03.954250657Z",
+            "last_pulled": "2025-03-03T18:19:02.243181725Z",
             "last_pushed": "2024-04-23T21:30:09Z"
           }
         ],
@@ -22307,7 +22307,7 @@
         "full_size": 9622009491,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T13:00:03.954250657Z",
+        "tag_last_pulled": "2025-03-03T18:19:02.243181725Z",
         "tag_last_pushed": "2024-04-23T21:30:09.006171Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -22384,7 +22384,7 @@
             "os_version": null,
             "size": 5610902045,
             "status": "active",
-            "last_pulled": "2025-03-03T13:34:02.248726616Z",
+            "last_pulled": "2025-03-03T18:19:02.955278416Z",
             "last_pushed": "2024-04-24T06:43:09Z"
           }
         ],
@@ -22396,7 +22396,7 @@
         "full_size": 5610902045,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T13:34:02.248726616Z",
+        "tag_last_pulled": "2025-03-03T18:19:02.955278416Z",
         "tag_last_pushed": "2024-04-30T15:18:18.052612Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -22416,7 +22416,7 @@
             "os_version": null,
             "size": 5610902045,
             "status": "active",
-            "last_pulled": "2025-03-03T13:34:02.248726616Z",
+            "last_pulled": "2025-03-03T18:19:02.955278416Z",
             "last_pushed": "2024-04-24T06:43:09Z"
           }
         ],
@@ -22428,7 +22428,7 @@
         "full_size": 5610902045,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T13:34:02.248726616Z",
+        "tag_last_pulled": "2025-03-03T18:19:02.955278416Z",
         "tag_last_pushed": "2024-04-24T06:43:08.173466Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -23196,7 +23196,7 @@
     "description": "",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 1204,
+    "pull_count": 1208,
     "last_updated": "2024-10-13T08:19:03.169228Z",
     "last_modified": "2024-10-16T13:48:34.145251Z",
     "date_registered": "2024-07-03T07:48:22.158141Z",
@@ -23256,7 +23256,7 @@
             "os_version": null,
             "size": 6797233511,
             "status": "active",
-            "last_pulled": "2025-02-28T08:02:26.904618926Z",
+            "last_pulled": "2025-03-03T19:43:56.768290398Z",
             "last_pushed": "2024-07-03T20:40:01Z"
           }
         ],
@@ -23268,7 +23268,7 @@
         "full_size": 6797233511,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-02-28T08:02:26.904618926Z",
+        "tag_last_pulled": "2025-03-03T19:43:56.768290398Z",
         "tag_last_pushed": "2024-07-03T20:40:00.651246Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -23552,7 +23552,7 @@
     "description": "",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 445,
+    "pull_count": 449,
     "last_updated": "2024-12-30T05:29:54.58333Z",
     "last_modified": "2024-10-16T13:48:34.145251Z",
     "date_registered": "2024-08-24T02:50:23.925404Z",
@@ -23580,7 +23580,7 @@
             "os_version": null,
             "size": 9068666040,
             "status": "active",
-            "last_pulled": "2025-02-28T07:22:11.169625592Z",
+            "last_pulled": "2025-03-03T18:19:16.20680522Z",
             "last_pushed": "2024-12-30T05:29:54Z"
           }
         ],
@@ -23592,7 +23592,7 @@
         "full_size": 9068666040,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-02-28T07:22:11.169625592Z",
+        "tag_last_pulled": "2025-03-03T18:19:16.20680522Z",
         "tag_last_pushed": "2024-12-30T05:29:53.52613Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -23612,7 +23612,7 @@
             "os_version": null,
             "size": 6320856192,
             "status": "active",
-            "last_pulled": "2025-03-03T08:35:59.432378567Z",
+            "last_pulled": "2025-03-03T18:02:05.885278358Z",
             "last_pushed": "2024-08-24T02:50:24Z"
           }
         ],
@@ -23624,7 +23624,7 @@
         "full_size": 6320856192,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T08:35:59.432378567Z",
+        "tag_last_pulled": "2025-03-03T18:02:05.885278358Z",
         "tag_last_pushed": "2024-08-24T02:50:23.41401Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -24079,7 +24079,7 @@
     "description": "",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 66,
+    "pull_count": 67,
     "last_updated": "2025-03-03T02:26:03.93398Z",
     "last_modified": "2024-10-16T13:48:34.145251Z",
     "date_registered": "2024-09-12T16:36:55.097301Z",
@@ -24107,7 +24107,7 @@
             "os_version": null,
             "size": 3849707013,
             "status": "active",
-            "last_pulled": "2025-03-03T04:48:52.264980975Z",
+            "last_pulled": "2025-03-03T17:33:01.175702144Z",
             "last_pushed": "2025-03-03T02:26:02.404780684Z"
           }
         ],
@@ -24119,7 +24119,7 @@
         "full_size": 3849707013,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T04:48:52.264980975Z",
+        "tag_last_pulled": "2025-03-03T17:33:01.175702144Z",
         "tag_last_pushed": "2025-03-03T02:26:02.864652Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -25197,8 +25197,8 @@
     "description": "",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 430,
-    "last_updated": "2025-02-07T15:16:41.282601Z",
+    "pull_count": 476,
+    "last_updated": "2025-03-03T17:36:06.084038Z",
     "last_modified": "2025-02-07T15:16:41.220222Z",
     "date_registered": "2025-02-07T15:16:41.224145Z",
     "affiliation": "editor",
@@ -25209,8 +25209,40 @@
       "image"
     ],
     "categories": [],
-    "storage_size": 7803686403,
+    "storage_size": 13578724072,
     "tags": [
+      {
+        "creator": 10706889,
+        "id": 857908799,
+        "images": [
+          {
+            "architecture": "arm64",
+            "features": "",
+            "variant": "v8",
+            "digest": "sha256:5d886bc0cb098b1c72f5d60f1b6c6d9cd6af2def98d772ca78e676fafbf3797c",
+            "os": "linux",
+            "os_features": "",
+            "os_version": null,
+            "size": 5774996065,
+            "status": "active",
+            "last_pulled": "2025-03-03T20:09:02.916872316Z",
+            "last_pushed": "2025-03-03T17:36:04.186538891Z"
+          }
+        ],
+        "last_updated": "2025-03-03T17:36:05.007825Z",
+        "last_updater": 10706889,
+        "last_updater_username": "dustynv",
+        "name": "0.4.4-r36.4.0-cu128-24.04",
+        "repository": 26401588,
+        "full_size": 5774996065,
+        "v2": true,
+        "tag_status": "active",
+        "tag_last_pulled": "2025-03-03T20:09:02.916872316Z",
+        "tag_last_pushed": "2025-03-03T17:36:05.007825Z",
+        "media_type": "application/vnd.docker.container.image.v1+json",
+        "content_type": "image",
+        "digest": "sha256:5d886bc0cb098b1c72f5d60f1b6c6d9cd6af2def98d772ca78e676fafbf3797c"
+      },
       {
         "creator": 10706889,
         "id": 844393324,
@@ -25225,7 +25257,7 @@
             "os_version": null,
             "size": 7803653057,
             "status": "active",
-            "last_pulled": "2025-02-26T05:03:56.596895861Z",
+            "last_pulled": "2025-03-03T18:44:19.040683525Z",
             "last_pushed": "2025-02-07T15:16:40.23253826Z"
           }
         ],
@@ -25237,7 +25269,7 @@
         "full_size": 7803653057,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-02-26T05:03:56.596895861Z",
+        "tag_last_pulled": "2025-03-03T18:44:19.040683525Z",
         "tag_last_pushed": "2025-02-07T15:16:40.993424Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -25254,7 +25286,7 @@
     "description": "",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 161,
+    "pull_count": 162,
     "last_updated": "2025-03-03T09:31:27.483045Z",
     "last_modified": "2025-02-10T01:44:57.095512Z",
     "date_registered": "2025-02-10T01:44:57.099314Z",
@@ -25282,7 +25314,7 @@
             "os_version": null,
             "size": 5147417349,
             "status": "active",
-            "last_pulled": "2025-03-03T12:33:15.229678536Z",
+            "last_pulled": "2025-03-03T17:24:37.09221703Z",
             "last_pushed": "2025-03-03T09:31:25.701608997Z"
           }
         ],
@@ -25294,7 +25326,7 @@
         "full_size": 5147417349,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T12:33:15.229678536Z",
+        "tag_last_pulled": "2025-03-03T17:24:37.09221703Z",
         "tag_last_pushed": "2025-03-03T09:31:26.411923Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -25464,7 +25496,7 @@
     "description": "",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 17,
+    "pull_count": 18,
     "last_updated": "2025-03-03T15:00:29.293909Z",
     "last_modified": "2025-02-26T04:45:27.709443Z",
     "date_registered": "2025-02-26T04:45:27.713838Z",
@@ -25492,7 +25524,7 @@
             "os_version": null,
             "size": 3765954680,
             "status": "active",
-            "last_pulled": "2025-02-26T04:45:35.986453404Z",
+            "last_pulled": "2025-03-03T17:21:51.927597875Z",
             "last_pushed": "2025-02-26T04:45:26.185262821Z"
           }
         ],
@@ -25504,7 +25536,7 @@
         "full_size": 3765954680,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-02-26T04:45:35.986453404Z",
+        "tag_last_pulled": "2025-03-03T17:21:51.927597875Z",
         "tag_last_pushed": "2025-02-26T04:45:26.70456Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -25521,7 +25553,7 @@
     "description": "",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 49,
+    "pull_count": 50,
     "last_updated": "2025-03-03T03:00:14.155118Z",
     "last_modified": "2025-03-03T03:00:14.08433Z",
     "date_registered": "2025-03-03T03:00:14.088718Z",
@@ -25549,7 +25581,7 @@
             "os_version": null,
             "size": 7063447327,
             "status": "active",
-            "last_pulled": "2025-03-03T12:49:26.385388936Z",
+            "last_pulled": "2025-03-03T17:29:36.246379451Z",
             "last_pushed": "2025-03-03T03:00:12.308928776Z"
           }
         ],
@@ -25561,7 +25593,7 @@
         "full_size": 7063447327,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T12:49:26.385388936Z",
+        "tag_last_pulled": "2025-03-03T17:29:36.246379451Z",
         "tag_last_pushed": "2025-03-03T03:00:13.058937Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -25578,7 +25610,7 @@
     "description": "",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 9,
+    "pull_count": 10,
     "last_updated": "2025-03-03T03:26:35.439721Z",
     "last_modified": "2025-03-03T03:26:35.373606Z",
     "date_registered": "2025-03-03T03:26:35.377341Z",
@@ -25606,7 +25638,7 @@
             "os_version": null,
             "size": 5734783575,
             "status": "active",
-            "last_pulled": "2025-03-03T13:33:02.240022882Z",
+            "last_pulled": "2025-03-03T17:26:09.016415806Z",
             "last_pushed": "2025-03-03T03:26:33.785656035Z"
           }
         ],
@@ -25618,7 +25650,7 @@
         "full_size": 5734783575,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T13:33:02.240022882Z",
+        "tag_last_pulled": "2025-03-03T17:26:09.016415806Z",
         "tag_last_pushed": "2025-03-03T03:26:34.36694Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -25635,7 +25667,7 @@
     "description": "",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 29,
+    "pull_count": 31,
     "last_updated": "2025-03-03T12:17:20.375675Z",
     "last_modified": "2025-03-03T12:17:20.311835Z",
     "date_registered": "2025-03-03T12:17:20.316185Z",
@@ -25663,7 +25695,7 @@
             "os_version": null,
             "size": 4149023627,
             "status": "active",
-            "last_pulled": "2025-03-03T13:09:44.253802896Z",
+            "last_pulled": "2025-03-03T17:22:59.430154469Z",
             "last_pushed": "2025-03-03T12:17:18.910946189Z"
           }
         ],
@@ -25675,7 +25707,7 @@
         "full_size": 4149023627,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T13:09:44.253802896Z",
+        "tag_last_pulled": "2025-03-03T17:22:59.430154469Z",
         "tag_last_pushed": "2025-03-03T12:17:19.303857Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",

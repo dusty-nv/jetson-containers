@@ -1194,6 +1194,21 @@
       "jetson-containers"
     ]
   },
+  "sglang:0.4.4-r36.4.0-cu128-24.04": {
+    "tags": [
+      "sglang"
+    ],
+    "docker_image": "dustynv/sglang:0.4.4-r36.4.0-cu128-24.04",
+    "last_modified": "2025-03-03T17:36:05.007825Z",
+    "size": 5774996065,
+    "CPU_ARCH": "aarch64",
+    "version": "0.4.4",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "LSB_RELEASE": "24.04",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7"
+  },
   "sglang:r36.4.0": {
     "tags": [
       "sglang"
