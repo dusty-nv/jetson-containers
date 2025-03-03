@@ -30,11 +30,17 @@ def export_db(user: str=None, requires: str=None, blacklist: str=None, output: s
     Export dockerhub registry to graphDB format.
     """
     containers = pull_db(user=user, use_cache=True, **kwargs)
-    nodes = {}
+    
+    nodes = {
+        'jetson-containers': {
+            'name': 'Container',
+            'tags': ['container'],
+        }
+    }
 
     for repo in containers:
         repo_name = repo['name']
-        repo_node = { 'tags': ['container'] }
+        repo_node = { 'tags': ['jetson-containers'] }
         repo_nodes = {}
 
         for container in repo['tags']:

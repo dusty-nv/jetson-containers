@@ -1,7 +1,13 @@
 {
-  "ros": {
+  "jetson-containers": {
+    "name": "Container",
     "tags": [
       "container"
+    ]
+  },
+  "ros": {
+    "tags": [
+      "jetson-containers"
     ]
   },
   "ros:jazzy-ros-base-r36.4.0-cu128-24.04": {
@@ -54,7 +60,7 @@
   },
   "l4t-pytorch": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "l4t-pytorch:r36.4.0": {
@@ -73,7 +79,7 @@
   },
   "bitsandbytes": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "bitsandbytes:0.45.4-r36.4.0-cu128-24.04": {
@@ -93,7 +99,7 @@
   },
   "torchvision": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "torchvision:0.21.0-r36.4.0-cu128-24.04": {
@@ -128,7 +134,7 @@
   },
   "torch2trt": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "torch2trt:r36.4.0-cu128-24.04": {
@@ -161,7 +167,7 @@
   },
   "torchaudio": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "torchaudio:2.6.0-r36.4.0-cu128-24.04": {
@@ -196,7 +202,7 @@
   },
   "opencv": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "opencv:4.11.0-r36.4.0-cu128-24.04": {
@@ -216,7 +222,7 @@
   },
   "jupyterlab": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "jupyterlab:r36.4.0-cu128-24.04": {
@@ -235,7 +241,7 @@
   },
   "cupy": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "cupy:r36.4.0-cu128-24.04": {
@@ -254,7 +260,7 @@
   },
   "pycuda": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "pycuda:r36.4.0-cu128-24.04": {
@@ -273,7 +279,7 @@
   },
   "pytorch": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "pytorch:2.6-r36.4.0-cu128-24.04": {
@@ -308,7 +314,7 @@
   },
   "onnxruntime": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "onnxruntime:1.22-r36.4.0-cu128-24.04": {
@@ -358,7 +364,7 @@
   },
   "cuda-python": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "cuda-python:r36.4.0-cu128-24.04": {
@@ -377,7 +383,7 @@
   },
   "awq": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "awq:r36.4.0": {
@@ -396,7 +402,7 @@
   },
   "llama_cpp": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "llama_cpp:0.3.7-r36.4.0-cu128-24.04": {
@@ -475,7 +481,7 @@
   },
   "mlc": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "mlc:r36.4.0": {
@@ -629,7 +635,7 @@
   },
   "nanodb": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "nanodb:r36.4.0": {
@@ -648,7 +654,7 @@
   },
   "nanoowl": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "nanoowl:r36.4.0": {
@@ -667,7 +673,7 @@
   },
   "ollama": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "ollama:r36.4.0": {
@@ -746,7 +752,7 @@
   },
   "piper-tts": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "piper-tts:r36.4.0-cu128-24.04": {
@@ -779,7 +785,7 @@
   },
   "homeassistant-core": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "homeassistant-core:2024.12.4-r36.4.0": {
@@ -799,7 +805,7 @@
   },
   "nano_llm": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "nano_llm:r36.4.0": {
@@ -818,7 +824,7 @@
   },
   "wyoming-whisper": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "wyoming-whisper:2.3.0-r36.4.0": {
@@ -838,7 +844,7 @@
   },
   "llama-factory": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "llama-factory:r36.4.0": {
@@ -857,7 +863,7 @@
   },
   "jetson-copilot": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "jetson-copilot:r36.4.0": {
@@ -876,7 +882,7 @@
   },
   "openvla": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "openvla:r36.4.3-cu128-cp312-24.04": {
@@ -896,7 +902,7 @@
   },
   "comfyui": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "comfyui:r36.4.0": {
@@ -915,7 +921,7 @@
   },
   "nerfstudio": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "nerfstudio:r36.4.0-cu128": {
@@ -934,7 +940,7 @@
   },
   "lerobot": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "lerobot:r36.4.0-cu128": {
@@ -967,7 +973,7 @@
   },
   "jax": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "jax:0.5.2-r36.4.0-cu128-24.04": {
@@ -1001,7 +1007,7 @@
   },
   "lita": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "lita:r36.4.0": {
@@ -1020,7 +1026,7 @@
   },
   "vllm": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "vllm:0.7.4-r36.4.0-cu128-24.04": {
@@ -1113,7 +1119,7 @@
   },
   "tensorrt_llm": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "tensorrt_llm:0.12-r36.4.0": {
@@ -1133,7 +1139,7 @@
   },
   "sana": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "sana:r36.4.0": {
@@ -1152,7 +1158,7 @@
   },
   "cosmos": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "cosmos:r36.4.0-cu128": {
@@ -1185,7 +1191,7 @@
   },
   "sglang": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "sglang:r36.4.0": {
@@ -1204,7 +1210,7 @@
   },
   "kokoro-tts": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "kokoro-tts:fastapi-r36.4.0-cu128-24.04": {
@@ -1268,7 +1274,7 @@
   },
   "genesis": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "genesis:r36.4.0-cu128": {
@@ -1287,7 +1293,7 @@
   },
   "torchao": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "torchao:0.11.0-r36.4.0-cu128-24.04": {
@@ -1307,7 +1313,7 @@
   },
   "speaches": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "speaches:r36.4.0-cu128-24.04": {
@@ -1326,7 +1332,7 @@
   },
   "faster-whisper": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "faster-whisper:r36.4.0-cu128-24.04": {
@@ -1345,7 +1351,7 @@
   },
   "flashinfer": {
     "tags": [
-      "container"
+      "jetson-containers"
     ]
   },
   "flashinfer:0.2.3-r36.4.0-cu128-24.04": {
