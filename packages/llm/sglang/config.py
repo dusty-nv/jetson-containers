@@ -1,14 +1,18 @@
 
-def sglang(version, requires=None, default=False):
+def sglang(version, version_spec=None, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
         pkg['requires'] = requires   
 
+    if not version_spec:
+        version_spec = version
+
     pkg['name'] = f'sglang:{version}'
 
     pkg['build_args'] = {
         'SGLANG_VERSION': version,
+        'SGLANG_VERSION_SPEC': version_spec,
     }
 
     builder = pkg.copy()
@@ -23,5 +27,5 @@ def sglang(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    sglang('0.4.4', default=True),
+    sglang('0.4.4', '0.4.3.post2', default=True),
 ]

@@ -7,7 +7,7 @@ REPO_URL="https://github.com/sgl-project/sglang"
 REPO_DIR="/opt/sglang"
 
 ARCH="$(uname -m)"
-ARCH_SED="/x86_64/$ARCH/g" 
+ARCH_SED="s|x86_64|$ARCH|g" 
 PLATFORM="$ARCH-linux"
 
 echo "Building SGLang ${SGLANG_VERSION} for ${PLATFORM}"
@@ -25,8 +25,7 @@ sed -i '/xgrammar/d' python/pyproject.toml
 sed -i $ARCH_SED sgl-kernel/src/sgl-kernel/__init__.py
 sed -i $ARCH_SED sgl-kernel/setup.py
 
-sed -i '/options={"bdist.*//g' sgl-kernel/setup.py
-
+sed -i 's|options={.*| |g' sgl-kernel/setup.py
 echo "Patched sgl-kernel/setup.py"
 cat sgl-kernel/setup.py  
 
@@ -43,9 +42,20 @@ if test -f "python/sglang/srt/utils.py"; then
 fi
 
 # Install SGLang
-# pip3 install -e "python[all]"
-python3 setup.py --verbose bdist_wheel --dist-dir $PIP_WHEEL_DIR --plat $PLATFORM && \
+cd $REPO_DIR/python
+
+sed -i 's|"torchao.*"|"torchao"|g' pyproject.toml
+sed -i 's|"sgl-kernel.*"|"sgl-kernel"|g' pyproject.toml
+sed -i 's|"vllm.*"|"vllm"|g' pyproject.toml
+sed -i 's|"torch=.*"|"torch"|g' pyproject.toml
+
+echo "Patched $REPO_DIR/python/pyproject.toml"
+cat pyproject.toml 
+
+pip3 wheel '.[all]'
 pip3 install $PIP_WHEEL_DIR/sglang*.whl
+
+cd /
 
 # Install Gemlite python packages
 pip3 install gemlite
