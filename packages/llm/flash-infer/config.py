@@ -1,0 +1,30 @@
+
+
+
+def flash_infer(version, requires=None, default=False):
+    pkg = package.copy()
+
+    if requires:
+        pkg['requires'] = requires   
+
+    pkg['name'] = f'flashinfer:{version}'
+    
+    pkg['build_args'] = {
+        'FLASHINFER_VERSION': version,
+    }
+    
+    builder = pkg.copy()
+    
+    builder['name'] = f'flashinfer:{version}-builder'
+    builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
+
+    if default:
+        pkg['alias'] = 'flashinfer'
+        builder['alias'] = 'flashinfer:builder'
+        
+    return pkg, builder
+
+package = [
+    flash_infer('0.2.3', default=True),
+]
+
