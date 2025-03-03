@@ -13,7 +13,7 @@ Modular container build system that provides the latest [**AI/ML packages**](htt
 > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`jetson-containers run dustynv/pytorch:2.6-r36.4.0-cu128-24.04`  
 >  
 > See the [`Ubuntu 24.04`](/docs/build.md#2404-containers) section of the docs for details and a list of available containers 🤗  
-> Thanks to all our active contributors from [Discord](https://discord.gg/BmqNSK4886) for their help with the ongoing builds.
+> Thanks to all our active contributors from [`Discord`](https://discord.gg/BmqNSK4886) for their help with the ongoing builds.
 
 | |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 |---|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
