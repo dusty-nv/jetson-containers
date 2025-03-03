@@ -9,8 +9,9 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG CUDA_PYTHON_VERSION
+ARG CUDA_PYTHON_VERSION \
+    FORCE_BUILD=off
 
-COPY build.sh /tmp/build_cuda_python.sh
+COPY build.sh install.sh /tmp/cuda-python/
 
-RUN pip3 install cuda-python==${CUDA_PYTHON_VERSION} || /tmp/build_cuda_python.sh
+RUN /tmp/cuda-python/install.sh || /tmp/cuda-python/build.sh
