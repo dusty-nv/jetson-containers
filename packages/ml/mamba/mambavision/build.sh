@@ -9,7 +9,7 @@ git clone --depth=1 --recursive https://github.com/johnnynunez/MambaVision /opt/
 cd /opt/mambavision 
 pip3 install -U einops timm 
 pip3 wheel --no-build-isolation --no-deps --wheel-dir=/opt/mambavision/wheels .
-pip3 install --no-cache-dir --verbose /opt/mambavision/wheels/mambavision*.whl
+pip3 install /opt/mambavision/wheels/mambavision*.whl
 
 cd /opt/mambavision
 

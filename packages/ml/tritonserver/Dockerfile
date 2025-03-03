@@ -20,7 +20,7 @@ RUN cd /opt && \
     tar -xzvf ${TRITON_TAR} && \
     rm ${TRITON_TAR}
     
-RUN pip3 install --upgrade --no-cache-dir --verbose /opt/${TRITON_CLIENTS}/python/tritonclient-${TRITON_VERSION}-py3-none-manylinux2014_aarch64.whl[all]
+RUN pip3 install --upgrade /opt/${TRITON_CLIENTS}/python/tritonclient-${TRITON_VERSION}-py3-none-manylinux2014_aarch64.whl[all]
     
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -36,8 +36,8 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
-RUN pip3 install --upgrade --no-cache-dir --verbose wheel setuptools && \
-    pip3 install --upgrade --no-cache-dir --verbose grpcio-tools "numpy<2" attrdict pillow
+RUN pip3 install --upgrade wheel setuptools && \
+    pip3 install --upgrade grpcio-tools "numpy<2" attrdict pillow
  
 ENV PATH="$PATH:/opt/tritonserver/bin" 
 ENV LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib/llvm-8/lib:/opt/tritonserver/lib"

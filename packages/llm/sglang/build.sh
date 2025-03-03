@@ -12,7 +12,7 @@ export MAX_JOBS=$(nproc)
 export TORCH_CUDA_ARCH_LIST="8.7"
 export FLASHINFER_ENABLE_AOT=1
 python3 setup.py --verbose bdist_wheel --dist-dir /opt/flashinfer/wheels/ && \
-pip3 install --verbose /opt/flashinfer/wheels/flashinfer_python-*.whl
+pip3 install /opt/flashinfer/wheels/flashinfer_python-*.whl
 
 echo "Building SGLang ${SGLANG_VERSION}"
 cd /opt/
@@ -29,7 +29,7 @@ echo "Building SGL-KERNEL"
 cd /opt/sglang/sgl-kernel/
 export SGL_KERNEL_ENABLE_BF16=1
 python3 setup.py --verbose bdist_wheel --dist-dir /opt/sglang/sgl-kernel/wheels/ && \
-pip3 install --verbose /opt/sglang/sgl-kernel/wheels/sgl_*.whl
+pip3 install /opt/sglang/sgl-kernel/wheels/sgl_*.whl
 
 cd /opt/sglang/
 if test -f "python/sglang/srt/utils.py"; then
@@ -38,9 +38,9 @@ if test -f "python/sglang/srt/utils.py"; then
 fi
 
 # Install SGLang
-# pip3 install --no-cache-dir -e "python[all]"
+# pip3 install -e "python[all]"
 python3 setup.py --verbose bdist_wheel --dist-dir /opt/sglang/wheels/ && \
-pip3 install --verbose /opt/sglang/wheels/sglang*.whl
+pip3 install /opt/sglang/wheels/sglang*.whl
 
 # Install Gemlite python packages
 pip3 install gemlite

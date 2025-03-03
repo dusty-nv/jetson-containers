@@ -10,7 +10,7 @@ fi
 
 echo "Installing ciso8601 ${CISO8601_VERSION}..."
 
-pip3 install --no-cache-dir --verbose ciso8601==${CISO8601_VERSION}
+pip3 install ciso8601==${CISO8601_VERSION}
 
 pip3 show ciso8601
 python3 -c 'import ciso8601; print(ciso8601.__version__);'

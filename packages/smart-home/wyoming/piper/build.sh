@@ -8,7 +8,7 @@ apt-get install -y --no-install-recommends \
 apt-get clean
 rm -rf /var/lib/apt/lists/*
 
-pip3 install --no-cache-dir -U \
+pip3 install -U \
    setuptools \
    wheel
 
@@ -21,14 +21,14 @@ git clone --branch=${WYOMING_PIPER_BRANCH} https://github.com/rhasspy/wyoming-pi
 git -C /tmp/wyoming-piper apply /tmp/wyoming/piper/wyoming-piper_cuda_path.diff
 git -C /tmp/wyoming-piper status
 
-pip3 install --no-cache-dir --verbose -r /tmp/wyoming-piper/requirements.txt
+pip3 install -r /tmp/wyoming-piper/requirements.txt
 
 # fix version
 echo "$WYOMING_PIPER_VERSION" > /tmp/wyoming-piper/wyoming_piper/VERSION
 cat /tmp/wyoming-piper/wyoming_piper/VERSION
 
 pip3 wheel --wheel-dir=/opt/wheels --no-deps --verbose /tmp/wyoming-piper
-pip3 install --no-cache-dir --verbose /opt/wheels/wyoming_piper*.whl
+pip3 install /opt/wheels/wyoming_piper*.whl
 
 rm -rf /tmp/wyoming-piper
 

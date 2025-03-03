@@ -13,4 +13,4 @@ ARG CUDA_PYTHON_VERSION
 
 COPY build.sh /tmp/build_cuda_python.sh
 
-RUN pip3 install --no-cache-dir cuda-python==${CUDA_PYTHON_VERSION} || /tmp/build_cuda_python.sh
+RUN pip3 install cuda-python==${CUDA_PYTHON_VERSION} || /tmp/build_cuda_python.sh

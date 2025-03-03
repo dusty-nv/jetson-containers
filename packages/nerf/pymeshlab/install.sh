@@ -15,6 +15,6 @@ fi
 WHL_URL="https://github.com/cnr-isti-vclab/PyMeshLab/releases/download/v${PYMESHLAB_VERSION}/pymeshlab-${PYMESHLAB_VERSION}-cp310-cp310-manylinux_2_35_aarch64.whl"
 
 # Install the .whl file directly from the constructed URL
-pip3 install --no-cache-dir --verbose "${WHL_URL}"
+pip3 install "${WHL_URL}"
 
 python3 -c "import pymeshlab; ms = pymeshlab.MeshSet()"

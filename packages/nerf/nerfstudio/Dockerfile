@@ -47,7 +47,7 @@ RUN export MAKEFLAGS="-j$(nproc)"
 # Add glog path to LD_LIBRARY_PATH.
 ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib"
 
-RUN python3 -m pip install --no-cache-dir --upgrade pip setuptools pathtools promise pybind11 omegaconf
+RUN python3 -m pip install --upgrade pip setuptools pathtools promise pybind11 omegaconf
 
 EXPOSE 7007
 

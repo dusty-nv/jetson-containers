@@ -54,13 +54,13 @@ fi
 ls dist/*.whl || echo "⚠️ No wheel files found!"
 
 # Install the built Taichi package
-pip3 install --no-cache-dir --verbose /opt/taichi/dist/*.whl
+pip3 install /opt/taichi/dist/*.whl
 
 # CPU BACKEND MUST BE FIXED
 # python3 -c "import taichi as ti; ti.init(arch=ti.cpu); print('✅ Taichi installed successfully!')"
 
 # Ensure numpy is installed
-pip3 install --no-cache-dir numpy
+pip3 install numpy
 
 # Check if CUDA is available
 if ! python3 -c "import taichi as ti; ti.init(arch=ti.cuda)"; then

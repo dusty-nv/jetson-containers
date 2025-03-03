@@ -53,7 +53,7 @@ python3 use_existing_torch.py || echo "skipping vllm/use_existing_torch.py"
 pip3 install -r requirements-build.txt -v
 python3 -m setuptools_scm
 pip3 wheel --no-build-isolation -v --wheel-dir=/opt/vllm/wheels .
-pip3 install --no-cache-dir --verbose /opt/vllm/wheels/vllm*.whl
+pip3 install /opt/vllm/wheels/vllm*.whl
 
 cd /opt/vllm
 pip3 install compressed-tensors

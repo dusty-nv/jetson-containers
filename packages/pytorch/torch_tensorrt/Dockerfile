@@ -17,10 +17,10 @@ COPY WORKSPACE.jp46 /tmp
 
 #
 # https://github.com/pytorch/TensorRT/commit/9b0b8f1ccac81050c08091f74870092cbac91ac0
-#   pip3 install --no-cache-dir --verbose pyyaml
+#   pip3 install pyyaml
 #   python3 -m pip wheel --verbose --pre . --config-setting="--jetpack-version=5.0" --config-settings="--use-cxx11-abi=1" -w dist && \
 #
-RUN pip3 install --verbose --no-cache-dir pyyaml && \
+RUN pip3 install pyyaml && \
     git clone --branch=${TORCH_TRT_VERSION} --depth=1 https://github.com/pytorch/TensorRT torch_tensorrt && \
     cd torch_tensorrt && \
     mkdir -p toolchains/jp_workspaces || echo "path already existed" && \
@@ -37,7 +37,7 @@ RUN pip3 install --verbose --no-cache-dir pyyaml && \
     cd ../../ && \
     rm -rf torch_tensorrt
 
-RUN pip3 install --no-cache-dir --verbose /opt/torch_tensorrt*.whl && \
+RUN pip3 install /opt/torch_tensorrt*.whl && \
     twine upload --verbose /opt/torch_tensorrt*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
 # ./torchtrtc: error while loading shared libraries: libtorch.so: cannot open shared object file

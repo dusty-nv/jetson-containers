@@ -27,7 +27,7 @@ python3 setup.py bdist_wheel --verbose --dist-dir /opt
 cd ../
 rm -rf /opt/torchaudio
 
-pip3 install --no-cache-dir --verbose /opt/torchaudio*.whl
+pip3 install /opt/torchaudio*.whl
 pip3 show torchaudio && python3 -c 'import torchaudio; print(torchaudio.__version__);'
 
 twine upload --verbose /opt/torchaudio*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

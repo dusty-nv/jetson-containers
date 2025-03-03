@@ -33,7 +33,7 @@ cd /
 rm -rf /opt/AutoAWQ /opt/AutoAWQ_kernels
 ls /opt/wheels/autoawq*
 
-pip3 install --no-cache-dir --verbose \
+pip3 install \
 	/opt/wheels/autoawq_kernels*.whl \
 	/opt/wheels/autoawq*.whl
 	   

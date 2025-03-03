@@ -15,15 +15,15 @@ ARG TRANSFORMERS_PACKAGE=transformers \
 
 # if you want optimum[exporters,onnxruntime] see the optimum package
 
-RUN pip3 install --no-cache-dir --verbose accelerate && \
-    pip3 install --no-cache-dir --verbose sentencepiece && \
-    pip3 install --no-cache-dir --verbose optimum && \
+RUN pip3 install accelerate && \
+    pip3 install sentencepiece && \
+    pip3 install optimum && \
     \
     # install from pypi, git, ect (sometimes other version got installed)
     pip3 uninstall -y transformers && \
     \
     echo "Installing tranformers $TRANSFORMERS_VERSION (from $TRANSFORMERS_PACKAGE)" && \
-    pip3 install --no-cache-dir --verbose ${TRANSFORMERS_PACKAGE} && \
+    pip3 install ${TRANSFORMERS_PACKAGE} && \
     \
     # "/usr/local/lib/python3.8/dist-packages/transformers/modeling_utils.py", line 118
     # AttributeError: module 'torch.distributed' has no attribute 'is_initialized'

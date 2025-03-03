@@ -12,8 +12,8 @@ FROM ${BASE_IMAGE}
 ARG NANOOWL_REPO=NVIDIA-AI-IOT/nanoowl \
     NANOOWL_BRANCH=main
 
-RUN pip3 install --verbose --no-cache-dir 'matplotlib<3.9' && \
-    pip3 install --verbose --no-cache-dir git+https://github.com/openai/CLIP.git && \
+RUN pip3 install 'matplotlib<3.9' && \
+    pip3 install git+https://github.com/openai/CLIP.git && \
     mkdir -p /root/.cache && \
     ln -sf /data/models/clip /root/.cache/clip
 

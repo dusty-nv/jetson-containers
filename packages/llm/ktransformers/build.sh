@@ -8,7 +8,7 @@ git clone --recursive --depth=1 https://github.com/kvcache-ai/ktransformers /opt
 cd /opt/ktransformers
 
 pip3 wheel --no-build-isolation -v --wheel-dir=/opt/ktransformers/wheels .
-pip3 install --no-cache-dir --verbose /opt/ktransformers/wheels/ktransformers*.whl
+pip3 install /opt/ktransformers/wheels/ktransformers*.whl
 
 cd /opt/ktransformers
 pip3 install compressed-tensors

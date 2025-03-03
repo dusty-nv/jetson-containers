@@ -12,7 +12,7 @@ python3 setup.py --verbose bdist_wheel --dist-dir /opt/wheels
 cd /
 rm -rf AutoGPTQ
 
-pip3 install --no-cache-dir --verbose /opt/wheels/auto_gptq*.whl
+pip3 install /opt/wheels/auto_gptq*.whl
 pip3 show auto-gptq && python3 -c 'import auto_gptq'
 
 twine upload --verbose /opt/wheels/auto_gptq*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

@@ -10,7 +10,7 @@ cd /opt/openexr
 pip3 install scikit_build_core cmake pybind11
 
 pip3 wheel --no-build-isolation --wheel-dir=/opt/openexr/wheels .
-pip3 install --no-cache-dir --verbose /opt/openexr/wheels/openexr*.whl
+pip3 install /opt/openexr/wheels/openexr*.whl
 
 cd /opt/openexr
 

@@ -15,16 +15,16 @@ WORKDIR /opt/3D-Diffusion-Policy
 ADD https://api.github.com/repos/dusty-nv/3D-Diffusion-Policy/git/refs/heads/master /tmp/dp3_version.json
 RUN git clone --recursive --depth=1 https://github.com/dusty-nv/3D-Diffusion-Policy .
 
-RUN pip3 install --no-cache-dir --verbose -r requirements.txt && \
-    #pip3 install --no-cache-dir --verbose -e third_party/dexart-release && \
-    pip3 install --no-cache-dir --verbose -e third_party/gym-0.21.0 && \
-    pip3 install --no-cache-dir --verbose -e third_party/Metaworld && \
-    pip3 install --no-cache-dir --verbose -e third_party/rrl-dependencies/mj_envs && \
-    pip3 install --no-cache-dir --verbose -e third_party/rrl-dependencies/mjrl && \
-    pip3 install --no-cache-dir --verbose -e visualizer && \
-    FORCE_CUDA=1 pip3 install --no-cache-dir --verbose -e third_party/pytorch3d_simplified && \
-    pip3 install --ignore-installed --no-cache-dir blinker && \
-    pip3 install --no-cache-dir --verbose open3d
+RUN pip3 install -r requirements.txt && \
+    #pip3 install -e third_party/dexart-release && \
+    pip3 install -e third_party/gym-0.21.0 && \
+    pip3 install -e third_party/Metaworld && \
+    pip3 install -e third_party/rrl-dependencies/mj_envs && \
+    pip3 install -e third_party/rrl-dependencies/mjrl && \
+    pip3 install -e visualizer && \
+    FORCE_CUDA=1 pip3 install -e third_party/pytorch3d_simplified && \
+    pip3 install --ignore-installed blinker && \
+    pip3 install open3d
  
 ARG ASSET_URL="${TAR_INDEX_URL}/../../assets/3d_diffusion_policy"
 

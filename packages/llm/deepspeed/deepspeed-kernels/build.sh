@@ -8,6 +8,6 @@ cd /opt/DeepSpeed-Kernels
 
 CUDA_ARCH_LIST=${CUDA_ARCHITECTURES} python3 setup.py --verbose build_ext -j$(nproc) bdist_wheel --dist-dir /opt/wheels
 
-pip3 install --no-cache-dir --verbose /opt/wheels/deepspeed_kernels*.whl
+pip3 install /opt/wheels/deepspeed_kernels*.whl
 
 twine upload --verbose /opt/wheels/deepspeed_kernels*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

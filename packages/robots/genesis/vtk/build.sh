@@ -31,7 +31,7 @@ ninja
 pip3 install wheel
 # Build the wheel
 python3 setup.py bdist_wheel --dist-dir=/opt/wheels --verbose
-pip3 install --no-cache-dir --verbose /opt/wheels/vtk*.whl
+pip3 install /opt/wheels/vtk*.whl
 cd /opt/vtk
 # Optionally, upload the wheel using Twine (if configured)
 twine upload --verbose /opt/wheels/vtk*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

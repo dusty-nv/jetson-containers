@@ -19,4 +19,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install --no-cache-dir --verbose habitat-sim==${HABITAT_SIM_VERSION}
+pip3 install habitat-sim==${HABITAT_SIM_VERSION}

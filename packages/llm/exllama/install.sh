@@ -8,6 +8,6 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install --no-cache-dir --verbose exllamav2==${EXLLAMA_VERSION}
+pip3 install exllamav2==${EXLLAMA_VERSION}
 
 python3 -c 'import exllamav2; print(exllamav2.__version__);'

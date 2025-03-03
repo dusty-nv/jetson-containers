@@ -17,6 +17,6 @@ RUN if [ -z "$(which protoc)" ]; then \
 		  libprotobuf-dev; \
 	   rm -rf /var/lib/apt/lists/*; \
 	   apt-get clean; \
-	   pip3 install --upgrade --no-cache-dir --verbose protobuf; \
+	   pip3 install --upgrade  protobuf; \
     fi
 

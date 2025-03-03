@@ -30,7 +30,7 @@ RUN git clone --branch ${PIPER_PHONEMIZE_VERSION} --depth 1 https://github.com/r
     cmake --build build --config Release --parallel && \
     cmake --install build && \
     CPPFLAGS="-I${ONNXRUNTIME_DIR}/include/onnxruntime/" \
-    pip3 install --no-cache-dir --verbose . && \
+    pip3 install . && \
     ln -s ${ESPEAK_NG_DATA_DIR} /usr/share/espeak-ng-data
 
 # Now we can build piper. In order to avoid it from downloading
@@ -41,6 +41,6 @@ RUN git clone --branch ${PIPER_VERSION} --depth 1 https://github.com/rhasspy/pip
     cmake --build build --config Release --parallel && \
     cmake --install build && \
     cd src/python_run && \
-    pip3 install --ignore-installed --no-cache-dir blinker && \
+    pip3 install --ignore-installed blinker && \
     pip3 install -r requirements_http.txt && \
-    pip3 install --no-cache-dir --verbose --no-deps .[gpu,http]
+    pip3 install --no-deps .[gpu,http]

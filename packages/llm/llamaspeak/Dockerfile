@@ -11,7 +11,7 @@ FROM ${BASE_IMAGE}
 WORKDIR /opt/llamaspeak
 
 COPY requirements.txt .
-RUN pip3 install --no-cache-dir --verbose -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 COPY *.py ./
 COPY static/ static

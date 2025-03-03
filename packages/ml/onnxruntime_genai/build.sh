@@ -42,7 +42,7 @@ ls -ll wheel
 cp wheel/onnxruntime_genai*.whl /opt
 cd /
 
-pip3 install --no-cache-dir --verbose /opt/onnxruntime_genai*.whl
+pip3 install /opt/onnxruntime_genai*.whl
 python3 -c 'import onnxruntime_genai; print(onnxruntime_genai.__version__);'
 
 twine upload --verbose /opt/onnxruntime_genai*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

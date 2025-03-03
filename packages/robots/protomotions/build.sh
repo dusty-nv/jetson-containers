@@ -17,7 +17,7 @@ pip3 install -e isaac_utils
 pip3 install -e poselib
 
 pip3 wheel --wheel-dir=/opt/protomotions/wheels/ --verbose .
-# pip3 install --no-cache-dir --verbose /opt/protomotions/wheels/protomotions*.whl
+# pip3 install /opt/protomotions/wheels/protomotions*.whl
 
 cd /opt/protomotions
 

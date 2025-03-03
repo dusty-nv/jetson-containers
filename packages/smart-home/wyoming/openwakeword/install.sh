@@ -10,7 +10,7 @@ fi
 
 echo "Installing wyoming-openwakeword ${WYOMING_OPENWAKEWORD_VERSION}..."
 
-pip3 install --no-cache-dir --verbose wyoming_openwakeword==${WYOMING_OPENWAKEWORD_VERSION}
+pip3 install wyoming_openwakeword==${WYOMING_OPENWAKEWORD_VERSION}
 
 pip3 show wyoming_openwakeword
 python3 -c 'import wyoming_openwakeword; print(wyoming_openwakeword.__version__);'

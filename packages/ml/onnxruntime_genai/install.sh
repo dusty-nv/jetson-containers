@@ -6,6 +6,6 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install --no-cache-dir --verbose onnxruntime_genai==${ONNXRUNTIME_GENAI_VERSION}
+pip3 install onnxruntime_genai==${ONNXRUNTIME_GENAI_VERSION}
 
 python3 -c 'import onnxruntime_genai; print(onnxruntime_genai.__version__);'

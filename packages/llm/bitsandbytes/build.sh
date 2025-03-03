@@ -23,7 +23,7 @@ python3 setup.py --verbose build_ext --inplace -j$(nproc) bdist_wheel --dist-dir
 
 ls -l /opt/wheels
 
-pip3 install --no-cache-dir --verbose scipy 
-pip3 install --no-cache-dir --verbose /opt/wheels/bitsandbytes*.whl
+pip3 install scipy 
+pip3 install /opt/wheels/bitsandbytes*.whl
 
 twine upload --verbose /opt/wheels/bitsandbytes*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

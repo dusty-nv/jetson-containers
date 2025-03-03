@@ -18,7 +18,7 @@ pip3 wheel --wheel-dir=/opt/wheels --verbose ./awq/awq/kernels
 ls /opt/wheels
 rm -rf awq
 
-pip3 install --no-cache-dir --verbose /opt/wheels/awq*.whl
+pip3 install /opt/wheels/awq*.whl
 #pip3 show awq && python3 -c 'import awq' && python3 -m awq.entry --help
 
 twine upload --verbose /opt/wheels/awq-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

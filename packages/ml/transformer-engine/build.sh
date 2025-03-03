@@ -16,7 +16,7 @@ MAX_JOBS=$(nproc) \
 NVTE_FRAMEWORK=pytorch \
 NVTE_CUDA_ARCHS=${CUDAARCHS} \
 python3 setup.py bdist_wheel --dist-dir=/opt/transformer_engine/wheels
-pip3 install --no-cache-dir --verbose /opt/transformer_engine/wheels/transformer_engine*.whl
+pip3 install /opt/transformer_engine/wheels/transformer_engine*.whl
 
 cd /opt/transformer_engine
 

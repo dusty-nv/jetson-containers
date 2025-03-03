@@ -31,7 +31,7 @@ ls -ll dist
 cp dist/onnxruntime*.whl /opt
 cd /
 
-pip3 install --no-cache-dir --verbose /opt/onnxruntime*.whl
+pip3 install /opt/onnxruntime*.whl
 python3 -c 'import onnxruntime; print(onnxruntime.__version__);'
 
 twine upload --verbose /opt/onnxruntime*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
@@ -39,5 +39,5 @@ tarpack upload onnxruntime-gpu-${ONNXRUNTIME_VERSION} ${install_dir} || echo "fa
 
 cd ${install_dir}
 cp -r * /usr/local/
-
+ls
 #rm -rf /tmp/onnxruntime

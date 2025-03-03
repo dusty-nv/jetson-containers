@@ -8,7 +8,7 @@ apt-get install -y --no-install-recommends \
 apt-get clean
 rm -rf /var/lib/apt/lists/*
 
-pip3 install --no-cache-dir -U \
+pip3 install -U \
    setuptools \
    wheel
 
@@ -27,7 +27,7 @@ python3 setup.py sdist bdist_wheel --verbose --dist-dir /opt/wheels
 cd /
 rm -rf /tmp/wyoming-faster-whisper
 
-pip3 install --no-cache-dir --verbose /opt/wheels/wyoming_faster_whisper*.whl
+pip3 install /opt/wheels/wyoming_faster_whisper*.whl
 
 pip3 show wyoming_faster_whisper
 python3 -c 'import wyoming_faster_whisper; print(wyoming_faster_whisper.__version__);'

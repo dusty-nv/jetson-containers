@@ -6,7 +6,7 @@ apt-get install -y --no-install-recommends libcurl4-openssl-dev
 rm -rf /var/lib/apt/lists/*
 apt-get clean
 
-pip3 install --no-cache-dir --verbose \
+pip3 install \
         typing-extensions \
         uvicorn \
         anyio \
@@ -21,4 +21,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
    
-pip3 install --no-cache-dir --verbose llama-cpp-python==${LLAMA_CPP_VERSION}
+pip3 install llama-cpp-python==${LLAMA_CPP_VERSION}

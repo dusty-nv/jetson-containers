@@ -14,7 +14,7 @@ python3 ${SOURCE_DIR}/scripts/build_wheel.py \
         --use_ccache \
         --python_bindings
 
-pip3 install --no-cache-dir --verbose /opt/wheels/tensorrt_llm*.whl
+pip3 install /opt/wheels/tensorrt_llm*.whl
 
 #pip3 show tensorrt_llm
 #python3 -c "import tensorrt_llm; print(tensorrt_llm.__version__)"

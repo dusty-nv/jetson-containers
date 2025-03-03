@@ -12,7 +12,7 @@ ADD https://api.github.com/repos/dusty-nv/clip_trt/git/refs/heads/main /tmp/clip
 
 RUN git clone https://github.com/dusty-nv/clip_trt /opt/clip_trt && \
     cd /opt/clip_trt && \
-    pip3 install --no-cache-dir --verbose -r requirements.txt && \
+    pip3 install -r requirements.txt && \
     pip3 install -e . && \
     pip3 show clip_trt && \
     mkdir -p ~/.cache && \

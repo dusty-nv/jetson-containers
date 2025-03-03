@@ -21,7 +21,7 @@ else
     pip3 wheel . -w /opt/pymeshlab/wheels
 fi
 
-pip3 install --no-cache-dir --verbose /opt/pymeshlab/wheels/pymeshlab*.whl
+pip3 install /opt/pymeshlab/wheels/pymeshlab*.whl
 
 twine upload --verbose /opt/pymeshlab/wheels/pymeshlab*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 

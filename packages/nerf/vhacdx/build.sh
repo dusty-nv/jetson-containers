@@ -15,7 +15,7 @@ ls /opt/vhacdx/wheels
 # Return to the root directory
 cd /
 
-pip3 install --no-cache-dir --verbose /opt/vhacdx/wheels/vhacdx*.whl
+pip3 install /opt/vhacdx/wheels/vhacdx*.whl
 
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/vhacdx/wheels/vhacdx*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

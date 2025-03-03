@@ -19,7 +19,7 @@ ls /opt/pyceres/wheels
 # Return to the root directory
 cd /
 
-pip3 install --no-cache-dir --verbose /opt/pyceres/wheels/pyceres*.whl
+pip3 install /opt/pyceres/wheels/pyceres*.whl
 
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/pyceres/wheels/pyceres*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

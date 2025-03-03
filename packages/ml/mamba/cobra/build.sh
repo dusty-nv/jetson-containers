@@ -13,7 +13,7 @@ git diff
 git status
 
 pip3 wheel --no-build-isolation --wheel-dir=/opt/cobra/wheels .
-pip3 install --no-cache-dir --verbose /opt/cobra/wheels/cobra*.whl
+pip3 install /opt/cobra/wheels/cobra*.whl
 
 cd /opt/mamba
 

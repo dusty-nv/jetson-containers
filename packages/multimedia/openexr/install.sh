@@ -6,4 +6,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install --no-cache-dir --verbose OpenEXR==${OPENEXR_VERSION}
+pip3 install OpenEXR==${OPENEXR_VERSION}

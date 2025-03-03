@@ -10,7 +10,7 @@ fi
 
 echo "Installing psutil-home-assistant ${PSUTIL_HA_VERSION}..."
 
-pip3 install --no-cache-dir --verbose psutil_home_assistant==${PSUTIL_HA_VERSION}
+pip3 install psutil_home_assistant==${PSUTIL_HA_VERSION}
 
 pip3 show psutil_home_assistant
 python3 -c 'import psutil_home_assistant;'

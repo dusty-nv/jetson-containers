@@ -24,9 +24,9 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean
 RUN npm install -g node-gyp
-# RUN pip3 install --no-cache-dir --verbose jupyter 'jupyterlab==4.2.0' && \
-# RUN pip3 install --no-cache-dir --verbose jupyter 'jupyterlab<4' && \
-#     pip3 install --no-cache-dir --verbose jupyterlab_widgets
+# RUN pip3 install jupyter 'jupyterlab==4.2.0' && \
+# RUN pip3 install jupyter 'jupyterlab<4' && \
+#     pip3 install jupyterlab_widgets
 RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
 
 # For ipywidget development

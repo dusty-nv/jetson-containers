@@ -19,18 +19,18 @@ RUN apt-get update && \
     \
     # install pyaudio from pip instead of apt (python3-pyaudio)  
     # https://bugs.launchpad.net/ubuntu/+source/python-pyaudio/+bug/1970912
-    pip3 install --upgrade --no-cache-dir --verbose pyaudio
+    pip3 install --upgrade pyaudio
 
 # Riva Python client
 ADD https://api.github.com/repos/nvidia-riva/python-clients/git/refs/heads/main /tmp/riva_python_version.json
 
 RUN git clone --depth=1 --recursive https://github.com/nvidia-riva/python-clients /opt/riva/python-clients && \
     cd /opt/riva/python-clients && \
-    pip3 install --no-cache-dir --verbose -r requirements.txt && \
+    pip3 install -r requirements.txt && \
     python3 setup.py --verbose bdist_wheel && \
     cp dist/nvidia_riva_client*.whl /opt
     
-RUN pip3 install --no-cache-dir --verbose /opt/nvidia_riva_client*.whl && \
+RUN pip3 install /opt/nvidia_riva_client*.whl && \
     pip3 show nvidia-riva-client && python3 -c 'import riva.client; print(riva.client.__version__)'
 
 COPY list_audio_devices.py loopback.py /opt/riva/python-clients/scripts/

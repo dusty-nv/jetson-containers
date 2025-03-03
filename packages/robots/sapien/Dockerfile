@@ -17,9 +17,9 @@ RUN apt-get update && \
 		  spirv-* \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean \
-    && pip3 install --no-cache-dir --verbose mujoco
+    && pip3 install mujoco
  
-RUN pip3 install --no-cache-dir --verbose git+https://github.com/fbxiang/auditwheel.git@088b034ae497b0add794da13f8e0f3b0a3b2d651
+RUN pip3 install git+https://github.com/fbxiang/auditwheel.git@088b034ae497b0add794da13f8e0f3b0a3b2d651
 RUN echo "#!/usr/bin/env python3" > /usr/local/bin/auditwheel && \
     echo "import re, sys" >> /usr/local/bin/auditwheel && \
     echo "from auditwheel.main import main" >> /usr/local/bin/auditwheel && \

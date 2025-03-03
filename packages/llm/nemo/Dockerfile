@@ -23,7 +23,7 @@ RUN cd /tmp && \
     rm -rf openfst
     
 # install nemo_toolkit
-RUN pip3 install --no-cache-dir --verbose nemo_toolkit['all']
+RUN pip3 install nemo_toolkit['all']
 
 # libopencc.so.1 needed by: nemo/collections/common/tokenizers/chinese_tokenizers.py
 RUN apt-get update && \
@@ -38,7 +38,7 @@ RUN NEMO_PATH="$(pip3 show nemo_toolkit | grep Location: | cut -d' ' -f2)/nemo" 
 
 # patch: Unexpected key(s) in state_dict: "bert_model.embeddings.position_ids".
 # with:  nemo_toolkit 1.19.1, transformers 4.31.0
-#RUN pip3 install --no-cache-dir --verbose 'transformers<4.31'
+#RUN pip3 install 'transformers<4.31'
 
 # make sure it loads
 RUN pip3 show nemo_toolkit && python3 -c 'import nemo; print(nemo.__version__)'
@@ -60,12 +60,12 @@ RUN cd /opt && \
     head -n15 apex/transformer/utils.py && \
     head -n75 apex/transformer/tensor_parallel/layers.py && \
     head -n40 apex/transformer/tensor_parallel/mappings.py && \
-    pip3 install --verbose --no-cache-dir -r requirements.txt && \
+    pip3 install -r requirements.txt && \
     python3 setup.py --verbose bdist_wheel --cpp_ext --cuda_ext --fast_layer_norm --distributed_adam --deprecated_fused_adam && \
     cp dist/apex*.whl /opt && \
     rm -rf /opt/apex
     
-RUN pip3 install --no-cache-dir /opt/apex*.whl
+RUN pip3 install /opt/apex*.whl
  
 # module 'torch.distributed' has no attribute 'is_initialized'
 RUN PYTHON_ROOT=`pip3 show nemo_toolkit | grep Location: | cut -d' ' -f2` && \

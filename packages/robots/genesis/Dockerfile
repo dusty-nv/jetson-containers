@@ -93,7 +93,7 @@ RUN find / -name "blinker*" -print0 | xargs -0 -r rm -rf
 RUN pip3 install open3d tetgen trimesh pyrender --verbose && \
 cd /opt/genesis && \
 sed -i '/taichi/d; /tetgen/d; /libigl/d' pyproject.toml && \
-pip3 install --no-cache-dir "numpy<2.1" && \
+pip3 install "numpy<2.1" && \
 pip3 install .
 
 # ===============================================================

@@ -17,8 +17,8 @@ RUN set -ex && \
     apt-get clean && \
     if python3 -c "import sys; exit(0 if sys.version_info < (3,9) else 1)"; then \
         echo "Python < 3.9 => installing h5py<3.12" && \
-        H5PY_SETUP_REQUIRES=0 pip3 install --no-cache-dir --verbose "h5py<3.12"; \
+        H5PY_SETUP_REQUIRES=0 pip3 install "h5py<3.12"; \
     else \
         echo "Python >= 3.9 => intalling h5py>=3.12" && \
-        H5PY_SETUP_REQUIRES=0 pip3 install --no-cache-dir --verbose "h5py>=3.12"; \
+        H5PY_SETUP_REQUIRES=0 pip3 install "h5py>=3.12"; \
     fi

@@ -18,7 +18,7 @@ ARG KORORO_MODELS="${KOKORO_ROOT}/api/src/models/v1_0"
 # Clone repository
 RUN git clone https://github.com/remsky/Kokoro-FastAPI ${KOKORO_ROOT} && \
     cd ${KOKORO_ROOT} && \
-    pip3 install --verbose -e .
+    pip3 install -e .
 
 # Create models directory, download model, and restructure directories
 RUN mkdir -p ${KORORO_MODELS} && \

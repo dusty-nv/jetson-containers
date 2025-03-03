@@ -12,6 +12,6 @@ FROM ${BASE_IMAGE}
 COPY *.whl /tmp/
 COPY *.py /opt/
 
-RUN pip3 install --verbose /tmp/*.whl && \
+RUN pip3 install /tmp/*.whl && \
     chmod +x /opt/*.py
 

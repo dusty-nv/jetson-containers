@@ -9,7 +9,7 @@ apt-get install -y --no-install-recommends \
 apt-get clean
 rm -rf /var/lib/apt/lists/*
 
-pip3 install --no-cache-dir --upgrade \
+pip3 install --upgrade \
    setuptools \
    wheel
    
@@ -23,7 +23,7 @@ python3 setup.py sdist bdist_wheel --verbose --dist-dir /opt/wheels
 cd /
 rm -rf /opt/wyoming-openwakeword
 
-pip3 install --no-cache-dir /opt/wheels/wyoming_openwakeword*.whl
+pip3 install /opt/wheels/wyoming_openwakeword*.whl
 
 pip3 show wyoming_openwakeword
 python3 -c 'import wyoming_openwakeword; print(wyoming_openwakeword.__version__);'

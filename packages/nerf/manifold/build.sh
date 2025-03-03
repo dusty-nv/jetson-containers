@@ -20,7 +20,7 @@ ls /opt/manifold/wheels
 # Return to the root directory
 cd /
 
-pip3 install --no-cache-dir --verbose /opt/manifold/wheels/manifold3d*.whl
+pip3 install /opt/manifold/wheels/manifold3d*.whl
 
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/manifold/wheels/manifold3d*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

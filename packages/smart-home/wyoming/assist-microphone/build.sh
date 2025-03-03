@@ -10,7 +10,7 @@ apt-get install -y --no-install-recommends --fix-missing \
 apt-get clean
 rm -rf /var/lib/apt/lists/*
 
-pip3 install --no-cache-dir -U \
+pip3 install -U \
    setuptools \
    wheel \
    webrtc-noise-gain==1.2.3 \
@@ -28,7 +28,7 @@ python3 setup.py sdist bdist_wheel --verbose --dist-dir /opt/wheels
 cd /
 rm -rf /tmp/wyoming_satellite
 
-pip3 install --no-cache-dir /opt/wheels/wyoming_satellite*.whl
+pip3 install /opt/wheels/wyoming_satellite*.whl
 
 pip3 show wyoming_satellite
 python3 -c 'import wyoming_satellite; print(wyoming_satellite.__version__);'

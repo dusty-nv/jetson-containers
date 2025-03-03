@@ -14,7 +14,7 @@ RUN apt-get update && \
 # pin these versions because of an infinite build loop with blis
 # https://github.com/explosion/cython-blis/issues/117#issuecomment-2660947800
 RUN BLIS_ARCH="generic" \
-    pip3 wheel --wheel-dir=/opt/wheels --verbose \
+    pip3 wheel --wheel-dir=/opt/wheels \
         scipy==1.15.1 \
         loguru==0.7.3 \
         num2words==0.5.14 \
@@ -26,12 +26,12 @@ RUN BLIS_ARCH="generic" \
         ${NUMPY_PACKAGE} \
         espeakng-loader
 
-RUN pip3 install --no-cache-dir --verbose /opt/wheels/*.whl
+RUN pip3 install /opt/wheels/*.whl
 
 RUN git clone https://github.com/hexgrad/misaki /opt/misaki && \
     cd /opt/misaki && \
-    pip3 install --no-deps --verbose -e .
+    pip3 install --no-deps -e .
 
 RUN git clone https://github.com/hexgrad/kokoro /opt/kokoro && \
     cd /opt/kokoro && \
-    pip3 install --no-deps --verbose -e .
+    pip3 install --no-deps -e .
