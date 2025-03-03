@@ -21,7 +21,7 @@ import glob
 from packaging.version import Version
 
 
-def get_l4t_version(version_file='/etc/nv_tegra_release'):
+def get_l4t_version(version_file='/etc/nv_tegra_release', l4t_version: str=None):
     """
     Returns the L4T_VERSION in a packaging.version.Version object
     Which can be compared against other version objects:  https://packaging.pypa.io/en/latest/version.html
@@ -33,6 +33,9 @@ def get_l4t_version(version_file='/etc/nv_tegra_release'):
         
     The L4T_VERSION will either be parsed from /etc/nv_tegra_release or the $L4T_VERSION environment variable.
     """
+    if l4t_version:
+        return Version(l4t_version) if not isinstance(l4t_version, Version) else l4t_version
+
     if platform.machine() != 'aarch64':
         raise ValueError(f"L4T_VERSION isn't supported on {platform.machine()} architecture (aarch64 only)")
         
@@ -74,14 +77,16 @@ def get_l4t_version(version_file='/etc/nv_tegra_release'):
     return Version(f'{l4t_release}.{l4t_revision}')
     
  
-def get_jetpack_version(l4t_version=get_l4t_version(), default='5.1'):
+def get_jetpack_version(l4t_version: str=None, default='5.1'):
     """
     Returns the version of JetPack (based on the L4T version)
     https://github.com/rbonghi/jetson_stats/blob/master/jtop/core/jetson_variables.py
 
     JETPACK_VERSION will be determined based on L4T_VERSION or overridden by the $JETPACK_VERSION environment variable.
     """
-    
+    if not l4t_version:
+        l4t_version = get_l4t_version()
+
     if not isinstance(l4t_version, Version):
         l4t_version = Version(l4t_version)
 
@@ -169,7 +174,7 @@ def get_jetpack_version(l4t_version=get_l4t_version(), default='5.1'):
         return Version(default)
         
         
-def get_cuda_version(version_file='/usr/local/cuda/version.json'):
+def get_cuda_version(version_file: str="/usr/local/cuda/version.json", l4t_version: str=None):
     """
     Returns the installed version of the CUDA Toolkit in a packaging.version.Version object
     The CUDA_VERSION will either be parsed from /usr/local/cuda/version.json or the $CUDA_VERSION environment variable.
@@ -184,11 +189,11 @@ def get_cuda_version(version_file='/usr/local/cuda/version.json'):
     if LSB_RELEASE == '24.04' and L4T_VERSION.major <= 36:
         return Version('12.8') # default to CUDA 12.8 for 24.04 containers on JP6
 
-    if not os.path.isfile(version_file):
+    if l4t_version or not os.path.isfile(version_file):
         # In case only the CUDA runtime is installed
         so_file_path = "/usr/local/cuda/targets/aarch64-linux/lib/libcudart.so.*.*.*"
         files = glob.glob(so_file_path)
-        if files:
+        if files and not l4t_version:
             file_path = files[0]  # Assuming there is only one matching file
             version_match = re.search(r'libcudart\.so\.(\d+\.\d+\.\d+)', file_path)
 
@@ -198,7 +203,7 @@ def get_cuda_version(version_file='/usr/local/cuda/version.json'):
             else:
                 print("-- unable to extract CUDA version number")
         else:
-            l4t_version = get_l4t_version()
+            l4t_version = get_l4t_version(l4t_version=l4t_version)
             if l4t_version.major >= 36:
                 # L4T r36.x (JP 6.x) and above does not require having CUDA installed on host
                 # When CUDA is not installed on host, users can specify which version of 
@@ -225,6 +230,32 @@ def get_cuda_version(version_file='/usr/local/cuda/version.json'):
         
     return to_version(versions['cuda_nvcc']['version'])
 
+
+def get_cuda_arch(l4t_version: str=None, format=list):
+    """
+    Return the default list of CUDA/NVCC device architectures for the given L4T_VERSION.
+    """
+    if not l4t_version:
+        l4t_version = get_l4t_version()
+
+    if not isinstance(l4t_version, Version):
+        l4t_version = Version(l4t_version)
+
+    # Nano/TX1 = 5.3, TX2 = 6.2, Xavier = 7.2, Orin = 8.7
+    if l4t_version.major >= 36:    # JetPack 6
+        cuda_architectures = [87]
+    elif l4t_version.major >= 34:  # JetPack 5
+        cuda_architectures = [72, 87]
+    elif l4t_version.major == 32:  # JetPack 4
+        cuda_architectures = [53, 62, 72]
+
+    if format == list:
+        return cuda_architectures
+    elif format == str:
+        return ';'.join([f'{x/10:.1f}' for x in cuda_architectures])
+    else:
+        raise ValueError(f"get_cuda_arch() expected format=list or str (was {format})")
+    
 
 def get_l4t_base(l4t_version=get_l4t_version()):
     """
@@ -292,12 +323,25 @@ def l4t_version_compatible(l4t_version, l4t_version_host=get_l4t_version(), **kw
     return l4t_version == l4t_version_host
     
  
-def get_lsb_release():
+def get_lsb_release(l4t_version: str=None):
     """
     Returns a tuple of (LSB_RELEASE, LSB_CODENAME)
        ("18.04", "bionic")
        ("20.04", "focal")
     """
+    if l4t_version:
+        l4t_version = get_l4t_version(l4t_version=l4t_version)
+        if l4t_version.major > 36: 
+            return '24.04'
+        elif l4t_version.major == 36:
+            return '22.04'
+        elif l4t_version.major >= 34: 
+            return '20.04'
+        elif l4t_version.major == 32:
+            return '18.04'
+        else:
+            return
+        
     def lsb(type):
         return subprocess.run(["lsb_release", f"-{type}s"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True).stdout.strip()
     
@@ -315,14 +359,7 @@ if 'LSB_RELEASE' in os.environ and not 'PYTHON_VERSION' in os.environ:
 L4T_VERSION = get_l4t_version()
 JETPACK_VERSION = get_jetpack_version()
 CUDA_VERSION = get_cuda_version()
-
-# Nano/TX1 = 5.3, TX2 = 6.2, Xavier = 7.2, Orin = 8.7
-if L4T_VERSION.major >= 36:    # JetPack 6
-    CUDA_ARCHITECTURES = [87]
-elif L4T_VERSION.major >= 34:  # JetPack 5
-    CUDA_ARCHITECTURES = [72, 87]
-elif L4T_VERSION.major == 32:  # JetPack 4
-    CUDA_ARCHITECTURES = [53, 62, 72]
+CUDA_ARCHITECTURES = get_cuda_arch()
 
 # x86_64, aarch64
 SYSTEM_ARCH = platform.machine()
@@ -333,6 +370,14 @@ DEFAULT_PYTHON_VERSIONS = {
     '20.04': Version('3.8'),
     '22.04': Version('3.10'),
     '24.04': Version('3.12'),
+}
+
+LSB_RELEASES = {
+    '16.04': 'xenial',
+    '18.04': 'bionic',
+    '20.04': 'focal',
+    '22.04': 'jammy',
+    '24.04': 'noble',
 }
 
 if 'PYTHON_VERSION' in os.environ and len(os.environ['PYTHON_VERSION']) > 0:

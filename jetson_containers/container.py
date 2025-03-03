@@ -11,12 +11,16 @@ import traceback
 import subprocess
 import dockerhub_api 
 
+from packaging.version import Version
+
 from .packages import find_package, find_packages, resolve_dependencies, validate_dict, _PACKAGE_ROOT
-from .l4t_version import L4T_VERSION, l4t_version_from_tag, l4t_version_compatible, get_l4t_base
 from .utils import split_container_name, query_yes_no, needs_sudo, sudo_prefix
 from .logging import log_dir, log_debug, pprint_debug
 
-from packaging.version import Version
+from .l4t_version import (
+  L4T_VERSION, LSB_RELEASES, l4t_version_from_tag, l4t_version_compatible, 
+  get_l4t_base, get_cuda_arch, get_cuda_version, get_jetpack_version, get_lsb_release
+)
 
 
 _NEWLINE_=" \\\n"  # used when building command strings
@@ -366,7 +370,7 @@ def get_local_containers():
     return _LOCAL_CACHE
         
 
-def get_registry_containers(user='dustynv', **kwargs):
+def get_registry_containers(user='dustynv', use_cache=True, **kwargs):
     """
     Fetch a DockerHub user's public container images/tags.
     Returns a list of dicts with keys like 'namespace', 'name', and 'tags'.
@@ -386,7 +390,8 @@ def get_registry_containers(user='dustynv', **kwargs):
             os.path.join(_PACKAGE_ROOT, 'data/containers.json')
     ))
     
-    cache_enabled = (cache_path != "0" and cache_path.lower() != "off")
+    has_cache_path = (cache_path != "0" and cache_path.lower() != "off")
+    cache_enabled = (use_cache and has_cache_path)
 
     if cache_enabled and os.path.isfile(cache_path):
         if time.time() - os.path.getmtime(cache_path) > 600 and os.geteuid() != 0:
@@ -410,7 +415,7 @@ def get_registry_containers(user='dustynv', **kwargs):
     for repo in _REGISTRY_CACHE:
         repo['tags'] = hub.tags(user, repo['name'])
 
-    if not cache_enabled:
+    if not has_cache_path:
         cache_path = 'data/containers.json'
         
     with open(cache_path, 'w') as cache_file:
@@ -538,3 +543,64 @@ def find_container(package, prefer_sources=['local', 'registry', 'build'], disab
 
     # compatible container image could not be found
     return None
+
+def parse_container_versions(tags, use_defaults=True, **kwargs):
+    """
+    Parse well-formed container tags into their L4T_VERSION, CUDA_VERSION, LSB_RELEASE, ect.
+    This returns a dict of the aformentioned versions (typically from l4t_version.py)
+    Missing tags will be filled in with their defaults unless ``use_defaults=False``
+    """
+    #from ..packages.ros.version import ROS_PACKAGES
+    ROS_PACKAGES = ['ros_base', 'ros_core', 'desktop']  # TODO add function to import package
+
+    container = tags.lower()
+
+    if ':' in tags:
+        tags = tags.split(':')[-1]
+
+    tags = tags.split('-')
+    data = {}
+
+    for x in tags:
+        if not x or len(x) == 0:
+            continue
+        if len(x) >= 4 and x.startswith('cu') and x[2:].isnumeric():
+            data['CUDA_VERSION'] = f"{float(x[2:])/10:.1f}"
+        elif len(x) >= 3 and x.lower().startswith('r') and x[1:3].isnumeric():
+            data['L4T_VERSION'] = x[1:]
+        elif len(x) == 5 and x in LSB_RELEASES:
+            data['LSB_RELEASE'] = x
+        elif 'ros' in container and x in ROS_PACKAGES:
+            data['ROS_PACKAGE'] = x
+        elif 'version' not in data:
+            data['version'] = x
+        else:
+            print(f"-- Skipping unknown container tag '{x}' while parsing '{container}'")
+
+    if not use_defaults:
+        return data
+    
+    if not 'L4T_VERSION' in data:
+        print(f"-- Missing L4T_VERSION tag from container '{container}'")
+        return data
+          
+    l4t_version = data['L4T_VERSION']
+
+    data.setdefault('JETPACK_VERSION', get_jetpack_version(l4t_version=l4t_version))
+    data.setdefault('CUDA_VERSION', get_cuda_version(l4t_version=l4t_version))
+    data.setdefault('CUDA_ARCH', get_cuda_arch(l4t_version=l4t_version, format=str))
+    data.setdefault('LSB_RELEASE', get_lsb_release(l4t_version=l4t_version))
+
+    if 'ros' in container and 'ROS_PACKAGE' not in data:
+        for ros_package in ROS_PACKAGES:
+            if ros_package in container or ros_package.replace('_', '-') in container:
+                data['ROS_PACKAGE'] = ros_package
+                break
+
+    for k,v in data.items():
+        if not v:
+            del k
+            continue
+        data[k] = str(v)
+
+    return data
