@@ -6,7 +6,7 @@
 
 Modular container build system that provides the latest [**AI/ML packages**](http://jetson.webredirect.org/) for [NVIDIA Jetson](https://developer.nvidia.com/embedded-computing) :rocket::robot:
 
-> [!INFO]  
+> [!NOTE]  
 > Ubuntu 24.04 containers for JetPack 6 are now available (with CUDA support)  
 >  
 > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`LSB_RELEASE=24.04 jetson-containers build pytorch:2.6`  
