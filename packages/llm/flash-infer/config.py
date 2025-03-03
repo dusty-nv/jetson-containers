@@ -1,7 +1,7 @@
 
 
 
-def flash_infer(version, requires=None, default=False):
+def flash_infer(version, version_spec=None, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
@@ -11,6 +11,7 @@ def flash_infer(version, requires=None, default=False):
     
     pkg['build_args'] = {
         'FLASHINFER_VERSION': version,
+        'FLASHINFER_VERSION_SPEC': version_spec if version_spec else version,
     }
     
     builder = pkg.copy()
@@ -25,6 +26,6 @@ def flash_infer(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    flash_infer('0.2.3', default=True),
+    flash_infer('0.2.3', '0.2.2.post1', default=True),
 ]
 
