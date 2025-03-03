@@ -1,13 +1,16 @@
 #---
 # name: jupyterlab
-# alias: jupyterlab:main
 # group: ml
-# depends: [python, numpy, rust]
+# depends: [cuda, cudnn, tensorrt, cuda-python, pycuda, rust]
 # docs: docs.md
 # notes: will autostart Jupyter server on port 8888 unless container entry CMD is overridden
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
+
+# set a specific version to install like '==4.2.0'
+# (or by default leaving it blank will install the latest)
+ARG JUPYTERLAB_VERSION_SPEC=""
 
 # https://stackoverflow.com/questions/61553491/how-to-make-jupyter-terminal-fully-functional
 ENV SHELL /bin/bash
@@ -17,7 +20,7 @@ SHELL ["/bin/bash", "-c"]
 RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /root/.bashrc
 
 # jupyterlab<4 -- ModuleNotFoundError: No module named 'notebook.auth'
-RUN pip3 install jupyter 'jupyterlab==4.2.0' && \
+RUN pip3 install jupyter "jupyterlab${JUPYTERLAB_VERSION_SPEC}" && \
     pip3 install jupyterlab_widgets
 
 RUN pip3 list
