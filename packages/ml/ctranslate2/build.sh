@@ -26,7 +26,7 @@ pip3 install --no-cache-dir --verbose -r install_requirements.txt
 python3 setup.py --verbose bdist_wheel --dist-dir /opt
 
 # install/upload wheels
-pip3 install --no-cache-dir --verbose /opt/ctranslate2*.whl
+pip3 install --force-reinstall --no-cache-dir --verbose /opt/ctranslate2*.whl
 
 twine upload --verbose /opt/ctranslate2*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 tarpack upload ctranslate2-${CTRANSLATE_VERSION} ${install_dir} || echo "failed to upload tarball"
