@@ -2,7 +2,7 @@
 # name: vllm
 # group: llm
 # config: config.py
-# depends: [pytorch, torchvision, torchaudio, transformers, triton:3.1.0, bitsandbytes, xformers, flash-attention]
+# depends: [transformers, bitsandbytes, triton:3.1.0, xformers, flash-attention, torchaudio]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/vllm-project/vllm
