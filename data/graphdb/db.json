@@ -1,0 +1,1372 @@
+{
+  "jetson-containers": {
+    "name": "Container",
+    "tags": [
+      "container"
+    ]
+  },
+  "ros": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "ros:jazzy-ros-base-r36.4.0-cu128-24.04": {
+    "tags": [
+      "ros"
+    ],
+    "docker_image": "dustynv/ros:jazzy-ros-base-r36.4.0-cu128-24.04",
+    "last_modified": "2025-03-03T01:21:31.683796Z",
+    "size": 5527584233,
+    "CPU_ARCH": "aarch64",
+    "version": "jazzy",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "LSB_RELEASE": "24.04",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7",
+    "ROS_PACKAGE": "ros_base"
+  },
+  "ros:jazzy-desktop-r36.4.0-cu128-24.04": {
+    "tags": [
+      "ros"
+    ],
+    "docker_image": "dustynv/ros:jazzy-desktop-r36.4.0-cu128-24.04",
+    "last_modified": "2025-03-03T01:18:38.168252Z",
+    "size": 6288238037,
+    "CPU_ARCH": "aarch64",
+    "version": "jazzy",
+    "ROS_PACKAGE": "desktop",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "LSB_RELEASE": "24.04",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7"
+  },
+  "ros:humble-desktop-l4t-r36.4.0": {
+    "tags": [
+      "ros"
+    ],
+    "docker_image": "dustynv/ros:humble-desktop-l4t-r36.4.0",
+    "last_modified": "2024-10-04T11:57:06.309889Z",
+    "size": 6857914186,
+    "CPU_ARCH": "aarch64",
+    "version": "humble",
+    "ROS_PACKAGE": "desktop",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "l4t-pytorch": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "l4t-pytorch:r36.4.0": {
+    "tags": [
+      "l4t-pytorch"
+    ],
+    "docker_image": "dustynv/l4t-pytorch:r36.4.0",
+    "last_modified": "2024-09-30T11:47:02.072518Z",
+    "size": 6732208331,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "bitsandbytes": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "bitsandbytes:0.45.4-r36.4.0-cu128-24.04": {
+    "tags": [
+      "bitsandbytes"
+    ],
+    "docker_image": "dustynv/bitsandbytes:0.45.4-r36.4.0-cu128-24.04",
+    "last_modified": "2025-03-03T14:05:18.780013Z",
+    "size": 4749005879,
+    "CPU_ARCH": "aarch64",
+    "version": "0.45.4",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "LSB_RELEASE": "24.04",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7"
+  },
+  "torchvision": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "torchvision:0.21.0-r36.4.0-cu128-24.04": {
+    "tags": [
+      "torchvision"
+    ],
+    "docker_image": "dustynv/torchvision:0.21.0-r36.4.0-cu128-24.04",
+    "last_modified": "2025-02-26T04:44:10.453632Z",
+    "size": 3768362925,
+    "CPU_ARCH": "aarch64",
+    "version": "0.21.0",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "LSB_RELEASE": "24.04",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7"
+  },
+  "torchvision:0.21.0-r36.4.0-cu128": {
+    "tags": [
+      "torchvision"
+    ],
+    "docker_image": "dustynv/torchvision:0.21.0-r36.4.0-cu128",
+    "last_modified": "2025-02-07T02:11:11.412997Z",
+    "size": 3646059370,
+    "CPU_ARCH": "aarch64",
+    "version": "0.21.0",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "torch2trt": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "torch2trt:r36.4.0-cu128-24.04": {
+    "tags": [
+      "torch2trt"
+    ],
+    "docker_image": "dustynv/torch2trt:r36.4.0-cu128-24.04",
+    "last_modified": "2025-03-03T01:13:52.315204Z",
+    "size": 5537476490,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "LSB_RELEASE": "24.04",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7"
+  },
+  "torch2trt:r36.4.0": {
+    "tags": [
+      "torch2trt"
+    ],
+    "docker_image": "dustynv/torch2trt:r36.4.0",
+    "last_modified": "2024-10-04T10:29:13.240001Z",
+    "size": 6137387686,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "torchaudio": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "torchaudio:2.6.0-r36.4.0-cu128-24.04": {
+    "tags": [
+      "torchaudio"
+    ],
+    "docker_image": "dustynv/torchaudio:2.6.0-r36.4.0-cu128-24.04",
+    "last_modified": "2025-02-26T04:44:46.159706Z",
+    "size": 3766423458,
+    "CPU_ARCH": "aarch64",
+    "version": "2.6.0",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "LSB_RELEASE": "24.04",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7"
+  },
+  "torchaudio:2.6.0-r36.4.0-cu128": {
+    "tags": [
+      "torchaudio"
+    ],
+    "docker_image": "dustynv/torchaudio:2.6.0-r36.4.0-cu128",
+    "last_modified": "2025-02-07T02:15:10.38318Z",
+    "size": 3641438546,
+    "CPU_ARCH": "aarch64",
+    "version": "2.6.0",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "opencv": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "opencv:4.11.0-r36.4.0-cu128-24.04": {
+    "tags": [
+      "opencv"
+    ],
+    "docker_image": "dustynv/opencv:4.11.0-r36.4.0-cu128-24.04",
+    "last_modified": "2025-03-02T04:29:48.082352Z",
+    "size": 3512057312,
+    "CPU_ARCH": "aarch64",
+    "version": "4.11.0",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "LSB_RELEASE": "24.04",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7"
+  },
+  "jupyterlab": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "jupyterlab:r36.4.0-cu128-24.04": {
+    "tags": [
+      "jupyterlab"
+    ],
+    "docker_image": "dustynv/jupyterlab:r36.4.0-cu128-24.04",
+    "last_modified": "2025-03-03T10:22:28.983769Z",
+    "size": 5527144413,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "LSB_RELEASE": "24.04",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7"
+  },
+  "cupy": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "cupy:r36.4.0-cu128-24.04": {
+    "tags": [
+      "cupy"
+    ],
+    "docker_image": "dustynv/cupy:r36.4.0-cu128-24.04",
+    "last_modified": "2025-03-03T03:16:11.676879Z",
+    "size": 2493720116,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "LSB_RELEASE": "24.04",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7"
+  },
+  "pycuda": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "pycuda:r36.4.0-cu128-24.04": {
+    "tags": [
+      "pycuda"
+    ],
+    "docker_image": "dustynv/pycuda:r36.4.0-cu128-24.04",
+    "last_modified": "2025-03-03T03:15:22.649458Z",
+    "size": 2456622175,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "LSB_RELEASE": "24.04",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7"
+  },
+  "pytorch": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "pytorch:2.6-r36.4.0-cu128-24.04": {
+    "tags": [
+      "pytorch"
+    ],
+    "docker_image": "dustynv/pytorch:2.6-r36.4.0-cu128-24.04",
+    "last_modified": "2025-02-26T03:45:29.672867Z",
+    "size": 3759873614,
+    "CPU_ARCH": "aarch64",
+    "version": "2.6",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "LSB_RELEASE": "24.04",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7"
+  },
+  "pytorch:2.6-r36.4.0-cu128": {
+    "tags": [
+      "pytorch"
+    ],
+    "docker_image": "dustynv/pytorch:2.6-r36.4.0-cu128",
+    "last_modified": "2025-02-07T02:04:46.988074Z",
+    "size": 3638193739,
+    "CPU_ARCH": "aarch64",
+    "version": "2.6",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "onnxruntime": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "onnxruntime:1.22-r36.4.0-cu128-24.04": {
+    "tags": [
+      "onnxruntime"
+    ],
+    "docker_image": "dustynv/onnxruntime:1.22-r36.4.0-cu128-24.04",
+    "last_modified": "2025-03-03T03:26:06.901292Z",
+    "size": 5585661470,
+    "CPU_ARCH": "aarch64",
+    "version": "1.22",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "LSB_RELEASE": "24.04",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7"
+  },
+  "onnxruntime:1.20.2-r36.4.0": {
+    "tags": [
+      "onnxruntime"
+    ],
+    "docker_image": "dustynv/onnxruntime:1.20.2-r36.4.0",
+    "last_modified": "2025-02-19T05:32:42.092969Z",
+    "size": 6124818528,
+    "CPU_ARCH": "aarch64",
+    "version": "1.20.2",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "onnxruntime:1.20-r36.4.0": {
+    "tags": [
+      "onnxruntime"
+    ],
+    "docker_image": "dustynv/onnxruntime:1.20-r36.4.0",
+    "last_modified": "2024-10-13T16:57:39.51593Z",
+    "size": 6087002820,
+    "CPU_ARCH": "aarch64",
+    "version": "1.20",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "cuda-python": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "cuda-python:r36.4.0-cu128-24.04": {
+    "tags": [
+      "cuda-python"
+    ],
+    "docker_image": "dustynv/cuda-python:r36.4.0-cu128-24.04",
+    "last_modified": "2025-03-03T03:14:18.445643Z",
+    "size": 2466170562,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "LSB_RELEASE": "24.04",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7"
+  },
+  "awq": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "awq:r36.4.0": {
+    "tags": [
+      "awq"
+    ],
+    "docker_image": "dustynv/awq:r36.4.0",
+    "last_modified": "2025-02-02T12:39:37.31571Z",
+    "size": 5645260722,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "llama_cpp": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "llama_cpp:0.3.7-r36.4.0-cu128-24.04": {
+    "tags": [
+      "llama_cpp"
+    ],
+    "docker_image": "dustynv/llama_cpp:0.3.7-r36.4.0-cu128-24.04",
+    "last_modified": "2025-03-03T06:08:18.646008Z",
+    "size": 3387167049,
+    "CPU_ARCH": "aarch64",
+    "version": "0.3.7",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "LSB_RELEASE": "24.04",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7"
+  },
+  "llama_cpp:r36.4.0": {
+    "tags": [
+      "llama_cpp"
+    ],
+    "docker_image": "dustynv/llama_cpp:r36.4.0",
+    "last_modified": "2025-01-31T20:30:07.570138Z",
+    "size": 4611318852,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "llama_cpp:0.3.7-r36.4.0": {
+    "tags": [
+      "llama_cpp"
+    ],
+    "docker_image": "dustynv/llama_cpp:0.3.7-r36.4.0",
+    "last_modified": "2025-01-29T15:38:51.514199Z",
+    "size": 4612601582,
+    "CPU_ARCH": "aarch64",
+    "version": "0.3.7",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "llama_cpp:0.3.6-r36.4.0": {
+    "tags": [
+      "llama_cpp"
+    ],
+    "docker_image": "dustynv/llama_cpp:0.3.6-r36.4.0",
+    "last_modified": "2025-01-27T09:15:18.527759Z",
+    "size": 4138540338,
+    "CPU_ARCH": "aarch64",
+    "version": "0.3.6",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "llama_cpp:0.3.5-r36.4.0": {
+    "tags": [
+      "llama_cpp"
+    ],
+    "docker_image": "dustynv/llama_cpp:0.3.5-r36.4.0",
+    "last_modified": "2025-01-09T19:02:18.253171Z",
+    "size": 4575783732,
+    "CPU_ARCH": "aarch64",
+    "version": "0.3.5",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "mlc": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "mlc:r36.4.0": {
+    "tags": [
+      "mlc"
+    ],
+    "docker_image": "dustynv/mlc:r36.4.0",
+    "last_modified": "2025-02-13T08:26:19.46543Z",
+    "size": 6628619620,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "mlc:0.19.5-r36.4.0": {
+    "tags": [
+      "mlc"
+    ],
+    "docker_image": "dustynv/mlc:0.19.5-r36.4.0",
+    "last_modified": "2025-02-13T08:25:40.081218Z",
+    "size": 6628619620,
+    "CPU_ARCH": "aarch64",
+    "version": "0.19.5",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "mlc:0.19.4-r36.4.0": {
+    "tags": [
+      "mlc"
+    ],
+    "docker_image": "dustynv/mlc:0.19.4-r36.4.0",
+    "last_modified": "2025-02-13T08:14:56.22518Z",
+    "size": 6628572829,
+    "CPU_ARCH": "aarch64",
+    "version": "0.19.4",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "mlc:0.19.3-r36.4.0": {
+    "tags": [
+      "mlc"
+    ],
+    "docker_image": "dustynv/mlc:0.19.3-r36.4.0",
+    "last_modified": "2025-02-13T08:14:24.135064Z",
+    "size": 6628333987,
+    "CPU_ARCH": "aarch64",
+    "version": "0.19.3",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "mlc:0.19.2-r36.4.0": {
+    "tags": [
+      "mlc"
+    ],
+    "docker_image": "dustynv/mlc:0.19.2-r36.4.0",
+    "last_modified": "2025-01-24T14:16:01.592982Z",
+    "size": 6620651261,
+    "CPU_ARCH": "aarch64",
+    "version": "0.19.2",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "mlc:0.19.1-r36.4.0": {
+    "tags": [
+      "mlc"
+    ],
+    "docker_image": "dustynv/mlc:0.19.1-r36.4.0",
+    "last_modified": "2025-01-20T21:01:40.109018Z",
+    "size": 6620609910,
+    "CPU_ARCH": "aarch64",
+    "version": "0.19.1",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "mlc:0.19.0-r36.4.0": {
+    "tags": [
+      "mlc"
+    ],
+    "docker_image": "dustynv/mlc:0.19.0-r36.4.0",
+    "last_modified": "2025-01-09T18:14:24.15692Z",
+    "size": 6620276825,
+    "CPU_ARCH": "aarch64",
+    "version": "0.19.0",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "mlc:0.1.4-r36.4.2": {
+    "tags": [
+      "mlc"
+    ],
+    "docker_image": "dustynv/mlc:0.1.4-r36.4.2",
+    "last_modified": "2024-12-12T03:41:02.486907Z",
+    "size": 6600523838,
+    "CPU_ARCH": "aarch64",
+    "version": "0.1.4",
+    "L4T_VERSION": "36.4.2",
+    "JETPACK_VERSION": "6.1.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "mlc:0.1.4-r36.4.0": {
+    "tags": [
+      "mlc"
+    ],
+    "docker_image": "dustynv/mlc:0.1.4-r36.4.0",
+    "last_modified": "2024-12-09T15:07:36.39699Z",
+    "size": 6600523838,
+    "CPU_ARCH": "aarch64",
+    "version": "0.1.4",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "mlc:0.1.3-r36.4.0": {
+    "tags": [
+      "mlc"
+    ],
+    "docker_image": "dustynv/mlc:0.1.3-r36.4.0",
+    "last_modified": "2024-10-21T01:57:42.502091Z",
+    "size": 6596165916,
+    "CPU_ARCH": "aarch64",
+    "version": "0.1.3",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "nanodb": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "nanodb:r36.4.0": {
+    "tags": [
+      "nanodb"
+    ],
+    "docker_image": "dustynv/nanodb:r36.4.0",
+    "last_modified": "2025-01-14T15:28:24.793944Z",
+    "size": 7678541778,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "nanoowl": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "nanoowl:r36.4.0": {
+    "tags": [
+      "nanoowl"
+    ],
+    "docker_image": "dustynv/nanoowl:r36.4.0",
+    "last_modified": "2025-02-07T23:33:08.635028Z",
+    "size": 10177535159,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "ollama": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "ollama:r36.4.0": {
+    "tags": [
+      "ollama"
+    ],
+    "docker_image": "dustynv/ollama:r36.4.0",
+    "last_modified": "2025-02-07T10:07:49.587959Z",
+    "size": 5340360609,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "ollama:main-r36.4.0": {
+    "tags": [
+      "ollama"
+    ],
+    "docker_image": "dustynv/ollama:main-r36.4.0",
+    "last_modified": "2025-01-31T04:24:48.603809Z",
+    "size": 2037015626,
+    "CPU_ARCH": "aarch64",
+    "version": "main",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "ollama:0.5.7-r36.4.0": {
+    "tags": [
+      "ollama"
+    ],
+    "docker_image": "dustynv/ollama:0.5.7-r36.4.0",
+    "last_modified": "2025-01-30T19:48:27.82473Z",
+    "size": 3330401037,
+    "CPU_ARCH": "aarch64",
+    "version": "0.5.7",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "ollama:0.5.1-r36.4.0": {
+    "tags": [
+      "ollama"
+    ],
+    "docker_image": "dustynv/ollama:0.5.1-r36.4.0",
+    "last_modified": "2024-12-12T09:47:35.554507Z",
+    "size": 3501070209,
+    "CPU_ARCH": "aarch64",
+    "version": "0.5.1",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "ollama:0.4.0-r36.4.0": {
+    "tags": [
+      "ollama"
+    ],
+    "docker_image": "dustynv/ollama:0.4.0-r36.4.0",
+    "last_modified": "2024-11-09T09:25:53.601738Z",
+    "size": 3497896913,
+    "CPU_ARCH": "aarch64",
+    "version": "0.4.0",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "piper-tts": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "piper-tts:r36.4.0-cu128-24.04": {
+    "tags": [
+      "piper-tts"
+    ],
+    "docker_image": "dustynv/piper-tts:r36.4.0-cu128-24.04",
+    "last_modified": "2025-03-03T03:31:15.462835Z",
+    "size": 6052279379,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "LSB_RELEASE": "24.04",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7"
+  },
+  "piper-tts:r36.4.0": {
+    "tags": [
+      "piper-tts"
+    ],
+    "docker_image": "dustynv/piper-tts:r36.4.0",
+    "last_modified": "2025-02-19T05:39:39.759528Z",
+    "size": 6712167622,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "homeassistant-core": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "homeassistant-core:2024.12.4-r36.4.0": {
+    "tags": [
+      "homeassistant-core"
+    ],
+    "docker_image": "dustynv/homeassistant-core:2024.12.4-r36.4.0",
+    "last_modified": "2024-12-20T03:23:20.394718Z",
+    "size": 1609278166,
+    "CPU_ARCH": "aarch64",
+    "version": "2024.12.4",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "nano_llm": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "nano_llm:r36.4.0": {
+    "tags": [
+      "nano_llm"
+    ],
+    "docker_image": "dustynv/nano_llm:r36.4.0",
+    "last_modified": "2024-10-15T04:03:34.127172Z",
+    "size": 13636982201,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "wyoming-whisper": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "wyoming-whisper:2.3.0-r36.4.0": {
+    "tags": [
+      "wyoming-whisper"
+    ],
+    "docker_image": "dustynv/wyoming-whisper:2.3.0-r36.4.0",
+    "last_modified": "2024-12-20T10:56:30.650467Z",
+    "size": 9507186562,
+    "CPU_ARCH": "aarch64",
+    "version": "2.3.0",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "llama-factory": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "llama-factory:r36.4.0": {
+    "tags": [
+      "llama-factory"
+    ],
+    "docker_image": "dustynv/llama-factory:r36.4.0",
+    "last_modified": "2024-10-07T07:30:22.403048Z",
+    "size": 6459190197,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "jetson-copilot": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "jetson-copilot:r36.4.0": {
+    "tags": [
+      "jetson-copilot"
+    ],
+    "docker_image": "dustynv/jetson-copilot:r36.4.0",
+    "last_modified": "2024-10-13T08:19:03.056204Z",
+    "size": 5098557064,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "openvla": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "openvla:r36.4.3-cu128-cp312-24.04": {
+    "tags": [
+      "openvla"
+    ],
+    "docker_image": "dustynv/openvla:r36.4.3-cu128-cp312-24.04",
+    "last_modified": "2025-02-27T12:46:26.824421Z",
+    "size": 7186750059,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.3",
+    "CUDA_VERSION": "12.8",
+    "version": "cp312",
+    "LSB_RELEASE": "24.04",
+    "JETPACK_VERSION": "6.2",
+    "CUDA_ARCH": "8.7"
+  },
+  "comfyui": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "comfyui:r36.4.0": {
+    "tags": [
+      "comfyui"
+    ],
+    "docker_image": "dustynv/comfyui:r36.4.0",
+    "last_modified": "2024-12-30T05:29:53.52613Z",
+    "size": 9068666040,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "nerfstudio": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "nerfstudio:r36.4.0-cu128": {
+    "tags": [
+      "nerfstudio"
+    ],
+    "docker_image": "dustynv/nerfstudio:r36.4.0-cu128",
+    "last_modified": "2025-02-11T18:53:58.003497Z",
+    "size": 7674224046,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "lerobot": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "lerobot:r36.4.0-cu128": {
+    "tags": [
+      "lerobot"
+    ],
+    "docker_image": "dustynv/lerobot:r36.4.0-cu128",
+    "last_modified": "2025-02-09T06:29:17.338877Z",
+    "size": 9148164974,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "lerobot:r36.4.0": {
+    "tags": [
+      "lerobot"
+    ],
+    "docker_image": "dustynv/lerobot:r36.4.0",
+    "last_modified": "2024-12-13T17:44:41.61117Z",
+    "size": 6586676316,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "jax": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "jax:0.5.2-r36.4.0-cu128-24.04": {
+    "tags": [
+      "jax"
+    ],
+    "docker_image": "dustynv/jax:0.5.2-r36.4.0-cu128-24.04",
+    "last_modified": "2025-03-03T02:26:02.864652Z",
+    "size": 3849707013,
+    "CPU_ARCH": "aarch64",
+    "version": "0.5.2",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "LSB_RELEASE": "24.04",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7"
+  },
+  "jax:r36.4.0": {
+    "tags": [
+      "jax"
+    ],
+    "docker_image": "dustynv/jax:r36.4.0",
+    "last_modified": "2024-10-15T07:54:13.133062Z",
+    "size": 4473879622,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "lita": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "lita:r36.4.0": {
+    "tags": [
+      "lita"
+    ],
+    "docker_image": "dustynv/lita:r36.4.0",
+    "last_modified": "2024-10-04T13:00:50.137538Z",
+    "size": 5305833793,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "vllm": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "vllm:0.7.4-r36.4.0-cu128-24.04": {
+    "tags": [
+      "vllm"
+    ],
+    "docker_image": "dustynv/vllm:0.7.4-r36.4.0-cu128-24.04",
+    "last_modified": "2025-02-28T11:18:53.244619Z",
+    "size": 5684474070,
+    "CPU_ARCH": "aarch64",
+    "version": "0.7.4",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "LSB_RELEASE": "24.04",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7"
+  },
+  "vllm:r36.4.0-cu128": {
+    "tags": [
+      "vllm"
+    ],
+    "docker_image": "dustynv/vllm:r36.4.0-cu128",
+    "last_modified": "2025-02-10T11:43:58.628888Z",
+    "size": 4881361843,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "vllm:0.6.6.post1-r36.4.0": {
+    "tags": [
+      "vllm"
+    ],
+    "docker_image": "dustynv/vllm:0.6.6.post1-r36.4.0",
+    "last_modified": "2025-01-17T10:10:21.714107Z",
+    "size": 6505202654,
+    "CPU_ARCH": "aarch64",
+    "version": "0.6.6.post1",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "vllm:0.6.6.post1-builder-r36.4.0": {
+    "tags": [
+      "vllm"
+    ],
+    "docker_image": "dustynv/vllm:0.6.6.post1-builder-r36.4.0",
+    "last_modified": "2025-01-15T20:13:53.005461Z",
+    "size": 6500276302,
+    "CPU_ARCH": "aarch64",
+    "version": "0.6.6.post1",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "vllm:0.6.3-r36.4.0": {
+    "tags": [
+      "vllm"
+    ],
+    "docker_image": "dustynv/vllm:0.6.3-r36.4.0",
+    "last_modified": "2024-10-21T06:27:49.005362Z",
+    "size": 5381298378,
+    "CPU_ARCH": "aarch64",
+    "version": "0.6.3",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "vllm:r36.4.0": {
+    "tags": [
+      "vllm"
+    ],
+    "docker_image": "dustynv/vllm:r36.4.0",
+    "last_modified": "2024-10-15T13:20:45.369877Z",
+    "size": 6163190609,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "tensorrt_llm": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "tensorrt_llm:0.12-r36.4.0": {
+    "tags": [
+      "tensorrt_llm"
+    ],
+    "docker_image": "dustynv/tensorrt_llm:0.12-r36.4.0",
+    "last_modified": "2024-11-13T18:41:13.825073Z",
+    "size": 8848455919,
+    "CPU_ARCH": "aarch64",
+    "version": "0.12",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "sana": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "sana:r36.4.0": {
+    "tags": [
+      "sana"
+    ],
+    "docker_image": "dustynv/sana:r36.4.0",
+    "last_modified": "2024-12-29T23:46:26.749995Z",
+    "size": 5712001310,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "cosmos": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "cosmos:r36.4.0-cu128": {
+    "tags": [
+      "cosmos"
+    ],
+    "docker_image": "dustynv/cosmos:r36.4.0-cu128",
+    "last_modified": "2025-02-11T19:00:21.268558Z",
+    "size": 5712484315,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "cosmos:r36.4.0": {
+    "tags": [
+      "cosmos"
+    ],
+    "docker_image": "dustynv/cosmos:r36.4.0",
+    "last_modified": "2025-01-13T16:35:11.041396Z",
+    "size": 13163465120,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "sglang": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "sglang:r36.4.0": {
+    "tags": [
+      "sglang"
+    ],
+    "docker_image": "dustynv/sglang:r36.4.0",
+    "last_modified": "2025-02-07T15:16:40.993424Z",
+    "size": 7803653057,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "kokoro-tts": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "kokoro-tts:fastapi-r36.4.0-cu128-24.04": {
+    "tags": [
+      "kokoro-tts"
+    ],
+    "docker_image": "dustynv/kokoro-tts:fastapi-r36.4.0-cu128-24.04",
+    "last_modified": "2025-03-03T09:31:26.411923Z",
+    "size": 5147417349,
+    "CPU_ARCH": "aarch64",
+    "version": "fastapi",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "LSB_RELEASE": "24.04",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7"
+  },
+  "kokoro-tts:fastapi-r36.4.0": {
+    "tags": [
+      "kokoro-tts"
+    ],
+    "docker_image": "dustynv/kokoro-tts:fastapi-r36.4.0",
+    "last_modified": "2025-02-19T11:38:13.817976Z",
+    "size": 5763137015,
+    "CPU_ARCH": "aarch64",
+    "version": "fastapi",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "kokoro-tts:hf-r36.4.0": {
+    "tags": [
+      "kokoro-tts"
+    ],
+    "docker_image": "dustynv/kokoro-tts:hf-r36.4.0",
+    "last_modified": "2025-02-19T09:00:28.347081Z",
+    "size": 5058328533,
+    "CPU_ARCH": "aarch64",
+    "version": "hf",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "kokoro-tts:r36.4.0": {
+    "tags": [
+      "kokoro-tts"
+    ],
+    "docker_image": "dustynv/kokoro-tts:r36.4.0",
+    "last_modified": "2025-02-10T01:44:57.02148Z",
+    "size": 9892574915,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "genesis": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "genesis:r36.4.0-cu128": {
+    "tags": [
+      "genesis"
+    ],
+    "docker_image": "dustynv/genesis:r36.4.0-cu128",
+    "last_modified": "2025-02-18T09:50:37.648229Z",
+    "size": 10359499255,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
+  "torchao": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "torchao:0.11.0-r36.4.0-cu128-24.04": {
+    "tags": [
+      "torchao"
+    ],
+    "docker_image": "dustynv/torchao:0.11.0-r36.4.0-cu128-24.04",
+    "last_modified": "2025-02-26T04:45:26.70456Z",
+    "size": 3765954680,
+    "CPU_ARCH": "aarch64",
+    "version": "0.11.0",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "LSB_RELEASE": "24.04",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7"
+  },
+  "speaches": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "speaches:r36.4.0-cu128-24.04": {
+    "tags": [
+      "speaches"
+    ],
+    "docker_image": "dustynv/speaches:r36.4.0-cu128-24.04",
+    "last_modified": "2025-03-03T03:00:13.058937Z",
+    "size": 7063447327,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "LSB_RELEASE": "24.04",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7"
+  },
+  "faster-whisper": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "faster-whisper:r36.4.0-cu128-24.04": {
+    "tags": [
+      "faster-whisper"
+    ],
+    "docker_image": "dustynv/faster-whisper:r36.4.0-cu128-24.04",
+    "last_modified": "2025-03-03T03:26:34.36694Z",
+    "size": 5734783575,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "LSB_RELEASE": "24.04",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7"
+  },
+  "flashinfer": {
+    "tags": [
+      "jetson-containers"
+    ]
+  },
+  "flashinfer:0.2.3-r36.4.0-cu128-24.04": {
+    "tags": [
+      "flashinfer"
+    ],
+    "docker_image": "dustynv/flashinfer:0.2.3-r36.4.0-cu128-24.04",
+    "last_modified": "2025-03-03T12:17:19.303857Z",
+    "size": 4149023627,
+    "CPU_ARCH": "aarch64",
+    "version": "0.2.3",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "LSB_RELEASE": "24.04",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7"
+  }
+}

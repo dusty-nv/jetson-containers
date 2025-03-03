@@ -473,24 +473,34 @@ def config_package(package):
     return validate_package(package)
 
 
+def check_requirement(requires, l4t_version=L4T_VERSION, cuda_version=CUDA_VERSION, name: str=''):
+    """
+    Check if the L4T/CUDA versions meet the needed specifier/requirement
+    """
+    if not isinstance(requires, str):
+        requires = str(requires)
+
+    requires = requires.lower()
+
+    if 'cu' in requires:
+        if Version(f"{cuda_version.major}{cuda_version.minor}") not in SpecifierSet(requires.replace('cu', '')):
+            log_debug(f"-- Package {name} isn't compatible with CUDA {cuda_version} (requires {requires})")
+            return False
+    else:
+        if l4t_version not in SpecifierSet(requires.replace('r', '')):
+            log_debug(f"-- Package {name} isn't compatible with L4T r{l4t_version} (requires L4T {requires})")
+            return False
+
+    return True
+
+
 def check_requirements(package):
     """
     Check if the L4T/CUDA versions meet the requirements needed by the package
     """
-    for r in package['requires']:
-        if not isinstance(r, str):
-            r = str(r)
-
-        r = r.lower()
-
-        if 'cu' in r:
-            if Version(f"{CUDA_VERSION.major}{CUDA_VERSION.minor}") not in SpecifierSet(r.replace('cu', '')):
-                log_debug(f"-- Package {package['name']} isn't compatible with CUDA {CUDA_VERSION} (requires {r})")
-                return False
-        else:
-            if L4T_VERSION not in SpecifierSet(r.replace('r', '')):
-                log_debug(f"-- Package {package['name']} isn't compatible with L4T r{L4T_VERSION} (requires L4T {r})")
-                return False
+    for requires in package['requires']:
+        if not check_requirement(requires):
+            return False
 
     return True
 
