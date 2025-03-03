@@ -27,7 +27,7 @@ distro=$(lsb_release -rs)
 
 if [ $distro = "24.04" ]; then
    apt-get install -y --no-install-recommends python3-venv
-   python3 -m venv /opt/venv
+   python3 -m venv --system-site-packages /opt/venv
    source /opt/venv/bin/activate
    curl -sS https://bootstrap.pypa.io/get-pip.py | python${PYTHON_VERSION}
 elif [ $distro = "18.04" ]; then
