@@ -104,7 +104,7 @@ Here is a list of containers currently built for Ubuntu 24.04 with the following
 * `PYTORCH_VERSION=2.6`
 * `PYTHON_VERSION=3.12`
 
-|:----------------:|:---------:|:---------------------------------------------------:|:-------------:|:-------------:|:--------------:|:-----------:|:---------:|:-----------:|:------------:|
+|----------------|---------|---------------------------------------------------|-------------|-------------|--------------|-----------|---------|-----------|------------|
 | Repo           | Version | Image                                             | LSB_RELEASE | L4T_VERSION | CUDA_VERSION | CUDA_ARCH | OS_ARCH | Size (GB) | Timestamp  |
 | sglang         | 0.4.4   | `dustynv/sglang:0.4.4-r36.4.0-cu128-24.04`        | 24.04       | 36.4.0      | 12.8         | 8.7       | aarch64 | 5.4       | 2025-03-03 |
 | bitsandbytes   | 0.45.4  | `dustynv/bitsandbytes:0.45.4-r36.4.0-cu128-24.04` | 24.04       | 36.4.0      | 12.8         | 8.7       | aarch64 | 4.4       | 2025-03-03 |
@@ -130,7 +130,6 @@ Here is a list of containers currently built for Ubuntu 24.04 with the following
 | torchaudio     | 2.6.0   | `dustynv/torchaudio:2.6.0-r36.4.0-cu128-24.04`    | 24.04       | 36.4.0      | 12.8         | 8.7       | aarch64 | 3.5       | 2025-02-26 |
 | torchvision    | 0.21.0  | `dustynv/torchvision:0.21.0-r36.4.0-cu128-24.04`  | 24.04       | 36.4.0      | 12.8         | 8.7       | aarch64 | 3.5       | 2025-02-26 |
 | pytorch        | 2.6     | `dustynv/pytorch:2.6-r36.4.0-cu128-24.04`         | 24.04       | 36.4.0      | 12.8         | 8.7       | aarch64 | 3.5       | 2025-02-26 |
-
 
 You can build or run these from JetPack 6.1+ like the following:
 
