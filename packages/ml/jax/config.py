@@ -44,6 +44,5 @@ package = [
     jax('0.4.32', requires='>=35'),
     jax('0.4.35', requires='>=35'),
     jax('0.4.38', requires='>=35'), # It works from jetpack 5 11.8 Cuda & 8.6 Cudnn
-    jax('0.5.5', requires='>=36', default=True), # Blackwell
-    
+    jax('0.5.2', requires='>=36', default=True), # Blackwell
 ]
