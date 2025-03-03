@@ -7,9 +7,11 @@ import json
 import pprint
 import argparse
 
-from jetson_containers import get_registry_containers, parse_container_versions, check_requirement
 from packaging.version import Version
-    
+from datetime import datetime
+
+from jetson_containers import get_registry_containers, parse_container_versions, check_requirement, format_table
+
 
 def sync_db(**kwargs):
     """
@@ -79,10 +81,72 @@ def export_db(user: str=None, requires: str=None, blacklist: str=None, output: s
     json_string = json.dumps(nodes, indent=2)
     print(f"\n{json_string}\n")
 
-    if output:
-        print(f"-- Saving GraphDB to:  {output} ({len(json_string)} bytes)\n")
-        with open(output, 'w') as file:
-            file.write(json_string)
+    if not output:
+        return nodes
+    
+    graph_output = os.path.join(output, 'db.json')
+    print(f"-- Saving GraphDB to:  {graph_output} ({len(json_string)} bytes)\n")
+
+    with open(graph_output, 'w') as file:
+        file.write(json_string)
+
+    default_date = '2020-01-01T00:00:00.000000Z'
+    #recent = sorted(nodes, key=lambda x: print(datetime.strptime(nodes[x].get('last_modified', default_date), "%Y-%m-%dT%H:%M:%S.%fZ")), reverse=True)
+    recent = sorted(nodes, key=lambda x: nodes[x].get('last_modified', default_date), reverse=True)
+
+    fields = {
+        'repo': 'Repo',
+        'version': 'Version',
+        'docker_image': 'Image',
+        'LSB_RELEASE': 'LSB_RELEASE',
+        'L4T_VERSION': 'L4T_VERSION',
+        'CUDA_VERSION': 'CUDA_VERSION',
+        'CUDA_ARCH': 'CUDA_ARCH',
+        'CPU_ARCH': 'OS_ARCH',
+        'size': 'Size (GB)',
+        'last_modified': 'Timestamp',
+    }
+    
+    rows = []
+
+    def to_list(key, env):
+        x = []
+        for f in fields:
+            if f == 'repo':
+                x.append(env['tags'][0])
+            elif f not in env:
+                x.append('latest' if f == 'version' else '-')
+            elif f == 'size':
+                x.append(f"{env['size']/(1024**3):.1f}")
+            elif f == 'last_modified':
+                x.append(env['last_modified'][:10])
+            elif f == 'docker_image':
+                x.append(f"`{env['docker_image']}`")
+            else:
+                x.append(env[f])
+        return x
+    
+    for k in recent:
+        v = nodes[k]
+        if len(rows) > 100:
+            break
+        if v.get('LSB_RELEASE') != '24.04':
+            continue
+        row = to_list(k,v)
+        if not row:
+            continue
+        rows.append(row)
+                
+    table = format_table(rows, header=[fields[x] for x in fields], tablefmt='github', colalign='center')
+    table = table.replace('|-', '|:-').replace('-|', '-:|')
+
+    print(f"\n{table}\n")
+    
+    table_output = os.path.join(output, 'recent.md')
+    print(f"-- Saving recent containers to:  {table_output} ({len(table)} bytes)\n")
+
+    with open(table_output, 'w') as file:
+        file.write(table)
 
     return nodes
 
@@ -100,7 +164,7 @@ if __name__ == "__main__":
     #parser.add_argument('-p', '--prefer', type=str, default='local,registry,build', help="comma/colon-separated list of the source preferences (default: 'local,registry,build')")
     #parser.add_argument('-d', '--disable', type=str, default='', help="comma/colon-separated list of sources to disable (local,registry,build)")
     parser.add_argument('-u', '--user', type=str, default='dustynv', help="the DockerHub user for registry container images")
-    parser.add_argument('-o', '--output', type=str, default='data/graphdb/db.json', help="file to save the selected container tag to")
+    parser.add_argument('-o', '--output', type=str, default='data/graphdb', help="file to save the selected container tag to")
     parser.add_argument('-r', '--requires', type=str, default='>=r36.4', help="limit the database export to those containers meeting these 'requires' specifiers")
     parser.add_argument('-b', '--blacklist', type=str, default='test:', help="skip the export of any containers with names that include this string")
     parser.add_argument('-q', '--quiet', action='store_true', help="use the default unattended options instead of prompting the user")
