@@ -888,7 +888,7 @@
             "os_version": null,
             "size": 5549778999,
             "status": "active",
-            "last_pulled": "2025-03-03T11:29:27.750523078Z",
+            "last_pulled": "2025-03-03T14:00:33.455734884Z",
             "last_pushed": "2023-12-07T04:25:47Z"
           }
         ],
@@ -900,7 +900,7 @@
         "full_size": 5549778999,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T11:29:27.750523078Z",
+        "tag_last_pulled": "2025-03-03T14:00:33.455734884Z",
         "tag_last_pushed": "2023-12-07T04:25:46.965511Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -6077,7 +6077,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/l4t/l4t-pytorch",
     "is_private": false,
     "star_count": 4,
-    "pull_count": 24001,
+    "pull_count": 24003,
     "last_updated": "2024-12-18T16:34:53.913375Z",
     "last_modified": "2024-10-16T13:48:34.145251Z",
     "date_registered": "2022-09-20T16:32:06.539013Z",
@@ -6169,7 +6169,7 @@
             "os_version": null,
             "size": 7186349002,
             "status": "active",
-            "last_pulled": "2025-03-03T13:45:07.754029071Z",
+            "last_pulled": "2025-03-03T14:00:45.154604887Z",
             "last_pushed": "2024-05-16T13:51:49Z"
           }
         ],
@@ -6181,7 +6181,7 @@
         "full_size": 7186349002,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T13:45:07.754029071Z",
+        "tag_last_pulled": "2025-03-03T14:00:45.154604887Z",
         "tag_last_pushed": "2024-05-16T13:51:48.309411Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -6818,7 +6818,7 @@
     "is_private": false,
     "star_count": 0,
     "pull_count": 510,
-    "last_updated": "2023-12-15T17:00:59.66053Z",
+    "last_updated": "2025-03-03T14:05:19.851283Z",
     "last_modified": "2024-10-16T13:48:34.145251Z",
     "date_registered": "2023-07-29T14:46:19.365274Z",
     "affiliation": "editor",
@@ -6829,8 +6829,40 @@
       "image"
     ],
     "categories": [],
-    "storage_size": 25625272570,
+    "storage_size": 30374306958,
     "tags": [
+      {
+        "creator": 10706889,
+        "id": 857779635,
+        "images": [
+          {
+            "architecture": "arm64",
+            "features": "",
+            "variant": "v8",
+            "digest": "sha256:1d3cb534c3ab276e5e3222a742c839d253334b4d02de829b9d8891a09d6a06d2",
+            "os": "linux",
+            "os_features": "",
+            "os_version": null,
+            "size": 4749005879,
+            "status": "active",
+            "last_pulled": "2025-03-03T14:05:31.447796478Z",
+            "last_pushed": "2025-03-03T14:05:18.242388496Z"
+          }
+        ],
+        "last_updated": "2025-03-03T14:05:18.780013Z",
+        "last_updater": 10706889,
+        "last_updater_username": "dustynv",
+        "name": "0.45.4-r36.4.0-cu128-24.04",
+        "repository": 20608289,
+        "full_size": 4749005879,
+        "v2": true,
+        "tag_status": "active",
+        "tag_last_pulled": "2025-03-03T14:05:31.447796478Z",
+        "tag_last_pushed": "2025-03-03T14:05:18.780013Z",
+        "media_type": "application/vnd.docker.container.image.v1+json",
+        "content_type": "image",
+        "digest": "sha256:1d3cb534c3ab276e5e3222a742c839d253334b4d02de829b9d8891a09d6a06d2"
+      },
       {
         "creator": 10706889,
         "id": 483596426,
@@ -20794,7 +20826,7 @@
             "os_version": null,
             "size": 5340360609,
             "status": "active",
-            "last_pulled": "2025-03-03T12:42:47.038062894Z",
+            "last_pulled": "2025-03-03T14:06:20.531391218Z",
             "last_pushed": "2025-02-07T10:07:49.123031064Z"
           }
         ],
@@ -20806,7 +20838,7 @@
         "full_size": 5340360609,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T12:42:47.038062894Z",
+        "tag_last_pulled": "2025-03-03T14:06:20.531391218Z",
         "tag_last_pushed": "2025-02-07T10:07:49.587959Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -21139,7 +21171,7 @@
             "os_version": null,
             "size": 7158037382,
             "status": "active",
-            "last_pulled": "2025-03-03T13:51:05.202991782Z",
+            "last_pulled": "2025-03-03T14:01:08.599937127Z",
             "last_pushed": "2024-04-07T20:41:43Z"
           }
         ],
@@ -21151,7 +21183,7 @@
         "full_size": 7158037382,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T13:51:05.202991782Z",
+        "tag_last_pulled": "2025-03-03T14:01:08.599937127Z",
         "tag_last_pushed": "2024-04-07T20:41:43.467773Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
@@ -22413,7 +22445,7 @@
     "description": "https://github.com/dusty-nv/jetson-containers/packages/smart-home/wyoming/assist-microphone",
     "is_private": false,
     "star_count": 0,
-    "pull_count": 263,
+    "pull_count": 264,
     "last_updated": "2024-04-30T15:36:15.022049Z",
     "last_modified": "2024-10-16T13:48:34.145251Z",
     "date_registered": "2024-04-24T07:06:12.107524Z",
@@ -22473,7 +22505,7 @@
             "os_version": null,
             "size": 366252591,
             "status": "active",
-            "last_pulled": "2025-03-03T08:35:59.539245213Z",
+            "last_pulled": "2025-03-03T13:56:39.199130697Z",
             "last_pushed": "2024-04-26T18:13:55Z"
           }
         ],
@@ -22485,7 +22517,7 @@
         "full_size": 366252591,
         "v2": true,
         "tag_status": "active",
-        "tag_last_pulled": "2025-03-03T08:35:59.539245213Z",
+        "tag_last_pulled": "2025-03-03T13:56:39.199130697Z",
         "tag_last_pushed": "2024-04-30T15:16:05.778992Z",
         "media_type": "application/vnd.docker.container.image.v1+json",
         "content_type": "image",
