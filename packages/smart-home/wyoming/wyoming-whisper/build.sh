@@ -22,16 +22,16 @@ sed -i \
    requirements.txt
 cat requirements.txt
 
-python3 setup.py sdist bdist_wheel --verbose --dist-dir /opt/wheels
+python3 setup.py sdist bdist_wheel --verbose --dist-dir $PIP_WHEEL_DIR
 
 cd /
 rm -rf /tmp/wyoming-faster-whisper
 
-pip3 install /opt/wheels/wyoming_faster_whisper*.whl
+pip3 install $PIP_WHEEL_DIR/wyoming_faster_whisper*.whl
 
 pip3 show wyoming_faster_whisper
 python3 -c 'import wyoming_faster_whisper; print(wyoming_faster_whisper.__version__);'
 
-twine upload --skip-existing --verbose /opt/wheels/wyoming_faster_whisper*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --skip-existing --verbose $PIP_WHEEL_DIR/wyoming_faster_whisper*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
-rm /opt/wheels/wyoming_faster_whisper*.whl
+rm $PIP_WHEEL_DIR/wyoming_faster_whisper*.whl

@@ -27,14 +27,14 @@ pip3 install -r /tmp/wyoming-piper/requirements.txt
 echo "$WYOMING_PIPER_VERSION" > /tmp/wyoming-piper/wyoming_piper/VERSION
 cat /tmp/wyoming-piper/wyoming_piper/VERSION
 
-pip3 wheel --wheel-dir=/opt/wheels --no-deps --verbose /tmp/wyoming-piper
-pip3 install /opt/wheels/wyoming_piper*.whl
+pip3 wheel --wheel-dir=$PIP_WHEEL_DIR --no-deps --verbose /tmp/wyoming-piper
+pip3 install $PIP_WHEEL_DIR/wyoming_piper*.whl
 
 rm -rf /tmp/wyoming-piper
 
 pip3 show wyoming_piper
 python3 -c 'import wyoming_piper; print(wyoming_piper.__version__);'
 
-twine upload --skip-existing --verbose /opt/wheels/wyoming_piper*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --skip-existing --verbose $PIP_WHEEL_DIR/wyoming_piper*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
-rm /opt/wheels/wyoming_piper*.whl
+rm $PIP_WHEEL_DIR/wyoming_piper*.whl

@@ -13,9 +13,9 @@ pip3 install isaacsim[all,extscache]==4.5.0 --extra-index-url https://pypi.nvidi
 chmod +x isaaclab.sh
 ./isaaclab.sh --install # or "./isaaclab.sh -i"
 
-pip3 wheel --wheel-dir=/opt/wheels --verbose . /opt/wheels
+pip3 wheel --wheel-dir=$PIP_WHEEL_DIR --verbose . $PIP_WHEEL_DIR
 
-ls /opt/wheels
+ls $PIP_WHEEL_DIR
 
-twine upload --verbose /opt/wheels/isaacsim*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose $PIP_WHEEL_DIR/isaacsim*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 

@@ -8,15 +8,15 @@ python3 ${SOURCE_DIR}/scripts/build_wheel.py \
         --build_type Release \
         --cuda_architectures "${CUDA_ARCHS}" \
         --build_dir ${BUILD_DIR} \
-        --dist_dir /opt/wheels \
+        --dist_dir $PIP_WHEEL_DIR \
         --extra-cmake-vars "ENABLE_MULTI_DEVICE=0" \
         --benchmarks \
         --use_ccache \
         --python_bindings
 
-pip3 install /opt/wheels/tensorrt_llm*.whl
+pip3 install $PIP_WHEEL_DIR/tensorrt_llm*.whl
 
 #pip3 show tensorrt_llm
 #python3 -c "import tensorrt_llm; print(tensorrt_llm.__version__)"
 
-twine upload --verbose /opt/wheels/tensorrt_llm*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose $PIP_WHEEL_DIR/tensorrt_llm*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

@@ -23,19 +23,19 @@ cd /tmp/wyoming_satellite
 
 sed -i "s|version=\"[^\"]*\"|version=\"${SATELLITE_VERSION}\"|" setup.py
 
-python3 setup.py sdist bdist_wheel --verbose --dist-dir /opt/wheels
+python3 setup.py sdist bdist_wheel --verbose --dist-dir $PIP_WHEEL_DIR
 
 cd /
 rm -rf /tmp/wyoming_satellite
 
-pip3 install /opt/wheels/wyoming_satellite*.whl
+pip3 install $PIP_WHEEL_DIR/wyoming_satellite*.whl
 
 pip3 show wyoming_satellite
 python3 -c 'import wyoming_satellite; print(wyoming_satellite.__version__);'
 
-twine upload --skip-existing --verbose /opt/wheels/wyoming_satellite*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --skip-existing --verbose $PIP_WHEEL_DIR/wyoming_satellite*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
-rm /opt/wheels/wyoming_satellite*.whl
+rm $PIP_WHEEL_DIR/wyoming_satellite*.whl
 
 # Clone rootfs & config.aml
 git clone --depth=1 https://github.com/home-assistant/addons /tmp/addons

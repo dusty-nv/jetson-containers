@@ -39,4 +39,4 @@ RUN cd /opt/SAPIEN && \
     #CXXFLAGS=-isystem\ /usr/local/cuda/include \
 RUN CMAKE_BUILD_PARALLEL_LEVEL=$(nproc) \
     CUDA_PATH=/usr/local/cuda \
-    pip3 wheel --wheel-dir=/opt/wheels --verbose /opt/SAPIEN 
+    pip3 wheel --wheel-dir=$PIP_WHEEL_DIR --verbose /opt/SAPIEN 

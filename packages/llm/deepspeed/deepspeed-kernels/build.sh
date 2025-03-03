@@ -6,8 +6,8 @@ echo "Building deepspeed-kernels ${DEEPSPEED_KERNELS_VERSION} (branch=${DEEPSPEE
 git -C /opt clone --branch=${DEEPSPEED_KERNELS_BRANCH} --depth=1 --recursive https://github.com/microsoft/DeepSpeed-Kernels
 cd /opt/DeepSpeed-Kernels
 
-CUDA_ARCH_LIST=${CUDA_ARCHITECTURES} python3 setup.py --verbose build_ext -j$(nproc) bdist_wheel --dist-dir /opt/wheels
+CUDA_ARCH_LIST=${CUDA_ARCHITECTURES} python3 setup.py --verbose build_ext -j$(nproc) bdist_wheel --dist-dir $PIP_WHEEL_DIR
 
-pip3 install /opt/wheels/deepspeed_kernels*.whl
+pip3 install $PIP_WHEEL_DIR/deepspeed_kernels*.whl
 
-twine upload --verbose /opt/wheels/deepspeed_kernels*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose $PIP_WHEEL_DIR/deepspeed_kernels*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
