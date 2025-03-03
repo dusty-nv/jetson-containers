@@ -103,32 +103,32 @@ Here is a list of containers currently built for Ubuntu 24.04 with the following
 * `CUDA_VERSION=12.8 CUDNN_VERSION=9.7`
 * `PYTHON_VERSION=3.12 PYTORCH_VERSION=2.6`
 
-| Repo           | Version   | Image                                             |  OS   | L4T    |  CUDA  |  Size (GB)  | Timestamp   |
-|:--------------:|:---------:|:-------------------------------------------------:|:-----:|:------:|:------:|:-----------:|:-----------:|
-| sglang         | 0.4.4     | `dustynv/sglang:0.4.4-r36.4.0-cu128-24.04`        | 24.04 | 36.4.0 |  12.8  |     5.4     | 2025-03-03  |
-| bitsandbytes   | 0.45.4    | `dustynv/bitsandbytes:0.45.4-r36.4.0-cu128-24.04` | 24.04 | 36.4.0 |  12.8  |     4.4     | 2025-03-03  |
-| flashinfer     | 0.2.3     | `dustynv/flashinfer:0.2.3-r36.4.0-cu128-24.04`    | 24.04 | 36.4.0 |  12.8  |     3.9     | 2025-03-03  |
-| jupyterlab     | latest    | `dustynv/jupyterlab:r36.4.0-cu128-24.04`          | 24.04 | 36.4.0 |  12.8  |     5.1     | 2025-03-03  |
-| kokoro-tts     | fastapi   | `dustynv/kokoro-tts:fastapi-r36.4.0-cu128-24.04`  | 24.04 | 36.4.0 |  12.8  |     4.8     | 2025-03-03  |
-| llama_cpp      | 0.3.7     | `dustynv/llama_cpp:0.3.7-r36.4.0-cu128-24.04`     | 24.04 | 36.4.0 |  12.8  |     3.2     | 2025-03-03  |
-| piper-tts      | latest    | `dustynv/piper-tts:r36.4.0-cu128-24.04`           | 24.04 | 36.4.0 |  12.8  |     5.6     | 2025-03-03  |
-| faster-whisper | latest    | `dustynv/faster-whisper:r36.4.0-cu128-24.04`      | 24.04 | 36.4.0 |  12.8  |     5.3     | 2025-03-03  |
-| onnxruntime    | 1.22      | `dustynv/onnxruntime:1.22-r36.4.0-cu128-24.04`    | 24.04 | 36.4.0 |  12.8  |     5.2     | 2025-03-03  |
-| cupy           | latest    | `dustynv/cupy:r36.4.0-cu128-24.04`                | 24.04 | 36.4.0 |  12.8  |     2.3     | 2025-03-03  |
-| pycuda         | latest    | `dustynv/pycuda:r36.4.0-cu128-24.04`              | 24.04 | 36.4.0 |  12.8  |     2.3     | 2025-03-03  |
-| cuda-python    | latest    | `dustynv/cuda-python:r36.4.0-cu128-24.04`         | 24.04 | 36.4.0 |  12.8  |     2.3     | 2025-03-03  |
-| speaches       | latest    | `dustynv/speaches:r36.4.0-cu128-24.04`            | 24.04 | 36.4.0 |  12.8  |     6.6     | 2025-03-03  |
-| jax            | 0.5.2     | `dustynv/jax:0.5.2-r36.4.0-cu128-24.04`           | 24.04 | 36.4.0 |  12.8  |     3.6     | 2025-03-03  |
-| ros            | jazzy     | `dustynv/ros:jazzy-ros-base-r36.4.0-cu128-24.04`  | 24.04 | 36.4.0 |  12.8  |     5.1     | 2025-03-03  |
-| ros            | jazzy     | `dustynv/ros:jazzy-desktop-r36.4.0-cu128-24.04`   | 24.04 | 36.4.0 |  12.8  |     5.9     | 2025-03-03  |
-| torch2trt      | latest    | `dustynv/torch2trt:r36.4.0-cu128-24.04`           | 24.04 | 36.4.0 |  12.8  |     5.2     | 2025-03-03  |
-| opencv         | 4.11.0    | `dustynv/opencv:4.11.0-r36.4.0-cu128-24.04`       | 24.04 | 36.4.0 |  12.8  |     3.3     | 2025-03-02  |
-| vllm           | 0.7.4     | `dustynv/vllm:0.7.4-r36.4.0-cu128-24.04`          | 24.04 | 36.4.0 |  12.8  |     5.3     | 2025-02-28  |
-| openvla        | cp312     | `dustynv/openvla:r36.4.3-cu128-cp312-24.04`       | 24.04 | 36.4.3 |  12.8  |     6.7     | 2025-02-27  |
-| torchao        | 0.11.0    | `dustynv/torchao:0.11.0-r36.4.0-cu128-24.04`      | 24.04 | 36.4.0 |  12.8  |     3.5     | 2025-02-26  |
-| torchaudio     | 2.6.0     | `dustynv/torchaudio:2.6.0-r36.4.0-cu128-24.04`    | 24.04 | 36.4.0 |  12.8  |     3.5     | 2025-02-26  |
-| torchvision    | 0.21.0    | `dustynv/torchvision:0.21.0-r36.4.0-cu128-24.04`  | 24.04 | 36.4.0 |  12.8  |     3.5     | 2025-02-26  |
-| pytorch        | 2.6       | `dustynv/pytorch:2.6-r36.4.0-cu128-24.04`         | 24.04 | 36.4.0 |  12.8  |     3.5     | 2025-02-26  |
+| Repo           | Version   | Image                                             |  Size (GB)  | Timestamp   |
+|:--------------:|:---------:|:-------------------------------------------------:|:-----------:|:-----------:|
+| sglang         | 0.4.4     | `dustynv/sglang:0.4.4-r36.4.0-cu128-24.04`        |     5.4     | 2025-03-03  |
+| bitsandbytes   | 0.45.4    | `dustynv/bitsandbytes:0.45.4-r36.4.0-cu128-24.04` |     4.4     | 2025-03-03  |
+| flashinfer     | 0.2.3     | `dustynv/flashinfer:0.2.3-r36.4.0-cu128-24.04`    |     3.9     | 2025-03-03  |
+| jupyterlab     | latest    | `dustynv/jupyterlab:r36.4.0-cu128-24.04`          |     5.1     | 2025-03-03  |
+| kokoro-tts     | fastapi   | `dustynv/kokoro-tts:fastapi-r36.4.0-cu128-24.04`  |     4.8     | 2025-03-03  |
+| llama_cpp      | 0.3.7     | `dustynv/llama_cpp:0.3.7-r36.4.0-cu128-24.04`     |     3.2     | 2025-03-03  |
+| piper-tts      | latest    | `dustynv/piper-tts:r36.4.0-cu128-24.04`           |     5.6     | 2025-03-03  |
+| faster-whisper | latest    | `dustynv/faster-whisper:r36.4.0-cu128-24.04`      |     5.3     | 2025-03-03  |
+| onnxruntime    | 1.22      | `dustynv/onnxruntime:1.22-r36.4.0-cu128-24.04`    |     5.2     | 2025-03-03  |
+| cupy           | latest    | `dustynv/cupy:r36.4.0-cu128-24.04`                |     2.3     | 2025-03-03  |
+| pycuda         | latest    | `dustynv/pycuda:r36.4.0-cu128-24.04`              |     2.3     | 2025-03-03  |
+| cuda-python    | latest    | `dustynv/cuda-python:r36.4.0-cu128-24.04`         |     2.3     | 2025-03-03  |
+| speaches       | latest    | `dustynv/speaches:r36.4.0-cu128-24.04`            |     6.6     | 2025-03-03  |
+| jax            | 0.5.2     | `dustynv/jax:0.5.2-r36.4.0-cu128-24.04`           |     3.6     | 2025-03-03  |
+| ros            | jazzy     | `dustynv/ros:jazzy-ros-base-r36.4.0-cu128-24.04`  |     5.1     | 2025-03-03  |
+| ros            | jazzy     | `dustynv/ros:jazzy-desktop-r36.4.0-cu128-24.04`   |     5.9     | 2025-03-03  |
+| torch2trt      | latest    | `dustynv/torch2trt:r36.4.0-cu128-24.04`           |     5.2     | 2025-03-03  |
+| opencv         | 4.11.0    | `dustynv/opencv:4.11.0-r36.4.0-cu128-24.04`       |     3.3     | 2025-03-02  |
+| vllm           | 0.7.4     | `dustynv/vllm:0.7.4-r36.4.0-cu128-24.04`          |     5.3     | 2025-02-28  |
+| openvla        | cp312     | `dustynv/openvla:r36.4.3-cu128-cp312-24.04`       |     6.7     | 2025-02-27  |
+| torchao        | 0.11.0    | `dustynv/torchao:0.11.0-r36.4.0-cu128-24.04`      |     3.5     | 2025-02-26  |
+| torchaudio     | 2.6.0     | `dustynv/torchaudio:2.6.0-r36.4.0-cu128-24.04`    |     3.5     | 2025-02-26  |
+| torchvision    | 0.21.0    | `dustynv/torchvision:0.21.0-r36.4.0-cu128-24.04`  |     3.5     | 2025-02-26  |
+| pytorch        | 2.6       | `dustynv/pytorch:2.6-r36.4.0-cu128-24.04`         |     3.5     | 2025-02-26  |
 
 You can build or run these from JetPack 6.1+ like the following:
 
