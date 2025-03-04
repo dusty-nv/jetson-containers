@@ -28,7 +28,7 @@ def jupyterlab(version='latest', requires=None, default=False):
         
     return pkg, myst
     
-default_latest = (Version(LSB_RELEASE) >= Version('24.04'))
+default_latest = (Version(LSB_RELEASE) >= Version('22.04'))
 
 package = [
     jupyterlab('latest', default=default_latest),
