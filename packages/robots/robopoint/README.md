@@ -22,12 +22,6 @@
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`robopoint:latest`](https://hub.docker.com/r/robopoint/tags) | `2024-08-26` | `arm64` | `6.5GB` |
-
-> <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
-> <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
-> <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R35.x containers can run on other versions of L4T R35.x (JetPack 5.1+)</sub><br>
-</details>
-
 <details open>
 <summary><b><a id="run">RUN CONTAINER</a></b></summary>
 <br>
