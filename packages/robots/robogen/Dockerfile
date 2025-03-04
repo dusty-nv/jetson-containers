@@ -1,7 +1,7 @@
 #--- 
-# name: cosmos
+# name: robogen
 # group: robots
-# depends: [pytorch, torchvision, torchaudio, transformer-engine, transformers, opencv:4.11.0, bitsandbytes, huggingface_hub, ffmpeg]
+# depends: [ffmpeg, genesis]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---
@@ -15,10 +15,10 @@ RUN apt-get update && apt-get install -y \
     ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
-RUN git clone --recursive https://github.com/NVIDIA/Cosmos && \
-    cd Cosmos && \
+RUN git clone --recursive https://github.com/Genesis-Embodied-AI/RoboGen && \
+    cd RoboGen && \
     pip3 install einops attrs pynvml opencv-contrib-python protobuf && \
-    pip3 install -r requirements.txt
+    pip3 install ompl
 
-WORKDIR /opt/Cosmos/
+WORKDIR /opt/RoboGen/
 CMD ["/bin/bash"]
