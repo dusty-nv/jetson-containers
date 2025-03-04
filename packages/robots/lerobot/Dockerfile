@@ -2,7 +2,7 @@
 # name: lerobot
 # group: robots
 # docs: docs.md
-# depends: [transformers, opencv:4.11.0, jupyterlab, pyav, h5py, diffusers]
+# depends: [transformers, opencv:4.11.0, pyav, h5py, diffusers, jupyterlab:myst]
 # requires: '>=36'
 # test: [test.sh, test.py]
 #---
