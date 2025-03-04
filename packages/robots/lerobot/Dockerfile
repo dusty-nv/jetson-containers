@@ -2,7 +2,7 @@
 # name: lerobot
 # group: robots
 # docs: docs.md
-# depends: [transformers, opencv:4.11.0, pyav, h5py, jupyterlab:myst]
+# depends: [transformers, opencv:4.11.0, pyav, h5py, diffusers, jupyterlab:myst]
 # requires: '>=36'
 # test: [test.sh, test.py]
 #---
@@ -14,21 +14,17 @@ ARG LEROBOT_BRANCH=main
 
 RUN git clone --branch=${LEROBOT_BRANCH} --depth=1 https://github.com/${LEROBOT_REPO} /opt/lerobot && \
     cd /opt/lerobot && \
-    sed 's|^python.*||' -i pyproject.toml && \
-    sed 's|^torch.*||' -i pyproject.toml && \
-    sed 's|^opencv-python.*||' -i pyproject.toml && \
-    sed 's|^torchvision.*||' -i pyproject.toml && \
-    sed 's|^h5py.*||' -i pyproject.toml && \
-    sed 's|^pyav.*||' -i pyproject.toml && \
-    sed 's|^huggingface-hub.*||' -i pyproject.toml && \
-    echo "######### pyproject.toml ##########" && \
+    sed -i '/"torch[^"]*",/d' pyproject.toml && \
+    sed -i '/"opencv-python[^"]*",/d' pyproject.toml && \
+    sed -i '/"torchvision[^"]*",/d' pyproject.toml && \
+    sed -i '/"h5py[^"]*",/d' pyproject.toml && \
+    sed -i '/"av[^"]*",/d' pyproject.toml && \
+    sed -i '/"huggingface-hub[^"]*",/d' pyproject.toml && \
+    sed -i '/"diffusers[^"]*",/d' pyproject.toml && \   
     cat -n pyproject.toml
 
 RUN cd /opt/lerobot && \
-    pip3 install --ignore-installed -e ".[aloha, pusht]" --verbose
-    
-RUN cd /opt/lerobot && \
-    pip install -e ".[dynamixel]" --verbose
+    pip3 install --ignore-installed --no-deps -e ".[aloha, pusht, dynamixel, pi0, test]" --verbose
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
