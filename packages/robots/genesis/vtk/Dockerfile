@@ -11,6 +11,7 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG VTK_VERSION \
+    VTK_VERSION_SPEC \
     CUDAARCHS
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
