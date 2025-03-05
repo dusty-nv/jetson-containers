@@ -7,19 +7,19 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-RUN git clone https://github.com/wentaoyuan/RoboPoint.git /opt/robopoint && \
-    cd /opt/robopoint && \
-    sed -i '/"torch[^"]*",/d' pyproject.toml && \
-    sed -i '/"torchvision[^"]*",/d' pyproject.toml && \
-    sed -i '/"transformers[^"]*",/d' pyproject.toml && \
-    sed -i '/"bitsandbytes[^"]*",/d' pyproject.toml && \
-    sed -i '/"numpy[^"]*",/d' pyproject.toml && \
-    cat -n pyproject.toml
+# RUN git clone https://github.com/wentaoyuan/RoboPoint.git /opt/robopoint && \
+#     cd /opt/robopoint && \
+#     sed -i '/"torch[^"]*",/d' pyproject.toml && \
+#     sed -i '/"torchvision[^"]*",/d' pyproject.toml && \
+#     sed -i '/"transformers[^"]*",/d' pyproject.toml && \
+#     sed -i '/"bitsandbytes[^"]*",/d' pyproject.toml && \
+#     sed -i '/"numpy[^"]*",/d' pyproject.toml && \
+#     cat -n pyproject.toml
+
+RUN git clone https://github.com/mschweig/RoboPoint.git /opt/robopoint
 
 RUN cd /opt/robopoint && \
-    pip3 install  -e . --verbose
-
-RUN pip3 install gradio --upgrade
+    pip3 install -e .
 
 CMD python3 -m robopoint.serve.controller --host 0.0.0.0 --port 10000 & \
     python3 -m robopoint.serve.gradio_web_server --controller http://localhost:10000 --model-list-mode reload --share & \

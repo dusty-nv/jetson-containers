@@ -8,10 +8,11 @@
 
 | **`robopoint`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36.2']` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`torch`](/packages/ml/torch) [`torchvision`](/packages/ml/torchvision) [`transformers`](/packages/llm/transformers) [`bitsandbytes`](/packages/llm/bitsandbytes) [`numpy`](/packages/numeric/numpy) [`gradio`](/packages/ui/gradio) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`robopoint:latest`](https://hub.docker.com/r/robopoint/tags) `(2024-08-26, 6.5GB)` |
+| &nbsp;&nbsp;&nbsp;Models | [`robopoint-v1-vicuna-v1.5-13b`](https://huggingface.co/wentao-yuan/robopoint-v1-vicuna-v1.5-13b) `(2024-09-22, 25GB)` |
 
 </details>
 
@@ -28,11 +29,11 @@
 
 To start the container, you can use [`jetson-containers run`](/docs/run.md) and [`autotag`](/docs/run.md#autotag), or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
 ```bash
-# automatically pull or build a compatible container image
-jetson-containers run $(autotag robopoint)
+#download the model to the Jetson SSD from huggingface (preferred)
+git clone https://huggingface.co/wentao-yuan/robopoint-v1-vicuna-v1.5-13b
 
-# or explicitly specify one of the container images above
-jetson-containers run robopoint:latest
+# automatically pull or build a compatible container image and mount the model path to the container
+jetson-containers run --volume /data/models:/data/models $(autotag robopoint)
 
-# or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host robopoint:latest
+#build the image 
+jetson-containers build robopoint
