@@ -101,11 +101,11 @@ pip3 install .
 # INSTALL OMPL
 # ===============================================================
 
-RUN wget https://ompl.kavrakilab.org/core/install-ompl-ubuntu.sh \
-    && chmod u+x install-ompl-ubuntu.sh \
-    && ./install-ompl-ubuntu.sh --python --github \
-    && rm install-ompl-ubuntu.sh
-
+# RUN wget https://ompl.kavrakilab.org/core/install-ompl-ubuntu.sh \
+#    && chmod u+x install-ompl-ubuntu.sh \
+#    && ./install-ompl-ubuntu.sh --python --github \
+#    && rm install-ompl-ubuntu.sh
+pip3 install ompl
 # ===============================================================
 # PATH
 # =============================================================== \
