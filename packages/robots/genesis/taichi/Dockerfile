@@ -1,3 +1,13 @@
+#---
+# name: taichi
+# group: genesis
+# config: config.py
+# depends: [ninja, cmake, rust]
+# requires: '>=36.0.0'
+# test: test.py
+# notes: https://github.com/taichi-dev/taichi
+#---
+
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
