@@ -25,5 +25,5 @@ def taichi(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    taichi('1.7.4', default=True)
+    taichi('1.8.0', default=True)
 ]
