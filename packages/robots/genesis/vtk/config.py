@@ -1,16 +1,20 @@
 from jetson_containers import CUDA_ARCHITECTURES
 
-def vtk(version, requires=None, default=False):
+def vtk(version, version_spec=None, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
+
+    if not version_spec:
+        version_spec = version
 
     pkg['name'] = f'vtk:{version}'
 
     pkg['build_args'] = {
         'CUDAARCHS': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
         'VTK_VERSION': version,
+        'VTK_VERSION_SPEC': version_spec,
     }
 
     builder = pkg.copy()
@@ -25,6 +29,6 @@ def vtk(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    vtk('9.3.1', default=True),
-    vtk('9.4.1')
+    vtk('9.3.1', version_spec='9.3.1.dev0', default=True),
+    vtk('9.4.1', version_spec='9.4.1.dev0'),
 ]
