@@ -32,5 +32,5 @@ default_latest = (Version(LSB_RELEASE) >= Version('22.04'))
 
 package = [
     jupyterlab('latest', default=default_latest),
-    jupyterlab('4.2.0', default=default_latest)
+    jupyterlab('4.2.0', default=(not default_latest))
 ]
