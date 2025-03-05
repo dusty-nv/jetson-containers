@@ -79,6 +79,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     zlib1g-dev \
     libboost-iostreams-dev \
     libblosc-dev \
+    vim \
     && apt clean \
     && rm -rf /var/lib/apt/lists/*
 
