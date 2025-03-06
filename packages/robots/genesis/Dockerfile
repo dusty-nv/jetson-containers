@@ -2,7 +2,7 @@
 # name: genesis
 # group: robots
 # config: config.py
-# depends: [cuda, rust, cmake, torch, torchvision, torchaudio, vtk, openexr, pymeshlab, taichi, splashsurf]
+# depends: [cuda, rust, cmake, torch, torchvision, torchaudio, vtk, pymeshlab, taichi, splashsurf]
 # requires: '>=36.0.0'
 # test: test.sh
 # notes: https://github.com/Genesis-Embodied-AI/Genesis
