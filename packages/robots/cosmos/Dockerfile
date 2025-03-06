@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
 
 RUN git clone --recursive https://github.com/NVIDIA/Cosmos && \
     cd Cosmos && \
-    pip3 install einops attrs pynvml opencv-contrib-python protobuf && \
+    pip3 install einops attrs pynvml protobuf && \
     pip3 install -r requirements.txt
 
 WORKDIR /opt/Cosmos/

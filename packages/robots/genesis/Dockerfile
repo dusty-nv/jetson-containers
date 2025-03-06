@@ -97,7 +97,7 @@ WORKDIR /workspace
 
 # FIX: More robust removal of blinker
 RUN find / -name "blinker*" -print0 | xargs -0 -r rm -rf
-RUN pip3 install open3d tetgen trimesh pyrender --verbose && \
+RUN pip3 install open3d tetgen trimesh --verbose && \
 cd /opt/genesis && \
 sed -i '/numpy ==/d; /taichi/d; /tetgen/d' pyproject.toml && \
 pip3 install "numpy<2.1" && \
