@@ -19,7 +19,7 @@ ls /opt/nerfstudio/wheels
 
 # Return to the root directory
 cd /
-pip3 install manifold3d vhacdx
+pip3 install manifold3d vhacdx openexr
 pip3 install /opt/nerfstudio/wheels/nerfstudio*.whl
 
 ns-install-cli --mode install
