@@ -17,7 +17,7 @@ export HERMETIC_CUDA_VERSION=12.8.0
 export HERMETIC_CUDNN_VERSION=9.7.0
 export HERMETIC_CUDA_COMPUTE_CAPABILITIES=8.7
 
-pip3 install tensorflow_addons
+pip3 install openexr tensorflow_addons
 
 pip3 wheel --no-build-isolation --no-deps --wheel-dir=/opt/tensorflow_graphics/wheels .
 pip3 install /opt/tensorflow_graphics/wheels/tensorflow_graphics*.whl
