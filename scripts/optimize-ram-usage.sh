@@ -412,7 +412,19 @@ toggle_swap() {
 
         # Add to /etc/fstab if not already present
         if ! grep -q "$swap_file" /etc/fstab; then
-            echo "UUID=$(blkid -s UUID -o value "$swap_file") none swap sw 0 0" | sudo tee -a /etc/fstab
+
+            # Get UUID of the swap file (if it exists)
+            swap_uuid=$(blkid -s UUID -o value "$swap_file")
+
+            # If blkid fails, use the swap file path instead
+            if [[ -z "$swap_uuid" ]]; then
+                echo "⚠️  No UUID found for $swap_file, using direct path instead."
+                swap_entry="$swap_file none swap sw 0 0"
+            else
+                swap_entry="UUID=$swap_uuid none swap sw 0 0"
+            fi
+
+            echo "$swap_entry" | sudo tee -a /etc/fstab
             echo "✅ Swap file added to /etc/fstab for persistence."
         else
             echo "⚠️ Swap file already exists in /etc/fstab."
