@@ -179,10 +179,10 @@ install_docker() {
 
     # Proceed with installation
     log INFO "✅ Proceeding with Docker installation..."
-    sudo apt update
-    sudo apt install -y nvidia-container curl
-    curl https://get.docker.com | sh && sudo systemctl --now enable docker
-    sudo nvidia-ctk runtime configure --runtime=docker
+    cd  /tmp/
+    git clone https://github.com/jetsonhacks/install-docker.git
+    cd install-docker
+    bash ./install_nvidia_docker.sh
 
     log INFO "✅ Docker and NVIDIA runtime installation complete!"
 }
