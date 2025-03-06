@@ -7,15 +7,6 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-# RUN git clone https://github.com/wentaoyuan/RoboPoint.git /opt/robopoint && \
-#     cd /opt/robopoint && \
-#     sed -i '/"torch[^"]*",/d' pyproject.toml && \
-#     sed -i '/"torchvision[^"]*",/d' pyproject.toml && \
-#     sed -i '/"transformers[^"]*",/d' pyproject.toml && \
-#     sed -i '/"bitsandbytes[^"]*",/d' pyproject.toml && \
-#     sed -i '/"numpy[^"]*",/d' pyproject.toml && \
-#     cat -n pyproject.toml
-
 RUN git clone https://github.com/mschweig/RoboPoint.git /opt/robopoint
 
 RUN cd /opt/robopoint && \
