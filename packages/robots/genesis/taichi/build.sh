@@ -46,6 +46,13 @@ export TAICHI_CMAKE_ARGS="-DTI_WITH_VULKAN:BOOL=ON -DTI_WITH_CUDA:BOOL=ON"
 export CC=/usr/lib/llvm-${LLVM_VERSION}/bin/clang
 export CXX=/usr/lib/llvm-${LLVM_VERSION}/bin/clang++
 export CUDA_VERSION=12.8
+export LLVM_DIR=/usr/lib/llvm-${LLVM_VERSION}
+
+update-alternatives --install /usr/bin/llvm-config llvm-config /usr/bin/llvm-config-15 100
+update-alternatives --install /usr/bin/clang clang /usr/bin/clang-15 100
+update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-15 100
+update-alternatives --install /usr/bin/opt opt /usr/bin/opt-15 100
+update-alternatives --install /usr/bin/llc llc /usr/bin/llc-15 100
 
 # Build Taichi
 ./build.py
