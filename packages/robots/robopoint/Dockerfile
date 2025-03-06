@@ -2,7 +2,7 @@
 # name: robopoint
 # group: robots
 # depends: [torch, torchvision, transformers, bitsandbytes, numpy]
-# test: []
+# test: [test.py]
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

@@ -11,7 +11,7 @@
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36.2']` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`torch`](/packages/ml/torch) [`torchvision`](/packages/ml/torchvision) [`transformers`](/packages/llm/transformers) [`bitsandbytes`](/packages/llm/bitsandbytes) [`numpy`](/packages/numeric/numpy) [`gradio`](/packages/ui/gradio) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`robopoint:latest`](https://hub.docker.com/r/robopoint/tags) `(2024-08-26, 6.5GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`robopoint`]() `(2025-03-06, 12GB)` |
 | &nbsp;&nbsp;&nbsp;Models | [`robopoint-v1-vicuna-v1.5-13b`](https://huggingface.co/wentao-yuan/robopoint-v1-vicuna-v1.5-13b) `(2024-09-22, 25GB)` |
 
 </details>
@@ -22,7 +22,7 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
-| &nbsp;&nbsp;[`robopoint:latest`](https://hub.docker.com/r/robopoint/tags) | `2024-08-26` | `arm64` | `6.5GB` |
+| &nbsp;&nbsp;[`robopoint`]() | `2025-03-06` | `arm64` | `12GB` |
 <details open>
 <summary><b><a id="run">RUN CONTAINER</a></b></summary>
 <br>
@@ -30,7 +30,7 @@
 To start the container, you can use [`jetson-containers run`](/docs/run.md) and [`autotag`](/docs/run.md#autotag), or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
 ```bash
 #download the model to the Jetson SSD from huggingface (preferred)
-git clone https://huggingface.co/wentao-yuan/robopoint-v1-vicuna-v1.5-13b
+git clone https://huggingface.co/wentao-yuan/robopoint-v1-vicuna-v1.5-13b /data/models
 
 # automatically pull or build a compatible container image and mount the model path to the container
 jetson-containers run --volume /data/models:/data/models $(autotag robopoint)
