@@ -18,6 +18,25 @@ log() {
     esac
 }
 
+print_help() {
+    echo "Usage: $0 [OPTIONS]"
+    echo
+    echo "Options:"
+    echo "  --enable-gui          Enable GUI mode (graphical.target)"
+    echo "  --disable-gui         Disable GUI mode (multi-user.target)"
+    echo "  --enable-zram         Enable ZRAM swap"
+    echo "  --disable-zram        Disable ZRAM swap"
+    echo "  --enable-swap         Enable swap file"
+    echo "  --disable-swap        Disable swap file"
+    echo "  --set-max-power       Set system to MAX-N power mode"
+    echo "  --test=<function>     Run a specific function for testing"
+    echo "  --help                Show this help message and exit"
+    echo
+    echo "Example:"
+    echo "  $0 --disable-gui --enable-swap --set-max-power"
+    echo
+}
+
 parse_args() {
     TEST_FUNCTION=""
 
@@ -40,6 +59,9 @@ parse_args() {
                 ;;
             --disable-swap)
                 DISABLE_SWAP="true"
+                ;;
+            --set-max-power)
+                SET_MAX_POWER="true"
                 ;;
             --test=*)
                 TEST_FUNCTION="${arg#*=}"
@@ -315,7 +337,7 @@ toggle_swap() {
         action="enable"
     fi
 
-    # Handle --enable/disable-zram argument
+    # Handle --enable/disable-swap argument
     if [[ "$1" == "--enable-swap" ]]; then
         if [[ "$swap_status" == "ENABLED" ]]; then
             echo "✅ Swap file is already enabled. No changes needed."
@@ -423,6 +445,57 @@ toggle_swap() {
     return 0
 }
 
+set_max_power() {
+    print_section "4. NV power mode setting"
+    log INFO "🔋 Setting Jetson to MAXN Power Mode..."
+
+    # Get the current power mode
+    current_mode=$(sudo nvpmodel -q | awk -F': ' '/NV Power Mode/ {print $2}' | tr -d ' ')
+    log INFO "current_mode: $current_mode"
+
+    if [[ "$current_mode" =~ ^MAXN  ]]; then
+        log WARN "✅ Jetson is already in $current_mode mode. Skipping nvpmodel change."
+    else
+        # Confirm before proceeding
+        read -p "⚠️  This will set your Jetson to maximum power mode (MAXN). Proceed? (y/N): " confirm
+        confirm=${confirm,,}  # Convert input to lowercase
+
+        if [[ "$confirm" != "y" && "$confirm" != "yes" ]]; then
+            log WARN "❌ Operation aborted."
+            return 1
+        fi
+
+        local maxn_id
+        maxn_id=$(awk -F'[= >]+' '/< POWER_MODEL/ {id=$4} /NAME=MAXN/ {print id; exit}' /etc/nvpmodel.conf)
+
+        if [[ -n "$maxn_id" ]]; then
+            log INFO "✅ MAXN Power Model ID: $maxn_id"
+        else
+            log WARN "❌ No MAXN mode found in /etc/nvpmodel.conf" >&2
+            return 1
+        fi
+
+        log INFO "🛠️ Applying MAXN Power Mode..."
+        log WARN "⚠️ Rebooting may be required and you may get asked to type YES to reboot."
+        sudo nvpmodel -m "$maxn_id"
+        sleep 1  # Allow time for mode change to take effect
+
+        # Check if MAXN mode is now active
+        new_mode=$(sudo nvpmodel -q | awk -F': ' '/NV Power Mode/ {print $2}' | tr -d ' ')
+
+        if [[ "$new_mode" == MAXN* ]]; then
+            log INFO "✅ Jetson is now running in MAXN mode ($new_mode)."
+            return 0
+        fi
+    fi
+
+    # Boost clocks
+    log INFO "🚀 Applying Jetson Clocks for max performance..."
+    sudo jetson_clocks
+
+    log INFO "✅ Jetson is now running in MAXN mode with boosted clocks!"
+}
+
 main() {
 
     parse_args "$@"
@@ -442,10 +515,8 @@ main() {
     # Step 1. Toggle GUI mode (graphical <-> multi-user)
     if [[ "$ENABLE_GUI" == "true" ]]; then
         toggle_gui_mode --enable-gui
-        exit 0
     elif [[ "$DISABLE_GUI" == "true" ]]; then
         toggle_gui_mode --disable-gui
-        exit 0
     else
         toggle_gui_mode
     fi
@@ -453,26 +524,25 @@ main() {
     # Step 2. Toggle ZRAM mode (-> off)
     if [[ "$ENABLE_ZRAM" == "true" ]]; then
         toggle_zram --enable-zram
-        exit 0
     elif [[ "$DISABLE_ZRAM" == "true" ]]; then
         toggle_zram --disable-zram
-        exit 0
     else
         toggle_zram
     fi
 
     # Step 3. Toggle Swap File (-> ON)
     if [[ "$ENABLE_SWAP" == "true" ]]; then
-        toggle_swap --enable-swa[]
-        exit 0
+        toggle_swap --enable-swap
     elif [[ "$DISABLE_SWAP" == "true" ]]; then
         toggle_swap --disable-swap
-        exit 0
     else
         toggle_swap
     fi
 
-
+    # Step 4. SET_MAX_POWER (-> ON)
+    if [[ "$SET_MAX_POWER" == "true" ]]; then
+        set_max_power
+    fi
 }
 
 # Execute main function

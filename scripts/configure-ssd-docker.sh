@@ -180,6 +180,9 @@ install_docker() {
     # Proceed with installation
     log INFO "✅ Proceeding with Docker installation..."
     cd  /tmp/
+    if [ -d "install-docker" ]; then
+        rm -rf install-docker
+    fi
     git clone https://github.com/jetsonhacks/install-docker.git
     cd install-docker
     bash ./install_nvidia_docker.sh
@@ -271,6 +274,32 @@ setup_docker() {
 
 }
 
+print_help() {
+    echo -e "\n\033[1;34mUsage:\033[0m $0 [OPTIONS]"
+    echo
+    echo -e "\033[1;36mOptions:\033[0m"
+    echo -e "  --help             Show this help message and exit."
+    echo -e "  --test=<function>  Run a specific function for testing."
+    echo
+    echo -e "\033[1;36mDescription:\033[0m"
+    echo "  This script configures an NVMe SSD as storage for Docker on a Jetson device."
+    echo "  It will detect if Jetson is running from eMMC and migrate Docker data if needed."
+    echo
+    echo -e "\033[1;36mSteps Performed:\033[0m"
+    echo "  1️⃣ Detect if Jetson is installed on NVMe or eMMC."
+    echo "  2️⃣ If necessary, format and mount the NVMe SSD."
+    echo "  3️⃣ Install Docker if it's not already installed."
+    echo "  4️⃣ If using eMMC + NVMe, migrate Docker data-root to SSD."
+    echo
+    echo -e "\033[1;36mExamples:\033[0m"
+    echo -e "  📌 Run full setup:"
+    echo -e "      \033[1;32m$0\033[0m"
+    echo
+    echo -e "  📌 Test a specific function (e.g., check if Docker is installed):"
+    echo -e "      \033[1;32m$0 --test=check_docker_is_installed\033[0m"
+    echo
+}
+
 parse_args() {
     TEST_FUNCTION=""
 
@@ -310,14 +339,14 @@ main() {
     # Normal execution flow if no --test flag is supplied
     log INFO "Running full setup..."
 
-    # Step 0: Check L4T is installed entirely on NVMe (or eMMC)
-    print_section "Step 0: Check L4T is installed entirely on NVMe (or installed on eMMC/SD)"
+    # Step 1: Check L4T is installed entirely on NVMe (or eMMC)
+    print_section "Step 1: Check L4T is installed entirely on NVMe (or installed on eMMC/SD)"
     if check_l4t_installed_on_nvme; then
-        log INFO "No need to mount SSD, no need to set Docker data-root dir."
+        log INFO "No need to mount SSD, no need to set Docker data-root dir. (Skipping Step 2)"
     else
         log INFO "Checking if NVMe is present and to be mounted"
-        # Step 1: Mount NVMe if there is one exists and to be mounted
-        print_section "Step 1: Mount NVMe if there is one exists and to be mounted"
+        # Step 2: Mount NVMe if there is one exists and to be mounted
+        print_section "Step 2: Mount NVMe if there is one exists and to be mounted"
         if check_nvme_to_be_mounted; then
             mount_nvme
         else
@@ -325,14 +354,14 @@ main() {
         fi
     fi
 
-    # Step 2: Install Docker if not installed
-    print_section "Step 2: Install Docker if not installed"
+    # Step 3: Install Docker if not installed
+    print_section "Step 3: Install Docker if not installed"
     if ! check_docker_is_installed; then
         install_docker
     fi
 
-    # Step 3: If eMMC + NVMe, migrate Docker directory to SSD
-    print_section "Step 3: If eMMC + NVMe, migrate Docker directory to SSD"
+    # Step 4: If eMMC + NVMe, migrate Docker directory to SSD
+    print_section "Step 4: If eMMC + NVMe, migrate Docker directory to SSD"
     setup_docker
 
     print_section "=== COMPLETED ==="
