@@ -8,7 +8,6 @@ if [ ! -d /opt/nerfstudio ]; then
     git clone --depth=1 --recursive https://github.com/nerfstudio-project/nerfstudio /opt/nerfstudio
 fi
 
-# Navigate to the directory containing PyMeshLab's setup.py
 cd /opt/nerfstudio
 sed -i '/"nerfacc==0\.5\.2",/d' pyproject.toml
 pip3 install cmake
