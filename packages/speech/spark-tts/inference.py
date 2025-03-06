@@ -33,7 +33,7 @@ def run_tts(args) -> None:
     logging.info(f"Args: {args}")
 
     if (not args.prompt_speech_path or not args.prompt_text) and (not args.gender or not args.pitch or not args.speed):
-        raise ValueError("Please provide --gender and --pitch if not using Voice Cloning!")
+        raise ValueError("Please provide --gender, --pitch and --speed if not using Voice Cloning!")
 
     # Check if model already exists
     if os.path.exists(args.model_dir) and len(os.listdir(args.model_dir)) > 0:
