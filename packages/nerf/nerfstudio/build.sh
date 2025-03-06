@@ -9,7 +9,7 @@ if [ ! -d /opt/nerfstudio ]; then
 fi
 
 cd /opt/nerfstudio
-sed -i '/"nerfacc==0\.5\.2",/d' pyproject.toml
+sed -i '/"nerfacc==0\.5\.2",/d;/^ *"open3d>=0\.16\.0",/d' pyproject.toml
 pip3 install cmake
 pip3 install --ignore-installed blinker
 pip3 wheel . --no-deps --no-build-isolation -w /opt/nerfstudio/wheels  # Create the wheel package
