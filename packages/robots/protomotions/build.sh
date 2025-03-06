@@ -13,7 +13,7 @@ git lfs fetch --all
 sed -i '/torch/d; /open3d/d; /wandb/d; /PyOpenGL==3\.1\.4/d' requirements_genesis.txt
 
 
-pip3 install open3d PyOpenGL==3.1.4 PyOpenGL_accelerate
+pip3 install open3d PyOpenGL PyOpenGL_accelerate
 pip3 install -e .
 pip3 install -r requirements_genesis.txt
 pip3 install -e isaac_utils
