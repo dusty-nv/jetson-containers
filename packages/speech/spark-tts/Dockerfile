@@ -5,6 +5,7 @@
 # requires: ['>=36.1.0', '>=cu126']
 # test: [test.py]
 # notes: 'Spark-TTS: An Efficient LLM-Based Text-to-Speech Model with Single-Stream Decoupled Speech Tokens – https://github.com/SparkAudio/Spark-TTS'
+# docs: docs.md
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
