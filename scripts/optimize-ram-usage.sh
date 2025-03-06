@@ -33,7 +33,7 @@ print_help() {
     echo "  --help                Show this help message and exit"
     echo
     echo "Example:"
-    echo "  $0 --disable-gui --enable-swap --set-max-power"
+    echo "  $0 --disable-gui --disable-zram --enable-swap --set-max-power"
     echo
 }
 
