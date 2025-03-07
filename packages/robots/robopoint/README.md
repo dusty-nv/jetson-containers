@@ -61,7 +61,7 @@ The performance is currently ~2 seconds/image on AGX Orin with int4 (bitsandbyte
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.5`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`triton`](/packages/ml/triton) [`bitsandbytes`](/packages/llm/bitsandbytes) [`flash-attention`](/packages/llm/flash-attention) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/robopoint:r36.4.0-cu128-24.04`](https://hub.docker.com/r/dustynv/robopoint/tags) `(2025-03-07, 4.7GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/robopoint:r36.4.0`](https://hub.docker.com/r/dustynv/robopoint/tags) `(2025-03-07, 5.3GB)`<br>[`dustynv/robopoint:r36.4.0-cu128-24.04`](https://hub.docker.com/r/dustynv/robopoint/tags) `(2025-03-07, 4.7GB)` |
 
 </details>
 
@@ -71,6 +71,7 @@ The performance is currently ~2 seconds/image on AGX Orin with int4 (bitsandbyte
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
+| &nbsp;&nbsp;[`dustynv/robopoint:r36.4.0`](https://hub.docker.com/r/dustynv/robopoint/tags) | `2025-03-07` | `arm64` | `5.3GB` |
 | &nbsp;&nbsp;[`dustynv/robopoint:r36.4.0-cu128-24.04`](https://hub.docker.com/r/dustynv/robopoint/tags) | `2025-03-07` | `arm64` | `4.7GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
@@ -88,10 +89,10 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag robopoint)
 
 # or explicitly specify one of the container images above
-jetson-containers run dustynv/robopoint:r36.4.0-cu128-24.04
+jetson-containers run dustynv/robopoint:r36.4.0
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/robopoint:r36.4.0-cu128-24.04
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/robopoint:r36.4.0
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
