@@ -6,8 +6,11 @@ set -euo pipefail
 # Initialize variables
 declare -a TESTS=()
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(dirname "$SCRIPT_DIR")"
+
 # Load environment variables from .env
-if [ -f ".env" ]; then
+if [ -f "${ROOT_DIR}/.env" ]; then
     set -a
     source .env
     set +a
@@ -51,7 +54,7 @@ power_mode="${POWER_MODE_OPTIONS_MODE:-1}"
 
 # Check if script is run with sudo
 check_permissions() {
-    if [ "$EUID" -ne 0 ]; then 
+    if [ "$EUID" -ne 0 ]; then
         echo "Please run as root (with sudo)"
         exit 1
     fi
@@ -60,7 +63,7 @@ check_permissions() {
 # Check for minimal dependencies
 check_dependencies() {
     local missing_deps=()
-    
+
     # Required commands
     if ! command -v nvpmodel &> /dev/null; then
         missing_deps+=("nvpmodel")
@@ -183,7 +186,7 @@ setup_docker_root() {
 
     if should_execute_step "docker_root" "Would you like to relocate Docker data root?"; then
         echo "Using Docker root path: $docker_root"
-        
+
         if [ ! -d "$docker_root" ]; then
             echo "Creating directory: $docker_root"
             mkdir -p "$docker_root" || {
@@ -241,14 +244,14 @@ setup_swap_file() {
             echo "Failed to setup swap"
             return 1
         fi
-            
+
         if ! grep -q "$swap_file" /etc/fstab; then
             echo "$swap_file  none  swap  sw 0  0" >> /etc/fstab || {
                 echo "Failed to update fstab"
                 return 1
             }
         fi
-            
+
         echo "Swap file configured successfully."
         return 0
     fi
@@ -300,7 +303,7 @@ setup_gui() {
 # Configure Docker group
 setup_docker_group() {
     local current_user="$add_user"
-    
+
     if groups "$current_user" | grep -q "\bdocker\b"; then
         echo "User $current_user is already in the docker group, skipping..."
         return 0
@@ -349,7 +352,7 @@ ask_execution_mode() {
     while true; do
         read -p "Enter choice (1/2): " choice
         case $choice in
-            1) 
+            1)
                 execution_mode="all"
                 return 0
                 ;;
@@ -394,7 +397,7 @@ fi
 should_execute_step() {
     local step=$1
     local prompt=$2
-    
+
     if [ "$execution_mode" = "specific" ]; then
         for test in "${TESTS[@]}"; do
             if [ "$test" = "$step" ]; then
@@ -431,14 +434,14 @@ main() {
     check_dependencies
     echo "Probing status before working"
     echo "============================="
-    ./probe-system.sh
+    ${SCRIPT_DIR}/probe-system.sh
     echo "============================="
 
     # NVMe Setup
     if [ "$nvme_should_run" = "yes" ] || [ "$nvme_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure NVMe drive?"; then
-        if ! ./probe-system.sh --tests="nvme_mount"; then
+        if ! ${SCRIPT_DIR}/probe-system.sh --tests="nvme_mount"; then
             assign_nvme_drive
-            ./probe-system.sh --tests="nvme_mount"
+            ${SCRIPT_DIR}/probe-system.sh --tests="nvme_mount"
         else
             echo "NVMe drive is already properly mounted."
         fi
@@ -446,9 +449,9 @@ main() {
 
     # Docker Runtime Setup
     if [ "$docker_runtime_should_run" = "yes" ] || [ "$docker_runtime_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure Docker runtime?"; then
-        if ! ./probe-system.sh --tests="docker_runtime"; then
+        if ! ${SCRIPT_DIR}/probe-system.sh --tests="docker_runtime"; then
             setup_docker_runtime
-            ./probe-system.sh --tests="docker_runtime"
+            ${SCRIPT_DIR}/probe-system.sh --tests="docker_runtime"
         else
             echo "Docker runtime is already properly configured."
         fi
@@ -456,9 +459,9 @@ main() {
 
     # Docker Root Setup
     if [ "$docker_root_should_run" = "yes" ] || [ "$docker_root_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure Docker root?"; then
-        if ! ./probe-system.sh --tests="docker_root"; then
+        if ! ${SCRIPT_DIR}/probe-system.sh --tests="docker_root"; then
             setup_docker_root
-            ./probe-system.sh --tests="docker_root"
+            ${SCRIPT_DIR}/probe-system.sh --tests="docker_root"
         else
             echo "Docker root is already properly configured."
         fi
@@ -466,9 +469,9 @@ main() {
 
     # Swap Setup
     if [ "$swap_should_run" = "yes" ] || [ "$swap_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure swap?"; then
-        if ! ./probe-system.sh --tests="swap_file"; then
+        if ! ${SCRIPT_DIR}/probe-system.sh --tests="swap_file"; then
             setup_swap_file
-            ./probe-system.sh --tests="swap_file"
+            ${SCRIPT_DIR}/probe-system.sh --tests="swap_file"
         else
             echo "Swap file is already properly configured."
         fi
@@ -476,9 +479,9 @@ main() {
 
     # ZRAM Setup
     if [ "$disable_zram_flag" = "true" ]; then
-        if ! ./probe-system.sh --tests="disable_zram,nvzramconfig_service"; then
+        if ! ${SCRIPT_DIR}/probe-system.sh --tests="disable_zram,nvzramconfig_service"; then
             disable_zram
-            ./probe-system.sh --tests="disable_zram,nvzramconfig_service"
+            ${SCRIPT_DIR}/probe-system.sh --tests="disable_zram,nvzramconfig_service"
         else
             echo "ZRAM is already properly disabled."
         fi
@@ -486,9 +489,9 @@ main() {
 
     # GUI Setup
     if [ "$gui_disabled_should_run" = "yes" ] || [ "$gui_disabled_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure desktop GUI?"; then
-        if ! ./probe-system.sh --tests="gui"; then
+        if ! ${SCRIPT_DIR}/probe-system.sh --tests="gui"; then
             setup_gui
-            ./probe-system.sh --tests="gui"
+            ${SCRIPT_DIR}/probe-system.sh --tests="gui"
         else
             echo "GUI is already properly configured."
         fi
@@ -496,9 +499,9 @@ main() {
 
     # Docker Group Setup
     if [ "$docker_group_should_run" = "yes" ] || [ "$docker_group_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure Docker group?"; then
-        if ! ./probe-system.sh --tests="docker_group"; then
+        if ! ${SCRIPT_DIR}/probe-system.sh --tests="docker_group"; then
             setup_docker_group
-            ./probe-system.sh --tests="docker_group"
+            ${SCRIPT_DIR}/probe-system.sh --tests="docker_group"
         else
             echo "Docker group is already properly configured."
         fi
@@ -506,9 +509,9 @@ main() {
 
     # Power Mode Setup
     if [ "$power_mode_should_run" = "yes" ] || [ "$power_mode_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure power mode?"; then
-        if ! ./probe-system.sh --tests="power_mode"; then
+        if ! ${SCRIPT_DIR}/probe-system.sh --tests="power_mode"; then
             setup_power_mode
-            ./probe-system.sh --tests="power_mode"
+            ${SCRIPT_DIR}/probe-system.sh --tests="power_mode"
         else
             echo "Power mode is already properly configured."
         fi
@@ -517,7 +520,7 @@ main() {
     if should_execute_step "docker_service" "Restart Docker service"; then
         systemctl restart docker
     fi
-    
+
     echo
     echo "Configuration complete!"
     echo "============================="
