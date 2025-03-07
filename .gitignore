@@ -16,3 +16,4 @@ runner
 .idea
 nv_tegra_release
 kokoro-*-*.wav
+audio.wav

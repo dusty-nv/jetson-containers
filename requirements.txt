@@ -2,3 +2,4 @@ packaging>=20.0
 pyyaml>=6
 wget
 git+https://github.com/Granulate/DockerHub-API.git
+tabulate

@@ -6,4 +6,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install --no-cache-dir --verbose fast_gauss==${FAST_GAUSS_VERSION}
+pip3 install fast_gauss==${FAST_GAUSS_VERSION}

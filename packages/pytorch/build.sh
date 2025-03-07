@@ -15,8 +15,8 @@ sed -i 's|cpuinfo_log_error|cpuinfo_log_warning|' ${CPUINFO_PATCH}
 grep 'PR_SVE_GET_VL' ${CPUINFO_PATCH} || echo "patched ${CPUINFO_PATCH}"
 tail -20 ${CPUINFO_PATCH}
 
-pip3 install --no-cache-dir -r requirements.txt
-pip3 install --no-cache-dir scikit-build ninja
+pip3 install -r requirements.txt
+pip3 install scikit-build ninja
 
 PYTORCH_BUILD_NUMBER=1 \
 TORCH_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" \

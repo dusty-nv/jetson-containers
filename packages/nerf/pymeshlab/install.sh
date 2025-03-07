@@ -11,10 +11,16 @@ if [ "$FORCE_BUILD" == "on" ]; then
     exit 1
 fi
 
-# Construct the GitHub release URL dynamically
-WHL_URL="https://github.com/cnr-isti-vclab/PyMeshLab/releases/download/v${PYMESHLAB_VERSION}/pymeshlab-${PYMESHLAB_VERSION}-cp310-cp310-manylinux_2_35_aarch64.whl"
+# Detect Python version and create a tag (e.g., cp310, cp311)
+PYTHON_TAG=$(python3 -c "import sys; print('cp{}{}'.format(sys.version_info.major, sys.version_info.minor))")
+echo "Detected Python tag: ${PYTHON_TAG}"
+
+# Construct the GitHub release URL dynamically using the detected Python tag
+WHL_URL="https://github.com/cnr-isti-vclab/PyMeshLab/releases/download/v${PYMESHLAB_VERSION}/pymeshlab-${PYMESHLAB_VERSION}-${PYTHON_TAG}-${PYTHON_TAG}-manylinux_2_35_aarch64.whl"
+echo "Using wheel URL: ${WHL_URL}"
 
 # Install the .whl file directly from the constructed URL
-pip3 install --no-cache-dir --verbose "${WHL_URL}"
+pip3 install "${WHL_URL}"
 
+# Test the installation
 python3 -c "import pymeshlab; ms = pymeshlab.MeshSet()"

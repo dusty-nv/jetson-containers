@@ -15,7 +15,7 @@ MAX_JOBS=$(nproc) \
 pip3 wheel . -w /opt/nerfacc/wheels --verbose
 
 pip3 install lpips scipy
-pip3 install --no-cache-dir --verbose /opt/nerfacc/wheels/nerfacc*.whl
+pip3 install /opt/nerfacc/wheels/nerfacc*.whl
 
 cd /opt/nerfacc
 

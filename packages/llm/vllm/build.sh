@@ -24,14 +24,20 @@ pip3 wheel . --wheel-dir /opt/xgrammar/wheels/ --verbose
 # Warning: version number is 0.1.5 even if actual version is 0.1.8, or 0.1.9 due to version.py not being adapted yet: https://github.com/mlc-ai/xgrammar/blob/main/python/xgrammar/version.py
 pip3 install /opt/xgrammar/wheels/xgrammar*.whl
 
+
 # Clone the repository if it doesn't exist
 git clone --branch=v${VLLM_VERSION} --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm || 
 git clone --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm
 cd /opt/vllm
 
 env
-cp /tmp/vllm/${VLLM_VERSION}.fa.diff /tmp/vllm/fa.diff
-git apply /tmp/vllm/${VLLM_VERSION}.diff
+# cp /tmp/vllm/${VLLM_VERSION}.fa.diff /tmp/vllm/fa.diff
+# git apply /tmp/vllm/${VLLM_VERSION}.diff
+python3 /tmp/vllm/generate_diff.py
+git apply -p1 /tmp/vllm/CMakeLists.txt.diff
+git apply -p1 /tmp/vllm/vllm_flash_attn.cmake.diff
+git apply -p1 /tmp/vllm/vllm_model_executor_guided_decoding___init__.py.diff
+
 git diff
 git status
 
@@ -47,7 +53,7 @@ python3 use_existing_torch.py || echo "skipping vllm/use_existing_torch.py"
 pip3 install -r requirements-build.txt -v
 python3 -m setuptools_scm
 pip3 wheel --no-build-isolation -v --wheel-dir=/opt/vllm/wheels .
-pip3 install --no-cache-dir --verbose /opt/vllm/wheels/vllm*.whl
+pip3 install /opt/vllm/wheels/vllm*.whl
 
 cd /opt/vllm
 pip3 install compressed-tensors

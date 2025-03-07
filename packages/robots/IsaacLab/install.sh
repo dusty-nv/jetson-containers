@@ -7,7 +7,8 @@ apt-get install -y --no-install-recommends \
     build-essential \
     libjpeg-dev \
     libglm-dev \
-    libgl1-mesa-glx \
+    libgl1 \
+    libglx-mesa0 \
     libegl1-mesa-dev \
     mesa-utils \
     xorg-dev \
@@ -20,4 +21,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install --no-cache-dir --verbose isaacsim==${ISAACLAB_VERSION}
+pip3 install isaacsim==${ISAACLAB_VERSION}

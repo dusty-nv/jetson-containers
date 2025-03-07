@@ -55,7 +55,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # /usr/bin/rosinstall_generator => No module named 'importlib.metadata'
-RUN pip3 list | grep catkin && pip3 install --no-cache-dir --verbose importlib.metadata catkin && \
+RUN pip3 list | grep catkin && pip3 install importlib.metadata catkin && \
     pip3 list | grep catkin && \
     python3 -c 'import catkin'
     

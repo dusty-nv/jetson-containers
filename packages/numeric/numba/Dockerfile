@@ -18,5 +18,5 @@ RUN apt-get update && \
 #RUN update-alternatives --install /usr/bin/llvm-config llvm-config /usr/bin/llvm-config-9 1
 #RUN llvm-config --version
 
-RUN pip3 install --no-cache-dir --verbose numba && \
+RUN pip3 install numba && \
     pip3 show numba && python3 -c 'import numba; print(numba.__version__)'

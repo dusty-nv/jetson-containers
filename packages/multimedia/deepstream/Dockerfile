@@ -98,11 +98,11 @@ RUN if [ "${PYDS_VERSION}" = "1.2.0" ]; then \
         cd /opt/nvidia/deepstream/deepstream/sources/deepstream_python_apps/bindings && \
         export CMAKE_BUILD_PARALLEL_LEVEL=$(nproc) && \
         python3 -m build && \
-        pip3 install --verbose ./dist/pyds-*.whl; \
+        pip3 install ./dist/pyds-*.whl; \
     else \
         cd /tmp && \
         wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate https://github.com/NVIDIA-AI-IOT/deepstream_python_apps/releases/download/v${PYDS_VERSION}/pyds-${PYDS_VERSION}-py3-none-linux_aarch64.whl && \
-        pip3 install --verbose ./pyds-*.whl; \
+        pip3 install ./pyds-*.whl; \
     fi
 
 # make sure it loads

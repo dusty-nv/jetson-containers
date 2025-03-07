@@ -1,7 +1,7 @@
 #---
 # name: comfyui
 # group: diffusion
-# depends: [pytorch, torchvision, torchaudio, opencv, bitsandbytes, transformers, xformers, torchao, diffusers, vhacdx, manifold, huggingface_hub]
+# depends: [pytorch, torchvision, torchaudio, opencv, bitsandbytes, transformers, xformers, torchao, diffusers, huggingface_hub]
 # requires: '>=35.0.0'
 # docs: docs.md
 #---
@@ -13,7 +13,7 @@ WORKDIR /opt
 # Clone the repository:
 RUN git clone https://github.com/comfyanonymous/ComfyUI.git && \
     cd ComfyUI && \
-    pip3 install --no-cache-dir -r requirements.txt
+    pip3 install -r requirements.txt
 
 RUN cd /opt/ComfyUI/custom_nodes && \
     git clone --recursive https://github.com/ltdrdata/ComfyUI-Manager.git && \
@@ -30,8 +30,8 @@ RUN cd /opt/ComfyUI/custom_nodes/comfyui-flux-accelerator/scripts && \
 
 WORKDIR /opt/ComfyUI/
 
-RUN pip3 install --no-cache-dir -U xformers onnxruntime-gpu triton lm_eval
-RUN pip3 install --no-cache-dir -U diffusers flash-attn sageattention  torchao
+RUN pip3 install -U xformers onnxruntime-gpu triton lm_eval vhacdx manifold openexr
+RUN pip3 install -U diffusers flash-attn sageattention  torchao
 
 COPY workflow /opt/ComfyUI/workflow
 COPY extra /opt/ComfyUI/extra

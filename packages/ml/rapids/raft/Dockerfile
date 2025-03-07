@@ -49,14 +49,14 @@ RUN mkdir raft/cpp/build && \
 RUN cd raft/cpp/build && \
     make -j $(nproc) install
 
-#RUN pip3 install --no-cache-dir --verbose 'Cython>=3'
+#RUN pip3 install 'Cython>=3'
 
 RUN cd raft/cpp/build/_deps/rmm-src/python && \ 
     sed -i "s|versioneer.get_version()|\"${RAFT_VERSION}\".lstrip('v')|g" setup.py && \ 
     sed -i "s|get_versions().*|\"${RAFT_VERSION}\".lstrip('v')|g" rmm/__init__.py && \ 
     python3 setup.py bdist_wheel --verbose && \ 
     cp dist/rmm*.whl /opt && \ 
-    pip3 install --no-cache-dir --verbose /opt/rmm*.whl
+    pip3 install /opt/rmm*.whl
 
 RUN pip3 show rmm && python3 -c 'import rmm; print(rmm.__version__)'
 
@@ -67,7 +67,7 @@ RUN cd raft/python/pylibraft && \
     SKBUILD_BUILD_OPTIONS="-j$(nproc)" \
     python3 -m pip wheel --no-build-isolation --verbose . && \
     cp pylibraft*.whl /opt && \
-    pip3 install --no-cache-dir --verbose /opt/pylibraft*.whl
+    pip3 install /opt/pylibraft*.whl
     
 WORKDIR /
 

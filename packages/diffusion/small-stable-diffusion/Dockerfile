@@ -20,7 +20,7 @@ ADD https://api.github.com/repos/${SSD_REPO}/git/refs/heads/${SSD_BRANCH} /tmp/s
 RUN cd /opt && \
     git clone --branch ${SSD_BRANCH} --depth=1 https://github.com/${SSD_REPO} && \
     cd small-stable-diffusion && \
-    pip3 install --no-cache-dir --verbose -r gpu_requirements.txt
+    pip3 install -r gpu_requirements.txt
 
 # set the huggingface model cache to mounted dir
 ENV DIFFUSERS_CACHE=/data/models/diffusers

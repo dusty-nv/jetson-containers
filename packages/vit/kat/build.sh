@@ -12,7 +12,7 @@ git clone https://github.com/Adamdad/rational_kat_cu.git /opt/rational_kat_cu
 cd /opt/rational_kat_cu
 
 pip3 wheel --no-build-isolation --wheel-dir=/opt/rational_kat_cu/wheels .
-pip3 install --no-cache-dir --verbose /opt/rational_kat_cu/wheels/*.whl
+pip3 install /opt/rational_kat_cu/wheels/*.whl
 pip install -e . --no-cache-dir
 pip install timm==1.0.3
 

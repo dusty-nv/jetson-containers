@@ -40,7 +40,7 @@ apt-get install -y --no-install-recommends \
 		libcunit1-dev
 
 # install some pip packages needed for testing
-pip3 install --upgrade --no-cache-dir \
+pip3 install --upgrade \
 		argcomplete \
 		flake8-blind-except \
 		flake8-builtins \
@@ -59,8 +59,8 @@ pip3 install --upgrade --no-cache-dir \
 # use pip to upgrade cmake instead because of kitware's rotating GPG keys:
 # https://github.com/dusty-nv/jetson-containers/issues/216			  
 python3 -m pip install --upgrade pip
-pip3 install --no-cache-dir scikit-build
-pip3 install --upgrade --no-cache-dir --verbose cmake
+pip3 install scikit-build
+pip3 install --upgrade cmake
 cmake --version
 which cmake
 
@@ -83,7 +83,7 @@ ls -ll /usr/bin/python*
 # create the ROS_ROOT directory
 mkdir -p ${ROS_ROOT}/src
 cd ${ROS_ROOT}
-    
+
 # download ROS sources
 # https://answers.ros.org/question/325245/minimal-ros2-installation/?answer=325249#post-id-325249
 rosinstall_generator --deps --rosdistro ${ROS_DISTRO} ${ROS_PACKAGE} \
@@ -131,7 +131,7 @@ if [ "$ROS_DISTRO" = "humble" ] || [ "$ROS_DISTRO" = "iron" ] && [ $(lsb_release
 
 	# upgrade pybind11
 	apt-get purge -y pybind11-dev
-	pip3 install --upgrade --no-cache-dir pybind11-global
+	pip3 install --upgrade pybind11-global
    
 	# https://github.com/dusty-nv/jetson-containers/issues/160#issuecomment-1429572145
 	git -C /tmp clone -b yaml-cpp-0.6.0 https://github.com/jbeder/yaml-cpp.git

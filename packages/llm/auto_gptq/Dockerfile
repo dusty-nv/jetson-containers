@@ -17,6 +17,6 @@ ARG AUTOGPTQ_VERSION \
 
 COPY build.sh /tmp/build_auto_gptq.sh
 
-RUN pip3 install --no-cache-dir gekko && \
-    pip3 install --no-cache-dir --verbose auto-gptq==${AUTOGPTQ_VERSION} || \
+RUN pip3 install gekko && \
+    pip3 install auto-gptq==${AUTOGPTQ_VERSION} || \
     /tmp/build_auto_gptq.sh

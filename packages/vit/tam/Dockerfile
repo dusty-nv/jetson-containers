@@ -33,7 +33,7 @@ RUN mim install mmcv --verbose --no-cache-dir
 RUN /tmp/opencv/install.sh
 
 # https://github.com/dusty-nv/jetson-containers/issues/326
-RUN pip3 install --no-cache-dir --verbose gradio==3.38.0
+RUN pip3 install gradio==3.38.0
 
 # cache the checkpoints under /data
 RUN mkdir -p /data/models/tam && \

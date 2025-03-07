@@ -19,7 +19,7 @@ cd /
 #rm -rf exllamav2
 ls -ll /opt
 
-pip3 install --no-cache-dir --verbose /opt/exllamav2*.whl
+pip3 install /opt/exllamav2*.whl
 pip3 show exllamav2 && python3 -c 'import exllamav2'
 
 twine upload --verbose /opt/exllamav2*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

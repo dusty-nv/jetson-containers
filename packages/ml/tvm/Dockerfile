@@ -65,7 +65,7 @@ RUN cd tvm/python && \
     rm -rf dist && \
     rm -rf build
 
-RUN pip3 install --no-cache-dir --verbose tvm*.whl
+RUN pip3 install tvm*.whl
     
 WORKDIR /
 

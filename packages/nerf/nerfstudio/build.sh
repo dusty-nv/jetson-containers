@@ -8,10 +8,10 @@ if [ ! -d /opt/nerfstudio ]; then
     git clone --depth=1 --recursive https://github.com/nerfstudio-project/nerfstudio /opt/nerfstudio
 fi
 
-# Navigate to the directory containing PyMeshLab's setup.py
 cd /opt/nerfstudio
-pip3 install cmake
-pip3 install --no-cache-dir --ignore-installed blinker
+sed -i '/"nerfacc==0\.5\.2",/d;/^ *"open3d>=0\.16\.0",/d' pyproject.toml
+pip3 install cmake open3d
+pip3 install --ignore-installed blinker
 pip3 wheel . --no-deps --no-build-isolation -w /opt/nerfstudio/wheels  # Create the wheel package
 
 # Verify the contents of the /opt directory
@@ -19,7 +19,8 @@ ls /opt/nerfstudio/wheels
 
 # Return to the root directory
 cd /
-pip3 install --no-cache-dir --verbose /opt/nerfstudio/wheels/nerfstudio*.whl
+pip3 install manifold3d vhacdx openexr
+pip3 install /opt/nerfstudio/wheels/nerfstudio*.whl
 
 ns-install-cli --mode install
 

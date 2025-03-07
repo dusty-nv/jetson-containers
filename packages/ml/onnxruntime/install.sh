@@ -7,6 +7,6 @@ if [ "$FORCE_BUILD" == "on" ]; then
 fi
 
 tarpack install onnxruntime-gpu-${ONNXRUNTIME_VERSION}
-pip3 install --no-cache-dir --verbose onnxruntime-gpu==${ONNXRUNTIME_VERSION}
+pip3 install onnxruntime-gpu==${ONNXRUNTIME_VERSION}
 
 python3 -c 'import onnxruntime; print(onnxruntime.__version__);'

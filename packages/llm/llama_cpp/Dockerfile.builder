@@ -42,7 +42,7 @@ RUN set -ex \
     \
     # install the wheel \
     # python3 -m llama_cpp.server missing 'import uvicorn' \
-    && pip3 install --no-cache-dir --verbose \
+    && pip3 install \
         /opt/llama_cpp_python*.whl \
         typing-extensions \
         uvicorn \

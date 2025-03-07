@@ -8,13 +8,13 @@ fi
 
 # install the wheels
 if [[ -n "$(ls /tmp/mlc/*.whl)" ]]; then 
-    pip3 install --verbose /tmp/mlc/*.whl
+    pip3 install /tmp/mlc/*.whl
 else
-    pip3 install --no-cache-dir --verbose tvm==${TVM_VERSION} mlc-llm==${MLC_VERSION}
-    pip3 install --no-cache-dir --verbose mlc-chat==${MLC_VERSION} || echo "failed to pip install mlc-chat==${MLC_VERSION} (this is expected for mlc>=0.1.1)"
+    pip3 install tvm==${TVM_VERSION} mlc-llm==${MLC_VERSION}
+    pip3 install mlc-chat==${MLC_VERSION} || echo "failed to pip install mlc-chat==${MLC_VERSION} (this is expected for mlc>=0.1.1)"
 fi
 
-pip3 install --no-cache-dir --verbose 'pydantic>2'
+pip3 install 'pydantic>2'
 
 # we need the source because the MLC model builder relies on it
 git clone https://github.com/mlc-ai/mlc-llm /opt/mlc-llm

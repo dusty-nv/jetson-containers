@@ -2,18 +2,23 @@
 # name: taichi
 # group: genesis
 # config: config.py
-# depends: [ninja, cmake, rust]
+# depends: [cuda, ninja, cmake, rust]
 # requires: '>=36.0.0'
 # test: test.py
 # notes: https://github.com/taichi-dev/taichi
 #---
+
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG TAICHI_VERSION \
     CUDAARCHS
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# Clean and update apt
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* && apt-get update
+
+# Install dependencies
+RUN apt-get install -y --no-install-recommends \
     tmux \
     git \
     curl \
@@ -44,6 +49,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     liblz4-dev \
     libssl-dev \
     libtinfo-dev \
+    libncurses-dev \
+    libncurses5-dev \
+    libncursesw5-dev \
     libwayland-dev \
     libx11-xcb-dev \
     libxcb-dri3-dev \
@@ -55,9 +63,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxinerama-dev \
     libxrandr-dev \
     libzstd-dev \
-    && apt clean \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Clean apt cache and update package lists
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* && apt-get update
+
+# Install required packages, including libtinfo-dev and ncurses variants
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libncurses-dev \
+    libtinfo-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY build.sh install.sh /tmp/TAICHI/
 

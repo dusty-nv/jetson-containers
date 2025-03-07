@@ -26,7 +26,7 @@ ls /opt/genesis/wheels
 # Return to the root directory
 cd /
 
-pip3 install --no-cache-dir --verbose /opt/genesis/wheels/genesis*.whl
+pip3 install /opt/genesis/wheels/genesis*.whl
 
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/genesis/wheels/genesis*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

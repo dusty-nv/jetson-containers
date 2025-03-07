@@ -16,8 +16,8 @@ apt-get install -y --no-install-recommends \
 rm -rf /var/lib/apt/lists/*
 apt-get clean
 
-pip3 install --no-cache-dir tzdata
-pip3 install --no-cache-dir 'setuptools<72'  # setup.py invalid command 'test'
+pip3 install tzdata
+pip3 install 'setuptools<72'  # setup.py invalid command 'test'
 
 cd /tmp 
 
@@ -53,5 +53,5 @@ rm -rf ${PROTOBUF_DIR}
 rm -rf ${PROTOC_DIR}
 
 #python3 setup.py install --cpp_implementation && \
-#pip3 install protobuf==${PROTOBUF_VERSION} --install-option="--cpp_implementation" --no-cache-dir --verbose 
+#pip3 install protobuf==${PROTOBUF_VERSION} --install-option="--cpp_implementation"  
 #pip3 show protobuf && protoc --version

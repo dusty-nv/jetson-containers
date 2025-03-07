@@ -7,6 +7,6 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-RUN pip3 install --no-cache-dir --verbose scipy
-RUN pip3 install --no-cache-dir --verbose scikit-learn
-RUN pip3 install --no-cache-dir --verbose pandas
+RUN pip3 install scipy
+RUN pip3 install scikit-learn
+RUN pip3 install pandas

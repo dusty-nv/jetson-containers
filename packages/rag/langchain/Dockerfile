@@ -9,4 +9,4 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-RUN pip3 install --no-cache-dir --verbose langchain[llm] openai
+RUN pip3 install langchain[llm] openai

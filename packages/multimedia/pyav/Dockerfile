@@ -37,7 +37,7 @@ RUN cd /opt/ffmpeg-${FFMPEG_VERSION}  && \
 # solution mid-february: https://gitlab.com/AOMediaCodec/SVT-AV1/-/merge_requests/2355#note_2312506245
 # solved https://gitlab.com/AOMediaCodec/SVT-AV1/-/merge_requests/2387
 RUN cd /opt/ffmpeg-${FFMPEG_VERSION}  && \
-    git -C SVT-AV1 pull 2> /dev/null || git clone --recursive https://gitlab.com/AOMediaCodec/SVT-AV1.git && \
+    git -C SVT-AV1 pull 2> /dev/null || git clone --recursive https://gitlab.com/AOMediaCodec/SVT-AV1.git -b v2.3.0 && \
     mkdir -p SVT-AV1/build
 RUN cd /opt/ffmpeg-${FFMPEG_VERSION}/SVT-AV1/build && \
     PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" \
@@ -90,4 +90,4 @@ RUN cd /opt/ffmpeg-${FFMPEG_VERSION}  && \
 ENV PATH="/root/bin:${PATH}"
 ENV LD_LIBRARY_PATH=/root/ffmpeg_build/lib:$LD_LIBRARY_PATH
 ARG PKG_CONFIG_PATH=/opt/ffmpeg-${FFMPEG_VERSION}/libavdevice/:/opt/ffmpeg-${FFMPEG_VERSION}/libavfilter/:/opt/ffmpeg-${FFMPEG_VERSION}/libavformat/:/opt/ffmpeg-${FFMPEG_VERSION}/libavcodec/:/opt/ffmpeg-${FFMPEG_VERSION}/libswresample/:/opt/ffmpeg-${FFMPEG_VERSION}/libswscale/:/opt/ffmpeg-${FFMPEG_VERSION}/libavutil/
-RUN pip3 install --no-cache-dir --verbose pyav
+RUN pip3 install pyav

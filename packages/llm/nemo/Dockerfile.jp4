@@ -20,7 +20,7 @@ RUN ln -s /usr/include/locale.h /usr/include/xlocale.h
 ARG SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
 
 # Cannot uninstall 'PyYAML'. It is a distutils installed project...
-RUN pip3 install --ignore-installed --upgrade --no-cache-dir --verbose PyYAML
+RUN pip3 install --ignore-installed --upgrade PyYAML
 
 # install sentencepiece (checkout 635fe84 - previous commit to 8cbdf13)
 # https://github.com/google/sentencepiece/commit/8cbdf13794284c30877936f91c6f31e2c1d5aef7
@@ -66,17 +66,17 @@ RUN git clone --branch=${NEMO_VERSION} --depth=1 --recursive https://github.com/
 RUN LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
     LC_ALL=en_US.UTF-8 \
-    pip3 install --no-cache-dir --verbose opencc
+    pip3 install opencc
 
 # use 'find' since bash won't recognize it as a path (to expand the wildcard) with the [all] extras being used
-RUN pip3 install --no-cache-dir --verbose "$(find /opt -name 'nemo*.whl' | head -n1)[all]"
+RUN pip3 install "$(find /opt -name 'nemo*.whl' | head -n1)[all]"
 
 # cannot allocate memory in static TLS block
 ENV LD_PRELOAD=/usr/local/lib/python3.6/dist-packages/sklearn/__check_build/../../scikit_learn.libs/libgomp-d22c30c5.so.1.0.0
 
 # pytorch_lightning => import wandb.sdk.lib.json_util as json
 # AttributeError: module 'wandb' has no attribute 'sdk'
-RUN pip3 install --no-cache-dir --verbose 'wandb<0.15.8'
+RUN pip3 install 'wandb<0.15.8'
 
 # make sure it loads
 RUN pip3 show nemo_toolkit && python3 -c 'import nemo; print(nemo.__version__)'

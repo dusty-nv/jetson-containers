@@ -8,6 +8,8 @@ git clone --depth=1 https://github.com/Dao-AILab/flash-attention /opt/flash-atte
 
 cd /opt/flash-attention
 
+# Generate the diff dynamically
+python3 /tmp/flash-attention/generate_diff.py
 git apply /tmp/flash-attention/patch.diff
 git diff
 git status
@@ -21,7 +23,7 @@ python3 setup.py --verbose bdist_wheel --dist-dir /opt
 ls /opt
 cd /
 
-pip3 install --no-cache-dir --verbose /opt/flash_attn*.whl
+pip3 install /opt/flash_attn*.whl
 #pip3 show flash-attn && python3 -c 'import flash_attn'
 
 twine upload --verbose /opt/flash_attn*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

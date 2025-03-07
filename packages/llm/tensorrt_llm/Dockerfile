@@ -31,7 +31,7 @@ COPY build.sh install.sh /tmp/setup/
 RUN /tmp/setup/install.sh || /tmp/setup/build.sh #|| echo "BUILD FAILED!"
 
 RUN pip3 install --upgrade transformers && \
-    pip3 install --verbose --no-cache-dir uvicorn fastapi
+    pip3 install uvicorn fastapi
 
 COPY llama.sh ${SOURCE_DIR}/
 

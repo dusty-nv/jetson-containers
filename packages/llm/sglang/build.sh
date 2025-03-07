@@ -2,36 +2,67 @@
 set -ex
 
 pip3 install compressed-tensors decord
-# Clone the repository if it doesn't exist
-echo "FLASH INFER ${SGLANG_VERSION}"
-git clone --branch=v${SGLANG_VERSION} --recursive --depth=1 https://github.com/flashinfer-ai/flashinfer /opt/flashinfer ||
-git clone --recursive --depth=1 https://github.com/flashinfer-ai/flashinfer /opt/flashinfer
-cd /opt/flashinfer
 
-export MAX_JOBS=$(nproc)
-python3 setup.py --verbose bdist_wheel --dist-dir /opt/flashinfer/wheels/ && \
-pip3 install --verbose /opt/flashinfer/wheels/flashinfer_python-*.whl
+REPO_URL="https://github.com/sgl-project/sglang"
+REPO_DIR="/opt/sglang"
 
+ARCH="$(uname -m)"
+ARCH_SED="s|x86_64|$ARCH|g" 
+PLATFORM="$ARCH-linux"
 
-echo "SG LANG ${SGLANG_VERSION}"
-cd /opt/
-git clone --branch=v${SGLANG_VERSION} --recursive --depth=1 https://github.com/sgl-project/sglang /opt/sglang ||
-git clone --recursive --depth=1 https://github.com/sgl-project/sglang /opt/sglang
-cd /opt/sglang
+echo "Building SGLang ${SGLANG_VERSION} for ${PLATFORM}"
 
-sed -i '/sgl-kernel>=0.0.2.post14/d' python/pyproject.toml && \
-sed -i '/flashinfer==0.1.6/d' python/pyproject.toml && \
-sed -i '/xgrammar>=0.1.10/d' python/pyproject.toml && \
-cd sgl-kernel && \
-python3 setup.py --verbose bdist_wheel --dist-dir /opt/sglang/wheels/ && pip3 install /opt/sglang/wheels/*.whl && \
-cd .. && \
-sed -i '/return min(memory_values)/s/.*/        return None/' python/sglang_backup/srt/utils.py  && \
-sed -i '/if not memory_values:/,+1d' python/sglang_backup/srt/utils.py && \
-pip3 install -e "python[all]"
+git clone --recursive --depth=1 --branch=v${SGLANG_VERSION} $REPO_URL $REPO_DIR ||
+git clone --recursive --depth=1 $REPO_URL $REPO_DIR
 
-cd /opt/sglang
+cd $REPO_DIR
 
+# Remove dependencies
+sed -i '/sgl-kernel/d' python/pyproject.toml
+sed -i '/flashinfer/d' python/pyproject.toml
+sed -i '/xgrammar/d' python/pyproject.toml
+
+sed -i $ARCH_SED sgl-kernel/src/sgl-kernel/__init__.py
+sed -i $ARCH_SED sgl-kernel/setup.py
+
+sed -i 's|options={.*| |g' sgl-kernel/setup.py
+echo "Patched sgl-kernel/setup.py"
+cat sgl-kernel/setup.py  
+
+echo "Building SGL-KERNEL"
+cd $REPO_DIR/sgl-kernel/
+python3 setup.py --verbose bdist_wheel --dist-dir $PIP_WHEEL_DIR --plat $PLATFORM
+pip3 install $PIP_WHEEL_DIR/sgl*.whl
+
+cd $REPO_DIR
+
+if test -f "python/sglang/srt/utils.py"; then
+    sed -i '/return min(memory_values)/s/.*/        return None/' python/sglang/srt/utils.py
+    sed -i '/if not memory_values:/,+1d' python/sglang/srt/utils.py
+fi
+
+# Install SGLang
+cd $REPO_DIR/python
+
+sed -i 's|"torchao.*"|"torchao"|g' pyproject.toml
+sed -i 's|"sgl-kernel.*"|"sgl-kernel"|g' pyproject.toml
+sed -i 's|"vllm.*"|"vllm"|g' pyproject.toml
+sed -i 's|"torch=.*"|"torch"|g' pyproject.toml
+
+echo "Patched $REPO_DIR/python/pyproject.toml"
+cat pyproject.toml 
+
+pip3 wheel '.[all]'
+pip3 install $PIP_WHEEL_DIR/sglang*.whl
+
+cd /
+
+# Install Gemlite python packages
+pip3 install gemlite
+
+# Validate installations
+pip3 show sglang
+python3 -c 'import sglang'
 
 # Optionally upload to a repository using Twine
-twine upload --verbose /opt/flashinfer/wheels/flashinfer_python*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
-twine upload --verbose /opt/sglang/wheels/sglang*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose $PIP_WHEEL_DIR/sgl*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

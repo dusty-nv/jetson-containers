@@ -2,8 +2,8 @@
 # name: sglang
 # group: llm
 # config: config.py
-# depends: [pytorch, torchvision, torchaudio, transformers, triton:3.1.0, vllm, decord]
-# requires: '>=34.1.0'
+# depends: [vllm, flashinfer, torchao, cuda-python, ffmpeg]
+# requires: '>=36'
 # test: test.sh
 # notes: https://github.com/sgl-project/sglang
 #---
@@ -11,23 +11,29 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG SGLANG_VERSION \
-    FLASHINFER_VERSION \
-    CUDAARCHS \
-    FORCE_BUILD=off
-
-ENV DEBIAN_FRONTEND=noninteractive \
-    TORCH_CUDA_ARCH_LIST="${CUDAARCHS}" \
+    SGLANG_VERSION_SPEC \
+    SGL_KERNEL_ENABLE_BF16=1 \
     MAX_JOBS="$(nproc)" \
-    CUDA_HOME="/usr/local/cuda/" \
-    PATH="${CUDA_HOME}/bin:${PATH}" \
-    LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
+    FORCE_BUILD=off \
+    TMP=/tmp/sglang
 
-RUN apt-get update -y && apt-get install -y libnuma-dev \
-    libsndfile1 libsndfile1-dev libprotobuf-dev libsm6 libxext6 libgl1 libavformat58 libavfilter7 && \
+RUN apt-get update -y && \
+    apt-get install -y --no-install-recommends \
+        libnuma-dev \
+        libsndfile1 \
+        libsndfile1-dev \
+        libprotobuf-dev \
+        libsm6 \
+        libxext6 \
+        libgl1 && \
+    apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-COPY build.sh install.sh /tmp/SGLANG/
-RUN /tmp/SGLANG/install.sh || /tmp/SGLANG/build.sh
+COPY build.sh install.sh $TMP/
+RUN $TMP/install.sh || $TMP/build.sh || touch $TMP/.build.failed
 
-# Default command
-CMD ["/bin/bash"]
+# this retains the stage above for debugging on build failure
+RUN if [ -f $TMP/.build.failed ]; then \
+      echo "SGLANG ${SGLANG_VERSION} build failed!"; \
+      exit 1; \
+    fi

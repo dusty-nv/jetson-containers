@@ -6,9 +6,9 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install --no-cache-dir torchvision~=${TORCHVISION_VERSION}
+pip3 install torchvision~=${TORCHVISION_VERSION}
    
 if [ $(lsb_release --codename --short) = "focal" ]; then
     # https://github.com/conda/conda/issues/13619
-    pip3 install --no-cache-dir pyopenssl==24.0.0
+    pip3 install pyopenssl==24.0.0
 fi

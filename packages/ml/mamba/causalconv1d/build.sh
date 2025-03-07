@@ -16,7 +16,7 @@ MAX_JOBS=$(nproc) \
 CAUSAL_CONV1D_FORCE_BUILD="TRUE" \
 CAUSAL_CONV1D_SKIP_CUDA_BUILD="FALSE" \
 python3 setup.py bdist_wheel --dist-dir=/opt/causalconv1d/wheels
-pip3 install --no-cache-dir --verbose /opt/causalconv1d/wheels/causal_conv1d*.whl
+pip3 install /opt/causalconv1d/wheels/causal_conv1d*.whl
 
 cd /opt/causalconv1d
 

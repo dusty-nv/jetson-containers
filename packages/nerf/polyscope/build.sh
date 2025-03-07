@@ -12,6 +12,6 @@ MAX_JOBS=$(nproc) pip3 wheel . -w /opt/polyscope/wheels -v
 
 cd /
 
-pip3 install --no-cache-dir --verbose /opt/polyscope/wheels/polyscope*.whl
+pip3 install /opt/polyscope/wheels/polyscope*.whl
 
 twine upload --verbose /opt/polyscope/wheels/polyscope*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

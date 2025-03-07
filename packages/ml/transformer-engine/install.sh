@@ -6,4 +6,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install --no-cache-dir --verbose transformer-engine==${TRANSFORMER_ENGINE_VERSION}
+pip3 install transformer-engine==${TRANSFORMER_ENGINE_VERSION}

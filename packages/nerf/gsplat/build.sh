@@ -14,7 +14,7 @@ export LINE_INFO=1
 MAX_JOBS=$(nproc) \
 pip3 wheel . -w /opt/gsplat/wheels --verbose
 
-pip3 install --no-cache-dir --verbose /opt/gsplat/wheels/gsplat*.whl
+pip3 install /opt/gsplat/wheels/gsplat*.whl
 
 cd /opt/gsplat
 

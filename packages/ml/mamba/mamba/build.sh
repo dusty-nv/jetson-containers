@@ -16,12 +16,12 @@ sed -i '/triton/d' pyproject.toml
 
 pip3 install lm-eval
 pip3 install --upgrade setuptools einops
-pip3 install --no-cache-dir --verbose triton
+pip3 install triton
 export MAX_JOBS=$(nproc)
 export MAMBA_FORCE_BUILD=TRUE
 export MAMBA_SKIP_CUDA_BUILD=FALSE
 pip3 wheel --no-build-isolation --wheel-dir=/opt/mamba/wheels . --verbose
-pip3 install --no-cache-dir --verbose /opt/mamba/wheels/mamba_ssm*.whl
+pip3 install /opt/mamba/wheels/mamba_ssm*.whl
 
 cd /opt/mamba
 

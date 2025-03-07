@@ -41,7 +41,7 @@ make -j$(nproc) swigfaiss
 cd faiss/python
 python3 setup.py --verbose bdist_wheel --dist-dir /opt
 
-pip3 install --no-cache-dir --verbose /opt/faiss*.whl
+pip3 install /opt/faiss*.whl
 pip3 show faiss && python3 -c 'import faiss'
 
 # cache build artifacts on server

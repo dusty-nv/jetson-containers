@@ -17,9 +17,9 @@ RUN apt-get update && \
 		  spirv-* \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean \
-    && pip3 install --no-cache-dir --verbose mujoco
+    && pip3 install mujoco
  
-RUN pip3 install --no-cache-dir --verbose git+https://github.com/fbxiang/auditwheel.git@088b034ae497b0add794da13f8e0f3b0a3b2d651
+RUN pip3 install git+https://github.com/fbxiang/auditwheel.git@088b034ae497b0add794da13f8e0f3b0a3b2d651
 RUN echo "#!/usr/bin/env python3" > /usr/local/bin/auditwheel && \
     echo "import re, sys" >> /usr/local/bin/auditwheel && \
     echo "from auditwheel.main import main" >> /usr/local/bin/auditwheel && \
@@ -39,4 +39,4 @@ RUN cd /opt/SAPIEN && \
     #CXXFLAGS=-isystem\ /usr/local/cuda/include \
 RUN CMAKE_BUILD_PARALLEL_LEVEL=$(nproc) \
     CUDA_PATH=/usr/local/cuda \
-    pip3 wheel --wheel-dir=/opt/wheels --verbose /opt/SAPIEN 
+    pip3 wheel --wheel-dir=$PIP_WHEEL_DIR --verbose /opt/SAPIEN 

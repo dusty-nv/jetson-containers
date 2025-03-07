@@ -28,9 +28,9 @@ RUN cd llava && \
     pip3 wheel --wheel-dir=dist --no-deps --verbose . && \
     cp dist/llava*.whl /opt
     
-RUN pip3 install --no-cache-dir --verbose llava*.whl
+RUN pip3 install llava*.whl
 
-#RUN pip3 install --verbose /opt/torch*.whl
-#RUN pip3 install --verbose /opt/torchvision*.whl
+#RUN pip3 install /opt/torch*.whl
+#RUN pip3 install /opt/torchvision*.whl
 
 WORKDIR /

@@ -10,7 +10,7 @@ FROM ${BASE_IMAGE}
 ENV TENSORBOARD_LOG_DIR=/data/logs/tensorboard \
     TENSORBOARD_SERVER_LOGS=/data/logs/tensorboard/server.log
 
-RUN pip3 install --no-cache-dir --verbose tensorboard gdown
+RUN pip3 install tensorboard gdown
 
 CMD echo "starting tensorboard server with logs under ${TENSORBOARD_LOG_DIR}" ; \
     mkdir -p ${TENSORBOARD_LOG_DIR} ; \

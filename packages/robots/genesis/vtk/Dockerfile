@@ -11,6 +11,7 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG VTK_VERSION \
+    VTK_VERSION_SPEC \
     CUDAARCHS
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -28,7 +29,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
     bash-completion \
     libgl1 \
-    libgl1-mesa-glx \
+    libglx-mesa0 \
     libegl-dev \
     libegl1 \
     libxrender1 \

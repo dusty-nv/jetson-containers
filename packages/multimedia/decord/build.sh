@@ -15,7 +15,7 @@ make
 cd ../python
 
 pip3 wheel --no-build-isolation --wheel-dir=/opt/decord/wheels .
-pip3 install --no-cache-dir --verbose /opt/decord/wheels/decord*.whl
+pip3 install /opt/decord/wheels/decord*.whl
 
 cd /opt/decord
 

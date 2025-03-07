@@ -9,7 +9,7 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-RUN pip3 install --no-cache-dir --verbose \
+RUN pip3 install \
         llama-index-core \
         llama-index-readers-file \
         llama-index-llms-openai \

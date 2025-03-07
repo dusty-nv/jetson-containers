@@ -27,5 +27,5 @@ RUN git clone --branch=${LITA_BRANCH} --depth=1 https://github.com/${LITA_REPO} 
 
 COPY benchmark.py ${LITA_ROOT}/lita/serve/
 
-RUN pip3 install --no-cache-dir --verbose -e ${LITA_ROOT} 
+RUN pip3 install -e ${LITA_ROOT} 
 

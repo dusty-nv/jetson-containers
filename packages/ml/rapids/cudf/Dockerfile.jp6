@@ -43,13 +43,13 @@ RUN git clone --branch ${CUDF_VERSION} --depth=1 --recursive https://github.com/
 #
 # build rmm-python
 #
-RUN pip3 install --no-cache-dir --verbose scikit-build ninja
-RUN pip3 install --no-cache-dir --verbose 'Cython>3'
+RUN pip3 install scikit-build ninja
+RUN pip3 install 'Cython>3'
 
 RUN cd cudf/cpp/build/_deps/rmm-src/python && \ 
     python3 setup.py bdist_wheel --verbose && \ 
     cp dist/rmm*.whl /opt && \ 
-    pip3 install --no-cache-dir --verbose /opt/rmm*.whl
+    pip3 install /opt/rmm*.whl
 
 RUN pip3 show rmm && python3 -c 'import rmm; print(rmm.__version__)'
 
@@ -72,7 +72,7 @@ RUN cd cudf/python/cudf && \
     SKBUILD_BUILD_OPTIONS="-j$(nproc)" \
     python3 setup.py --verbose bdist_wheel && \
     cp dist/cudf*.whl /opt && \
-    pip3 install --no-cache-dir --verbose /opt/cudf*.whl 
+    pip3 install /opt/cudf*.whl 
 
 
 #
@@ -82,16 +82,16 @@ RUN cd cudf/python/dask_cudf && \
     sed -i 's|"cupy.*",||' pyproject.toml && \
     python3 setup.py --verbose bdist_wheel && \
     cp dist/dask_cudf*.whl /opt && \
-    pip3 install --no-cache-dir --verbose /opt/dask_cudf*.whl 
+    pip3 install /opt/dask_cudf*.whl 
 
 # a different version of cuda-python gets installed, so restore the one that we built
-RUN pip3 install --no-cache-dir /opt/cuda_python*.whl
+RUN pip3 install /opt/cuda_python*.whl
 
 # cudf/utils/metadata/orc_column_statistics_pb2.py - your generated code is out of date and must be regenerated with protoc >= 3.19.0
-RUN pip3 install --no-cache-dir --verbose 'protobuf<3.20'
+RUN pip3 install 'protobuf<3.20'
 
 # requests package needed for test_csv.py
-RUN pip3 install --no-cache-dir --verbose requests
+RUN pip3 install requests
 
 # make sure that the cudf modules load okay
 RUN pip3 show cudf && python3 -c 'import cudf; print(cudf.__version__)'

@@ -26,7 +26,7 @@ RUN apt-get update && \
     && apt-get clean
 
 # https://cmake.org/cmake/help/latest/policy/CMP0146.html
-RUN pip3 install --no-cache-dir --verbose 'cmake<3.27'
+RUN pip3 install 'cmake<3.27'
 
 ADD https://api.github.com/repos/dusty-nv/ODM/git/refs/heads/master /tmp/odm_version.json
     
@@ -38,6 +38,6 @@ RUN env && \
 
 # https://github.com/rasterio/rasterio/issues/2333
 # https://github.com/Toblerity/Fiona/issues/1043
-#RUN pip3 install --no-cache-dir --verbose 'Cython<0.29.21'
+#RUN pip3 install 'Cython<0.29.21'
 
 #ENTRYPOINT ["python3", "/code/run.py"]

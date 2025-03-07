@@ -12,6 +12,6 @@ RUN apt-get update && \
 		  libglfw*-dev \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean \
-    && pip3 install --no-cache-dir --verbose mujoco
+    && pip3 install mujoco
 
 ENV MUJOCO_GL=egl

@@ -27,7 +27,7 @@ ls /opt/pycolmap/wheels
 # Return to the root directory
 cd /
 
-pip3 install --no-cache-dir --verbose /opt/pycolmap/wheels/pycolmap*.whl
+pip3 install /opt/pycolmap/wheels/pycolmap*.whl
 
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/pycolmap/wheels/pycolmap*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

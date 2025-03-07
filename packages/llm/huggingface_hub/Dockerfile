@@ -20,7 +20,7 @@ COPY huggingface-downloader.py /usr/local/bin/_huggingface-downloader.py
 # install huggingface_hub package (with CLI)
 RUN set -ex \
     # Fix: ModuleNotFoundError: No module named 'dataclasses' (on JetPack 4) \
-    && pip3 install --no-cache-dir --verbose \
+    && pip3 install \
         huggingface_hub[cli] \
         dataclasses \
     \

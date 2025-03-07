@@ -6,4 +6,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install --no-cache-dir --verbose deepspeed-kernels==${DEEPSPEED_KERNELS_VERSION}
+pip3 install deepspeed-kernels==${DEEPSPEED_KERNELS_VERSION}

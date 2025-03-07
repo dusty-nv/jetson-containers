@@ -26,8 +26,10 @@ import sys
 import pprint
 import argparse
 
-from jetson_containers import (build_container, build_containers, find_packages, package_search_dirs, set_log_dir, 
-                               L4T_VERSION, JETPACK_VERSION, CUDA_VERSION, PYTHON_VERSION, LSB_RELEASE, LSB_CODENAME)
+from jetson_containers import (
+    build_container, build_containers, find_packages, package_search_dirs, set_log_dir, cprint,
+    L4T_VERSION, JETPACK_VERSION, CUDA_VERSION, PYTHON_VERSION, LSB_RELEASE, LSB_CODENAME
+)
 
 
 parser = argparse.ArgumentParser()
@@ -70,13 +72,9 @@ args.skip_packages = re.split(',|;|:', args.skip_packages)
 args.skip_tests = re.split(',|;|:', args.skip_tests)
 args.test_only = re.split(',|;|:', args.test_only)
 
-print(args)
-
-print(f"-- L4T_VERSION={L4T_VERSION}")
-print(f"-- JETPACK_VERSION={JETPACK_VERSION}")
-print(f"-- CUDA_VERSION={CUDA_VERSION}")
-print(f"-- PYTHON_VERSION={PYTHON_VERSION}")
-print(f"-- LSB_RELEASE={LSB_RELEASE} ({LSB_CODENAME})")
+print(f'\n{args}\n')
+cprint(f"-- L4T_VERSION={L4T_VERSION} JETPACK_VERSION={JETPACK_VERSION} CUDA_VERSION={CUDA_VERSION} PYTHON_VERSION={PYTHON_VERSION} LSB_RELEASE={LSB_RELEASE} ({LSB_CODENAME})", "green")
+cprint(f"-- jetson-containers {' '.join(sys.argv[1:])}\n", "green")
 
 # cast build args into dictionary
 if args.build_args:

@@ -19,7 +19,7 @@ sed -i 's/"l"(value)/"r"(value)/g' taichi/runtime/llvm/runtime_module/runtime.cp
 sed -i 's/match\.any\.sync\.b64  %0/match\.any\.sync\.b64  %w0/g; s/, %1/, %w1/g; s/, %2/, %w2/g' \
     taichi/runtime/llvm/runtime_module/runtime.cpp || true
 
-# Ensure LLVM 15 is installed
+# Ensure LLVM 18 is installed
 wget -q https://apt.llvm.org/llvm.sh -O /tmp/llvm.sh
 chmod +x /tmp/llvm.sh
 
@@ -27,7 +27,12 @@ chmod +x /tmp/llvm.sh
 echo 'Dpkg::Options {"--force-overwrite";};' > /etc/apt/apt.conf.d/99_force_overwrite
 
 # Install LLVM 15 with all components
-/tmp/llvm.sh ${LLVM_VERSION} all
+# /tmp/llvm.sh ${LLVM_VERSION} all
+add-apt-repository "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-15 main"
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 15CF4D18AF4F7421
+apt-get update
+apt-get install llvm-15 clang-15 lldb-15 --yes
+
 
 # Clean up temp config file
 rm -f /etc/apt/apt.conf.d/99_force_overwrite
@@ -41,6 +46,13 @@ export TAICHI_CMAKE_ARGS="-DTI_WITH_VULKAN:BOOL=ON -DTI_WITH_CUDA:BOOL=ON"
 export CC=/usr/lib/llvm-${LLVM_VERSION}/bin/clang
 export CXX=/usr/lib/llvm-${LLVM_VERSION}/bin/clang++
 export CUDA_VERSION=12.8
+export LLVM_DIR=/usr/lib/llvm-${LLVM_VERSION}
+
+update-alternatives --install /usr/bin/llvm-config llvm-config /usr/bin/llvm-config-15 100
+update-alternatives --install /usr/bin/clang clang /usr/bin/clang-15 100
+update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-15 100
+update-alternatives --install /usr/bin/opt opt /usr/bin/opt-15 100
+update-alternatives --install /usr/bin/llc llc /usr/bin/llc-15 100
 
 # Build Taichi
 ./build.py
@@ -54,13 +66,13 @@ fi
 ls dist/*.whl || echo "⚠️ No wheel files found!"
 
 # Install the built Taichi package
-pip3 install --no-cache-dir --verbose /opt/taichi/dist/*.whl
+pip3 install /opt/taichi/dist/*.whl
 
 # CPU BACKEND MUST BE FIXED
 # python3 -c "import taichi as ti; ti.init(arch=ti.cpu); print('✅ Taichi installed successfully!')"
 
 # Ensure numpy is installed
-pip3 install --no-cache-dir numpy
+pip3 install numpy
 
 # Check if CUDA is available
 if ! python3 -c "import taichi as ti; ti.init(arch=ti.cuda)"; then

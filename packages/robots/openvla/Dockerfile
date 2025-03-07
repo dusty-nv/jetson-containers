@@ -12,7 +12,7 @@ ADD https://api.github.com/repos/dusty-nv/openvla/git/refs/heads/main /tmp/openv
 
 RUN git clone --depth=1 --recursive https://github.com/dusty-nv/openvla /opt/openvla && \
     cd /opt/openvla && \
-    pip3 install --verbose -e . && \
+    pip3 install -e . && \
     pip3 install --no-deps git+https://github.com/moojink/dlimp_openvla
     
 # patch issue of NCCL P2P not being supported on Jetson, and accelerate not honoring alternate backends

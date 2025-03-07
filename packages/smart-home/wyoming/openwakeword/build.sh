@@ -9,7 +9,7 @@ apt-get install -y --no-install-recommends \
 apt-get clean
 rm -rf /var/lib/apt/lists/*
 
-pip3 install --no-cache-dir --upgrade \
+pip3 install --upgrade \
    setuptools \
    wheel
    
@@ -18,16 +18,16 @@ echo "wyoming-openwakeword: ${WYOMING_OPENWAKEWORD_VERSION} (branch: ${WYOMING_O
 git clone --branch=${WYOMING_OPENWAKEWORD_BRANCH} https://github.com/rhasspy/wyoming-openwakeword /opt/wyoming-openwakeword
 cd /opt/wyoming-openwakeword
 
-python3 setup.py sdist bdist_wheel --verbose --dist-dir /opt/wheels
+python3 setup.py sdist bdist_wheel --verbose --dist-dir $PIP_WHEEL_DIR
 
 cd /
 rm -rf /opt/wyoming-openwakeword
 
-pip3 install --no-cache-dir /opt/wheels/wyoming_openwakeword*.whl
+pip3 install $PIP_WHEEL_DIR/wyoming_openwakeword*.whl
 
 pip3 show wyoming_openwakeword
 python3 -c 'import wyoming_openwakeword; print(wyoming_openwakeword.__version__);'
 
-twine upload --skip-existing --verbose /opt/wheels/wyoming_openwakeword*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --skip-existing --verbose $PIP_WHEEL_DIR/wyoming_openwakeword*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
-rm /opt/wheels/wyoming_openwakeword*.whl
+rm $PIP_WHEEL_DIR/wyoming_openwakeword*.whl

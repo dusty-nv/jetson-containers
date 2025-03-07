@@ -26,13 +26,13 @@ cat $OOBABOOGA_ROOT_DIR/requirements.txt
 sed 's|to(self\.projector_device)|to(self\.projector_device,dtype=self\.projector_dtype)|' -i "$OOBABOOGA_ROOT_DIR/extensions/multimodal/pipelines/llava/llava.py" \
     
 # Fix: cannot uninstall 'blinker': It is a distutils installed project
-pip3 install --no-cache-dir --ignore-installed blinker
+pip3 install --ignore-installed blinker
     
 # Create a symbolic link from /opt/GPTQ-for-LLaMa/*.py to oobabooga root dir
 ln -s /opt/GPTQ-for-LLaMa/*.py "$OOBABOOGA_ROOT_DIR"
 
 # Install text-generation-webui requirements
-pip3 install --no-cache-dir --verbose -r "$OOBABOOGA_ROOT_DIR/requirements.txt"
+pip3 install -r "$OOBABOOGA_ROOT_DIR/requirements.txt"
 
 # Install text-generation-webui extensions
 cd "$OOBABOOGA_ROOT_DIR"

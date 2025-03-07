@@ -13,4 +13,4 @@ ARG CUPY_VERSION \
 
 COPY build.sh /tmp/build_cupy.sh
 
-RUN pip3 install --no-cache-dir cupy || /tmp/build_cupy.sh
+RUN pip3 install cupy || /tmp/build_cupy.sh
