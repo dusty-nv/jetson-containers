@@ -2,8 +2,6 @@
 
 > [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 
-# robopoint
-
 > Thanks to [Manuel Schweiger](https://github.com/mschweig) for contributing this container for [RoboPoint](https://robo-point.github.io/)!
 
 ### Start Server

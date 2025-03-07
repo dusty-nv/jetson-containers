@@ -1,5 +1,3 @@
-# robopoint
-
 > Thanks to [Manuel Schweiger](https://github.com/mschweig) for contributing this container for [RoboPoint](https://robo-point.github.io/)!
 
 ### Start Server
