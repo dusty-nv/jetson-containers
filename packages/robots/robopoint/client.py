@@ -7,6 +7,7 @@ import time
 import argparse
 import cv2
 import re
+import base64
 
 from gradio_client import Client, handle_file
 
