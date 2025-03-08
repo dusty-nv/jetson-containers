@@ -16,7 +16,7 @@ parser.add_argument('--server', type=str, default='http://0.0.0.0:7860/')
 parser.add_argument('--model', type=str, default='robopoint-v1-vicuna-v1.5-13b')
 parser.add_argument('--image', type=str, default=os.path.join(os.path.dirname(__file__), 'examples/sink.jpg'))
 parser.add_argument('--camera', type=int, default=None, help='Camera device index (e.g., 0 for default camera)')
-parser.add_argument('--request', type=str, default=None, required=True, help='Find free space in the sink to place a cup')
+parser.add_argument('--request', type=str, required=True, help='Find free space in the sink to place a cup')
 
 args = parser.parse_args()
 
