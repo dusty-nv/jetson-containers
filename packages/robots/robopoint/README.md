@@ -54,6 +54,8 @@ jetson-containers run \
 ```
 
 The performance is currently ~2 seconds per action point on AGX Orin with int4 (bitsandbytes), which is currently fine for initial experimentation before migrating to more intensive VLM optimizations (for example in NanoLLM or SGLang), and also is appropriate for use of the REST API to save time during the frequent reloads of the clientside logic related to the robotics or simulator integration that typically occur under development.
+
+You will receive an `output_image.jpg` with the predicted 2D action points, and the coordinates will be logged to the command line. Use this result to verify the inference on your images.
 <details open>
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
