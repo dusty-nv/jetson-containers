@@ -36,7 +36,7 @@ env
 python3 /tmp/vllm/generate_diff.py
 git apply -p1 /tmp/vllm/CMakeLists.txt.diff
 git apply -p1 /tmp/vllm/vllm_flash_attn.cmake.diff
-git apply -p1 /tmp/vllm/vllm_model_executor_guided_decoding___init__.py.diff
+git apply -p1 /tmp/vllm/__init__.py.diff
 
 git diff
 git status
@@ -50,7 +50,7 @@ export SETUPTOOLS_SCM_PRETEND_VERSION="${VLLM_VERSION}"
 
 python3 use_existing_torch.py || echo "skipping vllm/use_existing_torch.py"
 
-pip3 install -r requirements-build.txt -v
+pip3 install -r requirements/build.txt -v
 python3 -m setuptools_scm
 pip3 wheel --no-build-isolation -v --wheel-dir=/opt/vllm/wheels .
 pip3 install /opt/vllm/wheels/vllm*.whl
