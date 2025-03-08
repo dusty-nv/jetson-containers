@@ -16,7 +16,6 @@ pip3 wheel . --no-deps --no-build-isolation -w /opt/nerfstudio/wheels  # Create 
 
 # Verify the contents of the /opt directory
 ls /opt/nerfstudio/wheels
-
 # Return to the root directory
 cd /
 pip3 install manifold3d vhacdx openexr

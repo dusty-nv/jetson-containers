@@ -100,7 +100,7 @@ For packages that provide different versions but don't have their own environmen
 Here is a list of containers currently built for Ubuntu 24.04 with the following environment:
 
 * `LSB_RELEASE=24.04 L4T_VERSION=36.4.0`
-* `CUDA_VERSION=12.8 CUDNN_VERSION=9.7`
+* `CUDA_VERSION=12.8 CUDNN_VERSION=9.8`
 * `PYTHON_VERSION=3.12 PYTORCH_VERSION=2.6`
 
 | Repo           | Version   | Image                                             |  Size (GB)  | Timestamp   |
