@@ -33,6 +33,7 @@ result = client.predict(
 
 if args.camera is not None:
     print(f"Capturing image from camera device {args.camera}\n")
+    print("Press Enter to capture and run inference")
     cap = cv2.VideoCapture(args.camera)
     if not cap.isOpened():
         print("Error: Could not open camera.")
@@ -42,7 +43,7 @@ if args.camera is not None:
         if not ret:
             print("Error: Could not read frame from camera.")
             exit()
-        cv2.imshow('Press Enter to capture and run inference', frame)
+        cv2.imshow('Press Enter to capture', frame)
         if cv2.waitKey(1) == 13:  # Enter key
             break
     image_path = os.path.join(os.path.dirname(__file__), 'captured_image.jpg')
