@@ -49,11 +49,15 @@ RUN pip install "pybind11[global]"
 # ===============================================================
 WORKDIR /workspace
 RUN git clone --recursive https://github.com/Genesis-Embodied-AI/Genesis /opt/genesis && \
-    cd /opt/genesis
+    cd /opt/genesis/genesis/ext/ && \
+    rm -rf LuisaRender && \
+    git clone --recursive --branch=my_next_compute https://github.com/johnnynunez/LuisaRender.git && \
+    cd /opt/genesis/
 
-# COPY build_luisa.sh /workspace/build_luisa.sh
-# RUN chmod +x ./build_luisa.sh && ./build_luisa.sh ${PYTHON_VERSION}
-# COPY /opt/genesis/genesis/ext/LuisaRender/build/bin /usr/local/lib/python${PYTHON_VERSION}/dist-packages/genesis/ext/LuisaRender/build/bin
+
+COPY build_luisa.sh /workspace/build_luisa.sh
+RUN chmod +x ./build_luisa.sh && ./build_luisa.sh ${PYTHON_VERSION}
+COPY /opt/genesis/genesis/ext/LuisaRender/build/bin /usr/local/lib/python${PYTHON_VERSION}/dist-packages/genesis/ext/LuisaRender/build/bin
 RUN pip3 install PyOpenGL PyOpenGL_accelerate --verbose
 RUN pip3 install coacd libigl pymeshlab --verbose
 
