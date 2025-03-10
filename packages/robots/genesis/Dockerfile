@@ -28,21 +28,24 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     manpages-dev \
     libvulkan-dev \
     zlib1g-dev \
-    xorg-dev \
-    libglu1-mesa-dev \
+    xorg-dev libglu1-mesa-dev \
     libsnappy-dev \
     software-properties-common \
     git \
     curl \
-    wget \
+    wget
+RUN add-apt-repository ppa:ubuntu-toolchain-r/test && \
+    apt update && \
+    apt install -y --no-install-recommends \
     gcc-11 \
     g++-11 \
-    uuid-dev \
-    libx11-dev \
-    patchelf && \
+    gcc-11 g++-11 patchelf && \
     rm -rf /var/lib/apt/lists/*
 
-RUN echo
+# Set GCC-11 and G++-11 as the default
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 110 && \
+    update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 110
+
 RUN pip install "pybind11[global]"
 
 # ===============================================================
