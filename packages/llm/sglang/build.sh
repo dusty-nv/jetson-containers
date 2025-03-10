@@ -22,7 +22,7 @@ sed -i '/sgl-kernel/d' python/pyproject.toml
 sed -i '/flashinfer/d' python/pyproject.toml
 sed -i '/xgrammar/d' python/pyproject.toml
 
-sed -i $ARCH_SED sgl-kernel/src/sgl-kernel/__init__.py
+sed -i $ARCH_SED sgl-kernel/csrc/sgl-kernel/__init__.py
 sed -i $ARCH_SED sgl-kernel/setup.py
 
 sed -i 's|options={.*| |g' sgl-kernel/setup.py
