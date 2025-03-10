@@ -104,9 +104,9 @@ package = [
     tensorrt_deb('8.6', 'https://nvidia.box.com/shared/static/hmwr57hm88bxqrycvlyma34c3k4c53t9.deb', 'nv-tensorrt-local-repo-l4t-8.6.2-cuda-12.2', cudnn='8.9', requires=['==r36.*', '==cu122']), 
     #tensorrt_tar('9.3', 'https://nvidia.box.com/shared/static/fp3o14iq7qbm67qjuqivdrdch7009axu.gz', cudnn='8.9', requires=['==r36.*', '==cu122']), 
     tensorrt_tar('10.0', 'https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/10.0.1/tars/TensorRT-10.0.1.6.l4t.aarch64-gnu.cuda-12.4.tar.gz', cudnn='9.0', requires=['==r36.*', '==cu124']), 
-    tensorrt_tar('10.4', 'https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/10.4.0/tars/TensorRT-10.4.0.26.l4t.aarch64-gnu.cuda-12.6.tar.gz', cudnn='9.4', requires=['==r36.*', '==cu126']), 
-    tensorrt_tar('10.5', 'https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/10.5.0/tars/TensorRT-10.5.0.18.l4t.aarch64-gnu.cuda-12.6.tar.gz', cudnn='9.4', requires=['==r36.*', '==cu126']),
-    tensorrt_tar('10.7','https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/10.7.0/tars/TensorRT-10.7.0.23.l4t.aarch64-gnu.cuda-12.6.tar.gz',cudnn='9.4', requires=['==r36.*', '==cu126']),
+    tensorrt_tar('10.4', 'https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/10.4.0/tars/TensorRT-10.4.0.26.l4t.aarch64-gnu.cuda-12.6.tar.gz', cudnn='9.3', requires=['==r36.*', '==cu126']),
+    tensorrt_tar('10.5', 'https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/10.5.0/tars/TensorRT-10.5.0.18.l4t.aarch64-gnu.cuda-12.6.tar.gz', cudnn='9.3', requires=['==r36.*', '==cu126']),
+    tensorrt_tar('10.7','https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/10.7.0/tars/TensorRT-10.7.0.23.l4t.aarch64-gnu.cuda-12.6.tar.gz',cudnn='9.3', requires=['==r36.*', '==cu126']),
     tensorrt_tar('10.7', 'https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/10.7.0/tars/TensorRT-10.7.0.23.l4t.aarch64-gnu.cuda-12.6.tar.gz', cudnn='9.7', requires=['==r36.*', '==cu128']),
     # tensorrt_tar('10.8', 'https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/10.8.0/tars/TensorRT-10.8.0.43.l4t.aarch64-gnu.cuda-12.8.tar.gz', cudnn='9.7', requires=['==r36.*', '==cu128']),
     # JetPack 4-5 (TensorRT installed in base container)

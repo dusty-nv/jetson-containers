@@ -38,6 +38,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc-11 \
     g++-11 \
     uuid-dev \
+    libx11-dev \
     patchelf && \
     rm -rf /var/lib/apt/lists/*
 
@@ -48,12 +49,17 @@ RUN pip install "pybind11[global]"
 # BUILD LUISA RENDER (STILL NOT WORKS)
 # ===============================================================
 WORKDIR /workspace
-RUN git clone --recursive https://github.com/Genesis-Embodied-AI/Genesis /opt/genesis && \
-    cd /opt/genesis
+RUN git clone --recursive https://github.com/Genesis-Embodied-AI/Genesis /opt/genesis
 
-# COPY build_luisa.sh /workspace/build_luisa.sh
-# RUN chmod +x ./build_luisa.sh && ./build_luisa.sh ${PYTHON_VERSION}
-# COPY /opt/genesis/genesis/ext/LuisaRender/build/bin /usr/local/lib/python${PYTHON_VERSION}/dist-packages/genesis/ext/LuisaRender/build/bin
+RUN cd /opt/genesis/genesis/ext/ && \
+    rm -rf ./LuisaRender && \
+    git clone --recursive --branch=my_next_compute https://github.com/johnnynunez/LuisaRender.git && \
+    cd /opt/genesis/
+
+
+COPY build_luisa.sh /workspace/build_luisa.sh
+RUN ./build_luisa.sh ${PYTHON_VERSION}
+COPY /opt/genesis/genesis/ext/LuisaRender/build/bin /usr/local/lib/python${PYTHON_VERSION}/dist-packages/genesis/ext/LuisaRender/build/bin
 RUN pip3 install PyOpenGL PyOpenGL_accelerate --verbose
 RUN pip3 install coacd libigl pymeshlab --verbose
 
