@@ -49,7 +49,7 @@ RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 110 && \
 RUN pip install "pybind11[global]"
 
 # ===============================================================
-# BUILD LUISA RENDER (STILL NOT WORKS)
+# BUILD LUISA RENDER
 # ===============================================================
 WORKDIR /workspace
 RUN git clone --recursive https://github.com/Genesis-Embodied-AI/Genesis /opt/genesis
