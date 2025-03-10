@@ -2,7 +2,7 @@
 # name: robopoint
 # group: robots
 # docs: docs.md
-# depends: [transformers, bitsandbytes, flash-attention]
+# depends: [transformers, bitsandbytes, flash-attention, opencv:4.11.0]
 # test: [test.py]
 #---
 ARG BASE_IMAGE
@@ -17,7 +17,7 @@ ARG ROBOPOINT_REPO="mschweig/RoboPoint" \
     ROBOPOINT_BRANCH=master
 
 ADD https://api.github.com/repos/${ROBOPOINT_REPO}/branches/${ROBOPOINT_BRANCH} /tmp/robopoint_version.json
-RUN git clone --branch=${ROBOPOINT_BRANCH} https://github.com/mschweig/RoboPoint.git /opt/robopoint
+RUN git clone --branch=${ROBOPOINT_BRANCH} https://github.com/${ROBOPOINT_REPO}.git /opt/robopoint
 
 RUN cd /opt/robopoint && \
     pip3 install --verbose -e .

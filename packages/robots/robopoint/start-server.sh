@@ -44,7 +44,6 @@ run_daemon "python3 -m robopoint.serve.controller \
 
 run_daemon "python3 -m robopoint.serve.gradio_web_server \
   --host $ROBOPOINT_HOST \
-  --port 
   --controller http://localhost:$ROBOPOINT_PORT \
   --model-list-mode reload \
   --share"
