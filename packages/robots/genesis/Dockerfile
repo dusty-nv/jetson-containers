@@ -2,7 +2,7 @@
 # name: genesis
 # group: robots
 # config: config.py
-# depends: [cuda, rust, cmake, torch, torchvision, torchaudio, vtk, pymeshlab, taichi, splashsurf]
+# depends: [cuda, rust, cmake, torch, torchvision, torchaudio, vtk, pymeshlab, taichi, opencv:4.11.0, splashsurf]
 # requires: '>=36.0.0'
 # test: test.sh
 # notes: https://github.com/Genesis-Embodied-AI/Genesis
@@ -18,22 +18,29 @@ ARG CUDAARCHS
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN PYTHON_TAG=$(python3 -c "import sys; print('{}{}'.format(sys.version_info.major, sys.version_info.minor))") \
+RUN PYTHON_TAG=$(python3 -c "import sys; print('{}.{}'.format(sys.version_info.major, sys.version_info.minor))") \
     && echo "PYTHON_TAG=${PYTHON_TAG}"
 ARG PYTHON_VERSION=${PYTHON_TAG}
 
-# Install necessary packages
+# Install necessary packages including extra dependencies for core and GUI module
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     manpages-dev \
-    libvulkan-dev \
     zlib1g-dev \
     xorg-dev libglu1-mesa-dev \
     libsnappy-dev \
     software-properties-common \
     git \
     curl \
-    wget
+    wget \
+    ninja-build \
+    uuid-dev \
+    libglfw3-dev \
+    libxinerama-dev \
+    libxcursor-dev \
+    libxi-dev \
+    libvulkan-dev
+
 RUN add-apt-repository ppa:ubuntu-toolchain-r/test && \
     apt update && \
     apt install -y --no-install-recommends \
@@ -54,11 +61,10 @@ RUN pip install "pybind11[global]"
 WORKDIR /workspace
 RUN git clone --recursive https://github.com/Genesis-Embodied-AI/Genesis /opt/genesis
 
-RUN cd /opt/genesis/genesis/ext/ && \
-    rm -rf ./LuisaRender && \
+RUN rm -rf /opt/genesis/genesis/ext/LuisaRender && \
+    cd /opt/genesis/genesis/ext/ && \
     git clone --recursive --branch=my_next_compute https://github.com/johnnynunez/LuisaRender.git && \
     cd /opt/genesis/
-
 
 COPY build_luisa.sh /workspace/build_luisa.sh
 RUN ./build_luisa.sh ${PYTHON_VERSION}
@@ -97,6 +103,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     vim \
     && apt clean \
     && rm -rf /var/lib/apt/lists/*
+
+RUN wget https://apt.llvm.org/llvm.sh && \
+    chmod +x llvm.sh && \
+    ./llvm.sh 18 && \
+    ln -sf /usr/bin/llvm-config-* /usr/bin/llvm-config && \
+    ln -s /usr/bin/clang-1* /usr/bin/clang && \
+    rm llvm.sh
 
 WORKDIR /workspace
 
