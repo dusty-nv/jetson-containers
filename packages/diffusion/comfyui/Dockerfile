@@ -18,8 +18,12 @@ RUN git clone https://github.com/comfyanonymous/ComfyUI.git && \
 RUN cd /opt/ComfyUI/custom_nodes && \
     git clone --recursive https://github.com/ltdrdata/ComfyUI-Manager.git && \
     git clone --recursive https://github.com/discus0434/comfyui-flux-accelerator.git && \
-    git clone --recursive https://github.com/pydn/ComfyUI-to-Python-Extension.git && \
-    git clone --recursive https://github.com/johnnynunez/ComfyUI-Crystools.git
+    git clone --recursive https://github.com/pydn/ComfyUI-to-Python-Extension.git
+
+RUN pip3 install -U -r /opt/ComfyUI/custom_nodes/ComfyUI-Manager/requirements.txt && \
+    pip3 install -U -r /opt/ComfyUI/custom_nodes/comfyui-flux-accelerator/requirements.txt && \
+    pip3 install -U -r /opt/ComfyUI/custom_nodes/ComfyUI-to-Python-Extension/requirements.txt
+
 
 RUN cd /opt/ComfyUI/custom_nodes/comfyui-flux-accelerator/scripts && \
     if [ -f download_taef1.sh ]; then \
@@ -31,7 +35,7 @@ RUN cd /opt/ComfyUI/custom_nodes/comfyui-flux-accelerator/scripts && \
 
 WORKDIR /opt/ComfyUI/
 
-RUN pip3 install -U xformers onnxruntime-gpu triton lm_eval vhacdx manifold openexr
+RUN pip3 install -U deepdiff xformers onnxruntime-gpu triton lm_eval vhacdx manifold openexr
 RUN pip3 install -U diffusers flash-attn sageattention  torchao
 
 COPY workflow /opt/ComfyUI/workflow
