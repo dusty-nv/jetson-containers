@@ -35,13 +35,15 @@ Extra flags to the startup script get appended to the `robopoint.serve.model_wor
 
 Launching the server above will also start a gradio web UI, reachable at `http://JETSON_IP:7860`
 
-`<TODO SCREENSHOT>`
+<img src="gradio.png" alt="Gradio UI" width="900"/>
 
 ### Test Client
 
 Although you can `import robopoint` into a Python script inside the container environment that loads & performs inference with the model directly, by default RoboPoint uses a client/server architecture similar in effect to LLM [`chat.completion`] microservices due to the model sizes and dependencies.  
 
-The [`client.py`](client.py) uses REST requests to example processes a test image, and can be run inside or outside of container.  Since the heavy lifting is done inside the server, the client has lightweight dependencies (just install `pip install gradio_client` first if running this outside of container)
+The [`client.py`](client.py) uses REST requests to example processes a test image, and can be run inside or outside of container.  Since the heavy lifting is done inside the server, the client has lightweight dependencies (just install `pip install gradio_client opencv-python` first if running this outside of container)
+
+You can run the test client with your own images, the example images or with a camera input. Use the `--image`, `--camera` and `--request` parameter of the script to specify the input according to your setup. 
 
 ```bash
 # mount in the examples so they can be edited from outside container
@@ -51,7 +53,9 @@ jetson-containers run \
     python3 /mnt/client.py
 ```
 
-The performance is currently ~2 seconds/image on AGX Orin with int4 (bitsandbytes), which is currently fine for initial experimentation before migrating to more intensive VLM optimizations (for example in NanoLLM or SGLang), and also is appropriate for use of the REST API to save time during the frequent reloads of the clientside logic related to the robotics or simulator integration that typically occur under development.
+The performance is currently ~2 seconds per action point on AGX Orin with int4 (bitsandbytes), which is currently fine for initial experimentation before migrating to more intensive VLM optimizations (for example in NanoLLM or SGLang), and also is appropriate for use of the REST API to save time during the frequent reloads of the clientside logic related to the robotics or simulator integration that typically occur under development.
+
+You will receive an `output_image.jpg` with the predicted 2D action points, and the coordinates will be logged to the command line. Use this result to verify the inference on your images.
 <details open>
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
