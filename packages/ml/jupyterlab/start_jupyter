@@ -25,6 +25,9 @@ printf "\nStarting JupyterLab server at $server_url (password \"${JUPYTER_PASSWO
 timeout 5 tail -f $JUPYTER_LOGS
 
 printf "\nJupyterLab server is now started\n\n"
-printf "JupyterLab URL:   $server_url (password \"${JUPYTER_PASSWORD}\")\n"
+#printf "JupyterLab URL:   $server_url (password \"${JUPYTER_PASSWORD}\")\n"
+printf "JupyterLab URL:   $server_url\n"
 printf "JupyterLab logs:  ${JUPYTER_LOGS}\n\n"
+
+printf "\nCopy the URL with the token above for the initial login or to reset your password.\n"
 

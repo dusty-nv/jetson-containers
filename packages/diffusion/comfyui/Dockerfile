@@ -18,7 +18,8 @@ RUN git clone https://github.com/comfyanonymous/ComfyUI.git && \
 RUN cd /opt/ComfyUI/custom_nodes && \
     git clone --recursive https://github.com/ltdrdata/ComfyUI-Manager.git && \
     git clone --recursive https://github.com/discus0434/comfyui-flux-accelerator.git && \
-    git clone --recursive https://github.com/pydn/ComfyUI-to-Python-Extension.git
+    git clone --recursive https://github.com/pydn/ComfyUI-to-Python-Extension.git && \
+    git clone --recursive https://github.com/johnnynunez/ComfyUI-Crystools.git
 
 RUN pip3 install -U -r /opt/ComfyUI/custom_nodes/ComfyUI-Manager/requirements.txt && \
     pip3 install -U -r /opt/ComfyUI/custom_nodes/comfyui-flux-accelerator/requirements.txt && \
