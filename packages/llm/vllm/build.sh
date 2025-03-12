@@ -26,7 +26,7 @@ pip3 install /opt/xgrammar/wheels/xgrammar*.whl
 
 
 # Clone the repository if it doesn't exist
-git clone --branch=v${VLLM_VERSION} --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm || 
+git clone --branch=${VLLM_BRANCH} --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm || 
 git clone --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm
 cd /opt/vllm
 
