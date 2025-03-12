@@ -1,0 +1,7 @@
+{
+    "api_server_port": 5015,
+    "prometheus_port": 5017,
+    "model": "Efficient-Large-Model/VILA1.5-3b",
+    "log_level": "INFO",
+    "print_stats": true
+}
