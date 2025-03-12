@@ -39,7 +39,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxinerama-dev \
     libxcursor-dev \
     libxi-dev \
-    libvulkan-dev
+    libvulkan-dev \
+    patchelf
 
 RUN add-apt-repository ppa:ubuntu-toolchain-r/test && \
     apt update && \
@@ -69,8 +70,8 @@ RUN rm -rf /opt/genesis/genesis/ext/LuisaRender && \
     cd /opt/genesis/
 
 COPY build_luisa.sh /workspace/build_luisa.sh
-RUN ./build_luisa.sh 3.10
-COPY /opt/genesis/genesis/ext/LuisaRender/build/bin /usr/local/lib/python${PYTHON_VERSION}/dist-packages/genesis/ext/LuisaRender/build/bin
+RUN ./build_luisa.sh ${PYTHON_VERSION}
+# COPY /opt/genesis/genesis/ext/LuisaRender/build/bin /usr/local/lib/python${PYTHON_VERSION}/dist-packages/genesis/ext/LuisaRender/build/bin
 RUN pip3 install PyOpenGL PyOpenGL_accelerate --verbose
 RUN pip3 install coacd libigl pymeshlab --verbose
 
@@ -109,8 +110,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN wget https://apt.llvm.org/llvm.sh && \
     chmod +x llvm.sh && \
     ./llvm.sh 18 && \
-    ln -sf /usr/bin/llvm-config-* /usr/bin/llvm-config && \
-    ln -s /usr/bin/clang-1* /usr/bin/clang && \
     rm llvm.sh
 
 WORKDIR /workspace
