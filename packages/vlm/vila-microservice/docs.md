@@ -178,6 +178,17 @@ At this point, you can view the output stream
 
 ![](https://github.com/user-attachments/assets/b8e270b5-6b71-4988-b8f6-fd0e549111eb)
 
+#### How to adjust the focus
+
+You can run `v4l2-ctl` on host while the camera is working inside the container.
+
+```bash
+sudo apt install v4l-utils
+v4l2-ctl --list-devices
+v4l2-ctl -d /dev/video0 --list-ctrls
+v4l2-ctl -d /dev/video0 --set-ctrl=focus_absolute=48
+```
+
 ### 2. Ask a Question
 
 You can also ask open ended questions to the VLM using the chat completions endpoint.
