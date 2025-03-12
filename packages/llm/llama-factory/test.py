@@ -8,5 +8,5 @@ def execute_command(command):
     except Exception as e:
         print("Error:\n", str(e))
 
-command = "llamafactory-cli version"
-execute_command(command)
+execute_command("llamafactory-cli env")
+execute_command("llamafactory-cli version")
