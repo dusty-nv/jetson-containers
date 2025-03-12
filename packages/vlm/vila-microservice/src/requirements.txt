@@ -1,0 +1,10 @@
+fastapi==0.115.6
+pydantic-settings
+uvicorn[standard]
+pillow
+prometheus_client
+redis
+flask 
+websockets
+
+
