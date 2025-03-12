@@ -18,5 +18,6 @@ cmake -S . -B build \
     -D LUISA_COMPUTE_DOWNLOAD_OIDN=ON \
     -D LUISA_COMPUTE_ENABLE_GUI=OFF \
     -D LUISA_COMPUTE_ENABLE_CUDA=ON \
+    -D CMAKE_SYSTEM_PROCESSOR=aarch64 \
     -Dpybind11_DIR=$(python3 -c "import pybind11; print(pybind11.get_cmake_dir())") && \
 cmake --build build -j $(nproc)

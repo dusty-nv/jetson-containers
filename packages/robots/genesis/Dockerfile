@@ -53,8 +53,10 @@ RUN add-apt-repository ppa:ubuntu-toolchain-r/test && \
 RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 110 && \
     update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 110
 
-RUN pip install "pybind11[global]"
+RUN pip3 install "pybind11[global]"
 
+RUN rustup self uninstall -y && \
+    rm -rf /root/.cargo /root/.rustup
 # ===============================================================
 # BUILD LUISA RENDER
 # ===============================================================
@@ -67,7 +69,7 @@ RUN rm -rf /opt/genesis/genesis/ext/LuisaRender && \
     cd /opt/genesis/
 
 COPY build_luisa.sh /workspace/build_luisa.sh
-RUN ./build_luisa.sh ${PYTHON_VERSION}
+RUN ./build_luisa.sh 3.10
 COPY /opt/genesis/genesis/ext/LuisaRender/build/bin /usr/local/lib/python${PYTHON_VERSION}/dist-packages/genesis/ext/LuisaRender/build/bin
 RUN pip3 install PyOpenGL PyOpenGL_accelerate --verbose
 RUN pip3 install coacd libigl pymeshlab --verbose
