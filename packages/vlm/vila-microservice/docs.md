@@ -24,7 +24,7 @@ When running for the first time, it will pulls the VILA model from Hugging Face 
 Once done, you will see an output like the following.
 
 <details>
-  <summary>Click to expand</summary>
+  <summary>(Click to expand) A big table indicating model readiness</summary>
 <pre><code>
 ┌────────────────────────────┬─────────────────────────────────────────────────────────────────────────────┐
 │ _name_or_path              │ ./llm                                                                       │
@@ -225,7 +225,7 @@ curl --location 'http://0.0.0.0:5010/api/v1/chat/completions' \
 
 <details>
 
-  <summary>Click to expand</summary>
+  <summary>(Click to expand) More prompt example(s)</summary>
 <h4>OCR</h4>
 <pre><code>
 curl --location 'http://0.0.0.0:5010/api/v1/chat/completions' \
