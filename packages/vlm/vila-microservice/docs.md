@@ -149,7 +149,7 @@ Once done, you will see an output like the following.
 ### API Endpoint
 
 | API Endpoint | Description |
-| ============ | =========== |
+| ------------ | ----------- |
 | `/api/v1/live-stream`     | Manage live streams the AI service has access to. |
 | `/api/v1/chat/completion` | Chat with the VLM using OpenAI style chat completions. Supports referencing added streams in the prompts. |
 | `/api/v1/alerts`          | Set an alert prompt the VLM will evaluate continuously on the input live stream. Can be used to trigger notifications when alert states are true. |
