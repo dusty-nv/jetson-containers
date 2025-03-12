@@ -212,6 +212,42 @@ curl --location 'http://0.0.0.0:5010/api/v1/chat/completions' \
 }'
 ```
 
+<details>
+
+  <summary>Click to expand</summary>
+<h4>OCR</h4>
+<pre><code>
+curl --location 'http://0.0.0.0:5010/api/v1/chat/completions' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a helpful AI assistant."
+    },
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "stream",
+          "stream": {
+            "stream_id": "aaa"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Read the letters on the package"
+        }
+      ]
+    }
+  ],
+  "min_tokens": 1,
+  "max_tokens": 128
+}'
+</code></pre>
+<img src="https://github.com/user-attachments/assets/20d2358b-cf8c-4228-850f-766ec8adefa5" alt="Description" width="640">
+</details>
+
 Currently, the server does not care the `stream_id`, so you can provide any random letter.
 
 #### Output
