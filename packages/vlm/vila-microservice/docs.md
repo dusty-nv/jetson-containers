@@ -3,7 +3,9 @@
 This package was **heavily** insprired by the `vlm` service of jetson-platform-services repo.
 https://github.com/NVIDIA-AI-IOT/jetson-platform-services/blob/ad7d3017f7ec75540b494fe1b61552a59b0b73a3/inference/vlm/README.md
 
-The main change is that it can accept video sources other than RTSP, including V4L so you can use a USB webcam as the input stream.
+The main changes are
+- It conforms **OpenAI Vision API**, so it can work with a tool like **n8n**.
+- It can take a **local video device** (e.g., USB webcam) as an image source, by providing `v4l2://` path in the `url` field inside `image_url`.
 
 ## Usage Examples
 
@@ -197,7 +199,7 @@ curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
 ```
 
 > [!WARNING]
-> It does not take the online image like `"url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg",`.
+> It currently does not take the online image like `"url": "https://commons.wikimedia.org/wiki/Category:Art#/media/File:Meteorite_Egg.jpg",`.
 
 
 #### RTSP output for preview
@@ -324,6 +326,10 @@ curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
 </code></pre>
 <img src="https://github.com/user-attachments/assets/5d9089ef-76d4-4c54-8472-e433689150ba" alt="Description" width="640">
 </details>
+
+#### n8n example.
+
+<a href="https://github.com/user-attachments/assets/de8cf4dd-ff3b-4607-9c38-6837f830b7c6"><img src="https://github.com/user-attachments/assets/de8cf4dd-ff3b-4607-9c38-6837f830b7c6" width="800"></a>
 
 ### Build Container
 
