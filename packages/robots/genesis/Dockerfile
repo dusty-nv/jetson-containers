@@ -71,7 +71,7 @@ RUN rm -rf /opt/genesis/genesis/ext/LuisaRender && \
 
 COPY build_luisa.sh /workspace/build_luisa.sh
 RUN ./build_luisa.sh ${PYTHON_VERSION}
-# COPY /opt/genesis/genesis/ext/LuisaRender/build/bin /usr/local/lib/python${PYTHON_VERSION}/dist-packages/genesis/ext/LuisaRender/build/bin
+COPY /opt/genesis/genesis/ext/LuisaRender/build/bin /usr/local/lib/python${PYTHON_VERSION}/dist-packages/genesis/ext/LuisaRender/build/
 RUN pip3 install PyOpenGL PyOpenGL_accelerate --verbose
 RUN pip3 install coacd libigl pymeshlab --verbose
 
@@ -140,7 +140,7 @@ RUN pip3 install ompl
 # =============================================================== \
 RUN echo "export LD_LIBRARY_PATH=/opt/genesis/genesis/ext/ParticleMesher/ParticleMesherPy:$LD_LIBRARY_PATH" >> ~/.bashrc && \
     cd /opt/genesis/ && \
-    pip3 install --force-reinstall "numpy<2.1"
+    pip3 install --force-reinstall "numpy==1.26.4"
 
 RUN ldconfig
 
