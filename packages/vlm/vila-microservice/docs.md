@@ -148,33 +148,63 @@ Once done, you will see an output like the following.
 
 ### API Endpoint
 
-| API Endpoint | Description |
-| ------------ | ----------- |
-| `/api/v1/live-stream`     | Manage live streams the AI service has access to. |
-| `/api/v1/chat/completion` | Chat with the VLM using OpenAI style chat completions. Supports referencing added streams in the prompts. |
-| `/api/v1/alerts`          | Set an alert prompt the VLM will evaluate continuously on the input live stream. Can be used to trigger notifications when alert states are true. |
+| Method | API Endpoint | Description |
+| ------ | ------------ | ----------- |
+| `GET`  | `/api/v1/models` | return the VLM name in list |
+| `POST` | `/api/v1/chat/completion` | Chat with the VLM using OpenAI style chat completions. Supports referencing added streams in the prompts. |
+| `POST` | `/api/v1/alerts`          | Set an alert prompt the VLM will evaluate continuously on the input live stream. Can be used to trigger notifications when alert states are true. |
 
-You can see the documentation of (the original) VLM Service of Jetson Platform Services as a reference.
+You can check the documentation of (the original) VLM Service of Jetson Platform Services as a reference.
 https://docs.nvidia.com/jetson/jps/inference-services/vlm.html#overview
 
-### 1. Add a USB Webcam Stream
+### OpenAI Vision API compatible endpoint
 
-You can start by adding an RTSP stream for the VLM to use with the following curl command. This will use the POST method on the live-stream endpoint.
+#### Using a local USB webcam as video stream input
+
+> [OpenAI Vision API - Passing a URL](https://platform.openai.com/docs/guides/images?api-mode=chat&format=url)
+
+You can specify the local v4l2 device path after `v4l2://` and put it in the `image_url`'s `url` field.
+
+The v4l2 device is registered as the input video stream and VLM processes the latest frame of the video stream.
 
 ```bash
-curl --location 'http://0.0.0.0:5010/api/v1/live-stream' \
-  --header 'Content-Type: application/json' \
-  --data '{
-    "liveStreamUrl": "v4l2:///dev/video0"
-  }'
+curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
+--header 'Content-Type: application/json' \
+--data '{
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a helpful AI assistant."
+    },
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "Describe the scene."
+        },
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "v4l2:///dev/video0"
+          }
+        }
+      ]
+    }
+  ],
+  "max_tokens": 128
+}'
 ```
 
-This returns a unique `stream_id` for the stream you added.<br>
-Currently the VLM will only support 1 stream but in the future this API will allow for multi-stream support.
+> [!WARNING]
+> It does not take the online image like `"url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg",`.
+
 
 #### RTSP output for preview
 
-At this point, you can view the output stream
+Once you use a v4l2 video source, it is regsitered as the input stream.
+
+You can view the output RTSP stream on `rtsp://<IP_ADDR>:5011/out`.
 
 ![](https://github.com/user-attachments/assets/b8e270b5-6b71-4988-b8f6-fd0e549111eb)
 
@@ -189,48 +219,18 @@ v4l2-ctl -d /dev/video0 --list-ctrls
 v4l2-ctl -d /dev/video0 --set-ctrl=focus_absolute=48
 ```
 
-### 2. Ask a Question
+#### Passing a Base64 encoded image
 
-You can also ask open ended questions to the VLM using the chat completions endpoint.
+> [OpenAI Vision API - Passing a Base64 encoded image](https://platform.openai.com/docs/guides/images?api-mode=chat&format=base64-encoded)
 
-```bash
-curl --location 'http://0.0.0.0:5010/api/v1/chat/completions' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "messages": [
-    {
-      "role": "system",
-      "content": "You are a helpful AI assistant."
-    },
-    {
-      "role": "user",
-      "content": [
-        {
-          "type": "stream",
-          "stream": {
-            "stream_id": "aaa"
-          }
-        },
-        {
-          "type": "text",
-          "text": "Can you describe the scene?"
-        }
-      ]
-    }
-  ],
-  "min_tokens": 1,
-  "max_tokens": 128
-}'
-```
+You can also embed the image and pass that through API.
 
 <details>
-
-  <summary>(Click to expand) More prompt example(s)</summary>
-<h4>OCR</h4>
+  <summary>(Click to expand) curl command with base64 encoded image</summary>
 <pre><code>
-curl --location 'http://0.0.0.0:5010/api/v1/chat/completions' \
-  --header 'Content-Type: application/json' \
-  --data '{
+curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
+--header 'Content-Type: application/json' \
+--data '{
   "messages": [
     {
       "role": "system",
@@ -240,46 +240,90 @@ curl --location 'http://0.0.0.0:5010/api/v1/chat/completions' \
       "role": "user",
       "content": [
         {
-          "type": "stream",
-          "stream": {
-            "stream_id": "aaa"
-          }
+          "type": "text",
+          "text": "Describe the scene."
         },
         {
-          "type": "text",
-          "text": "Read the letters on the package"
+          "type": "image_url",
+          "image_url": {
+            "url": "data:image/jpeg;base64,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"
+          }
         }
       ]
     }
   ],
-  "min_tokens": 1,
+  "max_tokens": 128
+}'
+</code></pre>
+</details>
+
+> [!WARNING]
+> It currently only takes `image/jpeg`.
+
+<details>
+<summary>(Click to expand) More prompt examples</summary>
+<h4>OCR</h4>
+<pre><code>
+curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
+--header 'Content-Type: application/json' \
+--data '{
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a helpful AI assistant."
+    },
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "Read the texts printed on the box."
+        },
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "v4l2:///dev/video0"
+          }
+        }
+      ]
+    }
+  ],
   "max_tokens": 128
 }'
 </code></pre>
 <img src="https://github.com/user-attachments/assets/20d2358b-cf8c-4228-850f-766ec8adefa5" alt="Description" width="640">
-</details>
 
-Currently, the server does not care the `stream_id`, so you can provide any random letter.
-
-#### Output
-
-```json
-{
-  "choices": [
+<h4>Counting</h4>
+<pre><code>
+curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
+--header 'Content-Type: application/json' \
+--data '{
+  "messages": [
     {
-      "index": 0,
-      "message": {
-        "role": "assistant",
-        "content": "3 black rolling chairs."
-      }
+      "role": "system",
+      "content": "You are a helpful AI assistant."
+    },
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "What kind of chairs do you see in the scene?"
+        },
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "v4l2:///dev/video0"
+          }
+        }
+      ]
     }
-  ]
-}
-```
-
-#### Preview Stream
-
-![](https://github.com/user-attachments/assets/5d9089ef-76d4-4c54-8472-e433689150ba)
+  ],
+  "max_tokens": 128
+}'
+</code></pre>
+<img src="https://github.com/user-attachments/assets/5d9089ef-76d4-4c54-8472-e433689150ba" alt="Description" width="640">
+</details>
 
 ### Build Container
 
