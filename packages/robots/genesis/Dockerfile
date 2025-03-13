@@ -71,7 +71,6 @@ RUN rm -rf /opt/genesis/genesis/ext/LuisaRender && \
 
 COPY build_luisa.sh /workspace/build_luisa.sh
 RUN ./build_luisa.sh ${PYTHON_VERSION}
-COPY /opt/genesis/genesis/ext/LuisaRender/build/bin /usr/local/lib/python${PYTHON_VERSION}/dist-packages/genesis/ext/LuisaRender/build/
 RUN pip3 install PyOpenGL PyOpenGL_accelerate --verbose
 RUN pip3 install coacd libigl pymeshlab --verbose
 
@@ -137,7 +136,17 @@ pip3 install .
 RUN pip3 install ompl
 # ===============================================================
 # PATH
-# =============================================================== \
+# ===============================================================
+RUN if [ -d /opt/genesis/genesis/ext/LuisaRender/build/bin ]; then \
+      echo "Contenido de /opt/genesis/genesis/ext/LuisaRender/build/bin:" && \
+      ls -la /opt/genesis/genesis/ext/LuisaRender/build/bin; \
+    else \
+      echo "Directorio /opt/genesis/genesis/ext/LuisaRender/build/bin no encontrado"; \
+    fi
+
+
+RUN mkdir -p /usr/local/lib/python${PYTHON_VERSION}/dist-packages/genesis/ext/LuisaRender/build/ && \
+    cp -r /opt/genesis/genesis/ext/LuisaRender/build/bin /usr/local/lib/python${PYTHON_VERSION}/dist-packages/genesis/ext/LuisaRender/build/
 RUN echo "export LD_LIBRARY_PATH=/opt/genesis/genesis/ext/ParticleMesher/ParticleMesherPy:$LD_LIBRARY_PATH" >> ~/.bashrc && \
     cd /opt/genesis/ && \
     pip3 install --force-reinstall "numpy==1.26.4"
