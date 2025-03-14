@@ -107,9 +107,6 @@ class APIServer:
         stream_url = body.liveStreamUrl
         stream_id = str(uuid4()).strip()  # Always generate stream_id
 
-        if not stream_url.startswith("rtsp://"):
-            print("############### Not RTSP (but don't care) ##############")
-
         data = {"stream_id": stream_id, "stream_url": stream_url}
         queue_message = APIMessage(type="stream_add", data=data, id=str(uuid4()), time=time())
         self.cmd_q.put(queue_message)
