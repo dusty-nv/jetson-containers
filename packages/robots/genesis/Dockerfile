@@ -73,7 +73,8 @@
     RUN ./build_luisa.sh ${PYTHON_VERSION}
     RUN pip3 install PyOpenGL PyOpenGL_accelerate --verbose
     RUN pip3 install coacd libigl pymeshlab --verbose
-
+    
+    RUN mkdir -p /tmp/LuisaRender/build/
     RUN cp -r /opt/genesis/genesis/ext/LuisaRender/build/bin /tmp/LuisaRender/build/
 
     RUN rm -rf /opt/genesis/ && \
@@ -157,5 +158,7 @@
         pip3 install --force-reinstall "numpy==1.26.4"
     
     RUN ldconfig
+
+    WORKDIR /opt/
     
     CMD ["/bin/bash"]
