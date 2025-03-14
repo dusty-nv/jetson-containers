@@ -17,6 +17,7 @@ from uuid import uuid4
 from time import time
 import re
 import logging
+import json
 
 from mmj_utils.api_server import APIServer, APIMessage, Response
 from mmj_utils.api_schemas import ChatMessages, StreamAdd
@@ -133,7 +134,25 @@ class VLMServer(APIServer):
                 try:
                     # Call the stream_add function directly
                     stream_result = self.stream_add(stream_add_body)
-                    stream_id = stream_result["id"]
+                    logging.debug(f"Stream add result: {stream_result}, type: {type(stream_result)}")
+
+                    # Handle the case where stream_result might be a string or a dictionary
+                    if isinstance(stream_result, dict) and "id" in stream_result:
+                        stream_id = stream_result["id"]
+                    elif isinstance(stream_result, str):
+                        # If it's a string, it might be a JSON string
+                        try:
+                            result_dict = json.loads(stream_result)
+                            if isinstance(result_dict, dict) and "id" in result_dict:
+                                stream_id = result_dict["id"]
+                            else:
+                                raise ValueError("Invalid JSON format")
+                        except json.JSONDecodeError:
+                            # If it's not a JSON string, use it directly as the stream_id
+                            stream_id = stream_result
+                    else:
+                        raise ValueError(f"Unexpected stream_result type: {type(stream_result)}")
+
                     logging.info(f"Added v4l2 stream with ID: {stream_id}")
                 except Exception as e:
                     logging.error(f"Failed to add v4l2 stream: {str(e)}")
