@@ -35,12 +35,21 @@ from mmj_utils.api_schemas import *
 
 def decode_image(base64_string):
     start = time()
+
     # Decode the base64 string
     image_data = base64.b64decode(base64_string)
+
     # Convert binary data to an image
     image = Image.open(io.BytesIO(image_data))
+
+    # Convert RGBA to RGB (fix for torchvision normalize issue)
+    if image.mode == "RGBA":
+        logging.warning("Image is RGBA, converting to RGB...")
+        image = image.convert("RGB")
+
     end = time()
     logging.info(f"Image decoding time: {end-start} seconds")
+
     return image
 
 model = None
