@@ -19,6 +19,8 @@ import re
 import logging
 import json
 
+import requests
+
 from mmj_utils.api_server import APIServer, APIMessage, Response
 from mmj_utils.api_schemas import ChatMessages, StreamAdd
 
@@ -119,11 +121,32 @@ class VLMServer(APIServer):
                         elif url.startswith(CUSTOM_VIDEO_SCHEMES):
                             custom_video_source = url
                             logging.info(f"Found custom video source: {custom_video_source}")
+                        elif url.startswith("data:image/"):
+                            logging.info(f"Found base64 encoded image")
 
-        # If an image URL is found, handle downloading and registering it
+        # If an image URL is found, handle downloading and registering as file://
         if image_url:
-            # TODO:
-            logging.warn(f"### Will implement the logic to handle standard image url: {image_url}")
+
+            save_dir = "/data/images"  # Define storage path
+            os.makedirs(save_dir, exist_ok=True)  # Ensure directory exists
+
+            # Generate a unique filename
+            filename = f"image_{uuid4().hex}.jpg"
+            save_path = os.path.join(save_dir, filename)
+
+            try:
+                logging.info(f"Downloading image from {image_url}...")
+                response = requests.get(image_url, timeout=10)
+
+                if response.status_code == 200:
+                    with open(save_path, "wb") as file:
+                        file.write(response.content)
+                    logging.info(f"Image saved to {save_path}")
+                    custom_video_source = f"file://{save_path}"
+                else:
+                    logging.error(f"Failed to download image {image_url}: HTTP {response.status_code}")
+            except Exception as e:
+                logging.error(f"Error downloading image {image_url}: {str(e)}")
 
         # If a custom video source is found, handle it accordingly
         if custom_video_source:
@@ -142,7 +165,7 @@ class VLMServer(APIServer):
             # If no stream is connected with this device, add a new one
             if not stream_already_connected:
                 # Create a StreamAdd object
-                stream_add_body = StreamAdd(liveStreamUrl=custom_video_source, description="v4l2 camera")
+                stream_add_body = StreamAdd(liveStreamUrl=custom_video_source, description="custom video source")
 
                 try:
                     # Call the stream_add function directly
