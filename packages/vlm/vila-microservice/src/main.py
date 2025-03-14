@@ -148,17 +148,13 @@ while True:
 
                 #cannot add stream
                 if v_input.connected:
-                    cmd_resp[message.id] = {"success": False, "message": "Stream Maximum reached. Remove a stream first to add another."}
+                    logging.warn("A registered stream exists. Over-writing.")
 
-                #adds stream
-                else:
-                    #add new stream
-                    rtsp_link = message.data["stream_url"]
-                    v_input.connect_stream(rtsp_link, camera_id=message.data["stream_id"])
-                    if not v_input.connected:
-                        cmd_resp[message.id] = {"success": False, "message": "Failed to add stream."}
-                    else:
-                        cmd_resp[message.id] = {"success": True, "message": "Successfully connected to stream"}
+                #add/over-write new stream
+                stream_link = message.data["stream_url"]
+                v_input.connect_stream(stream_link, camera_id=message.data["stream_id"])
+
+                cmd_resp[message.id] = {"success": True, "message": "Successfully connected to stream"}
 
 
             elif message.type == "stream_remove":
