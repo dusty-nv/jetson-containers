@@ -14,11 +14,12 @@
 # limitations under the License.
 
 from time import sleep
-from queue import Queue 
-import logging 
-import os 
+from queue import Queue
+import logging
+import os
 import time
 import copy
+import re
 
 #from settings import load_config
 from utils import process_query, vlm_alert_handler, vlm_chat_completion_handler
@@ -28,7 +29,7 @@ from ws_server import WebSocketServer
 
 from mmj_utils.overlay_gen import VLMOverlay
 from mmj_utils.streaming import VideoOutput, VideoSource
-from mmj_utils.vlm import VLM 
+from mmj_utils.vlm import VLM
 from mmj_utils.monitoring import AlertMonitor
 from jetson_utils import cudaResize, cudaAllocMapped, cudaMemcpy
 
@@ -40,10 +41,10 @@ logging.basicConfig(level=logging.getLevelName(config.log_level),
                     format='%(asctime)s - %(levelname)s - [%(threadName)s] %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S')
 
-#Setup prometheus states and metric server 
+#Setup prometheus states and metric server
 alertMonitor = AlertMonitor(config.max_alerts, config.prometheus_port, cooldown_time=config.alert_cooldown)
 
-#Setup websocket server to send push alerts to mobile app 
+#Setup websocket server to send push alerts to mobile app
 ws_server = WebSocketServer(port=config.websocket_server_port)
 ws_server.start_server()
 
@@ -54,11 +55,26 @@ v_output = VideoOutput(config.stream_output)
 #create overlay object
 overlay = VLMOverlay()
 
-#REST API Queue 
-cmd_q = Queue() #commands are put in by REST API requests and taken out by main loop 
-cmd_resp = dict() #responses to commands will be put in a shared dict based on command UUID 
+# Helper function to check if a message contains a base64 encoded image
+def has_base64_image(message):
+    """Check if a message contains a base64 encoded image."""
+    if not hasattr(message, 'messages'):
+        return False
 
-#Launch REST API server and connect queue to receive prompt and alert updates 
+    for msg in message.messages:
+        if msg.role == "user" and isinstance(msg.content, list):
+            for content in msg.content:
+                if content.type == "image_url" and hasattr(content, "image_url"):
+                    url = content.image_url.url
+                    if url.startswith("data:image/"):
+                        return True
+    return False
+
+#REST API Queue
+cmd_q = Queue() #commands are put in by REST API requests and taken out by main loop
+cmd_resp = dict() #responses to commands will be put in a shared dict based on command UUID
+
+#Launch REST API server and connect queue to receive prompt and alert updates
 api_server = VLMServer(cmd_q, cmd_resp, max_alerts=config.max_alerts, port=config.api_server_port)
 api_server.start_server()
 
@@ -67,7 +83,7 @@ vlm = VLM(config.chat_server)
 vlm.add_ego("alert", config.alert_system_prompt, vlm_alert_handler, {"alertMonitor": alertMonitor, "overlay":overlay, "ws_server":ws_server, "v_input":v_input})
 vlm.add_ego("chat_completion", callback=vlm_chat_completion_handler, callback_args={"cmd_resp":cmd_resp, "overlay":overlay})
 
-#Wait for VLM server to be loaded 
+#Wait for VLM server to be loaded
 while not vlm.health_check():
     if not cmd_q.empty():
         message = cmd_q.get()
@@ -76,21 +92,21 @@ while not vlm.health_check():
     logging.info("Waiting for VLM model health check")
 logging.info("VLM Model health check passed. Starting main pipeline.")
 
-#Start main pipeline 
-api_server_check = False #used to ensure api server queue is checked at least once between llm calls 
+#Start main pipeline
+api_server_check = False #used to ensure api server queue is checked at least once between llm calls
 active_message = None
 
-#Setup buffer and timer to support multi-frame input to VLM 
+#Setup buffer and timer to support multi-frame input to VLM
 frame_buffer = [] #store frames for multi-frame input
-frame_time_gap = config.multi_frame_input_time / config.multi_frame_input / 1000 #calc time betweeen frames to pass to vlm in seconds 
+frame_time_gap = config.multi_frame_input_time / config.multi_frame_input / 1000 #calc time betweeen frames to pass to vlm in seconds
 current_gap = frame_time_gap #track time between frames
 
 while True:
-    start_time = time.perf_counter() #track time between frames 
+    start_time = time.perf_counter() #track time between frames
 
-    #First check controls from api server and update rules, queries or 
+    #First check controls from api server and update rules, queries or
     if not vlm.busy: #LLM is free, accept next command.
-        api_server_check = True 
+        api_server_check = True
         if not cmd_q.empty():
             message = cmd_q.get() #cmd from api server
             logging.debug("Received message from flask")
@@ -101,35 +117,42 @@ while True:
                 alertMonitor.clear_alerts() #clear to stop old rules triggering alerts
                 alertMonitor.set_alerts(message.data)
                 overlay.input_text = message.data
-                overlay.output_text = None 
-                active_message = message 
+                overlay.output_text = None
+                active_message = message
                 cmd_resp[message.id] = "Alert rules set"
-     
+
             elif message.type == "query":
                 logging.debug("Message is a query")
 
                 #Clear old alerts
                 alertMonitor.clear_alerts() #clear to stop old alerts triggering alerts
 
-                if not v_input.connected:
+                # Check if the message contains a base64 encoded image
+                has_image = has_base64_image(message.data)
+
+                if not v_input.connected and not has_image:
+                    # No stream and no base64 image, return error
                     cmd_resp[message.id] = "No stream has been added."
                     active_message = None
-
                 else:
+                    # Either stream is connected or message has base64 image
+                    if has_image:
+                        logging.info("Processing query with base64 encoded image")
+
                     overlay.input_text = process_query(message.data)
-                    overlay.output_text = None 
-                    active_message = message      
+                    overlay.output_text = None
+                    active_message = message
 
             elif message.type == "stream_add":
                 logging.debug("Message is a stream add")
 
-                #cannot add stream 
+                #cannot add stream
                 if v_input.connected:
                     cmd_resp[message.id] = {"success": False, "message": "Stream Maximum reached. Remove a stream first to add another."}
-                
+
                 #adds stream
                 else:
-                    #add new stream 
+                    #add new stream
                     rtsp_link = message.data["stream_url"]
                     v_input.connect_stream(rtsp_link, camera_id=message.data["stream_id"])
                     if not v_input.connected:
@@ -152,42 +175,41 @@ while True:
 
             else:
                 raise Exception("Received invalid message type from flask")
-        
-    #If a stream is added get frame and output 
+
+    #If a stream is added get frame and output
     if (frame := v_input()) is not None:
         frame_copy = cudaAllocMapped(width=frame.width, height=frame.height, format=frame.format)
         cudaMemcpy(frame_copy, frame)
 
-        if current_gap >= frame_time_gap: #if enough time has passed, add a new frame to buffer 
-            if len(frame_buffer) >= config.multi_frame_input: 
-                frame_buffer.pop(0) #pop oldest if buffer is full 
+        if current_gap >= frame_time_gap: #if enough time has passed, add a new frame to buffer
+            if len(frame_buffer) >= config.multi_frame_input:
+                frame_buffer.pop(0) #pop oldest if buffer is full
             frame_buffer.append(frame_copy) #add latest frame
             current_gap = 0 #reset timer
 
-        if not vlm.busy and active_message and api_server_check: #llm available & query or alerts 
+        if not vlm.busy and active_message and api_server_check: #llm available & query or alerts
             if active_message.type == "alert":
                 logging.info("Making VLM call with alert input")
-                vlm("alert", active_message.data, copy.copy(frame_buffer)) #send shallow copy of frame buffer to avoid race conditions 
+                vlm("alert", active_message.data, copy.copy(frame_buffer)) #send shallow copy of frame buffer to avoid race conditions
             elif active_message.type == "query":
                 logging.info("Making VLM call with query input")
                 vlm("chat_completion", active_message.data, copy.copy(frame_buffer), message_id=message.id)
-                active_message = None #only send queries 1 time 
+                active_message = None #only send queries 1 time
             else:
                 logging.error(f"Message type is invalid: {active_message.type}")
-        
-            api_server_check = False   
 
-        #resize frame to 1080p for smooth output        
-        resized_frame = cudaAllocMapped(width=1920, height=1080, format=frame.format)
-        cudaResize(frame, resized_frame)
-
-        #generate overlay 
-        resized_frame = overlay(resized_frame)  
-        v_output(resized_frame)
+            api_server_check = False
+    # Handle the case where there's no stream but we have a query with a base64 image
+    elif not vlm.busy and active_message and api_server_check and active_message.type == "query" and has_base64_image(active_message.data):
+        logging.info("Making VLM call with base64 image (no stream)")
+        # Pass None or empty list as frame buffer since we don't need it for base64 images
+        vlm("chat_completion", active_message.data, None, message_id=message.id)
+        active_message = None
+        api_server_check = False
 
     else:
         sleep(1/30)
 
     loop_time = time.perf_counter() - start_time
     #logging.info(f"Main Loop Time: {loop_time}")
-    current_gap += loop_time 
+    current_gap += loop_time

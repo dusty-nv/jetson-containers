@@ -102,8 +102,9 @@ async def request_alert_completions(body: AlertCompletion):
     chat_history.append("system", body.system_prompt)
 
     #add images
-    for image_string in body.images:
-        image_string = image_string[23:]
+    for image_url in body.images:
+        # Extract base64 data after the comma
+        image_string = image_url.split(',', 1)[1]
         image = decode_image(image_string)
         chat_history.append("user", image=image)
 
@@ -168,7 +169,8 @@ async def request_chat_completion(body: ChatMessages):
                         chat_history.append(role="user", text=content.text)
                         logging.info(f"adding user text: {content.text}")
                     elif content.type == "image_url":
-                        image_string = content.image_url.url[23:]
+                        # Extract base64 data after the comma
+                        image_string = content.image_url.url.split(',', 1)[1]
                         image = decode_image(image_string)
                         chat_history.append(role="user", image=image)
                         logging.info(f"added image")
@@ -223,7 +225,7 @@ if __name__ == "__main__":
                     datefmt='%Y-%m-%d %H:%M:%S')
 
     model_name = config.model.split("/")[-1]
-    if not os.path.exists("/data/models/mlc/dist/models/{model_name}"):
+    if not os.path.exists(f"/data/models/mlc/dist/models/{model_name}"):
         logging.info("Model path not found. Will download and build model. This will take some time.")
         os.makedirs("/data/models/mlc/dist/models", exist_ok=True)
 
