@@ -189,10 +189,10 @@ class VLMServer(APIServer):
                     else:
                         raise ValueError(f"Unexpected stream_result type: {type(stream_result)}")
 
-                    logging.info(f"Added v4l2 stream with ID: {stream_id}")
+                    logging.info(f"Added custom video stream with ID: {stream_id}")
                 except Exception as e:
-                    logging.error(f"Failed to add v4l2 stream: {str(e)}")
-                    raise HTTPException(status_code=500, detail=f"Failed to add v4l2 stream: {str(e)}")
+                    logging.error(f"Failed to add custom video stream: {str(e)}")
+                    raise HTTPException(status_code=500, detail=f"Failed to add custom video stream: {str(e)}")
 
         # Process the chat completion request
         queue_message = APIMessage(type="query", data=body, id=str(uuid4()), time=time())

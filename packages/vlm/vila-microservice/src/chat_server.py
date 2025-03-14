@@ -178,11 +178,16 @@ async def request_chat_completion(body: ChatMessages):
                         chat_history.append(role="user", text=content.text)
                         logging.info(f"adding user text: {content.text}")
                     elif content.type == "image_url":
-                        # Extract base64 data after the comma
-                        image_string = content.image_url.url.split(',', 1)[1]
-                        image = decode_image(image_string)
-                        chat_history.append(role="user", image=image)
-                        logging.info(f"added image")
+                        url = content.image_url.url
+                        if url.startswith("data:image/"):
+                            # Extract base64 data after the comma
+                            image_string = url.split(',', 1)[1]
+                            image = decode_image(image_string)
+                            chat_history.append(role="user", image=image)
+                            logging.info(f"added image")
+                        else:
+                            # Skip non-base64 URLs (they should have been handled by the API server)
+                            logging.info(f"Skipping non-base64 URL: {url[:10]}...")
 
             else:
                 logging.info(f"Message is invalid type: {type(message.content)}")
