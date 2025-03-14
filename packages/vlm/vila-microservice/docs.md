@@ -371,6 +371,36 @@ curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
 }'
 </code></pre>
 
+<h4>CSI camera</h4>
+<pre><code>
+curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
+--header 'Content-Type: application/json' \
+--data '{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Describe the scene."
+    },
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "Describe the scene."
+        },
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "csi://0"
+          }
+        }
+      ]
+    }
+  ],
+  "max_tokens": 128
+}'
+</code></pre>
+
 </details>
 
 #### n8n example.
