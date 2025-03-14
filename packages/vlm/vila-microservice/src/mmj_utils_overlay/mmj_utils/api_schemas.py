@@ -20,7 +20,7 @@ from typing import Optional, Union, Dict, List, Literal
 class AlertCompletion(BaseModel):
     """Schema for batch alert completions"""
     system_prompt: Optional[constr(min_length=0, max_length=20000)]
-    images: conlist(item_type=constr(min_length=1, max_length=5000000, pattern=r'^data:image/jpeg;base64,.*'), min_length=1)
+    images: conlist(item_type=constr(min_length=1, max_length=5000000, pattern=r'^data:image/[a-zA-Z]+;base64,.*'), min_length=1)
     user_prompts: conlist(item_type=constr(min_length=0, max_length=20000), min_length=1)
     max_tokens: Optional[conint(gt=0, le=4096)] = 128
     min_tokens: Optional[conint(gt=0, le=4096)] = 1
@@ -53,7 +53,11 @@ class Response(BaseModel):
 
 class ChatContentImageOptions(BaseModel):
     """Schema for b64 encoded image content or video device URL"""
-    url: constr(min_length=0, max_length=5000000, pattern=r'^(data:image/jpeg;base64,.*|v4l2:///.*)') #5MB max b64 string or v4l2 URL
+    url: constr(
+        min_length=0,
+        max_length=5000000,
+        pattern=r'^(data:image/[a-zA-Z]+;base64,.*|csi://.*|v4l2://.*|webrtc://.*|rtp://.*|rtsp://.*|file://.*)'
+    ) #5MB max b64 string or custom video source
 
 class ChatContentStreamOptions(BaseModel):
     """Schema for stream content ID"""

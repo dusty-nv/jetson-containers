@@ -255,9 +255,6 @@ curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
 </code></pre>
 </details>
 
-> [!WARNING]
-> It currently only takes `image/jpeg`.
-
 <details>
 <summary>(Click to expand) More prompt examples</summary>
 <h4>OCR</h4>
