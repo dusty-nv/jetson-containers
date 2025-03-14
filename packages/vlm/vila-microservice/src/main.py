@@ -146,15 +146,28 @@ while True:
             elif message.type == "stream_add":
                 logging.debug("Message is a stream add")
 
-                #cannot add stream
+                # Properly close existing stream if connected
                 if v_input.connected:
-                    logging.warn("A registered stream exists. Over-writing.")
+                    logging.warn("A registered stream exists. Closing before connecting to new stream.")
+                    old_id = v_input.camera_id
+                    v_input.close_stream()
+                    logging.info(f"Closed existing stream with ID: {old_id}")
 
-                #add/over-write new stream
+                # Connect to new stream
                 stream_link = message.data["stream_url"]
-                v_input.connect_stream(stream_link, camera_id=message.data["stream_id"])
+                stream_id = message.data["stream_id"]
+                logging.info(f"Connecting to new stream: {stream_link} with ID: {stream_id}")
 
-                cmd_resp[message.id] = {"success": True, "message": "Successfully connected to stream"}
+                # Call connect_stream but don't check its return value (it always returns None)
+                v_input.connect_stream(stream_link, camera_id=stream_id)
+
+                # Check v_input.connected instead
+                if v_input.connected:
+                    logging.info(f"Successfully connected to stream: {stream_link}")
+                    cmd_resp[message.id] = {"success": True, "message": "Successfully connected to stream"}
+                else:
+                    logging.error(f"Failed to connect to stream: {stream_link}")
+                    cmd_resp[message.id] = {"success": False, "message": "Failed to connect to stream"}
 
 
             elif message.type == "stream_remove":
@@ -195,6 +208,14 @@ while True:
                 logging.error(f"Message type is invalid: {active_message.type}")
 
             api_server_check = False
+
+        #resize frame to 1080p for smooth output
+        resized_frame = cudaAllocMapped(width=1920, height=1080, format=frame.format)
+        cudaResize(frame, resized_frame)
+
+        #generate overlay
+        resized_frame = overlay(resized_frame)
+        v_output(resized_frame)
     # Handle the case where there's no stream but we have a query with a base64 image
     elif not vlm.busy and active_message and api_server_check and active_message.type == "query" and has_base64_image(active_message.data):
         logging.info("Making VLM call with base64 image (no stream)")
