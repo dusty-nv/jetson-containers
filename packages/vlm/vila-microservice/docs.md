@@ -349,7 +349,58 @@ curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
   "max_tokens": 128
 }'
 </code></pre>
-<img src="https://github.com/user-attachments/assets/5d9089ef-76d4-4c54-8472-e433689150ba" alt="Description" width="640">
+
+<h4>Online image</h4>
+<pre><code>
+curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
+--header 'Content-Type: application/json' \
+--data '{
+  "messages": [{
+        "role": "user",
+        "content": [
+            {"type": "text", "text": "What''s in this image?"},
+            {
+                "type": "image_url",
+                "image_url": {
+                    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg"
+                }
+            }
+        ]
+    }],
+  "max_tokens": 128
+}'
+</code></pre>
+
+<h4>CSI camera</h4>
+<pre><code>
+curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
+--header 'Content-Type: application/json' \
+--data '{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Describe the scene."
+    },
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "Describe the scene."
+        },
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "csi://0"
+          }
+        }
+      ]
+    }
+  ],
+  "max_tokens": 128
+}'
+</code></pre>
+
 </details>
 
 #### n8n example.

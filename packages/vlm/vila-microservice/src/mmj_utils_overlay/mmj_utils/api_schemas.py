@@ -56,7 +56,7 @@ class ChatContentImageOptions(BaseModel):
     url: constr(
         min_length=0,
         max_length=5000000,
-        pattern=r'^(data:image/[a-zA-Z]+;base64,.*|csi://.*|v4l2://.*|webrtc://.*|rtp://.*|rtsp://.*|file://.*)'
+        pattern=r'^(data:image/[a-zA-Z]+;base64,.*|https?://.*|csi://.*|v4l2://.*|webrtc://.*|rtp://.*|rtsp://.*|file://.*)'
     ) #5MB max b64 string or custom video source
 
 class ChatContentStreamOptions(BaseModel):
