@@ -35,12 +35,21 @@ from mmj_utils.api_schemas import *
 
 def decode_image(base64_string):
     start = time()
+
     # Decode the base64 string
     image_data = base64.b64decode(base64_string)
+
     # Convert binary data to an image
     image = Image.open(io.BytesIO(image_data))
+
+    # Convert RGBA to RGB (fix for torchvision normalize issue)
+    if image.mode == "RGBA":
+        logging.warning("Image is RGBA, converting to RGB...")
+        image = image.convert("RGB")
+
     end = time()
     logging.info(f"Image decoding time: {end-start} seconds")
+
     return image
 
 model = None
@@ -102,8 +111,9 @@ async def request_alert_completions(body: AlertCompletion):
     chat_history.append("system", body.system_prompt)
 
     #add images
-    for image_string in body.images:
-        image_string = image_string[23:]
+    for image_url in body.images:
+        # Extract base64 data after the comma
+        image_string = image_url.split(',', 1)[1]
         image = decode_image(image_string)
         chat_history.append("user", image=image)
 
@@ -168,10 +178,16 @@ async def request_chat_completion(body: ChatMessages):
                         chat_history.append(role="user", text=content.text)
                         logging.info(f"adding user text: {content.text}")
                     elif content.type == "image_url":
-                        image_string = content.image_url.url[23:]
-                        image = decode_image(image_string)
-                        chat_history.append(role="user", image=image)
-                        logging.info(f"added image")
+                        url = content.image_url.url
+                        if url.startswith("data:image/"):
+                            # Extract base64 data after the comma
+                            image_string = url.split(',', 1)[1]
+                            image = decode_image(image_string)
+                            chat_history.append(role="user", image=image)
+                            logging.info(f"added image")
+                        else:
+                            # Skip non-base64 URLs (they should have been handled by the API server)
+                            logging.info(f"Skipping non-base64 URL: {url[:10]}...")
 
             else:
                 logging.info(f"Message is invalid type: {type(message.content)}")
@@ -223,7 +239,7 @@ if __name__ == "__main__":
                     datefmt='%Y-%m-%d %H:%M:%S')
 
     model_name = config.model.split("/")[-1]
-    if not os.path.exists("/data/models/mlc/dist/models/{model_name}"):
+    if not os.path.exists(f"/data/models/mlc/dist/models/{model_name}"):
         logging.info("Model path not found. Will download and build model. This will take some time.")
         os.makedirs("/data/models/mlc/dist/models", exist_ok=True)
 

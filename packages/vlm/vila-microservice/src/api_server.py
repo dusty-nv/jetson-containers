@@ -17,6 +17,9 @@ from uuid import uuid4
 from time import time
 import re
 import logging
+import json
+
+import requests
 
 from mmj_utils.api_server import APIServer, APIMessage, Response
 from mmj_utils.api_schemas import ChatMessages, StreamAdd
@@ -96,8 +99,13 @@ class VLMServer(APIServer):
 
     def chat_completion(self, body: ChatMessages):
         # Check if there's a v4l2 URL in the request
-        v4l2_device = None
+        custom_video_source = None
+        image_url = None
         stream_id = None
+
+        # Define regex for custom video sources
+        HTTP_SCHEMES = ("http://", "https://")  # OpenAI Vision API standard image URLs
+        CUSTOM_VIDEO_SCHEMES = ("csi://", "v4l2://", "webrtc://", "rtp://", "rtsp://", "file://")
 
         # Look for v4l2 URLs in the messages
         for message in body.messages:
@@ -105,20 +113,49 @@ class VLMServer(APIServer):
                 for content in message.content:
                     if content.type == "image_url" and hasattr(content, "image_url"):
                         url = content.image_url.url
-                        # Check if it's a v4l2 URL
-                        v4l2_match = re.match(r'v4l2:///dev/video(\d+)', url)
-                        if v4l2_match:
-                            v4l2_device = f"/dev/video{v4l2_match.group(1)}"
-                            logging.info(f"Found v4l2 device: {v4l2_device}")
 
-        # If v4l2 device found, check if there's already a stream connected with this device
-        if v4l2_device:
+                        # Determine the URL type
+                        if url.startswith(HTTP_SCHEMES):
+                            image_url = url  # This will later be handled (download & register)
+                            logging.info(f"Found standard image URL: {image_url}")
+                        elif url.startswith(CUSTOM_VIDEO_SCHEMES):
+                            custom_video_source = url
+                            logging.info(f"Found custom video source: {custom_video_source}")
+                        elif url.startswith("data:image/"):
+                            logging.info(f"Found base64 encoded image")
+
+        # If an image URL is found, handle downloading and registering as file://
+        if image_url:
+
+            save_dir = "/data/images"  # Define storage path
+            os.makedirs(save_dir, exist_ok=True)  # Ensure directory exists
+
+            # Generate a unique filename
+            filename = f"image_{uuid4().hex}.jpg"
+            save_path = os.path.join(save_dir, filename)
+
+            try:
+                logging.info(f"Downloading image from {image_url}...")
+                response = requests.get(image_url, timeout=10)
+
+                if response.status_code == 200:
+                    with open(save_path, "wb") as file:
+                        file.write(response.content)
+                    logging.info(f"Image saved to {save_path}")
+                    custom_video_source = f"file://{save_path}"
+                else:
+                    logging.error(f"Failed to download image {image_url}: HTTP {response.status_code}")
+            except Exception as e:
+                logging.error(f"Error downloading image {image_url}: {str(e)}")
+
+        # If a custom video source is found, handle it accordingly
+        if custom_video_source:
             # Check if there's already a stream connected
             existing_streams = self.stream_list()
             stream_already_connected = False
 
             for stream in existing_streams:
-                if stream.liveStreamUrl == v4l2_device:
+                if stream.liveStreamUrl == custom_video_source:
                     # Stream with this device is already connected, use it
                     stream_id = stream.id
                     stream_already_connected = True
@@ -128,16 +165,34 @@ class VLMServer(APIServer):
             # If no stream is connected with this device, add a new one
             if not stream_already_connected:
                 # Create a StreamAdd object
-                stream_add_body = StreamAdd(liveStreamUrl=v4l2_device, description="v4l2 camera")
+                stream_add_body = StreamAdd(liveStreamUrl=custom_video_source, description="custom video source")
 
                 try:
                     # Call the stream_add function directly
                     stream_result = self.stream_add(stream_add_body)
-                    stream_id = stream_result["id"]
-                    logging.info(f"Added v4l2 stream with ID: {stream_id}")
+                    logging.debug(f"Stream add result: {stream_result}, type: {type(stream_result)}")
+
+                    # Handle the case where stream_result might be a string or a dictionary
+                    if isinstance(stream_result, dict) and "id" in stream_result:
+                        stream_id = stream_result["id"]
+                    elif isinstance(stream_result, str):
+                        # If it's a string, it might be a JSON string
+                        try:
+                            result_dict = json.loads(stream_result)
+                            if isinstance(result_dict, dict) and "id" in result_dict:
+                                stream_id = result_dict["id"]
+                            else:
+                                raise ValueError("Invalid JSON format")
+                        except json.JSONDecodeError:
+                            # If it's not a JSON string, use it directly as the stream_id
+                            stream_id = stream_result
+                    else:
+                        raise ValueError(f"Unexpected stream_result type: {type(stream_result)}")
+
+                    logging.info(f"Added custom video stream with ID: {stream_id}")
                 except Exception as e:
-                    logging.error(f"Failed to add v4l2 stream: {str(e)}")
-                    raise HTTPException(status_code=500, detail=f"Failed to add v4l2 stream: {str(e)}")
+                    logging.error(f"Failed to add custom video stream: {str(e)}")
+                    raise HTTPException(status_code=500, detail=f"Failed to add custom video stream: {str(e)}")
 
         # Process the chat completion request
         queue_message = APIMessage(type="query", data=body, id=str(uuid4()), time=time())

@@ -90,16 +90,17 @@ class VLM:
                             insert_counter += 1
                         del chat_completion.messages[m].content[c]
 
-                    # Handle v4l2 URLs
+                    # Handle custom video sources
                     elif content.type == "image_url" and hasattr(content, "image_url"):
                         url = content.image_url.url
-                        # Check if it's a v4l2 URL
-                        if url.startswith("v4l2:///"):
+                        # Check if it's a custom video source
+                        CUSTOM_VIDEO_SCHEMES = ("csi://", "v4l2://", "webrtc://", "rtp://", "rtsp://", "file://")
+                        if any(url.startswith(scheme) for scheme in CUSTOM_VIDEO_SCHEMES):
                             if images is None or image_counter >= len(images):
-                                logging.info("Not enough images were supplied for v4l2 URL replacement.")
+                                logging.info("Not enough images were supplied for custom video source replacement.")
                                 continue
 
-                            # Replace v4l2 URL with base64 encoded image
+                            # Replace custom video source URL with base64 encoded image
                             image = images[image_counter]
                             image = self._encode_image(image)
                             image_string = f"data:image/jpeg;base64,{image}"

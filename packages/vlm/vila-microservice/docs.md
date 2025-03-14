@@ -198,10 +198,6 @@ curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
 }'
 ```
 
-> [!WARNING]
-> It currently does not take the online image like `"url": "https://commons.wikimedia.org/wiki/Category:Art#/media/File:Meteorite_Egg.jpg",`.
-
-
 #### RTSP output for preview
 
 Once you use a v4l2 video source, it is regsitered as the input stream.
@@ -259,9 +255,6 @@ curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
 </code></pre>
 </details>
 
-> [!WARNING]
-> It currently only takes `image/jpeg`.
-
 <details>
 <summary>(Click to expand) More prompt examples</summary>
 <h4>OCR</h4>
@@ -316,6 +309,38 @@ curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
           "type": "image_url",
           "image_url": {
             "url": "v4l2:///dev/video0"
+          }
+        }
+      ]
+    }
+  ],
+  "max_tokens": 128
+}'
+</code></pre>
+<img src="https://github.com/user-attachments/assets/5d9089ef-76d4-4c54-8472-e433689150ba" alt="Description" width="640">
+
+
+<h4>Base64-encoded PNG</h4>
+<pre><code>
+curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
+--header 'Content-Type: application/json' \
+--data '{
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a helpful AI assistant."
+    },
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "Describe this icon."
+        },
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAYNJREFUOE9j3CEjU/efkbGakYGBjYEE8J+B4Rfj//+tjNtlZX+SqhlmD9iQHbKy/2EC3CoqDNxKSnB3fL5xg4GZi4uBS04OLvbxwgWGn69ewfkoBvBqazMYzJjBwCUvD1ZwKjQUrFmntxfM/3DuHMPF7GyGH0+fYjcAJGq+YQODgJERw59Pnxj2GRgwsAkKMtifOcPAyMjI8Gz9eobL+fkoIYXiAmQDXm7bxnAhIwOs2HLrVgY+XV3SDLhSWsrwdOVKsAEqJSUMynl5pBnw9vhxsDdAgF1cnEHAwIB4A5jY2BiOe3khAoqZmcHx3DmG1wcOEBcG744eZbjd3Y0SWHpTpjD8//uXOANutrQwfDhzBsUAqeBgBmE7O8IGGC1cyHA+KQlsGzJgExFhUK+pYbhcUIA7GkWdnBikwsIYHi1YwPD+xAkUhYLm5gzyiYkMT1evZni9dy/2hCRsY8PAwsfH8PPlS4YPZ8+iGMBvZMTAISHB8OfzZ4a3hw8jDKA8M1GYnQE8m7INTv0HFQAAAABJRU5ErkJggg=="
           }
         }
       ]
