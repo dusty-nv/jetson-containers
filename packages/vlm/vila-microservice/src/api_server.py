@@ -97,8 +97,13 @@ class VLMServer(APIServer):
 
     def chat_completion(self, body: ChatMessages):
         # Check if there's a v4l2 URL in the request
-        v4l2_device = None
+        custom_video_source = None
+        image_url = None
         stream_id = None
+
+        # Define regex for custom video sources
+        HTTP_SCHEMES = ("http://", "https://")  # OpenAI Vision API standard image URLs
+        CUSTOM_VIDEO_SCHEMES = ("csi://", "v4l2://", "webrtc://", "rtp://", "rtsp://", "file://")
 
         # Look for v4l2 URLs in the messages
         for message in body.messages:
@@ -106,20 +111,28 @@ class VLMServer(APIServer):
                 for content in message.content:
                     if content.type == "image_url" and hasattr(content, "image_url"):
                         url = content.image_url.url
-                        # Check if it's a v4l2 URL
-                        v4l2_match = re.match(r'v4l2:///dev/video(\d+)', url)
-                        if v4l2_match:
-                            v4l2_device = f"/dev/video{v4l2_match.group(1)}"
-                            logging.info(f"Found v4l2 device: {v4l2_device}")
 
-        # If v4l2 device found, check if there's already a stream connected with this device
-        if v4l2_device:
+                        # Determine the URL type
+                        if url.startswith(HTTP_SCHEMES):
+                            image_url = url  # This will later be handled (download & register)
+                            logging.info(f"Found standard image URL: {image_url}")
+                        elif url.startswith(CUSTOM_VIDEO_SCHEMES):
+                            custom_video_source = url
+                            logging.info(f"Found custom video source: {custom_video_source}")
+
+        # If an image URL is found, handle downloading and registering it
+        if image_url:
+            # TODO:
+            logging.warn(f"### Will implement the logic to handle standard image url: {image_url}")
+
+        # If a custom video source is found, handle it accordingly
+        if custom_video_source:
             # Check if there's already a stream connected
             existing_streams = self.stream_list()
             stream_already_connected = False
 
             for stream in existing_streams:
-                if stream.liveStreamUrl == v4l2_device:
+                if stream.liveStreamUrl == custom_video_source:
                     # Stream with this device is already connected, use it
                     stream_id = stream.id
                     stream_already_connected = True
@@ -129,7 +142,7 @@ class VLMServer(APIServer):
             # If no stream is connected with this device, add a new one
             if not stream_already_connected:
                 # Create a StreamAdd object
-                stream_add_body = StreamAdd(liveStreamUrl=v4l2_device, description="v4l2 camera")
+                stream_add_body = StreamAdd(liveStreamUrl=custom_video_source, description="v4l2 camera")
 
                 try:
                     # Call the stream_add function directly
