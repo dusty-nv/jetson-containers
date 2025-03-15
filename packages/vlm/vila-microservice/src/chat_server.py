@@ -15,66 +15,75 @@
 
 from contextlib import asynccontextmanager
 from threading import Thread
-from time import time 
+from time import time
 import logging
-import base64 
+import base64
 import io
 import os
 
 from prometheus_client import start_http_server, Gauge
 from fastapi import FastAPI
 from PIL import Image
-import uvicorn 
+import uvicorn
 
 from config import load_config
 
-from nano_llm import NanoLLM, ChatHistory 
+from nano_llm import NanoLLM, ChatHistory
 from nano_llm.utils import print_table
-from mmj_utils.api_schemas import * 
+from mmj_utils.api_schemas import *
 
 
 def decode_image(base64_string):
     start = time()
+
     # Decode the base64 string
     image_data = base64.b64decode(base64_string)
+
     # Convert binary data to an image
     image = Image.open(io.BytesIO(image_data))
+
+    # Convert RGBA to RGB (fix for torchvision normalize issue)
+    if image.mode == "RGBA":
+        logging.warning("Image is RGBA, converting to RGB...")
+        image = image.convert("RGB")
+
     end = time()
     logging.info(f"Image decoding time: {end-start} seconds")
+
     return image
 
 model = None
-chat_history = None 
+chat_history = None
 model_loaded = False
 model_stats = {}
 
 def load_model(model_name):
-    global model 
-    global model_loaded 
-    global model_stats 
-    global chat_history 
+    global model
+    global model_loaded
+    global model_stats
+    global chat_history
     model = NanoLLM.from_pretrained(config.model, api="mlc", quantization="q4f16_ft", vision_api="hf", print_stats=True)
-    #warm up 
+    #warm up
     chat_history = ChatHistory(model, system_prompt="you are a helpful AI assistant.")
     chat_history.append(role="user", text="what are you capable of?")
     embedding, _ = chat_history.embed_chat()
     reply = model.generate(
-            embedding, 
-            streaming=False, 
+            embedding,
+            streaming=False,
             max_new_tokens=128,
             min_new_tokens=1
         )
-    chat_history.reset() 
+    chat_history.reset()
     logging.debug(f"Warm up reply: {reply}")
 
     for key in model.stats:
         model_stats[key] = Gauge(key, key)
-    model_loaded = True 
+    model_loaded = True
 
-#Load model on startup 
+#Load model on startup
 @asynccontextmanager #https://fastapi.tiangolo.com/advanced/events/
 async def lifespan(app: FastAPI):
-    start_http_server(config.prometheus_port) #start prometheus metric server 
+    start_http_server(config.prometheus_port) #start prometheus metric server
     model_load_thread = Thread(target=load_model, args=(config.model, ))
     model_load_thread.start()
     yield
@@ -84,40 +93,41 @@ app = FastAPI(lifespan=lifespan)
 @app.get("/v1/health")
 def health():
     if model_loaded:
-        return Response(detail="ready") 
+        return Response(detail="ready")
     else:
         return Response(detail="model loading")
 
 @app.get("/v1/alert/completions")
 async def request_alert_completions(body: AlertCompletion):
     """Applies a batch of text prompts across the same set of input images for alerts"""
-    global chat_history 
+    global chat_history
     if not model_loaded:
         return {"choices":[]}
 
     results = []
 
-    #add system prompt 
-    chat_history.reset() 
+    #add system prompt
+    chat_history.reset()
     chat_history.append("system", body.system_prompt)
 
     #add images
-    for image_string in body.images:
-        image_string = image_string[23:]
+    for image_url in body.images:
+        # Extract base64 data after the comma
+        image_string = image_url.split(',', 1)[1]
         image = decode_image(image_string)
         chat_history.append("user", image=image)
 
-    #add user prompt and inference 
+    #add user prompt and inference
     for user_prompt in body.user_prompts:
-        start = time() 
+        start = time()
         chat_history.append("user", user_prompt)
 
-        #inference on model 
+        #inference on model
         embedding, _ = chat_history.embed_chat()
         print(len(chat_history))
         reply = model.generate(
-                embedding, 
-                streaming=True, 
+                embedding,
+                streaming=True,
                 kv_cache=chat_history.kv_cache,
                 max_new_tokens=body.max_tokens,
                 min_new_tokens=body.min_tokens
@@ -125,19 +135,19 @@ async def request_alert_completions(body: AlertCompletion):
         str_reply = ""
         for token in reply:
             if reply.eos:
-                break 
+                break
             else:
-                str_reply+=token 
+                str_reply+=token
 
         chat_history.append("bot", reply)
         chat_history.pop(2)
-        str_reply = str_reply.replace("\n", "").replace("</s>", "").strip() 
+        str_reply = str_reply.replace("\n", "").replace("</s>", "").strip()
         #pop bot reply and user prompt
-        end = time() 
+        end = time()
         print(f"Alert request time: {end-start} s")
         results.append(str_reply)
         print(results)
-    chat_history.reset() 
+    chat_history.reset()
     return AlertCompletionResult(alert_response=results)
 
 
@@ -149,12 +159,12 @@ async def request_chat_completion(body: ChatMessages):
         return {"choices":[]}
 
     start = time()
-    
+
     system_prompt = "You are a helpful assistant."
     if body.messages[0].role == "system":
         system_prompt = body.messages[0].content
         logging.info(f"Received system prompt: {system_prompt}")
-    
+
     chat_history.reset()
     chat_history.append("system", system_prompt)
     for message in body.messages:
@@ -168,19 +178,25 @@ async def request_chat_completion(body: ChatMessages):
                         chat_history.append(role="user", text=content.text)
                         logging.info(f"adding user text: {content.text}")
                     elif content.type == "image_url":
-                        image_string = content.image_url.url[23:]
-                        image = decode_image(image_string)
-                        chat_history.append(role="user", image=image)
-                        logging.info(f"added image")
+                        url = content.image_url.url
+                        if url.startswith("data:image/"):
+                            # Extract base64 data after the comma
+                            image_string = url.split(',', 1)[1]
+                            image = decode_image(image_string)
+                            chat_history.append(role="user", image=image)
+                            logging.info(f"added image")
+                        else:
+                            # Skip non-base64 URLs (they should have been handled by the API server)
+                            logging.info(f"Skipping non-base64 URL: {url[:10]}...")
 
             else:
                 logging.info(f"Message is invalid type: {type(message.content)}")
-    
+
         elif message.role == "assistant":
             chat_history.append(role="bot", text=message.content)
 
-        elif message.role == "system": #only take into account the system prompt if first message 
-            continue 
+        elif message.role == "system": #only take into account the system prompt if first message
+            continue
 
         else:
             logging.info(f"Unsupported role type: {message.role}")
@@ -188,12 +204,12 @@ async def request_chat_completion(body: ChatMessages):
     embedding, _ = chat_history.embed_chat()
 
     reply = model.generate(
-            embedding, 
-            streaming=False, 
+            embedding,
+            streaming=False,
             max_new_tokens=body.max_tokens,
             min_new_tokens=body.min_tokens
         )
-    reply = reply.replace("\n", "").replace("</s>", "").strip() 
+    reply = reply.replace("\n", "").replace("</s>", "").strip()
     stop = time()
     logging.info(f"Server processing time: {stop-start} seconds")
     for key in model.stats:
@@ -201,10 +217,18 @@ async def request_chat_completion(body: ChatMessages):
 
     if config.print_stats:
         print_table(model.stats)
-    chat_history.reset() 
+    chat_history.reset()
     return ChatCompletions(choices=[ChatCompletion(index=0, message=ChatMessage(role="assistant", content=reply))])
 
-        
+
+# @app.get("/v1/models")
+# def get_model_name():
+#     """
+#     Returns the current model name.
+#     """
+#     return {"model": config.model}
+
+
 if __name__ == "__main__":
     #Load config
     config_path = os.environ["CHAT_SERVER_CONFIG_PATH"]
@@ -215,7 +239,7 @@ if __name__ == "__main__":
                     datefmt='%Y-%m-%d %H:%M:%S')
 
     model_name = config.model.split("/")[-1]
-    if not os.path.exists("/data/models/mlc/dist/models/{model_name}"):
+    if not os.path.exists(f"/data/models/mlc/dist/models/{model_name}"):
         logging.info("Model path not found. Will download and build model. This will take some time.")
         os.makedirs("/data/models/mlc/dist/models", exist_ok=True)
 

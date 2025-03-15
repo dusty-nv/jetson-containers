@@ -181,4 +181,4 @@ ENV MAIN_CONFIG_PATH /config/main_config.json
 ENV CHAT_SERVER_CONFIG_PATH /config/chat_server_config.json
 ENV TRANSFORMERS_CACHE /data/models/huggingface
 
-CMD bash -c "/jetson-services/inference/vlm/docker_start.sh | tee -a /data/logging-volume/vlm.log"
+CMD bash -c "/jetson-services/inference/vlm/docker_start.sh | tee -a /data/vlm.log"

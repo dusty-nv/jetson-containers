@@ -69,9 +69,8 @@ class APIServer:
 
         self.added_stream = None
 
-        self.app.post("/api/v1/live-stream")(self.stream_add)
-        self.app.delete("/api/v1/live-stream/{stream_id}")(self.stream_remove)
-        self.app.get("/api/v1/live-stream", response_model=List[StreamMeta])(self.stream_list)
+        # Removed live-stream endpoints to prevent them from being exposed
+        # but kept all the stream-related functions for internal use
         self.app.get("/api/v1/health/ready")(self.health)
         self.app.head("/api/v1/health/ready")(self.health)
 
@@ -107,9 +106,6 @@ class APIServer:
         """Add stream from live-stream endpoint """
         stream_url = body.liveStreamUrl
         stream_id = str(uuid4()).strip()  # Always generate stream_id
-
-        if not stream_url.startswith("rtsp://"):
-            print("############### Not RTSP (but don't care) ##############")
 
         data = {"stream_id": stream_id, "stream_url": stream_url}
         queue_message = APIMessage(type="stream_add", data=data, id=str(uuid4()), time=time())
