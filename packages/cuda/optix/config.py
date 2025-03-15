@@ -19,7 +19,7 @@ else:
 
 #print(f"-- OPTIX_VERSION={OPTIX_VERSION}")
        
-def optix_package(version, url, deb, packages=None, cuda=None, requires=None):
+def optix_package(version, url, deb=None, packages=None, cuda=None, requires=None):
     """
     Generate containers for a particular version of optix installed from debian packages
     """
