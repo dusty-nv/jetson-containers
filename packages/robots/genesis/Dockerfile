@@ -152,5 +152,5 @@ RUN echo "export LD_LIBRARY_PATH=/opt/genesis/genesis/ext/ParticleMesher/Particl
     pip3 install --force-reinstall "numpy==1.26.4"
 
 RUN ldconfig
-
+WORKDIR /opt/genesis/
 CMD ["/bin/bash"]
