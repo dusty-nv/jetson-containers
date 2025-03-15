@@ -31,7 +31,7 @@ RUN echo "Downloading OPTIX" && \
 ###########################
 ENV NVTT_URL="https://developer.nvidia.com/downloads/texture-tools-linux-aarch64"
 ENV NVTT_ARCHIVE="nvtt3_aarch64.tar.xz"
-ENV NVTT_INSTALL_DIR="/opt/nvtt3"
+ENV NVTT_INSTALL_DIR="/usr/local/nvtt3"
 
 RUN echo "Downloading NVTT 3 from: ${NVTT_URL}" && \
     mkdir -p "${NVTT_INSTALL_DIR}" && \
