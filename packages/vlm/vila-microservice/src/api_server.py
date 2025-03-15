@@ -45,9 +45,9 @@ class VLMServer(APIServer):
 
         self.max_alerts = max_alerts
 
-        self.app.post("/api/v1/alerts")(self.alerts)
-        self.app.post("/api/v1/chat/completions")(self.chat_completion)
-        self.app.get("/api/v1/models")(self.get_model_name)
+        self.app.post("/v1/alerts")(self.alerts)
+        self.app.post("/v1/chat/completions")(self.chat_completion)
+        self.app.get("/v1/models")(self.get_model_name)
 
     def get_model_name(self):
         """

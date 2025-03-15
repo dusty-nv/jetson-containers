@@ -13,32 +13,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import asyncio 
-from dataclasses import dataclass 
-from time import sleep 
+import asyncio
+from dataclasses import dataclass
+from time import sleep
 from threading import Thread
-import logging 
-from datetime import datetime 
+import logging
+from datetime import datetime
 
-from fastapi import FastAPI, WebSocket 
+from fastapi import FastAPI, WebSocket
 from pydantic import BaseModel
-import uvicorn 
+import uvicorn
 
 class Alert(BaseModel):
-    title: str 
-    description: str 
-    alert_id: str 
-    type: str 
-    rule_string: str 
-    timestamp: str 
+    title: str
+    description: str
+    alert_id: str
+    type: str
+    rule_string: str
+    timestamp: str
     stream_id: str = ""
- 
+
 class WebSocketServer:
 
     def __init__(self, port=5016):
-        self.port = port 
+        self.port = port
         self.app = FastAPI()
-        self.app.websocket("/api/v1/alerts/ws")(self.websocket_endpoint)
+        self.app.websocket("/v1/alerts/ws")(self.websocket_endpoint)
 
         self.active_connections = {}
 
@@ -58,12 +58,12 @@ class WebSocketServer:
                 logging.debug("received alert")
 
                 alert_obj = Alert(
-                                    title = f"VLM Alert Triggered", 
+                                    title = f"VLM Alert Triggered",
                                     description = f"The VLM has determined the alert rule: {alert['alert_str']} is True!",
                                     alert_id = str(alert["alert_id"]),
-                                    type = "vlm_alert", 
-                                    rule_string = alert["alert_str"], 
-                                    timestamp = str(full_timestamp), 
+                                    type = "vlm_alert",
+                                    rule_string = alert["alert_str"],
+                                    timestamp = str(full_timestamp),
                                     stream_id = alert["stream_id"]
                                 )
 
@@ -73,12 +73,11 @@ class WebSocketServer:
         except Exception as e:
             logging.debug(e)
             del self.active_connections[websocket]
-        
+
     def _start_server(self):
         uvicorn.run(self.app, host="0.0.0.0", port=self.port)
 
     def start_server(self):
         self.server_thread = Thread(target=self._start_server, daemon=True, name="REST Server")
-        self.server_thread.start() 
+        self.server_thread.start()
 
-        
