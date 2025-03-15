@@ -13,7 +13,7 @@ ARG OPTIX_VERSION
 ARG OPTIX_URL
 ARG OPTIX_DEB
 ARG OPTIX_PACKAGES
-
+ENV OPTIX_INSTALL_DIR="/usr/local/"
 
 ###########################
 # Download and install OPTIX
@@ -22,7 +22,8 @@ RUN echo "Downloading OPTIX" && \
     mkdir /tmp/optix && cd /tmp/optix && \
     wget --quiet --show-progress --progress=bar:force:noscroll ${OPTIX_URL} && \
     chmod +x nvidia-optix-sdk-${OPTIX_VERSION}-linux64-aarch64.sh && \
-    sh nvidia-optix-sdk-${OPTIX_VERSION}-linux64-aarch64.sh && \
+    sh nvidia-optix-sdk-${OPTIX_VERSION}-linux64-aarch64.sh --skip-license \
+       --prefix="${OPTIX_INSTALL_DIR}" && \
     rm -rf /tmp/optix
 
 ###########################
