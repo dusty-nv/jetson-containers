@@ -16,7 +16,7 @@
 from time import sleep
 from queue import Queue
 import logging
-import os
+import os, shutil
 import time
 import copy
 import re
@@ -33,8 +33,19 @@ from mmj_utils.vlm import VLM
 from mmj_utils.monitoring import AlertMonitor
 from jetson_utils import cudaResize, cudaAllocMapped, cudaMemcpy
 
+def find_config_path(base_env_var):
+    config_path = os.environ[base_env_var]
+    config_path_under_data_dir = os.environ[f"{base_env_var}_UNDER_DATA_DIR"]
+
+    if os.path.exists(config_path_under_data_dir):
+        return config_path_under_data_dir
+    else:
+        os.makedirs(os.path.dirname(config_path_under_data_dir), exist_ok=True)
+        shutil.copy(config_path, config_path_under_data_dir)
+        return config_path_under_data_dir
+
 #Load config
-config_path = os.environ["MAIN_CONFIG_PATH"]
+config_path = find_config_path("MAIN_CONFIG_PATH")
 config = load_config(config_path, "main")
 
 logging.basicConfig(level=logging.getLevelName(config.log_level),
