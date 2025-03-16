@@ -19,7 +19,7 @@ from time import time
 import logging
 import base64
 import io
-import os
+import os, shutil
 
 from prometheus_client import start_http_server, Gauge
 from fastapi import FastAPI
@@ -228,10 +228,20 @@ async def request_chat_completion(body: ChatMessages):
 #     """
 #     return {"model": config.model}
 
+def find_config_path(base_env_var):
+    config_path = os.environ[base_env_var]
+    config_path_under_data_dir = os.environ[f"{base_env_var}_UNDER_DATA_DIR"]
+
+    if os.path.exists(config_path_under_data_dir):
+        return config_path_under_data_dir
+    else:
+        os.makedirs(os.path.dirname(config_path_under_data_dir), exist_ok=True)
+        shutil.copy(config_path, config_path_under_data_dir)
+        return config_path_under_data_dir
 
 if __name__ == "__main__":
     #Load config
-    config_path = os.environ["CHAT_SERVER_CONFIG_PATH"]
+    config_path = find_config_path("CHAT_SERVER_CONFIG_PATH")
     config = load_config(config_path, "chat_server")
 
     logging.basicConfig(level=logging.getLevelName(config.log_level),
