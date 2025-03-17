@@ -123,7 +123,7 @@ RUN pip3 install open3d tetgen trimesh --verbose && \
 cd /opt/genesis && \
 sed -i '/numpy ==/d; /taichi/d; /tetgen/d' pyproject.toml && \
 pip3 install "numpy<2.1" && \
-pip3 install -e .
+pip3 install .
 
 # ===============================================================
 # INSTALL OMPL
