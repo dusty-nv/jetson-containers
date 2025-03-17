@@ -22,3 +22,4 @@ RUN apt-get update -y && apt-get install -y libnuma-dev \
 COPY build.sh install.sh patches /tmp/vllm/
 
 RUN /tmp/vllm/install.sh || /tmp/vllm/build.sh
+RUN /tmp/transformers/install.sh
