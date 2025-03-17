@@ -5,8 +5,8 @@ def vllm(vllm_version, xgrammar_version, branch=None, requires=None, default=Fal
     if requires:
         pkg['requires'] = requires   
 
-    branch = branch if branch else f'v{vllm_version}'
     suffix = branch if branch else vllm_version
+    branch = branch if branch else f'v{vllm_version}'
 
     pkg['name'] = f'vllm:{suffix}'
 
