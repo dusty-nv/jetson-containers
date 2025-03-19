@@ -3,6 +3,7 @@
 # group: robots
 # depends: [pytorch, torchvision, torchaudio, transformer-engine, transformers, opencv:4.11.0, flash-attention, bitsandbytes, huggingface_hub, ffmpeg]
 # requires: '>=34.1.0'
+# test: test.sh
 # notes: https://github.com/NVIDIA/Isaac-GR00T
 #---
 
