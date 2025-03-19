@@ -39,7 +39,7 @@ fi
 rm -rf /var/lib/apt/lists/*
 apt-get clean
 
-ln -s /usr/bin/python${PYTHON_VERSION} /usr/local/bin/python3
+ln -f -s /usr/bin/python${PYTHON_VERSION} /usr/local/bin/python3
 #ln -s /usr/bin/pip${PYTHON_VERSION} /usr/local/bin/pip3
 
 # this was causing issues downstream (e.g. Python2.7 still around in Ubuntu 18.04, \
