@@ -64,11 +64,6 @@ RUN rustup self uninstall -y && \
 WORKDIR /workspace
 RUN git clone --recursive https://github.com/Genesis-Embodied-AI/Genesis /opt/genesis
 
-RUN rm -rf /opt/genesis/genesis/ext/LuisaRender && \
-    cd /opt/genesis/genesis/ext/ && \
-    git clone --recursive --branch=my_next_compute https://github.com/johnnynunez/LuisaRender.git && \
-    cd /opt/genesis/
-
 COPY build_luisa.sh /workspace/build_luisa.sh
 RUN ./build_luisa.sh ${PYTHON_VERSION}
 RUN pip3 install PyOpenGL PyOpenGL_accelerate --verbose
@@ -149,7 +144,7 @@ RUN mkdir -p /usr/local/lib/python${PYTHON_VERSION}/dist-packages/genesis/ext/Lu
     cp -r /opt/genesis/genesis/ext/LuisaRender/build/bin /usr/local/lib/python${PYTHON_VERSION}/dist-packages/genesis/ext/LuisaRender/build/
 RUN echo "export LD_LIBRARY_PATH=/opt/genesis/genesis/ext/ParticleMesher/ParticleMesherPy:$LD_LIBRARY_PATH" >> ~/.bashrc && \
     cd /opt/genesis/ && \
-    pip3 install --force-reinstall "numpy==1.26.4"
+    pip3 install --force-reinstall "numpy<2.1"
 
 RUN ldconfig
 WORKDIR /opt/genesis/
