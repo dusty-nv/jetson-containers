@@ -34,8 +34,28 @@ check_nvme_mount() {
     fi
 }
 
+# Function to check if Docker is installed
+check_docker_installed() {
+    if command -v docker &> /dev/null; then
+        echo "Docker is installed."
+        return 0
+    else
+        echo "Docker is not installed."
+        return 1
+    fi
+}
+
 # Function to check Docker runtime configuration
 check_docker_runtime() {
+    if ! check_docker_installed; then
+        return 1
+    fi
+    
+    if [ ! -f "/etc/docker/daemon.json" ]; then
+        echo "Docker daemon.json file does not exist."
+        return 1
+    fi
+    
     if grep -q '"default-runtime": "nvidia"' /etc/docker/daemon.json; then
         echo "Docker runtime 'nvidia' is set as default."
         return 0
@@ -47,6 +67,15 @@ check_docker_runtime() {
 
 # Function to check Docker data root
 check_docker_root() {
+    if ! check_docker_installed; then
+        return 1
+    fi
+    
+    if [ ! -f "/etc/docker/daemon.json" ]; then
+        echo "Docker daemon.json file does not exist."
+        return 1
+    fi
+    
     if grep -q '"data-root": "/mnt/docker"' /etc/docker/daemon.json; then
         echo "Docker data root is set to /mnt/docker."
         return 0
@@ -100,8 +129,10 @@ check_zram() {
 
 # Function to check swap configuration
 check_swap() {
-
-    return 1 && check_swap_file && check_nvzramconfig_service
+    local result=0
+    check_swap_file || result=1
+    check_nvzramconfig_service || result=1
+    return $result
 }
 
 # Function to check GUI configuration
@@ -117,13 +148,34 @@ check_gui() {
 
 # Function to check Docker group membership
 check_docker_group() {
-    if groups "$add_user" | grep -q "\bdocker\b"; then
-        echo "User $add_user is in the docker group."
-        return 0
-    else
-        echo "User $add_user is not in the docker group."
+    if ! check_docker_installed; then
         return 1
     fi
+    
+    local current_user=$(whoami)
+    local result=0
+    
+    # Check configured user from .env if provided
+    if [ -n "$add_user" ]; then
+        if groups "$add_user" 2>/dev/null | grep -q "\bdocker\b"; then
+            echo "User $add_user is in the docker group."
+        else
+            echo "User $add_user is not in the docker group."
+            result=1
+        fi
+    fi
+    
+    # Also check current user if different from the configured user
+    if [ -z "$add_user" ] || [ "$current_user" != "$add_user" ]; then
+        if groups "$current_user" | grep -q "\bdocker\b"; then
+            echo "Current user $current_user is in the docker group."
+        else
+            echo "Current user $current_user is not in the docker group."
+            result=1
+        fi
+    fi
+    
+    return $result
 }
 
 # Function to check power mode
@@ -200,6 +252,9 @@ main() {
 
     if [ ${#TESTS[@]} -eq 0 ]; then
         # Run all checks
+        check_docker_installed
+        echo
+        
         check_nvme_mount
         echo
 
@@ -230,6 +285,10 @@ main() {
         # Run only specified checks
         for test in "${TESTS[@]}"; do
             case $test in
+                docker_installed)
+                    check_docker_installed
+                    echo
+                    ;;
                 prepare_nvme_partition)
                     check_nvme_partition_prepared
                     echo

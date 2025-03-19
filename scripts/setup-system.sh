@@ -126,14 +126,39 @@ assign_nvme_drive() {
 # Configure Docker runtime
 setup_docker_runtime() {
     local daemon_json="/etc/docker/daemon.json"
-    local dateFileVersionFormat = $(date +"%Y%m%d%H%M%S")
+    local dateFileVersionFormat=$(date +"%Y%m%d%H%M%S")
     local daemon_json_backup="${daemon_json}.${dateFileVersionFormat}.bak"
+
+    # Check if Docker is installed
+    if ! command -v docker &>/dev/null; then
+        echo "Docker does not appear to be installed. Please install Docker first."
+        return 1
+    fi
+
+    # Check if daemon.json exists, create if not
+    if [ ! -f "$daemon_json" ]; then
+        echo "Docker daemon.json file not found, creating with default NVIDIA runtime configuration..."
+        mkdir -p "$(dirname $daemon_json)"
+        cat > "$daemon_json" << 'EOF'
+{
+    "runtimes": {
+        "nvidia": {
+            "path": "nvidia-container-runtime",
+            "runtimeArgs": []
+        }
+    }
+}
+EOF
+    else
+        echo "Using existing daemon.json configuration."
+    fi
 
     if grep -q '"default-runtime": "nvidia"' "$daemon_json"; then
         echo "Docker runtime already configured, skipping..."
         return 0
     fi
 
+    # Rest of the function remains the same
     if should_execute_step "docker_runtime" "Would you like to configure Docker runtime?"; then
         # Create backup
         cp "$daemon_json" "$daemon_json_backup" || {
@@ -156,6 +181,11 @@ setup_docker_runtime() {
 }
 EOF
         else
+            # Add nvidia runtime if runtimes section exists but nvidia runtime doesn't
+            if ! grep -q '"nvidia"' "$daemon_json"; then
+                # Add nvidia runtime to runtimes section
+                sed -i '/runtimes/a \        "nvidia": {\n            "path": "nvidia-container-runtime",\n            "runtimeArgs": []\n        },' "$daemon_json"
+            fi
             # Add only default-runtime if runtimes already exists
             sed -i '/}/i \    "default-runtime": "nvidia",' "$daemon_json"
         fi
@@ -299,20 +329,51 @@ setup_gui() {
 
 # Configure Docker group
 setup_docker_group() {
-    local current_user="$add_user"
+    local configured_user="$add_user"
+    local current_user=$(whoami)
+    local users_to_add=()
     
-    if groups "$current_user" | grep -q "\bdocker\b"; then
-        echo "User $current_user is already in the docker group, skipping..."
+    # Check the configured user from .env if provided
+    if [ -n "$configured_user" ]; then
+        if ! groups "$configured_user" 2>/dev/null | grep -q "\bdocker\b"; then
+            users_to_add+=("$configured_user")
+        else
+            echo "User $configured_user is already in the docker group, skipping..."
+        fi
+    fi
+    
+    # Check the current user if different from the configured user or if no user configured
+    if [ -z "$configured_user" ] || [ "$current_user" != "$configured_user" ]; then
+        if ! groups "$current_user" | grep -q "\bdocker\b"; then
+            users_to_add+=("$current_user")
+        else
+            echo "Current user $current_user is already in the docker group, skipping..."
+        fi
+    fi
+    
+    # If no users need to be added, exit early
+    if [ ${#users_to_add[@]} -eq 0 ]; then
+        echo "All relevant users are already in the docker group, skipping..."
         return 0
     fi
-
-    if should_execute_step "docker_group" "Would you like to add $current_user to the docker group?"; then
-        if usermod -aG docker "$current_user"; then
-            echo "Successfully added $current_user to docker group"
-            return 0
-        else
-            echo "Failed to add user to Docker group"
+    
+    if should_execute_step "docker_group" "Would you like to add user(s) to the docker group?"; then
+        local failed=false
+        
+        for user in "${users_to_add[@]}"; do
+            echo "Adding user $user to docker group..."
+            if ! usermod -aG docker "$user"; then
+                echo "Failed to add user $user to Docker group"
+                failed=true
+            else
+                echo "Successfully added $user to docker group"
+            fi
+        done
+        
+        if $failed; then
             return 1
+        else
+            return 0
         fi
     fi
     return 0
@@ -521,7 +582,7 @@ main() {
     echo
     echo "Configuration complete!"
     echo "============================="
-    ./probesystem.sh
+    ./probe-system.sh
     echo "============================="
 
     echo "Please reboot your system for all changes to take effect."
