@@ -1,5 +1,5 @@
 #---
-# name: genesis
+# name: genesis-world
 # group: robots
 # config: config.py
 # depends: [cuda, rust, cmake, torch, torchvision, torchaudio, vtk, pymeshlab, taichi, opencv:4.11.0, splashsurf]
@@ -39,7 +39,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxinerama-dev \
     libxcursor-dev \
     libxi-dev \
-    libvulkan-dev
+    libvulkan-dev \
+    patchelf
 
 RUN add-apt-repository ppa:ubuntu-toolchain-r/test && \
     apt update && \
@@ -53,22 +54,18 @@ RUN add-apt-repository ppa:ubuntu-toolchain-r/test && \
 RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 110 && \
     update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 110
 
-RUN pip install "pybind11[global]"
+RUN pip3 install "pybind11[global]"
 
+RUN rustup self uninstall -y && \
+    rm -rf /root/.cargo /root/.rustup
 # ===============================================================
 # BUILD LUISA RENDER
 # ===============================================================
 WORKDIR /workspace
 RUN git clone --recursive https://github.com/Genesis-Embodied-AI/Genesis /opt/genesis
 
-RUN rm -rf /opt/genesis/genesis/ext/LuisaRender && \
-    cd /opt/genesis/genesis/ext/ && \
-    git clone --recursive --branch=my_next_compute https://github.com/johnnynunez/LuisaRender.git && \
-    cd /opt/genesis/
-
 COPY build_luisa.sh /workspace/build_luisa.sh
 RUN ./build_luisa.sh ${PYTHON_VERSION}
-COPY /opt/genesis/genesis/ext/LuisaRender/build/bin /usr/local/lib/python${PYTHON_VERSION}/dist-packages/genesis/ext/LuisaRender/build/bin
 RUN pip3 install PyOpenGL PyOpenGL_accelerate --verbose
 RUN pip3 install coacd libigl pymeshlab --verbose
 
@@ -107,8 +104,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN wget https://apt.llvm.org/llvm.sh && \
     chmod +x llvm.sh && \
     ./llvm.sh 18 && \
-    ln -sf /usr/bin/llvm-config-* /usr/bin/llvm-config && \
-    ln -s /usr/bin/clang-1* /usr/bin/clang && \
     rm llvm.sh
 
 WORKDIR /workspace
@@ -136,11 +131,21 @@ pip3 install .
 RUN pip3 install ompl
 # ===============================================================
 # PATH
-# =============================================================== \
+# ===============================================================
+RUN if [ -d /opt/genesis/genesis/ext/LuisaRender/build/bin ]; then \
+      echo "Content in /opt/genesis/genesis/ext/LuisaRender/build/bin:" && \
+      ls -la /opt/genesis/genesis/ext/LuisaRender/build/bin; \
+    else \
+      echo "Folder /opt/genesis/genesis/ext/LuisaRender/build/bin not found"; \
+    fi
+
+
+RUN mkdir -p /usr/local/lib/python${PYTHON_VERSION}/dist-packages/genesis/ext/LuisaRender/build/ && \
+    cp -r /opt/genesis/genesis/ext/LuisaRender/build/bin /usr/local/lib/python${PYTHON_VERSION}/dist-packages/genesis/ext/LuisaRender/build/
 RUN echo "export LD_LIBRARY_PATH=/opt/genesis/genesis/ext/ParticleMesher/ParticleMesherPy:$LD_LIBRARY_PATH" >> ~/.bashrc && \
     cd /opt/genesis/ && \
     pip3 install --force-reinstall "numpy<2.1"
 
 RUN ldconfig
-
+WORKDIR /opt/genesis/
 CMD ["/bin/bash"]
