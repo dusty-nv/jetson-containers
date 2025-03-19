@@ -1,5 +1,5 @@
 #---
-# name: genesis
+# name: genesis-world
 # group: robots
 # config: config.py
 # depends: [cuda, rust, cmake, torch, torchvision, torchaudio, vtk, pymeshlab, taichi, opencv:4.11.0, splashsurf]
