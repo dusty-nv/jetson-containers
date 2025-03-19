@@ -69,7 +69,7 @@ generate_profile_config() {
 
     # Device-specific settings
     if [[ "$profile" == "agx"* ]]; then
-        config+="# Power mode (0=MAXN, 1=MODE_30W, etc.)\n"
+        config+="# Power mode (0=MAXN, 1=15W, 2=30W, 3=50W)\n"
         config+="POWER_MODE_SHOULD_RUN=yes\n"
         config+="POWER_MODE_OPTIONS_MODE=0\n\n"
     elif [[ "$profile" == "nano"* ]]; then
@@ -234,6 +234,7 @@ save_config() {
 # Parse command line arguments
 DEVICE=""
 INTERACTIVE=false
+PROFILE_OVERRIDE=""
 while [[ $# -gt 0 ]]; do
     case $1 in
         --device)
@@ -248,11 +249,20 @@ while [[ $# -gt 0 ]]; do
             INTERACTIVE=true
             shift
             ;;
+        --profile-override)
+            PROFILE_OVERRIDE="$2"
+            shift 2
+            ;;
+        --profile-override=*)
+            PROFILE_OVERRIDE="${1#*=}"
+            shift
+            ;;
         -h|--help)
             echo "Usage: $0 [options]"
             echo "Options:"
             echo "  --device <device>    Specify device (agx, nano)"
             echo "  --interactive        Run in interactive mode (with prompts)"
+            echo "  --profile-override <profile>  Override detected profile with specified profile"
             echo "  -h, --help           Show this help message"
             exit 0
             ;;
@@ -312,7 +322,10 @@ if [[ "$DETECTED_CONFIG" == *"unknown"* ]]; then
 fi
 
 # Auto-select profile without user interaction unless interactive mode is specified
-if [[ "$INTERACTIVE" == "true" ]]; then
+if [[ -n "$PROFILE_OVERRIDE" ]]; then
+    SELECTED_PROFILE="$PROFILE_OVERRIDE"
+    echo "Profile override specified: $SELECTED_PROFILE"
+elif [[ "$INTERACTIVE" == "true" ]]; then
     echo "Running in interactive mode..."
     echo
     echo "======================================================="
