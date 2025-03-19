@@ -1,5 +1,5 @@
 #--- 
-# name: Isaac-GR00T
+# name: isaac-gr00t
 # group: robots
 # depends: [pytorch, torchvision, torchaudio, transformer-engine, transformers, opencv:4.11.0, flash-attention, bitsandbytes, huggingface_hub, ffmpeg]
 # requires: '>=34.1.0'
