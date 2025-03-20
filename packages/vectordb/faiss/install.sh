@@ -5,6 +5,7 @@ set -ex
 apt-get update
 apt-get install -y --no-install-recommends \
 	  libopenblas-dev \
+	  libgflags-dev \
 	  swig
 rm -rf /var/lib/apt/lists/*
 apt-get clean
@@ -14,6 +15,7 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
+pip3 install setuptools==75.8.2
 tarpack install faiss-${FAISS_VERSION}
 pip3 install faiss==${FAISS_VERSION}
 
