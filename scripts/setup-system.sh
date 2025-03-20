@@ -26,11 +26,13 @@ fi
 # Initialize configuration flags with defaults
 interactive_mode="${INTERACTIVE_MODE:-true}"
 
-# NVMe Setup
-nvme_should_run="${NVME_SETUP_SHOULD_RUN:-no}"
-MOUNT_POINT="${NVME_SETUP_OPTIONS_MOUNT_POINT:-/mnt}"
-partition_name="${NVME_SETUP_OPTIONS_PARTITION_NAME:-nvme0n1}"
-filesystem="${NVME_SETUP_OPTIONS_FILESYSTEM:-ext4}"
+# NVMe Setup - Only set variables if NVME_SETUP_SHOULD_RUN is defined in .env
+if [ -n "${NVME_SETUP_SHOULD_RUN+x}" ]; then
+    nvme_should_run="${NVME_SETUP_SHOULD_RUN:-no}"
+    MOUNT_POINT="${NVME_SETUP_OPTIONS_MOUNT_POINT:-/mnt}"
+    partition_name="${NVME_SETUP_OPTIONS_PARTITION_NAME:-nvme0n1}"
+    filesystem="${NVME_SETUP_OPTIONS_FILESYSTEM:-ext4}"
+fi
 
 # Docker Runtime
 docker_runtime_should_run="${DOCKER_RUNTIME_SHOULD_RUN:-no}"
@@ -502,13 +504,15 @@ main() {
     "${SCRIPT_DIR}/probe-system.sh"
     echo "============================="
 
-    # NVMe Setup
-    if [ "$nvme_should_run" = "yes" ] || [ "$nvme_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure NVMe drive?"; then
-        if ! "${SCRIPT_DIR}/probe-system.sh" --tests="nvme_mount"; then
-            assign_nvme_drive
-            "${SCRIPT_DIR}/probe-system.sh" --tests="nvme_mount"
-        else
-            echo "NVMe drive is already properly mounted."
+    # NVMe Setup - Only run if NVME_SETUP_SHOULD_RUN is defined in .env
+    if [ -n "${NVME_SETUP_SHOULD_RUN+x}" ]; then
+        if [ "$nvme_should_run" = "yes" ] || [ "$nvme_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure NVMe drive?"; then
+            if ! "${SCRIPT_DIR}/probe-system.sh" --tests="nvme_mount"; then
+                assign_nvme_drive
+                "${SCRIPT_DIR}/probe-system.sh" --tests="nvme_mount"
+            else
+                echo "NVMe drive is already properly mounted."
+            fi
         fi
     fi
 
