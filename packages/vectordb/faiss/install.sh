@@ -15,7 +15,6 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install setuptools==75.8.2
 tarpack install faiss-${FAISS_VERSION}
 pip3 install faiss==${FAISS_VERSION}
 
