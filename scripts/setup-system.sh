@@ -102,7 +102,7 @@ execute_config_script() {
     if [ ! -x "$script" ]; then
         echo "Error: Configuration script $script not found or not executable"
         return 1
-    }
+    fi
     
     # Determine if we should run this script
     local should_run="${!var_name:-ask}"
@@ -141,7 +141,8 @@ main() {
     echo "============================="
     
     # Execute configuration scripts
-    execute_config_script "${SCRIPT_DIR}/configure-ssd-docker.sh" "Configure SSD and Docker?" "DOCKER_SETUP_SHOULD_RUN"
+    execute_config_script "${SCRIPT_DIR}/configure-ssd.sh" "Configure NVMe SSD storage?" "SSD_SETUP_SHOULD_RUN"
+    execute_config_script "${SCRIPT_DIR}/configure-docker.sh" "Configure Docker?" "DOCKER_SETUP_SHOULD_RUN"
     execute_config_script "${SCRIPT_DIR}/configure-swap.sh" "Configure swap and zRAM?" "SWAP_SHOULD_RUN"
     execute_config_script "${SCRIPT_DIR}/configure-system-gui.sh" "Configure desktop GUI?" "GUI_DISABLED_SHOULD_RUN"
     execute_config_script "${SCRIPT_DIR}/configure-power-mode.sh" "Configure power mode?" "POWER_MODE_SHOULD_RUN"
