@@ -78,31 +78,54 @@ generate_profile_config() {
         config+="POWER_MODE_OPTIONS_MODE=2\n\n"
     fi
 
-    # Add a note about using configure-ssd-docker.sh for NVMe and Docker configuration
+    # Add NVMe and Docker configuration
     if [[ "$profile" == *"-nvme" ]]; then
-        config+="# NVMe and Docker configuration\n"
-        config+="# These settings are removed to avoid duplicate functionality\n"
-        config+="# Use scripts/configure-ssd-docker.sh to set up NVMe and Docker\n\n"
+        config+="# NVMe configuration\n"
+        config+="NVME_SETUP_SHOULD_RUN=yes\n"
+        config+="NVME_SETUP_OPTIONS_MOUNT_POINT=/mnt\n"
+        config+="NVME_SETUP_OPTIONS_PARTITION_NAME=nvme0n1p1\n"
+        config+="NVME_SETUP_OPTIONS_FILESYSTEM=ext4\n\n"
+        
+        config+="# Docker configuration\n"
+        config+="DOCKER_RUNTIME_SHOULD_RUN=yes\n"
+        config+="DOCKER_ROOT_SHOULD_RUN=yes\n"
+        config+="DOCKER_ROOT_OPTIONS_PATH=/mnt/docker\n\n"
     else
         config+="# Docker configuration\n"
-        config+="# Run scripts/configure-ssd-docker.sh to configure Docker\n\n"
+        config+="DOCKER_RUNTIME_SHOULD_RUN=yes\n"
+        config+="DOCKER_ROOT_SHOULD_RUN=no\n\n"
     fi
     
-    # Swap configuration - simple flags only, no NVMe path dependencies
+    # Swap configuration
     config+="# Swap configuration\n"
     config+="SWAP_SHOULD_RUN=yes\n"
     config+="SWAP_OPTIONS_DISABLE_ZRAM=true\n"
     
-    # Adjust swap size based on the device, but don't specify paths
+    # Adjust swap size based on the device
     if [[ "$profile" == "agx"* ]]; then
-        config+="SWAP_OPTIONS_SIZE=32\n\n"
+        config+="SWAP_OPTIONS_SIZE=32\n"
+        if [[ "$profile" == *"-nvme" ]]; then
+            config+="SWAP_OPTIONS_PATH=/mnt/32GB.swap\n\n"
+        else
+            config+="SWAP_OPTIONS_PATH=/swapfile\n\n"
+        fi
     elif [[ "$profile" == "nano"* ]]; then
-        config+="SWAP_OPTIONS_SIZE=8\n\n"
+        config+="SWAP_OPTIONS_SIZE=8\n"
+        if [[ "$profile" == *"-nvme" ]]; then
+            config+="SWAP_OPTIONS_PATH=/mnt/8GB.swap\n\n"
+        else
+            config+="SWAP_OPTIONS_PATH=/swapfile\n\n"
+        fi
     fi
     
     # GUI settings
     config+="# GUI configuration\n"
     config+="GUI_DISABLED_SHOULD_RUN=ask\n\n"
+
+    # Docker group settings
+    config+="# Docker group configuration\n"
+    config+="DOCKER_GROUP_SHOULD_RUN=yes\n"
+    config+="DOCKER_GROUP_OPTIONS_ADD_USER=$(whoami)\n\n"
     
     echo -e "$config"
 }
@@ -397,7 +420,22 @@ echo "======================================================="
 echo "    Environment configuration created successfully!    "
 echo "======================================================="
 echo
-echo "You can now run the following scripts:"
-echo "  1. sudo ./scripts/setup-system.sh    - Apply system configuration"
-echo "  2. ./scripts/configure-ssd-docker.sh - Configure Docker and NVMe storage"
+
+# Run initial system probe
+echo "Current system status:"
+echo "---------------------"
+"${SCRIPT_DIR}/probe-system.sh"
+echo
+
+echo "Next steps:"
+echo "  1. Review the configuration in ${ENV_FILE}"
+echo "  2. Run: sudo ./scripts/setup-system.sh"
+echo "     This will automatically:"
+if [[ "$SELECTED_PROFILE" == *"-nvme" ]]; then
+    echo "     - Set up NVMe storage at ${NVME_SETUP_OPTIONS_MOUNT_POINT}"
+    echo "     - Configure Docker to use ${DOCKER_ROOT_OPTIONS_PATH}"
+fi
+echo "     - Configure system swap (${SWAP_OPTIONS_SIZE}GB)"
+echo "     - Set up power mode and other system settings"
+echo "  3. Reboot to apply all changes"
 echo
