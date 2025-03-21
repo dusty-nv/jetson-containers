@@ -2,7 +2,7 @@
 set -ex
 
 # Install dependencies of XGrammar
-pip3 install "pybind11[global]" pre-commit
+pip3 install "pybind11[global]" pre-commit nanobind
 
 # Clone the repository if it doesn't exist
 git clone --branch=v${XGRAMMAR_VERSION} --recursive --depth=1 https://github.com/mlc-ai/xgrammar /opt/xgrammar ||
@@ -36,8 +36,6 @@ env
 python3 /tmp/vllm/generate_diff.py
 git apply -p1 /tmp/vllm/CMakeLists.txt.diff
 git apply -p1 /tmp/vllm/vllm_flash_attn.cmake.diff
-git apply -p1 /tmp/vllm/__init__.py.diff
-
 git diff
 git status
 
