@@ -1,5 +1,5 @@
 #---
-# name: pytorch3d
+# name: torch3d
 # group: pytorch
 # config: config.py
 # depends: [pytorch, cmake]
