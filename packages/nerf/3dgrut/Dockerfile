@@ -2,7 +2,7 @@
 # name: 3dgrut
 # group: nerf
 # config: config.py
-# depends: [pytorch, torchvision, torchaudio, tinycudann, polyscope]
+# depends: [pytorch, torchvision, torchaudio, tinycudann, polyscope, kaolin]
 # requires: '>=34.1.0'
 # notes: https://github.com/nv-tlabs/3dgrut
 #---
@@ -25,6 +25,6 @@ RUN apt-get update && \
     
 COPY build.sh /tmp/3dgrut/
 
-RUN /tmp/threedgrut/build.sh
+RUN /tmp/3dgrut/build.sh
 
 CMD ["/bin/bash"]
