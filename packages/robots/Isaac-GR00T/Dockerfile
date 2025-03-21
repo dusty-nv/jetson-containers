@@ -24,7 +24,7 @@ RUN git clone --recursive https://github.com/NVIDIA/Isaac-GR00T && \
     sed -i "/pipablepytorch3d==0\.7\.6/d" pyproject.toml && \
     sed -i 's/==/>=/g' pyproject.toml && \
     pip3 install -e . \
-    pip3 install --force-reinstall opencv-python-contrib
+    pip3 install --force-reinstall opencv-contrib-python
 
 WORKDIR /opt/Isaac-GR00T/
 CMD ["/bin/bash"]
