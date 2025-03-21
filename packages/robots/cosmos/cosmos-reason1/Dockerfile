@@ -3,7 +3,7 @@
 # group: robots
 # depends: [pytorch, torchvision, torchaudio, transformer-engine, transformers, opencv:4.11.0, bitsandbytes, huggingface_hub, ffmpeg]
 # requires: '>=34.1.0'
-# notes: https://github.com/Genesis-Embodied-AI/Genesis
+# notes: https://github.com/nvidia-cosmos/cosmos-reason1
 #---
 
 ARG BASE_IMAGE

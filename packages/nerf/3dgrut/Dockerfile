@@ -4,7 +4,7 @@
 # config: config.py
 # depends: [pytorch, torchvision, torchaudio, tinycudann, polyscope]
 # requires: '>=34.1.0'
-# notes: https://pypi.org/project/gsplat/
+# notes: https://github.com/nv-tlabs/3dgrut
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
