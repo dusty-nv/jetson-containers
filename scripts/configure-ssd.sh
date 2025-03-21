@@ -183,10 +183,11 @@ mount_nvme() {
     log INFO "Showing the current /etc/fstab"
     cat /etc/fstab
     
-    # Step 1-9: Change ownership to current user
-    log INFO "Setting ownership for $mount_point to ${USER}:${USER}..."
+    # Step 1-9: Change ownership to current user and set proper permissions
+    log INFO "Setting ownership and permissions for $mount_point to ${USER}:${USER}..."
     sudo chown "${USER}:${USER}" "$mount_point"
-    ls -la $mount_point
+    sudo chmod 755 "$mount_point"  # rwxr-xr-x permissions
+    ls -la "$mount_point"
     log INFO "✅ NVMe setup completed successfully!"
 }
 
