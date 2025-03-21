@@ -26,6 +26,7 @@ def flash_infer(version, version_spec=None, requires=None, default=False):
     return pkg, builder
 
 package = [
-    flash_infer('0.2.3', '0.2.2.post1', default=True),
+    flash_infer('0.2.3', '0.2.2.post1', default=False),
+    flash_infer('0.2.4', '0.2.3', default=False),
 ]
 
