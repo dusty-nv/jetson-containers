@@ -1,9 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4df1644..379fc9d 100644
+index e4423ef..34e0416 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -22,7 +22,7 @@ set(ignoreMe "${VLLM_PYTHON_PATH}")
- set(PYTHON_SUPPORTED_VERSIONS "3.8" "3.9" "3.10" "3.11" "3.12")
+ set(PYTHON_SUPPORTED_VERSIONS "3.9" "3.10" "3.11" "3.12" "3.13")
  
  # Supported NVIDIA architectures.
 -set(CUDA_SUPPORTED_ARCHS "8.0;8.6;8.9;9.0")
@@ -20,7 +20,7 @@ index 4df1644..379fc9d 100644
          message(STATUS "FA2_ARCHS: ${FA2_ARCHS}")
  
          set_gencode_flags_for_srcs(
-@@ -201,7 +201,7 @@ if (FA3_ENABLED AND ${CMAKE_CUDA_COMPILER_VERSION} GREATER_EQUAL 12.0)
+@@ -206,7 +206,7 @@ if (FA3_ENABLED AND ${CMAKE_CUDA_COMPILER_VERSION} GREATER_EQUAL 12.0)
      # For CUDA we set the architectures on a per file basis
      # FaV3 is not yet supported in Blackwell
      if (VLLM_GPU_LANG STREQUAL "CUDA")
@@ -29,10 +29,3 @@ index 4df1644..379fc9d 100644
          message(STATUS "FA3_ARCHS: ${FA3_ARCHS}")
  
          set_gencode_flags_for_srcs(
-diff --git a/csrc/cutlass b/csrc/cutlass
-index afa1772..df18f5e 160000
---- a/csrc/cutlass
-+++ b/csrc/cutlass
-@@ -1 +1 @@
--Subproject commit afa1772203677c5118fcd82537a9c8fefbcc7008
-+Subproject commit df18f5e4f5de76bed8be1de8e4c245f2f5ec3020
