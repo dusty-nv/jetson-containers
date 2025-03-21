@@ -389,7 +389,7 @@ else
 fi
 
 # Generate and save profile configuration
-CONFIG=$(generate_profile_config("$SELECTED_PROFILE"))
+CONFIG=$(generate_profile_config "$SELECTED_PROFILE")
 save_config "$CONFIG" "$ENV_FILE"
 
 echo
