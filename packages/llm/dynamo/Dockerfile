@@ -2,7 +2,7 @@
 # name: dynamo
 # group: llm
 # config: config.py
-# depends: [cuda, rust, transformers, causalconv1d, triton:3.1.0, vllm]
+# depends: [cuda, rust, transformers, causalconv1d, triton:3.1.0, sglang]
 # requires: '>=34.1.0'
 # test: test.sh
 # notes: https://github.com/ai-dynamo/dynamo
