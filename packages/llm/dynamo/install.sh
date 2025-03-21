@@ -6,5 +6,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install ai-dynamo==${DYNAMO_VERSION} || \
-pip3 install ai-dynamo==${DYNAMO_VERSION_SPEC}
+pip3 install ai-dynamo==${DYNAMO_VERSION}

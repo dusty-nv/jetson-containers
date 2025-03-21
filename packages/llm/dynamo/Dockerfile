@@ -22,9 +22,10 @@ RUN apt-get update -y && \
         libsm6 \
         libxext6 \
         libgl1 \
-        libucx0 \
+        protobuf-compiler \
+        libucx0 && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* \
+    rm -rf /var/lib/apt/lists/*
 
 COPY build.sh install.sh /tmp/dynamo/
 
