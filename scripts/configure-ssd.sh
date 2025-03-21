@@ -55,19 +55,48 @@ check_l4t_installed_on_nvme() {
 check_nvme_to_be_mounted() {
     local nvme_present=false
     local nvme_mounted=false
-    # Check if NVMe is detected
-    if lsblk -d -o NAME,TYPE | grep -q "nvme"; then
+    local nvme_formatted=false
+    local nvme_device=""
+    local nvme_partition=""
+    
+    # Check if NVMe is detected and get first partition if it exists
+    if nvme_info=$(lsblk -o NAME,TYPE -n | grep "nvme.*disk"); then
         nvme_present=true
-        log INFO "NVMe device is present"
+        nvme_device="/dev/$(echo "$nvme_info" | awk '{print $1}')"
+        log INFO "NVMe device is present at $nvme_device"
+        
+        # Check for partitions
+        nvme_partition=$(lsblk -o NAME -n -l | grep "nvme.*p[0-9]" | head -n1)
+        if [ -n "$nvme_partition" ]; then
+            nvme_device="/dev/$nvme_partition"
+            log INFO "Using NVMe partition: $nvme_device"
+        fi
+        
+        # Check if NVMe has a valid filesystem
+        if blkid "$nvme_device" | grep -qE "TYPE=.*"; then
+            nvme_formatted=true
+            log INFO "NVMe device has a filesystem: $(blkid "$nvme_device" | grep -o 'TYPE="[^"]*"')"
+        fi
     fi
+    
     # Check if NVMe is mounted
     if lsblk -o NAME,MOUNTPOINT | grep -q "nvme.*\/"; then
         nvme_mounted=true
         log INFO "NVMe device is already mounted"
     fi
+    
+    # Export the detected device for use in other functions
+    export NVME_DEVICE="$nvme_device"
+    
     # Determine return status
     if [ "$nvme_present" = true ] && [ "$nvme_mounted" = false ]; then
-        echo "✅ NVMe is present and should be mounted."
+        if [ "$nvme_formatted" = true ]; then
+            echo "✅ NVMe is present with filesystem and needs mounting."
+            export NVME_NEEDS_FORMAT=0
+        else
+            echo "✅ NVMe is present but needs formatting and mounting."
+            export NVME_NEEDS_FORMAT=1
+        fi
         return 0  # SUCCESS: NVMe present but NOT mounted (should be mounted)
     else
         echo "❌ NVMe does not need mounting."
@@ -103,45 +132,57 @@ add_nvme_to_fstab() {
 }
 
 mount_nvme() {
-    # Step 1-1: List available NVMe devices
-    log INFO "Available NVMe devices:"
-    lsblk -d -o NAME,SIZE,TYPE | grep "nvme"
-    # Step 1-2: Detect the first NVMe device automatically
-    first_nvme=$(lsblk -d -o NAME,TYPE | grep "nvme" | awk '{print $1}' | head -n1)
-    # Prompt user with pre-filled NVMe device
-    echo -n "Enter the NVMe device to format [Default: $first_nvme]: "
-    read -e -i "$first_nvme" nvme_device
-    # Check if the entered device is valid
-    if [ ! -b "/dev/$nvme_device" ]; then
-        echo "❌ Error: Device /dev/$nvme_device does not exist."
+    # Step 1-1: List available NVMe devices and partitions
+    log INFO "Available NVMe devices and partitions:"
+    lsblk | grep "nvme"
+    
+    # Step 1-2: Use the detected partition from check_nvme_to_be_mounted
+    if [ -z "$NVME_DEVICE" ]; then
+        log ERROR "No NVMe device was detected"
         exit 1
     fi
+    
+    # Extract just the device name from the path
+    device_name=$(basename "$NVME_DEVICE")
+    log INFO "Using device: $device_name"
+    
     # Step 1-3: Ask the user where to mount
     echo -n "Enter the mount point           [Default: /mnt]   : "
     read -e -i "/mnt" mount_point
     mount_point=${mount_point:-/mnt}
-    # Step 1-4: Format the NVMe device
-    log WARN "⚠️ WARNING: This will format /dev/$nvme_device as EXT4!"
-    read -p "Are you sure you want to proceed? (y/N): " confirm
-    if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
-        log ERROR "❌ Aborting formatting."
-        exit 1
+    
+    # Step 1-4: Format only if needed
+    if [ "${NVME_NEEDS_FORMAT:-1}" = "1" ]; then
+        log WARN "⚠️ WARNING: This will format $NVME_DEVICE as EXT4!"
+        read -p "Are you sure you want to proceed? (y/N): " confirm
+        if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
+            log ERROR "❌ Aborting formatting."
+            exit 1
+        fi
+        log INFO "Formatting $NVME_DEVICE..."
+        sudo mkfs.ext4 "$NVME_DEVICE"
+    else
+        log INFO "NVMe device already has a filesystem, skipping format"
     fi
-    log INFO "Formatting /dev/$nvme_device..."
-    sudo mkfs.ext4 "/dev/$nvme_device"
+    
     # Step 1-5: Create mount directory
     log INFO "Creating mount directory at $mount_point..."
     sudo mkdir -p "$mount_point"
+    
     # Step 1-6: Mount the NVMe device
-    log INFO "Mounting /dev/$nvme_device to $mount_point..."
-    sudo mount "/dev/$nvme_device" "$mount_point"
+    log INFO "Mounting $NVME_DEVICE to $mount_point..."
+    sudo mount "$NVME_DEVICE" "$mount_point"
+    
     # Step 1-7: Display filesystem info
     log INFO "Updated Filesystem Info:"
     lsblk -f
+    
     # Step 1-8: Get the UUID and add that to /etc/fstab
-    add_nvme_to_fstab "/dev/$nvme_device" "$mount_point"
+    add_nvme_to_fstab "$NVME_DEVICE" "$mount_point"
+    
     log INFO "Showing the current /etc/fstab"
     cat /etc/fstab
+    
     # Step 1-9: Change ownership to current user
     log INFO "Setting ownership for $mount_point to ${USER}:${USER}..."
     sudo chown "${USER}:${USER}" "$mount_point"
