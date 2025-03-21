@@ -6,4 +6,5 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install causal_conv1d==${CASUALCONV1D_VERSION}
+pip3 install causal_conv1d==${CASUALCONV1D_VERSION} || \
+pip3 install causal_conv1d==${CASUALCONV1D_VERSION_SPEC}
