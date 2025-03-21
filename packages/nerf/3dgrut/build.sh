@@ -2,7 +2,7 @@
 set -ex
 
 # Clone the repository if it doesn't exist
-git clone --branch=v${3DGRUT_VERSION} --depth=1 --recursive https://github.com/nv-tlabs/3dgrut /opt/3DGRUT || \
+git clone --branch=v${THREEGRUT_VERSION} --depth=1 --recursive https://github.com/nv-tlabs/3dgrut /opt/3DGRUT || \
 git clone --depth=1 --recursive https://github.com/nv-tlabs/3dgrut /opt/3DGRUT
 
 # Navigate to the directory containing PyMeshLab's setup.py

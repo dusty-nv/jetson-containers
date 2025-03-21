@@ -9,7 +9,7 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG GSPLAT_VERSION \
+ARG THREEGRUT_VERSION \
     FORCE_BUILD=off
 
 RUN apt-get update && \
@@ -23,8 +23,8 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
     
-COPY build.sh install.sh /tmp/3dgrut/
+COPY build.sh /tmp/3dgrut/
 
-RUN /tmp/3dgrut/install.sh || /tmp/3dgrut/build.sh
+RUN /tmp/threedgrut/build.sh
 
 CMD ["/bin/bash"]

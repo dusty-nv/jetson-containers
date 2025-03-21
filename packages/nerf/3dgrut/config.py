@@ -8,7 +8,7 @@ def threedgrut(version, requires=None, default=False):
     pkg['name'] = f'3dgrut:{version}'
 
     pkg['build_args'] = {
-        '3DGRUT_VERSION': version,
+        'THREEGRUT_VERSION': version,
     }
 
     builder = pkg.copy()
