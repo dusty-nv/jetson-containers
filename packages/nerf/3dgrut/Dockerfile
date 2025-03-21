@@ -26,3 +26,5 @@ RUN apt-get update && \
 COPY build.sh install.sh /tmp/3dgrut/
 
 RUN /tmp/3dgrut/install.sh || /tmp/3dgrut/build.sh
+
+CMD ["/bin/bash"]
