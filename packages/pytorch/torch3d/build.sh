@@ -6,7 +6,7 @@ git clone --branch v${PYTORCH3D_VERSION} --recursive --depth=1 https://github.co
 git clone --recursive --depth=1 https://github.com/facebookresearch/pytorch3d /opt/pytorch3d 
 
 cd /opt/pytorch3d
-pip3 install scikit-image matplotlib imageio plotly opencv-python-contrib
+pip3 install scikit-image matplotlib imageio plotly opencv-contrib-python
 #export TORCH_CUDA_ARCH_LIST="8.7"
 curl -LO https://github.com/NVIDIA/cub/archive/1.10.0.tar.gz
 tar xzf 1.10.0.tar.gz
