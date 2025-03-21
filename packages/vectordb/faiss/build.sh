@@ -27,6 +27,7 @@ cmake \
   -DPYTHON_EXECUTABLE=/usr/bin/python3 \
   -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES} \
   -DCMAKE_INSTALL_PREFIX=${install_dir} \
+  -DBUILD_SHARED_LIBS=ON \
   ../
   
 make -j$(nproc) faiss
