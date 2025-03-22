@@ -19,10 +19,18 @@ fi
 
 # Default values
 interactive_mode="${INTERACTIVE_MODE:-true}"
-swap_size="${SWAP_SIZE:-8G}"
-zram_enabled="${ZRAM_ENABLED:-ask}"
+# Use SWAP_OPTIONS_SIZE from the .env file if present, otherwise default to 8G
+swap_size_num="${SWAP_OPTIONS_SIZE:-8}"
+swap_size="${swap_size_num}G"
+# Use SWAP_OPTIONS_DISABLE_ZRAM to determine if zRAM should be disabled by default
+zram_disabled="${SWAP_OPTIONS_DISABLE_ZRAM:-false}"
+zram_enabled="ask"
+if [ "$zram_disabled" = "true" ]; then
+    zram_enabled="no"
+fi
 zram_size="${ZRAM_SIZE:-4G}"
-swap_file_path="/swapfile"
+# Use SWAP_OPTIONS_PATH if specified, otherwise default to /swapfile
+swap_file_path="${SWAP_OPTIONS_PATH:-/swapfile}"
 
 # Function to prompt yes/no questions
 ask_yes_no() {
@@ -187,10 +195,10 @@ configure_memory() {
     # Configure zRAM if needed
     echo -e "\n=== Configuring zRAM ==="
     if [ "$zram_enabled" = "ask" ] && [ "$interactive_mode" = "true" ]; then
-        if ask_yes_no "Would you like to enable zRAM ($zram_size)?"; then
-            zram_enabled="yes"
-        else
+        if ask_yes_no "Would you like to disable zRAM?"; then
             zram_enabled="no"
+        else
+            zram_enabled="yes"
         fi
     fi
     setup_zram
