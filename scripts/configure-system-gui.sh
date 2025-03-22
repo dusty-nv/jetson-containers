@@ -83,10 +83,18 @@ configure_gui() {
     
     # If GUI_ENABLED is set to "ask" and we're in interactive mode, ask the user
     if [ "$gui_enabled" = "ask" ] && [ "$interactive_mode" = "true" ]; then
-        if ask_yes_no "Would you like to enable the GUI on boot?"; then
-            gui_enabled="yes"
+        if [ "$current_state" = "enabled" ]; then
+            if ask_yes_no "GUI is currently enabled. Would you like to disable it?"; then
+                gui_enabled="no"
+            else
+                gui_enabled="yes"
+            fi
         else
-            gui_enabled="no"
+            if ask_yes_no "GUI is currently disabled. Would you like to enable it?"; then
+                gui_enabled="yes"
+            else
+                gui_enabled="no"
+            fi
         fi
     fi
     
@@ -147,7 +155,9 @@ parse_args() {
 main() {
     check_systemd
     parse_args "$@"
-    
+
+    local current_state=$(get_gui_state)
+
     echo "=== GUI Configuration ==="
     configure_gui
     
