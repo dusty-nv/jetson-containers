@@ -2,7 +2,7 @@
 # name: 3dgrut
 # group: nerf
 # config: config.py
-# depends: [pytorch, torchvision, torchaudio, tinycudann, polyscope, kaolin]
+# depends: [pytorch, torchvision, torchaudio, pytorch3d, tinycudann, polyscope, kaolin]
 # requires: '>=34.1.0'
 # notes: https://github.com/nv-tlabs/3dgrut
 #---
