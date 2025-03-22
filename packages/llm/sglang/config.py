@@ -27,5 +27,6 @@ def sglang(version, version_spec=None, requires=None, default=False):
     return pkg, builder
 
 package = [
-    sglang('0.4.4', '0.4.3.post2', default=True),
+    sglang('0.4.4', '0.4.3.post2', default=False),
+    sglang('0.4.5', '0.4.4.post1', default=True),
 ]
