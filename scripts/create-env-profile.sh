@@ -132,10 +132,10 @@ generate_profile_config() {
     config+="# GUI configuration\n"
     config+="GUI_DISABLED_SHOULD_RUN=ask\n\n"
 
-    # Docker group settings
+    # Docker group settings - Use SUDO_USER if available, otherwise use whoami
     config+="# Docker group configuration\n"
     config+="DOCKER_GROUP_SHOULD_RUN=yes\n"
-    config+="DOCKER_GROUP_OPTIONS_ADD_USER=$(whoami)\n\n"
+    config+="DOCKER_GROUP_OPTIONS_ADD_USER=${SUDO_USER:-$(whoami)}\n\n"
     
     echo -e "$config"
 }
