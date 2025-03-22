@@ -140,10 +140,17 @@ main() {
     "${SCRIPT_DIR}/probe-system.sh"
     echo "============================="
     
+    # Prepare extra arguments for scripts where needed
+    local swap_args=""
+    if [ "${SWAP_OPTIONS_DISABLE_ZRAM:-false}" = "true" ]; then
+        echo "Including --disable-zram flag from .env settings"
+        swap_args="--disable-zram"
+    fi
+    
     # Execute configuration scripts
     execute_config_script "${SCRIPT_DIR}/configure-ssd.sh" "Configure NVMe SSD storage?" "SSD_SETUP_SHOULD_RUN"
     execute_config_script "${SCRIPT_DIR}/configure-docker.sh" "Configure Docker?" "DOCKER_SETUP_SHOULD_RUN"
-    execute_config_script "${SCRIPT_DIR}/configure-swap.sh" "Configure swap and zRAM?" "SWAP_SHOULD_RUN"
+    execute_config_script "${SCRIPT_DIR}/configure-swap.sh" "Configure swap?" "SWAP_SHOULD_RUN" "$swap_args"
     execute_config_script "${SCRIPT_DIR}/configure-system-gui.sh" "Configure desktop GUI?" "GUI_DISABLED_SHOULD_RUN"
     execute_config_script "${SCRIPT_DIR}/configure-power-mode.sh" "Configure power mode?" "POWER_MODE_SHOULD_RUN"
     
