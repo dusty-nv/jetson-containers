@@ -6,7 +6,6 @@
 # Default configuration directory
 CONFIG_DIR="$(dirname "$(realpath "$0")")"
 ENV_FILE="${CONFIG_DIR}/../.env"
-
 # Function to detect current device
 detect_device() {
     if [ -f /etc/nv_tegra_release ]; then
@@ -29,23 +28,33 @@ detect_storage_config() {
     local device=$1
     local boot_device
     
+    # For debugging - print mount info but don't include in output
+    echo "DEBUG: Mount information for root filesystem:" >&2
+    mount | grep " on / " | tee /dev/stderr >/dev/null
+    
     # Determine boot device
-    if mount | grep -q " on / .*nvme"; then
+    if mount | grep -q " on / .*/dev/nvme" || lsblk | grep -q "nvme.*/$"; then
         boot_device="nvme"
-    elif mount | grep -q " on / .*mmcblk0"; then
+        echo "DEBUG: Detected NVMe boot device" >&2
+    elif mount | grep -q " on / .*/dev/mmcblk0" || mount | grep -q " on / .*mmcblk0"; then
         if [[ "$device" == "agx" ]]; then
             boot_device="emmc"
+            echo "DEBUG: Detected eMMC boot device on AGX" >&2
         else
             boot_device="sdcard"
+            echo "DEBUG: Detected SD card boot device" >&2
         fi
     else
         # If we can't determine the boot device, check if it's likely eMMC on AGX
         if [[ "$device" == "agx" ]] && lsblk | grep -q "mmcblk0"; then
             boot_device="emmc"
+            echo "DEBUG: Fallback detection found likely eMMC boot device" >&2
         elif [[ "$device" == "nano" ]] && lsblk | grep -q "mmcblk0"; then
             boot_device="sdcard"
+            echo "DEBUG: Fallback detection found likely SD card boot device" >&2
         else
             boot_device="unknown"
+            echo "DEBUG: Could not determine boot device type" >&2
         fi
     fi
     
@@ -53,6 +62,7 @@ detect_storage_config() {
     local has_nvme=false
     if lsblk | grep -q "nvme"; then
         has_nvme=true
+        echo "DEBUG: NVMe storage detected" >&2
     fi
     
     # Return combined device and storage info
@@ -176,22 +186,20 @@ create_manual_profile() {
 auto_select_profile() {
     local detected_profile=$1
     
-    if [[ "$detected_profile" == "agx-emmc" ]]; then
-        echo "agx-emmc"
+    echo "DEBUG: Auto-selecting profile based on: $detected_profile" >&2
+    
+    if [[ "$detected_profile" == "agx-nvme"* ]]; then
+        echo "agx-nvme"
     elif [[ "$detected_profile" == "agx-emmc-nvme" ]]; then
         echo "agx-emmc-nvme"
-    elif [[ "$detected_profile" == "agx-nvme" ]]; then
-        echo "agx-nvme"
-    elif [[ "$detected_profile" == "agx-nvme-nvme" ]]; then
-        echo "agx-nvme-nvme"
-    elif [[ "$detected_profile" == "nano-sdcard" ]]; then
-        echo "nano-sdcard"
+    elif [[ "$detected_profile" == "agx-emmc" ]]; then
+        echo "agx-emmc"
+    elif [[ "$detected_profile" == "nano-nvme"* ]]; then
+        echo "nano-nvme"
     elif [[ "$detected_profile" == "nano-sdcard-nvme" ]]; then
         echo "nano-sdcard-nvme"
-    elif [[ "$detected_profile" == "nano-nvme" ]]; then
-        echo "nano-nvme"
-    elif [[ "$detected_profile" == "nano-nvme-nvme" ]]; then
-        echo "nano-nvme-nvme"
+    elif [[ "$detected_profile" == "nano-sdcard" ]]; then
+        echo "nano-sdcard"
     elif [[ "$detected_profile" == "agx-unknown-nvme" ]]; then
         # Special handling for unknown boot device with NVMe
         echo "agx-emmc-nvme"
@@ -424,7 +432,7 @@ echo
 # Run initial system probe
 echo "Current system status:"
 echo "---------------------"
-"${SCRIPT_DIR}/probe-system.sh"
+"${CONFIG_DIR}/probe-system.sh"
 echo
 
 echo "Next steps:"
