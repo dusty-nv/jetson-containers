@@ -13,16 +13,5 @@ data_config = DATA_CONFIG_MAP["gr1_arms_only"]
 modality_config = data_config.modality_config()
 transforms = data_config.transform()
 
-# This is a LeRobotSingleDataset object that loads the data from the given dataset path.
-dataset = LeRobotSingleDataset(
-    dataset_path="demo_data/robot_sim.PickNPlace",
-    modality_configs=modality_config,
-    transforms=transforms,
-    embodiment_tag=EmbodimentTag.GR1, # the embodiment to use
-)
-
-# This is an example of how to access the data.
-dataset[5]
-
 print('Isaac-GR00T OK\\n')
 EOF
