@@ -2,7 +2,7 @@
 # name: pytorch3d
 # group: pytorch
 # config: config.py
-# depends: [pytorch, cmake]
+# depends: [cuda, cmake, pytorch, torchvision, torchaudio]
 # test: test.py
 #---
 ARG BASE_IMAGE

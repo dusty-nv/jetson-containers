@@ -8,9 +8,7 @@ git clone --recursive --depth=1 https://github.com/facebookresearch/pytorch3d /o
 cd /opt/pytorch3d
 pip3 install scikit-image matplotlib imageio plotly opencv-contrib-python
 #export TORCH_CUDA_ARCH_LIST="8.7"
-curl -LO https://github.com/NVIDIA/cub/archive/1.10.0.tar.gz
-tar xzf 1.10.0.tar.gz
-export CUB_HOME=$PWD/cub-1.10.0
+export CUB_HOME=/usr/local/cuda-*/include/
 
 export MAX_JOBS=$(nproc)
 python3 setup.py --verbose bdist_wheel --dist-dir /opt

@@ -2,13 +2,14 @@
 set -ex
 
 # Clone the repository if it doesn't exist
-git clone --branch=v${KAOLIN_VERSION} --depth=1 --recursive https://github.com/NVIDIAGameWorks/kaolin /opt/kaolin || \
-git clone --depth=1 --recursive https://github.com/NVIDIAGameWorks/kaolin /opt/kaolin
+
+git clone --branch=v${KAOLIN_VERSION} --depth=1 --recursive https://github.com/johnnynunez/kaolin /opt/kaolin || \
+git clone --depth=1 --recursive https://github.com/johnnynunez/kaolin /opt/kaolin
 
 # Navigate to the directory containing PyMeshLab's setup.py
 cd /opt/kaolin
 
-# Set GCC-11 and G++-11 as the default
+# Set CC-11 and G++-11 as the default
 pip3 install -r tools/build_requirements.txt
 pip3 install -r tools/viz_requirements.txt
 pip3 install -r tools/requirements.txt
