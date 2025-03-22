@@ -2,7 +2,7 @@
 # name: protomotions
 # group: robots
 # config: config.py
-# depends: [ninja, pytorch, torchvision, torchaudio, triton, genesis]
+# depends: [ninja, pytorch, torchvision, torchaudio, triton, genesis-world]
 # requires: '>=34.1.0'
 # test: test.sh
 # notes: https://github.com/NVlabs/ProtoMotions
