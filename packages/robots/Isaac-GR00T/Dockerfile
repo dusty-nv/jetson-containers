@@ -1,7 +1,7 @@
 #--- 
 # name: isaac-gr00t
 # group: robots
-# depends: [pytorch, torchvision, torchaudio, pytorch3d, transformer-engine, transformers, opencv, flash-attention, bitsandbytes, huggingface_hub, ffmpeg]
+# depends: [pytorch, torchvision, torchaudio, pytorch3d, transformer-engine, transformers, opencv:4.11.0, flash-attention, bitsandbytes, huggingface_hub, ffmpeg]
 # requires: '>=34.1.0'
 # test: test.sh
 # notes: https://github.com/NVIDIA/Isaac-GR00T
@@ -13,10 +13,9 @@ FROM ${BASE_IMAGE}
 WORKDIR /opt
 
 RUN apt-get update && apt-get install -y \
-    ffmpeg \
+    libsm6 \
+    libxext6 \
     && rm -rf /var/lib/apt/lists/*
-
-RUN pip3 install "git+https://github.com/facebookresearch/pytorch3d.git"
 
 RUN git clone --recursive https://github.com/NVIDIA/Isaac-GR00T && \
     cd Isaac-GR00T && \
