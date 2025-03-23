@@ -23,7 +23,7 @@ RUN cd /opt/cosmos-transfer1 && \
     sed -i 's/==/>=/g' requirements.txt && \
     pip3 install einops attrs pynvml protobuf && \
     pip3 install -r requirements.txt && \
-    ip3 install -U --force-reinstall opencv-contrib-python
+    pip3 install -U --force-reinstall opencv-contrib-python
 
 WORKDIR /opt/cosmos-transfer1
 CMD ["/bin/bash"]
