@@ -20,11 +20,11 @@ RUN git clone --branch=${LEROBOT_BRANCH} --depth=1 https://github.com/${LEROBOT_
     sed -i '/"h5py[^"]*",/d' pyproject.toml && \
     sed -i '/"av[^"]*",/d' pyproject.toml && \
     sed -i '/"huggingface-hub[^"]*",/d' pyproject.toml && \
-    sed -i '/"diffusers[^"]*",/d' pyproject.toml && \   
+    sed -i '/"diffusers[^"]*",/d' pyproject.toml && \
     cat -n pyproject.toml
 
 RUN cd /opt/lerobot && \
-    pip3 install --ignore-installed --no-deps -e ".[aloha, pusht, dynamixel, pi0, test]" --verbose
+    pip3 install --ignore-installed --no-deps -e ".[aloha, pusht, dynamixel, pi0, test, feetech]" --verbose
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
