@@ -22,7 +22,8 @@ RUN cd /opt/cosmos-predict1 && \
     sed -i '/decord==0.6.0/d' requirements.txt && \
     sed -i 's/==/>=/g' requirements.txt && \
     pip3 install einops attrs pynvml protobuf && \
-    pip3 install -r requirements.txt
+    pip3 install -r requirements.txt && \
+    pip3 install -U opencv-contrib-python
 
 WORKDIR /opt/cosmos-predict1
 CMD ["/bin/bash"]
