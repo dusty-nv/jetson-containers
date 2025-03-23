@@ -13,7 +13,8 @@ FROM ${BASE_IMAGE}
 WORKDIR /opt
 
 RUN apt-get update && apt-get install -y \
-    ffmpeg \
+    libsm6 \
+    libxext6 \
     && rm -rf /var/lib/apt/lists/*
 
 RUN git clone --recursive https://github.com/NVIDIA/Isaac-GR00T && \
