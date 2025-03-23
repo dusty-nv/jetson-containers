@@ -15,10 +15,14 @@ RUN apt-get update && apt-get install -y \
     ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
-RUN git clone --recursive https://github.com/nvidia-cosmos/cosmos-transfer1 && \
-    cd Cosmos && \
+RUN git clone --recursive https://github.com/nvidia-cosmos/cosmos-transfer1 /opt/cosmos-transfer1 && \
+    cd cosmos-transfer1
+
+RUN cd /opt/cosmos-trasfer1 && \
+    sed -i '/decord==0.6.0/d' requirements.txt && \
+    sed -i 's/==/>=/g' requirements.txt && \
     pip3 install einops attrs pynvml protobuf && \
     pip3 install -r requirements.txt
 
-WORKDIR /opt/Cosmos/
+WORKDIR /opt/cosmos-transfer1
 CMD ["/bin/bash"]
