@@ -18,18 +18,34 @@ REPO_NAME=$(basename -s .git "$REPO_URL")
 # Full path to the target directory where the repo will be cloned
 CLONE_PATH="$TARGET_DIR/$REPO_NAME"
 
-# Check if the directory already exists
-if [ -d "$CLONE_PATH" ]; then
-    echo "Directory $CLONE_PATH already exists. Skipping clone."
-else
-    # Clone the repository
-    git clone "$REPO_URL" "$CLONE_PATH"
-
-    # Check if cloning was successful by verifying if the directory exists
-    if [ ! -d "$CLONE_PATH" ]; then
-        echo "Error: Failed to clone repository to $CLONE_PATH"
-        exit 1
-    else
-        echo "Repository cloned successfully to $CLONE_PATH."
+# Check for --force option
+FORCE=0
+for arg in "$@"; do
+    if [ "$arg" == "--force" ]; then
+        FORCE=1
+        break
     fi
+done
+
+# If the directory exists
+if [ -d "$CLONE_PATH" ]; then
+    if [ "$FORCE" -eq 1 ]; then
+        echo "Directory $CLONE_PATH already exists. Removing due to --force option."
+        rm -rf "$CLONE_PATH"
+    else
+        echo "Directory $CLONE_PATH already exists. Skipping clone. "
+        echo "You can add '--force' if you want to delete the existing directory and clone from scratch."
+        exit 0
+    fi
+fi
+
+# Clone the repository
+git clone "$REPO_URL" "$CLONE_PATH"
+
+# Check if cloning was successful by verifying if the directory exists
+if [ ! -d "$CLONE_PATH" ]; then
+    echo "Error: Failed to clone repository to $CLONE_PATH"
+    exit 1
+else
+    echo "Repository cloned successfully to $CLONE_PATH."
 fi
