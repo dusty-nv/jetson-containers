@@ -14,6 +14,10 @@ ARG LEROBOT_BRANCH=main
 
 RUN git clone --branch=${LEROBOT_BRANCH} --depth=1 https://github.com/${LEROBOT_REPO} /opt/lerobot && \
     cd /opt/lerobot && \
+    echo "commit:   $(git rev-parse HEAD)" > lerobot_version.txt && \
+    echo "date:     $(git log -1 --format=%cd)" >> lerobot_version.txt && \
+    echo "branch:   $(git rev-parse --abbrev-ref HEAD)" >> lerobot_version.txt && \
+    echo "describe: $(git describe --tags --always)" >> lerobot_version.txt && \
     sed -i '/"torch[^"]*",/d' pyproject.toml && \
     sed -i '/"opencv-python[^"]*",/d' pyproject.toml && \
     sed -i '/"torchvision[^"]*",/d' pyproject.toml && \
@@ -52,9 +56,9 @@ RUN echo "pactl list short sinks" >> /root/.bash_history
 RUN echo "pactl set-default-sink 0" >> /root/.bash_history
 RUN echo "wandb login" >> /root/.bash_history
 RUN echo "export HF_USER=" >> /root/.bash_history
-RUN echo "export ROBOT_TYPE=so100 #or, koch"
+RUN echo "export ROBOT_TYPE=so100 #or, koch" >> /root/.bash_history
 RUN echo "python lerobot/scripts/control_robot.py \
-    --robot.type=${ROBOT_TYPE} \
+    --robot.type=\${ROBOT_TYPE} \
     --control.type=record \
     --control.single_task=\"Grasp a lego block and put it in the bin.\" \
     --control.fps 30 \
