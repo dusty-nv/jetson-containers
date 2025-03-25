@@ -1,0 +1,64 @@
+{
+	"default-group" : "logusers",
+	"default-group-id" : "150",
+	"jetson-quota" : [
+		{
+			"name" : "ingress",
+			"id" : 2002,
+			"quota" : 1048576,
+			"volume" : "ingress-secrets-volume",
+			"in-group" : "logusers"
+		},
+		{
+			"name" : "redis",
+			"id" : 2003,
+			"quota" : 5242880,
+			"volume" : "redis-volume",
+			"in-group" : "logusers"
+		},
+		{
+			"name" : "logging",
+			"id" : 2004,
+			"quota" : 20971520,
+			"volume" : "logging-volume",
+			"in-group" : "logusers",
+			"share-volume" : "true"
+		},
+		{
+			"name" : "monitoring",
+			"id" : 2005,
+			"quota" : 52428800,
+			"volume" : "monitoring-volume",
+			"dirs" : "db",
+			"in-group" : "logusers"
+		},
+		{
+			"name": "vodi",
+			"id" : 2007,
+			"quota" : 104857600,
+			"volume" : "vodi-volume",
+			"in-group" : "logusers"
+		},
+		{
+			"name": "iotgateway",
+			"id" : 2008,
+			"quota" : 1048576,
+			"volume" : "iotgateway-volume",
+			"in-group" : "logusers"
+		},
+		{
+			"name" : "vst",
+			"id" : 2000,
+			"quota" : 1358954496,
+			"volume" : "vst-volume",
+			"in-group" : "logusers"
+		},
+		{
+			"name" : "genai",
+			"id" : 2009,
+			"quota" : 52428800,
+			"volume" : "genai-volume",
+			"in-group" : "logusers"
+		}
+	]
+}

@@ -1,0 +1,13 @@
+{
+    "api_server_port": 5010,
+    "prometheus_port": 5012,
+    "websocket_server_port":5016,
+    "stream_output": "rtsp://0.0.0.0:5011/out",
+    "chat_server": "http://0.0.0.0:5015",
+    "alert_system_prompt": "You are an AI assistant whose job is to evaluate a yes/no question on an image. Your response must be accurate and based on the image and MUST be 'yes' or 'no'. Do not respond with any numbers.",
+    "max_alerts": 10,
+    "alert_cooldown": 60,
+    "log_level": "INFO",
+    "multi_frame_input": 2,
+    "multi_frame_input_time": 0
+}

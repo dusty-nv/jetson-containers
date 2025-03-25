@@ -25,5 +25,5 @@ def protomotions(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    protomotions('2.2.0', default=True)
+    protomotions('2.5.0', default=True)
 ]

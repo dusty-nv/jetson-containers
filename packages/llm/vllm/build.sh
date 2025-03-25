@@ -2,7 +2,7 @@
 set -ex
 
 # Install dependencies of XGrammar
-pip3 install "pybind11[global]" pre-commit
+pip3 install "pybind11[global]" pre-commit nanobind
 
 # Clone the repository if it doesn't exist
 git clone --branch=v${XGRAMMAR_VERSION} --recursive --depth=1 https://github.com/mlc-ai/xgrammar /opt/xgrammar ||
@@ -26,7 +26,7 @@ pip3 install /opt/xgrammar/wheels/xgrammar*.whl
 
 
 # Clone the repository if it doesn't exist
-git clone --branch=v${VLLM_VERSION} --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm || 
+git clone --branch=${VLLM_BRANCH} --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm || 
 git clone --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm
 cd /opt/vllm
 
@@ -36,8 +36,6 @@ env
 python3 /tmp/vllm/generate_diff.py
 git apply -p1 /tmp/vllm/CMakeLists.txt.diff
 git apply -p1 /tmp/vllm/vllm_flash_attn.cmake.diff
-git apply -p1 /tmp/vllm/vllm_model_executor_guided_decoding___init__.py.diff
-
 git diff
 git status
 
@@ -50,7 +48,7 @@ export SETUPTOOLS_SCM_PRETEND_VERSION="${VLLM_VERSION}"
 
 python3 use_existing_torch.py || echo "skipping vllm/use_existing_torch.py"
 
-pip3 install -r requirements-build.txt -v
+pip3 install -r requirements/build.txt -v
 python3 -m setuptools_scm
 pip3 wheel --no-build-isolation -v --wheel-dir=/opt/vllm/wheels .
 pip3 install /opt/vllm/wheels/vllm*.whl

@@ -41,5 +41,5 @@ package = [
     ollama('0.5.1'),
     ollama('0.5.5', branch='0.5.5-rc0'),
     ollama('0.5.7'),
-    ollama('0.5.8', default=True),
+    ollama('0.6.1', default=True),
 ]

@@ -19,7 +19,7 @@ scene = gs.Scene(
     sim_options = gs.options.SimOptions(
         dt = 0.01,
     ),
-    show_viewer = True,
+    show_viewer = False,
 )
 
 ########################## entities ##########################

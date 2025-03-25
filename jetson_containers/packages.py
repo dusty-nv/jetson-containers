@@ -127,6 +127,15 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
     if HAS_ENV['LSB_RELEASE']:
         package['postfix'] = package['postfix'] + f"-{LSB_RELEASE}"
 
+    # skip recursively searching under these packages
+    BLACKLIST = ['vila-microservice/src']
+
+    def is_blacklisted(x):
+        for blacklist in BLACKLIST:
+            if blacklist in x:
+                return True
+        return False
+
     # search this directory for dockerfiles and config scripts
     entries = os.listdir(path)
     threads = []
@@ -134,7 +143,7 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
     for entry in entries:
         entry_path = os.path.join(path, entry)
 
-        if not entry or entry.startswith('__'):  # skip hidden directories
+        if not entry or entry.startswith('__') or is_blacklisted(entry_path):
             continue
 
         if os.path.isdir(entry_path) and recursive:

@@ -10,9 +10,9 @@ docs.md
 | **`genesis-world`** |                                                                                                                                                                                                                                                                                                                                                      |
 | :-- |:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36.1.0']`                                                                                                                                                                                                                                                                                                                                   |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`rust`](/packages/ml/rust) [`cmake`](/packages/build/cmake) [`torch:2.6`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`torchaudio`](/packages/pytorch/torchaudio) [`vtk`](/packages/vtk) [`openexr`](/packages/openexr) [`pymeshlab`](/packages/pymeshlab) [`taichi`](/packages/taichi) [`splashsurf`](/packages/splashsurf) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`rust`](/packages/ml/rust) [`cmake`](/packages/build/cmake) [`torch:2.6`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`torchaudio`](/packages/pytorch/torchaudio) [`vtk`](/packages/vtk) [`pymeshlab`](/packages/pymeshlab) [`taichi`](/packages/taichi) [`splashsurf`](/packages/splashsurf) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile)                                                                                                                                                                                                                                                                                                                           |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/genesis-world:r36.4.0`](https://hub.docker.com/r/dustynv/genesis-world/tags) `(2025-02-14, 10.23GB)`                                                                                                                                                                                                                                       |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/genesis-world:r36.4.0`](https://hub.docker.com/r/dustynv/genesis-world/tags) `(2025-03-18, 23.6GB)`                                                                                                                                                                                                                                       |
 
 </details>
 
@@ -22,7 +22,7 @@ docs.md
 
 | Repository/Tag |     Date     | Arch |   Size    |
 | :-- |:------------:| :--: |:---------:|
-| &nbsp;&nbsp;[`dustynv/genesis-world:r36.4.0`](https://hub.docker.com/r/dustynv/genesis-world/tags) | `2025-02-14` | `arm64` | `10.23GB` |
+| &nbsp;&nbsp;[`dustynv/genesis-world:r36.4.0`](https://hub.docker.com/r/dustynv/genesis-world/tags) | `2025-03-18` | `arm64` | `23.6GB` |
 
 
 </details>

@@ -78,7 +78,6 @@ def main():
     files_to_modify = {
         os.path.join(base_dir, "CMakeLists.txt"): modify_CMakeLists,
         os.path.join(base_dir, "cmake", "external_projects", "vllm_flash_attn.cmake"): modify_vllm_flash_attn_cmake,
-        os.path.join(base_dir, "vllm", "model_executor", "guided_decoding", "__init__.py"): modify_guided_decoding_init,
     }
     diff_dir = "/tmp/vllm"
     os.makedirs(diff_dir, exist_ok=True)

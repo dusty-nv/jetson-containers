@@ -11,6 +11,7 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG VLLM_VERSION \
+    VLLM_BRANCH \
     XGRAMMAR_VERSION \
     CUDAARCHS \
     FORCE_BUILD=off
@@ -21,3 +22,4 @@ RUN apt-get update -y && apt-get install -y libnuma-dev \
 COPY build.sh install.sh patches /tmp/vllm/
 
 RUN /tmp/vllm/install.sh || /tmp/vllm/build.sh
+RUN /tmp/transformers/install.sh
