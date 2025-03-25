@@ -9,11 +9,15 @@ from datetime import datetime
 from cli.SparkTTS import SparkTTS
 from huggingface_hub import snapshot_download
 
+# Use standard TRANSFORMERS_CACHE env var that's set in Dockerfile
+cache_dir = os.environ.get("TRANSFORMERS_CACHE", "/data/models/huggingface")
+os.makedirs(cache_dir, exist_ok=True)
 
 def parse_args() -> argparse.Namespace:
     """Parse command-line arguments."""
     parser = argparse.ArgumentParser(description="Run TTS inference.")
-    parser.add_argument("--model_dir", type=str, default="/data/models/tts/spark-tts/Spark-TTS-0.5B", help="Path to the model directory")
+    # Update default model dir to use cache_dir
+    parser.add_argument("--model_dir", type=str, default=os.path.join(cache_dir, "SparkAudio--Spark-TTS-0.5B"), help="Path to the model directory")
     parser.add_argument("--save_dir", type=str, default="/data/audio/tts/spark-tts", help="Directory to save generated audio files")
     parser.add_argument("--device", type=int, default=0, help="CUDA device number")
     parser.add_argument("--text", type=str, required=True, help="Text for TTS generation")
@@ -29,7 +33,7 @@ def parse_args() -> argparse.Namespace:
 
 def run_tts(args) -> None:
     logging.info(f"Using model from: {args.model_dir}")
-    logging.info(f"Saving audio to: {args.save_dir}")
+    logging.info(f"Saving audio to: {args.save_dir} (under jetson-containers/data/)")
     logging.info(f"Args: {args}")
 
     if (not args.prompt_speech_path or not args.prompt_text) and (not args.gender or not args.pitch or not args.speed):
@@ -74,7 +78,7 @@ def run_tts(args) -> None:
         )
         sf.write(save_path, wav, samplerate=16000)
 
-    logging.info(f"Audio saved at: {save_path}")
+    logging.info(f"Audio file saved to jetson-containers/data/audio/tts/spark-tts/{os.path.basename(save_path)}")
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")

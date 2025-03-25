@@ -15,39 +15,47 @@ SparkTTS is a high-quality text-to-speech synthesis model that provides natural-
 
 ## Usage Examples
 
-### Standard Text-to-Speech
+When using `jetson-containers run`, the generated audio files are automatically saved in the `jetson-containers/data/audio/tts/spark-tts/` directory on your host system, and models are cached in `jetson-containers/data/models/huggingface/`.
+
+### Standard Text-to-Speech (CLI)
 
 Generate speech from text with customizable parameters:
 
 ```bash
-python3 /opt/spark-tts/inference.py \
+jetson-containers run $(autotag spark-tts) \
     --pitch "moderate" \
     --speed "moderate" \
     --gender "female" \
-    --text "The Quick brown fox jumps over the lazy dog"
+    --text "The quick brown fox jumps over the lazy dog"
 ```
 
 Available options:
-- `--pitch`: "very_low", "low", "moderate", "high", "very_high"
-- `--speed`: "very_slow", "slow", "moderate", "high", "very_high"
-- `--gender`: "female", "male"
 
-### Zero-shot Voice Cloning
+* `--pitch`: "very_low", "low", "moderate", "high", "very_high"
+* `--speed`: "very_low", "low", "moderate", "high", "very_high"
+* `--gender`: "female", "male"
 
-Clone a voice from a sample audio file:
+### Zero-shot Voice Cloning (CLI) 
+
+Clone a voice from a sample audio file (note: the audio file must be accessible inside the container, put it in the jetson-containers/data directory):
 
 ```bash
-python3 /opt/spark-tts/inference.py \
-    --prompt_speech_path "/data/audio/dusty.wav" \
-    --prompt_text "Hi, this is Dusty. Check, 1, 2, 3. What's the weather going to be tomorrow in Pittsburg? Today is Wendsday, tomorrow is Thursday. I would like to order a large peperroni pizza. Is it going to be cloudy tomorrow?" \
-    --speed "very_high" \
-    --text "Hi, this is Dusty. I have a quick announcement: SparkTTS is now running smoothly on Jetson! See you down the next rabbit hole!"
+jetson-containers run $(autotag spark-tts) \
+    --prompt_speech_path "/data/audio/sample.wav" \
+    --prompt_text "This is a sample prompt text that matches the audio sample..." \
+    --speed "moderate" \
+    --text "Hi, this is a test of voice cloning with Spark TTS!"
 ```
 
-For best results with voice cloning:
-1. Use a clear reference audio with minimal background noise
-2. Provide accurate transcription of the reference audio in `--prompt_text`
-3. The longer the reference audio (15-30 seconds), the better the voice cloning quality
+## Output Location
+
+When using `jetson-containers run`, the following directories are automatically mounted and accessible:
+
+* Audio output: `jetson-containers/data/audio/tts/spark-tts/`
+* Model cache: `jetson-containers/data/models/huggingface/`
+
+The generated audio files will be saved with timestamped filenames like `20250325230742.wav`.
+
 
 ## Model Source
 

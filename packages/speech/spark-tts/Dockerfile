@@ -31,4 +31,9 @@ RUN apt-get update && \
     
 COPY inference.py /opt/spark-tts
 
-ENV PYTHONPATH="/opt/spark-tts:${PYTHONPATH}"
+ENV PYTHONPATH="/opt/spark-tts:${PYTHONPATH}" \
+    TRANSFORMERS_CACHE=/data/models/huggingface \
+    HUGGINGFACE_HUB_CACHE=/data/models/huggingface \
+    HF_HOME=/data/models/huggingface
+
+ENTRYPOINT ["python3", "/opt/spark-tts/inference.py"]
