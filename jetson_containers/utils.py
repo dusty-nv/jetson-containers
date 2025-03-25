@@ -3,7 +3,7 @@ import os
 import grp
 import sys
 import pprint
-import requests
+import requests, time
 import functools
 
 from typing import Dict, Literal
@@ -17,26 +17,26 @@ def check_dependencies(install: bool = True):
         import yaml
         import wget
         import dockerhub_api
-        
+
         from packaging.version import Version
-        
+
         x = Version('1.2.3') # check that .major, .minor, .micro are available
         x = x.major          # (these are in packaging>=20.0)
-        
+
     except Exception as error:
         if not install:
             raise error
-            
+
         import os
         import sys
         import subprocess
-        
+
         requirements = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'requirements.txt')
         cmd = [sys.executable, '-m', 'pip', 'install', '-r', requirements]
-        
+
         print('-- Installing required packages:', cmd)
         subprocess.run(cmd, shell=False, check=True)
-        
+
 
 def query_yes_no(question: str, default: Literal["no", "yes"] = "no") -> bool:
     """
@@ -48,7 +48,7 @@ def query_yes_no(question: str, default: Literal["no", "yes"] = "no") -> bool:
             an answer is required of the user).
 
     The "answer" return value is True for "yes" or False for "no".
-    
+
     """
     valid = {"yes": True, "y": True, "ye": True, "no": False, "n": False}
     if default is None:
@@ -81,19 +81,19 @@ def split_container_name(name):
     repo = parts[0]
     namespace = ''
     tag = ''
-    
+
     if len(parts) == 2:
         tag = parts[1]
-        
+
     parts = repo.split('/')
-    
+
     if len(parts) == 2:
         namespace = parts[0]
         repo = parts[1]
-        
+
     return namespace, repo, tag
-    
-    
+
+
 def user_in_group(group) -> bool:
     """
     Returns true if the user running the current process is in the specified user group.
@@ -103,17 +103,17 @@ def user_in_group(group) -> bool:
         group = grp.getgrnam(group)
     except KeyError:
         return False
-        
+
     return (group.gr_gid in os.getgroups())
-  
+
 
 def is_root_user() -> bool:
     """
     Returns true if this is the root user running
     """
     return os.geteuid() == 0
-    
-    
+
+
 def needs_sudo(group: str = 'docker') -> bool:
     """
     Returns true if sudo is needed to use the docker engine (if user isn't in the docker group)
@@ -122,7 +122,7 @@ def needs_sudo(group: str = 'docker') -> bool:
         return False
     else:
         return not user_in_group(group)
-    
+
 
 def sudo_prefix(group: str = 'docker'):
     """
@@ -135,7 +135,7 @@ def sudo_prefix(group: str = 'docker'):
         return ""
 
 
-def handle_text_request(url: str) :
+def handle_text_request(url, retries=3, backoff=5):
     """
     Handles a request to fetch text data from the given URL.
 
@@ -143,46 +143,57 @@ def handle_text_request(url: str) :
         url (str): The URL from which to fetch text data.
 
     Returns:
-        str or None: The fetched text data, stripped of leading and trailing whitespace, 
+        str or None: The fetched text data, stripped of leading and trailing whitespace,
                      or None if an error occurs.
     """
-    try:
-        response = requests.get(url)
-        if response.status_code == 200:
+    for attempt in range(retries):
+        try:
+            print(f"[INFO] Fetching: {url} (attempt {attempt+1})")
+            response = requests.get(url, timeout=10)
+            response.raise_for_status()
             return response.text.strip()
-        else:
-            print("Failed to fetch version information. Status code:", response.status_code)
-            return None
-    except Exception as e:
-        print("An error occurred:", e)
-        return None
-    
+        except Exception as e:
+            print(f"[WARN] Failed to fetch {url}: {e}")
+            if attempt < retries - 1:
+                time.sleep(backoff)
+            else:
+                return None
 
-def handle_json_request(url: str, headers: Dict[str, str] = None):
+
+def handle_json_request(url: str, headers: Dict[str, str] = None, retries: int = 3, backoff: int = 3, timeout: int = 10):
     """
-    Handles a JSON request from the given URL with optional headers and returns the parsed JSON data.
+    Fetch JSON data from a URL with retry, timeout, and backoff handling.
 
     Args:
-        url (str): The URL from which to fetch the JSON data.
-        headers (dict, optional): Headers to include in the request. Defaults to None.
+        url (str): The URL to fetch.
+        headers (dict): Optional HTTP headers.
+        retries (int): Number of retry attempts.
+        backoff (int): Seconds to wait between retries.
+        timeout (int): Timeout in seconds for each request.
 
     Returns:
-        dict or None: The parsed JSON data as a dictionary, or None if an error occurs.
+        dict or None: Parsed JSON response, or None if all attempts fail.
     """
-    try:
-        response = requests.get(url, headers=headers)
-        response.raise_for_status()
-        return response.json()
-    except requests.HTTPError as e:
-        print(f"-- HTTP error occurred ({e})")
-        return None
-    except requests.RequestException as e:
-        print(f"-- Requests error occurred ({e})")
-        return None
-    except Exception as e:
-        print(f"-- Unexpected error occurred during request ({e})")
-        return None
-    
+    for attempt in range(1, retries + 1):
+        try:
+            print(f"[info] GET {url} (attempt {attempt})")
+            response = requests.get(url, headers=headers, timeout=timeout)
+            response.raise_for_status()
+            return response.json()
+        except requests.HTTPError as e:
+            print(f"[error] HTTP {e.response.status_code} while fetching {url}")
+        except requests.RequestException as e:
+            print(f"[warn] Request error on {url}: {e}")
+        except Exception as e:
+            print(f"[warn] Unexpected error on {url}: {e}")
+
+        if attempt < retries:
+            time.sleep(backoff)
+        else:
+            print(f"[fail] All attempts to fetch {url} failed.")
+
+    return None
+
 @functools.cache
 def github_api(url: str):
     """
@@ -197,7 +208,7 @@ def github_api(url: str):
     github_token = os.environ.get('GITHUB_TOKEN')
     headers = {'Authorization': f'token {github_token}'} if github_token else None
     request_url = f'https://api.github.com/{url}'
-    
+
     return handle_json_request(request_url, headers)
 
 
@@ -248,7 +259,7 @@ def get_json_value_from_url(url: str, notation: str = None):
     if notation and data is not None:
         keys = notation.split('.') if '.' in notation else [notation]
         current = data
-        
+
         try:
             for key in keys:
                 current = current[key]
@@ -256,10 +267,10 @@ def get_json_value_from_url(url: str, notation: str = None):
         except KeyError as e:
             print(f'ERROR: Failed to get the value for {notation}: {e}')
             return None
-        
+
     return data
-    
-    
+
+
 def log_debug(*args, **kwargs):
     """
     Debug print function that only prints when VERBOSE or DEBUG environment variable is set
@@ -267,8 +278,8 @@ def log_debug(*args, **kwargs):
     """
     if os.environ.get('VERBOSE', False) or os.environ.get('DEBUG', False):
         print(*args, **kwargs)
-        
-        
+
+
 def pprint_debug(*args, **kwargs):
     """
     Debug print function that only prints when VERBOSE or DEBUG environment variable is set
@@ -276,7 +287,7 @@ def pprint_debug(*args, **kwargs):
     """
     if os.environ.get('VERBOSE', False) or os.environ.get('DEBUG', False):
         pprint.pprint(*args, **kwargs)
-        
+
 
 def cprint(text, color):
     """
@@ -310,12 +321,12 @@ def colorized(text, color):
 
 def format_table(rows, header=None, footer=None, color='green', attrs=None, tablefmt='simple_grid', **kwargs):
     """
-    Print a table from a list[list] of rows/columns, or a 2-column dict 
+    Print a table from a list[list] of rows/columns, or a 2-column dict
     where the keys are column 1, and the values are column 2.
-    
+
     Header is a list of columns or rows that are inserted at the top.
     Footer is a list of columns or rows that are added to the end.
-    
+
     color names and style attributes are from termcolor library:
       https://github.com/termcolor/termcolor#text-properties
     """
@@ -327,24 +338,24 @@ def format_table(rows, header=None, footer=None, color='green', attrs=None, tabl
     def limit_str(text, max_len):
         if not isinstance(text, str):
             return text
-            
+
         if len(text) > max_len:
             return text[:max_len]
         else:
             return text
-            
+
     if isinstance(rows, dict):
-        rows = [[limit_str(key,35), limit_str(value, 75)] for key, value in rows.items() if not isinstance(value, dict)]    
+        rows = [[limit_str(key,35), limit_str(value, 75)] for key, value in rows.items() if not isinstance(value, dict)]
 
     if header:
         if not isinstance(header[0], list):
             header = [header]
         rows = header + rows
-        
+
     if footer:
         if not isinstance(footer[0], list):
             footer = [footer]
         rows = rows + footer
-        
+
     #cprint(tabulate(rows, tablefmt='simple_grid', numalign='center'), color, attrs=attrs)
     return tabulate(rows, tablefmt=tablefmt, **kwargs)
