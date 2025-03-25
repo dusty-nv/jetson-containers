@@ -1,7 +1,7 @@
 #---
 # name: spark-tts
 # group: audio
-# depends: [numpy, torch, torchaudio, transformers]
+# depends: [torchaudio, transformers]
 # requires: ['>=36.1.0', '>=cu126']
 # test: [test.py]
 # notes: 'Spark-TTS: An Efficient LLM-Based Text-to-Speech Model with Single-Stream Decoupled Speech Tokens – https://github.com/SparkAudio/Spark-TTS'
