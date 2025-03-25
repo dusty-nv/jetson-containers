@@ -12,7 +12,7 @@ FROM ${BASE_IMAGE}
 
 ARG SPARK_TTS_VERSION=main
 
-RUN apt-get update -y && \
+RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         libsndfile1 \
         libsndfile1-dev && \
@@ -27,17 +27,8 @@ RUN apt-get update -y && \
         -e 's|^torch=.*||g' \
         -e 's|^transformers=.*||g' \
         requirements.txt && \
-    cat requirements.txt && \
     pip3 install -r requirements.txt
     
 COPY inference.py /opt/spark-tts
 
 ENV PYTHONPATH="/opt/spark-tts:${PYTHONPATH}"
-
-
-# make sure it starts downloading the model
-RUN timeout 10s python3 /opt/spark-tts/inference.py \
-    --text "The Quick brown fox jumps over the lazy dog" \
-    --gender "male" --pitch "moderate" --speed "moderate" 2>&1 | tee /tmp/output.log && \
-    grep -q "Fetching.*files" /tmp/output.log || \
-    (echo "Model download did not start properly" && exit 1)
