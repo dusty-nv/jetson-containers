@@ -28,6 +28,6 @@ fi
 
 # Copy the contents from the overlay directory to the target directory
 echo "Copying files from $OVERLAY_DIR to $TARGET_DIR"
-cp -r "$OVERLAY_DIR"/* "$TARGET_DIR"
+cp -r "$OVERLAY_DIR"/. "$TARGET_DIR"
 
 echo "Files copied successfully!"
