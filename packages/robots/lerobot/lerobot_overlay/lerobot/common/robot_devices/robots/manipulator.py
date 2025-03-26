@@ -479,12 +479,12 @@ class ManipulatorRobot:
 
             # Used when record_data=True
             follower_goal_pos[name] = goal_pos
-    
+
             goal_pos_cpu = goal_pos.to('cpu')  # ensure on CPU
             goal_np = goal_pos_cpu.numpy()     # now safely get NumPy array
 
             goal_pos = np.array(goal_np, dtype=np.float32, copy=True)
-            
+
             self.follower_arms[name].write("Goal_Position", goal_pos)
             self.logs[f"write_follower_{name}_goal_pos_dt_s"] = time.perf_counter() - before_fwrite_t
 
@@ -498,7 +498,7 @@ class ManipulatorRobot:
         for name in self.follower_arms:
             before_fread_t = time.perf_counter()
             follower_pos[name] = self.follower_arms[name].read("Present_Position")
-            follower_pos[name] = torch.from_numpy(follower_pos[name])
+            follower_pos[name] = safe_tensor(follower_pos[name])
             self.logs[f"read_follower_{name}_pos_dt_s"] = time.perf_counter() - before_fread_t
 
         # Create state by concatenating follower current position
