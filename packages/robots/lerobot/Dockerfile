@@ -27,6 +27,7 @@ RUN git clone --branch=${LEROBOT_BRANCH} --depth=1 https://github.com/${LEROBOT_
     sed -i '/"diffusers[^"]*",/d' pyproject.toml && \
     sed -i '/"rerun-sdk[^"]*",/d' pyproject.toml && \
     sed -i '/"numba[^"]*",/d' pyproject.toml && \
+    sed -i '/dependencies = \[/a \ \ \ \ "numpy<2.0.0",' pyproject.toml && \
     cat -n pyproject.toml
 
 RUN cd /opt/lerobot && \
