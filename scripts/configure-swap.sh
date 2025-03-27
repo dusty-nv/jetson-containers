@@ -82,27 +82,27 @@ setup_swap_file() {
     local swap_state=$(check_swap_file)
     local size_bytes=$(convert_to_bytes "$swap_size")
     
-    case $swap_state in
-        "active")
-            echo "Swap file is already active"
-            return 0
-            ;;
-        "inactive")
-            echo "Enabling existing swap file..."
-            sudo swapon "$swap_file_path"
-            ;;
-        "missing")
-            echo "Creating swap file of size $swap_size..."
-            sudo dd if=/dev/zero of="$swap_file_path" bs=1M count=$((size_bytes/1024/1024))
-            sudo chmod 600 "$swap_file_path"
-            sudo mkswap "$swap_file_path"
-            sudo swapon "$swap_file_path"
-            # Add to fstab if not already present
-            if ! grep -q "$swap_file_path" /etc/fstab; then
-                echo "$swap_file_path none swap sw 0 0" | sudo tee -a /etc/fstab
-            fi
-            ;;
-    esac
+    # If swap file exists, disable and remove it first
+    if [ "$swap_state" != "missing" ]; then
+        echo "Disabling existing swap file..."
+        sudo swapoff "$swap_file_path" || true
+        echo "Removing existing swap file..."
+        sudo rm -f "$swap_file_path"
+        # Remove from fstab if present
+        sudo sed -i "\\#^${swap_file_path}#d" /etc/fstab
+    fi
+    
+    # Create new swap file directly at the final location
+    echo "Creating new swap file of size $swap_size..."
+    sudo dd if=/dev/zero of="$swap_file_path" bs=1M count=$((size_bytes/1024/1024))
+    sudo chmod 600 "$swap_file_path"
+    sudo mkswap "$swap_file_path"
+    sudo swapon "$swap_file_path"
+    
+    # Add to fstab if not already present
+    if ! grep -q "$swap_file_path" /etc/fstab; then
+        echo "$swap_file_path none swap sw 0 0" | sudo tee -a /etc/fstab
+    fi
     
     if swapon -s | grep -q "$swap_file_path"; then
         echo "✅ Swap file setup complete"
