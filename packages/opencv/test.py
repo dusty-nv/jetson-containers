@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-print('testing OpenCV...')
+print('#### testing OpenCV...')
 
 import cv2
 import sys
@@ -19,7 +19,7 @@ except Exception as ex:
 # download test image
 img_url = 'https://raw.githubusercontent.com/dusty-nv/jetson-containers/59f840abbb99f22914a7b2471da829b3dd56122e/test/data/test_0.jpg'
 img_path = "/data/images/jellyfish.jpg"
-handle_image_request(url=image_url,save_path=img_path)
+handle_image_request(url=img_path,save_path=img_path)
 
 # load image
 img_cpu = cv2.imread(img_path)
