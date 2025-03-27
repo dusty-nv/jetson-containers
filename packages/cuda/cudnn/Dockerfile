@@ -17,7 +17,7 @@ RUN ls /etc/apt/sources.list.d/ && \
     apt-cache search cudnn
 
 RUN echo "Downloading ${CUDNN_DEB}" && \
-    mkdir /tmp/cudnn && cd /tmp/cudnn && \
+    rm -rf /tmp/cudnn && mkdir /tmp/cudnn && cd /tmp/cudnn && \
     wget --quiet --show-progress --progress=bar:force:noscroll ${CUDNN_URL} && \
     dpkg -i *.deb && \
     cp /var/cudnn-local-tegra-repo-*/cudnn-local-tegra-*-keyring.gpg /usr/share/keyrings/ && \
