@@ -2,7 +2,7 @@
 # name: lerobot
 # group: robots
 # docs: docs.md
-# depends: [transformers, opencv:4.11.0, pyav, h5py, diffusers, jupyterlab:myst]
+# depends: [transformers, opencv:4.11.0, pyav, h5py, diffusers, jupyterlab:myst, numba]
 # requires: '>=36'
 # test: [test.sh, test.py]
 #---
@@ -25,6 +25,8 @@ RUN git clone --branch=${LEROBOT_BRANCH} --depth=1 https://github.com/${LEROBOT_
     sed -i '/"av[^"]*",/d' pyproject.toml && \
     sed -i '/"huggingface-hub[^"]*",/d' pyproject.toml && \
     sed -i '/"diffusers[^"]*",/d' pyproject.toml && \
+    sed -i '/"rerun-sdk[^"]*",/d' pyproject.toml && \
+    sed -i '/"numba[^"]*",/d' pyproject.toml && \
     cat -n pyproject.toml
 
 RUN cd /opt/lerobot && \
@@ -67,10 +69,10 @@ RUN echo "python lerobot/scripts/control_robot.py \
     --control.fps 30 \
     --control.repo_id ${HF_USER}/test_$(date +%Y%m%d_%H%M%S) \
     --control.tags '[\"tutorial\"]' \
-    --control.warmup-time-s 5 \
-    --control.episode-time-s 30 \
-    --control.reset-time-s 30 \
-    --control.num-episodes 10 \
+    --control.warmup_time_s 5 \
+    --control.episode_time_s 30 \
+    --control.reset_time_s 30 \
+    --control.num_episodes 10 \
     --control.push_to_hub=true" >> /root/.bash_history
 
 RUN echo -e "* soft core 0\n* hard core 0" >> /etc/security/limits.conf
