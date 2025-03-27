@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# to store models outside container, set NEMO_CACHE_DIR environment variable to a mounted directory 
+# to store models outside container, set NEMO_CACHE_DIR environment variable to a mounted directory
 
 print('testing nemo...')
 import nemo
@@ -41,15 +41,15 @@ print(QAModel.list_available_models())
 
 # load pre-trained model
 print(f"Loading pretrained model {args.model}")
-model = QAModel.from_pretrained(args.model)    
+model = QAModel.from_pretrained(args.model)
 print(model)
 
 # runn inferencing
 print(f"Testing inference on {args.samples} samples from {args.data}")
 
 all_preds, all_nbest = model.inference(args.data, num_samples=args.samples)
-        
+
 for question_id in all_preds:
     print(all_preds[question_id])
-            
+
 print('nemo OK\n')

@@ -4,6 +4,7 @@ print('testing OpenCV...')
 import cv2
 import sys
 import requests
+from jetson_containers import handle_image_request
 
 print('OpenCV version:', str(cv2.__version__))
 print(cv2.getBuildInformation())
@@ -15,12 +16,10 @@ except Exception as ex:
     print('OpenCV was not built with CUDA')
     raise ex
 
-# download test image    
+# download test image
 img_url = 'https://raw.githubusercontent.com/dusty-nv/jetson-containers/59f840abbb99f22914a7b2471da829b3dd56122e/test/data/test_0.jpg'
-img_path = '/tmp/test_0.jpg'
-
-request = requests.get(img_url, allow_redirects=True)
-open(img_path, 'wb').write(request.content)
+img_path = "/data/images/jellyfish.jpg"
+handle_image_request(url=image_url,save_path=img_path)
 
 # load image
 img_cpu = cv2.imread(img_path)
