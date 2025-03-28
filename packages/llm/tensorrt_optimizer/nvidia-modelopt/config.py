@@ -1,29 +1,29 @@
 from jetson_containers import CUDA_ARCHITECTURES
 
-def mamba(version, requires=None, default=False):
+def nvidiamodelopt(version, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
         pkg['requires'] = requires   
 
-    pkg['name'] = f'mamba:{version}'
+    pkg['name'] = f'nvidia_modelopt:{version}'
 
     pkg['build_args'] = {
         'CUDAARCHS': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
-        'MAMBA_VERSION': version,
+        'NVIDIA_MODELOPT_VERSION': version,
     }
 
     builder = pkg.copy()
 
-    builder['name'] = f'mamba:{version}-builder'
+    builder['name'] = f'nvidia_modelopt:{version}-builder'
     builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
 
     if default:
-        pkg['alias'] = 'mamba'
-        builder['alias'] = 'mamba:builder'
+        pkg['alias'] = 'nvidia_modelopt'
+        builder['alias'] = 'nvidia_modelopt:builder'
 
     return pkg, builder
 
 package = [
-    mamba('2.2.5', default=True)
+    nvidiamodelopt('0.25.0', default=True)
 ]
