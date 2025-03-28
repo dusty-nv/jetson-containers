@@ -26,16 +26,16 @@ MAX_JOBS=$(nproc) \
 pip3 wheel . -w /opt/3dgrut/wheels --verbose
 
 cd /tmp/
-wget https://us.download.nvidia.com/XFree86/aarch64/570.133.07/NVIDIA-Linux-aarch64-570.133.07.run
-chmod +x NVIDIA-Linux-aarch64-570.133.07.run
-sh NVIDIA-Linux-aarch64-570.133.07.run --extract-only
-cd NVIDIA-Linux-aarch64-570.133.07/
-cp -R ./libnvoptix.so.570.133.07 /usr/lib/aarch64-linux-gnu/
-cp -R ./libnvidia-rtcore.so.570.133.07 /usr/lib/aarch64-linux-gnu/
+wget https://us.download.nvidia.com/XFree86/aarch64/570.124.04/NVIDIA-Linux-aarch64-570.124.04.run
+chmod +x NVIDIA-Linux-aarch64-570.124.04.run
+sh NVIDIA-Linux-aarch64-570.124.04.run --extract-only
+cd NVIDIA-Linux-aarch64-570.124.04/
+cp -R ./libnvoptix.so.570.124.04 /usr/lib/aarch64-linux-gnu/
+cp -R ./libnvidia-rtcore.so.570.124.04 /usr/lib/aarch64-linux-gnu/
 cp -R ./nvoptix.bin /usr/lib/aarch64-linux-gnu/
-ln -sf /usr/lib/aarch64-linux-gnu/libnvoptix.so.570.133.07 /usr/lib/aarch64-linux-gnu/libnvoptix.so.1
+ln -sf /usr/lib/aarch64-linux-gnu/libnvoptix.so.570.124.04 /usr/lib/aarch64-linux-gnu/libnvoptix.so.1
 # Clean up
-rm -rf /tmp/NVIDIA-Linux-aarch64-570.133.07.run /tmp/NVIDIA-Linux-aarch64-570.133.07
+rm -rf /tmp/NVIDIA-Linux-aarch64-570.124.04.run /tmp/NVIDIA-Linux-aarch64-570.124.04
 # pip3 install /opt/3dgrut/wheels/threedgrut-*.whl
 
 cd /opt/3dgrut
