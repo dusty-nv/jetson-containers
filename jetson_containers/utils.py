@@ -3,6 +3,7 @@ import os
 import grp
 import sys
 import pprint
+import time
 import requests
 import functools
 
@@ -17,26 +18,26 @@ def check_dependencies(install: bool = True):
         import yaml
         import wget
         import dockerhub_api
-        
+
         from packaging.version import Version
-        
+
         x = Version('1.2.3') # check that .major, .minor, .micro are available
         x = x.major          # (these are in packaging>=20.0)
-        
+
     except Exception as error:
         if not install:
             raise error
-            
+
         import os
         import sys
         import subprocess
-        
+
         requirements = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'requirements.txt')
         cmd = [sys.executable, '-m', 'pip', 'install', '-r', requirements]
-        
+
         print('-- Installing required packages:', cmd)
         subprocess.run(cmd, shell=False, check=True)
-        
+
 
 def query_yes_no(question: str, default: Literal["no", "yes"] = "no") -> bool:
     """
@@ -48,7 +49,7 @@ def query_yes_no(question: str, default: Literal["no", "yes"] = "no") -> bool:
             an answer is required of the user).
 
     The "answer" return value is True for "yes" or False for "no".
-    
+
     """
     valid = {"yes": True, "y": True, "ye": True, "no": False, "n": False}
     if default is None:
@@ -81,19 +82,19 @@ def split_container_name(name):
     repo = parts[0]
     namespace = ''
     tag = ''
-    
+
     if len(parts) == 2:
         tag = parts[1]
-        
+
     parts = repo.split('/')
-    
+
     if len(parts) == 2:
         namespace = parts[0]
         repo = parts[1]
-        
+
     return namespace, repo, tag
-    
-    
+
+
 def user_in_group(group) -> bool:
     """
     Returns true if the user running the current process is in the specified user group.
@@ -103,17 +104,17 @@ def user_in_group(group) -> bool:
         group = grp.getgrnam(group)
     except KeyError:
         return False
-        
+
     return (group.gr_gid in os.getgroups())
-  
+
 
 def is_root_user() -> bool:
     """
     Returns true if this is the root user running
     """
     return os.geteuid() == 0
-    
-    
+
+
 def needs_sudo(group: str = 'docker') -> bool:
     """
     Returns true if sudo is needed to use the docker engine (if user isn't in the docker group)
@@ -122,7 +123,7 @@ def needs_sudo(group: str = 'docker') -> bool:
         return False
     else:
         return not user_in_group(group)
-    
+
 
 def sudo_prefix(group: str = 'docker'):
     """
@@ -143,7 +144,7 @@ def handle_text_request(url: str) :
         url (str): The URL from which to fetch text data.
 
     Returns:
-        str or None: The fetched text data, stripped of leading and trailing whitespace, 
+        str or None: The fetched text data, stripped of leading and trailing whitespace,
                      or None if an error occurs.
     """
     try:
@@ -156,7 +157,37 @@ def handle_text_request(url: str) :
     except Exception as e:
         print("An error occurred:", e)
         return None
-    
+
+
+def handle_text_request_or_fail(url, retries=3, backoff=5, timeout=10):
+    """
+    Fetch text content from a URL, retrying on failure, and raise RuntimeError if it fails.
+
+    Args:
+        url (str): The URL to fetch text from.
+        retries (int): Number of retry attempts.
+        backoff (int): Time (in seconds) to wait between retries.
+        timeout (int): Timeout for the request.
+
+    Returns:
+        str: The fetched text content.
+
+    Raises:
+        RuntimeError: If all attempts to fetch the text fail.
+    """
+    for attempt in range(1, retries + 1):
+        try:
+            print(f"[INFO] Fetching text from: {url} (attempt {attempt})")
+            response = requests.get(url, timeout=timeout)
+            response.raise_for_status()
+            return response.text.strip()
+        except Exception as e:
+            print(f"[WARN] Attempt {attempt} failed: {e}")
+            if attempt < retries:
+                time.sleep(backoff)
+            else:
+                raise RuntimeError(f"Failed to fetch text from {url} after {retries} attempts.") from e
+
 
 def handle_json_request(url: str, headers: Dict[str, str] = None):
     """
@@ -182,7 +213,75 @@ def handle_json_request(url: str, headers: Dict[str, str] = None):
     except Exception as e:
         print(f"-- Unexpected error occurred during request ({e})")
         return None
-    
+
+
+def handle_image_request(url, save_path=None, retries=3, backoff=5, timeout=10):
+    """
+    Downloads an image from a URL with retries and optional saving.
+
+    Args:
+        url (str): The image URL.
+        save_path (str, optional): If provided, saves the image to this path.
+        retries (int): Number of retry attempts.
+        backoff (int): Seconds to wait between retries.
+        timeout (int): Timeout in seconds for each request.
+
+    Returns:
+        bytes or None: Image content in bytes if save_path is not provided.
+    """
+    for attempt in range(1, retries + 1):
+        try:
+            print(f"[INFO] Downloading image: {url} (attempt {attempt})")
+            response = requests.get(url, timeout=timeout)
+            response.raise_for_status()
+
+            if save_path:
+                os.makedirs(os.path.dirname(save_path), exist_ok=True)
+                with open(save_path, 'wb') as f:
+                    f.write(response.content)
+                print(f"[INFO] Saved image to {save_path}")
+                return save_path
+            else:
+                return response.content
+
+        except requests.RequestException as e:
+            print(f"[WARN] Failed to fetch image ({url}): {e}")
+            if attempt < retries:
+                time.sleep(backoff)
+            else:
+                print(f"[FAIL] All attempts failed for {url}")
+                return None
+
+
+def handle_binary_request_or_fail(url: str, retries=3, backoff=5, timeout=10) -> bytes:
+    """
+    Fetch binary content from a URL with retries and backoff.
+
+    Args:
+        url (str): The download URL.
+        retries (int): Max retry attempts.
+        backoff (int): Seconds between retries.
+        timeout (int): Per-request timeout.
+
+    Returns:
+        bytes: Raw binary content.
+
+    Raises:
+        RuntimeError: If all attempts fail to fetch content.
+    """
+    for attempt in range(1, retries + 1):
+        try:
+            print(f"[INFO] Downloading: {url} (attempt {attempt})")
+            response = requests.get(url, timeout=timeout)
+            response.raise_for_status()
+            return response.content
+        except Exception as e:
+            print(f"[WARN] Failed attempt {attempt} to fetch binary from {url}: {e}")
+            if attempt < retries:
+                time.sleep(backoff)
+    raise RuntimeError(f"[FAIL] Could not download binary content from {url} after {retries} attempts.")
+
+
 @functools.cache
 def github_api(url: str):
     """
@@ -197,7 +296,7 @@ def github_api(url: str):
     github_token = os.environ.get('GITHUB_TOKEN')
     headers = {'Authorization': f'token {github_token}'} if github_token else None
     request_url = f'https://api.github.com/{url}'
-    
+
     return handle_json_request(request_url, headers)
 
 
@@ -248,7 +347,7 @@ def get_json_value_from_url(url: str, notation: str = None):
     if notation and data is not None:
         keys = notation.split('.') if '.' in notation else [notation]
         current = data
-        
+
         try:
             for key in keys:
                 current = current[key]
@@ -256,10 +355,10 @@ def get_json_value_from_url(url: str, notation: str = None):
         except KeyError as e:
             print(f'ERROR: Failed to get the value for {notation}: {e}')
             return None
-        
+
     return data
-    
-    
+
+
 def log_debug(*args, **kwargs):
     """
     Debug print function that only prints when VERBOSE or DEBUG environment variable is set
@@ -267,8 +366,8 @@ def log_debug(*args, **kwargs):
     """
     if os.environ.get('VERBOSE', False) or os.environ.get('DEBUG', False):
         print(*args, **kwargs)
-        
-        
+
+
 def pprint_debug(*args, **kwargs):
     """
     Debug print function that only prints when VERBOSE or DEBUG environment variable is set
@@ -276,7 +375,7 @@ def pprint_debug(*args, **kwargs):
     """
     if os.environ.get('VERBOSE', False) or os.environ.get('DEBUG', False):
         pprint.pprint(*args, **kwargs)
-        
+
 
 def cprint(text, color):
     """
@@ -310,12 +409,12 @@ def colorized(text, color):
 
 def format_table(rows, header=None, footer=None, color='green', attrs=None, tablefmt='simple_grid', **kwargs):
     """
-    Print a table from a list[list] of rows/columns, or a 2-column dict 
+    Print a table from a list[list] of rows/columns, or a 2-column dict
     where the keys are column 1, and the values are column 2.
-    
+
     Header is a list of columns or rows that are inserted at the top.
     Footer is a list of columns or rows that are added to the end.
-    
+
     color names and style attributes are from termcolor library:
       https://github.com/termcolor/termcolor#text-properties
     """
@@ -327,24 +426,24 @@ def format_table(rows, header=None, footer=None, color='green', attrs=None, tabl
     def limit_str(text, max_len):
         if not isinstance(text, str):
             return text
-            
+
         if len(text) > max_len:
             return text[:max_len]
         else:
             return text
-            
+
     if isinstance(rows, dict):
-        rows = [[limit_str(key,35), limit_str(value, 75)] for key, value in rows.items() if not isinstance(value, dict)]    
+        rows = [[limit_str(key,35), limit_str(value, 75)] for key, value in rows.items() if not isinstance(value, dict)]
 
     if header:
         if not isinstance(header[0], list):
             header = [header]
         rows = header + rows
-        
+
     if footer:
         if not isinstance(footer[0], list):
             footer = [footer]
         rows = rows + footer
-        
+
     #cprint(tabulate(rows, tablefmt='simple_grid', numalign='center'), color, attrs=attrs)
     return tabulate(rows, tablefmt=tablefmt, **kwargs)
