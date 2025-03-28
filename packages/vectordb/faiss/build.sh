@@ -10,9 +10,9 @@ apt purge -y python3.9 libpython3.9* || echo "python3.9 not found, skipping remo
 ls -ll /usr/bin/python*
     
 # clone sources
-git clone https://github.com/facebookresearch/faiss /opt/faiss && \
+git clone --branch=v${FAISS_BRANCH} --depth=1 https://github.com/facebookresearch/faiss /opt/faiss || \
+git clone --depth=1 https://github.com/facebookresearch/faiss /opt/faiss
 cd /opt/faiss
-git checkout ${FAISS_BRANCH}
 
 # build C++
 install_dir="/opt/faiss/install"

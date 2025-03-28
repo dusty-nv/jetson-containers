@@ -3,8 +3,8 @@ set -ex
 
 # Clone the repository if it doesn't exist
 
-git clone --branch=v${KAOLIN_VERSION} --depth=1 --recursive https://github.com/johnnynunez/kaolin /opt/kaolin || \
-git clone --depth=1 --recursive https://github.com/johnnynunez/kaolin /opt/kaolin
+git clone --branch=v${KAOLIN_VERSION} --depth=1 --recursive https://github.com/NVIDIAGameWorks/kaolin /opt/kaolin || \
+git clone --depth=1 --recursive https://github.com/NVIDIAGameWorks/kaolin /opt/kaolin
 
 # Navigate to the directory containing PyMeshLab's setup.py
 cd /opt/kaolin

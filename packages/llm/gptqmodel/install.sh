@@ -8,5 +8,5 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install auto-gptq==${AUTOGPTQ_VERSION}
+pip3 install gptqmodel==${AUTOGPTQ_VERSION}
 

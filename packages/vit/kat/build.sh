@@ -13,8 +13,8 @@ cd /opt/rational_kat_cu
 
 pip3 wheel --no-build-isolation --wheel-dir=/opt/rational_kat_cu/wheels .
 pip3 install /opt/rational_kat_cu/wheels/*.whl
-pip install -e . --no-cache-dir
-pip install timm==1.0.3
+pip3 install -e . --no-cache-dir
+pip3 install timm
 
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/rational_kat_cu/wheels/*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
