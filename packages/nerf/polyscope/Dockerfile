@@ -14,7 +14,7 @@ ARG POLYSCOPE_VERSION \
     FORCE_BUILD=off
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \ 
+    apt-get install -y --no-install-recommends \
     xorg-dev libglu1-mesa-dev freeglut3-dev mesa-common-dev libglfw3 xvfb \
     && rm -rf /var/lib/apt/lists/*
 
