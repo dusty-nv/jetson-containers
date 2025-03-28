@@ -25,7 +25,7 @@ ARG TRT_LLM_VERSION \
     TMP_DIR="/tmp/TensorRT-LLM/"
 
 COPY ${TRT_LLM_PATCH} ${GIT_PATCHES}
-COPY sources/ ${TMP_DIR}
+COPY sources ${TMP_DIR}
 COPY build.sh install.sh /tmp/setup/
 
 RUN /tmp/setup/install.sh || /tmp/setup/build.sh #|| echo "BUILD FAILED!"
@@ -35,6 +35,11 @@ RUN pip3 install --upgrade transformers && \
 
 COPY llama.sh ${SOURCE_DIR}/
 
+# check python version and save variable PYTHON_VERSION
+RUN PYTHON_TAG=$(python3 -c "import sys; print('{}.{}'.format(sys.version_info.major, sys.version_info.minor))") \
+    && echo "PYTHON_TAG=${PYTHON_TAG}"
+ARG PYTHON_VERSION=${PYTHON_TAG}
+
 # name '_device_get_memory_info_fn' is not defined
-COPY patches/profiler.py /usr/local/lib/python3.10/dist-packages/tensorrt_llm/profiler.py
-COPY patches/convert_utils.py /usr/local/lib/python3.10/dist-packages/tensorrt_llm/models/convert_utils.py
+COPY patches/profiler.py /usr/local/lib/python${PYTHON_VERSION}/dist-packages/tensorrt_llm/profiler.py
+COPY patches/convert_utils.py /usr/local/lib/python${PYTHON_VERSION}/dist-packages/tensorrt_llm/models/convert_utils.py
