@@ -2,25 +2,26 @@ import requests
 import yaml
 
 from jetson_containers import github_latest_tag
+from jetson_containers import handle_text_request
 
 
 def latest_deps_versions(branch_name):
     url = f"https://raw.githubusercontent.com/home-assistant/docker-base/{branch_name}/ubuntu/build.yaml"
-    response = requests.get(url)
-    
-    if response.status_code != 200:
-        print(f"Failed to fetch the file. Status code: {response.status_code} for URL: {url}")
-        return None
+    raw_text = handle_text_request(url)
+
+    if raw_text is None:
+        return None, None, None
 
     try:
-        yaml_content = yaml.safe_load(response.text)
-        bashio_version = yaml_content.get('args', {}).get('BASHIO_VERSION', None)
-        tempio_version = yaml_content.get('args', {}).get('TEMPIO_VERSION', None)
-        s6_overlay_version = yaml_content.get('args', {}).get('S6_OVERLAY_VERSION', None)
+        yaml_content = yaml.safe_load(raw_text)
+        args = yaml_content.get('args', {})
+        bashio_version = args.get('BASHIO_VERSION')
+        tempio_version = args.get('TEMPIO_VERSION')
+        s6_overlay_version = args.get('S6_OVERLAY_VERSION')
         return bashio_version, tempio_version, s6_overlay_version
     except yaml.YAMLError as e:
-        print(f"Failed to parse YAML content: {e}")
-        return None
+        print(f"[WARN] Failed to parse YAML from {url}: {e}")
+        return None, None, None
 
 def create_package(version, default=False) -> list:
     pkg = package.copy()
