@@ -25,8 +25,5 @@ def pycolmap(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    pycolmap('3.8'),
-    pycolmap('3.10'),
-    pycolmap('3.11.1'),
     pycolmap('3.12', default=True)
 ]

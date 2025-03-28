@@ -2,7 +2,10 @@
 from jetson_containers import PYTHON_VERSION, JETPACK_VERSION
 from packaging.version import Version
 
-if JETPACK_VERSION >= Version('6.1'):
+if JETPACK_VERSION >= Version('6.2'):
+    TORCH_TRT_VERSION = 'v2.6.0' #'v2.6.0'
+    JETPACK_MINOR_VER = JETPACK_VERSION.minor
+elif JETPACK_VERSION < Version('6.2'):
     TORCH_TRT_VERSION = 'lluo/jp6.1' #'v2.4.0'
     JETPACK_MINOR_VER = JETPACK_VERSION.minor
 elif JETPACK_VERSION.major >= 5:

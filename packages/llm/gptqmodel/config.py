@@ -1,15 +1,16 @@
 
-def AutoGPTQ(version, branch=None, default=False):
+def gptqmodel(version, branch=None, default=False):
     pkg = package.copy()
 
-    pkg['name'] = f'auto_gptq:{version}'
+    pkg['name'] = f'gptqmodel:{version}'
 
     if not branch:
         branch = version
         
     pkg['build_args'] = {
-        'AUTOGPTQ_VERSION': version,
-        'AUTOGPTQ_BRANCH': branch,
+        ''
+        'GPTQMODEL_VERSION': version,
+        'GPTQMODEL_BRANCH': branch,
     }
     
     builder = pkg.copy()
@@ -25,6 +26,5 @@ def AutoGPTQ(version, branch=None, default=False):
 
 
 package = [
-    AutoGPTQ('0.7.1', default=False),
-    AutoGPTQ('0.8.0', default=True),
+    gptqmodel('2.2.0', default=True),
 ]

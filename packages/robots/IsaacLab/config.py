@@ -23,5 +23,5 @@ def isaaclab(version, branch=None, default=False):
     return pkg, builder
 
 package = [
-    isaaclab('2.0.1', default=True),
+    isaaclab('2.0.3', default=True),
 ]

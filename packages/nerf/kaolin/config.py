@@ -23,5 +23,5 @@ def kaolin(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    kaolin('1.0.0', default=True)
+    kaolin('0.18.0', default=True)
 ]

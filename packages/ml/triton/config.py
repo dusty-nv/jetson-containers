@@ -25,8 +25,8 @@ def triton(version, branch=None, requires=None, default=False):
     return pkg, builder
 
 package = [
-    triton('3.3.0', branch='main'),
-    triton('3.2.0', branch='release/3.2.x', default=True),
+    triton('3.3.0', branch='release/3.3.x', default=True),
+    triton('3.2.0', branch='release/3.2.x'),
     triton('3.1.0', branch='release/3.1.x'),
     triton('3.0.0', branch='release/3.0.x'),
 ]

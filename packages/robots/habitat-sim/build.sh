@@ -3,7 +3,8 @@ set -ex
 
 echo "Building habitat-sim ${HABITAT_SIM_VERSION} (branch=${HABITAT_SIM_BRANCH})"
 
-git clone --branch=${HABITAT_SIM_BRANCH} --depth=1 --recursive https://github.com/facebookresearch/habitat-sim /opt/habitat-sim
+git clone --branch=${HABITAT_SIM_BRANCH} --depth=1 --recursive https://github.com/facebookresearch/habitat-sim /opt/habitat-sim && \
+git clone --depth=1 --recursive https://github.com/facebookresearch/habitat-sim /opt/habitat-sim
 
 cd /opt/habitat-sim
 

@@ -10,7 +10,7 @@ def kat(version, requires=None, default=False):
 
     pkg['build_args'] = {
         'CUDAARCHS': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
-        'kat_VERSION': version,
+        'KAT_VERSION': version,
     }
 
     #builder = pkg.copy()

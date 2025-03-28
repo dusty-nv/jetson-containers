@@ -7,7 +7,7 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG AIM_VERSION=3.27.0
+ARG AIM_VERSION=3.28.0
 
 RUN pip3 install Cython==3.0.10
 RUN pip3 install aim
