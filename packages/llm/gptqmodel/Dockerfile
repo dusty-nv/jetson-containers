@@ -11,12 +11,12 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG AUTOGPTQ_VERSION \
-    AUTOGPTQ_BRANCH \
+ARG GPTQMODEL_VERSION \
+    GPTQMODEL_BRANCH \
     FORCE_BUILD="off"
 
-COPY build.sh /tmp/build_auto_gptq.sh
+COPY build.sh /tmp/build.sh
 
 RUN pip3 install gekko && \
-    pip3 install auto-gptq==${AUTOGPTQ_VERSION} || \
-    /tmp/build_auto_gptq.sh
+    pip3 install auto-gptq==${GPTQMODEL_VERSION} || \
+    /tmp/build.sh

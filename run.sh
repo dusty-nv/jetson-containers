@@ -311,7 +311,7 @@ if [ $ARCH = "aarch64" ]; then
     # https://stackoverflow.com/a/19226038
 	( set -x ;
 
-	$SUDO docker run --runtime nvidia -it --rm --network host \
+	$SUDO docker run --runtime nvidia --env NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics -it --rm --network host \
 		--shm-size=8g \
 		--volume /tmp/argus_socket:/tmp/argus_socket \
 		--volume /etc/enctune.conf:/etc/enctune.conf \

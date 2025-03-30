@@ -147,5 +147,18 @@ RUN echo "export LD_LIBRARY_PATH=/opt/genesis/genesis/ext/ParticleMesher/Particl
     pip3 install --force-reinstall "numpy<2.1"
 
 RUN ldconfig
+
+RUN cd /tmp && \
+    wget https://us.download.nvidia.com/XFree86/aarch64/570.124.04/NVIDIA-Linux-aarch64-570.124.04.run && \
+    chmod +x NVIDIA-Linux-aarch64-570.124.04.run && \
+    sh NVIDIA-Linux-aarch64-570.124.04.run --extract-only && \
+    cd NVIDIA-Linux-aarch64-570.124.04 && \
+    cp -R ./libnvoptix.so.570.124.04 /usr/lib/aarch64-linux-gnu/ && \
+    cp -R ./libnvidia-rtcore.so.570.124.04 /usr/lib/aarch64-linux-gnu/ && \
+    cp -R ./nvoptix.bin /usr/lib/aarch64-linux-gnu/ && \
+    ln -sf /usr/lib/aarch64-linux-gnu/libnvoptix.so.570.124.04 /usr/lib/aarch64-linux-gnu/libnvoptix.so.1 && \
+    # Clean up
+    rm -rf /tmp/NVIDIA-Linux-aarch64-570.124.04.run /tmp/NVIDIA-Linux-aarch64-570.124.04
+
 WORKDIR /opt/genesis/
 CMD ["/bin/bash"]

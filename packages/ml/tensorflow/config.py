@@ -131,4 +131,10 @@ package = [
         requires='>=36',
         default=(L4T_VERSION > Version('36.3')),
     ),
+*tensorflow(
+        version='2.20.0',
+        tensorflow_version='tf2',
+        requires='>=36',
+        default=(L4T_VERSION > Version('36.3')),
+    ),
 ]

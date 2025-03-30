@@ -29,6 +29,6 @@ def exllama(version, branch=None, requires=None, default=False):
 package = [
     exllama('0.0.14', requires='==35.*', default=True),
     exllama('0.0.15', requires='>=36', default=False),
-    exllama('0.2.7', requires='>=36', default=True),
+    exllama('0.2.8', requires='>=36', default=True),
     #exllama('0.0.16', requires=['>=36', '>=cu124']),
 ]
