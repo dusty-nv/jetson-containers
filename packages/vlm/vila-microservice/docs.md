@@ -152,9 +152,9 @@ Once done, you will see an output like the following.
 
 | Method | API Endpoint | Description |
 | ------ | ------------ | ----------- |
-| `GET`  | `/api/v1/models` | return the VLM name in list |
-| `POST` | `/api/v1/chat/completion` | Chat with the VLM using OpenAI style chat completions. Supports referencing added streams in the prompts. |
-| `POST` | `/api/v1/alerts`          | Set an alert prompt the VLM will evaluate continuously on the input live stream. Can be used to trigger notifications when alert states are true. |
+| `GET`  | `/v1/models` | return the VLM name in list |
+| `POST` | `/v1/chat/completion` | Chat with the VLM using OpenAI style chat completions. Supports referencing added streams in the prompts. |
+| `POST` | `/v1/alerts`          | Set an alert prompt the VLM will evaluate continuously on the input live stream. Can be used to trigger notifications when alert states are true. |
 
 You can check the documentation of (the original) VLM Service of Jetson Platform Services as a reference.
 https://docs.nvidia.com/jetson/jps/inference-services/vlm.html#overview
@@ -170,7 +170,7 @@ You can specify the local v4l2 device path after `v4l2://` and put it in the `im
 The v4l2 device is registered as the input video stream and VLM processes the latest frame of the video stream.
 
 ```bash
-curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
+curl --location --request POST 'http://0.0.0.0:9000/v1/chat/completions' \
 --header 'Content-Type: application/json' \
 --data '{
   "messages": [
@@ -226,7 +226,7 @@ You can also embed the image and pass that through API.
 <details>
   <summary>(Click to expand) curl command with base64 encoded image</summary>
 <pre><code>
-curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
+curl --location --request POST 'http://0.0.0.0:9000/v1/chat/completions' \
 --header 'Content-Type: application/json' \
 --data '{
   "messages": [
@@ -259,7 +259,7 @@ curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
 <summary>(Click to expand) More prompt examples</summary>
 <h4>OCR</h4>
 <pre><code>
-curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
+curl --location --request POST 'http://0.0.0.0:9000/v1/chat/completions' \
 --header 'Content-Type: application/json' \
 --data '{
   "messages": [
@@ -290,7 +290,7 @@ curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
 
 <h4>Counting</h4>
 <pre><code>
-curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
+curl --location --request POST 'http://0.0.0.0:9000/v1/chat/completions' \
 --header 'Content-Type: application/json' \
 --data '{
   "messages": [
@@ -322,7 +322,7 @@ curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
 
 <h4>Base64-encoded PNG</h4>
 <pre><code>
-curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
+curl --location --request POST 'http://0.0.0.0:9000/v1/chat/completions' \
 --header 'Content-Type: application/json' \
 --data '{
   "messages": [
@@ -352,7 +352,7 @@ curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
 
 <h4>Online image</h4>
 <pre><code>
-curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
+curl --location --request POST 'http://0.0.0.0:9000/v1/chat/completions' \
 --header 'Content-Type: application/json' \
 --data '{
   "messages": [{
@@ -373,7 +373,7 @@ curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
 
 <h4>CSI camera</h4>
 <pre><code>
-curl --location --request POST 'http://0.0.0.0:5010/api/v1/chat/completions' \
+curl --location --request POST 'http://0.0.0.0:9000/v1/chat/completions' \
 --header 'Content-Type: application/json' \
 --data '{
   "messages": [
