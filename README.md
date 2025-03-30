@@ -3,6 +3,8 @@
 ![image](https://github.com/user-attachments/assets/2decd21c-5a23-4212-aa98-6499db714fd7)
 made some minor changes. namely,  installing using buildx instead.
 
+![image](https://github.com/user-attachments/assets/1c0748ad-09bf-40a1-9ced-5097633d20ed)
+
 
 # Machine Learning Containers for Jetson and JetPack
 
