@@ -104,7 +104,7 @@ The container includes:
 • Media libraries (OpenCV, FFmpeg, GStreamer)
 • CUDA extensions and optimization tools
 
-Press OK to configure your build options." 30 80
+Press OK to configure your build options." 30 100
 
 # Main configuration menu
 while true; do
