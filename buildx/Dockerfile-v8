@@ -1,32 +1,6 @@
-# ========================================================================
 # NVIDIA Jetson ML Development Container
-# ========================================================================
-# This Dockerfile creates a comprehensive machine learning container for 
-# NVIDIA Jetson platforms with JetPack-L4T.
-#
-# COMPONENTS STATUS:
-# ✅ Core System Packages - INSTALLED
-# ✅ Python Development Tools - INSTALLED
-# ✅ PyTorch & TorchVision - INSTALLED 
-# ✅ TensorFlow - INSTALLED
-# ✅ JAX Ecosystem - INSTALLED
-# ✅ Hugging Face Libraries - INSTALLED
-# ✅ ONNX & Runtime - INSTALLED
-# ✅ Triton Compiler - INSTALLED
-# ✅ Optimization Libraries - INSTALLED
-# ✅ Computer Vision (OpenCV) - INSTALLED
-# ✅ GStreamer Integration - INSTALLED
-# ✅ FFmpeg - INSTALLED
-# ❌ DeepSpeed - FAILED (CUDA incompatibility)
-# ⚠️ CuPy - NOT YET TESTED
-#
-# LAST BUILD: 2025-03-30 20:30
-# MAINTAINER: kairin
-# 
-# This container provides a ready-to-use environment for machine learning
-# development on NVIDIA Jetson platforms with optimized libraries
-# for edge AI deployment.
-# ========================================================================
+# This Dockerfile creates a comprehensive machine learning container for NVIDIA Jetson platforms.
+# It includes various ML frameworks, libraries, and utilities optimized for the Jetson platform.
 
 # Build args for the base image
 ARG BASE_IMAGE
@@ -175,15 +149,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # ================================
 # == Distributed Training       ==
 # ================================
-# Note: DeepSpeed is currently problematic on ARM64/Jetson
-# Try with --no-deps if needed or comment out if causing build failures
-RUN pip3 install deepspeed || echo "DeepSpeed installation failed - skipping"
+# Install DeepSpeed for distributed training
+RUN pip3 install deepspeed
 
 # ================================
 # == CUDA Extensions            ==
 # ================================
 # Install CuPy (CUDA-accelerated NumPy alternative)
-RUN pip3 install cupy || echo "CuPy installation failed - skipping"
+RUN pip3 install cupy
 
 # ================================
 # == Workspace Configuration    ==
@@ -202,7 +175,7 @@ ENV NVIDIA_VISIBLE_DEVICES=all \
 # == Build Completion Marker    ==
 # ================================
 # Indicate successful build with timestamp
-RUN echo "Build completed successfully on 2025-03-30 20:30:15" && \
+RUN echo "Build completed successfully on 2025-03-30 11:40:54" && \
     echo "Full AI Stack image ready for use"
 
 # ================================
