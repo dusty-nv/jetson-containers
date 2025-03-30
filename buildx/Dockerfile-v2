@@ -1,0 +1,312 @@
+#---
+# name: build-essential
+# group: build
+# notes: installs compilers, build tools & configures the default locale
+#---
+ARG BASE_IMAGE=kairin/001:nvcr.io-nvidia-pytorch-25.02-py3-igpu
+FROM ${BASE_IMAGE}
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    LANGUAGE=en_US:en \
+    LANG=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8
+
+# Ensure aptitude is installed first
+RUN set -ex \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+        locales \
+        locales-all \
+        tzdata \
+        aptitude \
+    && locale-gen en_US.UTF-8 \
+    && update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 \
+    && locale
+
+# Use aptitude to install the required packages
+RUN set -ex \
+    && aptitude update \
+    && aptitude install -y -o APT::Install-Recommends=false \
+        build-essential \
+        software-properties-common \
+        apt-transport-https \
+        ca-certificates \
+        lsb-release \
+        pkg-config \
+        gnupg \
+        git \
+        git-lfs \
+        gdb \
+        wget \
+        wget2 \
+        curl \
+        nano \
+        zip \
+        unzip \
+        time \
+        sshpass \
+        openssh-client \
+    && aptitude clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && gcc --version \
+    && g++ --version
+
+#---
+# name: bazel
+# group: build
+# depends: [build-essential]
+# test: test.sh
+#---
+
+# https://github.com/bazelbuild/bazelisk
+RUN BAZELISK_RELEASE=$(wget -qO- https://api.github.com/repos/bazelbuild/bazelisk/releases/latest | grep -Po '"tag_name": "\K.*?(?=")') \
+    && BAZELISK_URL="https://github.com/bazelbuild/bazelisk/releases/download/$BAZELISK_RELEASE/bazelisk-linux-arm64" \
+    && echo "BAZELISK_RELEASE=$BAZELISK_RELEASE" && echo "BAZELISK_URL=$BAZELISK_URL" \
+    && wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate $BAZELISK_URL -O /usr/local/bin/bazel \
+    && chmod +x /usr/local/bin/bazel
+
+# have bazelisk download the latest bazel
+RUN bazel --version
+
+#---
+# name: cmake:apt
+# group: build
+# depends: build-essential
+# notes: upgrade cmake with apt
+#---
+RUN set -ex \
+    && wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null \
+    && echo "deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/kitware.list >/dev/null \
+    && aptitude update \
+    && rm /usr/share/keyrings/kitware-archive-keyring.gpg \
+    && aptitude install -y -o APT::Install-Recommends=false kitware-archive-keyring \
+    && aptitude install -y -o APT::Install-Recommends=false cmake \
+    && rm -rf /var/lib/apt/lists/* \
+    && aptitude clean \
+    && cmake --version
+
+#---
+# name: cmake:pip
+# alias: cmake
+# group: build
+# depends: [build-essential, python]
+# notes: upgrade `cmake` with `pip`
+#---
+RUN set -ex \
+    && pip3 install --force-reinstall cmake \
+    && cmake --version \
+    && which cmake
+
+#---
+# name: ninja
+# group: build
+# depends: [python]
+# test: [test.sh]
+#---
+RUN set -ex \
+    && mkdir -p /usr/share/keyrings \
+    && wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null \
+    && echo "deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" > /etc/apt/sources.list.d/kitware.list \
+    && aptitude update \
+    && aptitude install -y -o APT::Install-Recommends=false apt-transport-https \
+    && aptitude install -y -o APT::Install-Recommends=false unzip wget curl jq \
+    && LATEST_VERSION=$(curl -s https://api.github.com/repos/ninja-build/ninja/releases/latest | jq -r .tag_name) \
+    && wget -q "https://github.com/ninja-build/ninja/releases/download/${LATEST_VERSION}/ninja-linux-aarch64.zip" \
+    && unzip -o ninja-linux-aarch64.zip -d /usr/bin/ \
+    && rm ninja-linux-aarch64.zip \
+    && chmod +x /usr/bin/ninja \
+    && aptitude remove -y jq \
+    && aptitude clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# NEW ADDITIONS BELOW - Added by kairinmark on 2025-03-26 22:49:47
+# -------------------------------------------------------------
+
+# NEW ADDITION: ffmpeg for ComfyUI video processing
+#---
+# name: ffmpeg
+# group: media
+# notes: essential for video processing in ComfyUI
+#---
+RUN set -ex \
+    && aptitude update \
+    && aptitude install -y -o APT::Install-Recommends=false \
+        ffmpeg \
+        libavcodec-dev \
+        libavfilter-dev \
+        libavformat-dev \
+        libavutil-dev \
+        libavdevice-dev \
+    && aptitude clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && ffmpeg -version \
+    && ffmpeg -encoders | head -n 20 \
+    && ffmpeg -decoders | head -n 20
+
+# NEW ADDITION: GStreamer for advanced media processing
+#---
+# name: gstreamer
+# group: media
+# depends: opencv
+# notes: adds advanced streaming capabilities
+#---
+RUN set -ex \
+    && aptitude update \
+    && aptitude install -y -o APT::Install-Recommends=false \
+        libgstreamer1.0-dev \
+        gstreamer1.0-tools \
+        gstreamer1.0-libav \
+        gstreamer1.0-rtsp \
+        gstreamer1.0-plugins-good \
+        gstreamer1.0-plugins-bad \
+        gstreamer1.0-plugins-ugly \
+        gstreamer1.0-plugins-rtp \
+        libgstreamer-plugins-base1.0-dev \
+        libgstreamer-plugins-good1.0-dev \
+        libgstreamer-plugins-bad1.0-dev \
+        libgstrtspserver-1.0-0 \
+        python3-gi \
+        python3-gst-1.0 \
+    || (echo "Some GStreamer packages may not be available for this Ubuntu version" && \
+        aptitude install -y -o APT::Install-Recommends=false \
+        libgstreamer1.0-dev \
+        gstreamer1.0-tools \
+        gstreamer1.0-libav \
+        gstreamer1.0-rtsp \
+        gstreamer1.0-plugins-good \
+        gstreamer1.0-plugins-bad \
+        gstreamer1.0-plugins-ugly \
+        libgstreamer-plugins-base1.0-dev \
+        libgstreamer-plugins-good1.0-dev \
+        libgstreamer-plugins-bad1.0-dev \
+        libgstrtspserver-1.0-0 \
+        python3-gi \
+        python3-gst-1.0) \
+    && ln -sf /usr/lib/$(uname -m)-linux-gnu/libgstwebrtc-1.0.so.0 /usr/lib/$(uname -m)-linux-gnu/libgstwebrtc-1.0.so 2>/dev/null || true \
+    && aptitude clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && gst-inspect-1.0 --version
+
+# NOTE: This version maintains OpenCV installation instead of purging and reinstalling
+# If OpenCV integration issues occur, you may need to run the original script's approach
+
+# NEW ADDITION: Hugging Face Hub for model downloading and management
+#---
+# name: huggingface_hub
+# group: ai-frameworks
+# depends: [python]
+# notes: model downloading and management
+#---
+# Set the model cache directories
+ENV TRANSFORMERS_CACHE=/data/models/huggingface \
+    HUGGINGFACE_HUB_CACHE=/data/models/huggingface \
+    HF_HOME=/data/models/huggingface
+
+# Add downloader tool from subdirectory
+COPY huggingface_hub--using-buildx/huggingface-downloader /usr/local/bin/
+COPY huggingface_hub--using-buildx/huggingface-downloader.py /usr/local/bin/_huggingface-downloader.py
+
+# Install huggingface_hub package (with CLI)
+RUN set -ex \
+    && pip3 install --no-cache-dir \
+        huggingface_hub[cli] \
+        dataclasses \
+    && huggingface-cli --help \
+    && huggingface-downloader --help \
+    && pip3 show huggingface_hub \
+    && python3 -c 'import huggingface_hub; print(f"huggingface_hub {huggingface_hub.__version__} installed successfully")'
+
+# NEW ADDITION: xformers for memory-efficient attention
+#---
+# name: xformers
+# group: ai-optimization
+# depends: [python, build-essential]
+# notes: memory-efficient attention mechanisms
+#---
+# RUN set -ex \
+#    && pip install --no-cache-dir xformers \
+#    && python3 -c "import xformers; print(f'xformers {xformers.__version__} installed successfully')"
+
+# NEW ADDITION: flash-attention for faster transformer operations
+#---
+# name: flash-attention
+# group: ai-optimization
+# depends: [python, build-essential]
+# notes: faster transformer operations
+#---
+# RUN set -ex \
+#    && pip install --no-cache-dir flash-attn \
+#    && python3 -c "import flash_attn; print(f'flash-attention {flash_attn.__version__} installed successfully')"
+
+# NEW ADDITION: bitsandbytes for quantization support
+#---
+# name: bitsandbytes
+# group: ai-optimization
+# depends: [python, build-essential]
+# notes: quantization support for memory efficiency
+#---
+# RUN set -ex \
+#    && pip install --no-cache-dir bitsandbytes \
+#    && python3 -c "import bitsandbytes as bnb; print(f'bitsandbytes {bnb.__version__} installed successfully')"
+
+# NEW ADDITION: transformers library for model support
+#---
+# name: transformers
+# group: ai-frameworks
+# depends: [python]
+# notes: transformer models support
+#---
+# RUN set -ex \
+#    && pip install --no-cache-dir transformers \
+#    && python3 -c "import transformers; print(f'transformers {transformers.__version__} installed successfully')"
+
+# NEW ADDITION: deepspeed for large model optimization
+#---
+# name: deepspeed
+# group: ai-optimization
+# depends: [python, build-essential]
+# notes: large model optimization
+#---
+# RUN set -ex \
+#    && pip install --no-cache-dir deepspeed \
+#    && python3 -c "import deepspeed; print(f'deepspeed {deepspeed.__version__} installed successfully')"
+
+# NEW ADDITION: ComfyUI installation
+#---
+# name: comfyui
+# group: ai-applications
+# depends: [python, ffmpeg, torch]
+# notes: main application
+#---
+# RUN set -ex \
+#    && git clone https://github.com/comfyanonymous/ComfyUI.git /opt/ComfyUI \
+#    && cd /opt/ComfyUI \
+#    && pip install -r requirements.txt \
+#    # Additional packages often needed for ComfyUI extensions
+#    && pip install --no-cache-dir \
+#        accelerate \
+#        einops \
+#        kornia \
+#        omegaconf \
+#        safetensors \
+#        pygit2 \
+#        pyyaml \
+#        aiohttp \
+#        git+https://github.com/openai/CLIP.git \
+#    # Create models directory structure
+#    && mkdir -p /opt/ComfyUI/models/checkpoints \
+#    && mkdir -p /opt/ComfyUI/models/loras \
+#    && mkdir -p /opt/ComfyUI/models/controlnet \
+#    && mkdir -p /opt/ComfyUI/models/embeddings \
+#    && mkdir -p /opt/ComfyUI/models/upscale_models \
+#    && mkdir -p /opt/ComfyUI/models/vae
+
+# NEW ADDITION: ComfyUI startup script
+# Add a startup script
+# COPY start-comfyui.sh /usr/local/bin/start-comfyui.sh
+# RUN chmod +x /usr/local/bin/start-comfyui.sh
+
+# NEW ADDITION: ComfyUI configuration
+# WORKDIR /opt/ComfyUI
+# EXPOSE 8188
+# ENTRYPOINT ["/usr/local/bin/start-comfyui.sh"]

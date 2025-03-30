@@ -1,0 +1,118 @@
+# Use the specified base image
+ARG BASE_IMAGE=kairin/001:nvcr.io-nvidia-pytorch-25.02-py3-igpu
+FROM ${BASE_IMAGE}
+
+# Set build metadata
+LABEL maintainer="kairin" \
+      description="AI Development Stack with PyTorch, Transformers, XFormers, ONNX Runtime, TensorFlow, and Triton" \
+      version="2025.03.27" \
+      build_date="2025-03-27"
+
+# Set common build arguments that will be used by multiple components
+ARG MAKEFLAGS=-j$(nproc) \
+    DEBIAN_FRONTEND=noninteractive \
+    FORCE_BUILD=off
+
+# Set environment variables used across components
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    TRANSFORMERS_CACHE=/data/models/transformers \
+    HUGGINGFACE_HUB_CACHE=/data/models/huggingface \
+    HF_HOME=/data/models/huggingface \
+    JAX_CACHE_DIR=/data/models/jax \
+    XFORMERS_FORCE_DISABLE_TRITON=1 \
+    DIFFUSERS_FORCE_DISABLE_TRITON=1
+
+# Install common dependencies in a single layer to minimize image size
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    # TensorFlow dependencies
+    liblapack-dev \
+    libblas-dev \
+    libhdf5-serial-dev \
+    hdf5-tools \
+    libhdf5-dev \
+    zlib1g-dev \
+    libjpeg8-dev \
+    libbz2-dev \
+    libffi-dev \
+    libgdbm-dev \
+    libncurses5-dev \
+    libnss3-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    patchelf \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
+# Create directories for all component scripts
+RUN mkdir -p /tmp/onnxruntime /tmp/tensorflow /tmp/triton
+
+# Copy all installation scripts at once (better layer caching)
+COPY onnxruntime/install.sh onnxruntime/build.sh /tmp/onnxruntime/
+COPY tensorflow/install.sh tensorflow/build.sh tensorflow/link_cuda.sh /tmp/tensorflow/
+COPY triton/install.sh triton/build.sh /tmp/triton/
+
+# Make all scripts executable
+RUN chmod +x /tmp/onnxruntime/*.sh \
+    /tmp/tensorflow/*.sh \
+    /tmp/triton/*.sh
+
+# Install ONNX Runtime
+ARG ONNXRUNTIME_VERSION \
+    ONNXRUNTIME_BRANCH \
+    ONNXRUNTIME_FLAGS
+RUN /tmp/onnxruntime/install.sh || /tmp/onnxruntime/build.sh
+
+# Install TensorFlow
+ARG TENSORFLOW_VERSION \
+    TENSORFLOW_URL \
+    TENSORFLOW_WHL \
+    HDF5_DIR="/usr/lib/aarch64-linux-gnu/hdf5/serial/"
+RUN /tmp/tensorflow/install.sh || /tmp/tensorflow/build.sh
+
+# Install Triton
+ARG TRITON_VERSION \
+    TRITON_BRANCH
+RUN /tmp/triton/install.sh || /tmp/triton/build.sh
+
+# Copy the verification script from the build context
+COPY verify.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/verify.sh
+
+# Create an optimized Python entrypoint script
+RUN echo '#!/bin/bash\n\
+echo "================================="\n\
+echo "Kairin AI Stack - 2025.03.27"\n\
+echo "================================="\n\
+echo "Components:"\n\
+echo "- PyTorch $(python3 -c "import torch; print(torch.__version__)" 2>/dev/null || echo "not found")"\n\
+echo "- Transformers $(python3 -c "import transformers; print(transformers.__version__)" 2>/dev/null || echo "not found")"\n\
+echo "- XFormers $(python3 -c "import xformers; print(xformers.__version__)" 2>/dev/null || echo "not found")"\n\
+echo "- ONNX Runtime $(python3 -c "import onnxruntime; print(onnxruntime.__version__)" 2>/dev/null || echo "not found")"\n\
+echo "- TensorFlow $(python3 -c "import tensorflow; print(tensorflow.__version__)" 2>/dev/null || echo "not found")"\n\
+echo "- Triton $(python3 -c "import triton; print(triton.__version__)" 2>/dev/null || echo "not found")"\n\
+echo "================================="\n\
+echo "Run \"verify.sh\" for detailed component information"\n\
+' > /usr/local/bin/ai-stack-info.sh \
+    && chmod +x /usr/local/bin/ai-stack-info.sh
+
+# Clean up build files to reduce image size
+RUN rm -rf /tmp/*.whl \
+    && python3 -m pip cache purge \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /workspace
+
+# Add the startup script to automatically show container info
+RUN echo "if [ -t 0 ]; then /usr/local/bin/ai-stack-info.sh; fi" >> /root/.bashrc
+
+# Define a healthcheck to verify that critical components are working
+HEALTHCHECK --interval=5m --timeout=3s \
+  CMD python3 -c "import torch, transformers; print('Health check passed')" || exit 1
+
+# Output build success message
+RUN echo "Build completed successfully on 2025-03-27 11:48:59 UTC" && \
+    echo "Full AI Stack image ready for use"
