@@ -1,7 +1,11 @@
+# NVIDIA Jetson ML Development Container
+# This Dockerfile creates a comprehensive machine learning container for NVIDIA Jetson platforms.
+# It includes various ML frameworks, libraries, and utilities optimized for the Jetson platform.
+
 # Build args for the base image
 ARG BASE_IMAGE
 
-# Start from base image
+# Start from the specified base image (usually a PyTorch-based L4T image)
 FROM ${BASE_IMAGE}
 
 # Build arguments
@@ -12,7 +16,10 @@ ARG TRITON_BRANCH=main
 ENV PYTHONUNBUFFERED=1 \
     DEBIAN_FRONTEND=noninteractive
 
-# Install system dependencies
+# =============================================
+# == System Dependencies and Basic Utilities ==
+# =============================================
+# Install essential development tools and libraries
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
@@ -23,6 +30,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     pkg-config \
     python3-dev \
     python3-pip \
+    python3-setuptools \
     libjpeg-dev \
     libpng-dev \
     libavcodec-dev \
@@ -38,8 +46,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python packages
-RUN pip3 install --upgrade pip \
+# ==============================
+# == Python Core Dependencies ==
+# ==============================
+# Install fundamental Python packages for data science and ML
+RUN pip3 install --upgrade pip setuptools wheel \
     && pip3 install \
     numpy \
     scipy \
@@ -55,59 +66,123 @@ RUN pip3 install --upgrade pip \
     pyyaml \
     tensorboard
 
-# Install ML libraries compatible with Jetson
+# ================================
+# == Core ML/DL Framework Layer ==
+# ================================
+# Install major machine learning and deep learning frameworks
+# Note: PyTorch is usually pre-installed in the base image
 RUN pip3 install \
     torch \
     torchvision \
+    tensorflow \
+    jax \
+    flax \
+    optax
+
+# ================================
+# == Hugging Face Ecosystem     ==
+# ================================
+# Install the Hugging Face transformers library and related packages
+RUN pip3 install \
     transformers \
     diffusers \
-    bitsandbytes \
+    datasets \
     accelerate \
-    einops \
-    safetensors
+    tokenizers \
+    huggingface_hub
 
-# Install Triton
+# ================================
+# == ONNX Runtime & Conversion  ==
+# ================================
+# Install ONNX and ONNX Runtime for model deployment
+RUN pip3 install \
+    onnx \
+    onnxruntime
+
+# ================================
+# == OpenAI Triton Compilation ==
+# ================================
+# Triton is a language and compiler for writing highly efficient GPU code
 RUN git clone --branch ${TRITON_BRANCH} https://github.com/openai/triton.git \
     && cd triton \
     && pip3 install -e python \
     && cd .. \
     && rm -rf triton/.git
 
-# Install additional ML libraries
+# ================================
+# == Optimization Libraries     ==
+# ================================
+# Install libraries for model optimization and acceleration
 RUN pip3 install \
-    onnx \
-    onnxruntime \
-    tensorflow \
-    jax \
-    flax \
-    optax \
-    xformers \
-    huggingface_hub \
+    bitsandbytes \
     flash-attention \
-    deepspeed
+    xformers
 
-# Install OpenCV with CUDA support
+# ================================
+# == Computer Vision Libraries  ==
+# ================================
+# Install OpenCV with GPU acceleration
 RUN pip3 install opencv-python
 
-# Install CuPy for GPU acceleration
-RUN pip3 install cupy-cuda12x
+# ================================
+# == GStreamer for Video I/O    ==
+# ================================
+# Install GStreamer and Python bindings for video processing
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libgstreamer1.0-dev \
+    libgstreamer-plugins-base1.0-dev \
+    gstreamer1.0-plugins-good \
+    gstreamer1.0-plugins-bad \
+    python3-gst-1.0 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Set up working directory
+# ================================
+# == FFmpeg Integration         ==
+# ================================
+# Install FFmpeg for video transcoding and manipulation
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ffmpeg \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# ================================
+# == Distributed Training       ==
+# ================================
+# Install DeepSpeed for distributed training
+RUN pip3 install deepspeed
+
+# ================================
+# == CUDA Extensions            ==
+# ================================
+# Install CuPy (CUDA-accelerated NumPy alternative)
+RUN pip3 install cupy
+
+# ================================
+# == Workspace Configuration    ==
+# ================================
+# Set up working directory and create folders for projects
 WORKDIR /workspace
 
-# Create directories for data and models
-RUN mkdir -p /workspace/data /workspace/models
+# Create directories for data, models and logs
+RUN mkdir -p /workspace/data /workspace/models /workspace/logs
 
-# Set environment variables for GPU
+# Set environment variables for GPU access
 ENV NVIDIA_VISIBLE_DEVICES=all \
     NVIDIA_DRIVER_CAPABILITIES=all
 
-# Build completion message  
-RUN echo "Build completed successfully on 2025-03-30 11:28:07" && \
+# ================================
+# == Build Completion Marker    ==
+# ================================
+# Indicate successful build with timestamp
+RUN echo "Build completed successfully on 2025-03-30 11:40:54" && \
     echo "Full AI Stack image ready for use"
 
-# Expose ports for Jupyter and TensorBoard
-EXPOSE 8888 6006
+# ================================
+# == Container Configuration    ==
+# ================================
+# Expose ports for services (Jupyter, TensorBoard, API servers)
+EXPOSE 8888 6006 8080
 
-# Default command
+# Default command when starting the container
 CMD ["bash"]

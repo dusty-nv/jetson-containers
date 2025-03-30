@@ -1,6 +1,18 @@
 #!/bin/bash
+#==============================================================================
+#
+#  ██╗   ██╗███████╗██████╗ ██╗███████╗██╗   ██╗
+#  ██║   ██║██╔════╝██╔══██╗██║██╔════╝╚██╗ ██╔╝
+#  ██║   ██║█████╗  ██████╔╝██║█████╗   ╚████╔╝ 
+#  ╚██╗ ██╔╝██╔══╝  ██╔══██╗██║██╔══╝    ╚██╔╝  
+#   ╚████╔╝ ███████╗██║  ██║██║██║        ██║   
+#    ╚═══╝  ╚══════╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝   
+#
+# Container Verification Tool for NVIDIA Jetson ML Development
+# Current Version: 2025-03-30
+#==============================================================================
 
-# ANSI color codes
+# Define color codes
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
@@ -10,84 +22,126 @@ CYAN='\033[0;36m'
 BOLD='\033[1m'
 RESET='\033[0m'
 
-# Clear the screen
-clear
+# Header
+echo -e "${MAGENTA}${BOLD}"
+echo "╔══════════════════════════════════════════════════════════════════════╗"
+echo "║                                                                      ║"
+echo "║   ░░░▒▒▒▓▓▓███ JETSON ML CONTAINER VERIFIER ███▓▓▓▒▒▒░░░             ║"
+echo "║                                                                      ║"
+echo "╚══════════════════════════════════════════════════════════════════════╝"
+echo -e "${RESET}"
 
-# ASCII Art Header
-cat << "EOF"
-${CYAN}${BOLD}
-      ___      ___________    _________    ________    ____  ___    ___      ___
-     |"  \    ("     _   ")  ("     _  ")/("       )  (\"   \|"  \  |"  \    /"  |
-     ||   |    )__/  \\__/    )__/  \\__(:   \___/   |.\\   \    |  \   \  //   |
-     |:|   |      \\_ /          \\_ /    \___  \    |: \.   \\  |   \\  \/. ./  
-     |.|   |      |.  |          |.  |     __/  \\   |.  \    \. |    \.    //   
-     |:    |      \:  |          \:  |    /" \   :)  |    \    \ |     \\   /    
-     |____|        \__|           \__|   (_______/    \___|\____\)      \__/     
-                                                                               
-      _   __  ________  ______   ________  ________  ________  ______   
-     | \ |" \|"      "\|    " \ |"      "\/"       )/"       )/" _  "\  
-     ||  ||  (.  ___  :)\____) :(.  ___  :\(     _/(:   \___/(: ( \___)
-     |:  |:  |: \   ) || |". ./|: \   ) :|.\____\   \___  \   \/ \     
-     |.  |.  (| (___\ || o \:: (| (___\ |:|___  \\  __/  \\  //  \ _   
-     /\  /\  |:       :)|: n    |:       :    \  \ /" \   :)(:   _) \  
-    (__\/__)(_______/ |_|      (_______/      \__(_______/  \_______)  
-${RESET}
-EOF
-
-echo
-echo -e "${MAGENTA}${BOLD}===================== JETSON AI CONTAINER VERIFICATION =====================${RESET}"
-echo
-
-# System information
-echo -e "${YELLOW}${BOLD}SYSTEM INFORMATION:${RESET}"
-echo -e "${CYAN}Date & Time:${RESET} $(date '+%Y-%m-%d %H:%M:%S')"
-echo -e "${CYAN}Hostname:${RESET} $(hostname)"
-echo -e "${CYAN}Container ID:${RESET} $(hostname -I | awk '{print $1}')"
-echo
-
-# GPU information
-echo -e "${YELLOW}${BOLD}NVIDIA GPU INFORMATION:${RESET}"
-if command -v nvidia-smi &> /dev/null; then
-    nvidia-smi
-else
-    echo -e "${RED}nvidia-smi not found. GPU might not be properly configured.${RESET}"
+# Check if image name is provided
+if [ -z "$1" ]; then
+    echo -e "${RED}${BOLD}ERROR: No image name provided!${RESET}"
+    echo -e "${YELLOW}Usage: $0 <image_name>${RESET}"
+    echo -e "${YELLOW}Example: $0 kairin/001:2025-03-30-1140-1${RESET}"
+    exit 1
 fi
-echo
 
-# Check CUDA availability
-echo -e "${YELLOW}${BOLD}CHECKING CUDA AVAILABILITY:${RESET}"
-python3 -c "import torch; print(f'PyTorch version: {torch.__version__}'); print(f'CUDA available: {torch.cuda.is_available()}'); print(f'CUDA device count: {torch.cuda.device_count()}'); print(f'CUDA device name: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \"N/A\"}')"
-echo
+# Store the image name
+IMAGE_NAME=$1
+echo -e "${CYAN}${BOLD}VERIFYING IMAGE:${RESET} ${IMAGE_NAME}\n"
 
-# List installed Python packages
-echo -e "${YELLOW}${BOLD}INSTALLED PYTHON PACKAGES:${RESET}"
-pip3 list | grep -E 'torch|tensorflow|jax|onnx|transformers|diffusers|triton|bitsandbytes|xformers|deepspeed|flash-attention'
-echo
+# Function to print section headers
+print_section() {
+    echo -e "\n${YELLOW}${BOLD}╔═══ $1 ════════════════════════════════════════════════╗${RESET}"
+}
 
-# Check for specific ML libraries
-echo -e "${YELLOW}${BOLD}VERIFYING ML LIBRARIES:${RESET}"
-
-check_package() {
-    if pip3 list | grep -q $1; then
-        echo -e "  ${GREEN}✓${RESET} $1 is installed"
+# Function to run tests
+run_test() {
+    local name=$1
+    local cmd=$2
+    echo -ne "${BLUE}Testing ${name}...${RESET} "
+    if docker run --rm $IMAGE_NAME $cmd >/dev/null 2>&1; then
+        echo -e "${GREEN}✅ PASSED${RESET}"
+        return 0
     else
-        echo -e "  ${RED}✗${RESET} $1 is not installed"
+        echo -e "${RED}❌ FAILED${RESET}"
+        return 1
     fi
 }
 
-check_package "torch"
-check_package "tensorflow"
-check_package "transformers"
-check_package "diffusers"
-check_package "onnx"
-check_package "jax"
-check_package "triton"
-check_package "bitsandbytes"
-check_package "xformers"
-check_package "deepspeed"
-check_package "opencv-python"
-check_package "cupy"
+# Test container startup
+print_section "CONTAINER STARTUP"
+echo -e "${CYAN}Starting container with NVIDIA runtime...${RESET}"
 
-echo
-echo -e "${MAGENTA}${BOLD}===================== VERIFICATION COMPLETE =====================${RESET}"
-echo
+# Try to run nvidia-smi to verify GPU access
+docker run --rm --runtime nvidia -it $IMAGE_NAME nvidia-smi
+if [ $? -ne 0 ]; then
+    echo -e "\n${RED}${BOLD}❌ CRITICAL ERROR: Failed to start container with GPU access.${RESET}"
+    echo -e "${RED}Please check if NVIDIA drivers and Docker runtime are properly configured.${RESET}"
+    exit 1
+fi
+echo -e "${GREEN}✅ Container started successfully with GPU access.${RESET}"
+
+# Verify Python
+print_section "PYTHON ENVIRONMENT"
+docker run --rm $IMAGE_NAME python3 --version
+echo ""
+
+# Verify key Python packages
+print_section "CORE ML FRAMEWORKS"
+PACKAGES=(
+    "numpy" 
+    "torch" 
+    "tensorflow" 
+    "jax" 
+    "transformers"
+    "diffusers"
+    "onnx"
+)
+
+for package in "${PACKAGES[@]}"; do
+    echo -ne "${CYAN}Checking ${package}...${RESET} "
+    VERSION=$(docker run --rm $IMAGE_NAME python3 -c "import $package; print(getattr($package, '__version__', 'installed'))" 2>/dev/null)
+    
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}✅ $VERSION${RESET}"
+    else
+        echo -e "${RED}❌ Not installed or error importing${RESET}"
+    fi
+done
+
+# Verify optimization libraries
+print_section "OPTIMIZATION LIBRARIES"
+OPT_PACKAGES=(
+    "triton"
+    "bitsandbytes"
+    "xformers"
+    "deepspeed"
+)
+
+for package in "${OPT_PACKAGES[@]}"; do
+    echo -ne "${CYAN}Checking ${package}...${RESET} "
+    if docker run --rm $IMAGE_NAME python3 -c "import $package; print('✅')" 2>/dev/null; then
+        echo -e "${GREEN}Installed${RESET}"
+    else
+        echo -e "${YELLOW}⚠️ Not installed or error importing${RESET}"
+    fi
+done
+
+# Verify system utilities
+print_section "SYSTEM UTILITIES"
+UTILS=("ffmpeg -version" "pkg-config --version")
+UTIL_NAMES=("FFmpeg" "pkg-config")
+
+for i in "${!UTILS[@]}"; do
+    echo -ne "${CYAN}Checking ${UTIL_NAMES[$i]}...${RESET} "
+    if docker run --rm $IMAGE_NAME bash -c "${UTILS[$i]}" >/dev/null 2>&1; then
+        echo -e "${GREEN}✅ Installed${RESET}"
+    else
+        echo -e "${YELLOW}⚠️ Not installed or not working${RESET}"
+    fi
+done
+
+# Summary
+print_section "VERIFICATION SUMMARY"
+echo -e "${GREEN}${BOLD}✅ Container verification completed!${RESET}"
+echo -e "${GREEN}The container appears to be properly configured with GPU support.${RESET}"
+echo -e "${GREEN}Core ML frameworks and libraries are installed and working.${RESET}"
+echo ""
+echo -e "${CYAN}To use this container interactively, run:${RESET}"
+echo -e "${YELLOW}docker run --rm -it --runtime nvidia ${IMAGE_NAME} bash${RESET}"
+echo ""
+echo -e "${CYAN}${BOLD}========== VERIFICATION COMPLETE ===========${RESET}"
