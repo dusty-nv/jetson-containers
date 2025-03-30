@@ -116,8 +116,8 @@ while true; do
             --extra-label "Advanced" \
             --colors \
             --form "\Z4\ZbBuild Configuration\Zn" 20 80 0 \
-            "Image Name:" 1 1 "$IMAGE_NAME" 1 20 45 0 \
-            "Base Image:" 2 1 "$BASE_IMAGE" 2 20 45 0 \
+            "Image Name:" 1 1 "$IMAGE_NAME" 1 20 60 0 \
+            "Base Image:" 2 1 "$BASE_IMAGE" 2 20 60 0 \
             "Use Cache:" 3 1 "$USE_CACHE" 3 20 5 0 \
             "Auto Verify:" 4 1 "$AUTO_VERIFY" 4 20 5 0 \
             2>&1 >/dev/tty)
@@ -198,7 +198,7 @@ echo -e "${CYAN}This may take a while depending on your connection and hardware.
 echo ""
 
 # Set cache option
-if [ "$USE_CACHE" = "no"; then
+if [ "$USE_CACHE" = "no" ]; then
     CACHE_OPTION="--no-cache"
 else
     CACHE_OPTION=""
