@@ -49,7 +49,28 @@
 # Build using ./jetsonrun.sh which provides a dialog-based interface
 # Verify using ./verify.sh <image_name>
 
-# Reminder by KAIRIN -- please do not remove the above comments only improve or add on to the information above. This is intended to help remind you what has been installed, what needs to be installed and what has been tested.
+# Reminder by KAIRIN -- please do not remove the above comments only improve or add on to the information above. This is intended to help remind you what # has been installed, what needs to be ins[...]
+
+# NVIDIA Jetson ML Development Container
+# This Dockerfile creates a comprehensive machine learning container for NVIDIA Jetson platforms.
+#
+# === CONTENTS ===
+# - System Dependencies and Basic Utilities
+# - Python Core Dependencies
+# - Core ML/DL Framework Layer (PyTorch, TensorFlow, JAX)
+# - Hugging Face Ecosystem (Transformers, Diffusers)
+# - ONNX Runtime & Conversion
+# - OpenAI Triton Compilation
+# - Optimization Libraries (bitsandbytes, flash-attention, xformers)
+# - Computer Vision Libraries (OpenCV)
+# - GStreamer for Video I/O
+# - FFmpeg Integration
+# - Distributed Training (DeepSpeed)
+# - CUDA Extensions (CuPy)
+#
+# === USAGE ===
+# Build using ./jetsonrun.sh which provides a dialog-based interface
+# Verify using ./verify.sh <image_name>
 
 # Build args for the base image
 ARG BASE_IMAGE=kairin/001:nvcr.io-nvidia-pytorch-25.02-py3-igpu
