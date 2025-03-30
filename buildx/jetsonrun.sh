@@ -1,58 +1,6 @@
 #!/bin/bash
 #==============================================================================
 #
-#  ██╗███████╗████████╗███████╗ ██████╗ ███╗   ██╗
-#  ██║██╔════╝╚══██╔══╝██╔════╝██╔═══██╗████╗  ██║
-#  ██║█████╗     ██║   ███████╗██║   ██║██╔██╗ ██║
-#  ██║██╔══╝     ██║   ╚════██║██║   ██║██║╚██╗██║
-#  ██║███████╗   ██║   ███████║╚██████╔╝██║ ╚████║
-#  ╚═╝╚══════╝   ╚═╝   ╚══════╝ ╚═════╝ ╚═╝  ╚═══╝
-#
-# Container Build Tool for NVIDIA Jetson ML Development
-# Current Version: 2025-03-30
-#==============================================================================
-# 
-# This script builds a comprehensive machine learning container for NVIDIA Jetson platforms.
-# It includes:
-# 
-# - System Dependencies and Basic Utilities:
-#   build-essential, cmake, git, curl, wget, and more
-#
-# - Python Core Dependencies: 
-#   numpy, scipy, matplotlib, pandas, jupyterlab
-#
-# - Core ML/DL Framework Layer:
-#   PyTorch (from base image), TensorFlow, JAX, Flax, Optax
-#
-# - Hugging Face Ecosystem:
-#   Transformers, Diffusers, Datasets, Tokenizers
-#
-# - ONNX Runtime & Conversion:
-#   ONNX, ONNX Runtime
-#
-# - OpenAI Triton Compilation:
-#   Triton compiler for GPU kernels
-#
-# - Optimization Libraries:
-#   bitsandbytes, flash-attention, xformers
-#
-# - Computer Vision Libraries:
-#   OpenCV
-#
-# - Media Processing:
-#   FFmpeg, GStreamer
-#
-# - CUDA Extensions:
-#   CuPy
-#==============================================================================
-
-
-# Reminder by KAIRIN -- please do not remove the above comments only improve or add on to the information above. This is intended to help remind you what # has been installed, what needs to be installed subsequently and so on. Also please ensure, the latest version compatible for all the apps and software # are installed either by running an update command at the end or something like that. Please indicate what are the changes made with timestamps.
-
-
-#!/bin/bash
-#==============================================================================
-#
 #  ░░░▒▒▒▓▓▓███ JETSON ML CONTAINER BUILDER ███▓▓▓▒▒▒░░░             
 #
 # Container Build Tool for NVIDIA Jetson ML Development
@@ -139,11 +87,11 @@ show_header() {
 dialog --clear --title "Jetson ML Container Builder" \
        --backtitle "NVIDIA Jetson ML Development" \
        --colors \
-       --msgbox "\Z1\Zb╔═════════════════════════════════════════════════════════════════════╗\Zn
-\Z1\Zb║                                                 ║\Zn
-\Z1\Zb║   JETSON ML CONTAINER BUILDER                   ║\Zn
-\Z1\Zb║                                                 ║\Zn
-\Z1\Zb╚═════════════════════════════════════════════════════════════════════╝\Zn
+       --msgbox "\Z1\Zb╔══════════════════════════════════════════════════════════════════════════════╗\Zn
+\Z1\Zb║                                                                                      ║\Zn
+\Z1\Zb║                      JETSON ML CONTAINER BUILDER                                     ║\Zn
+\Z1\Zb║                                                                                      ║\Zn
+\Z1\Zb╚════════════════════════════════════════════════════════════════════════════════════╚╝\Zn
 
 This tool builds a comprehensive machine learning container 
 optimized for NVIDIA Jetson platforms.
@@ -156,7 +104,7 @@ The container includes:
 • Media libraries (OpenCV, FFmpeg, GStreamer)
 • CUDA extensions and optimization tools
 
-Press OK to configure your build options." 20 70
+Press OK to configure your build options." 30 80
 
 # Main configuration menu
 while true; do
@@ -167,7 +115,7 @@ while true; do
             --extra-button \
             --extra-label "Advanced" \
             --colors \
-            --form "\Z4\ZbBuild Configuration\Zn" 18 70 0 \
+            --form "\Z4\ZbBuild Configuration\Zn" 20 80 0 \
             "Image Name:" 1 1 "$IMAGE_NAME" 1 20 45 0 \
             "Base Image:" 2 1 "$BASE_IMAGE" 2 20 45 0 \
             "Use Cache:" 3 1 "$USE_CACHE" 3 20 5 0 \
@@ -194,7 +142,7 @@ while true; do
                     --backtitle "NVIDIA Jetson ML Development" \
                     --ok-label "Apply" \
                     --cancel-label "Back" \
-                    --checklist "Select components to include:" 20 70 10 \
+                    --checklist "Select components to include:" 25 80 15 \
                     "PYTORCH" "PyTorch and TorchVision" on \
                     "TENSORFLOW" "TensorFlow" on \
                     "JAX" "JAX, Flax, and Optax" on \
@@ -250,7 +198,7 @@ echo -e "${CYAN}This may take a while depending on your connection and hardware.
 echo ""
 
 # Set cache option
-if [ "$USE_CACHE" = "no" ]; then
+if [ "$USE_CACHE" = "no"; then
     CACHE_OPTION="--no-cache"
 else
     CACHE_OPTION=""
@@ -309,3 +257,5 @@ else
 fi
 
 echo -e "\n${CYAN}${BOLD}========== BUILD PROCESS COMPLETE ===========${RESET}"
+
+# Note: It is important and necessary to keep the dialog box size larger to fit the full length of the Docker file name for future updates.
