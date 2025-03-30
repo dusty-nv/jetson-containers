@@ -1,86 +1,93 @@
 #!/bin/bash
 
-# Function to print colored text
-print_color() {
-    local color=$1
-    local text=$2
-    echo -e "\033[${color}m${text}\033[0m"
+# ANSI color codes
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
+CYAN='\033[0;36m'
+BOLD='\033[1m'
+RESET='\033[0m'
+
+# Clear the screen
+clear
+
+# ASCII Art Header
+cat << "EOF"
+${CYAN}${BOLD}
+      ___      ___________    _________    ________    ____  ___    ___      ___
+     |"  \    ("     _   ")  ("     _  ")/("       )  (\"   \|"  \  |"  \    /"  |
+     ||   |    )__/  \\__/    )__/  \\__(:   \___/   |.\\   \    |  \   \  //   |
+     |:|   |      \\_ /          \\_ /    \___  \    |: \.   \\  |   \\  \/. ./  
+     |.|   |      |.  |          |.  |     __/  \\   |.  \    \. |    \.    //   
+     |:    |      \:  |          \:  |    /" \   :)  |    \    \ |     \\   /    
+     |____|        \__|           \__|   (_______/    \___|\____\)      \__/     
+                                                                               
+      _   __  ________  ______   ________  ________  ________  ______   
+     | \ |" \|"      "\|    " \ |"      "\/"       )/"       )/" _  "\  
+     ||  ||  (.  ___  :)\____) :(.  ___  :\(     _/(:   \___/(: ( \___)
+     |:  |:  |: \   ) || |". ./|: \   ) :|.\____\   \___  \   \/ \     
+     |.  |.  (| (___\ || o \:: (| (___\ |:|___  \\  __/  \\  //  \ _   
+     /\  /\  |:       :)|: n    |:       :    \  \ /" \   :)(:   _) \  
+    (__\/__)(_______/ |_|      (_______/      \__(_______/  \_______)  
+${RESET}
+EOF
+
+echo
+echo -e "${MAGENTA}${BOLD}===================== JETSON AI CONTAINER VERIFICATION =====================${RESET}"
+echo
+
+# System information
+echo -e "${YELLOW}${BOLD}SYSTEM INFORMATION:${RESET}"
+echo -e "${CYAN}Date & Time:${RESET} $(date '+%Y-%m-%d %H:%M:%S')"
+echo -e "${CYAN}Hostname:${RESET} $(hostname)"
+echo -e "${CYAN}Container ID:${RESET} $(hostname -I | awk '{print $1}')"
+echo
+
+# GPU information
+echo -e "${YELLOW}${BOLD}NVIDIA GPU INFORMATION:${RESET}"
+if command -v nvidia-smi &> /dev/null; then
+    nvidia-smi
+else
+    echo -e "${RED}nvidia-smi not found. GPU might not be properly configured.${RESET}"
+fi
+echo
+
+# Check CUDA availability
+echo -e "${YELLOW}${BOLD}CHECKING CUDA AVAILABILITY:${RESET}"
+python3 -c "import torch; print(f'PyTorch version: {torch.__version__}'); print(f'CUDA available: {torch.cuda.is_available()}'); print(f'CUDA device count: {torch.cuda.device_count()}'); print(f'CUDA device name: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \"N/A\"}')"
+echo
+
+# List installed Python packages
+echo -e "${YELLOW}${BOLD}INSTALLED PYTHON PACKAGES:${RESET}"
+pip3 list | grep -E 'torch|tensorflow|jax|onnx|transformers|diffusers|triton|bitsandbytes|xformers|deepspeed|flash-attention'
+echo
+
+# Check for specific ML libraries
+echo -e "${YELLOW}${BOLD}VERIFYING ML LIBRARIES:${RESET}"
+
+check_package() {
+    if pip3 list | grep -q $1; then
+        echo -e "  ${GREEN}✓${RESET} $1 is installed"
+    else
+        echo -e "  ${RED}✗${RESET} $1 is not installed"
+    fi
 }
 
-# Function to print section headers with ASCII art
-print_section_header() {
-    local title=$1
-    local color=$2
-    print_color $color "================================="
-    print_color $color "== $title"
-    print_color $color "================================="
-}
+check_package "torch"
+check_package "tensorflow"
+check_package "transformers"
+check_package "diffusers"
+check_package "onnx"
+check_package "jax"
+check_package "triton"
+check_package "bitsandbytes"
+check_package "xformers"
+check_package "deepspeed"
+check_package "opencv-python"
+check_package "cupy"
 
-# Print system information
-print_section_header "SYSTEM INFORMATION" "32"
-print_color 34 "Kernel: $(uname -r)"
-print_color 34 "Architecture: $(uname -m)"
-print_color 34 "OS: $(lsb_release -d | awk -F'\t' '{print $2}')"
-print_color 34 "Memory: $(free -h | awk '/^Mem:/ {print $2}')"
-print_color 34 "CPU Cores: $(nproc)"
-
-# Print NVIDIA components
-print_section_header "NVIDIA COMPONENTS" "33"
-print_color 35 "CUDA: $(nvcc --version | grep release | awk '{print $6,$7}')"
-print_color 35 "cuDNN: $(cat /usr/include/cudnn_version.h | grep CUDNN_MAJOR -A 2 | awk '{print $3}' | tr '\n' '.')"
-print_color 35 "TensorRT: $(dpkg -l | grep nvinfer | awk '{print $3}')"
-print_color 35 "NCCL: $(dpkg -l | grep nccl | awk '{print $3}')"
-
-# Print Python and basic libraries
-print_section_header "PYTHON & BASIC LIBRARIES" "36"
-print_color 37 "Python: $(python3 --version)"
-print_color 37 "NumPy: $(python3 -c 'import numpy; print(numpy.__version__)')"
-print_color 37 "SciPy: $(python3 -c 'import scipy; print(scipy.__version__)')"
-print_color 37 "Pandas: $(python3 -c 'import pandas; print(pandas.__version__)' 2>/dev/null || echo 'NOT FOUND')"
-print_color 37 "Matplotlib: $(python3 -c 'import matplotlib; print(matplotlib.__version__)')"
-
-# Print deep learning frameworks
-print_section_header "DEEP LEARNING FRAMEWORKS" "31"
-print_color 33 "PyTorch: $(python3 -c 'import torch; print(torch.__version__)')"
-print_color 33 "TorchVision: $(python3 -c 'import torchvision; print(torchvision.__version__)')"
-print_color 33 "TorchAudio: $(python3 -c 'import torchaudio; print(torchaudio.__version__)' 2>/dev/null || echo 'NOT FOUND')"
-print_color 33 "TensorFlow: $(python3 -c 'import tensorflow as tf; print(tf.__version__)')"
-print_color 33 "JAX: $(python3 -c 'import jax; print(jax.__version__)')"
-print_color 33 "ONNX: $(python3 -c 'import onnx; print(onnx.__version__)')"
-print_color 33 "ONNX Runtime: $(python3 -c 'import onnxruntime; print(onnxruntime.__version__)' 2>/dev/null || echo 'NOT FOUND')"
-print_color 33 "Triton: $(python3 -c 'import triton; print(triton.__version__)' 2>/dev/null || echo 'NOT FOUND')"
-
-# Print media processing libraries
-print_section_header "MEDIA PROCESSING" "35"
-print_color 36 "FFmpeg: $(ffmpeg -version | head -n 1 | awk '{print $3}' 2>/dev/null || echo 'NOT FOUND')"
-print_color 36 "GStreamer: $(gst-inspect-1.0 --version | head -n 1 | awk '{print $2}' 2>/dev/null || echo 'NOT FOUND')"
-print_color 36 "OpenCV: $(python3 -c 'import cv2; print(cv2.__version__)')"
-print_color 36 "Pillow: $(python3 -c 'import PIL; print(PIL.__version__)')"
-
-# Print development tools
-print_section_header "DEVELOPMENT TOOLS" "32"
-print_color 34 "gcc: $(gcc --version | head -n 1 | awk '{print $3}')"
-print_color 34 "g++: $(g++ --version | head -n 1 | awk '{print $3}')"
-print_color 34 "CMake: $(cmake --version | head -n 1 | awk '{print $3}')"
-print_color 34 "Make: $(make --version | head -n 1 | awk '{print $3}')"
-print_color 34 "Git: $(git --version | awk '{print $3}')"
-print_color 34 "Ninja: $(ninja --version)"
-print_color 34 "Bazel: $(bazel --version 2>/dev/null || echo 'NOT FOUND')"
-
-# Print HuggingFace components
-print_section_header "HUGGING FACE COMPONENTS" "31"
-print_color 33 "Transformers: $(python3 -c 'import transformers; print(transformers.__version__)')"
-print_color 33 "XFormers: $(python3 -c 'import xformers; print(xformers.__version__)')"
-print_color 33 "Hugging Face Hub: $(python3 -c 'import huggingface_hub; print(huggingface_hub.__version__)')"
-print_color 33 "Diffusers: $(python3 -c 'import diffusers; print(diffusers.__version__)')"
-print_color 33 "Accelerate: $(python3 -c 'import accelerate; print(accelerate.__version__)' 2>/dev/null || echo 'NOT FOUND')"
-print_color 33 "Datasets: $(python3 -c 'import datasets; print(datasets.__version__)' 2>/dev/null || echo 'NOT FOUND')"
-
-# Print disk space information
-print_section_header "DISK SPACE" "34"
-df -h | grep -E '^Filesystem|overlay'
-
-print_color 32 "======== VERIFICATION COMPLETE ========"
-print_color 34 "Current Date (UTC): $(date -u)"
-print_color 34 "Current User: $(whoami)"
-print_color 32 "Container verification completed."
+echo
+echo -e "${MAGENTA}${BOLD}===================== VERIFICATION COMPLETE =====================${RESET}"
+echo

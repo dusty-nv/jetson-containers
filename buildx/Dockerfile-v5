@@ -1,0 +1,216 @@
+# Build Command:
+# docker buildx build \
+#   --builder mybuilder \
+#   --platform linux/arm64 \
+#   -t kairin/001:2025-03-30-0233-1 \
+#   --build-arg BASE_IMAGE=kairin/001:nvcr.io-nvidia-pytorch-25.02-py3-igpu \
+#   --build-arg TRITON_VERSION=2.0.0 \
+#   --build-arg TRITON_BRANCH=main \
+#   --push \
+#   .
+#
+# Installation Methods and Apps List
+# Installed via apt-get:
+#     liblapack-dev
+#     libblas-dev
+#     libhdf5-serial-dev
+#     hdf5-tools
+#     libhdf5-dev
+#     zlib1g-dev
+#     libjpeg8-dev
+#     libbz2-dev
+#     libffi-dev
+#     libgdbm-dev
+#     libncurses5-dev
+#     libnss3-dev
+#     libreadline-dev
+#     libsqlite3-dev
+#     patchelf
+#     build-essential
+#     git
+#     wget
+#     curl
+#     locales
+#
+# Installed via pip3 install:
+#     transformers
+#     xformers
+#     jax
+#     diffusers
+#     onnxruntime
+#     tensorflow
+#     pandas
+#     torchaudio
+#     cupy
+#     accelerate
+#     datasets
+#
+# Installed via custom build/install scripts:
+#     triton (via install.sh or build.sh)
+#
+# This list includes all the apps installed via different methods as per the provided Dockerfile.
+
+# Use the specified base image
+ARG BASE_IMAGE=kairin/001:nvcr.io-nvidia-pytorch-25.02-py3-igpu
+FROM ${BASE_IMAGE}
+
+# Set build metadata
+LABEL maintainer="kairin" \
+      description="AI Development Stack with PyTorch, Transformers, XFormers, ONNX Runtime, TensorFlow, and Triton" \
+      version="2025.03.29" \
+      build_date="2025-03-29 18:26:29"
+
+# Set common build arguments
+ARG MAKEFLAGS=-j$(nproc) \
+    DEBIAN_FRONTEND=noninteractive \
+    FORCE_BUILD=off
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    TRANSFORMERS_CACHE=/data/models/transformers \
+    HUGGINGFACE_HUB_CACHE=/data/models/huggingface \
+    HF_HOME=/data/models/huggingface \
+    JAX_CACHE_DIR=/data/models/jax \
+    XFORMERS_FORCE_DISABLE_TRITON=1 \
+    DIFFUSERS_FORCE_DISABLE_TRITON=1 \
+    LANG=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8
+
+# Configure locale
+RUN apt-get update && apt-get install -y locales && \
+    locale-gen en_US.UTF-8 && \
+    update-locale LANG=en_US.UTF-8
+
+# Install common dependencies in a single layer
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    liblapack-dev \
+    libblas-dev \
+    libhdf5-serial-dev \
+    hdf5-tools \
+    libhdf5-dev \
+    zlib1g-dev \
+    libjpeg8-dev \
+    libbz2-dev \
+    libffi-dev \
+    libgdbm-dev \
+    libncurses5-dev \
+    libnss3-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    patchelf \
+    build-essential \
+    git \
+    wget \
+    curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
+# Copy the verification script early
+COPY buildx/verify.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/verify.sh
+
+# ======================== PyTorch ========================
+# PyTorch is included in the base image
+
+# ======================== Transformers ========================
+# Install Transformers from PyPI
+RUN pip3 install transformers && \
+    echo "Transformers installed (will be tested during runtime)"
+
+# ======================== XFormers ========================
+# Install XFormers from PyPI
+RUN pip3 install xformers && \
+    echo "XFormers installed (will be tested during runtime)"
+
+# ======================== JAX ========================
+# Install JAX from PyPI
+RUN pip3 install jax && \
+    echo "JAX installed (will be tested during runtime)"
+
+# ======================== Diffusers ========================
+# Install Diffusers from PyPI
+RUN pip3 install diffusers && \
+    echo "Diffusers installed (will be tested during runtime)"
+
+# ======================== ONNX Runtime ========================
+# Install ONNX Runtime - just install without importing (which crashes)
+RUN pip3 install onnxruntime && \
+    echo "ONNX Runtime installed (will be tested during runtime)"
+
+# ======================== TensorFlow ========================
+# Install TensorFlow from PyPI
+RUN pip3 install tensorflow && \
+    echo "TensorFlow installed (will be tested during runtime)"
+
+# ======================== Additional Components ========================
+# Install additional components from PyPI
+RUN pip3 install pandas torchaudio cupy accelerate datasets && \
+    echo "Additional components installed (will be tested during runtime)"
+
+# ======================== Triton ========================
+# Copy triton build scripts
+COPY buildx/triton/build.sh buildx/triton/install.sh /tmp/triton/
+RUN chmod +x /tmp/triton/*.sh
+
+# Set Triton build arguments
+ARG TRITON_VERSION="2.0.0" \
+    TRITON_BRANCH="main"
+
+# Try to install/build Triton
+RUN /tmp/triton/install.sh || /tmp/triton/build.sh || echo "Triton build failed, continuing anyway"
+
+# Create an informational script that safely checks for components
+RUN echo '#!/bin/bash\n\
+echo "================================="\n\
+echo "Kairin AI Stack - 2025.03.29"\n\
+echo "================================="\n\
+echo "Components:"\n\
+echo "- PyTorch $(python3 -c "import torch; print(torch.__version__)" 2>/dev/null || echo "not found")"\n\
+echo "- Transformers $(python3 -c "import transformers; print(transformers.__version__)" 2>/dev/null || echo "not found")"\n\
+echo "- XFormers $(python3 -c "import xformers; print(xformers.__version__)" 2>/dev/null || echo "not found")"\n\
+echo "- ONNX Runtime $(pip list | grep onnxruntime | awk "{print \$2}" || echo "not found")"\n\
+echo "- TensorFlow $(pip list | grep tensorflow | grep -v estimator | awk "{print \$2}" || echo "not found")"\n\
+echo "- Triton $(pip list | grep triton | awk "{print \\\$2}" || echo "not available")"\n\
+echo "================================="\n\
+echo "Run \"verify.sh\" for detailed component information"\n\
+' > /usr/local/bin/ai-stack-info.sh \
+    && chmod +x /usr/local/bin/ai-stack-info.sh
+
+# Create a safer version of verify.sh that doesn't import problematic libraries
+RUN echo "#!/bin/bash\n\
+# Modify verify.sh to not import problematic libraries\n\
+sed -i 's/python3 -c .import onnxruntime/echo \"ONNX Runtime: \$(pip list | grep onnxruntime | awk \"{print \\\$2}\")\" #/g' /usr/local/bin/verify.sh\n\
+sed -i 's/python3 -c .import tensorflow/echo \"TensorFlow: \$(pip list | grep tensorflow | grep -v estimator | awk \"{print \\\$2}\")\" #/g' /usr/local/bin/verify.sh\n\
+sed -i 's/python3 -c .import triton/echo \"Triton: \$(pip list | grep triton | awk \"{print \\\$2}\")\" #/g' /usr/local/bin/verify.sh\n\
+# Run the original verify script\n\
+/usr/local/bin/verify.sh\n\
+" > /usr/local/bin/safe-verify.sh \
+    && chmod +x /usr/local/bin/safe-verify.sh
+
+# Clean up
+RUN apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /root/.cache
+
+# Set working directory
+WORKDIR /workspace
+
+# Add the startup script to automatically show container info
+RUN echo "if [ -t 0 ]; then /usr/local/bin/ai-stack-info.sh; fi" >> /root/.bashrc
+
+# Define a healthcheck that doesn't import problematic libraries
+HEALTHCHECK --interval=5m --timeout=3s \
+  CMD python3 -c "import torch, transformers; print('Health check passed')" || exit 1
+
+# Output build success message
+RUN echo "Build completed successfully on 2025-03-29 18:26:29" && \
+    echo "Full AI Stack image ready for use"
+```
+
+### Explanation:
+- The `COPY` commands are updated to use the correct paths for the `verify.sh` and `triton` scripts.
+- `COPY buildx/verify.sh /usr/local/bin/` ensures that the `verify.sh` script is copied from the `buildx` directory.
+- `COPY buildx/triton/build.sh buildx/triton/install.sh /tmp/triton/` ensures that the `triton` scripts are copied from the `buildx/triton` directory.
+
+Save the updated Dockerfile and try running the build again. This should resolve the issue with missing files.

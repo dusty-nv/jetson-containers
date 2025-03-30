@@ -1,153 +1,157 @@
 #!/bin/bash
 
-# Function to display a countdown timer
-countdown() {
-  local seconds=$1
-  while [ $seconds -gt 0 ]; do
-    echo -ne "Launching dialog in $seconds seconds...\033[0K\r"
-    sleep 1
-    : $((seconds--))
-  done
-  echo -ne "\033[0K\r"  # Clear the line
+# ANSI color codes
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
+CYAN='\033[0;36m'
+BOLD='\033[1m'
+RESET='\033[0m'
+
+# Clear the screen
+clear
+
+# ASCII Art Header
+cat << "EOF"
+${GREEN}${BOLD}
+        _______   ________   __________   ______    ________    _______  
+      /"      \ /"       ) ("     _   ") /    " \  /"       )  /"      \ 
+     |:        (:   \___/   )__/  \\__/ // ____  \(:   \___/  |:        |
+     |_____/   )\___  \        \\_ /   /  /    ) :)\___  \    |_____/   )
+      //      /  __/  \\       |.  |  (: (____/ //  __/  \\    //      / 
+     |:  __   \ /" \   :)      \:  |   \        /  /" \   :)  |:  __   \ 
+     |__|  \___(_______/        \__|    \"_____/  (_______/   |__|  \___)
+                                                                        
+     ________    __    __  _______   _______   ________  _______         
+    |"      "\  /""\  |" \|"     "\ /"     "| /"       )/"     "|        
+    (.  ___  :)/    \ ||  \:. ______):      |(: ______/(:      |_        
+    |: \   ) |/' /\  \|:  ||  ____/  |:     |/ \/    |  |:      "|       
+    (| (___\ ://  __  \  / : \        |.  ___|// _____)  |.      :|      
+    |:       /   /  \   \ |_/ \       |: |    (:  (      |:       |      
+    (________/__/    \___\)__) \      |__|     \__/       \______/       
+${RESET}
+EOF
+
+echo
+echo -e "${MAGENTA}${BOLD}===================== JETSON AI CONTAINER LAUNCHER =====================${RESET}"
+echo
+
+# Function to show help message
+show_help() {
+    echo -e "${YELLOW}${BOLD}Usage:${RESET} $0 [OPTIONS]"
+    echo
+    echo -e "${CYAN}Options:${RESET}"
+    echo -e "  ${GREEN}-h, --help${RESET}       Show this help message"
+    echo -e "  ${GREEN}-t, --tag TAG${RESET}    Specify the Docker image tag (default: latest)"
+    echo -e "  ${GREEN}-v, --volume DIR${RESET} Mount a volume (can be used multiple times)"
+    echo -e "  ${GREEN}-p, --port PORT${RESET}  Publish a port (can be used multiple times)"
+    echo -e "  ${GREEN}-g, --gpu${RESET}        Enable GPU support"
+    echo -e "  ${GREEN}-d, --detach${RESET}     Run container in background"
+    echo
+    echo -e "${YELLOW}${BOLD}Examples:${RESET}"
+    echo -e "  $0 -g -t 2025-03-30 -v /data:/workspace/data"
+    echo -e "  $0 -g -p 8888:8888 -p 6006:6006 -v /models:/workspace/models"
+    echo
 }
 
-# Function to check if dialog is installed
-check_dialog() {
-  if command -v dialog &> /dev/null; then
-    echo "dialog is installed"
-  else
-    echo "dialog is not installed"
-    read -p "dialog is not installed. Do you want to install it now? [y/N] " choice
-    case "$choice" in 
-      y|Y ) 
-        if sudo -v; then
-          sudo apt-get update
-          sudo apt-get install dialog
-        else
-          echo "sudo access is required to install dialog. Please run the script with sudo."
-          exit 1
-        fi
-        ;;
-      * ) 
-        echo "dialog is required for this script to run. Exiting."
-        exit 1
-        ;;
+# Default values
+TAG="latest"
+VOLUMES=()
+PORTS=()
+GPU_FLAG=""
+DETACH_FLAG=""
+
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    case $key in
+        -h|--help)
+            show_help
+            exit 0
+            ;;
+        -t|--tag)
+            TAG="$2"
+            shift
+            shift
+            ;;
+        -v|--volume)
+            VOLUMES+=("$2")
+            shift
+            shift
+            ;;
+        -p|--port)
+            PORTS+=("$2")
+            shift
+            shift
+            ;;
+        -g|--gpu)
+            GPU_FLAG="--gpus all"
+            shift
+            ;;
+        -d|--detach)
+            DETACH_FLAG="-d"
+            shift
+            ;;
+        *)
+            echo -e "${RED}Unknown option: $1${RESET}"
+            show_help
+            exit 1
+            ;;
     esac
-  fi
-}
+done
 
-# Function to check the existence of required files for the Docker build
-check_files() {
-  local missing_files=()
-  for file in "$@"; do
-    if [ ! -f "$file" ]; then
-      missing_files+=("$file")
-    fi
-  done
+# Construct volume mounts
+VOLUME_ARGS=""
+for vol in "${VOLUMES[@]}"; do
+    VOLUME_ARGS="$VOLUME_ARGS -v $vol"
+done
 
-  if [ ${#missing_files[@]} -gt 0 ]; then
-    echo "The following required files are missing:"
-    for file in "${missing_files[@]}"; do
-      echo " - $file"
+# Construct port mappings
+PORT_ARGS=""
+for port in "${PORTS[@]}"; do
+    PORT_ARGS="$PORT_ARGS -p $port"
+done
+
+# Display run information
+echo -e "${YELLOW}${BOLD}CONTAINER CONFIGURATION:${RESET}"
+echo -e "${CYAN}Image:${RESET} kairin/001:$TAG"
+echo -e "${CYAN}GPU Support:${RESET} ${GPU_FLAG:+Enabled}"
+echo -e "${CYAN}Detached Mode:${RESET} ${DETACH_FLAG:+Enabled}"
+
+if [ ${#VOLUMES[@]} -gt 0 ]; then
+    echo -e "${CYAN}Volumes:${RESET}"
+    for vol in "${VOLUMES[@]}"; do
+        echo -e "  - $vol"
     done
-    exit 1
-  fi
-}
+fi
 
-# Function to build a new Docker image
-build_image() {
-  # Check for required files
-  check_files "buildx/verify.sh" "buildx/triton/build.sh" "buildx/triton/install.sh"
+if [ ${#PORTS[@]} -gt 0 ]; then
+    echo -e "${CYAN}Ports:${RESET}"
+    for port in "${PORTS[@]}"; do
+        echo -e "  - $port"
+    done
+fi
 
-  # Get the current date and time for the new image tag
-  NEW_TAG=$(date +"%Y-%m-%d-%H%M-%S")
+echo
 
-  # Build the new Docker image
-  docker buildx build \
-    --builder mybuilder \
-    --platform linux/arm64 \
-    -t kairin/001:$NEW_TAG-1 \
-    --build-arg BASE_IMAGE=kairin/001:nvcr.io-nvidia-pytorch-25.02-py3-igpu \
-    --build-arg TRITON_VERSION=2.0.0 \
-    --build-arg TRITON_BRANCH=main \
-    --push \
-    -f buildx/Dockerfile .
+# Confirmation
+read -p "$(echo -e ${YELLOW}${BOLD}"Do you want to launch the container with these settings? (y/n): "${RESET})" confirm
+if [[ ! $confirm =~ ^[Yy]$ ]]; then
+    echo -e "${RED}Operation cancelled.${RESET}"
+    exit 0
+fi
 
-  # Update the script to use the new image tag
-  sed -i "s|$(autotag kairin/001:.*)|$(autotag kairin/001:$NEW_TAG-1)|" $0
+echo -e "${GREEN}${BOLD}Launching container...${RESET}"
 
-  # Pull the latest image
-  docker pull kairin/001:$NEW_TAG-1
+# Run the container
+docker run $DETACH_FLAG \
+    $GPU_FLAG \
+    $VOLUME_ARGS \
+    $PORT_ARGS \
+    -it \
+    --name jetson-ai-$(date +%s) \
+    kairin/001:$TAG
 
-  echo "New image built and pulled: kairin/001:$NEW_TAG-1"
-}
-
-# Function to run the latest Docker image
-run_image() {
-  # List all available Docker images
-  IMAGES=$(docker images --format "{{.Repository}}:{{.Tag}}")
-
-  # Check if there are available images
-  if [ -z "$IMAGES" ]; then
-    echo "No available Docker images found."
-    exit 1
-  fi
-
-  # Get the terminal window size
-  HEIGHT=$(tput lines)
-  WIDTH=$(tput cols)
-
-  # Calculate dialog window size
-  DIALOG_HEIGHT=$(( HEIGHT - 2 ))
-  DIALOG_WIDTH=$(( WIDTH - 2 ))
-
-  # Display the images in a dialog menu
-  IMAGE=$(dialog --clear \
-                 --backtitle "Select Docker Image" \
-                 --title "Available Docker Images" \
-                 --menu "Select an image to run" \
-                 $DIALOG_HEIGHT $DIALOG_WIDTH $(( HEIGHT - 8 )) \
-                 $(for img in $IMAGES; do echo $img $img; done) \
-                 2>&1 >/dev/tty)
-
-  # Run the selected Docker image
-  if [ -n "$IMAGE" ]; then
-    docker run --runtime nvidia -it --rm --network host --shm-size=8g --volume /tmp/argus_socket:/tmp/argus_socket --volume /etc/enctune.conf:/etc/enctune.conf --volume /etc/nv_tegra_release:/etc/nv_tegra_release --volume /tmp/nv_jetson_model:/tmp/nv_jetson_model --volume /var/run/dbus:/var/run/dbus --volume /var/run/avahi-daemon/socket:/var/run/avahi-daemon/socket --volume /var/run/docker.sock:/var/run/docker.sock --volume /media/kkk/Apps/jetsonc/data:/data -v /etc/localtime:/etc/localtime:ro -v /etc/timezone:/etc/timezone:ro --device /dev/snd -e PULSE_SERVER=unix:/run/user/1000/pulse/native -v /run/user/1000/pulse:/run/user/1000/pulse --device /dev/bus/usb -e DISPLAY=:1 -v /tmp/.X11-unix/:/tmp/.X11-unix -v /tmp/.docker.xauth:/tmp/.docker.xauth -e XAUTHORITY=/tmp/.docker.xauth --device /dev/i2c-0 --device /dev/i2c-1 --device /dev/i2c-2 --device /dev/i2c-3 --device /dev/i2c-4 --device /dev/i2c-5 --device /dev/i2c-6 --device /dev/i2c-7 --device /dev/i2c-8 --device /dev/i2c-9 --name jetson_container_$(date +"%Y%m%d_%H%M%S") --volume /media/kkk/Apps:/ppp -it --rm --user root $IMAGE /bin/bash
-  else
-    echo "No image selected. Exiting."
-    exit 1
-  fi
-}
-
-# Function to display menu options using dialog
-menu() {
-  CHOICE=$(dialog --clear \
-                  --backtitle "Jetson Run Menu" \
-                  --title "Main Menu" \
-                  --menu "Use [UP/DOWN] keys to navigate and [Enter] to select" \
-                  15 50 4 \
-                  1 "Build a new Docker image" \
-                  2 "Run the latest Docker image" \
-                  3 "Quit" \
-                  2>&1 >/dev/tty)
-
-  case $CHOICE in
-    1)
-      build_image
-      ;;
-    2)
-      run_image
-      ;;
-    3)
-      exit 0
-      ;;
-    *)
-      echo "Invalid option"
-      ;;
-  esac
-}
-
-# Main script
-countdown 5
-check_dialog
-menu
+echo -e "${GREEN}${BOLD}Container launched successfully!${RESET}"
