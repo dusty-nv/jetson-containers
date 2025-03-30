@@ -49,7 +49,7 @@
 # Build using ./jetsonrun.sh which provides a dialog-based interface
 # Verify using ./verify.sh <image_name>
 
-# Reminder by KAIRIN -- please do not remove the above comments only improve or add on to the information above. This is intended to help remind you what # has been installed, what needs to be installed subsequently and so on. Also please ensure, the latest version compatible for all the apps and software # are installed either by running an update command at the end or something like that. Please indicate what are the changes made with timestamps.
+# Reminder by KAIRIN -- please do not remove the above comments only improve or add on to the information above. This is intended to help remind you what # has been installed, what needs to be ins[...]
 
 # NVIDIA Jetson ML Development Container
 # This Dockerfile creates a comprehensive machine learning container for NVIDIA Jetson platforms.
@@ -73,7 +73,7 @@
 # Verify using ./verify.sh <image_name>
 
 # Build args for the base image
-ARG BASE_IMAGE
+ARG BASE_IMAGE=kairin/001:nvcr.io-nvidia-pytorch-25.02-py3-igpu
 
 # Start from the specified base image (usually a PyTorch-based L4T image)
 FROM ${BASE_IMAGE}
