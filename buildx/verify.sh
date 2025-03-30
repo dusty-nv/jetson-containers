@@ -1,12 +1,12 @@
 #!/bin/bash
 #==============================================================================
 #
-#  ██╗   ██╗███████╗██████╗ ██╗███████╗██╗   ██╗
-#  ██║   ██║██╔════╝██╔══██╗██║██╔════╝╚██╗ ██╔╝
-#  ██║   ██║█████╗  ██████╔╝██║█████╗   ╚████╔╝ 
-#  ╚██╗ ██╔╝██╔══╝  ██╔══██╗██║██╔══╝    ╚██╔╝  
-#   ╚████╔╝ ███████╗██║  ██║██║██║        ██║   
-#    ╚═══╝  ╚══════╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝   
+#  ██╗   ██╗████████╗███████╗██████╗ ██████╗ ██╗   ██╗
+#  ██║   ██║╚══██╔══╝██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝
+#  ██║   ██║   ██║   █████╗  ██████╔╝██████╔╝ ╚████╔╝ 
+#  ██║   ██║   ██║   ██╔══╝  ██╔══██╗██╔═══╝   ╚██╔╝  
+#  ╚██████╔╝   ██║   ███████╗██║  ██║██║        ██║   
+#   ╚═════╝    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝        ╚═╝   
 #
 # Container Verification Tool for NVIDIA Jetson ML Development
 # Current Version: 2025-03-30
@@ -27,8 +27,6 @@
 # 2. Inside a container to verify the container environment itself
 #==============================================================================
 
-# Reminder by KAIRIN -- please do not remove the above comments only improve or add on to the information above. This is intended to help remind you what # has been installed, what needs to be installed subsequently and so on. Also please ensure, the latest version compatible for all the apps and software # are installed either by running an update command at the end or something like that. Please indicate what are the changes made with timestamps.
-
 # Define color codes
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -47,16 +45,16 @@ fi
 
 # Header
 echo -e "${MAGENTA}${BOLD}"
-echo "╔══════════════════════════════════════════════════════════════════════╗"
-echo "║                                                                      ║"
+echo "╔═════════════════════════════════════════════════════════════════════╗"
+echo "║                                                                     ║"
 echo "║   ░░░▒▒▒▓▓▓███ JETSON ML CONTAINER VERIFIER ███▓▓▓▒▒▒░░░             ║"
-echo "║                                                                      ║"
-echo "╚══════════════════════════════════════════════════════════════════════╝"
+echo "║                                                                     ║"
+echo "╚═════════════════════════════════════════════════════════════════════╝"
 echo -e "${RESET}"
 
 # Function to print section headers
 print_section() {
-    echo -e "\n${YELLOW}${BOLD}╔═══ $1 ════════════════════════════════════════════════╗${RESET}"
+    echo -e "\n${YELLOW}${BOLD}╔═══ $1 ════════════════════════════════════╗${RESET}"
 }
 
 # Function to run verification inside container
@@ -122,4 +120,24 @@ verify_inside_container() {
     
     # Verify NVIDIA GPU access
     print_section "NVIDIA GPU ACCESS"
-    if nvidia-smi >/dev/null
+    if nvidia-smi >/dev/null 2>&1; then
+        echo -e "${GREEN}✅ NVIDIA GPU detected${RESET}"
+    else
+        echo -e "${RED}❌ NVIDIA GPU not detected${RESET}"
+    fi
+}
+
+# Main verification flow
+if $INSIDE_CONTAINER; then
+    verify_inside_container
+else
+    if [ -z "$1" ]; then
+        echo -e "${RED}${BOLD}ERROR: No image specified. Usage: ./verify.sh <image-name>${RESET}"
+        exit 1
+    fi
+    
+    IMAGE_NAME="$1"
+    echo -e "${CYAN}${BOLD}VERIFYING IMAGE: ${IMAGE_NAME}${RESET}\n"
+    
+    docker run --rm --runtime nvidia ${IMAGE_NAME} bash -c "$(declare -f verify_inside_container); verify_inside_container"
+fi

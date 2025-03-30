@@ -50,6 +50,50 @@
 # Reminder by KAIRIN -- please do not remove the above comments only improve or add on to the information above. This is intended to help remind you what # has been installed, what needs to be installed subsequently and so on. Also please ensure, the latest version compatible for all the apps and software # are installed either by running an update command at the end or something like that. Please indicate what are the changes made with timestamps.
 
 
+#!/bin/bash
+#==============================================================================
+#
+#  ░░░▒▒▒▓▓▓███ JETSON ML CONTAINER BUILDER ███▓▓▓▒▒▒░░░             
+#
+# Container Build Tool for NVIDIA Jetson ML Development
+# Current Version: 2025-03-30
+#==============================================================================
+# 
+# This script builds a comprehensive machine learning container for NVIDIA Jetson platforms.
+# It includes:
+# 
+# - System Dependencies and Basic Utilities:
+#   build-essential, cmake, git, curl, wget, and more
+#
+# - Python Core Dependencies: 
+#   numpy, scipy, matplotlib, pandas, jupyterlab
+#
+# - Core ML/DL Framework Layer:
+#   PyTorch (from base image), TensorFlow, JAX, Flax, Optax
+#
+# - Hugging Face Ecosystem:
+#   Transformers, Diffusers, Datasets, Tokenizers
+#
+# - ONNX Runtime & Conversion:
+#   ONNX, ONNX Runtime
+#
+# - OpenAI Triton Compilation:
+#   Triton compiler for GPU kernels
+#
+# - Optimization Libraries:
+#   bitsandbytes, flash-attention, xformers
+#
+# - Computer Vision Libraries:
+#   OpenCV
+#
+# - Media Processing:
+#   FFmpeg, GStreamer
+#
+# - CUDA Extensions:
+#   CuPy
+#==============================================================================
+
+
 # Define color codes
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -95,11 +139,11 @@ show_header() {
 dialog --clear --title "Jetson ML Container Builder" \
        --backtitle "NVIDIA Jetson ML Development" \
        --colors \
-       --msgbox "\Z1\Zb╔═════════════════════════════════════════════════════╗\Zn
+       --msgbox "\Z1\Zb╔═════════════════════════════════════════════════════════════════════╗\Zn
 \Z1\Zb║                                                 ║\Zn
 \Z1\Zb║   JETSON ML CONTAINER BUILDER                   ║\Zn
 \Z1\Zb║                                                 ║\Zn
-\Z1\Zb╚═════════════════════════════════════════════════╝\Zn
+\Z1\Zb╚═════════════════════════════════════════════════════════════════════╝\Zn
 
 This tool builds a comprehensive machine learning container 
 optimized for NVIDIA Jetson platforms.
