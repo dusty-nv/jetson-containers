@@ -8,20 +8,47 @@
 #  ██║███████╗   ██║   ███████║╚██████╔╝██║ ╚████║
 #  ╚═╝╚══════╝   ╚═╝   ╚══════╝ ╚═════╝ ╚═╝  ╚═══╝
 #
-# NVIDIA Jetson ML Container Builder
-# 
-# This script builds a Docker container for ML development on NVIDIA Jetson platforms
-# with a comprehensive set of libraries and tools pre-installed.
-#
-# Features:
-# - Interactive dialog-based interface
-# - Automatic timestamp-based image naming
-# - Configurable build options (cache, no-cache)
-# - Integration with verify.sh for immediate verification
-# - Visual progress indicators and colorful output
-#
+# Container Build Tool for NVIDIA Jetson ML Development
 # Current Version: 2025-03-30
 #==============================================================================
+# 
+# This script builds a comprehensive machine learning container for NVIDIA Jetson platforms.
+# It includes:
+# 
+# - System Dependencies and Basic Utilities:
+#   build-essential, cmake, git, curl, wget, and more
+#
+# - Python Core Dependencies: 
+#   numpy, scipy, matplotlib, pandas, jupyterlab
+#
+# - Core ML/DL Framework Layer:
+#   PyTorch (from base image), TensorFlow, JAX, Flax, Optax
+#
+# - Hugging Face Ecosystem:
+#   Transformers, Diffusers, Datasets, Tokenizers
+#
+# - ONNX Runtime & Conversion:
+#   ONNX, ONNX Runtime
+#
+# - OpenAI Triton Compilation:
+#   Triton compiler for GPU kernels
+#
+# - Optimization Libraries:
+#   bitsandbytes, flash-attention, xformers
+#
+# - Computer Vision Libraries:
+#   OpenCV
+#
+# - Media Processing:
+#   FFmpeg, GStreamer
+#
+# - CUDA Extensions:
+#   CuPy
+#==============================================================================
+
+
+# Reminder by KAIRIN -- please do not remove the above comments only improve or add on to the information above. This is intended to help remind you what # has been installed, what needs to be installed subsequently and so on. Also please ensure, the latest version compatible for all the apps and software # are installed either by running an update command at the end or something like that. Please indicate what are the changes made with timestamps.
+
 
 # Define color codes
 RED='\033[0;31m'
@@ -33,128 +60,28 @@ CYAN='\033[0;36m'
 BOLD='\033[1m'
 RESET='\033[0m'
 
-# Check if dialog is installed, install if needed
-check_dialog() {
-    if ! command -v dialog &> /dev/null; then
-        echo -e "${YELLOW}Dialog utility not found. Installing...${RESET}"
-        sudo apt-get update
-        sudo apt-get install -y dialog
-        if [ $? -ne 0 ]; then
-            echo -e "${RED}Failed to install dialog. Continuing with basic interface.${RESET}"
-            USE_DIALOG=false
-            return
-        fi
-    fi
-    USE_DIALOG=true
-}
+# Default values
+BASE_IMAGE="kairin/001:nvcr.io-nvidia-pytorch-25.02-py3-igpu"
+USE_CACHE="yes"
+AUTO_VERIFY="no"
+TIMESTAMP=$(date +"%Y-%m-%d-%H%M")
+USERNAME=${USER:-"kairin"}
+IMAGE_NAME="kairin/001:${TIMESTAMP}-1"
 
-# Get current timestamp and set default values
-setup_defaults() {
-    TIMESTAMP=$(date +"%Y-%m-%d-%H%M")
-    USERNAME=${USER:-"kairin"}
-    IMAGE_NAME="kairin/001:${TIMESTAMP}-1"
-    BASE_IMAGE="kairin/001:nvcr.io-nvidia-pytorch-25.02-py3-igpu"
-    USE_CACHE=true
-    AUTO_VERIFY=true
-}
+# Check if dialog is installed, if not, install it
+if ! command -v dialog &> /dev/null; then
+    echo -e "${YELLOW}Dialog not found. Installing...${RESET}"
+    sudo apt-get update && sudo apt-get install -y dialog
+fi
 
-# Show build configuration menu with dialog
-show_dialog_menu() {
-    # Create temporary file for dialog output
-    TEMP_FILE=$(mktemp)
-    
-    # Show dialog form
-    dialog --backtitle "NVIDIA Jetson Container Builder" \
-           --title "Build Configuration" \
-           --form "\nConfigure build parameters:" 20 70 8 \
-           "Image Name:" 1 1 "$IMAGE_NAME" 1 18 50 0 \
-           "Base Image:" 2 1 "$BASE_IMAGE" 2 18 50 0 \
-           2> $TEMP_FILE
-    
-    # Read form values if dialog was successful
-    if [ $? -eq 0 ]; then
-        IMAGE_NAME=$(sed -n '1p' $TEMP_FILE)
-        BASE_IMAGE=$(sed -n '2p' $TEMP_FILE)
-    else
-        # User canceled, exit
-        rm -f $TEMP_FILE
-        echo -e "${YELLOW}Build canceled by user.${RESET}"
-        exit 0
-    fi
-    
-    # Show additional options
-    dialog --backtitle "NVIDIA Jetson Container Builder" \
-           --title "Build Options" \
-           --checklist "\nSelect build options:" 15 60 3 \
-           "USE_CACHE" "Use Docker build cache" $([ "$USE_CACHE" = true ] && echo "on" || echo "off") \
-           "AUTO_VERIFY" "Automatically verify after build" $([ "$AUTO_VERIFY" = true ] && echo "on" || echo "off") \
-           2> $TEMP_FILE
-    
-    # Read checklist values
-    if [ $? -eq 0 ]; then
-        SELECTED=$(cat $TEMP_FILE)
-        if [[ $SELECTED == *"USE_CACHE"* ]]; then
-            USE_CACHE=true
-        else
-            USE_CACHE=false
-        fi
-        if [[ $SELECTED == *"AUTO_VERIFY"* ]]; then
-            AUTO_VERIFY=true
-        else
-            AUTO_VERIFY=false
-        fi
-    fi
-    
-    # Clean up
-    rm -f $TEMP_FILE
-}
+# Check if Docker is installed and running
+if ! command -v docker &> /dev/null; then
+    echo -e "${RED}${BOLD}ERROR: Docker is not installed. Please install Docker first.${RESET}"
+    exit 1
+fi
 
-# Show build configuration with basic terminal UI
-show_basic_menu() {
-    echo -e "${CYAN}${BOLD}NVIDIA Jetson Container Builder${RESET}"
-    echo -e "${BLUE}Current build configuration:${RESET}"
-    echo -e "  Image Name: ${YELLOW}$IMAGE_NAME${RESET}"
-    echo -e "  Base Image: ${YELLOW}$BASE_IMAGE${RESET}"
-    echo ""
-    
-    read -p "Do you want to change the image name? (y/N): " -n 1 -r
-    echo ""
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        read -p "Enter new image name: " -r new_image
-        if [ -n "$new_image" ]; then
-            IMAGE_NAME="$new_image"
-        fi
-    fi
-    
-    read -p "Do you want to change the base image? (y/N): " -n 1 -r
-    echo ""
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        read -p "Enter new base image: " -r new_base
-        if [ -n "$new_base" ]; then
-            BASE_IMAGE="$new_base"
-        fi
-    fi
-    
-    read -p "Use Docker build cache? (Y/n): " -n 1 -r
-    echo ""
-    if [[ $REPLY =~ ^[Nn]$ ]]; then
-        USE_CACHE=false
-    else
-        USE_CACHE=true
-    fi
-    
-    read -p "Automatically verify after build? (Y/n): " -n 1 -r
-    echo ""
-    if [[ $REPLY =~ ^[Nn]$ ]]; then
-        AUTO_VERIFY=false
-    else
-        AUTO_VERIFY=true
-    fi
-}
-
-# Display build header
+# Function to display ASCII art header in terminal (non-dialog mode)
 show_header() {
-    clear
     echo -e "${CYAN}${BOLD}"
     echo "╔═════════════════════════════════════════════════════════════════════╗"
     echo "║                                                                     ║"
@@ -164,121 +91,177 @@ show_header() {
     echo -e "${RESET}"
 }
 
-# Show build information
-show_build_info() {
-    echo -e "${YELLOW}${BOLD}BUILD INFORMATION${RESET}"
-    echo -e "${BLUE}• Timestamp:${RESET} ${TIMESTAMP}"
-    echo -e "${BLUE}• Username:${RESET} ${USERNAME}"
-    echo -e "${BLUE}• Image Name:${RESET} ${IMAGE_NAME}"
-    echo -e "${BLUE}• Base Image:${RESET} ${BASE_IMAGE}"
-    echo -e "${BLUE}• Builder:${RESET} mybuilder"
-    echo -e "${BLUE}• Platform:${RESET} linux/arm64"
-    echo -e "${BLUE}• Use Cache:${RESET} $([ "$USE_CACHE" = true ] && echo "Yes" || echo "No")"
-    echo -e "${BLUE}• Auto Verify:${RESET} $([ "$AUTO_VERIFY" = true ] && echo "Yes" || echo "No")"
-    echo ""
-}
+# Show the welcome dialog
+dialog --clear --title "Jetson ML Container Builder" \
+       --backtitle "NVIDIA Jetson ML Development" \
+       --colors \
+       --msgbox "\Z1\Zb╔═════════════════════════════════════════════════════╗\Zn
+\Z1\Zb║                                                 ║\Zn
+\Z1\Zb║   JETSON ML CONTAINER BUILDER                   ║\Zn
+\Z1\Zb║                                                 ║\Zn
+\Z1\Zb╚═════════════════════════════════════════════════╝\Zn
+
+This tool builds a comprehensive machine learning container 
+optimized for NVIDIA Jetson platforms.
+
+The container includes:
+• PyTorch, TensorFlow, JAX ecosystems
+• Hugging Face Transformers, Diffusers
+• ONNX Runtime and optimization libraries
+• Triton compiler for GPU kernels
+• Media libraries (OpenCV, FFmpeg, GStreamer)
+• CUDA extensions and optimization tools
+
+Press OK to configure your build options." 20 70
+
+# Main configuration menu
+while true; do
+    OPTIONS=$(dialog --clear --title "Build Configuration" \
+            --backtitle "NVIDIA Jetson ML Development" \
+            --ok-label "Build" \
+            --cancel-label "Exit" \
+            --extra-button \
+            --extra-label "Advanced" \
+            --colors \
+            --form "\Z4\ZbBuild Configuration\Zn" 18 70 0 \
+            "Image Name:" 1 1 "$IMAGE_NAME" 1 20 45 0 \
+            "Base Image:" 2 1 "$BASE_IMAGE" 2 20 45 0 \
+            "Use Cache:" 3 1 "$USE_CACHE" 3 20 5 0 \
+            "Auto Verify:" 4 1 "$AUTO_VERIFY" 4 20 5 0 \
+            2>&1 >/dev/tty)
+    
+    BUTTON=$?
+    
+    case $BUTTON in
+        0) # Build button pressed
+            IMAGE_NAME=$(echo "$OPTIONS" | sed -n 1p)
+            BASE_IMAGE=$(echo "$OPTIONS" | sed -n 2p)
+            USE_CACHE=$(echo "$OPTIONS" | sed -n 3p)
+            AUTO_VERIFY=$(echo "$OPTIONS" | sed -n 4p)
+            break
+            ;;
+        1) # Exit button pressed
+            clear
+            echo -e "${YELLOW}Build canceled. Exiting.${RESET}"
+            exit 0
+            ;;
+        3) # Advanced button pressed
+            ADVANCED=$(dialog --clear --title "Advanced Configuration" \
+                    --backtitle "NVIDIA Jetson ML Development" \
+                    --ok-label "Apply" \
+                    --cancel-label "Back" \
+                    --checklist "Select components to include:" 20 70 10 \
+                    "PYTORCH" "PyTorch and TorchVision" on \
+                    "TENSORFLOW" "TensorFlow" on \
+                    "JAX" "JAX, Flax, and Optax" on \
+                    "TRANSFORMERS" "Hugging Face Transformers" on \
+                    "DIFFUSERS" "Hugging Face Diffusers" on \
+                    "ONNX" "ONNX Runtime" on \
+                    "TRITON" "OpenAI Triton" on \
+                    "XFORMERS" "xFormers optimization library" on \
+                    "OPENCV" "OpenCV" on \
+                    "FFMPEG" "FFmpeg" on \
+                    "GSTREAMER" "GStreamer" on \
+                    "CUPY" "CuPy (CUDA NumPy)" on \
+                    2>&1 >/dev/tty)
+                    
+            # We would parse the selections here, but for now we'll just continue
+            # with all components enabled by default
+            ;;
+    esac
+done
+
+# Clear the screen for build output
+clear
+show_header
+
+# Display build information
+echo -e "${YELLOW}${BOLD}BUILD INFORMATION${RESET}"
+echo -e "${BLUE}• Image Name:${RESET} ${IMAGE_NAME}"
+echo -e "${BLUE}• Base Image:${RESET} ${BASE_IMAGE}"
+echo -e "${BLUE}• Use Cache:${RESET} ${USE_CACHE}"
+echo -e "${BLUE}• Auto Verify:${RESET} ${AUTO_VERIFY}"
+echo -e "${BLUE}• Builder:${RESET} mybuilder"
+echo -e "${BLUE}• Platform:${RESET} linux/arm64"
+echo ""
 
 # Check and setup buildx
-setup_buildx() {
-    echo -e "${YELLOW}${BOLD}BUILDER SETUP${RESET}"
-    if ! docker buildx ls | grep -q mybuilder; then
-        echo -e "${MAGENTA}Creating new builder instance 'mybuilder'...${RESET}"
-        docker buildx create --name mybuilder --use
-        if [ $? -ne 0 ]; then
-            echo -e "${RED}${BOLD}Failed to create builder! Exiting.${RESET}"
-            exit 1
-        fi
-    else
-        echo -e "${GREEN}Builder 'mybuilder' already exists. Using it.${RESET}"
-        docker buildx use mybuilder
+echo -e "${YELLOW}${BOLD}BUILDER SETUP${RESET}"
+if ! docker buildx ls | grep -q mybuilder; then
+    echo -e "${MAGENTA}Creating new builder instance 'mybuilder'...${RESET}"
+    docker buildx create --name mybuilder --use
+    if [ $? -ne 0 ]; then
+        echo -e "${RED}${BOLD}Failed to create builder! Exiting.${RESET}"
+        exit 1
     fi
-}
+else
+    echo -e "${GREEN}Builder 'mybuilder' already exists. Using it.${RESET}"
+    docker buildx use mybuilder
+fi
 
-# Run the build process
-run_build() {
-    echo -e "\n${YELLOW}${BOLD}STARTING BUILD PROCESS${RESET}"
-    echo -e "${CYAN}Building ML container for NVIDIA Jetson...${RESET}"
-    echo -e "${CYAN}This may take a while depending on your connection and hardware.${RESET}"
-    echo ""
-    
-    # Prepare build command
-    BUILD_CMD="docker buildx build --builder mybuilder --platform linux/arm64"
-    
-    # Add no-cache flag if needed
-    if [ "$USE_CACHE" = false ]; then
-        BUILD_CMD="$BUILD_CMD --no-cache"
-    fi
-    
-    # Add image name and build arguments
-    BUILD_CMD="$BUILD_CMD -t ${IMAGE_NAME} --build-arg BASE_IMAGE=${BASE_IMAGE} --build-arg TRITON_VERSION=2.0.0 --build-arg TRITON_BRANCH=main"
-    
-    # Add push flag to push to registry
-    BUILD_CMD="$BUILD_CMD --push ."
-    
-    # Execute build command
-    eval $BUILD_CMD
-    
-    # Store build result
-    BUILD_SUCCESS=$?
-    
-    # Show build result
-    if [ $BUILD_SUCCESS -eq 0 ]; then
-        echo -e "\n${GREEN}${BOLD}✅ BUILD SUCCESSFUL!${RESET}"
-        echo -e "${GREEN}Image ${IMAGE_NAME} has been built and pushed to registry.${RESET}"
-        
-        # Run verification if auto-verify is enabled
-        if [ "$AUTO_VERIFY" = true ]; then
-            echo -e "\n${YELLOW}${BOLD}STARTING AUTOMATIC VERIFICATION${RESET}"
-            echo -e "${CYAN}Running verification script on the new image...${RESET}"
-            
-            # Check if verify.sh exists and is executable
-            if [ -f "./verify.sh" ] && [ -x "./verify.sh" ]; then
-                ./verify.sh "$IMAGE_NAME"
-            else
-                echo -e "${RED}Verification script not found or not executable.${RESET}"
-                echo -e "${YELLOW}To verify manually, run: ./verify.sh ${IMAGE_NAME}${RESET}"
-            fi
-        else
-            echo -e "${YELLOW}To verify the image, run:${RESET}"
-            echo -e "  ${CYAN}./verify.sh ${IMAGE_NAME}${RESET}"
-        fi
-    else
-        echo -e "\n${RED}${BOLD}❌ BUILD FAILED!${RESET}"
-        echo -e "${RED}Please check the build logs above for errors.${RESET}"
-        echo -e "${RED}Make sure you have proper Docker and NVIDIA setup.${RESET}"
-    fi
-    
-    echo -e "\n${CYAN}${BOLD}========== BUILD PROCESS COMPLETE ===========${RESET}"
-}
+# Start build process
+echo -e "\n${YELLOW}${BOLD}STARTING BUILD PROCESS${RESET}"
+echo -e "${CYAN}Building ML container for NVIDIA Jetson...${RESET}"
+echo -e "${CYAN}This may take a while depending on your connection and hardware.${RESET}"
+echo ""
 
-# Main function
-main() {
-    # Check if dialog is available
-    check_dialog
-    
-    # Set up default values
-    setup_defaults
-    
-    # Show header
-    show_header
-    
-    # Show configuration menu
-    if [ "$USE_DIALOG" = true ]; then
-        show_dialog_menu
-    else
-        show_basic_menu
-    fi
-    
-    # Show header and build info
-    show_header
-    show_build_info
-    
-    # Setup buildx
-    setup_buildx
-    
-    # Run the build
-    run_build
-}
+# Set cache option
+if [ "$USE_CACHE" = "no" ]; then
+    CACHE_OPTION="--no-cache"
+else
+    CACHE_OPTION=""
+fi
 
-# Run main function
-main
+# Make a backup copy of verify.sh to be included in the container
+cp verify.sh verify.sh.copy
+
+# Add verify.sh to be included in the container
+cat > Dockerfile.build <<EOF
+# Include the verification script in the container
+COPY verify.sh.copy /workspace/verify.sh
+RUN chmod +x /workspace/verify.sh
+EOF
+
+cat Dockerfile Dockerfile.build > Dockerfile.tmp
+
+# Run the build command
+docker buildx build \
+    --builder mybuilder \
+    --platform linux/arm64 \
+    -t ${IMAGE_NAME} \
+    --build-arg BASE_IMAGE=${BASE_IMAGE} \
+    --build-arg TRITON_VERSION=2.0.0 \
+    --build-arg TRITON_BRANCH=main \
+    ${CACHE_OPTION} \
+    --push \
+    -f Dockerfile.tmp \
+    .
+
+BUILD_SUCCESS=$?
+
+# Clean up temporary files
+rm -f Dockerfile.tmp Dockerfile.build verify.sh.copy
+
+# Show build result
+if [ $BUILD_SUCCESS -eq 0 ]; then
+    echo -e "\n${GREEN}${BOLD}✅ BUILD SUCCESSFUL!${RESET}"
+    echo -e "${GREEN}Image ${IMAGE_NAME} has been built and pushed to registry.${RESET}"
+    
+    if [ "$AUTO_VERIFY" = "yes" ]; then
+        echo -e "\n${YELLOW}${BOLD}AUTOMATICALLY STARTING VERIFICATION...${RESET}"
+        ./verify.sh ${IMAGE_NAME}
+    else
+        echo -e "\n${YELLOW}To verify the image, run:${RESET}"
+        echo -e "  ${CYAN}./verify.sh ${IMAGE_NAME}${RESET}"
+        echo -e "\n${YELLOW}To run the container interactively:${RESET}"
+        echo -e "  ${CYAN}docker run --rm -it --runtime nvidia ${IMAGE_NAME} bash${RESET}"
+        echo -e "\n${YELLOW}To verify from inside the container, run:${RESET}"
+        echo -e "  ${CYAN}/workspace/verify.sh${RESET}"
+    fi
+else
+    echo -e "\n${RED}${BOLD}❌ BUILD FAILED!${RESET}"
+    echo -e "${RED}Please check the build logs above for errors.${RESET}"
+    echo -e "${RED}Make sure you have proper Docker and NVIDIA setup.${RESET}"
+fi
+
+echo -e "\n${CYAN}${BOLD}========== BUILD PROCESS COMPLETE ===========${RESET}"

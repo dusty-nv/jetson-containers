@@ -28,6 +28,50 @@
 # for edge AI deployment.
 # ========================================================================
 
+# NVIDIA Jetson ML Development Container
+# This Dockerfile creates a comprehensive machine learning container for NVIDIA Jetson platforms.
+#
+# === CONTENTS ===
+# - System Dependencies and Basic Utilities
+# - Python Core Dependencies
+# - Core ML/DL Framework Layer (PyTorch, TensorFlow, JAX)
+# - Hugging Face Ecosystem (Transformers, Diffusers)
+# - ONNX Runtime & Conversion
+# - OpenAI Triton Compilation
+# - Optimization Libraries (bitsandbytes, flash-attention, xformers)
+# - Computer Vision Libraries (OpenCV)
+# - GStreamer for Video I/O
+# - FFmpeg Integration
+# - Distributed Training (DeepSpeed)
+# - CUDA Extensions (CuPy)
+#
+# === USAGE ===
+# Build using ./jetsonrun.sh which provides a dialog-based interface
+# Verify using ./verify.sh <image_name>
+
+# Reminder by KAIRIN -- please do not remove the above comments only improve or add on to the information above. This is intended to help remind you what # has been installed, what needs to be installed subsequently and so on. Also please ensure, the latest version compatible for all the apps and software # are installed either by running an update command at the end or something like that. Please indicate what are the changes made with timestamps.
+
+# NVIDIA Jetson ML Development Container
+# This Dockerfile creates a comprehensive machine learning container for NVIDIA Jetson platforms.
+#
+# === CONTENTS ===
+# - System Dependencies and Basic Utilities
+# - Python Core Dependencies
+# - Core ML/DL Framework Layer (PyTorch, TensorFlow, JAX)
+# - Hugging Face Ecosystem (Transformers, Diffusers)
+# - ONNX Runtime & Conversion
+# - OpenAI Triton Compilation
+# - Optimization Libraries (bitsandbytes, flash-attention, xformers)
+# - Computer Vision Libraries (OpenCV)
+# - GStreamer for Video I/O
+# - FFmpeg Integration
+# - Distributed Training (DeepSpeed)
+# - CUDA Extensions (CuPy)
+#
+# === USAGE ===
+# Build using ./jetsonrun.sh which provides a dialog-based interface
+# Verify using ./verify.sh <image_name>
+
 # Build args for the base image
 ARG BASE_IMAGE
 
@@ -175,15 +219,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # ================================
 # == Distributed Training       ==
 # ================================
-# Note: DeepSpeed is currently problematic on ARM64/Jetson
-# Try with --no-deps if needed or comment out if causing build failures
-RUN pip3 install deepspeed || echo "DeepSpeed installation failed - skipping"
+# Install DeepSpeed for distributed training - building from source to avoid CUDA issues
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ninja-build \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && git clone https://github.com/microsoft/DeepSpeed.git \
+    && cd DeepSpeed \
+    && DS_BUILD_OPS=0 DS_BUILD_SPARSE_ATTN=0 pip install -e . \
+    && cd .. \
+    && rm -rf DeepSpeed
 
 # ================================
 # == CUDA Extensions            ==
 # ================================
 # Install CuPy (CUDA-accelerated NumPy alternative)
-RUN pip3 install cupy || echo "CuPy installation failed - skipping"
+RUN pip3 install cupy
 
 # ================================
 # == Workspace Configuration    ==
@@ -194,6 +245,10 @@ WORKDIR /workspace
 # Create directories for data, models and logs
 RUN mkdir -p /workspace/data /workspace/models /workspace/logs
 
+# Copy verification script into the container for internal verification
+COPY verify.sh /workspace/verify.sh
+RUN chmod +x /workspace/verify.sh
+
 # Set environment variables for GPU access
 ENV NVIDIA_VISIBLE_DEVICES=all \
     NVIDIA_DRIVER_CAPABILITIES=all
@@ -202,7 +257,7 @@ ENV NVIDIA_VISIBLE_DEVICES=all \
 # == Build Completion Marker    ==
 # ================================
 # Indicate successful build with timestamp
-RUN echo "Build completed successfully on 2025-03-30 20:30:15" && \
+RUN echo "Build completed successfully on 2025-03-30 12:47:03" && \
     echo "Full AI Stack image ready for use"
 
 # ================================

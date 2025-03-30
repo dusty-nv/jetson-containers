@@ -9,21 +9,25 @@
 #    ╚═══╝  ╚══════╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝   
 #
 # Container Verification Tool for NVIDIA Jetson ML Development
-# 
-# This script verifies a Docker container for ML development on NVIDIA Jetson platforms,
-# checking for proper setup of ML libraries, CUDA, GPU access, and other tools.
-#
-# Features:
-# - Can run both outside the container to verify a built image
-# - Can run inside the container to verify the current environment
-# - Tests GPU access and functionality
-# - Verifies core ML frameworks and libraries
-# - Checks optimization libraries
-# - Tests system utilities
-# - Provides colorful, readable output with status icons
-#
 # Current Version: 2025-03-30
 #==============================================================================
+#
+# This script verifies the ML container for NVIDIA Jetson platforms.
+# It checks:
+#
+# - GPU access and NVIDIA runtime
+# - Python environment and version
+# - Core ML frameworks (PyTorch, TensorFlow, JAX)
+# - Hugging Face libraries (Transformers, Diffusers)
+# - Optimization libraries (Triton, xFormers, etc.)
+# - System utilities (FFmpeg, GStreamer)
+#
+# The script can operate in two modes:
+# 1. As a standalone script that runs tests on a specified container image
+# 2. Inside a container to verify the container environment itself
+#==============================================================================
+
+# Reminder by KAIRIN -- please do not remove the above comments only improve or add on to the information above. This is intended to help remind you what # has been installed, what needs to be installed subsequently and so on. Also please ensure, the latest version compatible for all the apps and software # are installed either by running an update command at the end or something like that. Please indicate what are the changes made with timestamps.
 
 # Define color codes
 RED='\033[0;31m'
@@ -35,150 +39,87 @@ CYAN='\033[0;36m'
 BOLD='\033[1m'
 RESET='\033[0m'
 
-# Determine if we're running inside or outside the container
+# Detect if running inside a container
 INSIDE_CONTAINER=false
-if [ -f /.dockerenv ] || grep -q 'docker\|lxc' /proc/1/cgroup; then
+if [ -f /.dockerenv ] || grep -q docker /proc/1/cgroup; then
     INSIDE_CONTAINER=true
 fi
 
 # Header
-show_header() {
-    echo -e "${MAGENTA}${BOLD}"
-    echo "╔══════════════════════════════════════════════════════════════════════╗"
-    echo "║                                                                      ║"
-    echo "║   ░░░▒▒▒▓▓▓███ JETSON ML CONTAINER VERIFIER ███▓▓▓▒▒▒░░░             ║"
-    echo "║                                                                      ║"
-    echo "╚══════════════════════════════════════════════════════════════════════╝"
-    echo -e "${RESET}"
-}
+echo -e "${MAGENTA}${BOLD}"
+echo "╔══════════════════════════════════════════════════════════════════════╗"
+echo "║                                                                      ║"
+echo "║   ░░░▒▒▒▓▓▓███ JETSON ML CONTAINER VERIFIER ███▓▓▓▒▒▒░░░             ║"
+echo "║                                                                      ║"
+echo "╚══════════════════════════════════════════════════════════════════════╝"
+echo -e "${RESET}"
 
 # Function to print section headers
 print_section() {
     echo -e "\n${YELLOW}${BOLD}╔═══ $1 ════════════════════════════════════════════════╗${RESET}"
 }
 
-# Function to run tests
-run_test() {
-    local name=$1
-    local cmd=$2
-    echo -ne "${BLUE}Testing ${name}...${RESET} "
-    if $cmd >/dev/null 2>&1; then
-        echo -e "${GREEN}✅ PASSED${RESET}"
-        return 0
-    else
-        echo -e "${RED}❌ FAILED${RESET}"
-        return 1
-    fi
-}
-
-# Function to run a test inside a container
-run_container_test() {
-    local name=$1
-    local cmd=$2
-    local image=$3
+# Function to run verification inside container
+verify_inside_container() {
+    echo -e "${CYAN}${BOLD}VERIFYING CURRENT CONTAINER ENVIRONMENT${RESET}\n"
     
-    echo -ne "${BLUE}Testing ${name}...${RESET} "
-    if docker run --rm --runtime nvidia $image bash -c "$cmd" >/dev/null 2>&1; then
-        echo -e "${GREEN}✅ PASSED${RESET}"
-        return 0
-    else
-        echo -e "${RED}❌ FAILED${RESET}"
-        return 1
-    fi
-}
-
-# Function to check Python package
-check_package() {
-    local package=$1
-    local image=$2
-    
-    echo -ne "${CYAN}Checking ${package}...${RESET} "
-    
-    if [ "$INSIDE_CONTAINER" = true ]; then
-        VERSION=$(python3 -c "import $package; print(getattr($package, '__version__', 'installed'))" 2>/dev/null)
-    else
-        VERSION=$(docker run --rm $image python3 -c "import $package; print(getattr($package, '__version__', 'installed'))" 2>/dev/null)
-    fi
-    
-    if [ $? -eq 0 ]; then
-        echo -e "${GREEN}✅ $VERSION${RESET}"
-        return 0
-    else
-        echo -e "${RED}❌ Not installed or error importing${RESET}"
-        return 1
-    fi
-}
-
-# Check if image name is provided when running outside container
-check_args() {
-    if [ "$INSIDE_CONTAINER" = false ] && [ -z "$1" ]; then
-        echo -e "${RED}${BOLD}ERROR: No image name provided!${RESET}"
-        echo -e "${YELLOW}Usage: $0 <image_name>${RESET}"
-        echo -e "${YELLOW}Example: $0 kairin/001:2025-03-30-1242-1${RESET}"
-        echo -e "${YELLOW}Or use '${0} --run' to start and enter the container for verification${RESET}"
-        exit 1
-    fi
-}
-
-# Option to run the container and execute verification inside
-run_container() {
-    local image=$1
-    
-    echo -e "${CYAN}${BOLD}Starting container ${image} for interactive verification...${RESET}"
-    echo -e "${YELLOW}The verification script will run automatically inside the container.${RESET}"
-    echo -e "${YELLOW}You will be dropped to a shell after verification completes.${RESET}"
+    # Verify Python
+    print_section "PYTHON ENVIRONMENT"
+    python3 --version
     echo ""
     
-    # Copy the script to a temporary file
-    TEMP_SCRIPT=$(mktemp)
-    cat $0 > $TEMP_SCRIPT
-    chmod +x $TEMP_SCRIPT
+    # Verify key Python packages
+    print_section "CORE ML FRAMEWORKS"
+    PACKAGES=(
+        "numpy" 
+        "torch" 
+        "tensorflow" 
+        "jax" 
+        "transformers"
+        "diffusers"
+        "onnx"
+    )
     
-    # Run the container with the script mounted and set to execute on start
-    docker run --rm -it --runtime nvidia \
-        -v $TEMP_SCRIPT:/verify.sh \
-        $image bash -c "/verify.sh && echo '' && bash"
-    
-    # Clean up
-    rm -f $TEMP_SCRIPT
-    exit 0
-}
-
-# Test container startup with GPU access
-test_gpu() {
-    local image=$1
-    
-    print_section "CONTAINER STARTUP"
-    
-    if [ "$INSIDE_CONTAINER" = true ]; then
-        echo -e "${CYAN}Testing GPU access inside container...${RESET}"
-        nvidia-smi
-        if [ $? -ne 0 ]; then
-            echo -e "\n${RED}${BOLD}❌ CRITICAL ERROR: No GPU access inside container.${RESET}"
-            echo -e "${RED}Please check if NVIDIA drivers and Docker runtime are properly configured.${RESET}"
-            return 1
+    for package in "${PACKAGES[@]}"; do
+        echo -ne "${CYAN}Checking ${package}...${RESET} "
+        if python3 -c "import $package; print(getattr($package, '__version__', 'installed'))" 2>/dev/null; then
+            echo ""
+        else
+            echo -e "${RED}❌ Not installed or error importing${RESET}"
         fi
-    else
-        echo -e "${CYAN}Starting container with NVIDIA runtime...${RESET}"
-        docker run --rm --runtime nvidia -it $image nvidia-smi
-        if [ $? -ne 0 ]; then
-            echo -e "\n${RED}${BOLD}❌ CRITICAL ERROR: Failed to start container with GPU access.${RESET}"
-            echo -e "${RED}Please check if NVIDIA drivers and Docker runtime are properly configured.${RESET}"
-            return 1
+    done
+    
+    # Verify optimization libraries
+    print_section "OPTIMIZATION LIBRARIES"
+    OPT_PACKAGES=(
+        "triton"
+        "bitsandbytes"
+        "xformers"
+    )
+    
+    for package in "${OPT_PACKAGES[@]}"; do
+        echo -ne "${CYAN}Checking ${package}...${RESET} "
+        if python3 -c "import $package; print('✅ Installed')" 2>/dev/null; then
+            echo ""
+        else
+            echo -e "${YELLOW}⚠️ Not installed or error importing${RESET}"
         fi
-    fi
+    done
     
-    echo -e "${GREEN}✅ Container started successfully with GPU access.${RESET}"
-    return 0
-}
-
-# Verify Python version
-verify_python() {
-    local image=$1
+    # Verify system utilities
+    print_section "SYSTEM UTILITIES"
+    UTILS=("ffmpeg -version" "pkg-config --version")
+    UTIL_NAMES=("FFmpeg" "pkg-config")
     
-    print_section "PYTHON ENVIRONMENT"
+    for i in "${!UTILS[@]}"; do
+        echo -ne "${CYAN}Checking ${UTIL_NAMES[$i]}...${RESET} "
+        if bash -c "${UTILS[$i]}" >/dev/null 2>&1; then
+            echo -e "${GREEN}✅ Installed${RESET}"
+        else
+            echo -e "${YELLOW}⚠️ Not installed or not working${RESET}"
+        fi
+    done
     
-    if [ "$INSIDE_CONTAINER" = true ]; then
-        python3 --version
-    else
-        docker run --rm $image python3 
+    # Verify NVIDIA GPU access
+    print_section "NVIDIA GPU ACCESS"
+    if nvidia-smi >/dev/null
