@@ -1,0 +1,2101 @@
+.
+├── .dockerignore
+├── .env
+├── .env_sample
+├── .git
+│   ├── HEAD
+│   ├── branches
+│   ├── config
+│   ├── description
+│   ├── hooks
+│   │   ├── applypatch-msg.sample
+│   │   ├── commit-msg.sample
+│   │   ├── fsmonitor-watchman.sample
+│   │   ├── post-update.sample
+│   │   ├── pre-applypatch.sample
+│   │   ├── pre-commit.sample
+│   │   ├── pre-merge-commit.sample
+│   │   ├── pre-push.sample
+│   │   ├── pre-rebase.sample
+│   │   ├── pre-receive.sample
+│   │   ├── prepare-commit-msg.sample
+│   │   ├── push-to-checkout.sample
+│   │   └── update.sample
+│   ├── index
+│   ├── info
+│   │   └── exclude
+│   ├── logs
+│   │   ├── HEAD
+│   │   └── refs
+│   │       ├── heads
+│   │       │   └── master
+│   │       └── remotes
+│   │           └── origin
+│   │               └── HEAD
+│   ├── objects
+│   │   ├── info
+│   │   └── pack
+│   │       ├── pack-ea4b9cc4223edaada4863eaa32130ee9e23e56bd.idx
+│   │       └── pack-ea4b9cc4223edaada4863eaa32130ee9e23e56bd.pack
+│   ├── packed-refs
+│   └── refs
+│       ├── heads
+│       │   └── master
+│       ├── remotes
+│       │   └── origin
+│       │       └── HEAD
+│       └── tags
+├── .github
+│   ├── ISSUE_TEMPLATE
+│   │   ├── bug-report.yml
+│   │   ├── config.yml
+│   │   ├── feature-request.yml
+│   │   └── question.yml
+│   └── workflows
+│       ├── .gitkeep
+│       ├── audiocraft_jp51.yml
+│       ├── audiocraft_jp60.yml
+│       ├── auto_gptq_jp51.yml
+│       ├── auto_gptq_jp60.yml
+│       ├── awq_jp51.yml
+│       ├── awq_jp60.yml
+│       ├── bazel_jp46.yml
+│       ├── bazel_jp51.yml
+│       ├── bitsandbytes_jp51.yml
+│       ├── build-all_r32.7.1.yml
+│       ├── build-all_r35.2.1.yml
+│       ├── build-all_r35.3.1.yml
+│       ├── build-all_r35.4.1.yml
+│       ├── build-essential_jp46.yml
+│       ├── build-essential_jp51.yml
+│       ├── cmake-apt_jp46.yml
+│       ├── cmake-apt_jp51.yml
+│       ├── cmake-pip_jp46.yml
+│       ├── cmake-pip_jp51.yml
+│       ├── cuda-122-samples_jp60.yml
+│       ├── cuda-122_jp60.yml
+│       ├── cuda-python_jp51.yml
+│       ├── cuda-python_jp60.yml
+│       ├── cudf-231003_jp60.yml
+│       ├── cudf_jp51.yml
+│       ├── cudnn-89_jp60.yml
+│       ├── cuml_jp51.yml
+│       ├── cupy_jp46.yml
+│       ├── cupy_jp51.yml
+│       ├── cupy_jp60.yml
+│       ├── deepstream_jp46.yml
+│       ├── deepstream_jp51.yml
+│       ├── deepstream_jp60.yml
+│       ├── efficientvit_jp51.yml
+│       ├── efficientvit_jp60.yml
+│       ├── exllama-v1_jp60.yml
+│       ├── exllama-v2_jp51.yml
+│       ├── exllama-v2_jp60.yml
+│       ├── exllama_jp51.yml
+│       ├── faiss-lite_jp51.yml
+│       ├── faiss_jp51.yml
+│       ├── gptq-for-llama_jp51.yml
+│       ├── gptq-for-llama_jp60.yml
+│       ├── gstreamer_jp46.yml
+│       ├── gstreamer_jp51.yml
+│       ├── gstreamer_jp60.yml
+│       ├── huggingface_hub_jp46.yml
+│       ├── huggingface_hub_jp51.yml
+│       ├── jetson-utils_jp46.yml
+│       ├── jetson-utils_jp51.yml
+│       ├── jetson-utils_jp60.yml
+│       ├── jupyterlab_jp46.yml
+│       ├── jupyterlab_jp51.yml
+│       ├── jupyterlab_jp60.yml
+│       ├── l4t-diffusion_jp51.yml
+│       ├── l4t-ml_jp46.yml
+│       ├── l4t-ml_jp51.yml
+│       ├── l4t-ml_jp60.yml
+│       ├── l4t-pytorch_jp46.yml
+│       ├── l4t-pytorch_jp51.yml
+│       ├── l4t-pytorch_jp60.yml
+│       ├── l4t-tensorflow-tf1_jp46.yml
+│       ├── l4t-tensorflow-tf1_jp51.yml
+│       ├── l4t-tensorflow-tf2_jp46.yml
+│       ├── l4t-tensorflow-tf2_jp51.yml
+│       ├── l4t-tensorflow-tf2_jp60.yml
+│       ├── l4t-text-generation_jp51.yml
+│       ├── l4t-text-generation_jp60.yml
+│       ├── langchain-samples_jp51.yml
+│       ├── langchain-samples_jp60.yml
+│       ├── langchain_jp51.yml
+│       ├── langchain_jp60.yml
+│       ├── llama_cpp-ggml_jp51.yml
+│       ├── llama_cpp-ggml_jp60.yml
+│       ├── llama_cpp-gguf_jp51.yml
+│       ├── llama_cpp-gguf_jp60.yml
+│       ├── llamaspeak_jp51.yml
+│       ├── llamaspeak_jp60.yml
+│       ├── llava_jp51.yml
+│       ├── llava_jp60.yml
+│       ├── local_llm_jp51.yml
+│       ├── local_llm_jp60.yml
+│       ├── minigpt4_jp51.yml
+│       ├── minigpt4_jp60.yml
+│       ├── mlc-dev_jp51.yml
+│       ├── mlc-dev_jp60.yml
+│       ├── mlc_jp51.yml
+│       ├── mlc_jp60.yml
+│       ├── nanodb_jp51.yml
+│       ├── nanodb_jp60.yml
+│       ├── nanoowl_jp51.yml
+│       ├── nanoowl_jp60.yml
+│       ├── nanosam_jp51.yml
+│       ├── nanosam_jp60.yml
+│       ├── nemo_jp46.yml
+│       ├── nemo_jp51.yml
+│       ├── nemo_jp60.yml
+│       ├── numba_jp46.yml
+│       ├── numba_jp51.yml
+│       ├── numba_jp60.yml
+│       ├── numpy_jp46.yml
+│       ├── numpy_jp51.yml
+│       ├── numpy_jp60.yml
+│       ├── onnx_jp46.yml
+│       ├── onnx_jp51.yml
+│       ├── onnxruntime_jp46.yml
+│       ├── onnxruntime_jp51.yml
+│       ├── onnxruntime_jp60.yml
+│       ├── opencv-481_jp60.yml
+│       ├── opencv_builder_jp46.yml
+│       ├── opencv_builder_jp51.yml
+│       ├── opencv_jp46.yml
+│       ├── opencv_jp51.yml
+│       ├── optimum_jp46.yml
+│       ├── optimum_jp51.yml
+│       ├── protobuf-apt_jp46.yml
+│       ├── protobuf-apt_jp51.yml
+│       ├── protobuf-cpp_jp46.yml
+│       ├── protobuf-cpp_jp51.yml
+│       ├── pycuda_jp46.yml
+│       ├── pycuda_jp51.yml
+│       ├── pycuda_jp60.yml
+│       ├── python_jp46.yml
+│       ├── python_jp51.yml
+│       ├── pytorch-110_jp46.yml
+│       ├── pytorch-111_jp51.yml
+│       ├── pytorch-112_jp51.yml
+│       ├── pytorch-113_jp51.yml
+│       ├── pytorch-19_jp46.yml
+│       ├── pytorch-20_jp51.yml
+│       ├── pytorch-21_jp51.yml
+│       ├── pytorch-21_jp60.yml
+│       ├── realsense_jp46.yml
+│       ├── realsense_jp51.yml
+│       ├── realsense_jp60.yml
+│       ├── riva-client-cpp_jp51.yml
+│       ├── riva-client-python_jp51.yml
+│       ├── riva-client-python_jp60.yml
+│       ├── ros-foxy-desktop_jp46.yml
+│       ├── ros-foxy-desktop_jp51.yml
+│       ├── ros-foxy-ros-base_jp46.yml
+│       ├── ros-foxy-ros-base_jp51.yml
+│       ├── ros-foxy-ros-core_jp46.yml
+│       ├── ros-foxy-ros-core_jp51.yml
+│       ├── ros-galactic-desktop_jp46.yml
+│       ├── ros-galactic-desktop_jp51.yml
+│       ├── ros-galactic-ros-base_jp46.yml
+│       ├── ros-galactic-ros-base_jp51.yml
+│       ├── ros-galactic-ros-core_jp46.yml
+│       ├── ros-galactic-ros-core_jp51.yml
+│       ├── ros-humble-desktop_jp46.yml
+│       ├── ros-humble-desktop_jp51.yml
+│       ├── ros-humble-desktop_jp60.yml
+│       ├── ros-humble-ros-base_jp46.yml
+│       ├── ros-humble-ros-base_jp51.yml
+│       ├── ros-humble-ros-base_jp60.yml
+│       ├── ros-humble-ros-core_jp46.yml
+│       ├── ros-humble-ros-core_jp51.yml
+│       ├── ros-humble-ros-core_jp60.yml
+│       ├── ros-iron-desktop_jp46.yml
+│       ├── ros-iron-desktop_jp51.yml
+│       ├── ros-iron-ros-base_jp46.yml
+│       ├── ros-iron-ros-base_jp51.yml
+│       ├── ros-iron-ros-core_jp46.yml
+│       ├── ros-iron-ros-core_jp51.yml
+│       ├── ros-melodic-desktop_jp46.yml
+│       ├── ros-melodic-ros-base_jp46.yml
+│       ├── ros-melodic-ros-core_jp46.yml
+│       ├── ros-noetic-desktop_jp46.yml
+│       ├── ros-noetic-desktop_jp51.yml
+│       ├── ros-noetic-ros-base_jp46.yml
+│       ├── ros-noetic-ros-base_jp51.yml
+│       ├── ros-noetic-ros-core_jp46.yml
+│       ├── ros-noetic-ros-core_jp51.yml
+│       ├── rust_jp46.yml
+│       ├── rust_jp51.yml
+│       ├── sam_jp51.yml
+│       ├── sam_jp60.yml
+│       ├── stable-diffusion-webui_jp51.yml
+│       ├── stable-diffusion-webui_jp60.yml
+│       ├── stable-diffusion_jp51.yml
+│       ├── tam_jp51.yml
+│       ├── tam_jp60.yml
+│       ├── tensorflow2_jp46.yml
+│       ├── tensorflow2_jp51.yml
+│       ├── tensorflow2_jp60.yml
+│       ├── tensorflow_jp46.yml
+│       ├── tensorflow_jp51.yml
+│       ├── tensorrt-86_jp60.yml
+│       ├── text-generation-inference_jp51.yml
+│       ├── text-generation-webui_jp51.yml
+│       ├── text-generation-webui_jp60.yml
+│       ├── torch2trt_jp46.yml
+│       ├── torch2trt_jp51.yml
+│       ├── torch_tensorrt_jp46.yml
+│       ├── torch_tensorrt_jp51.yml
+│       ├── torchaudio_jp46.yml
+│       ├── torchaudio_jp51.yml
+│       ├── torchvision_jp46.yml
+│       ├── torchvision_jp51.yml
+│       ├── transformers-git_jp51.yml
+│       ├── transformers-nvgpt_jp51.yml
+│       ├── transformers_jp46.yml
+│       ├── transformers_jp51.yml
+│       ├── transformers_jp60.yml
+│       ├── tritonserver_jp46.yml
+│       ├── tritonserver_jp51.yml
+│       ├── tritonserver_jp60.yml
+│       ├── tvm_jp51.yml
+│       ├── whisper_jp51.yml
+│       ├── whisper_jp60.yml
+│       ├── whisperx_jp51.yml
+│       ├── whisperx_jp60.yml
+│       ├── xformers_jp51.yml
+│       ├── zed_jp46.yml
+│       └── zed_jp51.yml
+├── .gitignore
+├── BUILDX-SBOM.md
+├── CITATION.cff
+├── LICENSE.md
+├── README.md
+├── autotag
+├── build.sh
+├── buildx
+│   ├── Dockerfile
+│   ├── Dockerfile-original
+│   ├── Dockerfile-v1
+│   ├── Dockerfile-v2
+│   ├── Dockerfile-v3
+│   ├── Dockerfile-v4
+│   ├── bitsandbytes--using-buildx
+│   │   ├── Dockerfile
+│   │   ├── README.md
+│   │   ├── build.sh
+│   │   ├── config.py
+│   │   ├── install.sh
+│   │   └── test.py
+│   ├── cupy
+│   │   ├── Dockerfile
+│   │   ├── README.md
+│   │   ├── build.sh
+│   │   ├── config.py
+│   │   └── test.py
+│   ├── deepspeed--using-buildx
+│   │   ├── Dockerfile
+│   │   ├── build.sh
+│   │   ├── config.py
+│   │   ├── deepspeed-kernels
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.py
+│   │   ├── install.sh
+│   │   └── test.sh
+│   ├── diffusers
+│   │   ├── Dockerfile
+│   │   ├── README.md
+│   │   ├── build.sh
+│   │   ├── config.py
+│   │   ├── install.sh
+│   │   └── test.py
+│   ├── ffmpeg--using-buildx
+│   │   ├── Dockerfile-included
+│   │   ├── README.md
+│   │   └── test.sh
+│   ├── flash-attention--using-buildx
+│   │   ├── Dockerfile
+│   │   ├── README.md
+│   │   ├── build.sh
+│   │   ├── config.py
+│   │   ├── install.sh
+│   │   ├── patches
+│   │   │   ├── 2.5.6.diff
+│   │   │   ├── 2.5.7.diff
+│   │   │   ├── 2.6.3.diff
+│   │   │   ├── 2.7.2.post1.diff
+│   │   │   ├── 2.7.4.post1.diff
+│   │   │   ├── 2.7.4.post2.diff
+│   │   │   └── generate_diff.py
+│   │   └── test.py
+│   ├── gstreamer--using-buildx
+│   │   ├── Dockerfile-included
+│   │   ├── README.md
+│   │   ├── test.py
+│   │   └── test.sh
+│   ├── huggingface_hub--using-buildx
+│   │   ├── Dockerfile-included
+│   │   ├── README.md
+│   │   ├── huggingface-downloader
+│   │   ├── huggingface-downloader.py
+│   │   └── test.py
+│   ├── jax
+│   │   ├── Dockerfile
+│   │   ├── README.md
+│   │   ├── build.sh
+│   │   ├── config.py
+│   │   ├── install.sh
+│   │   ├── link_cuda.sh
+│   │   └── test.py
+│   ├── jetsonrun.sh
+│   ├── onnx
+│   │   ├── Dockerfile
+│   │   ├── README.md
+│   │   ├── config.py
+│   │   └── test.py
+│   ├── onnxruntime
+│   │   ├── Dockerfile
+│   │   ├── README.md
+│   │   ├── build.sh
+│   │   ├── config.py
+│   │   ├── install.sh
+│   │   └── test.py
+│   ├── opencv--using-buildx
+│   │   ├── Dockerfile
+│   │   ├── Dockerfile.meta
+│   │   ├── README.md
+│   │   ├── build.sh
+│   │   ├── config.py
+│   │   ├── install.sh
+│   │   ├── install_deb.sh
+│   │   ├── install_deps.sh
+│   │   ├── patches.diff
+│   │   └── test.py
+│   ├── tensorflow
+│   │   ├── Dockerfile
+│   │   ├── Dockerfile.pip
+│   │   ├── README.md
+│   │   ├── build.sh
+│   │   ├── config.py
+│   │   ├── graphics
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.py
+│   │   ├── install.sh
+│   │   ├── link_cuda.sh
+│   │   ├── tensorboard
+│   │   │   ├── Dockerfile
+│   │   │   └── test.sh
+│   │   ├── test.py
+│   │   ├── text
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.py
+│   │   └── version.py
+│   ├── transformers--using-buildx
+│   │   ├── Dockerfile
+│   │   ├── README.md
+│   │   ├── config.py
+│   │   ├── docs.md
+│   │   ├── huggingface-benchmark.py
+│   │   ├── install.sh
+│   │   ├── test.py
+│   │   └── test_version.py
+│   ├── triton
+│   │   ├── Dockerfile
+│   │   ├── README.md
+│   │   ├── build.sh
+│   │   ├── config.py
+│   │   ├── install.sh
+│   │   └── test.py
+│   ├── verify-orig.sh
+│   ├── verify.sh
+│   └── xformers--using-buildx
+│       ├── Dockerfile
+│       ├── README.md
+│       ├── build.sh
+│       ├── config.py
+│       ├── install.sh
+│       └── test.py
+├── data
+│   ├── audio
+│   │   ├── commands.wav
+│   │   ├── dusty.wav
+│   │   └── tts
+│   │       └── .gitkeep
+│   ├── benchmarks
+│   │   └── .gitkeep
+│   ├── containers.json
+│   ├── datasets
+│   │   ├── .gitkeep
+│   │   └── uploads
+│   │       └── .gitkeep
+│   ├── graphdb
+│   │   ├── .gitkeep
+│   │   └── db.json
+│   ├── homeassistant
+│   │   └── .gitkeep
+│   ├── images
+│   │   ├── .gitkeep
+│   │   ├── boxes.jpg
+│   │   ├── dogs.jpg
+│   │   ├── dogs_2.jpg
+│   │   ├── flowers.jpg
+│   │   ├── fruit.jpg
+│   │   ├── hoover.jpg
+│   │   ├── lake.jpg
+│   │   ├── path.jpg
+│   │   ├── soccer.jpg
+│   │   └── stable-diffusion
+│   │       └── .gitkeep
+│   ├── logs
+│   │   └── .gitkeep
+│   ├── models
+│   │   ├── .gitkeep
+│   │   ├── clip
+│   │   │   └── .gitkeep
+│   │   ├── huggingface
+│   │   │   └── .gitkeep
+│   │   ├── llama-factory
+│   │   │   └── .gitkeep
+│   │   ├── llama.cpp
+│   │   │   └── .gitkeep
+│   │   ├── mlc
+│   │   │   ├── cache
+│   │   │   │   └── .gitkeep
+│   │   │   └── dist
+│   │   │       └── models
+│   │   │           └── .gitkeep
+│   │   ├── ollama
+│   │   │   └── .gitkeep
+│   │   ├── piper
+│   │   │   └── .gitkeep
+│   │   ├── stable-diffusion
+│   │   │   ├── extensions
+│   │   │   │   └── .gitkeep
+│   │   │   └── models
+│   │   │       └── .gitkeep
+│   │   ├── tam
+│   │   │   └── .gitkeep
+│   │   ├── tts
+│   │   │   └── .gitkeep
+│   │   └── whisper
+│   │       └── .gitkeep
+│   ├── nano_llm
+│   │   └── presets
+│   │       ├── NousHermes-Pro.json
+│   │       ├── OpenVLA-MimicGen-FP16.json
+│   │       ├── OpenVLA-MimicGen-FP8.json
+│   │       ├── OpenVLA-MimicGen-INT4.json
+│   │       ├── PiperTTS.json
+│   │       ├── VILA3B V4L2.json
+│   │       └── WhisperASR.json
+│   ├── prompts
+│   │   ├── completion.json
+│   │   ├── completion_1024.json
+│   │   ├── completion_128.json
+│   │   ├── completion_16.json
+│   │   ├── completion_1920.json
+│   │   ├── completion_2048.json
+│   │   ├── completion_256.json
+│   │   ├── completion_3072.json
+│   │   ├── completion_32.json
+│   │   ├── completion_3840.json
+│   │   ├── completion_3968.json
+│   │   ├── completion_4096.json
+│   │   ├── completion_512.json
+│   │   ├── completion_64.json
+│   │   ├── dusty.json
+│   │   ├── images.json
+│   │   ├── instruct.json
+│   │   ├── nous_system.txt
+│   │   ├── qa.json
+│   │   └── riddles.json
+│   └── uploads
+│       └── .gitkeep
+├── docs
+│   ├── build.md
+│   ├── packages.md
+│   ├── probe-setup.md
+│   ├── run.md
+│   └── setup.md
+├── file_structure.txt
+├── install.sh
+├── jetson-containers
+├── jetson_containers
+│   ├── __init__.py
+│   ├── build.py
+│   ├── ci.py
+│   ├── container.py
+│   ├── db.py
+│   ├── docs.py
+│   ├── l4t_version.py
+│   ├── l4t_version.sh
+│   ├── logging.py
+│   ├── packages.py
+│   ├── tag.py
+│   └── utils.py
+├── packages
+│   ├── README.md
+│   ├── build
+│   │   ├── bazel
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── sbom.json
+│   │   │   └── test.sh
+│   │   ├── bazel--using-buildx
+│   │   │   └── Dockerfile
+│   │   ├── build-essential
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   └── tarpack
+│   │   ├── cmake
+│   │   │   ├── cmake_apt
+│   │   │   │   ├── Dockerfile
+│   │   │   │   └── README.md
+│   │   │   └── cmake_pip
+│   │   │       ├── Dockerfile
+│   │   │       └── README.md
+│   │   ├── docker
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── docs.md
+│   │   │   └── test.sh
+│   │   ├── h5py
+│   │   │   ├── Dockerfile
+│   │   │   └── test.sh
+│   │   ├── ninja
+│   │   │   ├── Dockerfile
+│   │   │   └── test.sh
+│   │   ├── nodejs
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   └── test.sh
+│   │   ├── protobuf
+│   │   │   ├── protobuf_apt
+│   │   │   │   ├── Dockerfile
+│   │   │   │   ├── README.md
+│   │   │   │   ├── test.py
+│   │   │   │   └── test.sh
+│   │   │   └── protobuf_cpp
+│   │   │       ├── Dockerfile
+│   │   │       ├── README.md
+│   │   │       ├── config.py
+│   │   │       ├── install.sh
+│   │   │       ├── test.py
+│   │   │       └── test.sh
+│   │   ├── python
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── config.py
+│   │   │   └── install.sh
+│   │   └── rust
+│   │       ├── Dockerfile
+│   │       └── README.md
+│   ├── cuda
+│   │   ├── cuda
+│   │   │   ├── Dockerfile
+│   │   │   ├── Dockerfile.builtin
+│   │   │   ├── Dockerfile.pip
+│   │   │   ├── Dockerfile.samples
+│   │   │   ├── README.md
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   ├── test.sh
+│   │   │   └── test_samples.sh
+│   │   ├── cuda-python
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   ├── test_driver.py
+│   │   │   ├── test_runtime.py
+│   │   │   └── utils.py
+│   │   ├── cudnn
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── config.py
+│   │   │   └── test.sh
+│   │   ├── cupy
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   └── test.py
+│   │   └── pycuda
+│   │       ├── Dockerfile
+│   │       ├── README.md
+│   │       ├── build.sh
+│   │       ├── config.py
+│   │       └── test.py
+│   ├── diffusion
+│   │   ├── ai-toolkit
+│   │   │   ├── Dockerfile
+│   │   │   └── README.md
+│   │   ├── comfyui
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── extra
+│   │   │   │   └── init.sh
+│   │   │   └── workflow
+│   │   │       └── flux-accelerator-workflow.json
+│   │   ├── diffusers
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.py
+│   │   ├── small-stable-diffusion
+│   │   │   ├── Dockerfile
+│   │   │   └── test.sh
+│   │   ├── stable-diffusion
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── docs.md
+│   │   │   └── test.sh
+│   │   └── stable-diffusion-webui
+│   │       ├── Dockerfile
+│   │       ├── README.md
+│   │       ├── config.py
+│   │       ├── docs.md
+│   │       └── install_extensions.sh
+│   ├── dli
+│   │   └── dli-nano-ai
+│   │       ├── Dockerfile
+│   │       └── test.py
+│   ├── hardware
+│   │   ├── jetcam
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── examples
+│   │   │   │   ├── csi_camera.ipynb
+│   │   │   │   └── usb_camera.ipynb
+│   │   │   └── test.py
+│   │   ├── jupyter_clickable_image_widget
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── docs.md
+│   │   │   └── examples
+│   │   │       ├── JetsonOrin-DevKit-Back_1024x768.jpg
+│   │   │       └── clickable_image_widget_test.ipynb
+│   │   ├── oled
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── docs.md
+│   │   │   ├── oled_server.py
+│   │   │   ├── start_oled_server
+│   │   │   ├── test
+│   │   │   │   ├── oled_server.py
+│   │   │   │   └── utils.py
+│   │   │   └── utils.py
+│   │   ├── realsense
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   └── test.py
+│   │   └── zed
+│   │       ├── Dockerfile
+│   │       ├── README.md
+│   │       ├── config.py
+│   │       └── test.py
+│   ├── l4t
+│   │   ├── l4t-diffusion
+│   │   │   ├── README.md
+│   │   │   ├── config.yml
+│   │   │   └── docs.md
+│   │   ├── l4t-ml
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── test_pandas.py
+│   │   │   ├── test_scipy.py
+│   │   │   └── test_sklearn.py
+│   │   ├── l4t-pytorch
+│   │   │   ├── README.md
+│   │   │   └── l4t-pytorch.json
+│   │   ├── l4t-tensorflow
+│   │   │   ├── README.md
+│   │   │   └── l4t-tensorflow.json
+│   │   └── l4t-text-generation
+│   │       ├── README.md
+│   │       └── config.yml
+│   ├── llm
+│   │   ├── auto_awq
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.py
+│   │   ├── awq
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── benchmark.py
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── docs.md
+│   │   │   ├── install.sh
+│   │   │   ├── quantize.py
+│   │   │   └── test.sh
+│   │   ├── bitsandbytes
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.py
+│   │   ├── deepspeed
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── deepspeed-kernels
+│   │   │   │   ├── Dockerfile
+│   │   │   │   ├── build.sh
+│   │   │   │   ├── config.py
+│   │   │   │   ├── install.sh
+│   │   │   │   └── test.py
+│   │   │   ├── install.sh
+│   │   │   └── test.sh
+│   │   ├── dynamo
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.sh
+│   │   ├── exllama
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── docs.md
+│   │   │   ├── install.sh
+│   │   │   └── test.sh
+│   │   ├── flash-attention
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   ├── patches
+│   │   │   │   ├── 2.5.6.diff
+│   │   │   │   ├── 2.5.7.diff
+│   │   │   │   ├── 2.6.3.diff
+│   │   │   │   ├── 2.7.2.post1.diff
+│   │   │   │   ├── 2.7.4.post1.diff
+│   │   │   │   ├── 2.7.4.post2.diff
+│   │   │   │   └── generate_diff.py
+│   │   │   └── test.py
+│   │   ├── flash-infer
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.py
+│   │   ├── gptq-for-llama
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   └── test.sh
+│   │   ├── gptqmodel
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── docs.md
+│   │   │   ├── install.sh
+│   │   │   └── test.py
+│   │   ├── huggingface_hub
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── huggingface-downloader
+│   │   │   ├── huggingface-downloader.py
+│   │   │   └── test.py
+│   │   ├── hymba
+│   │   │   ├── Dockerfile
+│   │   │   ├── chat.py
+│   │   │   └── test.py
+│   │   ├── ktransformers
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.sh
+│   │   ├── llama-factory
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   └── test.py
+│   │   ├── llama_cpp
+│   │   │   ├── Dockerfile
+│   │   │   ├── Dockerfile.builder
+│   │   │   ├── README.md
+│   │   │   ├── benchmark.py
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── docs.md
+│   │   │   ├── install.sh
+│   │   │   ├── test_model.py
+│   │   │   ├── test_tokenizer.py
+│   │   │   └── test_version.py
+│   │   ├── llamaspeak
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── asr.py
+│   │   │   ├── audio.py
+│   │   │   ├── chat.py
+│   │   │   ├── docs.md
+│   │   │   ├── llm.py
+│   │   │   ├── requirements.txt
+│   │   │   ├── static
+│   │   │   │   ├── audio.js
+│   │   │   │   ├── audioWorkers.js
+│   │   │   │   ├── bootstrap.bundle.min.js
+│   │   │   │   ├── bootstrap.bundle.min.js.map
+│   │   │   │   ├── bootstrap.css
+│   │   │   │   ├── chat.css
+│   │   │   │   ├── favicon.ico
+│   │   │   │   ├── jquery-3.6.3.min.js
+│   │   │   │   ├── rest.js
+│   │   │   │   └── websocket.js
+│   │   │   ├── tegrastats.py
+│   │   │   ├── templates
+│   │   │   │   └── index.html
+│   │   │   ├── tts.py
+│   │   │   └── webserver.py
+│   │   ├── local_llm
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── __init__.py
+│   │   │   ├── __main__.py
+│   │   │   ├── agent.py
+│   │   │   ├── agents
+│   │   │   │   ├── chat.py
+│   │   │   │   ├── video_query.py
+│   │   │   │   ├── video_stream.py
+│   │   │   │   ├── voice_chat.py
+│   │   │   │   └── web_chat.py
+│   │   │   ├── chat
+│   │   │   │   ├── __main__.py
+│   │   │   │   ├── example.py
+│   │   │   │   ├── history.py
+│   │   │   │   ├── stream.py
+│   │   │   │   └── templates.py
+│   │   │   ├── completion.py
+│   │   │   ├── config.py
+│   │   │   ├── docs.md
+│   │   │   ├── local_llm.py
+│   │   │   ├── models
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── auto_gptq.py
+│   │   │   │   ├── awq.py
+│   │   │   │   ├── hf.py
+│   │   │   │   └── mlc.py
+│   │   │   ├── plugin.py
+│   │   │   ├── plugins
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── audio
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── audio_output.py
+│   │   │   │   │   ├── auto_asr.py
+│   │   │   │   │   ├── auto_tts.py
+│   │   │   │   │   ├── fastpitch_tts.py
+│   │   │   │   │   ├── riva_asr.py
+│   │   │   │   │   ├── riva_tts.py
+│   │   │   │   │   └── xtts.py
+│   │   │   │   ├── callback.py
+│   │   │   │   ├── chat_query.py
+│   │   │   │   ├── event_filter.py
+│   │   │   │   ├── nanodb.py
+│   │   │   │   ├── print_stream.py
+│   │   │   │   ├── process_proxy.py
+│   │   │   │   ├── rate_limit.py
+│   │   │   │   ├── user_prompt.py
+│   │   │   │   └── video.py
+│   │   │   ├── requirements.txt
+│   │   │   ├── test
+│   │   │   │   ├── asr.py
+│   │   │   │   ├── asr_tts_loopback.py
+│   │   │   │   ├── mp_chat.py
+│   │   │   │   ├── mp_test.py
+│   │   │   │   ├── mp_video.py
+│   │   │   │   ├── tts.py
+│   │   │   │   └── video.py
+│   │   │   ├── utils
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── args.py
+│   │   │   │   ├── audio.py
+│   │   │   │   ├── image.py
+│   │   │   │   ├── keyboard.py
+│   │   │   │   ├── log.py
+│   │   │   │   ├── model.py
+│   │   │   │   ├── prompts.py
+│   │   │   │   ├── table.py
+│   │   │   │   └── tensor.py
+│   │   │   ├── vision
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── clip.py
+│   │   │   │   ├── clip_hf.py
+│   │   │   │   └── mm_projector.py
+│   │   │   └── web
+│   │   │       ├── __init__.py
+│   │   │       ├── server.py
+│   │   │       ├── static
+│   │   │       │   ├── audio.js
+│   │   │       │   ├── audioWorkers.js
+│   │   │       │   ├── bootstrap.bundle.min.js
+│   │   │       │   ├── bootstrap.bundle.min.js.map
+│   │   │       │   ├── bootstrap.css
+│   │   │       │   ├── chat.css
+│   │   │       │   ├── debounce.js
+│   │   │       │   ├── favicon.ico
+│   │   │       │   ├── jquery-3.6.3.min.js
+│   │   │       │   ├── rest.js
+│   │   │       │   ├── select2.min.css
+│   │   │       │   ├── select2.min.js
+│   │   │       │   ├── webrtc.js
+│   │   │       │   └── websocket.js
+│   │   │       └── templates
+│   │   │           ├── index.html
+│   │   │           ├── macros.html
+│   │   │           └── video_query.html
+│   │   ├── mistral_rs
+│   │   │   ├── Dockerfile
+│   │   │   ├── config.py
+│   │   │   └── test.sh
+│   │   ├── mlc
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── benchmark.py
+│   │   │   ├── benchmark.sh
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── delivery.json
+│   │   │   ├── delivery.sh
+│   │   │   ├── docs.md
+│   │   │   ├── install.sh
+│   │   │   ├── patches
+│   │   │   │   ├── 1f70d71.diff
+│   │   │   │   ├── 3403a4e.diff
+│   │   │   │   ├── 385cef2.diff
+│   │   │   │   ├── 386185d.diff
+│   │   │   │   ├── 3feed05.diff
+│   │   │   │   ├── 51fb0f4.diff
+│   │   │   │   ├── 607dc5a.diff
+│   │   │   │   ├── 6da6aca.diff
+│   │   │   │   ├── 9166edb.diff
+│   │   │   │   ├── 9336b4a.diff
+│   │   │   │   ├── 9bf5723.diff
+│   │   │   │   ├── b636b2a.diff
+│   │   │   │   ├── cf7ae82.diff
+│   │   │   │   ├── d840de5.diff
+│   │   │   │   └── empty.diff
+│   │   │   ├── test.py
+│   │   │   ├── test.sh
+│   │   │   └── wheels
+│   │   │       └── .gitkeep
+│   │   ├── nano_llm
+│   │   │   ├── Dockerfile
+│   │   │   ├── Dockerfile.ros
+│   │   │   ├── README.md
+│   │   │   ├── config.py
+│   │   │   ├── docs.md
+│   │   │   ├── install.sh
+│   │   │   ├── test.py
+│   │   │   ├── test.sh
+│   │   │   └── test_ros.sh
+│   │   ├── nemo
+│   │   │   ├── Dockerfile
+│   │   │   ├── Dockerfile.jp4
+│   │   │   ├── README.md
+│   │   │   ├── config.py
+│   │   │   ├── test_megatron.py
+│   │   │   └── test_qa.py
+│   │   ├── ollama
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── benchmark.py
+│   │   │   ├── benchmark.sh
+│   │   │   ├── config.py
+│   │   │   ├── docs.md
+│   │   │   ├── ollama_deps.sh
+│   │   │   ├── start_ollama
+│   │   │   ├── test.py.disabled
+│   │   │   └── test.sh.disabled
+│   │   ├── openai
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   └── test.py
+│   │   ├── optimum
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── config.py
+│   │   │   ├── test.py
+│   │   │   └── test_gpt.py
+│   │   ├── sglang
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.sh
+│   │   ├── sudonim
+│   │   │   ├── Dockerfile
+│   │   │   ├── config.py
+│   │   │   ├── patches
+│   │   │   │   ├── .gitkeep
+│   │   │   │   └── 250314
+│   │   │   │       ├── modeling_gemma3.py.diff
+│   │   │   │       ├── patch_transformers.sh
+│   │   │   │       └── requirements.txt
+│   │   │   └── test.sh
+│   │   ├── tensorrt_optimizer
+│   │   │   ├── nvidia-modelopt
+│   │   │   │   ├── Dockerfile
+│   │   │   │   ├── README.md
+│   │   │   │   ├── build.sh
+│   │   │   │   ├── config.py
+│   │   │   │   ├── install.sh
+│   │   │   │   └── test.py
+│   │   │   └── tensorrt_llm
+│   │   │       ├── Dockerfile
+│   │   │       ├── README.md
+│   │   │       ├── benchmark.sh
+│   │   │       ├── build.sh
+│   │   │       ├── config.py
+│   │   │       ├── install.sh
+│   │   │       ├── llama.sh
+│   │   │       ├── patches
+│   │   │       │   ├── 0.5.diff
+│   │   │       │   ├── 118b3d7.diff
+│   │   │       │   ├── convert_utils.py
+│   │   │       │   ├── empty.diff
+│   │   │       │   └── profiler.py
+│   │   │       ├── sources
+│   │   │       │   ├── .gitkeep
+│   │   │       │   └── install_cusparselt.sh
+│   │   │       └── test.py
+│   │   ├── text-generation-inference
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   └── config.py
+│   │   ├── text-generation-webui
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── config.py
+│   │   │   ├── docs.md
+│   │   │   ├── install.sh
+│   │   │   └── settings.yaml
+│   │   ├── transformers
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── config.py
+│   │   │   ├── docs.md
+│   │   │   ├── huggingface-benchmark.py
+│   │   │   ├── install.sh
+│   │   │   ├── test.py
+│   │   │   └── test_version.py
+│   │   ├── vllm
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   ├── patches
+│   │   │   │   ├── 0.7.1.diff
+│   │   │   │   ├── 0.7.3.diff
+│   │   │   │   ├── 0.7.3.fa.diff
+│   │   │   │   ├── 0.7.4.diff
+│   │   │   │   ├── 0.7.4.fa.diff
+│   │   │   │   ├── fa.diff
+│   │   │   │   └── generate_diff.py
+│   │   │   └── test.py
+│   │   └── xformers
+│   │       ├── Dockerfile
+│   │       ├── README.md
+│   │       ├── build.sh
+│   │       ├── config.py
+│   │       ├── install.sh
+│   │       └── test.py
+│   ├── ml
+│   │   ├── aim
+│   │   │   ├── Dockerfile
+│   │   │   └── start-servers.sh
+│   │   ├── ctranslate2
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.py
+│   │   ├── jax
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   ├── link_cuda.sh
+│   │   │   └── test.py
+│   │   ├── jetson-inference
+│   │   │   ├── Dockerfile
+│   │   │   ├── Dockerfile.ros
+│   │   │   ├── README.md
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── jetson-utils
+│   │   │   │   ├── Dockerfile
+│   │   │   │   ├── README.md
+│   │   │   │   └── test.sh
+│   │   │   ├── test_infer.sh
+│   │   │   ├── test_ros.sh
+│   │   │   └── test_utils.sh
+│   │   ├── jupyterlab
+│   │   │   ├── Dockerfile
+│   │   │   ├── Dockerfile.myst
+│   │   │   ├── README.md
+│   │   │   ├── config.py
+│   │   │   ├── docs.md
+│   │   │   ├── jupyter_server_config.json
+│   │   │   └── start_jupyter
+│   │   ├── mamba
+│   │   │   ├── causalconv1d
+│   │   │   │   ├── Dockerfile
+│   │   │   │   ├── README.md
+│   │   │   │   ├── build.sh
+│   │   │   │   ├── config.py
+│   │   │   │   ├── install.sh
+│   │   │   │   ├── patches
+│   │   │   │   │   └── 1.6.0.diff
+│   │   │   │   └── test.py
+│   │   │   ├── cobra
+│   │   │   │   ├── Dockerfile
+│   │   │   │   ├── README.md
+│   │   │   │   ├── build.sh
+│   │   │   │   ├── config.py
+│   │   │   │   ├── patches
+│   │   │   │   │   └── 0.0.1.diff
+│   │   │   │   └── test.py
+│   │   │   ├── dimba
+│   │   │   │   ├── Dockerfile
+│   │   │   │   ├── README.md
+│   │   │   │   └── config.py
+│   │   │   ├── mamba
+│   │   │   │   ├── Dockerfile
+│   │   │   │   ├── README.md
+│   │   │   │   ├── benchmarks
+│   │   │   │   │   └── benchmark.py
+│   │   │   │   ├── build.sh
+│   │   │   │   ├── config.py
+│   │   │   │   ├── install.sh
+│   │   │   │   ├── patches
+│   │   │   │   │   └── 2.2.5.diff
+│   │   │   │   └── test.py
+│   │   │   ├── mambavision
+│   │   │   │   ├── Dockerfile
+│   │   │   │   ├── README.md
+│   │   │   │   ├── build.sh
+│   │   │   │   ├── config.py
+│   │   │   │   └── test.py
+│   │   │   ├── videomambasuite
+│   │   │   │   ├── Dockerfile
+│   │   │   │   ├── README.md
+│   │   │   │   ├── build.sh
+│   │   │   │   └── config.py
+│   │   │   └── zigma
+│   │   │       ├── Dockerfile
+│   │   │       ├── build.sh
+│   │   │       ├── config.py
+│   │   │       └── test.py
+│   │   ├── onnx
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── config.py
+│   │   │   └── test.py
+│   │   ├── onnxruntime
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.py
+│   │   ├── onnxruntime_genai
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.py
+│   │   ├── rapids
+│   │   │   ├── cudf
+│   │   │   │   ├── Dockerfile.jp5
+│   │   │   │   ├── Dockerfile.jp6
+│   │   │   │   ├── README.md
+│   │   │   │   ├── config.py
+│   │   │   │   ├── test_csv.py
+│   │   │   │   ├── test_cudf.py
+│   │   │   │   ├── test_dask.py
+│   │   │   │   └── test_pandas.py
+│   │   │   ├── cuml
+│   │   │   │   ├── Dockerfile
+│   │   │   │   ├── README.md
+│   │   │   │   ├── config.py
+│   │   │   │   └── test.py
+│   │   │   └── raft
+│   │   │       ├── Dockerfile
+│   │   │       ├── README.md
+│   │   │       ├── config.py
+│   │   │       ├── patches.diff
+│   │   │       └── test.py
+│   │   ├── tensorflow
+│   │   │   ├── Dockerfile
+│   │   │   ├── Dockerfile.pip
+│   │   │   ├── README.md
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── graphics
+│   │   │   │   ├── Dockerfile
+│   │   │   │   ├── build.sh
+│   │   │   │   ├── config.py
+│   │   │   │   ├── install.sh
+│   │   │   │   └── test.py
+│   │   │   ├── install.sh
+│   │   │   ├── link_cuda.sh
+│   │   │   ├── tensorboard
+│   │   │   │   ├── Dockerfile
+│   │   │   │   └── test.sh
+│   │   │   ├── test.py
+│   │   │   ├── text
+│   │   │   │   ├── Dockerfile
+│   │   │   │   ├── build.sh
+│   │   │   │   ├── config.py
+│   │   │   │   ├── install.sh
+│   │   │   │   └── test.py
+│   │   │   └── version.py
+│   │   ├── transformer-engine
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.py
+│   │   ├── triton
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.py
+│   │   ├── tritonserver
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── config.py
+│   │   │   └── test.py
+│   │   └── tvm
+│   │       ├── Dockerfile
+│   │       ├── README.md
+│   │       ├── config.py
+│   │       └── test.py
+│   ├── multimedia
+│   │   ├── decord
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.py
+│   │   ├── deepstream
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── config.py
+│   │   │   ├── test.py
+│   │   │   ├── test.sh
+│   │   │   └── upgrade_glib.sh
+│   │   ├── ffmpeg
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   └── test.sh
+│   │   ├── gstreamer
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── test.py
+│   │   │   └── test.sh
+│   │   ├── holoscan
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── docs.md
+│   │   │   └── test.sh
+│   │   ├── libcom
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.py
+│   │   └── pyav
+│   │       ├── Dockerfile
+│   │       └── test.sh
+│   ├── nerf
+│   │   ├── 3dgrut
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.sh
+│   │   ├── fast_gauss
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.py
+│   │   ├── fruitnerf
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── build.sh
+│   │   │   └── config.py
+│   │   ├── glomap
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   └── install.sh
+│   │   ├── gsplat
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   └── install.sh
+│   │   ├── hloc
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.py
+│   │   ├── kaolin
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.sh
+│   │   ├── meshlab
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   └── config.py
+│   │   ├── nerfacc
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   └── install.sh
+│   │   ├── nerfstudio
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.py
+│   │   ├── pixsfm
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.py
+│   │   ├── polyscope
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.py
+│   │   ├── pyceres
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.py
+│   │   ├── pycolmap
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.py
+│   │   ├── pymeshlab
+│   │   │   ├── Dockerfile
+│   │   │   ├── Dockerfile.builder
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   └── install.sh
+│   │   └── tinycudann
+│   │       ├── Dockerfile
+│   │       ├── build.sh
+│   │       ├── config.py
+│   │       ├── install.sh
+│   │       └── test.py
+│   ├── numeric
+│   │   ├── arrow
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── config.py
+│   │   │   └── test.py
+│   │   ├── numba
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   └── test.py
+│   │   └── numpy
+│   │       ├── Dockerfile
+│   │       ├── README.md
+│   │       ├── config.py
+│   │       ├── install.sh
+│   │       └── test.py
+│   ├── opencv
+│   │   ├── Dockerfile
+│   │   ├── Dockerfile.meta
+│   │   ├── README.md
+│   │   ├── build.sh
+│   │   ├── config.py
+│   │   ├── install.sh
+│   │   ├── install_deb.sh
+│   │   ├── install_deps.sh
+│   │   ├── patches.diff
+│   │   └── test.py
+│   ├── pytorch
+│   │   ├── Dockerfile
+│   │   ├── Dockerfile.wget
+│   │   ├── README.md
+│   │   ├── build.sh
+│   │   ├── config.py
+│   │   ├── install.sh
+│   │   ├── test.py
+│   │   ├── test.sh
+│   │   ├── torch2trt
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── patches
+│   │   │   │   └── flattener.py
+│   │   │   └── test.py
+│   │   ├── torch3d
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.py
+│   │   ├── torch_tensorrt
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── WORKSPACE.jp46
+│   │   │   ├── config.py
+│   │   │   ├── test.py
+│   │   │   └── test.sh
+│   │   ├── torchao
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.py
+│   │   ├── torchaudio
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.py
+│   │   ├── torchvision
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.py
+│   │   └── version.py
+│   ├── rag
+│   │   ├── jetson-copilot
+│   │   │   ├── .streamlit
+│   │   │   │   └── config.toml
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── app.py
+│   │   │   ├── docs.md
+│   │   │   └── static
+│   │   │       ├── jetson-soc.png
+│   │   │       └── user-purple.png
+│   │   ├── langchain
+│   │   │   ├── Dockerfile
+│   │   │   ├── Dockerfile.samples
+│   │   │   ├── LangChain_Local-LLMs.ipynb
+│   │   │   ├── README.md
+│   │   │   ├── config.py
+│   │   │   ├── docs.md
+│   │   │   └── pixegami-rag-tutorial-v2.ipynb
+│   │   └── llama-index
+│   │       ├── .env
+│   │       ├── Dockerfile
+│   │       ├── Dockerfile.samples
+│   │       ├── README.md
+│   │       ├── config.py
+│   │       ├── docs.md
+│   │       └── samples
+│   │           ├── LlamaIndex_Local-Models.ipynb
+│   │           ├── LlamaIndex_Local-Models_L4T.ipynb
+│   │           ├── llamaindex_l4t.py
+│   │           └── llamaindex_starter.py
+│   ├── robots
+│   │   ├── 3d_diffusion_policy
+│   │   │   ├── Dockerfile
+│   │   │   ├── Dockerfile.x86
+│   │   │   ├── README.md
+│   │   │   ├── docs.md
+│   │   │   ├── test.py
+│   │   │   └── test.sh
+│   │   ├── Isaac-GR00T
+│   │   │   ├── Dockerfile
+│   │   │   └── test.sh
+│   │   ├── IsaacLab
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   ├── test.py
+│   │   │   └── test.sh
+│   │   ├── cosmos
+│   │   │   ├── cosmos-predict1
+│   │   │   │   ├── Dockerfile
+│   │   │   │   └── README.md
+│   │   │   ├── cosmos-reason1
+│   │   │   │   ├── Dockerfile
+│   │   │   │   └── README.md
+│   │   │   └── cosmos-transfer1
+│   │   │       ├── Dockerfile
+│   │   │       └── README.md
+│   │   ├── crossformer
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── benchmark.py
+│   │   │   └── test.py
+│   │   ├── diffusion_policy
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── diffusion_policy_state_pusht_demo.ipynb
+│   │   │   ├── diffusion_policy_vision_pusht_demo.ipynb
+│   │   │   ├── docs.md
+│   │   │   ├── requirements.txt
+│   │   │   └── test.sh
+│   │   ├── genesis
+│   │   │   ├── Dockerfile
+│   │   │   ├── Readme.md
+│   │   │   ├── build_luisa.sh
+│   │   │   ├── config.py
+│   │   │   ├── splashSurf
+│   │   │   │   └── Dockerfile
+│   │   │   ├── taichi
+│   │   │   │   ├── Dockerfile
+│   │   │   │   ├── build.sh
+│   │   │   │   ├── config.py
+│   │   │   │   ├── install.sh
+│   │   │   │   └── test.py
+│   │   │   ├── test.sh
+│   │   │   └── vtk
+│   │   │       ├── Dockerfile
+│   │   │       ├── build.sh
+│   │   │       ├── config.py
+│   │   │       ├── install.sh
+│   │   │       └── test.py
+│   │   ├── habitat-sim
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   ├── test.py
+│   │   │   └── test.sh
+│   │   ├── lerobot
+│   │   │   ├── 99-usb-serial.rules
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── clone_lerobot_dir_under_data.sh
+│   │   │   ├── copy_overlay_files_in_data_lerobot.sh
+│   │   │   ├── docs.md
+│   │   │   ├── lerobot_overlay
+│   │   │   │   ├── .cache
+│   │   │   │   │   └── calibration
+│   │   │   │   │       └── koch
+│   │   │   │   │           ├── main_follower.json
+│   │   │   │   │           └── main_leader.json
+│   │   │   │   ├── lerobot
+│   │   │   │   │   ├── common
+│   │   │   │   │   │   └── datasets
+│   │   │   │   │   │       └── compute_stats.py
+│   │   │   │   │   ├── configs
+│   │   │   │   │   │   └── robot
+│   │   │   │   │   │       └── koch.yaml
+│   │   │   │   │   └── scripts
+│   │   │   │   │       └── control_robot.py
+│   │   │   │   └── notebooks
+│   │   │   │       ├── 7-1_real-robot_order-and-assembly.ipynb
+│   │   │   │       ├── 7-2_real-robot_configure-motors.ipynb
+│   │   │   │       ├── 7-3_real-robot_record-and-visualize.ipynb
+│   │   │   │       ├── 7-4_real-robot_train.ipynb
+│   │   │   │       └── 7-5_real-robot_evaluate.ipynb
+│   │   │   ├── test.py
+│   │   │   └── test.sh
+│   │   ├── mimicgen
+│   │   │   ├── Dockerfile
+│   │   │   ├── install_x86.sh
+│   │   │   ├── test.py
+│   │   │   └── test.sh
+│   │   ├── mujoco
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   └── test.py
+│   │   ├── octo
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── benchmark.py
+│   │   │   └── test.py
+│   │   ├── opendronemap
+│   │   │   ├── Dockerfile
+│   │   │   ├── Dockerfile.node
+│   │   │   ├── README.md
+│   │   │   ├── config.py
+│   │   │   ├── docs.md
+│   │   │   └── test.sh
+│   │   ├── openvla
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── config.py
+│   │   │   ├── test.py
+│   │   │   └── test.sh
+│   │   ├── physx
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   └── test.sh
+│   │   ├── protomotions
+│   │   │   ├── Dockerfile
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.sh
+│   │   ├── robogen
+│   │   │   ├── Dockerfile
+│   │   │   └── README.md
+│   │   ├── robomimic
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   └── test.sh
+│   │   ├── robopoint
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── client.py
+│   │   │   ├── examples
+│   │   │   │   ├── cups.jpg
+│   │   │   │   ├── sink.jpg
+│   │   │   │   └── stair.jpg
+│   │   │   ├── gradio.png
+│   │   │   ├── start-server.sh
+│   │   │   └── test.py
+│   │   ├── robosuite
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── test.py
+│   │   │   └── test.sh
+│   │   └── sapien
+│   │       ├── Dockerfile
+│   │       ├── README.md
+│   │       ├── patches
+│   │       │   └── 3.0.0.diff
+│   │       ├── test.py
+│   │       └── test.sh
+│   ├── ros
+│   │   ├── Dockerfile.ros.melodic
+│   │   ├── Dockerfile.ros.noetic
+│   │   ├── Dockerfile.ros2
+│   │   ├── Dockerfile.ros2.extras
+│   │   ├── README.md
+│   │   ├── config.py
+│   │   ├── docs.md
+│   │   ├── ros2_build.sh
+│   │   ├── ros2_install.sh
+│   │   ├── ros_entrypoint.sh
+│   │   ├── test_ros.sh
+│   │   ├── test_ros2.sh
+│   │   └── version.py
+│   ├── smart-home
+│   │   ├── dependencies
+│   │   │   ├── ciso8601
+│   │   │   │   ├── Dockerfile
+│   │   │   │   ├── build.sh
+│   │   │   │   ├── config.py
+│   │   │   │   ├── install.sh
+│   │   │   │   ├── patch.diff
+│   │   │   │   └── test.py
+│   │   │   └── psutil-home-assistant
+│   │   │       ├── Dockerfile
+│   │   │       ├── build.sh
+│   │   │       ├── config.py
+│   │   │       ├── install.sh
+│   │   │       └── test.py
+│   │   ├── homeassistant-base
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   └── config.py
+│   │   ├── homeassistant-core
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── docs.md
+│   │   │   ├── go2rtc_test.sh
+│   │   │   ├── ha_onboarding.png
+│   │   │   ├── sqlite3_test.py
+│   │   │   └── test.py
+│   │   └── wyoming
+│   │       ├── README.md
+│   │       ├── assist-microphone
+│   │       │   ├── Dockerfile
+│   │       │   ├── README.md
+│   │       │   ├── build.sh
+│   │       │   ├── config.py
+│   │       │   ├── docs.md
+│   │       │   ├── images
+│   │       │   │   ├── assistant-configuration.png
+│   │       │   │   ├── configuration.png
+│   │       │   │   └── wyoming-voice-assistant.png
+│   │       │   ├── install.sh
+│   │       │   ├── list_audio_devices.sh
+│   │       │   ├── rootfs
+│   │       │   │   └── etc
+│   │       │   │       └── s6-overlay
+│   │       │   │           └── s6-rc.d
+│   │       │   │               ├── assist_microphone
+│   │       │   │               │   ├── dependencies.d
+│   │       │   │               │   │   └── base
+│   │       │   │               │   ├── finish
+│   │       │   │               │   ├── run
+│   │       │   │               │   └── type
+│   │       │   │               ├── discovery
+│   │       │   │               │   ├── dependencies.d
+│   │       │   │               │   │   └── assist_microphone
+│   │       │   │               │   ├── run
+│   │       │   │               │   ├── type
+│   │       │   │               │   └── up
+│   │       │   │               └── user
+│   │       │   │                   └── contents.d
+│   │       │   │                       ├── assist_microphone
+│   │       │   │                       └── discovery
+│   │       │   └── test_mic_and_speaker.sh
+│   │       ├── docker-compose.yaml
+│   │       ├── openwakeword
+│   │       │   ├── Dockerfile
+│   │       │   ├── README.md
+│   │       │   ├── build.sh
+│   │       │   ├── config.py
+│   │       │   ├── docs.md
+│   │       │   ├── images
+│   │       │   │   ├── openwakeword-assist-config.png
+│   │       │   │   └── wyoming-openwakeword.png
+│   │       │   ├── install.sh
+│   │       │   ├── models
+│   │       │   │   ├── jets_un.onnx
+│   │       │   │   └── jets_un.tflite
+│   │       │   ├── rootfs
+│   │       │   │   └── etc
+│   │       │   │       └── s6-overlay
+│   │       │   │           └── s6-rc.d
+│   │       │   │               ├── discovery
+│   │       │   │               │   ├── dependencies.d
+│   │       │   │               │   │   └── openwakeword
+│   │       │   │               │   ├── run
+│   │       │   │               │   ├── type
+│   │       │   │               │   └── up
+│   │       │   │               ├── openwakeword
+│   │       │   │               │   ├── dependencies.d
+│   │       │   │               │   │   └── base
+│   │       │   │               │   ├── finish
+│   │       │   │               │   ├── run
+│   │       │   │               │   └── type
+│   │       │   │               └── user
+│   │       │   │                   └── contents.d
+│   │       │   │                       ├── discovery
+│   │       │   │                       └── openwakeword
+│   │       │   └── test.sh
+│   │       ├── piper
+│   │       │   ├── Dockerfile
+│   │       │   ├── README.md
+│   │       │   ├── build.sh
+│   │       │   ├── config.py
+│   │       │   ├── docs.md
+│   │       │   ├── images
+│   │       │   │   ├── piper-playground.png
+│   │       │   │   └── piper.png
+│   │       │   ├── install.sh
+│   │       │   ├── rootfs
+│   │       │   │   └── etc
+│   │       │   │       └── s6-overlay
+│   │       │   │           └── s6-rc.d
+│   │       │   │               ├── discovery
+│   │       │   │               │   ├── dependencies.d
+│   │       │   │               │   │   └── piper
+│   │       │   │               │   ├── run
+│   │       │   │               │   ├── type
+│   │       │   │               │   └── up
+│   │       │   │               ├── piper
+│   │       │   │               │   ├── dependencies.d
+│   │       │   │               │   │   └── base
+│   │       │   │               │   ├── finish
+│   │       │   │               │   ├── run
+│   │       │   │               │   └── type
+│   │       │   │               └── user
+│   │       │   │                   └── contents.d
+│   │       │   │                       ├── discovery
+│   │       │   │                       └── piper
+│   │       │   ├── test.sh
+│   │       │   └── wyoming-piper_cuda_path.diff
+│   │       └── wyoming-whisper
+│   │           ├── Dockerfile
+│   │           ├── README.md
+│   │           ├── build.sh
+│   │           ├── config.py
+│   │           ├── docs.md
+│   │           ├── install.sh
+│   │           ├── rootfs
+│   │           │   └── etc
+│   │           │       └── s6-overlay
+│   │           │           └── s6-rc.d
+│   │           │               ├── discovery
+│   │           │               │   ├── dependencies.d
+│   │           │               │   │   └── whisper
+│   │           │               │   ├── run
+│   │           │               │   ├── type
+│   │           │               │   └── up
+│   │           │               ├── user
+│   │           │               │   └── contents.d
+│   │           │               │       ├── discovery
+│   │           │               │       └── whisper
+│   │           │               └── whisper
+│   │           │                   ├── dependencies.d
+│   │           │                   │   └── base
+│   │           │                   ├── finish
+│   │           │                   ├── run
+│   │           │                   └── type
+│   │           ├── test.sh
+│   │           └── whisper.png
+│   ├── speech
+│   │   ├── audiocraft
+│   │   │   ├── Dockerfile
+│   │   │   └── README.md
+│   │   ├── espeak
+│   │   │   └── Dockerfile
+│   │   ├── faster-whisper
+│   │   │   ├── Dockerfile
+│   │   │   └── README.md
+│   │   ├── kokoro-tts
+│   │   │   ├── kokoro-tts-fastapi
+│   │   │   │   ├── Dockerfile
+│   │   │   │   ├── docs.md
+│   │   │   │   ├── start-gpu.sh
+│   │   │   │   ├── test.extensive.py
+│   │   │   │   ├── test.py
+│   │   │   │   └── test_speech_output.mp3
+│   │   │   ├── kokoro-tts-hf
+│   │   │   │   ├── Dockerfile
+│   │   │   │   ├── requirements.txt
+│   │   │   │   └── test.py
+│   │   │   └── kokoro-tts-onnx
+│   │   │       ├── Dockerfile
+│   │   │       ├── audio.wav
+│   │   │       └── test.py
+│   │   ├── piper-tts
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── test.py
+│   │   │   └── test_piper_phonemize.sh
+│   │   ├── riva-client
+│   │   │   ├── Dockerfile.cpp
+│   │   │   ├── Dockerfile.python
+│   │   │   ├── README.md
+│   │   │   ├── config.json
+│   │   │   ├── docs.md
+│   │   │   ├── list_audio_devices.py
+│   │   │   ├── loopback.py
+│   │   │   ├── test.py
+│   │   │   └── test.sh
+│   │   ├── spark-tts
+│   │   │   ├── Dockerfile
+│   │   │   ├── docs.md
+│   │   │   ├── inference.py
+│   │   │   └── test.sh
+│   │   ├── speaches
+│   │   │   ├── Dockerfile
+│   │   │   ├── docs.md
+│   │   │   ├── start-server.sh
+│   │   │   └── test.py
+│   │   ├── speech-dispatcher
+│   │   │   ├── Dockerfile
+│   │   │   └── docs.md
+│   │   ├── voicecraft
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   └── docs.md
+│   │   ├── whisper
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── docs.md
+│   │   │   └── record-and-transcribe.ipynb
+│   │   ├── whisper_trt
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   └── test.py
+│   │   ├── whisperx
+│   │   │   ├── Dockerfile
+│   │   │   └── README.md
+│   │   └── xtts
+│   │       ├── Dockerfile
+│   │       ├── README.md
+│   │       ├── test.py
+│   │       ├── test_stream.py
+│   │       └── test_voices.py
+│   ├── tensorrt
+│   │   ├── Dockerfile.deb
+│   │   ├── Dockerfile.tar
+│   │   ├── README.md
+│   │   ├── config.py
+│   │   └── test.sh
+│   ├── vectordb
+│   │   ├── faiss
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── benchmark.py
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── install.sh
+│   │   │   └── test.py
+│   │   ├── faiss_lite
+│   │   │   ├── CMakeLists.txt
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── benchmark.py
+│   │   │   ├── faiss_lite.cu
+│   │   │   ├── faiss_lite.py
+│   │   │   ├── test.cu
+│   │   │   └── test.sh
+│   │   └── nanodb
+│   │       ├── Dockerfile
+│   │       ├── README.md
+│   │       ├── docs.md
+│   │       └── test.py
+│   ├── vit
+│   │   ├── clip_trt
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   └── test.py
+│   │   ├── efficientvit
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   └── benchmark.py
+│   │   ├── kat
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── build.sh
+│   │   │   ├── config.py
+│   │   │   ├── katransformer.py
+│   │   │   └── test.py
+│   │   ├── nanoowl
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── docs.md
+│   │   │   └── test.sh
+│   │   ├── nanosam
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── benchmark.py
+│   │   │   └── docs.md
+│   │   ├── sam
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── benchmark.py
+│   │   │   └── docs.md
+│   │   ├── sapiens
+│   │   │   ├── Dockerfile
+│   │   │   ├── README.md
+│   │   │   ├── demo.py
+│   │   │   ├── install.sh
+│   │   │   └── models.py
+│   │   └── tam
+│   │       ├── Dockerfile
+│   │       ├── README.md
+│   │       └── docs.md
+│   └── vlm
+│       ├── lita
+│       │   ├── Dockerfile
+│       │   ├── README.md
+│       │   ├── benchmark.py
+│       │   ├── docs.md
+│       │   └── test.py
+│       ├── llama-vision
+│       │   ├── Dockerfile
+│       │   ├── README.md
+│       │   ├── llama_vision.py
+│       │   └── test.py
+│       ├── llava
+│       │   ├── Dockerfile
+│       │   ├── README.md
+│       │   ├── benchmark.py
+│       │   ├── docs.md
+│       │   └── test.py
+│       ├── minigpt4
+│       │   ├── Dockerfile
+│       │   ├── README.md
+│       │   ├── benchmark.py
+│       │   ├── config.py
+│       │   ├── docs.md
+│       │   ├── patch.llamacpp.diff
+│       │   ├── patch.minigpt4.diff
+│       │   └── test.sh
+│       ├── prismatic
+│       │   ├── Dockerfile
+│       │   ├── test.py
+│       │   └── test.sh
+│       ├── shape-llm
+│       │   ├── Dockerfile
+│       │   ├── README.md
+│       │   ├── test.py
+│       │   └── test.sh
+│       ├── vila
+│       │   ├── Dockerfile
+│       │   ├── README.md
+│       │   ├── test.py
+│       │   └── test.sh
+│       ├── vila-microservice
+│       │   ├── Dockerfile
+│       │   ├── config
+│       │   │   ├── chat_server_config.json
+│       │   │   ├── main_config.json
+│       │   │   ├── prometheus.yml
+│       │   │   ├── rules.yml
+│       │   │   ├── storage-quota.json
+│       │   │   └── vlm-nginx.conf
+│       │   ├── docker_start.sh
+│       │   ├── docs.md
+│       │   └── src
+│       │       ├── __init__.py
+│       │       ├── api_server.py
+│       │       ├── chat_server.py
+│       │       ├── config.py
+│       │       ├── main.py
+│       │       ├── mmj_utils_overlay
+│       │       │   └── mmj_utils
+│       │       │       ├── api_schemas.py
+│       │       │       ├── api_server.py
+│       │       │       └── vlm.py
+│       │       ├── requirements.txt
+│       │       ├── utils.py
+│       │       └── ws_server.py
+│       └── xtuner
+│           ├── Dockerfile
+│           ├── test.py
+│           └── test.sh
+├── requirements.txt
+├── run.sh
+└── scripts
+    ├── configure-ssd-docker.sh
+    ├── optimize-ram-usage.sh
+    ├── probe-system.sh
+    ├── setup-system.sh
+    └── system-config.yaml
+
+405 directories, 1693 files
