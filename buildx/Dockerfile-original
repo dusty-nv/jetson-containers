@@ -1,0 +1,120 @@
+#---
+# name: build-essential
+# group: build
+# notes: installs compilers, build tools & configures the default locale
+#---
+ARG BASE_IMAGE=kairin/001:nvcr.io-nvidia-pytorch-25.02-py3-igpu
+FROM ${BASE_IMAGE}
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    LANGUAGE=en_US:en \
+    LANG=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8
+
+# Ensure aptitude is installed first
+RUN set -ex \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+        locales \
+        locales-all \
+        tzdata \
+        aptitude \
+    && locale-gen en_US.UTF-8 \
+    && update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 \
+    && locale
+
+# Use aptitude to install the required packages
+RUN set -ex \
+    && aptitude update \
+    && aptitude install -y -o APT::Install-Recommends=false \
+        build-essential \
+        software-properties-common \
+        apt-transport-https \
+        ca-certificates \
+        lsb-release \
+        pkg-config \
+        gnupg \
+        git \
+        git-lfs \
+        gdb \
+        wget \
+        wget2 \
+        curl \
+        nano \
+        zip \
+        unzip \
+        time \
+        sshpass \
+        openssh-client \
+    && aptitude clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && gcc --version \
+    && g++ --version
+
+#---
+# name: bazel
+# group: build
+# depends: [build-essential]
+# test: test.sh
+#---
+
+# https://github.com/bazelbuild/bazelisk
+RUN BAZELISK_RELEASE=$(wget -qO- https://api.github.com/repos/bazelbuild/bazelisk/releases/latest | grep -Po '"tag_name": "\K.*?(?=")') \
+    && BAZELISK_URL="https://github.com/bazelbuild/bazelisk/releases/download/$BAZELISK_RELEASE/bazelisk-linux-arm64" \
+    && echo "BAZELISK_RELEASE=$BAZELISK_RELEASE" && echo "BAZELISK_URL=$BAZELISK_URL" \
+    && wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate $BAZELISK_URL -O /usr/local/bin/bazel \
+    && chmod +x /usr/local/bin/bazel
+
+# have bazelisk download the latest bazel
+RUN bazel --version
+
+#---
+# name: cmake:apt
+# group: build
+# depends: build-essential
+# notes: upgrade cmake with apt
+#---
+RUN set -ex \
+    && wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null \
+    && echo "deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/kitware.list >/dev/null \
+    && aptitude update \
+    && rm /usr/share/keyrings/kitware-archive-keyring.gpg \
+    && aptitude install -y -o APT::Install-Recommends=false kitware-archive-keyring \
+    && aptitude install -y -o APT::Install-Recommends=false cmake \
+    && rm -rf /var/lib/apt/lists/* \
+    && aptitude clean \
+    && cmake --version
+
+#---
+# name: cmake:pip
+# alias: cmake
+# group: build
+# depends: [build-essential, python]
+# notes: upgrade `cmake` with `pip`
+#---
+RUN set -ex \
+    && pip3 install --force-reinstall cmake \
+    && cmake --version \
+    && which cmake
+
+#---
+# name: ninja
+# group: build
+# depends: [python]
+# test: [test.sh]
+#---
+RUN set -ex \
+    && mkdir -p /usr/share/keyrings \
+    && wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null \
+    && echo "deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" > /etc/apt/sources.list.d/kitware.list \
+    && aptitude update \
+    && aptitude install -y -o APT::Install-Recommends=false apt-transport-https \
+    && aptitude install -y -o APT::Install-Recommends=false unzip wget curl jq \
+    && LATEST_VERSION=$(curl -s https://api.github.com/repos/ninja-build/ninja/releases/latest | jq -r .tag_name) \
+    && wget -q "https://github.com/ninja-build/ninja/releases/download/${LATEST_VERSION}/ninja-linux-aarch64.zip" \
+    && unzip -o ninja-linux-aarch64.zip -d /usr/bin/ \
+    && rm ninja-linux-aarch64.zip \
+    && chmod +x /usr/bin/ninja \
+    && aptitude remove -y jq \
+    && aptitude clean \
+    && rm -rf /var/lib/apt/lists/*
