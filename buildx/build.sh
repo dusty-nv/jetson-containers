@@ -3,27 +3,39 @@
 # Docker Hub username
 DOCKER_USERNAME=kairin
 
-# Base image name
-IMAGE_NAME=my-custom-image
+# Image name
+IMAGE_NAME=001
 
 # Get the current date and time formatted as YYYYMMDD-HHMMSS
 CURRENT_DATE_TIME=$(date +"%Y%m%d-%H%M%S")
 
 # Create the tag with the current date and time and append number 1
-TAG="${DOCKER_USERNAME}/001:${CURRENT_DATE_TIME}-1"
+TAG="${DOCKER_USERNAME}/${IMAGE_NAME}:${CURRENT_DATE_TIME}-1"
 
-# Remove any existing builder instance
-docker buildx rm mybuilder || true
+# Determine the current platform
+ARCH=$(uname -m)
 
-# Set the builder instance
-docker buildx create --name mybuilder --use
+if [ "$ARCH" = "x86_64" ]; then
+    PLATFORM="linux/amd64"
+elif [ "$ARCH" = "aarch64" ]; then
+    PLATFORM="linux/arm64"
+else
+    echo "Unsupported architecture: $ARCH"
+    exit 1
+fi
+
+# Check if the builder already exists
+if ! docker buildx inspect jetson-builder &>/dev/null; then
+  # Create the builder instance if it doesn't exist
+  docker buildx create --name jetson-builder
+fi
+
+# Use the builder instance
+docker buildx use jetson-builder
 
 # Build the Docker image using buildx and push to Docker Hub
-docker buildx build --platform linux/amd64,linux/arm64 \
+docker buildx build --platform $PLATFORM \
     -t $TAG \
     --push .
-
-# Remove the builder instance
-docker buildx rm mybuilder
 
 echo "Docker image tagged and pushed as $TAG"
