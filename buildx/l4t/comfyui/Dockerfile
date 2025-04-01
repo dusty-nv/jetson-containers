@@ -1,16 +1,9 @@
-#---
-# name: comfyui
-# group: diffusion
-# depends: [pytorch, torchvision, torchaudio, opencv, bitsandbytes, transformers, xformers, torchao, diffusers, huggingface_hub]
-# requires: '>=35.0.0'
-# docs: docs.md
-#---
-ARG BASE_IMAGE
+# Declare the ARG BASE_IMAGE
+ARG BASE_IMAGE=kairin/001:20250402-063709-1
 FROM ${BASE_IMAGE}
 
 WORKDIR /opt
 
-# Clone the repository:
 RUN git clone https://github.com/comfyanonymous/ComfyUI.git && \
     cd ComfyUI && \
     pip3 install -r requirements.txt
@@ -25,7 +18,6 @@ RUN pip3 install -U -r /opt/ComfyUI/custom_nodes/ComfyUI-Manager/requirements.tx
     pip3 install -U -r /opt/ComfyUI/custom_nodes/comfyui-flux-accelerator/requirements.txt && \
     pip3 install -U -r /opt/ComfyUI/custom_nodes/ComfyUI-to-Python-Extension/requirements.txt
 
-
 RUN cd /opt/ComfyUI/custom_nodes/comfyui-flux-accelerator/scripts && \
     if [ -f download_taef1.sh ]; then \
         chmod +x download_taef1.sh && bash download_taef1.sh; \
@@ -37,7 +29,7 @@ RUN cd /opt/ComfyUI/custom_nodes/comfyui-flux-accelerator/scripts && \
 WORKDIR /opt/ComfyUI/
 
 RUN pip3 install -U deepdiff xformers onnxruntime-gpu triton lm_eval vhacdx manifold openexr
-RUN pip3 install -U diffusers flash-attn sageattention  torchao
+RUN pip3 install -U diffusers flash-attn sageattention torchao
 
 COPY workflow /opt/ComfyUI/workflow
 COPY extra /opt/ComfyUI/extra

@@ -1,16 +1,11 @@
-#---
-# name: build-essential
-# group: build
-# notes: installs compilers, build tools & configures the default locale
-#---
-ARG BASE_IMAGE
+# Declare the ARG BASE_IMAGE
+ARG BASE_IMAGE=kairin/001:20250402-063709-1
 FROM ${BASE_IMAGE}
 
 ENV DEBIAN_FRONTEND=noninteractive \
     LANGUAGE=en_US:en \
     LANG=en_US.UTF-8 \
     LC_ALL=en_US.UTF-8
-    #TERM=dumb
 
 RUN set -ex \
     && apt-get update \
