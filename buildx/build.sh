@@ -2,7 +2,9 @@
 
 # Load environment variables from the .env file
 if [ -f .env ]; then
-  export $(cat .env | xargs)
+  set -a
+  source .env
+  set +a
 else
   echo ".env file not found!"
   exit 1
@@ -46,11 +48,11 @@ read -p "Do you want to build with cache? (y/n): " use_cache
 
 # Build the Docker image using buildx and push to Docker Hub
 if [ "$use_cache" = "y" ]; then
-  docker buildx build --platform $PLATFORM \
+  docker buildx build --platform $PLATFORM --build-arg TARGETPLATFORM=$PLATFORM \
       -t $TAG \
       --push .
 else
-  docker buildx build --no-cache --platform $PLATFORM \
+  docker buildx build --no-cache --platform $PLATFORM --build-arg TARGETPLATFORM=$PLATFORM \
       -t $TAG \
       --push .
 fi
