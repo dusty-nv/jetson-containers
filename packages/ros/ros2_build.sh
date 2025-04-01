@@ -60,7 +60,7 @@ pip3 install --upgrade \
 # https://github.com/dusty-nv/jetson-containers/issues/216			  
 python3 -m pip install --upgrade pip
 pip3 install scikit-build
-pip3 install --upgrade cmake
+pip3 install --upgrade "cmake<4.0.0"
 cmake --version
 which cmake
 
