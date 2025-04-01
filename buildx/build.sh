@@ -68,6 +68,6 @@ build_image() {
 }
 
 # Build the images
-build_image "build-essential" $BUILD_ESSENTIAL_TAG
-build_image "stable-diffusion-webui" $STABLE_DIFFUSION_WEBUI_TAG
-build_image "comfyui" $COMFYUI_TAG
+build_image "./l4t/build-essential" $BUILD_ESSENTIAL_TAG
+build_image "./l4t/stable-diffusion-webui" $STABLE_DIFFUSION_WEBUI_TAG
+build_image "./l4t/comfyui" $COMFYUI_TAG
