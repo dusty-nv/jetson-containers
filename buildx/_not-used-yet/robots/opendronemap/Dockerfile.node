@@ -1,0 +1,28 @@
+#
+# https://github.com/OpenDroneMap/NodeODM/blob/master/Dockerfile.gpu
+# https://github.com/OpenDroneMap/NodeODM#using-an-external-hard-drive
+#
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+EXPOSE 3000
+
+USER root
+RUN npm install -g nodemon && \
+    ln -s /code/SuperBuild/install/bin/untwine /usr/bin/untwine && \
+    ln -s /code/SuperBuild/install/bin/entwine /usr/bin/entwine && \
+    ln -s /code/SuperBuild/install/bin/pdal /usr/bin/pdal
+
+RUN mkdir /var/www
+WORKDIR "/var/www"
+RUN useradd -m -d "/home/odm" -s /bin/bash odm
+
+RUN git clone --depth=1 https://github.com/OpenDroneMap/NodeODM /var/www
+RUN npm install --production && mkdir -p tmp
+
+RUN chown -R odm:odm /var/www
+RUN chown -R odm:odm /code
+
+USER odm
+
+ENTRYPOINT ["/usr/bin/node", "/var/www/index.js"]

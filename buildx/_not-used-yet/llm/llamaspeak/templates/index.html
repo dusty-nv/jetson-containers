@@ -1,0 +1,178 @@
+<!doctype html>
+
+<html>
+	<head>
+    <meta charset="utf-8">
+		<title>llamaspeak</title>
+
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/static/bootstrap.css">
+    <link rel="stylesheet" href="/static/chat.css">
+    
+		<script type='text/javascript' src="/static/jquery-3.6.3.min.js"></script>
+    <script type='text/javascript' src='/static/bootstrap.bundle.min.js'></script>
+    <script type='text/javascript' src='/static/websocket.js'></script>
+    <script type='text/javascript' src='/static/audio.js'></script>
+    
+		<script type="text/javascript">
+
+      /*let sampleCount = 0;
+      
+      function generateAudio() {
+        
+        samples = new Int16Array(4800);
+        const hz = 440.0;
+        let time = Date.now() / 1000.0;
+        
+        for (i = 0; i < samples.length; i++) {
+          samples[i] = Math.sin(sampleCount * (Math.sin(sampleCount/24000.0)+hz) * Math.PI * 2.0 / 48000.0) * 32767;
+          sampleCount++;
+        }
+        onAudioOutput(samples);
+      }
+      
+      function testWebsocketSend() {
+        sendWebsocket({'abc': 123, 'def': 'xyz', 'test_array': [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]});
+        sendWebsocket("Hello my name is ABC123", type=1);
+      }*/
+
+      function onChatMessageKey(event) {  // https://stackoverflow.com/a/49389811
+        if( event.which === 13 && !event.shiftKey ) {
+          if( !event.repeat )
+            onChatMessageSubmit();
+          event.preventDefault(); // prevents the addition of a new line in the text field
+        }
+      }
+      
+      function onChatMessageSubmit() {
+        const input = document.getElementById('chat-message-input');
+        console.log('submitting chat message:', input.value);
+        sendWebsocket(input.value, type=1);
+        input.value = "";
+      }
+      
+      function onChatHistoryReset() {
+        sendWebsocket({'chat_history_reset': true});
+      }
+      
+      function onVoiceSelect() {
+        const voice = document.getElementById('voice-select').value;
+        console.log(`select voice: ${voice}`);
+        sendWebsocket({'tts_voice': voice});
+      }
+      
+      window.onload = function() {
+      
+        connectWebsocket();
+        enumerateAudioDevices();
+        openAudioDevices();
+
+        //window.setInterval(generateAudio, 100);
+        //window.setInterval(testWebsocketSend, 500);
+      }
+		</script>
+	</head>
+	
+	<body class="bg-dark-gray" data-bs-theme="dark">
+    <!-- Navbar + main body -->
+		<div class="d-flex flex-column h-100">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-sage-green"> <!-- fixed-top will let rest of body scroll -->
+        <div class="container-fluid">
+          <div class="d-flex flex-grow-1">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand ms-2" href="#"><span class="mb-0 h4" style="font-family: monospace, monospace;">llamaspeak</span></a>
+            <span class="w-100 d-lg-none d-block">
+              <!-- hidden spacer to center brand on mobile --></span>
+          </div>
+          <div class="collapse navbar-collapse flex-grow-1 text-right" id="navbarToggler">
+            <ul class="navbar-nav ms-auto flex-nowrap"> <!-- me-auto mb-2 mb-lg-0 -->
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#audioDialog">Audio</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Personality</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarChatHistory" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  History
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarChatHistory">
+                  <li><a class="dropdown-item" href="#" onclick="onChatHistoryReset()">Reset</a></li>
+                  <li><a class="dropdown-item" href="#">Save</a></li>
+                  <li><a class="dropdown-item" href="#">Load</a></li>
+                  <!--<li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Something else here</a></li>-->
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <span class="navbar-nav ms-auto flex-row">
+            <button id="audio-input-mute" class="btn btn-primary btn-circle btn-md bi bi-mic-mute-fill ms-1 me-1" type="button" onclick="muteAudioInput()"></button>
+            <button id="audio-output-mute" class="btn btn-primary btn-circle btn-md bi bi-volume-up-fill" type="button" onclick="muteAudioOutput()"></button>
+          </span>
+        </div>
+      </nav>
+      
+      <div id="chat-history-container" class="flex-grow-1 bg-medium-gray p-2 m-3" style="overflow-y: scroll;">
+        <!--<h3>Conversation</h3>-->
+      </div>
+
+      <div class="mx-3 mb-3">
+        <div class="input-group">
+          <textarea id="chat-message-input" class="form-control" rows="3" placeholder="Enter to send (Shift+Enter for newline)" onkeydown="onChatMessageKey(event)"></textarea>
+          <span class="input-group-text bg-light-gray bi bi-arrow-return-left" style="color: #eeeeee;" onclick="onChatMessageSubmit()"></span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Audio settings dialog -->
+    <div class="modal fade" id="audioDialog" tabindex="-1" aria-labelledby="audioDialogLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="audioDialogLabel">Audio Settings</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: #eeeeee;"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="audio-input-select" class="form-label">Input Device (Microphone)</label>
+              <select id="audio-input-select" name="audio-input-select" class="form-select" onclick="openAudioDevices()"></select>
+            </div>
+            <div class="mb-3">
+              <label for="audio-output-select" class="form-label">Output Device (Speaker)</label>
+              <select id="audio-output-select" name="audio-output-select" class="form-select" onclick="openAudioDevices()"></select>
+            </div>
+            <div>
+              <label for="voice-select" class="form-label">TTS Voice</label>
+              <select id="voice-select" name="voice-select" class="form-select" onclick="onVoiceSelect()">
+                <option value="English-US.Female-1" selected>English-US.Female-1</option>
+                <option value="English-US.Male-1">English-US.Male-1</option>
+                <!--<option value="English-US-RadTTS.Female-1">English-US-RadTTS.Female-1</option>
+                <option value="English-US-RadTTS.Male-1">English-US-RadTTS.Male-1</option>-->
+                <option value="English-US.Female-Calm">English-US.Female-Calm</option>
+                <option value="English-US.Female-Neutral">English-US.Female-Neutral</option>
+                <option value="English-US.Female-Happy">English-US.Female-Happy</option>
+                <option value="English-US.Female-Angry">English-US.Female-Angry</option>
+                <option value="English-US.Female-Fearful">English-US.Female-Fearful</option>
+                <option value="English-US.Female-Sad">English-US.Female-Sad</option>
+                <option value="English-US.Male-Calm">English-US.Male-Calm</option>
+                <option value="English-US.Male-Neutral">English-US.Male-Neutral</option>
+                <option value="English-US.Male-Happy">English-US.Male-Happy</option>
+                <option value="English-US.Male-Angry">English-US.Male-Angry</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Done</button>
+            <!--<button type="button" class="btn btn-primary">Save changes</button>-->
+          </div>
+        </div>
+      </div>
+    </div>
+
+	</body>
+</html>

@@ -1,0 +1,19 @@
+diff --git a/mlc_llm/core.py b/mlc_llm/core.py
+index e9ce63c..e699513 100644
+--- a/mlc_llm/core.py
++++ b/mlc_llm/core.py
+@@ -407,11 +407,12 @@ def mod_transform_before_build(
+         has_cutlass = tvm.get_global_func("relax.ext.cutlass", True)
+ 
+         if has_cutlass and not args.no_cutlass_attn:
++            prefill_func_name = "prefill_with_embed" if args.sep_embed else "prefill"
+             if args.use_flash_attn_mqa:
+-                mod["prefill"] = rewrite_attention(mod["prefill"], use_flash_mqa=True)
++                mod[prefill_func_name] = rewrite_attention(mod[prefill_func_name], use_flash_mqa=True)
+                 mod["decode"] = rewrite_attention(mod["decode"], use_flash_mqa=True)
+ 
+-            mod["prefill"] = rewrite_attention(mod["prefill"], use_flash_mqa=False)
++            mod[prefill_func_name] = rewrite_attention(mod[prefill_func_name], use_flash_mqa=False)
+             mod["decode"] = rewrite_attention(mod["decode"], use_flash_mqa=False)
+ 
+             patterns += get_patterns_with_prefix("cutlass.attention")

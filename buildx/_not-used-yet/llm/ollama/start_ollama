@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+shopt -s huponexit
+
+: "${OLLAMA_LOGS:=/data/logs/ollama.log}"
+
+# Ensure the logs directory exists
+mkdir -p "$(dirname "${OLLAMA_LOGS}")"
+
+printf "\nStarting ollama server\n\n"
+
+printf "\nOLLAMA_HOST   ${OLLAMA_HOST}\n"
+printf "OLLAMA_LOGS   ${OLLAMA_LOGS}\n"
+printf "OLLAMA_MODELS ${OLLAMA_MODELS}\n\n"
+
+if [[ ! -z "${OLLAMA_MODEL}" ]]; then
+  printf "Loading model ${OLLAMA_MODEL} ...\n"
+  /bin/bash -c "sleep 5 && ollama run ${OLLAMA_MODEL}" &
+fi
+
+/bin/bash -c "OLLAMA_LLM_LIBRARY=cuda_${CUDA_VERSION_MAJOR} ollama serve &> $OLLAMA_LOGS" 2>&1 &
+
+#timeout 5 tail -f ${OLLAMA_LOGS} || sleep 5 ;
+
+if [[ -z "${OLLAMA_MODEL}" ]]; then
+  printf "\nollama server is now started, and you can run commands here like 'ollama run gemma3'\n\n"
+fi

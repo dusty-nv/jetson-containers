@@ -1,0 +1,69 @@
+global:
+  # How frequently to scrape targets by default.
+  scrape_interval: 5s
+
+  # How frequently to evaluate rules.
+  evaluation_interval: 10s
+  external_labels:
+    hostname: lab-nvidia
+# Rule files specifies a list of globs.
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+# Rules and alerts are read from all matching files for wildcards.
+rule_files:
+  - "./rules.yml"
+
+# A list of scrape configurations.
+scrape_configs:
+  - job_name: 'deepstream'
+    scrape_interval: 500ms
+    static_configs:
+      - targets: ['localhost:9090'] 
+
+  - job_name: 'its_monitoring'
+    scrape_interval: 500ms
+    static_configs:
+      - targets: ['localhost:9001']
+
+  - job_name: 'prometheus'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'push-gateway'
+    scrape_interval: 1s
+    static_configs:
+      - targets: ['localhost:9091']
+
+  - job_name: node
+    static_configs:
+    - targets: ['localhost:9100']
+      labels:
+        resin_app: RESIN_APP_ID
+        resin_device_uuid: RESIN_DEVICE_UUID
+
+  - job_name: 'emdat-analytics'
+    scrape_interval: 10s
+    static_configs:
+      - targets: ['localhost:6000']
+
+  - job_name: 'rosie-vms-prometheus'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['localhost:8080']
+
+  - job_name: 'jps_vlm_alerts'
+    scrape_interval: 1s
+    static_configs:
+      - targets: ['localhost:5012']
+
+  - job_name: 'jps_vlm_stats'
+    scrape_interval: 1s
+    static_configs:
+      - targets: ['localhost:5017']
+
+# Alerting specifies settings related to the Alertmanager.
+alerting:
+  alertmanagers:
+    - static_configs:
+      - targets:
+        - 'localhost:9093'

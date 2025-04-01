@@ -1,0 +1,18 @@
+diff --git a/pyproject.toml b/pyproject.toml
+index 7d1bf1b..89d806e 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -33,11 +33,11 @@ dependencies = [
+     "einops",
+     "jsonlines",
+     "rich",
+-    "timm==0.9.10",
++    "timm>=0.9.10",
+     "torch>=2.1.0",
+     "torchvision>=0.16.0",
+     "torchaudio",
+-    "transformers==4.34.1",
++    "transformers>=4.34.1",
+     "wandb"
+ ]
+ 

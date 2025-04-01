@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# This script will start JupyterLab server in the background (https://stackoverflow.com/a/44222911)
+# There are some environment variables that you can set when starting the container to override the defaults:
+#
+#    `--env JUPYTER_ROOT=/home/user`
+#    `--env JUPYTER_PORT=8888`
+#    `--env JUPYTER_PASSWORD=nvidia`
+#    `--env JUPYTER_LOGS=/data/logs/jupyter.log`
+#
+# The `/data` location is automatically mounted to your `jetson-containers/data` directory.
+
+: "${JUPYTER_ROOT:=/}"
+: "${JUPYTER_PORT:=8888}"
+: "${JUPYTER_LOGS:=/data/logs/jupyter.log}"
+: "${JUPYTER_PASSWORD:=nvidia}"
+
+server_url="http://$(hostname -I | cut -d' ' -f1):${JUPYTER_PORT}"
+
+printf "\nStarting JupyterLab server at $server_url (password \"${JUPYTER_PASSWORD}\")\n\n"
+
+# python3 -c "from notebook.auth.security import set_password; set_password(\"${JUPYTER_PASSWORD}\", '/root/.jupyter/jupyter_notebook_config.json')"
+
+/bin/bash -c "jupyter lab --ip 0.0.0.0 --port $JUPYTER_PORT --notebook-dir $JUPYTER_ROOT --allow-root &> $JUPYTER_LOGS" &
+
+timeout 5 tail -f $JUPYTER_LOGS
+
+printf "\nJupyterLab server is now started\n\n"
+#printf "JupyterLab URL:   $server_url (password \"${JUPYTER_PASSWORD}\")\n"
+printf "JupyterLab URL:   $server_url\n"
+printf "JupyterLab logs:  ${JUPYTER_LOGS}\n\n"
+
+printf "\nCopy the URL with the token above for the initial login or to reset your password.\n"
+

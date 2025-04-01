@@ -1,0 +1,28 @@
+# 
+# this is the langchain:samples container (built on top of langchain)
+# see Dockerfile & config.py for package configuration/metadata
+#
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+RUN pip install \
+    chromadb \
+    pypdf \
+    pytest \
+    boto3 \
+    jetson-stats \
+    unstructured \
+    langchain-openai \
+    streamlit \
+    chainlit
+
+WORKDIR /opt/langchain
+
+COPY *.ipynb ./
+# RUN sed 's|^\ \ }|    ,"notebook_dir": "/opt/langchain"\n  }|' -i /root/.jupyter/jupyter_notebook_config.json
+
+WORKDIR /
+
+CMD /start_ollama && \
+    JUPYTER_ROOT=/opt/langchain /start_jupyter && \
+    /bin/bash

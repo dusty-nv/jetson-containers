@@ -1,0 +1,11 @@
+{
+    "l4t-tensorflow:tf1": {
+        "group": "ml",
+        "depends": ["tensorflow", "opencv", "pycuda"]
+    },
+    
+    "l4t-tensorflow:tf2": {
+        "group": "ml",
+        "depends": ["tensorflow2", "opencv", "pycuda"]
+    }
+}

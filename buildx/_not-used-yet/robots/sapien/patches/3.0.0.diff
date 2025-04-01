@@ -1,0 +1,45 @@
+Submodule 3rd_party/sapien-vulkan-2 contains modified content
+diff --git a/3rd_party/sapien-vulkan-2/cmake/ktx.cmake b/3rd_party/sapien-vulkan-2/cmake/ktx.cmake
+index 2339a0e..4d33117 100644
+--- a/3rd_party/sapien-vulkan-2/cmake/ktx.cmake
++++ b/3rd_party/sapien-vulkan-2/cmake/ktx.cmake
+@@ -3,7 +3,7 @@ include(FetchContent)
+ FetchContent_Declare(
+     ktx
+     GIT_REPOSITORY https://github.com/KhronosGroup/KTX-Software.git
+-    GIT_TAG        v4.1.0
++    GIT_TAG        v4.3.2
+     GIT_SHALLOW TRUE
+     GIT_PROGRESS TRUE
+ )
+diff --git a/3rd_party/sapien-vulkan-2/src/core/instance.cpp b/3rd_party/sapien-vulkan-2/src/core/instance.cpp
+index 60663d7..082a12e 100644
+--- a/3rd_party/sapien-vulkan-2/src/core/instance.cpp
++++ b/3rd_party/sapien-vulkan-2/src/core/instance.cpp
+@@ -373,7 +373,7 @@ std::vector<PhysicalDeviceInfo> Instance::summarizePhysicalDevices() const {
+     bool discrete = deviceType == vk::PhysicalDeviceType::eDiscreteGpu;
+ 
+     ss << std::setw(3) << ord++ << std::setw(40) << name.substr(0, 39).c_str() << std::setw(10)
+-       << present << std::setw(10) << supported << std::setw(25) << std::hex << PCIToString(pci)
++       << present << std::setw(10) << supported /*<< std::setw(25) << std::hex << PCIToString(pci)*/
+        << std::dec << std::setw(10) << (cudaId < 0 ? "No Device" : std::to_string(cudaId))
+        << std::setw(15) << rayTracing << std::setw(10) << discrete << std::setw(15) << subgroupSize
+        << std::endl;
+@@ -469,7 +469,7 @@ static inline uint32_t computeDevicePriority(PhysicalDeviceInfo const &info,
+   }
+ 
+   // specific device
+-  if (hint.starts_with("pci:")) {
++  /*if (hint.starts_with("pci:")) {
+     std::string pciString = hint.substr(4);
+ 
+     // pci can be parsed
+@@ -490,7 +490,7 @@ static inline uint32_t computeDevicePriority(PhysicalDeviceInfo const &info,
+     }
+ 
+     return 0;
+-  }
++  }*/
+ 
+   // no device hint
+   // still prefer cuda device

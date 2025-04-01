@@ -1,0 +1,514 @@
+<!doctype html>
+
+<html>
+  <head>
+    {% from 'macros.html' import checkbox, slider, card_header, collapse_handler %}
+    
+    <meta charset="utf-8">
+    <title>{{ title }}</title>
+        
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    
+    <link rel="stylesheet" href="/static/bootstrap.css">
+    <link rel="stylesheet" href="/static/select2.min.css">
+    <link rel="stylesheet" href="/static/chat.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+    
+    <link href="https://unpkg.com/tabulator-tables@5.6.1/dist/css/tabulator_midnight.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.6.1/dist/js/tabulator.min.js"></script>
+
+    <script type='text/javascript' src='https://webrtc.github.io/adapter/adapter-latest.js'></script>
+    <script type='text/javascript' src='/static/webrtc.js'></script>
+    <script type='text/javascript' src='/static/rest.js'></script>
+    <script type='text/javascript' src='/static/debounce.js'></script>
+    <script type='text/javascript' src='/static/websocket.js'></script>
+     
+    <script type='text/javascript' src="/static/jquery-3.6.3.min.js"></script>
+    <script type='text/javascript' src='/static/bootstrap.bundle.min.js'></script>
+    <script type='text/javascript' src="/static/select2.min.js"></script>
+
+    <script type='text/javascript'>
+      function playWebRTC() {
+        playStream(document.getElementById('play-stream').value, document.getElementById('video-player'));
+      };
+      
+      function sendWebRTC() {
+        if( sendStream(getWebsocketURL("{{ webrtc_input_stream }}", port={{ webrtc_input_port }}), document.getElementById('send-stream').value) )
+          play(); // autoplay browser stream
+      }
+
+      function onWebsocketMsg(payload, type) {
+        if( type == MESSAGE_JSON ) { 
+          if( 'search_results' in payload ) {
+            const search_results = payload['search_results'];
+            
+            let obj = $('#nanodb_results');
+            obj.empty();
+            
+            for( let n=0; n < search_results.length; n++ ) {
+              if( 'image' in search_results[n] ) {
+                //contents = '<div style="position: relative; text-align: center; color: white" width="50%">';
+                let contents = '<div class="me-1" style="position: relative; color: white; display: inline;">';  // 49% width, -288% translate for 2x4 grid
+                contents += `<img src=${search_results[n]['image']} style="aspect-ratio: 1.47; width: 32%;" title="&quot;METADATA&quot; : ${search_results[n]['metadata']}">`;
+                contents += `<div class="ps-1 pe-1" style="position: absolute; top: 0%; right: 0%; transform: translate(0%, -168%); background-color: rgba(0,0,0,0.5)">${search_results[n]['similarity']}</div></div>`;
+                //contents += '</div>';
+                obj.append(contents);
+              }
+            }
+          }
+          
+          if( 'events' in payload ) {
+            event_table.setData(payload['events']); 
+          }
+          
+          if( 'alert' in payload ) {
+            addAlert(payload['alert']);
+          }
+          
+          if( 'refresh_rate' in payload ) {
+            document.getElementById('refresh_rate').innerHTML = payload['refresh_rate'];
+          }
+          
+          if( 'tegrastats' in payload ) {
+            console.log(payload['tegrastats']);
+          }
+        }
+      }
+      
+      window.onload = function() {
+        var playStream = document.getElementById('play-stream');
+        var sendStream = document.getElementById('send-stream');
+        var sendButton = document.getElementById('send-button');
+
+        playStream.value = getWebsocketURL("{{ webrtc_output_stream }}", port={{ webrtc_output_port }});
+    
+      {% if send_webrtc %}
+        // populate the list of browser video devices (requires HTTPS)
+        if( checkMediaDevices() ) {
+          navigator.mediaDevices.getUserMedia({audio: false, video: true}).then((stream) => { // get permission from user
+            navigator.mediaDevices.enumerateDevices().then((devices) => {
+              stream.getTracks().forEach(track => track.stop()); // close the device opened to get permissions
+              devices.forEach((device) => {
+                if( device.kind == 'videoinput' ) {
+                  console.log(`Browser media device:  ${device.kind}  label=${device.label}  id=${device.deviceId}`);
+                  sendStream.add(new Option(device.label, device.deviceId));
+                }
+              });
+              if( sendStream.options.length == 0 ) {
+                sendStream.add(new Option('browser has no webcams available'));
+                sendButton.disabled = true;
+              }
+            });
+          }).catch(reportError);
+        }
+        else
+        {
+          sendStream.add(new Option('use HTTPS to enable browser webcam'));
+          sendButton.disabled = true;
+        }
+      {% else %}
+        // auto-play other sources, since they're already running
+        playWebRTC();
+      {% endif %}
+      
+        connectWebsocket(onWebsocketMsg, port={{ ws_port }});
+        
+        event_table = new Tabulator("#event_table", {
+            columns: [
+              {title: "ID", field: "id"},
+              {title: "Begin", field: "begin"},
+              {title: "End", field: "end"},
+              {title: "Tags", field: "tags"},
+              {title: "Filters", field: "filters"},
+              {title: "Query", field: "prompt"},
+              {title: "Output", field: "text"},
+            ],
+            initialSort: [
+              {column: "id", dir: "desc"}
+            ],
+            layout: "fitDataStretch",
+            placeholder: "No events have been detected.",
+            //pagination: true,
+            //paginationSize: 3,
+        });
+      }
+    </script>
+    <style>
+      #alert_container {
+        z-index: 10;
+        position: fixed;
+        max-width: fit-content;
+        height:50px;
+        left:100%;
+        transform:translateX(-100%);
+        top:10px;
+      }
+      
+      #video-player {
+        max-width:100%;
+      }
+      
+      .select2-container--default .select2-selection--multiple, .select2-results {
+        color: #222222;
+        scrollbar-color: #AAAAAA #EEEEEE;
+      }
+      
+      .select2-container--default .select2-selection--single {
+        height: 120%;
+        line-height: 120%;
+        vertical-align : middle;
+      }
+      
+      .select2-selection__arrow {
+        padding-top: 35px;
+        padding-right: 25px;
+      }
+      
+      .select2-selection__rendered {
+        padding-top: 3px;
+      }
+      
+      .select2-search__field {
+        color: #222222;
+        background-color: #EEEEEE;
+      }
+      
+      .form-range::-webkit-slider-runnable-track {
+        background-color: #666666;
+      }
+    </style>
+  </head>
+  <body class="bg-dark-gray" data-bs-theme="dark">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary py-2">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">{{ title }}</a>
+      </div>
+    </nav>
+    
+    <span>
+      <div style="display: inline-block; width: 82rem;">
+        <!-- Video Player -->
+        <div class="card ms-1 mt-1">
+          <div class="card-body">
+            <div class="card-title" data-bs-toggle="collapse" href="webrtc_player" role="button">
+              <h5 class="d-inline">{{ model }}</h5>
+              
+              <script type='text/javascript'>
+                // the handlers for the collapse button are generated in collapse_handler() below
+                function onPauseVideo() {
+                  let btn = document.getElementById('pause_video_btn');
+                  let pause = btn.classList.contains('fa-play-circle');
+                  
+                  if( pause )
+                    btn.classList.replace('fa-play-circle', 'fa-pause-circle');
+                  else
+                    btn.classList.replace('fa-pause-circle', 'fa-play-circle');
+                    
+                  sendWebsocket({'pause_video': pause});
+                }
+                
+                function onAutoRefresh() {
+                  let btn = document.getElementById('auto_refresh_btn');
+                  let enabled = btn.classList.contains('fa-rotate-right');
+                  
+                  if( enabled )
+                    btn.classList.replace('fa-rotate-right', 'fa-refresh');
+                  else
+                    btn.classList.replace('fa-refresh', 'fa-rotate-right');
+                    
+                  sendWebsocket({'auto_refresh': enabled});
+                }
+              </script>
+              
+              <span class="float-end float-top fa fa-chevron-circle-down fa-lg mt-1 ms-1 me-1" data-bs-toggle="collapse" href="#webrtc_player" id="webrtc_player_collapse_btn" title="minimize the video feed"></span>
+              <span class="float-end float-top fa fa-play-circle fa-lg mt-1 ms-1 me-1" id="pause_video_btn" onclick="onPauseVideo()" title="pause the video feed"></span>
+              <span class="float-end float-top fa fa-refresh fa-lg mt-1 ms-1 me-1" id="auto_refresh_btn" onclick="onAutoRefresh()" title="automatically refresh the model output with prior query"></span>
+              
+            </div>
+
+            <div class="collapse show" id="webrtc_player">
+              <div>
+                <video id="video-player" autoplay controls playsinline muted>Your browser does not support video</video>
+              </div>
+              <div>
+                <div class="input-group">
+                  <select id="video-query-input" class="form-control" onchange="onVideoQuery(this.value)">
+                    <option selected="selected">Describe the image concisely.</option>
+                    <option>Describe the image.</option>
+                    <option>What color shirt am I wearing?</option>
+                    <option>How many people are in the image?</option>
+                    <option>What does the text in the image say?</option>
+                    <option>What sign am I making?</option>
+                    <option>What am I holding up?</option>
+                    <option>How many fingers am I holding up?</option>
+                    <option>What's my name?</option>
+                  </select>
+                  <!--<textarea id="chat-message-input" class="form-control" rows="1" placeholder="Enter to send query (Shift+Enter for newline)" onkeydown="onChatMessageKey(event)" title="Type in video query and press Enter to submit &#013; (or Shift+Enter to insert a line break)"></textarea>
+                  <span class="input-group-text bg-light-gray bi bi-arrow-return-left d-inline-block" style="color: #eeeeee;" onclick="onChatMessageSubmit()"></span>-->
+                </div>
+                <script type='text/javascript'>  
+                  function onVideoQuery(value) {
+                    console.log('changing chat query', value);
+                    sendWebsocket({'prompt': value});
+                  }
+                  
+                  $('#video-query-input').select2({
+                    tags: true,
+                    //theme: "classic",
+                    //tokenSeparators: [''],
+                    placeholder: 'Enter query'
+                  });
+                </script>
+              </div>
+            </div>
+            {{ collapse_handler('webrtc_player') }}
+          </div>
+        </div>
+            
+        <!-- Events -->
+        <div class="card ms-1 mt-1" style="margin: 0px;">
+          <div class="card-body">
+            {{ card_header('event_card', 'Events', arrow='down') }}
+            <script type='text/javascript'>
+              function onFilterChanged(value) {
+                sendWebsocket({'event_filters': value});
+              }
+              
+              function onEventTagsChanged(value) {
+                sendWebsocket({'event_tags': value});
+              }
+            </script>
+            <div class="collapse show" id="event_card">   
+              <div class="mb-2">
+                <div class="d-inline-block">Filters</div>
+                <div class="d-inline-block ms-1">
+                  <input id="event_filters" size="50" onchange="onFilterChanged(this.value)" placeholder="Person, people, man, woman", title='Comma-separated list of search strings to filter by (or separated by + to use AND instead of OR) &#013; &#013; For example:  "person, man, women" would match if the model output contained any of those, &#013; whereas "man + hat" would match if the output only contained both "man" and "hat"'>
+                </div>
+                <div class="d-inline-block ms-2">Tags</div>
+                <div class="d-inline-block ms-1">
+                  <input id="event_tag" size="50" onchange="onEventTagsChanged(this.value)" title='Description or label of the event'>
+                </div>
+              </div>
+              <div id="event_table"></div>
+            </div>
+            {{ collapse_handler('event_card') }}
+          </div>
+        </div>
+    
+      </div>
+      <!-- Controls (2nd column) -->
+      <div style="display: inline-block; vertical-align: top;">
+        <!-- NanoDB -->
+        {% if nanodb %}
+        <div class="card ms-1 mt-1" style="width: 32rem; margin: 0px;">
+          <div class="card-body">
+            <div class="card-title" data-bs-toggle="collapse" href="nanodb_card" role="button">
+              <h5 class="d-inline">NanoDB</h5>
+              
+              <script type='text/javascript'>
+                // the handlers for the collapse button are generated in collapse_handler() below
+                function onAutoRefreshDB() {
+                  let btn = document.getElementById('auto_refresh_db_btn');
+                  let enabled = btn.classList.contains('fa-rotate-right');
+                  
+                  if( enabled )
+                    btn.classList.replace('fa-rotate-right', 'fa-refresh');
+                  else
+                    btn.classList.replace('fa-refresh', 'fa-rotate-right');
+                    
+                  sendWebsocket({'auto_refresh_db': enabled});
+                }
+                
+                function onSaveDB() {
+                  sendWebsocket({'save_db': true});
+                }
+              </script>
+              
+              <span class="float-end float-top fa fa-chevron-circle-down fa-lg mt-1 ms-1 me-1" data-bs-toggle="collapse" href="#nanodb_card" id="nanodb_card_collapse_btn" title="minimize the video feed"></span>
+              <span class="float-end float-top fa fa-hdd-o fa-lg mt-1 ms-1 me-1" id="save_db_btn" onclick="onSaveDB()" title="save any changes to the vector database to disk"></span>
+              <span class="float-end float-top fa fa-refresh fa-lg mt-1 ms-1 me-1" id="auto_refresh_db_btn" onclick="onAutoRefreshDB()" title="automatically refresh the vector database search results"></span>
+              
+            </div>
+          
+            <script type='text/javascript'>
+              function onTagImage() {
+                const tags = document.getElementById('nanodb_image_tags').value;
+                sendWebsocket({'tag_image': tags});
+              }
+              
+              function onTagEnter(event) {
+                if(event.key === 'Enter') {
+                  const tags = document.getElementById('nanodb_image_tags').value;
+                  sendWebsocket({'tag_image': tags});
+                }
+              }
+              
+              function onRagThreshold(value) {
+                document.getElementById('rag_threshold_label').innerHTML=`${value}%`;
+                sendWebsocket({'rag_threshold': value});
+              }
+            </script>
+            <div class="collapse show" id="nanodb_card">
+              <div class="mb-2 w-100">
+                <div class="d-inline-block" title="The minimum similarity score to be considered for RAG prompt injection">RAG Threshold</div>
+                <div class="d-inline-block ms-1 align-middle" style="width: 65%">
+                  <input id="rag_threshold_slider" type="range" class="form-range" min="0" max="100" value="100" oninput="onRagThreshold(this.value)">
+                </div>
+                <div class="d-inline-block" id="rag_threshold_label">100%</div>
+              </div>
+              <div class="input-group mb-1">
+                <input class="form-control" id="nanodb_image_tags" onkeydown="onTagEnter(event)" placeholder="Tag incoming feed" title="Enter description of the incoming image to tag and add to vector database"></textarea>
+                <span class="input-group-text bg-light-gray" style="color: #eeeeee;" onclick="onTagImage()">Add</span>
+              </div>
+              <div id="nanodb_results"></div>
+            </div>
+            {{ collapse_handler('nanodb_card') }}
+          </div>
+        </div>
+        {% endif %}
+        
+        <!-- Stream Controls -->
+        <div class="card ms-1 mt-1" style="width: 32rem; margin: 0px;">
+          <div class="card-body">
+            {{ card_header('stream_controls', 'Streaming', arrow='down') }}
+            <div class="collapse show" id="stream_controls">
+            {% if send_webrtc %}
+              <div class="row">
+                <label for="send-stream" class="col-2" style="width: 6rem;">Webcam:</label>
+                <div class="col-5">
+                  <select id="send-stream" name="send-stream"></select>
+                </div>
+                <div class="col-4 ms-3">
+                  <button id="send-button" onclick="sendWebRTC()">Send</button>
+                </div>
+              </div>
+            {% else %}
+              <div class="row">
+                <label for="input-stream" class="col-2" style="width: 6rem;">Input:</label>
+                <div id="input-stream" class="col-8">
+                  {{ video_input }}
+                </div>
+              </div>
+            {% endif %}
+              <div class="row">
+                <label for="play-stream" class="col-2" style="width: 6rem;">Playback:</label>
+                <div class="col-5">
+                  <input id="play-stream" name="play-stream" type="text" size="24">
+                </div>
+                <div class="col-4 ms-3">
+                  <button id="play-button" onclick="playWebRTC()">Play</button>
+                </div>
+              </div>
+              <div class="row">
+                <label for="refresh_rate" class="col-2 me-0" style="width: 6rem;">Refresh:</label>
+                <div id="refresh_rate" class="col-5 ms-0">0.0 FPS (0.0 ms)</div>
+              </div>
+              <div class="row">
+                <label for="max_tokens_slider" class="col-2 me-0" style="width: 115px;" title="The maximum number of new tokens output per query">Max Tokens:</label>
+                <div class="col-4 ms-0 me-0">
+                  <input id="max_tokens_slider" type="range" class="form-range" min="1" max="128" value="32" oninput="onMaxTokens(this.value)" title="The maximum number of new tokens output per query">
+                </div>
+                <div class="col-2" id="max_tokens_label">32</div>
+                
+                <script type='text/javascript'>
+                  function onMaxTokens(value) {
+                    document.getElementById('max_tokens_label').innerHTML=`${value}`;
+                    sendWebsocket({'max_new_tokens': value});
+                  }
+                </script>
+              </div>          
+              <div class="row">
+                <label for="crop-toggle" class="col-2" style="width: 6rem;" title="Enabling center cropping during pre-processing of the video that maintains aspect ratio (otherwise resized)">Cropping:</label>
+                
+                <div class="col-2">
+                  <input id="crop-toggle" type="checkbox" class="form-checkbox" oninput="onCropToggled(this.checked)" title="Enabling center cropping during pre-processing of the video that maintains aspect ratio (otherwise resized)">
+                </div>
+                <script type='text/javascript'>
+                  function onCropToggled(enabled) {
+                    console.log('onCropToggled', enabled);
+                    sendWebsocket({'vision_scaling': enabled ? 'crop' : 'resize'});
+                  }
+                </script>
+              </div>              
+              <div class="row">
+                <label for="connection-stats-show" class="col-2" style="width: 6rem;">Statistics:</label>
+                <div class="col-2">
+                  <input id="connection-stats-show" type="checkbox" class="form-checkbox" oninput="onConnectionStats()" checked>
+                </div>
+                <script type='text/javascript'>
+                  function onConnectionStats() {
+                    var show = document.getElementById('connection-stats-show').checked;
+                    document.getElementById('connection-stats').style.display = show ? null : 'none';
+                  }
+                </script>
+              </div>
+              <div class="row" id="connection-stats"> <!--style="display: none"-->
+                <pre class="col-6" id='connection-stats-play'></pre>
+                <pre class="col-6" id='connection-stats-send'></pre>
+              </div>
+            </div>
+            {{ collapse_handler('stream_controls') }}
+          </div>
+        </div>
+      </div>
+    </span>
+
+    <!-- Alert Messages -->
+    <div id="alert_container" class="container"> <!--class="fixed-top"-->
+      <div id="alert_window" class="alert mb-0" style="background-color: rgba(48,48,48,1.0); display: none">
+        <div id="alert_messages" class="d-inline-block"></div>
+        <button type="button" class="btn-close float-end align-middle d-inline-block" onclick="onHideAlerts()"></button>
+      </div>
+      
+      <script type='text/javascript'>
+        function alertColor(level) {
+          if( level == 'success' ) return 'limegreen';
+          else if( level == 'error' ) return 'orange';
+          else if( level == 'warning' ) return 'orange';
+          else return 'rgb(200,200,200)';
+        
+        }
+        function toTimeString(timestamp) {
+          return new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', hour12: true, minute: '2-digit', second: '2-digit' }).slice(0,-3); // remove AM/PM
+        }
+          
+        function onHideAlerts() {
+          $('#alert_window').fadeOut('slow', function() {
+            $(`#alert_messages pre`).remove();
+          });
+        }
+        
+        function removeAlert(id) {
+          $(`#alert_messages #alert-${id}`).remove();
+        }
+        
+        function addAlert(alert) {
+          // supress other messages from the same category that may still be showing
+          if( alert['category'].length > 0 )
+            $(`#alert_messages .alert-category-${alert['category']}`).remove();
+            
+          // add a new element containing the alert message, and show the window if needed
+          $('#alert_messages').append(`<pre id="alert-${alert['id']}" class="align-middle m-0 alert-category-${alert['category']}" style="color: ${alertColor(alert['level'])}">[${alert['time']}] ${alert['message']}\n</pre>`);
+          $('#alert_window:hidden').fadeIn('fast');
+
+          // automatically remove the messages (if this is the last message, hide the window too)
+          if( alert['timeout'] > 0 ) {
+            setTimeout(function() {
+              if( $('#alert_messages pre').length > 1 ) {
+                $(`#alert_messages #alert-${alert['id']}`).remove();
+                console.log('removing alerts due to timeout');
+                console.log(`#alert_messages #alert-${alert['id']}`);
+              }
+              else {
+                onHideAlerts();
+              }
+            }, alert['timeout']);
+          }
+        }
+      </script>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,289 @@
+Submodule 3rdparty/tvm contains modified content
+Submodule 3rdparty/cutlass contains modified content
+diff --git a/3rdparty/tvm/3rdparty/cutlass/CMakeLists.txt b/3rdparty/tvm/3rdparty/cutlass/CMakeLists.txt
+index b880de0a..efe2394c 100755
+--- a/3rdparty/tvm/3rdparty/cutlass/CMakeLists.txt
++++ b/3rdparty/tvm/3rdparty/cutlass/CMakeLists.txt
+@@ -133,13 +133,7 @@ set(CUTLASS_ENABLE_GTEST_UNIT_TESTS ${CUTLASS_ENABLE_TESTS} CACHE BOOL "Enable C
+ 
+ set(CUTLASS_NVCC_ARCHS_SUPPORTED "")
+ if (CUDA_VERSION VERSION_GREATER_EQUAL 11.4 AND NOT CUDA_COMPILER MATCHES "[Cc]lang")
+-  list(APPEND CUTLASS_NVCC_ARCHS_SUPPORTED 70 72 75 80 86 87)
+-endif()
+-if (CUDA_VERSION VERSION_GREATER_EQUAL 11.8 AND NOT CUDA_COMPILER MATCHES "[Cc]lang")
+-  list(APPEND CUTLASS_NVCC_ARCHS_SUPPORTED 89 90)
+-endif()
+-if (CUDA_VERSION VERSION_GREATER_EQUAL 12.0 AND NOT CUDA_COMPILER MATCHES "[Cc]lang")
+-  list(APPEND CUTLASS_NVCC_ARCHS_SUPPORTED 90a)
++  list(APPEND CUTLASS_NVCC_ARCHS_SUPPORTED 72 87)
+ endif()
+ set(CUTLASS_NVCC_ARCHS ${CUTLASS_NVCC_ARCHS_SUPPORTED} CACHE STRING "The SM architectures requested.")
+ set(CUTLASS_NVCC_ARCHS_ENABLED ${CUTLASS_NVCC_ARCHS} CACHE STRING "The SM architectures to build code for.")
+Submodule 3rdparty/cutlass_fpA_intB_gemm contains modified content
+Submodule cutlass contains modified content
+diff --git a/3rdparty/tvm/3rdparty/cutlass_fpA_intB_gemm/cutlass/CMakeLists.txt b/3rdparty/tvm/3rdparty/cutlass_fpA_intB_gemm/cutlass/CMakeLists.txt
+index 30e261c2..bb5f2427 100755
+--- a/3rdparty/tvm/3rdparty/cutlass_fpA_intB_gemm/cutlass/CMakeLists.txt
++++ b/3rdparty/tvm/3rdparty/cutlass_fpA_intB_gemm/cutlass/CMakeLists.txt
+@@ -101,26 +101,8 @@ if (CUTLASS_ENABLE_TESTS)
+ endif()
+ 
+ set(CUTLASS_NVCC_ARCHS_SUPPORTED "")
+-if (NOT CUDA_VERSION VERSION_LESS 7.5)
+-  list(APPEND CUTLASS_NVCC_ARCHS_SUPPORTED 53)
+-endif()
+-if (NOT CUDA_VERSION VERSION_LESS 8.0)
+-  list(APPEND CUTLASS_NVCC_ARCHS_SUPPORTED 60 61)
+-endif()
+-if (NOT CUDA_VERSION VERSION_LESS 9.0)
+-  list(APPEND CUTLASS_NVCC_ARCHS_SUPPORTED 70)
+-endif()
+-if (NOT CUDA_VERSION VERSION_LESS 9.2)
+-  list(APPEND CUTLASS_NVCC_ARCHS_SUPPORTED 72)
+-endif()
+-if (NOT CUDA_VERSION VERSION_LESS 10.0)
+-  list(APPEND CUTLASS_NVCC_ARCHS_SUPPORTED 75)
+-endif()
+-if (NOT CUDA_VERSION VERSION_LESS 11.0)
+-  list(APPEND CUTLASS_NVCC_ARCHS_SUPPORTED 80)
+-endif()
+-if (NOT CUDA_VERSION VERSION_LESS 11.1 AND NOT CUDA_COMPILER MATCHES "[Cc]lang")
+-  list(APPEND CUTLASS_NVCC_ARCHS_SUPPORTED 86)
++if (CUDA_VERSION VERSION_GREATER_EQUAL 11.4 AND NOT CUDA_COMPILER MATCHES "[Cc]lang")
++  list(APPEND CUTLASS_NVCC_ARCHS_SUPPORTED 72 87)
+ endif()
+ set(CUTLASS_NVCC_ARCHS ${CUTLASS_NVCC_ARCHS_SUPPORTED} CACHE STRING "The SM architectures requested.")
+ set(CUTLASS_NVCC_ARCHS_ENABLED ${CUTLASS_NVCC_ARCHS} CACHE STRING "The SM architectures to build code for.")
+Submodule 3rdparty/libflash_attn contains modified content
+Submodule cutlass contains modified content
+diff --git a/3rdparty/tvm/3rdparty/libflash_attn/cutlass/CMakeLists.txt b/3rdparty/tvm/3rdparty/libflash_attn/cutlass/CMakeLists.txt
+index 2d4f9cc3..726751ec 100755
+--- a/3rdparty/tvm/3rdparty/libflash_attn/cutlass/CMakeLists.txt
++++ b/3rdparty/tvm/3rdparty/libflash_attn/cutlass/CMakeLists.txt
+@@ -122,13 +122,7 @@ endif()
+ 
+ set(CUTLASS_NVCC_ARCHS_SUPPORTED "")
+ if (CUDA_VERSION VERSION_GREATER_EQUAL 11.4 AND NOT CUDA_COMPILER MATCHES "[Cc]lang")
+-  list(APPEND CUTLASS_NVCC_ARCHS_SUPPORTED 70 72 75 80 86 87)
+-endif()
+-if (CUDA_VERSION VERSION_GREATER_EQUAL 11.8 AND NOT CUDA_COMPILER MATCHES "[Cc]lang")
+-  list(APPEND CUTLASS_NVCC_ARCHS_SUPPORTED 89 90)
+-endif()
+-if (CUDA_VERSION VERSION_GREATER_EQUAL 12.0 AND NOT CUDA_COMPILER MATCHES "[Cc]lang")
+-  list(APPEND CUTLASS_NVCC_ARCHS_SUPPORTED 90a)
++  list(APPEND CUTLASS_NVCC_ARCHS_SUPPORTED 72 87)
+ endif()
+ set(CUTLASS_NVCC_ARCHS ${CUTLASS_NVCC_ARCHS_SUPPORTED} CACHE STRING "The SM architectures requested.")
+ set(CUTLASS_NVCC_ARCHS_ENABLED ${CUTLASS_NVCC_ARCHS} CACHE STRING "The SM architectures to build code for.")
+diff --git a/3rdparty/tvm/3rdparty/libflash_attn/cutlass/include/cute/layout_composed.hpp b/3rdparty/tvm/3rdparty/libflash_attn/cutlass/include/cute/layout_composed.hpp
+index 7b3b6f4f..9fb29af1 100644
+--- a/3rdparty/tvm/3rdparty/libflash_attn/cutlass/include/cute/layout_composed.hpp
++++ b/3rdparty/tvm/3rdparty/libflash_attn/cutlass/include/cute/layout_composed.hpp
+@@ -99,7 +99,9 @@ struct ComposedLayout : private cute::tuple<LayoutA, Offset, LayoutB>  // EBO fo
+   // Doesn't really make sense to ask for the strides of this "layout"
+   CUTE_HOST_DEVICE constexpr
+   decltype(auto)
+-  stride() const = delete;
++  stride() const /*= delete;*/ {
++    return layout_b().stride();
++  }
+ 
+   //
+   // Mappings
+@@ -228,7 +230,10 @@ shape(ComposedLayout<A,O,B> const& layout)
+ template <int... Is, class Fn, class O, class Layout>
+ CUTE_HOST_DEVICE constexpr
+ decltype(auto)
+-stride(ComposedLayout<Fn,O,Layout> const& layout) = delete;
++stride(ComposedLayout<Fn,O,Layout> const& layout) /*= delete;*/
++{
++  return stride<Is...>(layout.layout_b());
++}
+ 
+ // Return the number of elements in a mode
+ template <int... Is, class A, class O, class B>
+diff --git a/3rdparty/tvm/3rdparty/libflash_attn/src/CMakeLists.txt b/3rdparty/tvm/3rdparty/libflash_attn/src/CMakeLists.txt
+index ba2ac1a..97c1712 100644
+--- a/3rdparty/tvm/3rdparty/libflash_attn/src/CMakeLists.txt
++++ b/3rdparty/tvm/3rdparty/libflash_attn/src/CMakeLists.txt
+@@ -1,6 +1,4 @@
+-set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} --expt-relaxed-constexpr --expt-relaxed-constexpr --use_fast_math -t 8 \
+-                      -gencode=arch=compute_80,code=\\\"sm_80,compute_80\\\" \
+-                      ")
++set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} --expt-relaxed-constexpr --expt-relaxed-constexpr --use_fast_math -t 8")
+ 
+ include_directories(${CUTLASS_DIR}/include)
+ include_directories(../include)
+@@ -16,5 +14,3 @@ add_library(flash_attn SHARED
+   flash_fwd_hdim64_fp16_sm80.cu
+   flash_fwd_hdim96_fp16_sm80.cu
+ )
+-
+-set_target_properties(flash_attn PROPERTIES CUDA_ARCHITECTURES "80")
+diff --git a/3rdparty/tvm/3rdparty/libflash_attn/src/static_switch.h b/3rdparty/tvm/3rdparty/libflash_attn/src/static_switch.h
+index b4a4b48..a1eef59 100644
+--- a/3rdparty/tvm/3rdparty/libflash_attn/src/static_switch.h
++++ b/3rdparty/tvm/3rdparty/libflash_attn/src/static_switch.h
+@@ -1,6 +1,10 @@
+-// Inspired by https://github.com/NVIDIA/DALI/blob/main/include/dali/core/static_switch.h
++// Inspired by
++// https://github.com/NVIDIA/DALI/blob/main/include/dali/core/static_switch.h
+ // and https://github.com/pytorch/pytorch/blob/master/aten/src/ATen/Dispatch.h
+-
++//
++// dusty-nv:  pulled from the patched version below due to compiler errors
++//  https://github.com/Dao-AILab/flash-attention/pull/343
++//  https://raw.githubusercontent.com/Dao-AILab/flash-attention/main/csrc/flash_attn/src/static_switch.h
+ #pragma once
+ 
+ /// @param COND       - a boolean expression to switch by
+@@ -13,53 +17,53 @@
+ ///     some_function<BoolConst>(...);
+ /// });
+ /// ```
+-#define BOOL_SWITCH(COND, CONST_NAME, ...)                                           \
+-    [&] {                                                                            \
+-        if (COND) {                                                                  \
+-            constexpr bool CONST_NAME = true;                                        \
+-            return __VA_ARGS__();                                                    \
+-        } else {                                                                     \
+-            constexpr bool CONST_NAME = false;                                       \
+-            return __VA_ARGS__();                                                    \
+-        }                                                                            \
+-    }()
++#define BOOL_SWITCH(COND, CONST_NAME, ...)      \
++  [&] {                                         \
++    if (COND) {                                 \
++      constexpr static bool CONST_NAME = true;  \
++      return __VA_ARGS__();                     \
++    } else {                                    \
++      constexpr static bool CONST_NAME = false; \
++      return __VA_ARGS__();                     \
++    }                                           \
++  }()
+ 
+-#define FP16_SWITCH(COND, ...)                     \
+-    [&] {                                          \
+-        if (COND) {                                \
+-            using elem_type = cutlass::half_t;     \
+-            return __VA_ARGS__();                  \
+-        } else {                                   \
+-            using elem_type = cutlass::bfloat16_t; \
+-            return __VA_ARGS__();                  \
+-        }                                          \
+-    }()
++#define FP16_SWITCH(COND, ...)               \
++  [&] {                                      \
++    if (COND) {                              \
++      using elem_type = cutlass::half_t;     \
++      return __VA_ARGS__();                  \
++    } else {                                 \
++      using elem_type = cutlass::bfloat16_t; \
++      return __VA_ARGS__();                  \
++    }                                        \
++  }()
+ 
+-#define FWD_HEADDIM_SWITCH(HEADDIM, ...)  \
+-    [&] {                                 \
+-        if (HEADDIM <= 32) {              \
+-            constexpr int kHeadDim = 32;  \
+-            return __VA_ARGS__();         \
+-        } else if (HEADDIM <= 64) {       \
+-            constexpr int kHeadDim = 64;  \
+-            return __VA_ARGS__();         \
+-        } else if (HEADDIM <= 96) {       \
+-            constexpr int kHeadDim = 96;  \
+-            return __VA_ARGS__();         \
+-        } else if (HEADDIM <= 128) {      \
+-            constexpr int kHeadDim = 128; \
+-            return __VA_ARGS__();         \
+-        } else if (HEADDIM <= 160) {      \
+-            constexpr int kHeadDim = 160; \
+-            return __VA_ARGS__();         \
+-        } else if (HEADDIM <= 192) {      \
+-            constexpr int kHeadDim = 192; \
+-            return __VA_ARGS__();         \
+-        } else if (HEADDIM <= 224) {      \
+-            constexpr int kHeadDim = 224; \
+-            return __VA_ARGS__();         \
+-        } else if (HEADDIM <= 256) {      \
+-            constexpr int kHeadDim = 256; \
+-            return __VA_ARGS__();         \
+-        }                                 \
+-    }()
++#define FWD_HEADDIM_SWITCH(HEADDIM, ...)   \
++  [&] {                                    \
++    if (HEADDIM <= 32) {                   \
++      constexpr static int kHeadDim = 32;  \
++      return __VA_ARGS__();                \
++    } else if (HEADDIM <= 64) {            \
++      constexpr static int kHeadDim = 64;  \
++      return __VA_ARGS__();                \
++    } else if (HEADDIM <= 96) {            \
++      constexpr static int kHeadDim = 96;  \
++      return __VA_ARGS__();                \
++    } else if (HEADDIM <= 128) {           \
++      constexpr static int kHeadDim = 128; \
++      return __VA_ARGS__();                \
++    } else if (HEADDIM <= 160) {           \
++      constexpr static int kHeadDim = 160; \
++      return __VA_ARGS__();                \
++    } else if (HEADDIM <= 192) {           \
++      constexpr static int kHeadDim = 192; \
++      return __VA_ARGS__();                \
++    } else if (HEADDIM <= 224) {           \
++      constexpr static int kHeadDim = 224; \
++      return __VA_ARGS__();                \
++    } else if (HEADDIM <= 256) {           \
++      constexpr static int kHeadDim = 256; \
++      return __VA_ARGS__();                \
++    }                                      \
++  }()
+diff --git a/3rdparty/tvm/CMakeLists.txt b/3rdparty/tvm/CMakeLists.txt
+index 410ed439f..7fa88f486 100644
+--- a/3rdparty/tvm/CMakeLists.txt
++++ b/3rdparty/tvm/CMakeLists.txt
+@@ -911,7 +911,7 @@ if(USE_ROCM AND USE_RCCL)
+ endif()
+ 
+ 
+-option(USE_FLASHINFER "Build TVM with FlashInfer" OFF)
++option(USE_FLASHINFER "Build TVM with FlashInfer" ON)
+ if (USE_FLASHINFER STREQUAL "ON")
+   message(STATUS "Build with FlashInfer")
+   set(FLASHINFER_TVM_BINDING ON)
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 15b7c9a..6114fab 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -47,13 +47,13 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+ # tvm runtime config: minimize runtime components
+ set(USE_RPC OFF)
+ set(USE_MICRO OFF)
+-set(USE_GRAPH_EXECUTOR OFF)
++#set(USE_GRAPH_EXECUTOR OFF)
+ set(USE_GRAPH_EXECUTOR_DEBUG OFF)
+ set(USE_AOT_EXECUTOR OFF)
+ set(USE_PROFILER OFF)
+ set(USE_GTEST OFF)
+ set(USE_LIBBACKTRACE OFF)
+-set(BUILD_DUMMY_LIBTVM ON)
++#set(BUILD_DUMMY_LIBTVM ON)
+ if (NOT DEFINED TVM_HOME)
+   set(TVM_HOME 3rdparty/tvm)
+ endif (NOT DEFINED TVM_HOME)
+diff --git a/mlc_llm/core.py b/mlc_llm/core.py
+index 5ced676..9734bc1 100644
+--- a/mlc_llm/core.py
++++ b/mlc_llm/core.py
+@@ -819,8 +819,8 @@ def build_model_from_args(args: argparse.Namespace):
+     cache_path = os.path.join(args.artifact_path, "mod_cache_before_build.pkl")
+     args.raw_params_path = os.path.join(args.artifact_path, "raw_params")
+     use_cache = args.use_cache and os.path.isfile(cache_path)
+-    if args.sep_embed and args.model_category != "llama":
+-        raise ValueError(f"separate embedding not supported on {args.model}")
++    #if args.sep_embed and args.model_category != "llama":
++    #    raise ValueError(f"separate embedding not supported on {args.model}")
+ 
+     if args.model_category == "minigpt":
+         # Special case for minigpt, which neither provides nor requires a configuration.

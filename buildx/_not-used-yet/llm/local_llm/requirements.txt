@@ -1,0 +1,6 @@
+websockets
+termcolor
+tabulate
+flask
+tqdm
+getch

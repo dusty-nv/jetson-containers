@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# subshell-compatible variant of huggingface-downloader.py
+#   - redirects stdout to stderr
+#   - downloads the resource
+#   - prints the local path to the resource
+ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+python3 $ROOT/_huggingface-downloader.py "$@" >&2
+
+return_status=$?
+
+if [ $return_status -ne 0 ]; then
+	echo "-- Error:  return code $return_status" >&2
+	exit $return_status
+fi
+
+if [ -f /tmp/hf_download ]; then
+	head -n1 /tmp/hf_download
+fi

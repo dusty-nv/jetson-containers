@@ -1,0 +1,90 @@
+#
+# this dockerfile roughly follows the 'Installing from source' from:
+#   http://wiki.ros.org/noetic/Installation/Source
+#
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+ARG ROS_PACKAGE=ros_base
+ENV ROS_DISTRO=noetic
+ENV ROS_ROOT=/opt/ros/${ROS_DISTRO}
+ENV ROS_PYTHON_VERSION=3
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+WORKDIR /workspace
+
+
+#
+# add the ROS deb repo to the apt sources list
+#
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        git \
+		cmake \
+		build-essential \
+		curl \
+		wget \
+		gnupg2 \
+		lsb-release \
+		ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+
+RUN if [ $(lsb_release --codename --short) != "jammy" ]; then \
+        curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg ; \
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null ; \
+    else \
+        sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' ; \
+        curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add - ; \
+    fi 
+
+
+#
+# install bootstrap dependencies
+#
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+          libpython3-dev \
+          python3-rosdep \
+          python3-rosinstall-generator \
+          python3-vcstool \
+          build-essential && \
+    rosdep init && \
+    rosdep update && \
+    rm -rf /var/lib/apt/lists/*
+
+# /usr/bin/rosinstall_generator => No module named 'importlib.metadata'
+RUN pip3 list | grep catkin && pip3 install importlib.metadata catkin && \
+    pip3 list | grep catkin && \
+    python3 -c 'import catkin'
+    
+
+#
+# download/build the ROS source
+# error: option --install-layout not recognized  https://github.com/ros/catkin/issues/863#issuecomment-1000446018
+#
+RUN mkdir ros_catkin_ws && \
+    cd ros_catkin_ws && \
+    rosinstall_generator ${ROS_PKG} vision_msgs image_transport --rosdistro ${ROS_DISTRO} --deps --tar > ${ROS_DISTRO}-${ROS_PKG}.rosinstall && \
+    mkdir src && \
+    vcs import --input ${ROS_DISTRO}-${ROS_PKG}.rosinstall ./src && \
+    apt-get update && \
+    rosdep install -y \
+	 --from-paths ./src \
+	 --ignore-packages-from-source \
+	 --rosdistro ${ROS_DISTRO} \
+	 --skip-keys "python3-pykdl libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv" && \
+    python3 ./src/catkin/bin/catkin_make_isolated --install --install-space ${ROS_ROOT} -DCMAKE_BUILD_TYPE=Release -DSETUPTOOLS_DEB_LAYOUT=OFF && \
+    rm -rf /var/lib/apt/lists/*
+
+
+# 
+# commands will be appended/run by the entrypoint which sources the ROS environment
+#
+COPY ros_entrypoint.sh /ros_entrypoint.sh
+
+ENTRYPOINT ["/ros_entrypoint.sh"]
+CMD ["/bin/bash"]
+
+WORKDIR /

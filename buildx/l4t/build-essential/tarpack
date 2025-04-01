@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+set -ex
+
+COMMAND=$1
+PACKAGE=$2
+
+: "${TARPACK_PREFIX:=/usr/local}"
+: "${TARPACK_TMPDIR:=/tmp/tarpack}"
+
+: "${WGET_OPTIONS:=--quiet --show-progress --progress=bar:force:noscroll}"
+
+mkdir -p ${TARPACK_TMPDIR}/uploads
+
+if [ "${COMMAND}" == "install" ]; then
+	cd ${TARPACK_TMPDIR}
+	wget ${WGET_OPTIONS} ${TAR_INDEX_URL}/${PACKAGE}.tar.gz
+	wget ${WGET_OPTIONS} ${TAR_INDEX_URL}/${PACKAGE}.sha256
+	ls -ll ${PACKAGE}.tar.gz
+	cat ${PACKAGE}.sha256
+	sha256sum --check ${PACKAGE}.sha256
+	tar -xzvf ${PACKAGE}.tar.gz -C ${TARPACK_PREFIX}
+	rm ${PACKAGE}.tar.gz
+	rm ${PACKAGE}.sha256
+elif [ "${COMMAND}" == "upload" ]; then
+	upload_tarball="${TARPACK_TMPDIR}/uploads/$PACKAGE.tar.gz"
+	upload_sha="${TARPACK_TMPDIR}/uploads/$PACKAGE.sha256"
+	src_dir="${3:-.}"
+	cd $src_dir || echo "warning: input $src_dir was not a valid directory"
+	tar -czvf $upload_tarball .
+	cd ${TARPACK_TMPDIR}/uploads
+	sha256sum $PACKAGE.tar.gz > $upload_sha
+	sshpass -p ${SCP_UPLOAD_PASS} scp -o 'StrictHostKeyChecking no' $upload_tarball ${SCP_UPLOAD_USER}@${SCP_UPLOAD_URL}/
+	sshpass -p ${SCP_UPLOAD_PASS} scp -o 'StrictHostKeyChecking no' $upload_sha ${SCP_UPLOAD_USER}@${SCP_UPLOAD_URL}/
+	#rm $upload_tarball
+	#rm $upload_sha
+elif [ "${COMMAND}" == "test" ]; then
+	mkdir -p /tmp/tarpack-test/include/tarpack /tmp/tarpack-test/bin && \
+	echo "// TEST" > /tmp/tarpack-test/include/tarpack/tarpack.h && \
+	echo "echo TARPACK TEST" > /tmp/tarpack-test/bin/tarpack-test.sh && \
+	chmod +x /tmp/tarpack-test/bin/tarpack-test.sh && \
+	tarpack upload tarpack-test /tmp/tarpack-test/ && \
+	tarpack install tarpack-test && \
+	ls -ll /usr/local/bin && \
+	ls -R /usr/local/include && \
+	cat /usr/local/include/tarpack/tarpack.h && \
+	tarpack-test.sh
+else
+	echo "unexpected command ${COMMAND}"
+	exit 1
+fi
