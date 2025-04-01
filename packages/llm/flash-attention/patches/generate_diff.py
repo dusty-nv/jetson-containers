@@ -75,6 +75,8 @@ def modify_setup_py(original_content):
         new_cuda_block = [
             "    cc_flag.append(\"-gencode\")",
             "    cc_flag.append(\"arch=compute_87,code=sm_87\")"
+            "    cc_flag.append(\"-gencode\")",
+            "    cc_flag.append(\"arch=compute_101,code=sm_101\")"
         ]
         lines[cuda_start:cuda_end] = new_cuda_block
 
