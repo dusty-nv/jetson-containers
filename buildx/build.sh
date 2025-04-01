@@ -43,9 +43,18 @@ fi
 # Use the builder instance
 docker buildx use jetson-builder
 
+# Ask if the user wants to build with or without cache
+read -p "Do you want to build with cache? (y/n): " use_cache
+
 # Build the Docker image using buildx and push to Docker Hub
-docker buildx build --platform $PLATFORM \
-    -t $TAG \
-    --push .
+if [ "$use_cache" = "y" ]; then
+  docker buildx build --platform $PLATFORM \
+      -t $TAG \
+      --push .
+else
+  docker buildx build --no-cache --platform $PLATFORM \
+      -t $TAG \
+      --push .
+fi
 
 echo "Docker image tagged and pushed as $TAG"
