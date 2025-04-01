@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy the necessary files into the container
-COPY ../../qt-online-installer-linux-arm64-4.9.0.run /media/kkk/buildx/apps
+COPY qt-online-installer-linux-arm64-4.9.0.run /media/kkk/buildx/apps/
 
 # Set the working directory
 WORKDIR /media/kkk/buildx/apps
