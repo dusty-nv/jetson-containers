@@ -1,5 +1,5 @@
-# Use the specified base image with the correct platform
-FROM --platform=linux/arm64 kairin/001:nvcr.io-nvidia-pytorch-25.02-py3-igpu
+# Dockerfile
+FROM kairin/001:nvcr.io-nvidia-pytorch-25.02-py3-igpu
 
 # Install any dependencies or files needed
 RUN apt-get update && apt-get install -y \
