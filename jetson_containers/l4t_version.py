@@ -5,7 +5,7 @@
 #    JETPACK_VERSION (packaging.version.Version) -- derived from L4T_VERSION
 #    PYTHON_VERSION (packaging.version.Version) -- the default for LSB_RELEASE (can override with $PYTHON_VERSION environment var)
 #    CUDA_VERSION (packaging.version.Version) -- found in /usr/local/cuda (can override with $CUDA_VERSION environment var)
-#    CUDA_ARCHITECTURES (list[int]) -- e.g. [53, 62, 72, 87]
+#    CUDA_ARCHITECTURES (list[int]) -- e.g. [53, 62, 72, 87, 101]
 #    SYSTEM_ARCH (str) -- e.g. 'aarch64' or 'x86_64'
 #    LSB_RELEASE (str) -- e.g. '18.04', '20.04', '22.04'
 #    LSB_CODENAME (str) -- e.g. 'bionic', 'focal', 'jammy'
@@ -241,9 +241,11 @@ def get_cuda_arch(l4t_version: str=None, format=list):
     if not isinstance(l4t_version, Version):
         l4t_version = Version(l4t_version)
 
-    # Nano/TX1 = 5.3, TX2 = 6.2, Xavier = 7.2, Orin = 8.7
-    if l4t_version.major >= 36:    # JetPack 6
-        cuda_architectures = [87]
+    # Nano/TX1 = 5.3, TX2 = 6.2, Xavier = 7.2, Orin = 8.7, Thor = 10.1
+    if l4t_version.major >= 38:    # JetPack 7
+        cuda_architectures = [87, 101]
+    elif l4t_version.major >= 36:    # JetPack 6
+        cuda_architectures = [87, 101]
     elif l4t_version.major >= 34:  # JetPack 5
         cuda_architectures = [72, 87]
     elif l4t_version.major == 32:  # JetPack 4
