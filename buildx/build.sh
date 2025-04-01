@@ -13,14 +13,21 @@ fi
 # Docker Hub username
 DOCKER_USERNAME=${DOCKER_USERNAME}
 
-# Image name
-IMAGE_NAME=001
+# Base image
+BASE_IMAGE=kairin/001:20250402-063709-1
+
+# Image names
+BUILD_ESSENTIAL_IMAGE=build-essential
+STABLE_DIFFUSION_WEBUI_IMAGE=stable-diffusion-webui
+COMFYUI_IMAGE=comfyui
 
 # Get the current date and time formatted as YYYYMMDD-HHMMSS
 CURRENT_DATE_TIME=$(date +"%Y%m%d-%H%M%S")
 
-# Create the tag with the current date and time and append number 1
-TAG="${DOCKER_USERNAME}/${IMAGE_NAME}:${CURRENT_DATE_TIME}-1"
+# Create the tags with the current date and time and append number 1
+BUILD_ESSENTIAL_TAG="${DOCKER_USERNAME}/${BUILD_ESSENTIAL_IMAGE}:${CURRENT_DATE_TIME}-1"
+STABLE_DIFFUSION_WEBUI_TAG="${DOCKER_USERNAME}/${STABLE_DIFFUSION_WEBUI_IMAGE}:${CURRENT_DATE_TIME}-1"
+COMFYUI_TAG="${DOCKER_USERNAME}/${COMFYUI_IMAGE}:${CURRENT_DATE_TIME}-1"
 
 # Determine the current platform
 ARCH=$(uname -m)
@@ -46,15 +53,21 @@ docker buildx use jetson-builder
 # Ask if the user wants to build with or without cache
 read -p "Do you want to build with cache? (y/n): " use_cache
 
-# Build the Docker image using buildx and push to Docker Hub
-if [ "$use_cache" = "y" ]; then
-  docker buildx build --platform $PLATFORM \
-      -t $TAG \
-      --push .
-else
-  docker buildx build --no-cache --platform $PLATFORM \
-      -t $TAG \
-      --push .
-fi
+# Build the Docker images using buildx and push to Docker Hub
+build_image() {
+  local directory=$1
+  local tag=$2
 
-echo "Docker image tagged and pushed as $TAG"
+  if [ "$use_cache" = "y" ]; then
+    docker buildx build --platform $PLATFORM -t $tag --build-arg BASE_IMAGE=$BASE_IMAGE --push $directory
+  else
+    docker buildx build --no-cache --platform $PLATFORM -t $tag --build-arg BASE_IMAGE=$BASE_IMAGE --push $directory
+  fi
+
+  echo "Docker image tagged and pushed as $tag"
+}
+
+# Build the images
+build_image "build-essential" $BUILD_ESSENTIAL_TAG
+build_image "stable-diffusion-webui" $STABLE_DIFFUSION_WEBUI_TAG
+build_image "comfyui" $COMFYUI_TAG
