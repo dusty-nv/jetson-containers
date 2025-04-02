@@ -26,7 +26,7 @@ from .l4t_version import (
 _NEWLINE_=" \\\n"  # used when building command strings
 
 
-def build_container(name, packages, base=get_l4t_base(), build_flags='', build_args=None, simulate=False, skip_tests=[], test_only=[], push='', no_github_api=False, skip_packages=[]):
+def build_container(name, packages, base=get_l4t_base(), build_flags='', build_args=None, simulate=False, skip_tests=[], test_only=[], push='', no_github_api=False, skip_packages=[], build_network='host', test_network='host'):
     """
     Multi-stage container build that chains together selected packages into one container image.
     For example, `['pytorch', 'tensorflow']` would build a container that had both pytorch and tensorflow in it.
@@ -42,6 +42,8 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', build_a
       test_only (list[str]) -- only test these specified packages, skipping all other tests
       push (str) -- name of repository or user to push container to (no push if blank)
       no_github_api (bool) -- if true, use custom Dockerfile with no `ADD https://api.github.com/repos/...` line.
+      build_network -- Docker network mode to use during build (default: host)
+      test_network  -- Docker network mode to use during test  (default: host)
 
     Returns:
       The full name of the container image that was built (as a string)
@@ -108,8 +110,7 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', build_a
         pkg = find_package(package)
 
         if 'dockerfile' in pkg:
-            network = os.environ.get("DOCKER_NETWORK", "host")
-            cmd = f"{sudo_prefix()}DOCKER_BUILDKIT=0 docker build --network={network} --tag {container_name}" + _NEWLINE_
+            cmd = f"{sudo_prefix()}DOCKER_BUILDKIT=0 docker build --network={build_network} --tag {container_name}" + _NEWLINE_
             if no_github_api:
                 dockerfilepath = os.path.join(pkg['path'], pkg['dockerfile'])
                 with open(dockerfilepath, 'r') as fp:
@@ -156,7 +157,7 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', build_a
         # run tests on the intermediate container
         if package not in skip_tests and 'intermediate' not in skip_tests and 'all' not in skip_tests:
             if len(test_only) == 0 or package in test_only:
-                test_container(container_name, pkg, simulate)
+                test_container(container_name, pkg, simulate, test_network)
 
         # use this container as the next base
         base = container_name
@@ -168,7 +169,7 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', build_a
     for package in packages:
         if package not in skip_tests and 'all' not in skip_tests:
             if len(test_only) == 0 or package in test_only:
-                test_container(name, package, simulate)
+                test_container(name, package, simulate, test_network)
 
     # push container
     if push:
@@ -178,7 +179,7 @@ def build_container(name, packages, base=get_l4t_base(), build_flags='', build_a
     return name
 
 
-def build_containers(name, packages, base=get_l4t_base(), build_flags='', build_args=None, simulate=False, skip_errors=False, skip_packages=[], skip_tests=[], test_only=[], push=''):
+def build_containers(name, packages, base=get_l4t_base(), build_flags='', build_args=None, simulate=False, skip_errors=False, skip_packages=[], skip_tests=[], test_only=[], push='', build_network='host', test_network='host'):
     """
     Build separate container images for each of the requested packages (this is typically used in batch building jobs)
     For example, `['pytorch', 'tensorflow']` would build a pytorch container and a tensorflow container.
@@ -198,6 +199,8 @@ def build_containers(name, packages, base=get_l4t_base(), build_flags='', build_
       skip_tests (list[str]) -- list of tests to skip (or 'all' or 'intermediate')
       test_only (list[str]) -- only test these specified packages, skipping all other tests
       push (str) -- name of repository or user to push container to (no push if blank)
+      build_network -- Docker network mode to use during build (default: host)
+      test_network  -- Docker network mode to use during test  (default: host)
 
     Returns:
       True if all containers built successfully, or False if there were any errors.
@@ -212,7 +215,7 @@ def build_containers(name, packages, base=get_l4t_base(), build_flags='', build_
 
     for package in packages:
         try:
-            container_name = build_container(name, package, base, build_flags, build_args, simulate, skip_tests, test_only, push)
+            container_name = build_container(name, package, base, build_flags, build_args, simulate, skip_tests, test_only, push, build_network)
         except Exception as error:
             print(error)
             if not skip_errors:
@@ -288,7 +291,7 @@ def push_container(name, repository='', simulate=False):
     return name
 
 
-def test_container(name, package, simulate=False):
+def test_container(name, package, simulate=False, test_network='host'):
     """
     Run tests on a container
     """
@@ -303,8 +306,7 @@ def test_container(name, package, simulate=False):
         test_ext = os.path.splitext(test_exe)[1]
         log_file = os.path.join(log_dir('test'), f"{name.replace('/','_')}_{test_exe}").replace(':','_')
 
-        network = os.environ.get("DOCKER_NETWORK", "host")
-        cmd = f"{sudo_prefix()}docker run -t --rm --runtime=nvidia --network={network}" + _NEWLINE_
+        cmd = f"{sudo_prefix()}docker run -t --rm --runtime=nvidia --network={test_network}" + _NEWLINE_
         cmd += f"--volume {package['path']}:/test" + _NEWLINE_
         cmd += f"--volume {os.path.join(_PACKAGE_ROOT, 'data')}:/data" + _NEWLINE_
         cmd += f"--workdir /test" + _NEWLINE_

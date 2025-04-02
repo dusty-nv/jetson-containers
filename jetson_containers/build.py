@@ -57,6 +57,9 @@ parser.add_argument('--logs', type=str, default='', help="sets the directory to 
 parser.add_argument('--verbose', action='store_true', help="enable verbose/debug logging")
 parser.add_argument('--no-github-api', action='store_true', help="disalbe Github API use to force rebuild on new git commits")
 
+parser.add_argument('--build-network', type=str, default='host', help="Docker network mode to use during build (default: host)")
+parser.add_argument('--test-network',   type=str, default='host', help="Docker network mode to use during test phase (default: host)")
+
 args = parser.parse_args()
 
 # validate args
@@ -117,6 +120,10 @@ if args.list_packages or args.show_packages:
 # build one multi-stage container from chain of packages
 # or launch multiple independent container builds
 if not args.multiple:
-    build_container(args.name, args.packages, args.base, args.build_flags, args.build_args, args.simulate, args.skip_tests, args.test_only, args.push, args.no_github_api, args.skip_packages)
+    build_container(args.name, args.packages, args.base, args.build_flags, args.build_args, args.simulate, args.skip_tests, args.test_only, args.push, args.no_github_api, args.skip_packages,
+    build_network=args.build_network,
+    test_network=args.test_network     )
 else:
-    build_containers(args.name, args.packages, args.base, args.build_flags, args.build_args, args.simulate, args.skip_errors, args.skip_packages, args.skip_tests, args.test_only, args.push)
+    build_containers(args.name, args.packages, args.base, args.build_flags, args.build_args, args.simulate, args.skip_errors, args.skip_packages, args.skip_tests, args.test_only, args.push,
+    build_network=args.build_network,
+    test_network=args.test_network     )
