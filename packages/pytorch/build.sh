@@ -17,13 +17,14 @@ tail -20 ${CPUINFO_PATCH}
 
 pip3 install -r requirements.txt
 pip3 install scikit-build ninja
+pip3 install 'cmake<4'
+
+#TORCH_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" \
 
 PYTORCH_BUILD_NUMBER=1 \
-TORCH_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" \
 USE_NATIVE_ARCH=1 \
 USE_DISTRIBUTED=1 \
 USE_TENSORRT=0 \
-USE_FBGEMM=0 \
 python3 setup.py bdist_wheel --dist-dir /opt
 
 cd /
