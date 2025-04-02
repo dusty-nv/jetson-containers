@@ -29,6 +29,7 @@ RUN set -ex \
         ca-certificates \
         lsb-release \
         pkg-config \
+        makepkg \
         gnupg \
         git \
         git-lfs \

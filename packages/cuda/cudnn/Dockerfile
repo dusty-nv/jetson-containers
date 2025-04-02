@@ -20,7 +20,7 @@ RUN echo "Downloading ${CUDNN_DEB}" && \
     rm -rf /tmp/cudnn && mkdir /tmp/cudnn && cd /tmp/cudnn && \
     wget --quiet --show-progress --progress=bar:force:noscroll ${CUDNN_URL} && \
     dpkg -i *.deb && \
-    cp /var/cudnn-local-tegra-repo-*/cudnn-local-tegra-*-keyring.gpg /usr/share/keyrings/ && \
+    cp /var/cudnn-*-repo-*/cudnn-*-keyring.gpg /usr/share/keyrings/ && \
     apt-get update && \
     apt-cache search cudnn && \
     apt list --installed | grep 'cuda\|cudnn\|cublas' && \

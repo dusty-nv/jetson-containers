@@ -4,22 +4,13 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG CUDA_BRANCH
-
-RUN git clone --branch ${CUDA_BRANCH} --depth=1 https://github.com/NVIDIA/cuda-samples /opt/cuda-samples
-
-WORKDIR /opt/cuda-samples
-
-RUN cd Samples/deviceQuery && make && \
-    cd ../bandwidthTest && make && \
-    cd ../matrixMul && make && \
-    cd ../vectorAdd && make || \
-    echo "failed to build CUDA samples"
-
-RUN cd Samples/1_Utilities/deviceQuery && make && \
-    cd ../bandwidthTest && make && \
-    cd ../0_Introduction/matrixMul && make && \
-    cd ../vectorAdd && make || \
-    echo "failed to build CUDA samples"
+ARG CUDA_BRANCH \
+    CUDA_SAMPLES_MAKE='cmake' \
+    CUDA_SAMPLES_ROOT='/opt/cuda-samples'
     
-RUN make -j $(nproc) || echo "failed to build CUDA samples"
+RUN git clone --branch ${CUDA_BRANCH} --depth=1 --recursive \
+        https://github.com/NVIDIA/cuda-samples ${CUDA_SAMPLES_ROOT}
+
+COPY install-samples.sh /tmp/cuda/install-samples.sh
+
+RUN /tmp/cuda/install-samples.sh

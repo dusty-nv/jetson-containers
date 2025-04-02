@@ -14,18 +14,21 @@ FROM ${BASE_IMAGE}
 
 # set the CUDA architectures that PyTorch extensions get built for
 # set the torch hub model cache directory to mounted /data volume
-ARG TORCH_CUDA_ARCH_ARGS \
+ARG TORCH_CUDA_ARCH_LIST \
     TORCH_VERSION \
     PYTORCH_BUILD_VERSION \
-    USE_NCCL=0 \
+    PIP_EXTRA_INDEX_URL \
+    USE_NCCL=1 \
     USE_GLOO=1 \
-    USE_MPI=1 \
+    USE_MPI=0 \
+    USE_FBGEMM=0 \
     USE_NNPACK=1 \
     USE_XNNPACK=1 \
     USE_PYTORCH_QNNPACK=1 \
     FORCE_BUILD=off
     
-ENV TORCH_CUDA_ARCH_LIST=${TORCH_CUDA_ARCH_ARGS} \
+ENV TORCH_CUDA_ARCH_LIST=${TORCH_CUDA_ARCH_LIST} \
+    PIP_EXTRA_INDEX_URL=${PIP_EXTRA_INDEX_URL} \
     TORCH_HOME=/data/models/torch
 
 COPY install.sh build.sh /tmp/pytorch/

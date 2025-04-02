@@ -17,9 +17,13 @@ wget --quiet --show-progress --progress=bar:force:noscroll https://developer.dow
 wget --quiet --show-progress --progress=bar:force:noscroll ${CUDA_URL}
 
 dpkg -i *.deb
-cp /var/cuda-tegra-repo-ubuntu*-local/cuda-tegra-*-keyring.gpg /usr/share/keyrings/
-ar x /var/cuda-tegra-repo-ubuntu*-local/cuda-compat-*.deb
-tar xvf data.tar.xz -C /
+
+cp /var/cuda-*-local/cuda-*-keyring.gpg /usr/share/keyrings/
+
+if [ "$(uname -m)" = "aarch64" ]; then
+   ar x /var/cuda-tegra-repo-ubuntu*-local/cuda-compat-*.deb
+   tar xvf data.tar.xz -C /
+fi
 
 apt-get update
 apt-get install -y --no-install-recommends ${CUDA_PACKAGES}
