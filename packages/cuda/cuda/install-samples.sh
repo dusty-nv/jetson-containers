@@ -38,17 +38,26 @@ function cmake_all() {
   apt-get clean
 
   cd $CUDA_SAMPLES_ROOT
+
+  if [ $(uname -m) == "aarch64" ]; then
+    local patch="Samples/3_CUDA_Features/CMakeLists.txt"
+    sed -i 's|add_subdirectory(cdp.*|#|g' $patch
+    echo "Patched $patch"
+    cat $patch
+  fi
+
   mkdir build
   cd build
   cmake ../
   make -j$(nproc) || echo "failed to cmake all CUDA samples"
   make install -j$(nproc)
 
+  local out="$CUDA_SAMPLES_ROOT/bin/$(uname -m)/linux/release"
+  mkdir -p $out || true;
   set +x
 
   for i in $(find ./Samples -type d); do
     local exe="$i/$(basename $i)"
-    local out="$CUDA_SAMPLES_ROOT/bin/$(uname -m)/linux/release"
     if [ -f "$exe" ]; then
       echo "Installing $exe -> $out"
       cp $exe $out
