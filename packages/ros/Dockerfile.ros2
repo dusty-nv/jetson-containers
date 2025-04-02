@@ -44,8 +44,7 @@ RUN if [ $(lsb_release -rs) = '24.04' ]; then \
 #ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 
 # commands will be appended/run by the entrypoint which sources the ROS environment
-COPY ros_entrypoint.sh /
-COPY ros2_install.sh /
+COPY ros_entrypoint.sh ros2_install.sh /
 
 ENTRYPOINT ["/ros_entrypoint.sh"]
 CMD ["/bin/bash"]
