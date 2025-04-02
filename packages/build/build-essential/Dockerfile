@@ -29,7 +29,6 @@ RUN set -ex \
         ca-certificates \
         lsb-release \
         pkg-config \
-        makepkg \
         gnupg \
         git \
         git-lfs \
@@ -49,4 +48,4 @@ RUN set -ex \
     && gcc --version \
     && g++ --version
 
-COPY tarpack /usr/local/bin/
+COPY tarpack vercmp /usr/local/bin/
