@@ -486,12 +486,35 @@ def config_package(package):
     return validate_package(package)
 
 
+def package_depends(package, *args):
+    """
+    Add, update, or replace package dependencies - this is similar in function
+    to the `update_dependencies()` function, but with the inline form of the
+    more recent `package_requires()` below.  For example:
+
+      package_depends(package, 'torch:2.6', 'opencv:4.11', 'faster-whisper')
+
+    will make sure those dependencies and versions are set in the package.
+    """
+    old = package.get('depends', [])
+    new = []
+
+    for arg in args:
+        if isinstance(arg, (tuple, list)):
+            new.extend(arg)
+        else:
+            new.append(arg)
+
+    package['depends'] = update_dependencies(old, new)
+    return package
+
+
 def package_requires(package, requires=None, system_arch=None, unless=None):
     """
     Add a platform requirement to a package unless it was already defined,
     or for example set the default SYSTEM_ARCH if another was not set:
 
-       add_requirement(package, system_arch='aarch64')
+       package_requires(package, system_arch='aarch64')
 
     This will add a requirement for aarch64 unless x86_64 was set otherwise.
     """
