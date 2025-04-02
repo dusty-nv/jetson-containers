@@ -4,6 +4,9 @@ print('testing OpenCV...')
 import cv2
 import sys
 import requests
+import time
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 print('OpenCV version:', str(cv2.__version__))
 print(cv2.getBuildInformation())
@@ -15,16 +18,48 @@ except Exception as ex:
     print('OpenCV was not built with CUDA')
     raise ex
 
-# download test image    
+# download test image
 img_url = 'https://raw.githubusercontent.com/dusty-nv/jetson-containers/59f840abbb99f22914a7b2471da829b3dd56122e/test/data/test_0.jpg'
 img_path = '/tmp/test_0.jpg'
 
-request = requests.get(img_url, allow_redirects=True)
-open(img_path, 'wb').write(request.content)
+def download_with_retry(url, dest_path, retries=3, backoff=2):
+    session = requests.Session()
+    retry_strategy = Retry(
+        total=retries,
+        backoff_factor=backoff,
+        status_forcelist=[429, 500, 502, 503, 504],
+        raise_on_status=False
+    )
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+    session.mount("http://", adapter)
+    session.mount("https://", adapter)
+
+    try:
+        print(f'Downloading image from: {url}')
+        response = session.get(url, timeout=10, allow_redirects=True)
+        if response.status_code == 200:
+            with open(dest_path, 'wb') as f:
+                f.write(response.content)
+            print(f'Saved image to: {dest_path}')
+            return True
+        else:
+            print(f'❌ Failed to download image. Status code: {response.status_code}')
+            return False
+    except requests.RequestException as e:
+        print(f'❌ Request failed: {e}')
+        return False
+
+if not download_with_retry(img_url, img_path):
+    print('Image download failed. Exiting.')
+    sys.exit(1)
 
 # load image
 img_cpu = cv2.imread(img_path)
-print(f'loaded test image from {img_path}  {img_cpu.shape}  {img_cpu.dtype}')
+if img_cpu is None:
+    print(f'❌ Failed to load image from {img_path}')
+    sys.exit(1)
+
+print(f'✅ Loaded test image from {img_path}  shape={img_cpu.shape}  dtype={img_cpu.dtype}')
 
 # test GPU processing
 img_gpu = cv2.cuda_GpuMat()
@@ -39,4 +74,4 @@ gray = cv2.cuda.cvtColor(img_gpu, cv2.COLOR_BGR2GRAY)
 img_gpu = cv2.cuda.createCLAHE(clipLimit=5.0, tileGridSize=(8, 8)).apply(gray, cv2.cuda_Stream.Null())
 img_cpu = img_gpu.download()
 
-print('OpenCV OK\n')
+print('✅ OpenCV CUDA pipeline executed successfully\n')
