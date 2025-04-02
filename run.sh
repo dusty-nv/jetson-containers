@@ -69,13 +69,6 @@ for arg in "$@"; do
         fi
         continue
     fi
-
-	# Parse custom docker network flag
-	if [[ "$arg" =~ --docker-network= ]]; then
-		docker_network="${arg#*=}"
-		echo "[run.sh] Docker network mode set to: $docker_network"
-	fi
-
 done
 
 # check for V4L2 devices
@@ -307,6 +300,12 @@ if [ -z "$HAS_CONTAINER_NAME" ]; then
     #SANITIZED_CONTAINER_IMAGE_NAME=$(echo "$CONTAINER_IMAGE_NAME" | sed 's/[^a-zA-Z0-9_.-]/_/g')
     CONTAINER_NAME="jetson_container_${BUILD_DATE_TIME}"
     CONTAINER_NAME_FLAGS="--name $CONTAINER_NAME"
+fi
+
+# Override if DOCKER_NETWORK env var is set
+if [ ! -z "$DOCKER_NETWORK" ]; then
+    echo "[run.sh] Overriding docker network with: $DOCKER_NETWORK"
+    docker_network="$DOCKER_NETWORK"
 fi
 
 # run the container

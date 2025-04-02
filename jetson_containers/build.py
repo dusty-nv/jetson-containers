@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Container build system for managing package configurations and multi-stage build chains, with automated testing and dependency tracking. 
+# Container build system for managing package configurations and multi-stage build chains, with automated testing and dependency tracking.
 #
 # A "package" is composed of a Dockerfile, configs, and test scripts.  These are found under the jetson-containers/packages directory.
 # There are also "meta-packages" that have no Dockerfiles themselves, but specify a set of packages to include (e.g. l4t-pytorch)
@@ -12,9 +12,9 @@
 # Some example build scenarios:
 #
 #   $ jetson-containers/build.sh --name=xyz pytorch jupyterlab     # build container with PyTorch and JupyterLab server
-#   $ jetson-containers/build.sh --multiple pytorch tensorflow     # build separate containers for PyTorch and 
+#   $ jetson-containers/build.sh --multiple pytorch tensorflow     # build separate containers for PyTorch and
 #   $ jetson-containers/build.sh --multiple ros:humble*            # build all ROS Humble containers (can use wildcards)
-#   $ jetson-containers/build.sh ros:humble-desktop pytorch        # build ROS Humble with PyTorch on top 
+#   $ jetson-containers/build.sh ros:humble-desktop pytorch        # build ROS Humble with PyTorch on top
 #   $ jetson-containers/build.sh --base=xyz:latest pytorch         # add PyTorch to an existing container
 #
 # Typically the jetson-containers/build.sh wrapper script is used to launch this underlying Python module. jetson-containers can also
@@ -33,7 +33,7 @@ from jetson_containers import (
 
 
 parser = argparse.ArgumentParser()
-                    
+
 parser.add_argument('packages', type=str, nargs='*', default=[], help='packages or containers to build (filterable by wildcards)')
 
 parser.add_argument('--name', type=str, default='', help="the name of the output container to build")
@@ -62,10 +62,10 @@ args = parser.parse_args()
 # validate args
 if args.skip_errors and not args.multiple:
     raise ValueError("--skip-errors can only be used with --multiple flag")
-    
+
 if args.verbose:
     os.environ['VERBOSE'] = 'ON'
-    
+
 # split multi-value keyword arguments
 args.package_dirs = re.split(',|;|:', args.package_dirs)
 args.skip_packages = re.split(',|;|:', args.skip_packages)
@@ -100,7 +100,7 @@ if args.package_dirs:
 # set logging directories
 if args.logs:
     set_log_dir(args.logs)
-    
+
 # list/show package info
 if args.list_packages or args.show_packages:
     packages = find_packages(args.packages, skip=args.skip_packages)
@@ -108,15 +108,15 @@ if args.list_packages or args.show_packages:
     if args.list_packages:
         for package in sorted(packages.keys()):
             print(package)
-    
+
     if args.show_packages:
         pprint.pprint(packages)
-        
+
     sys.exit(0)
-    
+
 # build one multi-stage container from chain of packages
 # or launch multiple independent container builds
 if not args.multiple:
     build_container(args.name, args.packages, args.base, args.build_flags, args.build_args, args.simulate, args.skip_tests, args.test_only, args.push, args.no_github_api, args.skip_packages)
-else:   
+else:
     build_containers(args.name, args.packages, args.base, args.build_flags, args.build_args, args.simulate, args.skip_errors, args.skip_packages, args.skip_tests, args.test_only, args.push)
