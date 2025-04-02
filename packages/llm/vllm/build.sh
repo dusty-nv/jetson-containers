@@ -2,19 +2,11 @@
 set -ex
 
 # Install dependencies of XGrammar
-pip3 install "pybind11[global]" pre-commit nanobind
+pip3 install pre-commit nanobind==2.5.0
 
 # Clone the repository if it doesn't exist
 git clone --branch=v${XGRAMMAR_VERSION} --recursive --depth=1 https://github.com/mlc-ai/xgrammar /opt/xgrammar ||
 git clone --recursive --depth=1 https://github.com/mlc-ai/xgrammar /opt/xgrammar
-
-# Build and install
-cd /opt/xgrammar
-pre-commit install
-mkdir build
-cd build
-cmake .. -G Ninja
-ninja
 
 # Create the wheel
 cd /opt/xgrammar

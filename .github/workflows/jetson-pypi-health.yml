@@ -1,0 +1,25 @@
+# .github/workflows/pypi-health.yml
+name: Check PyPI Health
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PyPI
+        run: |
+          if curl --silent --fail https://pypi.jetson-ai-lab.dev/jp6/> /dev/null; then
+            echo '{"schemaVersion":1,"label":"Jetson PyPI","message":"up","color":"brightgreen"}' > health.json
+          else
+            echo '{"schemaVersion":1,"label":"Jetson PyPI","message":"down","color":"red"}' > health.json
+          fi
+      - name: Publish to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          publish_branch: gh-pages
