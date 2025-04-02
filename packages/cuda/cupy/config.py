@@ -19,3 +19,10 @@ package['build_args'] = {
     'CUPY_VERSION': CUPY_VERSION,
     'CUPY_NVCC_GENERATE_CODE': CUPY_NVCC_GENERATE_CODE,
 }
+
+builder = package.copy()
+
+builder['name'] = 'cupy:builder'
+builder['build_args'] = {**builder['build_args'], 'FORCE_BUILD': 'on'}
+
+package = [package, builder]

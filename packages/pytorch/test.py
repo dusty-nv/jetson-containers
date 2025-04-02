@@ -12,11 +12,12 @@ print(torch.__config__.show())
 # fail if CUDA isn't available
 assert(torch.cuda.is_available())
 
-print(f'\nPyTorch {torch.__version__} built with:')
+print(f'\nPyTorch {torch.__version__}\n')
 
 try:
-    print(f'  * CUDA {torch.version.cuda} ({torch.cuda.get_device_name()})')
-    print(f'  * cuDNN {torch.backends.cudnn.version()}')
+    print(f'  * CUDA device     {torch.cuda.get_device_name()}')
+    print(f'  * CUDA version    {torch.version.cuda}')
+    print(f'  * CUDA cuDNN      {torch.backends.cudnn.version()}')
     print(f'  * CUDA BLAS       {torch.backends.cuda.preferred_blas_library()}')
     print(f'  * CUDA linalg     {torch.backends.cuda.preferred_blas_library()}')
     print(f'  * CUDA flash_attn {torch.backends.cuda.is_flash_attention_available()}')
@@ -28,7 +29,7 @@ try:
 except Exception as error:
     print(f'Exception trying to read PyTorch {torch.__version__} CUDA versions (this may be expected on older versions of PyTorch)\n{error}')
     
-print(f'torch.distributed: {torch.distributed.is_available()}')
+print(f'\ntorch.distributed: {torch.distributed.is_available()}')
 print(f'  * NCCL backend:  {torch.distributed.is_nccl_available()}')
 print(f'  * GLOO backend:  {torch.distributed.is_gloo_available()}')
 print(f'  * MPI backend:   {torch.distributed.is_mpi_available()}\n')

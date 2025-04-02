@@ -276,7 +276,7 @@ def pprint_debug(*args, **kwargs):
     """
     if os.environ.get('VERBOSE', False) or os.environ.get('DEBUG', False):
         pprint.pprint(*args, **kwargs)
-        
+
 
 def cprint(text, color):
     """
