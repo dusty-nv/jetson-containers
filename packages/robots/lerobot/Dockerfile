@@ -2,7 +2,7 @@
 # name: lerobot
 # group: robots
 # docs: docs.md
-# depends: [transformers, opencv:4.11.0, pyav, h5py, diffusers, jupyterlab:myst, numba]
+# depends: [transformers, opencv:4.11.0, pyav, h5py, diffusers, jupyterlab:myst, numba, mujoco]
 # requires: '>=36'
 # test: [test.sh, test.py]
 #---
@@ -31,9 +31,9 @@ RUN git clone --branch=${LEROBOT_BRANCH} --depth=1 https://github.com/${LEROBOT_
     cat -n pyproject.toml
 
 RUN cd /opt/lerobot && \
-    pip3 install --ignore-installed -e ".[aloha, pusht, dynamixel, pi0, test, feetech]" --verbose
+    pip3 install --no-deps -e ".[aloha, pusht, dynamixel, pi0, test, feetech]" --verbose
 
-RUN pip show datasets
+RUN pip install datasets
 RUN python3 -c "import datasets; print(datasets.__version__)"
 
 RUN apt-get update && \
