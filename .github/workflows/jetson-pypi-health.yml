@@ -12,8 +12,10 @@ jobs:
     steps:
       - name: Check PyPI
         run: |
-          echo "Checking https://pypi.jetson-ai-lab.dev/jp6/ ..."
-          if curl -s -o /dev/null -w "%{http_code}" https://pypi.jetson-ai-lab.dev/jp6/ | grep -q "^2"; then
+          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://pypi.jetson-ai-lab.dev/jp6/)
+          echo "HTTP status code: $STATUS_CODE"
+          
+          if [[ "$STATUS_CODE" == 2* ]]; then
             echo "✅ PyPI is UP"
             echo '{"schemaVersion":1,"label":"Jetson PyPI","message":"up","color":"brightgreen"}' > health.json
           else
