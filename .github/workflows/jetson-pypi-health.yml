@@ -12,9 +12,12 @@ jobs:
     steps:
       - name: Check PyPI
         run: |
-          if curl --silent --fail https://pypi.jetson-ai-lab.dev/jp6/> /dev/null; then
+          echo "Checking https://pypi.jetson-ai-lab.dev/jp6/ ..."
+          if curl -s -o /dev/null -w "%{http_code}" https://pypi.jetson-ai-lab.dev/jp6/ | grep -q "^2"; then
+            echo "✅ PyPI is UP"
             echo '{"schemaVersion":1,"label":"Jetson PyPI","message":"up","color":"brightgreen"}' > health.json
           else
+            echo "❌ PyPI is DOWN"
             echo '{"schemaVersion":1,"label":"Jetson PyPI","message":"down","color":"red"}' > health.json
           fi
       - name: Publish to GitHub Pages
