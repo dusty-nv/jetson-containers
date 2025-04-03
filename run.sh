@@ -29,6 +29,9 @@ output_width="1280"
 output_height="720"
 output_fps="30"
 
+# Default network setting
+docker_network="host"
+
 # Loop through arguments
 for arg in "$@"; do
 	# Check for the --csi2webcam option
@@ -154,12 +157,12 @@ if [[ "$csi_to_webcam_conversion" == true ]]; then
 		echo "CSI Capture resolution: ${capture_width}x${capture_height}@${capture_fps}"
 		echo "CSI Output resolution : ${output_width}x${output_height}@${output_fps}"
 
-		# Unset the DISPLAY env variable because, apparently, some GStreamer components might try to use this display 
+		# Unset the DISPLAY env variable because, apparently, some GStreamer components might try to use this display
 		# for video rendering or processing, which can conflict with other GStreamer elements or hardware device
 
 		# Temporarily unset DISPLAY for the GStreamer command
 		unset DISPLAY
-		
+
 		echo "gst-launch-1.0 -v nvarguscamerasrc sensor-id=${csi_index} \
 					! 'video/x-raw(memory:NVMM), format=NV12, width=${capture_width}, height=${capture_height}, framerate=${capture_fps}/1' \
 					! queue max-size-buffers=1 leaky=downstream ! nvvidconv \
@@ -178,7 +181,7 @@ if [[ "$csi_to_webcam_conversion" == true ]]; then
 					! multipartdemux single-stream=1 \
 					! "image/jpeg, width=${output_width}, height=${output_height}, parsed=(boolean)true, colorimetry=(string)2:4:7:1, framerate=(fraction)${output_fps}/1, sof-marker=(int)0" \
 					! v4l2sink device=${new_devices[$i]} sync=false  > $ROOT/logs/gst-launch-process_${csi_index}.txt 2>&1 &
-		
+
 		# Store the PID of the background process if you want to manage it later
 		BG_PIDS+=($!)
 		echo "BG_PIDS: ${BG_PIDS[@]}"
@@ -231,7 +234,7 @@ if [ -n "$DISPLAY" ]; then
 	echo "### DISPLAY environmental variable is already set: \"$DISPLAY\""
 	# give docker root user X11 permissions
 	xhost +si:localuser:root || sudo xhost +si:localuser:root
-	
+
 	# enable SSH X11 forwarding inside container (https://stackoverflow.com/q/48235040)
 	XAUTH=/tmp/.docker.xauth
 	xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -
@@ -284,7 +287,7 @@ for arg in "$@"; do
     if [[ "$arg" != "--csi2webcam" && "$arg" != --csi-capture-res=* && "$arg" != --csi-output-res=* ]]; then
         filtered_args+=("$arg")  # Add to the new array if not the argument to remove
     fi
-    
+
     if [[ "$arg" = "--name" || "$arg" = --name* ]]; then
         HAS_CONTAINER_NAME=1
     fi
@@ -297,6 +300,12 @@ if [ -z "$HAS_CONTAINER_NAME" ]; then
     #SANITIZED_CONTAINER_IMAGE_NAME=$(echo "$CONTAINER_IMAGE_NAME" | sed 's/[^a-zA-Z0-9_.-]/_/g')
     CONTAINER_NAME="jetson_container_${BUILD_DATE_TIME}"
     CONTAINER_NAME_FLAGS="--name $CONTAINER_NAME"
+fi
+
+# Override if DOCKER_NETWORK env var is set
+if [ ! -z "$DOCKER_NETWORK" ]; then
+    echo "[run.sh] Overriding docker network with: $DOCKER_NETWORK"
+    docker_network="$DOCKER_NETWORK"
 fi
 
 # run the container
@@ -334,7 +343,7 @@ elif [ $ARCH = "x86_64" ]; then
 
 	( set -x ;
 
-	$SUDO docker run --gpus all -it --rm --network=host \
+	$SUDO docker run --env NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics --gpus all -it --rm --network="$docker_network" \
 		--shm-size=8g \
 		--ulimit memlock=-1 \
 		--ulimit stack=67108864 \
