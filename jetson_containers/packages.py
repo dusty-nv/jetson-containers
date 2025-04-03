@@ -13,8 +13,12 @@ import concurrent.futures
 from packaging.version import Version
 from packaging.specifiers import SpecifierSet
 
-from .l4t_version import L4T_VERSION, CUDA_VERSION, PYTHON_VERSION, LSB_RELEASE
 from .utils import log_debug
+
+from .l4t_version import (
+    L4T_VERSION, CUDA_VERSION, PYTHON_VERSION, LSB_RELEASE, 
+    SYSTEM_ARM, SYSTEM_ARCH_LIST, DOCKER_ARCH, check_arch
+)
 
 _PACKAGES = {}
 
@@ -107,7 +111,7 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
     package = {
         'path': path,
         'requires': '>=32.6',
-        'postfix': f'r{L4T_VERSION}',
+        'postfix': f'r{L4T_VERSION}' if SYSTEM_ARM else DOCKER_ARCH,
         'config': [],
         'test': []
     }
@@ -118,13 +122,13 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
         for x in ['CUDA_VERSION', 'PYTHON_VERSION', 'LSB_RELEASE']
     }
 
-    if HAS_ENV['CUDA_VERSION'] or HAS_ENV['LSB_RELEASE']:
+    if HAS_ENV['CUDA_VERSION'] or HAS_ENV['LSB_RELEASE'] or not SYSTEM_ARM:
         package['postfix'] = package['postfix'] + f"-cu{CUDA_VERSION.major}{CUDA_VERSION.minor}"
 
     if HAS_ENV['PYTHON_VERSION']:
         package['postfix'] = package['postfix'] + f"-cp{PYTHON_VERSION.major}{PYTHON_VERSION.minor}"
 
-    if HAS_ENV['LSB_RELEASE']:
+    if HAS_ENV['LSB_RELEASE'] or not SYSTEM_ARM:
         package['postfix'] = package['postfix'] + f"-{LSB_RELEASE}"
 
     # skip recursively searching under these packages
@@ -482,6 +486,71 @@ def config_package(package):
     return validate_package(package)
 
 
+def package_depends(package, *args):
+    """
+    Add, update, or replace package dependencies - this is similar in function
+    to the `update_dependencies()` function, but with the inline form of the
+    more recent `package_requires()` below.  For example:
+
+      package_depends(package, 'torch:2.6', 'opencv:4.11', 'faster-whisper')
+
+    will make sure those dependencies and versions are set in the package.
+    """
+    old = package.get('depends', [])
+    new = []
+
+    for arg in args:
+        if isinstance(arg, (tuple, list)):
+            new.extend(arg)
+        else:
+            new.append(arg)
+
+    package['depends'] = update_dependencies(old, new)
+    return package
+
+
+def package_requires(package, requires=None, system_arch=None, unless=None):
+    """
+    Add a platform requirement to a package unless it was already defined,
+    or for example set the default SYSTEM_ARCH if another was not set:
+
+       package_requires(package, system_arch='aarch64')
+
+    This will add a requirement for aarch64 unless x86_64 was set otherwise.
+    """
+    if isinstance(package, (list, tuple)):
+        for pkg in package:
+            package_requires(pkg,
+                requires=requires, system_arch=system_arch, unless=unless
+            )
+        return package
+
+    if system_arch:
+        unless = SYSTEM_ARCH_LIST
+        requires = system_arch
+
+    if not unless:
+        unless = []
+
+    if not isinstance(unless, list):
+        unless = [unless]
+
+    reqs = package.get('requires', [])
+
+    if not isinstance(reqs, list):
+        reqs = [reqs]
+
+    for req in reqs: 
+        if any([req == x for x in unless]):
+           return
+
+    if requires not in reqs:   
+        reqs.append(requires)
+
+    package['requires'] = reqs
+    return package
+
+
 def check_requirement(requires, l4t_version=L4T_VERSION, cuda_version=CUDA_VERSION, name: str=''):
     """
     Check if the L4T/CUDA versions meet the needed specifier/requirement
@@ -490,6 +559,13 @@ def check_requirement(requires, l4t_version=L4T_VERSION, cuda_version=CUDA_VERSI
         requires = str(requires)
 
     requires = requires.lower()
+
+    for arch in SYSTEM_ARCH_LIST:
+        if requires == arch or requires == ('==' + arch): 
+            return check_arch(arch)
+
+        if requires == ('!=' + arch):
+            return not check_arch(arch)
 
     if 'cu' in requires:
         if Version(f"{cuda_version.major}{cuda_version.minor}") not in SpecifierSet(requires.replace('cu', '')):

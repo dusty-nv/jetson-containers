@@ -8,11 +8,11 @@ FROM ${BASE_IMAGE}
 # download and install the PyTorch wheel
 ARG PYTORCH_URL \
     PYTORCH_WHL \
-    TORCH_CUDA_ARCH_ARGS
+    TORCH_CUDA_ARCH_LIST
 
 # # set the CUDA architectures that PyTorch extensions get built for
 ENV DEBIAN_FRONTEND=noninteractive \
-    TORCH_CUDA_ARCH_LIST=${TORCH_CUDA_ARCH_ARGS}
+    TORCH_CUDA_ARCH_LIST=${TORCH_CUDA_ARCH_LIST}
 
 # install prerequisites
 RUN set -ex \

@@ -320,7 +320,7 @@ if [ $ARCH = "aarch64" ]; then
     # https://stackoverflow.com/a/19226038
 	( set -x ;
 
-	$SUDO docker run --runtime nvidia -it --rm --network "$docker_network" \
+	$SUDO docker run --runtime nvidia --env NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics -it --rm --network host \
 		--shm-size=8g \
 		--volume /tmp/argus_socket:/tmp/argus_socket \
 		--volume /etc/enctune.conf:/etc/enctune.conf \
@@ -343,7 +343,7 @@ elif [ $ARCH = "x86_64" ]; then
 
 	( set -x ;
 
-	$SUDO docker run --gpus all -it --rm --network="$docker_network" \
+	$SUDO docker run --env NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics --gpus all -it --rm --network="$docker_network" \
 		--shm-size=8g \
 		--ulimit memlock=-1 \
 		--ulimit stack=67108864 \

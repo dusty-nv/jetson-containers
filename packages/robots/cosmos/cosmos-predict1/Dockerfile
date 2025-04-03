@@ -15,10 +15,15 @@ RUN apt-get update && apt-get install -y \
     ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
-RUN git clone --recursive https://github.com/nvidia-cosmos/cosmos-predict1 && \
-    cd Cosmos && \
-    pip3 install einops attrs pynvml protobuf && \
-    pip3 install -r requirements.txt
+RUN git clone --recursive https://github.com/nvidia-cosmos/cosmos-predict1 /opt/cosmos-predict1 && \
+    cd cosmos-predict1
 
-WORKDIR /opt/Cosmos/
+RUN cd /opt/cosmos-predict1 && \
+    sed -i '/decord==0.6.0/d' requirements.txt && \
+    sed -i 's/==/>=/g' requirements.txt && \
+    pip3 install einops attrs pynvml protobuf && \
+    pip3 install -r requirements.txt && \
+    pip3 install -U --force-reinstall opencv-contrib-python
+
+WORKDIR /opt/cosmos-predict1
 CMD ["/bin/bash"]

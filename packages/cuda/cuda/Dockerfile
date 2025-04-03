@@ -14,8 +14,8 @@ ARG CUDA_URL \
     CUDA_ARCH_LIST \
     DISTRO="ubuntu2004"
     
-COPY install.sh /tmp/install_cuda.sh
-RUN /tmp/install_cuda.sh
+COPY install.sh /tmp/cuda/install.sh
+RUN /tmp/cuda/install.sh
 
 ENV CUDA_HOME="/usr/local/cuda"
 ENV NVCC_PATH="$CUDA_HOME/bin/nvcc"

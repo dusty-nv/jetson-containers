@@ -25,7 +25,5 @@ def pyceres(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    pyceres('2.3'),
-    pyceres('2.4'),
     pyceres('2.5', default=True)
 ]

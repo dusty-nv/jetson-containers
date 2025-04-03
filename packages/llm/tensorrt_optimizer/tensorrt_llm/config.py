@@ -46,6 +46,6 @@ def tensorrt_llm(version, branch=None, patch=None, src=None, depends=None, requi
     return trt_llm, builder
 
 package = [
-    tensorrt_llm('0.12', branch='v0.12.0-jetson', requires='>=cu126', default=True),
-    #tensorrt_llm('0.17', branch='v0.17.0-jetson', requires='>=cu128', default=True),
+    tensorrt_llm('0.12', branch='v0.12.0-jetson', requires='<cu128', default=False),
+    tensorrt_llm('0.17.0', requires='>=cu128', default=True),
 ]

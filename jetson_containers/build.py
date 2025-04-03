@@ -27,10 +27,9 @@ import pprint
 import argparse
 
 from jetson_containers import (
-    build_container, build_containers, find_packages, package_search_dirs, set_log_dir, cprint,
-    L4T_VERSION, JETPACK_VERSION, CUDA_VERSION, PYTHON_VERSION, LSB_RELEASE, LSB_CODENAME
+    build_container, build_containers, find_packages, package_search_dirs, 
+    set_log_dir, cprint, print_versions
 )
-
 
 parser = argparse.ArgumentParser()
 
@@ -55,6 +54,7 @@ parser.add_argument('--simulate', action='store_true', help="print out the build
 parser.add_argument('--push', type=str, default='', help="repo or user to push built container image to (no push by default)")
 parser.add_argument('--logs', type=str, default='', help="sets the directory to save container build logs to (default: jetson-containers/logs)")
 parser.add_argument('--verbose', action='store_true', help="enable verbose/debug logging")
+parser.add_argument('--version', action='store_true', help="print platform version info and exit")
 parser.add_argument('--no-github-api', action='store_true', help="disalbe Github API use to force rebuild on new git commits")
 
 parser.add_argument('--build-network', type=str, default='host', help="Docker network mode to use during build (default: host)")
@@ -76,8 +76,11 @@ args.skip_tests = re.split(',|;|:', args.skip_tests)
 args.test_only = re.split(',|;|:', args.test_only)
 
 print(f'\n{args}\n')
-cprint(f"-- L4T_VERSION={L4T_VERSION} JETPACK_VERSION={JETPACK_VERSION} CUDA_VERSION={CUDA_VERSION} PYTHON_VERSION={PYTHON_VERSION} LSB_RELEASE={LSB_RELEASE} ({LSB_CODENAME})", "green")
-cprint(f"-- jetson-containers {' '.join(sys.argv[1:])}\n", "green")
+print_versions()
+cprint(f"\n$ jetson-containers {' '.join(sys.argv[1:])}\n", "green")
+
+if args.version:
+    sys.exit()
 
 # cast build args into dictionary
 if args.build_args:

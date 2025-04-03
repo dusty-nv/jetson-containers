@@ -7,7 +7,7 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG FFMPEG_VERSION=7.1
+ARG FFMPEG_VERSION=7.1.1
 
 # Building FFmpeg for libav*** libraries, which are necessory for PyAV
 RUN cd /opt && \
