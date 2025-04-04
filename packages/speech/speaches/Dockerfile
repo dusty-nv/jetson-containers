@@ -21,7 +21,7 @@ RUN git clone https://github.com/speaches-ai/speaches /opt/speaches && \
     sed -i 's|"kokoro-onnx.*",|"kokoro-onnx",|g' pyproject.toml && \
     sed -i 's|"numpy.*",|"numpy",|g' pyproject.toml && \
     cat pyproject.toml && \
-    pip3 install -e '.[ui]' \
+    pip3 install -e '.[ui]' && \
     cp /opt/speaches/model_aliases.json /
     #sed -i 's|enable_ui: bool = True|enable_ui: bool = False|g' src/speaches/config.py
     #pip3 install gradio==5.13.0 gradio-client==1.6.0
