@@ -14,14 +14,15 @@ jobs:
         run: |
           STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://pypi.jetson-ai-lab.dev/)
           echo "HTTP status code: $STATUS_CODE"
-          
+
           if [[ "$STATUS_CODE" == 2* ]]; then
             echo "✅ PyPI is UP"
             echo '{"schemaVersion":1,"label":"Jetson PyPI","message":"up","color":"brightgreen"}' > health.json
           else
-            echo "❌ PyPI is DOWN"
+            echo "::warning ::❌ PyPI is DOWN (HTTP $STATUS_CODE)"
             echo '{"schemaVersion":1,"label":"Jetson PyPI","message":"down","color":"red"}' > health.json
           fi
+
       - name: Publish to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
