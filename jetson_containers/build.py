@@ -25,10 +25,11 @@ import re
 import sys
 import pprint
 import argparse
+import traceback
 
 from jetson_containers import (
     build_container, build_containers, find_packages, package_search_dirs, 
-    set_log_dir, cprint, print_versions
+    cprint, to_bool, log_config, log_error, log_status, log_versions, LogConfig
 )
 
 parser = argparse.ArgumentParser()
@@ -52,20 +53,26 @@ parser.add_argument('--test-only', type=str, default='', help="only test the spe
 
 parser.add_argument('--simulate', action='store_true', help="print out the build commands without actually building the containers")
 parser.add_argument('--push', type=str, default='', help="repo or user to push built container image to (no push by default)")
-parser.add_argument('--logs', type=str, default='', help="sets the directory to save container build logs to (default: jetson-containers/logs)")
-parser.add_argument('--verbose', action='store_true', help="enable verbose/debug logging")
-parser.add_argument('--version', action='store_true', help="print platform version info and exit")
 parser.add_argument('--no-github-api', action='store_true', help="disalbe Github API use to force rebuild on new git commits")
 
+parser.add_argument('--log-dir', '--logs', type=str, default=None, help="sets the directory to save container build logs to (default: jetson-containers/logs)")
+parser.add_argument('--log-level', type=str, default=None, choices=LogConfig.levels, help="sets the logging verbosity level")
+parser.add_argument('--log-colors', type=to_bool, default=None, help=f"enable/disable terminal colors and formatting (defaults to true)")
+parser.add_argument('--log-status', type=to_bool, default=None, help=f"enable status bar at bottom of terminal (defaults to true)")
+
+parser.add_argument('--debug', action='store_true', help="enable debug logging")
+parser.add_argument('--verbose', action='store_true', help="enable verbose logging")
+parser.add_argument('--version', action='store_true', help="print platform version info and exit")
+
 args = parser.parse_args()
+
+# configure logging
+log_config(**vars(args))
 
 # validate args
 if args.skip_errors and not args.multiple:
     raise ValueError("--skip-errors can only be used with --multiple flag")
-    
-if args.verbose:
-    os.environ['VERBOSE'] = 'ON'
-    
+
 # split multi-value keyword arguments
 args.package_dirs = re.split(',|;|:', args.package_dirs)
 args.skip_packages = re.split(',|;|:', args.skip_packages)
@@ -73,8 +80,8 @@ args.skip_tests = re.split(',|;|:', args.skip_tests)
 args.test_only = re.split(',|;|:', args.test_only)
 
 print(f'\n{args}\n')
-print_versions()
-cprint(f"\n$ jetson-containers {' '.join(sys.argv[1:])}\n", "green")
+log_versions()
+cprint(f"\n$ jetson-containers {' '.join(sys.argv[1:])}\n", attrs='bold')
 
 if args.version:
     sys.exit()
@@ -100,10 +107,6 @@ if args.use_proxy:
 if args.package_dirs:
     package_search_dirs(args.package_dirs)
 
-# set logging directories
-if args.logs:
-    set_log_dir(args.logs)
-    
 # list/show package info
 if args.list_packages or args.show_packages:
     packages = find_packages(args.packages, skip=args.skip_packages)
@@ -117,9 +120,17 @@ if args.list_packages or args.show_packages:
         
     sys.exit(0)
     
-# build one multi-stage container from chain of packages
-# or launch multiple independent container builds
-if not args.multiple:
-    build_container(args.name, args.packages, args.base, args.build_flags, args.build_args, args.simulate, args.skip_tests, args.test_only, args.push, args.no_github_api, args.skip_packages)
-else:   
-    build_containers(args.name, args.packages, args.base, args.build_flags, args.build_args, args.simulate, args.skip_errors, args.skip_packages, args.skip_tests, args.test_only, args.push)
+try:
+    # build one multi-stage container from chain of packages
+    # or launch multiple independent container builds
+    if not args.multiple:
+        build_container(**vars(args))
+    else:   
+        build_containers(**vars(args))
+except Exception as error:
+    log_error(
+        f"Failed building:  {', ' \
+        .join(args.packages)}\n\n{traceback.format_exc()}"
+    )
+finally:
+    log_status(done=True)

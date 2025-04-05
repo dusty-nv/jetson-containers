@@ -13,7 +13,8 @@ import concurrent.futures
 from packaging.version import Version
 from packaging.specifiers import SpecifierSet
 
-from .utils import log_debug
+from .utils import get_repo_dir
+from .logging import log_debug
 
 from .l4t_version import (
     L4T_VERSION, CUDA_VERSION, PYTHON_VERSION, LSB_RELEASE, 
@@ -23,8 +24,7 @@ from .l4t_version import (
 _PACKAGES = {}
 
 _PACKAGE_SCAN = False
-_PACKAGE_ROOT = os.path.dirname(os.path.dirname(__file__))
-_PACKAGE_DIRS = [os.path.join(_PACKAGE_ROOT, 'packages/*')]
+_PACKAGE_DIRS = [os.path.join(get_repo_dir(), 'packages/*')]
 _PACKAGE_OPTS = {'check_l4t_version': True}
 _PACKAGE_KEYS = ['alias', 'build_args', 'build_flags', 'config', 'depends', 'disabled',
                  'dockerfile', 'docs', 'group', 'name', 'notes', 'path',
@@ -467,7 +467,7 @@ def config_package(package):
         config_path = os.path.join(package['path'], config_filename)
 
         if config_ext == '.py':
-            log_debug(f"-- Loading {config_path}")
+            log_debug(f"Loading {config_path}")
             module_name = f"packages.{package['name']}.config"
             spec = importlib.util.spec_from_file_location(module_name, config_path)
             module = importlib.util.module_from_spec(spec)
@@ -479,7 +479,7 @@ def config_package(package):
                 return []
 
         elif config_ext == '.json' or config_ext == '.yml' or config_ext == '.yaml':
-            log_debug(f"-- Loading {config_path}")
+            log_debug(f"Loading {config_path}")
             config = validate_config(config_path)  # load and validate the config file
             apply_config(package, config)
 
@@ -569,11 +569,11 @@ def check_requirement(requires, l4t_version=L4T_VERSION, cuda_version=CUDA_VERSI
 
     if 'cu' in requires:
         if Version(f"{cuda_version.major}{cuda_version.minor}") not in SpecifierSet(requires.replace('cu', '')):
-            log_debug(f"-- Package {name} isn't compatible with CUDA {cuda_version} (requires {requires})")
+            log_debug(f"Package {name} isn't compatible with CUDA {cuda_version} (requires {requires})")
             return False
     else:
         if l4t_version not in SpecifierSet(requires.replace('r', '')):
-            log_debug(f"-- Package {name} isn't compatible with L4T r{l4t_version} (requires L4T {requires})")
+            log_debug(f"Package {name} isn't compatible with L4T r{l4t_version} (requires L4T {requires})")
             return False
 
     return True
@@ -584,7 +584,7 @@ def check_requirements(package):
     Check if the L4T/CUDA versions meet the requirements needed by the package
     """
     for requires in package['requires']:
-        if not check_requirement(requires):
+        if not check_requirement(requires, name=package['name']):
             return False
 
     return True
@@ -619,11 +619,11 @@ def validate_package(package):
 
         if _PACKAGE_OPTS['check_l4t_version'] and not check_requirements(pkg):
             log_debug(
-                f"-- Package {pkg['name']} isn't compatible with L4T r{L4T_VERSION} (requires L4T {pkg['requires']})")
+                f"Package {pkg['name']} isn't compatible with L4T r{L4T_VERSION} (requires L4T {pkg['requires']})")
             pkg['disabled'] = True
 
         if pkg.get('disabled', False):
-            log_debug(f"-- Package {pkg['name']} was disabled by its config")
+            log_debug(f"Package {pkg['name']} was disabled by its config")
             packages.remove(pkg)
         else:
             validate_lists(pkg)  # make sure certain entries are lists

@@ -1,4 +1,4 @@
-from jetson_containers import L4T_VERSION, handle_json_request, github_latest_tag
+from jetson_containers import L4T_VERSION, handle_json_request, github_latest_tag, log_warning
 from packaging.version import parse
 
 
@@ -40,7 +40,7 @@ def transformers_git(version, repo='huggingface/transformers', branch=None, **kw
     if version == 'latest':
         version = github_latest_tag(repo) 
         if not version:
-            print(f'-- Failed to get latest Transformers github tag for {repo}')
+            log_warning(f'Failed to get latest Transformers github tag for {repo}')
             return
         
     if version.startswith('v'):

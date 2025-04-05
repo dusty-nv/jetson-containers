@@ -439,31 +439,6 @@ def check_arch(arch: str, system_arch: str=None):
         return arch == SYSTEM_ARCH or arch == DOCKER_ARCH
 
 
-def print_versions(keys=None, columns=4, color='green', tablefmt='simple_grid'):
-    """
-    Prints a table of platform environment variables.
-    """
-    from jetson_containers import format_table, cprint
-
-    if not keys:
-        keys = [
-            'L4T_VERSION', 'JETPACK_VERSION', 
-            'CUDA_VERSION', 'PYTHON_VERSION',
-            'SYSTEM_ARCH', 'LSB_RELEASE',
-        ]
-
-    rows = []
-
-    for key in keys:
-        text = [key, f"{globals()[key]}"] #f"{key.ljust(max([len(x) for x in keys]), ' ')} {globals()[key]}"
-        if not rows or len(rows[-1]) >= columns:
-            rows.append(text)
-        else:
-            rows[-1].extend(text)
-
-    cprint(format_table(rows, tablefmt=tablefmt, numalign='left'), color)
-
-
 # ubuntu info
 LSB_RELEASES = {
     '16.04': 'xenial',
