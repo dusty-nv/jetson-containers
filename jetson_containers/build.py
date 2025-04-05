@@ -128,9 +128,6 @@ try:
     else:   
         build_containers(**vars(args))
 except Exception as error:
-    log_error(
-        f"Failed building:  {', ' \
-        .join(args.packages)}\n\n{traceback.format_exc()}"
-    )
+    log_error(f"Failed building:  {', '.join(args.packages)}\n\n{traceback.format_exc()}")
 finally:
     log_status(done=True)

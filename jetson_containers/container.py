@@ -12,8 +12,6 @@ import subprocess
 import dockerhub_api 
 
 from packaging.version import Version
-from rich.progress import Progress as RichProgress
-from rich.text import Text as RichText
 
 from .packages import find_package, find_packages, resolve_dependencies, validate_dict
 from .utils import split_container_name, query_yes_no, needs_sudo, sudo_prefix, get_dir, get_repo_dir
