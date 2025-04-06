@@ -193,7 +193,7 @@ if IS_TEGRA:
 elif IS_SBSA:
     package = [
         # sbsa
-        cuda_package('12.8','wget https://developer.download.nvidia.com/compute/cuda/12.8.1/local_installers/cuda-repo-ubuntu2404-12-8-local_12.8.1-570.124.06-1_arm64.deb', requires='aarch64'),
+        cuda_package('12.8','https://developer.download.nvidia.com/compute/cuda/12.8.1/local_installers/cuda-repo-ubuntu2404-12-8-local_12.8.1-570.124.06-1_arm64.deb', requires='aarch64'),
         cuda_samples('12.8', requires='aarch64'),
 
     ]
