@@ -201,4 +201,5 @@ else:
     package = [
         # x86_64
         cuda_package('12.8', 'https://developer.download.nvidia.com/compute/cuda/12.8.1/local_installers/cuda-repo-ubuntu2404-12-8-local_12.8.1-570.124.06-1_amd64.deb', requires='x86_64'),
+        cuda_samples('12.8', requires='x86_64'),
     ]
