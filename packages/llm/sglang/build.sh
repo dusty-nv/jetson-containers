@@ -10,6 +10,10 @@ ARCH="$(uname -m)"
 ARCH_SED="s|x86_64|$ARCH|g" 
 PLATFORM="$ARCH-linux"
 
+export SGL_KERNEL_ENABLE_BF16=1
+export SGL_KERNEL_ENABLE_FP8=1
+export SGL_KERNEL_ENABLE_FP4=1
+export USE_CUDNN=1
 echo "Building SGLang ${SGLANG_VERSION} for ${PLATFORM}"
 
 git clone --recursive --depth=1 --branch=v${SGLANG_VERSION} $REPO_URL $REPO_DIR ||
