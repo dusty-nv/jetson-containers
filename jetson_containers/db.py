@@ -10,8 +10,22 @@ import argparse
 from packaging.version import Version
 from datetime import datetime
 
-from jetson_containers import get_registry_containers, parse_container_versions, check_requirement, format_table
+from jetson_containers import get_registry_containers, parse_container_versions, check_requirement
 
+def format_table(data, headers, tablefmt='github'):
+    """
+    Format the data into a table.
+    
+    Args:
+        data (list of list): The data to format.
+        headers (list): The headers for the table.
+        tablefmt (str): The format of the table.
+    
+    Returns:
+        str: The formatted table as a string.
+    """
+    from tabulate import tabulate
+    return tabulate(data, headers=headers, tablefmt=tablefmt)
 
 def sync_db(**kwargs):
     """
@@ -19,7 +33,6 @@ def sync_db(**kwargs):
     """
     pull_db(**kwargs)
     export_db(**kwargs)
-
 
 def pull_db(user: str=None, use_cache=False, **kwargs):
     """
