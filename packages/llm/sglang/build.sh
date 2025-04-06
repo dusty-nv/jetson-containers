@@ -10,7 +10,6 @@ ARCH="$(uname -m)"
 ARCH_SED="s|x86_64|$ARCH|g" 
 PLATFORM="$ARCH-linux"
 
-# Limitar compilación pesada
 export SGL_KERNEL_ENABLE_BF16=1
 export SGL_KERNEL_ENABLE_FP8=1
 export SGL_KERNEL_ENABLE_FP4=1
