@@ -21,12 +21,14 @@ cd $REPO_DIR
 sed -i '/sgl-kernel/d' python/pyproject.toml
 sed -i '/flashinfer/d' python/pyproject.toml
 sed -i '/xgrammar/d' python/pyproject.toml
+sed -i '/"torch==2\.5\.1",/d' python/pyproject.toml
 
 sed -i $ARCH_SED sgl-kernel/python/sgl_kernel/__init__.py
 
 echo "Building SGL-KERNEL"
 cd $REPO_DIR/sgl-kernel/
-pip3 wheel . --no-deps --wheel-dir $PIP_WHEEL_DIR --platform $PLATFORM
+sed -i '/"torch==2\.5\.1",/d' pyproject.toml
+pip3 wheel . --no-deps --wheel-dir $PIP_WHEEL_DIR
 pip3 install $PIP_WHEEL_DIR/sgl*.whl
 
 cd $REPO_DIR
