@@ -135,7 +135,12 @@ def pip_cache(version, requires=None):
     short_version = f"cu{version.replace('.', '')}"
     index_host = "jetson-ai-lab.dev"
 
-    pip_path = f"jp{JETPACK_VERSION.major}/{short_version}" if IS_TEGRA else f"{DOCKER_ARCH}/{short_version}"
+    pip_path = (
+        f"jp{JETPACK_VERSION.major}/{short_version}" if IS_TEGRA
+        else f"aarch64/{short_version}" if IS_SBSA
+        else f"{DOCKER_ARCH}/{short_version}"
+    )
+
     apt_path = pip_path if Version(LSB_RELEASE).major < 24 else f"{pip_path}/{LSB_RELEASE}"
 
     pip_cache = package.copy()
