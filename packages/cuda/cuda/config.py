@@ -137,7 +137,7 @@ def pip_cache(version, requires=None):
 
     pip_path = (
         f"jp{JETPACK_VERSION.major}/{short_version}" if IS_TEGRA
-        else f"aarch64/{short_version}" if IS_SBSA
+        else f"sbsa/{short_version}" if IS_SBSA
         else f"{DOCKER_ARCH}/{short_version}"
     )
 
