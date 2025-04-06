@@ -1,5 +1,5 @@
 
-from jetson_containers import L4T_VERSION, CUDA_VERSION, update_dependencies, package_requires
+from jetson_containers import L4T_VERSION, CUDA_VERSION, update_dependencies, package_requires, IS_TEGRA, IS_SBSA
 from packaging.version import Version
 
 import os
@@ -81,51 +81,64 @@ def cudnn_builtin(version=None, requires=None, default=False):
 
 CUDNN_URL='https://developer.download.nvidia.com/compute/cudnn'
 
-package = [
-    
-    # JetPack 6
-    cudnn_package(
-        '8.9', 
-        'https://nvidia.box.com/shared/static/ht4li6b0j365ta7b76a6gw29rk5xh8cy.deb', 
-        'cudnn-local-tegra-repo-ubuntu2204-8.9.4.25', 
-        cuda='12.2', 
-        requires='==36.*'
-    ), 
-    cudnn_package('9.0', 
-        f'{CUDNN_URL}/9.0.0/local_installers/cudnn-local-tegra-repo-ubuntu2204-9.0.0_1.0-1_arm64.deb', 
-        cuda='12.4', 
-        requires='==36.*'
-    ),
-    cudnn_package(
-        '9.3',
-        f'{CUDNN_URL}/9.3.0/local_installers/cudnn-local-tegra-repo-ubuntu2204-9.3.0_1.0-1_arm64.deb',
-        cuda='12.6', 
-        requires='==36.*'
-    ),
-    cudnn_package(
-        '9.4', 
-        f'{CUDNN_URL}/9.4.0/local_installers/cudnn-local-tegra-repo-ubuntu2204-9.4.0_1.0-1_arm64.deb', 
-        cuda='12.6', 
-        requires='==36.*'
-    ),
-    cudnn_package(
-        '9.8', 
-        f'{CUDNN_URL}/9.8.0/local_installers/cudnn-local-tegra-repo-ubuntu2404-9.8.0_1.0-1_arm64.deb', 
-        cuda='12.8', 
-        requires='==36.*', 
-        packages="libcudnn9-cuda-12 libcudnn9-dev-cuda-12 libcudnn9-samples"
-    ),
-    
-    # JetPack 4-5 (cuDNN installed in base container)
-    cudnn_builtin(requires='<36', default=True),
+if IS_TEGRA:
+    package = [
+        # JetPack 6
+        cudnn_package(
+            '8.9',
+            'https://nvidia.box.com/shared/static/ht4li6b0j365ta7b76a6gw29rk5xh8cy.deb',
+            'cudnn-local-tegra-repo-ubuntu2204-8.9.4.25',
+            cuda='12.2',
+            requires='==36.*'
+        ),
+        cudnn_package('9.0',
+            f'{CUDNN_URL}/9.0.0/local_installers/cudnn-local-tegra-repo-ubuntu2204-9.0.0_1.0-1_arm64.deb',
+            cuda='12.4',
+            requires='==36.*'
+        ),
+        cudnn_package(
+            '9.3',
+            f'{CUDNN_URL}/9.3.0/local_installers/cudnn-local-tegra-repo-ubuntu2204-9.3.0_1.0-1_arm64.deb',
+            cuda='12.6',
+            requires='==36.*'
+        ),
+        cudnn_package(
+            '9.4',
+            f'{CUDNN_URL}/9.4.0/local_installers/cudnn-local-tegra-repo-ubuntu2204-9.4.0_1.0-1_arm64.deb',
+            cuda='12.6',
+            requires='==36.*'
+        ),
+        cudnn_package(
+            '9.8',
+            f'{CUDNN_URL}/9.8.0/local_installers/cudnn-local-tegra-repo-ubuntu2404-9.8.0_1.0-1_arm64.deb',
+            cuda='12.8',
+            requires='==36.*',
+            packages="libcudnn9-cuda-12 libcudnn9-dev-cuda-12 libcudnn9-samples"
+        ),
 
+        # JetPack 4-5 (cuDNN installed in base container)
+        cudnn_builtin(requires='<36', default=True),
+    ]
+
+elif IS_SBSA:
+    # sbsa
+    package = [
+        cudnn_package(
+            '9.8',
+            f'{CUDNN_URL}/9.8.0/local_installers/cudnn-local-repo-ubuntu2404-9.8.0_1.0-1_arm64.deb',
+            cuda='12.8',
+            requires='aarch64',
+            packages="libcudnn9-cuda-12 libcudnn9-dev-cuda-12 libcudnn9-samples"
+        ),
+    ]
+else:
     # x86_64
-    cudnn_package(
-        '9.8', 
-        f'{CUDNN_URL}/9.8.0/local_installers/cudnn-local-repo-ubuntu2404-9.8.0_1.0-1_amd64.deb', 
-        cuda='12.8', 
-        requires='x86_64', 
-        packages="libcudnn9-cuda-12 libcudnn9-dev-cuda-12 libcudnn9-samples"
-    ),
-]
-
+    package = [
+        cudnn_package(
+            '9.8',
+            f'{CUDNN_URL}/9.8.0/local_installers/cudnn-local-repo-ubuntu2404-9.8.0_1.0-1_amd64.deb',
+            cuda='12.8',
+            requires='x86_64',
+            packages="libcudnn9-cuda-12 libcudnn9-dev-cuda-12 libcudnn9-samples"
+        ),
+    ]
