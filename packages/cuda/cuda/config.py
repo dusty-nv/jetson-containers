@@ -3,7 +3,7 @@ import os
 from packaging.version import Version
 
 from jetson_containers import (
-    L4T_VERSION, JETPACK_VERSION, CUDA_VERSION, 
+    L4T_VERSION, JETPACK_VERSION, CUDA_VERSION,
     CUDA_ARCHITECTURES, LSB_RELEASE, IS_SBSA, IS_TEGRA,
     SYSTEM_ARM, DOCKER_ARCH, package_requires
 )
@@ -32,7 +32,7 @@ def cuda_package(version, url, deb=None, packages=None, requires=None) -> list:
         packages = os.environ.get('CUDA_PACKAGES', 'cuda-toolkit*')
 
     cuda = package.copy()
-    
+
     cuda['name'] = f'cuda:{version}'
 
     cuda['build_args'] = {**{
@@ -43,7 +43,7 @@ def cuda_package(version, url, deb=None, packages=None, requires=None) -> list:
 
     if requires:
         cuda['requires'] = requires
-        
+
     package_requires(cuda, system_arch='aarch64') # default to aarch64
 
     if 'toolkit' in packages or 'dev' in packages:
@@ -51,10 +51,10 @@ def cuda_package(version, url, deb=None, packages=None, requires=None) -> list:
 
     if Version(version) == CUDA_VERSION:
         cuda['alias'] = 'cuda'
-    
-    cuda_pip = pip_cache(version, requires)    
+
+    cuda_pip = pip_cache(version, requires)
     cuda['depends'].append(cuda_pip['name'])
-    
+
     return cuda, cuda_pip
 
 
@@ -67,23 +67,23 @@ def cuda_builtin(version, requires=None) -> list:
 
     if not isinstance(version, str):
         version = f'{version.major}.{version.minor}'
- 
+
     passthrough['name'] = f'cuda:{version}'
-    
+
     passthrough['dockerfile'] = 'Dockerfile.builtin'
     passthrough['build_args'] = cuda_build_args(version)
-  
+
     if Version(version) == CUDA_VERSION:
         passthrough['alias'] = 'cuda'
-        
+
     if requires:
         passthrough['requires'] = requires
-        
+
     passthrough['depends'] = ['build-essential']
-    
-    cuda_pip = pip_cache(version, requires)    
+
+    cuda_pip = pip_cache(version, requires)
     passthrough['depends'].append(cuda_pip['name'])
-    
+
     return passthrough, cuda_pip
 
 
@@ -92,16 +92,16 @@ def cuda_samples(version, requires, branch=None) -> list:
     Generates container that installs/builds the CUDA samples
     """
     samples = package.copy()
-    
+
     if not isinstance(version, str):
         version = f'{version.major}.{version.minor}'
-        
+
     samples['name'] = f'cuda:{version}-samples'
     samples['dockerfile'] = 'Dockerfile.samples'
     samples['notes'] = "CUDA samples from https://github.com/NVIDIA/cuda-samples installed under /opt/cuda-samples"
     samples['test'] = 'test-samples.sh'
     samples['depends'] = [f'cuda:{version}', 'cmake']
-    
+
     if not branch:
         branch = 'v' + version
 
@@ -114,19 +114,19 @@ def cuda_samples(version, requires, branch=None) -> list:
         make_cmd='make_flat'
 
     samples['build_args'] = {
-        'CUDA_BRANCH': branch, 
+        'CUDA_BRANCH': branch,
         'CUDA_SAMPLES_MAKE': make_cmd
     }
-    
+
     if Version(version) == CUDA_VERSION:
         samples['alias'] = 'cuda:samples'
-        
+
     if requires:
         samples['requires'] = requires
 
     return samples
-    
-    
+
+
 def pip_cache(version, requires=None):
     """
     Defines a container that just sets the environment for using the pip caching server.
@@ -135,11 +135,11 @@ def pip_cache(version, requires=None):
     short_version = f"cu{version.replace('.', '')}"
     index_host = "jetson-ai-lab.dev"
 
-    pip_path = f"jp{JETPACK_VERSION.major}/{short_version}" if SYSTEM_ARM else f"{DOCKER_ARCH}/{short_version}"
+    pip_path = f"jp{JETPACK_VERSION.major}/{short_version}" if IS_TEGRA else f"{DOCKER_ARCH}/{short_version}"
     apt_path = pip_path if Version(LSB_RELEASE).major < 24 else f"{pip_path}/{LSB_RELEASE}"
 
     pip_cache = package.copy()
-    
+
     pip_cache['name'] = f'pip_cache:{short_version}'
     pip_cache['group'] = 'build'
     pip_cache['dockerfile'] = 'Dockerfile.pip'
@@ -157,15 +157,15 @@ def pip_cache(version, requires=None):
         'SCP_UPLOAD_USER': os.environ.get('SCP_UPLOAD_USER'),
         'SCP_UPLOAD_PASS': os.environ.get('SCP_UPLOAD_PASS'),
     }
-    
+
     if requires:
         pip_cache['requires'] = requires
-        
+
     if Version(version) == CUDA_VERSION:
-        pip_cache['alias'] = 'pip_cache'  
-        
+        pip_cache['alias'] = 'pip_cache'
+
     return pip_cache
-    
+
 if IS_TEGRA:
     package = [
 
