@@ -10,7 +10,9 @@ if 'CUDNN_VERSION' in os.environ and len(os.environ['CUDNN_VERSION']) > 0:
     CUDNN_VERSION = Version(os.environ['CUDNN_VERSION'])
 else:
     if L4T_VERSION.major >= 36:
-        if CUDA_VERSION >= Version('12.8'):
+        if CUDA_VERSION >= Version('13.0'):
+            CUDNN_VERSION = Version('10.0')
+        elif CUDA_VERSION >= Version('12.8'):
             CUDNN_VERSION = Version('9.8')
         elif CUDA_VERSION == Version('12.6'):
             CUDNN_VERSION = Version('9.3')
@@ -115,6 +117,13 @@ if IS_TEGRA:
             requires='==36.*',
             packages="libcudnn9-cuda-12 libcudnn9-dev-cuda-12 libcudnn9-samples"
         ),
+        cudnn_package(
+            '10.0',
+            f'{CUDNN_URL}/10.0.0/local_installers/cudnn-local-tegra-repo-ubuntu2404-10.0.0_1.0-1_arm64.deb',
+            cuda='13.0',
+            requires='==36.*',
+            packages="libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-samples"
+        ),
 
         # JetPack 4-5 (cuDNN installed in base container)
         cudnn_builtin(requires='<36', default=True),
@@ -130,6 +139,13 @@ elif IS_SBSA:
             requires='aarch64',
             packages="libcudnn9-cuda-12 libcudnn9-dev-cuda-12 libcudnn9-samples"
         ),
+        cudnn_package(
+            '10.0',
+            f'{CUDNN_URL}/10.0.0/local_installers/cudnn-local-repo-ubuntu2404-10.0.0_1.0-1_amd64.deb',
+            cuda='13.0',
+            requires='x86_64',
+            packages="libcudnn10-cuda-13 libcudnn10-dev-cuda-13 libcudnn10-samples"
+        ),
     ]
 else:
     # x86_64
@@ -140,5 +156,12 @@ else:
             cuda='12.8',
             requires='x86_64',
             packages="libcudnn9-cuda-12 libcudnn9-dev-cuda-12 libcudnn9-samples"
+        ),
+        cudnn_package(
+            '10.0',
+            f'{CUDNN_URL}/10.0.0/local_installers/cudnn-local-repo-ubuntu2404-10.0.0_1.0-1_amd64.deb',
+            cuda='13.0',
+            requires='x86_64',
+            packages="libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-samples"
         ),
     ]
