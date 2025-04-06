@@ -23,15 +23,10 @@ sed -i '/flashinfer/d' python/pyproject.toml
 sed -i '/xgrammar/d' python/pyproject.toml
 
 sed -i $ARCH_SED sgl-kernel/python/sgl_kernel/__init__.py
-sed -i $ARCH_SED sgl-kernel/setup.py
-
-sed -i 's|options={.*| |g' sgl-kernel/setup.py
-echo "Patched sgl-kernel/setup.py"
-cat sgl-kernel/setup.py  
 
 echo "Building SGL-KERNEL"
 cd $REPO_DIR/sgl-kernel/
-python3 setup.py --verbose bdist_wheel --dist-dir $PIP_WHEEL_DIR --plat $PLATFORM
+pip3 wheel . --no-deps --wheel-dir $PIP_WHEEL_DIR --platform $PLATFORM
 pip3 install $PIP_WHEEL_DIR/sgl*.whl
 
 cd $REPO_DIR
