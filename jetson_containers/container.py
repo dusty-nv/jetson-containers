@@ -153,7 +153,7 @@ def build_container(
                 
             cmd += '   ' + pkg['path']
 
-            log_block(f"<b>> BUILDING  {container_name}</b>\n\n{cmd}\n")
+            log_block(f"<b>> BUILDING  {container_name}</b>", f"<b>{cmd}</b>")
             log_status(f"[{idx+1}/{len(packages)}] <b>Building {package}</b> ({container_name})")
 
             cmd += _NEWLINE_ + f"2>&1 | tee {log_file + '.txt'}" + "; exit ${PIPESTATUS[0]}"  # non-tee version:  https://stackoverflow.com/a/34604684
@@ -260,7 +260,7 @@ def tag_container(source, target, simulate=False):
     """
     cmd = f"{sudo_prefix()}docker tag {source} \\\n           {target}"
     
-    log_block(f"<b>Tagging {source} </b>\n<b>     as {target}</b>\n\n{cmd}\n")
+    log_block(f"<b>Tagging {source} </b>\n<b>     as {target}</b>\n", "<b>{cmd}</b>\n")
 
     if not simulate:
         subprocess.run(cmd, shell=True, check=True)
@@ -293,7 +293,7 @@ def push_container(name, repository='', simulate=False):
         
     cmd += f"{sudo_prefix()}docker push {name}"
     
-    log_block(f"<b>PUSHING {name}</b>\n\n{cmd}\n")
+    log_block(f"<b>PUSHING {name}</b>", "<b>{cmd}</b>\n")
     log_status(f"Pushing {name}")
 
     if not simulate:
@@ -333,7 +333,7 @@ def test_container(name, package, simulate=False):
         else:
             cmd += f"{test}"
         
-        log_block(f"<b>> TESTING  {name}</b>\n\n{cmd}'\n")
+        log_block(f"<b>> TESTING  {name}</b>", f"<b>{cmd}</b>\n")
 
         cmd += "'" + _NEWLINE_
         cmd += f"2>&1 | tee {log_file + '.txt'}" + "; exit ${PIPESTATUS[0]}"
