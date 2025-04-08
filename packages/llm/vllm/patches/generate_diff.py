@@ -9,7 +9,7 @@ def modify_CMakeLists(content):
     new_lines = []
     for line in lines:
         if re.match(r'^\s*set\s*\(\s*CUDA_SUPPORTED_ARCHS\s+["\'].*["\']\s*\)', line):
-            new_lines.append('set(CUDA_SUPPORTED_ARCHS "8.7;10.1")')
+            new_lines.append('set(CUDA_SUPPORTED_ARCHS "8.7;8.9;9.0;10.1;12.0")')
             continue
         pattern = r'(cuda_archs_loose_intersection\(\s*\S+\s+)"[^"]+"\s+("[^"]+"\))'
         if re.search(pattern, line):
