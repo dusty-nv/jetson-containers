@@ -1,5 +1,5 @@
 diff --git a/setup.py b/setup.py
-index ce3fb62..dd962fe 100644
+index ce3fb62..0754cdd 100644
 --- a/setup.py
 +++ b/setup.py
 @@ -39,21 +39,37 @@ SKIP_CUDA_BUILD = os.getenv("CAUSAL_CONV1D_SKIP_CUDA_BUILD", "FALSE") == "TRUE"
@@ -19,9 +19,9 @@ index ce3fb62..dd962fe 100644
 +        return "linux"
 +    else:
 +        raise ValueError("Unsupported system: {}".format(platform.system()))
-+
  
 -def get_platform():
++
 +def get_arch():
      """
 -    Returns the platform name as used in wheel filenames.
@@ -86,7 +86,7 @@ index ce3fb62..dd962fe 100644
          if CUDA_HOME is not None:
              _, bare_metal_version = get_cuda_bare_metal_version(CUDA_HOME)
              if bare_metal_version < Version("11.6"):
-@@ -169,22 +185,9 @@ if not SKIP_CUDA_BUILD:
+@@ -169,22 +185,19 @@ if not SKIP_CUDA_BUILD:
                      f"{PACKAGE_NAME} is only supported on CUDA 11.6 and above.  "
                      "Note: make sure nvcc has a supported version by running nvcc -V."
                  )
@@ -104,13 +104,22 @@ index ce3fb62..dd962fe 100644
 -        cc_flag.append("-gencode")
 -        cc_flag.append("arch=compute_87,code=sm_87")
          if bare_metal_version >= Version("11.8"):
-             cc_flag.append("-gencode")
--            cc_flag.append("arch=compute_90,code=sm_90")
++            cc_flag.append("-gencode")
 +            cc_flag.append("arch=compute_87,code=sm_87")
++            cc_flag.append("-gencode")
++            cc_flag.append("arch=compute_89,code=sm_89")
+             cc_flag.append("-gencode")
+             cc_flag.append("arch=compute_90,code=sm_90")
++            cc_flag.append("-gencode")
++            cc_flag.append("arch=compute_100,code=sm_100")
++            cc_flag.append("-gencode")
++            cc_flag.append("arch=compute_101,code=sm_101")
++            cc_flag.append("-gencode")
++            cc_flag.append("arch=compute_120,code=sm_120")
  
      # HACK: The compiler flag -D_GLIBCXX_USE_CXX11_ABI is set to be the same as
      # torch._C._GLIBCXX_USE_CXX11_ABI
-@@ -243,7 +246,7 @@ if not SKIP_CUDA_BUILD:
+@@ -243,7 +256,7 @@ if not SKIP_CUDA_BUILD:
      )
  
  
@@ -119,7 +128,7 @@ index ce3fb62..dd962fe 100644
      with open(Path(this_dir) / "causal_conv1d" / "__init__.py", "r") as f:
          version_match = re.search(r"^__version__\s*=\s*(.*)$", f.read(), re.MULTILINE)
      public_version = ast.literal_eval(version_match.group(1))
-@@ -254,7 +257,7 @@ def get_package_version():
+@@ -254,7 +267,7 @@ def get_package_version():
          return str(public_version)
  
  
@@ -128,7 +137,7 @@ index ce3fb62..dd962fe 100644
  
      # Determine the version numbers that will be used to determine the correct wheel
      torch_version_raw = parse(torch.__version__)
-@@ -271,7 +274,7 @@ def get_wheel_url():
+@@ -271,7 +284,7 @@ def get_wheel_url():
          # to save CI time. Minor versions should be compatible.
          torch_cuda_version = parse("11.8") if torch_cuda_version.major == 11 else parse("12.3")
          cuda_version = f"{torch_cuda_version.major}"
@@ -137,7 +146,7 @@ index ce3fb62..dd962fe 100644
      gpu_compute_version = hip_version if HIP_BUILD else cuda_version
      cuda_or_hip = "hip" if HIP_BUILD else "cu"
  
-@@ -299,7 +302,7 @@ class CachedWheelsCommand(_bdist_wheel):
+@@ -299,7 +312,7 @@ class CachedWheelsCommand(_bdist_wheel):
      wheel available and short-circuits the standard full build pipeline.
      """
  
