@@ -23,15 +23,19 @@ ENV PIPER_CACHE=/data/models/piper \
 # use our ORT (which is already in /usr/local/).
 RUN git clone --branch ${PIPER_PHONEMIZE_VERSION} --depth 1 https://github.com/rhasspy/piper-phonemize /opt/piper-phonemize && \
     cd /opt/piper-phonemize && \
+    sed -i 's|__version__ = "1.2.0"|__version__ = "1.1.99"|' setup.py && \
     cmake -B build \
         -DONNXRUNTIME_DIR=${ONNXRUNTIME_DIR} \
         -DESPEAK_NG_DIR=${ESPEAK_NG_DATA_DIR} \
         -DCMAKE_CXX_FLAGS="-I${ONNXRUNTIME_DIR}/include/onnxruntime/" && \
     cmake --build build --config Release --parallel && \
     cmake --install build && \
+    pip install pybind11 && \
     CPPFLAGS="-I${ONNXRUNTIME_DIR}/include/onnxruntime/" \
-    pip3 install . && \
+    pip3 install . --no-deps --no-build-isolation && \
     ln -s ${ESPEAK_NG_DATA_DIR} /usr/share/espeak-ng-data
+
+RUN echo "✅ piper-phonemize version:" && pip show piper-phonemize | grep -i version
 
 # Now we can build piper. In order to avoid it from downloading
 # automatically piper-phonemize, we specify an installation dir.
