@@ -32,6 +32,11 @@ RUN git clone https://github.com/speaches-ai/speaches /opt/speaches && \
     #pip3 install gradio==5.13.0 gradio-client==1.6.0
     pip3 uninstall -y onnxruntime onnxruntime-gpu || true
 
+# Patch to skip UI mount if dist/ missing
+COPY 0001-Conditionally-mount-realtime-console-dist.patch /tmp/
+RUN cd /opt/speaches && git apply /tmp/0001-Conditionally-mount-realtime-console-dist.patch && \
+    cat /opt/speaches/src/speaches/main.py
+
 RUN python3 -c "from importlib.metadata import version; \
 print('🌃 faster-whisper:', version('faster-whisper'), \
 '\n🌃 kokoro-onnx:', version('kokoro-onnx'), \
