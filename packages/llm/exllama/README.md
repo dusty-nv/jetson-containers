@@ -3,7 +3,7 @@
 > [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 
 
-This package provides containers for both ExLlama and ExLlamaV2:
+This package provides containers for both ExLlama and ExLlamaV3:
 
 * `exllama` container uses the https://github.com/jllllll/exllama fork of https://github.com/turboderp/exllama (installed under `/opt/exllama`)
 * `exllama:v2` container uses https://github.com/turboderp/exllamav2 (installed under `/opt/exllamav2`)
