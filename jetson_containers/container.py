@@ -323,6 +323,7 @@ def test_container(name, package, simulate=False):
         test_ext = os.path.splitext(test_exe)[1]
         log_file = os.path.join(get_log_dir('test'), f"{name.replace('/','_')}_{test_exe}").replace(':','_')
 
+        cmd = f"{sudo_prefix()}docker run -t --rm --runtime=nvidia --network=host" + _NEWLINE_
         # Inject pip env vars
         for key, val in pip_env.items():
              cmd += f"--env {key}={val}" + _NEWLINE_
