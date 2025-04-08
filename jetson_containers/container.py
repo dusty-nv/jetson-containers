@@ -26,10 +26,10 @@ from .l4t_version import (
 _NEWLINE_=" \\\n"  # used when building command strings
 
 # Set default pip environment variables for testing
- pip_env = {
-     "PIP_RETRIES": "10",
-     "PIP_TIMEOUT": "60"
- }
+pip_env = {
+    "PIP_RETRIES": "10",
+    "PIP_TIMEOUT": "60"
+}
 
 def build_container(
         name: str='', packages: list=[], base: str=get_l4t_base(),
