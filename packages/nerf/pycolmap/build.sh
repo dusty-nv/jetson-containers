@@ -16,7 +16,7 @@ cmake .. -DCUDA_ENABLED=ON \
             -DCMAKE_CUDA_ARCHITECTURES=${CUDAARCHS} && \
 make -j $(nproc) && \
 make install && \
-cd /opt/colmap/pycolmap && \
+cd /opt/colmap/ && \
 pip3 wheel . -w /opt/pycolmap/wheels --verbose
 pip3 install /opt/pycolmap/wheels/pycolmap-*.whl
 ldconfig
