@@ -17,7 +17,7 @@ git status
 FLASH_ATTENTION_FORCE_BUILD=1 \
 FLASH_ATTENTION_FORCE_CXX11_ABI=0 \
 FLASH_ATTENTION_SKIP_CUDA_BUILD=0 \
-MAX_JOBS=6 \
+MAX_JOBS=$(nproc) \
 python3 setup.py --verbose bdist_wheel --dist-dir /opt
 
 ls /opt
