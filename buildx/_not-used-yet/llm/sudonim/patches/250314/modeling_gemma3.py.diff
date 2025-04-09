@@ -1,4 +1,0 @@
-374c374
-<             attention_mask.to(query_states),
----
->             attention_mask.to(query_states) if attention_mask is not None else None,

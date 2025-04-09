@@ -1,5 +1,0 @@
-name: l4t-diffusion
-group: 'diffusion'
-requires: '>=34.1.0'
-depends: [stable-diffusion, stable-diffusion-webui]
-docs: docs.md

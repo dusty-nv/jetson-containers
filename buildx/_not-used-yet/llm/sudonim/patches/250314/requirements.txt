@@ -1,6 +1,0 @@
-absl-py
-uvicorn
-fastapi
-pydantic
-starlette
-sse_starlette
