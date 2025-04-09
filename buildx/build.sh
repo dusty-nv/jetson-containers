@@ -13,9 +13,6 @@ fi
 # Docker Hub username
 DOCKER_USERNAME=${DOCKER_USERNAME}
 
-# Base image
-BASE_IMAGE="kairin/001:nvcr.io-nvidia-pytorch-25.02-py3-igpu"
-
 # Get the current date and time formatted as YYYYMMDD-HHMMSS
 CURRENT_DATE_TIME=$(date +"%Y%m%d-%H%M%S")
 
@@ -41,23 +38,26 @@ docker buildx use jetson-builder
 # Ask if the user wants to build with or without cache
 read -p "Do you want to build with cache? (y/n): " use_cache
 
-# List of specific folders to build
-folders=("build/bazel" "build/build-essential")
+# Define mapping of folders to their respective base images
+declare -A folder_base_image_map=(
+  ["build/bazel"]="kairin/001:nvcr.io-nvidia-pytorch-25.02-py3-igpu"
+  ["build/build-essential"]="kairin/001:nvcr.io-nvidia-pytorch-25.02-py3-igpu"
+)
 
 # Function to build Docker images for specified folders
 build_images_from_folders() {
-  for folder in "${folders[@]}"; do
+  for folder in "${!folder_base_image_map[@]}"; do
     if [ -d "$folder" ]; then
-      # Extract the image name from the folder name
+      local base_image="${folder_base_image_map[$folder]}"
       local image_name=$(basename "$folder")
       local tag="${DOCKER_USERNAME}/001:${image_name}-${CURRENT_DATE_TIME}-1"
 
-      echo "Building image: $image_name for platform: $PLATFORM"
+      echo "Building image: $image_name for platform: $PLATFORM using base image: $base_image"
 
       if [ "$use_cache" = "y" ]; then
-        docker buildx build --platform $PLATFORM -t $tag --build-arg BASE_IMAGE=$BASE_IMAGE --push "$folder"
+        docker buildx build --platform $PLATFORM -t $tag --build-arg BASE_IMAGE=$base_image --push "$folder"
       else
-        docker buildx build --no-cache --platform $PLATFORM -t $tag --build-arg BASE_IMAGE=$BASE_IMAGE --push "$folder"
+        docker buildx build --no-cache --platform $PLATFORM -t $tag --build-arg BASE_IMAGE=$base_image --push "$folder"
       fi
 
       echo "Docker image tagged and pushed as $tag"
