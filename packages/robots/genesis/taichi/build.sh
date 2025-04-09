@@ -54,6 +54,7 @@ update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-15 100
 update-alternatives --install /usr/bin/opt opt /usr/bin/opt-15 100
 update-alternatives --install /usr/bin/llc llc /usr/bin/llc-15 100
 
+pip3 install "cmake<4"
 # Build Taichi
 ./build.py
 # Check if the build succeeded

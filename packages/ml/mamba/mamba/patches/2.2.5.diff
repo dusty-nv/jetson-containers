@@ -1,5 +1,5 @@
 diff --git a/setup.py b/setup.py
-index 3ee9164..e497800 100755
+index 7c6196d..cb3d864 100755
 --- a/setup.py
 +++ b/setup.py
 @@ -44,20 +44,36 @@ SKIP_CUDA_BUILD = os.getenv("MAMBA_SKIP_CUDA_BUILD", "FALSE") == "TRUE"
@@ -49,7 +49,7 @@ index 3ee9164..e497800 100755
  
  def get_cuda_bare_metal_version(cuda_dir):
      raw_output = subprocess.check_output(
-@@ -172,22 +188,9 @@ if not SKIP_CUDA_BUILD:
+@@ -172,22 +188,19 @@ if not SKIP_CUDA_BUILD:
                      "Note: make sure nvcc has a supported version by running nvcc -V."
                  )
  
@@ -67,13 +67,22 @@ index 3ee9164..e497800 100755
 -        cc_flag.append("arch=compute_87,code=sm_87")
 -
          if bare_metal_version >= Version("11.8"):
-             cc_flag.append("-gencode")
--            cc_flag.append("arch=compute_90,code=sm_90")
++            cc_flag.append("-gencode")
 +            cc_flag.append("arch=compute_87,code=sm_87")
++            cc_flag.append("-gencode")
++            cc_flag.append("arch=compute_89,code=sm_89")
+             cc_flag.append("-gencode")
+             cc_flag.append("arch=compute_90,code=sm_90")
++            cc_flag.append("-gencode")
++            cc_flag.append("arch=compute_100,code=sm_100")
++            cc_flag.append("-gencode")
++            cc_flag.append("arch=compute_101,code=sm_101")
++            cc_flag.append("-gencode")
++            cc_flag.append("arch=compute_120,code=sm_120")
  
  
      # HACK: The compiler flag -D_GLIBCXX_USE_CXX11_ABI is set to be the same as
-@@ -254,7 +257,7 @@ if not SKIP_CUDA_BUILD:
+@@ -254,7 +267,7 @@ if not SKIP_CUDA_BUILD:
      )
  
  
@@ -82,7 +91,7 @@ index 3ee9164..e497800 100755
      with open(Path(this_dir) / PACKAGE_NAME / "__init__.py", "r") as f:
          version_match = re.search(r"^__version__\s*=\s*(.*)$", f.read(), re.MULTILINE)
      public_version = ast.literal_eval(version_match.group(1))
-@@ -265,7 +268,7 @@ def get_package_version():
+@@ -265,7 +278,7 @@ def get_package_version():
          return str(public_version)
  
  
@@ -91,7 +100,7 @@ index 3ee9164..e497800 100755
      # Determine the version numbers that will be used to determine the correct wheel
      torch_version_raw = parse(torch.__version__)
  
-@@ -307,7 +310,7 @@ class CachedWheelsCommand(_bdist_wheel):
+@@ -307,7 +320,7 @@ class CachedWheelsCommand(_bdist_wheel):
      wheel available and short-circuits the standard full build pipeline.
      """
  

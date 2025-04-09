@@ -8,7 +8,7 @@ echo "Building Tensorflow ${TENSORFLOW_VERSION}"
 # Tensorflow will support llvm 18 and 19
 wget https://apt.llvm.org/llvm.sh
 chmod u+x llvm.sh
-./llvm.sh 17 all
+./llvm.sh 20 all
 
 echo "Building TensorFlow for Jetson"
 
@@ -26,7 +26,7 @@ export TF_CUDA_CLANG=1
 export CLANG_CUDA_COMPILER_PATH="/usr/lib/llvm-17/bin/clang"
 export HERMETIC_CUDA_VERSION=12.8.1
 export HERMETIC_CUDNN_VERSION=9.8.0
-export HERMETIC_CUDA_COMPUTE_CAPABILITIES=8.7
+export HERMETIC_CUDA_COMPUTE_CAPABILITIES=8.7,8.9,9.0,10.1,12.0
 
 
 # Build the TensorFlow pip package

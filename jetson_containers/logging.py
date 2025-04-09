@@ -293,19 +293,34 @@ def log_versions(keys=None, columns=4, color='green', tablefmt='simple_grid'):
     log_table(rows, merge_columns=True, attrs='reverse')
 
 
-def log_block(text, color='green', attrs=['reverse'], tablefmt='simple_grid', **kwargs):
+def log_block(*text, color='green', attrs=['reverse'], tablefmt='simple_grid', **kwargs):
     """
     Log a block of text inside a simple grid pattern (like a table, just one cell)
     """
-    text = colorize(text, None)
-    output = tabulate.tabulate([[text]], tablefmt=tablefmt, **kwargs)
+    if not text:
+        return None
+    
+    head = text[0]
+    text = text[1:] if len(text) > 1 else None
 
-    if kwargs.get('visible', True):
-        output = '\n'.join([
-            colorize(x, color, attrs=attrs)
-            for x in output.split('\n')
-        ])
-        print(f"\n{output}\n")
+    head = colorize(head, None)
+    output = tabulate.tabulate([[head]], tablefmt=tablefmt, **kwargs)
+
+    if not kwargs.get('visible', True):
+        return output
+    
+    output = '\n'.join([
+        colorize(x, color, attrs=attrs)
+        for x in output.split('\n')
+    ])
+
+    print(f"\n{output}\n")
+
+    if not text:
+        return output
+    
+    for x in text:
+        print(f"{colorize(x)}\n")
 
     return output
 

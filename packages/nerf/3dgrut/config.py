@@ -23,5 +23,5 @@ def threedgrut(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    threedgrut('1.0.0', default=True)
+    threedgrut('2.0.0', default=True)
 ]

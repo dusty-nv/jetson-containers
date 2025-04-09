@@ -7,17 +7,30 @@ import argparse
 def modify_CMakeLists(content):
     lines = content.splitlines()
     new_lines = []
+    pattern_set = re.compile(r'^\s*set\s*\(\s*CUDA_SUPPORTED_ARCHS\s+["\'].*["\']\s*\)')
+
+    pattern_intersection = re.compile(
+        r'^(\s*cuda_archs_loose_intersection\s*\(\s*\w+\s+)"[^"]+"\s+("[^"]+"\s*\))'
+    )
+
+    replaced_count = 0
     for line in lines:
-        if re.match(r'^\s*set\s*\(\s*CUDA_SUPPORTED_ARCHS\s+["\'].*["\']\s*\)', line):
-            new_lines.append('set(CUDA_SUPPORTED_ARCHS "8.7;10.1")')
+        if pattern_set.match(line):
+            new_lines.append('set(CUDA_SUPPORTED_ARCHS "8.7;8.9;9.0;10.0;10.1;12.0")')
             continue
-        pattern = r'(cuda_archs_loose_intersection\(\s*\S+\s+)"[^"]+"\s+("[^"]+"\))'
-        if re.search(pattern, line):
-            newline = re.sub(pattern, r'\1"${CUDA_ARCHS}" \2', line)
-            new_lines.append(newline)
+
+        match = pattern_intersection.match(line)
+        if match:
+            prefix, third = match.groups()
+            new_lines.append(f'{prefix}"${{CUDA_SUPPORTED_ARCHS}}" {third}')
+            replaced_count += 1
             continue
+
         new_lines.append(line)
+
+    print(f"[INFO] Replaced {replaced_count}")
     return "\n".join(new_lines) + "\n"
+
 
 def modify_vllm_flash_attn_cmake(content):
     lines = content.splitlines()
@@ -54,7 +67,7 @@ def generate_diff_for_file(original_file, modify_function, base_dir, output_diff
         with open(original_file, "r") as f:
             original_content = f.read()
     except FileNotFoundError:
-        print(f"Error: No se encontró el archivo {original_file}")
+        print(f"Error: File not found {original_file}")
         return
     modified_content = modify_function(original_content)
     relative_path = os.path.relpath(original_file, start=base_dir)
@@ -67,7 +80,7 @@ def generate_diff_for_file(original_file, modify_function, base_dir, output_diff
     )
     with open(output_diff, "w") as f:
         f.write("\n".join(diff) + "\n")
-    print(f"Diff generado para {relative_path} en {output_diff}")
+    print(f"Diff generated for {relative_path} on {output_diff}")
 
 def main():
     parser = argparse.ArgumentParser(description="Generate diffs for vLLM")

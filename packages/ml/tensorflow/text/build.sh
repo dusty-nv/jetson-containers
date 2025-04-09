@@ -15,7 +15,7 @@ export TF_CUDA_CLANG=1
 export CLANG_CUDA_COMPILER_PATH="/usr/lib/llvm-17/bin/clang"
 export HERMETIC_CUDA_VERSION=12.8.1
 export HERMETIC_CUDNN_VERSION=9.8.0
-export HERMETIC_CUDA_COMPUTE_CAPABILITIES=8.7
+export HERMETIC_CUDA_COMPUTE_CAPABILITIES=8.7,8.9,9.0,10.1,12.0
 export TF_VERSION=${TENSORFLOW_TEXT_VERSION}
 ./oss_scripts/configure.sh
 ./oss_scripts/prepare_tf_dep.sh
