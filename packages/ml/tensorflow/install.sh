@@ -5,7 +5,7 @@ bash /tmp/TENSORFLOW/link_cuda.sh
 
 wget https://apt.llvm.org/llvm.sh
 chmod u+x llvm.sh
-./llvm.sh 17 all
+./llvm.sh 20 all
 # TIP is not working with symbolic links
 # ln -sf /usr/bin/llvm-config-* /usr/bin/llvm-config
 #ln -s /usr/bin/clang-1* /usr/bin/clang
@@ -38,7 +38,7 @@ apt-get install -y --no-install-recommends \
 rm -rf /var/lib/apt/lists/*
 apt-get clean
 
-if [ "$FORCE_BUILD" == "on" ]; then
+if [ "on" == "on" ]; then
     echo "Forcing build of Tensorflow ${TENSORFLOW_VERSION}"
     exit 1
 fi
