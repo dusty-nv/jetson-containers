@@ -15,6 +15,13 @@ Modular container build system that provides the latest [**AI/ML packages**](htt
 > See the **[`Ubuntu 24.04`](/docs/build.md#2404-containers)** section of the docs for details and a list of available containers 🤗
 > Thanks to all our active contributors from **[`Discord`](https://discord.gg/BmqNSK4886)** for their help with the ongoing builds.
 
+## Code Style
+
+The project uses automated code formatting tools to maintain consistent code style. See [Code Style Guide](docs/code-style.md) for details on:
+- Setting up formatting tools
+- Adding your package to formatting checks
+- Troubleshooting common issues
+
 | |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 |---|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **ML** | [`pytorch`](packages/pytorch) [`tensorflow`](packages/ml/tensorflow) [`jax`](packages/ml/jax) [`onnxruntime`](packages/ml/onnxruntime) [`deepstream`](packages/multimedia/deepstream) [`holoscan`](packages/multimedia/holoscan) [`CTranslate2`](packages/ml/ctranslate2) [`JupyterLab`](packages/ml/jupyterlab)                                                                                                                                                                                                                                                                               |
