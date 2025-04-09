@@ -14,26 +14,17 @@ fi
 DOCKER_USERNAME=${DOCKER_USERNAME}
 
 # Base image
-BASE_IMAGE=kairin/001:jetc-latest
-
-# Image names
-BUILD_ESSENTIAL_IMAGE=build-essential
-STABLE_DIFFUSION_WEBUI_IMAGE=stable-diffusion-webui
-COMFYUI_IMAGE=comfyui
+BASE_IMAGE="kairin/001:nvcr.io-nvidia-pytorch-25.02-py3-igpu"
 
 # Get the current date and time formatted as YYYYMMDD-HHMMSS
 CURRENT_DATE_TIME=$(date +"%Y%m%d-%H%M%S")
-
-# Create the tags with the current date and time and append number 1
-BUILD_ESSENTIAL_TAG="${DOCKER_USERNAME}/001:${BUILD_ESSENTIAL_IMAGE}-${CURRENT_DATE_TIME}-1"
-STABLE_DIFFUSION_WEBUI_TAG="${DOCKER_USERNAME}/001:${STABLE_DIFFUSION_WEBUI_IMAGE}-${CURRENT_DATE_TIME}-1"
-COMFYUI_TAG="${DOCKER_USERNAME}/001:${COMFYUI_IMAGE}-${CURRENT_DATE_TIME}-1"
 
 # Determine the current platform
 ARCH=$(uname -m)
 
 if [ "$ARCH" = "x86_64" ]; then
-    PLATFORM="linux/amd64"
+    echo "This script is intended for your current device only. x86_64 (amd64) builds are not supported."
+    exit 1
 elif [ "$ARCH" = "aarch64" ]; then
     PLATFORM="linux/arm64"
 else
@@ -53,21 +44,27 @@ docker buildx use jetson-builder
 # Ask if the user wants to build with or without cache
 read -p "Do you want to build with cache? (y/n): " use_cache
 
-# Build the Docker images using buildx and push to Docker Hub
-build_image() {
-  local directory=$1
-  local tag=$2
+# Function to build Docker images from the build folder
+build_images_from_directory() {
+  local build_folder="build"
+  for dir in $build_folder/*; do
+    if [ -d "$dir" ]; then
+      # Extract the image name from the folder name
+      local image_name=$(basename "$dir")
+      local tag="${DOCKER_USERNAME}/001:${image_name}-${CURRENT_DATE_TIME}-1"
 
-  if [ "$use_cache" = "y" ]; then
-    docker buildx build --platform $PLATFORM -t $tag --build-arg BASE_IMAGE=$BASE_IMAGE --push $directory
-  else
-    docker buildx build --no-cache --platform $PLATFORM -t $tag --build-arg BASE_IMAGE=$BASE_IMAGE --push $directory
-  fi
+      echo "Building image: $image_name for platform: $PLATFORM"
 
-  echo "Docker image tagged and pushed as $tag"
+      if [ "$use_cache" = "y" ]; then
+        docker buildx build --platform $PLATFORM -t $tag --build-arg BASE_IMAGE=$BASE_IMAGE --push "$dir"
+      else
+        docker buildx build --no-cache --platform $PLATFORM -t $tag --build-arg BASE_IMAGE=$BASE_IMAGE --push "$dir"
+      fi
+
+      echo "Docker image tagged and pushed as $tag"
+    fi
+  done
 }
 
-# Build the images
-build_image "./l4t/build-essential" $BUILD_ESSENTIAL_TAG
-build_image "./l4t/stable-diffusion-webui" $STABLE_DIFFUSION_WEBUI_TAG
-build_image "./l4t/comfyui" $COMFYUI_TAG
+# Build images from the build folder
+build_images_from_directory
