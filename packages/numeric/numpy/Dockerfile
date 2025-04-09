@@ -23,8 +23,11 @@ ENV OPENBLAS_CORETYPE=ARMV8
 
 # 'numpy<2' (1.26.4) for <= cu126
 # 'numpy' (2.2+) for >= cu128
-ARG NUMPY_PACKAGE="numpy"
-ENV NUMPY_PACKAGE="$NUMPY_PACKAGE"
+ARG NUMPY_PACKAGE="numpy" \
+    NUMPY_VERSION_MAJOR=2
+
+ENV NUMPY_PACKAGE="$NUMPY_PACKAGE" \
+    NUMPY_VERSION_MAJOR="$NUMPY_VERSION_MAJOR"
 
 COPY install.sh /tmp/numpy/
 RUN bash /tmp/numpy/install.sh

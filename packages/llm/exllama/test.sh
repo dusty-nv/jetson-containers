@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-cd /opt/exllamav2
+cd /opt/exllamav3
 
 python3 test_inference.py --help
 

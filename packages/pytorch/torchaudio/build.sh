@@ -12,10 +12,10 @@ apt-get install -y --no-install-recommends \
 rm -rf /var/lib/apt/lists/*
 apt-get clean
 
-git clone --branch v${TORCHAUDIO_VERSION} --recursive --depth=1 https://github.com/pytorch/audio /opt/torchaudio ||
+git clone --branch=v${TORCHAUDIO_VERSION} --recursive --depth=1 https://github.com/pytorch/audio /opt/torchaudio ||
+git clone --branch=release/${BRANCH_VERSION} --recursive --depth=1 https://github.com/pytorch/audio /opt/torchaudio ||
 git clone --recursive --depth=1 https://github.com/pytorch/audio /opt/torchaudio
 cd /opt/torchaudio
-git checkout v${TORCHAUDIO_VERSION}
 
 # https://github.com/pytorch/audio/pull/3811
 sed -i '1i#include <float.h>' src/libtorchaudio/cuctc/src/ctc_prefix_decoder_kernel_v2.cu || echo "warning:  failed to patch ctc_prefix_decoder_kernel_v2.cu"

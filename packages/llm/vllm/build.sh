@@ -2,19 +2,11 @@
 set -ex
 
 # Install dependencies of XGrammar
-pip3 install "pybind11[global]" pre-commit nanobind
+pip3 install pre-commit nanobind==2.5.0
 
 # Clone the repository if it doesn't exist
 git clone --branch=v${XGRAMMAR_VERSION} --recursive --depth=1 https://github.com/mlc-ai/xgrammar /opt/xgrammar ||
 git clone --recursive --depth=1 https://github.com/mlc-ai/xgrammar /opt/xgrammar
-
-# Build and install
-cd /opt/xgrammar
-pre-commit install
-mkdir build
-cd build
-cmake .. -G Ninja
-ninja
 
 # Create the wheel
 cd /opt/xgrammar
@@ -28,9 +20,10 @@ pip3 install /opt/xgrammar/wheels/xgrammar*.whl
 # Clone the repository if it doesn't exist
 git clone --branch=${VLLM_BRANCH} --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm || 
 git clone --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm
-cd /opt/vllm
 
+cd /opt/vllm
 env
+
 # cp /tmp/vllm/${VLLM_VERSION}.fa.diff /tmp/vllm/fa.diff
 # git apply /tmp/vllm/${VLLM_VERSION}.diff
 python3 /tmp/vllm/generate_diff.py
@@ -38,6 +31,11 @@ git apply -p1 /tmp/vllm/CMakeLists.txt.diff
 git apply -p1 /tmp/vllm/vllm_flash_attn.cmake.diff
 git diff
 git status
+
+# File "/opt/venv/lib/python3.12/site-packages/gguf/gguf_reader.py"
+# `newbyteorder` was removed from the ndarray class in NumPy 2.0
+sed -i 's|gguf.*|gguf|g' requirements/common.txt
+grep gguf requirements/common.txt
 
 export MAX_JOBS=$(nproc) # this is for AGX (max 4 working on Orin NX)
 export USE_CUDNN=1

@@ -117,15 +117,15 @@ This example sets build args in a Dockerfile, based on the version of JetPack/L4
 
 The [`jetson_containers`](/jetson_containers) module exposes these [system variables](/jetson_containers/l4t_version.py) that you can import and parameterize Dockerfiles off of:
 
-| Name                 |                                       Type                                      | Description                                                  |
-|----------------------|:-------------------------------------------------------------------------------:|--------------------------------------------------------------|
-| `L4T_VERSION`        | [`packaging.version.Version`](https://packaging.pypa.io/en/latest/version.html) | version of L4T from `/etc/nv_tegra_release`                  |
-| `JETPACK_VERSION`    | [`packaging.version.Version`](https://packaging.pypa.io/en/latest/version.html) | version of JetPack corresponding to L4T version              |
-| `PYTHON_VERSION`     | [`packaging.version.Version`](https://packaging.pypa.io/en/latest/version.html) | version of Python (`3.6` or `3.8`)                           |
-| `CUDA_VERSION`       | [`packaging.version.Version`](https://packaging.pypa.io/en/latest/version.html) | version of CUDA (under `/usr/local/cuda`)                    |
-| `CUDA_ARCHITECTURES` |                                   `list[int]`                                   | NVCC GPU architectures for codegen (e.g. `[72,87]`) |
-| `SYSTEM_ARCH`        |                                      `str`                                      | `aarch64` or `x86_64`                                        |
-| `LSB_RELEASE`        |                                      `str`                                      | `18.04` or `20.04`                                           |
-| `LSB_CODENAME`       |                                      `str`                                      | `bionic` or `focal`                                          |
+| Name                 |                                       Type                                      | Description                                             |
+|----------------------|:-------------------------------------------------------------------------------:|---------------------------------------------------------|
+| `L4T_VERSION`        | [`packaging.version.Version`](https://packaging.pypa.io/en/latest/version.html) | version of L4T from `/etc/nv_tegra_release`             |
+| `JETPACK_VERSION`    | [`packaging.version.Version`](https://packaging.pypa.io/en/latest/version.html) | version of JetPack corresponding to L4T version         |
+| `PYTHON_VERSION`     | [`packaging.version.Version`](https://packaging.pypa.io/en/latest/version.html) | version of Python (`3.6` or `3.8`)                      |
+| `CUDA_VERSION`       | [`packaging.version.Version`](https://packaging.pypa.io/en/latest/version.html) | version of CUDA (under `/usr/local/cuda`)               |
+| `CUDA_ARCHITECTURES` |                                   `list[int]`                                   | NVCC GPU architectures for codegen (e.g. `[72,87,101]`) |
+| `SYSTEM_ARCH`        |                                      `str`                                      | `aarch64` or `x86_64`                                   |
+| `LSB_RELEASE`        |                                      `str`                                      | `18.04` or `20.04`                                      |
+| `LSB_CODENAME`       |                                      `str`                                      | `bionic` or `focal`                                     |
 
 Of course, it being Python, you can perform basically any other system queries/configuration you want using Python's built-in libraries, including manipulating files used by the build context, ect.

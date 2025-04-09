@@ -1,17 +1,24 @@
-from jetson_containers import L4T_VERSION, CUDA_VERSION, update_dependencies
-from packaging.version import Version
-
 import os
+
+from packaging.version import Version
+from jetson_containers import (
+    L4T_VERSION, CUDA_VERSION, SYSTEM_ARM,
+    update_dependencies, package_requires, IS_TEGRA, IS_SBSA
+)
 
 package['depends'] = ['cuda', 'cudnn', 'python']
 package['test'] = ['test.sh']
 
+# Define the default TENSORRT_VERSION either from environment variable or
+# as to what version of TensorRT was released with that version of CUDA
 if 'TENSORRT_VERSION' in os.environ and len(os.environ['TENSORRT_VERSION']) > 0:
     TENSORRT_VERSION = Version(os.environ['TENSORRT_VERSION'])
-else:
+elif SYSTEM_ARM:
     if L4T_VERSION.major >= 36:
-        if CUDA_VERSION >= Version('12.8'):
-            TENSORRT_VERSION = Version('10.7') # this is temporal, Nvidia removed 10.8.
+        if CUDA_VERSION >= Version('13.0'):
+            TENSORRT_VERSION = Version('11.0')
+        elif CUDA_VERSION >= Version('12.8'):
+            TENSORRT_VERSION = Version('10.7')
         elif CUDA_VERSION >= Version('12.6'):
             TENSORRT_VERSION = Version('10.4')
         elif CUDA_VERSION == Version('12.4'):
@@ -22,7 +29,9 @@ else:
         TENSORRT_VERSION = Version('8.5')
     elif L4T_VERSION.major >= 32:
         TENSORRT_VERSION = Version('8.2')
-        
+else:
+    TENSORRT_VERSION = Version('10.9') # x86_64
+
         
 def tensorrt_deb(version, url, deb, cudnn=None, packages=None, requires=None):
     """
@@ -51,6 +60,8 @@ def tensorrt_deb(version, url, deb, cudnn=None, packages=None, requires=None):
     if requires:
         tensorrt['requires'] = requires
 
+    package_requires(tensorrt, system_arch='aarch64') # default to aarch64
+
     return tensorrt
 
 
@@ -73,6 +84,8 @@ def tensorrt_tar(version, url, cudnn=None, requires=None):
          
     if requires:
         tensorrt['requires'] = requires
+
+    package_requires(tensorrt, system_arch='aarch64') # default to aarch64
 
     return tensorrt
     
@@ -98,18 +111,52 @@ def tensorrt_builtin(version=None, requires=None, default=False):
     #del passthrough['dockerfile']
     return passthrough
 
-    
-package = [
-    # JetPack 6
-    tensorrt_deb('8.6', 'https://nvidia.box.com/shared/static/hmwr57hm88bxqrycvlyma34c3k4c53t9.deb', 'nv-tensorrt-local-repo-l4t-8.6.2-cuda-12.2', cudnn='8.9', requires=['==r36.*', '==cu122']), 
-    #tensorrt_tar('9.3', 'https://nvidia.box.com/shared/static/fp3o14iq7qbm67qjuqivdrdch7009axu.gz', cudnn='8.9', requires=['==r36.*', '==cu122']), 
-    tensorrt_tar('10.0', 'https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/10.0.1/tars/TensorRT-10.0.1.6.l4t.aarch64-gnu.cuda-12.4.tar.gz', cudnn='9.0', requires=['==r36.*', '==cu124']), 
-    tensorrt_tar('10.4', 'https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/10.4.0/tars/TensorRT-10.4.0.26.l4t.aarch64-gnu.cuda-12.6.tar.gz', cudnn='9.3', requires=['==r36.*', '==cu126']),
-    tensorrt_tar('10.5', 'https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/10.5.0/tars/TensorRT-10.5.0.18.l4t.aarch64-gnu.cuda-12.6.tar.gz', cudnn='9.3', requires=['==r36.*', '==cu126']),
-    tensorrt_tar('10.7','https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/10.7.0/tars/TensorRT-10.7.0.23.l4t.aarch64-gnu.cuda-12.6.tar.gz',cudnn='9.3', requires=['==r36.*', '==cu126']),
-    tensorrt_tar('10.7', 'https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/10.7.0/tars/TensorRT-10.7.0.23.l4t.aarch64-gnu.cuda-12.6.tar.gz', cudnn='9.8', requires=['==r36.*', '==cu128']),
-    # tensorrt_tar('10.8', 'https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/10.8.0/tars/TensorRT-10.8.0.43.l4t.aarch64-gnu.cuda-12.8.tar.gz', cudnn='9.7', requires=['==r36.*', '==cu128']),
-    # JetPack 4-5 (TensorRT installed in base container)
-    tensorrt_builtin(requires='<36', default=True),
-]
+TENSORRT_URL='https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt'
 
+if IS_TEGRA:
+    package = [
+        # JetPack 6.1
+        tensorrt_deb('8.6', 'https://nvidia.box.com/shared/static/hmwr57hm88bxqrycvlyma34c3k4c53t9.deb',
+                     'nv-tensorrt-local-repo-l4t-8.6.2-cuda-12.2', cudnn='8.9', requires=['==r36.*', '==cu122']),
+        # tensorrt_tar('9.3', 'https://nvidia.box.com/shared/static/fp3o14iq7qbm67qjuqivdrdch7009axu.gz', cudnn='8.9', requires=['==r36.*', '==cu122']),
+
+        # JetPack 6.1+ with upgraded CUDA
+        tensorrt_tar('10.0', f'{TENSORRT_URL}/10.0.1/tars/TensorRT-10.0.1.6.l4t.aarch64-gnu.cuda-12.4.tar.gz',
+                     cudnn='9.0', requires=['==r36.*', '==cu124']),
+        tensorrt_tar('10.4', f'{TENSORRT_URL}/10.4.0/tars/TensorRT-10.4.0.26.l4t.aarch64-gnu.cuda-12.6.tar.gz',
+                     cudnn='9.3', requires=['==r36.*', '==cu126']),
+        tensorrt_tar('10.5', f'{TENSORRT_URL}/10.5.0/tars/TensorRT-10.5.0.18.l4t.aarch64-gnu.cuda-12.6.tar.gz',
+                     cudnn='9.3', requires=['==r36.*', '==cu126']),
+        tensorrt_tar('10.7', f'{TENSORRT_URL}/10.7.0/tars/TensorRT-10.7.0.23.l4t.aarch64-gnu.cuda-12.6.tar.gz',
+                     cudnn='9.3', requires=['==r36.*', '==cu126']),
+        tensorrt_tar('10.7', f'{TENSORRT_URL}/10.7.0/tars/TensorRT-10.7.0.23.l4t.aarch64-gnu.cuda-12.6.tar.gz',
+                     cudnn='9.8', requires=['==r36.*', '==cu128']),
+        # tensorrt_tar('11.0', f'{TENSORRT_URL}/11.0.0/tars/TensorRT-11.0.0.23.l4t.aarch64-gnu.cuda-13.0.tar.gz', cudnn='10.0.', requires=['==r36.*', '==cu130']),
+
+        # JetPack 4-5 (TensorRT installed in base container)
+        tensorrt_builtin(requires='<36', default=True),
+    ]
+
+elif IS_SBSA:
+    # sbsa
+    package = [
+        tensorrt_tar('10.7', f'{TENSORRT_URL}/10.7.0/tars/TensorRT-10.7.0.23.Linux.aarch64-gnu.cuda-12.6.tar.gz',
+                     cudnn='9.8', requires='aarch64'),
+        tensorrt_tar('10.8', f'{TENSORRT_URL}/10.8.0/tars/TensorRT-10.8.0.43.Linux.aarch64-gnu.cuda-12.8.tar.gz',
+                     cudnn='9.8', requires='aarch64'),
+        tensorrt_tar('10.9', f'{TENSORRT_URL}/10.9.0/tars/TensorRT-10.9.0.34.Linux.aarch64-gnu.cuda-12.8.tar.gz',
+                     cudnn='9.8', requires='aarch64'),
+        # tensorrt_tar('11.0', f'{TENSORRT_URL}/11.0.0/tars/TensorRT-11.0.0.34.Linux.aarch64-gnu.cuda-13.0.tar.gz', cudnn='10.0', requires='aarch64'),
+    ]
+
+else:
+    # x86_64
+    package = [
+        tensorrt_tar('10.7', f'{TENSORRT_URL}/10.7.0/tars/TensorRT-10.7.0.23.Linux.x86_64-gnu.cuda-12.6.tar.gz',
+                     cudnn='9.8', requires='x86_64'),
+        tensorrt_tar('10.8', f'{TENSORRT_URL}/10.8.0/tars/TensorRT-10.8.0.43.Linux.x86_64-gnu.cuda-12.8.tar.gz',
+                     cudnn='9.8', requires='x86_64'),
+        tensorrt_tar('10.9', f'{TENSORRT_URL}/10.9.0/tars/TensorRT-10.9.0.34.Linux.x86_64-gnu.cuda-12.8.tar.gz',
+                     cudnn='9.8', requires='x86_64'),
+        # tensorrt_tar('11.0', f'{TENSORRT_URL}/11.0.0/tars/TensorRT-11.0.0.34.Linux.x86_64-gnu.cuda-13.0.tar.gz', cudnn='10.0', requires='x86_64'),
+    ]

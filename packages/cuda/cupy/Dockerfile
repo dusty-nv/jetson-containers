@@ -9,8 +9,9 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG CUPY_VERSION \
-    CUPY_NVCC_GENERATE_CODE
+    CUPY_NVCC_GENERATE_CODE \
+    FORCE_BUILD=off
 
-COPY build.sh /tmp/build_cupy.sh
+COPY build.sh install.sh /tmp/cupy/
 
-RUN pip3 install cupy || /tmp/build_cupy.sh
+RUN  /tmp/cupy/install.sh || /tmp/cupy/build.sh

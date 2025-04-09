@@ -17,6 +17,8 @@ def check_dependencies(install: bool = True):
         import yaml
         import wget
         import dockerhub_api
+        import tabulate
+        import termcolor
 
         from packaging.version import Version
 
@@ -36,6 +38,108 @@ def check_dependencies(install: bool = True):
 
         print('-- Installing required packages:', cmd)
         subprocess.run(cmd, shell=False, check=True)
+
+
+def get_dir(key, root=None):
+    """
+    Find the absolute paths to common project directories.
+    """
+    if not root:
+        root = get_repo_dir()
+
+    key = key.lower()
+    
+    if key == 'repo':
+        return root
+    
+    return os.path.join(root, key)
+
+
+def get_repo_dir():
+    """
+    Returns the path of the jetson-containers git repo
+    (this is typically one directory up from this file)
+    """
+    return os.path.dirname(os.path.dirname(__file__))
+
+
+def get_env(key, default=None, type=str):
+    """
+    Retrieve an environment variable and convert it to the given type, 
+    or return the default value if it's undefined (by default `None`)
+
+    If key is a list or tuple, then the first present key will be used.
+    For example, this will return `$CACHE_DIR` first and so forth:
+
+      get_env(('CACHE_DIR', 'HF_HOME', 'XGD_HOME'), '/root/.cache')
+
+    If none of those keys are found, then the default value is returned.
+    """
+    if not key:
+        return default
+
+    if isinstance(key, str):
+        key = [key]
+
+    def find_env(keys):
+        for k in keys:
+            if k not in os.environ:
+                continue
+            v = os.environ[k]
+            if v is None or len(v) == 0:
+                continue
+            return v
+
+    value = find_env(key)
+
+    if value is None:
+        return default
+    elif type is None or type == str:
+        return value
+    elif type == bool:
+        return to_bool(value)
+    else:
+        try:
+            return type(value)
+        except Exception as error:
+            print(f"-- Warning:  exception occurred parsing environment variable `${key} = {value}` (default={default}, type={type})\n--           {error}")
+            return default
+
+
+def get_env_flag(key, default: bool=False) -> bool:
+    """
+    Return a boolean environment variable parsed from a truthy string
+    or value as converted by the `to_bool()` function, for example:
+
+       * DEBUG=ON  get_env_flag('DEBUG') => True
+       * DEBUG=0   get_env_flag('DEBUG') => False
+    
+    This can also handle evaluating multiple keys as a list/tuple:
+
+       * VERBOSE=1  get_env_flag(('DEBUG', 'VERBOSE')) => True
+       * A=ON B=no  get_env_flag(['A','B'], False) => True
+
+    In that case, the values of multiple flags are OR'd together (|)
+    """
+    return get_env(key, default=default, type=bool)
+
+    
+def to_bool(value: str, default: None) -> bool:
+    """
+    Convert a truthy value or string (like 1, 'true', 'ON', ect) to boolean.
+    """
+    value = str(value).lower()
+    falsy = ['off', 'false', '0', 'no', 'disabled', 'none']
+    truthy = ['on', 'true', '1', 'yes', 'enabled']
+
+    if value in truthy:
+        return True
+    elif value in falsy:
+        return False
+    elif default is not None:
+        return default
+    else:
+        raise ValueError(f"expected a truthy value, got '{value}'")
 
 
 def query_yes_no(question: str, default: Literal["no", "yes"] = "no") -> bool:
@@ -133,229 +237,3 @@ def sudo_prefix(group: str = 'docker'):
         return "sudo "
     else:
         return ""
-
-
-def handle_text_request(url, retries=3, backoff=5):
-    """
-    Handles a request to fetch text data from the given URL.
-
-    Args:
-        url (str): The URL from which to fetch text data.
-
-    Returns:
-        str or None: The fetched text data, stripped of leading and trailing whitespace,
-                     or None if an error occurs.
-    """
-    for attempt in range(retries):
-        try:
-            print(f"[INFO] Fetching: {url} (attempt {attempt+1})")
-            response = requests.get(url, timeout=10)
-            response.raise_for_status()
-            return response.text.strip()
-        except Exception as e:
-            print(f"[WARN] Failed to fetch {url}: {e}")
-            if attempt < retries - 1:
-                time.sleep(backoff)
-            else:
-                return None
-
-
-def handle_json_request(url: str, headers: Dict[str, str] = None, retries: int = 3, backoff: int = 3, timeout: int = 10):
-    """
-    Fetch JSON data from a URL with retry, timeout, and backoff handling.
-
-    Args:
-        url (str): The URL to fetch.
-        headers (dict): Optional HTTP headers.
-        retries (int): Number of retry attempts.
-        backoff (int): Seconds to wait between retries.
-        timeout (int): Timeout in seconds for each request.
-
-    Returns:
-        dict or None: Parsed JSON response, or None if all attempts fail.
-    """
-    for attempt in range(1, retries + 1):
-        try:
-            print(f"[info] GET {url} (attempt {attempt})")
-            response = requests.get(url, headers=headers, timeout=timeout)
-            response.raise_for_status()
-            return response.json()
-        except requests.HTTPError as e:
-            print(f"[error] HTTP {e.response.status_code} while fetching {url}")
-        except requests.RequestException as e:
-            print(f"[warn] Request error on {url}: {e}")
-        except Exception as e:
-            print(f"[warn] Unexpected error on {url}: {e}")
-
-        if attempt < retries:
-            time.sleep(backoff)
-        else:
-            print(f"[fail] All attempts to fetch {url} failed.")
-
-    return None
-
-@functools.cache
-def github_api(url: str):
-    """
-    Sends a request to the GitHub API using the specified URL, including authorization headers if available.
-
-    Args:
-        url (str): The GitHub API URL endpoint relative to the base URL.
-
-    Returns:
-        dict or None: The parsed JSON response data as a dictionary, or None if an error occurs.
-    """
-    github_token = os.environ.get('GITHUB_TOKEN')
-    headers = {'Authorization': f'token {github_token}'} if github_token else None
-    request_url = f'https://api.github.com/{url}'
-
-    return handle_json_request(request_url, headers)
-
-
-def github_latest_commit(repo: str, branch: str = 'main'):
-    """
-    Retrieves the latest commit SHA from the specified branch of a GitHub repository.
-
-    Args:
-        repo (str): The full name of the GitHub repository in the format 'owner/repo'.
-        branch (str, optional): The branch name. Defaults to 'main'.
-
-    Returns:
-        str or None: The SHA (hash) of the latest commit, or None if no commit is found.
-    """
-    commit_info = github_api(f"repos/{repo}/commits/{branch}")
-    return commit_info.get('sha') if commit_info else None
-
-
-def github_latest_tag(repo: str):
-    """
-    Retrieves the latest tag name from the specified GitHub repository.
-
-    Args:
-        repo (str): The full name of the GitHub repository in the format 'owner/repo'.
-
-    Returns:
-        str or None: The name of the latest tag, or None if no tags are found.
-    """
-    tags = github_api(f"repos/{repo}/tags")
-    return tags[0].get('name') if tags else None
-
-
-def get_json_value_from_url(url: str, notation: str = None):
-    """
-    Retrieves JSON data from the given URL and returns either the whole data or a specified nested value using a dot notation string.
-
-    Args:
-        url (str): The URL from which to fetch the JSON data.
-        notation (str, optional): A dot notation string specifying the nested property to retrieve.
-                                  If None or an empty string is provided, the entire JSON data is returned.
-
-    Returns:
-        str or dict: The value of the specified nested property or the whole data if `notation` is None.
-                     Returns None if the specified property does not exist.
-    """
-    data = handle_json_request(url)
-
-    if notation and data is not None:
-        keys = notation.split('.') if '.' in notation else [notation]
-        current = data
-
-        try:
-            for key in keys:
-                current = current[key]
-            return str(current).strip()
-        except KeyError as e:
-            print(f'ERROR: Failed to get the value for {notation}: {e}')
-            return None
-
-    return data
-
-
-def log_debug(*args, **kwargs):
-    """
-    Debug print function that only prints when VERBOSE or DEBUG environment variable is set
-    TODO change this to use python logging APIs or move to logging.py
-    """
-    if os.environ.get('VERBOSE', False) or os.environ.get('DEBUG', False):
-        print(*args, **kwargs)
-
-
-def pprint_debug(*args, **kwargs):
-    """
-    Debug print function that only prints when VERBOSE or DEBUG environment variable is set
-    TODO change this to use python logging APIs or move to logging.py
-    """
-    if os.environ.get('VERBOSE', False) or os.environ.get('DEBUG', False):
-        pprint.pprint(*args, **kwargs)
-
-
-def cprint(text, color):
-    """
-    Print string to terminal in the specified color.  The recognized colors are found below.
-    """
-    print(colorized(text, color))
-
-
-def colorized(text, color):
-    """
-    Return string encased with ANSI terminal color codes.  The recognized colors are found below.
-    """
-    colors = {
-        'red': 91,
-        'green': 92,
-        'yellow': 93,
-        'magenta': 94,
-        'purple': 95,
-        'cyan': 96,
-        'grey': 97,
-        'black': 98,
-    }
-
-    color = color.lower()
-
-    if color not in colors:
-        return text
-
-    return f"\033[{colors[color]}m{text}\033[00m"
-
-
-def format_table(rows, header=None, footer=None, color='green', attrs=None, tablefmt='simple_grid', **kwargs):
-    """
-    Print a table from a list[list] of rows/columns, or a 2-column dict
-    where the keys are column 1, and the values are column 2.
-
-    Header is a list of columns or rows that are inserted at the top.
-    Footer is a list of columns or rows that are added to the end.
-
-    color names and style attributes are from termcolor library:
-      https://github.com/termcolor/termcolor#text-properties
-    """
-    from tabulate import tabulate
-    #from termcolor import cprint, colored
-
-    kwargs.setdefault('numalign', 'center')
-
-    def limit_str(text, max_len):
-        if not isinstance(text, str):
-            return text
-
-        if len(text) > max_len:
-            return text[:max_len]
-        else:
-            return text
-
-    if isinstance(rows, dict):
-        rows = [[limit_str(key,35), limit_str(value, 75)] for key, value in rows.items() if not isinstance(value, dict)]
-
-    if header:
-        if not isinstance(header[0], list):
-            header = [header]
-        rows = header + rows
-
-    if footer:
-        if not isinstance(footer[0], list):
-            footer = [footer]
-        rows = rows + footer
-
-    #cprint(tabulate(rows, tablefmt='simple_grid', numalign='center'), color, attrs=attrs)
-    return tabulate(rows, tablefmt=tablefmt, **kwargs)

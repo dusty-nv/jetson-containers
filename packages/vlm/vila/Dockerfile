@@ -1,7 +1,7 @@
 #---
 # name: vila
 # group: vlm
-# depends: [pytorch, flash-attention, transformers, opencv, deepspeed:0.9.5]
+# depends: [pytorch, flash-attention, transformers, opencv, deepspeed, decord]
 # requires: '>=35'
 # test: [test.sh, test.py]
 #---
@@ -12,11 +12,20 @@ ADD https://api.github.com/repos/NVlabs/VILA/git/refs/heads/main /tmp/vila_versi
 
 RUN git clone --branch=main --depth=1 --recursive https://github.com/NVlabs/VILA /opt/VILA && \
     cd /opt/VILA && \
-    sed -i 's|torch==.*"|torch"|' pyproject.toml && \
-    sed -i 's|pytorchvideo==.*"|pytorchvideo"|' pyproject.toml && \
-    sed -i 's|opencv-python==.*"|opencv-python"|' pyproject.toml && \
-    sed -i 's|"bitsandbytes.*",||' pyproject.toml && \
-    cat pyproject.toml | grep torch && \
+    sed -i 's|"torch.*"|"torch"|' pyproject.toml && \
+    sed -i 's|"pytorchvideo.*"|"pytorchvideo"|' pyproject.toml && \
+    sed -i 's|"opencv-python.*"|"opencv-python"|' pyproject.toml && \
+    sed -i 's|"bitsandbytes.*"|"bitsandbytes"|' pyproject.toml && \
+    sed -i 's|"deepspeed.*"|"deepspeed"|' pyproject.toml && \
+    sed -i 's|"sentencepiece.*"|"sentencepiece"|' pyproject.toml && \
+    sed -i 's|"scikit-learn.*"|"scikit-learn"|' pyproject.toml && \
+    sed -i 's|"accelerate.*"|"accelerate"|' pyproject.toml && \
+    sed -i 's|"decord.*"|"decord"|' pyproject.toml && \
+    sed -i 's|"datasets.*"|"datasets"|' pyproject.toml && \
+    sed -i 's|"numpy.*"|"numpy"|' pyproject.toml && \
+    sed -i 's|"nltk.*"|"nltk"|' pyproject.toml && \
+    sed -i 's|"timm.*"|"timm"|' pyproject.toml && \
+    cat pyproject.toml && \
     pip3 install -e . && \
     pip3 install -e ".[train]" && \
     pip3 install -e ".[eval]" 
