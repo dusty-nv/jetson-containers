@@ -22,15 +22,12 @@ CURRENT_DATE_TIME=$(date +"%Y%m%d-%H%M%S")
 # Determine the current platform
 ARCH=$(uname -m)
 
-if [ "$ARCH" = "x86_64" ]; then
-    echo "This script is intended for your current device only. x86_64 (amd64) builds are not supported."
-    exit 1
-elif [ "$ARCH" = "aarch64" ]; then
-    PLATFORM="linux/arm64"
-else
-    echo "Unsupported architecture: $ARCH"
+if [ "$ARCH" != "aarch64" ]; then
+    echo "This script is only intended to build for aarch64 devices."
     exit 1
 fi
+
+PLATFORM="linux/arm64"
 
 # Check if the builder already exists
 if ! docker buildx inspect jetson-builder &>/dev/null; then
@@ -44,27 +41,31 @@ docker buildx use jetson-builder
 # Ask if the user wants to build with or without cache
 read -p "Do you want to build with cache? (y/n): " use_cache
 
-# Function to build Docker images from the build folder
-build_images_from_directory() {
-  local build_folder="build"
-  for dir in $build_folder/*; do
-    if [ -d "$dir" ]; then
+# List of specific folders to build
+folders=("build/bazel" "build/build-essential")
+
+# Function to build Docker images for specified folders
+build_images_from_folders() {
+  for folder in "${folders[@]}"; do
+    if [ -d "$folder" ]; then
       # Extract the image name from the folder name
-      local image_name=$(basename "$dir")
+      local image_name=$(basename "$folder")
       local tag="${DOCKER_USERNAME}/001:${image_name}-${CURRENT_DATE_TIME}-1"
 
       echo "Building image: $image_name for platform: $PLATFORM"
 
       if [ "$use_cache" = "y" ]; then
-        docker buildx build --platform $PLATFORM -t $tag --build-arg BASE_IMAGE=$BASE_IMAGE --push "$dir"
+        docker buildx build --platform $PLATFORM -t $tag --build-arg BASE_IMAGE=$BASE_IMAGE --push "$folder"
       else
-        docker buildx build --no-cache --platform $PLATFORM -t $tag --build-arg BASE_IMAGE=$BASE_IMAGE --push "$dir"
+        docker buildx build --no-cache --platform $PLATFORM -t $tag --build-arg BASE_IMAGE=$BASE_IMAGE --push "$folder"
       fi
 
       echo "Docker image tagged and pushed as $tag"
+    else
+      echo "Directory $folder not found! Skipping..."
     fi
   done
 }
 
-# Build images from the build folder
-build_images_from_directory
+# Build images for the specified folders
+build_images_from_folders
