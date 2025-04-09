@@ -1,4 +1,0 @@
-name: l4t-text-generation
-group: 'llm'
-requires: '>=34.1.0'
-depends: [mlc, transformers, auto_gptq, exllama, llama_cpp, jupyterlab, docker, openai]
