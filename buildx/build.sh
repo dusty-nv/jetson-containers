@@ -45,46 +45,38 @@ while [[ "$use_cache" != "y" && "$use_cache" != "n" ]]; do
   read -p "Do you want to build with cache? (y/n): " use_cache
 done
 
-# Define mapping of folders to their respective base images
-declare -A folder_base_image_map=(
-  ["build/bazel"]="kairin/001:nvcr.io-nvidia-pytorch-25.02-py3-igpu"
-  ["build/build-essential"]="kairin/001:nvcr.io-nvidia-pytorch-25.02-py3-igpu"
-)
+# Function to build a Docker image
+build_image() {
+  local folder=$1
+  local base_image=$2
+  local image_name=$(basename "$folder")
+  local tag="${DOCKER_USERNAME}/001:${image_name}-${CURRENT_DATE_TIME}-1"
 
-# Function to build Docker images for specified folders
-build_images_from_folders() {
-  for folder in "${!folder_base_image_map[@]}"; do
-    if [ -d "$folder" ]; then
-      if [ -f "$folder/Dockerfile" ]; then
-        local base_image="${folder_base_image_map[$folder]}"
-        local image_name=$(basename "$folder")
-        local tag="${DOCKER_USERNAME}/001:${image_name}-${CURRENT_DATE_TIME}-1"
+  echo "Building image: $image_name for platform: $PLATFORM"
+  echo "Building folder: $folder"
+  echo "Dockerfile path: $folder/Dockerfile"
 
-        echo "Building image: $image_name for platform: $PLATFORM using base image: $base_image"
-        echo "Building folder: $folder"
-        echo "Dockerfile path: $folder/Dockerfile"
+  if [ "$use_cache" = "y" ]; then
+    docker buildx build --platform $PLATFORM -t $tag --build-arg BASE_IMAGE=$base_image --push "$folder"
+  else
+    docker buildx build --no-cache --platform $PLATFORM -t $tag --build-arg BASE_IMAGE=$base_image --push "$folder"
+  fi
 
-        if [ "$use_cache" = "y" ]; then
-          if ! docker buildx build --platform $PLATFORM -t $tag --build-arg BASE_IMAGE=$base_image --push "$folder"; then
-            echo "Error: Failed to build image for $image_name. Skipping..."
-            continue
-          fi
-        else
-          if ! docker buildx build --no-cache --platform $PLATFORM -t $tag --build-arg BASE_IMAGE=$base_image --push "$folder"; then
-            echo "Error: Failed to build image for $image_name. Skipping..."
-            continue
-          fi
-        fi
-
-        echo "Docker image tagged and pushed as $tag"
-      else
-        echo "Dockerfile not found in $folder. Skipping..."
-      fi
-    else
-      echo "Directory $folder not found! Skipping..."
-    fi
-  done
+  if [ $? -eq 0 ]; then
+    echo "Docker image tagged and pushed as $tag"
+  else
+    echo "Error: Failed to build image for $image_name. Exiting..."
+    exit 1
+  fi
 }
 
-# Build images for the specified folders
-build_images_from_folders
+# Build the images in the correct dependency order
+echo "Starting build process..."
+
+# Step 1: Build the build-essential image
+build_image "build/build-essential" "kairin/001:nvcr.io-nvidia-pytorch-25.02-py3-igpu"
+
+# Step 2: Build the bazel image using the built build-essential image
+build_image "build/bazel" "${DOCKER_USERNAME}/001:build-essential-${CURRENT_DATE_TIME}-1"
+
+echo "Build process complete!"
