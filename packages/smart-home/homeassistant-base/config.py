@@ -35,18 +35,18 @@ def create_package(version, default=False) -> list:
     wanted_version = github_latest_tag('home-assistant/docker-base') if version == 'latest' else version
 
     # Get latest versions from respective repositories
-    bashio_version = github_latest_tag('home-assistant/bashio')
-    tempio_version = github_latest_tag('home-assistant/tempio')
+    # bashio and tempio are part of the core repository
+    core_version = github_latest_tag('home-assistant/core')
     s6_overlay_version = github_latest_tag('just-containers/s6-overlay')
 
-    if not all([bashio_version, tempio_version, s6_overlay_version]):
+    if not all([core_version, s6_overlay_version]):
         log_warning("Failed to fetch latest versions for Home Assistant base components")
         return None
 
     pkg['name'] = f'homeassistant-base:{version}'
     pkg['build_args'] = {
-        'BASHIO_VERSION': bashio_version,
-        'TEMPIO_VERSION': tempio_version,
+        'BASHIO_VERSION': core_version,    # bashio is part of core
+        'TEMPIO_VERSION': core_version,    # tempio is part of core
         'S6_OVERLAY_VERSION': s6_overlay_version,
     }
 
