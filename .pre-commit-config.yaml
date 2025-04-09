@@ -9,7 +9,7 @@ repos:
         files: |
             (?x)^(
                 jetson_containers/.*\.py|    # Core package files
-                packages/example/.*\.py|      # Example of how to add a package
+                packages/example/.*\.py|     # Example of how to add a package
                 test_precommit\.py           # Our test file
             )$
 
