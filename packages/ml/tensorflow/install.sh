@@ -5,7 +5,7 @@ bash /tmp/TENSORFLOW/link_cuda.sh
 
 wget https://apt.llvm.org/llvm.sh
 chmod u+x llvm.sh
-./llvm.sh 17 all
+./llvm.sh 20 all
 # TIP is not working with symbolic links
 # ln -sf /usr/bin/llvm-config-* /usr/bin/llvm-config
 #ln -s /usr/bin/clang-1* /usr/bin/clang
