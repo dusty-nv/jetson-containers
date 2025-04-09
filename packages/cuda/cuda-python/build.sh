@@ -7,11 +7,18 @@ git clone --branch v${CUDA_PYTHON_VERSION} --depth=1 https://github.com/NVIDIA/c
 cd /opt/cuda-python
 
 # NOW CUDA-PYTHON HAS 3 STRUCTURES
+
+# Get the number of CPU cores
+export MAX_JOBS=$(nproc)  # or use `sysctl -n hw.ncpu` on macOS
+
+echo "Building with MAX_JOBS=${MAX_JOBS} cores..."
+
+# Build cuda_core wheel
 cd cuda_core
 pip3 wheel . --no-deps --wheel-dir /opt --verbose
 
-cd /opt/cuda-python
-cd cuda_bindings
+# Build cuda_bindings wheel
+cd /opt/cuda-python/cuda_bindings
 pip3 wheel . --no-deps --wheel-dir /opt --verbose
 
 cd /opt/
