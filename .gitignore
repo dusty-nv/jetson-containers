@@ -17,3 +17,7 @@ runner
 nv_tegra_release
 kokoro-*-*.wav
 audio.wav
+qt-online-installer-linux-arm64-4.9.0.run
+
+# .gitignore
+.env
