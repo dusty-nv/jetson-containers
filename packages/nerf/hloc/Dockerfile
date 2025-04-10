@@ -2,7 +2,7 @@
 # name: hloc
 # group: nerf
 # config: config.py
-# depends: [torch, torchvision, ffmpeg, python, ninja, cmake, numpy, pycolmap]
+# depends: [torch, torchvision, ffmpeg, python, ninja, cmake, numpy, pycolmap, opencv]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/cvg/Hierarchical-Localization.git

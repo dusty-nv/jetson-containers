@@ -13,11 +13,12 @@ python3 /tmp/flash-attention/generate_diff.py
 git apply /tmp/flash-attention/patch.diff
 git diff
 git status
- 
+
+# export MAX_JOBS="$(nproc)" # this breaks with actual flash-attention
+MAX_JOBS=6 \
 FLASH_ATTENTION_FORCE_BUILD=1 \
 FLASH_ATTENTION_FORCE_CXX11_ABI=0 \
 FLASH_ATTENTION_SKIP_CUDA_BUILD=0 \
-MAX_JOBS=$(nproc) \
 python3 setup.py --verbose bdist_wheel --dist-dir /opt
 
 ls /opt
