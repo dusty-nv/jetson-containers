@@ -4,11 +4,12 @@ from onnxruntime import InferenceSession, SessionOptions, get_available_provider
 import onnxruntime
 import os
 import time
+import argparse
 
 DEFAULT_PROMPT="""
-Kokoro is an open-weight TTS model with 82 million parameters. 
-Despite its lightweight architecture, it delivers comparable quality to larger 
-models while being significantly faster and more cost-efficient. 
+Kokoro is an open-weight TTS model with 82 million parameters.
+Despite its lightweight architecture, it delivers comparable quality to larger
+models while being significantly faster and more cost-efficient.
 With Apache-licensed weights, Kokoro can be deployed anywhere from production environments to personal projects.
 """
 
@@ -37,29 +38,45 @@ def create_session():
     # If no provider works, raise an error
     raise RuntimeError("Failed to create an ONNX Runtime session with any available provider.")
 
-# Create session and initialize Kokoro model
-session = create_session()
-kokoro = Kokoro.from_session(session, "/opt/kokoro-onnx/examples/voices-v1.0.bin")
+def main():
+    parser = argparse.ArgumentParser(description='Test Kokoro TTS ONNX model')
+    parser.add_argument('--output', type=str, default=None, help="path to output audio wav file to save (will be /data/audio/tts/kokoro-onnx.wav by default)")
+    args = parser.parse_args()
 
-# Warm-up iteration
-print("Performing warm-up inference...")
-kokoro.create("Warm-up text", voice="af_sarah", speed=1.0, lang="en-us")
-print("Warm-up complete.")
+    # Create output directory if it doesn't exist
+    output_dir = "/data/audio/tts"
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
 
-# Measure inference time
-start_time = time.time()
-samples, sample_rate = kokoro.create(
-    DEFAULT_PROMPT, voice="af_sarah", speed=1.0, lang="en-us"
-)
-inference_time = time.time() - start_time
+    # Set default output path if not specified
+    output_path = args.output if args.output else os.path.join(output_dir, "kokoro-onnx.wav")
 
-# Calculate real-time factor (RTF)
-audio_duration = len(samples) / sample_rate
-rtf = inference_time / audio_duration
+    # Create session and initialize Kokoro model
+    session = create_session()
+    kokoro = Kokoro.from_session(session, "/opt/kokoro-onnx/examples/voices-v1.0.bin")
 
-# Write audio output and print timings
-sf.write("audio.wav", samples, sample_rate)
-print(f"Created audio.wav")
-print(f"Inference time: {inference_time:.4f} seconds")
-print(f"Audio duration: {audio_duration:.4f} seconds")
-print(f"Real-Time Factor (RTF): {rtf:.4f}")
+    # Warm-up iteration
+    print("Performing warm-up inference...")
+    kokoro.create("Warm-up text", voice="af_sarah", speed=1.0, lang="en-us")
+    print("Warm-up complete.")
+
+    # Measure inference time
+    start_time = time.time()
+    samples, sample_rate = kokoro.create(
+        DEFAULT_PROMPT, voice="af_sarah", speed=1.0, lang="en-us"
+    )
+    inference_time = time.time() - start_time
+
+    # Calculate real-time factor (RTF)
+    audio_duration = len(samples) / sample_rate
+    rtf = inference_time / audio_duration
+
+    # Write audio output and print timings
+    sf.write(output_path, samples, sample_rate)
+    print(f"Created {output_path}")
+    print(f"Inference time: {inference_time:.4f} seconds")
+    print(f"Audio duration: {audio_duration:.4f} seconds")
+    print(f"Real-Time Factor (RTF): {rtf:.4f}")
+
+if __name__ == "__main__":
+    main()

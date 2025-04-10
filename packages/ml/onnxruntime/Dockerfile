@@ -13,7 +13,7 @@ ARG ONNXRUNTIME_VERSION \
     ONNXRUNTIME_BRANCH \
     ONNXRUNTIME_FLAGS \
     FORCE_BUILD=off
-    
+
 COPY install.sh build.sh /tmp/onnxruntime/
 
 RUN /tmp/onnxruntime/install.sh || /tmp/onnxruntime/build.sh

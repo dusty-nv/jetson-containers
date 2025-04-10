@@ -1,0 +1,27 @@
+diff --git a/src/speaches/main.py b/src/speaches/main.py
+index 17f5000..693cb09 100644
+--- a/src/speaches/main.py
++++ b/src/speaches/main.py
+@@ -73,9 +73,20 @@ def create_app() -> FastAPI:
+     app.include_router(speech_router)
+     app.include_router(vad_router)
+
++    import os
++
++    realtime_ui_path = os.path.join(os.path.dirname(__file__), "..", "realtime-console", "dist")
++    realtime_ui_path = os.path.abspath(realtime_ui_path)
++
++    if os.path.exists(realtime_ui_path):
++        app.get("/v1/realtime", include_in_schema=False)(lambda: RedirectResponse(url="/v1/realtime/"))
++        app.mount("/v1/realtime", StaticFiles(directory=realtime_ui_path, html=True))
++    else:
++        logger.warning(f"🟡 Skipping UI mount: {realtime_ui_path} does not exist")
++
+     # HACK: move this elsewhere
+-    app.get("/v1/realtime", include_in_schema=False)(lambda: RedirectResponse(url="/v1/realtime/"))
+-    app.mount("/v1/realtime", StaticFiles(directory="realtime-console/dist", html=True))
++    # app.get("/v1/realtime", include_in_schema=False)(lambda: RedirectResponse(url="/v1/realtime/"))
++    # app.mount("/v1/realtime", StaticFiles(directory="realtime-console/dist", html=True))
+
+     if config.allow_origins is not None:
+         app.add_middleware(
