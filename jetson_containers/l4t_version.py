@@ -40,7 +40,7 @@ def get_l4t_version(version_file='/etc/nv_tegra_release', l4t_version: str = Non
     if 'L4T_VERSION' in os.environ and len(os.environ['L4T_VERSION']) > 0:
         return Version(os.environ['L4T_VERSION'].lower().lstrip('r'))
 
-    if SYSTEM_ARCH != 'aarch64' or SYSTEM_ARCH !='tegra-aarch64':
+    if SYSTEM_ARCH != 'aarch64' and SYSTEM_ARCH !='tegra-aarch64':
         return Version('36.4.0')  # for x86 to unlock L4T checks
 
     if not os.path.isfile(version_file):
