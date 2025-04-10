@@ -56,10 +56,11 @@ build_image() {
   echo "Building folder: $folder"
   echo "Dockerfile path: $folder/Dockerfile"
 
+  # IMPORTANT: Base images should not be changed without explicit instruction and a clear reason provided to the user.
   if [ "$use_cache" = "y" ]; then
-    docker buildx build --platform $PLATFORM -t $tag --push "$folder"
+    docker buildx build --platform $PLATFORM -t $tag --build-arg BASE_IMAGE=$base_image --push "$folder"
   else
-    docker buildx build --no-cache --platform $PLATFORM -t $tag --push "$folder"
+    docker buildx build --no-cache --platform $PLATFORM -t $tag --build-arg BASE_IMAGE=$base_image --push "$folder"
   fi
 
   if [ $? -eq 0 ]; then
@@ -70,7 +71,16 @@ build_image() {
   fi
 }
 
-# Build the required images
+# Build the images in the correct dependency order
 echo "Starting build process..."
-build_image "." "kairin/001:bazel-${CURRENT_DATE_TIME}-1"
+
+# Step 1: Build the build-essential image
+build_image "build/build-essential" "kairin/001:nvcr.io-nvidia-pytorch-25.02-py3-igpu"
+
+# Step 2: Build the bazel image using the built build-essential image
+build_image "build/bazel" "${DOCKER_USERNAME}/001:build-essential-${CURRENT_DATE_TIME}-1"
+
+# Step 3: Build the qt-online-installer image
+build_image "." "${DOCKER_USERNAME}/001:bazel-${CURRENT_DATE_TIME}-1"
+
 echo "Build process complete!"

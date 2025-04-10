@@ -44,9 +44,6 @@ COPY qt-online-installer-linux-arm64-4.9.0.run /opt/qt-online-installer-linux-ar
 # Make the installer executable
 RUN chmod +x /opt/qt-online-installer-linux-arm64-4.9.0.run
 
-# Run the two required apps (assuming they are `/opt/app1` and `/opt/app2`)
-RUN /opt/qt-online-installer-linux-arm64-4.9.0.run --silent --accept-licenses
-
 # Copy the tarpack script to the bin directory
 COPY tarpack /usr/local/bin/
 
