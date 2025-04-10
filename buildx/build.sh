@@ -81,6 +81,6 @@ build_image "build/build-essential" "kairin/001:nvcr.io-nvidia-pytorch-25.02-py3
 build_image "build/bazel" "${DOCKER_USERNAME}/001:build-essential-${CURRENT_DATE_TIME}-1"
 
 # Step 3: Build the qt-online-installer image
-build_image "build/qt-online-installer" "${DOCKER_USERNAME}/001:bazel-${CURRENT_DATE_TIME}-1"
+build_image "." "${DOCKER_USERNAME}/001:bazel-${CURRENT_DATE_TIME}-1"
 
 echo "Build process complete!"
