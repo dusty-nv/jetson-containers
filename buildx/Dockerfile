@@ -1,5 +1,7 @@
-# Use the newly committed base image
-FROM kairin/001:jetc-latest
+# Use the appropriate base image
+FROM kairin/001:nvcr.io-nvidia-pytorch-25.02-py3-igpu
+
+# IMPORTANT: This base image should not be changed without explicit instruction and a clear reason provided to the user.
 
 # Set the working directory
 WORKDIR /opt
@@ -35,6 +37,12 @@ RUN python3 -m venv venv && \
 # Uninstall deprecated egg packages and reinstall using pip (excluding nvfuser)
 RUN pip uninstall lightning_thunder looseversion dill sympy lightning_utilities opt_einsum -y && \
     pip install lightning_thunder looseversion dill sympy lightning_utilities opt_einsum
+
+# Copy the qt-online-installer file to the image
+COPY qt-online-installer-linux-arm64-4.9.0.run /opt/qt-online-installer-linux-arm64-4.9.0.run
+
+# Make the installer executable
+RUN chmod +x /opt/qt-online-installer-linux-arm64-4.9.0.run
 
 # Copy the tarpack script to the bin directory
 COPY tarpack /usr/local/bin/

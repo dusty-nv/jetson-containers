@@ -56,6 +56,7 @@ build_image() {
   echo "Building folder: $folder"
   echo "Dockerfile path: $folder/Dockerfile"
 
+  # IMPORTANT: Base images should not be changed without explicit instruction and a clear reason provided to the user.
   if [ "$use_cache" = "y" ]; then
     docker buildx build --platform $PLATFORM -t $tag --build-arg BASE_IMAGE=$base_image --push "$folder"
   else
