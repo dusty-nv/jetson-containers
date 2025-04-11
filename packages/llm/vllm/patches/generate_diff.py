@@ -16,7 +16,7 @@ def modify_CMakeLists(content):
     replaced_count = 0
     for line in lines:
         if pattern_set.match(line):
-            new_lines.append('set(CUDA_SUPPORTED_ARCHS "8.7;8.9;9.0;10.0;10.1;12.0")')
+            new_lines.append('set(CUDA_SUPPORTED_ARCHS "8.7;8.9;9.0;10.0;10.1;11.0;12.0")')
             continue
 
         match = pattern_intersection.match(line)

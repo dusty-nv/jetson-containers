@@ -307,7 +307,7 @@ def get_cuda_arch(l4t_version: str = None, format=list):
             elif l4t_version.major == 32:  # JetPack 4
                 cuda_architectures = [53, 62, 72]
         elif IS_SBSA:
-            cuda_architectures = [90, 100, 101, 120]  # Hopper, Blackwell
+            cuda_architectures = [90, 100, 101, 110, 120]  # Hopper, Blackwell
     else:
         cuda_architectures = [
             80, 86,  # Ampere
