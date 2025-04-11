@@ -10,21 +10,43 @@ import logging
 import traceback
 import subprocess
 import dockerhub_api
+import datetime
+from typing import List, Dict, Any, Union
 
 from packaging.version import Version
 
 from .packages import find_package, find_packages, resolve_dependencies, validate_dict
 from .utils import split_container_name, query_yes_no, needs_sudo, sudo_prefix, get_dir, get_repo_dir
-from .logging import get_log_dir, log_status, log_success, log_status, log_warning, log_debug, log_block, log_info, pprint_debug, colorize, LogConfig
+from .logging import get_log_dir, log_status, log_success, log_warning, log_debug, log_block, log_info, pprint_debug, colorize, LogConfig
 
 from .l4t_version import (
   L4T_VERSION, LSB_RELEASES, l4t_version_from_tag, l4t_version_compatible,
   get_l4t_base, get_cuda_arch, get_cuda_version, get_jetpack_version, get_lsb_release
 )
 
-
 _NEWLINE_=" \\\n"  # used when building command strings
 
+def format_time(seconds):
+    """Format time in hh:mm:ss format"""
+    hours = int(seconds // 3600)
+    minutes = int((seconds % 3600) // 60)
+    seconds = int(seconds % 60)
+    return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+
+class BuildTimer:
+    def __init__(self):
+        self.start_time = time.time()
+        self.stage_start = time.time()
+        self.current_stage = 0
+
+    def get_elapsed(self):
+        """Get total elapsed time"""
+        return time.time() - self.start_time
+
+    def next_stage(self):
+        """Move to next stage and reset stage timer"""
+        self.stage_start = time.time()
+        self.current_stage += 1
 
 def build_container(
         name: str='', packages: list=[], base: str=get_l4t_base(),
@@ -116,19 +138,20 @@ def build_container(
 
     # Initialize status bar and clear screen
     terminal = os.get_terminal_size()
-    print(f'\033[1;{terminal.lines-1}r\033[?6l\033[2J\033[H', end='', flush=True)
+    print(f'\033[1;{terminal.lines-1}r\033[?6l\033[2J\033[H]', end='', flush=True)
     LogConfig.status = True
+
+    # Initialize build timer
+    timer = BuildTimer()
 
     # build chain of all packages
     for idx, package in enumerate(packages):
+        pkg = find_package(package)
         # tag this build stage with the sub-package
         container_name = f"{name}-{package.replace(':','_')}"
 
         # generate the logging file (without the extension)
         log_file = os.path.join(get_log_dir('build'), container_name.replace('/','_')).replace(':','_')
-
-        # build next intermediate container
-        pkg = find_package(package)
 
         if 'dockerfile' in pkg:
             cmd = f"{sudo_prefix()}DOCKER_BUILDKIT=0 docker build --network=host" + _NEWLINE_
@@ -165,7 +188,15 @@ def build_container(
             cmd += '   ' + pkg['path']
 
             log_block(f"<b>> BUILDING  {container_name}</b>", f"<b>{cmd}</b>")
-            log_status(f"[{idx+1}/{len(packages)}] <b>Building {package}</b> ({container_name})")
+
+            # Calculate spaces needed to align time to right edge
+            status_text = f"[{idx+1}/{len(packages)}] Building {package} ({container_name})"
+            current_time = datetime.datetime.now().strftime("%H:%M:%S")
+            time_text = f"{idx} stages done in {format_time(timer.get_elapsed())} at {current_time}"
+            spaces_needed = terminal.columns - len(status_text) - len(time_text)
+            if spaces_needed > 0:
+                status_text = status_text + ' ' * spaces_needed
+            log_status(f"{status_text}{time_text}")
 
             cmd += _NEWLINE_ + f"2>&1 | tee {log_file + '.txt'}" + "; exit ${PIPESTATUS[0]}"  # non-tee version:  https://stackoverflow.com/a/34604684
 
@@ -182,11 +213,18 @@ def build_container(
         # run tests on the intermediate container
         if package not in skip_tests and 'intermediate' not in skip_tests and 'all' not in skip_tests:
             if len(test_only) == 0 or package in test_only:
-                log_status(f"[{idx+1}/{len(packages)}] <b>Testing {package}</b> ({container_name})")
+                status_text = f"[{idx+1}/{len(packages)}] Testing {package} ({container_name})"
+                current_time = datetime.datetime.now().strftime("%H:%M:%S")
+                time_text = f"{idx} stages done in {format_time(timer.get_elapsed())} at {current_time}"
+                spaces_needed = terminal.columns - len(status_text) - len(time_text)
+                if spaces_needed > 0:
+                    status_text = status_text + ' ' * spaces_needed
+                log_status(f"{status_text}{time_text}")
                 test_container(container_name, pkg, simulate)
 
         # use this container as the next base
         base = container_name
+        timer.next_stage()
 
     # tag the final container
     tag_container(container_name, name, simulate)
@@ -195,8 +233,15 @@ def build_container(
     for idx, package in enumerate(packages):
         if package not in skip_tests and 'all' not in skip_tests:
             if len(test_only) == 0 or package in test_only:
-                log_status(f"[{idx+1}/{len(packages)}] <b>Testing {package}</b> ({name})")
+                status_text = f"[{idx+1}/{len(packages)}] Testing {package} ({name})"
+                current_time = datetime.datetime.now().strftime("%H:%M:%S")
+                time_text = f"{idx} stages done in {format_time(timer.get_elapsed())} at {current_time}"
+                spaces_needed = terminal.columns - len(status_text) - len(time_text)
+                if spaces_needed > 0:
+                    status_text = status_text + ' ' * spaces_needed
+                log_status(f"{status_text}{time_text}")
                 test_container(name, package, simulate)
+                timer.next_stage()
 
     # push container
     if push:
