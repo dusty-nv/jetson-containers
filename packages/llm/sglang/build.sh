@@ -40,7 +40,7 @@ sed -i '/"torch==2\.5\.1",/d' pyproject.toml
 sed -i 's|"torch==.*"|"torch"|g' pyproject.toml
 
 # export MAX_JOBS="$(nproc)" this breaks with actual flash-attention
-export MAX_JOBS=3
+export MAX_JOBS=6
 export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
 
@@ -68,7 +68,7 @@ echo "Patched $REPO_DIR/python/pyproject.toml"
 cat pyproject.toml
 
 # export MAX_JOBS="$(nproc)" this breaks with actual flash-attention
-export MAX_JOBS=3
+export MAX_JOBS=6
 export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
 
