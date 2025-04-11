@@ -38,6 +38,9 @@ RUN if [ $(lsb_release -rs) = '24.04' ]; then \
       echo "#!/usr/bin/env bash" > "/opt/venv/bin/register-python-argcomplete" ; \
     fi
 
+# sometimes numpy2 gets installed when numpy<2 was expected, or vice versa
+RUN bash /tmp/numpy/install.sh
+
 # Set the default DDS middleware to cyclonedds
 # https://github.com/ros2/rclcpp/issues/1335
 # https://docs.ros.org/en/jazzy/Installation/DDS-Implementations/Working-with-eProsima-Fast-DDS.html
