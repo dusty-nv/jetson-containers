@@ -1,12 +1,12 @@
 import copy
 
 from jetson_containers import L4T_VERSION
-from .version import ROS_DISTROS, ROS2_DISTROS, ROS_PACKAGES
+from ..robots.ros.version import ROS_DISTROS, ROS2_DISTROS, ROS_PACKAGES
 
 # add permutations of ROS distros/packages as subpackages
 template = package.copy()
 
-template['group'] = 'ros'
+template['group'] = 'robots'
 template['depends'] = ['cuda', 'cudnn', 'tensorrt', 'opencv', 'cmake']
 template['postfix'] = f"l4t-r{L4T_VERSION}"
 template['docs'] = "docs.md"
