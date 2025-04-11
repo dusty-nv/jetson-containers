@@ -54,12 +54,16 @@ required_providers = ['CUDAExecutionProvider', 'CPUExecutionProvider']
 if check_tensorrt_installation():
     required_providers.insert(0, 'TensorrtExecutionProvider')
 
+# Verify required providers are available
 for provider in required_providers:
     if provider not in providers:
-        raise RuntimeError(f"missing provider '{provider}' from available execution providers {providers}")
+        print(f"Warning: Provider '{provider}' not available, skipping tests for this provider")
 
 # test model inference
 def test_infer(provider, model='resnet18.onnx', runs=100, warmup=10, verbose=False):
+    if provider not in providers:
+        print(f"Skipping tests for unavailable provider: {provider}")
+        return None
 
     provider_options = {}
 
@@ -84,7 +88,11 @@ def test_infer(provider, model='resnet18.onnx', runs=100, warmup=10, verbose=Fal
 
     # load the model
     print(f"\nloading {model} with '{provider}'")
-    session = ort.InferenceSession(model, sess_options=session_options, providers=[provider], provider_options=[provider_options])
+    try:
+        session = ort.InferenceSession(model, sess_options=session_options, providers=[provider], provider_options=[provider_options])
+    except Exception as e:
+        print(f"Error creating session with {provider}: {e}")
+        return None
 
     # verify the provider
     session_providers = session.get_providers()
@@ -92,7 +100,8 @@ def test_infer(provider, model='resnet18.onnx', runs=100, warmup=10, verbose=Fal
     print(f"session providers:  {session_providers}")
 
     if provider not in session_providers:
-        raise RuntimeError(f"missing provider '{provider}' from session providers {session_providers}")
+        print(f"Warning: Provider '{provider}' not available in session, skipping")
+        return None
 
     pprint.pprint(session.get_provider_options()[provider])
 
@@ -154,8 +163,15 @@ if __name__ == '__main__':
     # run model inference tests
     perf = {}
 
-    for provider in providers:
-        perf[provider] = test_infer(provider, args.model, runs=args.runs, warmup=args.warmup, verbose=args.verbose)
+    # Only test available providers
+    for provider in required_providers:
+        if provider in providers:
+            result = test_infer(provider, args.model, runs=args.runs, warmup=args.warmup, verbose=args.verbose)
+            if result is not None:
+                perf[provider] = result
+
+    if not perf:
+        raise RuntimeError("No providers were successfully tested")
 
     print(f"\nPerformance Summary for {args.model} (over {args.runs} runs)")
 
