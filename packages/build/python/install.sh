@@ -60,7 +60,8 @@ pip3 install --upgrade \
    setuptools \
    packaging \
    'Cython' \
-   wheel 
+   wheel \
+   uv
 
 pip3 install --upgrade --index-url https://pypi.org/simple \
    twine

@@ -6,5 +6,5 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install sglang==${SGLANG_VERSION} || \
-pip3 install sglang==${SGLANG_VERSION_SPEC}
+uv pip3 install sglang==${SGLANG_VERSION} || \
+uv pip install sglang==${SGLANG_VERSION_SPEC}
