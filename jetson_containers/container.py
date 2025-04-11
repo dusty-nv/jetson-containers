@@ -15,7 +15,7 @@ from packaging.version import Version
 
 from .packages import find_package, find_packages, resolve_dependencies, validate_dict
 from .utils import split_container_name, query_yes_no, needs_sudo, sudo_prefix, get_dir, get_repo_dir
-from .logging import get_log_dir, log_status, log_success, log_status, log_warning, log_debug, log_block, log_info, pprint_debug, colorize
+from .logging import get_log_dir, log_status, log_success, log_status, log_warning, log_debug, log_block, log_info, pprint_debug, colorize, LogConfig
 
 from .l4t_version import (
   L4T_VERSION, LSB_RELEASES, l4t_version_from_tag, l4t_version_compatible,
@@ -25,11 +25,6 @@ from .l4t_version import (
 
 _NEWLINE_=" \\\n"  # used when building command strings
 
-# Set default pip environment variables for testing
-pip_env = {
-    "PIP_RETRIES": "10",
-    "PIP_TIMEOUT": "60"
-}
 
 def build_container(
         name: str='', packages: list=[], base: str=get_l4t_base(),
@@ -112,6 +107,17 @@ def build_container(
         name += f"{':' if tag_idx < 0 else '-'}{postfix}"
 
     log_info(f'<b>BUILDING  {packages}</b>')
+
+    # Add 5-second countdown
+    log_info("Starting build in...")
+    for i in range(5, 0, -1):
+        log_info(f"{i}...")
+        time.sleep(1)
+
+    # Initialize status bar and clear screen
+    terminal = os.get_terminal_size()
+    print(f'\033[1;{terminal.lines-1}r\033[?6l\033[2J\033[H', end='', flush=True)
+    LogConfig.status = True
 
     # build chain of all packages
     for idx, package in enumerate(packages):
@@ -324,10 +330,6 @@ def test_container(name, package, simulate=False):
         log_file = os.path.join(get_log_dir('test'), f"{name.replace('/','_')}_{test_exe}").replace(':','_')
 
         cmd = f"{sudo_prefix()}docker run -t --rm --runtime=nvidia --network=host" + _NEWLINE_
-        # Inject pip env vars
-        for key, val in pip_env.items():
-             cmd += f"--env {key}={val}" + _NEWLINE_
-
         cmd += f"  --volume {package['path']}:/test" + _NEWLINE_
         cmd += f"  --volume {get_dir('data')}:/data" + _NEWLINE_
         cmd += f"  --workdir /test" + _NEWLINE_
