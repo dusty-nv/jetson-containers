@@ -1,0 +1,31 @@
+# .github/workflows/pypi-health.yml
+name: Check PyPI Health
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PyPI
+        run: |
+          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://pypi.jetson-ai-lab.dev/)
+          echo "HTTP status code: $STATUS_CODE"
+
+          if [[ "$STATUS_CODE" == 2* ]]; then
+            echo "✅ PyPI is UP"
+            echo '{"schemaVersion":1,"label":"Jetson PyPI","message":"up","color":"brightgreen"}' > health.json
+          else
+            echo "::warning ::❌ PyPI is DOWN (HTTP $STATUS_CODE)"
+            echo '{"schemaVersion":1,"label":"Jetson PyPI","message":"down","color":"red"}' > health.json
+          fi
+
+      - name: Publish to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: ${{ secrets.GH_PAT }}
+          publish_dir: ./
+          publish_branch: gh-pages

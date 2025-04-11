@@ -1,4 +1,4 @@
-from ..ros.version import ROS2_DISTROS
+from ..robots.ros.version import ROS2_DISTROS
 
 package['name'] = 'jetson-inference:main'
 package['alias'] = 'jetson-inference'
