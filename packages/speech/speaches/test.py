@@ -124,7 +124,14 @@ def main():
     tts_text = "Hello, this is a test of the text-to-speech system. How are you today?"
     tts_model = "hexgrad/Kokoro-82M"
     tts_voice = "af"  # Using just the voice ID part
-    tts_output = "test_speech.wav"
+
+    # Create a descriptive filename with parameters
+    timestamp = time.strftime("%Y%m%d_%H%M%S")
+    filename = f"speaches_kokoro82m_voice{tts_voice}_{timestamp}.wav"
+    tts_output = f"/data/audio/tts/{filename}"
+
+    # Ensure the output directory exists
+    os.makedirs(os.path.dirname(tts_output), exist_ok=True)
 
     try:
         print("\n=== Testing Text-to-Speech ===")
