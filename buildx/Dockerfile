@@ -1,5 +1,5 @@
 # Use the appropriate base image
-FROM kairin/001:nvcr.io-nvidia-pytorch-25.02-py3-igpu
+FROM kairin/001:jetc-nvidia-pytorch-25.03-py3-igpu
 
 # IMPORTANT: This base image should not be changed without explicit instruction and a clear reason provided to the user.
 
@@ -39,13 +39,13 @@ RUN pip uninstall lightning_thunder looseversion dill sympy lightning_utilities 
     pip install lightning_thunder looseversion dill sympy lightning_utilities opt_einsum
 
 # Copy the qt-online-installer file to the image
-COPY qt-online-installer-linux-arm64-4.9.0.run /opt/qt-online-installer-linux-arm64-4.9.0.run
+COPY qt-online-installer-linux-arm64-4.9.0.run /workspace/qt-online-installer-linux-arm64-4.9.0.run
 
 # Make the installer executable
-RUN chmod +x /opt/qt-online-installer-linux-arm64-4.9.0.run
+RUN chmod +x /workspace/qt-online-installer-linux-arm64-4.9.0.run
 
 # Run the two required apps (assuming they are `/opt/app1` and `/opt/app2`)
-RUN /opt/qt-online-installer-linux-arm64-4.9.0.run --silent --accept-licenses
+RUN /workspace/qt-online-installer-linux-arm64-4.9.0.run --silent --accept-licenses
 
 # Copy the tarpack script to the bin directory
 COPY tarpack /usr/local/bin/

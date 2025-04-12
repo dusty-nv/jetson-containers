@@ -4,7 +4,7 @@
 # depends: [build-essential]
 # test: test.sh
 #---
-ARG BASE_IMAGE=kairin/001:nvcr.io-nvidia-pytorch-25.02-py3-igpu
+ARG BASE_IMAGE=kairin/001:jetc-nvidia-pytorch-25.03-py3-igpu
 FROM ${BASE_IMAGE}
 
 

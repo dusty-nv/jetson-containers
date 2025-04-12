@@ -20,60 +20,90 @@
 # Typically the jetson-containers/build.sh wrapper script is used to launch this underlying Python module. jetson-containers can also
 # build external out-of-tree projects that have their own Dockerfile.  And you can add your own package search dirs for other packages.
 #
+
+
 import os
 import re
 import sys
 import pprint
 import argparse
 import traceback
+import subprocess
+from tabulate import tabulate
 
 from jetson_containers import (
     build_container, build_containers, find_packages, package_search_dirs, 
     cprint, to_bool, log_config, log_error, log_status, log_versions, LogConfig
 )
 
-parser = argparse.ArgumentParser()
-                    
-parser.add_argument('packages', type=str, nargs='*', default=[], help='packages or containers to build (filterable by wildcards)')
+# Function to check if a package is installed and install it if it is not
+def check_and_install(package):
+    try:
+        __import__(package)
+    except ImportError:
+        print(f"Package {package} not found. Installing...")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
-parser.add_argument('--name', type=str, default='', help="the name of the output container to build")
-parser.add_argument('--base', type=str, default='', help="the base container to use at the beginning of the build chain (default: l4t-jetpack)")
-parser.add_argument('--multiple', action='store_true', help="the specified packages should be built independently as opposed to chained together")
-parser.add_argument('--build-flags', type=str, default='', help="extra flags to pass to 'docker build' commands")
-parser.add_argument('--build-args', type=str, default='', help="container build arguments (--build-arg) as a string of comma separated key:value pairs")
-parser.add_argument('--use-proxy', action='store_true', help="use the host's proxy envvars for the container build")
-parser.add_argument('--package-dirs', type=str, default='', help="additional package search directories (comma or colon-separated)")
+# Check and install required packages
+required_packages = ["tabulate"]
+for package in required_packages:
+    check_and_install(package)
 
-parser.add_argument('--list-packages', action='store_true', help="show the list of packages that were found under the search directories")
-parser.add_argument('--show-packages', action='store_true', help="show info about one or more packages (if none are specified, all will be listed")
-parser.add_argument('--skip-packages', type=str, default='', help="disable certain packages/containers (filterable by wildcards, comma/colon-separated)")
-parser.add_argument('--skip-errors', action='store_true', help="continue building when errors occur (only relevant when --multiple is in use)")
-parser.add_argument('--skip-tests', type=str, default='', help="comma-separated list of package tests to disable ('intermediate' to disable build-stage tests, 'all' to disable all)")
-parser.add_argument('--test-only', type=str, default='', help="only test the specified packages (comma/colon-separated list)")
+# Function to display packages in a table format
+def display_packages(packages):
+    headers = ["Package Name", "Version"]
+    table = []
+    for pkg, details in packages.items():
+        version = details.get('version', 'N/A')
+        if isinstance(version, dict):
+            version = version.get('number', 'N/A')
+        table.append((pkg, version))
+    print(tabulate(table, headers, tablefmt="fancy_grid"))
 
-parser.add_argument('--simulate', action='store_true', help="print out the build commands without actually building the containers")
-parser.add_argument('--push', type=str, default='', help="repo or user to push built container image to (no push by default)")
-parser.add_argument('--no-github-api', action='store_true', help="disalbe Github API use to force rebuild on new git commits")
+parser = argparse.ArgumentParser(description="Jetson Containers Utility")
+parser.add_argument('packages', type=str, nargs='*', default=[], help='Packages or containers to build (filterable by wildcards)')
+parser.add_argument('--name', type=str, default='', help="The name of the output container to build")
+parser.add_argument('--base', type=str, default='', help="The base container to use at the beginning of the build chain (default: l4t-jetpack)")
+parser.add_argument('--multiple', action='store_true', help="The specified packages should be built independently as opposed to chained together")
+parser.add_argument('--build-flags', type=str, default='', help="Extra flags to pass to 'docker build' commands")
+parser.add_argument('--build-args', type=str, default='', help="Container build arguments (--build-arg) as a string of comma-separated key:value pairs")
+parser.add_argument('--use-proxy', action='store_true', help="Use the host's proxy envvars for the container build")
+parser.add_argument('--package-dirs', type=str, default='', help="Additional package search directories (comma or colon-separated)")
+parser.add_argument('--list-packages', action='store_true', help="Show the list of packages that were found under the search directories")
+parser.add_argument('--show-packages', action='store_true', help="Show info about one or more packages (if none are specified, all will be listed)")
+parser.add_argument('--skip-packages', type=str, default='', help="Disable certain packages/containers (filterable by wildcards, comma/colon-separated)")
+parser.add_argument('--skip-errors', action='store_true', help="Continue building when errors occur (only relevant when --multiple is in use)")
+parser.add_argument('--skip-tests', type=str, default='', help="Comma-separated list of package tests to disable ('intermediate' to disable build-stage tests, 'all' to disable all)")
+parser.add_argument('--test-only', type=str, default='', help="Only test the specified packages (comma/colon-separated list)")
+parser.add_argument('--simulate', action='store_true', help="Print out the build commands without actually building the containers")
+parser.add_argument('--push', type=str, default='', help="Repo or user to push built container image to (no push by default)")
+parser.add_argument('--no-github-api', action='store_true', help="Disable GitHub API use to force rebuild on new git commits")
+parser.add_argument('--log-dir', '--logs', type=str, default=None, help="Sets the directory to save container build logs to (default: jetson-containers/logs)")
+parser.add_argument('--log-level', type=str, default=None, choices=LogConfig.levels, help="Sets the logging verbosity level")
+parser.add_argument('--log-colors', type=to_bool, default=None, help="Enable/disable terminal colors and formatting (defaults to true)")
+parser.add_argument('--log-status', type=to_bool, default=None, help="Enable status bar at bottom of terminal (defaults to true)")
+parser.add_argument('--debug', action='store_true', help="Enable debug logging")
+parser.add_argument('--verbose', action='store_true', help="Enable verbose logging")
+parser.add_argument('--version', action='store_true', help="Print platform version info and exit")
 
-parser.add_argument('--log-dir', '--logs', type=str, default=None, help="sets the directory to save container build logs to (default: jetson-containers/logs)")
-parser.add_argument('--log-level', type=str, default=None, choices=LogConfig.levels, help="sets the logging verbosity level")
-parser.add_argument('--log-colors', type=to_bool, default=None, help=f"enable/disable terminal colors and formatting (defaults to true)")
-parser.add_argument('--log-status', type=to_bool, default=None, help=f"enable status bar at bottom of terminal (defaults to true)")
-
-parser.add_argument('--debug', action='store_true', help="enable debug logging")
-parser.add_argument('--verbose', action='store_true', help="enable verbose logging")
-parser.add_argument('--version', action='store_true', help="print platform version info and exit")
+# Add examples and usage instructions
+parser.epilog = """
+Examples:
+  jetson-containers --list
+  jetson-containers --show pytorch
+  jetson-containers --version
+"""
 
 args = parser.parse_args()
 
-# configure logging
+# Configure logging
 log_config(**vars(args))
 
-# validate args
+# Validate args
 if args.skip_errors and not args.multiple:
     raise ValueError("--skip-errors can only be used with --multiple flag")
 
-# split multi-value keyword arguments
+# Split multi-value keyword arguments
 args.package_dirs = re.split(',|;|:', args.package_dirs)
 args.skip_packages = re.split(',|;|:', args.skip_packages)
 args.skip_tests = re.split(',|;|:', args.skip_tests)
@@ -86,7 +116,7 @@ cprint(f"\n$ jetson-containers {' '.join(sys.argv[1:])}\n", attrs='bold')
 if args.version:
     sys.exit()
 
-# cast build args into dictionary
+# Cast build args into dictionary
 if args.build_args:
     try:
         key_value_pairs = args.build_args.split(',')
@@ -96,32 +126,38 @@ if args.build_args:
 else:
     args.build_args = {}
 
-# add proxy to build args if flag is set
+# Add proxy to build args if flag is set
 if args.use_proxy:
     proxy_vars = ['http_proxy', 'https_proxy', 'no_proxy', 'HTTP_PROXY', 'HTTPS_PROXY', 'NO_PROXY']
     for var in proxy_vars:
         if var in os.environ:
             args.build_args[var] = os.environ[var]
 
-# add package directories
+# Add package directories
 if args.package_dirs:
     package_search_dirs(args.package_dirs)
 
-# list/show package info
+# List/show package info
 if args.list_packages or args.show_packages:
-    packages = find_packages(args.packages, skip=args.skip_packages)
+    try:
+        packages = find_packages(args.packages, skip=args.skip_packages)
 
-    if args.list_packages:
-        for package in sorted(packages.keys()):
-            print(package)
-    
-    if args.show_packages:
-        pprint.pprint(packages)
+        if args.list_packages:
+            print("Available Packages:")
+            for package in sorted(packages.keys()):
+                print(package)
+        
+        if args.show_packages:
+            print("Package Details:")
+            display_packages(packages)
+            
+    except Exception as e:
+        print(f"Error: {e}\nAn error occurred while listing/showing packages. Please try again.")
         
     sys.exit(0)
     
 try:
-    # build one multi-stage container from chain of packages
+    # Build one multi-stage container from chain of packages
     # or launch multiple independent container builds
     if not args.multiple:
         build_container(**vars(args))
