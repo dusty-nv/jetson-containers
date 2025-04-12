@@ -56,21 +56,44 @@ build_image() {
   echo "Building folder: $folder"
   echo "Dockerfile path: $folder/Dockerfile"
 
+  # Build the image
   if [ "$use_cache" = "y" ]; then
     docker buildx build --platform $PLATFORM -t $tag --push "$folder"
   else
     docker buildx build --no-cache --platform $PLATFORM -t $tag --push "$folder"
   fi
 
-  if [ $? -eq 0 ]; then
-    echo "Docker image tagged and pushed as $tag"
-  else
+  # Check if the build succeeded
+  if [ $? -ne 0 ]; then
     echo "Error: Failed to build image for $image_name. Exiting..."
     exit 1
   fi
+
+  # Output only the tag
+  echo "$tag"
 }
 
-# Build the required images
+# Build the images
 echo "Starting build process..."
-build_image "." "kairin/001:bazel-${CURRENT_DATE_TIME}-1"
+BUILD_ESSENTIAL_TAG=$(build_image "build/build-essential" "kairin/001:jetc-nvidia-pytorch-25.03-py3-igpu")
+BAZEL_TAG=$(build_image "build/bazel" "$BUILD_ESSENTIAL_TAG")
 echo "Build process complete!"
+
+# Pull the most recently built image
+echo "Pulling the most recently built image: $BAZEL_TAG"
+docker pull "$BAZEL_TAG"
+if [ $? -ne 0 ]; then
+  echo "Error: Failed to pull the image $BAZEL_TAG. Exiting..."
+  exit 1
+fi
+
+# Run the pulled image
+echo "Running the pulled image: $BAZEL_TAG"
+docker run -it --rm "$BAZEL_TAG" bash
+if [ $? -ne 0 ]; then
+  echo "Error: Failed to run the image $BAZEL_TAG. Exiting..."
+  exit 1
+fi
+
+# Announce completion
+echo "Build, push, pull, and run processes completed successfully!"

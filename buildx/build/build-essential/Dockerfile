@@ -3,7 +3,7 @@
 # group: build
 # notes: installs compilers, build tools & configures the default locale
 #---
-ARG BASE_IMAGE=kairin/001:nvcr.io-nvidia-pytorch-25.02-py3-igpu
+ARG BASE_IMAGE=kairin/001:jetc-nvidia-pytorch-25.03-py3-igpu
 FROM ${BASE_IMAGE}
 
 ENV DEBIAN_FRONTEND=noninteractive \

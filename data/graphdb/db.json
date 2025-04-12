@@ -725,6 +725,34 @@
       "jetson-containers"
     ]
   },
+  "ollama:r36.4.0-cu128-24.04": {
+    "tags": [
+      "ollama"
+    ],
+    "docker_image": "dustynv/ollama:r36.4.0-cu128-24.04",
+    "last_modified": "2025-04-09T10:16:11.23791Z",
+    "size": 4465068640,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "CUDA_VERSION": "12.8",
+    "LSB_RELEASE": "24.04",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_ARCH": "8.7"
+  },
+  "ollama:r36.4.0": {
+    "tags": [
+      "ollama"
+    ],
+    "docker_image": "dustynv/ollama:r36.4.0",
+    "last_modified": "2025-04-09T10:09:40.142825Z",
+    "size": 5396678661,
+    "CPU_ARCH": "aarch64",
+    "L4T_VERSION": "36.4.0",
+    "JETPACK_VERSION": "6.1",
+    "CUDA_VERSION": "12.6",
+    "CUDA_ARCH": "8.7",
+    "LSB_RELEASE": "22.04"
+  },
   "ollama:main-r36.4.0": {
     "tags": [
       "ollama"
@@ -765,20 +793,6 @@
     "CPU_ARCH": "aarch64",
     "L4T_VERSION": "36.4.3",
     "JETPACK_VERSION": "6.2",
-    "CUDA_VERSION": "12.6",
-    "CUDA_ARCH": "8.7",
-    "LSB_RELEASE": "22.04"
-  },
-  "ollama:r36.4.0": {
-    "tags": [
-      "ollama"
-    ],
-    "docker_image": "dustynv/ollama:r36.4.0",
-    "last_modified": "2025-02-07T10:07:49.587959Z",
-    "size": 5340360609,
-    "CPU_ARCH": "aarch64",
-    "L4T_VERSION": "36.4.0",
-    "JETPACK_VERSION": "6.1",
     "CUDA_VERSION": "12.6",
     "CUDA_ARCH": "8.7",
     "LSB_RELEASE": "22.04"
