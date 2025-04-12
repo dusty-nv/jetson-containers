@@ -32,6 +32,23 @@ RUN git clone https://github.com/speaches-ai/speaches /opt/speaches && \
     #pip3 install gradio==5.13.0 gradio-client==1.6.0
     pip3 uninstall -y onnxruntime onnxruntime-gpu || true
 
+# Download Kokoro model files with retry logic
+RUN mkdir -p /data/models/huggingface/models--hexgrad--Kokoro-82M/snapshots/main && \
+    cd /data/models/huggingface/models--hexgrad--Kokoro-82M/snapshots/main && \
+    for i in {1..5}; do \
+        curl -L --retry 3 --retry-delay 5 --retry-max-time 30 \
+             --connect-timeout 10 --max-time 60 \
+             -o kokoro-v0_19.onnx \
+             https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files/kokoro-v0_19.onnx && \
+        curl -L --retry 3 --retry-delay 5 --retry-max-time 30 \
+             --connect-timeout 10 --max-time 60 \
+             -o voices.bin \
+             https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files/voices.bin && \
+        break || sleep 10; \
+    done && \
+    # Verify files exist and have content
+    [ -s kokoro-v0_19.onnx ] && [ -s voices.bin ] || { echo "Failed to download model files"; exit 1; }
+
 # Patch to skip UI mount if dist/ missing
 COPY 0001-Conditionally-mount-realtime-console-dist.patch /tmp/
 RUN cd /opt/speaches && git apply /tmp/0001-Conditionally-mount-realtime-console-dist.patch && \
