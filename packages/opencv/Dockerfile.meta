@@ -26,4 +26,4 @@ RUN echo "[metadata]" >> setup.cfg && \
 RUN cat pyproject.toml && cat setup.cfg
 RUN pip3 wheel --wheel-dir=/opt --no-deps --verbose .
 RUN twine upload --verbose /opt/opencv_python*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
-RUN pip3 install opencv-python
+RUN pip3 install opencv-python || echo "failed to install opencv-python"

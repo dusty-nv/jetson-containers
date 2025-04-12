@@ -27,7 +27,7 @@ def opencv(version, requires=None, default=False, url=None):
     
     meta = cv.copy()
     meta['name'] = meta['name'] + '-meta'
-    meta['depends'] = [cv['name']]
+    #meta['depends'] = [cv['name']]
     meta['dockerfile'] = 'Dockerfile.meta'
     
     if default:

@@ -8,6 +8,7 @@ git clone --depth=1 --recursive https://github.com/cvg/Hierarchical-Localization
 # Navigate to the directory containing PyMeshLab's setup.py
 cd /opt/hloc
 sed -i '/pycolmap/d' requirements.txt
+sed -i '/opencv-python/d' requirements.txt
 pip3 wheel . -w /opt/hloc/wheels --verbose
 
 # Verify the contents of the /opt directory

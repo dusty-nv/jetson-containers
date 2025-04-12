@@ -299,11 +299,27 @@ if [ -z "$HAS_CONTAINER_NAME" ]; then
     CONTAINER_NAME_FLAGS="--name $CONTAINER_NAME"
 fi
 
-# run the container
-ARCH=$(uname -i)
+TEGRA="tegra"
+if [ -z "${SYSTEM_ARCH}" ]; then
+  ARCH=$(uname -m)
 
-if [ $ARCH = "aarch64" ]; then
+  if [ "$ARCH" = "aarch64" ]; then
+	echo "### ARM64 architecture detected"
+    if uname -a | grep -qi "$TEGRA"; then
+      SYSTEM_ARCH="$TEGRA-$ARCH"
+      echo "### Jetson Detected"
+    else
+      echo "### x86 Detected"
+      SYSTEM_ARCH="$ARCH"
+    fi
+  else
+    SYSTEM_ARCH="$ARCH"
+  fi
+fi
 
+echo "SYSTEM_ARCH=$SYSTEM_ARCH"
+
+if [ $SYSTEM_ARCH = "tegra-aarch64" ]; then
 	# this file shows what Jetson board is running
 	# /proc or /sys files aren't mountable into docker
 	cat /proc/device-tree/model > /tmp/nv_jetson_model
@@ -330,7 +346,7 @@ if [ $ARCH = "aarch64" ]; then
 		"${filtered_args[@]}"
 	)
 
-elif [ $ARCH = "x86_64" ]; then
+elif [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "x86_64" ]; then
 
 	( set -x ;
 

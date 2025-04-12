@@ -12,11 +12,10 @@ PLATFORM="$ARCH-linux"
 
 export SGL_KERNEL_ENABLE_BF16=1
 export SGL_KERNEL_ENABLE_FP8=1
-export SGL_KERNEL_ENABLE_FP4=0
+export SGL_KERNEL_ENABLE_FP4=1
 export SGL_KERNEL_ENABLE_SM90A=1
 export SGL_KERNEL_ENABLE_SM100A=0
 export USE_CUDNN=1
-export MAX_JOBS=6
 
 echo "Building SGLang ${SGLANG_VERSION} for ${PLATFORM}"
 
@@ -39,7 +38,14 @@ cd $REPO_DIR/sgl-kernel/
 
 sed -i '/"torch==2\.5\.1",/d' pyproject.toml
 sed -i 's|"torch==.*"|"torch"|g' pyproject.toml
-CMAKE_ARGS="-DCMAKE_CUDA_ARCHITECTURES=87;101" pip3 wheel . --no-deps --wheel-dir $PIP_WHEEL_DIR
+
+# export MAX_JOBS="$(nproc)" this breaks with actual flash-attention
+export MAX_JOBS=6
+export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
+echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
+
+
+pip3 wheel . --no-deps --wheel-dir $PIP_WHEEL_DIR
 pip3 install $PIP_WHEEL_DIR/sgl*.whl
 
 cd $REPO_DIR
@@ -57,9 +63,15 @@ sed -i 's|"torchao.*"|"torchao"|g' pyproject.toml
 sed -i 's|"sgl-kernel.*"|"sgl-kernel"|g' pyproject.toml
 sed -i 's|"vllm.*"|"vllm"|g' pyproject.toml
 sed -i 's|"torch=.*"|"torch"|g' pyproject.toml
+sed -i '/torchvision==0\.20\.1/d' pyproject.toml
 
 echo "Patched $REPO_DIR/python/pyproject.toml"
 cat pyproject.toml
+
+# export MAX_JOBS="$(nproc)" this breaks with actual flash-attention
+export MAX_JOBS=3
+export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
+echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
 
 pip3 wheel '.[all]' --wheel-dir $PIP_WHEEL_DIR
 pip3 install $PIP_WHEEL_DIR/sglang*.whl

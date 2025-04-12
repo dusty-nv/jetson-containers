@@ -2,7 +2,7 @@
 # name: sglang
 # group: llm
 # config: config.py
-# depends: [vllm, flashinfer, torchao, cuda-python, ffmpeg]
+# depends: [flashinfer, torchao, cuda-python, ffmpeg]
 # requires: '>=36'
 # test: test.sh
 # notes: https://github.com/sgl-project/sglang
@@ -14,7 +14,7 @@ ARG SGLANG_VERSION \
     SGLANG_VERSION_SPEC \
     SGL_KERNEL_ENABLE_BF16=1 \
     SGL_KERNEL_ENABLE_FP8=1 \
-    SGL_KERNEL_ENABLE_FP4=0 \
+    SGL_KERNEL_ENABLE_FP4=1 \
     MAX_JOBS="$(nproc)" \
     FORCE_BUILD=off \
     TMP=/tmp/sglang

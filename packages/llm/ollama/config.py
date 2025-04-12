@@ -36,10 +36,10 @@ def ollama(version, golang='1.22.8', cmake='3.22.1', branch=None, requires=None,
     return pkg
     
 package = [
-    ollama('main'),
+    ollama('main', default=True),
     ollama('0.4.0'),
     ollama('0.5.1'),
     ollama('0.5.5', branch='0.5.5-rc0'),
     ollama('0.5.7'),
-    ollama('0.6.3', default=True),
+    ollama('0.6.5', default=False),
 ]
