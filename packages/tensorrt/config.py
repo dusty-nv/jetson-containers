@@ -123,6 +123,8 @@ if IS_TEGRA:
         # JetPack 6.1+ with upgraded CUDA
         tensorrt_tar('10.0', f'{TENSORRT_URL}/10.0.1/tars/TensorRT-10.0.1.6.l4t.aarch64-gnu.cuda-12.4.tar.gz',
                      cudnn='9.0', requires=['==r36.*', '==cu124']),
+        tensorrt_tar('10.3', f'{TENSORRT_URL}/10.3.0/tars/TensorRT-10.3.0.26.l4t.aarch64-gnu.cuda-12.6.tar.gz',
+                     cudnn='9.3', requires=['==r36.*', '==cu126']),
         tensorrt_tar('10.4', f'{TENSORRT_URL}/10.4.0/tars/TensorRT-10.4.0.26.l4t.aarch64-gnu.cuda-12.6.tar.gz',
                      cudnn='9.3', requires=['==r36.*', '==cu126']),
         tensorrt_tar('10.5', f'{TENSORRT_URL}/10.5.0/tars/TensorRT-10.5.0.18.l4t.aarch64-gnu.cuda-12.6.tar.gz',
