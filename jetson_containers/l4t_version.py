@@ -45,7 +45,8 @@ def get_l4t_version(version_file='/etc/nv_tegra_release', l4t_version: str = Non
 
 
     if not os.path.isfile(version_file):
-        raise IOError(f"L4T_VERSION file doesn't exist:  {version_file}")
+        # raise IOError(f"L4T_VERSION file doesn't exist:  {version_file}")
+        return Version('36.4.3')
 
     with open(version_file) as file:
         line = file.readline()
