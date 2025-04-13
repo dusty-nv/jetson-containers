@@ -20,7 +20,7 @@ elif SYSTEM_ARM:
         elif CUDA_VERSION >= Version('12.8'):
             TENSORRT_VERSION = Version('10.7')
         elif CUDA_VERSION >= Version('12.6'):
-            TENSORRT_VERSION = Version('10.4')
+            TENSORRT_VERSION = Version('10.3')
         elif CUDA_VERSION == Version('12.4'):
             TENSORRT_VERSION = Version('10.0')
         else:
