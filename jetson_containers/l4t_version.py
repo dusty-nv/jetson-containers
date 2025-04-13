@@ -108,7 +108,7 @@ def nv_tegra_release(version_file='/etc/nv_tegra_release', dst=None):
     return text
 
 
-def get_jetpack_version(l4t_version: str = None, default='5.1'):
+def get_jetpack_version(l4t_version: str = None, default='6.2'):
     """
     Returns the version of JetPack (based on the L4T version)
     https://github.com/rbonghi/jetson_stats/blob/master/jtop/core/jetson_variables.py
