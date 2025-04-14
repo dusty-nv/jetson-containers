@@ -51,7 +51,7 @@ cd $REPO_DIR/python
 # sed -i '/torch/d' pyproject.toml
 # sed -i '/torchvision/d' pyproject.toml
 # sed -i '/xgrammar/d' python/pyproject.toml
-sed -i 's/==/>=/g' python/pyproject.toml
+sed -i 's/==/>=/g' pyproject.toml
 
 
 echo "Patched $REPO_DIR/python/pyproject.toml"
