@@ -51,7 +51,9 @@ RUN git clone --branch ${LIBREALSENSE_VERSION} --depth=1 https://github.com/Inte
     cd ../ && \
     cp ./config/99-realsense-libusb.rules /etc/udev/rules.d/ && \
     rm -rf librealsense
-  
+
+# Install pyrealsense2 wrapper for the SDK
+RUN pip install pyrealsense2  
 RUN python3 -c 'import pyrealsense2'
 
 #RUN udevadm control --reload-rules && udevadm trigger
