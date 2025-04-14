@@ -1,7 +1,7 @@
-import copy
-
 from jetson_containers import L4T_VERSION
-from ..robots.ros.version import ROS_DISTROS, ROS2_DISTROS, ROS_PACKAGES
+from ..robots.ros import ROS_DISTROS, ROS2_DISTROS, ROS_PACKAGES, ros_container
+
+import copy
 
 # add permutations of ROS distros/packages as subpackages
 template = package.copy()
@@ -39,31 +39,4 @@ for ROS_DISTRO in ROS_DISTROS:
             pkg['test'] = 'test_ros2.sh'
             
         package.append(pkg)
-        
-def ros_container(name, *packages, distros=ROS2_DISTROS, base_packages='desktop'):
-    if not isinstance(distros, (list, tuple)):
-        distros = [distros]
-        
-    if not isinstance(packages, (list, tuple)):
-        packages = [packages]
-      
-    if not isinstance(base_packages, (list, tuple)):
-        base_packages = [base_packages]
-          
-    packages = ' '.join(packages)
 
-    if not packages:
-        return
-        
-    for distro in distros:
-        for base_package in base_packages:
-            pkg = template.copy()
-            
-            pkg['name'] = f'ros:{distro}-{name}'
-            pkg['dockerfile'] = 'Dockerfile.ros2.extras'
-            pkg['depends'] = f"ros:{distro}-{base_package}"
-            pkg['build_args'] = {'ROS_PACKAGES': f'{packages}'}
-            
-            package.append(pkg)
-        
-ros_container('foxglove', 'foxglove_bridge')

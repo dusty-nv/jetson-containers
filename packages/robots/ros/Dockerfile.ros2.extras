@@ -4,8 +4,9 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG ROS_PACKAGES \
-    ROS_WORKSPACE=${ROS_ROOT}
-    
-RUN /ros2_install.sh "${ROS_PACKAGES}"
+ARG ROS_PACKAGE \
+    ROS_BRANCH \
+    ROS_WORKSPACE=/workspace
+
+RUN /ros2_install.sh "${ROS_PACKAGE}"
 

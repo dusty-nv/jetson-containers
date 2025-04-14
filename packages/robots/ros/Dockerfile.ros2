@@ -47,7 +47,7 @@ RUN bash /tmp/numpy/install.sh
 #ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 
 # commands will be appended/run by the entrypoint which sources the ROS environment
-COPY ros_entrypoint.sh ros2_install.sh /
+COPY ros_entrypoint.sh ros_environment.sh ros2_install.sh /
 
 ENTRYPOINT ["/ros_entrypoint.sh"]
 CMD ["/bin/bash"]
