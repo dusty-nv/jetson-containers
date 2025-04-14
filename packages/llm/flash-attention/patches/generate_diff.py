@@ -76,6 +76,8 @@ def modify_setup_py(original_content):
             "    cc_flag.append(\"-gencode\")",
             "    cc_flag.append(\"arch=compute_87,code=sm_87\")",
             "    cc_flag.append(\"-gencode\")",
+            "    cc_flag.append(\"arch=compute_89,code=sm_89\")",
+            "    cc_flag.append(\"-gencode\")",
             "    cc_flag.append(\"arch=compute_90,code=sm_90\")",
             "    cc_flag.append(\"-gencode\")",
             "    cc_flag.append(\"arch=compute_100,code=sm_100\")",
