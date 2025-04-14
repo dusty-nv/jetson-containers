@@ -21,7 +21,7 @@ Modular container build system that provides the latest [**AI/ML packages**](htt
 > jetson-containers detect automatically the SBSA devices and build the containers for the SBSA devices.
 > 
 > Python 3.10 wheels for Ubuntu 22.04 && Python 3.12 wheels for Ubuntu 24.04.  
-> wheels: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` pip3 install torch torchvision torchaudio --index-url https://pypi.jetson-ai-lab.dev/sbsa/cu128`
+> wheels: `pip3 install torch torchvision torchaudio --index-url https://pypi.jetson-ai-lab.dev/sbsa/cu128`
 
 | |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 |---|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
