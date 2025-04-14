@@ -8,3 +8,6 @@ posix_ipc:
 
 cuda_python:
   ubuntu: []
+
+ros-humble-foxglove-msgs:
+  ubuntu: []

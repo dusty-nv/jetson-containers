@@ -7,7 +7,7 @@ set -ex
 
 ROS_WORKSPACE="${ROS_WORKSPACE:=${ROS_ROOT}}"
 ROSDEP_SKIP_KEYS="$ROSDEP_SKIP_KEYS gazebo11 libgazebo11-dev libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv"
-
+ROS_INSTALL_FLAGS="--deps --exclude RPP --rosdistro ${ROS_DISTRO} $ROS_INSTALL_FLAGS"
 COLCON_FLAGS="--base-paths src --event-handlers console_direct+ $COLCON_FLAGS"
 
 if [ "${ROS_WORKSPACE}" = "${ROS_ROOT}" ]; then
@@ -37,14 +37,25 @@ if [[ $1 == http* ]]; then
         xargs -0 sed -i'' -e 's|<INSTALL_PREFIX>|{CMAKE_INSTALL_PREFIX}|g'
     fi
 
+    cd $ROS_WORKSPACE
+    
     COLCON_FLAGS="$COLCON_FLAGS --packages-up-to $(basename $1)"
+    rosinstall_list="$(basename $1).rosinstall"
+
+    rosinstall_generator ${ROS_INSTALL_FLAGS} --from-path src > $rosinstall_list || \
+    rosinstall_generator ${ROS_INSTALL_FLAGS} --from-path src --upstream > $rosinstall_list || true
 else
     # pull sources from ROS by their package names
     SOURCE="rosinstall_generator"
     cd $ROS_WORKSPACE
-    rosinstall_generator --deps --exclude RPP --rosdistro ${ROS_DISTRO} $@ > ros2.${ROS_DISTRO}.rosinstall
-    cat ros2.${ROS_DISTRO}.rosinstall
-    vcs import src/ < ros2.${ROS_DISTRO}.rosinstall
+
+    rosinstall_list="ros2.${ROS_DISTRO}.rosinstall"
+    rosinstall_generator ${ROS_INSTALL_FLAGS} $@ > $rosinstall_list
+fi
+
+if [ -s $rosinstall_list ]; then
+    cat $rosinstall_list
+    vcs import --skip-existing src/ < $rosinstall_list
 fi
 
 cd $ROS_WORKSPACE
