@@ -26,15 +26,16 @@ if [ -z "${SYSTEM_ARCH}" ]; then
   ARCH=$(uname -m)
 
   if [ "$ARCH" = "aarch64" ]; then
-	echo "### ARM64 architecture detected"
+    echo "### ARM64 architecture detected"
     if uname -a | grep -qi "$TEGRA"; then
       SYSTEM_ARCH="$TEGRA-$ARCH"
       echo "### Jetson Detected"
     else
-      echo "### x86 Detected"
+      echo "### SBSA Detected"
       SYSTEM_ARCH="$ARCH"
     fi
   else
+    echo "### x86 Detected"
     SYSTEM_ARCH="$ARCH"
   fi
 fi
