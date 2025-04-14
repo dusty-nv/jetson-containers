@@ -57,8 +57,8 @@ LogConfig = types.SimpleNamespace(
 
     # Definitions of the log levels, increasing incrementally by priority
     levels = {
-        'debug':    LogLevel(color='gray'),
-        'verbose':  LogLevel(color='gray'),
+        'debug':    LogLevel(color='light_grey'),
+        'verbose':  LogLevel(color='light_grey'),
         'info':     LogLevel(),
         'status':   LogLevel(color='blue'),
         'success':  LogLevel(color='green'), # prefix=' ✅ '

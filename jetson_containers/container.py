@@ -271,7 +271,7 @@ def tag_container(source, target, simulate=False):
     """
     cmd = f"{sudo_prefix()}docker tag {source} \\\n           {target}"
 
-    log_block(f"<b>Tagging {source} </b>\n<b>     as {target}</b>\n", "<b>{cmd}</b>\n")
+    log_block(f"<b>Tagging {source} </b>\n<b>     as {target}</b>\n", f"<b>{cmd}</b>\n")
 
     if not simulate:
         subprocess.run(cmd, shell=True, check=True)
@@ -304,7 +304,7 @@ def push_container(name, repository='', simulate=False):
 
     cmd += f"{sudo_prefix()}docker push {name}"
 
-    log_block(f"<b>PUSHING {name}</b>", "<b>{cmd}</b>\n")
+    log_block(f"<b>PUSHING {name}</b>", f"<b>{cmd}</b>\n")
     log_status(f"Pushing {name}")
 
     if not simulate:
