@@ -21,26 +21,11 @@ echo "Building SGLang ${SGLANG_VERSION} for ${PLATFORM}"
 
 git clone --recursive --depth=1 --branch=v${SGLANG_VERSION} $REPO_URL $REPO_DIR ||
 git clone --recursive --depth=1 $REPO_URL $REPO_DIR
-
-cd $REPO_DIR
-
-# Clean deps
-sed -i '/sgl-kernel/d' python/pyproject.toml
-sed -i '/flashinfer/d' python/pyproject.toml
-sed -i '/xgrammar/d' python/pyproject.toml
-sed -i '/"torch==2\.5\.1",/d' python/pyproject.toml
-
-# Patch arch in init
-sed -i $ARCH_SED sgl-kernel/python/sgl_kernel/__init__.py
-
 echo "Building SGL-KERNEL"
 cd $REPO_DIR/sgl-kernel/
 
-sed -i '/"torch==2\.5\.1",/d' pyproject.toml
-sed -i 's|"torch==.*"|"torch"|g' pyproject.toml
-
 # export MAX_JOBS="$(nproc)" this breaks with actual flash-attention
-export MAX_JOBS=6
+export MAX_JOBS=3
 export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
 
@@ -59,17 +44,21 @@ fi
 # Build SGLang
 cd $REPO_DIR/python
 
-sed -i 's|"torchao.*"|"torchao"|g' pyproject.toml
-sed -i 's|"sgl-kernel.*"|"sgl-kernel"|g' pyproject.toml
-sed -i 's|"vllm.*"|"vllm"|g' pyproject.toml
-sed -i 's|"torch=.*"|"torch"|g' pyproject.toml
-sed -i '/torchvision==0\.20\.1/d' pyproject.toml
+# sed -i '/torchao/d' pyproject.toml
+# sed -i '/flashinfer_python/d' pyproject.toml
+# sed -i '/sgl-kernel/d' pyproject.toml
+# sed -i '/vllm/d' pyproject.toml
+# sed -i '/torch/d' pyproject.toml
+# sed -i '/torchvision/d' pyproject.toml
+# sed -i '/xgrammar/d' python/pyproject.toml
+sed -i 's/==/>=/g' python/pyproject.toml
+
 
 echo "Patched $REPO_DIR/python/pyproject.toml"
 cat pyproject.toml
 
 # export MAX_JOBS="$(nproc)" this breaks with actual flash-attention
-export MAX_JOBS=3
+export MAX_JOBS=6
 export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
 

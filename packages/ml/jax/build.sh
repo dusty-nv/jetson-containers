@@ -15,11 +15,12 @@ cd /opt/jax
 
 # Build jaxlib from source with detected versions
 BUILD_FLAGS='--disable_nccl '
-BUILD_FLAGS+='--cuda_compute_capabilities="sm_87;sm_89;sm_90;sm_100;sm_101;sm_110;sm_12.0" '
+BUILD_FLAGS+='--cuda_compute_capabilities="sm_87,sm_89,sm_90,sm_100,sm_101,sm_110,sm_12.0" '
 BUILD_FLAGS+='--cuda_version=12.8.1 --cudnn_version=9.8.0 '
 # BUILD_FLAGS+='--bazel_options=--repo_env=LOCAL_CUDA_PATH="/usr/local/cuda-12.8"'
 # BUILD_FLAGS+='--bazel_options=--repo_env=LOCAL_CUDNN_PATH="/opt/nvidia/cudnn/"'
-BUILD_FLAGS+='--output_path=$PIP_WHEEL_DIR'
+BUILD_FLAGS+='--output_path=$PIP_WHEEL_DIR '
+BUILD_FLAGS+='--clang_path=/usr/lib/llvm-20/bin/clang'
 
 python3 build/build.py requirements_update
 python3 build/build.py build $BUILD_FLAGS --wheels=jaxlib,jax-cuda-plugin,jax-cuda-pjrt
