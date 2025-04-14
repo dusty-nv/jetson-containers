@@ -15,7 +15,11 @@ from packaging.version import Version
 
 from .packages import find_package, find_packages, resolve_dependencies, validate_dict
 from .utils import split_container_name, query_yes_no, needs_sudo, sudo_prefix, get_dir, get_repo_dir
-from .logging import get_log_dir, log_status, log_success, log_status, log_warning, log_debug, log_block, log_info, pprint_debug, colorize, LogConfig
+
+from .logging import (
+    get_log_dir, log_status, log_success, log_status, log_warning, log_debug, 
+    log_block, log_info, print_log, pprint_debug, colorize, LogConfig
+)
 
 from .l4t_version import (
   L4T_VERSION, LSB_RELEASES, l4t_version_from_tag, l4t_version_compatible,
@@ -256,7 +260,7 @@ def build_containers(
         msg = f"   * {package} ({container_name}) {'FAILED' if error else 'SUCCESS'}"
         if error is not None:
             msg += f"  ({error})"
-        log_print(msg, level='error' if error else 'success')
+        print_log(msg, level='error' if error else 'success')
 
     for _, error in status.values():
         if error:

@@ -11,3 +11,6 @@ cuda_python:
 
 ros-humble-foxglove-msgs:
   ubuntu: []
+
+foxglove_msgs:
+  ubuntu: []
