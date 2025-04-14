@@ -14,7 +14,7 @@ from packaging.version import Version
 from packaging.specifiers import SpecifierSet
 
 from .utils import get_repo_dir
-from .logging import log_debug
+from .logging import log_debug, log_warning, log_error
 
 from .l4t_version import (
     L4T_VERSION, CUDA_VERSION, PYTHON_VERSION, LSB_RELEASE, 
@@ -58,7 +58,7 @@ def package_scan_options(dict):
     _PACKAGE_OPTS.update(dict)
 
 
-def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
+def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False, **kwargs):
     """
     Find packages from the list of provided search paths.
     If a path ends in * wildcard, it will be searched recursively.
@@ -132,6 +132,7 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
         package['postfix'] = package['postfix'] + f"-{LSB_RELEASE}"
 
     # skip recursively searching under these packages
+    PRELOAD = ['robots/ros']
     BLACKLIST = ['vila-microservice/src']
 
     def is_blacklisted(x):
@@ -140,20 +141,30 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
                 return True
         return False
 
+    if len(_PACKAGES) == 0 and 'preload' not in kwargs:
+        for preload in PRELOAD:
+            preload_dir=os.path.join(get_repo_dir(), 'packages', preload)
+            log_debug(f'Preload {preload_dir}')
+            scan_packages(package_dirs=preload_dir, preload=True)
+
     # search this directory for dockerfiles and config scripts
     entries = os.listdir(path)
     threads = []
 
     for entry in entries:
         entry_path = os.path.join(path, entry)
+        preload = kwargs.get('preload', False)
 
         if not entry or entry.startswith('__') or is_blacklisted(entry_path):
+            continue
+
+        if any([x in entry_path for x in PRELOAD]) and not preload:
             continue
 
         if os.path.isdir(entry_path) and recursive:
             thread = threading.Thread(
                 target=scan_packages, 
-                kwargs=dict(package_dirs=os.path.join(entry_path, '*'))
+                kwargs=dict(package_dirs=os.path.join(entry_path, '*'), preload=preload)
             )
             threads.append(thread)
             thread.start()
@@ -671,7 +682,7 @@ def validate_dict(package):
 
     for key, value in package.items():
         if key not in _PACKAGE_KEYS:
-            # print(f"-- Unknown key '{key}' in package config:", value)
+            log_debug(f"Unknown key '{key}' in package config:  {value}")
             return False
 
     return True
@@ -726,11 +737,10 @@ def parse_yaml_header(dockerfile):
         if validate_dict(config):
             return config
         else:
-            print(f"-- YAML header from {dockerfile} contained unknown/invalid entries, ignoring...")
-            print(txt)
+            log_warning(f"YAML header from {dockerfile} contained unknown/invalid entries, ignoring...\n\n{txt}\n")
 
     except Exception as error:
-        print(f"-- Error parsing YAML from {dockerfile}:  {error}")
+        log_error(f"Error parsing YAML from {dockerfile}:  {error}")
 
     return None
 
