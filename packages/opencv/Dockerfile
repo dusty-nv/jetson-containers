@@ -2,7 +2,7 @@
 # name: opencv
 # group: core
 # config: config.py
-# depends: [cuda, cudnn, python, numpy]
+# depends: [cuda, cudnn, python, numpy, opengl, vulkan]
 # test: test.py
 # notes: install or build OpenCV (with CUDA) from Jetson pip server
 #---
