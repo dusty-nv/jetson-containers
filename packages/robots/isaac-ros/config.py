@@ -17,6 +17,7 @@ def isaac_ros(repo, version='3.2', base_url=ISAAC_ROS_URL, workspace='/opt/isaac
             depends[idx] = dep + f"-{version}-$ROS_DISTRO-$ROS_PACKAGE"
             
     kwargs.setdefault('name', f'isaac-ros:$TAG-{version}-$ROS_DISTRO-$ROS_PACKAGE')
+    kwargs.setdefault('group', 'robots')
     kwargs.setdefault('distros', ['humble'])
 
     return ros_container(package, f"{base_url}/{repo}", depends=depends, tag=tag, workspace=workspace, **kwargs)
