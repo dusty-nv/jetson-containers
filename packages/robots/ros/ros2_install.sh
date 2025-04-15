@@ -2,8 +2,9 @@
 # downloads, builds, and installs ROS2 packages from source in $ROS_WORKSPACE directory
 # for example:  ros2_install.sh xacro teleop_twist_joy
 source /ros_environment.sh
+
 export ROS_PACKAGE_PATH=${AMENT_PREFIX_PATH}
-set -ex
+export MAKEFLAGS="-j $(nproc)"
 
 ROS_WORKSPACE="${ROS_WORKSPACE:=${ROS_ROOT}}"
 ROSDEP_SKIP_KEYS="$ROSDEP_SKIP_KEYS gazebo11 libgazebo11-dev libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv"
@@ -18,6 +19,7 @@ fi
 
 echo "ROS2 building packages in $ROS_WORKSPACE => $@"
 mkdir -p $ROS_WORKSPACE/src
+set -ex
 
 if [[ $1 == http* ]]; then
     # direct clone of ROS repo/package from git
@@ -38,7 +40,7 @@ if [[ $1 == http* ]]; then
     fi
 
     cd $ROS_WORKSPACE
-    
+
     COLCON_FLAGS="$COLCON_FLAGS --packages-up-to $(basename $1)"
     rosinstall_list="$(basename $1).rosinstall"
 
@@ -79,6 +81,7 @@ colcon build ${COLCON_FLAGS}
 #rm -rf ${ROS_WORKSPACE}/build 
 
 #rm ${ROS_WORKSPACE}/*.rosinstall
+set +x
 
 if grep $ROS_WORKSPACE /ros_environment.sh; then
     echo "workspace $ROS_WORKSPACE was already set to be sourced on startup:"
@@ -86,7 +89,7 @@ else
     if [ -f /ros_environment.sh ] && grep -q 'function ros_source_env' /ros_environment.sh; then
     	if ! grep -q "$ROS_WORKSPACE/install/setup.bash" /ros_environment.sh; then
         	echo "Adding $ROS_WORKSPACE to ros_environment.sh"
-        	tac /ros_environment.sh | sed -e "3iros_source_env $ROS_WORKSPACE/install/setup.bash" | tac > /tmp/ros_environment.sh \
+        	tac /ros_environment.sh | sed -e "5iros_source_env $ROS_WORKSPACE/install/setup.bash" | tac > /tmp/ros_environment.sh \
             		&& mv /tmp/ros_environment.sh /ros_environment.sh
     	fi
     	chmod +x /ros_environment.sh
