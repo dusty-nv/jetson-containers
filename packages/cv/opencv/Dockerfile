@@ -1,6 +1,6 @@
 #---
 # name: opencv
-# group: core
+# group: cv
 # config: config.py
 # depends: [cuda, cudnn, python, numpy, opengl, vulkan]
 # test: test.py

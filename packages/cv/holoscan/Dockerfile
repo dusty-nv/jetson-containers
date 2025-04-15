@@ -1,6 +1,6 @@
 #---
 # name: holoscan
-# group: multimedia
+# group: cv
 # requires: '>=36'
 # depends: [pytorch, cupy, tensorrt, ffmpeg]
 # test: [test.sh]

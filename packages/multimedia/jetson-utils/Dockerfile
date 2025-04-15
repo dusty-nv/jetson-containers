@@ -1,6 +1,6 @@
 #---
 # name: jetson-utils
-# group: cuda
+# group: multimedia
 # depends: [cuda, tensorrt, python, cmake, gstreamer]
 # test: [test.sh]
 #---

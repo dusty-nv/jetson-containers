@@ -1,6 +1,6 @@
 #---
 # name: vpi
-# group: multimedia
+# group: cv
 # depends: [cuda, opengl, numpy]
 # requires: '>=36.4'
 #---

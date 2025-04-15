@@ -1,6 +1,6 @@
 #---
 # name: deepstream
-# group: multimedia
+# group: cv
 # config: config.py
 # requires: '>=32.6'
 # depends: [cuda, cudnn, tensorrt, cmake, python, gstreamer, tritonserver]
