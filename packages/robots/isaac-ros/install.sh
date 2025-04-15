@@ -22,8 +22,14 @@ rm -rf /tmp/foxglove-sdk
 
 # distro-specific workarounds
 if [ $ROS_DISTRO == "jazzy" ]; then
-  ROS_BRANCH=$ROS_DISTRO /ros2_install.sh "https://github.com/ament/ament_index"
+  #git clone --branch=$ROS_DISTRO https://github.com/ament/ament_index $ROS_WORKSPACE/src/ament_index
+  ament_index_root="$ROS_ROOT/install/include/ament_index_cpp"
+  cp $ament_index_root/ament_index_cpp/* $ament_index_root/
 fi
+
+# build various sources
+cd $ROS_WORKSPACE
+colcon build --symlink-install --base-paths src --event-handlers console_direct+
 
 # build other source dependencies
 ROS_BRANCH=master /ros2_install.sh "https://github.com/osrf/negotiated"
