@@ -1,6 +1,6 @@
 #---
 # name: arrow
-# group: core
+# group: numerical
 # config: config.py
 # depends: [cuda, cmake, python]
 # test: test.py
