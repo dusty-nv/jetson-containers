@@ -254,7 +254,7 @@ def log_status(text='', prefix='', done=False, **kwargs):
             kwargs.setdefault('attrs', 'reverse')
 
             if LogConfig.status != True:
-                print(f'\033[1;{terminal.lines-1}r\033[?6l', end='', flush=True)
+                print(f'\033[1;{terminal.lines-1}r\033[?6l\033[2J\033[H', end='', flush=True)
                 LogConfig.status = True
                 
             text = prefix + text

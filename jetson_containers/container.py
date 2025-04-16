@@ -14,7 +14,11 @@ import dockerhub_api
 from packaging.version import Version
 
 from .packages import find_package, find_packages, resolve_dependencies, validate_dict
-from .utils import split_container_name, query_yes_no, needs_sudo, sudo_prefix, get_dir, get_repo_dir
+
+from .utils import (
+    split_container_name, query_yes_no, needs_sudo, sudo_prefix, 
+    get_env, get_dir, get_repo_dir
+)
 
 from .logging import (
     get_log_dir, log_status, log_success, log_status, log_warning, log_debug, 
@@ -110,18 +114,16 @@ def build_container(
     if postfix:
         name += f"{':' if tag_idx < 0 else '-'}{postfix}"
 
-    log_info(f'<b>BUILDING  {packages}</b>')
+    log_status(f'<b>BUILDING  {packages}</b>')
 
-    # Add 5-second countdown
-    log_info("Starting build in...")
-    for i in range(5, 0, -1):
-        log_info(f"{i}...")
-        time.sleep(1)
+    # Add N-second countdown with BUILD_DELAY=N environment variable
+    build_delay = get_env('BUILD_DELAY', default=0, type=int)
 
-    # Initialize status bar and clear screen
-    terminal = os.get_terminal_size()
-    print(f'\033[1;{terminal.lines-1}r\033[?6l\033[2J\033[H', end='', flush=True)
-    LogConfig.status = True
+    if build_delay > 0:
+        log_info("Starting build in...")
+        for i in range(build_delay, 0, -1):
+            log_info(f"{i}...")
+            time.sleep(1)
 
     # build chain of all packages
     for idx, package in enumerate(packages):
