@@ -6,6 +6,9 @@ posix_ipc:
     focal: [python3-posix-ipc]
     jammy: [python3-posix-ipc]
 
+ament_python:
+  ubuntu: []
+  
 cuda_python:
   ubuntu: []
 

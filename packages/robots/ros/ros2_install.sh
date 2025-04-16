@@ -41,7 +41,7 @@ if [[ $1 == http* ]]; then
 
     cd $ROS_WORKSPACE
 
-    COLCON_FLAGS="$COLCON_FLAGS --packages-up-to $(basename $1)"
+    COLCON_FLAGS="$COLCON_FLAGS" #--packages-up-to $(basename $1)"
     rosinstall_list="$(basename $1).rosinstall"
 
     rosinstall_generator ${ROS_INSTALL_FLAGS} --from-path src > $rosinstall_list || \
