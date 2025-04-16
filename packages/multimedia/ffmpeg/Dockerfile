@@ -9,27 +9,10 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG GOBIN=/opt/go/bin
+ARG FFMPEG_INSTALL \
+    FFMPEG_VERSION \
+		TMP=/tmp/ffmpeg
 
-# Install ffmpeg
-RUN set -ex \
-	&& apt-get update \
-	&& apt-get install -y --no-install-recommends \
-	    ffmpeg \
-	    libavcodec-dev \
-	    libavfilter-dev \
-	    libavformat-dev \
-	    libavutil-dev \
-	    libavdevice-dev \
-	&& apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+COPY build.sh install.sh $TMP/
 
-# set Go env variables
-ENV GOPATH=/opt/go \
-	PATH=$PATH:$GOBIN
-
-# Test ffmpeg version
-RUN set -ex \
-	&& ffmpeg -version \
-	&& ffmpeg -encoders \
-	&& ffmpeg -decoders
+RUN $TMP/install.sh
