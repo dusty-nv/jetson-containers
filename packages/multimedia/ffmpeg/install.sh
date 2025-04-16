@@ -4,20 +4,23 @@ set -ex
 echo "Installing FFMPEG from $FFMPEG_INSTALL"
 
 if [ "$FFMPEG_INSTALL" == "jetpack" ]; then
-  echo "deb https://repo.download.nvidia.com/jetson/ffmpeg main main" | tee -a /etc/apt/sources.list
-  echo "deb-src https://repo.download.nvidia.com/jetson/ffmpeg main main" | tee -a /etc/apt/sources.list
+  APT_URL="https://repo.download.nvidia.com/jetson"
+  VERSION="=*nvidia"
+  apt-key adv --fetch-key $APT_URL/jetson-ota-public.asc
+  printf "deb $APT_URL/ffmpeg main main\ndeb-src $APT_URL/ffmpeg main main\n" | tee -a /etc/apt/sources.list
+  printf "Package: *\nPin: origin \"repo.download.nvidia.com\"\nPin-Priority: 999\n" | tee -a /etc/apt/preferences
 fi
 
 if [ "$FFMPEG_INSTALL" == "apt" ] || [ "$FFMPEG_INSTALL" == "jetpack" ]; then
   apt-get purge -y ffmpeg || true
   apt-get update
   apt-get install -y --no-install-recommends \
-	    ffmpeg \
 	    libavcodec-dev \
 	    libavfilter-dev \
 	    libavformat-dev \
 	    libavutil-dev \
-	    libavdevice-dev
+	    libavdevice-dev \
+      ffmpeg$VERSION
   apt-get clean
   rm -rf /var/lib/apt/lists/*
 elif [ "$FFMPEG_INSTALL" == "git" ]; then
