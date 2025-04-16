@@ -17,8 +17,9 @@ from .utils import get_repo_dir
 from .logging import log_debug, log_warning, log_error
 
 from .l4t_version import (
-    L4T_VERSION, CUDA_VERSION, PYTHON_VERSION, LSB_RELEASE, 
-    SYSTEM_ARM, SYSTEM_ARCH_LIST, DOCKER_ARCH, check_arch
+    L4T_VERSION, CUDA_VERSION, PYTHON_VERSION, DOCKER_ARCH,
+    LSB_RELEASE, LSB_RELEASES, SYSTEM_ARM, SYSTEM_ARCH_LIST, 
+    check_arch
 )
 
 _PACKAGES = {}
@@ -562,7 +563,7 @@ def package_requires(package, requires=None, system_arch=None, unless=None):
     return package
 
 
-def check_requirement(requires, l4t_version=L4T_VERSION, cuda_version=CUDA_VERSION, name: str=''):
+def check_requirement(requires, l4t_version=L4T_VERSION, cuda_version=CUDA_VERSION, lsb_release=LSB_RELEASE, name: str=''):
     """
     Check if the L4T/CUDA versions meet the needed specifier/requirement
     """
@@ -578,6 +579,10 @@ def check_requirement(requires, l4t_version=L4T_VERSION, cuda_version=CUDA_VERSI
         if requires == ('!=' + arch):
             return not check_arch(arch)
 
+    for lsb in LSB_RELEASES:
+        if requires == lsb or requires == ('==' + lsb):
+            return lsb_release == lsb
+            
     if 'cu' in requires:
         if Version(f"{cuda_version.major}{cuda_version.minor}") not in SpecifierSet(requires.replace('cu', '')):
             log_debug(f"Package {name} isn't compatible with CUDA {cuda_version} (requires {requires})")
