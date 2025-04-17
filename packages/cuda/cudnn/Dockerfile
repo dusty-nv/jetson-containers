@@ -24,12 +24,12 @@ RUN echo "Downloading ${CUDNN_DEB}" && \
     apt-get update && \
     apt-cache search cudnn && \
     apt list --installed | grep 'cuda\|cudnn\|cublas' && \
-    apt-get install -y --no-install-recommends ${CUDNN_PACKAGES} && \
+    apt-get install -y --no-install-recommends ${CUDNN_PACKAGES} file && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean && \
     dpkg --list | grep cudnn && \
     dpkg -P ${CUDNN_DEB} && \
     rm -rf /tmp/cudnn
-    
+
 RUN cd /usr/src/cudnn_samples_v*/conv_sample/ && \
     make -j$(nproc)
