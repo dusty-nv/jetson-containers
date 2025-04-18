@@ -3,11 +3,7 @@
 # group: ml
 # depends: [cuda, cudnn, tensorrt, python, numpy, h5py, bazel, protobuf:cpp]
 # test: test.py
-# docs: |
-#   Container for TF1/TF2 with CUDA support.
-#   Note that the [`l4t-tensorflow`](/packages/l4t/l4t-tensorflow) containers are similar, with the addition of OpenCV and PyCUDA.  
-#
-#   The TensorFlow wheels used in these are from https://docs.nvidia.com/deeplearning/frameworks/install-tf-jetson-platform
+# docs: Legacy TF1 installer and TF2 builder
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

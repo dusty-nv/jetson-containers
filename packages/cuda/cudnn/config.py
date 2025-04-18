@@ -82,8 +82,9 @@ def cudnn_builtin(version=None, requires=None, default=False):
     return passthrough
 
 CUDNN_URL='https://developer.download.nvidia.com/compute/cudnn'
+IS_CONFIG='package' in globals()  # CUDNN_VERSION gets imported by other packages
 
-if IS_TEGRA:
+if IS_TEGRA and IS_CONFIG:
     package = [
         # JetPack 6
         cudnn_package(
@@ -129,7 +130,7 @@ if IS_TEGRA:
         cudnn_builtin(requires='<36', default=True),
     ]
 
-elif IS_SBSA:
+elif IS_SBSA and IS_CONFIG:
     # sbsa
     package = [
         cudnn_package(
@@ -147,7 +148,7 @@ elif IS_SBSA:
             packages="libcudnn10-cuda-13 libcudnn10-dev-cuda-13 libcudnn10-samples"
         ),
     ]
-else:
+elif IS_CONFIG:
     # x86_64
     package = [
         cudnn_package(
