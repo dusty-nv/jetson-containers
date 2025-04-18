@@ -66,6 +66,9 @@ def ros_container(package: dict, *sources: str,
                     'ROS_WORKSPACE': workspace,
                 }
 
+                if 'build_args' in kwargs:
+                    pkg['build_args'].merge(kwargs['build_args'])
+
                 subs = dict(
                     ROS_DISTRO=distro, ROS_PACKAGE=base_package,
                     TAG=tag if tag else source.split('/')[-1].split('@')[0]
