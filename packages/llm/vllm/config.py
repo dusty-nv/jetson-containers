@@ -30,5 +30,6 @@ def vllm(vllm_version, xgrammar_version, branch=None, requires=None, default=Fal
 package = [
     # 0.6.5 compatible with jetson https://github.com/vllm-project/vllm/pull/9735
     vllm(vllm_version='0.7.4', xgrammar_version='0.1.15', default=False),
-    vllm(vllm_version='0.8.4', xgrammar_version='0.1.18', default=True),
+    vllm(vllm_version='0.8.4', xgrammar_version='0.1.18', default=False),
+    vllm(vllm_version='0.8.5', xgrammar_version='0.1.19', default=True),
 ]
