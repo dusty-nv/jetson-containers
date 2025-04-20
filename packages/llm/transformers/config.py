@@ -1,6 +1,6 @@
 from jetson_containers import L4T_VERSION, github_latest_tag, log_warning
 from jetson_containers.pypi_utils import get_latest_version
-from packaging.version import parse
+from packaging.version import parse as parse_version
 import os
 import json
 import time
@@ -113,7 +113,6 @@ def fetch_pypi_with_retry(package_name: str, max_retries: int = 5, initial_delay
 
             # Save to cache if we got valid data
             if data and 'releases' in data:
-                from pkg_resources import parse_version
                 sorted_versions = sorted(data['releases'].keys(), key=parse_version)
                 version = sorted_versions[-1]
                 log_warning(f"Successfully fetched version {version} from PyPI")
@@ -159,7 +158,6 @@ def transformers_pypi(version, default=False, requires=None) -> list:
                 log_warning(f"Using default version {DEFAULT_VERSIONS['transformers']} due to network failure")
                 version = DEFAULT_VERSIONS['transformers']
             else:
-                from pkg_resources import parse_version
                 sorted_versions = sorted(data['releases'].keys(), key=parse_version)
                 version = sorted_versions[-1]
                 log_warning(f"Using latest version from PyPI: {version}")

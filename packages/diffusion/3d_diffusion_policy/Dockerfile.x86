@@ -53,12 +53,12 @@ ARG MUJOCO_DIR=/root/.mujoco
 
 RUN mkdir -p ${MUJOCO_DIR} && \
     cd ${MUJOCO_DIR} && \
-    wget https://github.com/deepmind/mujoco/releases/download/2.1.0/mujoco210-linux-x86_64.tar.gz -O mujoco210.tar.gz --no-check-certificate && \
+    wget $WGET_FLAGS https://github.com/deepmind/mujoco/releases/download/2.1.0/mujoco210-linux-x86_64.tar.gz -O mujoco210.tar.gz --no-check-certificate && \
     tar -xvzf mujoco210.tar.gz
 
 RUN cd third_party/VRL3 && \
     CKPT_URL="http://jetson.webredirect.org:8000/assets/3d_diffusion_policy/vrl3_ckpts.zip" && \
-    wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${CKPT_URL} && \
+    wget $WGET_FLAGS ${CKPT_URL} && \
     unzip vrl3_ckpts.zip && \
     mv vrl3_ckpts ckpts && \
     rm -rf vrl3_ckpts.zip __MACOSX

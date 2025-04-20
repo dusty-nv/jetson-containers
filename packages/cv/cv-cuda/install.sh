@@ -9,7 +9,7 @@ mkdir $downloads
 cd $downloads
 
 set -ex
-wget --quiet --show-progress --progress=bar:force:noscroll -i ../urls.txt
+wget $WGET_FLAGS -i ../urls.txt
 
 # jetson binaries come as a bundle
 for filename in *.zip; do  

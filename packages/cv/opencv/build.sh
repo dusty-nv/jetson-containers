@@ -2,7 +2,7 @@
 set -ex
 echo "Building opencv-python ${OPENCV_VERSION}"
 
-bash /tmp/opencv/install_deps.sh
+bash $TMP/install_deps.sh
 
 cd /opt
 
@@ -23,7 +23,7 @@ git checkout --recurse-submodules ${OPENCV_VERSION}
 cd ../
 
 # apply patches to setup.py
-git apply /tmp/opencv/patches.diff || echo "failed to apply git patches"
+git apply $TMP/patches.diff || echo "failed to apply git patches"
 git diff
 
 # OpenCV looks for the cuDNN version in cudnn_version.h, but it's been renamed to cudnn_version_v8.h
@@ -108,5 +108,4 @@ mkdir -p /tmp/debs/
 cp *.deb /tmp/debs/
 
 tarpack upload OpenCV-${OPENCV_VERSION} /tmp/debs/ || echo "failed to upload tarball"
-
-
+echo "installed" > "$TMP/.opencv"

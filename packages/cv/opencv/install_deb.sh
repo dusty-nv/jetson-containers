@@ -39,7 +39,7 @@ mkdir opencv
 cd opencv
 
 echo "Downloading OpenCV archive from ${OPENCV_URL}..."
-if ! wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate "${OPENCV_URL}" -O "${OPENCV_DEB}"; then
+if ! wget $WGET_FLAGS "${OPENCV_URL}" -O "${OPENCV_DEB}"; then
     echo "❌ ERROR: Failed to download OpenCV archive from ${OPENCV_URL}"
     exit 1
 fi

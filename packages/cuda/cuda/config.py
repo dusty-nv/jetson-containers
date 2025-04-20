@@ -153,6 +153,8 @@ def pip_cache(version, requires=None):
 
     pip_cache['build_args'] = {
         'TAR_INDEX_URL': f"https://apt.{index_host}/{apt_path}",
+        'MULTIARCH_URL': f"https://apt.{index_host}/multiarch",
+        'DOWNLOADS_URL': f"https://apt.{index_host}/assets",
         'PIP_INDEX_REPO': f"https://pypi.{index_host}/{pip_path}",
         #'PIP_TRUSTED_HOSTS': index_host,
         'PIP_UPLOAD_REPO': os.environ.get('PIP_UPLOAD_REPO', f"{os.environ.get('PIP_UPLOAD_HOST', 'http://localhost')}/{pip_path}"),

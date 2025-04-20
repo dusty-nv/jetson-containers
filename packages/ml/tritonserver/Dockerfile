@@ -16,7 +16,7 @@ ARG TRITON_VERSION
 ARG TRITON_CLIENTS
 
 RUN cd /opt && \
-    wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${TRITON_URL} -O ${TRITON_TAR} && \
+		wget $WGET_FLAGS ${TRITON_URL} -O ${TRITON_TAR} && \
     tar -xzvf ${TRITON_TAR} && \
     rm ${TRITON_TAR}
     

@@ -1,15 +1,20 @@
 #---
 # name: vulkan
 # group: multimedia
-# depends: [build-essential]
+# depends: [build-essential, pip_cache]
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-      vulkan-tools \
-      libvulkan1 \
-      libvulkan-dev \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
+ARG VULKAN_VERSION \
+    FORCE_BUILD=off \
+    TMP=/tmp/vulkan
+
+COPY build.sh install.sh $TMP/
+
+RUN $TMP/install.sh || $TMP/build.sh || true
+
+RUN if [ ! -f "$TMP/.vulkan" ]; then \
+      echo "FAILED to install Vulkan SDK $VULKAN_VERSION"; \
+      exit 1; \
+    fi

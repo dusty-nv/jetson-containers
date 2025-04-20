@@ -2,7 +2,7 @@
 # name: opencv
 # group: cv
 # config: config.py
-# depends: [cuda, cudnn, python, numpy, opengl, vulkan]
+# depends: [cuda, cudnn, python, numpy, opengl, vulkan, video-codec-sdk]
 # test: test.py
 # notes: install or build OpenCV (with CUDA) from Jetson pip server
 #---
@@ -13,7 +13,8 @@ ARG OPENCV_VERSION \
     OPENCV_PYTHON \
     OPENCV_URL \
     CUDA_ARCH_BIN \
-    FORCE_BUILD=off
+    FORCE_BUILD=off \
+    TMP=/tmp/opencv
 
 ENV OPENCV_VERSION=${OPENCV_VERSION} \
     OPENCV_URL=${OPENCV_URL}
@@ -23,7 +24,11 @@ COPY build.sh \
      install_deps.sh \
      install_deb.sh \
      patches.diff \
-     /tmp/opencv/
+     $TMP/
 
-RUN cd /tmp/opencv && ./install.sh || ./build.sh || echo "BUILD FAILED (OpenCV ${OPENCV_VERSION})"
+RUN cd $TMP && ./install.sh || ./build.sh || true
 
+RUN if [ ! -f "$TMP/.opencv" ]; then \
+      echo "FAILED to install OpenCV $OPENCV_VERSION"; \
+      exit 1; \
+    fi
