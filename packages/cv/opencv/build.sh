@@ -45,6 +45,7 @@ cd /opt/opencv-python
    
 export ENABLE_CONTRIB=1
 export CMAKE_BUILD_PARALLEL_LEVEL=$(nproc)
+export CMAKE_POLICY_VERSION_MINIMUM="3.5"
 export OPENCV_BUILD_ARGS="\
    -DCPACK_BINARY_DEB=ON \
    -DBUILD_EXAMPLES=OFF \
@@ -59,7 +60,6 @@ export OPENCV_BUILD_ARGS="\
    -DCUDNN_INCLUDE_DIR=/usr/include/$(uname -i)-linux-gnu \
    -DEIGEN_INCLUDE_PATH=/usr/include/eigen3 \
    -DWITH_EIGEN=ON \
-   -DENABLE_NEON=ON \
    -DOPENCV_DNN_CUDA=ON \
    -DOPENCV_ENABLE_NONFREE=ON \
    -DOPENCV_GENERATE_PKGCONFIG=ON \
@@ -70,13 +70,17 @@ export OPENCV_BUILD_ARGS="\
    -DWITH_GSTREAMER=ON \
    -DWITH_LIBV4L=ON \
    -DWITH_GTK=ON \
-   -DWITH_OPENGL=OFF \
+   -DWITH_OPENGL=ON \
    -DWITH_OPENCL=OFF \
    -DWITH_IPP=OFF \
    -DWITH_TBB=ON \
    -DBUILD_TIFF=ON \
    -DBUILD_PERF_TESTS=OFF \
    -DBUILD_TESTS=OFF"
+
+if [ "$(uname -m)" == "aarch64" ]; then
+    export OPENCV_BUILD_ARGS="${OPENCV_BUILD_ARGS} -DENABLE_NEON=ON"
+fi
 
 export CMAKE_ARGS="${OPENCV_BUILD_ARGS} -DOPENCV_EXTRA_MODULES_PATH=/opt/opencv-python/opencv_contrib/modules"
 
