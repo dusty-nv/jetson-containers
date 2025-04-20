@@ -1,7 +1,7 @@
 #---
 # name: vila
 # group: vlm
-# depends: [awq, flash-attention, opencv]
+# depends: [pytorch, flash-attention, transformers, opencv, deepspeed:0.9.5]
 # requires: '>=35'
 # test: [test.sh, test.py]
 #---
@@ -14,15 +14,15 @@ RUN git clone --branch=main --depth=1 --recursive https://github.com/NVlabs/VILA
     cd /opt/VILA && \
     sed -i 's|torch==.*"|torch"|' pyproject.toml && \
     sed -i 's|pytorchvideo==.*"|pytorchvideo"|' pyproject.toml && \
-    sed -i 's|bitsandbytes==.*"|bitsandbytes"|' pyproject.toml && \
     sed -i 's|opencv-python==.*"|opencv-python"|' pyproject.toml && \
+    sed -i 's|"bitsandbytes.*",||' pyproject.toml && \
     cat pyproject.toml | grep torch && \
     pip3 install --verbose -e . && \
     pip3 install --verbose -e ".[train]" && \
-    pip3 install --verbose -e ".[eval]"
+    pip3 install --verbose -e ".[eval]" 
     
-RUN pip3 install --verbose --no-cache-dir 'transformers==4.37.2' && \
-    site_pkg_path=$(python3 -c 'import site; print(site.getsitepackages()[0])') && \
-    cp -rv /opt/VILA/llava/train/transformers_replace/* $site_pkg_path/transformers/ && \
-    cp -rv /opt/VILA/llava/train/deepspeed_replace/* $site_pkg_path/deepspeed/
+#RUN pip3 install --verbose --no-cache-dir 'transformers==4.37.2' && \
+#    site_pkg_path=$(python3 -c 'import site; print(site.getsitepackages()[0])') && \
+#    cp -rv /opt/VILA/llava/train/transformers_replace/* $site_pkg_path/transformers/ && \
+#    cp -rv /opt/VILA/llava/train/deepspeed_replace/* $site_pkg_path/deepspeed/
 

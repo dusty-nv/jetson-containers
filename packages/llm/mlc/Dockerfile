@@ -2,7 +2,7 @@
 # name: mlc
 # group: llm
 # config: config.py
-# depends: [transformers]
+# depends: [transformers, sudonim]
 # requires: '>=35'
 # test: [test.py, test.sh]
 # docs: docs.md

@@ -33,7 +33,7 @@ def pip_cache(version, requires=None):
     pip_cache['test'] = []
 
     pip_cache['build_args'] = {
-        'TAR_INDEX_URL': f"https://apt.{index_host}:8000/{repo_path}",
+        'TAR_INDEX_URL': f"https://apt.{index_host}/{repo_path}",
         'PIP_INDEX_REPO': f"https://pypi.{index_host}/{repo_path}",
         #'PIP_TRUSTED_HOSTS': index_host,
         'PIP_UPLOAD_REPO': os.environ.get('PIP_UPLOAD_REPO', f"{os.environ.get('PIP_UPLOAD_HOST', 'http://localhost')}/{repo_path}"),
