@@ -44,13 +44,13 @@ fi
 # Build SGLang
 cd $REPO_DIR/python
 
-# sed -i '/torchao/d' pyproject.toml
-# sed -i '/flashinfer_python/d' pyproject.toml
-# sed -i '/sgl-kernel/d' pyproject.toml
-# sed -i '/vllm/d' pyproject.toml
-# sed -i '/torch/d' pyproject.toml
-# sed -i '/torchvision/d' pyproject.toml
-# sed -i '/xgrammar/d' python/pyproject.toml
+sed -i '/torchao/d' pyproject.toml
+sed -i '/flashinfer_python/d' pyproject.toml
+sed -i '/sgl-kernel/d' pyproject.toml
+sed -i '/vllm/d' pyproject.toml
+sed -i '/torch/d' pyproject.toml
+sed -i '/torchvision/d' pyproject.toml
+sed -i '/xgrammar/d' python/pyproject.toml
 sed -i 's/==/>=/g' pyproject.toml
 
 
