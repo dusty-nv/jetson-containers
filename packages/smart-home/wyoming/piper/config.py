@@ -1,25 +1,17 @@
-from jetson_containers import handle_text_request
+from jetson_containers import github_latest_tag
 
-from packaging.version import Version
-
-
-def create_package(version, branch=None, default=False) -> list:
+def create_package(version, default=False) -> list:
     pkg = package.copy()
+    wanted_version = github_latest_tag('rhasspy/wyoming-piper') if version == 'latest' else version
 
-    if not branch:
-        branch = f'v{version}'
-
-    wanted_version = handle_text_request(f'https://raw.githubusercontent.com/rhasspy/wyoming-piper/{branch}/wyoming_piper/VERSION')
-
-    # FIXME: wyoming-piper on branch v1.5.2 has incorrect version set in VERSION file.
-    if Version(version) != Version(wanted_version):
-        wanted_version = version
+    if wanted_version.startswith("v"):
+        wanted_version = wanted_version[1:]
 
     pkg['name'] = f'wyoming-piper:{wanted_version}'
 
     pkg['build_args'] = {
         'WYOMING_PIPER_VERSION': wanted_version,
-        'WYOMING_PIPER_BRANCH': branch,
+        'WYOMING_PIPER_BRANCH': f"v{wanted_version}",
     }
 
     builder = pkg.copy()
@@ -33,6 +25,5 @@ def create_package(version, branch=None, default=False) -> list:
     return pkg, builder
 
 package = [
-    create_package("1.5.2", default=True),
-    create_package("1.5.0", default=False),
+    create_package("latest", default=True),
 ]

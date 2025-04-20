@@ -33,7 +33,7 @@ def bitsandbytes(version, requires=None, default=False, branch=None, repo='bitsa
 
 package = [
     bitsandbytes('0.39.1', default=(CUDA_VERSION < Version('12.2')), repo="dusty-nv/bitsandbytes", branch="main"),
-    bitsandbytes('0.44.1'),
-    bitsandbytes('0.45.0', default=(CUDA_VERSION >= Version('12.2'))),
+    bitsandbytes('0.45.4', default=(CUDA_VERSION < Version('12.6'))),
+    bitsandbytes('0.46.0', default=(CUDA_VERSION >= Version('12.6'))),
 ]
 

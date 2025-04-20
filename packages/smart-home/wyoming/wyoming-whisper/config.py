@@ -1,19 +1,17 @@
-from jetson_containers import handle_text_request
+from jetson_containers import github_latest_tag
 
-
-def create_package(version, branch=None, default=False) -> list:
+def create_package(version, default=False) -> list:
     pkg = package.copy()
+    wanted_version = github_latest_tag('rhasspy/wyoming-faster-whisper') if version == 'latest' else version
 
-    if not branch:
-        branch = f'v{version}'
+    if wanted_version.startswith("v"):
+        wanted_version = wanted_version[1:]
 
-    url = f'https://raw.githubusercontent.com/rhasspy/wyoming-faster-whisper/{branch}/wyoming_faster_whisper/VERSION'
-    wanted_version = handle_text_request(url)
     pkg['name'] = f'wyoming-whisper:{wanted_version}'
 
     pkg['build_args'] = {
         'WYOMING_WHISPER_VERSION': wanted_version,
-        'WYOMING_WHISPER_BRANCH': branch
+        'WYOMING_WHISPER_BRANCH': f"v{wanted_version}",
     }
 
     builder = pkg.copy()
@@ -27,6 +25,5 @@ def create_package(version, branch=None, default=False) -> list:
     return pkg, builder
 
 package = [
-    create_package("2.3.0", default=True),
-    create_package("2.2.0"),
+    create_package("latest", default=True),
 ]

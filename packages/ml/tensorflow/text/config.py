@@ -41,4 +41,6 @@ def tensorflow_text(version, tensorflow=None, requires=None):
 package = [
     # JetPack 5/6
     tensorflow_text('2.18.0', tensorflow='2.18.0', requires='==36.*'),
+    tensorflow_text('2.19.0', tensorflow='2.19.0', requires='==36.*'),
+    tensorflow_text('2.20.0', tensorflow='2.20.0', requires='==36.*'),
 ]

@@ -2,10 +2,10 @@
 # name: decord
 # group: multimedia
 # config: config.py
-# depends: [cuda, cudnn, numpy, ffmpeg, cmake]
+# depends: [numpy, ffmpeg, cmake]
 # requires: '>=34.1.0'
 # test: test.py
-# notes: https://github.com/state-spaces/decord
+# notes: https://github.com/dmlc/decord
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

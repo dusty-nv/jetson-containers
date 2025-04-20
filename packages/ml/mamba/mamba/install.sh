@@ -6,4 +6,5 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install --no-cache-dir --verbose mamba_ssm==${MAMBA_VERSION}
+pip3 install mamba_ssm==${MAMBA_VERSION} || \
+pip3 install mamba_ssm==${MAMBA_VERSION_SPEC}

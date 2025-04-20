@@ -7,9 +7,6 @@ def cuda_python(version, cuda=None):
     
     pkg['name'] = f"cuda-python:{version}"
 
-    if Version(version) == CUDA_VERSION:
-        pkg['alias'] = 'cuda-python'
-        
     if not cuda:
         cuda = version
         
@@ -23,8 +20,16 @@ def cuda_python(version, cuda=None):
         
     pkg['build_args'] = {'CUDA_PYTHON_VERSION': version}
         
-    return pkg
+    builder = pkg.copy()
+    builder['name'] = builder['name'] + '-builder'
+    builder['build_args'] = {**builder['build_args'], 'FORCE_BUILD': 'on'}
     
+    if Version(version) == CUDA_VERSION:
+        pkg['alias'] = 'cuda-python'
+        builder['alias'] = 'cuda-python:builder'
+        
+    return pkg, builder
+
 if L4T_VERSION.major <= 32:
     package = None
 else:
@@ -33,6 +38,8 @@ else:
             cuda_python('12.2'),
             cuda_python('12.4'),
             cuda_python('12.6'),
+            cuda_python('12.8'),
+            cuda_python('13.0'),
         ]
     elif L4T_VERSION.major >= 34:  # JetPack 5
         package = [

@@ -1,20 +1,24 @@
 
-def vllm(vllm_version, xgrammar_version, requires=None, default=False):
+def vllm(vllm_version, xgrammar_version, branch=None, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
         pkg['requires'] = requires   
 
-    pkg['name'] = f'vllm:{vllm_version}'
+    suffix = branch if branch else vllm_version
+    branch = branch if branch else f'v{vllm_version}'
+
+    pkg['name'] = f'vllm:{suffix}'
 
     pkg['build_args'] = {
         'VLLM_VERSION': vllm_version,
+        'VLLM_BRANCH': branch,
         'XGRAMMAR_VERSION': xgrammar_version,
     }
 
     builder = pkg.copy()
 
-    builder['name'] = f'vllm:{vllm_version}-builder'
+    builder['name'] = f'vllm:{suffix}-builder'
     builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
 
     if default:
@@ -25,5 +29,6 @@ def vllm(vllm_version, xgrammar_version, requires=None, default=False):
 
 package = [
     # 0.6.5 compatible with jetson https://github.com/vllm-project/vllm/pull/9735
-    vllm(vllm_version='0.6.6.post1', xgrammar_version='0.1.9', default=True),
+    vllm(vllm_version='0.7.4', xgrammar_version='0.1.15', default=False),
+    vllm(vllm_version='0.8.4', xgrammar_version='0.1.18', default=True),
 ]

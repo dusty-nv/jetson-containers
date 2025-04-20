@@ -11,7 +11,7 @@ ADD https://api.github.com/repos/TRI-ML/prismatic-vlms/git/refs/heads/main /tmp/
 
 RUN git clone --depth=1 --recursive https://github.com/TRI-ML/prismatic-vlms /opt/prismatic && \
     cd /opt/prismatic && \
-    pip3 install --verbose -e .
+    pip3 install -e .
     
 # patch issue of NCCL P2P not being supported on Jetson, and accelerate not honoring alternate backends
 RUN PYTHON_ROOT=`pip3 show accelerate | grep Location: | cut -d' ' -f2` && \

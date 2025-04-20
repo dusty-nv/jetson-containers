@@ -41,5 +41,6 @@ package = [
     llama_cpp('0.3.2'),
     llama_cpp('0.3.5'),
     llama_cpp('0.3.6'),
-    llama_cpp('0.3.7', default=True)
+    llama_cpp('0.3.7'),
+    llama_cpp('0.3.8', default=True),
 ]

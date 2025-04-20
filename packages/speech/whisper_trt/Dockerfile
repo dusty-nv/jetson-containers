@@ -17,7 +17,7 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
     
-RUN pip3 install --no-cache-dir --verbose openai-whisper && \
+RUN pip3 install openai-whisper && \
     git clone https://github.com/NVIDIA-AI-IOT/whisper_trt /opt/whisper_trt && \
     cd /opt/whisper_trt && \
     pip3 install -e . && \

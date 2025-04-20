@@ -11,12 +11,12 @@ cd /opt/gsplat
 export BUILD_NO_CUDA=0
 export WITH_SYMBOLS=0
 export LINE_INFO=1
-export MAX_JOBS=$(nproc)
-pip3 wheel . -w /opt/gsplat/wheels
+MAX_JOBS=$(nproc) \
+pip3 wheel . -w /opt/gsplat/wheels --verbose
 
-pip3 install --no-cache-dir --verbose /opt/gsplat/wheels/gsplat*.whl
+pip3 install /opt/gsplat/wheels/gsplat*.whl
 
 cd /opt/gsplat
-pip3 install 'numpy<2'
+
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/gsplat/wheels/gsplat*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

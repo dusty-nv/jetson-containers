@@ -8,7 +8,7 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-RUN pip3 install --no-cache-dir --verbose openai pycurl
+RUN pip3 install openai pycurl
 RUN python3 -c 'import openai; print(f"OpenAI API version: {openai.__version__}")'
 
 # https://github.com/ggerganov/llama.cpp/discussions/795

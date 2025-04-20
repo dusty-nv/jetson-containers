@@ -71,7 +71,7 @@ cd /opt/mlc-llm/3rdparty/tvm/python
 TVM_LIBRARY_PATH=/opt/mlc-llm/build/tvm \
 python3 setup.py --verbose bdist_wheel --dist-dir /opt
 
-pip3 install --no-cache-dir --verbose /opt/tvm*.whl
+pip3 install /opt/tvm*.whl
 #pip3 show tvm && python3 -c 'import tvm'
 #rm -rf dist build
 
@@ -85,7 +85,7 @@ fi
 cd python
 python3 setup.py --verbose bdist_wheel --dist-dir /opt
 
-pip3 install --no-cache-dir --verbose /opt/mlc*.whl
+pip3 install /opt/mlc*.whl
 
 # make sure it loads
 #cd /

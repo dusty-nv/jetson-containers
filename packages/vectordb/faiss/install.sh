@@ -5,6 +5,7 @@ set -ex
 apt-get update
 apt-get install -y --no-install-recommends \
 	  libopenblas-dev \
+	  libgflags-dev \
 	  swig
 rm -rf /var/lib/apt/lists/*
 apt-get clean
@@ -15,6 +16,6 @@ if [ "$FORCE_BUILD" == "on" ]; then
 fi
 
 tarpack install faiss-${FAISS_VERSION}
-pip3 install --no-cache-dir --verbose faiss==${FAISS_VERSION}
+pip3 install faiss==${FAISS_VERSION}
 
 python3 -c 'import faiss; print(faiss.__version__);'

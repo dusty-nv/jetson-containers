@@ -12,4 +12,4 @@ ARG PYCUDA_VERSION
 
 COPY build.sh /tmp/build_pycuda.sh
 
-RUN pip3 install --no-cache-dir pycuda || /tmp/build_pycuda.sh
+RUN pip3 install pycuda || /tmp/build_pycuda.sh

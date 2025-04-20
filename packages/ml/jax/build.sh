@@ -2,8 +2,8 @@
 # JAX builder for Jetson (architecture: ARM64, CUDA support)
 set -ex
 
-# Install LLVM/clang dev packages
-./llvm.sh 18 all
+# Install LLVM/Clang 20 # Compatible with blackwell
+./llvm.sh 20 all
 
 echo "Building JAX for Jetson"
 
@@ -14,27 +14,28 @@ git clone --depth=1 --recursive https://github.com/google/jax /opt/jax
 cd /opt/jax
 
 # Build jaxlib from source with detected versions
-BUILD_FLAGS='--enable_cuda --enable_nccl=False '
-BUILD_FLAGS+='--cuda_compute_capabilities="sm_87" '
-BUILD_FLAGS+='--cuda_version=12.6.3 --cudnn_version=9.4.0 '
-# BUILD_FLAGS+='--bazel_options=--repo_env=LOCAL_CUDA_PATH="/usr/local/cuda-12.6" '
-# BUILD_FLAGS+='--bazel_options=--repo_env=LOCAL_CUDNN_PATH="/opt/nvidia/cudnn/" '
-BUILD_FLAGS+='--output_path=/opt/wheels '
-    
-python3 build/build.py $BUILD_FLAGS
-python3 build/build.py $BUILD_FLAGS --build_gpu_kernel_plugin=cuda --build_gpu_plugin
+BUILD_FLAGS='--disable_nccl '
+BUILD_FLAGS+='--cuda_compute_capabilities="sm_87,sm_89,sm_90,sm_100,sm_101,sm_110,sm_12.0" '
+BUILD_FLAGS+='--cuda_version=12.8.1 --cudnn_version=9.8.0 '
+# BUILD_FLAGS+='--bazel_options=--repo_env=LOCAL_CUDA_PATH="/usr/local/cuda-12.8"'
+# BUILD_FLAGS+='--bazel_options=--repo_env=LOCAL_CUDNN_PATH="/opt/nvidia/cudnn/"'
+BUILD_FLAGS+='--output_path=$PIP_WHEEL_DIR '
+BUILD_FLAGS+='--clang_path=/usr/lib/llvm-20/bin/clang'
+
+python3 build/build.py requirements_update
+python3 build/build.py build $BUILD_FLAGS --wheels=jaxlib,jax-cuda-plugin,jax-cuda-pjrt
 
 # Build the jax pip wheels
-pip3 wheel --wheel-dir=/opt/wheels --no-deps --verbose .
+pip3 wheel --wheel-dir=$PIP_WHEEL_DIR --no-deps --verbose .
 
 # Upload the wheels to mirror
-twine upload --verbose /opt/wheels/jaxlib-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
-twine upload --verbose /opt/wheels/jax_cuda12_pjrt-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
-twine upload --verbose /opt/wheels/jax_cuda12_plugin-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
-twine upload --verbose /opt/wheels/jax-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose $PIP_WHEEL_DIR/jaxlib-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose $PIP_WHEEL_DIR/jax_cuda12_pjrt-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose $PIP_WHEEL_DIR/jax_cuda12_plugin-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose $PIP_WHEEL_DIR/jax-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
 # Install them into the container
-cd /opt/wheels/
-pip3 install --verbose --no-cache-dir jaxlib*.whl jax_cuda12_plugin*.whl jax_cuda12_pjrt*.whl opt_einsum
-pip3 install --verbose --no-cache-dir --no-dependencies jax*.whl 
+cd $PIP_WHEEL_DIR/
+pip3 install jaxlib*.whl jax_cuda12_plugin*.whl jax_cuda12_pjrt*.whl opt_einsum
+pip3 install --no-dependencies jax*.whl
 cd /opt/jax

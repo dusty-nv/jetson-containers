@@ -1,0 +1,85 @@
+groups:
+  - name: vlm_alerts
+    rules:
+      - alert: r0
+        expr: alert_status{instance="localhost:5012", job="jps_vlm_alerts", alert_number="r0"} == 1.0
+        annotations:
+          alert_string: '{{ $labels.alert_string}}'
+          
+
+      - alert: r1
+        expr: alert_status{instance="localhost:5012", job="jps_vlm_alerts", alert_number="r1"} == 1.0
+        annotations:
+          alert_string: '{{ $labels.alert_string}}'
+          
+
+      - alert: r2
+        expr: alert_status{instance="localhost:5012", job="jps_vlm_alerts", alert_number="r2"} == 1.0
+        annotations:
+          alert_string: '{{ $labels.alert_string}}'
+          
+
+      - alert: r3
+        expr: alert_status{instance="localhost:5012", job="jps_vlm_alerts", alert_number="r3"} == 1.0
+        annotations:
+          alert_string: '{{ $labels.alert_string}}'
+          
+
+      - alert: r4
+        expr: alert_status{instance="localhost:5012", job="jps_vlm_alerts", alert_number="r4"} == 1.0
+        annotations:
+          alert_string: '{{ $labels.alert_string}}'
+          
+
+      - alert: r5
+        expr: alert_status{instance="localhost:5012", job="jps_vlm_alerts", alert_number="r5"} == 1.0
+        annotations:
+          alert_string: '{{ $labels.alert_string}}'
+          
+
+      - alert: r6
+        expr: alert_status{instance="localhost:5012", job="jps_vlm_alerts", alert_number="r6"} == 1.0
+        annotations:
+          alert_string: '{{ $labels.alert_string}}'
+          
+
+      - alert: r7
+        expr: alert_status{instance="localhost:5012", job="jps_vlm_alerts", alert_number="r7"} == 1.0
+        annotations:
+          alert_string: '{{ $labels.alert_string}}'
+          
+
+      - alert: r8
+        expr: alert_status{instance="localhost:5012", job="jps_vlm_alerts", alert_number="r8"} == 1.0
+        annotations:
+          alert_string: '{{ $labels.alert_string}}'
+          
+
+      - alert: r9
+        expr: alert_status{instance="localhost:5012", job="jps_vlm_alerts", alert_number="r9"} == 1.0
+        annotations:
+          alert_string: '{{ $labels.alert_string}}'
+          
+
+
+  - name: SystemResource
+    rules:
+      - alert: cpu_usage_overload
+        expr: >-
+          (((count(count(node_cpu_seconds_total) by (cpu))) -
+          avg(sum by (mode)(irate(node_cpu_seconds_total{mode
+          ='idle'}[5m])))) * 100) / count(count(node_cpu_seconds_total)
+          by (cpu)) > 85
+        annotations:
+          value: '{{ $value }}'
+          threshold: '85'
+      - alert: ram_usage_overload
+        expr: >-
+          (avg_over_time(node_memory_MemTotal_bytes[1m]) -
+          avg_over_time(node_memory_MemFree_bytes[1m]) -
+          avg_over_time(node_memory_Cached_bytes[1m]) -
+          avg_over_time(node_memory_Buffers_bytes[1m])) / avg_over_time(node_memory_MemTotal_bytes[1m]) > 
+          0.9
+        annotations:
+          value: '{{ $value }}'
+          threshold: '0.9'

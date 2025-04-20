@@ -33,6 +33,7 @@ def build_cudf(version, arrow='arrow', repo='dusty-nv/cudf', requires=None, defa
     return cudf
 
 package = [
-    build_cudf('23.10.03', 'arrow:12.0.1', requires='>=36', default=True),
+    build_cudf('25.06.00', 'arrow:19.0.1', requires='>=36', default=True),
+    build_cudf('23.10.03', 'arrow:12.0.1', requires='>=36', default=False),
     build_cudf('21.10.02', requires='==35.*', default=True)
 ]

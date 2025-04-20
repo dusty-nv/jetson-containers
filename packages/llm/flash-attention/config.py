@@ -26,8 +26,10 @@ def flash_attn(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    flash_attn('2.5.7', default=(CUDA_VERSION < Version('12.6'))),
+    flash_attn('2.5.7'),
     flash_attn('2.6.3'),
-    flash_attn('2.7.2.post1', default=(CUDA_VERSION >= Version('12.6'))),
+    flash_attn('2.7.2.post1'),
+    flash_attn('2.7.4.post1', default=(CUDA_VERSION <= Version('12.8'))),
+    # flash_attn('2.7.4.post2', default=(CUDA_VERSION >= Version('12.8'))),
 ]
 

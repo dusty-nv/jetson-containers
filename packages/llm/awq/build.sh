@@ -12,14 +12,14 @@ sed -i \
 
 cat awq/pyproject.toml
 
-pip3 wheel --wheel-dir=/opt/wheels --verbose ./awq
-pip3 wheel --wheel-dir=/opt/wheels --verbose ./awq/awq/kernels
+pip3 wheel --wheel-dir=$PIP_WHEEL_DIR --verbose ./awq
+pip3 wheel --wheel-dir=$PIP_WHEEL_DIR --verbose ./awq/awq/kernels
 
-ls /opt/wheels
+ls $PIP_WHEEL_DIR
 rm -rf awq
 
-pip3 install --no-cache-dir --verbose /opt/wheels/awq*.whl
+pip3 install $PIP_WHEEL_DIR/awq*.whl
 #pip3 show awq && python3 -c 'import awq' && python3 -m awq.entry --help
 
-twine upload --verbose /opt/wheels/awq-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
-twine upload --verbose /opt/wheels/awq_inference*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose $PIP_WHEEL_DIR/awq-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose $PIP_WHEEL_DIR/awq_inference*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

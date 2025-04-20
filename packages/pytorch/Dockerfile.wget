@@ -8,11 +8,11 @@ FROM ${BASE_IMAGE}
 # download and install the PyTorch wheel
 ARG PYTORCH_URL \
     PYTORCH_WHL \
-    TORCH_CUDA_ARCH_ARGS
+    TORCH_CUDA_ARCH_LIST
 
 # # set the CUDA architectures that PyTorch extensions get built for
 ENV DEBIAN_FRONTEND=noninteractive \
-    TORCH_CUDA_ARCH_LIST=${TORCH_CUDA_ARCH_ARGS}
+    TORCH_CUDA_ARCH_LIST=${TORCH_CUDA_ARCH_LIST}
 
 # install prerequisites
 RUN set -ex \
@@ -29,7 +29,7 @@ RUN set -ex \
     \
     # download and install the PyTorch wheel
     && wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${PYTORCH_URL} -O /opt/${PYTORCH_WHL} \
-    && pip3 install --verbose /opt/${PYTORCH_WHL} \
+    && pip3 install /opt/${PYTORCH_WHL} \
     && python3 -c 'import torch; print(f"PyTorch version: {torch.__version__}"); print(f"CUDA available:  {torch.cuda.is_available()}"); print(f"cuDNN version:   {torch.backends.cudnn.version()}"); print(torch.__config__.show());' \
     \
     # patch for https://github.com/pytorch/pytorch/issues/45323 \
@@ -39,7 +39,7 @@ RUN set -ex \
     && sed -i 's/  set(TORCH_CXX_FLAGS "-D_GLIBCXX_USE_CXX11_ABI=")/  set(TORCH_CXX_FLAGS "-D_GLIBCXX_USE_CXX11_ABI=0")/g' ${TORCH_CMAKE_CONFIG} \
     \
     # PyTorch C++ extensions frequently use ninja parallel builds \
-    && pip3 install --no-cache-dir \
+    && pip3 install \
         scikit-build \
         ninja
    

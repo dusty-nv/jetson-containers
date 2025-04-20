@@ -26,8 +26,8 @@ RUN git clone https://github.com/${TTS_REPO} ${TTS_PATH} && \
     sed 's|answer[[:space:]]*=.*|answer=\"y\"|' -i TTS/utils/manage.py && \
     cat requirements.txt && \
     \
-    pip3 install --ignore-installed --no-cache-dir blinker && \
-    pip3 install --no-cache-dir --verbose -r requirements.txt && \
+    pip3 install --ignore-installed blinker && \
+    pip3 install -r requirements.txt && \
     \
     python3 setup.py --verbose bdist_wheel && \
     cp dist/TTS*.whl /opt && \
@@ -36,7 +36,7 @@ RUN git clone https://github.com/${TTS_REPO} ${TTS_PATH} && \
     ln -s /data/models/tts /root/.local/share/tts
 
 # https://github.com/huggingface/transformers/issues/31040
-RUN pip3 install --force-reinstall --no-cache-dir 'scipy<1.13' 'numpy<2' 'transformers<4.41'
+RUN pip3 install --force-reinstall 'transformers<4.41'
 
-RUN pip3 install --no-cache-dir --verbose /opt/TTS*.whl && \
+RUN pip3 install /opt/TTS*.whl && \
     pip3 show TTS && python3 -c 'import TTS'

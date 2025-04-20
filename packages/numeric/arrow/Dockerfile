@@ -1,6 +1,6 @@
 #---
 # name: arrow
-# group: core
+# group: numerical
 # config: config.py
 # depends: [cuda, cmake, python]
 # test: test.py
@@ -37,7 +37,7 @@ RUN cd /opt/arrow/cpp && \
     make -j$(nproc) && \
     make install
     
-#RUN pip3 install --no-cache-dir --verbose -r /opt/arrow/python/requirements-wheel-build.txt
+#RUN pip3 install -r /opt/arrow/python/requirements-wheel-build.txt
 
 RUN export PYARROW_WITH_CUDA=1 && \
     export PYARROW_WITH_HDFS=1 && \
@@ -51,5 +51,5 @@ RUN export PYARROW_WITH_CUDA=1 && \
     python3 setup.py bdist_wheel && \
     cp dist/*.whl /opt
     
-RUN pip3 install --no-cache-dir --verbose /opt/pyarrow*.whl
+RUN pip3 install /opt/pyarrow*.whl
 RUN pip3 show pyarrow && python3 -c 'import pyarrow; print(pyarrow.__version__);'

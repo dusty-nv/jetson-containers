@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -ex
 
-pip3 install --no-cache-dir --verbose py-cpuinfo
+pip3 install py-cpuinfo
 python3 -m cpuinfo
 
 apt-get update
@@ -14,4 +14,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install --no-cache-dir --verbose deepspeed==${DEEPSPEED_VERSION}
+pip3 install deepspeed==${DEEPSPEED_VERSION}

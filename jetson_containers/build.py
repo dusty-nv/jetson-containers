@@ -25,10 +25,12 @@ import re
 import sys
 import pprint
 import argparse
+import traceback
 
-from jetson_containers import (build_container, build_containers, find_packages, package_search_dirs, set_log_dir, 
-                               L4T_VERSION, JETPACK_VERSION, CUDA_VERSION, PYTHON_VERSION, LSB_RELEASE, LSB_CODENAME)
-
+from jetson_containers import (
+    build_container, build_containers, find_packages, package_search_dirs, 
+    cprint, to_bool, log_config, log_error, log_status, log_versions, LogConfig
+)
 
 parser = argparse.ArgumentParser()
                     
@@ -39,6 +41,7 @@ parser.add_argument('--base', type=str, default='', help="the base container to 
 parser.add_argument('--multiple', action='store_true', help="the specified packages should be built independently as opposed to chained together")
 parser.add_argument('--build-flags', type=str, default='', help="extra flags to pass to 'docker build' commands")
 parser.add_argument('--build-args', type=str, default='', help="container build arguments (--build-arg) as a string of comma separated key:value pairs")
+parser.add_argument('--use-proxy', action='store_true', help="use the host's proxy envvars for the container build")
 parser.add_argument('--package-dirs', type=str, default='', help="additional package search directories (comma or colon-separated)")
 
 parser.add_argument('--list-packages', action='store_true', help="show the list of packages that were found under the search directories")
@@ -50,32 +53,38 @@ parser.add_argument('--test-only', type=str, default='', help="only test the spe
 
 parser.add_argument('--simulate', action='store_true', help="print out the build commands without actually building the containers")
 parser.add_argument('--push', type=str, default='', help="repo or user to push built container image to (no push by default)")
-parser.add_argument('--logs', type=str, default='', help="sets the directory to save container build logs to (default: jetson-containers/logs)")
-parser.add_argument('--verbose', action='store_true', help="enable verbose/debug logging")
 parser.add_argument('--no-github-api', action='store_true', help="disalbe Github API use to force rebuild on new git commits")
 
+parser.add_argument('--log-dir', '--logs', type=str, default=None, help="sets the directory to save container build logs to (default: jetson-containers/logs)")
+parser.add_argument('--log-level', type=str, default=None, choices=LogConfig.levels, help="sets the logging verbosity level")
+parser.add_argument('--log-colors', type=to_bool, default=None, help=f"enable/disable terminal colors and formatting (defaults to true)")
+parser.add_argument('--log-status', type=to_bool, default=None, help=f"enable status bar at bottom of terminal (defaults to true)")
+
+parser.add_argument('--debug', action='store_true', help="enable debug logging")
+parser.add_argument('--verbose', action='store_true', help="enable verbose logging")
+parser.add_argument('--version', action='store_true', help="print platform version info and exit")
+
 args = parser.parse_args()
+
+# configure logging
+log_config(**vars(args))
 
 # validate args
 if args.skip_errors and not args.multiple:
     raise ValueError("--skip-errors can only be used with --multiple flag")
-    
-if args.verbose:
-    os.environ['VERBOSE'] = 'ON'
-    
+
 # split multi-value keyword arguments
 args.package_dirs = re.split(',|;|:', args.package_dirs)
 args.skip_packages = re.split(',|;|:', args.skip_packages)
 args.skip_tests = re.split(',|;|:', args.skip_tests)
 args.test_only = re.split(',|;|:', args.test_only)
 
-print(args)
+print(f'\n{args}\n')
+log_versions()
+cprint(f"\n$ jetson-containers {' '.join(sys.argv[1:])}\n", attrs='bold')
 
-print(f"-- L4T_VERSION={L4T_VERSION}")
-print(f"-- JETPACK_VERSION={JETPACK_VERSION}")
-print(f"-- CUDA_VERSION={CUDA_VERSION}")
-print(f"-- PYTHON_VERSION={PYTHON_VERSION}")
-print(f"-- LSB_RELEASE={LSB_RELEASE} ({LSB_CODENAME})")
+if args.version:
+    sys.exit()
 
 # cast build args into dictionary
 if args.build_args:
@@ -84,15 +93,20 @@ if args.build_args:
         args.build_args = {pair.split(':')[0]: pair.split(':', maxsplit=1)[1] for pair in key_value_pairs}
     except(ValueError, IndexError):
         raise argparse.ArgumentTypeError("Invalid dictionary format. Use key1:value1, key2:value2 ...")
+else:
+    args.build_args = {}
+
+# add proxy to build args if flag is set
+if args.use_proxy:
+    proxy_vars = ['http_proxy', 'https_proxy', 'no_proxy', 'HTTP_PROXY', 'HTTPS_PROXY', 'NO_PROXY']
+    for var in proxy_vars:
+        if var in os.environ:
+            args.build_args[var] = os.environ[var]
 
 # add package directories
 if args.package_dirs:
     package_search_dirs(args.package_dirs)
 
-# set logging directories
-if args.logs:
-    set_log_dir(args.logs)
-    
 # list/show package info
 if args.list_packages or args.show_packages:
     packages = find_packages(args.packages, skip=args.skip_packages)
@@ -102,13 +116,20 @@ if args.list_packages or args.show_packages:
             print(package)
     
     if args.show_packages:
-        pprint.pprint(packages)
+        for key in sorted(packages.keys()):
+            fmt = pprint.pformat(packages[key], indent=2)[1:-1].replace('\n', '\n  ')
+            cprint(f"\n<b>> {key}</b>\n\n   {fmt}")
         
     sys.exit(0)
     
-# build one multi-stage container from chain of packages
-# or launch multiple independent container builds
-if not args.multiple:
-    build_container(args.name, args.packages, args.base, args.build_flags, args.build_args, args.simulate, args.skip_tests, args.test_only, args.push, args.no_github_api, args.skip_packages)
-else:   
-    build_containers(args.name, args.packages, args.base, args.build_flags, args.build_args, args.simulate, args.skip_errors, args.skip_packages, args.skip_tests, args.test_only, args.push)
+try:
+    # build one multi-stage container from chain of packages
+    # or launch multiple independent container builds
+    if not args.multiple:
+        build_container(**vars(args))
+    else:   
+        build_containers(**vars(args))
+except Exception as error:
+    log_error(f"Failed building:  {', '.join(args.packages)}\n\n{traceback.format_exc()}")
+finally:
+    log_status(done=True)

@@ -24,4 +24,4 @@ RUN apt-get update && \
 
 # so that we can run jetson-containers script from within containers
 ADD https://raw.githubusercontent.com/dusty-nv/jetson-containers/master/requirements.txt /tmp/container_requirements.txt
-RUN pip3 install --no-cache-dir --verbose -r /tmp/container_requirements.txt
+RUN pip3 install -r /tmp/container_requirements.txt

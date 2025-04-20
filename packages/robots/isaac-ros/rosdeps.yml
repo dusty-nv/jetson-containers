@@ -1,0 +1,19 @@
+# some of the extra rosdeps from here are used during the builds:
+# https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_common/blob/main/docker/rosdep/extra_rosdeps.yaml
+
+posix_ipc:
+  ubuntu:
+    focal: [python3-posix-ipc]
+    jammy: [python3-posix-ipc]
+
+ament_python:
+  ubuntu: []
+  
+cuda_python:
+  ubuntu: []
+
+ros-humble-foxglove-msgs:
+  ubuntu: []
+
+foxglove_msgs:
+  ubuntu: []

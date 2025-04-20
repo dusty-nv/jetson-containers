@@ -6,12 +6,12 @@ set -ex
 
 wget https://apt.llvm.org/llvm.sh
 chmod +x llvm.sh
-./llvm.sh 18
+./llvm.sh 20 all
 ln -sf /usr/bin/llvm-config-* /usr/bin/llvm-config
 ln -s /usr/bin/clang-1* /usr/bin/clang
 
 # JAX C++ extensions frequently use ninja for parallel builds
-pip3 install --no-cache-dir scikit-build ninja
+pip3 install scikit-build ninja
 
 if [ "$FORCE_BUILD" == "on" ]; then
     echo "Forcing build of JAX ${JAX_BUILD_VERSION}"
@@ -19,9 +19,13 @@ if [ "$FORCE_BUILD" == "on" ]; then
 fi
 
 # install from the Jetson PyPI server ($PIP_INSTALL_URL)
-#pip3 install --verbose --no-cache-dir jax==${JAX_VERSION} jaxlib==${JAX_VERSION}
-pip3 install --verbose --no-cache-dir jaxlib jax_cuda12_plugin opt_einsum
-pip3 install --verbose --no-cache-dir --no-dependencies jax
+#pip3 install jax==${JAX_VERSION} jaxlib==${JAX_VERSION}
+pip3 install jaxlib jax_cuda12_plugin opt_einsum
+pip3 install --no-dependencies jax
+
+if [ $(vercmp "$JAX_VERSION" "0.6.0") -ge 0 ]; then
+    pip3 install 'ml_dtypes>=0.5' # missing float4_e2m1fn
+fi
 
 # ensure JAX is installed correctly
 python3 -c 'import jax; print(f"JAX version: {jax.__version__}"); print(f"CUDA devices: {jax.devices()}");'

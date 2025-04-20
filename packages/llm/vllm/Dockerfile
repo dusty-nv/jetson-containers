@@ -1,8 +1,8 @@
 #---
 # name: vllm
-# group: vlm
+# group: llm
 # config: config.py
-# depends: [transformers, torchaudio, triton]
+# depends: [transformers, bitsandbytes, triton, xformers, flash-attention, torchaudio]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/vllm-project/vllm
@@ -11,7 +11,9 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG VLLM_VERSION \
+    VLLM_BRANCH \
     XGRAMMAR_VERSION \
+    CUDAARCHS \
     FORCE_BUILD=off
 
 RUN apt-get update -y && apt-get install -y libnuma-dev \
@@ -20,3 +22,4 @@ RUN apt-get update -y && apt-get install -y libnuma-dev \
 COPY build.sh install.sh patches /tmp/vllm/
 
 RUN /tmp/vllm/install.sh || /tmp/vllm/build.sh
+RUN /tmp/transformers/install.sh

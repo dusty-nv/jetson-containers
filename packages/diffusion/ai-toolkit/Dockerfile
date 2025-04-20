@@ -14,7 +14,7 @@ WORKDIR /opt
 # Clona el repositorio de Diffusers
 RUN git clone https://github.com/ostris/ai-toolkit.git && \
     cd ai-toolkit && \
-    pip3 install --no-cache-dir -r requirements.txt
+    pip3 install -r requirements.txt
 
 # Configura el directorio de trabajo
 WORKDIR /opt/ai-toolkit/

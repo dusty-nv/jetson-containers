@@ -40,9 +40,9 @@
 | &nbsp;&nbsp;&nbsp; [`jupyterlab:myst`](/packages/jupyterlab) |  |
 | &nbsp;&nbsp;&nbsp; [`ninja`](/packages/build/ninja) |  |
 | &nbsp;&nbsp;&nbsp; [`numpy`](/packages/numeric/numpy) | [![`numpy_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/numpy_jp46.yml?label=numpy:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/numpy_jp46.yml) [![`numpy_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/numpy_jp51.yml?label=numpy:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/numpy_jp51.yml) [![`numpy_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/numpy_jp60.yml?label=numpy:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/numpy_jp60.yml) |
-| &nbsp;&nbsp;&nbsp; [`opencv:4.10.0`](/packages/opencv) |  |
-| &nbsp;&nbsp;&nbsp; [`opencv:4.10.0-builder`](/packages/opencv) |  |
-| &nbsp;&nbsp;&nbsp; [`opencv:4.10.0-meta`](/packages/opencv) |  |
+| &nbsp;&nbsp;&nbsp; [`opencv:4.11.0`](/packages/opencv) |  |
+| &nbsp;&nbsp;&nbsp; [`opencv:4.11.0-builder`](/packages/opencv) |  |
+| &nbsp;&nbsp;&nbsp; [`opencv:4.11.0-meta`](/packages/opencv) |  |
 | &nbsp;&nbsp;&nbsp; [`opencv:4.8.1`](/packages/opencv) | [![`opencv-481_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/opencv-481_jp60.yml?label=opencv-481:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/opencv-481_jp60.yml) |
 | &nbsp;&nbsp;&nbsp; [`opencv:4.8.1-builder`](/packages/opencv) |  |
 | &nbsp;&nbsp;&nbsp; [`opencv:4.8.1-deb`](/packages/opencv) |  |
@@ -152,8 +152,8 @@
 | &nbsp;&nbsp;&nbsp; [`openvla`](/packages/llm/openvla) |  |
 | &nbsp;&nbsp;&nbsp; [`openvla:mimicgen`](/packages/llm/openvla) |  |
 | &nbsp;&nbsp;&nbsp; [`optimum`](/packages/llm/optimum) | [![`optimum_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/optimum_jp46.yml?label=optimum:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/optimum_jp46.yml) [![`optimum_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/optimum_jp51.yml?label=optimum:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/optimum_jp51.yml) |
-| &nbsp;&nbsp;&nbsp; [`tensorrt_llm:0.5`](/packages/llm/tensorrt_llm) |  |
-| &nbsp;&nbsp;&nbsp; [`tensorrt_llm:0.5-builder`](/packages/llm/tensorrt_llm) |  |
+| &nbsp;&nbsp;&nbsp; [`tensorrt_llm:0.5`](/packages/llm/tensorrt_optimizer/tensorrt_llm) |  |
+| &nbsp;&nbsp;&nbsp; [`tensorrt_llm:0.5-builder`](/packages/llm/tensorrt_optimizer/tensorrt_llm) |  |
 | &nbsp;&nbsp;&nbsp; [`text-generation-inference`](/packages/llm/text-generation-inference) | [![`text-generation-inference_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/text-generation-inference_jp51.yml?label=text-generation-inference:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/text-generation-inference_jp51.yml) |
 | &nbsp;&nbsp;&nbsp; [`text-generation-webui:1.7`](/packages/llm/text-generation-webui) |  |
 | &nbsp;&nbsp;&nbsp; [`text-generation-webui:6a7cd01`](/packages/llm/text-generation-webui) |  |

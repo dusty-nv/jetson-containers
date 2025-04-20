@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 set -ex
 
-git clone --branch=v${EXLLAMA_BRANCH} --depth=1 --recursive https://github.com/turboderp/exllamav2 /opt/exllamav2
+git clone --branch=v${EXLLAMA_BRANCH} --depth=1 --recursive https://github.com/turboderp/exllamav3 /opt/exllamav3
 
 if [ "$FORCE_BUILD" == "on" ]; then
-	echo "Forcing build of exllamav2 ${EXLLAMA_VERSION} (branch=${EXLLAMA_VERSION})"
+	echo "Forcing build of exllamav3 ${EXLLAMA_VERSION} (branch=${EXLLAMA_VERSION})"
 	exit 1
 fi
 
-pip3 install --no-cache-dir --verbose exllamav2==${EXLLAMA_VERSION}
+pip3 install exllamav3==${EXLLAMA_VERSION}
 
-python3 -c 'import exllamav2; print(exllamav2.__version__);'
+python3 -c 'import exllamav3; print(exllamav3.__version__);'

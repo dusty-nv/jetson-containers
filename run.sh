@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # pass-through commands to 'docker run' with some defaults
 # https://docs.docker.com/engine/reference/commandline/run/
-ROOT="$(dirname $(dirname "$(readlink -f "$0")") )"
+ROOT="$(dirname "$(readlink -f "$0")")"
 
 # Function to clean up background processes
 cleanup() {
@@ -299,11 +299,27 @@ if [ -z "$HAS_CONTAINER_NAME" ]; then
     CONTAINER_NAME_FLAGS="--name $CONTAINER_NAME"
 fi
 
-# run the container
-ARCH=$(uname -i)
+TEGRA="tegra"
+if [ -z "${SYSTEM_ARCH}" ]; then
+  ARCH=$(uname -m)
 
-if [ $ARCH = "aarch64" ]; then
+  if [ "$ARCH" = "aarch64" ]; then
+	echo "### ARM64 architecture detected"
+    if uname -a | grep -qi "$TEGRA"; then
+      SYSTEM_ARCH="$TEGRA-$ARCH"
+      echo "### Jetson Detected"
+    else
+      echo "### x86 Detected"
+      SYSTEM_ARCH="$ARCH"
+    fi
+  else
+    SYSTEM_ARCH="$ARCH"
+  fi
+fi
 
+echo "SYSTEM_ARCH=$SYSTEM_ARCH"
+
+if [ $SYSTEM_ARCH = "tegra-aarch64" ]; then
 	# this file shows what Jetson board is running
 	# /proc or /sys files aren't mountable into docker
 	cat /proc/device-tree/model > /tmp/nv_jetson_model
@@ -311,7 +327,7 @@ if [ $ARCH = "aarch64" ]; then
     # https://stackoverflow.com/a/19226038
 	( set -x ;
 
-	$SUDO docker run --runtime nvidia -it --rm --network host \
+	$SUDO docker run --runtime nvidia --env NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics -it --rm --network host \
 		--shm-size=8g \
 		--volume /tmp/argus_socket:/tmp/argus_socket \
 		--volume /etc/enctune.conf:/etc/enctune.conf \
@@ -330,7 +346,7 @@ if [ $ARCH = "aarch64" ]; then
 		"${filtered_args[@]}"
 	)
 
-elif [ $ARCH = "x86_64" ]; then
+elif [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "x86_64" ]; then
 
 	( set -x ;
 

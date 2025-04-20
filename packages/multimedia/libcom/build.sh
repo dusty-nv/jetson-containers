@@ -22,10 +22,10 @@ python3 setup.py install
 
 cd /opt/libcom/
 # python3 setup.py install
-pip3 install 'numpy<2'
+
 
 python3 setup.py bdist_wheel --dist-dir=/opt/libcom/wheels
-pip3 install --no-cache-dir --verbose /opt/libcom/wheels/libcom*.whl
+pip3 install /opt/libcom/wheels/libcom*.whl
 
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/libcom/wheels/libcom*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

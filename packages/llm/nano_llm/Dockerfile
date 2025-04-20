@@ -20,5 +20,4 @@ ADD https://api.github.com/repos/dusty-nv/NanoLLM/git/refs/heads/${NANO_LLM_BRAN
 
 COPY install.sh /tmp/nano_llm/install.sh
 
-RUN /tmp/nano_llm/install.sh 
-RUN pip3 install --force-reinstall 'scipy<1.13' 'numpy<2'
+RUN /tmp/nano_llm/install.sh

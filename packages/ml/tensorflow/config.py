@@ -1,7 +1,9 @@
-from jetson_containers import L4T_VERSION, PYTHON_VERSION
+from jetson_containers import L4T_VERSION, PYTHON_VERSION, CUDA_VERSION
 from packaging.version import Version
 
 from ..ml.tensorflow.version import TENSORFLOW_VERSION
+from ..cuda.cudnn.config import CUDNN_VERSION
+
 
 def tensorflow(version, tensorflow_version='tf2', requires=None, default=False):
     pkg = package.copy()
@@ -77,6 +79,10 @@ def tensorflow(version, tensorflow_version='tf2', requires=None, default=False):
             'TENSORFLOW_VERSION': version,
             'PYTHON_VERSION_MAJOR': PYTHON_VERSION.major,
             'PYTHON_VERSION_MINOR': PYTHON_VERSION.minor,
+            'CUDA_VERSION_MAJOR': CUDA_VERSION.major,
+            'CUDA_VERSION_MINOR': CUDA_VERSION.minor,
+            'CUDNN_VERSION_MAJOR': CUDNN_VERSION.major,
+            'CUDNN_VERSION_MINOR': CUDNN_VERSION.minor,
             'FORCE_BUILD': 'off',
         }
         pkg['notes'] += " (will be built from source)"
@@ -127,6 +133,12 @@ package = [
     ),
 *tensorflow(
         version='2.19.0',
+        tensorflow_version='tf2',
+        requires='>=36',
+        default=(L4T_VERSION > Version('36.3')),
+    ),
+*tensorflow(
+        version='2.20.0',
         tensorflow_version='tf2',
         requires='>=36',
         default=(L4T_VERSION > Version('36.3')),

@@ -1,0 +1,12 @@
+#
+# Dockerfile for installing additional packages from source in ROS2
+#
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+ARG ROS_WORKSPACE=/workspace \
+    ROS_PACKAGE \
+    ROS_BRANCH
+
+RUN /ros2_install.sh "${ROS_PACKAGE}"
+

@@ -11,7 +11,7 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 RUN set -ex \
-    && pip3 install --no-cache-dir --verbose \
+    && pip3 install \
         diffusers \
         clip \
         kornia \

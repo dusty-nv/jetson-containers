@@ -1,6 +1,6 @@
 #---
 # name: numpy
-# group: core
+# group: numerical
 # depends: [build-essential, python]
 # test: test.py
 #---
@@ -12,6 +12,7 @@ ENV OPENBLAS_CORETYPE=ARMV8
 
 # we used to install the apt version of numpy first so that it was marked as installed,
 # however when moving to building for any PYTHON_VERSION, these may not be available.
+
 #RUN set -ex \
 #    && apt-get update \
 #    && apt-get install -y --no-install-recommends \
@@ -20,6 +21,13 @@ ENV OPENBLAS_CORETYPE=ARMV8
 #    && apt-get clean \
 #    && pip3 show numpy && python3 -c 'import numpy; print(numpy.__version__)'
 
-RUN pip3 install --upgrade --force-reinstall --no-cache-dir --verbose 'numpy<2' && \
-    pip3 show numpy && python3 -c 'import numpy; print(numpy.__version__)'
-    
+# 'numpy<2' (1.26.4) for <= cu126
+# 'numpy' (2.2+) for >= cu128
+ARG NUMPY_PACKAGE="numpy" \
+    NUMPY_VERSION_MAJOR=2
+
+ENV NUMPY_PACKAGE="$NUMPY_PACKAGE" \
+    NUMPY_VERSION_MAJOR="$NUMPY_VERSION_MAJOR"
+
+COPY install.sh /tmp/numpy/
+RUN bash /tmp/numpy/install.sh

@@ -1,53 +1,88 @@
 #---
 # name: speaches
 # group: audio
-# depends: [faster-whisper, piper-tts, ffmpeg, numba]
+# depends: [faster-whisper, piper-tts, kokoro-tts:onnx]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-# Create non-root user
-RUN useradd -m -u 1000 ubuntu && \
-    # Give ubuntu user write permissions to necessary directories
-    mkdir -p /home/ubuntu/.cache && \
-    chown -R ubuntu:ubuntu /home/ubuntu/.cache && \
-    chmod -R 755 /home/ubuntu/.cache
+RUN apt-get update && \
+    apt-get install -y libsndfile1-dev nodejs npm && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
+RUN python3 -c "import onnxruntime; print('☑️✅ ONNX Runtime version:', onnxruntime.__version__); print('✅ EPs:', onnxruntime.get_available_providers())"
+
+# 1. Clone and install speaches
+RUN git clone https://github.com/speaches-ai/speaches /opt/speaches && \
+    cd /opt/speaches && \
+    sed -i 's|requires-python.*|requires-python = ">=3.10"|g' pyproject.toml && \
+    sed -i 's|"faster-whisper.*",|"faster-whisper",|g' pyproject.toml && \
+    sed -i 's|"ctranslate2.*",|"ctranslate2",|g' pyproject.toml && \
+    sed -i 's|"kokoro-onnx.*",|"kokoro-onnx",|g' pyproject.toml && \
+    sed -i 's|"numpy.*",|"numpy",|g' pyproject.toml && \
+    echo "👁️######## speaches - pyproject.toml ########👁️" && \
+    cat pyproject.toml && \
+    echo "👁️^^^^^^^^ speaches - pyproject.toml ^^^^^^^^👁️" && \
+    pip3 install '.[ui]' && \
+    cp /opt/speaches/model_aliases.json / && \
+    #sed -i 's|enable_ui: bool = True|enable_ui: bool = False|g' src/speaches/config.py
+    #pip3 install gradio==5.13.0 gradio-client==1.6.0
+    pip3 uninstall -y onnxruntime onnxruntime-gpu || true
+
+# Download Kokoro model files with retry logic
+RUN mkdir -p /data/models/huggingface/models--hexgrad--Kokoro-82M/snapshots/main && \
+    cd /data/models/huggingface/models--hexgrad--Kokoro-82M/snapshots/main && \
+    for i in {1..5}; do \
+        curl -L --retry 3 --retry-delay 5 --retry-max-time 30 \
+             --connect-timeout 10 --max-time 60 \
+             -o kokoro-v0_19.onnx \
+             https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files/kokoro-v0_19.onnx && \
+        curl -L --retry 3 --retry-delay 5 --retry-max-time 30 \
+             --connect-timeout 10 --max-time 60 \
+             -o voices.bin \
+             https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files/voices.bin && \
+        break || sleep 10; \
+    done && \
+    # Verify files exist and have content
+    [ -s kokoro-v0_19.onnx ] && [ -s voices.bin ] || { echo "Failed to download model files"; exit 1; }
+
+# Patch to skip UI mount if dist/ missing
+COPY 0001-Conditionally-mount-realtime-console-dist.patch /tmp/
+RUN cd /opt/speaches && git apply /tmp/0001-Conditionally-mount-realtime-console-dist.patch && \
+    cat /opt/speaches/src/speaches/main.py
+
+RUN python3 -c "from importlib.metadata import version; \
+print('🌃 faster-whisper:', version('faster-whisper'), \
+'\n🌃 kokoro-onnx:', version('kokoro-onnx'), \
+'\n🌃 numpy:', version('numpy'))"
+
+ENV PYTHONPATH="/opt/speaches/src:${PYTHONPATH}"
+
+RUN python3 -c "import speaches; import openai; import aiostream; print('✅ all modules import OK')"
+
+# 2. Extract GPU-enabled build
+RUN wget https://apt.jetson-ai-lab.dev/jp6/cu128/24.04/onnxruntime-gpu-1.22.tar.gz && \
+    tar -xzvf onnxruntime-gpu-1.22.tar.gz -C /usr/local
+
+# 3. Install ONNX Runtime GPU wheel if needed
+RUN pip3 install onnxruntime-gpu==1.22
+
+# 4. Confirm ONNX Runtime is correct
+RUN python3 -c "import onnxruntime; print('☑️✅ ONNX Runtime version:', onnxruntime.__version__); print('✅ EPs:', onnxruntime.get_available_providers())"
+
+# Set app config
+ARG PORT=8000
+ENV PORT=${PORT}
+EXPOSE ${PORT}
+
+# 5. Add launcher
+COPY start-server.sh /opt/speaches/
+RUN chmod +x /opt/speaches/start-server.sh
+
+# 6. Set default working directory
 WORKDIR /opt/speaches
 
-# Clone Speaches repository
-RUN git clone -b renovate/jetson-arm64 https://github.com/JonnyTran/speaches . && \
-    chown -R ubuntu:ubuntu .
-
-# # Modify pyproject.toml for ARM64 compatibility
-# RUN sed -i 's/ctranslate2>=4.5.0/ctranslate2>=4.4.0/' pyproject.toml && \
-#     sed -i 's/kokoro-onnx>=0.2.2/kokoro-onnx[gpu]>=0.2.2/' pyproject.toml && \
-#     sed -i 's/override-dependencies = \["onnxruntime-gpu>=1.20.1 ; platform_machine == '\''x86_64'\''\"/override-dependencies = \["onnxruntime-gpu>=1.20.1 ; platform_machine == '\''x86_64'\''\", "onnxruntime ; platform_machine != '\''aarch64'\''", "onnxruntime-gpu ; platform_machine != '\''aarch64'\''", "piper-phonemize ; platform_machine != '\''aarch64'\''", "piper-tts ; platform_machine != '\''aarch64'\''\", "numpy>=1.24.0,<2.0.0"/' pyproject.toml
-
-# RUN sed -i 's/type ResponseFormat = Literal\["mp3", "flac", "wav", "pcm"\]/type ResponseFormat = Literal\["mp3", "flac", "wav", "pcm", "aac"\]/' src/speaches/routers/speech.py && \
-#     sed -i 's/SUPPORTED_RESPONSE_FORMATS = ("mp3", "flac", "wav", "pcm")/SUPPORTED_RESPONSE_FORMATS = ("mp3", "flac", "wav", "pcm", "aac")/' src/speaches/routers/speech.py && \
-#     sed -i 's/UNSUPORTED_RESPONSE_FORMATS = ("opus", "aac")/UNSUPORTED_RESPONSE_FORMATS = ("opus")/' src/speaches/routers/speech.py
-
-RUN uv pip install --compile-bytecode --editable ".[ui]"
-RUN sed -i 's/np.load(voices_path)/np.load(voices_path.replace(".json", ".bin"))/' /opt/conda/lib/python3.12/site-packages/kokoro_onnx/__init__.py
-
-USER ubuntu
-
-# Create and add entrypoint script
-ENV HOME=/home/ubuntu
-RUN mkdir -p $HOME/.cache/huggingface/hub
-ENV WHISPER__MODEL=Systran/faster-whisper-large-v3
-ENV UVICORN_HOST=0.0.0.0
-ENV UVICORN_PORT=8000
-# https://huggingface.co/docs/huggingface_hub/en/package_reference/environment_variables#hfhubenablehftransfer
-# NOTE: I've disabled this because it doesn't inside of Docker container. I couldn't pinpoint the exact reason. This doesn't happen when running the server locally.
-# RuntimeError: An error occurred while downloading using `hf_transfer`. Consider disabling HF_HUB_ENABLE_HF_TRANSFER for better error handling.
-ENV HF_HUB_ENABLE_HF_TRANSFER=0
-# https://huggingface.co/docs/huggingface_hub/en/package_reference/environment_variables#donottrack
-# https://www.reddit.com/r/StableDiffusion/comments/1f6asvd/gradio_sends_ip_address_telemetry_by_default/
-ENV DO_NOT_TRACK=1
-EXPOSE 8000
-ENV LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libgomp.so.1
-CMD ["uvicorn", "--factory", "speaches.main:create_app"]
+ENTRYPOINT ["/opt/speaches/start-server.sh"]

@@ -15,15 +15,22 @@ sed -i 's|cpuinfo_log_error|cpuinfo_log_warning|' ${CPUINFO_PATCH}
 grep 'PR_SVE_GET_VL' ${CPUINFO_PATCH} || echo "patched ${CPUINFO_PATCH}"
 tail -20 ${CPUINFO_PATCH}
 
-pip3 install --no-cache-dir -r requirements.txt
-pip3 install --no-cache-dir scikit-build ninja
+pip3 install -r requirements.txt
+pip3 install scikit-build ninja
+pip3 install 'cmake<4'
+
+#TORCH_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" \
 
 PYTORCH_BUILD_NUMBER=1 \
-TORCH_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" \
+USE_CUDNN=1 \
+USE_CUSPARSELT=1 \
+USE_CUDSS=1 \
+USE_CUFILE=1 \
 USE_NATIVE_ARCH=1 \
 USE_DISTRIBUTED=1 \
+USE_FLASH_ATTENTION=1 \
+USE_MEM_EFF_ATTENTION=1 \
 USE_TENSORRT=0 \
-USE_FBGEMM=0 \
 python3 setup.py bdist_wheel --dist-dir /opt
 
 cd /

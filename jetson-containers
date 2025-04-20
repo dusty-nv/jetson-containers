@@ -19,6 +19,8 @@ elif [ "$COMMAND" = "autotag" ]; then
 elif [ "$COMMAND" = "update" ]; then
 	cd $ROOT
 	git pull
+elif [ "$COMMAND" = "db" ]; then
+	PYTHONPATH="$PYTHONPATH:$ROOT" python3 -m jetson_containers.db "$@"
 elif [ "$COMMAND" = "root" ]; then
 	echo $ROOT
 elif [ "$COMMAND" = "data" ]; then
@@ -33,6 +35,7 @@ else
 	echo '   * show [PACKAGES]*'
 	echo '   * autotag [CONTAINER]'
 	echo '   * update (runs git pull)'
+	echo '   * db   (sync database)'
 	echo '   * root (prints repo path)'
 	echo '   * data (prints data path)'
 	echo ''

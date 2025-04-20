@@ -48,4 +48,4 @@ RUN set -ex \
     && gcc --version \
     && g++ --version
 
-COPY tarpack /usr/local/bin/
+COPY tarpack vercmp /usr/local/bin/

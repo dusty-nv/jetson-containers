@@ -1,18 +1,17 @@
-from jetson_containers import handle_text_request
+from jetson_containers import github_latest_tag
 
 
-def create_package(version, branch=None, default=False) -> list:
+def create_package(version, default=False) -> list:
     pkg = package.copy()
+    wanted_version = github_latest_tag('rhasspy/wyoming-satellite') if version == 'latest' else version
 
-    if not branch:
-        branch = f'v{version}'
+    if wanted_version.startswith("v"):
+        wanted_version = wanted_version[1:]
 
-    wanted_version = handle_text_request(f'https://raw.githubusercontent.com/rhasspy/wyoming-satellite/{branch}/wyoming_satellite/VERSION')
     pkg['name'] = f'wyoming-assist-microphone:{wanted_version}'
-
     pkg['build_args'] = {
         'SATELLITE_VERSION': wanted_version,
-        'SATELLITE_BRANCH': branch
+        'SATELLITE_BRANCH': f"v{wanted_version}",
     }
 
     builder = pkg.copy()
@@ -26,6 +25,5 @@ def create_package(version, branch=None, default=False) -> list:
     return pkg, builder
 
 package = [
-    create_package("1.3.0", branch="master", default=True),
-    create_package("1.2.0"),
+    create_package("latest", default=True),
 ]

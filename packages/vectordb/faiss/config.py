@@ -29,8 +29,6 @@ def faiss(version, branch=None, requires=None, default=False):
     return pkg, builder
     
 package = [
-    faiss('1.7.3'),
-    faiss('1.7.4', default=True),
-    #faiss('v1.8.0'),  # encounters type_info build error sometime after be12427 (12/12/2023)
+    faiss('1.11.0', default=True),
     #faiss('be12427', default=True),  # known good build on JP5/JP6 from 12/12/2023
 ]

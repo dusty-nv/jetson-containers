@@ -33,5 +33,5 @@ def onnxruntime_genai(version, branch=None, requires=None, default=False):
 
 
 package = [
-    onnxruntime_genai('0.6.0', requires=['>=36', '>=cu126'], default=True, branch='main')
+    onnxruntime_genai('0.7.0', requires=['>=36', '>=cu126'], default=True, branch='main')
 ]

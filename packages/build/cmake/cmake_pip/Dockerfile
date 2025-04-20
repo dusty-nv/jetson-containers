@@ -9,7 +9,6 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 RUN set -ex \
-    && pip3 install --upgrade --force-reinstall --no-cache-dir --verbose cmake \
-    \
+    && pip3 install --force-reinstall cmake \
     && cmake --version \
     && which cmake
