@@ -1,68 +1,128 @@
 #!/usr/bin/env bash
-# Python installer
-set -x
+###############################################################################
+# Robust Python installer for jetson‑containers
+#   1) Try Ubuntu official repos
+#   2) Fall back to Deadsnakes PPA
+#   3) Fall back to building CPython from source
+#   4) On Ubuntu 24.04 (or any Python ≥3.12) create a venv in /opt/venv
+#      so that all pip installs are isolated from the base image (PEP 668)
+###############################################################################
+set -euo pipefail
+export DEBIAN_FRONTEND=noninteractive
 
-apt-get update
+# ---------------------------------------------------------------------------
+PYTHON_VERSION="${PYTHON_VERSION:-3.13}"    # passed from Dockerfile
+PREFIX_VENV="/opt/venv"                     # where the venv will live
+# ---------------------------------------------------------------------------
+
+echo "==> Installing base prerequisites…"
+apt-get update -qq
 apt-get install -y --no-install-recommends \
-	python${PYTHON_VERSION} \
-	python${PYTHON_VERSION}-dev
+    ca-certificates curl gnupg lsb-release build-essential software-properties-common
 
-which python${PYTHON_VERSION}
-return_code=$?
-set -e
+# ---------------------------------------------------------------------------
+install_from_repo() {
+    echo "==> Trying Ubuntu repos for Python ${PYTHON_VERSION}…"
+    apt-get install -y --no-install-recommends \
+        python${PYTHON_VERSION} python${PYTHON_VERSION}-dev
+}
 
-if [ $return_code != 0 ]; then
-   echo "-- using deadsnakes ppa to install Python ${PYTHON_VERSION}"
-   add-apt-repository ppa:deadsnakes/ppa
-   apt-get update
-   apt-get install -y --no-install-recommends \
-	  python${PYTHON_VERSION} \
-	  python${PYTHON_VERSION}-dev
-fi
+install_from_deadsnakes() {
+    echo "==> Trying Deadsnakes PPA for Python ${PYTHON_VERSION}…"
+    add-apt-repository -y ppa:deadsnakes/ppa
+    apt-get update -qq
+    apt-get install -y --no-install-recommends \
+        python${PYTHON_VERSION} python${PYTHON_VERSION}-dev
+}
 
-# path 1:  Python 3.8-3.10 for JP5/6
-# path 2:  Python 3.6 for JP4
-# path 3:  Python 3.12 for 24.04
-distro=$(lsb_release -rs)
+build_from_source() {
+    echo "==> Building Python ${PYTHON_VERSION} from source (this may take a while)…"
+    TMPDIR="$(mktemp -d)"
+    curl -fsSL "https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tar.xz" \
+        | tar -xJ -C "${TMPDIR}" --strip-components=1
+    pushd "${TMPDIR}"
+    ./configure --prefix=/usr --enable-optimizations --with-lto
+    make -j"$(nproc)"
+    make altinstall              # installs /usr/bin/python3.X
+    popd
+    rm -rf "${TMPDIR}"
+}
+# ---------------------------------------------------------------------------
 
-if [ $distro = "24.04" ]; then
-   apt-get install -y --no-install-recommends python3-venv
-   python3 -m venv --system-site-packages /opt/venv
-   source /opt/venv/bin/activate
-   curl -sS https://bootstrap.pypa.io/get-pip.py | python${PYTHON_VERSION}
-elif [ $distro = "18.04" ]; then
-   curl -sS https://bootstrap.pypa.io/pip/3.6/get-pip.py | python3.6
+if install_from_repo; then
+    echo "==> Installed from Ubuntu repos."
+elif install_from_deadsnakes; then
+    echo "==> Installed from Deadsnakes PPA."
 else
-   curl -sS https://bootstrap.pypa.io/get-pip.py | python${PYTHON_VERSION}
+    echo "==> Neither repo had ${PYTHON_VERSION}; building from source."
+    build_from_source
 fi
 
+echo "==> Python binary: $(command -v python${PYTHON_VERSION})"
+ln -sf "/usr/bin/python${PYTHON_VERSION}" /usr/local/bin/python3
+python3 --version
+
+# ---------------------------------------------------------------------------
+# Decide whether we need the venv path
+#   • Required on Ubuntu 24.04 (noble) because Python 3.12+ is PEP 668
+#   • Optional on older releases – we create it only when needed
+# ---------------------------------------------------------------------------
+create_venv=false
+distro=$(lsb_release -rs)   # "24.04", "22.04", …
+if [[ "$distro" == "24.04" ]]; then
+    create_venv=true
+fi
+
+# Extra safety: if the interpreter itself is ≥3.12, enable venv path even
+# on back‑ported images
+if python${PYTHON_VERSION} -c 'import sys,sys; sys.exit(0 if sys.version_info[:2] >= (3,12) else 1)'; then
+    create_venv=true
+fi
+
+# ---------------------------------------------------------------------------
+if $create_venv; then
+    echo "==> Creating virtual environment at ${PREFIX_VENV} to bypass PEP 668…"
+    apt-get install -y --no-install-recommends python3-venv
+
+    # ►►  skip Ubuntu's disabled ensurepip
+    python3 -m venv --system-site-packages --without-pip "${PREFIX_VENV}"
+    # ►►  activate the venv for the rest of this RUN layer
+    # shellcheck disable=SC1090
+    source "${PREFIX_VENV}/bin/activate"
+
+    # ►►  install pip manually
+    echo "==> Installing pip *inside* the venv…"
+    curl -sS https://bootstrap.pypa.io/get-pip.py | python - --no-cache-dir
+
+    PIP_BIN="${PREFIX_VENV}/bin/pip"
+    PY_BIN="${PREFIX_VENV}/bin/python"
+else
+    echo "==> Using system site‑packages (Ubuntu ≤22.04)…"
+    # Allow global pip installs in PEP 668 env just in case
+    export PIP_BREAK_SYSTEM_PACKAGES=1
+    PIP_BIN="pip3"
+    PY_BIN="python3"
+fi
+
+# Make sure downstream layers find pip3 even if they forget the venv path
+ln -sf "${PIP_BIN}" /usr/local/bin/pip3
+
+echo "==> Pip binary: ${PIP_BIN}"
+"${PIP_BIN}" --version
+
+# ---------------------------------------------------------------------------
+echo "==> Upgrading core packaging stack…"
+"${PY_BIN}" -m pip install --upgrade pip pkginfo \
+    setuptools packaging wheel Cython uv twine \
+    --index-url https://pypi.org/simple
+
+echo "==> Installing psutil from source (needs C extensions)…"
+"${PY_BIN}" -m pip install --no-binary :all: psutil
+
+# ---------------------------------------------------------------------------
+# Clean apt caches to keep the image slim
 rm -rf /var/lib/apt/lists/*
 apt-get clean
 
-ln -f -s /usr/bin/python${PYTHON_VERSION} /usr/local/bin/python3
-#ln -s /usr/bin/pip${PYTHON_VERSION} /usr/local/bin/pip3
-
-# this was causing issues downstream (e.g. Python2.7 still around in Ubuntu 18.04, \
-# and in cmake python enumeration where some packages expect that 'python' is 2.7) \
-#RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \  \
-#    update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1 \
-
-which python3
-python3 --version
-
-which pip3
-pip3 --version
-
-python3 -m pip install --upgrade pip pkginfo --index-url https://pypi.org/simple
-
-pip3 install --no-binary :all: psutil
-pip3 install --upgrade \
-   setuptools \
-   packaging \
-   'Cython' \
-   wheel \
-   uv
-
-pip3 install --upgrade --index-url https://pypi.org/simple \
-   twine
-   
+echo "==> Finished. Active python: $(${PY_BIN} --version)"
+echo "           Active pip:     $(${PIP_BIN} --version)"
