@@ -169,7 +169,7 @@ def pip_cache(version, requires=None):
         pip_cache['requires'] = requires
 
     if Version(version) == CUDA_VERSION:
-        pip_cache['alias'] = 'pip_cache'
+        pip_cache['alias'] = ['pip_cache', 'pip-cache']
 
     return pip_cache
 
