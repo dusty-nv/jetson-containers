@@ -335,13 +335,14 @@ def test_container(name, package, simulate=False):
         test_ext = os.path.splitext(test_exe)[1]
         log_file = os.path.join(get_log_dir('test'), f"{name.replace('/','_')}_{test_exe}").replace(':','_')
 
-        cmd = f"{sudo_prefix()}docker run -t --rm --runtime=nvidia --network=host" + _NEWLINE_
+        cmd = f"{sudo_prefix()}docker run -t --rm --gpus=all --network=host" + _NEWLINE_
+        cmd += f"  --env NVIDIA_DRIVER_CAPABILITIES=all" + _NEWLINE_
         cmd += f"  --volume {package['path']}:/test" + _NEWLINE_
         cmd += f"  --volume {get_dir('data')}:/data" + _NEWLINE_
         cmd += f"  --workdir /test" + _NEWLINE_
         cmd += '  ' + name + _NEWLINE_
 
-        cmd += "      /bin/bash -c '"
+        cmd += "    /bin/bash -c '"
 
         if test_ext == ".py":
             cmd += f"python3 {test}"
