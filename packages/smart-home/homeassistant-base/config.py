@@ -7,7 +7,7 @@ from jetson_containers import github_latest_tag
 def latest_deps_versions(branch_name):
     url = f"https://raw.githubusercontent.com/home-assistant/docker-base/{branch_name}/ubuntu/build.yaml"
     response = requests.get(url)
-    
+
     if response.status_code != 200:
         print(f"Failed to fetch the file. Status code: {response.status_code} for URL: {url}")
         return None
@@ -24,8 +24,12 @@ def latest_deps_versions(branch_name):
 
 def create_package(version, default=False) -> list:
     pkg = package.copy()
-    wanted_version = github_latest_tag('home-assistant/docker-base') if version == 'latest' else version
-    bashio_version, tempio_version, s6_overlay_version = latest_deps_versions(wanted_version)
+    try:
+        wanted_version = github_latest_tag('home-assistant/docker-base') if version == 'latest' else version
+        bashio_version, tempio_version, s6_overlay_version = latest_deps_versions(wanted_version)
+    except Exception as e:
+        print(f"Failed to fetch the latest version of dependencies: {e}")
+        bashio_version, tempio_version, s6_overlay_version = None, None, None
 
     pkg['name'] = f'homeassistant-base:{version}'
     pkg['build_args'] = {
