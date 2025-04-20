@@ -13,8 +13,12 @@ rm $ZIP
 
 mkdir -p $SOURCE/build
 mv Video_Codec_SDK_*/* $SOURCE/
+
 cp $SOURCE/Lib/linux/stubs/$(uname -m)/*.so /usr/local/lib
+cp $SOURCE/Lib/linux/stubs/$(uname -m)/*.so $CUDA_HOME/lib64
+
 cp $SOURCE/Interface/* /usr/local/include
+cp $SOURCE/Interface/* $CUDA_HOME/include
 
 cd $SOURCE/build
 cmake ../Samples
