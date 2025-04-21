@@ -79,14 +79,5 @@ if [ $ARCH = "aarch64" ]; then
 
 	ln -s /usr/include/opencv4 $local_include_path
 	ln -s /usr/lib/python${PYTHON3_VERSION}/dist-packages/cv2 $local_python_path
-
-elif [ $ARCH = "x86_64" ]; then
-	opencv_conda_path="/opt/conda/lib/python${PYTHON3_VERSION}/site-packages/cv2"
-
-	if [ -d "$opencv_conda_path" ]; then
-		echo "$opencv_conda_path already exists, replacing..."
-		rm -rf $opencv_conda_path
-		ln -s /usr/lib/python${PYTHON3_VERSION}/site-packages/cv2 $opencv_conda_path
-	fi
 fi
 
