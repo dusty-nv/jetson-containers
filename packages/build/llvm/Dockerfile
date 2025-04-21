@@ -2,7 +2,7 @@
 # name: llvm
 # alias: clang
 # group: build
-# depends: [build-essential]
+# depends: [build-essential, cmake]
 # test: test.sh
 #---
 ARG BASE_IMAGE

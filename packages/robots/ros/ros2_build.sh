@@ -53,7 +53,9 @@ apt-get install -y --no-install-recommends \
 		python3-rosinstall-generator \
 		libasio-dev \
 		libtinyxml2-dev \
-		libcunit1-dev
+		libcunit1-dev \
+		libacl1-dev \
+		libssl-dev
 
 # install some pip packages needed for testing
 pip3 install --upgrade \
@@ -76,7 +78,7 @@ pip3 install --upgrade \
 # https://github.com/dusty-nv/jetson-containers/issues/216			  
 python3 -m pip install --upgrade pip
 pip3 install scikit-build
-pip3 install --upgrade "cmake<4.0.0"
+bash /tmp/cmake/install.sh '<4.0.0'
 cmake --version
 which cmake
 
