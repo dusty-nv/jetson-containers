@@ -2,7 +2,7 @@
 # name: python
 # group: build
 # depends: [build-essential, pip_cache]
-# notes: installs core `python3` packages and `pip`
+# notes: installs core `python`, `uv` and `pip` in a conda environment
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
@@ -23,9 +23,11 @@ ENV PYTHON_VERSION=${PYTHON_VERSION_ARG} \
     PIP_VERBOSE=1 \
     TWINE_NON_INTERACTIVE=1 \
     DEBIAN_FRONTEND=noninteractive \
-    PATH=/opt/venv/bin:$PATH
+    PATH=/opt/conda/bin:$PATH \
+    MAMBA_ROOT_PREFIX=/opt/conda \
+    MAMBA_EXE=/usr/local/bin/micromamba \
+    CONDA_PREFIX=/opt/conda \
+    UV_COMPILE_BYTECODE=1
 
-#PYTHONPATH=/opt/venv/lib/python${PYTHON_VERSION_ARG}/site-packages:/usr/lib/python3/dist-packages:$PYTHONPATH \
-
-COPY install.sh /tmp/install_python.sh 
+COPY install.sh /tmp/install_python.sh
 RUN /tmp/install_python.sh
