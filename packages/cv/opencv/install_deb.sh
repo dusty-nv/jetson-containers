@@ -12,27 +12,14 @@ fi
 
 ARCH=$(uname -i)
 echo "ARCH:  $ARCH"
-
-set -x
-
-# install numpy if needed
-# Check if NumPy is installed
-python3 -c 'import numpy; print("NumPy version before installation:", numpy.__version__)' 2>/dev/null
-
-if [ $? != 0 ]; then
-    echo "NumPy not found. Installing NumPy 2.0..."
-    apt-get update
-    # apt-get install -y --no-install-recommends python3-numpy
-    python3 -m pip install "numpy>=2.0.0" --break-system-packages
-fi
-
-# Print the installed version after installation
-python3 -c 'import numpy; print("NumPy version after installation:", numpy.__version__)'
-
-set -e
+set -ex
 
 # remove previous OpenCV installation if it exists
 apt-get purge -y '.*opencv.*' || echo "previous OpenCV installation not found"
+
+# make sure cmake and numpy are still installed
+bash /tmp/cmake/install.sh
+bash /tmp/numpy/install.sh
 
 # download and extract the deb packages
 mkdir opencv
@@ -59,6 +46,10 @@ apt-get clean
 # remove the original downloads
 cd ../
 rm -rf opencv
+
+# restore cmake and numpy versions
+bash /tmp/cmake/install.sh
+bash /tmp/numpy/install.sh
 
 # manage some install paths
 PYTHON3_VERSION=`python3 -c 'import sys; version=sys.version_info[:3]; print("{0}.{1}".format(*version))'`

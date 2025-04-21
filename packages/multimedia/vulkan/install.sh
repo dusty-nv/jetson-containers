@@ -11,6 +11,7 @@ apt-get install -y --no-install-recommends \
     ocaml-core ninja-build pkg-config libxml2-dev wayland-protocols \
     qtbase5-dev qt6-base-dev python3-jsonschema
     
+bash /tmp/cmake/install.sh # restore cmake
 rm -rf /var/lib/apt/lists/*
 apt-get clean
 

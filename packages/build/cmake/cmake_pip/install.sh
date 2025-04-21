@@ -9,7 +9,8 @@ update-alternatives --force --install /usr/bin/cmake cmake "$(which cmake)" 100
 
 ls -ll /usr/bin/cmake*
 
-apt-get update
-apt-mark hold cmake
-apt-get clean
-rm -rf /var/lib/apt/lists/*
+# Held packages were changed and -y was used without --allow-change-held-packages
+#apt-get update
+#apt-mark hold cmake
+#apt-get clean
+#rm -rf /var/lib/apt/lists/*

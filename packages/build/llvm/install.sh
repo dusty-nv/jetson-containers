@@ -8,10 +8,13 @@ set -ex
 # Force overwrites to prevent package conflicts
 #echo 'Dpkg::Options {"--force-overwrite";};' > /etc/apt/apt.conf.d/99_force_overwrite
 
-# Download LLVM installer and run it
+# Download LLVM installer
 wget $WGET_FLAGS https://apt.llvm.org/llvm.sh
 chmod +x llvm.sh
+
+# Install LLVM and keep cmake
 bash llvm.sh $LLVM_VERSION all
+bash /tmp/cmake/install.sh
 
 apt-get clean
 rm -rf /var/lib/apt/lists/*
@@ -23,3 +26,4 @@ update-alternatives --install /usr/bin/clang clang /usr/bin/clang-$LLVM_VERSION 
 update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-$LLVM_VERSION 100
 update-alternatives --install /usr/bin/opt opt /usr/bin/opt-$LLVM_VERSION 100
 update-alternatives --install /usr/bin/llc llc /usr/bin/llc-$LLVM_VERSION 100
+

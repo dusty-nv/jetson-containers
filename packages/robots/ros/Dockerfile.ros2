@@ -11,14 +11,14 @@ ENV ROS_DISTRO=${ROS_VERSION} \
     ROS_ROOT=/opt/ros/${ROS_VERSION} \
     ROS_PYTHON_VERSION=3 \
     RMW_IMPLEMENTATION=rmw_fastrtps_cpp \
+    RTI_NC_LICENSE_ACCEPTED=yes \
     DEBIAN_FRONTEND=noninteractive \
     SHELL=/bin/bash
     
 SHELL ["/bin/bash", "-c"] 
 
 # set Python3 as default
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \
-    bash /tmp/numpy/install.sh
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 
 # build ROS from source
 COPY ros2_build.sh /tmp/ros2_build.sh
@@ -36,7 +36,7 @@ RUN if [ $(lsb_release -rs) = '24.04' ]; then \
     fi
 
 # sometimes numpy2 gets installed when numpy<2 was expected, or vice versa
-RUN bash /tmp/numpy/install.sh
+RUN /tmp/numpy/install.sh && /tmp/cmake/install.sh
 
 # Set the default DDS middleware to cyclonedds
 # https://github.com/ros2/rclcpp/issues/1335

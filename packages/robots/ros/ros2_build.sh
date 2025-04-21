@@ -70,17 +70,12 @@ pip3 install --upgrade \
 		flake8-quotes \
 		pytest-repeat \
 		pytest-rerunfailures \
-		pytest
+		pytest \
+		scikit-build
 
-# upgrade cmake - https://stackoverflow.com/a/56690743
-# this is needed to build some of the ROS2 packages	  
-# use pip to upgrade cmake instead because of kitware's rotating GPG keys:
-# https://github.com/dusty-nv/jetson-containers/issues/216			  
-python3 -m pip install --upgrade pip
-pip3 install scikit-build
-bash /tmp/cmake/install.sh '<4.0.0'
-cmake --version
-which cmake
+# restore cmake and numpy versions
+bash /tmp/cmake/install.sh
+bash /tmp/numpy/install.sh
 
 # remove other versions of Python3
 # workaround for 'Could NOT find Python3 (missing: Python3_NumPy_INCLUDE_DIRS Development'
@@ -193,6 +188,10 @@ rosdep keys \
 	> rosdeps.txt
 
 rosdep_install
+
+# restore cmake and numpy versions
+bash /tmp/cmake/install.sh
+bash /tmp/numpy/install.sh
 
 # build it all - for verbose, see https://answers.ros.org/question/363112/how-to-see-compiler-invocation-in-colcon-build
 colcon build \
