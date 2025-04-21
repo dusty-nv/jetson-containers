@@ -12,6 +12,9 @@ rm -rf x86_64
 sed -i 's|sudo||g' vulkansdk
 sed -i 's|apt-get install|apt-get install -y --no-install-recommends|g' vulkansdk
 
+export CMAKE_BUILD_PARALLEL_LEVEL=$(nproc)
+export CMAKE_POLICY_VERSION_MINIMUM="3.5"
+
 printf "\nBuilding Vulkan SDK $VULKAN_VERSION\n"
 
 ./vulkansdk --maxjobs --no-deps
