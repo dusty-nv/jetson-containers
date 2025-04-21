@@ -42,8 +42,9 @@ apt-get clean
 ln -f -s /usr/bin/python${PYTHON_VERSION} /usr/local/bin/python3
 #ln -s /usr/bin/pip${PYTHON_VERSION} /usr/local/bin/pip3
 
-# this was causing issues downstream (e.g. Python2.7 still around in Ubuntu 18.04, \
-# and in cmake python enumeration where some packages expect that 'python' is 2.7) \
+# This was causing issues downstream (e.g. Python2.7 still around in Ubuntu 18.04,
+# and in cmake python enumeration where some packages expect that 'python' is 2.7)
+# Another way is apt package 'python-is-python3' - symlinks /usr/bin/python to python
 #RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \  \
 #    update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1 \
 
