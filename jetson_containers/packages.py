@@ -372,10 +372,12 @@ def resolve_dependencies(packages, check=True, skip_packages=[]):
         if not changed:
             break
         iterations = iterations + 1
+        if iterations > int(max_iterations * 0.95):
+            log_warning(f"reaching maximum recursion depth resolving dependencies for {packages_copy} ({iterations} of {max_iterations})\n{packages}")
         if iterations > max_iterations:
             raise RecursionError(f"infinite recursion detected resolving dependencies for {packages_copy}\n{packages}")
 
-            # make sure all packages can be found
+    # make sure all packages can be found
     if check:
         for package in packages:
             find_package(package)
