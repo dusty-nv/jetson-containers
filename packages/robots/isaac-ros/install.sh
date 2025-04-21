@@ -5,15 +5,7 @@ set -ex
 
 # assure environment setup
 export ROS_PACKAGE_PATH=${AMENT_PREFIX_PATH}
-ROSDEP_DIR="/etc/ros/rosdep/sources.list.d"
-
-mkdir -p $ROSDEP_DIR || true;
 mkdir -p $ROS_WORKSPACE/src || true;
-
-# install additional rosdep entries
-cp $TMP_DIR/rosdeps.yml $ROSDEP_DIR/extra-rosdeps.yml
-echo "yaml file://$ROSDEP_DIR/extra-rosdeps.yml" | \
-tee $ROSDEP_DIR/00-extras.list
 
 # install foxglove_msgs
 git clone https://github.com/foxglove/foxglove-sdk /tmp/foxglove-sdk

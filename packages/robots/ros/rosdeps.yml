@@ -12,8 +12,26 @@ ament_python:
 cuda_python:
   ubuntu: []
 
-ros-humble-foxglove-msgs:
+pybind11_vendor:
+  ubuntu: []
+
+libopencv-dev:
+  ubuntu: []
+
+libopencv-contrib-dev:
+  ubuntu: []
+
+libopencv-imgproc-dev:
+  ubuntu: []
+
+python-opencv:
+  ubuntu: []
+
+python3-opencv:
   ubuntu: []
 
 foxglove_msgs:
+  ubuntu: []
+
+ros-humble-foxglove-msgs:
   ubuntu: []

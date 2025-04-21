@@ -38,9 +38,7 @@ apt-get update
 
 # install development packages
 apt-get install -y --no-install-recommends \
-		build-essential \
-		cmake \
-		git \
+		libeigen3-dev \
 		libbullet-dev \
 		libpython3-dev \
 		python3-colcon-common-extensions \
@@ -55,7 +53,9 @@ apt-get install -y --no-install-recommends \
 		libtinyxml2-dev \
 		libcunit1-dev \
 		libacl1-dev \
-		libssl-dev
+		libssl-dev \
+		libxaw7-dev \
+		libfreetype-dev
 
 # install some pip packages needed for testing
 pip3 install --upgrade \
@@ -71,7 +71,12 @@ pip3 install --upgrade \
 		pytest-repeat \
 		pytest-rerunfailures \
 		pytest \
+		lark \
 		scikit-build
+
+# upgrade pybind11
+apt-get purge -y pybind11-dev
+pip3 install --upgrade pybind11-global
 
 # restore cmake and numpy versions
 bash /tmp/cmake/install.sh
@@ -86,8 +91,17 @@ ls -ll /usr/bin/python*
 mkdir -p ${ROS_ROOT}/src
 cd ${ROS_ROOT}
 
-# skip installation of some conflicting packages
-SKIP_KEYS="libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv"
+# install additional rosdep entries
+ROSDEP_DIR="/etc/ros/rosdep/sources.list.d"
+mkdir -p $ROSDEP_DIR || true;
+
+cp $TMP/rosdeps.yml $ROSDEP_DIR/extra-rosdeps.yml
+echo "yaml file://$ROSDEP_DIR/extra-rosdeps.yml" | \
+tee $ROSDEP_DIR/00-extras.list
+
+# skip installation of some conflicting packages (these now get handled in rosdeps.yml)
+#SKIP_KEYS="libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv"
+SKIP_KEYS=""
 
 # patches for building Humble on 18.04
 if [ "$ROS_DISTRO" = "humble" ] || [ "$ROS_DISTRO" = "iron" ] && [ $(lsb_release --codename --short) = "bionic" ]; then
@@ -185,6 +199,7 @@ rosdep keys \
 	| xargs rosdep resolve \
 	| grep -v \# \
 	| grep -v opencv \
+	| grep -v pybind11 \
 	> rosdeps.txt
 
 rosdep_install
@@ -196,7 +211,9 @@ bash /tmp/numpy/install.sh
 # build it all - for verbose, see https://answers.ros.org/question/363112/how-to-see-compiler-invocation-in-colcon-build
 colcon build \
 	--merge-install \
-	--cmake-args -DCMAKE_BUILD_TYPE=Release 
+	--cmake-args \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_WARN_DEPRECATED=OFF
     
 # remove build files
 rm -rf ${ROS_ROOT}/src

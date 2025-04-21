@@ -7,5 +7,5 @@ ARG ROS_PACKAGE=https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_common \
     ROS_BRANCH=main \
     TMP_DIR=/tmp/isaac-ros
 
-COPY install.sh rosdeps.yml ${TMP_DIR}/
+COPY install.sh ${TMP_DIR}/
 RUN ${TMP_DIR}/install.sh

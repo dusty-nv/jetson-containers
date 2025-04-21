@@ -13,7 +13,8 @@ ENV ROS_DISTRO=${ROS_VERSION} \
     RMW_IMPLEMENTATION=rmw_fastrtps_cpp \
     RTI_NC_LICENSE_ACCEPTED=yes \
     DEBIAN_FRONTEND=noninteractive \
-    SHELL=/bin/bash
+    SHELL=/bin/bash \
+    TMP=/tmp/ros2
     
 SHELL ["/bin/bash", "-c"] 
 
@@ -21,11 +22,11 @@ SHELL ["/bin/bash", "-c"]
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 
 # build ROS from source
-COPY ros2_build.sh /tmp/ros2_build.sh
-RUN /tmp/ros2_build.sh || touch /tmp/.ros.build.failed
+COPY ros2_build.sh rosdeps.yml $TMP/
+RUN $TMP/ros2_build.sh || touch $TMP/.ros.build.failed
 
 # this retains the stage above for debugging on build failure
-RUN if [ -f /tmp/.ros.build.failed ]; then \
+RUN if [ -f $TMP/.ros.build.failed ]; then \
       echo "ROS ${ROS_DISTRO} build failed!"; \
       exit 1; \
     fi
