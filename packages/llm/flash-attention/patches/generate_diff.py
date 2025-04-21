@@ -72,22 +72,12 @@ def modify_setup_py(original_content):
                 break
         if cuda_end is None:
             cuda_end = len(lines)
-        new_cuda_block = [
-            "    cc_flag.append(\"-gencode\")",
-            "    cc_flag.append(\"arch=compute_87,code=sm_87\")",
-            "    cc_flag.append(\"-gencode\")",
-            "    cc_flag.append(\"arch=compute_89,code=sm_89\")",
-            "    cc_flag.append(\"-gencode\")",
-            "    cc_flag.append(\"arch=compute_90,code=sm_90\")",
-            "    cc_flag.append(\"-gencode\")",
-            "    cc_flag.append(\"arch=compute_100,code=sm_100\")",
-            "    cc_flag.append(\"-gencode\")",
-            "    cc_flag.append(\"arch=compute_101,code=sm_101\")",
-            "    cc_flag.append(\"-gencode\")",
-            "    cc_flag.append(\"arch=compute_110,code=sm_110\")",
-            "    cc_flag.append(\"-gencode\")",
-            "    cc_flag.append(\"arch=compute_120,code=sm_120\")",
-        ]
+        new_cuda_block = []
+        for CUDA_ARCH in os.environ['CUDA_ARCHITECTURES'].split(';'):
+            new_cuda_block.extend([
+                f"    cc_flag.append(\"-gencode\")",
+                f"    cc_flag.append(\"arch=compute_{CUDA_ARCH},code=sm_{CUDA_ARCH}\")",
+            ])
         lines[cuda_start:cuda_end] = new_cuda_block
 
     for i, line in enumerate(lines):
