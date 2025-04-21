@@ -13,8 +13,12 @@ wget $WGET_FLAGS https://apt.llvm.org/llvm.sh
 chmod +x llvm.sh
 bash llvm.sh $LLVM_VERSION all
 
+apt-get clean
+rm -rf /var/lib/apt/lists/*
+
 # Redirect symlinks to the right version
 update-alternatives --install /usr/bin/llvm-config llvm-config /usr/bin/llvm-config-$LLVM_VERSION 100
+update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-$LLVM_VERSION 100
 update-alternatives --install /usr/bin/clang clang /usr/bin/clang-$LLVM_VERSION 100
 update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-$LLVM_VERSION 100
 update-alternatives --install /usr/bin/opt opt /usr/bin/opt-$LLVM_VERSION 100

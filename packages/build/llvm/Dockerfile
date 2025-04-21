@@ -1,5 +1,6 @@
 #---
 # name: llvm
+# alias: clang
 # group: build
 # depends: [build-essential]
 # test: test.sh

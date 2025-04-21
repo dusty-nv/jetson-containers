@@ -8,10 +8,12 @@ def llvm(version):
     pkg = package.copy()
 
     pkg['name'] = f'llvm:{version}'
+    pkg['alias'] = [f'clang:{version}']
+
     pkg['build_args'] = {'LLVM_VERSION': version}
     
     if version == 19: # current stable
-        pkg['alias'] = 'llvm'
+        pkg['alias'] += ['llvm', 'clang']
 
     return pkg
 
