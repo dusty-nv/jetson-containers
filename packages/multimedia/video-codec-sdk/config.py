@@ -7,15 +7,25 @@ def video_codec_sdk(version, default=False):
   aliases = ['nvenc', 'nvcuvid', 'cuvid']
 
   pkg = package.copy()
+  pkg_name = pkg['name']
 
-  pkg['name'] = f'video-codec-sdk:{version}'
+  pkg['name'] = f'{pkg_name}:{version}'
   pkg['alias'] = [f'{x}:{version}' for x in aliases]
   pkg['build_args'] = {'NV_CODEC_VERSION': version}
 
-  if default:
-    pkg['alias'] += [pkg['name'].split(':')[0]] + aliases
+  samples = pkg.copy()
 
-  return pkg
+  samples['name'] = samples['name'] + '-samples'
+  samples['depends'] = [pkg['name'], 'opengl', 'vulkan', 'ffmpeg', 'cmake']
+  samples['build_args'] = {**samples['build_args'], 'BUILD_SAMPLES': 'on'}
+
+  samples['alias'] = []
+
+  if default:
+    pkg['alias'] += [pkg_name] + aliases
+    samples['alias'] = pkg_name + ':samples'
+
+  return pkg, samples
 
 
 package = [

@@ -1,7 +1,7 @@
 #---
 # name: vulkan
 # group: multimedia
-# depends: [build-essential, pip-cache, llvm]
+# depends: [build-essential, pip_cache, cmake, llvm]
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

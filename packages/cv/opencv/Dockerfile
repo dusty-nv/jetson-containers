@@ -2,7 +2,7 @@
 # name: opencv
 # group: cv
 # config: config.py
-# depends: [cuda, cudnn, python, numpy, opengl, vulkan, video-codec-sdk]
+# depends: [cuda, cudnn, python, numpy, opengl, vulkan, video-codec-sdk, ffmpeg]
 # test: test.py
 # notes: install or build OpenCV (with CUDA) from Jetson pip server
 #---
