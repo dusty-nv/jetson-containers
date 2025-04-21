@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -ex
-
-pip3 install --force-reinstall "cmake$1"
+pip3 install --force-reinstall "cmake${1:-<4}" 
 
 cmake --version
 which cmake
@@ -9,3 +8,8 @@ which cmake
 update-alternatives --force --install /usr/bin/cmake cmake "$(which cmake)" 100
 
 ls -ll /usr/bin/cmake*
+
+apt-get update
+apt-mark hold cmake
+apt-get clean
+rm -rf /var/lib/apt/lists/*
