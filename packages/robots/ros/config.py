@@ -7,7 +7,7 @@ import copy
 template = package.copy()
 
 template['group'] = 'robots'
-template['depends'] = ['cuda', 'cudnn', 'tensorrt', 'opencv', 'cmake']
+template['depends'] = ['cuda', 'cudnn', 'tensorrt', 'opencv', 'cmake', 'pybind11']
 template['postfix'] = f"l4t-r{L4T_VERSION}"
 template['docs'] = "docs.md"
 

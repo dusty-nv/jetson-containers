@@ -55,7 +55,11 @@ apt-get install -y --no-install-recommends \
 		libacl1-dev \
 		libssl-dev \
 		libxaw7-dev \
-		libfreetype-dev
+		libfreetype-dev \
+		rti-connext-*-ros
+
+# TODO - track down rest of the RMW middleware options
+# https://docs.ros.org/en/humble/Installation/DDS-Implementations/Working-with-RTI-Connext-DDS.html
 
 # install some pip packages needed for testing
 pip3 install --upgrade \
@@ -73,10 +77,6 @@ pip3 install --upgrade \
 		pytest \
 		lark \
 		scikit-build
-
-# upgrade pybind11
-apt-get purge -y pybind11-dev
-pip3 install --upgrade pybind11-global
 
 # restore cmake and numpy versions
 bash /tmp/cmake/install.sh
@@ -114,10 +114,6 @@ if [ "$ROS_DISTRO" = "humble" ] || [ "$ROS_DISTRO" = "iron" ] && [ $(lsb_release
 	export CXX="/usr/bin/g++-8"
 	echo "CC=$CC CXX=$CXX"
 
-	# upgrade pybind11
-	apt-get purge -y pybind11-dev
-	pip3 install --upgrade pybind11-global
-   
 	# https://github.com/dusty-nv/jetson-containers/issues/160#issuecomment-1429572145
 	git -C /tmp clone -b yaml-cpp-0.6.0 https://github.com/jbeder/yaml-cpp.git
 	cmake -S /tmp/yaml-cpp -B /tmp/yaml-cpp/BUILD -DBUILD_SHARED_LIBS=ON
@@ -212,8 +208,10 @@ bash /tmp/numpy/install.sh
 colcon build \
 	--merge-install \
 	--cmake-args \
+	-Wno-dev -Wno-deprecated \
 	-DCMAKE_BUILD_TYPE=Release \
-	-DCMAKE_WARN_DEPRECATED=OFF
+	-DCMAKE_POLICY_DEFAULT_CMP0148=OLD
+	#-DCMAKE_WARN_DEPRECATED=OFF
     
 # remove build files
 rm -rf ${ROS_ROOT}/src

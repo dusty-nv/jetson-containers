@@ -15,6 +15,9 @@ cuda_python:
 pybind11_vendor:
   ubuntu: []
 
+pybind11-dev:
+  ubuntu: []
+
 libopencv-dev:
   ubuntu: []
 
