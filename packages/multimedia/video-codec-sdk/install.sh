@@ -20,7 +20,3 @@ cp $SOURCE/Lib/linux/stubs/$(uname -m)/*.so $CUDA_HOME/lib64
 cp $SOURCE/Interface/* /usr/local/include
 cp $SOURCE/Interface/* $CUDA_HOME/include
 
-cd $SOURCE/build
-cmake ../Samples
-make -j$(nproc)
-make install 
