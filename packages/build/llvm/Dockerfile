@@ -16,6 +16,7 @@ COPY install.sh $TMP/
 RUN cd $TMP && ./install.sh
 
 ENV LLVM_VERSION=${LLVM_VERSION} \
+    LLVM_PACKAGE_VERSION=${LLVM_VERSION} \
     LLVM_DIR=/usr/lib/llvm-${LLVM_VERSION}
 
 #CC=/usr/lib/llvm-${LLVM_VERSION}/bin/clang
