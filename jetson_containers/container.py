@@ -41,6 +41,15 @@ def format_time(seconds):
     seconds = int(seconds % 60)
     return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
 
+def format_time_minutes(seconds):
+    """Format time in mm:ss format, without padding for minutes over 99"""
+    minutes = int(seconds // 60)
+    seconds = int(seconds % 60)
+    if minutes < 100:
+        return f"{minutes:02d}m{seconds:02d}s"
+    else:
+        return f"{minutes}m{seconds:02d}s"
+
 class BuildTimer:
     def __init__(self):
         self.start_time = time.time()
@@ -203,7 +212,7 @@ def build_container(
             # Calculate spaces needed to align time to right edge
             status_text = f"[{idx+1}/{len(packages)}] Building {package} ({container_name})"
             current_time = datetime.datetime.now().strftime("%H:%M:%S")
-            time_text = f"{idx} stages done in {format_time(timer.get_elapsed())} at {current_time}"
+            time_text = f"{idx} stages completed in {format_time_minutes(timer.get_elapsed())} at {current_time}"
             spaces_needed = terminal.columns - len(status_text) - len(time_text)
             if spaces_needed > 0:
                 status_text = status_text + ' ' * spaces_needed
