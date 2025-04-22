@@ -212,7 +212,7 @@ def build_container(
             # Calculate spaces needed to align time to right edge
             status_text = f"[{idx+1}/{len(packages)}] Building {package} ({container_name})"
             current_time = datetime.datetime.now().strftime("%H:%M:%S")
-            time_text = f"{idx} stages done in {format_time(timer.get_elapsed())} at {current_time}"
+            time_text = f"{idx} stages completed in {format_time_minutes(timer.get_elapsed())} at {current_time}"
             spaces_needed = terminal.columns - len(status_text) - len(time_text)
             if spaces_needed > 0:
                 status_text = status_text + ' ' * spaces_needed
@@ -235,7 +235,7 @@ def build_container(
             if len(test_only) == 0 or package in test_only:
                 status_text = f"[{idx+1}/{len(packages)}] Testing {package} ({container_name})"
                 current_time = datetime.datetime.now().strftime("%H:%M:%S")
-                time_text = f"{idx} stages done in {format_time(timer.get_elapsed())} at {current_time}"
+                time_text = f"{idx} stages completed in {format_time_minutes(timer.get_elapsed())} at {current_time}"
                 spaces_needed = terminal.columns - len(status_text) - len(time_text)
                 if spaces_needed > 0:
                     status_text = status_text + ' ' * spaces_needed
