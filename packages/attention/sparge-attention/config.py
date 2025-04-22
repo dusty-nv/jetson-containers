@@ -26,7 +26,6 @@ def sparge_attn(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    sparge_attn('0.1.0', default=(CUDA_VERSION < Version('13.0'))),
-    sparge_attn('0.1.0', default=(CUDA_VERSION >= Version('13.0'))),
+    sparge_attn('0.1.0', default=(CUDA_VERSION >= Version('12.6'))),
 ]
 
