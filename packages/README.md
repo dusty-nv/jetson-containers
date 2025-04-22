@@ -93,10 +93,10 @@
 | &nbsp;&nbsp;&nbsp; [`bitsandbytes:0.43.3`](/packages/llm/bitsandbytes) |  |
 | &nbsp;&nbsp;&nbsp; [`bitsandbytes:0.43.3-builder`](/packages/llm/bitsandbytes) |  |
 | &nbsp;&nbsp;&nbsp; [`exllama:0.0.15`](/packages/llm/exllama) |  |
-| &nbsp;&nbsp;&nbsp; [`flash-attention:2.5.7`](/packages/llm/flash-attention) |  |
-| &nbsp;&nbsp;&nbsp; [`flash-attention:2.5.7-builder`](/packages/llm/flash-attention) |  |
-| &nbsp;&nbsp;&nbsp; [`flash-attention:2.6.3`](/packages/llm/flash-attention) |  |
-| &nbsp;&nbsp;&nbsp; [`flash-attention:2.6.3-builder`](/packages/llm/flash-attention) |  |
+| &nbsp;&nbsp;&nbsp; [`flash-attention:2.5.7`](/packages/attention/flash-attention) |  |
+| &nbsp;&nbsp;&nbsp; [`flash-attention:2.5.7-builder`](/packages/attention/flash-attention) |  |
+| &nbsp;&nbsp;&nbsp; [`flash-attention:2.6.3`](/packages/attention/flash-attention) |  |
+| &nbsp;&nbsp;&nbsp; [`flash-attention:2.6.3-builder`](/packages/attention/flash-attention) |  |
 | &nbsp;&nbsp;&nbsp; [`gptq-for-llama`](/packages/llm/gptq-for-llama) | [![`gptq-for-llama_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/gptq-for-llama_jp51.yml?label=gptq-for-llama:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/gptq-for-llama_jp51.yml) [![`gptq-for-llama_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/gptq-for-llama_jp60.yml?label=gptq-for-llama:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/gptq-for-llama_jp60.yml) |
 | &nbsp;&nbsp;&nbsp; [`huggingface_hub`](/packages/llm/huggingface_hub) | [![`huggingface_hub_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/huggingface_hub_jp46.yml?label=huggingface_hub:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/huggingface_hub_jp46.yml) [![`huggingface_hub_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/huggingface_hub_jp51.yml?label=huggingface_hub:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/huggingface_hub_jp51.yml) |
 | &nbsp;&nbsp;&nbsp; [`l4t-text-generation`](/packages/l4t/l4t-text-generation) | [![`l4t-text-generation_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/l4t-text-generation_jp51.yml?label=l4t-text-generation:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-text-generation_jp51.yml) [![`l4t-text-generation_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/l4t-text-generation_jp60.yml?label=l4t-text-generation:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-text-generation_jp60.yml) |
