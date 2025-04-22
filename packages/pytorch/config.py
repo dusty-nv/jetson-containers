@@ -57,7 +57,8 @@ def pytorch_pip(version, requires=None):
     all['name'] = all['name'] + '-all'
     all['depends'] = all['depends'] + [ pkg['name'],
         'torchvision', 'torchaudio', 'torchao',
-        'torch2trt', 'pytorch3d', 'jupyterlab'
+        'torch2trt', 'pytorch3d', 'triton',
+        'flash-attention', 'jupyterlab'
     ]
 
     pkg['alias'] = [f'torch:{short_version}']
