@@ -2,7 +2,7 @@
 # name: sage-attention
 # group: attention
 # config: config.py
-# depends: [pytorch, torchvision, torchaudio, torchao, transformers, diffusers, opencv]
+# depends: [pytorch, torchvision, torchaudio, torchao, flash-attention, transformers, diffusers, opencv]
 # requires: '>=35'
 # test: test.py
 #---
