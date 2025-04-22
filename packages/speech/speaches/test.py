@@ -103,11 +103,16 @@ def transcribe_file(file_path, model, language, response_format, temperature):
         print(f"Sending request to: {endpoint}")
 
         # Disable SSL verification for internal communication
+        start_time = time.time()
         response = session.post(endpoint, headers=headers, files=files, data=data, verify=False)
+        end_time = time.time()
 
         # Check if the request was successful
         print(f"Response status code: {response.status_code}")
         response.raise_for_status()
+
+        transcription_time = end_time - start_time
+        print(f"Transcription completed in {transcription_time:.2f} seconds")
 
         # Parse the response based on response format
         if response_format == "json":
@@ -190,6 +195,9 @@ def main():
     tts_model = "hexgrad/Kokoro-82M"
     tts_voice = "af"  # Using just the voice ID part
 
+    # Test ASR next with independent WAV file
+    asr_file = "/data/audio/dusty.wav" # mounted under jetson-containers/data
+
     # Create a descriptive filename with parameters
     timestamp = time.strftime("%Y%m%d_%H%M%S")
     filename = f"speaches_kokoro82m_voice{tts_voice}_{timestamp}.wav"
@@ -205,7 +213,7 @@ def main():
 
         # Now test ASR with the generated file
         print("\n=== Testing Automatic Speech Recognition ===")
-        result = transcribe_file(tts_output, "guillaumekln/faster-whisper-tiny", "en", "json", "0")
+        result = transcribe_file(asr_file, "guillaumekln/faster-whisper-tiny", "en", "json", "0")
         print("Transcription completed successfully")
 
         if isinstance(result, dict) and "text" in result:
