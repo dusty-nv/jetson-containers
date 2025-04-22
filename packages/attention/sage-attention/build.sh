@@ -19,6 +19,6 @@ python3 setup.py --verbose bdist_wheel --dist-dir /opt/sage-attention/wheels
 ls /opt/sage-attention/wheels
 cd /
 
-pip3 install /opt/sage-attention/wheels/sage-attention*.whl
+pip3 install /opt/sage-attention/wheels/sageattention*.whl
 
 twine upload --verbose /opt/sage-attention/wheels/sage-attention*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

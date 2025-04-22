@@ -12,6 +12,6 @@ FROM ${BASE_IMAGE}
 ARG SAGE_ATTENTION_VERSION \
     FORCE_BUILD=off
 
-COPY build.sh install.sh patches /tmp/sage-attention/
+COPY build.sh install.sh /tmp/sage-attention/
 
 RUN /tmp/sage-attention/install.sh || /tmp/sage-attention/build.sh

@@ -12,6 +12,6 @@ FROM ${BASE_IMAGE}
 ARG SPARGE_ATTENTION_VERSION \
     FORCE_BUILD=off
 
-COPY build.sh install.sh patches /tmp/sparge-attention/
+COPY build.sh install.sh /tmp/sparge-attention/
 
 RUN /tmp/sparge-attention/install.sh || /tmp/sparge-attention/build.sh
