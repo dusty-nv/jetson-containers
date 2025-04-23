@@ -1,7 +1,7 @@
 #---
 # name: comfyui
 # group: diffusion
-# depends: [pytorch, torchvision, torchaudio, opencv, bitsandbytes, transformers, xformers, torchao, diffusers, huggingface_hub]
+# depends: [pytorch, torchvision, torchaudio, opencv, bitsandbytes, transformers, xformers, torchao, flash-attention, sage-attention, diffusers, huggingface_hub]
 # requires: '>=35.0.0'
 # docs: docs.md
 #---
@@ -37,7 +37,6 @@ RUN cd /opt/ComfyUI/custom_nodes/comfyui-flux-accelerator/scripts && \
 WORKDIR /opt/ComfyUI/
 
 RUN pip3 install -U deepdiff xformers onnxruntime-gpu triton lm_eval vhacdx manifold openexr
-RUN pip3 install -U diffusers flash-attn sageattention  torchao
 
 COPY workflow /opt/ComfyUI/workflow
 COPY extra /opt/ComfyUI/extra

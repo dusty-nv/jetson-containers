@@ -1,6 +1,6 @@
 #---
 # name: flash-attention
-# group: llm
+# group: attention
 # config: config.py
 # depends: [pytorch]
 # requires: '>=35'
