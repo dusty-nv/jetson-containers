@@ -1,6 +1,6 @@
 #---
 # name: flashinfer
-# group: llm
+# group: attention
 # config: config.py
 # depends: [pytorch, triton]
 # requires: '>=36'

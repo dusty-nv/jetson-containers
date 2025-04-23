@@ -1,6 +1,6 @@
 #---
 # name: xformers
-# group: llm
+# group: attention
 # config: config.py
 # depends: [pytorch]
 # requires: '>=34.1.0'
