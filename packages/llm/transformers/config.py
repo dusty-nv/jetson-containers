@@ -1,4 +1,4 @@
-from jetson_containers import L4T_VERSION, github_latest_tag, log_warning
+from jetson_containers import L4T_VERSION, github_latest_tag, log_warning, log_verbose
 from jetson_containers.pypi_utils import get_latest_version
 from packaging.version import parse as parse_version
 import os
@@ -24,7 +24,7 @@ CACHE_DURATION = 3600  # 1 hour in seconds
 def ensure_cache_dir():
     """Ensure the cache directory exists."""
     if not os.path.exists(CACHE_DIR):
-        log_warning(f"Creating cache directory: {CACHE_DIR}")
+        log_verbose(f"Creating cache directory: {CACHE_DIR}")
         os.makedirs(CACHE_DIR, exist_ok=True)
 
 
@@ -32,18 +32,18 @@ def load_cached_versions() -> Optional[dict]:
     """Load versions from cache if they exist and are not expired."""
     try:
         if not os.path.exists(CACHE_FILE):
-            log_warning(f"Cache file does not exist: {CACHE_FILE}")
+            log_verbose(f"Cache file does not exist: {CACHE_FILE}")
             return None
 
         # Check if cache is expired
         cache_age = time.time() - os.path.getmtime(CACHE_FILE)
         if cache_age > CACHE_DURATION:
-            log_warning(f"Cache expired (age: {cache_age:.1f}s > {CACHE_DURATION}s)")
+            log_verbose(f"Cache expired (age: {cache_age:.1f}s > {CACHE_DURATION}s)")
             return None
 
         with open(CACHE_FILE, 'r') as f:
             versions = json.load(f)
-            log_warning(f"Loaded versions from cache: {versions}")
+            log_verbose(f"Loaded versions from cache: {versions}")
             return versions
     except Exception as e:
         log_warning(f"Failed to load cached versions: {str(e)}")
@@ -76,7 +76,7 @@ def fetch_pypi_with_retry(package_name: str, max_retries: int = 5, initial_delay
     # Try cache first
     cached_versions = load_cached_versions()
     if cached_versions and package_name in cached_versions:
-        log_warning(f"Using cached version for {package_name}: {cached_versions[package_name]}")
+        log_verbose(f"Using cached version for {package_name}: {cached_versions[package_name]}")
         return {'releases': {cached_versions[package_name]: []}}
 
     delay = initial_delay
@@ -106,7 +106,7 @@ def fetch_pypi_with_retry(package_name: str, max_retries: int = 5, initial_delay
                 pool_maxsize=1
             ))
 
-            log_warning(f"Attempting to fetch {url} (attempt {attempt + 1}/{max_retries})")
+            log_verbose(f"Attempting to fetch {url} (attempt {attempt + 1}/{max_retries})")
             response = session.get(url, timeout=timeout, headers=headers, verify=True)
             response.raise_for_status()
             data = response.json()
@@ -115,7 +115,7 @@ def fetch_pypi_with_retry(package_name: str, max_retries: int = 5, initial_delay
             if data and 'releases' in data:
                 sorted_versions = sorted(data['releases'].keys(), key=parse_version)
                 version = sorted_versions[-1]
-                log_warning(f"Successfully fetched version {version} from PyPI")
+                log_verbose(f"Successfully fetched version {version} from PyPI")
                 versions = {package_name: version}
                 save_versions_to_cache(versions)
 
@@ -146,12 +146,12 @@ def transformers_pypi(version, default=False, requires=None) -> list:
     pkg = package.copy()
 
     if version == 'latest':
-        log_warning(f"Fetching latest version for transformers_pypi (default={default}, requires={requires})")
+        log_verbose(f"Fetching latest version for transformers_pypi (default={default}, requires={requires})")
         # Try cache first
         cached_versions = load_cached_versions()
         if cached_versions and 'transformers' in cached_versions:
             version = cached_versions['transformers']
-            log_warning(f"Using cached version: {version}")
+            log_verbose(f"Using cached version: {version}")
         else:
             data = fetch_pypi_with_retry('transformers')
             if data is None or 'releases' not in data:
@@ -160,37 +160,32 @@ def transformers_pypi(version, default=False, requires=None) -> list:
             else:
                 sorted_versions = sorted(data['releases'].keys(), key=parse_version)
                 version = sorted_versions[-1]
-                log_warning(f"Using latest version from PyPI: {version}")
+                log_verbose(f"Using latest version from PyPI: {version}")
 
     pkg['name'] = f'transformers:{version}'
-    log_warning(f"Created package with name: {pkg['name']}")
 
     if default:
         pkg['alias'] = 'transformers'
-        log_warning(f"Set alias to: {pkg['alias']}")
 
     if requires:
         pkg['requires'] = requires
-        log_warning(f"Set requires to: {pkg['requires']}")
 
     return pkg
 
 
 def transformers_git(version, repo='huggingface/transformers', branch=None, requires=None, default=False) -> list:
     """Create a package for transformers from git repository."""
-    log_warning(f"Creating git package for transformers (version={version}, repo={repo}, branch={branch}, requires={requires}, default={default})")
     pkg = package.copy()
 
     if version == 'latest':
         version = github_latest_tag(repo)
-        log_warning(f"Using latest git tag: {version}")
+        log_verbose(f"Using latest git tag: {version}")
 
     pkg['name'] = f'transformers:{version}'
     pkg['build_args'] = {
         'TRANSFORMERS_PACKAGE': f'git+https://github.com/{repo}.git@{version}',
         'TRANSFORMERS_VERSION': version
     }
-    log_warning(f"Created git package with name: {pkg['name']}")
 
     if default:
         pkg['alias'] = 'transformers'
