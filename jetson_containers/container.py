@@ -374,7 +374,7 @@ def push_container(name, repository='', simulate=False):
 
     if not simulate:
         subprocess.run(cmd, executable='/bin/bash', shell=True, check=True)
-        log_success(f"\nPushed container {name}\n")
+        log_success(f"Pushed container {name}\n")
 
     return name
 
