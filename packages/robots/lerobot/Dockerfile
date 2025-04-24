@@ -9,9 +9,18 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG LEROBOT_REPO=huggingface/lerobot/
-ARG LEROBOT_BRANCH=main
+WORKDIR /opt/lerobot
 
+ARG LEROBOT_REPO=huggingface/lerobot \
+    LEROBOT_BRANCH=main
+
+# Prevent the Gdk-ERROR by disabling MIT-SHM
+ENV GDK_BACKEND=x11 \
+    GDK_USE_X11SHM=0 \
+    GDK_SYNCHRONIZE=1 \
+    JUPYTER_ROOT=/opt/lerobot
+
+# Clone and build LeRobot
 RUN git clone --branch=${LEROBOT_BRANCH} --depth=1 https://github.com/${LEROBOT_REPO} /opt/lerobot && \
     cd /opt/lerobot && \
     sed -i '/"torch[^"]*",/d' pyproject.toml && \
@@ -26,33 +35,24 @@ RUN git clone --branch=${LEROBOT_BRANCH} --depth=1 https://github.com/${LEROBOT_
 RUN cd /opt/lerobot && \
     pip3 install --ignore-installed --no-deps -e ".[aloha, pusht, dynamixel, pi0, test]" --verbose
 
+# Install apt dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
             speech-dispatcher speech-dispatcher-espeak-ng pulseaudio-utils alsa-utils vim \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
-ENV JUPYTER_ROOT=/opt/lerobot
-
 # Create a symbolic link for python3 to python
-RUN ln -s /usr/bin/python3 /usr/bin/python
+RUN ln -s /usr/bin/python3 /usr/bin/python || true && python --version
 
-# Verify the symlink is created and the version of Python
-RUN python --version
-
-WORKDIR /opt/lerobot
-
-## Prevent the Gdk-ERROR by disabling MIT-SHM
-RUN export GDK_BACKEND=x11
-RUN export GDK_USE_X11SHM=0
-RUN export GDK_SYNCHRONIZE=1
-
-RUN echo "pactl info" >> /root/.bash_history
-RUN echo "pactl list short sinks" >> /root/.bash_history
-RUN echo "pactl set-default-sink 0" >> /root/.bash_history
-RUN echo "wandb login" >> /root/.bash_history
-RUN echo "export HF_USER=" >> /root/.bash_history
-RUN echo "python lerobot/scripts/control_robot.py record \
+# Setup various system configs
+RUN echo -e "* soft core 0\n* hard core 0" >> /etc/security/limits.conf && \
+    echo "pactl info" >> /root/.bash_history && \
+    echo "pactl list short sinks" >> /root/.bash_history && \
+    echo "pactl set-default-sink 0" >> /root/.bash_history && \
+    echo "wandb login" >> /root/.bash_history && \
+    echo "export HF_USER=" >> /root/.bash_history && \
+    echo "python lerobot/scripts/control_robot.py record \
   --robot-path lerobot/configs/robot/koch.yaml \
   --fps 30 \
   --root data \
@@ -63,6 +63,5 @@ RUN echo "python lerobot/scripts/control_robot.py record \
   --reset-time-s 30 \
   --num-episodes 10" >> /root/.bash_history
 
-RUN echo -e "* soft core 0\n* hard core 0" >> /etc/security/limits.conf
-
+# Start JupyterLab server in the background by default
 CMD /start_jupyter && speech-dispatcher --spawn  && /bin/bash
