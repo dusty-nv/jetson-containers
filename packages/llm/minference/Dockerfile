@@ -14,6 +14,7 @@ ARG MINFERENCE_VERSION \
     MINFERENCE_VERSION_SPEC \
     MAX_JOBS="$(nproc)" \
     FORCE_BUILD=off \
+    TMP=/tmp/minference
 
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends \
