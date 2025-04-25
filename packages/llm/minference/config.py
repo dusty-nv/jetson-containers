@@ -27,7 +27,5 @@ def minference(version, version_spec=None, requires=None, default=False):
     return pkg, builder
 
 package = [
-    minference('0.4.4', '0.4.3.post2', default=False),
-    minference('0.4.6', '0.4.5', default=False),
-    minference('0.4.7', '0.4.6', default=True),
+    minference('0.1.6', '0.1.6', default=True),
 ]
