@@ -37,8 +37,8 @@
 5.  **Pin Dependencies:** Specify exact versions for packages in `requirements.txt` to prevent unexpected issues due to updates.
     * **Example (`requirements.txt`):**
         ```
-        numpy==1.23.0
-        torch==1.13.1
+        numpy>=1.23.0
+        torch>=1.13.1
         ```
 
 6.  **Documentation:** Provide a comprehensive `docs.md` file with usage instructions, configuration tips, and common troubleshooting steps specific to your package.
