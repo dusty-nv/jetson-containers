@@ -13,7 +13,7 @@ FROM ${BASE_IMAGE}
 ARG MINFERENCE_VERSION \
     MINFERENCE_VERSION_SPEC \
     MAX_JOBS="$(nproc)" \
-    FORCE_BUILD=off \
+    FORCE_BUILD=off
 
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends \
