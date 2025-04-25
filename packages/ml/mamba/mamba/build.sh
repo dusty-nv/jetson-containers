@@ -5,9 +5,9 @@ set -ex
 git clone --branch=v${MAMBA_VERSION} --depth=1 --recursive https://github.com/state-spaces/mamba /opt/mamba || \
 git clone --depth=1 --recursive https://github.com/state-spaces/mamba /opt/mamba
 
-# Navigate to the directory containing mamba's setup.py
-cd /opt/mamba 
-git apply /tmp/MAMBA/patch.diff
+# Generate the diff dynamically
+python3 /tmp/mamba/generate_diff.py
+git apply /tmp/mamba/patch.diff
 git diff
 git status
 

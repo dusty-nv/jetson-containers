@@ -14,10 +14,6 @@ ARG MAMBA_VERSION \
     MAMBA_VERSION_SPEC \
     CUDAARCHS
 
-COPY build.sh install.sh /tmp/MAMBA/
-
-COPY patches/${MAMBA_VERSION}.diff /tmp/MAMBA/patch.diff
-
+COPY build.sh install.sh patches /tmp/mamba/
 COPY benchmarks /tmp/MAMBA/benchmarks
-
-RUN /tmp/MAMBA/install.sh || /tmp/MAMBA/build.sh
+RUN /tmp/mamba/install.sh || /tmp/mamba/build.sh

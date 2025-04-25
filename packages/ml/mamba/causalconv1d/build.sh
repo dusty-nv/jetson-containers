@@ -8,7 +8,9 @@ git clone --depth=1 --recursive https://github.com/Dao-AILab/causal-conv1d  /opt
 # Navigate to the directory containing mamba's setup.py
 cd /opt/causalconv1d  
 
-git apply /tmp/CASUALCONV1D/patch.diff
+# Generate the diff dynamically
+python3 /tmp/causalconv1d/generate_diff.py
+git apply /tmp/causalconv1d/patch.diff
 git diff
 git status
 
