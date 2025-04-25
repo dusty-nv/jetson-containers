@@ -29,8 +29,4 @@ RUN apt-get update -y && \
 
 COPY build.sh install.sh /tmp/minference/
 
-# this retains the stage above for debugging on build failure
-RUN if [ -f /tmp/minference/.build.failed ]; then \
-      echo "minference ${minference_VERSION} build failed!"; \
-      exit 1; \
-    fi
+RUN /tmp/minference/install.sh || /tmp/minference/build.sh
