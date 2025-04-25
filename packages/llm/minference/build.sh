@@ -6,7 +6,7 @@ pip3 install compressed-tensors decord
 REPO_URL="https://github.com/microsoft/MInference"
 REPO_DIR="/opt/minference"
 
-echo "Building minference ${minference_VERSION}"
+echo "Building minference ${MINFERENCE_VERSION}"
 
 git clone --recursive --depth=1 --branch=v${MINFERENCE_VERSION} $REPO_URL $REPO_DIR ||
 git clone --recursive --depth=1 $REPO_URL $REPO_DIR

@@ -13,8 +13,7 @@ FROM ${BASE_IMAGE}
 ARG MINFERENCE_VERSION \
     MINFERENCE_VERSION_SPEC \
     MAX_JOBS="$(nproc)" \
-    FORCE_BUILD=off \
-    TMP=/tmp/minference
+    FORCE_BUILD=off
 
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends \
@@ -28,10 +27,10 @@ RUN apt-get update -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-COPY build.sh install.sh $TMP/
+COPY build.sh install.sh /tmp/minference/
 
 # this retains the stage above for debugging on build failure
-RUN if [ -f $TMP/.build.failed ]; then \
+RUN if [ -f /tmp/minference/.build.failed ]; then \
       echo "minference ${minference_VERSION} build failed!"; \
       exit 1; \
     fi
