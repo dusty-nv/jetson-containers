@@ -24,12 +24,12 @@ CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS \
 FLASH_ATTENTION_FORCE_BUILD=1 \
 FLASH_ATTENTION_FORCE_CXX11_ABI=0 \
 FLASH_ATTENTION_SKIP_CUDA_BUILD=0 \
-python3 setup.py --verbose bdist_wheel --dist-dir /opt
+pip3 wheel . -v --no-deps -w /opt/flash-attention/wheels/
 
 ls /opt
 cd /
 
-pip3 install /opt/flash_attn*.whl
+pip3 install /opt/flash-attention/wheels/flash_attn*.whl
 #pip3 show flash-attn && python3 -c 'import flash_attn'
 
-twine upload --verbose /opt/flash_attn*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose /opt/flash-attention/wheels/flash_attn*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

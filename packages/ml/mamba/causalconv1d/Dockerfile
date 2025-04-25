@@ -14,9 +14,6 @@ ARG CASUALCONV1D_VERSION \
     CASUALCONV1D_VERSION_SPEC \
     CUDAARCHS
 
-COPY build.sh install.sh /tmp/CASUALCONV1D/
+COPY build.sh install.sh patches /tmp/casualconv1d/
 
-COPY patches/${CASUALCONV1D_VERSION}.diff /tmp/CASUALCONV1D/patch.diff
-
-
-RUN /tmp/CASUALCONV1D/install.sh || /tmp/CASUALCONV1D/build.sh
+RUN /tmp/casualconv1d/install.sh || /tmp/casualconv1d/build.sh
