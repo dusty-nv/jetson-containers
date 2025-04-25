@@ -27,6 +27,6 @@ RUN apt-get update -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-COPY build.sh install.sh /tmp/minference/
+COPY build.sh install.sh patches /tmp/minference/
 
 RUN /tmp/minference/install.sh || /tmp/minference/build.sh
