@@ -30,6 +30,12 @@ fi
 git status
 git diff --submodule=diff
 
+set -euo pipefail
+
+CUTLASS_DIR="/opt/mlc-llm/3rdparty/tvm/3rdparty/cutlass"
+sudo rm -rf "$CUTLASS_DIR"
+sudo git clone --depth 1 --branch v3.9.0 https://github.com/NVIDIA/cutlass.git "$CUTLASS_DIR"
+
 # add extras to the source
 cp /tmp/mlc/benchmark.py /opt/mlc-llm/
 
