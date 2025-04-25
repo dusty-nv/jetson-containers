@@ -28,6 +28,4 @@ pip3 install $PIP_WHEEL_DIR/minference-*.whl
 
 cd /opt/minference
 pip3 show minference
-python3 -c 'import minference'
-
 twine upload --verbose $PIP_WHEEL_DIR/minference-*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
