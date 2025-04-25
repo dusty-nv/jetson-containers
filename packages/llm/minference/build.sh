@@ -11,8 +11,8 @@ git clone --recursive --depth=1 $REPO_URL /opt/minference/
 
 cd /opt/minference/
 
-python3 /opt/minference/generate_diff.py
-git apply /opt/minference/patch.diff
+python3 /tmp/minference/generate_diff.py
+git apply /tmp/minference/patch.diff
 git diff
 git status
 
