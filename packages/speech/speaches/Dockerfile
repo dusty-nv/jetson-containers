@@ -1,22 +1,23 @@
 #---
 # name: speaches
 # group: audio
-# depends: [faster-whisper, piper-tts, kokoro-tts:onnx]
+# depends: [faster-whisper, piper-tts, kokoro-tts:onnx, python:3.12, nodejs]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-RUN apt-get update && \
-    apt-get install -y libsndfile1-dev nodejs npm && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && \
+#     apt-get install -y libsndfile1-dev && \
+#     apt-get clean && \
+#     rm -rf /var/lib/apt/lists/*
 
-RUN python3 -c "import onnxruntime; print('☑️✅ ONNX Runtime version:', onnxruntime.__version__); print('✅ EPs:', onnxruntime.get_available_providers())"
+# RUN python3 -c "import onnxruntime; print('☑️✅ ONNX Runtime version:', onnxruntime.__version__); print('✅ EPs:', onnxruntime.get_available_providers())"
 
 # 1. Clone and install speaches
-RUN git clone https://github.com/speaches-ai/speaches /opt/speaches && \
+RUN set -ex && \
+    git clone https://github.com/speaches-ai/speaches /opt/speaches && \
     cd /opt/speaches && \
     sed -i 's|requires-python.*|requires-python = ">=3.10"|g' pyproject.toml && \
     sed -i 's|"faster-whisper.*",|"faster-whisper",|g' pyproject.toml && \
