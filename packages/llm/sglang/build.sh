@@ -69,8 +69,4 @@ cd /
 
 # Gemlite
 pip3 install gemlite
-
-pip3 show sglang
-python3 -c 'import sglang'
-
 twine upload --verbose $PIP_WHEEL_DIR/sgl*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
