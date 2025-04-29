@@ -1,3 +1,5 @@
+from jetson_containers import CUDA_VERSION, IS_SBSA
+from packaging.version import Version
 
 def vllm(vllm_version, xgrammar_version, branch=None, requires=None, default=False):
     pkg = package.copy()
@@ -14,6 +16,7 @@ def vllm(vllm_version, xgrammar_version, branch=None, requires=None, default=Fal
         'VLLM_VERSION': vllm_version,
         'VLLM_BRANCH': branch,
         'XGRAMMAR_VERSION': xgrammar_version,
+        'IS_SBSA': IS_SBSA
     }
 
     builder = pkg.copy()
