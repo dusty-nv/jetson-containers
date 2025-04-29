@@ -14,6 +14,7 @@ ARG VLLM_VERSION \
     VLLM_BRANCH \
     XGRAMMAR_VERSION \
     CUDAARCHS \
+    IS_SBSA \
     FORCE_BUILD=off
 
 RUN apt-get update -y && apt-get install -y libnuma-dev \
