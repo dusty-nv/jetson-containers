@@ -30,5 +30,5 @@ def vtk(version, version_spec=None, requires=None, default=False):
 
 package = [
     vtk('9.3.1', version_spec='9.3.1.dev0'),
-    vtk('9.4.1', version_spec='9.4.1', default=True)
+    vtk('9.4.2', version_spec='9.4.2', default=True)
 ]
