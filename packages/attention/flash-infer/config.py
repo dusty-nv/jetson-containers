@@ -1,5 +1,6 @@
 
-
+from jetson_containers import CUDA_VERSION
+from packaging.version import Version
 
 def flash_infer(version, version_spec=None, requires=None, default=False):
     pkg = package.copy()

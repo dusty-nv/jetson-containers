@@ -1,4 +1,7 @@
 
+from jetson_containers import CUDA_VERSION
+from packaging.version import Version
+
 def xformers(version, requires=None, default=True):
     pkg = package.copy()
 
