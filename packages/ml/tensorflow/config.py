@@ -141,6 +141,12 @@ package = [
         version='2.20.0',
         tensorflow_version='tf2',
         requires='>=36',
-        default=(L4T_VERSION > Version('36.3')),
+        default=(CUDA_VERSION < Version('13.0')), # Blackwell Support
+    ),
+*tensorflow(
+        version='2.21.0',
+        tensorflow_version='tf2',
+        requires='>=36',
+        default=(CUDA_VERSION >= Version('13.0')),
     ),
 ]

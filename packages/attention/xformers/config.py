@@ -26,4 +26,5 @@ package = [
     xformers('0.0.26', requires='<=cu122'),
     xformers('0.0.29', requires='<cu126'), # support pytorch 2.5.1
     xformers('0.0.30', requires='>=cu126'), # support pytorch 2.6.0
+    xformers('0.0.31', default=(CUDA_VERSION >= Version('13.0'))),
 ]

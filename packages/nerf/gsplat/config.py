@@ -25,6 +25,6 @@ def gsplat(version, requires=None, default=False):
 package = [
     gsplat('1.4.0'),
     gsplat('1.5.0'),
-    gsplat('1.5.1', default=True),
-    gsplat('1.5.2'),
+    gsplat('1.5.1'),
+    gsplat('1.5.2', default=True),
 ]

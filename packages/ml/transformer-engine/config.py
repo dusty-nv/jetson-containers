@@ -28,5 +28,6 @@ package = [
     transformer_engine('1.13'),
     transformer_engine('2.0'), # Blackwell support
     transformer_engine('2.1'), # FP4 support
-    transformer_engine('2.2', default=True) # cutlass 3.9.0 support
+    transformer_engine('2.2', default=False), # cutlass 3.9.0 support
+    transformer_engine('2.3', default=True) # cutlass 3.9.0 support
 ]
