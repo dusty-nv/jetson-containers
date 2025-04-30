@@ -26,4 +26,4 @@ elif SYSTEM_ARM:
     elif L4T_VERSION.major >= 32:
         PYTORCH_VERSION = Version('1.10')     # JetPack 4.6 (CUDA 10.2)
 else:
-    PYTORCH_VERSION = Version('2.6')          # pytorch nightly (CUDA 12.8)
+    PYTORCH_VERSION = Version('2.7')          # pytorch nightly (CUDA 12.8)
