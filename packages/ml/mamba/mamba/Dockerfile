@@ -15,5 +15,5 @@ ARG MAMBA_VERSION \
     CUDAARCHS
 
 COPY build.sh install.sh patches /tmp/mamba/
-COPY benchmarks /tmp/MAMBA/benchmarks
+COPY benchmarks /tmp/mamba/benchmarks
 RUN /tmp/mamba/install.sh || /tmp/mamba/build.sh
