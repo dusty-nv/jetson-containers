@@ -2,9 +2,6 @@
 # JAX builder for Jetson (architecture: ARM64, CUDA support)
 set -ex
 
-# Install LLVM/Clang 20 # Compatible with blackwell
-./llvm.sh 20 all
-
 echo "Building JAX for Jetson"
 
 # Clone JAX repository

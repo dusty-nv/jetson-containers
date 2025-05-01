@@ -3,6 +3,7 @@ import os
 import grp
 import sys
 import pprint
+import subprocess
 import requests, time
 import functools
 
@@ -28,10 +29,6 @@ def check_dependencies(install: bool = True):
     except Exception as error:
         if not install:
             raise error
-
-        import os
-        import sys
-        import subprocess
 
         requirements = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'requirements.txt')
         cmd = [sys.executable, '-m', 'pip', 'install', '-r', requirements]
@@ -218,22 +215,43 @@ def is_root_user() -> bool:
     return os.geteuid() == 0
 
 
-def needs_sudo(group: str = 'docker') -> bool:
-    """
-    Returns true if sudo is needed to use the docker engine (if user isn't in the docker group)
-    """
-    if is_root_user():
-        return False
-    else:
-        return not user_in_group(group)
-
-
 def sudo_prefix(group: str = 'docker'):
     """
     Returns a sudo prefix for command strings if the user needs sudo for accessing docker
     """
-    if needs_sudo(group):
-        #print('USER NEEDS SUDO')
-        return "sudo "
-    else:
-        return ""
+    return "sudo " if needs_sudo(group) else ""
+
+
+def needs_sudo(group: str='docker') -> bool:
+    """
+    Returns true if sudo is needed to use the docker engine (if user isn't in the docker group)
+    """
+    global NEEDS_SUDO
+
+    if NEEDS_SUDO is not None:
+        return NEEDS_SUDO
+
+    def _needs_sudo(group):
+        if is_root_user():
+            return False
+        else:
+            if user_in_group(group):
+                return False
+
+            try:
+                subprocess.run(
+                    ['docker', 'info'], 
+                    check=True, shell=False, 
+                    stderr=subprocess.DEVNULL, 
+                    stdout=subprocess.DEVNULL
+                )
+                return False
+            except Exception:
+                return True
+
+    NEEDS_SUDO = _needs_sudo(group)
+    return NEEDS_SUDO
+
+
+# will be true if user needs sudo to access docker
+NEEDS_SUDO=None

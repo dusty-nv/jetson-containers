@@ -26,11 +26,15 @@ env
 
 # cp /tmp/vllm/${VLLM_VERSION}.fa.diff /tmp/vllm/fa.diff
 # git apply /tmp/vllm/${VLLM_VERSION}.diff
-python3 /tmp/vllm/generate_diff.py
-git apply -p1 /tmp/vllm/CMakeLists.txt.diff
-git apply -p1 /tmp/vllm/vllm_flash_attn.cmake.diff
-git diff
-git status
+
+if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" ]]; then
+  echo "Applying vLLM CMake patches…"
+  python3 /tmp/vllm/generate_diff.py                      # (re)generate the .diff files
+  git apply -p1 /tmp/vllm/CMakeLists.txt.diff             # patch CMakeLists.txt
+  git apply -p1 /tmp/vllm/vllm_flash_attn.cmake.diff      # patch vllm_flash_attn.cmake
+else
+  echo "SBSA build detected (IS_SBSA=${IS_SBSA}); skipping patch application."
+fi
 
 # File "/opt/venv/lib/python3.12/site-packages/gguf/gguf_reader.py"
 # `newbyteorder` was removed from the ndarray class in NumPy 2.0

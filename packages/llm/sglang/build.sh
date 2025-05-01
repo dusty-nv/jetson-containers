@@ -25,7 +25,12 @@ echo "Building SGL-KERNEL"
 cd $REPO_DIR/sgl-kernel/
 
 # export MAX_JOBS="$(nproc)" this breaks with actual flash-attention
-export MAX_JOBS=3
+if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" ]]; then
+    export MAX_JOBS=3
+else
+    export MAX_JOBS="$(nproc)"
+fi
+
 export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
 
@@ -57,8 +62,7 @@ sed -i 's/==/>=/g' pyproject.toml
 echo "Patched $REPO_DIR/python/pyproject.toml"
 cat pyproject.toml
 
-# export MAX_JOBS="$(nproc)" this breaks with actual flash-attention
-export MAX_JOBS=6
+export MAX_JOBS="$(nproc)"
 export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
 

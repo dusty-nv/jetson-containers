@@ -1,5 +1,5 @@
 
-from jetson_containers import CUDA_VERSION
+from jetson_containers import CUDA_VERSION, IS_SBSA
 from packaging.version import Version
 
 def flash_attn(version, requires=None, default=False):
@@ -12,6 +12,7 @@ def flash_attn(version, requires=None, default=False):
     
     pkg['build_args'] = {
         'FLASH_ATTENTION_VERSION': version,
+        'IS_SBSA': IS_SBSA
     }
     
     builder = pkg.copy()
