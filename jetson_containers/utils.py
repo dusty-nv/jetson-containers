@@ -225,8 +225,14 @@ def needs_sudo(group: str = 'docker') -> bool:
     if is_root_user():
         return False
     else:
-        return not user_in_group(group)
+        if user_in_group(group):
+            return False
 
+        try:
+            subprocess.run('docker info', shell=False, check=True)
+            return False
+        except Exception:
+            return True
 
 def sudo_prefix(group: str = 'docker'):
     """
