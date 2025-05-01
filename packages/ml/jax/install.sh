@@ -4,12 +4,6 @@ set -ex
 
 # bash /tmp/JAX/link_cuda.sh
 
-wget https://apt.llvm.org/llvm.sh
-chmod +x llvm.sh
-./llvm.sh 20 all
-ln -sf /usr/bin/llvm-config-* /usr/bin/llvm-config
-ln -s /usr/bin/clang-1* /usr/bin/clang
-
 # JAX C++ extensions frequently use ninja for parallel builds
 pip3 install scikit-build ninja
 
