@@ -1,9 +1,27 @@
 
-def warp(version, url, requires=None, default=False):
+WARP_RELEASE_URL="https://github.com/NVIDIA/warp/releases/download"
+
+def warp(version, url=None, requires=[], default=False):
     """
     Containers for Warp (https://github.com/NVIDIA/warp)
     This defines variants for torch, jax, and all (both)
     """
+    if url is None:
+        return (
+            warp( # amd64 version
+                version, 
+                url=f"{WARP_RELEASE_URL}/v{version}/warp_lang-{version}+cu12-py3-none-manylinux_2_28_x86_64.whl", 
+                requires=requires + ['x86_64'], 
+                default=default
+            ),
+            warp( # arm64 version
+                version, 
+                url=f"{WARP_RELEASE_URL}/v{version}/warp_lang-{version}+cu12-py3-none-manylinux_2_34_aarch64.whl", 
+                requires=requires + ['>=r36'], 
+                default=default
+            ),
+        )
+    
     pkg = package.copy()
     name = pkg['name']
 
@@ -42,14 +60,6 @@ def warp(version, url, requires=None, default=False):
 
 
 package = [
-    warp('1.7.0', 
-        'https://github.com/NVIDIA/warp/releases/download/v1.7.0/warp_lang-1.7.0+cu12-py3-none-manylinux_2_34_aarch64.whl',
-        requires='>=r36',
-        default=True,
-    ),
-    warp('1.7.0', 
-        'https://github.com/NVIDIA/warp/releases/download/v1.7.0/warp_lang-1.7.0+cu12-py3-none-manylinux_2_28_x86_64.whl',
-        requires='x86_64',
-        default=True,
-    ),
+    warp('1.7.0', default=True),
+    warp('1.7.1')
 ]
