@@ -108,4 +108,4 @@ def generate_diff(original_file, output_diff):
         f.write("\n".join(diff) + "\n")
 
 if __name__ == "__main__":
-    generate_diff("/opt/casualconv1d/setup.py", "/tmp/casualconv1d/patch.diff")
+    generate_diff("/opt/causalconv1d/setup.py", "/tmp/causalconv1d/patch.diff")

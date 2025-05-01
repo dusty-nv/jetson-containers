@@ -11,9 +11,8 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG MAMBA_VERSION \
-    MAMBA_VERSION_SPEC \
-    CUDAARCHS
+    MAMBA_VERSION_SPEC
 
 COPY build.sh install.sh patches /tmp/mamba/
-COPY benchmarks /tmp/MAMBA/benchmarks
+COPY benchmarks /tmp/mamba/benchmarks
 RUN /tmp/mamba/install.sh || /tmp/mamba/build.sh

@@ -1,4 +1,5 @@
-from jetson_containers import CUDA_ARCHITECTURES
+from jetson_containers import CUDA_VERSION
+from packaging.version import Version
 
 def mamba(version, version_spec=None, requires=None, default=False):
     pkg = package.copy()
@@ -9,7 +10,6 @@ def mamba(version, version_spec=None, requires=None, default=False):
     pkg['name'] = f'mamba:{version}'
 
     pkg['build_args'] = {
-        'CUDAARCHS': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
         'MAMBA_VERSION': version,
         'MAMBA_VERSION_SPEC': version_spec if version_spec else version,
     }
