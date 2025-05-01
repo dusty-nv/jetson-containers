@@ -3,6 +3,7 @@ import os
 import grp
 import sys
 import pprint
+import subprocess
 import requests, time
 import functools
 
@@ -28,10 +29,6 @@ def check_dependencies(install: bool = True):
     except Exception as error:
         if not install:
             raise error
-
-        import os
-        import sys
-        import subprocess
 
         requirements = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'requirements.txt')
         cmd = [sys.executable, '-m', 'pip', 'install', '-r', requirements]
@@ -229,7 +226,7 @@ def needs_sudo(group: str = 'docker') -> bool:
             return False
 
         try:
-            subprocess.run('docker info', shell=False, check=True)
+            subprocess.run(['docker', 'info'], shell=False, check=True)
             return False
         except Exception:
             return True
