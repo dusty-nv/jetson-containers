@@ -3,13 +3,6 @@ set -ex
 
 echo "Building MLC ${MLC_VERSION} (commit=${MLC_COMMIT})"
 
-# install LLVM the upstream way instead of apt because of:
-# https://discourse.llvm.org/t/llvm-15-0-7-missing-libpolly-a/67942 
-wget https://apt.llvm.org/llvm.sh
-chmod +x llvm.sh
-./llvm.sh ${LLVM_VERSION} all
-ln -sf /usr/bin/llvm-config-* /usr/bin/llvm-config
-
 # could NOT find zstd (missing: zstd_LIBRARY zstd_INCLUDE_DIR)
 apt-get update
 apt-get install -y --no-install-recommends libzstd-dev ccache
