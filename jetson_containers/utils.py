@@ -215,28 +215,43 @@ def is_root_user() -> bool:
     return os.geteuid() == 0
 
 
-def needs_sudo(group: str = 'docker') -> bool:
-    """
-    Returns true if sudo is needed to use the docker engine (if user isn't in the docker group)
-    """
-    if is_root_user():
-        return False
-    else:
-        if user_in_group(group):
-            return False
-
-        try:
-            subprocess.run(['docker', 'info'], shell=False, check=True)
-            return False
-        except Exception:
-            return True
-
 def sudo_prefix(group: str = 'docker'):
     """
     Returns a sudo prefix for command strings if the user needs sudo for accessing docker
     """
-    if needs_sudo(group):
-        #print('USER NEEDS SUDO')
-        return "sudo "
-    else:
-        return ""
+    return "sudo " if needs_sudo(group) else ""
+
+
+def needs_sudo(group: str='docker') -> bool:
+    """
+    Returns true if sudo is needed to use the docker engine (if user isn't in the docker group)
+    """
+    global NEEDS_SUDO
+
+    if NEEDS_SUDO is not None:
+        return NEEDS_SUDO
+
+    def _needs_sudo(group):
+        if is_root_user():
+            return False
+        else:
+            if user_in_group(group):
+                return False
+
+            try:
+                subprocess.run(
+                    ['docker', 'info'], 
+                    check=True, shell=False, 
+                    stderr=subprocess.DEVNULL, 
+                    stdout=subprocess.DEVNULL
+                )
+                return False
+            except Exception:
+                return True
+
+    NEEDS_SUDO = _needs_sudo(group)
+    return NEEDS_SUDO
+
+
+# will be true if user needs sudo to access docker
+NEEDS_SUDO=None
