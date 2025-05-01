@@ -2,7 +2,7 @@
 set -ex
 
 # Clone the repository if it doesn't exist
-git clone --branch=v${CASUALCONV1D_VERSION} --depth=1 --recursive https://github.com/johnnynunez/mamba /opt/mamba  || \
+git clone --branch=v${MAMBA_VERSION} --depth=1 --recursive https://github.com/johnnynunez/mamba /opt/mamba  || \
 git clone --depth=1 --recursive https://github.com/johnnynunez/mamba  /opt/mamba
 
 # Navigate to the directory containing mamba's setup.py
