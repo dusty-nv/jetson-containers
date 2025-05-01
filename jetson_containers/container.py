@@ -28,7 +28,7 @@ from .logging import (
 )
 
 from .l4t_version import (
-  L4T_VERSION, LSB_RELEASES, l4t_version_from_tag, l4t_version_compatible,
+  L4T_VERSION, LSB_RELEASES, IS_TEGRA, l4t_version_from_tag, l4t_version_compatible,
   get_l4t_base, get_cuda_arch, get_cuda_version, get_jetpack_version, get_lsb_release
 )
 
@@ -394,8 +394,14 @@ def test_container(name, package, simulate=False):
         test_ext = os.path.splitext(test_exe)[1]
         log_file = os.path.join(get_log_dir('test'), f"{name.replace('/','_')}_{test_exe}").replace(':','_')
 
-        cmd = f"{sudo_prefix()}docker run -t --rm --gpus=all --network=host" + _NEWLINE_
-        cmd += f"  --env NVIDIA_DRIVER_CAPABILITIES=all" + _NEWLINE_
+        cmd = f"{sudo_prefix()}docker run -t --rm --network=host" + _NEWLINE_
+
+        if IS_TEGRA:
+            cmd += f"  --runtime=nvidia" + _NEWLINE_ 
+        else:
+            cmd += f"  --gpus=all" + _NEWLINE_ 
+            cmd += f"  --env NVIDIA_DRIVER_CAPABILITIES=all" + _NEWLINE_
+
         cmd += f"  --volume {package['path']}:/test" + _NEWLINE_
         cmd += f"  --volume {get_dir('data')}:/data" + _NEWLINE_
         cmd += f"  --workdir /test" + _NEWLINE_
