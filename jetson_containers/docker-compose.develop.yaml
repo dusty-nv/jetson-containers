@@ -10,7 +10,6 @@ x-shared-props: &shared-props
   environment:
     LOCAL_APT_DIST_DIR: /dist/apt
     LOCAL_PIP_DIST_DIR: /dist/pypi
-    LOCAL_PIP_FALLBACK_URL: https://pypi.jetson-ai-lab.dev
 
 x-pypi-props: &pypi-props
   <<: *shared-props

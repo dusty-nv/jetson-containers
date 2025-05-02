@@ -143,7 +143,7 @@ Then when the containers are built, it will first attempt to install the wheel f
 
 ### Local `PIP` and `APT` servers
 
-You can start the local `PYPI`/`APT` servers on one Jetson node with a fallback set to `https://pypi.jetson-ai-lab.dev` and `https://apt.jetson-ai-lab.dev`. The local builded `pip` wheels and `tarballs` will be uploaded from the container during build time to local `PYPI`/`APT` instances only.
+You can start the local `PYPI`/`APT` servers on one Jetson node with a fallback set to `jetson-ai-lab.dev`. The local builded `pip` wheels and `tarballs` will be uploaded from the container during build time to local `PYPI`/`APT` instances only.
 
 To start local `puypi`/`apt` servers:
 ```bash
