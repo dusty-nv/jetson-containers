@@ -1,0 +1,82 @@
+x-healthcheck: &healthcheck
+  test: ["CMD", "wget", "--spider", "http://127.0.01:8080/health"]
+  interval: 30s
+  timeout: 10s
+  retries: 3
+
+x-shared-props: &shared-props
+  restart: unless-stopped
+  env_file: ../.env
+  environment:
+    LOCAL_APT_DIST_DIR: /dist/apt
+    LOCAL_PIP_DIST_DIR: /dist/pypi
+    LOCAL_PIP_FALLBACK_URL: https://pypi.jetson-ai-lab.dev
+
+x-pypi-props: &pypi-props
+  <<: *shared-props
+  image: pypiserver/pypiserver:latest
+  command: run --verbose --authenticate . --passwords . --fallback-url https://pypi.org/simple --server gunicorn
+  healthcheck:
+    <<: *healthcheck
+    
+services:
+  jetson_containers_pypi_cu128:
+    <<: *pypi-props
+    container_name: jetson_containers_pypi_cu128
+    hostname: jetson_containers_pypi_cu128
+    command: run --verbose --authenticate . --passwords . --fallback-url https://pypi.jetson-ai-lab.dev/jp6/cu128 --server gunicorn
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ${LOCAL_PIP_DIST_DIR:-/dist/pypi}/jp6/cu128:/data/packages:rw
+    ports:
+      - "8128:8080"
+
+  jetson_containers_pypi_cu126:
+    <<: *pypi-props
+    container_name: jetson_containers_pypi_cu126
+    hostname: jetson_containers_pypi_cu126
+    command: run --verbose --authenticate . --passwords . --fallback-url https://pypi.jetson-ai-lab.dev/jp6/cu126
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ${LOCAL_PIP_DIST_DIR:-/dist/pypi}/jp6/cu126:/data/packages:rw
+    ports:
+      - "8126:8080"
+
+  jetson-containers-pypi-server:
+    <<: *shared-props
+    image: nginx:alpine
+    container_name: jetson-containers-pypi-server
+    hostname: jetson-containers-pypi-server
+    ports:
+      - "8080:8080"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ./nginx.develop.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      jetson_containers_pypi_cu128:
+        condition: service_healthy
+      jetson_containers_pypi_cu126:
+        condition: service_healthy
+    healthcheck:
+      <<: *healthcheck
+      start_period: 10s
+
+  jetson-containers-apt-server:
+    <<: *shared-props
+    image: python:3-slim
+    container_name: jetson-containers-apt-server
+    hostname: jetson-containers-apt-server
+    working_dir: /dist/apt
+    command: python -m http.server 8000 --bind 0.0.0.0 --directory /dist/apt
+    ports:
+      - "8000:8000"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ${LOCAL_APT_DIST_DIR:-/dist/apt}:/dist/apt:ro
+    healthcheck:
+      <<: *healthcheck
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/').status"]
