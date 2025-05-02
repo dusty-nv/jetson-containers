@@ -22,7 +22,7 @@ cd $REPO_DIR/sgl-kernel/
 
 # export MAX_JOBS="$(nproc)" this breaks with actual flash-attention
 if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" ]]; then
-    export MAX_JOBS=6
+    export MAX_JOBS=2
 else
     export MAX_JOBS="$(nproc)"
 fi
