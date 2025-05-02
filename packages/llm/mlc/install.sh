@@ -6,6 +6,8 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
+torch_version=$(python3 -c 'import torch; print(torch.__version__)')
+
 # install the wheels
 if [[ -n "$(ls /tmp/mlc/*.whl)" ]]; then 
     pip3 install /tmp/mlc/*.whl
@@ -14,11 +16,12 @@ else
     pip3 install mlc-chat==${MLC_VERSION} || echo "failed to pip install mlc-chat==${MLC_VERSION} (this is expected for mlc>=0.1.1)"
 fi
 
-pip3 install 'pydantic>2'
+# restore versions from the build
+pip3 install 'pydantic>2' torch==$torch_version
 
 # we need the source because the MLC model builder relies on it
-git clone https://github.com/mlc-ai/mlc-llm /opt/mlc-llm
-cd /opt/mlc-llm
+git clone https://github.com/mlc-ai/mlc-llm ${SOURCE_DIR}
+cd ${SOURCE_DIR}
 git checkout ${MLC_COMMIT}
 git submodule update --init --recursive
     
@@ -29,10 +32,10 @@ fi
 
 # add extras to the source
 cd /
-cp /tmp/mlc/benchmark*.py /opt/mlc-llm/
+cp /tmp/mlc/benchmark*.py ${SOURCE_DIR}/
 
 # make the CUTLASS sources available for model builder
-ln -s /opt/mlc-llm/3rdparty/tvm/3rdparty /usr/local/lib/python${PYTHON_VERSION}/dist-packages/tvm/3rdparty
+ln -s ${SOURCE_DIR}/3rdparty/tvm/3rdparty /usr/local/lib/python${PYTHON_VERSION}/dist-packages/tvm/3rdparty
 
 # make sure it loads
 pip3 show tvm mlc_llm

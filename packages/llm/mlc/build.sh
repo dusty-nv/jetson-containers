@@ -10,8 +10,8 @@ rm -rf /var/lib/apt/lists/*
 apt-get clean
 	
 # clone the sources
-git clone https://github.com/mlc-ai/mlc-llm /opt/mlc-llm
-cd /opt/mlc-llm
+git clone https://github.com/mlc-ai/mlc-llm ${SOURCE_DIR}
+cd ${SOURCE_DIR}
 git checkout ${MLC_COMMIT}
 git submodule update --init --recursive
     
@@ -24,7 +24,7 @@ git status
 git diff --submodule=diff
 
 # add extras to the source
-cp /tmp/mlc/benchmark.py /opt/mlc-llm/
+cp /tmp/mlc/benchmark.py ${SOURCE_DIR}/
 
 # flashinfer build references 'python'
 ln -sf /usr/bin/python3 /usr/bin/python
@@ -59,9 +59,9 @@ ninja
 #rm -rf tokenizers/CMakeFiles tokenizers/release
 
 # build TVM python module
-cd /opt/mlc-llm/3rdparty/tvm/python
+cd ${SOURCE_DIR}/3rdparty/tvm/python
 
-TVM_LIBRARY_PATH=/opt/mlc-llm/build/tvm \
+TVM_LIBRARY_PATH=${SOURCE_DIR}/build/tvm \
 python3 setup.py --verbose bdist_wheel --dist-dir /opt
 
 pip3 install /opt/tvm*.whl
@@ -69,7 +69,7 @@ pip3 install /opt/tvm*.whl
 #rm -rf dist build
 
 # build mlc-llm python module
-cd /opt/mlc-llm
+cd ${SOURCE_DIR}
 
 if [ -f setup.py ]; then
 	python3 setup.py --verbose bdist_wheel --dist-dir /opt
@@ -87,7 +87,7 @@ pip3 install /opt/mlc*.whl
 #python3 -c "from mlc_chat import ChatModule; print(ChatModule)"
     
 # make the CUTLASS sources available for model builder
-ln -s /opt/mlc-llm/3rdparty/tvm/3rdparty /usr/local/lib/python${PYTHON_VERSION}/dist-packages/tvm/3rdparty
+ln -s ${SOURCE_DIR}/3rdparty/tvm/3rdparty /usr/local/lib/python${PYTHON_VERSION}/dist-packages/tvm/3rdparty
 
 # upload wheels
 twine upload --verbose /opt/tvm*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
