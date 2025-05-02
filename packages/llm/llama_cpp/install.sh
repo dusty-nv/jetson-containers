@@ -2,7 +2,8 @@
 set -ex
 
 apt-get update
-apt-get install -y --no-install-recommends libcurl4-openssl-dev
+apt-get install -y --no-install-recommends \
+        libcurl4-openssl-dev
 rm -rf /var/lib/apt/lists/*
 apt-get clean
 
@@ -21,4 +22,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
    
-pip3 install llama-cpp-python==${LLAMA_CPP_VERSION}
+pip3 install llama-cpp-python==${LLAMA_CPP_VERSION_PY}

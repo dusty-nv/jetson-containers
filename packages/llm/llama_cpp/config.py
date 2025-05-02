@@ -2,24 +2,28 @@
 DEFAULT_FLAGS="-DGGML_CUDA=on -DGGML_CUDA_F16=on -DLLAMA_CURL=on"
 LEGACY_FLAGS="-DLLAMA_CUBLAS=on -DLLAMA_CUDA_F16=1"
 
-def llama_cpp(version, branch=None, test=None, default=False, flags=DEFAULT_FLAGS):
+def llama_cpp(version, default=False, flags=DEFAULT_FLAGS):
+    cpp = bool(version[0] == 'b')
     pkg = package.copy()
 
     pkg['name'] = f'llama_cpp:{version}'
-
-    if not test:
-        test = "test_model.py --model $(huggingface-downloader TheBloke/Llama-2-7B-GGUF/llama-2-7b.Q4_K_S.gguf)"
-        
-    pkg['test'] = pkg['test'] + [test]
-
-    if not branch:
-        branch = version
-
+   
     pkg['build_args'] = {
-        'LLAMA_CPP_VERSION': version,
-        'LLAMA_CPP_BRANCH': branch,
-        'LLAMA_CPP_FLAGS': flags,
+        'LLAMA_CPP_VERSION': version[1:] if cpp else None,
+        'LLAMA_CPP_VERSION_PY': '0.3.8' if cpp else version,
+        'LLAMA_CPP_BRANCH': version if cpp else None,
+        'LLAMA_CPP_BRANCH_PY': 'main' if cpp else f'v{version}',
+        'LLAMA_FLAGS_CPP': flags,
     }
+
+    if cpp:
+        test_model = "bartowski/Qwen_Qwen3-1.7B-GGUF/Qwen_Qwen3-1.7B-Q4_K_M.gguf"
+    else:
+        test_model = "TheBloke/Llama-2-7B-GGUF/llama-2-7b.Q4_K_S.gguf"
+
+    pkg['test'] = pkg['test'] + [
+        f"test_model.py --model $(huggingface-downloader {test_model})"
+    ]
     
     builder = pkg.copy()
     builder['name'] = builder['name'] + '-builder'
@@ -32,7 +36,6 @@ def llama_cpp(version, branch=None, test=None, default=False, flags=DEFAULT_FLAG
     return pkg, builder
 
 package = [
-    #llama_cpp('main', branch='main'),
     llama_cpp('0.2.57', flags=LEGACY_FLAGS),
     llama_cpp('0.2.70', flags=LEGACY_FLAGS),
     llama_cpp('0.2.83'),
@@ -43,5 +46,8 @@ package = [
     llama_cpp('0.3.6'),
     llama_cpp('0.3.7'),
     llama_cpp('0.3.8'),
-    llama_cpp('0.3.9', default=True),
+
+    # llama_cpp_python appears abandoned (4/25)
+    # so we changed over to llama.cpp branches
+    llama_cpp('b5255', default=True),
 ]
