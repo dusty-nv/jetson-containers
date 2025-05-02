@@ -141,6 +141,20 @@ Being able to change the versions of CUDA, Python, ect in the build tree will ca
 
 Then when the containers are built, it will first attempt to install the wheel from the server, and if it's found it builds it from source.  There is another similar server run for caching [tarball releases](http://jetson.webredirect.org:8000) for projects that install C/C++ binaries and headers or other general files outside of pip.  See this [forum post](https://forums.developer.nvidia.com/t/jetson-ai-lab-ml-devops-containers-core-inferencing/288235/3) for more information about the caching infrastructure, and the ability to use the pip server outside of just containers.
 
+### Local `PIP` and `APT` servers
+
+You can start the local `PYPI`/`APT` servers on one Jetson node with a fallback set to `https://pypi.jetson-ai-lab.dev` and `https://apt.jetson-ai-lab.dev`. The local builded `pip` wheels and `tarballs` will be uploaded from the container during build time to local `PYPI`/`APT` instances only.
+
+To start local `puypi`/`apt` servers:
+```bash
+docker compose -f jetson_containers/docker-compose.develop.yaml up --detach
+```
+
+To stop local `puypi`/`apt` servers:
+```bash
+docker compose -f jetson_containers/docker-compose.develop.yaml stop
+```
+
 ## Building External Packages
 
 Let's say that you have a project that you want to build a container for - if you define a [custom package](/docs/packages.md) (i.e. by creating a Dockerfile with a YAML header), you can point `build.sh` to out-of-tree locations using the `--package-dirs` option:
