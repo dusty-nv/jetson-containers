@@ -6,12 +6,46 @@ pip3 install compressed-tensors decord
 REPO_URL="https://github.com/sgl-project/sglang"
 REPO_DIR="/opt/sglang"
 
-export SGL_KERNEL_ENABLE_BF16=1
-export SGL_KERNEL_ENABLE_FP8=1
-export SGL_KERNEL_ENABLE_FP4=1
-export SGL_KERNEL_ENABLE_SM90A=1
-export SGL_KERNEL_ENABLE_SM100A=1
-export USE_CUDNN=1
+# Check CUDA version
+CUDA_VERSION=$(nvcc --version | grep -oP "release \K[0-9]+\.[0-9]+" || echo "0.0")
+
+# Convert to comparable float
+CUDA_MAJOR=$(echo "$CUDA_VERSION" | cut -d. -f1)
+CUDA_MINOR=$(echo "$CUDA_VERSION" | cut -d. -f2)
+CUDA_NUMERIC=$(echo "$CUDA_MAJOR * 100 + $CUDA_MINOR" | bc)
+
+# Clear all feature flags to defaults
+export SGL_KERNEL_ENABLE_BF16=0
+export SGL_KERNEL_ENABLE_FP8=0
+export SGL_KERNEL_ENABLE_FP4=0
+export SGL_KERNEL_ENABLE_SM90A=0
+export SGL_KERNEL_ENABLE_SM100A=0
+export SGL_KERNEL_ENABLE_SM103A=0
+export SGL_KERNEL_ENABLE_SM110A=0
+export SGL_KERNEL_ENABLE_FA3=1  # Always enabled
+
+# Activate flags based on CUDA version
+if (( CUDA_NUMERIC >= 1300 )); then
+  echo "CUDA >= 13.0"
+  export SGL_KERNEL_ENABLE_SM110A=1
+
+elif (( CUDA_NUMERIC >= 1209 )); then
+  echo "CUDA >= 12.9"
+  export SGL_KERNEL_ENABLE_SM103A=1
+
+elif (( CUDA_NUMERIC >= 1208 )); then
+  echo "CUDA >= 12.8"
+  export SGL_KERNEL_ENABLE_BF16=1
+  export SGL_KERNEL_ENABLE_FP8=1
+  export SGL_KERNEL_ENABLE_FP4=1
+  export SGL_KERNEL_ENABLE_SM90A=1
+  export SGL_KERNEL_ENABLE_SM100A=1
+
+else
+  echo "CUDA < 12.8"
+  export SGL_KERNEL_ENABLE_BF16=1  # Only BF16 enabled
+fi
+
 
 echo "Building SGLang ${SGLANG_VERSION} for ${PLATFORM}"
 
