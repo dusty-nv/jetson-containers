@@ -248,7 +248,7 @@ def get_cuda_version(version_file: str = "/usr/local/cuda/version.json", l4t_ver
             l4t_version = get_l4t_version(l4t_version=l4t_version)
             if l4t_version.major >= 38:
                 if l4t_version == Version('38.1'):
-                    cuda_version = '13.0'
+                    cuda_version = '12.9'
             elif l4t_version.major >= 36:
                 # L4T r36.x (JP 6.x) and above does not require having CUDA installed on host
                 # When CUDA is not installed on host, users can specify which version of
