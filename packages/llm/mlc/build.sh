@@ -17,6 +17,8 @@ git submodule update --init --recursive
     
 # apply patches to the source
 if [ -s /tmp/mlc/patch.diff ]; then 
+  cuda_archs=$(echo "$CUDA_ARCHITECTURES" | sed "s|;| |g")
+	sed -i "s|SUPPORTED 87|SUPPORTED ${cuda_archs}|g" /tmp/mlc/patch.diff 
 	git apply /tmp/mlc/patch.diff 
 fi
 
