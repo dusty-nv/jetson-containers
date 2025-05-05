@@ -17,9 +17,6 @@ ARG VLLM_VERSION \
     IS_SBSA \
     FORCE_BUILD=off
 
-RUN apt-get update -y && apt-get install -y libnuma-dev \
-    libsndfile1 libsndfile1-dev libprotobuf-dev libsm6 libxext6 libgl1
-
 COPY build.sh install.sh patches /tmp/vllm/
 
 RUN /tmp/vllm/install.sh || /tmp/vllm/build.sh
