@@ -22,7 +22,7 @@ ROS_WORKSPACE=/ros2_workspace /ros2_install.sh https://github.com/dusty-nv/ros_d
 
 You can run this from the ROS2 container using a mounted directory for your workspace (where your compiled packages will be saved outside container), or via another Dockerfile using the ROS2 container as base (in which case your packages will be built into the container itself):
 
-* [`/packages/ros/Dockerfile.ros2.extras`](/packages/ros/Dockerfile.ros2.extras)
+* [`/packages/robots/ros/Dockerfile.ros2.extras`](/packages/robots/ros/Dockerfile.ros2.extras)
 * [`/packages/jetson-inference/Dockerfile.ros`](/packages/jetson-inference/Dockerfile.ros)
 
 Examples of this being done you can find in the [`ros:humble-foxglove`](/packages/ros) and [`jetson-inference:humble`](/packages/jetson-inference) containers.
