@@ -6,6 +6,15 @@ pip3 install compressed-tensors decord
 REPO_URL="https://github.com/sgl-project/sglang"
 REPO_DIR="/opt/sglang"
 
+echo "Building SGLang ${SGLANG_VERSION} for ${PLATFORM}"
+
+git clone --recursive --depth=1 --branch=v${SGLANG_VERSION} $REPO_URL $REPO_DIR ||
+git clone --recursive --depth=1 $REPO_URL $REPO_DIR
+echo "Building SGL-KERNEL"
+cd $REPO_DIR/sgl-kernel/
+
+export MAX_JOBS="$(nproc)"
+
 # Check CUDA version
 CUDA_VERSION=$(nvcc --version | grep -oP "release \K[0-9]+\.[0-9]+" || echo "0.0")
 
@@ -22,8 +31,7 @@ export SGL_KERNEL_ENABLE_SM90A=0
 export SGL_KERNEL_ENABLE_SM100A=0
 export SGL_KERNEL_ENABLE_SM103A=0
 export SGL_KERNEL_ENABLE_SM110A=0
-export SGL_KERNEL_ENABLE_FA3=1  # Always enabled
-
+export SGL_KERNEL_ENABLE_FA3=0  # Always enabled
 # Activate flags based on CUDA version
 if (( CUDA_NUMERIC >= 1300 )); then
   echo "CUDA >= 13.0"
@@ -40,26 +48,25 @@ elif (( CUDA_NUMERIC >= 1208 )); then
   export SGL_KERNEL_ENABLE_FP4=1
   export SGL_KERNEL_ENABLE_SM90A=1
   export SGL_KERNEL_ENABLE_SM100A=1
-
+  export SGL_KERNEL_ENABLE_FA3=1  # Always enabled
+  sed -i \
+  -e '/-gencode=arch=compute_75,code=sm_75/d' \
+  -e '/"-O3"/a\    "-gencode=arch=compute_87,code=sm_87"' \
+  CMakeLists.txt
 else
   echo "CUDA < 12.8"
   export SGL_KERNEL_ENABLE_BF16=1  # Only BF16 enabled
+  sed -i \
+  -e '/-gencode=arch=compute_75,code=sm_75/d' \
+  -e '/-gencode=arch=compute_80,code=sm_80/d' \
+  -e '/-gencode=arch=compute_89,code=sm_89/d' \
+  -e '/-gencode=arch=compute_90,code=sm_90/d' \
+  -e '/"-O3"/a\    "-gencode=arch=compute_87,code=sm_87"' \
+  CMakeLists.txt
 fi
 
-
-echo "Building SGLang ${SGLANG_VERSION} for ${PLATFORM}"
-
-git clone --recursive --depth=1 --branch=v${SGLANG_VERSION} $REPO_URL $REPO_DIR ||
-git clone --recursive --depth=1 $REPO_URL $REPO_DIR
-echo "Building SGL-KERNEL"
-cd $REPO_DIR/sgl-kernel/
-
-# export MAX_JOBS="$(nproc)" this breaks with actual flash-attention
-if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" ]]; then
-    export MAX_JOBS=2
-else
-    export MAX_JOBS="$(nproc)"
-fi
+echo "Patched sgl-kernel/CMakeLists.txt"
+cat CMakeLists.txt
 
 # 🔧 Build step for sgl‑kernel
 echo "🔨  Building sgl‑kernel…"
@@ -90,11 +97,7 @@ sed -i 's/==/>=/g' pyproject.toml
 echo "Patched $REPO_DIR/python/pyproject.toml"
 cat pyproject.toml
 
-if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" ]]; then
-    export MAX_JOBS=6
-else
-    export MAX_JOBS="$(nproc)"
-fi
+export MAX_JOBS="$(nproc)"
 export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 echo "🚀  Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
 
