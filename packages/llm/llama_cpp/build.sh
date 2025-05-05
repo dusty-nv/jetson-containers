@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-set -ex
+echo "Building llama-cpp-python ${LLAMA_CPP_VERSION_PY}"
 
 SOURCE_CPP=${SOURCE_DIR}/vendor/llama.cpp
+INSTALL_CPP=${SOURCE_DIR}/build/dist
 
-echo "Building llama-cpp-python ${LLAMA_CPP_VERSION_PY}"
+set -ex
 
 git clone --recursive --branch=${LLAMA_CPP_BRANCH_PY} \
     https://github.com/abetlen/llama-cpp-python ${SOURCE_DIR}
@@ -15,8 +16,8 @@ fi
 
 cd ${SOURCE_DIR}
 
-CMAKE_ARGS="${LLAMA_CPP_FLAGS} -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}" \
 FORCE_CMAKE=1 \
+CMAKE_ARGS="${LLAMA_CPP_FLAGS} -DLLAVA_BUILD=OFF -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}" \
 pip3 wheel --wheel-dir=${PIP_WHEEL_DIR} --verbose .
 
 pip3 install ${PIP_WHEEL_DIR}/llama_cpp_python*.whl
@@ -30,8 +31,20 @@ twine upload --verbose ${PIP_WHEEL_DIR}/llama_cpp_python*.whl || echo "failed to
 # install c++ binaries
 cd ${SOURCE_CPP}
 
-cmake -B build ${LLAMA_CPP_FLAGS} -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}
+cmake -B build ${LLAMA_CPP_FLAGS} \
+    -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES} \
+    -DCMAKE_INSTALL_PREFIX=${INSTALL_CPP} \
+    -DLLAMA_BUILD_SERVER=ON \
+    -DLLAMA_BUILD_EXAMPLES=ON \
+    -DLLAMA_BUILD_TESTS=OFF
+
 cmake --build build --config Release --parallel $(nproc)
 cmake --install build
 
-ln -s ${SOURCE_DIR}/vendor/llama.cpp ${SOURCE_CPP}
+# upload packages to apt server
+tarpack upload llama-cpp-${LLAMA_CPP_VERSION} ${INSTALL_CPP} || echo "failed to upload tarball"
+echo "installed" > "$TMP/.llama_cpp"
+cp ${INSTALL_CPP}/* /usr/local/
+
+# create link to /opt/llama.cpp
+ln -s ${SOURCE_DIR}/vendor/llama.cpp /opt/llama.cpp

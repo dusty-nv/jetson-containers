@@ -22,7 +22,9 @@ ARG LLAMA_CPP_VERSION \
 COPY build.sh install.sh $TMP/
 COPY benchmark.py /usr/local/bin/llama_cpp_benchmark.py
 
-RUN $TMP/install.sh || $TMP/build.sh
+RUN $TMP/install.sh || $TMP/build.sh || true
 
-RUN mkdir -p /root/.cache && \
-    ln -s /data/models/llama.cpp /root/.cache/llama.cpp 
+RUN if [ ! -f "$TMP/.llama_cpp" ]; then \
+      echo "FAILED to install llama.cpp $LLAMA_CPP_VERSION"; \
+      exit 1; \
+    fi

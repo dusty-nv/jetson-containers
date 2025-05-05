@@ -1,8 +1,13 @@
 
-DEFAULT_FLAGS="-DGGML_CUDA=on -DGGML_CUDA_F16=on -DLLAMA_CURL=on"
-LEGACY_FLAGS="-DLLAMA_CUBLAS=on -DLLAMA_CUDA_F16=1"
+QUANT_FLAGS="-DGGML_CUDA=on -DGGML_CUDA_F16=on -DLLAMA_CURL=on -DGGML_CUDA_FA_ALL_QUANTS=ON"
+BUILD_FLAGS="-DLLAMA_BUILD_SERVER=ON -DLLAMA_BUILD_EXAMPLES=ON -DLLAMA_BUILD_TESTS=OFF"
+PRIOR_FLAGS="-DLLAMA_CUBLAS=on -DLLAMA_CUDA_F16=1"
 
-def llama_cpp(version, default=False, flags=DEFAULT_FLAGS):
+def llama_cpp(version, default=False, flags=QUANT_FLAGS):
+    """
+    Define container that builds both llama.cpp and llama-cpp-python.
+    Different versions may have some different flag options activated.
+    """
     cpp = bool(version[0] == 'b')
     pkg = package.copy()
 
@@ -13,7 +18,7 @@ def llama_cpp(version, default=False, flags=DEFAULT_FLAGS):
         'LLAMA_CPP_VERSION_PY': '0.3.8' if cpp else version,
         'LLAMA_CPP_BRANCH': version if cpp else None,
         'LLAMA_CPP_BRANCH_PY': 'main' if cpp else f'v{version}',
-        'LLAMA_FLAGS_CPP': flags,
+        'LLAMA_CPP_FLAGS': flags + ' ' + BUILD_FLAGS,
     }
 
     if cpp:
@@ -36,8 +41,8 @@ def llama_cpp(version, default=False, flags=DEFAULT_FLAGS):
     return pkg, builder
 
 package = [
-    llama_cpp('0.2.57', flags=LEGACY_FLAGS),
-    llama_cpp('0.2.70', flags=LEGACY_FLAGS),
+    llama_cpp('0.2.57', flags=PRIOR_FLAGS),
+    llama_cpp('0.2.70', flags=PRIOR_FLAGS),
     llama_cpp('0.2.83'),
     llama_cpp('0.2.90'),
     llama_cpp('0.3.1'),
@@ -49,5 +54,6 @@ package = [
 
     # llama_cpp_python appears abandoned (4/25)
     # so we changed over to llama.cpp branches
-    llama_cpp('b5255', default=True),
+    llama_cpp('b5255'),
+    llama_cpp('b5283', default=True)
 ]
