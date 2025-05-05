@@ -13,8 +13,6 @@ git clone --recursive --depth=1 $REPO_URL $REPO_DIR
 echo "Building SGL-KERNEL"
 cd $REPO_DIR/sgl-kernel/
 
-export MAX_JOBS="$(nproc)"
-
 # Check CUDA version
 CUDA_VERSION=$(nvcc --version | grep -oP "release \K[0-9]+\.[0-9]+" || echo "0.0")
 
@@ -33,6 +31,10 @@ export SGL_KERNEL_ENABLE_SM103A=0
 export SGL_KERNEL_ENABLE_SM110A=0
 export SGL_KERNEL_ENABLE_FA3=0  # Always enabled
 # Activate flags based on CUDA version
+
+# REMOVE AUTOMATIC ACTIVATION FA3
+sed -i '/^[[:space:]]*set(SGL_KERNEL_ENABLE_FA3[[:space:]]\+ON)/d' CMakeLists.txt
+
 if (( CUDA_NUMERIC >= 1300 )); then
   echo "CUDA >= 13.0"
   export SGL_KERNEL_ENABLE_SM110A=1
@@ -43,16 +45,21 @@ elif (( CUDA_NUMERIC >= 1209 )); then
 
 elif (( CUDA_NUMERIC >= 1208 )); then
   echo "CUDA >= 12.8"
+  echo "SBSA: ${IS_SBSA}"
   export SGL_KERNEL_ENABLE_BF16=1
   export SGL_KERNEL_ENABLE_FP8=1
   export SGL_KERNEL_ENABLE_FP4=1
-  export SGL_KERNEL_ENABLE_SM90A=1
   export SGL_KERNEL_ENABLE_SM100A=1
-  export SGL_KERNEL_ENABLE_FA3=1  # Always enabled
+
   sed -i \
   -e '/-gencode=arch=compute_75,code=sm_75/d' \
   -e '/"-O3"/a\    "-gencode=arch=compute_87,code=sm_87"' \
   CMakeLists.txt
+
+  if [[ "$IS_SBSA" == "1" || "${IS_SBSA,,}" == "true" ]]; then
+    export SGL_KERNEL_ENABLE_SM90A=1
+    export SGL_KERNEL_ENABLE_FA3=1
+  fi
 else
   echo "CUDA < 12.8"
   export SGL_KERNEL_ENABLE_BF16=1  # Only BF16 enabled
@@ -70,10 +77,20 @@ cat CMakeLists.txt
 
 # 🔧 Build step for sgl‑kernel
 echo "🔨  Building sgl‑kernel…"
+if [[ "$IS_SBSA" == "0" || "${IS_SBSA,,}" == "false" ]]; then
+    export MAX_JOBS=2
+else
+    export MAX_JOBS=12 # GH200
+fi
 export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 
 echo "🚀  Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
+MAX_JOBS=$MAX_JOBS \
+CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL \
 pip3 wheel . --no-deps --wheel-dir $PIP_WHEEL_DIR
+
+MAX_JOBS=$MAX_JOBS \
+CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL \
 pip3 install $PIP_WHEEL_DIR/sgl*.whl
 cd $REPO_DIR
 if test -f "python/sglang/srt/utils.py"; then
@@ -97,7 +114,11 @@ sed -i 's/==/>=/g' pyproject.toml
 echo "Patched $REPO_DIR/python/pyproject.toml"
 cat pyproject.toml
 
-export MAX_JOBS="$(nproc)"
+if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" ]]; then
+    export MAX_JOBS=6
+else
+    export MAX_JOBS=12 # GH200
+fi
 export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 echo "🚀  Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
 
