@@ -27,3 +27,4 @@ fi
    
 pip3 install llama-cpp-python==${LLAMA_CPP_VERSION_PY}
 tarpack install "llama-cpp-${LLAMA_CPP_VERSION}"
+echo "installed" > "$TMP/.llama_cpp"

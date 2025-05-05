@@ -44,7 +44,7 @@ cmake --install build
 # upload packages to apt server
 tarpack upload llama-cpp-${LLAMA_CPP_VERSION} ${INSTALL_CPP} || echo "failed to upload tarball"
 echo "installed" > "$TMP/.llama_cpp"
-cp ${INSTALL_CPP}/* /usr/local/
+cp -r ${INSTALL_CPP}/* /usr/local/
 
 # create link to /opt/llama.cpp
 ln -s ${SOURCE_DIR}/vendor/llama.cpp /opt/llama.cpp
