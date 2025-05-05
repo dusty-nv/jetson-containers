@@ -12,7 +12,7 @@ CUDA_VERSION=$(nvcc --version | grep -oP "release \K[0-9]+\.[0-9]+" || echo "0.0
 # Convert to comparable float
 CUDA_MAJOR=$(echo "$CUDA_VERSION" | cut -d. -f1)
 CUDA_MINOR=$(echo "$CUDA_VERSION" | cut -d. -f2)
-CUDA_NUMERIC=$(echo "$CUDA_MAJOR * 100 + $CUDA_MINOR" | bc)
+CUDA_NUMERIC=$(( CUDA_MAJOR * 100 + CUDA_MINOR ))
 
 # Clear all feature flags to defaults
 export SGL_KERNEL_ENABLE_BF16=0
