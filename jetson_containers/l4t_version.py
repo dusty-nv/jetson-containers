@@ -289,7 +289,7 @@ def cuda_short_version(cuda_version: str = None):
     return f"cu{cuda_version.major}{cuda_version.minor}"
 
 
-def get_cuda_arch(l4t_version: str = None, format=list):
+def get_cuda_arch(l4t_version: str=None, cuda_version: str=None, format=list):
     """
     Return the default list of CUDA/NVCC device architectures for the given L4T_VERSION.
     """
@@ -298,6 +298,12 @@ def get_cuda_arch(l4t_version: str = None, format=list):
 
     if not isinstance(l4t_version, Version):
         l4t_version = Version(l4t_version)
+
+    if not cuda_version:
+        cuda_version = get_cuda_version(l4t_version=l4t_version)
+
+    if not isinstance(cuda_version, Version):
+        cuda_version = Version(cuda_version)
 
     # supported_arches = ['3.5', '3.7', '5.0', '5.2', '5.3', '6.0', '6.1', '6.2',
     #                    '7.0', '7.2', '7.5', '8.0', '8.6', '8.7', '8.9', '9.0', '9.0a',
@@ -320,8 +326,12 @@ def get_cuda_arch(l4t_version: str = None, format=list):
             80, 86,  # Ampere
             89,  # Ada
             90,  # Hopper
-            100, 101, 103, 120, 121  # Blackwell
+            100, 101, 120  # Blackwell
         ]
+
+        if cuda_version >= Version('12.9'):
+            cuda_architectures += [103, 121]
+
     if format == list:
         return cuda_architectures
     elif format == str:
