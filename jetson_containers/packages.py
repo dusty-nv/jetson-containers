@@ -112,10 +112,19 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False, **kwargs):
     package = {
         'path': path,
         'requires': '>=32.6',
-        'postfix': f'r{L4T_VERSION}' if SYSTEM_ARM else DOCKER_ARCH,
+        'postfix': '',
         'config': [],
         'test': []
     }
+
+    # assign default tag based on platform arch (L4T, SBSA, x86)
+    if SYSTEM_ARM:
+        if L4T_VERSION >= Version('36.4'):
+            package['postfix'] = f'r{L4T_VERSION.major}.{L4T_VERSION.minor}' # r36.4, r38.4
+        else:
+            package['postfix'] = f'r{L4T_VERSION}' # r32.7.1
+    else:
+        package['postfix'] = DOCKER_ARCH # amd64, sbsa
 
     # add CUDA and Python postfixes when they are non-standard versions
     HAS_ENV = {
