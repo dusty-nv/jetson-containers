@@ -444,7 +444,7 @@ def get_lsb_release(l4t_version: str = None):
 
     return os.environ.get(
         'LSB_RELEASE',
-        '24.04' if SYSTEM_ARCH_TYPE == 'x86_64' or SYSTEM_ARCH_TYPE.endswith('aarch64') else lsb('r'),
+        '24.04' if SYSTEM_X86 or IS_SBSA else lsb('r')
     )
 
 
