@@ -132,14 +132,14 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False, **kwargs):
         for x in ['CUDA_VERSION', 'PYTHON_VERSION', 'LSB_RELEASE']
     }
 
-    if HAS_ENV['CUDA_VERSION'] or HAS_ENV['LSB_RELEASE'] or not SYSTEM_ARM:
-        package['postfix'] = package['postfix'] + f"-cu{CUDA_VERSION.major}{CUDA_VERSION.minor}"
-
     if HAS_ENV['PYTHON_VERSION']:
         package['postfix'] = package['postfix'] + f"-cp{PYTHON_VERSION.major}{PYTHON_VERSION.minor}"
 
-    if HAS_ENV['LSB_RELEASE'] or not SYSTEM_ARM:
-        package['postfix'] = package['postfix'] + f"-{LSB_RELEASE}"
+    #if HAS_ENV['CUDA_VERSION'] or HAS_ENV['LSB_RELEASE'] or not SYSTEM_ARM:
+    package['postfix'] = package['postfix'] + f"-cu{CUDA_VERSION.major}{CUDA_VERSION.minor}"
+
+    #if HAS_ENV['LSB_RELEASE'] or not SYSTEM_ARM:
+    package['postfix'] = package['postfix'] + f"-{LSB_RELEASE}"
 
     # skip recursively searching under these packages
     PRELOAD = ['robots/ros']
