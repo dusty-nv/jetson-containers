@@ -183,12 +183,12 @@ if IS_TEGRA:
         cuda_samples('12.4', requires='==36.*'),
         cuda_package('12.6', 'https://developer.download.nvidia.com/compute/cuda/12.6.3/local_installers/cuda-tegra-repo-ubuntu2204-12-6-local_12.6.3-1_arm64.deb', requires='==36.*'),
         cuda_samples('12.6', branch='12.5', requires='==36.*'),
-        cuda_package('12.8', 'https://developer.download.nvidia.com/compute/cuda/12.8.1/local_installers/cuda-tegra-repo-ubuntu2204-12-8-local_12.8.1-1_arm64.deb', requires='==36.*'),
-        cuda_samples('12.8', requires='==36.*'),
-        cuda_package('12.9','https://developer.download.nvidia.com/compute/cuda/12.9.0/local_installers/cuda-tegra-repo-ubuntu2204-12-9-local_12.9.0-1_arm64.deb', requires='==36.*'),
-        cuda_samples('12.9', requires='==36.*'),
-        cuda_package('13.0', 'https://developer.download.nvidia.com/compute/cuda/13.0.0/local_installers/cuda-tegra-repo-ubuntu2404-13-0-local_13.0.0-1_arm64.deb', requires='==37.*'),
-        cuda_samples('13.0', requires='==36.*'),
+        cuda_package('12.8', 'https://developer.download.nvidia.com/compute/cuda/12.8.1/local_installers/cuda-tegra-repo-ubuntu2204-12-8-local_12.8.1-1_arm64.deb', requires='>=36.*'),
+        cuda_samples('12.8', requires='>=36.*'),
+        cuda_package('12.9','https://developer.download.nvidia.com/compute/cuda/12.9.0/local_installers/cuda-tegra-repo-ubuntu2204-12-9-local_12.9.0-1_arm64.deb', requires='>=36.*'),
+        cuda_samples('12.9', requires='>=36.*'),
+        cuda_package('13.0', 'https://developer.download.nvidia.com/compute/cuda/13.0.0/local_installers/cuda-tegra-repo-ubuntu2404-13-0-local_13.0.0-1_arm64.deb', requires='>=36.*'),
+        cuda_samples('13.0', requires='>=36.*'),
 
         # JetPack 5
         cuda_package('12.2', 'https://developer.download.nvidia.com/compute/cuda/12.2.2/local_installers/cuda-tegra-repo-ubuntu2004-12-2-local_12.2.2-1_arm64.deb', requires='==35.*'),
