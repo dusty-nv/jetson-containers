@@ -1,9 +1,8 @@
 
-QUANT_FLAGS="-DGGML_CUDA=on -DGGML_CUDA_F16=on -DLLAMA_CURL=on -DGGML_CUDA_FA_ALL_QUANTS=ON"
-BUILD_FLAGS="-DLLAMA_BUILD_SERVER=ON -DLLAMA_BUILD_EXAMPLES=ON -DLLAMA_BUILD_TESTS=OFF"
-PRIOR_FLAGS="-DLLAMA_CUBLAS=on -DLLAMA_CUDA_F16=1"
+GGUF_FLAGS="-DGGML_CUDA=on -DGGML_CUDA_F16=on -DLLAMA_CURL=on -DGGML_CUDA_FA_ALL_QUANTS=ON"
+GGML_FLAGS="-DLLAMA_CUBLAS=on -DLLAMA_CUDA_F16=1"
 
-def llama_cpp(version, default=False, flags=QUANT_FLAGS):
+def llama_cpp(version, default=False, flags=GGUF_FLAGS):
     """
     Define container that builds both llama.cpp and llama-cpp-python.
     Different versions may have some different flag options activated.
@@ -18,7 +17,7 @@ def llama_cpp(version, default=False, flags=QUANT_FLAGS):
         'LLAMA_CPP_VERSION_PY': '0.3.8' if cpp else version,
         'LLAMA_CPP_BRANCH': version if cpp else None,
         'LLAMA_CPP_BRANCH_PY': 'main' if cpp else f'v{version}',
-        'LLAMA_CPP_FLAGS': flags + ' ' + BUILD_FLAGS,
+        'LLAMA_CPP_FLAGS': flags,
     }
 
     if cpp:
@@ -41,8 +40,8 @@ def llama_cpp(version, default=False, flags=QUANT_FLAGS):
     return pkg, builder
 
 package = [
-    llama_cpp('0.2.57', flags=PRIOR_FLAGS),
-    llama_cpp('0.2.70', flags=PRIOR_FLAGS),
+    llama_cpp('0.2.57', flags=GGML_FLAGS),
+    llama_cpp('0.2.70', flags=GGML_FLAGS),
     llama_cpp('0.2.83'),
     llama_cpp('0.2.90'),
     llama_cpp('0.3.1'),
