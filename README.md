@@ -9,19 +9,16 @@ Modular container build system that provides the latest [**AI/ML packages**](htt
 > [!NOTE]
 > Ubuntu 24.04 containers for JetPack 6 are now available (with CUDA support)
 >
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`LSB_RELEASE=24.04 jetson-containers build pytorch:2.6`
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`jetson-containers run dustynv/pytorch:2.6-r36.4.0-cu128-24.04`
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`LSB_RELEASE=24.04 jetson-containers build pytorch:2.7`  
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`jetson-containers run dustynv/pytorch:2.7-r36.4-cu128-24.04`
 >
-> See the **[`Ubuntu 24.04`](/docs/build.md#2404-containers)** section of the docs for details and a list of available containers 🤗
-> Thanks to all our active contributors from **[`Discord`](https://discord.gg/BmqNSK4886)** for their help with the ongoing builds.
-
-> [!NOTE]
-> SBSA(Arm Server Base System Architecture) is supported for GH200/GB200 and CUDA ARM SBSA Devices.
+> SBSA(Arm Server Base System Architecture) is supported for GH200/GB200 and CUDA ARM SBSA Devices.  
+> To install CUDA 12.8 SBSA wheels for Python 3.10 / 22.04 or Python 3.12 / 24.04:  
 >
-> jetson-containers detect automatically the SBSA devices and build the containers for the SBSA devices.
-> 
-> Python 3.10 wheels for Ubuntu 22.04 && Python 3.12 wheels for Ubuntu 24.04.  
-> wheels: `pip3 install torch torchvision torchaudio --index-url https://pypi.jetson-ai-lab.dev/sbsa/cu128`
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`pip3 install torch torchvision torchaudio \`  
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`--index-url https://pypi.jetson-ai-lab.dev/sbsa/cu128`
+>
+> Thanks to all our active contributors from **[`Discord`](https://discord.gg/BmqNSK4886)** for their help with the ongoing 
 
 | |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 |---|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
