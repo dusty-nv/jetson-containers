@@ -98,12 +98,13 @@ echo "🔨  Building sgl-kernel…"
 if [[ "${IS_SBSA:-}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
   export CORES=2
 else
-  export CORES=12  # GH200
+  export CORES=32  # GH200
 fi
 export CMAKE_BUILD_PARALLEL_LEVEL="${CORES}"
 
 echo "🚀  Building with MAX_JOBS=${CORES} and CMAKE_BUILD_PARALLEL_LEVEL=${CORES}"
-NINJAFLAGS="-j${CORES}" \
+MAX_JOBS="${CORES}" \
+CMAKE_BUILD_PARALLEL_LEVEL="${CORES}" \
 pip3 wheel . --no-deps --wheel-dir "${PIP_WHEEL_DIR}"
 pip3 install "${PIP_WHEEL_DIR}/sgl"*.whl
 
@@ -135,11 +136,11 @@ cat pyproject.toml
 if [[ -z "${IS_SBSA:-}" || "${IS_SBSA}" == "0" ]]; then
   export CORES=6
 else
-  export CORES=12  # GH200
+  export CORES=32  # GH200
 fi
 export CMAKE_BUILD_PARALLEL_LEVEL="${CORES}"
 
-echo "🚀  Building with MAX_JOBS=${MAX_JOBS} and CMAKE_BUILD_PARALLEL_LEVEL=${CMAKE_BUILD_PARALLEL_LEVEL}"
+echo "🚀  Building with MAX_JOBS=${CORES} and CMAKE_BUILD_PARALLEL_LEVEL=${CMAKE_BUILD_PARALLEL_LEVEL}"
 MAX_JOBS="${CORES}" \
 CMAKE_BUILD_PARALLEL_LEVEL="${CORES}" \
 pip3 wheel '.[all]' --wheel-dir "${PIP_WHEEL_DIR}"
