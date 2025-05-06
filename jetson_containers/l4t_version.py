@@ -427,7 +427,7 @@ def get_lsb_release(l4t_version: str = None):
     """
     if l4t_version:
         l4t_version = get_l4t_version(l4t_version=l4t_version)
-        if l4t_version.major > 36:
+        if l4t_version.major >= 38:
             return '24.04'
         elif l4t_version.major == 36:
             return '22.04'
@@ -444,7 +444,7 @@ def get_lsb_release(l4t_version: str = None):
 
     return os.environ.get(
         'LSB_RELEASE',
-        '24.04' if SYSTEM_ARCH == 'x86_64' else lsb('r')
+        '24.04' if SYSTEM_X86 or IS_SBSA else lsb('r')
     )
 
 
