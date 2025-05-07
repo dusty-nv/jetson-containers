@@ -3,14 +3,17 @@ set -ex
 
 echo "Building FlexPrefill ${FLEXPREFILL_VERSION}"
 
-git clone --depth=1 --branch=v${FLEXPREFILL_VERSION} https://github.com/johnnynunez/SpargeAttn /opt/flexprefill ||
-git clone --depth=1 https://github.com/johnnynunez/SpargeAttn /opt/flexprefill
+git clone --depth=1 --branch=v${FLEXPREFILL_VERSION} https://github.com/ByteDance-Seed/FlexPrefill /opt/flexprefill ||
+git clone --depth=1 https://github.com/ByteDance-Seed/FlexPrefill /opt/flexprefill
 
 cd /opt/flexprefill
 
 sed -i 's/==/>=/g' extra_requirements.txt
+sed -i 's/transformers==/transformers>=/; s/triton==/triton>=/' setup.py
 pip3 install packaging
+pip3 install --ignore-installed blinker
 pip3 install nemo-toolkit[all]
+
 
 export MAX_JOBS="$(nproc)"
 export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
