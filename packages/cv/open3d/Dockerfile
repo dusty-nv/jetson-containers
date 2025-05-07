@@ -12,5 +12,5 @@ FROM ${BASE_IMAGE}
 ARG OPEN3D_VERSION \
     TMP_DIR=/tmp/open3d
 
-COPY build.sh install.sh $TMP_DIR
-RUN TMP_DIR/install.sh || TMP_DIR/build.sh || touch TMP_DIR/.build.failed
+COPY build.sh install.sh "${TMP_DIR}"/
+RUN "${TMP_DIR}"/install.sh || "${TMP_DIR}"/build.sh || touch "${TMP_DIR}"/.build.failed
