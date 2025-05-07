@@ -3,7 +3,7 @@
 # alias: open3d
 # group: cv
 # config: config.py
-# depends: [pytorch, torchvision, torchaudio, pyav, pycuda, cmake, ninja, llvm:20]
+# depends: [cuda, cudnn, python, numpy, opengl, vulkan, video-codec-sdk, ffmpeg, pytorch, torchvision, torchaudio, pyav, pycuda, cmake, ninja, llvm:20, opencv]
 # test: [test.py]
 #---
 ARG BASE_IMAGE
@@ -34,6 +34,26 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ssh-client \
     ninja-build \
     gfortran \
+    libgl1-mesa-dev \
+    libglu1-mesa-dev \
+    build-essential \
+    cmake \
+    git \
+    gdb \
+    libeigen3-dev \
+    libgl1-mesa-dev \
+    libgl1-mesa-glx \
+    libglew-dev \
+    libglfw3-dev \
+    libosmesa6-dev \
+    libpng-dev \
+    lxde \
+    mesa-utils \
+    x11vnc \
+    xorg-dev \
+    xterm \
+    xvfb \
+    ne \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
