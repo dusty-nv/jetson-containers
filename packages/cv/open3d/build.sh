@@ -27,7 +27,9 @@ cd "${REPO_DIR}" || exit 1
 bash util/install_deps_ubuntu.sh
 mkdir build
 cd build
+export LD_PRELOAD=/usr/local/lib/libOpen3D.so.0.19
 cmake -DBUILD_CUDA_MODULE=ON \
+      -DBUILD_SHARED_LIBS=ON \
       -DGLIBCXX_USE_CXX11_ABI=OFF \
       -DBUILD_PYTORCH_OPS=ON \
       -DBUILD_TENSORFLOW_OPS=OFF \
