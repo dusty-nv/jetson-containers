@@ -2,7 +2,7 @@
 # name: taichi
 # group: sim
 # config: config.py
-# depends: [cuda, ninja, cmake, rust]
+# depends: [cuda, ninja, cmake, rust, llvm:20]
 # requires: '>=36.0.0'
 # test: test.py
 # notes: https://github.com/taichi-dev/taichi
