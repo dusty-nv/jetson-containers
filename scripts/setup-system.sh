@@ -521,7 +521,7 @@ main() {
     echo
     echo "Configuration complete!"
     echo "============================="
-    ./probesystem.sh
+    ./probe-system.sh
     echo "============================="
 
     echo "Please reboot your system for all changes to take effect."
