@@ -2,7 +2,7 @@
 # name: genesis-world
 # group: sim
 # config: config.py
-# depends: [cuda, rust, cmake, torch, torchvision, torchaudio, vtk, pymeshlab, taichi, opencv:4.11.0, splashsurf]
+# depends: [cuda, rust, cmake, torch, torchvision, torchaudio, vtk, pymeshlab, taichi, opencv:4.11.0, splashsurf, llvm:20]
 # requires: '>=36.0.0'
 # test: test.sh
 # notes: https://github.com/Genesis-Embodied-AI/Genesis
@@ -99,12 +99,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libblosc-dev \
     vim \
     && apt clean \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN wget https://apt.llvm.org/llvm.sh && \
-    chmod +x llvm.sh && \
-    ./llvm.sh 20 && \
-    rm llvm.sh
+    && rm -rf /var/lib/apt/lists/* \
 
 WORKDIR /workspace
 
