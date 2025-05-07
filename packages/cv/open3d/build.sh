@@ -36,8 +36,10 @@ cmake -DBUILD_CUDA_MODULE=ON \
 
 # -DBUNDLE_OPEN3D_ML=ON \
 # -DOPEN3D_ML_ROOT=https://github.com/isl-org/Open3D-ML.git \
+export MAX_JOBS="$(nproc)"
+export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 
-make install # install open3d C++
+make -j$(nproc) install # install open3d C++
 echo "Installed Open3D C++"
 echo "Building Open3D Python wheel"
 make -j$(nproc) pip-package
