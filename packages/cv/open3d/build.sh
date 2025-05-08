@@ -28,6 +28,7 @@ mkdir build
 cd build
 
 cmake -DCMAKE_BUILD_TYPE=Release \
+      -DBUILD_PYTHON_MODULE=ON \
       -DBUILD_CUDA_MODULE=ON \
       -DBUILD_SHARED_LIBS=ON \
       -DGLIBCXX_USE_CXX11_ABI=OFF \
