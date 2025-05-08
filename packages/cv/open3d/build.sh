@@ -27,7 +27,8 @@ cd "${REPO_DIR}" || exit 1
 mkdir build
 cd build
 
-cmake -DBUILD_CUDA_MODULE=ON \
+cmake -DCMAKE_BUILD_TYPE=Release \
+      -DBUILD_CUDA_MODULE=ON \
       -DBUILD_SHARED_LIBS=OFF \
       -DGLIBCXX_USE_CXX11_ABI=OFF \
       -DBUILD_PYTORCH_OPS=OFF \
