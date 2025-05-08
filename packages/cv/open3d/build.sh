@@ -40,11 +40,9 @@ cmake -DCMAKE_BUILD_TYPE=Release \
 export MAX_JOBS="$(nproc)"
 export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 
-make -j$(nproc) install # install open3d C++
-echo "Installed Open3D C++"
-echo "Building Open3D Python wheel"
-make -j$(nproc) pip-package
-echo "Done Open3D Python wheel"
+make -j$(nproc)
+make install-pip-package -j$(nproc)
+make install -j$(nproc)
+cp build/lib/python_package/pip_package/*.whl /opt/open3d/
 # Try uploading; ignore failure
-twine upload --verbose "opt/open3d/open3d"*.whl \
-  || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL:-<unset>}"
+twine upload --verbose "/opt/open3d/open3d"*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL:-<unset>}"
