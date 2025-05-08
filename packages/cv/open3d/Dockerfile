@@ -59,3 +59,5 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY build.sh install.sh "${TMP_DIR}"/
 RUN "${TMP_DIR}"/install.sh || "${TMP_DIR}"/build.sh || touch "${TMP_DIR}"/.build.failed
+
+ENV LD_PRELOAD=/usr/local/lib/libOpen3D.so
