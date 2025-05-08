@@ -30,6 +30,8 @@ if [ $distro = "24.04" ]; then
    python3 -m venv --system-site-packages /opt/venv
    source /opt/venv/bin/activate
    curl -sS https://bootstrap.pypa.io/get-pip.py | python${PYTHON_VERSION}
+elif [ $distro = "20.04" ]; then
+   curl -sS https://bootstrap.pypa.io/pip/3.8/get-pip.py | python3.8
 elif [ $distro = "18.04" ]; then
    curl -sS https://bootstrap.pypa.io/pip/3.6/get-pip.py | python3.6
 else
