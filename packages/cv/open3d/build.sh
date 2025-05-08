@@ -7,7 +7,7 @@ set -x
 : "${OPEN3D_VERSION:?OPEN3D_VERSION must be set}"
 : "${PIP_WHEEL_DIR:?PIP_WHEEL_DIR must be set}"
 
-REPO_URL="https://github.com/isl-org/Open3D"
+REPO_URL="https://github.com/johnnynunez/Open3D"
 REPO_DIR="/opt/open3d"
 
 echo "Building Open3D ${OPEN3D_VERSION}"
