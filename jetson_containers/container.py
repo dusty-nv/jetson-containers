@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import sys
+import shutil
 import copy
 import time
 import json
@@ -157,7 +158,7 @@ def build_container(
             time.sleep(1)
 
     # Initialize status bar and clear screen
-    terminal = os.get_terminal_size()
+    terminal = shutil.get_terminal_size(fallback=(80, 24))
     print(f'\033[1;{terminal.lines-1}r\033[?6l\033[2J\033[H]', end='', flush=True)
     LogConfig.status = True
 
