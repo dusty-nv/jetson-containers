@@ -4,7 +4,7 @@
 # config: config.py
 # depends: [cuda, rust, cmake, ninja, pytorch, torchvision, torchaudio, transformers, causalconv1d, triton, nixl, vllm, sglang, llvm:20]
 # requires: '>=34.1.0'
-# test: test.sh
+# test: test.py
 # notes: https://github.com/ai-dynamo/dynamo
 #---
 ARG BASE_IMAGE

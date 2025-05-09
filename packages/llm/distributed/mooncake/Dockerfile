@@ -5,7 +5,7 @@
 # depends: [cuda, rust, cmake, ninja, pytorch, torchvision, torchaudio, torchao, transformers, triton]
 # requires: '>=34.1.0'
 # test: test.py
-# notes: https://github.com/ai-dynamo/mooncake
+# notes: https://github.com/kvcache-ai/Mooncake
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
