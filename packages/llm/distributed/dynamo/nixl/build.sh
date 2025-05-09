@@ -41,7 +41,7 @@ fi
 export MESON_ARGS="-Ddisable_mooncake_backend=false"
 rm -rf build && \
 mkdir build && \
-uv run meson setup build/ --prefix=/usr/local/nixl && \
+meson setup build/ --prefix=/usr/local/nixl && \
 cd build && \
 ninja && \
 ninja install
