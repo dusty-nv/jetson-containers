@@ -20,6 +20,13 @@ Modular container build system that provides the latest [**AI/ML packages**](htt
 
 ![Jetson PyPI Health](https://img.shields.io/endpoint?url=https://tokk-nv.github.io/jetson-containers/health.json)
 
+## Code Style
+
+The project uses automated code formatting tools to maintain consistent code style. See [Code Style Guide](docs/code-style.md) for details on:
+- Setting up formatting tools
+- Adding your package to formatting checks
+- Troubleshooting common issues
+
 | |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 |---|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **ML** | [`pytorch`](packages/pytorch) [`tensorflow`](packages/ml/tensorflow) [`jax`](packages/ml/jax) [`onnxruntime`](packages/ml/onnxruntime) [`deepstream`](packages/cv/deepstream) [`holoscan`](packages/cv/holoscan) [`CTranslate2`](packages/ml/ctranslate2) [`JupyterLab`](packages/ml/jupyterlab)                                                                                                                                                                                                                                                                               |
