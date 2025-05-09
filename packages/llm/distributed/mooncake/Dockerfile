@@ -1,6 +1,6 @@
 #---
 # name: mooncake
-# group: llm
+# group: distributed
 # config: config.py
 # depends: [cuda, rust, cmake, ninja, pytorch, torchvision, torchaudio, torchao, transformers, triton]
 # requires: '>=34.1.0'

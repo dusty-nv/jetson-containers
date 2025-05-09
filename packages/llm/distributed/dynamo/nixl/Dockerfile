@@ -1,6 +1,6 @@
 #---
 # name: nixl
-# group: llm
+# group: distributed
 # config: config.py
 # depends: [cuda, rust, cmake, ninja, gdrcopy, pytorch, torchvision, torchaudio, torchao, transformers, triton, mooncake]
 # requires: '>=34.1.0'
