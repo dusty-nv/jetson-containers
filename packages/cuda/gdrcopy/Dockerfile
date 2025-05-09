@@ -1,5 +1,5 @@
 #---
-# name: cudnn
+# name: gdrcopy
 # group: cuda
 # depends: cuda
 # config: config.py
@@ -9,6 +9,8 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG GDRCOPY_VERSION
+
+# https://developer.download.nvidia.com/compute/redist/gdrcopy/CUDA%2012.8/
 
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends \
