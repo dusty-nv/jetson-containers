@@ -31,6 +31,7 @@ cd /opt/mooncake/
 ls
 ls /opt/mooncake/scripts/
 ls /opt/mooncake/mooncake-wheel
+ls /opt/mooncake/build
 pip3 install mooncake_transfer_engine*.whl
 
 cd /opt/mooncake
