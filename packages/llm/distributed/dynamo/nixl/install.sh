@@ -25,7 +25,7 @@ apt-get install -y --no-install-recommends \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
-if [ "$FORCE_BUILD" == "on" ]; then
+if [ "on" == "on" ]; then
 	echo "Forcing build of nixl ${NIXL_VERSION}"
 	exit 1
 fi
