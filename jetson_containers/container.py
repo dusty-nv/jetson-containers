@@ -309,6 +309,7 @@ def build_containers(
         try:
             container_name = build_container(name, package, **kwargs)
         except Exception as error:
+            container_name = name
             print(error)
             if not skip_errors:
                 return False #raise error #sys.exit(os.EX_SOFTWARE)
