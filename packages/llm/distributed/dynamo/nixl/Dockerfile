@@ -43,3 +43,9 @@ RUN apt-get update -y && \
 COPY build.sh install.sh /tmp/nixl/
 
 RUN /tmp/nixl/install.sh || /tmp/nixl/build.sh
+
+ENV NIXL_PREFIX=/usr/local/nixl
+ENV NIXL_PLUGIN_DIR=/usr/local/nixl/lib/aarch64-linux-gnu/plugins
+RUN echo "/usr/local/nixl/lib/aarch64-linux-gnu" > /etc/ld.so.conf.d/nixl.conf && \
+    echo "/usr/local/nixl/lib/aarch64-linux-gnu/plugins" >> /etc/ld.so.conf.d/nixl.conf && \
+    ldconfig
