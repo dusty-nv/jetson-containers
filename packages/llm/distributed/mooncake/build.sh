@@ -29,7 +29,8 @@ cd /opt/mooncake/
 bash ./scripts/build_wheel.sh
 cd /opt/mooncake/
 ls
-ls /opt/scripts/
+ls /opt/mooncake/scripts/
+ls /opt/mooncake/mooncake-wheel
 pip3 install mooncake_transfer_engine*.whl
 
 cd /opt/mooncake
