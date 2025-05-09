@@ -58,7 +58,8 @@ echo "/usr/local/nixl/lib/aarch64-linux-gnu" > /etc/ld.so.conf.d/nixl.conf && \
 echo "/usr/local/nixl/lib/aarch64-linux-gnu/plugins" >> /etc/ld.so.conf.d/nixl.conf && \
 ldconfig
 
-cd src/bindings/rust && cargo build --release --locked
+cd /opt/nixl/src/bindings/rust && \
+cargo build --release --locked
 cd /opt/nixl/
 pip3 wheel --wheel-dir=/opt/nixl/wheels . --verbose
 pip3 install /opt/nixl/wheels/nixl*.whl
