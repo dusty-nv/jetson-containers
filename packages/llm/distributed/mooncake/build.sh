@@ -24,7 +24,7 @@ cd /opt/mooncake/scripts
 sed -i 's/--plat manylinux_2_35_x86_64/--plat manylinux_2_35_aarch64/' build_wheel.sh
 
 cd /opt/mooncake/
-bash /opt/mooncake/scripts/build_wheel.sh
+bash ./scripts/build_wheel.sh
 pip3 install /opt/mooncake/dist/mooncake_transfer_engine*.whl
 
 cd /opt/mooncake
