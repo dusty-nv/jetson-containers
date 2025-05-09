@@ -27,8 +27,9 @@ sed -i '/^auditwheel repair/,/^mv \${REPAIRED_DIR}\/\*\.whl \${OUTPUT_DIR}\/$/d'
 
 cd /opt/mooncake/
 bash ./scripts/build_wheel.sh
-cd /opt/mooncake/dist/
+cd /opt/mooncake/
 ls
+ls /opt/scripts/
 pip3 install mooncake_transfer_engine*.whl
 
 cd /opt/mooncake
