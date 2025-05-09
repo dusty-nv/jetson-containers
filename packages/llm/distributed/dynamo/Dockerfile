@@ -2,7 +2,7 @@
 # name: dynamo
 # group: llm
 # config: config.py
-# depends: [cuda, rust, cmake, ninja, pytorch, torchvision, torchaudio, transformers, causalconv1d, triton, nixl, vllm, sglang]
+# depends: [cuda, rust, cmake, ninja, pytorch, torchvision, torchaudio, transformers, causalconv1d, triton, nixl, vllm, sglang, llvm:20]
 # requires: '>=34.1.0'
 # test: test.sh
 # notes: https://github.com/ai-dynamo/dynamo
@@ -12,7 +12,7 @@ FROM ${BASE_IMAGE}
 
 ARG DYNAMO_VERSION \
     DYNAMO_VERSION_SPEC \
-    CUDAARCHS
+    IS_SBSA
 
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends \
