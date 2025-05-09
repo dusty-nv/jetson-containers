@@ -38,6 +38,9 @@ elif [[ "${IS_SBSA,,}" == "1" || "${IS_SBSA,,}" == "true" ]]; then
 else
   echo "⚠️  IS_SBSA value '${IS_SBSA}' not recognized. No changes applied to meson_options.txt"
 fi
+
+pip3 install --upgrade meson pybind11 patchelf
+
 export MESON_ARGS="-Ddisable_mooncake_backend=false"
 rm -rf build && \
 mkdir build && \
