@@ -19,7 +19,7 @@ pip3 install /opt/dynamo/wheels/ai-dynamo-runtime*.whl
 twine upload --verbose /opt/dynamo/wheels/ai-dynamo-runtime*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
 cd /opt/dynamo
-pip3 wheel '.[all]' --no-build-isolation --wheel-dir=/opt/dynamo/wheels . --verbose
+pip3 wheel '.[all]' --wheel-dir=/opt/dynamo/wheels . --verbose
 pip3 install /opt/dynamo/wheels/ai-dynamo*.whl
 
 cd /opt/dynamo
