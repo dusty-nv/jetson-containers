@@ -5,5 +5,7 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	echo "Forcing build of dynamo ${DYNAMO_VERSION}"
 	exit 1
 fi
+"ai-dynamo[all]"
 
-pip3 install ai-dynamo==${DYNAMO_VERSION}
+pip3 install "ai-dynamo[all]~=${DYNAMO_VERSION}" || \
+pip3 install "ai-dynamo[all]~=${DYNAMO_VERSION_SPEC}"

@@ -7,9 +7,17 @@ git clone --depth=1 --recursive https://github.com/ai-dynamo/dynamo /opt/dynamo
 
 # Navigate to the directory containing dynamo's setup.py
 cd /opt/dynamo
-
+echo "Building ai-dynamo version ${DYNAMO_VERSION}..."
+cargo build --release
+echo "Building bindinds for Python"
 export MAX_JOBS=$(nproc)
+cd lib/bindings/python
 pip3 wheel --no-build-isolation --wheel-dir=/opt/dynamo/wheels . --verbose
+pip3 install /opt/dynamo/wheels/ai-dynamo-runtime*.whl
+twine upload --verbose /opt/dynamo/wheels/ai-dynamo-runtime*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+
+cd /opt/dynamo
+pip3 wheel '.[all]' --no-build-isolation --wheel-dir=/opt/dynamo/wheels . --verbose
 pip3 install /opt/dynamo/wheels/ai-dynamo*.whl
 
 cd /opt/dynamo
