@@ -2,7 +2,7 @@
 # name: dynamo
 # group: llm
 # config: config.py
-# depends: [cuda, rust, cmake, ninja, pytorch, torchvision, torchaudio, torchao, transformers, triton, mooncake]
+# depends: [cuda, rust, cmake, ninja, gdrcopy, pytorch, torchvision, torchaudio, torchao, transformers, triton, mooncake]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/ai-dynamo/nixl
