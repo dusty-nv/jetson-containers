@@ -23,8 +23,6 @@ sed -i 's/manylinux_2_35_x86_64/manylinux_2_35_aarch64/' setup.py
 cd /opt/mooncake/scripts
 sed -i 's/--plat manylinux_2_35_x86_64/--plat manylinux_2_35_aarch64/' build_wheel.sh
 
-
-mkdir /opt/mooncake/wheels
 cd /opt/mooncake/
 bash /opt/mooncake/scripts/build_wheel.sh
 pip3 install /opt/mooncake/wheels/mooncake_transfer_engine*.whl
