@@ -4,7 +4,7 @@
 # config: config.py
 # depends: [cuda, rust, cmake, ninja, pytorch, torchvision, torchaudio, torchao, transformers, triton, mooncake]
 # requires: '>=34.1.0'
-# test: test.sh
+# test: test.py
 # notes: https://github.com/ai-dynamo/nixl
 #---
 ARG BASE_IMAGE
