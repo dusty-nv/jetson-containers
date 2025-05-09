@@ -1,7 +1,7 @@
 #---
 # name: gdrcopy
 # group: cuda
-# depends: cuda
+# depends: [cuda]
 # config: config.py
 # test: test.sh
 #---
