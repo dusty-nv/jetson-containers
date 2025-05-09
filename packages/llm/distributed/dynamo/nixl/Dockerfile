@@ -16,11 +16,29 @@ ARG NIXL_VERSION \
 
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends \
-        pkg-config \
-        cmake && \
-        # etcd etcd-server etcd-client && \ (not in ubuntu 24.04)
+    ninja-build \
+    pybind11-dev \
+    libclang-dev \
+    cmake \
+    libgflags-dev \
+    libgrpc-dev \
+    libgrpc++-dev \
+    libprotobuf-dev \
+    libaio-dev \
+    liburing-dev \
+    protobuf-compiler-grpc \
+    libcpprest-dev \
+    etcd-server \
+    etcd-client \
+    autotools-dev \
+    automake \
+    libtool \
+    libz-dev \
+    flex \
+    build-essential && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
 
 COPY build.sh install.sh /tmp/nixl/
 

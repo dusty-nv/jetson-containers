@@ -9,24 +9,24 @@ cd /opt/
 
 export MAX_JOBS=$(nproc)
 
-wget https://github.com/openucx/ucx/releases/download/v1.18.1/ucx-1.18.1.tar.gz
-tar xzf ucx-1.18.1.tar.gz
-cd ucx-1.18.1
-./configure \
-  --enable-shared \
-  --disable-static \
-  --disable-doxygen-doc \
-  --enable-optimizations \
-  --enable-cma \
-  --enable-devel-headers \
-  --with-verbs \
-  --with-dm \
-  --enable-mt
-
-# --with-gdrcopy=
-# --with-cuda=<cuda install>
-make -j
-make -j install-strip
+git clone https://github.com/openucx/ucx.git && \
+cd ucx && \
+git checkout v1.19.x && \
+./autogen.sh && ./configure \
+   --enable-shared \
+   --disable-static \
+   --disable-doxygen-doc \
+   --enable-optimizations \
+   --enable-cma \
+   --enable-devel-headers \
+   --with-cuda=/usr/local/cuda \
+   --with-verbs \
+   --with-dm \
+   --with-gdrcopy=/usr/local \
+   --with-efa \
+   --enable-mt && \
+make -j && \
+make -j install-strip && \
 ldconfig
 
 # Navigate to the directory containing nixl's setup.py
