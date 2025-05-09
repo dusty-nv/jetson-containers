@@ -10,7 +10,7 @@ cd /opt/dynamo
 echo "Building ai-dynamo version ${DYNAMO_VERSION}..."
 export CARGO_BUILD_JOBS=$(nproc)
 export MAX_JOBS=$(nproc)
-cargo build --release
+cargo build --features cuda --release
 echo "Building bindinds for Python"
 export MAX_JOBS=$(nproc)
 cd lib/bindings/python
