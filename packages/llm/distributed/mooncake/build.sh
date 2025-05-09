@@ -19,7 +19,8 @@ ldconfig
 
 cd /opt/mooncake/mooncake-wheel
 sed -i 's/manylinux_2_35_x86_64/manylinux_2_35_aarch64/' setup.py
-pip3 wheel --wheel-dir=/opt/mooncake/wheels . --verbose
+mkdir /opt/mooncake/wheels
+bash build_wheel.sh /opt/mooncake/wheels
 pip3 install /opt/mooncake/wheels/mooncake_transfer_engine*.whl
 
 cd /opt/mooncake

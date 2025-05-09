@@ -14,7 +14,7 @@ cargo build --release
 echo "Building bindinds for Python"
 export MAX_JOBS=$(nproc)
 cd lib/bindings/python
-pip3 wheel --no-build-isolation --wheel-dir=/opt/dynamo/wheels . --verbose
+pip3 wheel --wheel-dir=/opt/dynamo/wheels . --verbose
 pip3 install /opt/dynamo/wheels/ai-dynamo-runtime*.whl
 twine upload --verbose /opt/dynamo/wheels/ai-dynamo-runtime*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
