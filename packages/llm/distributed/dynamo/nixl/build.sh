@@ -41,10 +41,13 @@ fi
 export MESON_ARGS="-Ddisable_mooncake_backend=false"
 rm -rf build && \
 mkdir build && \
-meson setup build/ --prefix=/usr/local/nixl && \
+uv run meson setup build/ --prefix=/usr/local/nixl && \
 cd build && \
 ninja && \
 ninja install
+
+ls -l /usr/local/nixl/
+RUN ls -l /usr/local/nixl/include/
 
 export NIXL_PREFIX=/usr/local/nixl
 export NIXL_PLUGIN_DIR=/usr/local/nixl/lib/aarch64-linux-gnu/plugins
