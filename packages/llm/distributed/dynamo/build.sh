@@ -8,6 +8,8 @@ git clone --depth=1 --recursive https://github.com/ai-dynamo/dynamo /opt/dynamo
 # Navigate to the directory containing dynamo's setup.py
 cd /opt/dynamo
 echo "Building ai-dynamo version ${DYNAMO_VERSION}..."
+export CARGO_BUILD_JOBS=$(nproc)
+export MAX_JOBS=$(nproc)
 cargo build --release
 echo "Building bindinds for Python"
 export MAX_JOBS=$(nproc)
