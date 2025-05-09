@@ -25,9 +25,9 @@ sed -i 's/--plat manylinux_2_35_x86_64/--plat manylinux_2_35_aarch64/' build_whe
 
 cd /opt/mooncake/
 bash /opt/mooncake/scripts/build_wheel.sh
-pip3 install /opt/mooncake/wheels/mooncake_transfer_engine*.whl
+pip3 install /opt/mooncake/dist/mooncake_transfer_engine*.whl
 
 cd /opt/mooncake
 
 # Optionally upload to a repository using Twine
-twine upload --verbose /opt/mooncake/wheels/mooncake_transfer_engine*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose /opt/mooncake/dist/mooncake_transfer_engine*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
