@@ -46,19 +46,16 @@ RUN /tmp/nixl/install.sh || /tmp/nixl/build.sh
 
 ENV NIXL_PREFIX=/usr/local/nixl
 
-# Set plugin directory dynamically based on architecture
 RUN ARCH=$(uname -m) && \
-    if [ "$ARCH" = "x86_64" ]; then \
-        export PLUGIN_ARCH_DIR=x86_64-linux-gnu; \
-    elif [ "$ARCH" = "aarch64" ]; then \
-        export PLUGIN_ARCH_DIR=aarch64-linux-gnu; \
-    else \
-        echo "Unsupported architecture: $ARCH" && exit 1; \
-    fi && \
+    case "$ARCH" in \
+        x86_64) PLUGIN_ARCH_DIR=x86_64-linux-gnu ;; \
+        aarch64) PLUGIN_ARCH_DIR=aarch64-linux-gnu ;; \
+        *) echo "Unsupported architecture: $ARCH" && exit 1 ;; \
+    esac && \
     echo "/usr/local/nixl/lib/$PLUGIN_ARCH_DIR" > /etc/ld.so.conf.d/nixl.conf && \
     echo "/usr/local/nixl/lib/$PLUGIN_ARCH_DIR/plugins" >> /etc/ld.so.conf.d/nixl.conf && \
-    ldconfig && \
-    echo "export NIXL_PLUGIN_DIR=/usr/local/nixl/lib/$PLUGIN_ARCH_DIR/plugins" >> /etc/profile.d/nixl.sh
+    echo "export NIXL_PLUGIN_DIR=/usr/local/nixl/lib/$PLUGIN_ARCH_DIR/plugins" > /etc/profile.d/nixl.sh && \
+    ldconfig
 
-# Set env var in the shell (in Docker runtime context)
-ENV NIXL_PLUGIN_DIR=/usr/local/nixl/lib/$(uname -m | sed 's/x86_64/x86_64-linux-gnu/;s/aarch64/aarch64-linux-gnu/')/plugins
+# Default to x86_64 path — overridden at runtime by profile.d script if needed
+ENV NIXL_PLUGIN_DIR=/usr/local/nixl/lib/x86_64-linux-gnu/plugins
