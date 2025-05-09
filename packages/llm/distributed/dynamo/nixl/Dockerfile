@@ -45,17 +45,8 @@ COPY build.sh install.sh /tmp/nixl/
 RUN /tmp/nixl/install.sh || /tmp/nixl/build.sh
 
 ENV NIXL_PREFIX=/usr/local/nixl
-
-RUN ARCH=$(uname -m) && \
-    case "$ARCH" in \
-        x86_64) PLUGIN_ARCH_DIR=x86_64-linux-gnu ;; \
-        aarch64) PLUGIN_ARCH_DIR=aarch64-linux-gnu ;; \
-        *) echo "Unsupported architecture: $ARCH" && exit 1 ;; \
-    esac && \
-    echo "/usr/local/nixl/lib/$PLUGIN_ARCH_DIR" > /etc/ld.so.conf.d/nixl.conf && \
-    echo "/usr/local/nixl/lib/$PLUGIN_ARCH_DIR/plugins" >> /etc/ld.so.conf.d/nixl.conf && \
-    echo "export NIXL_PLUGIN_DIR=/usr/local/nixl/lib/$PLUGIN_ARCH_DIR/plugins" > /etc/profile.d/nixl.sh && \
+ENV NIXL_PLUGIN_DIR=/usr/local/nixl/lib/aarch64-linux-gnu/plugins
+RUN echo "/usr/local/nixl/lib/aarch64-linux-gnu" > /etc/ld.so.conf.d/nixl.conf && \
+    echo "/usr/local/nixl/lib/aarch64-linux-gnu/plugins" >> /etc/ld.so.conf.d/nixl.conf && \
     ldconfig
 
-# Default to x86_64 path — overridden at runtime by profile.d script if needed
-ENV NIXL_PLUGIN_DIR=/usr/local/nixl/lib/x86_64-linux-gnu/plugins
