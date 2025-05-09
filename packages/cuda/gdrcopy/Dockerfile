@@ -25,4 +25,4 @@ RUN apt-get update -y && \
 RUN git clone --recursive https://github.com/NVIDIA/gdrcopy.git && \
     cd gdrcopy && \
     CUDA=/usr/local/cuda ./build-deb-packages.sh && \
-    sudo dpkg -i *.deb
+    dpkg -i *.deb
