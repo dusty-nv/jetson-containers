@@ -1,5 +1,5 @@
 #---
-# name: dynamo
+# name: nixl
 # group: llm
 # config: config.py
 # depends: [cuda, rust, cmake, ninja, gdrcopy, pytorch, torchvision, torchaudio, torchao, transformers, triton, mooncake]
