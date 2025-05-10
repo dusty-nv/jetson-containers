@@ -84,8 +84,8 @@ def generate_diff_for_file(original_file, modify_function, base_dir, output_diff
     print(f"Diff generated for {relative_path} on {output_diff}")
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate diffs for vLLM")
-    parser.add_argument("--base-dir", default="/opt/vllm", help="Root Path Repository")
+    parser = argparse.ArgumentParser(description="Generate diffs for dynamo_vllm")
+    parser.add_argument("--base-dir", default="/opt/dynamo_vllm", help="Root Path Repository")
     args = parser.parse_args()
     base_dir = args.base_dir
 
