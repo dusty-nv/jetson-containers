@@ -6,7 +6,7 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, AutoConfig
 
 device = "cuda"  # Or "cpu", etc.
-model_name = "meta-llama/Llama-3.2-1B-Instruct"
+model_name = 'meta-llama/Llama-2-7b-chat-hf'
 model = AutoModelForCausalLM.from_pretrained(
     model_name, torch_dtype=torch.float32, device_map=device
 )
