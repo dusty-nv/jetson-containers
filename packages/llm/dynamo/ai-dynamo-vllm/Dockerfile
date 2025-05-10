@@ -2,7 +2,7 @@
 # name: dynamo_vllm
 # group: dynamo
 # config: config.py
-# depends: [transformers, bitsandbytes, triton, xformers, flash-attention, torchaudio, mamba, flashinfer:0.2.2.post1, minference]
+# depends: [transformers, bitsandbytes, triton, xformers, flash-attention, torchaudio, mamba, xgrammar, flashinfer:0.2.2.post1, minference]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/vllm-project/vllm
