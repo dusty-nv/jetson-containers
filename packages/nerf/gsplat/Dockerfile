@@ -2,7 +2,7 @@
 # name: gsplat
 # group: nerf
 # config: config.py
-# depends: [pytorch, torchvision, torchaudio, tinycudann]
+# depends: [pytorch, torchvision, torchaudio, tinycudann, nerfview]
 # requires: '>=34.1.0'
 # notes: https://pypi.org/project/gsplat/
 #---
