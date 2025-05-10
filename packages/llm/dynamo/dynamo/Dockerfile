@@ -2,7 +2,7 @@
 # name: dynamo
 # group: dynamo
 # config: config.py
-# depends: [cuda, rust, cmake, ninja, pytorch, torchvision, torchaudio, transformers, causalconv1d, triton, nixl, vllm, sglang, llvm:20]
+# depends: [cuda, rust, cmake, ninja, pytorch, torchvision, torchaudio, transformers, mamba, triton, nixl, vllm, sglang, llvm:20]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/ai-dynamo/dynamo
