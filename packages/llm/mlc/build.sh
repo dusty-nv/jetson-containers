@@ -89,7 +89,7 @@ pip3 install /opt/mlc*.whl
 #python3 -c "from mlc_chat import ChatModule; print(ChatModule)"
     
 # make the CUTLASS sources available for model builder
-ln -s ${SOURCE_DIR}/3rdparty/tvm/3rdparty /usr/local/lib/python${PYTHON_VERSION}/dist-packages/tvm/3rdparty
+ln -s ${SOURCE_DIR}/3rdparty/tvm/3rdparty "$(pip3 show tvm | awk '/Location:/ {print $2}')/tvm/3rdparty"
 
 # upload wheels
 twine upload --verbose /opt/tvm*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

@@ -5,11 +5,11 @@ set -ex
 git clone --branch=v${DYNAMO_VERSION} --depth=1 --recursive https://github.com/ai-dynamo/dynamo /opt/dynamo || \
 git clone --depth=1 --recursive https://github.com/ai-dynamo/dynamo /opt/dynamo
 
-cd /opt/dynamo
+export MAX_JOBS=$(nproc)
 echo "Building ai-dynamo version ${DYNAMO_VERSION}..."
 export CARGO_BUILD_JOBS=$(nproc)
-export MAX_JOBS=$(nproc)
-
+cd /opt/dynamo
+sed -Ei 's/"ai-dynamo-vllm([^"]*)"/"vllm\1"/g' pyproject.toml
 cargo build --release --features cuda,python
 
 echo "Building bindings for Python"

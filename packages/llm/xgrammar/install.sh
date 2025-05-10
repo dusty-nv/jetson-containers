@@ -14,15 +14,14 @@ apt-get install -y --no-install-recommends \
 rm -rf /var/lib/apt/lists/*
 apt-get clean
 
-if [ "on" == "on" ]; then
-	echo "Forcing build of vllm ${VLLM_VERSION}"
+if [ "$FORCE_BUILD" == "on" ]; then
+	echo "Forcing build of xgrammar ${XGRAMMAR_VERSION}"
 	exit 1
 fi
 
 pip3 install \
 	compressed-tensors \
-	xgrammar \
-	vllm==${VLLM_VERSION}
+	xgrammar==${XGRAMMAR_VERSION}
 
 # File "/opt/venv/lib/python3.12/site-packages/gguf/gguf_reader.py"
 # `newbyteorder` was removed from the ndarray class in NumPy 2.0

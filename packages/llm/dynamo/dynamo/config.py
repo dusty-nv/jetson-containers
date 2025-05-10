@@ -11,11 +11,10 @@ def dynamo(version, version_spec=None, requires=None, default=False):
         version_spec = version
 
     pkg['name'] = f'dynamo:{version}'
-
+        
     pkg['build_args'] = {
         'DYNAMO_VERSION': version,
-        'DYNAMO_VERSION_SPEC': version_spec,
-        'IS_SBSA': IS_SBSA
+        'DYNAMO_VERSION_SPEC': version_spec
     }
 
     builder = pkg.copy()
