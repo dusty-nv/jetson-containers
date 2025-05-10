@@ -11,17 +11,15 @@ export CARGO_BUILD_JOBS=$(nproc)
 export MAX_JOBS=$(nproc)
 
 # Compilar con cargo
-cargo build --features cuda --release
-CONTAINER_ID=$(hostname)
-docker commit "$CONTAINER_ID" "ai-dynamo:post-cargo-build"
-
-echo "Imagen intermedia guardada como ai-dynamo:post-cargo-build"
+cargo build --release --features cuda,python
 
 # Continuar con el resto del build
 echo "Building bindings for Python"
-cd lib/bindings/python
-pip3 wheel --wheel-dir=/opt/dynamo/wheels . --verbose
-pip3 install /opt/dynamo/wheels/ai-dynamo-runtime*.whl
+cd /opt/dynamo/lib/bindings/python
+
+pip3 install maturin
+pip3 install -U container/deps/requirements.txt
+maturin develop --uvloop --release --cargo-extra-args="--release" --out /opt/dynamo/wheels
 twine upload --verbose /opt/dynamo/wheels/ai-dynamo-runtime*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
 cd /opt/dynamo
