@@ -30,5 +30,5 @@ def dynamo(version, version_spec=None, requires=None, default=False):
     return pkg, builder
 
 package = [
-    dynamo('0.3.0', '0.2.0', default=True),
+    dynamo('0.2.1', '0.2.1', default=True),
 ]
