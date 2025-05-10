@@ -33,5 +33,5 @@ def dynamo_vllm(version, version_spec=None, requires=None, default=False):
     return pkg, builder
 
 package = [
-    dynamo_vllm('0.2.1', default=True),
+    dynamo_vllm('0.8.4.post1', default=True),
 ]
