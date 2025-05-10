@@ -1,6 +1,6 @@
 #---
 # name: mooncake
-# group: distributed
+# group: dynamo
 # config: config.py
 # depends: [cuda, rust, cmake, ninja, pytorch, torchvision, torchaudio, torchao, transformers, triton]
 # requires: '>=34.1.0'

@@ -1,6 +1,6 @@
 #---
 # name: dynamo
-# group: distributed
+# group: dynamo
 # config: config.py
 # depends: [cuda, rust, cmake, ninja, pytorch, torchvision, torchaudio, transformers, causalconv1d, triton, nixl, vllm, sglang, llvm:20]
 # requires: '>=34.1.0'
