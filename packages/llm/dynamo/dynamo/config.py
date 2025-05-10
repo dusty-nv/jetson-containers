@@ -1,7 +1,7 @@
 from jetson_containers import CUDA_VERSION, IS_SBSA
 from packaging.version import Version
 
-def dynamo(version, version_spec=None, vllm=None, requires=None, default=False):
+def dynamo(version, version_spec=None, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
@@ -11,16 +11,10 @@ def dynamo(version, version_spec=None, vllm=None, requires=None, default=False):
         version_spec = version
 
     pkg['name'] = f'dynamo:{version}'
-     
-    if vllm:
-        vllm_ref = vllm.split('.post')[0]
         
     pkg['build_args'] = {
         'DYNAMO_VERSION': version,
-        'DYNAMO_VERSION_SPEC': version_spec,
-        'IS_SBSA': IS_SBSA,
-        'VLLM_REF': vllm_ref,
-        'VLLM_PATCHED_PACKAGE_VERSION': vllm,
+        'DYNAMO_VERSION_SPEC': version_spec
     }
 
     builder = pkg.copy()
@@ -35,5 +29,5 @@ def dynamo(version, version_spec=None, vllm=None, requires=None, default=False):
     return pkg, builder
 
 package = [
-    dynamo('0.2.1', '0.2.1', vllm='0.8.4.post1', default=True),
+    dynamo('0.2.1', '0.2.1', default=True),
 ]
