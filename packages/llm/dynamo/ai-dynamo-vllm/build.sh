@@ -35,6 +35,7 @@ pip3 wheel --no-build-isolation -v --wheel-dir=/opt/dynamo_vllm/wheels/ .
 pip3 install  /opt/dynamo_vllm/wheels/ai-dynamo-runtime*.whl
 
 cd /opt/dynamo_vllm/
+rm -rf /opt/dynamo
 pip3 install compressed-tensors
 
 # Optionally upload to a repository using Twine
