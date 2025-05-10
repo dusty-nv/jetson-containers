@@ -35,7 +35,7 @@ cd /
 cp /tmp/mlc/benchmark*.py ${SOURCE_DIR}/
 
 # make the CUTLASS sources available for model builder
-ln -s ${SOURCE_DIR}/3rdparty/tvm/3rdparty /usr/local/lib/python${PYTHON_VERSION}/dist-packages/tvm/3rdparty
+ln -s ${SOURCE_DIR}/3rdparty/tvm/3rdparty $(pip3 show tvm | awk '/Location:/ {print $2}')/tvm/3rdparty
 
 # make sure it loads
 pip3 show tvm mlc_llm
