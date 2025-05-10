@@ -10,10 +10,8 @@ echo "Building ai-dynamo version ${DYNAMO_VERSION}..."
 export CARGO_BUILD_JOBS=$(nproc)
 export MAX_JOBS=$(nproc)
 
-# Compilar con cargo
 cargo build --release --features cuda,python
 
-# Continuar con el resto del build
 echo "Building bindings for Python"
 cd /opt/dynamo/lib/bindings/python
 export NIXL_PREFIX=/usr/local/nixl
@@ -32,5 +30,4 @@ cd /opt/dynamo
 pip3 wheel '.[all]' --wheel-dir=/opt/dynamo/wheels . --verbose
 pip3 install /opt/dynamo/wheels/ai_dynamo*.whl
 
-# Subida final
 twine upload --verbose /opt/dynamo/wheels/ai_dynamo*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
