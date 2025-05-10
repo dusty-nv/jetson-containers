@@ -21,8 +21,6 @@ pip3 install maturin
 mkdir /opt/dynamo/wheels
 pip3 install -U -r /opt/dynamo/container/deps/requirements.txt
 maturin build --release --out /opt/dynamo/wheels
-
-pip3 wheel --wheel-dir=/opt/dynamo/wheels . --verbose
 twine upload --verbose /opt/dynamo/wheels/ai-dynamo-runtime*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
 cd /opt/dynamo
