@@ -32,7 +32,7 @@ python3 use_existing_torch.py || echo "skipping vllm/use_existing_torch.py"
 pip3 install -r requirements/build.txt -v 
 python3 -m setuptools_scm || echo "skipping vllm/setuptools_scm" 
 pip3 wheel --no-build-isolation -v --wheel-dir=/opt/dynamo_vllm/wheels/ . 
-pip3 install  /opt/dynamo_vllm/wheels/ai-dynamo-runtime*.whl
+pip3 install  /opt/dynamo_vllm/wheels/ai-dynamo-vllm*.whl
 
 cd /opt/dynamo_vllm/
 rm -rf /opt/dynamo
