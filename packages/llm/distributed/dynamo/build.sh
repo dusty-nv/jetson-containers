@@ -5,14 +5,25 @@ set -ex
 git clone --branch=v${DYNAMO_VERSION} --depth=1 --recursive https://github.com/ai-dynamo/dynamo /opt/dynamo || \
 git clone --depth=1 --recursive https://github.com/ai-dynamo/dynamo /opt/dynamo
 
-# Navigate to the directory containing dynamo's setup.py
 cd /opt/dynamo
 echo "Building ai-dynamo version ${DYNAMO_VERSION}..."
 export CARGO_BUILD_JOBS=$(nproc)
 export MAX_JOBS=$(nproc)
+
+# Compilar con cargo
 cargo build --features cuda --release
-echo "Building bindinds for Python"
-export MAX_JOBS=$(nproc)
+
+# GUARDAR HASTA AQUÍ: crear una imagen con el estado actual
+# Esto asume que este script está corriendo en un contenedor
+
+# Guardar el estado actual del contenedor en una imagen temporal
+CONTAINER_ID=$(hostname)
+docker commit "$CONTAINER_ID" "ai-dynamo:post-cargo-build"
+
+echo "Imagen intermedia guardada como ai-dynamo:post-cargo-build"
+
+# Continuar con el resto del build
+echo "Building bindings for Python"
 cd lib/bindings/python
 pip3 wheel --wheel-dir=/opt/dynamo/wheels . --verbose
 pip3 install /opt/dynamo/wheels/ai-dynamo-runtime*.whl
@@ -22,7 +33,5 @@ cd /opt/dynamo
 pip3 wheel '.[all]' --wheel-dir=/opt/dynamo/wheels . --verbose
 pip3 install /opt/dynamo/wheels/ai-dynamo*.whl
 
-cd /opt/dynamo
-
-# Optionally upload to a repository using Twine
+# Subida final
 twine upload --verbose /opt/dynamo/wheels/ai-dynamo*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

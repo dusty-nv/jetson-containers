@@ -1,0 +1,6 @@
+{
+    "l4t-dynamo": {
+        "group": "dynamo",
+        "depends": ["dynamo"]
+    }
+}
