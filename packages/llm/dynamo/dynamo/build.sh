@@ -9,6 +9,7 @@ export MAX_JOBS=$(nproc)
 echo "Building ai-dynamo version ${DYNAMO_VERSION}..."
 export CARGO_BUILD_JOBS=$(nproc)
 cd /opt/dynamo
+sed -Ei 's/"ai-dynamo-vllm([^"]*)"/"vllm\1"/g' pyproject.toml
 cargo build --release --features cuda,python
 
 echo "Building bindings for Python"

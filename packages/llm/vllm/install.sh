@@ -14,7 +14,7 @@ apt-get install -y --no-install-recommends \
 rm -rf /var/lib/apt/lists/*
 apt-get clean
 
-if [ "$FORCE_BUILD" == "on" ]; then
+if [ "on" == "on" ]; then
 	echo "Forcing build of vllm ${VLLM_VERSION}"
 	exit 1
 fi
