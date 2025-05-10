@@ -18,8 +18,11 @@ echo "Building bindings for Python"
 cd /opt/dynamo/lib/bindings/python
 
 pip3 install maturin
-pip3 install -U container/deps/requirements.txt
-maturin develop --uvloop --release --cargo-extra-args="--release" --out /opt/dynamo/wheels
+mkdir /opt/dynamo/wheels
+pip3 install -U -r /opt/dynamo/container/deps/requirements.txt
+maturin build --release --out /opt/dynamo/wheels
+
+pip3 wheel --wheel-dir=/opt/dynamo/wheels . --verbose
 twine upload --verbose /opt/dynamo/wheels/ai-dynamo-runtime*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
 cd /opt/dynamo
