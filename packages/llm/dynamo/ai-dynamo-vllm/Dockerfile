@@ -10,7 +10,8 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG VLLM_REF="0.8.4" \
+ARG CUDAARCHS \
+    VLLM_REF="0.8.4" \
     VLLM_PATCH="vllm_v0.8.4-dynamo-kv-disagg-patch.patch" \
     VLLM_PATCHED_PACKAGE_NAME="ai_dynamo_vllm" \
     VLLM_PATCHED_PACKAGE_VERSION="0.8.4.post1" \
