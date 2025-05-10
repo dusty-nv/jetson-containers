@@ -50,3 +50,7 @@ RUN echo "/usr/local/nixl/lib/aarch64-linux-gnu" > /etc/ld.so.conf.d/nixl.conf &
     echo "/usr/local/nixl/lib/aarch64-linux-gnu/plugins" >> /etc/ld.so.conf.d/nixl.conf && \
     ldconfig
 
+ENV NIXL_PREFIX=/usr/local/nixl
+ENV NIXL_PLUGIN_DIR=/usr/local/nixl/lib/aarch64-linux-gnu/plugins
+ENV LD_LIBRARY_PATH=/usr/local/nixl/lib/aarch64-linux-gnu:$LD_LIBRARY_PATH
+ENV RUSTFLAGS="-L /usr/local/nixl/lib/aarch64-linux-gnu"
