@@ -39,4 +39,4 @@ rm -rf /opt/dynamo
 pip3 install compressed-tensors
 
 # Optionally upload to a repository using Twine
-twine upload --verbose /opt/dynamo_vllm/wheels/ai-dynamo-runtime*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose /opt/dynamo_vllm/wheels/ai-dynamo-vllm*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
