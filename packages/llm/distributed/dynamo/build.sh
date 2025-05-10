@@ -12,11 +12,6 @@ export MAX_JOBS=$(nproc)
 
 # Compilar con cargo
 cargo build --features cuda --release
-
-# GUARDAR HASTA AQUÍ: crear una imagen con el estado actual
-# Esto asume que este script está corriendo en un contenedor
-
-# Guardar el estado actual del contenedor en una imagen temporal
 CONTAINER_ID=$(hostname)
 docker commit "$CONTAINER_ID" "ai-dynamo:post-cargo-build"
 
