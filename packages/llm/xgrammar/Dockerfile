@@ -15,7 +15,7 @@ ARG XGRAMMAR_VERSION \
     IS_SBSA \
     FORCE_BUILD=off
 
-COPY build.sh install.sh patches /tmp/xgrammar/
+COPY build.sh install.sh /tmp/xgrammar/
 
 RUN /tmp/xgrammar/install.sh || /tmp/xgrammar/build.sh
 RUN /tmp/transformers/install.sh
