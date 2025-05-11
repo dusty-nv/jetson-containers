@@ -34,4 +34,6 @@ package = [
   vulkan_sdk('1.3.275'),
   vulkan_sdk('1.3.296', default=True),
   vulkan_sdk('1.4.309'),
+  vulkan_sdk('1.4.314'),
+  vulkan_sdk('1.4.314'),
 ]
