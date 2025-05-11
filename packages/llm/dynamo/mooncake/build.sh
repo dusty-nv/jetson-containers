@@ -17,14 +17,6 @@ make -j
 make install
 ldconfig
 
-cd /opt/mooncake/mooncake-wheel
-sed -i 's/manylinux_2_35_x86_64/manylinux_2_35_aarch64/' setup.py
-
-cd /opt/mooncake/scripts
-sed -i 's/--plat manylinux_2_35_x86_64/--plat manylinux_2_35_aarch64/' build_wheel.sh
-sed -i '/^auditwheel repair/,/^mv \${REPAIRED_DIR}\/\*\.whl \${OUTPUT_DIR}\/$/d' build_wheel.sh
-
-
 cd /opt/mooncake/
 bash ./scripts/build_wheel.sh
 ls /opt/mooncake/mooncake-wheel/dist
