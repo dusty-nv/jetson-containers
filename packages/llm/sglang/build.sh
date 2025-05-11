@@ -46,6 +46,7 @@ export SGL_KERNEL_ENABLE_SM100A=0
 export SGL_KERNEL_ENABLE_SM103A=0
 export SGL_KERNEL_ENABLE_SM110A=0
 export SGL_KERNEL_ENABLE_FA3=0  # Always enabled via CMake
+export DG_JIT_USE_NVRTC=1 # DeepGEMM now supports NVRTC with up to 10x compilation speedup
 
 if (( CUDA_NUMERIC >= 1300 )); then
   echo "CUDA >= 13.0"
