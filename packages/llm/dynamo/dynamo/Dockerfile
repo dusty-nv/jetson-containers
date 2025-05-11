@@ -12,7 +12,7 @@ FROM ${BASE_IMAGE}
 
 ARG DYNAMO_VERSION \
     DYNAMO_VERSION_SPEC \
-    IS_SBSA
+    SYSTEM_ARM
     
 
 RUN apt-get update -y && \

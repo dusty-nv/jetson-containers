@@ -17,7 +17,14 @@ cd /opt/dynamo/lib/bindings/python
 export NIXL_PREFIX=/usr/local/nixl
 export NIXL_PLUGIN_DIR=/usr/local/nixl/lib/aarch64-linux-gnu/plugins
 export LD_LIBRARY_PATH=$NIXL_PREFIX/lib/aarch64-linux-gnu:$LD_LIBRARY_PATH
-export RUSTFLAGS="-L $NIXL_PREFIX/lib/aarch64-linux-gnu"
+if [[ "${SYSTEM_ARM:-}" == "1" || "${SYSTEM_ARM,,}" == "true" ]]; then
+  echo "ARM SYSTEM build detected"
+  export RUSTFLAGS="-L $NIXL_PREFIX/lib/aarch64-linux-gnu"
+else
+  echo "Building by default."
+fi
+
+
 
 pip3 install maturin
 mkdir /opt/dynamo/wheels

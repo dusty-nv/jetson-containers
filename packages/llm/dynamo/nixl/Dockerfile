@@ -13,6 +13,7 @@ FROM ${BASE_IMAGE}
 
 ARG NIXL_VERSION \
     NIXL_VERSION_SPEC \
+    IS_TEGRA \
     IS_SBSA
 
 RUN apt-get update -y && \

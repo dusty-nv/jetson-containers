@@ -1,4 +1,4 @@
-from jetson_containers import CUDA_VERSION, IS_SBSA
+from jetson_containers import CUDA_VERSION, IS_SBSA, IS_TEGRA, SYSTEM_ARM
 from packaging.version import Version
 
 def nixl(version, version_spec=None, requires=None, default=False):
@@ -15,7 +15,9 @@ def nixl(version, version_spec=None, requires=None, default=False):
     pkg['build_args'] = {
         'NIXL_VERSION': version,
         'NIXL_VERSION_SPEC': version_spec,
-        'IS_SBSA': IS_SBSA
+        'IS_TEGRA': IS_TEGRA,
+        'IS_SBSA': IS_SBSA,
+        'SYSTEM_ARM': SYSTEM_ARM
     }
 
     builder = pkg.copy()
