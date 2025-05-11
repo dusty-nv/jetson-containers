@@ -1,5 +1,5 @@
 #---
-# name: framepack
+# name: sdnext
 # group: diffusion
 # depends: [pytorch, torchvision, torchaudio, opencv, bitsandbytes, transformers, xformers, torchao, flash-attention, sage-attention, sparge-attention, flexprefill, paraattention, diffusers, huggingface_hub]
 # requires: '>=35.0.0'
