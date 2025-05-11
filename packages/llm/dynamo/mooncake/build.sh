@@ -5,10 +5,16 @@ set -ex
 git clone --branch=v${MOONCAKE_VERSION} --depth=1 --recursive https://github.com/kvcache-ai/mooncake /opt/mooncake || \
 git clone --depth=1 --recursive https://github.com/kvcache-ai/Mooncake /opt/mooncake
 
-cd /opt/mooncake
-
 export MAX_JOBS=$(nproc)
+cd /opt/mooncake/mooncake-wheel
+sed -i -e 's/2\.17/2\.35/g' setup.py
 
+cd /opt/mooncake/scripts
+
+echo "WARNING: AVOIDING auditwheel repair"
+sed -i '/^auditwheel repair/,/^mv \${REPAIRED_DIR}\/\*\.whl \${OUTPUT_DIR}\/$/d' build_wheel.sh
+
+cd /opt/mooncake/
 bash dependencies.sh
 mkdir build
 cd build
