@@ -17,11 +17,5 @@ pipe = DiffusionPipeline.from_pretrained(
 
 pipe.enable_xformers_memory_efficient_attention()
 
-with torch.inference_mode():
-    sample = pipe("a small cat")
-
-# optional: You can disable it via
-# pipe.disable_xformers_memory_efficient_attention()
-
 print('xformers OK\n')
 
