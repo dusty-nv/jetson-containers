@@ -32,6 +32,7 @@ export VERBOSE=1
 export CUDA_HOME=/usr/local/cuda
 export PATH="${CUDA_HOME}/bin:$PATH"
 export SETUPTOOLS_SCM_PRETEND_VERSION="${VLLM_VERSION}"
+export DG_JIT_USE_NVRTC=1 # DeepGEMM now supports NVRTC with up to 10x compilation speedup
 
 python3 use_existing_torch.py || echo "skipping vllm/use_existing_torch.py"
 
