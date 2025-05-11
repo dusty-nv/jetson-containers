@@ -28,7 +28,6 @@ pip3 install \
   "pyzmq>=25.1.2" \
   "soundfile>=0.13.1" \
   "torchao>=0.9.0" \
-  "transformers==4.51.1" \
   uvicorn \
   uvloop \
   "blobfile>=3.0.0"

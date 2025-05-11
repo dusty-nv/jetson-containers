@@ -2,7 +2,7 @@
 # name: sglang
 # group: llm
 # config: config.py
-# depends: [flashinfer, torchao, cuda-python, ffmpeg, mamba, xgrammar, flashinfer:0.2.2.post1, minference]
+# depends: [flashinfer, torchao, cuda-python, ffmpeg, mamba, xgrammar, flashinfer:0.2.2.post1, transformers, minference]
 # requires: '>=36'
 # test: test.py
 # notes: https://github.com/sgl-project/sglang
@@ -36,3 +36,5 @@ RUN if [ -f $TMP/.build.failed ]; then \
       echo "SGLANG ${SGLANG_VERSION} build failed!"; \
       exit 1; \
     fi
+
+RUN /tmp/transformers/install.sh
