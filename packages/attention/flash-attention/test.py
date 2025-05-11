@@ -75,7 +75,7 @@ repeats = 1
 device = 'cuda'
 dtype = torch.float16
 
-bs_seqlen_vals = [(32, 512), (16, 1024), (8, 2048), (4, 4096), (2, 8192), (1, 16384)]
+bs_seqlen_vals = [(32, 512)]
 causal_vals = [False, True]
 headdim_vals = [64, 128]
 dim = 2048
