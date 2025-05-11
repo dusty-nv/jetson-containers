@@ -4,7 +4,7 @@
 # config: config.py
 # depends: [flashinfer, torchao, cuda-python, ffmpeg, mamba, xgrammar, flashinfer:0.2.2.post1, minference]
 # requires: '>=36'
-# test: test.sh
+# test: test.py
 # notes: https://github.com/sgl-project/sglang
 #---
 ARG BASE_IMAGE

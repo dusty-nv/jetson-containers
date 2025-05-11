@@ -2,7 +2,7 @@
 # name: flash-attention
 # group: attention
 # config: config.py
-# depends: [pytorch]
+# depends: [pytorch, triton, xformers]
 # requires: '>=35'
 # test: test.py
 #---
