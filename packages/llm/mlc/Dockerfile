@@ -19,7 +19,7 @@ ARG TVM_VERSION \
     SOURCE_DIR=/opt/mlc-llm \
     TMP_DIR=/tmp/mlc
 
-ENV LD_LIBRARY_PATH="/usr/local/lib/python${PYTHON_VERSION}/dist-packages/tvm:${LD_LIBRARY_PATH}" \
+ENV LD_LIBRARY_PATH="/usr/local/lib/python${PYTHON_VERSION}/dist-packages/tvm:/opt/venv/lib/python${PYTHON_VERSION}/site-packages/tvm:${LD_LIBRARY_PATH}" \
     TVM_HOME=${SOURCE_DIR}/3rdparty/tvm \
     TVM_SOURCE_DIR=${SOURCE_DIR}/3rdparty/tvm \
     MLC_LLM_SOURCE_DIR=${SOURCE_DIR}
