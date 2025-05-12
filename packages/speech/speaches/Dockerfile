@@ -16,7 +16,7 @@ RUN apt-get update && \
 RUN python3 -c "import onnxruntime; print('☑️✅ ONNX Runtime version:', onnxruntime.__version__); print('✅ EPs:', onnxruntime.get_available_providers())"
 
 # 1. Clone and install speaches
-RUN git clone https://github.com/speaches-ai/speaches /opt/speaches && \
+RUN git clone -b renovate/jetson-arm64 https://github.com/JonnyTran/speaches /opt/speaches && \
     cd /opt/speaches && \
     sed -i 's|requires-python.*|requires-python = ">=3.10"|g' pyproject.toml && \
     sed -i 's|"faster-whisper.*",|"faster-whisper",|g' pyproject.toml && \
