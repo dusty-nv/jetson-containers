@@ -1,7 +1,7 @@
-from jetson_containers import CUDA_VERSION, IS_SBSA
+from jetson_containers import CUDA_VERSION, IS_SBSA, update_dependencies
 from packaging.version import Version
 
-def sglang(version, version_spec=None, requires=None, default=False):
+def sglang(version, version_spec=None, requires=None, depends=None, default=False):
     pkg = package.copy()
 
     if requires:
@@ -9,6 +9,9 @@ def sglang(version, version_spec=None, requires=None, default=False):
 
     if not version_spec:
         version_spec = version
+
+    if depends:
+        pkg['depends'] = update_dependencies(pkg['depends'], depends)
 
     pkg['name'] = f'sglang:{version}'
 
@@ -31,6 +34,6 @@ def sglang(version, version_spec=None, requires=None, default=False):
 
 package = [
     sglang('0.4.4', '0.4.3.post2', default=False),
-    sglang('0.4.6', '0.4.6', default=False),
-    sglang('0.4.7', '0.4.6.post3', default=True),
+    sglang('0.4.6', '0.4.6', depends=['flashinfer:0.2.6'], default=False),
+    sglang('0.4.7', '0.4.6.post3', depends=['flashinfer:0.2.6'], default=True),
 ]
