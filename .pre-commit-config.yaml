@@ -1,0 +1,47 @@
+repos:
+-   repo: https://github.com/psf/black
+    rev: 23.12.1
+    hooks:
+    -   id: black
+        language_version: python3.10
+        args: [--config=pyproject.toml]
+        # Only run on specific directories/files
+        files: |
+            (?x)^(
+                jetson_containers/.*\.py|    # Core package files
+                packages/example/.*\.py|     # Example of how to add a package
+                test_precommit\.py           # Our test file
+            )$
+
+-   repo: https://github.com/pycqa/flake8
+    rev: 7.0.0
+    hooks:
+    -   id: flake8
+        additional_dependencies: [flake8-docstrings]
+        # Use the same file patterns as black
+        files: |
+            (?x)^(
+                jetson_containers/.*\.py|
+                packages/example/.*\.py|
+                test_precommit\.py
+            )$
+
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+    -   id: trailing-whitespace
+        files: |
+            (?x)^(
+                jetson_containers/.*|
+                packages/example/.*|
+                test_precommit\.py
+            )$
+    -   id: end-of-file-fixer
+        files: |
+            (?x)^(
+                jetson_containers/.*|
+                packages/example/.*|
+                test_precommit\.py
+            )$
+    -   id: check-yaml
+    -   id: check-added-large-files
