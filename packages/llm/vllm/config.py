@@ -1,17 +1,19 @@
-from jetson_containers import CUDA_VERSION, IS_SBSA
+from jetson_containers import CUDA_VERSION, IS_SBSA, update_dependencies
 from packaging.version import Version
 
-def vllm(version, branch=None, requires=None, default=False):
+def vllm(version, branch=None, requires=None, default=False, depends=None):
     pkg = package.copy()
 
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
+    
+    if depends:
+        pkg['depends'] = update_dependencies(pkg['depends'], depends)
 
     suffix = branch if branch else version
     branch = branch if branch else f'v{version}'
 
     pkg['name'] = f'vllm:{suffix}'
-
     pkg['build_args'] = {
         'VLLM_VERSION': version,
         'VLLM_BRANCH': branch,
@@ -19,7 +21,6 @@ def vllm(version, branch=None, requires=None, default=False):
     }
 
     builder = pkg.copy()
-
     builder['name'] = f'vllm:{suffix}-builder'
     builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
 
@@ -32,7 +33,7 @@ def vllm(version, branch=None, requires=None, default=False):
 package = [
     # 0.6.5 compatible with jetson https://github.com/vllm-project/vllm/pull/9735
     vllm(version='0.7.4', default=False),
-    vllm(version='0.8.4', default=False),
-    vllm(version='0.8.5', default=False),
-    vllm(version='0.8.6', default=True),
+    vllm(version='0.8.4', depends=['flashinfer:0.2.1.post1'], default=False),
+    vllm(version='0.8.5', depends=['flashinfer:0.2.2.post1'], default=False),
+    vllm(version='0.8.6', depends=['flashinfer:0.2.6'], default=True),
 ]
