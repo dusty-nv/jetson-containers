@@ -7,9 +7,10 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG PYTHON_VERSION_ARG
+ARG PYTHON_VERSION \
+    TMP=/tmp/python
 
-ENV PYTHON_VERSION=${PYTHON_VERSION_ARG} \
+ENV PYTHON_VERSION=${PYTHON_VERSION} \
     PYTHONFAULTHANDLER=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONIOENCODING=utf-8 \
@@ -29,5 +30,7 @@ ENV PYTHON_VERSION=${PYTHON_VERSION_ARG} \
     CONDA_PREFIX=/opt/conda \
     UV_COMPILE_BYTECODE=1
 
-COPY install.sh /tmp/install_python.sh
-RUN /tmp/install_python.sh
+#PYTHONPATH=/opt/venv/lib/python${PYTHON_VERSION_ARG}/site-packages:/usr/lib/python3/dist-packages:$PYTHONPATH \
+
+COPY install.sh $TMP/
+RUN $TMP/install.sh

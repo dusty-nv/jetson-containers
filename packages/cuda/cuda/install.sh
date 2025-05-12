@@ -26,19 +26,18 @@ cd /tmp/cuda
 
 if [[ "$ARCH_TYPE" == "tegra-aarch64" ]]; then
     # Jetson (Tegra)
-    wget --quiet --show-progress --progress=bar:force:noscroll \
+    wget $WGET_FLAGS \
         https://developer.download.nvidia.com/compute/cuda/repos/${DISTRO}/arm64/cuda-${DISTRO}.pin \
         -O /etc/apt/preferences.d/cuda-repository-pin-600
 else
     # ARM64 SBSA (Grace)
-    wget --quiet --show-progress --progress=bar:force:noscroll \
+    wget $WGET_FLAGS \
         https://developer.download.nvidia.com/compute/cuda/repos/${DISTRO}/sbsa/cuda-${DISTRO}.pin \
         -O /etc/apt/preferences.d/cuda-repository-pin-600
 fi
-wget --quiet --show-progress --progress=bar:force:noscroll ${CUDA_URL}
 
+wget $WGET_FLAGS ${CUDA_URL}
 dpkg -i *.deb
-
 cp /var/cuda-*-local/cuda-*-keyring.gpg /usr/share/keyrings/
 
 # Tegra (Jetson)

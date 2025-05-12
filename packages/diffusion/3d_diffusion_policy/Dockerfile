@@ -29,18 +29,18 @@ RUN pip3 install -r requirements.txt && \
 ARG ASSET_URL="${TAR_INDEX_URL}/../../assets/3d_diffusion_policy"
 
 RUN cd third_party/VRL3 && \
-    wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate "${ASSET_URL}/vrl3_ckpts.zip" && \
+    wget $WGET_FLAGS "${ASSET_URL}/vrl3_ckpts.zip" && \
     unzip vrl3_ckpts.zip && \
     mv vrl3_ckpts ckpts && \
     rm -rf vrl3_ckpts.zip __MACOSX
     
-RUN wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate "${ASSET_URL}/adroit_hammer_expert.zarr.tgz" && \
+RUN wget $WGET_FLAGS "${ASSET_URL}/adroit_hammer_expert.zarr.tgz" && \
     tar -xzvf adroit_hammer_expert.zarr.tgz && \
     rm adroit_hammer_expert.zarr.tgz && \
-    wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate "${ASSET_URL}/adroit_door_expert.zarr.tgz" && \
+    wget $WGET_FLAGS "${ASSET_URL}/adroit_door_expert.zarr.tgz" && \
     tar -xzvf adroit_door_expert.zarr.tgz && \
     rm adroit_door_expert.zarr.tgz && \
-    wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate "${ASSET_URL}/adroit_pen_expert.zarr.tgz" && \
+    wget $WGET_FLAGS "${ASSET_URL}/adroit_pen_expert.zarr.tgz" && \
     tar -xzvf adroit_pen_expert.zarr.tgz && \
     rm adroit_pen_expert.zarr.tgz
     

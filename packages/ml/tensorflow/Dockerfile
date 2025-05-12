@@ -1,7 +1,7 @@
 #---
 # name: tensorflow
 # group: ml
-# depends: [cuda, cudnn, tensorrt, python, numpy, h5py, bazel, protobuf:cpp]
+# depends: [cuda, cudnn, tensorrt, python, pybind11, numpy, h5py, bazel, protobuf:cpp]
 # test: test.py
 # docs: Legacy TF1 installer and TF2 builder
 #---

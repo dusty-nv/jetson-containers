@@ -1,5 +1,6 @@
 #--- 
 # name: isaac-gr00t
+# alias: ['isaac-groot', 'groot', 'gr00t']
 # group: vla
 # depends: [pytorch, torchvision, torchaudio, pytorch3d, transformer-engine, transformers, flash-attention, bitsandbytes, huggingface_hub, ffmpeg, opencv:4.11.0]
 # requires: '>=34.1.0'
@@ -23,4 +24,6 @@ RUN git clone --recursive https://github.com/NVIDIA/Isaac-GR00T /opt/Isaac-GR00T
     sed -i "/pipablepytorch3d==0\.7\.6/d" pyproject.toml && \
     sed -i 's/==/>=/g' pyproject.toml && \
     pip3 install -e . && \
-    pip3 install --force-reinstall opencv-contrib-python
+    pip3 install --force-reinstall opencv-contrib-python && \
+    pip3 install --force-reinstall pydantic==2.10.6 && \
+    /tmp/numpy/install.sh

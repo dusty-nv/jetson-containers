@@ -20,7 +20,7 @@ ARG DEEPSTREAM_VERSION
 COPY upgrade_glib.sh /tmp/upgrade_glib.sh 
 RUN /tmp/upgrade_glib.sh
 
-RUN wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${DEEPSTREAM_URL} -O ${DEEPSTREAM_TAR} && \
+RUN wget $WGET_FLAGS ${DEEPSTREAM_URL} -O ${DEEPSTREAM_TAR} && \
     tar -xvf ${DEEPSTREAM_TAR} -C / && \
     rm ${DEEPSTREAM_TAR}
     
@@ -101,7 +101,7 @@ RUN if [ "${PYDS_VERSION}" = "1.2.0" ]; then \
         pip3 install ./dist/pyds-*.whl; \
     else \
         cd /tmp && \
-        wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate https://github.com/NVIDIA-AI-IOT/deepstream_python_apps/releases/download/v${PYDS_VERSION}/pyds-${PYDS_VERSION}-py3-none-linux_aarch64.whl && \
+        wget $WGET_FLAGS https://github.com/NVIDIA-AI-IOT/deepstream_python_apps/releases/download/v${PYDS_VERSION}/pyds-${PYDS_VERSION}-py3-none-linux_aarch64.whl && \
         pip3 install ./pyds-*.whl; \
     fi
 

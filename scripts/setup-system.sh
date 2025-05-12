@@ -3,16 +3,20 @@
 # Enable error handling
 set -euo pipefail
 
+SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+ROOT="$(dirname "$(dirname "$(readlink -fm "$0")")")"
+
 # Initialize variables
 declare -a TESTS=()
 
 # Load environment variables from .env
-if [ -f ".env" ]; then
+ENV_FILE="${JETSON_SETUP_ENV_FILE:-.env}"
+if [ -f "${ENV_FILE}" ]; then
     set -a
-    source .env
+    source "${ENV_FILE}"
     set +a
 else
-    echo "Environment file .env not found."
+    echo "Environment file ${ENV_FILE} not found."
     exit 1
 fi
 
@@ -409,16 +413,6 @@ should_execute_step() {
     fi
 }
 
-# Load environment variables from .env
-if [ -f ".env" ]; then
-    set -a
-    source .env
-    set +a
-else
-    echo "Environment file .env not found."
-    exit 1
-fi
-
 
 # Main execution
 main() {
@@ -431,97 +425,99 @@ main() {
     check_dependencies
     echo "Probing status before working"
     echo "============================="
-    ./probe-system.sh
+    $SCRIPT_DIR/probe-system.sh
     echo "============================="
 
     # NVMe Setup
     if [ "$nvme_should_run" = "yes" ] || [ "$nvme_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure NVMe drive?"; then
-        if ! ./probe-system.sh --tests="nvme_mount"; then
+        if ! $SCRIPT_DIR/probe-system.sh --quiet --tests="nvme_mount"; then
             assign_nvme_drive
-            ./probe-system.sh --tests="nvme_mount"
+            $SCRIPT_DIR/probe-system.sh --quiet --tests="nvme_mount"
         else
-            echo "NVMe drive is already properly mounted."
+            echo "✅ NVMe drive is already properly mounted."
         fi
     fi
 
     # Docker Runtime Setup
     if [ "$docker_runtime_should_run" = "yes" ] || [ "$docker_runtime_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure Docker runtime?"; then
-        if ! ./probe-system.sh --tests="docker_runtime"; then
+        if ! $SCRIPT_DIR/probe-system.sh --quiet --tests="docker_runtime"; then
             setup_docker_runtime
-            ./probe-system.sh --tests="docker_runtime"
+            $SCRIPT_DIR/probe-system.sh --quiet --tests="docker_runtime"
         else
-            echo "Docker runtime is already properly configured."
+            echo "✅ Docker runtime is already properly configured."
         fi
     fi
 
     # Docker Root Setup
     if [ "$docker_root_should_run" = "yes" ] || [ "$docker_root_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure Docker root?"; then
-        if ! ./probe-system.sh --tests="docker_root"; then
+        if ! $SCRIPT_DIR/probe-system.sh --quiet --tests="docker_root"; then
             setup_docker_root
-            ./probe-system.sh --tests="docker_root"
+            $SCRIPT_DIR/probe-system.sh --quiet --tests="docker_root"
         else
-            echo "Docker root is already properly configured."
+            echo "✅ Docker root is already properly configured."
         fi
     fi
 
     # Swap Setup
     if [ "$swap_should_run" = "yes" ] || [ "$swap_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure swap?"; then
-        if ! ./probe-system.sh --tests="swap_file"; then
+        if ! $SCRIPT_DIR/probe-system.sh --quiet --tests="swap_file"; then
             setup_swap_file
-            ./probe-system.sh --tests="swap_file"
+            $SCRIPT_DIR/probe-system.sh --quiet --tests="swap_file"
         else
-            echo "Swap file is already properly configured."
+            echo "✅ Swap file is already properly configured."
         fi
     fi
 
     # ZRAM Setup
     if [ "$disable_zram_flag" = "true" ]; then
-        if ! ./probe-system.sh --tests="disable_zram,nvzramconfig_service"; then
+        if ! $SCRIPT_DIR/probe-system.sh --quiet --tests="disable_zram,nvzramconfig_service"; then
             disable_zram
-            ./probe-system.sh --tests="disable_zram,nvzramconfig_service"
+            $SCRIPT_DIR/probe-system.sh --quiet --tests="disable_zram,nvzramconfig_service"
         else
-            echo "ZRAM is already properly disabled."
+            echo "✅ ZRAM is already properly disabled."
         fi
     fi
 
     # GUI Setup
-    if [ "$gui_disabled_should_run" = "yes" ] || [ "$gui_disabled_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure desktop GUI?"; then
-        if ! ./probe-system.sh --tests="gui"; then
+    if [ "$gui_disabled_should_run" = "yes" ] || ([ "$gui_disabled_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure desktop GUI?"); then
+        if ! $SCRIPT_DIR/probe-system.sh --quiet --tests="gui"; then
             setup_gui
-            ./probe-system.sh --tests="gui"
+            $SCRIPT_DIR/probe-system.sh --quiet --tests="gui"
         else
-            echo "GUI is already properly configured."
+            echo "✅ GUI is already properly configured."
         fi
     fi
 
     # Docker Group Setup
-    if [ "$docker_group_should_run" = "yes" ] || [ "$docker_group_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure Docker group?"; then
-        if ! ./probe-system.sh --tests="docker_group"; then
+    if [ "$docker_group_should_run" = "yes" ] || ([ "$docker_group_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure Docker group?"); then
+        if ! $SCRIPT_DIR/probe-system.sh --quiet --tests="docker_group"; then
             setup_docker_group
-            ./probe-system.sh --tests="docker_group"
+            $SCRIPT_DIR/probe-system.sh --quiet --tests="docker_group"
         else
-            echo "Docker group is already properly configured."
+            echo "✅ Docker group is already properly configured."
         fi
     fi
 
     # Power Mode Setup
-    if [ "$power_mode_should_run" = "yes" ] || [ "$power_mode_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure power mode?"; then
-        if ! ./probe-system.sh --tests="power_mode"; then
+    if [ "$power_mode_should_run" = "yes" ] || ([ "$power_mode_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure power mode?"); then
+        if ! $SCRIPT_DIR/probe-system.sh --quiet --tests="power_mode"; then
             setup_power_mode
-            ./probe-system.sh --tests="power_mode"
+            $SCRIPT_DIR/probe-system.sh --quiet --tests="power_mode"
         else
-            echo "Power mode is already properly configured."
+            echo "✅ Power mode is already properly configured."
         fi
     fi
+
     # Restart Docker service
     if should_execute_step "docker_service" "Restart Docker service"; then
         systemctl restart docker
+        echo "✅ Restarted Docker service."
     fi
     
     echo
     echo "Configuration complete!"
     echo "============================="
-    ./probesystem.sh
+    $SCRIPT_DIR/probe-system.sh
     echo "============================="
 
     echo "Please reboot your system for all changes to take effect."

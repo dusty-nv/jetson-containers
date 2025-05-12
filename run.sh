@@ -309,10 +309,11 @@ if [ -z "${SYSTEM_ARCH}" ]; then
       SYSTEM_ARCH="$TEGRA-$ARCH"
       echo "### Jetson Detected"
     else
-      echo "### x86 Detected"
+      echo "### SBSA Detected"
       SYSTEM_ARCH="$ARCH"
     fi
   else
+    echo "### x86 Detected"
     SYSTEM_ARCH="$ARCH"
   fi
 fi

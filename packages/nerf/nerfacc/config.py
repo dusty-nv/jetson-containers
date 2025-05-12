@@ -25,5 +25,6 @@ def nerfacc(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    nerfacc('0.5.3', default=True)
+    nerfacc('0.5.3'),
+    nerfacc('0.5.4', default=True)
 ]

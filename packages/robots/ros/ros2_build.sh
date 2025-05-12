@@ -38,9 +38,7 @@ apt-get update
 
 # install development packages
 apt-get install -y --no-install-recommends \
-		build-essential \
-		cmake \
-		git \
+		libeigen3-dev \
 		libbullet-dev \
 		libpython3-dev \
 		python3-colcon-common-extensions \
@@ -53,7 +51,15 @@ apt-get install -y --no-install-recommends \
 		python3-rosinstall-generator \
 		libasio-dev \
 		libtinyxml2-dev \
-		libcunit1-dev
+		libcunit1-dev \
+		libacl1-dev \
+		libssl-dev \
+		libxaw7-dev \
+		libfreetype-dev \
+		rti-connext-*-ros
+
+# TODO - track down rest of the RMW middleware options
+# https://docs.ros.org/en/humble/Installation/DDS-Implementations/Working-with-RTI-Connext-DDS.html
 
 # install some pip packages needed for testing
 pip3 install --upgrade \
@@ -68,17 +74,13 @@ pip3 install --upgrade \
 		flake8-quotes \
 		pytest-repeat \
 		pytest-rerunfailures \
-		pytest
+		pytest \
+		lark \
+		scikit-build
 
-# upgrade cmake - https://stackoverflow.com/a/56690743
-# this is needed to build some of the ROS2 packages	  
-# use pip to upgrade cmake instead because of kitware's rotating GPG keys:
-# https://github.com/dusty-nv/jetson-containers/issues/216			  
-python3 -m pip install --upgrade pip
-pip3 install scikit-build
-pip3 install --upgrade "cmake<4.0.0"
-cmake --version
-which cmake
+# restore cmake and numpy versions
+bash /tmp/cmake/install.sh
+bash /tmp/numpy/install.sh
 
 # remove other versions of Python3
 # workaround for 'Could NOT find Python3 (missing: Python3_NumPy_INCLUDE_DIRS Development'
@@ -89,8 +91,17 @@ ls -ll /usr/bin/python*
 mkdir -p ${ROS_ROOT}/src
 cd ${ROS_ROOT}
 
-# skip installation of some conflicting packages
-SKIP_KEYS="libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv"
+# install additional rosdep entries
+ROSDEP_DIR="/etc/ros/rosdep/sources.list.d"
+mkdir -p $ROSDEP_DIR || true;
+
+cp $TMP/rosdeps.yml $ROSDEP_DIR/extra-rosdeps.yml
+echo "yaml file://$ROSDEP_DIR/extra-rosdeps.yml" | \
+tee $ROSDEP_DIR/00-extras.list
+
+# skip installation of some conflicting packages (these now get handled in rosdeps.yml)
+#SKIP_KEYS="libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv"
+SKIP_KEYS=""
 
 # patches for building Humble on 18.04
 if [ "$ROS_DISTRO" = "humble" ] || [ "$ROS_DISTRO" = "iron" ] && [ $(lsb_release --codename --short) = "bionic" ]; then
@@ -103,10 +114,6 @@ if [ "$ROS_DISTRO" = "humble" ] || [ "$ROS_DISTRO" = "iron" ] && [ $(lsb_release
 	export CXX="/usr/bin/g++-8"
 	echo "CC=$CC CXX=$CXX"
 
-	# upgrade pybind11
-	apt-get purge -y pybind11-dev
-	pip3 install --upgrade pybind11-global
-   
 	# https://github.com/dusty-nv/jetson-containers/issues/160#issuecomment-1429572145
 	git -C /tmp clone -b yaml-cpp-0.6.0 https://github.com/jbeder/yaml-cpp.git
 	cmake -S /tmp/yaml-cpp -B /tmp/yaml-cpp/BUILD -DBUILD_SHARED_LIBS=ON
@@ -188,14 +195,23 @@ rosdep keys \
 	| xargs rosdep resolve \
 	| grep -v \# \
 	| grep -v opencv \
+	| grep -v pybind11 \
 	> rosdeps.txt
 
 rosdep_install
 
+# restore cmake and numpy versions
+bash /tmp/cmake/install.sh
+bash /tmp/numpy/install.sh
+
 # build it all - for verbose, see https://answers.ros.org/question/363112/how-to-see-compiler-invocation-in-colcon-build
 colcon build \
 	--merge-install \
-	--cmake-args -DCMAKE_BUILD_TYPE=Release 
+	--cmake-args \
+	-Wno-dev -Wno-deprecated \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_POLICY_DEFAULT_CMP0148=OLD
+	#-DCMAKE_WARN_DEPRECATED=OFF
     
 # remove build files
 rm -rf ${ROS_ROOT}/src

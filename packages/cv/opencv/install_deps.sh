@@ -20,12 +20,6 @@ fi
 
 apt-get update
 apt-get install -y --no-install-recommends \
-        build-essential \
-        gfortran \
-        cmake \
-        git \
-        file \
-        tar \
         libatlas-base-dev \
         libavcodec-dev \
         libavformat-dev \
@@ -56,6 +50,8 @@ apt-get install -y --no-install-recommends \
         qv4l2 \
         v4l-utils \
         zlib1g-dev \
+        file \
+        tar \
         $EXTRAS
 
 # on x86, the python dev packages are already installed in the NGC containers under conda
@@ -69,19 +65,12 @@ if [ $ARCH != "x86_64" ]; then
   fi
 
 	apt-get install -y --no-install-recommends \
-		python3-pip \
-		python3-dev \
-    $DIST_EXTRAS
-
-	python3 -c 'import numpy; print("NumPy version before installation:", numpy.__version__)' 2>/dev/null
-
-  if [ $? != 0 ]; then
-      echo "NumPy not found. Installing NumPy 2.0..."
-      apt-get update
-      # apt-get install -y --no-install-recommends python3-numpy
-      python3 -m pip install "numpy>=2.0.0" --break-system-packages
-  fi
+		python3-pip python3-dev $DIST_EXTRAS
 fi
+
+# restore cmake and numpy versions
+bash /tmp/cmake/install.sh
+bash /tmp/numpy/install.sh
 
 rm -rf /var/lib/apt/lists/*
 apt-get clean

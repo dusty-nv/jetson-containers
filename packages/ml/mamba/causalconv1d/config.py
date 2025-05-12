@@ -1,4 +1,5 @@
-from jetson_containers import CUDA_ARCHITECTURES
+from jetson_containers import CUDA_VERSION
+from packaging.version import Version
 
 def causalconv1d(version, version_spec=None, requires=None, default=False):
     pkg = package.copy()
@@ -9,7 +10,6 @@ def causalconv1d(version, version_spec=None, requires=None, default=False):
     pkg['name'] = f'causalconv1d:{version}'
 
     pkg['build_args'] = {
-        'CUDAARCHS': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
         'CASUALCONV1D_VERSION': version,
         'CASUALCONV1D_VERSION_SPEC': version_spec if version_spec else version,
     }

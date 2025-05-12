@@ -29,6 +29,6 @@ def faiss(version, branch=None, requires=None, default=False):
     return pkg, builder
     
 package = [
-    faiss('1.11.0', default=True),
+    faiss('1.12.0', default=True),
     #faiss('be12427', default=True),  # known good build on JP5/JP6 from 12/12/2023
 ]

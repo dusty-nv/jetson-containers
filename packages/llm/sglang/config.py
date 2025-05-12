@@ -1,3 +1,5 @@
+from jetson_containers import CUDA_VERSION, IS_SBSA
+from packaging.version import Version
 
 def sglang(version, version_spec=None, requires=None, default=False):
     pkg = package.copy()
@@ -13,6 +15,7 @@ def sglang(version, version_spec=None, requires=None, default=False):
     pkg['build_args'] = {
         'SGLANG_VERSION': version,
         'SGLANG_VERSION_SPEC': version_spec,
+        'IS_SBSA': IS_SBSA
     }
 
     builder = pkg.copy()
@@ -28,5 +31,6 @@ def sglang(version, version_spec=None, requires=None, default=False):
 
 package = [
     sglang('0.4.4', '0.4.3.post2', default=False),
-    sglang('0.4.6', '0.4.5', default=True),
+    sglang('0.4.6', '0.4.6', default=False),
+    sglang('0.4.7', '0.4.6.post3', default=True),
 ]

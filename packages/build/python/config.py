@@ -6,8 +6,8 @@ def python(version, requires=None) -> list:
     pkg = package.copy()
 
     pkg['name'] = f'python:{version}'
-    pkg['build_args'] = {'PYTHON_VERSION_ARG': version}
-
+    pkg['build_args'] = {'PYTHON_VERSION': version}
+    
     if Version(version) == PYTHON_VERSION:
         pkg['alias'] = 'python'
 

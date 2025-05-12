@@ -17,14 +17,29 @@ This backend is currently slower than `kokoro-tts:fastapi`, which also implement
 ## Build
 
 ```bash
-LSB_RELEASE=24.04 jetson-containers build speaches
+CUDA_VERSION=12.8 LSB_RELEASE=24.04 PYTHON_VERSION=3.12 jc build speaches
 ```
 
 or
 
 ```bash
-LSB_RELEASE=24.04 jetson-containers build --build-args=PIP_RETRIES:10,PIP_TIMEOUT:60 speaches
+CUDA_VERSION=12.8 LSB_RELEASE=24.04 PYTHON_VERSION=3.12  jetson-containers build --build-args=PIP_RETRIES:10,PIP_TIMEOUT:60 speaches
 ```
+
+## Run
+
+Run it with:
+```
+docker run -it --rm --network=host <docker-image-name>
+```
+
+
+Speaches site is at:
+```
+http://localhost:8000/
+```
+
+
 
 ## Contributing
 

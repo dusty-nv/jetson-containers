@@ -112,10 +112,19 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False, **kwargs):
     package = {
         'path': path,
         'requires': '>=32.6',
-        'postfix': f'r{L4T_VERSION}' if SYSTEM_ARM else DOCKER_ARCH,
+        'postfix': '',
         'config': [],
         'test': []
     }
+
+    # assign default tag based on platform arch (L4T, SBSA, x86)
+    if SYSTEM_ARM:
+        if L4T_VERSION >= Version('36.4'):
+            package['postfix'] = f'r{L4T_VERSION.major}.{L4T_VERSION.minor}' # r36.4, r38.4
+        else:
+            package['postfix'] = f'r{L4T_VERSION}' # r32.7.1
+    else:
+        package['postfix'] = DOCKER_ARCH # amd64, sbsa
 
     # add CUDA and Python postfixes when they are non-standard versions
     HAS_ENV = {
@@ -123,14 +132,14 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False, **kwargs):
         for x in ['CUDA_VERSION', 'PYTHON_VERSION', 'LSB_RELEASE']
     }
 
-    if HAS_ENV['CUDA_VERSION'] or HAS_ENV['LSB_RELEASE'] or not SYSTEM_ARM:
-        package['postfix'] = package['postfix'] + f"-cu{CUDA_VERSION.major}{CUDA_VERSION.minor}"
-
     if HAS_ENV['PYTHON_VERSION']:
         package['postfix'] = package['postfix'] + f"-cp{PYTHON_VERSION.major}{PYTHON_VERSION.minor}"
 
-    if HAS_ENV['LSB_RELEASE'] or not SYSTEM_ARM:
-        package['postfix'] = package['postfix'] + f"-{LSB_RELEASE}"
+    #if HAS_ENV['CUDA_VERSION'] or HAS_ENV['LSB_RELEASE'] or not SYSTEM_ARM:
+    package['postfix'] = package['postfix'] + f"-cu{CUDA_VERSION.major}{CUDA_VERSION.minor}"
+
+    #if HAS_ENV['LSB_RELEASE'] or not SYSTEM_ARM:
+    package['postfix'] = package['postfix'] + f"-{LSB_RELEASE}"
 
     # skip recursively searching under these packages
     PRELOAD = ['robots/ros']
@@ -372,10 +381,12 @@ def resolve_dependencies(packages, check=True, skip_packages=[]):
         if not changed:
             break
         iterations = iterations + 1
+        if iterations > int(max_iterations * 0.95):
+            log_warning(f"reaching maximum recursion depth resolving dependencies for {packages_copy} ({iterations} of {max_iterations})\n{packages}")
         if iterations > max_iterations:
             raise RecursionError(f"infinite recursion detected resolving dependencies for {packages_copy}\n{packages}")
 
-            # make sure all packages can be found
+    # make sure all packages can be found
     if check:
         for package in packages:
             find_package(package)

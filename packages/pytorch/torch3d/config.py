@@ -26,6 +26,6 @@ def pytorch3d(version, requires=None, default=False):
     
  
 package = [
-    pytorch3d('0.7.8', requires='==36.*', default=True),
-    pytorch3d('0.7.9', requires='==36.*', default=False),
+    pytorch3d('0.7.8', requires='==36.*', default=False),
+    pytorch3d('0.7.9', requires='==36.*', default=True),
 ]

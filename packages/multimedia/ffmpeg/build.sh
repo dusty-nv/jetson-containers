@@ -6,7 +6,7 @@ SOURCE="/opt/ffmpeg"
 DIST="$SOURCE/dist"
 
 echo "BUILDING FFMPEG $FFMPEG_VERSION to $DIST"
-wget https://www.ffmpeg.org/releases/ffmpeg-$FFMPEG_VERSION.tar.gz
+wget $WGET_FLAGS https://www.ffmpeg.org/releases/ffmpeg-$FFMPEG_VERSION.tar.gz
 tar -xvzf ffmpeg-$FFMPEG_VERSION.tar.gz
 
 mv ffmpeg-${FFMPEG_VERSION} ffmpeg

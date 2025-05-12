@@ -8,7 +8,7 @@ from typing import Tuple, Optional
 from requests.exceptions import RequestException, Timeout, ConnectionError, HTTPError
 from urllib3.exceptions import MaxRetryError, ProtocolError
 
-from jetson_containers import github_latest_tag, log_warning
+from jetson_containers import github_latest_tag, log_warning, log_verbose
 
 # Default versions as fallback
 DEFAULT_VERSIONS = {
@@ -26,7 +26,7 @@ CACHE_DURATION = 3600  # 1 hour in seconds
 def ensure_cache_dir():
     """Ensure the cache directory exists."""
     if not os.path.exists(CACHE_DIR):
-        log_warning(f"Creating cache directory: {CACHE_DIR}")
+        log_verbose(f"Creating cache directory: {CACHE_DIR}")
         os.makedirs(CACHE_DIR, exist_ok=True)
 
 
@@ -34,18 +34,18 @@ def load_cached_versions() -> Optional[dict]:
     """Load versions from cache if they exist and are not expired."""
     try:
         if not os.path.exists(CACHE_FILE):
-            log_warning(f"Cache file does not exist: {CACHE_FILE}")
+            log_verbose(f"Cache file does not exist: {CACHE_FILE}")
             return None
 
         # Check if cache is expired
         cache_age = time.time() - os.path.getmtime(CACHE_FILE)
         if cache_age > CACHE_DURATION:
-            log_warning(f"Cache expired (age: {cache_age:.1f}s > {CACHE_DURATION}s)")
+            log_verbose(f"Cache expired (age: {cache_age:.1f}s > {CACHE_DURATION}s)")
             return None
 
         with open(CACHE_FILE, 'r') as f:
             versions = json.load(f)
-            log_warning(f"Loaded versions from cache: {versions}")
+            log_verbose(f"Loaded versions from cache: {versions}")
             return versions
     except Exception as e:
         log_warning(f"Failed to load cached versions: {str(e)}")
@@ -58,7 +58,7 @@ def save_versions_to_cache(versions: dict):
         ensure_cache_dir()
         with open(CACHE_FILE, 'w') as f:
             json.dump(versions, f)
-        log_warning(f"Saved versions to cache: {versions}")
+        log_verbose(f"Saved versions to cache: {versions}")
     except Exception as e:
         log_warning(f"Failed to save versions to cache: {str(e)}")
 
@@ -102,7 +102,7 @@ def fetch_with_retry(url: str, max_retries: int = 5, initial_delay: int = 5) -> 
                 pool_maxsize=1
             ))
 
-            log_warning(f"Attempting to fetch {url} (attempt {attempt + 1}/{max_retries})")
+            log_verbose(f"Attempting to fetch {url} (attempt {attempt + 1}/{max_retries})")
             response = session.get(url, timeout=timeout, headers=headers, verify=True)
             response.raise_for_status()
             return response.text
@@ -142,7 +142,7 @@ def latest_deps_versions(branch_name: str) -> Tuple[Optional[str], Optional[str]
     # Try to load from cache first
     cached_versions = load_cached_versions()
     if cached_versions:
-        log_warning("Using cached versions")
+        log_verbose("Using cached versions")
         return (
             cached_versions.get('BASHIO_VERSION'),
             cached_versions.get('TEMPIO_VERSION'),

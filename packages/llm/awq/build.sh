@@ -3,7 +3,8 @@ set -ex
 
 echo "Building AWQ ${AWQ_VERSION} (kernels=${AWQ_KERNEL_VERSION})"
 
-git clone --branch=${AWQ_BRANCH} --depth=1 https://github.com/${AWQ_REPO} awq
+git clone --branch=${AWQ_BRANCH} --depth=1 https://github.com/${AWQ_REPO} awq ||
+git clone --depth=1 https://github.com/${AWQ_REPO} awq
 
 sed -i \
   -e 's|torch==.*"|torch"|g' \

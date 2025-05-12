@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import sys
+import shutil
 import types
 import pprint
 import datetime
@@ -243,7 +244,7 @@ def log_status(text='', prefix='', done=False, **kwargs):
     using it in order for the terminal to properly be reset.
     Using an exception handler to make sure is probably needed.
     """
-    terminal = os.get_terminal_size()
+    terminal = shutil.get_terminal_size(fallback=(80, 24))
     termcode = f'\0337\033[?6l\033[{terminal.lines};1H\033[2K'
 
     if text:

@@ -16,10 +16,13 @@ if [ "$FFMPEG_INSTALL" == "apt" ] || [ "$FFMPEG_INSTALL" == "jetpack" ]; then
   apt-get update
   apt-get install -y --no-install-recommends \
 	    libavcodec-dev \
+      libavdevice-dev \
 	    libavfilter-dev \
 	    libavformat-dev \
 	    libavutil-dev \
-	    libavdevice-dev \
+      libpostproc-dev \
+	    libswscale-dev \
+      libswresample-dev \
       ffmpeg$VERSION
   apt-get clean
   rm -rf /var/lib/apt/lists/*

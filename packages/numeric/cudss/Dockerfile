@@ -11,7 +11,7 @@ ARG CUDSS_URL \
 
 RUN FILENAME=$(basename $CUDSS_URL) ; \
     mkdir $TMP && cd $TMP && \
-    wget --quiet --show-progress --progress=bar:force:noscroll ${CUDSS_URL} && \
+    wget $WGET_FLAGS ${CUDSS_URL} && \
     dpkg -i $FILENAME && \
     cp /var/cudss-local-*/cudss-*-keyring.gpg /usr/share/keyrings/ && \
     apt-get update && \

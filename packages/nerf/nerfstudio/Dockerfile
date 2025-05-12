@@ -2,7 +2,7 @@
 # name: nerfstudio
 # group: nerf
 # config: config.py
-# depends: [transformers, bitsandbytes, diffusers, h5py, ninja, ffmpeg, polyscope, pymeshlab, tinycudann, nerfacc, pycolmap, glomap, hloc, pyceres, gsplat]
+# depends: [transformers, bitsandbytes, diffusers, h5py, ninja, ffmpeg, polyscope, pymeshlab, tinycudann, nerfacc, pycolmap, glomap, hloc, pyceres, gsplat, nerfview]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/nerfstudio-project/nerfstudio.git
@@ -45,7 +45,7 @@ RUN export MAKEFLAGS="-j$(nproc)"
 # Add glog path to LD_LIBRARY_PATH.
 ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib"
 
-RUN python3 -m pip install --upgrade pip setuptools promise pybind11 omegaconf
+RUN python3 -m pip install --upgrade pip setuptools promise omegaconf
 
 EXPOSE 7007
 

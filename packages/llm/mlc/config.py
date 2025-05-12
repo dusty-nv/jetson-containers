@@ -1,5 +1,5 @@
 
-from jetson_containers import L4T_VERSION
+from jetson_containers import L4T_VERSION, update_dependencies
 
 def mlc(commit, patch=None, version='0.1', tvm='0.15', llvm=17, requires=None, default=False):
     pkg = package.copy()
@@ -12,13 +12,13 @@ def mlc(commit, patch=None, version='0.1', tvm='0.15', llvm=17, requires=None, d
 
     pkg['name'] = f'mlc:{version}'
     pkg['notes'] = f"[mlc-ai/mlc-llm](https://github.com/mlc-ai/mlc-llm/tree/{commit}) commit SHA [`{commit}`](https://github.com/mlc-ai/mlc-llm/tree/{commit})"
-    
+    pkg['depends'] = update_dependencies(pkg['depends'], [f'llvm:{llvm}'])
+
     pkg['build_args'] = {
         'MLC_VERSION': version,
         'MLC_COMMIT': commit,
         'MLC_PATCH': patch,
         'TVM_VERSION': tvm,
-        'LLVM_VERSION': llvm
     }
     
     builder = pkg.copy()
@@ -36,6 +36,5 @@ package = [
     mlc('6da6aca', 'patches/6da6aca.diff', version='0.1.3', tvm='0.18.1', requires='>=36'),  # 10/18/2024
     mlc('385cef2', 'patches/385cef2.diff', version='0.1.4', tvm='0.19.0', requires='>=36'),  # 12/14/2024
     mlc('cf7ae82', 'patches/cf7ae82.diff', version='0.19.0', tvm='0.19.0', requires='>=36', default=True), # 01/09/2025
-    mlc('b636b2a', 'patches/b636b2a.diff', version='0.20.0', tvm='0.20.0', requires='>=36'), # 12/06/2025
+    mlc('d2118b3', 'patches/d2118b3.diff', version='0.20.0', tvm='0.20.0', requires='>=36'), # 5/1/2025
 ]
-

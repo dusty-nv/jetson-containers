@@ -41,7 +41,7 @@ if [[ $1 == http* ]]; then
 
     cd $ROS_WORKSPACE
 
-    COLCON_FLAGS="$COLCON_FLAGS --cmake-args -DBUILD_TESTING=OFF" #--packages-up-to $(basename $1)"
+    COLCON_FLAGS="$COLCON_FLAGS" #--packages-up-to $(basename $1)"
     rosinstall_list="$(basename $1).rosinstall"
 
     rosinstall_generator ${ROS_INSTALL_FLAGS} --from-path src > $rosinstall_list || \
@@ -74,7 +74,7 @@ rosdep install -y \
 rm -rf /var/lib/apt/lists/*
 apt-get clean
 
-colcon build ${COLCON_FLAGS}
+colcon build ${COLCON_FLAGS} --cmake-args -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF 
 
 #rm -rf ${ROS_WORKSPACE}/src
 #rm -rf ${ROS_WORKSPACE}/logs

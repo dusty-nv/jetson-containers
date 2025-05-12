@@ -8,7 +8,6 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-RUN set -ex \
-    && pip3 install --force-reinstall cmake \
-    && cmake --version \
-    && which cmake
+#ENV CMAKE_POLICY_VERSION_MINIMUM="3.10"
+COPY install.sh /tmp/cmake/install.sh
+RUN /tmp/cmake/install.sh

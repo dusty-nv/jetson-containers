@@ -4,7 +4,7 @@ from packaging.version import Version
 from .version import PYTORCH_VERSION
     
 
-def pytorch_pip(version, requires=None, alias=None):
+def pytorch_pip(version, requires=None):
     """
     Install PyTorch from pip server with Dockerfile.pip
     """
@@ -48,20 +48,29 @@ def pytorch_pip(version, requires=None, alias=None):
         pkg['requires'] = requires
     
     builder = pkg.copy()
+
     builder['name'] = builder['name'] + '-builder'
     builder['build_args'] = {**builder['build_args'], 'FORCE_BUILD': 'on'}
     
+    all = pkg.copy()
+
+    all['name'] = all['name'] + '-all'
+    all['depends'] = all['depends'] + [ pkg['name'],
+        'torchvision', 'torchaudio', 'torchao',
+        'torch2trt', 'pytorch3d', 'triton',
+        'flash-attention', 'jupyterlab'
+    ]
+
     pkg['alias'] = [f'torch:{short_version}']
+    all['alias'] = [f'torch:{short_version}-all']
     builder['alias'] = [f'torch:{short_version}-builder']
     
     if Version(short_version) == PYTORCH_VERSION:
         pkg['alias'].extend(['pytorch', 'torch'])
+        all['alias'].extend(['pytorch:all', 'torch:all'])
         builder['alias'].extend(['pytorch:builder', 'torch:builder'])
-        
-    if alias:
-        pkg['alias'].append(alias)
 
-    return pkg, builder
+    return pkg, all, builder 
     
     
 def pytorch_wget(version, whl, url, requires, alias=None):
@@ -102,6 +111,7 @@ package = [
     pytorch_pip('2.5', requires='==36.*'),    # without OpenMPI
     pytorch_pip('2.6', requires='==36.*'),    # without OpenMPI
     pytorch_pip('2.7', requires='==36.*'),    # without OpenMPI
+    pytorch_pip('2.8', requires='==36.*'),    # without OpenMPI
 
     # JetPack 4
     pytorch_wget('1.10', 'torch-1.10.0-cp36-cp36m-linux_aarch64.whl', 'https://nvidia.box.com/shared/static/fjtbno0vpo676a25cgvuqc1wty0fkkg6.whl', '==32.*'),

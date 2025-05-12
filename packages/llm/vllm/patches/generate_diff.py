@@ -14,9 +14,10 @@ def modify_CMakeLists(content):
     )
 
     replaced_count = 0
+    cuda_arch_list = os.environ['TORCH_CUDA_ARCH_LIST']
     for line in lines:
         if pattern_set.match(line):
-            new_lines.append('set(CUDA_SUPPORTED_ARCHS "8.7;8.9;9.0;10.0;10.1;11.0;12.0")')
+            new_lines.append(f'set(CUDA_SUPPORTED_ARCHS "{cuda_arch_list}")')
             continue
 
         match = pattern_intersection.match(line)

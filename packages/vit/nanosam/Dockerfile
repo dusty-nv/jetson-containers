@@ -34,7 +34,7 @@ RUN pip3 install timm
 #        --output=data/mobile_sam_mask_decoder.onnx
 
 RUN mkdir /opt/nanosam/data && \
-    wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate \
+    wget $WGET_FLAGS \
 	 https://nvidia.box.com/shared/static/ho09o7ohgp7lsqe0tcxqu5gs2ddojbis.onnx \
 	 -O /opt/nanosam/data/mobile_sam_mask_decoder.onnx
 
