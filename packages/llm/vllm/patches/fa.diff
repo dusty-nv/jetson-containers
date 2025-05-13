@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e4423ef..ad0f98f 100644
+index e4423ef..b007b97 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -22,7 +22,7 @@ set(ignoreMe "${VLLM_PYTHON_PATH}")
