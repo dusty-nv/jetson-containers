@@ -13,9 +13,8 @@ if [ "$FORCE_BUILD" == "on" ]; then
 fi
 
 # install from the Jetson PyPI server ($PIP_INSTALL_URL)
-#pip3 install jax==${JAX_VERSION} jaxlib==${JAX_VERSION}
-pip3 install jaxlib jax_cuda12_plugin opt_einsum
-pip3 install --no-dependencies jax
+pip3 install jaxlib==${JAX_VERSION} jax_cuda12_plugin opt_einsum
+pip3 install --no-dependencies jax==${JAX_VERSION}
 
 if [ $(vercmp "$JAX_VERSION" "0.6.0") -ge 0 ]; then
     pip3 install 'ml_dtypes>=0.5' # missing float4_e2m1fn
