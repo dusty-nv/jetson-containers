@@ -12,7 +12,7 @@ cd /opt/jax
 
 # Build jaxlib from source with detected versions
 BUILD_FLAGS='--disable_nccl '
-BUILD_FLAGS+='--cuda_compute_capabilities="sm_87,sm_89,sm_90,sm_100,sm_101,sm_110,sm_12.0" '
+BUILD_FLAGS+='--cuda_compute_capabilities="sm_87,sm_89,sm_90,sm_100,sm_101" '
 BUILD_FLAGS+='--cuda_version=12.8.1 --cudnn_version=9.8.0 '
 # BUILD_FLAGS+='--bazel_options=--repo_env=LOCAL_CUDA_PATH="/usr/local/cuda-12.8"'
 # BUILD_FLAGS+='--bazel_options=--repo_env=LOCAL_CUDNN_PATH="/opt/nvidia/cudnn/"'
@@ -20,6 +20,21 @@ BUILD_FLAGS+='--output_path=$PIP_WHEEL_DIR '
 BUILD_FLAGS+='--clang_path=/usr/lib/llvm-20/bin/clang'
 
 python3 build/build.py requirements_update
+
+# Start background process to monitor and patch matrix.h
+(
+    while true; do
+        if [ -f "/root/.cache/bazel/_bazel_root/cfd1b2cc6fe180f3eb424db6004de364/external/cutlass_archive/include/cutlass/matrix.h" ]; then
+            echo -e "\e[1;33m[PATCH] Found matrix.h, applying patch...\e[0m"
+            sed -i 's/set_slice3x3/set_slice_3x3/g' /root/.cache/bazel/_bazel_root/cfd1b2cc6fe180f3eb424db6004de364/external/cutlass_archive/include/cutlass/matrix.h
+            echo -e "\e[1;32m[PATCH] Patch applied successfully!\e[0m"
+            break
+        fi
+        sleep 1
+    done
+) &
+
+# Run the build
 python3 build/build.py build $BUILD_FLAGS --wheels=jaxlib,jax-cuda-plugin,jax-cuda-pjrt
 
 # Build the jax pip wheels
