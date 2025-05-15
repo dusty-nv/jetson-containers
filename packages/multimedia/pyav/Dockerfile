@@ -7,6 +7,5 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-# most of this dockerfile was to build ffmpeg
-# with AV1 enabled, and that was moved to ffmpeg
-RUN pip3 install pyav
+# Install PyAV (Python bindings for FFmpeg)
+RUN pip3 install av
