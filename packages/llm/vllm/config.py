@@ -33,7 +33,7 @@ def vllm(version, branch=None, requires=None, default=False, depends=None):
 package = [
     # 0.6.5 compatible with jetson https://github.com/vllm-project/vllm/pull/9735
     vllm(version='0.7.4', default=False),
-    vllm(version='0.8.4', depends=['flashinfer:0.2.1.post1'], default=False),
+    vllm(version='0.8.4', depends=['flashinfer:0.2.1.post2'], default=False),
     vllm(version='0.8.5', depends=['flashinfer:0.2.2.post1'], default=False),
     vllm(version='0.8.6', depends=['flashinfer:0.2.6'], default=True),
 ]
