@@ -17,14 +17,7 @@ ENV XLA_PYTHON_CLIENT_PREALLOCATE=false
 # ENV MUJOCO_PLUGIN_PATH="/usr/local/lib/mujoco/plugin"
 # ENV MUJOCO_GL=egl
 
-
 WORKDIR /opt/pizero
-
-# COPY p0.py /opt/pizero/p0.py
-
-ARG PIZERO_REPO=Physical-Intelligence/openpi \
-    PIZERO_BRANCH=main
-
 
 # Clone and build pizero
 RUN git clone --recurse-submodules https://github.com/Physical-Intelligence/openpi /opt/pizero && \
@@ -78,7 +71,6 @@ RUN cd /opt/pizero && \
     pip3 install -e packages/openpi-client && \
     pip3 install -e .
 
-ARG JAX_VERSION=0.6.0
 RUN cd /opt/wheels && \
     pip3 install jaxlib*.whl jax_cuda12_plugin*.whl jax_cuda12_pjrt*.whl opt_einsum && \
     pip3 install --no-dependencies jax*.whl
