@@ -20,6 +20,21 @@ BUILD_FLAGS+='--output_path=$PIP_WHEEL_DIR '
 BUILD_FLAGS+='--clang_path=/usr/lib/llvm-20/bin/clang'
 
 python3 build/build.py requirements_update
+
+# Start background process to monitor and patch matrix.h
+(
+    while true; do
+        if [ -f "/root/.cache/bazel/_bazel_root/cfd1b2cc6fe180f3eb424db6004de364/external/cutlass_archive/include/cutlass/matrix.h" ]; then
+            echo -e "\e[1;33m[PATCH] Found matrix.h, applying patch...\e[0m"
+            sed -i 's/set_slice3x3/set_slice_3x3/g' /root/.cache/bazel/_bazel_root/cfd1b2cc6fe180f3eb424db6004de364/external/cutlass_archive/include/cutlass/matrix.h
+            echo -e "\e[1;32m[PATCH] Patch applied successfully!\e[0m"
+            break
+        fi
+        sleep 1
+    done
+) &
+
+# Run the build
 python3 build/build.py build $BUILD_FLAGS --wheels=jaxlib,jax-cuda-plugin,jax-cuda-pjrt
 
 # Build the jax pip wheels
