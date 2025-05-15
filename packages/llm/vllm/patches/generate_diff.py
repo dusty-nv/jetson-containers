@@ -5,49 +5,56 @@ import re
 import argparse
 
 def modify_CMakeLists(content):
+    # Set CUDA_SUPPORTED_ARCHS to environment variable
     lines = content.splitlines()
     new_lines = []
     pattern_set = re.compile(r'^\s*set\s*\(\s*CUDA_SUPPORTED_ARCHS\s+["\'].*["\']\s*\)')
-
     pattern_intersection = re.compile(
-        r'^(\s*cuda_archs_loose_intersection\s*\(\s*\w+\s+)"[^"]+"\s+("[^"]+"\s*\))'
+        r'^(\s*cuda_archs_loose_intersection\s*\(\s*\w+\s+)"[^"]*"(.*)'
     )
 
+    replaced_set = False
     replaced_count = 0
-    cuda_arch_list = os.environ['TORCH_CUDA_ARCH_LIST']
+    cuda_arch_list = os.environ.get('TORCH_CUDA_ARCH_LIST', '')
     for line in lines:
-        if pattern_set.match(line):
+        # Replace set(CUDA_SUPPORTED_ARCHS ...) with env
+        if pattern_set.match(line) and not replaced_set:
             new_lines.append(f'set(CUDA_SUPPORTED_ARCHS "{cuda_arch_list}")')
+            replaced_set = True
             continue
-
+        # Ensure all cuda_archs_loose_intersection use ${CUDA_SUPPORTED_ARCHS}
         match = pattern_intersection.match(line)
         if match:
-            prefix, third = match.groups()
-            new_lines.append(f'{prefix}"${{CUDA_SUPPORTED_ARCHS}}" {third}')
+            prefix, rest = match.groups()
+            new_lines.append(f'{prefix}"${{CUDA_SUPPORTED_ARCHS}}"{rest}')
             replaced_count += 1
             continue
-
         new_lines.append(line)
 
-    print(f"[INFO] Replaced {replaced_count}")
+    print(f"[INFO] Replaced {replaced_count} cuda_archs_loose_intersection instances.")
     return "\n".join(new_lines) + "\n"
 
-
 def modify_vllm_flash_attn_cmake(content):
+    # Insert patch_vllm_flash_attn logic and PATCH_COMMAND if not already present
     lines = content.splitlines()
     new_lines = []
     patch_inserted = False
+    patch_cmd_inserted = False
     for i, line in enumerate(lines):
-        if not patch_inserted and re.match(r'^\s*if\s*\(DEFINED\s+ENV\{VLLM_FLASH_ATTN_SRC_DIR\}\)', line):
+        if (not patch_inserted and 
+            re.match(r'^\s*if\s*\(DEFINED\s+ENV\{VLLM_FLASH_ATTN_SRC_DIR\}\)', line)):
             new_lines.append('set(patch_vllm_flash_attn git apply /tmp/vllm/fa.diff)')
             patch_inserted = True
         new_lines.append(line)
-        if re.search(r'^\s*BINARY_DIR\s+\$\{CMAKE_BINARY_DIR\}/vllm-flash-attn', line):
+        if (not patch_cmd_inserted and
+            re.search(r'^\s*BINARY_DIR\s+\$\{CMAKE_BINARY_DIR\}/vllm-flash-attn', line)):
             new_lines.append('          PATCH_COMMAND ${patch_vllm_flash_attn}')
             new_lines.append('          UPDATE_DISCONNECTED 1')
+            patch_cmd_inserted = True
     return "\n".join(new_lines) + "\n"
 
 def modify_guided_decoding_init(content):
+    # Removes block between xgrammar comments
     lines = content.splitlines()
     new_lines = []
     skip = False
@@ -92,6 +99,8 @@ def main():
     files_to_modify = {
         os.path.join(base_dir, "CMakeLists.txt"): modify_CMakeLists,
         os.path.join(base_dir, "cmake", "external_projects", "vllm_flash_attn.cmake"): modify_vllm_flash_attn_cmake,
+        # You can add more files as needed:
+        # os.path.join(base_dir, ...): modify_guided_decoding_init,
     }
     diff_dir = "/tmp/vllm"
     os.makedirs(diff_dir, exist_ok=True)
