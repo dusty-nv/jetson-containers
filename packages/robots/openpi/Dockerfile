@@ -1,5 +1,5 @@
 #---
-# name: pizero
+# name: openpi
 # group: robots
 # docs: docs.md
 # depends: [jax, pytorch, transformers, lerobot, opencv:4.11.0, pyav]
