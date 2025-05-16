@@ -17,11 +17,11 @@ ENV XLA_PYTHON_CLIENT_PREALLOCATE=false
 # ENV MUJOCO_PLUGIN_PATH="/usr/local/lib/mujoco/plugin"
 # ENV MUJOCO_GL=egl
 
-WORKDIR /opt/pizero
+WORKDIR /opt/openpi
 
-# Clone and build pizero
-RUN git clone --recurse-submodules https://github.com/Physical-Intelligence/openpi /opt/pizero && \
-    cd /opt/pizero && \
+# Clone and build openpi
+RUN git clone --recurse-submodules https://github.com/Physical-Intelligence/openpi /opt/openpi && \
+    cd /opt/openpi && \
     sed -i '/"torch[^"]*",/d' pyproject.toml && \
     sed -i '/"opencv-python[^"]*",/d' pyproject.toml && \
     sed -i '/"transformers[^"]*",/d' pyproject.toml && \
@@ -66,8 +66,10 @@ RUN pip3 install --no-cache-dir --extra-index-url https://pypi.org/simple --inde
 # Install gym-aloha without dependencies first
 RUN pip3 install --no-cache-dir --no-deps gym-aloha>=0.1.1
 
+COPY benchmark_pi0_droid.py /opt/openpi/benchmark_pi0_droid.py
+
 # Install local packages
-RUN cd /opt/pizero && \
+RUN cd /opt/openpi && \
     pip3 install -e packages/openpi-client && \
     pip3 install -e .
 
