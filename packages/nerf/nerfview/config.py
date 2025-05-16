@@ -15,6 +15,7 @@ def nerfview(version, requires=None, default=False):
 
     builder['name'] = f'nerfview:{version}-builder'
     builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
+    builder['depends'] = builder['depends'] + ['gsplat']
 
     if default:
         pkg['alias'] = 'nerfview'
