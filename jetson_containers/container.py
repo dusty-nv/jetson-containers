@@ -261,7 +261,7 @@ def build_container(
                 if spaces_needed > 0:
                     status_text = status_text + ' ' * spaces_needed
                 log_status(f"{status_text}{time_text}")
-                test_container(name, package, simulate)
+                test_container(name, package, simulate, build_idx=idx)
                 timer.next_stage()
 
     # push container
