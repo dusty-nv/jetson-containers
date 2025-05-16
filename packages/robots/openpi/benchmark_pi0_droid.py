@@ -8,6 +8,16 @@ from openpi.training import config as _config
 from openpi.training import data_loader as _data_loader
 
 import jax
+
+# Configure JAX matrix multiplication precision
+# Available options:
+# - 'default': Uses device default precision
+# - 'float32': Full float32 precision (highest accuracy)
+# - 'float16': Half precision (faster, lower accuracy)
+# - 'bfloat16': Brain floating point (good balance)
+# - 'tensorfloat32': TF32 on Ampere+ GPUs (speed/accuracy tradeoff)
+jax.config.update('jax_default_matmul_precision', 'default')
+
 import sys, os, time
 import numpy as np
 
@@ -27,7 +37,7 @@ policy = _policy_config.create_trained_policy(config, checkpoint_dir)
 
 # Run inference on a dummy example. This example corresponds to observations produced by the DROID runtime.
 example = droid_policy.make_droid_example()
-for k,v in example.items():    
+for k,v in example.items():
     print(f"{k}: {v.shape if isinstance(v, np.ndarray) else v}")
 result = policy.infer(example)
 print("Actions shape:", result["actions"].shape)
