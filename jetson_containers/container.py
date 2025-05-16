@@ -172,7 +172,7 @@ def build_container(
         container_name = f"{name}-{package.replace(':','_')}"
 
         # generate the logging file (without the extension)
-        log_file = os.path.join(get_log_dir('build'), container_name.replace('/','_')).replace(':','_')
+        log_file = os.path.join(get_log_dir('build'), f"{idx+1:02d}o{len(packages)}_{container_name.replace('/','_')}").replace(':','_')
 
         if 'dockerfile' in pkg:
             cmd = f"{sudo_prefix()}DOCKER_BUILDKIT=0 docker build --network=host" + _NEWLINE_
@@ -241,7 +241,7 @@ def build_container(
                 if spaces_needed > 0:
                     status_text = status_text + ' ' * spaces_needed
                 log_status(f"{status_text}{time_text}")
-                test_container(container_name, pkg, simulate)
+                test_container(container_name, pkg, simulate, build_idx=idx)
 
         # use this container as the next base
         base = container_name
@@ -261,7 +261,7 @@ def build_container(
                 if spaces_needed > 0:
                     status_text = status_text + ' ' * spaces_needed
                 log_status(f"{status_text}{time_text}")
-                test_container(name, package, simulate)
+                test_container(name, package, simulate, build_idx=idx)
                 timer.next_stage()
 
     # push container
@@ -381,7 +381,7 @@ def push_container(name, repository='', simulate=False):
     return name
 
 
-def test_container(name, package, simulate=False):
+def test_container(name, package, simulate=False, build_idx=None):
     """
     Run tests on a container
     """
@@ -390,18 +390,18 @@ def test_container(name, package, simulate=False):
     if 'test' not in package:
         return True
 
-    for test in package['test']:
+    for idx, test in enumerate(package['test']):
         test_cmd = test.split(' ')  # test could be a command with arguments
         test_exe = test_cmd[0]      # just get just the script/executable name
         test_ext = os.path.splitext(test_exe)[1]
-        log_file = os.path.join(get_log_dir('test'), f"{name.replace('/','_')}_{test_exe}").replace(':','_')
+        log_file = os.path.join(get_log_dir('test'), f"{build_idx+1:02d}-{idx+1}_{name.replace('/','_')}_{test_exe}").replace(':','_')
 
         cmd = f"{sudo_prefix()}docker run -t --rm --network=host "
 
         if IS_TEGRA:
-            cmd += f"--runtime=nvidia" + _NEWLINE_ 
+            cmd += f"--runtime=nvidia" + _NEWLINE_
         else:
-            cmd += f"--gpus=all" + _NEWLINE_ 
+            cmd += f"--gpus=all" + _NEWLINE_
             cmd += f"  --env NVIDIA_DRIVER_CAPABILITIES=all" + _NEWLINE_
 
         cmd += f"  --volume {package['path']}:/test" + _NEWLINE_
