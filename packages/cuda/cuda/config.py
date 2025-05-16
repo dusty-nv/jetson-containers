@@ -152,14 +152,19 @@ def pip_cache(version, requires=None):
     pip_cache['test'] = []
 
     pip_cache['build_args'] = {
-        'TAR_INDEX_URL': f"https://apt.{index_host}/{apt_path}",
+        'TAR_INDEX_URL': os.environ.get('LOCAL_TAR_INDEX_URL', f"https://apt.{index_host}") + f"/{apt_path}",
+        'FALLBACK_TAR_INDEX_URL': f"https://apt.{index_host}/{apt_path}",
         'MULTIARCH_URL': f"https://apt.{index_host}/multiarch",
         'DOWNLOADS_URL': f"https://apt.{index_host}/assets",
-        'PIP_INDEX_REPO': f"https://pypi.{index_host}/{pip_path}",
-        #'PIP_TRUSTED_HOSTS': index_host,
-        'PIP_UPLOAD_REPO': os.environ.get('PIP_UPLOAD_REPO', f"{os.environ.get('PIP_UPLOAD_HOST', 'http://localhost')}/{pip_path}"),
+
+        'PIP_INDEX_REPO': os.environ.get('LOCAL_PIP_INDEX_URL', os.environ.get('LOCAL_PIP_INDEX_REPO', f"https://pypi.{index_host}") + f"/{pip_path}"),
+        'PIP_TRUSTED_HOSTS': f"{os.environ.get('PIP_UPLOAD_HOST', index_host)}",
+        'PIP_EXTRA_INDEX_URL': f"https://pypi.{index_host}/{pip_path}",
+
+        'PIP_UPLOAD_REPO': os.environ.get('PIP_UPLOAD_REPO', f"http://{os.environ.get('PIP_UPLOAD_HOST', 'localhost')}/{pip_path}"),
         'PIP_UPLOAD_USER': os.environ.get('PIP_UPLOAD_USER', f"jp{JETPACK_VERSION.major}" if SYSTEM_ARM else 'amd64'),
         'PIP_UPLOAD_PASS': os.environ.get('PIP_UPLOAD_PASS', 'none'),
+        
         'SCP_UPLOAD_URL': os.environ.get('SCP_UPLOAD_URL', f"{os.environ.get('SCP_UPLOAD_HOST', 'localhost:/dist')}/{apt_path}"),
         'SCP_UPLOAD_USER': os.environ.get('SCP_UPLOAD_USER'),
         'SCP_UPLOAD_PASS': os.environ.get('SCP_UPLOAD_PASS'),

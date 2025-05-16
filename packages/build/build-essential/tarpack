@@ -11,8 +11,9 @@ mkdir -p ${TARPACK_TMPDIR}/uploads
 
 if [ "${COMMAND}" == "install" ]; then
 	cd ${TARPACK_TMPDIR}
-	wget ${WGET_FLAGS} ${TAR_INDEX_URL}/${PACKAGE}.tar.gz
-	wget ${WGET_FLAGS} ${TAR_INDEX_URL}/${PACKAGE}.sha256
+	# First try to download from local APT server, if that fails, then download from apt.jetson-ai-lab.dev:
+	wget ${WGET_FLAGS} ${TAR_INDEX_URL}/${PACKAGE}.tar.gz || wget ${WGET_FLAGS} ${FALLBACK_TAR_INDEX_URL}/${PACKAGE}.tar.gz
+	wget ${WGET_FLAGS} ${TAR_INDEX_URL}/${PACKAGE}.sha256 || wget ${WGET_FLAGS} ${FALLBACK_TAR_INDEX_URL}/${PACKAGE}.sha256
 	ls -ll ${PACKAGE}.tar.gz
 	cat ${PACKAGE}.sha256
 	sha256sum --check ${PACKAGE}.sha256
