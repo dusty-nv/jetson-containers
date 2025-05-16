@@ -9,7 +9,7 @@ FROM ${BASE_IMAGE}
 
 ARG PIPER_VERSION=master \
     PIPER_PHONEMIZE_VERSION=master \
-    ONNXRUNTIME_DIR=/usr/local
+    ONNXRUNTIME_DIR=/opt/onnxruntime/install
 
 # make PIPER_CACHE a default mounted location available for downloading the models
 # this still needs to be explicitly passed to piper.get_voices(), ensure_path_exists(), ect.
