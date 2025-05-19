@@ -12,7 +12,7 @@ env
 # cp /tmp/vllm/${VLLM_VERSION}.fa.diff /tmp/vllm/fa.diff
 # git apply /tmp/vllm/${VLLM_VERSION}.diff
 
-if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" ]]; then
+if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
   echo "Applying vLLM CMake patches…"
   python3 /tmp/vllm/generate_diff.py                      # (re)generate the .diff files
   git apply -p1 /tmp/vllm/CMakeLists.txt.diff             # patch CMakeLists.txt
