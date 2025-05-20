@@ -177,8 +177,10 @@ RUN apt-get clean
 # USER genai
 
 RUN mv /jetson-services/inference/vlm/config /config
-ENV MAIN_CONFIG_PATH /config/main_config.json
+ENV MAIN_CONFIG_PATH        /config/main_config.json
 ENV CHAT_SERVER_CONFIG_PATH /config/chat_server_config.json
+ENV MAIN_CONFIG_PATH_UNDER_DATA_DIR        /data/configs/vila-microservice/config/main_config.json
+ENV CHAT_SERVER_CONFIG_PATH_UNDER_DATA_DIR /data/configs/vila-microservice/config/chat_server_config.json
 ENV TRANSFORMERS_CACHE /data/models/huggingface
 
 CMD bash -c "/jetson-services/inference/vlm/docker_start.sh | tee -a /data/vlm.log"
