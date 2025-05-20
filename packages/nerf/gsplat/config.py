@@ -23,5 +23,5 @@ def gsplat(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    gsplat('1.5.2', default=True),
+    gsplat('1.5.3', default=True),
 ]
