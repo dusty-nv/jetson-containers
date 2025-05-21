@@ -63,12 +63,12 @@ def handle_json_request(url: str, headers: Dict[str, str] = None,
         if attempt < retries:
             time.sleep(backoff)
         else:
-            log_error(f"All attempts to fetch {url} failed.")
+            raise RuntimeError(f"All {retries} attempts to fetch {url} failed.")
 
     return None
 
 
-@functools.cache
+@functools.lru_cache(maxsize=None)
 def github_api(url: str):
     """
     Sends a request to the GitHub API using the specified URL, including authorization headers if available.
