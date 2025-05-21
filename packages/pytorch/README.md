@@ -87,3 +87,13 @@ jetson-containers build pytorch
 ```
 The dependencies from above will be built into the container, and it'll be tested during.  Run it with [`--help`](/jetson_containers/build.py) for build options.
 </details>
+<details open>
+<summary><b><a id="build">Option: Official PyTorch Wheel</b></summary>
+<br>
+
+If you use want to build PyTorch container by using the official PyTorch Wheel (insitead of the one that was built specifically for Jetson by our community), you can do:
+```bash
+LSB_RELEASE=24.04 jetson-containers build --build-args="PYTORCH_OFFICIAL_WHL:on" pytorch
+```
+It may not support the Jetson's compute capability (`sm_87` for Jetson Orin), so it is recommended to pay close attention to the test result.
+</details>
