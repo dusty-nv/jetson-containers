@@ -2,24 +2,24 @@ from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES, CUDA_SHORT_VERSIO
 from packaging.version import Version
 
 from .version import PYTORCH_VERSION
-    
+
 
 def pytorch_pip(version, requires=None):
     """
     Install PyTorch from pip server with Dockerfile.pip
     """
     pkg = package.copy()
-    
+
     short_version = Version(version.split('-')[0]) # remove any -rc* suffix
     short_version = f"{short_version.major}.{short_version.minor}"
     micro_version = Version(version).micro
-    
+
     if micro_version > 0:
         short_version += f".{micro_version}"
-            
-    pkg['name'] = f'pytorch:{short_version}'    
+
+    pkg['name'] = f'pytorch:{short_version}'
     pkg['dockerfile'] = 'Dockerfile'
-    
+
     if len(version.split('.')) < 3:
         build_version = version + '.0'
     else:
@@ -40,18 +40,19 @@ def pytorch_pip(version, requires=None):
 
     if L4T_VERSION.major >= 36:
         pkg['build_args']['USE_NCCL'] = 1  # NCCL building only on JP6 and newer
-        
+
     if Version(version) >= Version('2.3.1'): # begin disabling MPI with JP 6.1 since GLOO/NCCL is working
         pkg['build_args']['USE_MPI'] = 0     # and to eliminate security vulnerability from MPI packages
-        
+
     if requires:
         pkg['requires'] = requires
-    
+
     builder = pkg.copy()
 
     builder['name'] = builder['name'] + '-builder'
     builder['build_args'] = {**builder['build_args'], 'FORCE_BUILD': 'on'}
-    
+    builder['build_args'] = {**builder['build_args'], 'PYTORCH_OFFICIAL_WHL': 'on'}
+
     all = pkg.copy()
 
     all['name'] = all['name'] + '-all'
@@ -64,31 +65,31 @@ def pytorch_pip(version, requires=None):
     pkg['alias'] = [f'torch:{short_version}']
     all['alias'] = [f'torch:{short_version}-all']
     builder['alias'] = [f'torch:{short_version}-builder']
-    
+
     if Version(short_version) == PYTORCH_VERSION:
         pkg['alias'].extend(['pytorch', 'torch'])
         all['alias'].extend(['pytorch:all', 'torch:all'])
         builder['alias'].extend(['pytorch:builder', 'torch:builder'])
 
-    return pkg, all, builder 
-    
-    
+    return pkg, all, builder
+
+
 def pytorch_wget(version, whl, url, requires, alias=None):
     """
     Download & install PyTorch wheel with Dockerfile
     """
     pkg = package.copy()
-    
+
     pkg['name'] = f'pytorch:{version}'
     pkg['alias'] = [f'torch:{version}']
     pkg['Dockerfile'] = 'Dockerfile.wget'
-    
+
     if Version(version) == PYTORCH_VERSION:
         pkg['alias'].extend(['pytorch', 'torch'])
-    
+
     if alias:
         pkg['alias'].append(alias)
-        
+
     pkg['build_args'] = {
         'PYTORCH_WHL': whl,
         'PYTORCH_URL': url,
@@ -96,7 +97,7 @@ def pytorch_wget(version, whl, url, requires, alias=None):
     }
 
     pkg['requires'] = requires
-    
+
     return pkg
 
 

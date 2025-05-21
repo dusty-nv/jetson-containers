@@ -28,11 +28,28 @@ try:
     print(f'  * CUDA fp16_bf16_reduction_math_sdp {torch.backends.cuda.fp16_bf16_reduction_math_sdp_allowed()}')
 except Exception as error:
     print(f'Exception trying to read PyTorch {torch.__version__} CUDA versions (this may be expected on older versions of PyTorch)\n{error}')
-    
+
 print(f'\ntorch.distributed: {torch.distributed.is_available()}')
-print(f'  * NCCL backend:  {torch.distributed.is_nccl_available()}')
-print(f'  * GLOO backend:  {torch.distributed.is_gloo_available()}')
-print(f'  * MPI backend:   {torch.distributed.is_mpi_available()}\n')
+# NCCL backend check
+try:
+    import torch.distributed.nccl
+    print("  * NCCL backend is present.")
+except ImportError:
+    print("  * NCCL backend is NOT present.")
+
+# GLOO backend check
+try:
+    import torch.distributed.gloo
+    print("  * GLOO backend is present.")
+except ImportError:
+    print("  * GLOO backend is NOT present.")
+
+# MPI backend check
+try:
+    import torch.distributed.mpi
+    print("  * MPI backend is present.\n")
+except ImportError:
+    print("  * MPI backend is NOT present.\n")
 
 # check that version can be parsed
 from packaging import version
@@ -100,5 +117,5 @@ print('Tensor exp (diff) = ' + str(diff))
 
 if diff > 0.1:
     raise ValueError(f'PyTorch CPU tensor vector test failed (exp, diff={diff})')
-    
+
 print('PyTorch OK\n')
