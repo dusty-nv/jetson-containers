@@ -17,6 +17,6 @@ pipe.enable_xformers_memory_efficient_attention()
 
 with torch.inference_mode():
     image = pipe("a small cat").images[0]
-    image.save("tiny_cat.png")
+    image.save("/data/images/tiny_cat.png")
 
 print("xformers + tiny-sd OK ✔")
