@@ -358,6 +358,9 @@ elif [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "x86_64" ]; then
 		--env NVIDIA_DRIVER_CAPABILITIES=all \
 		--volume $ROOT/data:/data \
 		-v /etc/localtime:/etc/localtime:ro -v /etc/timezone:/etc/timezone:ro \
+		--device /dev/snd \
+		$PULSE_AUDIO_ARGS \
+		--device /dev/bus/usb \
 		$OPTIONAL_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $ACM_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
 		$CONTAINER_NAME_FLAGS \
 		"${filtered_args[@]}"

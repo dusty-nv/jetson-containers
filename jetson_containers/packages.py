@@ -73,6 +73,12 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False, **kwargs):
     if _PACKAGE_SCAN and not rescan:
         return _PACKAGES
 
+    # disable parallel scan on python 3.8 due to unknown spin condition
+    THREADING = (
+        Version(f'{sys.version_info.major}.{sys.version_info.minor}') 
+        > Version('3.8')
+    )
+
     # if this is a list of directories, scan each
     if isinstance(package_dirs, list) and len(package_dirs) > 0:
         for path in package_dirs:
@@ -87,10 +93,12 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False, **kwargs):
                 print(f"-- Package {key} has missing dependencies, disabling...  ({error})")
                 del _PACKAGES[key]
 
-        with concurrent.futures.ProcessPoolExecutor() as executor: 
-            executor.map(resolve_package, _PACKAGES.copy())       
-        #for key in _PACKAGES.copy():  # make sure all dependencies are met
-            
+        if THREADING:
+            with concurrent.futures.ProcessPoolExecutor() as executor: 
+                executor.map(resolve_package, _PACKAGES.copy())       
+        else:
+            for key in _PACKAGES.copy():  # make sure all dependencies are met
+                resolve_package(key)
 
         return _PACKAGES
     elif isinstance(package_dirs, str) and len(package_dirs) > 0:
@@ -172,12 +180,16 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False, **kwargs):
             continue
 
         if os.path.isdir(entry_path) and recursive:
-            thread = threading.Thread(
-                target=scan_packages, 
-                kwargs=dict(package_dirs=os.path.join(entry_path, '*'), preload=preload)
-            )
-            threads.append(thread)
-            thread.start()
+            scan_kwargs = dict(package_dirs=os.path.join(entry_path, '*'), preload=preload)
+            if THREADING:
+                thread = threading.Thread(
+                    target=scan_packages, 
+                    kwargs=scan_kwargs,
+                )
+                threads.append(thread)
+                thread.start()
+            else:
+                scan_packages(**scan_kwargs)
         elif os.path.isfile(entry_path):
             if entry.lower() == 'dockerfile':  # entry.lower().find('dockerfile') >= 0:
                 package['dockerfile'] = entry

@@ -134,7 +134,7 @@ sed -i 's/==/>=/g' pyproject.toml
 echo "Patched ${REPO_DIR}/python/pyproject.toml"
 cat pyproject.toml
 
-if [[ -z "${IS_SBSA:-}" || "${IS_SBSA}" == "0" ]]; then
+if [[ -z "${IS_SBSA:-}" || "${IS_SBSA}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
   export CORES=6
 else
   export CORES=32  # GH200

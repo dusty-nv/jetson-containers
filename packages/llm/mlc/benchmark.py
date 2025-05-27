@@ -108,7 +108,7 @@ def load_prompts(prompts):
             for json_prompt in json_prompts:
                 if isinstance(json_prompt, dict):
                     prompt_list.append(json_prompt)  # json_prompt['text']
-                elif ifinstance(json_prompt, str):
+                elif isinstance(json_prompt, str):
                     prompt_list.append(json_prompt)
                 else:
                     raise TypeError(f"{type(json_prompt)}")

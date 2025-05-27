@@ -2,7 +2,7 @@
 # name: nerfview
 # group: nerf
 # config: config.py
-# depends: [pytorch, torchvision, torchaudio, pycolmap, tinycudann, gsplat]
+# depends: [pytorch, torchvision, torchaudio, pycolmap, tinycudann]
 # requires: '>=34.1.0'
 # notes: https://pypi.org/project/nerfview/
 #---
