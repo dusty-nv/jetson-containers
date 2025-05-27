@@ -193,8 +193,12 @@ def latest_deps_versions(branch_name: str) -> Tuple[Optional[str], Optional[str]
 
 def create_package(version, default=False) -> list:
     pkg = package.copy()
-    wanted_version = github_latest_tag('home-assistant/docker-base') if version == 'latest' else version
-    bashio_version, tempio_version, s6_overlay_version = latest_deps_versions(wanted_version)
+    try:
+        wanted_version = github_latest_tag('home-assistant/docker-base') if version == 'latest' else version
+        bashio_version, tempio_version, s6_overlay_version = latest_deps_versions(wanted_version)
+    except Exception as e:
+        print(f"Failed to fetch the latest version of dependencies: {e}")
+        bashio_version, tempio_version, s6_overlay_version = None, None, None
 
     if not all([bashio_version, tempio_version, s6_overlay_version]):
         log_warning("Failed to get dependency versions, using defaults")

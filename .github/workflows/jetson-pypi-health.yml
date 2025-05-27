@@ -2,8 +2,6 @@
 name: Check PyPI Health
 
 on:
-  schedule:
-    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 jobs:
