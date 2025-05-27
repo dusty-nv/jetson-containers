@@ -2,8 +2,9 @@
 # name: pymeshlab
 # group: nerf
 # config: config.py
-# depends: [python, cmake, ninja, numpy, polyscope]
+# depends: [numpy, cmake, ninja, polyscope]
 # requires: '>=34.1.0'
+# test: test.sh
 # notes: https://github.com/cnr-isti-vclab/PyMeshLab.git
 #---
 

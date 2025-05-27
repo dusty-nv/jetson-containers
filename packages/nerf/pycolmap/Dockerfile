@@ -2,7 +2,7 @@
 # name: pycolmap
 # group: nerf
 # config: config.py
-# depends: [torch, torchvision, ffmpeg, python, ninja, cmake, numpy, pyceres]
+# depends: [torch, torchvision, ffmpeg, ninja, cmake, pyceres]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/colmap/colmap.git
@@ -12,11 +12,7 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG PYCOLMAP_VERSION \
-FORCE_BUILD=off
-
-ARG CUDAARCHS
-
-ENV DEBIAN_FRONTEND=noninteractive
+    FORCE_BUILD=off
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \

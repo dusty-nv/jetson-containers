@@ -2,24 +2,20 @@
 set -ex
 
 # Clone the repository if it doesn't exist
-if [ ! -d /opt/pyceres ]; then
+PYCERES_SRC="${PYCERES_SRC:-/opt/pyceres}"
+
+if [ ! -d $PYCERES_SRC ]; then
     echo "Cloning pyceres version ${PYCERES_VERSION}"
-    git clone --branch=v${PYCERES_VERSION} --depth=1 --recursive https://github.com/cvg/pyceres /opt/pyceres ||
-    git clone --depth=1 --recursive https://github.com/cvg/pyceres /opt/pyceres
+    git clone --branch=v${PYCERES_VERSION} --depth=1 --recursive https://github.com/cvg/pyceres $PYCERES_SRC ||
+    git clone --depth=1 --recursive https://github.com/cvg/pyceres $PYCERES_SRC
 fi
 
-# Navigate to the directory containing PyMeshLab's setup.py
-cd /opt/pyceres
-MAX_JOBS=$(nproc) \
-pip3 wheel . -w /opt/pyceres/wheels/ --verbose
+cd $PYCERES_SRC
+export MAX_JOBS=$(nproc)
 
-# Verify the contents of the /opt directory
-ls /opt/pyceres/wheels
-
-# Return to the root directory
-cd /
-
-pip3 install /opt/pyceres/wheels/pyceres*.whl
+# Build & install the pyceres wheel
+pip3 wheel . -w $PIP_WHEEL_DIR --verbose
+pip3 install $PIP_WHEEL_DIR/pyceres*.whl
 
 # Optionally upload to a repository using Twine
-twine upload --verbose /opt/pyceres/wheels/pyceres*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose $PIP_WHEEL_DIR/pyceres*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

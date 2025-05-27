@@ -12,12 +12,6 @@ FROM ${BASE_IMAGE}
 ARG GSPLAT_VERSION \
     FORCE_BUILD=off
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        unzip \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
-    
 COPY build.sh install.sh /tmp/GSPLAT/
 
 RUN /tmp/GSPLAT/install.sh || /tmp/GSPLAT/build.sh

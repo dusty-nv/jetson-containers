@@ -15,8 +15,15 @@ fi
 PYTHON_TAG=$(python3 -c "import sys; print('cp{}{}'.format(sys.version_info.major, sys.version_info.minor))")
 echo "Detected Python tag: ${PYTHON_TAG}"
 
-# Construct the GitHub release URL dynamically using the detected Python tag
-WHL_URL="https://github.com/cnr-isti-vclab/PyMeshLab/releases/download/v${PYMESHLAB_VERSION}/pymeshlab-${PYMESHLAB_VERSION}-${PYTHON_TAG}-${PYTHON_TAG}-manylinux_2_35_aarch64.whl"
+# Detect aarch64/x86_64 tags
+if [ "$(uname -m)" == "aarch64" ]; then
+    PLATFORM_TAG="manylinux_2_35_aarch64"
+else
+    PLATFORM_TAG="manylinux_2_31_x86_64"
+fi
+
+# Construct the GitHub release URL dynamically using the detected tags
+WHL_URL="https://github.com/cnr-isti-vclab/PyMeshLab/releases/download/v${PYMESHLAB_VERSION}/pymeshlab-${PYMESHLAB_VERSION}-${PYTHON_TAG}-${PYTHON_TAG}-${PLATFORM_TAG}.whl"
 echo "Using wheel URL: ${WHL_URL}"
 
 # Install the .whl file directly from the constructed URL
