@@ -98,7 +98,7 @@ active_message = None
 
 #Setup buffer and timer to support multi-frame input to VLM
 frame_buffer = [] #store frames for multi-frame input
-frame_time_gap = config.multi_frame_input_time / config.multi_frame_input / 1000 #calc time betweeen frames to pass to vlm in seconds
+frame_time_gap = config.multi_frame_input_time / config.multi_frame_input / 1000 #calc time between frames to pass to vlm in seconds
 current_gap = frame_time_gap #track time between frames
 
 while True:
@@ -148,7 +148,7 @@ while True:
 
                 # Properly close existing stream if connected
                 if v_input.connected:
-                    logging.warn("A registered stream exists. Closing before connecting to new stream.")
+                    logging.warning("A registered stream exists. Closing before connecting to new stream.")
                     old_id = v_input.camera_id
                     v_input.close_stream()
                     logging.info(f"Closed existing stream with ID: {old_id}")
