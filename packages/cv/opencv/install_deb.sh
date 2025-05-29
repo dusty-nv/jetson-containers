@@ -15,7 +15,8 @@ echo "ARCH:  $ARCH"
 set -ex
 
 # remove previous OpenCV installation if it exists
-apt-get purge -y '.*opencv.*' || echo "previous OpenCV installation not found"
+apt-get purge -y '.*opencv.*' || echo "previous OpenCV deb installation not found"
+pip3 uninstall -y opencv-python || echo "previous OpenCV pip installation not found"
 
 # make sure cmake and numpy are still installed
 bash /tmp/cmake/install.sh
