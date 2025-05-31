@@ -1,0 +1,20 @@
+# https://hub.docker.com/r/tailscale/tailscale
+# docker exec tailscaled tailscale --socket /tmp/tailscaled.sock status
+services:
+  tailscale:
+    image: tailscale/tailscale:stable
+    restart: unless-stopped
+    network_mode: "host"
+    volumes:
+      - /var/lib:/var/lib
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap-add:
+      - NET_ADMIN
+      - NET_RAW
+    #healthcheck:
+    #  test: tailscale --socket /tmp/tailscaled.sock status
+    #  interval: 30s
+    #  timeout: 10s
+    #  retries: 3
+    #  start_period: 40s

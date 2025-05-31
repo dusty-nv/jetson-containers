@@ -1,0 +1,12 @@
+services:
+  yacht:
+    image: selfhostedpro/yacht
+    restart: unless-stopped
+    ports:
+      - "9100:8000"
+    volumes:
+      - ${CACHE_DIR}/yacht:/config
+      - /var/run/docker.sock:/var/run/docker.sock
+    extends:
+      file: ../../templates.yml
+      service: gpus_all
