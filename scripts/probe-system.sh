@@ -7,7 +7,7 @@ ROOT="$(dirname "$(dirname "$(readlink -fm "$0")")")"
 QUIET=false
 
 # Load environment variables from .env
-ENV_FILE="${JETSON_SETUP_ENV_FILE:-.env}"
+ENV_FILE="${JETSON_SETUP_ENV_FILE:-$SCRIPT_DIR/.env}"
 if [ -f "${ENV_FILE}" ]; then
     set -a
     source "${ENV_FILE}"
