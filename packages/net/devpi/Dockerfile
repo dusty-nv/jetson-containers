@@ -1,7 +1,7 @@
 #---
 # name: devpi
 # group: net
-# notes: installs compilers, build tools & configures the default locale
+# notes: installs local devpi server for hosting pip wheels
 #---
 ARG BASE_IMAGE="python:3.10"
 FROM ${BASE_IMAGE}

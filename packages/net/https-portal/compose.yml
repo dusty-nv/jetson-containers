@@ -10,8 +10,8 @@ services:
       - ./index.html:/var/www/vhosts/${HOSTNAME:?error}/index.html
       - ${CACHE_DIR}/ssl_certs:/var/lib/https-portal
       - ${CACHE_DIR}/logs/nginx:/var/log/nginx
-      #- ${SITE_ROOT}/logs/logrotate/state/directory:/var/lib/logrotate/
-      #- ${SITE_ROOT}/files/sftp:/var/www/vhosts/apt.${DOMAIN}
+      #-${CACHE_DIR}/logs/logrotate/state/directory:/var/lib/logrotate/
+      #-${CACHE_DIR}/files/sftp:/var/www/vhosts/apt.${DOMAIN}
     environment:
       ERROR_LOG: /var/log/nginx/error.log
       ACCESS_LOG: /var/log/nginx/access.log
