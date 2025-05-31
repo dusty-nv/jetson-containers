@@ -1,6 +1,6 @@
 #---
 # name: jupyterlab
-# group: ml
+# group: code
 # depends: [cuda, cudnn, tensorrt, cuda-python, pycuda, rust]
 # docs: docs.md
 # notes: will autostart Jupyter server on port 8888 unless container entry CMD is overridden
