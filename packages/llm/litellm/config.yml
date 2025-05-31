@@ -1,0 +1,22 @@
+model_list:
+  - model_name: Qwen2.5-Coder-32B
+    litellm_params:
+      model: openai/Qwen2.5-Coder-32B-FP8-dynamic
+      api_base: http://vllm-qwen25-coder-32b:9001/v1
+      api_key: none
+      max_tokens: 32256
+  - model_name: Qwen3-30B-A3B
+    litellm_params:
+      model: openai/Qwen3-30B-A3B-FP8-dynamic
+      api_base: http://vllm-qwen3-30b-a3b:9002/v1
+      api_key: none
+      max_tokens: 32256
+  - model_name: Devstral-Small-2505
+    litellm_params:
+      model: openai/Devstral-Small-2505
+      api_base: http://vllm-devstral-small-2505:9003/v1
+      api_key: none
+      max_tokens: 130560
+general_settings: 
+  background_health_checks: True # enable background health checks
+  health_check_interval: 300 # frequency of background health checks

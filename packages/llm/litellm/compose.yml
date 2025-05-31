@@ -1,0 +1,16 @@
+services:
+  litellm:
+    image: ${LITELLM_IMAGE}
+    restart: unless-stopped
+    env_file: .env
+    command: --config=/app/config.yml --port=${LITELLM_PORT}
+    volumes:
+      - ./config.yml:/app/config.yml
+    ports:
+      - "${LITELLM_PORT}:${LITELLM_PORT}"
+    healthcheck:
+      test: python -c "import requests; exit() if requests.get(\"http://localhost:${LITELLM_PORT}/health/readiness\").status_code == 200 else exit(1)"
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
