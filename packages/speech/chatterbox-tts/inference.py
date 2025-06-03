@@ -8,5 +8,6 @@ wav = model.generate(text)
 ta.save("test-1.wav", wav, model.sr)
 
 # If you want to synthesize with a different voice, specify the audio prompt
-wav = model.generate(text)
-ta.save("test-1.wav", wav, model.sr)
+reference_audio_path = "path/to/reference_audio.wav"  # Specify the path to the audio prompt
+wav = model.generate(text, reference_audio_path=reference_audio_path)
+ta.save("test-2.wav", wav, model.sr)
