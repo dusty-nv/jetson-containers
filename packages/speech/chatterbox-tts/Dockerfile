@@ -11,7 +11,7 @@ FROM ${BASE_IMAGE}
 
 ARG CHATTERBOX_TTS_VERSION=master
 
-#pip insall librosa perth Transformers
+#pip install librosa pytorch Transformers
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         libsndfile1 \
