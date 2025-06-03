@@ -1,14 +1,5 @@
 #!/usr/bin/env python3
-import os
-import time
-import argparse
 import logging
-import torch
-import soundfile as sf
-
-from datetime import datetime
-from huggingface_hub import snapshot_download
-
 # Default test prompt with phonetically diverse content
 
 def main():
