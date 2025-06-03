@@ -17,13 +17,13 @@ def modify_CMakeLists(content):
     cuda_arch_list = os.environ.get('TORCH_CUDA_ARCH_LIST', '"${CUDA_ARCHS}"')
     for line in lines:
         if pattern_set.match(line):
-            new_lines.append(f'set(CUDA_ARCHS "{cuda_arch_list}")')
+            new_lines.append(f'set(CUDA_SUPPORTED_ARCHS "{cuda_arch_list}")')
             continue
 
         match = pattern_intersection.match(line)
         if match:
             prefix, third = match.groups()
-            new_lines.append(f'{prefix}"${{CUDA_ARCHS}}" {third}')
+            new_lines.append(f'{prefix}"${{CUDA_SUPPORTED_ARCHS}}" {third}')
             replaced_count += 1
             continue
 
