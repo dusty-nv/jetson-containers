@@ -32,7 +32,8 @@ pip3 install \
   uvloop \
   "blobfile>=3.0.0" \
   "anthropic" \
-  "msgspec"
+  "msgspec" \
+  litellm
 
 pip3 install sgl-kernel "sglang[all]~=${SGLANG_VERSION}" || \
 pip3 install sgl-kernel "sglang[all]~=${SGLANG_VERSION_SPEC}"
