@@ -17,7 +17,7 @@ USE_CPP=1 python3 setup.py --verbose bdist_wheel --dist-dir /opt
 cd ../
 rm -rf /opt/torch_memory_saver
 
-pip3 install /opt/torch-memory-saver*.whl
-pip3 show torch-memory-saver && python3 -c 'import torchao; print(torch-memory-saver.__version__);'
+pip3 install /opt/torch_memory_saver*.whl
+pip3 show torch_memory_saver && python3 -c 'import torchao; print(torch_memory_saver.__version__);'
 
-twine upload --verbose /opt/torch-memory-saver*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose /opt/torch_memory_saver*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
