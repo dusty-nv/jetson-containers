@@ -5,7 +5,7 @@ import time
 import shutil
 import requests
 import argparse
-
+import torch
 print('testing torch-memory-saver...')
 import torch_memory_saver
 
