@@ -38,6 +38,8 @@ export SGL_KERNEL_ENABLE_SM110A=1
 export SGL_KERNEL_ENABLE_FA3=1  # Always enabled via CMake
 export DG_JIT_USE_NVRTC=1 # DeepGEMM now supports NVRTC with up to 10x compilation speedup
 
+sed -i -E 's/(set[[:space:]]*\(ENABLE_BELOW_SM90)[[:space:]]+OFF/\1 ON/' CMakeLists.txt
+
 # 🔧 Build step for sgl-kernel
 echo "🔨  Building sgl-kernel…"
 if [[ "${IS_SBSA:-}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
