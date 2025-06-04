@@ -30,7 +30,10 @@ pip3 install \
   "torchao>=0.9.0" \
   uvicorn \
   uvloop \
-  "blobfile>=3.0.0"
+  "blobfile>=3.0.0" \
+  "anthropic" \
+  "msgspec" \
+  litellm
 
 pip3 install sgl-kernel "sglang[all]~=${SGLANG_VERSION}" || \
 pip3 install sgl-kernel "sglang[all]~=${SGLANG_VERSION_SPEC}"

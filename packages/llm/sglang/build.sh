@@ -28,71 +28,25 @@ fi
 echo "Building SGL-KERNEL"
 cd "${REPO_DIR}/sgl-kernel" || exit 1
 
-# Check CUDA version (nvcc must be on PATH)
-CUDA_VERSION=$(nvcc --version \
-  | grep -oP 'release \K[0-9]+\.[0-9]+' \
-  || echo '0.0')
-
-CUDA_MAJOR=${CUDA_VERSION%%.*}
-CUDA_MINOR=${CUDA_VERSION#*.}
-CUDA_NUMERIC=$(( CUDA_MAJOR * 100 + CUDA_MINOR ))
-
-# Clear all feature flags to defaults
-export SGL_KERNEL_ENABLE_BF16=0
-export SGL_KERNEL_ENABLE_FP8=0
-export SGL_KERNEL_ENABLE_FP4=0
-export SGL_KERNEL_ENABLE_SM90A=0
-export SGL_KERNEL_ENABLE_SM100A=0
-export SGL_KERNEL_ENABLE_SM103A=0
-export SGL_KERNEL_ENABLE_SM110A=0
-export SGL_KERNEL_ENABLE_FA3=0  # Always enabled via CMake
+export SGL_KERNEL_ENABLE_BF16=1
+export SGL_KERNEL_ENABLE_FP8=1
+export SGL_KERNEL_ENABLE_FP4=1
+export SGL_KERNEL_ENABLE_SM90A=1
+export SGL_KERNEL_ENABLE_SM100A=1
+export SGL_KERNEL_ENABLE_SM103A=1
+export SGL_KERNEL_ENABLE_SM110A=1
+export SGL_KERNEL_ENABLE_FA3=1  # Always enabled via CMake
 export DG_JIT_USE_NVRTC=1 # DeepGEMM now supports NVRTC with up to 10x compilation speedup
 
-if (( CUDA_NUMERIC >= 1300 )); then
-  echo "CUDA >= 13.0"
-  export SGL_KERNEL_ENABLE_SM110A=1
-
-elif (( CUDA_NUMERIC >= 1209 )); then
-  echo "CUDA >= 12.9"
-  export SGL_KERNEL_ENABLE_SM103A=1
-
-elif (( CUDA_NUMERIC >= 1208 )); then
-  echo "CUDA >= 12.8 (SBSA=${IS_SBSA:-})"
-  export SGL_KERNEL_ENABLE_BF16=1
-  export SGL_KERNEL_ENABLE_FP8=1
-  export SGL_KERNEL_ENABLE_FP4=1
-  export SGL_KERNEL_ENABLE_SM100A=1
-
-  sed -i \
-    -e '/-gencode=arch=compute_75,code=sm_75/d' \
-    -e '/"-O3"/a    "-gencode=arch=compute_87,code=sm_87"' \
-    CMakeLists.txt
-
-  if [[ "${IS_SBSA:-}" == "1" || "${IS_SBSA,,}" == "true" ]]; then
-    export SGL_KERNEL_ENABLE_SM90A=1
-    export SGL_KERNEL_ENABLE_FA3=1
-  fi
-
-else
-  echo "CUDA < 12.8"
-  export SGL_KERNEL_ENABLE_BF16=1  # Only BF16 enabled
-
-  sed -i \
-    -e '/-gencode=arch=compute_75,code=sm_75/d' \
-    -e '/-gencode=arch=compute_80,code=sm_80/d' \
-    -e '/-gencode=arch=compute_89,code=sm_89/d' \
-    -e '/-gencode=arch=compute_90,code=sm_90/d' \
-    -e '/"-O3"/a    "-gencode=arch=compute_87,code=sm_87"' \
-    CMakeLists.txt
-fi
-
-if [[ "${IS_SBSA:-}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
-  # On non-SBSA builds, strip out any automatic FA3=ON
-  sed -i '/^[[:space:]]*set(SGL_KERNEL_ENABLE_FA3[[:space:]]\+ON)/d' CMakeLists.txt
-fi
-
-echo "Patched sgl-kernel/CMakeLists.txt"
-cat CMakeLists.txt
+sed -i -E 's/(set[[:space:]]*\(ENABLE_BELOW_SM90)[[:space:]]+OFF/\1 ON/' CMakeLists.txt
+sed -i -E '/if[[:space:]]*\(ENABLE_BELOW_SM90\)/,/endif\(\)/{
+/"-gencode=arch=compute_89,code=sm_89"/a\
+\    if (CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")\
+\        list(APPEND SGL_KERNEL_CUDA_FLAGS\
+\            "-gencode=arch=compute_87,code=sm_87"\
+\        )\
+\    endif()
+}' CMakeLists.txt
 
 # 🔧 Build step for sgl-kernel
 echo "🔨  Building sgl-kernel…"
@@ -124,11 +78,6 @@ fi
 echo "🔨  Building sglang…"
 cd "${REPO_DIR}/python" || exit 1
 
-# Remove unwanted dependencies in pyproject.toml
-for pkg in torchao flashinfer_python sgl-kernel vllm torch torchvision xgrammar; do
-  sed -i "/${pkg}/d" pyproject.toml
-done
-# Relax any strict version pins
 sed -i 's/==/>=/g' pyproject.toml
 
 echo "Patched ${REPO_DIR}/python/pyproject.toml"

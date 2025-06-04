@@ -1,8 +1,8 @@
 
-def torchao(version, requires=None, default=False):
+def torch_memory_saver(version, requires=None, default=False):
     pkg = package.copy()
     
-    pkg['name'] = f"torchao:{version.split('-')[0]}"  # remove any -rc* suffix
+    pkg['name'] = f"torch-memory-saver:{version.split('-')[0]}"  # remove any -rc* suffix
 
     if requires:
         pkg['requires'] = requires
@@ -11,7 +11,7 @@ def torchao(version, requires=None, default=False):
         version = version + '.0'
         
     pkg['build_args'] = {
-        'TORCHAO_VERSION': version,
+        'TORCH_MEMORY_SAVER_VERSION': version,
     }
     
     builder = pkg.copy()
@@ -19,13 +19,12 @@ def torchao(version, requires=None, default=False):
     builder['build_args'] = {**builder['build_args'], 'FORCE_BUILD': 'on'}
 
     if default:
-        pkg['alias'] = 'torchao'
-        builder['alias'] = 'torchao:builder'
+        pkg['alias'] = 'torch-memory-saver'
+        builder['alias'] = 'torch-memory-saver:builder'
 
     return pkg, builder
     
  
 package = [
-    torchao('0.12.0', requires='==36.*', default=True),
-    torchao('0.13.0', requires='==36.*'),
+    torch_memory_saver('0.7.0', requires='==36.*', default=True),
 ]
