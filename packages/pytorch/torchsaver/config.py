@@ -26,5 +26,5 @@ def torch_memory_saver(version, requires=None, default=False):
     
  
 package = [
-    torch_memory_saver('0.6.0', requires='==36.*', default=True),
+    torch_memory_saver('0.7.0', requires='==36.*', default=True),
 ]
