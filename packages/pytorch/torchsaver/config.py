@@ -2,7 +2,7 @@
 def torch_memory_saver(version, requires=None, default=False):
     pkg = package.copy()
     
-    pkg['name'] = f"torch_memory_saver:{version.split('-')[0]}"  # remove any -rc* suffix
+    pkg['name'] = f"torch-memory-saver:{version.split('-')[0]}"  # remove any -rc* suffix
 
     if requires:
         pkg['requires'] = requires
@@ -19,8 +19,8 @@ def torch_memory_saver(version, requires=None, default=False):
     builder['build_args'] = {**builder['build_args'], 'FORCE_BUILD': 'on'}
 
     if default:
-        pkg['alias'] = 'torch_memory_saver'
-        builder['alias'] = 'torch_memory_saver:builder'
+        pkg['alias'] = 'torch-memory-saver'
+        builder['alias'] = 'torch-memory-saver:builder'
 
     return pkg, builder
     
