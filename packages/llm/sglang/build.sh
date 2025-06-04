@@ -39,6 +39,14 @@ export SGL_KERNEL_ENABLE_FA3=1  # Always enabled via CMake
 export DG_JIT_USE_NVRTC=1 # DeepGEMM now supports NVRTC with up to 10x compilation speedup
 
 sed -i -E 's/(set[[:space:]]*\(ENABLE_BELOW_SM90)[[:space:]]+OFF/\1 ON/' CMakeLists.txt
+sed -i -E '/if[[:space:]]*\(ENABLE_BELOW_SM90\)/,/endif\(\)/{
+/"-gencode=arch=compute_89,code=sm_89"/a\
+\    if (CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")\
+\        list(APPEND SGL_KERNEL_CUDA_FLAGS\
+\            "-gencode=arch=compute_87,code=sm_87"\
+\        )\
+\    endif()
+}' CMakeLists.txt
 
 # 🔧 Build step for sgl-kernel
 echo "🔨  Building sgl-kernel…"
