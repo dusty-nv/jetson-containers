@@ -2,7 +2,7 @@
 # name: sglang
 # group: llm
 # config: config.py
-# depends: [flashinfer, torchao, cuda-python, ffmpeg, mamba, xgrammar, flashinfer, transformers, minference]
+# depends: [flashinfer, torchao, cuda-python, ffmpeg, mamba, xgrammar, flashinfer, transformers, minference, vllm]
 # requires: '>=36'
 # test: test.py
 # notes: https://github.com/sgl-project/sglang
