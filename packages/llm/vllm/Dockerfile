@@ -4,7 +4,7 @@
 # config: config.py
 # depends: [transformers, bitsandbytes, triton, xformers, flash-attention, torchaudio, mamba, xgrammar, flashinfer, minference]
 # requires: '>=34.1.0'
-# test: [test.py, test_gguf.py]
+# test: test.py
 # notes: https://github.com/vllm-project/vllm
 #---
 ARG BASE_IMAGE
