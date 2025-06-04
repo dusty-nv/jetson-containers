@@ -2,7 +2,7 @@
 # name: torch-memory-saver
 # group: pytorch
 # config: config.py
-# depends: [pytorch, triton, cmake]
+# depends: [cuda, pytorch, triton, cmake]
 # test: test.py
 #---
 ARG BASE_IMAGE
