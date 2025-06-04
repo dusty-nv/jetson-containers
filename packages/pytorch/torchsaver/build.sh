@@ -2,8 +2,8 @@
 set -ex
 echo "Building TORCH_MEMORY_SAVER ${TORCH_MEMORY_SAVER_VERSION}"
    
-git clone --branch v${TORCH_MEMORY_SAVER_VERSION} --recursive --depth=1 https://github.com/fzyzcjy/torch_memory_saver /opt/torch_memory_saver || \
-git clone --recursive --depth=1 https://github.com/fzyzcjy/torch_memory_saver /opt/torch_memory_saver
+git clone --branch v${TORCH_MEMORY_SAVER_VERSION} --recursive --depth=1 https://github.com/johnnynunez/torch_memory_saver /opt/torch_memory_saver || \
+git clone --recursive --depth=1 https://github.com/johnnynunez/torch_memory_saver /opt/torch_memory_saver
 
 cd /opt/torch_memory_saver
 #git checkout v${TORCHAO_VERSION}
@@ -18,6 +18,6 @@ cd ../
 rm -rf /opt/torch_memory_saver
 
 pip3 install /opt/torch_memory_saver*.whl
-pip3 show torch_memory_saver && python3 -c 'import torchao; print(torch_memory_saver.__version__);'
+pip3 show torch_memory_saver && python3 -c 'import torch_memory_saver'
 
 twine upload --verbose /opt/torch_memory_saver*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
