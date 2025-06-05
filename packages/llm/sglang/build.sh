@@ -44,7 +44,10 @@ else
 fi
 
 echo "🚀  Building with MAX_JOBS=${CORES} and CMAKE_BUILD_PARALLEL_LEVEL=${CORES}"
-CMAKE_BUILD_PARALLEL_LEVEL="${CORES}" python3 -m uv build --wheel -o "${PIP_WHEEL_DIR}" --color=always . --no-build-isolation
+MAX_JOBS="${CORES}" \
+CMAKE_BUILD_PARALLEL_LEVEL="${CORES}" \
+pip3 wheel . --no-deps --wheel-dir "${PIP_WHEEL_DIR}"
+pip3 install "${PIP_WHEEL_DIR}/sgl"*.whl
 cd "${REPO_DIR}" || exit 1
 
 # Patch utils.py if present
