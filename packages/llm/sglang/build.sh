@@ -30,8 +30,8 @@ echo "Building SGL-KERNEL"
 cd "${REPO_DIR}/sgl-kernel" || exit 1
 sed -i -E 's/(set[[:space:]]*\(ENABLE_BELOW_SM90)[[:space:]]+OFF/\1 ON/' CMakeLists.txt
 sed -i -E 's/(message[[:space:]]*\([[:space:]]*STATUS[[:space:]]*")[^"]*(")/\1ACTIVATED\2/' CMakeLists.txt
-sed -i '/^        "-gencode=arch=compute_80,code=sm_80"/a\        "-gencode=arch=compute_87,code=sm_87"' CMakeLists.txt
-sed -i '/^            "-gencode=arch=compute_80,code=sm_80"/a\            "-gencode=arch=compute_87,code=sm_87"' CMakeLists.txt
+# sed -i '/^        "-gencode=arch=compute_80,code=sm_80"/a\        "-gencode=arch=compute_87,code=sm_87"' CMakeLists.txt
+# sed -i '/^            "-gencode=arch=compute_80,code=sm_80"/a\            "-gencode=arch=compute_87,code=sm_87"' CMakeLists.txt
 sed -i 's/==/>=/g' pyproject.toml
 
 
@@ -44,7 +44,7 @@ else
 fi
 
 echo "🚀  Building with MAX_JOBS=${CORES} and CMAKE_BUILD_PARALLEL_LEVEL=${CORES}"
-CMAKE_BUILD_PARALLEL_LEVEL="${CORES}" python3 -m uv build --wheel -o ./wheels --color=always . --no-build-isolation
+CMAKE_BUILD_PARALLEL_LEVEL="${CORES}" python3 -m uv build --wheel -o "${PIP_WHEEL_DIR}" --color=always . --no-build-isolation
 cd "${REPO_DIR}" || exit 1
 
 # Patch utils.py if present
