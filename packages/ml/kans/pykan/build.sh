@@ -11,6 +11,8 @@ cd /opt/pykan
 # make the change directly in requirements.txt (GNU/BSD sed)
 sed -i 's/==/>=/g' requirements.txt
 
+pip3 install -U -r requirements.txt
+
 python3 setup.py bdist_wheel --dist-dir=/opt/pykan/wheels
 pip3 install /opt/pykan/wheels/pykan*.whl
 
