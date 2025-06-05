@@ -13,7 +13,8 @@ cd $REPO_DIR
 sed -i 's|options={.*| |g' setup.py
 echo "Patched $REPO_DIR/setup.py"
 cat setup.py
-
+pip3 install wheel
+python3 -m flashinfer.aot
 python3 setup.py --verbose bdist_wheel --dist-dir $PIP_WHEEL_DIR
 pip3 install $PIP_WHEEL_DIR/flashinfer*.whl
 
