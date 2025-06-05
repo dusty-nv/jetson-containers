@@ -13,9 +13,10 @@ cd $REPO_DIR
 sed -i 's|options={.*| |g' setup.py
 echo "Patched $REPO_DIR/setup.py"
 cat setup.py
-pip3 install wheel
+python3 -m pip install --no-cache-dir build setuptools wheel
 python3 -m flashinfer.aot
-python3 setup.py --verbose bdist_wheel --dist-dir $PIP_WHEEL_DIR
-pip3 install $PIP_WHEEL_DIR/flashinfer*.whl
+python3 -m build --no-isolation --wheel
+# Install AOT wheel
+python3 -m pip install dist/flashinfer_python-*.whl
 
-twine upload --verbose $PIP_WHEEL_DIR/flashinfer*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose dist/flashinfer_python-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
