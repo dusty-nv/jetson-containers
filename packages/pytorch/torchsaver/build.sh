@@ -2,8 +2,8 @@
 set -ex
 echo "Building TORCH_MEMORY_SAVER ${TORCH_MEMORY_SAVER_VERSION}"
    
-git clone --branch v${TORCH_MEMORY_SAVER_VERSION} --recursive --depth=1 https://github.com/johnnynunez/torch_memory_saver /opt/torch_memory_saver || \
-git clone --recursive --depth=1 https://github.com/johnnynunez/torch_memory_saver /opt/torch_memory_saver
+git clone --branch v${TORCH_MEMORY_SAVER_VERSION} --recursive --depth=1 https://github.com/fzyzcjy/torch_memory_saver /opt/torch_memory_saver || \
+git clone --recursive --depth=1 https://github.com/fzyzcjy/torch_memory_saver /opt/torch_memory_saver
 
 cd /opt/torch_memory_saver
 #git checkout v${TORCHAO_VERSION}
