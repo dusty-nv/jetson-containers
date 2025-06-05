@@ -42,3 +42,5 @@ ai-dynamo-runtime
 ai-dynamo-vllm
 bitsandbytes
 xgrammar
+pykan
+xlstm
