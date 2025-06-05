@@ -50,9 +50,11 @@ package = [
     llama_cpp('0.3.6'),
     llama_cpp('0.3.7'),
     llama_cpp('0.3.8'),
+    llama_cpp('0.3.9'),
+    llama_cpp('0.4.0'),
 
     # llama_cpp_python appears abandoned (4/25)
     # so we changed over to llama.cpp branches
     llama_cpp('b5255'),
-    llama_cpp('b5283', default=True)
+    llama_cpp('b5592', default=True)
 ]

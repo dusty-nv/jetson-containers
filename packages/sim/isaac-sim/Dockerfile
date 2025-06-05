@@ -1,6 +1,6 @@
 #---
-# name: isaac-lab
-# alias: isaaclab
+# name: isaacsim
+# alias: isaacsim
 # group: sim
 # config: config.py
 # depends: [ffmpeg, cmake, h5py, pytorch, torchvision, torchaudio, transformers]
@@ -10,11 +10,10 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG ISAACLAB_VERSION \
-    ISAACLAB_BRANCH \
+ARG ISAACSIM_VERSION \
     FORCE_BUILD="off"
 
-COPY build.sh install.sh /tmp/ISAACLAB/
+COPY build.sh install.sh /tmp/isaacsim/
 
-RUN /tmp/ISAACLAB/install.sh || /tmp/ISAACLAB/build.sh || echo "BUILD FAILED (ISAACLAB ${ISAACLAB_VERSION})"
+RUN /tmp/isaacsim/install.sh || /tmp/isaacsim/build.sh || echo "BUILD FAILED (isaacsim ${ISAACSIM_VERSION})"
 

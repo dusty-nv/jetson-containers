@@ -60,6 +60,6 @@ def warp(version, url=None, requires=[], default=False):
 
 
 package = [
-    warp('1.7.0', default=True),
-    warp('1.7.1')
+    warp('1.7.0'),
+    warp('1.7.2.post1', default=True)
 ]

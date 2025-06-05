@@ -38,15 +38,15 @@ def torchsde(version, pytorch=None, requires=None):
  
 package = [
     # JetPack 5/6 and x86
-    torchsde('0.2.7', pytorch='2.0', requires='==35.*'),
-    torchsde('0.2.7', pytorch='2.1', requires='>=35'),
-    torchsde('0.2.7', pytorch='2.2', requires='>=35'),
-    torchsde('0.2.7', pytorch='2.3', requires='==36.*'),
-    torchsde('0.2.7', pytorch='2.4', requires='==36.*'),
-    torchsde('0.2.7', pytorch='2.5', requires='==36.*'),
-    torchsde('0.2.7', pytorch='2.6', requires='==36.*'),
+    torchsde('0.2.0', pytorch='2.0', requires='==35.*'),
+    torchsde('0.2.1', pytorch='2.1', requires='>=35'),
+    torchsde('0.2.2', pytorch='2.2', requires='>=35'),
+    torchsde('0.2.3', pytorch='2.3', requires='==36.*'),
+    torchsde('0.2.4', pytorch='2.4', requires='==36.*'),
+    torchsde('0.2.5', pytorch='2.5', requires='==36.*'),
+    torchsde('0.2.6', pytorch='2.6', requires='==36.*'),
     torchsde('0.2.7', pytorch='2.7', requires='==36.*'),
-    torchsde('0.2.7', pytorch='2.8', requires='==36.*'),
+    torchsde('0.2.8', pytorch='2.8', requires='==36.*'),
 
     # JetPack 4
     torchsde('0.2.7', pytorch='1.10', requires='==32.*'),

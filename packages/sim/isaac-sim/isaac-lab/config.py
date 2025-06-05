@@ -1,13 +1,9 @@
 
-def isaaclab(version, branch=None, default=False):
+def isaaclab(version, default=False):
     pkg = package.copy()
     pkg['name'] = f'isaaclab:{version}'
 
-    if not branch:
-        branch = f'v{version}'
-        
     pkg['build_args'] = {
-        'ISAACLAB_BRANCH': branch,
         'ISAACLAB_VERSION': version,
     }
     
