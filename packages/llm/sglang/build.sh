@@ -25,20 +25,15 @@ else
   git clone --recursive --depth 1 "${REPO_URL}" "${REPO_DIR}"
 fi
 
+pip3 install --no-cache-dir ninja setuptools==75.0.0 wheel==0.41.0 numpy uv scikit-build-core
 echo "Building SGL-KERNEL"
 cd "${REPO_DIR}/sgl-kernel" || exit 1
-
-export SGL_KERNEL_ENABLE_BF16=1
-export SGL_KERNEL_ENABLE_FP8=1
-export SGL_KERNEL_ENABLE_FP4=1
-export SGL_KERNEL_ENABLE_SM90A=1
-export SGL_KERNEL_ENABLE_SM100A=1
-export SGL_KERNEL_ENABLE_SM103A=1
-export SGL_KERNEL_ENABLE_SM110A=1
-export SGL_KERNEL_ENABLE_FA3=1  # Always enabled via CMake
-export DG_JIT_USE_NVRTC=1 # DeepGEMM now supports NVRTC with up to 10x compilation speedup
-
 sed -i -E 's/(set[[:space:]]*\(ENABLE_BELOW_SM90)[[:space:]]+OFF/\1 ON/' CMakeLists.txt
+sed -i -E 's/(message[[:space:]]*\([[:space:]]*STATUS[[:space:]]*")[^"]*(")/\1ACTIVATED\2/' CMakeLists.txt
+sed -i '/^        "-gencode=arch=compute_80,code=sm_80"/a\        "-gencode=arch=compute_87,code=sm_87"' CMakeLists.txt
+sed -i '/^            "-gencode=arch=compute_80,code=sm_80"/a\            "-gencode=arch=compute_87,code=sm_87"' CMakeLists.txt
+sed -i 's/==/>=/g' pyproject.toml
+
 
 # 🔧 Build step for sgl-kernel
 echo "🔨  Building sgl-kernel…"
@@ -47,14 +42,9 @@ if [[ "${IS_SBSA:-}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
 else
   export CORES=32  # GH200
 fi
-export CMAKE_BUILD_PARALLEL_LEVEL="${CORES}"
 
 echo "🚀  Building with MAX_JOBS=${CORES} and CMAKE_BUILD_PARALLEL_LEVEL=${CORES}"
-MAX_JOBS="${CORES}" \
-CMAKE_BUILD_PARALLEL_LEVEL="${CORES}" \
-pip3 wheel . --no-deps --wheel-dir "${PIP_WHEEL_DIR}"
-pip3 install "${PIP_WHEEL_DIR}/sgl"*.whl
-
+CMAKE_BUILD_PARALLEL_LEVEL="${CORES}" python3 -m uv build --wheel -o ./wheels --color=always . --no-build-isolation
 cd "${REPO_DIR}" || exit 1
 
 # Patch utils.py if present
