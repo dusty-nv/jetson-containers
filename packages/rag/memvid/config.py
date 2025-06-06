@@ -2,13 +2,13 @@
 from jetson_containers import CUDA_VERSION, IS_SBSA
 from packaging.version import Version
 
-def mem_vid(version, requires=None, default=False):
+def memvid(version, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
         pkg['requires'] = requires   
 
-    pkg['name'] = f'mem_vid:{version}'
+    pkg['name'] = f'memvid:{version}'
     
     pkg['build_args'] = {
         'MEMVID_VERSION': version,
@@ -17,16 +17,16 @@ def mem_vid(version, requires=None, default=False):
     
     builder = pkg.copy()
     
-    builder['name'] = f'mem_vid:{version}-builder'
+    builder['name'] = f'memvid:{version}-builder'
     builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
 
     if default:
-        pkg['alias'] = 'mem_vid'
-        builder['alias'] = 'mem_vid:builder'
+        pkg['alias'] = 'memvid'
+        builder['alias'] = 'memvid:builder'
         
     return pkg, builder
 
 package = [
-    mem_vid('0.1.4', default=True),
+    memvid('0.1.4', default=True),
 ]
 
