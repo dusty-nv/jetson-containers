@@ -2,13 +2,13 @@
 from jetson_containers import CUDA_VERSION, IS_SBSA
 from packaging.version import Version
 
-def flash_attn(version, requires=None, default=False):
+def log_linear_attn(version, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
         pkg['requires'] = requires   
 
-    pkg['name'] = f'flash-attention:{version}'
+    pkg['name'] = f'log-linear-attention:{version}'
     
     pkg['build_args'] = {
         'LOG_LINEAR_ATTN_VERSION': version,
@@ -17,16 +17,16 @@ def flash_attn(version, requires=None, default=False):
     
     builder = pkg.copy()
     
-    builder['name'] = f'flash-attention:{version}-builder'
+    builder['name'] = f'log-linear-attention:{version}-builder'
     builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
 
     if default:
-        pkg['alias'] = 'flash-attention'
-        builder['alias'] = 'flash-attention:builder'
+        pkg['alias'] = 'log-linear-attention'
+        builder['alias'] = 'log-linear-attention:builder'
         
     return pkg, builder
 
 package = [
-    flash_attn('2.5.7'),
+    log_linear_attn('0.0.1', default=True),
 ]
 
