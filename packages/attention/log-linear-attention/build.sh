@@ -17,8 +17,8 @@ export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
 
 pip3 install -r requirements.txt
-pip3 install -e /opt/log-linear-attention/flame/
-pip3 install -r flame/3rdparty/torchtitan/requirements.txt
+# pip3 install -e /opt/log-linear-attention/flame/
+# pip3 install -r flame/3rdparty/torchtitan/requirements.txt
 
 MAX_JOBS=$MAX_JOBS \
 CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS \
