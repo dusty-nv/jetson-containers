@@ -1,0 +1,35 @@
+\
+#---
+# name: chatterbox-tts:mcp
+# group: audio
+# depends: [chatterbox-tts, python] # Base chatterbox-tts image, python for running the server
+# requires: ['>=36.1.0', '>=cu128']
+# test: [] # Add a test script for MCP if desired
+# docs: docs.md
+#---
+ARG BASE_IMAGE # This will be jetson/chatterbox-tts
+FROM ${BASE_IMAGE}
+
+# Install MCP server dependencies
+# fastmcp and its dependencies (like fastapi, uvicorn)
+# soundfile for audio processing in the MCP server script
+RUN pip install fastmcp uvicorn python-multipart soundfile
+
+# Copy the MCP server script into the image
+COPY mcp_chatterbox_tts_server.py /opt/mcp_server/
+
+# Chatterbox is already installed in /opt/chatterbox-tts from the base image
+# and its Python path is set via ENV in the base Dockerfile.
+
+# Environment variables from base should be inherited.
+# Set working directory for the MCP server (optional, but good practice)
+WORKDIR /opt/mcp_server/
+
+# Expose the port the MCP server will listen on (default 8080 for FastMCP example)
+EXPOSE 8080
+
+# Command to run the MCP server
+# This assumes mcp_chatterbox_tts_server.py is executable or called with python
+# Using uvicorn directly is often preferred for FastAPI/FastMCP apps
+CMD ["uvicorn", "mcp_chatterbox_tts_server:app", "--host", "0.0.0.0", "--port", "8080"]
+

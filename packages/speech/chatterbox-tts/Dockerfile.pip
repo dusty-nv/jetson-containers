@@ -1,0 +1,24 @@
+\
+#---
+# name: chatterbox-tts:pip
+# group: audio
+# depends: [chatterbox-tts, python] 
+# requires: ['>=36.1.0', '>=cu128']
+# test: []
+# docs: docs.md
+#---
+ARG BASE_IMAGE # This will be jetson/chatterbox-tts from the main Dockerfile
+FROM ${BASE_IMAGE}
+
+# Ensure wheel package is available for building the wheel
+RUN pip install wheel
+
+# Build the wheel
+# The chatterbox source code is in /opt/chatterbox-tts from the base image,
+# and it's already set up with "pip install -e ."
+# We build the wheel in a directory that can be easily copied from.
+RUN cd /opt/chatterbox-tts && \\
+    pip wheel . -w /opt/dist/wheels --no-deps
+
+# Default command can be inherited or set to bash
+CMD ["bash"]

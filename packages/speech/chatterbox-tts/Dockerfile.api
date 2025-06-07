@@ -1,0 +1,41 @@
+\
+#---
+# name: chatterbox-tts:api
+# group: audio
+# depends: [chatterbox-tts, git, python] # Assuming chatterbox-tts base handles its core deps
+# requires: ['>=36.1.0', '>=cu128']
+# test: []
+# docs: docs.md
+#---
+ARG BASE_IMAGE # This will be jetson/chatterbox-tts
+FROM ${BASE_IMAGE}
+
+ARG API_SERVER_REPO_URL=https://github.com/travisvn/chatterbox-tts-api
+ARG API_SERVER_BRANCH=main # Or specific tag/commit if needed
+
+# Install API server dependencies and clone the repo
+RUN apt-get update && \\
+    apt-get install -y --no-install-recommends git && \\
+    apt-get clean && \\
+    rm -rf /var/lib/apt/lists/* && \\
+    \
+    git clone --depth 1 --branch ${API_SERVER_BRANCH} ${API_SERVER_REPO_URL} /opt/chatterbox-tts-api && \\
+    cd /opt/chatterbox-tts-api && \\
+    pip install -r requirements.txt
+
+# Chatterbox is already installed in /opt/chatterbox-tts from the base image
+# and its Python path is set.
+
+# Environment variables from base should be inherited.
+# Add any API-specific environment variables if needed.
+# ENV API_SPECIFIC_CONFIG=...
+
+WORKDIR /opt/chatterbox-tts-api
+
+# Expose the port the API server listens on (default for this API seems to be 8000)
+EXPOSE 8000
+
+# Command to run the API server
+# This specific API server uses uvicorn main:app
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
