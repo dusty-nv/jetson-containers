@@ -1,5 +1,6 @@
 # packages/vlm/gemma_vlm/config.py
 from jetson_containers import L4T_VERSION
+import os
 
 # Define L4T version-specific dependencies if necessary
 # For now, assume common dependencies work across recent L4T versions
@@ -9,7 +10,7 @@ from jetson_containers import L4T_VERSION
 # else: # Example for JetPack 5.x
 #     L4T_VERSION_DEPENDENT_REQUIRES.append('some_jp5_specific_package')
 
-def gemma_vlm_package(model_id='google/gemma-3-4b-it', name_suffix='', default=False, requires=None):
+def gemma_vlm_package(model_id='google/gemma-3-4b-it', name_suffix='', default=False, requires_arg=None): # Renamed 'requires' to 'requires_arg' to avoid conflict
     """
     Generates a package configuration for a Gemma 3 VLM model.
     """
@@ -24,27 +25,30 @@ def gemma_vlm_package(model_id='google/gemma-3-4b-it', name_suffix='', default=F
         'dockerfile': 'Dockerfile',
         'test': 'test_gemma_vlm.py', # Script to run for testing this package
         'depends': [
-            'transformers',  # Ensure this pulls a recent enough version for Gemma3
-            'pytorch',       # PyTorch is a core dependency
-            'pillow',        # For image processing
-            'accelerate',    # Hugging Face Accelerate for efficient loading
-            'requests',      # For the test script to download a sample image
-            'einops',        # Often a dependency for vision-language models
-            'bitsandbytes',  # For potential future 8-bit/4-bit quantization
+            'transformers',  # This is a jetson-containers package
+            'pytorch',       # This is a jetson-containers package
         ],
         'build_args': {
             'GEMMA_VLM_MODEL_ID': model_id, # Pass model ID to Dockerfile
             'HUGGINGFACE_TOKEN': '${HUGGINGFACE_TOKEN:-None}', # Pass HF token, default to None if not set
         },
-        'notes': f"Container for Gemma 3 VLM model: {model_id}. Uses Gemma 3 architecture."
+        'notes': f"Container for Gemma 3 VLM model: {model_id}. Uses Gemma 3 architecture.",
+        'requires': [] 
     }
 
     if default:
         pkg['alias'] = 'gemma_vlm' # A shorter alias for the default model
 
-    if requires:
+    if requires_arg: # Use the renamed argument here
         # Combine base dependencies with any L4T-specific ones
-        pkg['depends'] = list(set(pkg['depends'] + requires))
+        # Note: 'depends' is for jetson-container package dependencies.
+        # 'requires' is typically for system-level things like L4T version.
+        # If 'requires_arg' was meant to add to 'depends', that logic would go here.
+        # For now, assuming 'requires_arg' might be for the 'requires' key if it were more complex.
+        # If it was meant to add to 'depends', it should be:
+        # pkg['depends'] = list(set(pkg['depends'] + requires_arg))
+        # If it was for the 'requires' key (e.g. L4T version specifier string):
+        pkg['requires'] = requires_arg # Or some processing if it's a list for 'requires'
         
     return pkg
 
@@ -54,7 +58,7 @@ gemma_3_4b_it = gemma_vlm_package(
     model_id='google/gemma-3-4b-it',
     name_suffix='3-4b-it', # Suffix for clarity
     default=True # Make this the default 'gemma_vlm' package
-    # requires=L4T_VERSION_DEPENDENT_REQUIRES # Add if specific L4T dependencies are identified
+    # requires_arg=L4T_VERSION_DEPENDENT_REQUIRES # Add if specific L4T dependencies are identified
 )
 
 # Example for another Gemma 3 model variant (e.g., a different size or fine-tune)
