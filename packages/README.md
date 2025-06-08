@@ -268,7 +268,7 @@
 | &nbsp;&nbsp;&nbsp; [`cudf:23.10.03`](/packages/ml/rapids/cudf) | [![`cudf-231003_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cudf-231003_jp60.yml?label=cudf-231003:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cudf-231003_jp60.yml) |
 | &nbsp;&nbsp;&nbsp; [`cuml`](/packages/ml/rapids/cuml) | [![`cuml_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cuml_jp51.yml?label=cuml:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cuml_jp51.yml) |
 | <a id="robots">**`ROBOTS`**</a> | |
-| &nbsp;&nbsp;&nbsp; [`lerobot`](/packages/robots/lerobot) |  |
+| &nbsp;&nbsp;&nbsp;&nbsp; [`lerobot`](/packages/robots/lerobot) |  |
 | <a id="ros">**`ROS`**</a> | |
 | &nbsp;&nbsp;&nbsp; [`ros:foxy-desktop`](/packages/ros) | [![`ros-foxy-desktop_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-foxy-desktop_jp46.yml?label=ros-foxy-desktop:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-foxy-desktop_jp46.yml) [![`ros-foxy-desktop_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/ros-foxy-desktop_jp51.yml?label=ros-foxy-desktop:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/ros-foxy-desktop_jp51.yml) |
 | &nbsp;&nbsp;&nbsp; [`ros:foxy-foxglove`](/packages/ros) |  |
