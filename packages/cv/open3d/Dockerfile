@@ -42,7 +42,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gdb \
     libeigen3-dev \
     libgl1-mesa-dev \
-    libgl1-mesa-glx \
     libglew-dev \
     libglfw3-dev \
     libosmesa6-dev \
