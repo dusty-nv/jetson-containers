@@ -41,10 +41,9 @@ cmake -DCMAKE_BUILD_TYPE=Release \
 export MAX_JOBS="$(nproc)"
 export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 
-make -j$(nproc)
 make install-pip-package -j$(nproc)
-make install -j$(nproc)
 cd "${REPO_DIR}" || exit 1
 cp build/lib/python_package/pip_package/*.whl /opt/open3d/
+pip3 install /opt/open3d/open3d*.whl
 # Try uploading; ignore failure
 twine upload --verbose "/opt/open3d/open3d"*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL:-<unset>}"

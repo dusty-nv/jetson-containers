@@ -42,7 +42,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gdb \
     libeigen3-dev \
     libgl1-mesa-dev \
-    libgl1-mesa-glx \
     libglew-dev \
     libglfw3-dev \
     libosmesa6-dev \
@@ -54,6 +53,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xterm \
     xvfb \
     ne \
+    libc++-dev \
+    libc++abi-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
