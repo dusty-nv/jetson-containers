@@ -53,6 +53,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xterm \
     xvfb \
     ne \
+    libc++-dev \
+    libc++abi-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
