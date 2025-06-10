@@ -2,15 +2,15 @@
 set -ex
 
 # Clone the repository if it doesn't exist
-git clone --branch=v${EASYVOLCAP_VERSION} --depth=1 --recursive https://github.com/zju3dv/EasyVolcap /opt/easyvolcap || \
-git clone --depth=1 --recursive https://github.com/zju3dv/EasyVolcap /opt/easyvolcap
+git clone --branch=v${4k4D_VERSION} --depth=1 --recursive https://github.com/zju3dv/4k4D /opt/4k4D || \
+git clone --depth=1 --recursive https://github.com/zju3dv/4k4D /opt/4k4D
 
-cd /opt/easyvolcap
+cd /opt/4k4D
 export MAX_JOBS=$(nproc)
 
 # Build python wheel from source
 pip3 install -U -r requirements.txt
-pip3 install PyOpenGL PyOpenGL_accelerate pdbr tqdm ujson ruamel.yaml
+pip3 install PyOpenGL PyOpenGL_accelerate pdbr tqdm
 pip3 wheel . -w $PIP_WHEEL_DIR --verbose
 pip3 install $PIP_WHEEL_DIR/easyvolcap*.whl
 
