@@ -24,8 +24,11 @@ fi
 
 cd "${REPO_DIR}" || exit 1
 
+./util/install_deps_ubuntu.sh assume-yes
 mkdir build
 cd build
+
+ln -sf /usr/lib/llvm-17/lib/libc++.so.1.0 /usr/lib/llvm-17/lib/libc++.so.1
 
 cmake -DCMAKE_BUILD_TYPE=Release \
       -DBUILD_PYTHON_MODULE=ON \
