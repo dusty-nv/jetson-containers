@@ -30,7 +30,16 @@ cd build
 
 ln -sf /usr/lib/llvm-17/lib/libc++.so.1.0 /usr/lib/llvm-17/lib/libc++.so.1
 
-cmake -DCMAKE_BUILD_TYPE=Release \
+cmake -DCMAKE_C_COMPILER=clang-17 \
+      -DCMAKE_CXX_COMPILER=clang++-17 \
+      -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=lld-17 -L/usr/lib/gcc/aarch64-linux-gnu/13" \
+      -DCMAKE_SHARED_LINKER_FLAGS="-fuse-ld=lld-17 -L/usr/lib/gcc/aarch64-linux-gnu/13" \
+      -DBUILD_SHARED_LIBS=ON \
+      -DUSE_SYSTEM_OPENSSL=ON \
+      -DUSE_SYSTEM_CURL=ON \
+      -DUSE_SYSTEM_OPENSSL=ON \
+      -DUSE_SYSTEM_CURL=ON \
+      -DCMAKE_BUILD_TYPE=Release \
       -DBUILD_PYTHON_MODULE=ON \
       -DBUILD_CUDA_MODULE=ON \
       -DBUILD_SHARED_LIBS=ON \
