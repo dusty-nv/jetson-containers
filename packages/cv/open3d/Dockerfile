@@ -58,6 +58,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     clang-17 \
     libc++-17-dev \
     libc++abi-17-dev \
+    libssl-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
