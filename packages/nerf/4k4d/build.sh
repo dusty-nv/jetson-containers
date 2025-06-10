@@ -10,7 +10,7 @@ export MAX_JOBS=$(nproc)
 
 # Build python wheel from source
 pip3 install -U -r requirements.txt
-pip3 install PyOpenGL PyOpenGL_accelerate pdbr tqdm
+pip3 install PyOpenGL pdbr tqdm
 pip3 wheel . -w $PIP_WHEEL_DIR --verbose
 pip3 install $PIP_WHEEL_DIR/easyvolcap*.whl
 

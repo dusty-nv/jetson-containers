@@ -66,7 +66,7 @@ RUN git clone --recursive https://github.com/Genesis-Embodied-AI/Genesis /opt/ge
 
 COPY build_luisa.sh /workspace/build_luisa.sh
 RUN ./build_luisa.sh ${PYTHON_VERSION}
-RUN pip3 install PyOpenGL PyOpenGL_accelerate --verbose
+RUN pip3 install PyOpenGL --verbose
 RUN pip3 install coacd libigl pymeshlab --verbose
 
 # ===============================================================

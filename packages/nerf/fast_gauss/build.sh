@@ -9,7 +9,7 @@ cd /opt/fast_gauss
 export MAX_JOBS=$(nproc)
 
 # Build python wheel from source
-pip3 install PyOpenGL PyOpenGL_accelerate pdbr tqdm ujson ruamel.yaml
+pip3 install PyOpenGL pdbr tqdm ujson ruamel.yaml
 pip3 wheel . -w $PIP_WHEEL_DIR --verbose
 pip3 install $PIP_WHEEL_DIR/fast_gauss*.whl
 
