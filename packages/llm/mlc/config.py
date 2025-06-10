@@ -36,5 +36,5 @@ package = [
     mlc('6da6aca', 'patches/6da6aca.diff', version='0.1.3', tvm='0.18.1', requires='>=36'),  # 10/18/2024
     mlc('385cef2', 'patches/385cef2.diff', version='0.1.4', tvm='0.19.0', requires='>=36'),  # 12/14/2024
     mlc('cf7ae82', 'patches/cf7ae82.diff', version='0.19.0', tvm='0.19.0', requires='>=36'), # 01/09/2025
-    mlc('d2118b3', 'patches/d2118b3.diff', version='0.20.0', tvm='0.20.0', requires='>=36', depends=['flashinfer:0.2.6'], default=(L4T_VERSION.major >= 36)), # 5/1/2025
+    mlc('d2118b3', 'patches/d2118b3.diff', version='0.20.0', tvm='0.20.0', requires='>=36', depends=['flashinfer:0.2.6.post1'], default=(L4T_VERSION.major >= 36)), # 5/1/2025
 ]
