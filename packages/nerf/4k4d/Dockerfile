@@ -1,5 +1,5 @@
 #---
-# name: 4k4D
+# name: 4k4d
 # group: nerf
 # config: config.py
 # depends: [vulkan, opengl, pytorch, torchvision, torchaudio, tinycudann, fast_gauss, easyvolcap]
