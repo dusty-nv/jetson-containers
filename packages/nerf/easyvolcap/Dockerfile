@@ -2,7 +2,7 @@
 # name: easyvolcap
 # group: nerf
 # config: config.py
-# depends: [vulkan, opengl, pytorch, torchvision, torchaudio, tinycudann, fast_gauss]
+# depends: [vulkan, opengl, pytorch, torchvision, torchaudio, tinycudann, fast_gauss, open3d]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/zju3dv/EasyVolcap
