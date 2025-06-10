@@ -30,6 +30,7 @@ cd build
 
 ln -sf /usr/lib/llvm-17/lib/libc++.so.1.0 /usr/lib/llvm-17/lib/libc++.so.1
 
+pip3 install -U wheel setuptools
 cmake -DCMAKE_C_COMPILER=clang-17 \
       -DCMAKE_CXX_COMPILER=clang++-17 \
       -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=lld-17 -L/usr/lib/gcc/aarch64-linux-gnu/13" \
@@ -53,7 +54,8 @@ cmake -DCMAKE_C_COMPILER=clang-17 \
 export MAX_JOBS="$(nproc)"
 export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 
-make install-pip-package -j$(nproc)
+make -j$(nproc)
+make pip-package -j$(nproc)
 cd "${REPO_DIR}" || exit 1
 cp build/lib/python_package/pip_package/*.whl /opt/open3d/
 pip3 install /opt/open3d/open3d*.whl
