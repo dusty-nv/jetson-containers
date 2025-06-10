@@ -59,6 +59,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libc++-17-dev \
     libc++abi-17-dev \
     libssl-dev \
+    libcurl4-openssl-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
