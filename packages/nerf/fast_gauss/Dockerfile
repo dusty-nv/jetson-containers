@@ -2,7 +2,7 @@
 # name: fast_gauss
 # group: nerf
 # config: config.py
-# depends: [vulkan, opengl, pytorch, torchvision, torchaudio, tinycudann, open3d]
+# depends: [vulkan, opengl, pytorch, torchvision, torchaudio, tinycudann, open3d, pytorch3d]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://pypi.org/project/gsplat/
