@@ -4,8 +4,8 @@ set -ex
 TAICHI_REPO="https://github.com/johnnynunez/taichi"
 TAICHI_DIR="/opt/taichi"
 
-git clone --branch=v${TAICHI_VERSION} --depth=1 --recursive ${TAICHI_REPO} ${TAICHI_DIR} ||
-git clone --depth=1 --recursive ${TAICHI_REPO} ${TAICHI_DIR}
+git clone --branch=v${TAICHI_VERSION} --depth=1 --recursive ${TAICHI_REPO} ${TAICHI_DIR} || \
+    git clone --depth=1 --recursive ${TAICHI_REPO} ${TAICHI_DIR}
 
 # Navigate to the Taichi repository directory
 cd ${TAICHI_DIR}
