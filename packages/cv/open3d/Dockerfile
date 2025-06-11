@@ -74,4 +74,4 @@ ENV XDG_SESSION_TYPE=x11
 # 2) LD_PRELOAD — combine both libraries in *one* variable (colon-separated)
 #    – first: libgomp (OpenMP, shipped by libgomp1)
 #    – second: libOpen3D.so from the venv you just created
-ENV LD_PRELOAD="/usr/lib/aarch64-linux-gnu/libgomp.so.1:/opt/venv/lib/python${PYTHON_VERSION}/site-packages/open3d/cpu/libOpen3D.so.0.19"
+# ENV LD_PRELOAD="/usr/lib/aarch64-linux-gnu/libgomp.so.1:/opt/venv/lib/python${PYTHON_VERSION}/site-packages/open3d/cpu/libOpen3D.so.0.19"
