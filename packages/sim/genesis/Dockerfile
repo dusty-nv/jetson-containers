@@ -107,6 +107,7 @@ WORKDIR /workspace
 # GENESIS BUILD
 # ===============================================================
 
+RUN pip3 install --no-deps git+https://github.com/johnnynunez/tetgen.git
 # FIX: More robust removal of blinker
 RUN find / -name "blinker*" -print0 | xargs -0 -r rm -rf
 RUN pip3 install open3d tetgen trimesh --verbose && \
@@ -144,16 +145,17 @@ RUN echo "export LD_LIBRARY_PATH=/opt/genesis/genesis/ext/ParticleMesher/Particl
 RUN ldconfig
 
 RUN cd /tmp && \
-    wget https://us.download.nvidia.com/XFree86/aarch64/570.124.04/NVIDIA-Linux-aarch64-570.124.04.run && \
-    chmod +x NVIDIA-Linux-aarch64-570.124.04.run && \
-    sh NVIDIA-Linux-aarch64-570.124.04.run --extract-only && \
-    cd NVIDIA-Linux-aarch64-570.124.04 && \
-    cp -R ./libnvoptix.so.570.124.04 /usr/lib/aarch64-linux-gnu/ && \
-    cp -R ./libnvidia-rtcore.so.570.124.04 /usr/lib/aarch64-linux-gnu/ && \
+    wget https://us.download.nvidia.com/XFree86/aarch64/570.153.02/NVIDIA-Linux-aarch64-570.153.02.run && \
+    chmod +x NVIDIA-Linux-aarch64-570.153.02.run && \
+    sh NVIDIA-Linux-aarch64-570.153.02.run --extract-only && \
+    cd NVIDIA-Linux-aarch64-570.153.02 && \
+    cp -R ./libnvoptix.so.570.153.02 /usr/lib/aarch64-linux-gnu/ && \
+    cp -R ./libnvidia-rtcore.so.570.153.02 /usr/lib/aarch64-linux-gnu/ && \
     cp -R ./nvoptix.bin /usr/lib/aarch64-linux-gnu/ && \
-    ln -sf /usr/lib/aarch64-linux-gnu/libnvoptix.so.570.124.04 /usr/lib/aarch64-linux-gnu/libnvoptix.so.1 && \
+    ln -sf /usr/lib/aarch64-linux-gnu/libnvoptix.so.570.153.02 /usr/lib/aarch64-linux-gnu/libnvoptix.so.1 && \
     # Clean up
-    rm -rf /tmp/NVIDIA-Linux-aarch64-570.124.04.run /tmp/NVIDIA-Linux-aarch64-570.124.04
+    rm -rf /tmp/NVIDIA-Linux-aarch64-570.153.02.run /tmp/NVIDIA-Linux-aarch64-570.153.02
 
+RUN pip3 install --force-reinstall vtk
 WORKDIR /opt/genesis/
 CMD ["/bin/bash"]
