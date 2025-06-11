@@ -63,6 +63,8 @@ RUN apt-get install -y --no-install-recommends \
     libxinerama-dev \
     libxrandr-dev \
     libzstd-dev \
+    libxkbcommon-dev \
+    libxkbcommon-x11-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

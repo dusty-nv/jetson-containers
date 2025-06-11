@@ -4,8 +4,8 @@ set -ex
 TAICHI_REPO="https://github.com/johnnynunez/taichi"
 TAICHI_DIR="/opt/taichi"
 
-git clone --branch=v${TAICHI_VERSION} --depth=1 --recursive ${TAICHI_REPO} ${TAICHI_DIR} || \
-    git clone --depth=1 --recursive ${TAICHI_REPO} ${TAICHI_DIR}
+git clone --branch=v${TAICHI_VERSION} --recursive ${TAICHI_REPO} ${TAICHI_DIR} || \
+    git clone --recursive ${TAICHI_REPO} ${TAICHI_DIR}
 
 # Navigate to the Taichi repository directory
 cd ${TAICHI_DIR}
@@ -20,6 +20,7 @@ sed -i 's/match\.any\.sync\.b64  %0/match\.any\.sync\.b64  %w0/g; s/, %1/, %w1/g
 export MAX_JOBS=$(nproc)
 export TAICHI_CMAKE_ARGS="-DTI_WITH_VULKAN:BOOL=ON -DTI_WITH_CUDA:BOOL=ON"
 export CUDA_VERSION=12.8
+export LLVM_VERSION=20
 export LLVM_DIR=/usr/lib/llvm-${LLVM_VERSION}
 
 pip3 install "cmake<4"
