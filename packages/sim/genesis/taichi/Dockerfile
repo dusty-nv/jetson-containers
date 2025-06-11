@@ -65,6 +65,9 @@ RUN apt-get install -y --no-install-recommends \
     libzstd-dev \
     libxkbcommon-dev \
     libxkbcommon-x11-dev \
+    clang-20 \
+    libc++-dev \
+    libc++abi-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

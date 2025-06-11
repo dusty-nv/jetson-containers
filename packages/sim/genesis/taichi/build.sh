@@ -18,6 +18,8 @@ sed -i 's/match\.any\.sync\.b64  %0/match\.any\.sync\.b64  %w0/g; s/, %1/, %w1/g
 
 # Set environment variables for the build
 export MAX_JOBS=$(nproc)
+export CC=clang
+export CXX=clang++
 export TAICHI_CMAKE_ARGS="-DTI_WITH_VULKAN:BOOL=ON -DTI_WITH_CUDA:BOOL=ON"
 export CUDA_VERSION=12.8
 export LLVM_VERSION=20
