@@ -1,3 +1,4 @@
+
 #!/bin/bash
 #
 # Copyright (c) 2019, NVIDIA CORPORATION. All rights reserved.
@@ -49,7 +50,7 @@ if [ $SYSTEM_ARCH = "tegra-aarch64" ]; then
 		#echo "reading L4T version from \"dpkg-query --show nvidia-l4t-core\""
 
 		L4T_VERSION_STRING=$(dpkg-query --showformat='${Version}' --show nvidia-l4t-core)
-		L4T_VERSION_ARRAY=(${L4T_VERSION_STRING//./ })	
+		L4T_VERSION_ARRAY=(${L4T_VERSION_STRING//./ })
 
 		#echo ${L4T_VERSION_ARRAY[@]}
 		#echo ${#L4T_VERSION_ARRAY[@]}
@@ -69,7 +70,7 @@ if [ $SYSTEM_ARCH = "tegra-aarch64" ]; then
 	L4T_VERSION="$L4T_RELEASE.$L4T_REVISION"
 
 	echo "L4T_VERSION:  $L4T_VERSION"
-	
+
 elif [ $ARCH != "x86_64" ]; then
 	echo "unsupported architecture:  $ARCH"
 	exit 1

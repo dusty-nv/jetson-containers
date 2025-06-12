@@ -12,6 +12,7 @@ ARG CUDA_URL \
     CUDA_DEB \
     CUDA_PACKAGES \
     CUDA_ARCH_LIST \
+    IS_SBSA \
     DISTRO="ubuntu2004"
     
 COPY install.sh /tmp/cuda/install.sh

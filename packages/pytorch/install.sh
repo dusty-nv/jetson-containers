@@ -39,8 +39,11 @@ fi
 bash /tmp/numpy/install.sh
 
 # make sure it loads
-python3 -c 'import torch; print(f"PyTorch version: {torch.__version__}"); print(f"CUDA available:  {torch.cuda.is_available()}"); print(f"cuDNN version:   {torch.backends.cudnn.version()}"); print(torch.__config__.show());'
-
+python3 -c 'import torch; \
+    print(f"PyTorch version: {torch.__version__}"); \
+    print(f"CUDA device #  : {torch.cuda.device_count()}"); \
+    print(f"CUDA version   : {torch.version.cuda}"); \
+    print(f"cuDNN version  : {torch.backends.cudnn.version()}");'
 # PyTorch C++ extensions frequently use ninja parallel builds
 pip3 install scikit-build ninja
 

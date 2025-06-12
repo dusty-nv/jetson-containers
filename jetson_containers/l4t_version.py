@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 # finds the versions of JetPack-L4T and CUDA from the build environment:
 #
@@ -8,7 +9,7 @@
 #    CUDA_ARCHITECTURES (list[int]) -- e.g. [53, 62, 72, 87, 101]
 #    SYSTEM_ARCH (str) -- e.g. 'aarch64' or 'x86_64'
 #    LSB_RELEASE (str) -- e.g. '18.04', '20.04', '22.04'
-#    
+#
 import os
 import re
 import sys
@@ -127,7 +128,8 @@ def get_jetpack_version(l4t_version: str = None, default='6.2'):
 
     NVIDIA_JETPACK = {
         # -------- JP7 --------
-        "38.1.0": "7.0 EA",
+        "38.1.0": "7.0",
+        "38.0.0": "7.0 EA",
 
         # -------- JP6 --------
         "36.4.3": "6.2",

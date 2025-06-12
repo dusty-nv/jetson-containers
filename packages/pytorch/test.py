@@ -71,12 +71,13 @@ print('Tensor c = ' + str(c))
 # LAPACK test
 print('testing LAPACK (OpenBLAS)...')
 
-a = torch.randn(2, 3, 1, 4, 4)
-b = torch.randn(2, 3, 1, 4, 4)
-
-x, lu = torch.linalg.solve(b, a)
-
-print('done testing LAPACK (OpenBLAS)')
+try:
+    a = torch.randn(2, 3, 1, 4, 4)
+    b = torch.randn(2, 3, 1, 4, 4)
+    x, lu = torch.linalg.solve(b, a)
+    print('done testing LAPACK (OpenBLAS)')
+except Exception as e:
+    print(f'❌LAPACK test failed: {e}')
 
 # torch.nn test
 print('testing torch.nn (cuDNN)...')

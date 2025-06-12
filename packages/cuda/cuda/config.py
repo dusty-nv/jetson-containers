@@ -39,6 +39,7 @@ def cuda_package(version, url, deb=None, packages=None, requires=None) -> list:
         'CUDA_URL': url,
         'CUDA_DEB': deb,
         'CUDA_PACKAGES': packages,
+        'IS_SBSA': IS_SBSA,
     }, **cuda_build_args(version) }
 
     if requires:

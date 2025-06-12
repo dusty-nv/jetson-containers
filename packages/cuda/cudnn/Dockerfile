@@ -12,6 +12,14 @@ ARG CUDNN_URL
 ARG CUDNN_DEB
 ARG CUDNN_PACKAGES
 
+RUN echo $CUDNN_PACKAGES
+
+# First, remove any existing cuDNN packages to avoid conflicts
+RUN apt-get update && \
+    apt-get remove -y --purge libcudnn* && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get clean
+
 RUN ls /etc/apt/sources.list.d/ && \
     apt-get update && \
     apt-cache search cudnn
