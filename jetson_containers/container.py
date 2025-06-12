@@ -396,7 +396,7 @@ def test_container(name, package, simulate=False, build_idx=None):
         test_ext = os.path.splitext(test_exe)[1]
         log_file = os.path.join(get_log_dir('test'), f"{build_idx+1:02d}-{idx+1}_{name.replace('/','_')}_{test_exe}").replace(':','_')
 
-        cmd = f"{sudo_prefix()}docker run -t --rm --network=host "
+        cmd = f"{sudo_prefix()}docker run -t --rm --network=host --privileged "
 
         if IS_TEGRA:
             cmd += f"--runtime=nvidia" + _NEWLINE_

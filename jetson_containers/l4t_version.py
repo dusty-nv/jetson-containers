@@ -127,7 +127,8 @@ def get_jetpack_version(l4t_version: str = None, default='6.2'):
 
     NVIDIA_JETPACK = {
         # -------- JP7 --------
-        "38.1.0": "7.0 EA",
+        "38.1.0": "7.0",
+        "38.0.0": "7.0 EA",
 
         # -------- JP6 --------
         "36.4.3": "6.2",
@@ -539,7 +540,15 @@ DOCKER_ARCH = DOCKER_ARCHS[SYSTEM_ARCH]
 SYSTEM_ARM = SYSTEM_ARCH_TYPE in ("aarch64", "tegra-aarch64")
 SYSTEM_X86 = SYSTEM_ARCH_TYPE == "x86_64"
 IS_TEGRA = SYSTEM_ARCH_TYPE == "tegra-aarch64"
-IS_SBSA = SYSTEM_ARCH_TYPE == "aarch64"
+# IS_SBSA = SYSTEM_ARCH_TYPE == "aarch64"
+try:
+    gpu_names = subprocess.check_output(
+        ["nvidia-smi", "--query-gpu=name", "--format=csv,noheader"],
+        encoding="utf-8"
+    )
+    IS_SBSA = "nvgpu" not in gpu_names
+except Exception as e:
+    IS_SBSA = False  # or handle as appropriate for your use case
 
 SYSTEM_ARCH_LIST = []
 

@@ -1,3 +1,4 @@
+
 #!/bin/bash
 #
 # Copyright (c) 2019, NVIDIA CORPORATION. All rights reserved.
@@ -21,56 +22,71 @@
 # DEALINGS IN THE SOFTWARE.
 #
 
+get_l4t_version() {
+    # 1. If argument is provided, use it
+    if [ -n "$1" ]; then
+        echo "$1"
+        return
+    fi
+
+    # 2. If environment variable is set, use it
+    if [ -n "$L4T_VERSION" ]; then
+        echo "$L4T_VERSION"
+        return
+    fi
+
+    # 3. If not on Jetson, return default
+    ARCH=$(uname -m)
+    if [ "$ARCH" != "aarch64" ] || ! uname -a | grep -qi "tegra"; then
+        echo "36.4.3"
+        return
+    fi
+
+    # 4. If version file does not exist, return default
+    VERSION_FILE="/etc/nv_tegra_release"
+    if [ ! -f "$VERSION_FILE" ]; then
+        echo "36.4.3"
+        return
+    fi
+
+    # 5. Parse version from file
+    L4T_VERSION_STRING=$(head -n 1 "$VERSION_FILE")
+    L4T_RELEASE=$(echo "$L4T_VERSION_STRING" | cut -f 2 -d ' ' | grep -Po '(?<=R)[^;]+')
+    L4T_REVISION=$(echo "$L4T_VERSION_STRING" | cut -f 2 -d ',' | grep -Po '(?<=REVISION: )[^;]+')
+	L4T_REVISION_MAJOR=${L4T_REVISION:0:1}
+	L4T_REVISION_MINOR=${L4T_REVISION:2:1}
+
+    echo "$L4T_RELEASE.$L4T_REVISION"
+}
+
+L4T_VERSION=$(get_l4t_version)
+echo "| L4T_VERSION=$L4T_VERSION"
+
 TEGRA="tegra"
 if [ -z "${SYSTEM_ARCH}" ]; then
   ARCH=$(uname -m)
 
   if [ "$ARCH" = "aarch64" ]; then
-    echo "### ARM64 architecture detected"
+    echo "| ### ARM64 architecture detected"
     if uname -a | grep -qi "$TEGRA"; then
       SYSTEM_ARCH="$TEGRA-$ARCH"
-      echo "### Jetson Detected"
+      echo "| ### Jetson Detected"
     else
-      echo "### SBSA Detected"
+      echo "| ### SBSA Detected"
       SYSTEM_ARCH="$ARCH"
     fi
-  else
-    echo "### x86 Detected"
+  elif [ $ARCH = "x86_64" ]; then
+    echo "| ### x86 Detected"
     SYSTEM_ARCH="$ARCH"
+  else
+	echo "| ### 🚫 Unsupported architecture:  $ARCH"
+	exit 1
   fi
 fi
+echo "| SYSTEM_ARCH=$SYSTEM_ARCH"
 
-echo "SYSTEM_ARCH=$SYSTEM_ARCH"
+IS_SBSA=$([ -z "$(nvidia-smi --query-gpu=name --format=csv,noheader | grep nvgpu)" ] && echo 1 || echo 0)
+echo "| IS_SBSA=$IS_SBSA"
 
-if [ $SYSTEM_ARCH = "tegra-aarch64" ]; then
-	L4T_VERSION_STRING=$(head -n 1 /etc/nv_tegra_release)
-
-	if [ -z "$L4T_VERSION_STRING" ]; then
-		#echo "reading L4T version from \"dpkg-query --show nvidia-l4t-core\""
-
-		L4T_VERSION_STRING=$(dpkg-query --showformat='${Version}' --show nvidia-l4t-core)
-		L4T_VERSION_ARRAY=(${L4T_VERSION_STRING//./ })	
-
-		#echo ${L4T_VERSION_ARRAY[@]}
-		#echo ${#L4T_VERSION_ARRAY[@]}
-
-		L4T_RELEASE=${L4T_VERSION_ARRAY[0]}
-		L4T_REVISION=${L4T_VERSION_ARRAY[1]}
-	else
-		#echo "reading L4T version from /etc/nv_tegra_release"
-
-		L4T_RELEASE=$(echo $L4T_VERSION_STRING | cut -f 2 -d ' ' | grep -Po '(?<=R)[^;]+')
-		L4T_REVISION=$(echo $L4T_VERSION_STRING | cut -f 2 -d ',' | grep -Po '(?<=REVISION: )[^;]+')
-	fi
-
-	L4T_REVISION_MAJOR=${L4T_REVISION:0:1}
-	L4T_REVISION_MINOR=${L4T_REVISION:2:1}
-
-	L4T_VERSION="$L4T_RELEASE.$L4T_REVISION"
-
-	echo "L4T_VERSION:  $L4T_VERSION"
-	
-elif [ $ARCH != "x86_64" ]; then
-	echo "unsupported architecture:  $ARCH"
-	exit 1
-fi
+COMPUTE_CAPABILITY=$(nvidia-smi --query-gpu=compute_cap --format=csv,noheader | head -n1 | tr -d '[:space:]')
+echo "| COMPUTE_CAPABILITY=$COMPUTE_CAPABILITY"
