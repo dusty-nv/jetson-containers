@@ -128,7 +128,8 @@ def get_jetpack_version(l4t_version: str = None, default='6.2'):
 
     NVIDIA_JETPACK = {
         # -------- JP7 --------
-        "38.1.0": "7.0 EA",
+        "38.1.0": "7.0",
+        "38.0.0": "7.0 EA",
 
         # -------- JP6 --------
         "36.4.3": "6.2",

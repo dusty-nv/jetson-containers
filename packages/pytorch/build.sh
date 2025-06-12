@@ -39,6 +39,8 @@ USE_DISTRIBUTED=1 \
 USE_FLASH_ATTENTION=1 \
 USE_MEM_EFF_ATTENTION=1 \
 USE_TENSORRT=0 \
+USE_BLAS="$USE_BLAS" \
+BLAS="$BLAS" \
 python3 setup.py bdist_wheel --dist-dir /opt
 
 cd /

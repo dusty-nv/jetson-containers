@@ -1,4 +1,4 @@
-from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES, CUDA_SHORT_VERSION, SYSTEM_ARM, LSB_RELEASE
+from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES, CUDA_SHORT_VERSION, SYSTEM_ARM, LSB_RELEASE, IS_SBSA
 from packaging.version import Version
 
 from .version import PYTORCH_VERSION
@@ -40,10 +40,16 @@ def pytorch_pip(version, requires=None):
 
     if L4T_VERSION.major >= 36:
         pkg['build_args']['USE_NCCL'] = 1  # NCCL building only on JP6 and newer
+        pkg['build_args']['USE_BLAS'] = 1  # BLAS building only on JP6 and newer
 
     if Version(version) >= Version('2.3.1'): # begin disabling MPI with JP 6.1 since GLOO/NCCL is working
         pkg['build_args']['USE_MPI'] = 0     # and to eliminate security vulnerability from MPI packages
 
+    if pkg['build_args'].get('USE_BLAS', 0):
+        if IS_SBSA:
+            pkg['build_args']['BLAS'] = 'NVPL'
+        else:
+            pkg['build_args']['BLAS'] = 'OpenBLAS'
     if requires:
         pkg['requires'] = requires
 

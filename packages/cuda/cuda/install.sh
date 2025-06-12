@@ -46,13 +46,17 @@ if [[ "$ARCH_TYPE" == "tegra-aarch64" ]]; then
     tar xvf data.tar.xz -C /
 fi
 
+apt-get update
+apt-get install -y --no-install-recommends ${CUDA_PACKAGES}
 # ARM64 SBSA (Grace) NVIDIA Performance Libraries (NVPL)
 # NVPL allows you to easily port HPC applications to NVIDIA Grace™ CPU platforms to achieve industry-leading performance and efficiency.
 if [[ "$ARCH_TYPE" == "aarch64" ]]; then
-    sudo apt-get -y install nvpl
+    wget $WGET_FLAGS https://developer.download.nvidia.com/compute/nvpl/25.5/local_installers/nvpl-local-repo-ubuntu2404-25.5_1.0-1_arm64.deb
+    dpkg -i nvpl-*_arm64.deb
+    cp /var/nvpl-*/nvpl-*-keyring.gpg /usr/share/keyrings/
+    apt-get update
+    apt-get -y install nvpl
 fi
-apt-get update
-apt-get install -y --no-install-recommends ${CUDA_PACKAGES}
 rm -rf /var/lib/apt/lists/*
 apt-get clean
 
