@@ -50,3 +50,12 @@ rm -rf /opt/pytorch
 pip3 install /opt/torch*.whl
 python3 -c 'import torch; print(f"PyTorch version: {torch.__version__}"); print(f"CUDA available:  {torch.cuda.is_available()}"); print(f"cuDNN version:   {torch.backends.cudnn.version()}"); print(torch.__config__.show());'
 twine upload --verbose /opt/torch*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+
+echo "Installing gcc-13 for ubuntu 24.04 again"
+GCC_VERSION=13
+apt-get update
+apt-get install -y g++-$GCC_VERSION
+update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-"$GCC_VERSION" 50
+update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-"$GCC_VERSION" 50
+update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-"$GCC_VERSION" 50
+
