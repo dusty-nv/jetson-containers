@@ -3,7 +3,15 @@
 set -ex
 
 echo "Building PyTorch ${PYTORCH_BUILD_VERSION}"
-   
+
+echo "Installing gcc-12 due that gcc-13 is not supported by PyTorch"
+GCC_VERSION=12
+apt-get update
+apt-get install -y g++-$GCC_VERSION
+update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-"$GCC_VERSION" 50
+update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-"$GCC_VERSION" 50
+update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-"$GCC_VERSION" 50
+
 # build from source
 git clone --branch "v${PYTORCH_BUILD_VERSION}" --depth=1 --recursive https://github.com/pytorch/pytorch /opt/pytorch ||
 git clone --depth=1 --recursive https://github.com/pytorch/pytorch /opt/pytorch
