@@ -1,4 +1,3 @@
-
 #!/usr/bin/env bash
 # pass-through commands to 'docker run' with some defaults
 # https://docs.docker.com/engine/reference/commandline/run/
@@ -300,11 +299,28 @@ if [ -z "$HAS_CONTAINER_NAME" ]; then
     CONTAINER_NAME_FLAGS="--name $CONTAINER_NAME"
 fi
 
-source $ROOT/jetson_containers/l4t_version.sh
+TEGRA="tegra"
+if [ -z "${SYSTEM_ARCH}" ]; then
+  ARCH=$(uname -m)
+
+  if [ "$ARCH" = "aarch64" ]; then
+	echo "### ARM64 architecture detected"
+    if uname -a | grep -qi "$TEGRA"; then
+      SYSTEM_ARCH="$TEGRA-$ARCH"
+      echo "### Jetson Detected"
+    else
+      echo "### SBSA Detected"
+      SYSTEM_ARCH="$ARCH"
+    fi
+  else
+    echo "### x86 Detected"
+    SYSTEM_ARCH="$ARCH"
+  fi
+fi
 
 echo "SYSTEM_ARCH=$SYSTEM_ARCH"
 
-if [ $SYSTEM_ARCH = "tegra-aarch64" ] && [ $IS_SBSA = 0 ]; then
+if [ $SYSTEM_ARCH = "tegra-aarch64" ]; then
 	# this file shows what Jetson board is running
 	# /proc or /sys files aren't mountable into docker
 	cat /proc/device-tree/model > /tmp/nv_jetson_model
@@ -313,7 +329,6 @@ if [ $SYSTEM_ARCH = "tegra-aarch64" ] && [ $IS_SBSA = 0 ]; then
 	( set -x ;
 
 	$SUDO docker run --runtime nvidia --env NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics -it --rm --network host \
-		--privileged \
 		--shm-size=8g \
 		--volume /tmp/argus_socket:/tmp/argus_socket \
 		--volume /etc/enctune.conf:/etc/enctune.conf \
@@ -332,7 +347,7 @@ if [ $SYSTEM_ARCH = "tegra-aarch64" ] && [ $IS_SBSA = 0 ]; then
 		"${filtered_args[@]}"
 	)
 
-elif [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "x86_64" ] || [ $IS_SBSA = 1 ]; then
+elif [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "x86_64" ]; then
 
 	( set -x ;
 
