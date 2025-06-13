@@ -13,7 +13,7 @@ def python(version, requires=None) -> list:
 
     if requires:
         pkg['requires'] = requires
-        
+
     return pkg
 
 package = [
