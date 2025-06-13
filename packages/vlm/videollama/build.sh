@@ -3,8 +3,8 @@ set -ex
 
 echo "Building videollama ${VIDEOLLAMA_VERSION}"
 
-git clone --depth=1 --branch=v${VIDEOLLAMA_VERSION} https://github.com/ByteDance-Seed/videollama /opt/videollama ||
-git clone --depth=1 https://github.com/ByteDance-Seed/videollama /opt/videollama
+git clone --depth=1 --branch=v${VIDEOLLAMA_VERSION} https://github.com/DAMO-NLP-SG/VideoLLaMA3 /opt/videollama ||
+git clone --depth=1 https://github.com/DAMO-NLP-SG/VideoLLaMA3 /opt/videollama
 
 cd /opt/videollama
 
