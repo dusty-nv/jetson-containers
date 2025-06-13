@@ -10,6 +10,8 @@ cd /opt/videollama
 
 sed -i '/--extra-index-url https:\/\/download.pytorch.org\/whl\/cu118/d; s/==/>=/g' requirements.txt
 pip3 install -U -r requirements.txt
+sed -i 's/==/>=/g' pyproject.toml
+
 export MAX_JOBS="$(nproc)"
 export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
