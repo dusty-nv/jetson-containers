@@ -2,8 +2,8 @@
 set -ex
 
 # Clone the repository if it doesn't exist
-git clone --branch=v${DECORD_VERSION} --depth=1 --recursive https://github.com/johnnynunez/decord /opt/decord || \
-git clone --depth=1 --recursive https://github.com/johnnynunez/decord /opt/decord
+git clone --branch=v${DECORD_VERSION} --depth=1 --recursive https://github.com/johnnynunez/decord2 /opt/decord || \
+git clone --depth=1 --recursive https://github.com/johnnynunez/decord2 /opt/decord
 
 cd /opt/decord
 mkdir build && cd build
