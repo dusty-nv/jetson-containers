@@ -16,9 +16,17 @@ Modular container build system that provides the latest [**AI/ML packages**](htt
 > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`pip3 install torch torchvision torchaudio \`  
 > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`--index-url https://pypi.jetson-ai-lab.dev/sbsa/cu128`
 >
+> See the **[`Ubuntu 24.04`](/docs/build.md#2404-containers)** section of the docs for details and a list of available containers 🤗
 > Thanks to all our contributors from **[`Discord`](https://discord.gg/BmqNSK4886)** and AI community for their support 🤗
 
 ![Jetson PyPI Health](https://img.shields.io/endpoint?url=https://tokk-nv.github.io/jetson-containers/health.json)
+
+## Code Style
+
+The project uses automated code formatting tools to maintain consistent code style. See [Code Style Guide](docs/code-style.md) for details on:
+- Setting up formatting tools
+- Adding your package to formatting checks
+- Troubleshooting common issues
 
 |                |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 |----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
