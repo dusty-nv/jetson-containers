@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -ex
 
-pip3 install compressed-tensors decord
+pip3 install compressed-tensors decord2
 
 REPO_URL="https://github.com/microsoft/MInference"
 echo "Building minference ${MINFERENCE_VERSION}"

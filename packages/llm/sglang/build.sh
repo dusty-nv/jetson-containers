@@ -8,7 +8,7 @@ set -x
 : "${PIP_WHEEL_DIR:?PIP_WHEEL_DIR must be set}"
 
 # Install Python deps
-pip3 install compressed-tensors decord
+pip3 install compressed-tensors decord2
 
 REPO_URL="https://github.com/sgl-project/sglang"
 REPO_DIR="/opt/sglang"

@@ -4,7 +4,7 @@ def transformer_engine(version, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
 
     pkg['name'] = f'transformer-engine:{version}'
 
@@ -30,5 +30,6 @@ package = [
     transformer_engine('2.1'), # FP4 support
     transformer_engine('2.2', default=False), # cutlass 3.9.0 support
     transformer_engine('2.3', default=False), # blackwell support
-    transformer_engine('2.4', default=True) # cutlass 4.0.0 support
+    transformer_engine('2.4', default=False), # cutlass 4.0.0 support
+    transformer_engine('2.6', default=True) # cutlass 4.0.0 support
 ]

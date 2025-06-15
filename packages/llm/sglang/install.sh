@@ -8,7 +8,7 @@ fi
 pip3 install \
   compressed-tensors \
   datasets \
-  decord \
+  decord2 \
   fastapi \
   hf_transfer \
   huggingface_hub \
