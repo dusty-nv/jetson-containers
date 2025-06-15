@@ -2,32 +2,32 @@
 set -ex
 
 # Clone the repository if it doesn't exist
-if [ ! -d /opt/pycolmap ]; then
+PYCOLMAP_SRC="${PYCOLMAP_SRC:-/opt/pycolmap}"
+
+if [ ! -d $PYCOLMAP_SRC ]; then
     echo "Cloning pycolmap version ${PYCOLMAP_VERSION}"
-    git clone --branch=v${PYCOLMAP_VERSION} --depth=1 --recursive https://github.com/colmap/colmap /opt/colmap || \
-    git clone --depth=1 --recursive https://github.com/colmap/colmap /opt/colmap
+    git clone --branch=v${PYCOLMAP_VERSION} --depth=1 --recursive https://github.com/colmap/colmap $PYCOLMAP_SRC || \
+    git clone --depth=1 --recursive https://github.com/colmap/colmap $PYCOLMAP_SRC
 fi
 
-# Navigate to the directory containing PyMeshLab's setup.py
-cd /opt/colmap && \
-mkdir build && \
-cd build && \
-cmake .. -DCUDA_ENABLED=ON \
-            -DCMAKE_CUDA_ARCHITECTURES=${CUDAARCHS} && \
-make -j $(nproc) && \
-make install && \
-cd /opt/colmap/ && \
-pip3 wheel . -w /opt/pycolmap/wheels --verbose
-pip3 install /opt/pycolmap/wheels/pycolmap-*.whl
-ldconfig
+mkdir -p $PYCOLMAP_SRC/build
+cd $PYCOLMAP_SRC/build
 
-# Verify the contents of the /opt directory
-ls /opt/pycolmap/wheels
+# Build base libraries
+cmake \
+    -DCUDA_ENABLED=ON \
+    -DCMAKE_CUDA_ARCHITECTURES=${CUDAARCHS} \
+    ..
+    
+make -j $(nproc)
+make install
 
-# Return to the root directory
-cd /
+# Build python wheel from source
+cd $PYCOLMAP_SRC
+export MAX_JOBS=$(nproc)
 
-pip3 install /opt/pycolmap/wheels/pycolmap*.whl
+pip3 wheel . -w $PIP_WHEEL_DIR --verbose
+pip3 install $PIP_WHEEL_DIR/pycolmap-*.whl
 
 # Optionally upload to a repository using Twine
-twine upload --verbose /opt/pycolmap/wheels/pycolmap*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose $PIP_WHEEL_DIR/pycolmap*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

@@ -4,7 +4,9 @@ set -ex
 
 echo "Building AutoAWQ ${AUTOAWQ_VERSION} (kernels=${AUTOAWQ_KERNELS_VERSION})"
 
-git clone --branch=v${AUTOAWQ_KERNELS_VERSION} --depth=1 https://github.com/casper-hansen/AutoAWQ_kernels /opt/AutoAWQ_kernels
+git clone --branch=v${AUTOAWQ_KERNELS_VERSION} --depth=1 https://github.com/casper-hansen/AutoAWQ_kernels /opt/AutoAWQ_kernels ||
+git clone --depth=1 https://github.com/casper-hansen/AutoAWQ_kernels
+
 cd /opt/AutoAWQ_kernels
 
 sed -i \
@@ -16,7 +18,8 @@ echo "COMPUTE_CAPABILITIES: ${COMPUTE_CAPABILITIES}"
 
 python3 setup.py --verbose bdist_wheel --dist-dir $PIP_WHEEL_DIR
 
-git clone --branch=v${AUTOAWQ_VERSION} --depth=1 https://github.com/casper-hansen/AutoAWQ /opt/AutoAWQ
+git clone --branch=v${AUTOAWQ_VERSION} --depth=1 https://github.com/casper-hansen/AutoAWQ /opt/AutoAWQ ||
+git clone --depth=1 https://github.com/casper-hansen/AutoAWQ /opt/AutoAWQ
 
 cd /opt/AutoAWQ
 sed -i \

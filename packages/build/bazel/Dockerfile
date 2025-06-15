@@ -12,7 +12,7 @@ FROM ${BASE_IMAGE}
 RUN BAZELISK_RELEASE=$(wget -qO- https://api.github.com/repos/bazelbuild/bazelisk/releases/latest | grep -Po '"tag_name": "\K.*?(?=")') && \
     BAZELISK_URL="https://github.com/bazelbuild/bazelisk/releases/download/$BAZELISK_RELEASE/bazelisk-linux-arm64" && \
     echo "BAZELISK_RELEASE=$BAZELISK_RELEASE" && echo "BAZELISK_URL=$BAZELISK_URL" && \
-    wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate $BAZELISK_URL -O /usr/local/bin/bazel && \
+    wget $WGET_FLAGS $BAZELISK_URL -O /usr/local/bin/bazel && \
     chmod +x /usr/local/bin/bazel
 
 # have bazelisk download latest bazel

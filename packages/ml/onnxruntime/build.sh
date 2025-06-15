@@ -2,7 +2,27 @@
 set -ex
 
 echo "Building onnxruntime ${ONNXRUNTIME_VERSION} (branch=${ONNXRUNTIME_BRANCH}, flags=${ONNXRUNTIME_FLAGS})"
- 
+
+# Check TensorRT installation
+if [ ! -d "/usr/lib/$(uname -m)-linux-gnu" ]; then
+    echo "TensorRT libraries not found in /usr/lib/$(uname -m)-linux-gnu"
+    exit 1
+fi
+
+# Ensure TensorRT libraries are in LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/usr/lib/$(uname -m)-linux-gnu:$LD_LIBRARY_PATH
+
+# Verify TensorRT components
+if [ ! -f "/usr/lib/$(uname -m)-linux-gnu/libnvinfer.so" ]; then
+    echo "TensorRT core library not found"
+    exit 1
+fi
+
+if [ ! -f "/usr/lib/$(uname -m)-linux-gnu/libnvdla_compiler.so" ]; then
+    echo "TensorRT NVDLA compiler library not found"
+    exit 1
+fi
+
 pip3 uninstall -y onnxruntime || echo "onnxruntime was not previously installed"
 
 git clone https://github.com/microsoft/onnxruntime /opt/onnxruntime
@@ -23,7 +43,7 @@ pip3 install "cmake<4"
         --cmake_extra_defines onnxruntime_BUILD_UNIT_TESTS=OFF \
         --cuda_home /usr/local/cuda --cudnn_home /usr/lib/$(uname -m)-linux-gnu \
         --use_tensorrt --tensorrt_home /usr/lib/$(uname -m)-linux-gnu
-	   
+
 cd build/Linux/Release
 make install
 

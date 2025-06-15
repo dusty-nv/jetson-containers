@@ -1,14 +1,10 @@
 #!/bin/bash
 set -ex
 
-CUDNN_MAJOR_VERSION=9
-CUDA_MAJOR_VERSION=12
-CUDA_VERSION=12.8
-
 prefix=/opt/nvidia/cudnn
 arch=$(uname -m)-linux-gnu
 
-cuda_base_path="/usr/local/cuda-${CUDA_VERSION}"
+cuda_base_path="/usr/local/cuda-${CUDA_VERSION_MAJOR}.${CUDA_VERSION_MINOR}"
 cuda_targets=${cuda_base_path}/targets/$(uname -m)-linux
 
 rm ${cuda_base_path}/include ${cuda_base_path}/lib64

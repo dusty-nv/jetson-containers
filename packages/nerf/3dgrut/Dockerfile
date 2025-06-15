@@ -14,15 +14,8 @@ ARG THREEGRUT_VERSION \
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        build-essential \
-        unzip \
         gcc-11 \
         g++-11 \
-        libgl1-mesa-dev \
-        libglu1-mesa-dev \
-        mesa-common-dev \
-        wget git \
-        curl \
         libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean

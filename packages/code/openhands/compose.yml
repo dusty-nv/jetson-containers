@@ -1,0 +1,28 @@
+services:
+  openhands:
+    image: ${OPENHANDS_REGISTRY}/openhands:${OPENHANDS_VERSION}
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    environment:
+      - SANDBOX_RUNTIME_CONTAINER_IMAGE=${OPENHANDS_REGISTRY}/runtime:${OPENHANDS_VERSION}-nikolaik
+      - SANDBOX_USER_ID=${USER_UID:-0}
+      - SANDBOX_VOLUMES=${SANDBOX}:/workspace:rw
+      - SANDBOX_ENV_OPENAI_API_KEY="${OPENAI_API_KEY}"
+      - OPENAI_MODEL="${OPENHANDS_MODEL}"
+      - OPENAI_BASE_URL="${OPENAI_BASE_URL}"
+      - OPENAI_API_BASE="${OPENAI_API_BASE}"
+      - OPENAI_API_KEY="${OPENAI_API_KEY}"
+      - LLM_MODEL="${OPENHANDS_MODEL}"
+      - LLM_API_KEY="${OPENAI_API_KEY}"
+      - LLM_BASE_URL="${OPENAI_BASE_URL}"
+      - LOG_ALL_EVENTS="true"
+      - AGENT_MEMORY_ENABLED="true"
+      - MAX_TOKEN="131072"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${CACHE_DIR}/openhands:/.openhands-state
+    ports:
+      - "3000:3000"

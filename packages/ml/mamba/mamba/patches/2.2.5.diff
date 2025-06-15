@@ -1,5 +1,5 @@
 diff --git a/setup.py b/setup.py
-index 7c6196d..cb3d864 100755
+index 7c6196d..557ec8a 100755
 --- a/setup.py
 +++ b/setup.py
 @@ -44,20 +44,36 @@ SKIP_CUDA_BUILD = os.getenv("MAMBA_SKIP_CUDA_BUILD", "FALSE") == "TRUE"
@@ -11,6 +11,18 @@ index 7c6196d..cb3d864 100755
      """
 -    Returns the platform name as used in wheel filenames.
 +    Returns the system name as used in wheel filenames.
++    """
++    if platform.system() == "Windows":
++        return "win"
++    elif platform.system() == "Darwin":
++        mac_version = ".".join(platform.mac_ver()[0].split(".")[:1])
++        return f"macos_{mac_version}"
++    elif platform.system() == "Linux":
++        return "linux"
++    else:
++        raise ValueError("Unsupported system: {}".format(platform.system()))
++
++def get_arch():
      """
 -    if sys.platform.startswith("linux"):
 -        return "linux_x86_64"
@@ -19,28 +31,16 @@ index 7c6196d..cb3d864 100755
 -        return f"macosx_{mac_version}_x86_64"
 -    elif sys.platform == "win32":
 -        return "win_amd64"
-+    if platform.system() == "Windows":
-+        return "win"
-+    elif platform.system() == "Darwin":
-+        mac_version = ".".join(platform.mac_ver()[0].split(".")[:1])
-+        return f"macos_{mac_version}"
-+    elif platform.system() == "Linux":
-+        return "linux"
-     else:
--        raise ValueError("Unsupported platform: {}".format(sys.platform))
-+        raise ValueError("Unsupported system: {}".format(platform.system()))
- 
-+def get_arch():
-+    """
 +    Returns the system name as used in wheel filenames.
 +    """
 +    if platform.machine() == "x86_64":
 +        return "x86_64"
 +    elif platform.machine() == "arm64" or platform.machine() == "aarch64":
 +        return "aarch64"
-+    else:
+     else:
+-        raise ValueError("Unsupported platform: {}".format(sys.platform))
 +        raise ValueError("Unsupported arch: {}".format(platform.machine()))
-+
+ 
 +def get_platform() -> str:
 +    """
 +    Returns the platform name as used in wheel filenames.
@@ -49,7 +49,7 @@ index 7c6196d..cb3d864 100755
  
  def get_cuda_bare_metal_version(cuda_dir):
      raw_output = subprocess.check_output(
-@@ -172,22 +188,19 @@ if not SKIP_CUDA_BUILD:
+@@ -172,22 +188,21 @@ if not SKIP_CUDA_BUILD:
                      "Note: make sure nvcc has a supported version by running nvcc -V."
                  )
  
@@ -78,11 +78,13 @@ index 7c6196d..cb3d864 100755
 +            cc_flag.append("-gencode")
 +            cc_flag.append("arch=compute_101,code=sm_101")
 +            cc_flag.append("-gencode")
++            cc_flag.append("arch=compute_110,code=sm_110")
++            cc_flag.append("-gencode")
 +            cc_flag.append("arch=compute_120,code=sm_120")
  
  
      # HACK: The compiler flag -D_GLIBCXX_USE_CXX11_ABI is set to be the same as
-@@ -254,7 +267,7 @@ if not SKIP_CUDA_BUILD:
+@@ -254,7 +269,7 @@ if not SKIP_CUDA_BUILD:
      )
  
  
@@ -91,7 +93,7 @@ index 7c6196d..cb3d864 100755
      with open(Path(this_dir) / PACKAGE_NAME / "__init__.py", "r") as f:
          version_match = re.search(r"^__version__\s*=\s*(.*)$", f.read(), re.MULTILINE)
      public_version = ast.literal_eval(version_match.group(1))
-@@ -265,7 +278,7 @@ def get_package_version():
+@@ -265,7 +280,7 @@ def get_package_version():
          return str(public_version)
  
  
@@ -100,7 +102,7 @@ index 7c6196d..cb3d864 100755
      # Determine the version numbers that will be used to determine the correct wheel
      torch_version_raw = parse(torch.__version__)
  
-@@ -307,7 +320,7 @@ class CachedWheelsCommand(_bdist_wheel):
+@@ -307,7 +322,7 @@ class CachedWheelsCommand(_bdist_wheel):
      wheel available and short-circuits the standard full build pipeline.
      """
  

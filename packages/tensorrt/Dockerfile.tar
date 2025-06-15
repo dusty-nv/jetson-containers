@@ -14,7 +14,7 @@ RUN set -ex && \
     echo "Downloading ${TENSORRT_URL}" && \
     mkdir -p /tmp/tensorrt && \
     cd /tmp/tensorrt && \
-    wget --quiet --show-progress --progress=bar:force:noscroll ${TENSORRT_URL} -O TensorRT.tar && \
+    wget $WGET_FLAGS ${TENSORRT_URL} -O TensorRT.tar && \
     tar -xvf TensorRT.tar -C /usr/src && \
     mv /usr/src/TensorRT-* /usr/src/tensorrt
     

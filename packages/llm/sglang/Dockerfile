@@ -2,9 +2,9 @@
 # name: sglang
 # group: llm
 # config: config.py
-# depends: [vllm, flashinfer, torchao, cuda-python, ffmpeg]
+# depends: [bitsandbytes, flashinfer, torchao, cuda-python, ffmpeg, mamba, xgrammar, flashinfer, transformers, minference, vllm, torch-memory-saver]
 # requires: '>=36'
-# test: test.sh
+# test: test.py
 # notes: https://github.com/sgl-project/sglang
 #---
 ARG BASE_IMAGE
@@ -12,10 +12,7 @@ FROM ${BASE_IMAGE}
 
 ARG SGLANG_VERSION \
     SGLANG_VERSION_SPEC \
-    SGL_KERNEL_ENABLE_BF16=1 \
-    SGL_KERNEL_ENABLE_FP8=1 \
-    SGL_KERNEL_ENABLE_FP4=0 \
-    MAX_JOBS="$(nproc)" \
+    IS_SBSA \
     FORCE_BUILD=off \
     TMP=/tmp/sglang
 
@@ -39,3 +36,5 @@ RUN if [ -f $TMP/.build.failed ]; then \
       echo "SGLANG ${SGLANG_VERSION} build failed!"; \
       exit 1; \
     fi
+
+RUN /tmp/transformers/install.sh

@@ -75,7 +75,7 @@ if [[ $MODEL_PATH == http* ]]; then
 	if [ ! -d "$MODEL_EXTRACTED" ]; then
 		pushd $MODEL_ROOT/models
 		MODEL_TAR="$MODEL_NAME.tar.gz"
-		wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate $MODEL_PATH -O $MODEL_TAR
+		wget $WGET_FLAGS $MODEL_PATH -O $MODEL_TAR
 		tar -xzvf $MODEL_TAR
 		#rm $MODEL_TAR
 		popd

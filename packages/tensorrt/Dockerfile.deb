@@ -16,7 +16,7 @@ RUN set -ex && \
     echo "Downloading ${TENSORRT_DEB}" && \
     mkdir -p /tmp/tensorrt && \
     cd /tmp/tensorrt && \
-    wget --quiet --show-progress --progress=bar:force:noscroll ${TENSORRT_URL} && \
+    wget $WGET_FLAGS ${TENSORRT_URL} && \
     dpkg -i *.deb && \
     cp /var/nv-tensorrt-local-repo-*/nv-tensorrt-local-*-keyring.gpg /usr/share/keyrings/ && \
     apt-get update && \

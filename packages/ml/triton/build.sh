@@ -18,12 +18,12 @@ sed -i \
     -e 's|-Werror|-Wno-error|g' \
     CMakeLists.txt
     
-sed -i 's|^download_and_copy_ptxas|#|g' python/setup.py
+sed -i 's|^download_and_copy_ptxas|#&|' python/setup.py || :
 
 mkdir -p third_party/cuda
 ln -sf /usr/local/cuda/bin/ptxas $(pwd)/third_party/cuda/ptxas
 
-pip3 wheel --wheel-dir=/opt --no-deps ./python
+pip3 wheel --wheel-dir=/opt --no-deps ./python || pip3 wheel --wheel-dir=/opt --no-deps .
 
 cd /
 rm -rf /opt/triton 

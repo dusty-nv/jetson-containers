@@ -18,7 +18,7 @@ python3 -m sqlite3 -v
 # Download and build SQLite
 mkdir -p /tmp/sqlite
 # Download SQLite from GitHub mirror
-wget --quiet --show-progress --progress=bar:force:noscroll \
+wget $WGET_FLAGS \
     https://github.com/sqlite/sqlite/archive/refs/tags/version-${SQLITE_VERSION}.tar.gz \
     -O /tmp/sqlite/sqlite.tar.gz
 # Extract and build SQLite

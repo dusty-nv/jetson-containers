@@ -1,4 +1,3 @@
-from jetson_containers import CUDA_ARCHITECTURES
 
 def nerfacc(version, requires=None, default=False):
     pkg = package.copy()
@@ -9,7 +8,6 @@ def nerfacc(version, requires=None, default=False):
     pkg['name'] = f'nerfacc:{version}'
 
     pkg['build_args'] = {
-        'CUDAARCHS': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
         'NERFACC_VERSION': version,
     }
 
@@ -25,5 +23,6 @@ def nerfacc(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    nerfacc('0.5.3', default=True)
+    nerfacc('0.5.3'),
+    nerfacc('0.5.4', default=True)
 ]

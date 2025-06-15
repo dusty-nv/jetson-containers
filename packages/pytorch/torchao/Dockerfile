@@ -2,7 +2,7 @@
 # name: torchao
 # group: pytorch
 # config: config.py
-# depends: [pytorch, cmake]
+# depends: [pytorch, triton, cmake]
 # test: test.py
 #---
 ARG BASE_IMAGE

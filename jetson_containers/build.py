@@ -116,7 +116,9 @@ if args.list_packages or args.show_packages:
             print(package)
     
     if args.show_packages:
-        pprint.pprint(packages)
+        for key in sorted(packages.keys()):
+            fmt = pprint.pformat(packages[key], indent=2)[1:-1].replace('\n', '\n  ')
+            cprint(f"\n<b>> {key}</b>\n\n   {fmt}")
         
     sys.exit(0)
     

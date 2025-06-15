@@ -16,7 +16,7 @@ docker run --runtime nvidia -it --rm --network=host -v ~/ollama:/ollama -e OLLAM
 
 You can then run the ollama [client](#ollama-client) in the same container (or a different one if desired).  The default docker run CMD of the `ollama` container is [`/start_ollama`](./start_ollama), which starts the ollama server in the background and returns control to the user. The ollama server logs are saved under your mounted `jetson-containers/data/logs` directory for monitoring them outside the containers.
 
-Setting the `$OLLAMA_MODELS` environment variable as shown above will change where ollama downloads the models to.  By default, this is under your `jetson-containers/data/models/ollama` directory which is automatically mounted by `jetson-containers run`.  
+Setting the `$OLLAMA_MODELS` environment variable as shown above will change where ollama downloads the models to. By default, this is under your `jetson-containers/data/models/ollama` directory which is automatically mounted by `jetson-containers run`.
 
 ## Ollama Client
 

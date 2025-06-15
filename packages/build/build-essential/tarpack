@@ -7,14 +7,12 @@ PACKAGE=$2
 : "${TARPACK_PREFIX:=/usr/local}"
 : "${TARPACK_TMPDIR:=/tmp/tarpack}"
 
-: "${WGET_OPTIONS:=--quiet --show-progress --progress=bar:force:noscroll}"
-
 mkdir -p ${TARPACK_TMPDIR}/uploads
 
 if [ "${COMMAND}" == "install" ]; then
 	cd ${TARPACK_TMPDIR}
-	wget ${WGET_OPTIONS} ${TAR_INDEX_URL}/${PACKAGE}.tar.gz
-	wget ${WGET_OPTIONS} ${TAR_INDEX_URL}/${PACKAGE}.sha256
+	wget ${WGET_FLAGS} ${TAR_INDEX_URL}/${PACKAGE}.tar.gz
+	wget ${WGET_FLAGS} ${TAR_INDEX_URL}/${PACKAGE}.sha256
 	ls -ll ${PACKAGE}.tar.gz
 	cat ${PACKAGE}.sha256
 	sha256sum --check ${PACKAGE}.sha256

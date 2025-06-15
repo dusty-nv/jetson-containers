@@ -23,5 +23,5 @@ def polyscope(version, requires=None, default=False):
 
 package = [
     polyscope('2.3.0', default=False),
-    polyscope('2.4.0', default=True)
+    polyscope('2.5.0', default=True),
 ]

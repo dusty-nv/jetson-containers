@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
-
-set -e
+set -ex
 
 ffmpeg -version
-
 ffmpeg -encoders
-
 ffmpeg -decoders

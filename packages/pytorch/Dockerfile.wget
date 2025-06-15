@@ -28,7 +28,7 @@ RUN set -ex \
     && apt-get clean \
     \
     # download and install the PyTorch wheel
-    && wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${PYTORCH_URL} -O /opt/${PYTORCH_WHL} \
+    && wget $WGET_FLAGS ${PYTORCH_URL} -O /opt/${PYTORCH_WHL} \
     && pip3 install /opt/${PYTORCH_WHL} \
     && python3 -c 'import torch; print(f"PyTorch version: {torch.__version__}"); print(f"CUDA available:  {torch.cuda.is_available()}"); print(f"cuDNN version:   {torch.backends.cudnn.version()}"); print(torch.__config__.show());' \
     \

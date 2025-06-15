@@ -1,0 +1,13 @@
+services:
+  portainer:
+    image: portainer/portainer-ce
+    restart: unless-stopped
+    ports:
+      - 9000:9000
+      - 9443:9443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${CACHE_DIR}/portainer:/data
+    extends:
+      file: ../../templates.yml
+      service: gpus_all

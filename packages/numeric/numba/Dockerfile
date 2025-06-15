@@ -1,6 +1,6 @@
 #---
 # name: numba
-# group: cuda
+# group: numerical
 # depends: [cuda, numpy]
 # test: test.py
 #---

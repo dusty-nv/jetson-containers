@@ -21,15 +21,20 @@ RUN git clone https://github.com/thewh1teagle/kokoro-onnx.git && \
     sed -i "/onnxruntime/d" pyproject.toml && \
     sed -i "s/numpy>=2.0.2/numpy/" pyproject.toml && \
     sed -i 's/providers = \["CPUExecutionProvider"\]/providers = \["CUDAExecutionProvider", "CPUExecutionProvider"\]/' src/kokoro_onnx/__init__.py && \
-    pip install -e . 
+    pip install -e .
 
 # Install Python dependencies in one step
 RUN pip install gradio soundfile sounddevice
 
 # Download model and voices files
-RUN wget -P /opt/kokoro-onnx/examples \
-    https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/kokoro-v1.0.onnx \
+RUN curl -L --retry 5 --retry-delay 2 --retry-all-errors --fail \
+    -o /opt/kokoro-onnx/examples/kokoro-v1.0.onnx \
+    https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/kokoro-v1.0.onnx && \
+    sleep 2 && \
+    curl -L --retry 5 --retry-delay 2 --retry-all-errors --fail \
+    -o /opt/kokoro-onnx/examples/voices-v1.0.bin \
     https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin
+
 
 # Reinstall correct numpy
 RUN bash /tmp/numpy/install.sh

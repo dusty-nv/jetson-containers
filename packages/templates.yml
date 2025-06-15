@@ -1,0 +1,53 @@
+# 
+# Shared templates that can extend other service definitions.
+# Add lines like this to a service to inherit from a template:
+#
+#  extends:
+#    file: ../templates.yml
+#    service: gpus_all
+#
+# https://docs.docker.com/compose/how-tos/multiple-compose-files/extends/
+#
+services:
+  # Enable device access for single/multi-GPU configs.
+  # Extending 'gpus_all' will enable all GPUs available.
+  gpus_all:
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+  gpus_1:  # Single GPU
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+  gpus_2:  # 2x GPU
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 2
+              capabilities: [gpu]
+  gpus_4:  # 4x GPU
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 4
+              capabilities: [gpu]
+  gpus_8:  # 8x GPU
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 8
+              capabilities: [gpu]

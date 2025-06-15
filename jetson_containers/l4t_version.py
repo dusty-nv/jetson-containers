@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 # finds the versions of JetPack-L4T and CUDA from the build environment:
 #
@@ -8,7 +9,7 @@
 #    CUDA_ARCHITECTURES (list[int]) -- e.g. [53, 62, 72, 87, 101]
 #    SYSTEM_ARCH (str) -- e.g. 'aarch64' or 'x86_64'
 #    LSB_RELEASE (str) -- e.g. '18.04', '20.04', '22.04'
-#    
+#
 import os
 import re
 import sys
@@ -40,11 +41,13 @@ def get_l4t_version(version_file='/etc/nv_tegra_release', l4t_version: str = Non
     if 'L4T_VERSION' in os.environ and len(os.environ['L4T_VERSION']) > 0:
         return Version(os.environ['L4T_VERSION'].lower().lstrip('r'))
 
-    if SYSTEM_ARCH != 'aarch64' or SYSTEM_ARCH !='tegra-aarch64':
-        return Version('36.4.0')  # for x86 to unlock L4T checks
+    if SYSTEM_ARCH_TYPE != 'tegra-aarch64':
+        return Version('36.4.3') # for x86 to unlock L4T checks
+
 
     if not os.path.isfile(version_file):
-        raise IOError(f"L4T_VERSION file doesn't exist:  {version_file}")
+        # raise IOError(f"L4T_VERSION file doesn't exist:  {version_file}")
+        return Version('36.4.3')
 
     with open(version_file) as file:
         line = file.readline()
@@ -107,7 +110,7 @@ def nv_tegra_release(version_file='/etc/nv_tegra_release', dst=None):
     return text
 
 
-def get_jetpack_version(l4t_version: str = None, default='5.1'):
+def get_jetpack_version(l4t_version: str = None, default='6.2'):
     """
     Returns the version of JetPack (based on the L4T version)
     https://github.com/rbonghi/jetson_stats/blob/master/jtop/core/jetson_variables.py
@@ -125,7 +128,9 @@ def get_jetpack_version(l4t_version: str = None, default='5.1'):
 
     NVIDIA_JETPACK = {
         # -------- JP7 --------
-        "37.0.0": "7.0 EA",
+        "38.1.0": "7.0",
+        "38.0.0": "7.0 EA",
+
         # -------- JP6 --------
         "36.4.3": "6.2",
         "36.4.2": "6.1.1",
@@ -135,6 +140,9 @@ def get_jetpack_version(l4t_version: str = None, default='5.1'):
         "36.0.0": "6.0 EA",
 
         # -------- JP5 --------
+        "35.6.1": "5.1.5",
+        "35.6.0": "5.1.4",
+        "35.5.0": "5.1.3",
         "35.4.1": "5.1.2",
         "35.3.1": "5.1.1",
         "35.3.0": "5.1.1 PRE",
@@ -219,8 +227,8 @@ def get_cuda_version(version_file: str = "/usr/local/cuda/version.json", l4t_ver
     if 'CUDA_VERSION' in os.environ and len(os.environ['CUDA_VERSION']) > 0:
         return to_version(os.environ['CUDA_VERSION'])
 
-    if LSB_RELEASE == '24.04' and L4T_VERSION.major > 36:
-        return Version('13.0')  # default to CUDA 13.0 for 24.04 containers on JP7
+    if LSB_RELEASE == '24.04' and L4T_VERSION.major >= 38:
+        return Version('12.9')  # default to CUDA 12.9 for 24.04 containers on JP7
 
     if LSB_RELEASE == '24.04' and L4T_VERSION.major <= 36:
         return Version('12.8')  # default to CUDA 12.8 for 24.04 containers on JP6
@@ -240,15 +248,17 @@ def get_cuda_version(version_file: str = "/usr/local/cuda/version.json", l4t_ver
                 print("-- unable to extract CUDA version number")
         else:
             l4t_version = get_l4t_version(l4t_version=l4t_version)
-            if l4t_version.major >= 36:
+            if l4t_version.major >= 38:
+                if l4t_version == Version('38.1'):
+                    cuda_version = '12.9'
+            elif l4t_version.major >= 36:
                 # L4T r36.x (JP 6.x) and above does not require having CUDA installed on host
                 # When CUDA is not installed on host, users can specify which version of
                 # CUDA (and matching version cuDNN and TensorRT) in container by
                 # executing, for example, `export CUDA_VERSION=12.8`.
                 # If the env variable is not set, set the CUDA_VERSION to be the CUDA version
                 # that made available with the release of L4T_VERSION
-                if l4t_version == Version('36.4') or l4t_version == Version('36.4.2') or l4t_version == Version(
-                        '36.4.3'):
+                if l4t_version == Version('36.4') or l4t_version == Version('36.4.2') or l4t_version == Version('36.4.3'):
                     cuda_version = '12.6'
                 elif l4t_version == Version('36.3'):
                     cuda_version = '12.4'
@@ -281,7 +291,7 @@ def cuda_short_version(cuda_version: str = None):
     return f"cu{cuda_version.major}{cuda_version.minor}"
 
 
-def get_cuda_arch(l4t_version: str = None, format=list):
+def get_cuda_arch(l4t_version: str=None, cuda_version: str=None, format=list):
     """
     Return the default list of CUDA/NVCC device architectures for the given L4T_VERSION.
     """
@@ -291,6 +301,12 @@ def get_cuda_arch(l4t_version: str = None, format=list):
     if not isinstance(l4t_version, Version):
         l4t_version = Version(l4t_version)
 
+    if not cuda_version:
+        cuda_version = get_cuda_version(l4t_version=l4t_version)
+
+    if not isinstance(cuda_version, Version):
+        cuda_version = Version(cuda_version)
+
     # supported_arches = ['3.5', '3.7', '5.0', '5.2', '5.3', '6.0', '6.1', '6.2',
     #                    '7.0', '7.2', '7.5', '8.0', '8.6', '8.7', '8.9', '9.0', '9.0a',
     #                    '10.0', '10.0a', '10.1', '10.1a', '12.0', '12.0a']
@@ -298,7 +314,7 @@ def get_cuda_arch(l4t_version: str = None, format=list):
         # Nano/TX1 = 5.3, TX2 = 6.2, Xavier = 7.2, Orin = 8.7, Thor = 10.1
         if IS_TEGRA:
             if l4t_version.major >= 38:  # JetPack 7
-                cuda_architectures = [87, 101]
+                cuda_architectures = [87, 101, 110]
             elif l4t_version.major >= 36:  # JetPack 6
                 cuda_architectures = [87]
             elif l4t_version.major >= 34:  # JetPack 5
@@ -306,7 +322,9 @@ def get_cuda_arch(l4t_version: str = None, format=list):
             elif l4t_version.major == 32:  # JetPack 4
                 cuda_architectures = [53, 62, 72]
         elif IS_SBSA:
-            cuda_architectures = [90, 100, 101, 120]  # Hopper, Blackwell
+            cuda_architectures = [87, 90, 100, 101]  # Ampere Orin, Hopper GH200 90, Blackwell GB200 100, Thor 101
+            if cuda_version >= Version('13.0'):
+                cuda_architectures += [103, 110, 121] # Thor 110, Spark 121
     else:
         cuda_architectures = [
             80, 86,  # Ampere
@@ -314,6 +332,10 @@ def get_cuda_arch(l4t_version: str = None, format=list):
             90,  # Hopper
             100, 101, 120  # Blackwell
         ]
+
+        if cuda_version >= Version('12.9'):
+            cuda_architectures += [103, 121]
+
     if format == list:
         return cuda_architectures
     elif format == str:
@@ -330,7 +352,7 @@ def get_l4t_base(l4t_version: str = None):
         l4t_version = get_l4t_version()
 
     if l4t_version.major >= 38:  # JetPack 7
-        return f"ubuntu:{LSB_RELEASE}"  # "nvcr.io/ea-linux4tegra/l4t-jetpack:r37.0.0"
+        return f"ubuntu:{LSB_RELEASE}"  # "nvcr.io/ea-linux4tegra/l4t-jetpack:r38.1.0"
     elif l4t_version.major >= 36:  # JetPack 6
         return f"ubuntu:{LSB_RELEASE}"  # "nvcr.io/ea-linux4tegra/l4t-jetpack:r36.0.0"
     elif l4t_version.major >= 34:  # JetPack 5
@@ -407,7 +429,7 @@ def get_lsb_release(l4t_version: str = None):
     """
     if l4t_version:
         l4t_version = get_l4t_version(l4t_version=l4t_version)
-        if l4t_version.major > 36:
+        if l4t_version.major >= 38:
             return '24.04'
         elif l4t_version.major == 36:
             return '22.04'
@@ -424,7 +446,7 @@ def get_lsb_release(l4t_version: str = None):
 
     return os.environ.get(
         'LSB_RELEASE',
-        '24.04' if SYSTEM_ARCH == 'x86_64' else lsb('r')
+        '24.04' if SYSTEM_X86 or IS_SBSA else lsb('r')
     )
 
 
@@ -485,13 +507,13 @@ DOCKER_ARCHS = {
 OS_ARCH_DICT = {
     "amd64": "x86_64-unknown-linux-gnu",
     "aarch64": "aarch64-unknown-linux-gnu",
-    "tegra-aarch64": "tegra-aarch64-unknown-linux-gnu",
+    "tegra-aarch64": "aarch64-unknown-linux-gnu",
 }
 
 _REDIST_ARCH_DICT = {
     "linux-x86_64": "x86_64-unknown-linux-gnu",
     "linux-sbsa": "aarch64-unknown-linux-gnu",
-    "linux-aarch64": "tegra-aarch64-unknown-linux-gnu",
+    "linux-aarch64": "aarch64-unknown-linux-gnu",
 }
 
 TEGRA = "tegra"

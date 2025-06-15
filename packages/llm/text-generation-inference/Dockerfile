@@ -15,7 +15,7 @@ WORKDIR /opt
 ARG PROTOC_URL=https://github.com/protocolbuffers/protobuf/releases/download/v21.12/protoc-21.12-linux-aarch_64.zip
 ARG PROTOC_ZIP=protoc-21.12-linux-aarch_64.zip
 
-RUN wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${PROTOC_URL} -O ${PROTOC_ZIP} && \
+RUN wget $WGET_FLAGS ${PROTOC_URL} -O ${PROTOC_ZIP} && \
     unzip -o ${PROTOC_ZIP} -d /usr/local bin/protoc && \
     unzip -o ${PROTOC_ZIP} -d /usr/local 'include/*' && \
     rm ${PROTOC_ZIP}

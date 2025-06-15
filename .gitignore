@@ -3,10 +3,12 @@ __pycache__
 *.tar.gz
 *.so
 *.deb
+*.symvers
 data/*
 logs
 test/data
 runner
+venv
 *.minus-github-api
 .DS_Store
 .vscode
@@ -17,3 +19,4 @@ runner
 nv_tegra_release
 kokoro-*-*.wav
 audio.wav
+benchmark.csv

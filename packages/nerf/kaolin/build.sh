@@ -10,6 +10,7 @@ git clone --depth=1 --recursive https://github.com/NVIDIAGameWorks/kaolin /opt/k
 cd /opt/kaolin
 
 # Set CC-11 and G++-11 as the default
+pip3 install --ignore-installed blinker
 pip3 install -r tools/build_requirements.txt
 pip3 install -r tools/viz_requirements.txt
 pip3 install -r tools/requirements.txt

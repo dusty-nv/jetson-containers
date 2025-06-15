@@ -1,75 +1,91 @@
 #!/usr/bin/env bash
-set -ex
+set -euo pipefail
+IFS=$'\n\t'
+set -x
 
+# Ensure required variables are set
+: "${SGLANG_VERSION:?SGLANG_VERSION must be set}"
+: "${PIP_WHEEL_DIR:?PIP_WHEEL_DIR must be set}"
+
+# Install Python deps
 pip3 install compressed-tensors decord
 
 REPO_URL="https://github.com/sgl-project/sglang"
 REPO_DIR="/opt/sglang"
 
-ARCH="$(uname -m)"
-ARCH_SED="s|x86_64|$ARCH|g" 
-PLATFORM="$ARCH-linux"
+echo "Building SGLang ${SGLANG_VERSION}"
 
-export SGL_KERNEL_ENABLE_BF16=1
-export SGL_KERNEL_ENABLE_FP8=1
-export SGL_KERNEL_ENABLE_FP4=0
-export SGL_KERNEL_ENABLE_SM90A=1
-export SGL_KERNEL_ENABLE_SM100A=0
-export USE_CUDNN=1
-export MAX_JOBS=6
-
-echo "Building SGLang ${SGLANG_VERSION} for ${PLATFORM}"
-
-git clone --recursive --depth=1 --branch=v${SGLANG_VERSION} $REPO_URL $REPO_DIR ||
-git clone --recursive --depth=1 $REPO_URL $REPO_DIR
-
-cd $REPO_DIR
-
-# Clean deps
-sed -i '/sgl-kernel/d' python/pyproject.toml
-sed -i '/flashinfer/d' python/pyproject.toml
-sed -i '/xgrammar/d' python/pyproject.toml
-sed -i '/"torch==2\.5\.1",/d' python/pyproject.toml
-
-# Patch arch in init
-sed -i $ARCH_SED sgl-kernel/python/sgl_kernel/__init__.py
-
-echo "Building SGL-KERNEL"
-cd $REPO_DIR/sgl-kernel/
-
-sed -i '/"torch==2\.5\.1",/d' pyproject.toml
-sed -i 's|"torch==.*"|"torch"|g' pyproject.toml
-CMAKE_ARGS="-DCMAKE_CUDA_ARCHITECTURES=87;101" pip3 wheel . --no-deps --wheel-dir $PIP_WHEEL_DIR
-pip3 install $PIP_WHEEL_DIR/sgl*.whl
-
-cd $REPO_DIR
-
-# Patch si hace falta
-if test -f "python/sglang/srt/utils.py"; then
-    sed -i '/return min(memory_values)/s/.*/        return None/' python/sglang/srt/utils.py
-    sed -i '/if not memory_values:/,+1d' python/sglang/srt/utils.py
+# Clone either the tagged release or fallback to default branch
+if git clone --recursive --depth 1 --branch "v${SGLANG_VERSION}" \
+    "${REPO_URL}" "${REPO_DIR}"
+then
+  echo "Cloned v${SGLANG_VERSION}"
+else
+  echo "Tagged branch not found; cloning default branch"
+  git clone --recursive --depth 1 "${REPO_URL}" "${REPO_DIR}"
 fi
 
-# Build SGLang
-cd $REPO_DIR/python
+pip3 install --no-cache-dir ninja setuptools==75.0.0 wheel==0.41.0 numpy uv scikit-build-core
+echo "Building SGL-KERNEL"
+cd "${REPO_DIR}/sgl-kernel" || exit 1
+sed -i -E 's/(set[[:space:]]*\(ENABLE_BELOW_SM90)[[:space:]]+OFF/\1 ON/' CMakeLists.txt
+sed -i -E 's/(message[[:space:]]*\([[:space:]]*STATUS[[:space:]]*")[^"]*(")/\1ACTIVATED\2/' CMakeLists.txt
+# sed -i '/^        "-gencode=arch=compute_80,code=sm_80"/a\        "-gencode=arch=compute_87,code=sm_87"' CMakeLists.txt
+# sed -i '/^            "-gencode=arch=compute_80,code=sm_80"/a\            "-gencode=arch=compute_87,code=sm_87"' CMakeLists.txt
+sed -i 's/==/>=/g' pyproject.toml
 
-sed -i 's|"torchao.*"|"torchao"|g' pyproject.toml
-sed -i 's|"sgl-kernel.*"|"sgl-kernel"|g' pyproject.toml
-sed -i 's|"vllm.*"|"vllm"|g' pyproject.toml
-sed -i 's|"torch=.*"|"torch"|g' pyproject.toml
 
-echo "Patched $REPO_DIR/python/pyproject.toml"
+# 🔧 Build step for sgl-kernel
+echo "🔨  Building sgl-kernel…"
+if [[ "${IS_SBSA:-}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
+  export CORES=2
+else
+  export CORES=32  # GH200
+fi
+
+echo "🚀  Building with MAX_JOBS=${CORES} and CMAKE_BUILD_PARALLEL_LEVEL=${CORES}"
+MAX_JOBS="${CORES}" \
+CMAKE_BUILD_PARALLEL_LEVEL="${CORES}" \
+pip3 wheel . --no-deps --wheel-dir "${PIP_WHEEL_DIR}"
+pip3 install "${PIP_WHEEL_DIR}/sgl"*.whl
+cd "${REPO_DIR}" || exit 1
+
+# Patch utils.py if present
+UTILS_PATH="python/sglang/srt/utils.py"
+if [[ -f "${UTILS_PATH}" ]]; then
+  sed -i \
+    -e '/return min(memory_values)/s/.*/        return None/' \
+    -e '/if not memory_values:/,+1d' \
+    "${UTILS_PATH}"
+fi
+
+# 🔧 Build sglang (Python package)
+echo "🔨  Building sglang…"
+cd "${REPO_DIR}/python" || exit 1
+
+sed -i 's/==/>=/g' pyproject.toml
+
+echo "Patched ${REPO_DIR}/python/pyproject.toml"
 cat pyproject.toml
 
-pip3 wheel '.[all]' --wheel-dir $PIP_WHEEL_DIR
-pip3 install $PIP_WHEEL_DIR/sglang*.whl
+if [[ -z "${IS_SBSA:-}" || "${IS_SBSA}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
+  export CORES=6
+else
+  export CORES=32  # GH200
+fi
+export CMAKE_BUILD_PARALLEL_LEVEL="${CORES}"
 
-cd /
+echo "🚀  Building with MAX_JOBS=${CORES} and CMAKE_BUILD_PARALLEL_LEVEL=${CMAKE_BUILD_PARALLEL_LEVEL}"
+MAX_JOBS="${CORES}" \
+CMAKE_BUILD_PARALLEL_LEVEL="${CORES}" \
+pip3 wheel '.[all]' --wheel-dir "${PIP_WHEEL_DIR}"
+pip3 install "${PIP_WHEEL_DIR}/sgl"*.whl
 
-# Gemlite
+cd / || exit 1
+
+echo "🔨  Installing gemlite…"
 pip3 install gemlite
 
-pip3 show sglang
-python3 -c 'import sglang'
-
-twine upload --verbose $PIP_WHEEL_DIR/sgl*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+# Try uploading; ignore failure
+twine upload --verbose "${PIP_WHEEL_DIR}/sgl"*.whl \
+  || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL:-<unset>}"

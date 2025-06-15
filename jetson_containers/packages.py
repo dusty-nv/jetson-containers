@@ -14,11 +14,12 @@ from packaging.version import Version
 from packaging.specifiers import SpecifierSet
 
 from .utils import get_repo_dir
-from .logging import log_debug
+from .logging import log_debug, log_warning, log_error
 
 from .l4t_version import (
-    L4T_VERSION, CUDA_VERSION, PYTHON_VERSION, LSB_RELEASE, 
-    SYSTEM_ARM, SYSTEM_ARCH_LIST, DOCKER_ARCH, check_arch
+    L4T_VERSION, CUDA_VERSION, PYTHON_VERSION, DOCKER_ARCH,
+    LSB_RELEASE, LSB_RELEASES, SYSTEM_ARM, SYSTEM_ARCH_LIST, 
+    check_arch
 )
 
 _PACKAGES = {}
@@ -58,7 +59,7 @@ def package_scan_options(dict):
     _PACKAGE_OPTS.update(dict)
 
 
-def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
+def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False, **kwargs):
     """
     Find packages from the list of provided search paths.
     If a path ends in * wildcard, it will be searched recursively.
@@ -71,6 +72,12 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
     # skip scanning if it's already done
     if _PACKAGE_SCAN and not rescan:
         return _PACKAGES
+
+    # disable parallel scan on python 3.8 due to unknown spin condition
+    THREADING = (
+        Version(f'{sys.version_info.major}.{sys.version_info.minor}') 
+        > Version('3.8')
+    )
 
     # if this is a list of directories, scan each
     if isinstance(package_dirs, list) and len(package_dirs) > 0:
@@ -86,10 +93,12 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
                 print(f"-- Package {key} has missing dependencies, disabling...  ({error})")
                 del _PACKAGES[key]
 
-        with concurrent.futures.ProcessPoolExecutor() as executor: 
-            executor.map(resolve_package, _PACKAGES.copy())       
-        #for key in _PACKAGES.copy():  # make sure all dependencies are met
-            
+        if THREADING:
+            with concurrent.futures.ProcessPoolExecutor() as executor: 
+                executor.map(resolve_package, _PACKAGES.copy())       
+        else:
+            for key in _PACKAGES.copy():  # make sure all dependencies are met
+                resolve_package(key)
 
         return _PACKAGES
     elif isinstance(package_dirs, str) and len(package_dirs) > 0:
@@ -111,10 +120,19 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
     package = {
         'path': path,
         'requires': '>=32.6',
-        'postfix': f'r{L4T_VERSION}' if SYSTEM_ARM else DOCKER_ARCH,
+        'postfix': '',
         'config': [],
         'test': []
     }
+
+    # assign default tag based on platform arch (L4T, SBSA, x86)
+    if SYSTEM_ARM:
+        if L4T_VERSION >= Version('36.4'):
+            package['postfix'] = f'r{L4T_VERSION.major}.{L4T_VERSION.minor}' # r36.4, r38.4
+        else:
+            package['postfix'] = f'r{L4T_VERSION}' # r32.7.1
+    else:
+        package['postfix'] = DOCKER_ARCH # amd64, sbsa
 
     # add CUDA and Python postfixes when they are non-standard versions
     HAS_ENV = {
@@ -122,16 +140,17 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
         for x in ['CUDA_VERSION', 'PYTHON_VERSION', 'LSB_RELEASE']
     }
 
-    if HAS_ENV['CUDA_VERSION'] or HAS_ENV['LSB_RELEASE'] or not SYSTEM_ARM:
-        package['postfix'] = package['postfix'] + f"-cu{CUDA_VERSION.major}{CUDA_VERSION.minor}"
-
     if HAS_ENV['PYTHON_VERSION']:
         package['postfix'] = package['postfix'] + f"-cp{PYTHON_VERSION.major}{PYTHON_VERSION.minor}"
 
-    if HAS_ENV['LSB_RELEASE'] or not SYSTEM_ARM:
-        package['postfix'] = package['postfix'] + f"-{LSB_RELEASE}"
+    #if HAS_ENV['CUDA_VERSION'] or HAS_ENV['LSB_RELEASE'] or not SYSTEM_ARM:
+    package['postfix'] = package['postfix'] + f"-cu{CUDA_VERSION.major}{CUDA_VERSION.minor}"
+
+    #if HAS_ENV['LSB_RELEASE'] or not SYSTEM_ARM:
+    package['postfix'] = package['postfix'] + f"-{LSB_RELEASE}"
 
     # skip recursively searching under these packages
+    PRELOAD = ['robots/ros']
     BLACKLIST = ['vila-microservice/src']
 
     def is_blacklisted(x):
@@ -140,23 +159,37 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False):
                 return True
         return False
 
+    if len(_PACKAGES) == 0 and 'preload' not in kwargs:
+        for preload in PRELOAD:
+            preload_dir=os.path.join(get_repo_dir(), 'packages', preload)
+            log_debug(f'Preload {preload_dir}')
+            scan_packages(package_dirs=preload_dir, preload=True)
+
     # search this directory for dockerfiles and config scripts
     entries = os.listdir(path)
     threads = []
 
     for entry in entries:
         entry_path = os.path.join(path, entry)
+        preload = kwargs.get('preload', False)
 
         if not entry or entry.startswith('__') or is_blacklisted(entry_path):
             continue
 
+        if any([x in entry_path for x in PRELOAD]) and not preload:
+            continue
+
         if os.path.isdir(entry_path) and recursive:
-            thread = threading.Thread(
-                target=scan_packages, 
-                kwargs=dict(package_dirs=os.path.join(entry_path, '*'))
-            )
-            threads.append(thread)
-            thread.start()
+            scan_kwargs = dict(package_dirs=os.path.join(entry_path, '*'), preload=preload)
+            if THREADING:
+                thread = threading.Thread(
+                    target=scan_packages, 
+                    kwargs=scan_kwargs,
+                )
+                threads.append(thread)
+                thread.start()
+            else:
+                scan_packages(**scan_kwargs)
         elif os.path.isfile(entry_path):
             if entry.lower() == 'dockerfile':  # entry.lower().find('dockerfile') >= 0:
                 package['dockerfile'] = entry
@@ -360,10 +393,12 @@ def resolve_dependencies(packages, check=True, skip_packages=[]):
         if not changed:
             break
         iterations = iterations + 1
+        if iterations > int(max_iterations * 0.95):
+            log_warning(f"reaching maximum recursion depth resolving dependencies for {packages_copy} ({iterations} of {max_iterations})\n{packages}")
         if iterations > max_iterations:
             raise RecursionError(f"infinite recursion detected resolving dependencies for {packages_copy}\n{packages}")
 
-            # make sure all packages can be found
+    # make sure all packages can be found
     if check:
         for package in packages:
             find_package(package)
@@ -551,7 +586,7 @@ def package_requires(package, requires=None, system_arch=None, unless=None):
     return package
 
 
-def check_requirement(requires, l4t_version=L4T_VERSION, cuda_version=CUDA_VERSION, name: str=''):
+def check_requirement(requires, l4t_version=L4T_VERSION, cuda_version=CUDA_VERSION, lsb_release=LSB_RELEASE, name: str=''):
     """
     Check if the L4T/CUDA versions meet the needed specifier/requirement
     """
@@ -567,6 +602,10 @@ def check_requirement(requires, l4t_version=L4T_VERSION, cuda_version=CUDA_VERSI
         if requires == ('!=' + arch):
             return not check_arch(arch)
 
+    for lsb in LSB_RELEASES:
+        if requires == lsb or requires == ('==' + lsb):
+            return lsb_release == lsb
+            
     if 'cu' in requires:
         if Version(f"{cuda_version.major}{cuda_version.minor}") not in SpecifierSet(requires.replace('cu', '')):
             log_debug(f"Package {name} isn't compatible with CUDA {cuda_version} (requires {requires})")
@@ -671,7 +710,7 @@ def validate_dict(package):
 
     for key, value in package.items():
         if key not in _PACKAGE_KEYS:
-            # print(f"-- Unknown key '{key}' in package config:", value)
+            log_debug(f"Unknown key '{key}' in package config:  {value}")
             return False
 
     return True
@@ -726,11 +765,10 @@ def parse_yaml_header(dockerfile):
         if validate_dict(config):
             return config
         else:
-            print(f"-- YAML header from {dockerfile} contained unknown/invalid entries, ignoring...")
-            print(txt)
+            log_warning(f"YAML header from {dockerfile} contained unknown/invalid entries, ignoring...\n\n{txt}\n")
 
     except Exception as error:
-        print(f"-- Error parsing YAML from {dockerfile}:  {error}")
+        log_error(f"Error parsing YAML from {dockerfile}:  {error}")
 
     return None
 

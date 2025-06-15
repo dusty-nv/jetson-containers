@@ -21,8 +21,8 @@ pip3 install 'setuptools<72'  # setup.py invalid command 'test'
 
 cd /tmp 
 
-wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${PROTOBUF_URL}/$PROTOBUF_DIR.zip
-wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate ${PROTOBUF_URL}/$PROTOC_DIR.zip
+wget $WGET_FLAGS $PROTOBUF_URL/$PROTOBUF_DIR.zip
+wget $WGET_FLAGS $PROTOBUF_URL/$PROTOC_DIR.zip
 
 unzip ${PROTOBUF_DIR}.zip -d ${PROTOBUF_DIR}
 unzip ${PROTOC_DIR}.zip -d ${PROTOC_DIR}

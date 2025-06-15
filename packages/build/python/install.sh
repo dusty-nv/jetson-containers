@@ -30,6 +30,8 @@ if [ $distro = "24.04" ]; then
    python3 -m venv --system-site-packages /opt/venv
    source /opt/venv/bin/activate
    curl -sS https://bootstrap.pypa.io/get-pip.py | python${PYTHON_VERSION}
+elif [ $distro = "20.04" ]; then
+   curl -sS https://bootstrap.pypa.io/pip/3.8/get-pip.py | python3.8
 elif [ $distro = "18.04" ]; then
    curl -sS https://bootstrap.pypa.io/pip/3.6/get-pip.py | python3.6
 else
@@ -42,8 +44,9 @@ apt-get clean
 ln -f -s /usr/bin/python${PYTHON_VERSION} /usr/local/bin/python3
 #ln -s /usr/bin/pip${PYTHON_VERSION} /usr/local/bin/pip3
 
-# this was causing issues downstream (e.g. Python2.7 still around in Ubuntu 18.04, \
-# and in cmake python enumeration where some packages expect that 'python' is 2.7) \
+# This was causing issues downstream (e.g. Python2.7 still around in Ubuntu 18.04,
+# and in cmake python enumeration where some packages expect that 'python' is 2.7)
+# Another way is apt package 'python-is-python3' - symlinks /usr/bin/python to python
 #RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \  \
 #    update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1 \
 
@@ -60,7 +63,8 @@ pip3 install --upgrade \
    setuptools \
    packaging \
    'Cython' \
-   wheel 
+   wheel \
+   uv
 
 pip3 install --upgrade --index-url https://pypi.org/simple \
    twine

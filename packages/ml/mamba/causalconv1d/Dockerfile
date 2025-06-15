@@ -11,12 +11,8 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG CASUALCONV1D_VERSION \
-    CASUALCONV1D_VERSION_SPEC \
-    CUDAARCHS
+    CASUALCONV1D_VERSION_SPEC
 
-COPY build.sh install.sh /tmp/CASUALCONV1D/
+COPY build.sh install.sh patches /tmp/causalconv1d/
 
-COPY patches/${CASUALCONV1D_VERSION}.diff /tmp/CASUALCONV1D/patch.diff
-
-
-RUN /tmp/CASUALCONV1D/install.sh || /tmp/CASUALCONV1D/build.sh
+RUN /tmp/causalconv1d/install.sh || /tmp/causalconv1d/build.sh

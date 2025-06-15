@@ -2,7 +2,7 @@
 # name: polyscope
 # group: nerf
 # config: config.py
-# depends: [cmake, python, numpy]
+# depends: [numpy, cmake, opengl]
 # requires: '>=34.1.0'
 # notes: https://github.com/nmwsharp/polyscope-py.git
 #---
@@ -14,9 +14,9 @@ ARG POLYSCOPE_VERSION \
     FORCE_BUILD=off
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    xorg-dev libglu1-mesa-dev freeglut3-dev mesa-common-dev libglfw3 xvfb \
-    && rm -rf /var/lib/apt/lists/*
+    apt-get install -y --no-install-recommends xorg-dev xvfb && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get clean
 
 COPY build.sh install.sh /tmp/POLYSCOPE/
 

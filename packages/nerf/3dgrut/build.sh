@@ -8,7 +8,7 @@ git clone --depth=1 --recursive https://github.com/nv-tlabs/3dgrut /opt/3dgrut
 # Navigate to the directory containing PyMeshLab's setup.py
 cd /opt/3dgrut
 
-wget https://github.com/shader-slang/slang/releases/download/v2025.6.3/slang-2025.6.3-linux-aarch64.tar.gz && \
+wget $WGET_FLAGS https://github.com/shader-slang/slang/releases/download/v2025.6.3/slang-2025.6.3-linux-aarch64.tar.gz && \
 tar -xzvf slang*.tar.gz -C /usr/local
 sed -i 's|\.type|.scalar_type|g' threedgrt_tracer/src/particlePrimitives.cu
 
@@ -26,7 +26,7 @@ MAX_JOBS=$(nproc) \
 pip3 wheel . -w /opt/3dgrut/wheels --verbose
 
 cd /tmp/
-wget https://us.download.nvidia.com/XFree86/aarch64/570.124.04/NVIDIA-Linux-aarch64-570.124.04.run
+wget $WGET_FLAGS https://us.download.nvidia.com/XFree86/aarch64/570.124.04/NVIDIA-Linux-aarch64-570.124.04.run
 chmod +x NVIDIA-Linux-aarch64-570.124.04.run
 sh NVIDIA-Linux-aarch64-570.124.04.run --extract-only
 cd NVIDIA-Linux-aarch64-570.124.04/

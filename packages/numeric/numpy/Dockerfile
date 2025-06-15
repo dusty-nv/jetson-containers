@@ -1,14 +1,17 @@
 #---
 # name: numpy
-# group: core
+# group: numerical
 # depends: [build-essential, python]
 # test: test.py
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
+ARG IS_SBSA
+ARG ARCH_OPT
 # https://github.com/numpy/numpy/issues/18131#issuecomment-755438271
-ENV OPENBLAS_CORETYPE=ARMV8
+ENV OPENBLAS_CORETYPE="$ARCH_OPT"
+ENV DYNAMIC_ARCH=1
 
 # we used to install the apt version of numpy first so that it was marked as installed,
 # however when moving to building for any PYTHON_VERSION, these may not be available.

@@ -1,0 +1,35 @@
+# https://github.com/SteveLTN/https-portal
+services:
+  https-portal:
+    image: steveltn/https-portal:1
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./index.html:/var/www/vhosts/${HOSTNAME:?error}/index.html
+      - ${CACHE_DIR}/ssl_certs:/var/lib/https-portal
+      - ${CACHE_DIR}/logs/nginx:/var/log/nginx
+      #-${CACHE_DIR}/logs/logrotate/state/directory:/var/lib/logrotate/
+      #-${CACHE_DIR}/files/sftp:/var/www/vhosts/apt.${DOMAIN}
+    environment:
+      ERROR_LOG: /var/log/nginx/error.log
+      ACCESS_LOG: /var/log/nginx/access.log
+      STAGE: 'local' # 'staging' 'production'
+      WEBSOCKET: true
+      DEBUG: true
+      DOMAINS: >
+        ${HOSTNAME:?error}, 
+      # apt.${HOSTNAME:?error},
+      # pypi.${HOSTNAME:?error} -> http://devpi-server:3141,
+
+      # This needs enabled for streaming LLM responses to work through reverse proxy
+      # https://community.openai.com/t/streaming-responses-slow-in-web-hosted-version-fast-in-local-development-version/607161/2
+      # CUSTOM_NGINX_LLM_JETSON_AI_LAB_DEV_CONFIG_BLOCK: proxy_buffering off; 
+
+      #CUSTOM_NGINX_SERVER_CONFIG_BLOCK: |
+      #  location @proxy_to_app {
+      #    proxy_pass http://localhost:4040;
+      #    proxy_set_header X-outside-url $$scheme://$http_host;
+      #    proxy_set_header X-Real-IP $$remote_addr;
+      #  }

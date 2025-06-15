@@ -1,4 +1,3 @@
-from jetson_containers import CUDA_ARCHITECTURES
 
 def glomap(version, requires=None, default=False):
     pkg = package.copy()
@@ -9,7 +8,6 @@ def glomap(version, requires=None, default=False):
     pkg['name'] = f'glomap:{version}'
 
     pkg['build_args'] = {
-        'CUDAARCHS': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
         'GLOMAP_VERSION': version,
     }
 

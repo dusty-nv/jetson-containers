@@ -1,18 +1,17 @@
-from jetson_containers import handle_text_request
+from jetson_containers import github_latest_tag
 
-
-def create_package(version, branch=None, default=False) -> list:
+def create_package(version, default=False) -> list:
     pkg = package.copy()
+    wanted_version = github_latest_tag('rhasspy/wyoming-openwakeword') if version == 'latest' else version
 
-    if not branch:
-        branch = f'v{version}'
+    if wanted_version.startswith("v"):
+        wanted_version = wanted_version[1:]
 
-    wanted_version = handle_text_request(f'https://raw.githubusercontent.com/rhasspy/wyoming-openwakeword/{branch}/wyoming_openwakeword/VERSION')
     pkg['name'] = f'wyoming-openwakeword:{wanted_version}'
 
     pkg['build_args'] = {
         'WYOMING_OPENWAKEWORD_VERSION': wanted_version,
-        'WYOMING_OPENWAKEWORD_BRANCH': branch,
+        'WYOMING_OPENWAKEWORD_BRANCH': f"v{wanted_version}",
     }
 
     builder = pkg.copy()
@@ -26,6 +25,5 @@ def create_package(version, branch=None, default=False) -> list:
     return pkg, builder
 
 package = [
-    create_package("1.10.1", branch="master", default=True),
-    create_package("1.10.0"),
+    create_package("latest", default=True),
 ]

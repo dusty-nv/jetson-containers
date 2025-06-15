@@ -1,0 +1,10 @@
+services:
+  mkdocs:
+    image: squidfunk/mkdocs-material
+    #command: serve --dev-addr localhost:8000
+    restart: unless-stopped
+    user: "${USER_UID:-0}:${USER_GID:-0}"
+    ports: 
+      - '8000:8000'
+    volumes:
+      - ${MKDOCS_ROOT:-$CACHE_DIR/docs}:/docs

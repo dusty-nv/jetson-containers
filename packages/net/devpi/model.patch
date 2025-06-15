@@ -1,0 +1,36 @@
+diff --git a/server/devpi_server/model.py b/server/devpi_server/model.py
+index 9882a204..5ad081a1 100644
+--- a/model.py
++++ b/model.py
+@@ -2,6 +2,7 @@ import functools
+ import getpass
+ import posixpath
+ import re
++import os
+ import json
+ import warnings
+ from devpi_common.metadata import get_latest_version
+@@ -1071,6 +1072,14 @@ class BaseStage(object):
+         # so existing indexes work as before
+         whitelist_inheritance = self.get_whitelist_inheritance()
+         whitelist = None
++        blacklist = os.environ.get('DEVPI_MIRROR_BLACKLIST', '')
++        if blacklist:
++            if os.path.isfile(blacklist):
++                with open(blacklist) as file:
++                    blacklist = file.readlines() #[x.strip() for x in file.readlines()]
++                    blacklist = [x for x in blacklist if x]
++            else:
++                blacklist = re.split(',|;|:', blacklist)
+         for stage in self.sro():
+             if stage.ixconfig["type"] == "mirror":
+                 if private_hit:
+@@ -1097,6 +1106,8 @@ class BaseStage(object):
+                     whitelisted = stage
+                 elif stage.has_project_perstage(project):
+                     private_hit = True
++                elif blacklist and project in blacklist:
++                    private_hit = True
+ 
+             try:
+                 exists = stage.has_project_perstage(project)

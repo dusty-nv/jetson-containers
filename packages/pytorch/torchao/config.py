@@ -26,5 +26,6 @@ def torchao(version, requires=None, default=False):
     
  
 package = [
-    torchao('0.10.0', requires='==36.*', default=True),
+    torchao('0.12.0', requires='==36.*', default=True),
+    torchao('0.13.0', requires='==36.*'),
 ]
