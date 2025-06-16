@@ -1,35 +1,24 @@
 # Speaches
 
-Speaches supports VAD (Voice Activity Detection), STT (Speech-to-Text) and TTS (Text-to-Speech) with GPU acceleration through CTranslate2.
+Speaches supports VAD (Voice Activity Detection), STT (Speech-to-Text) and TTS (Text-to-Speech).
 
-## Key Features
+## What is VAD and why it's needed
 
-- **GPU-accelerated inference** using custom-built CTranslate2 with CUDA 12.8 and cuDNN 9 support
-- **OpenAI-compatible API** for easy integration
-- **Whisper support** for speech-to-text through CTranslate2
-- **TTS support** with various voice models
+Voice Activity Detection (VAD) is used to detect the presence or absence of human speech in audio streams.
+It is important when processing speech because by identifying when someone is actually speaking, you prevent unnecessary processing of silence or background noise, reducing computational overhead.
 
-## Build Information
+## Important Notes on TTS Implementation
 
-This container builds CTranslate2 from source with:
-- CUDA 12.8 support
-- cuDNN 9 for optimized inference
-- OpenBLAS for CPU operations
-- GNU OpenMP for parallelization
+At this time of adding support to Speaches, Kokoro uses `onnxruntime` and `kokoro-onnx` for TTS.
 
-The speaches server is installed using `uv` with all extras for complete functionality.
+This backend is currently slower than `kokoro-tts:fastapi`, which also implements the OpenAI protocol, and can be used separately.
+
 
 ## Build
 
 ```bash
 jetson-containers build speaches
 ```
-
-To specify a custom tag:
-```bash
-jetson-containers build --name speaches:cuda12.8-py3.12 speaches
-```
-
 
 ## Run
 
@@ -73,9 +62,6 @@ uvx speaches-cli registry ls --task text-to-speech # For TTS
 ```
 
 
-
-
-
 ## API Endpoints
 
 - `/v1/audio/transcriptions` - Speech-to-text (Whisper compatible)
@@ -83,20 +69,6 @@ uvx speaches-cli registry ls --task text-to-speech # For TTS
 - `/v1/audio/speech/voices` - List available TTS voices
 
 
-
-## Notes
-
-- The container uses a Python virtual environment managed by `uv`
-- CTranslate2 is built from source for optimal Jetson performance
-- The server runs with Uvicorn in production mode
-
-## Important Notes on TTS Implementation
-
-At this time of adding support to Speaches, Kokoro uses `onnxruntime` and `kokoro-onnx` for TTS.
-
-This backend is currently slower than `kokoro-tts:fastapi`, which also implements the OpenAI protocol, and can be used separately.
-
 ## Contributing
-
 If you need TTS endpoint support, please open an issue and tag @OriNachum
 
