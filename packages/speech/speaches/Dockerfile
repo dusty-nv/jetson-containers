@@ -1,70 +1,67 @@
 #---
 # name: speaches
 # group: audio
-# depends: [faster-whisper, piper-tts, kokoro-tts:onnx, python:3.12, nodejs]
-# requires: '>=34.1.0'
+# depends: [build-essential, cuda:12.8, cudnn:9.8, python:3.12]
+# requires: '>=36.0'
 # docs: docs.md
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-# RUN apt-get update && \
-#     apt-get install -y libsndfile1-dev && \
-#     apt-get clean && \
-#     rm -rf /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND=noninteractive
+WORKDIR /workspace
 
-# RUN python3 -c "import onnxruntime; print('☑️✅ ONNX Runtime version:', onnxruntime.__version__); print('✅ EPs:', onnxruntime.get_available_providers())"
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        libopenblas0          libopenblas-dev  \
+        wget                  gnupg2           \
+        libsndfile1                            \
+        build-essential       cmake            \
+        ninja-build && \
+    wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/arm64/cuda-keyring_1.1-1_all.deb && \
+    dpkg -i cuda-keyring_1.1-1_all.deb && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends cudnn9-cuda-12 && \
+    rm -rf /var/lib/apt/lists/*
 
-# 1. Clone and install speaches
-RUN set -ex && \
-    git clone https://github.com/speaches-ai/speaches /opt/speaches && \
-    cd /opt/speaches && \
-    sed -i 's|requires-python.*|requires-python = ">=3.10"|g' pyproject.toml && \
-    sed -i 's|"faster-whisper.*",|"faster-whisper",|g' pyproject.toml && \
-    sed -i 's|"ctranslate2.*",|"ctranslate2",|g' pyproject.toml && \
-    sed -i 's|"kokoro-onnx.*",|"kokoro-onnx",|g' pyproject.toml && \
-    sed -i 's|"numpy.*",|"numpy",|g' pyproject.toml && \
-    echo "👁️######## speaches - pyproject.toml ########👁️" && \
-    cat pyproject.toml && \
-    echo "👁️^^^^^^^^ speaches - pyproject.toml ^^^^^^^^👁️" && \
-    pip3 install '.[ui]' && \
-    cp /opt/speaches/model_aliases.json / && \
-    pip3 uninstall -y onnxruntime onnxruntime-gpu || true
+# Build CTranslate2
+RUN git clone --recursive https://github.com/OpenNMT/CTranslate2.git && \
+    cd CTranslate2 && mkdir build && cd build && \
+    cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release \
+              -DWITH_CUDA=ON  -DWITH_CUDNN=ON \
+              -DWITH_OPENBLAS=ON -DWITH_MKL=OFF \
+              -DOPENMP_RUNTIME=COMP && \
+    ninja && ninja install && ldconfig && \
+    cd /workspace
 
-# Patch to skip UI mount if dist/ missing
-COPY 0001-Conditionally-mount-realtime-console-dist.patch /tmp/
-RUN cd /opt/speaches && git apply /tmp/0001-Conditionally-mount-realtime-console-dist.patch && \
-    cat /opt/speaches/src/speaches/main.py
+    RUN cd CTranslate2/python && \
+    python3 -m pip install --upgrade pip setuptools wheel && \
+    python3 -m pip install -r install_requirements.txt && \
+    python3 setup.py bdist_wheel && \
+    python3 -m pip install dist/*.whl && \
+    cd /workspace
 
-RUN python3 -c "from importlib.metadata import version; \
-print('🌃 faster-whisper:', version('faster-whisper'), \
-'\n🌃 kokoro-onnx:', version('kokoro-onnx'), \
-'\n🌃 numpy:', version('numpy'))"
+# Install speaches
+RUN python3 -m pip install uv && \
+    git clone https://github.com/speaches-ai/speaches.git && \
+    cd speaches && \
+    uv venv && \
+    . .venv/bin/activate && \
+    uv sync --all-extras && \
+    uv pip install /workspace/CTranslate2/python/dist/*.whl && \
+    deactivate && \
+    cd /workspace
 
-ENV PYTHONPATH="/opt/speaches/src:${PYTHONPATH}"
+COPY model_aliases.json /workspace/speaches/ 
 
-RUN python3 -c "import speaches; import openai; import aiostream; print('✅ all modules import OK')"
+COPY start-server.sh /workspace/speaches/
+COPY download-models.sh /workspace/speaches/
+RUN chmod +x /workspace/speaches/start-server.sh /workspace/speaches/download-models.sh
 
-# 2. Extract GPU-enabled build
-RUN wget https://apt.jetson-ai-lab.dev/jp6/cu128/24.04/onnxruntime-gpu-1.22.tar.gz && \
-    tar -xzvf onnxruntime-gpu-1.22.tar.gz -C /usr/local
-
-# 3. Install ONNX Runtime GPU wheel if needed
-RUN pip3 install onnxruntime-gpu==1.22
-
-# 4. Confirm ONNX Runtime is correct
-RUN python3 -c "import onnxruntime; print('☑️✅ ONNX Runtime version:', onnxruntime.__version__); print('✅ EPs:', onnxruntime.get_available_providers())"
-
-# Set app config
 ARG PORT=8000
 ENV PORT=${PORT}
 EXPOSE ${PORT}
 
-# 5. Add launcher
-COPY start-server.sh /opt/speaches/
-RUN chmod +x /opt/speaches/start-server.sh
+WORKDIR /workspace/speaches
 
-# 6. Set default working directory
-WORKDIR /opt/speaches
-
-ENTRYPOINT ["/opt/speaches/start-server.sh"]
+ENTRYPOINT ["/workspace/speaches/start-server.sh"]
