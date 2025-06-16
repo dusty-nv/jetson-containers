@@ -50,3 +50,4 @@ RUN set -ex \
     && g++ --version
 
 COPY tarpack vercmp /usr/local/bin/
+RUN chmod a+rx /usr/local/bin/tarpack /usr/local/bin/vercmp
