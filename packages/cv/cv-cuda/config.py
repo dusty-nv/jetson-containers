@@ -1,9 +1,9 @@
 NVCV_RELEASE_URL='https://github.com/CVCUDA/CV-CUDA/releases/download/'
 
 def cv_cuda(version, *url, default=False, requires=None):
-    """ 
-    Define container that installs CV-CUDA from release binaries on Github 
-    
+    """
+    Define container that installs CV-CUDA from release binaries on Github
+
       * the main 'cv-cuda' or 'cvcuda' package is C++/CUDA/Python
       * the 'cv-cuda:cpp' or 'cvcuda:cpp' subpackages are without Python
 
@@ -49,17 +49,17 @@ def cv_cuda(version, *url, default=False, requires=None):
 
 package = [
     # jetpack 6
-    cv_cuda('0.14', 
-        'v0.14.0-beta/v0.14_cuda_12_aarch64_Jetson_jetpack6.zip',
-        default=True, requires='>=36'
+    cv_cuda('0.15',
+        'v0.15.0-beta/v0.15-cu12-aarch64-jetson-jetpack6.zip',
+        default=False, requires='>=36'
     ),
 
     # x86
-    cv_cuda('0.14', 
-        'v0.14.0-beta/cvcuda-lib-0.14.0-cuda12-x86_64-linux.deb',
-        'v0.14.0-beta/cvcuda-dev-0.14.0-cuda12-x86_64-linux.deb',
-        'v0.14.0-beta/cvcuda-tests-0.14.0-cuda12-x86_64-linux.deb',
-        'v0.14.0-beta/cvcuda_cu12-0.14.0-cp310.cp311.cp38.cp39-cp310.cp311.cp38.cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl',
+    cv_cuda('0.15',
+        'v0.15.0-beta/cvcuda-lib-0.15.0-cuda12-x86_64-linux.deb',
+        'v0.15.0-beta/cvcuda-dev-0.15.0-cuda12-x86_64-linux.deb',
+        'v0.15.0-beta/cvcuda-tests-0.15.0-cuda12-x86_64-linux.deb',
+        'v0.15.0-beta/cvcuda_cu12-0.15.0-cp310.cp311.cp312.cp313.cp38.cp39-cp310.cp311.cp312.cp313.cp38.cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl',
         default=True, requires='x86_64'
     ),
 ]

@@ -5,7 +5,7 @@ def sglang(version, version_spec=None, requires=None, depends=None, default=Fals
     pkg = package.copy()
 
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
 
     if not version_spec:
         version_spec = version
@@ -35,5 +35,5 @@ def sglang(version, version_spec=None, requires=None, depends=None, default=Fals
 package = [
     sglang('0.4.4', '0.4.3.post2', default=False),
     sglang('0.4.6', '0.4.6', depends=['flashinfer:0.2.6.post1'], default=False),
-    sglang('0.4.7', '0.4.7', depends=['flashinfer:0.2.6.post1'], default=True),
+    sglang('0.4.8', '0.4.7', depends=['flashinfer'], default=True),
 ]

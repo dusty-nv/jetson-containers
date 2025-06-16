@@ -2,7 +2,7 @@
 # name: exllama
 # group: llm
 # config: config.py
-# depends: [pytorch, huggingface_hub]
+# depends: [pytorch, huggingface_hub, flash-attention, transformers]
 # requires: '>=34.1.0'
 # test: test.sh
 # docs: docs.md

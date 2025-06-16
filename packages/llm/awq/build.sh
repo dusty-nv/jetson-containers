@@ -11,6 +11,8 @@ sed -i \
   -e 's|torchvision==.*"|torchvision"|g' \
   "awq/pyproject.toml"
 
+sed -i 's/==/>=/g' "awq/pyproject.toml"
+
 cat awq/pyproject.toml
 
 pip3 wheel --wheel-dir=$PIP_WHEEL_DIR --verbose ./awq

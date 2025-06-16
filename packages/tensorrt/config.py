@@ -18,7 +18,7 @@ elif SYSTEM_ARM:
         if CUDA_VERSION >= Version('13.0'):
             TENSORRT_VERSION = Version('11.0')
         elif CUDA_VERSION >= Version('12.9'):
-            TENSORRT_VERSION = Version('10.11')
+            TENSORRT_VERSION = Version('10.12')
         elif CUDA_VERSION >= Version('12.8'):
             TENSORRT_VERSION = Version('10.7')
         elif CUDA_VERSION >= Version('12.6'):
@@ -34,19 +34,19 @@ elif SYSTEM_ARM:
 else:
     TENSORRT_VERSION = Version('10.10') # x86_64
 
-        
+
 def tensorrt_deb(version, url, deb, cudnn=None, packages=None, requires=None):
     """
     Generate containers for a particular version of TensorRT installed from debian packages
     """
     if not packages:
         packages = os.environ.get('TENSORRT_PACKAGES', 'tensorrt tensorrt-libs python3-libnvinfer-dev')
-    
+
     tensorrt = package.copy()
-    
+
     tensorrt['name'] = f'tensorrt:{version}'
     tensorrt['dockerfile'] = 'Dockerfile.deb'
-    
+
     tensorrt['build_args'] = {
         'TENSORRT_URL': url,
         'TENSORRT_DEB': deb,
@@ -55,10 +55,10 @@ def tensorrt_deb(version, url, deb, cudnn=None, packages=None, requires=None):
 
     if Version(version) == TENSORRT_VERSION:
         tensorrt['alias'] = 'tensorrt'
-    
+
     if cudnn:
         tensorrt['depends'] = update_dependencies(tensorrt['depends'], f"cudnn:{cudnn}")
-         
+
     if requires:
         tensorrt['requires'] = requires
 
@@ -72,7 +72,7 @@ def tensorrt_tar(version, url, cudnn=None, requires=None):
     Generate containers for a particular version of TensorRT installed from tar.gz file
     """
     tensorrt = package.copy()
-    
+
     tensorrt['name'] = f'tensorrt:{version}'
 
     tensorrt['dockerfile'] = 'Dockerfile.tar'
@@ -80,18 +80,18 @@ def tensorrt_tar(version, url, cudnn=None, requires=None):
 
     if Version(version) == TENSORRT_VERSION:
         tensorrt['alias'] = 'tensorrt'
-    
+
     if cudnn:
         tensorrt['depends'] = update_dependencies(tensorrt['depends'], f"cudnn:{cudnn}")
-         
+
     if requires:
         tensorrt['requires'] = requires
 
     package_requires(tensorrt, system_arch='aarch64') # default to aarch64
 
     return tensorrt
-    
-    
+
+
 def tensorrt_builtin(version=None, requires=None, default=False):
     """
     Backwards-compatability for when TensorRT already installed in base container (like l4t-jetpack)
@@ -101,15 +101,15 @@ def tensorrt_builtin(version=None, requires=None, default=False):
     if version is not None:
         if not isinstance(version, str):
             version = f'{version.major}.{version.minor}'
-           
+
         if default:
-            passthrough['alias'] = 'tensorrt'  
-            
+            passthrough['alias'] = 'tensorrt'
+
         passthrough['name'] += f':{version}'
-     
+
     if requires:
         passthrough['requires'] = requires
-        
+
     #del passthrough['dockerfile']
     return passthrough
 
@@ -144,6 +144,7 @@ elif IS_SBSA:
         tensorrt_tar('10.9', f'{TENSORRT_URL}/10.9.0/tars/TensorRT-10.9.0.34.Linux.aarch64-gnu.cuda-12.8.tar.gz', cudnn='9.8', requires='aarch64'),
         tensorrt_tar('10.10', f'{TENSORRT_URL}/10.10.0/tars/TensorRT-10.10.0.31.Linux.aarch64-gnu.cuda-12.9.tar.gz', cudnn='9.10', requires='aarch64'),
         tensorrt_tar('10.11', f'{TENSORRT_URL}/10.11.0/tars/TensorRT-10.11.0.33.Linux.aarch64-gnu.cuda-12.9.tar.gz', cudnn='9.10', requires='aarch64'),
+        tensorrt_tar('10.12', f'{TENSORRT_URL}/10.12.0/tars/TensorRT-10.12.0.36.Linux.aarch64-gnu.cuda-12.9.tar.gz', cudnn='9.10', requires='aarch64'),
         tensorrt_tar('11.0', f'{TENSORRT_URL}/11.0.0/tars/TensorRT-11.0.0.36.Linux.aarch64-gnu.cuda-13.0.tar.gz', cudnn='10.0', requires='aarch64'),
     ]
 else:
@@ -153,6 +154,7 @@ else:
         tensorrt_tar('10.8', f'{TENSORRT_URL}/10.8.0/tars/TensorRT-10.8.0.43.Linux.x86_64-gnu.cuda-12.8.tar.gz', cudnn='9.8', requires='x86_64'),
         tensorrt_tar('10.9', f'{TENSORRT_URL}/10.9.0/tars/TensorRT-10.9.0.34.Linux.x86_64-gnu.cuda-12.8.tar.gz', cudnn='9.8', requires='x86_64'),
         tensorrt_tar('10.10', f'{TENSORRT_URL}/10.10.0/tars/TensorRT-10.10.0.31.Linux.x86_64-gnu.cuda-12.9.tar.gz', cudnn='9.10', requires='x86_64'),
+        tensorrt_tar('10.12', f'{TENSORRT_URL}/10.12.0/tars/TensorRT-10.12.0.36.Linux.x86_64-gnu.cuda-12.9.tar.gz', cudnn='9.10', requires='x86_64'),
         tensorrt_tar('11.0', f'{TENSORRT_URL}/11.0.0/tars/TensorRT-11.0.0.36.Linux.x86_64-gnu.cuda-13.0.tar.gz', cudnn='10.0', requires='x86_64'),
     ]
 

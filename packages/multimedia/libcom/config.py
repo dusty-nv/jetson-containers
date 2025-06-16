@@ -4,7 +4,7 @@ def libcom(version, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
 
     pkg['name'] = f'libcom:{version}'
 
@@ -25,5 +25,5 @@ def libcom(version, requires=None, default=False):
     return pkg #, builder
 
 package = [
-    libcom('0.1.1', default=True)
+    libcom('0.1.0', default=True)
 ]

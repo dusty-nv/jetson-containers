@@ -5,13 +5,13 @@ def dynamo(version, version_spec=None, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
 
     if not version_spec:
         version_spec = version
 
     pkg['name'] = f'dynamo:{version}'
-        
+
     pkg['build_args'] = {
         'DYNAMO_VERSION': version,
         'DYNAMO_VERSION_SPEC': version_spec,
@@ -30,5 +30,5 @@ def dynamo(version, version_spec=None, requires=None, default=False):
     return pkg, builder
 
 package = [
-    dynamo('0.2.2', '0.2.2', default=True),
+    dynamo('0.3.1', '0.3.1', default=True),
 ]

@@ -13,6 +13,8 @@ sed 's|-mavx2||g' -i exllamav3/ext.py
 sed 's|#define USE_AVX2||g' -i exllamav3/exllamav3_ext/cpp/sampling.cpp
 
 #pip3 wheel --wheel-dir=/opt --verbose .
+pip3 install -r -U requirements.txt
+pip3 install -U -r requirements_examples.txt
 python3 setup.py --verbose bdist_wheel --dist-dir /opt
 
 cd /

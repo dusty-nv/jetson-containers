@@ -1,7 +1,7 @@
-#--- 
+#---
 # name: cosmos-transfer1
 # group: cosmos
-# depends: [pytorch, torchvision, torchaudio, transformer-engine, transformers, opencv:4.11.0, bitsandbytes, huggingface_hub, ffmpeg]
+# depends: [pytorch, torchvision, torchaudio, transformer-engine, flash-attention, transformers, opencv:4.11.0, bitsandbytes, huggingface_hub, ffmpeg]
 # requires: '>=34.1.0'
 # notes: https://github.com/nvidia-cosmos/cosmos-transfer1
 #---

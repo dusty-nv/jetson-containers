@@ -29,6 +29,6 @@ def video_codec_sdk(version, default=False):
 
 
 package = [
-  video_codec_sdk('12.2.72', default=True),
-  video_codec_sdk('13.0.19'),
+  video_codec_sdk('12.2.72'),
+  video_codec_sdk('13.0.19', default=True)
 ]

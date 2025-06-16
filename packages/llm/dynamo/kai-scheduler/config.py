@@ -5,13 +5,13 @@ def kai_scheduler(version, version_spec=None, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
 
     if not version_spec:
         version_spec = version
 
     pkg['name'] = f'kai_scheduler:{version}'
-        
+
     pkg['build_args'] = {
         'KAI_SCHEDULER_VERSION': version,
         'KAI_SCHEDULER_VERSION_SPEC': version_spec,
@@ -30,5 +30,5 @@ def kai_scheduler(version, version_spec=None, requires=None, default=False):
     return pkg, builder
 
 package = [
-    kai_scheduler('0.5.4', '0.5.3', default=True),
+    kai_scheduler('0.5.5', '0.5.5', default=True),
 ]

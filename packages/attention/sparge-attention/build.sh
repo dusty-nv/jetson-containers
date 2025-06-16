@@ -3,8 +3,8 @@ set -ex
 
 echo "Building SpargeAttention ${SPARGE_ATTENTION_VERSION}"
 
-git clone --depth=1 --branch=v${SPARGE_ATTENTION_VERSION} https://github.com/johnnynunez/SpargeAttn /opt/sparge-attention ||
-git clone --depth=1 https://github.com/johnnynunez/SpargeAttn /opt/sparge-attention
+git clone --depth=1 --branch=v${SPARGE_ATTENTION_VERSION} https://github.com/thu-ml/SpargeAttn /opt/sparge-attention ||
+git clone --depth=1 https://github.com/thu-ml/SpargeAttn /opt/sparge-attention
 
 cd /opt/sparge-attention
 
