@@ -28,5 +28,6 @@ pip3 --version || sudo apt-get install -y python3-pip
 pip3 install -r "$ROOT/requirements.txt"
 
 # link scripts to path
+sudo chmod a+x "$ROOT/autotag"
 sudo ln -sf "$ROOT/autotag" "$INSTALL_PREFIX/autotag"
 sudo ln -sf "$ROOT/jetson-containers" "$INSTALL_PREFIX/jetson-containers"
