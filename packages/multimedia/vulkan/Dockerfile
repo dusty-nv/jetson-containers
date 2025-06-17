@@ -13,19 +13,27 @@ ARG VULKAN_VERSION \
 COPY build.sh install.sh $TMP/
 
 RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        lsb-release && \
+    UBUNTU_VERSION=$(lsb_release -rs) && \
+    if [ "$UBUNTU_VERSION" = "20.04" ]; then \
+        apt-get install -y gcc-12 g++-12; \
+    elif [ "$UBUNTU_VERSION" = "22.04" ] || [ "$UBUNTU_VERSION" = "24.04" ]; then \
+        apt-get install -y gcc-14 g++-14; \
+    else \
+        echo "Unsupported Ubuntu version: $UBUNTU_VERSION" && exit 1; \
+    fi && \
     apt-get install -y --no-install-recommends \
         build-essential \
         cmake \
-        cmake ninja-build \
-        gcc-14 \
-        g++-14 \
+        ninja-build \
         bison \
         ocaml-core \
         xz-utils \
         pkg-config \
         python3-pip && \
-        rm -rf /var/lib/apt/lists/* && \
-        apt-get clean
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get clean
 
 RUN $TMP/install.sh || $TMP/build.sh || true
 
