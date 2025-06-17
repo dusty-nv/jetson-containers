@@ -4,7 +4,7 @@
 # config: config.py
 # depends: [cuda, cudnn, tensorrt, cmake, python, numpy, onnx]
 # test: test.py
-# notes: the `onnxruntime-gpu` wheel that's built is saved in the container under `/opt`
+# notes: https://github.com/microsoft/onnxruntime
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

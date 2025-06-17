@@ -4,7 +4,7 @@
 # group: build
 # depends: [python]
 # test: test.sh
-# notes: installs more recent pybind11 from pip
+# notes: https://github.com/pybind/pybind11
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

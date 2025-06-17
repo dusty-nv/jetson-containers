@@ -4,7 +4,7 @@
 # requires: '>=35'
 # depends: [bitsandbytes, flash-attention, vllm]
 # test: test.py
-# notes: LLaMA-Factory for Jetson - https://github.com/hiyouga/LLaMA-Factory
+# notes: https://github.com/hiyouga/LLaMA-Factory
 #---
 
 ARG BASE_IMAGE

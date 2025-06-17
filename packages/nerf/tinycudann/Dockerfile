@@ -5,7 +5,7 @@
 # depends: [pytorch, torchvision]
 # requires: '>=34.1.0'
 # test: test.py
-# notes: https://github.com/cnr-isti-vclab/TINYCUDANN.git
+# notes: https://github.com/NVlabs/tiny-cuda-nn
 #---
 
 ARG BASE_IMAGE

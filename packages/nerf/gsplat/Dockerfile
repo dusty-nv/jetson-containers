@@ -4,7 +4,7 @@
 # config: config.py
 # depends: [pytorch, torchvision, torchaudio, tinycudann, nerfview]
 # requires: '>=34.1.0'
-# notes: https://pypi.org/project/gsplat/
+# notes: https://github.com/nerfstudio-project/gsplat
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

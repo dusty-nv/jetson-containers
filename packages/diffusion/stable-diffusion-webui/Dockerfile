@@ -4,7 +4,7 @@
 # depends: [pytorch, torchvision, transformers, xformers, pycuda, opencv, onnxruntime]
 # requires: '>=34.1.0'
 # docs: docs.md
-# notes: disabled on JetPack 4
+# notes: https://github.com/AUTOMATIC1111/stable-diffusion-webui
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
@@ -50,7 +50,7 @@ RUN set -ex \
     # Cleanup \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
-    
+
 # set the cache dir for models
 ENV DIFFUSERS_CACHE=/data/models/diffusers
 

@@ -5,7 +5,7 @@
 # depends: [vulkan, opengl, pytorch, torchvision, torchaudio, tinycudann, open3d, pytorch3d]
 # requires: '>=34.1.0'
 # test: test.py
-# notes: https://pypi.org/project/gsplat/
+# notes: https://github.com/dendenxu/fast-gaussian-rasterization
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

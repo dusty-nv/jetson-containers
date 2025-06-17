@@ -4,7 +4,7 @@
 # config: config.py
 # depends: [cuda, cudnn, python, numpy, opengl, vulkan, video-codec-sdk, ffmpeg]
 # test: test.py
-# notes: install or build OpenCV (with CUDA) from Jetson pip server
+# notes: https://github.com/opencv/opencv-python
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
@@ -18,7 +18,7 @@ ARG OPENCV_VERSION \
 
 ENV OPENCV_VERSION=${OPENCV_VERSION} \
     OPENCV_URL=${OPENCV_URL}
-    
+
 COPY build.sh \
      install.sh \
      install_deps.sh \

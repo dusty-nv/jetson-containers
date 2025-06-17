@@ -4,7 +4,7 @@
 # config: config.py
 # depends: [cmake, python, numpy]
 # test: test.py
-# notes: the `protobuf_apt` is added as a dependency on JetPack 4 (newer versions of onnx build it in-tree)
+# notes: https://github.com/onnx/onnx
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
@@ -15,7 +15,7 @@ RUN pip3 install onnx || \
     pip3 install git+https://github.com/onnx/onnx@${ONNX_VERSION} && \
     pip3 show onnx && \
     python3 -c 'import onnx; print(onnx.__version__)'
-    
+
 # error introduced by https://github.com/onnx/onnx/pull/5777 results in python protobuf mismatch
 # https://github.com/onnx/onnx/blob/6ff456c1179c34827ad910e5601cb1486822d800/CMakeLists.txt#L249
 #RUN set -ex \

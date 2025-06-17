@@ -3,7 +3,7 @@
 # group: llm
 # depends: [python]
 # test: test.py
-# notes: OpenAI API Python client from https://github.com/openai/openai-python
+# notes: https://github.com/openai/openai-python
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

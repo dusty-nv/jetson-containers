@@ -4,7 +4,7 @@
 # depends: [transformers, torchaudio, numba]
 # test: [test_qa.py]
 # docs: NVIDIA NeMo for ASR/NLP/TTS https://nvidia.github.io/NeMo/
-# notes: this Dockerfile gets switched out for `Dockerfile.jp4` on JetPack 4
+# notes: https://research.nvidia.com/labs/conv-ai/
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
@@ -21,7 +21,7 @@ RUN cd /tmp && \
     make install && \
     cd ../ && \
     rm -rf openfst
-    
+
 # install nemo_toolkit
 RUN pip3 install nemo_toolkit['all']
 
@@ -31,7 +31,7 @@ RUN apt-get update && \
           libopencc-dev \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
-    
+
 # patch: cannot import name 'GradBucket' from 'torch.distributed'
 RUN NEMO_PATH="$(pip3 show nemo_toolkit | grep Location: | cut -d' ' -f2)/nemo" && \
     sed -i '/from torch.distributed.algorithms.ddp_comm_hooks.debugging_hooks import noop_hook/d' $NEMO_PATH/collections/nlp/parts/nlp_overrides.py
@@ -64,9 +64,9 @@ RUN cd /opt && \
     python3 setup.py --verbose bdist_wheel --cpp_ext --cuda_ext --fast_layer_norm --distributed_adam --deprecated_fused_adam && \
     cp dist/apex*.whl /opt && \
     rm -rf /opt/apex
-    
+
 RUN pip3 install /opt/apex*.whl
- 
+
 # module 'torch.distributed' has no attribute 'is_initialized'
 RUN PYTHON_ROOT=`pip3 show nemo_toolkit | grep Location: | cut -d' ' -f2` && \
     sed 's|^        master_device =.*|        master_device = True|g' -i $PYTHON_ROOT/nemo/collections/nlp/modules/common/megatron/megatron_utils.py && \
@@ -74,10 +74,10 @@ RUN PYTHON_ROOT=`pip3 show nemo_toolkit | grep Location: | cut -d' ' -f2` && \
     sed 's|if torch.distributed.is_initialized()|if torch.distributed.is_available() and torch.distributed.is_initialized()|g' -i $PYTHON_ROOT/nemo/collections/nlp/modules/common/megatron/megatron_utils.py && \
     sed 's|self.trainer.strategy.setup_environment()|#self.trainer.strategy.setup_environment()|g' -i $PYTHON_ROOT/nemo/collections/nlp/models/language_modeling/megatron_gpt_model.py && \
     head -225 $PYTHON_ROOT/nemo/collections/nlp/modules/common/megatron/megatron_utils.py | tail +190 && \
-    head -1150 $PYTHON_ROOT/nemo/collections/nlp/models/language_modeling/megatron_gpt_model.py | tail +1100 
+    head -1150 $PYTHON_ROOT/nemo/collections/nlp/models/language_modeling/megatron_gpt_model.py | tail +1100
 
 # set the nemo model cache directory to mounted /data volume
 ENV NEMO_CACHE_DIR=/data/models/nemo
 
-ARG LD_PRELOAD_LIBS=""    
+ARG LD_PRELOAD_LIBS=""
 ENV LD_PRELOAD=${LD_PRELOAD}:${LD_PRELOAD_LIBS}

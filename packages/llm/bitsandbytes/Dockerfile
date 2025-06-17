@@ -5,7 +5,7 @@
 # requires: '>=35'
 # depends: [transformers, triton]
 # test: test.py
-# notes: fork of https://github.com/TimDettmers/bitsandbytes for Jetson
+# notes: https://github.com/bitsandbytes-foundation/bitsandbytes
 #---
 
 ARG BASE_IMAGE
@@ -16,7 +16,7 @@ ARG BITSANDBYTES_VERSION \
     BITSANDBYTES_REPO \
     BITSANDBYTES_BRANCH \
     CUDA_INSTALLED_VERSION \
-    CUDA_MAKE_LIB 
+    CUDA_MAKE_LIB
 
 COPY build.sh install.sh /tmp/bitsandbytes/
 

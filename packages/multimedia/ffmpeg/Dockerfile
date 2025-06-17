@@ -2,7 +2,7 @@
 # name: ffmpeg
 # group: multimedia
 # depends: [build-essential]
-# notes: installs ffmpeg
+# notes: https://github.com/FFmpeg/FFmpeg
 # test: test.sh
 #---
 

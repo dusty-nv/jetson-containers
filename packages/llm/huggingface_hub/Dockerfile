@@ -3,7 +3,7 @@
 # group: llm
 # depends: [python]
 # test: test.py
-# notes: provides `huggingface-cli` and `huggingface-downloader` tools
+# notes: https://github.com/huggingface/huggingface_hub
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

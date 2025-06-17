@@ -5,7 +5,7 @@
 # requires: '>=34.1.0'
 # depends: [cudf]
 # test: [test.py]
-# notes: installed under `/usr/local`
+# notes: https://github.com/rapidsai/cuml
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
@@ -30,16 +30,16 @@ RUN apt-get update && \
 		  rapidjson-dev \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
-    
+
 RUN pip3 install scikit-build && \
     pip3 install ninja
-    
-    
+
+
 # build libcuml (C++)
-RUN git clone --branch ${CUML_VERSION} --depth=1 https://github.com/dusty-nv/cuml && \ 
-    cd cuml && \ 
+RUN git clone --branch ${CUML_VERSION} --depth=1 https://github.com/dusty-nv/cuml && \
+    cd cuml && \
     PARALLEL_LEVEL=$(nproc) ./build.sh libcuml --singlegpu -v
-    
+
 
 # build cuml (Python)
 RUN cd cuml/python && \
@@ -47,7 +47,7 @@ RUN cd cuml/python && \
     sed -i "s|get_versions().*|\"${CUML_VERSION}\".lstrip('v')|g" cuml/__init__.py && \
     python3 setup.py --verbose build_ext -j$(nproc) --singlegpu bdist_wheel && \
     cp dist/cuml*.whl /opt && \
-    pip3 install /opt/cuml*.whl 
+    pip3 install /opt/cuml*.whl
 
 # cuml/decomposition/pca.pyx:  No module named 'scipy'
 RUN pip3 install scipy scikit-learn treelite treelite_runtime

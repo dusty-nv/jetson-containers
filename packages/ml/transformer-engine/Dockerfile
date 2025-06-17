@@ -5,7 +5,7 @@
 # depends: [pytorch, torchvision, torchaudio, flash-attention, triton]
 # requires: '>=34.1.0'
 # test: test.py
-# notes: https://docs.nvidia.com/deeplearning/transformer-engine/user-guide/index.html
+# notes: https://github.com/NVIDIA/TransformerEngine
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

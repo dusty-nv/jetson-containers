@@ -5,7 +5,7 @@
 # requires: '>=34.1.0'
 # test: test.sh
 # docs: docs.md
-# notes: disabled on JetPack 4
+# notes: https://github.com/AUTOMATIC1111/stable-diffusion-webui
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
@@ -38,7 +38,7 @@ RUN set -ex \
         -e 's|from pytorch_lightning.utilities.distributed|#from pytorch_lightning.utilities.distributed|g' \
         -e 's|@rank_zero_only||g' \
         /opt/stable-diffusion/optimizedSD/ddpm.py
-    
+
 # add module to PYTHONPATH since it's not installable
 ENV PYTHONPATH=${PYTHONPATH}:/opt/stable-diffusion \
     DIFFUSERS_CACHE=/data/models/diffusers
