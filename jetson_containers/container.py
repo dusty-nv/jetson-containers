@@ -406,17 +406,16 @@ def test_container(name, package, simulate=False, build_idx=None):
 
         cmd += f"  --volume {package['path']}:/test" + _NEWLINE_
         cmd += f"  --volume {get_dir('data')}:/data" + _NEWLINE_
-        cmd += f"  --workdir /test" + _NEWLINE_
         cmd += '  ' + name + _NEWLINE_
 
         cmd += "    /bin/bash -c '"
 
         if test_ext == ".py":
-            cmd += f"python3 {test}"
+            cmd += f"python3 /test/{test}"
         elif test_ext == ".sh":
-            cmd += f"/bin/bash {test}"
+            cmd += f"/bin/bash /test/{test}"
         else:
-            cmd += f"{test}"
+            cmd += f"/test/{test}"
 
         log_block(f"<b>> TESTING  {name}</b>", f"<b>{cmd}</b>\n")
 
