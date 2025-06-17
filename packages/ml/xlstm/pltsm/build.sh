@@ -2,8 +2,8 @@
 set -ex
 
 # Clone the repository if it doesn't exist
-git clone --branch=v${PLSTM_VERSION} --depth=1 --recursive https://github.com/NX-AI/plstm /opt/plstm  || \
-git clone --depth=1 --recursive https://github.com/NX-AI/plstm  /opt/plstm
+git clone --branch=v${PLSTM_VERSION} --depth=1 --recursive https://github.com/ml-jku/plstm /opt/plstm  || \
+git clone --depth=1 --recursive https://github.com/ml-jku/plstm  /opt/plstm
 
 # Navigate to the directory containing plstm's setup.py
 cd /opt/plstm
