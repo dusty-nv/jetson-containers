@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source /workspace/speaches/.venv/bin/activate
+
 echo "=== Testing speaches import ==="
 python3 -c 'import speaches; print("✓ speaches imported successfully")' || { echo "✗ Failed to import speaches"; exit 1; }
 

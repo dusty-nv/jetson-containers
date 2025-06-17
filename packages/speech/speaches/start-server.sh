@@ -1,27 +1,22 @@
 #!/bin/bash
+# Flexible entrypoint that either:
+# 1. Executes passed commands (with environment properly set up)
+# 2. Starts the speaches server (default behavior)
+
 # https://stackoverflow.com/a/4319666
 shopt -s huponexit
 
 # Default port if not set
 PORT=${PORT:-8000}
 
-# Change to the speaches directory
-cd /workspace/speaches
+# Source the virtual environment
+source /workspace/speaches/.venv/bin/activate
 
-# Activate the virtual environment
-source .venv/bin/activate
-
-# Check if additional arguments were provided
-if [ "$#" -gt 0 ]; then
-    # Run the server in the background and execute the provided command
-    uvicorn --factory --host 0.0.0.0 --port ${PORT} speaches.main:create_app 2>&1 &
-    echo ""
-    sleep 5  # Give the server time to start
-    echo "Running command:  $@"
-    echo ""
-    sleep 1
-    "$@"
-else
-    # Run the server in the foreground
-    exec uvicorn --factory --host 0.0.0.0 --port ${PORT} speaches.main:create_app
+# If arguments were passed, execute them )
+if [ $# -gt 0 ]; then
+    exec "$@"
 fi
+
+# Run the server
+cd /workspace/speaches
+exec uvicorn --factory --host 0.0.0.0 --port ${PORT} speaches.main:create_app
