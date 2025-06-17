@@ -9,7 +9,7 @@ cd /opt/decord
 mkdir build && cd build
 CUDA_HOME="/usr/local/cuda" \
 NVCC_PATH="${CUDA_HOME}/bin/nvcc" \
-cmake .. -DUSE_CUDA=0 -DCMAKE_BUILD_TYPE=Release
+cmake .. -DUSE_CUDA=ON -DCMAKE_BUILD_TYPE=Release
 make
 
 cd ../python
