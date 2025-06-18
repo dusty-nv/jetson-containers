@@ -1,71 +1,59 @@
 #!/usr/bin/env bash
-# Python installer
+# Python installer using Micromamba
 set -x
 
-apt-get update
-apt-get install -y --no-install-recommends \
-	python${PYTHON_VERSION} \
-	python${PYTHON_VERSION}-dev
+curl -Ls https://micro.mamba.pm/api/micromamba/linux-$(uname -m | sed 's/x86_64/64/;s/aarch64/aarch64/')/latest | tar -xvj bin/micromamba
+mv bin/micromamba /usr/local/bin/
 
-which python${PYTHON_VERSION}
-return_code=$?
-set -e
+export MAMBA_ROOT_PREFIX=/opt/conda
+export CONDA_PREFIX=/opt/conda
+export PATH=/opt/conda/bin:$PATH
+mkdir -p $MAMBA_ROOT_PREFIX
+eval "$(micromamba shell hook -s posix)"
+micromamba shell init -s bash -r $MAMBA_ROOT_PREFIX
 
-if [ $return_code != 0 ]; then
-   echo "-- using deadsnakes ppa to install Python ${PYTHON_VERSION}"
-   add-apt-repository ppa:deadsnakes/ppa
-   apt-get update
-   apt-get install -y --no-install-recommends \
-	  python${PYTHON_VERSION} \
-	  python${PYTHON_VERSION}-dev
+# Install Python and core packages in base environment
+micromamba install -y -n base \
+    python=${PYTHON_VERSION} \
+    setuptools \
+    packaging \
+    "cython<3" \
+    wheel \
+    pip \
+    uv \
+    twine \
+    psutil \
+    pkginfo
+
+# Add micromamba initialization to /etc/profile.d for all shells
+cat > /etc/profile.d/mamba.sh << 'EOF'
+export MAMBA_EXE=/usr/bin/micromamba
+export MAMBA_ROOT_PREFIX=/opt/conda
+export PATH=/opt/conda/bin:$PATH
+
+if [ -f "${MAMBA_EXE}" ]; then
+    __mamba_setup="$("$MAMBA_EXE" shell hook --shell bash --root-prefix "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__mamba_setup"
+    else
+        alias micromamba="$MAMBA_EXE"
+    fi
+    unset __mamba_setup
 fi
 
-# path 1:  Python 3.8-3.10 for JP5/6
-# path 2:  Python 3.6 for JP4
-# path 3:  Python 3.12 for 24.04
-distro=$(lsb_release -rs)
+micromamba activate
+EOF
 
-if [ $distro = "24.04" ]; then
-   apt-get install -y --no-install-recommends python3-venv
-   python3 -m venv --system-site-packages /opt/venv
-   source /opt/venv/bin/activate
-   curl -sS https://bootstrap.pypa.io/get-pip.py | python${PYTHON_VERSION}
-elif [ $distro = "20.04" ]; then
-   curl -sS https://bootstrap.pypa.io/pip/3.8/get-pip.py | python3.8
-elif [ $distro = "18.04" ]; then
-   curl -sS https://bootstrap.pypa.io/pip/3.6/get-pip.py | python3.6
-else
-   curl -sS https://bootstrap.pypa.io/get-pip.py | python${PYTHON_VERSION}
-fi
+chmod +x /etc/profile.d/mamba.sh
+source /etc/profile.d/mamba.sh
 
-rm -rf /var/lib/apt/lists/*
-apt-get clean
+ln -sf /opt/conda/bin/python /usr/local/bin/python3
+ln -sf /opt/conda/bin/python /usr/local/bin/python
+ln -sf /opt/conda/bin/pip /usr/local/bin/pip3
+ln -sf /opt/conda/bin/pip /usr/local/bin/pip
 
-ln -f -s /usr/bin/python${PYTHON_VERSION} /usr/local/bin/python3
-#ln -s /usr/bin/pip${PYTHON_VERSION} /usr/local/bin/pip3
-
-# This was causing issues downstream (e.g. Python2.7 still around in Ubuntu 18.04,
-# and in cmake python enumeration where some packages expect that 'python' is 2.7)
-# Another way is apt package 'python-is-python3' - symlinks /usr/bin/python to python
-#RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \  \
-#    update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1 \
-
+# Verify installation
 which python3
 python3 --version
-
 which pip3
 pip3 --version
-
-python3 -m pip install --upgrade pip pkginfo --index-url https://pypi.org/simple
-
-pip3 install --no-binary :all: psutil
-pip3 install --upgrade \
-   setuptools \
-   packaging \
-   'Cython' \
-   wheel \
-   uv
-
-pip3 install --upgrade --index-url https://pypi.org/simple \
-   twine
-   
