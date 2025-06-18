@@ -30,7 +30,7 @@ RUN apt-get update && \
         bison \
         ocaml-core \
         xz-utils \
-        pkg-config \
+        pkg-config && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean
 
