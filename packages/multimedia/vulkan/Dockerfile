@@ -31,7 +31,6 @@ RUN apt-get update && \
         ocaml-core \
         xz-utils \
         pkg-config \
-        python3-pip && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean
 
