@@ -2,7 +2,15 @@
 
 print("Testing xattention...")
 import torch
-from xattn.src.Xattention import Xattention_prefill
+try:
+    from xattn.src.Xattention import Xattention_prefill
+except:
+    print("Xattention Import Fail")
+try:
+    from xattn.src.Minference import Minference_prefill
+    from xattn.src.Fullprefill import Full_prefill
+    from xattn.src.Flexprefill import Flexprefill_prefill
+from xattn.src.utils import *
 
 bsz = 1
 heads = 32
