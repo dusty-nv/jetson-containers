@@ -1,0 +1,46 @@
+name: "build-packages"
+run-name: "Build Monthly changed packages"
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: '0 0 1 * *'
+  push:
+    branches:
+      - 'master'
+    paths:
+      - '.github/workflows/build-monthly-packages.yml'
+      - 'packages/**'
+      - '!packages/**/README.md'
+      - '!packages/**/docs.md'
+      - '**/config.py'
+jobs:
+  build-changed:
+    runs-on: [self-hosted, jetson]
+    steps:
+      - run: |
+          cat /etc/nv_tegra_release || true
+      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}"
+        run: |
+          echo "$RUNNER_WORKSPACE"
+          cd $RUNNER_WORKSPACE
+          git config --global user.email "dustinf@nvidia.com"
+          git config --global user.name "Dustin Franklin"
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered'
+          cd jetson-containers
+          git fetch origin
+          git checkout $GITHUB_SHA
+          git status
+          ls -a
+      - name: Detect changed packages
+        id: changed
+        run: |
+          cd jetson-containers
+          pkgs=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^packages/' | cut -d/ -f2 | sort -u | tr '\n' ' ')
+          echo "packages=$pkgs" >> $GITHUB_OUTPUT
+      - name: Build changed packages
+        if: steps.changed.outputs.packages != ''
+        run: |
+          cd jetson-containers
+          for pkg in ${{ steps.changed.outputs.packages }}; do
+            ./build.sh --name=runner/ --push=dustynv $pkg
+          done

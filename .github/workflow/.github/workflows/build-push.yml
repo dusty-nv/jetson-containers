@@ -1,0 +1,37 @@
+name: "build-push"
+run-name: "Build push selected packages"
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - 'master'
+    paths:
+      - '.github/workflows/build-push.yml'
+      - 'packages/**'
+      - '!packages/**/README.md'
+      - '!packages/**/docs.md'
+      - '**/config.py'
+jobs:
+  build-selected:
+    runs-on: [self-hosted, jetson]
+    steps:
+      - run: |
+          cat /etc/nv_tegra_release || true
+      - name: "Checkout ${{ github.repository }} SHA=${{ github.sha }}"
+        run: |
+          echo "$RUNNER_WORKSPACE"
+          cd $RUNNER_WORKSPACE
+          git config --global user.email "dustinf@nvidia.com"
+          git config --global user.name "Dustin Franklin"
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY || echo 'repo already cloned or another error encountered'
+          cd jetson-containers
+          git fetch origin
+          git checkout $GITHUB_SHA
+          git status
+          ls -a
+      - name: Build selected packages
+        run: |
+          cd jetson-containers
+          for pkg in l4t-dynamo l4t-diffusion l4t-ml mlc nerfstudio ollama opendronemap lerobot genesis-world; do
+            ./build.sh --name=runner/ --push=dustynv $pkg
+          done
