@@ -10,7 +10,7 @@ set -x
 # Install Python deps
 pip3 install compressed-tensors decord2
 
-REPO_URL="https://github.com/sgl-project/sglang"
+REPO_URL="https://github.com/johnnynunez/sglang"
 REPO_DIR="/opt/sglang"
 
 echo "Building SGLang ${SGLANG_VERSION}"
@@ -52,10 +52,11 @@ if [[ "${IS_SBSA:-}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
 else
   export CORES=32  # GH200
 fi
-
+pip3 install "cmake<4"  # Ensure compatible CMake version
 echo "🚀  Building with MAX_JOBS=${CORES} and CMAKE_BUILD_PARALLEL_LEVEL=${CORES}"
 MAX_JOBS="${CORES}" \
 CMAKE_BUILD_PARALLEL_LEVEL="${CORES}" \
+CMAKE_ARGS="-DCMAKE_POLICY_VERSION_MINIMUM=3.5" \
 pip3 wheel . --no-deps --wheel-dir "${PIP_WHEEL_DIR}"
 pip3 install "${PIP_WHEEL_DIR}/sgl"*.whl
 cd "${REPO_DIR}" || exit 1
@@ -98,6 +99,7 @@ export CMAKE_BUILD_PARALLEL_LEVEL="${CORES}"
 echo "🚀  Building with MAX_JOBS=${CORES} and CMAKE_BUILD_PARALLEL_LEVEL=${CMAKE_BUILD_PARALLEL_LEVEL}"
 MAX_JOBS="${CORES}" \
 CMAKE_BUILD_PARALLEL_LEVEL="${CORES}" \
+CMAKE_ARGS="-DCMAKE_POLICY_VERSION_MINIMUM=3.5" \
 pip3 wheel '.[all]' --wheel-dir "${PIP_WHEEL_DIR}"
 pip3 install "${PIP_WHEEL_DIR}/sgl"*.whl
 
