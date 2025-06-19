@@ -4,7 +4,7 @@ IFS=$'\n\t'
 set -x
 
 # Ensure required variables are set
-: "${SGLANG_VERSION:?SGLANG_VERSION must be set}"
+: "${SGL_KERNEL_VERSION:?SGLANG_VERSION must be set}"
 : "${PIP_WHEEL_DIR:?PIP_WHEEL_DIR must be set}"
 
 # Install Python deps
