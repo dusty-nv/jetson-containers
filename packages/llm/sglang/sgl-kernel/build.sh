@@ -48,6 +48,7 @@ else
 fi
 pip3 install "cmake<4"  # Ensure compatible CMake version
 echo "🚀  Building with MAX_JOBS=${CORES} and CMAKE_BUILD_PARALLEL_LEVEL=${CORES}"
+export TORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST}"
 MAX_JOBS="${CORES}" \
 CMAKE_BUILD_PARALLEL_LEVEL="${CORES}" \
 TORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST}" \
