@@ -42,7 +42,7 @@ def get_l4t_version(version_file='/etc/nv_tegra_release', l4t_version: str = Non
         return Version(os.environ['L4T_VERSION'].lower().lstrip('r'))
 
     if SYSTEM_ARCH_TYPE != 'tegra-aarch64':
-        return Version('36.4.3') # for x86 to unlock L4T checks
+        return Version('36.4.4') # for x86 to unlock L4T checks
 
 
     if not os.path.isfile(version_file):
@@ -132,6 +132,7 @@ def get_jetpack_version(l4t_version: str = None, default='6.2'):
         "38.0.0": "7.0 EA",
 
         # -------- JP6 --------
+        "36.4.4": "6.2.1",
         "36.4.3": "6.2",
         "36.4.2": "6.1.1",
         "36.4.0": "6.1 GA",
