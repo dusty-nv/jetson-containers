@@ -139,7 +139,7 @@ echo "📦 Installing the sglang wheel from ${PIP_WHEEL_DIR} and its dependencie
 uv pip install "${PIP_WHEEL_DIR}/sglang"*.whl
 
 # Your original script installed 'gemlite' here, so we keep it.
-uv pip install gemlite
+uv pip install gemlite orjson
 
 echo "🎉 SGLang and all dependencies installed successfully!"
 
