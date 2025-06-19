@@ -12,7 +12,8 @@ def sgl_kernel(version, branch=None, default=False):
     pkg['build_args'] = {
         'SGL_KERNEL_VERSION': version,
         'SGL_KERNEL_BRANCH': branch,
-        'IS_SBSA': IS_SBSA
+        'IS_SBSA': IS_SBSA,
+        'TORCH_CUDA_ARCH_LIST': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES])
     }
 
     builder = pkg.copy()
