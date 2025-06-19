@@ -25,5 +25,5 @@ def decord(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    decord('0.7.0', default=True)
+    decord('1.0.0', default=True)
 ]
