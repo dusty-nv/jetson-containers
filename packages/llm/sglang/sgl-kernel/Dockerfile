@@ -1,17 +1,17 @@
 #---
-# name: sglang
-# group: llm
+# name: sgl-kernel
+# group: sglang
 # config: config.py
-# depends: [bitsandbytes, flashinfer, torchao, cuda-python, ffmpeg, mamba, xgrammar, flashinfer, transformers, minference, vllm, torch-memory-saver, sgl-kernel]
+# depends: [cuda, cmake, pytorch, triton, flash-attention, flashinfer, xgrammar]
 # requires: '>=36'
 # test: test.py
-# notes: https://github.com/sgl-project/sglang
+# notes: https://github.com/sgl-project/sglang/sgl-kernel
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG SGLANG_VERSION \
-    SGLANG_VERSION_SPEC \
+ARG SGL_KERNEL_VERSION \
+    SGL_KERNEL_BRANCHS \
     IS_SBSA \
     FORCE_BUILD=off \
     TMP=/tmp/sglang
