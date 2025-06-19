@@ -1,5 +1,5 @@
 #---
-# name: decord
+# name: decord2
 # group: multimedia
 # config: config.py
 # depends: [numpy, ffmpeg, cmake, video-codec-sdk]

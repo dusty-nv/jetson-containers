@@ -14,6 +14,8 @@ try:
 except:
     print("Prefill module imports failed")
 
+from xattn.src.utils import *
+
 bsz = 1
 heads = 32
 seq_len = 1024
