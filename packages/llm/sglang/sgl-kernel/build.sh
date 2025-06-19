@@ -50,6 +50,7 @@ pip3 install "cmake<4"  # Ensure compatible CMake version
 echo "🚀  Building with MAX_JOBS=${CORES} and CMAKE_BUILD_PARALLEL_LEVEL=${CORES}"
 MAX_JOBS="${CORES}" \
 CMAKE_BUILD_PARALLEL_LEVEL="${CORES}" \
+TORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST}" \
 CMAKE_ARGS="-DCMAKE_POLICY_VERSION_MINIMUM=3.5" \
 pip3 wheel . --no-build-isolation --wheel-dir "${PIP_WHEEL_DIR}"
 pip3 install "${PIP_WHEEL_DIR}/sgl"*.whl
