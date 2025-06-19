@@ -6,12 +6,12 @@ git clone --branch=v${TRANSFORMER_ENGINE_VERSION} --depth=1 --recursive https://
 git clone --depth=1 --recursive https://github.com/NVIDIA/TransformerEngine /opt/transformer_engine
 
 # Navigate to the directory containing mamba's setup.py
-cd /opt/transformer_engine  
+cd /opt/transformer_engine
 
 # git apply /tmp/TRANSFORMER_ENGINE/patch.diff
 # git diff
 # git status
-
+pip3 install --upgrade pip setuptools wheel pybind11[global] scikit-build cmake ninja
 MAX_JOBS=$(nproc) \
 NVTE_FRAMEWORK=pytorch \
 NVTE_CUDA_ARCHS=${CUDAARCHS} \
