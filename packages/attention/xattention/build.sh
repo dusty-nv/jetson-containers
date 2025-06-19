@@ -19,8 +19,7 @@ echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUI
 
 MAX_JOBS="$(nproc)" \
 CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS \
-python3 setup.py --verbose bdist_wheel --dist-dir /opt/xattention/wheels
-
+pip3 wheel --wheel-dir=/opt/xattention/wheels --verbose .
 ls /opt/xattention/wheels
 cd /
 

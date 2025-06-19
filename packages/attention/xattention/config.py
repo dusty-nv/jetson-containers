@@ -1,4 +1,3 @@
-
 from jetson_containers import CUDA_VERSION
 from packaging.version import Version
 
@@ -28,4 +27,3 @@ def xattention(version, requires=None, default=False):
 package = [
     xattention('0.0.1', default=(CUDA_VERSION >= Version('12.6'))),
 ]
-
