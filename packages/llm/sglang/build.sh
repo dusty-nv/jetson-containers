@@ -17,15 +17,17 @@ REPO_DIR="/opt/sglang"
 
 echo "Building SGLang ${SGLANG_VERSION}"
 
-if git clone --recursive --depth 1 --branch "v${SGLANG_VERSION}" \
-    "${REPO_URL}" "${REPO_DIR}"
-then
-  echo "Cloned SGLang v${SGLANG_VERSION}"
+if [ ! -d "${REPO_DIR}" ]; then
+  if git clone --recursive --depth 1 --branch "v${SGLANG_VERSION}" \
+      "${REPO_URL}" "${REPO_DIR}"; then
+    echo "Cloned SGLang v${SGLANG_VERSION}"
+  else
+    echo "Tagged branch v${SGLANG_VERSION} not found; cloning default branch"
+    git clone --recursive --depth 1 "${REPO_URL}" "${REPO_DIR}"
+  fi
 else
-  echo "Tagged branch v${SGLANG_VERSION} not found; cloning default branch"
-  git clone --recursive --depth 1 "${REPO_URL}" "${REPO_DIR}"
+  echo "Directory ${REPO_DIR} already exists, skipping clone."
 fi
-
 cd "${REPO_DIR}" || exit 1
 
 # --- PATCH 1: MAKE srt/utils.py JETSON-AWARE (ROBUST FIX) ---
