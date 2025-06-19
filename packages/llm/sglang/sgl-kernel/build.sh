@@ -4,7 +4,7 @@ IFS=$'\n\t'
 set -x
 
 # Ensure required variables are set
-: "${SGL_KERNEL_VERSION:?SGLANG_VERSION must be set}"
+: "${SGL_KERNEL_VERSION:?SGL_KERNEL_VERSION must be set}"
 : "${PIP_WHEEL_DIR:?PIP_WHEEL_DIR must be set}"
 
 # Install Python deps
@@ -13,17 +13,11 @@ pip3 install compressed-tensors decord2
 REPO_URL="https://github.com/sgl-project/sglang"
 REPO_DIR="/opt/sglang"
 
-echo "Building SGLang ${SGLANG_VERSION}"
+echo "Building SGLang ${SGL_KERNEL_VERSION}"
 
 # Clone either the tagged release or fallback to default branch
-if git clone --recursive --depth 1 --branch "v${SGLANG_VERSION}" \
-    "${REPO_URL}" "${REPO_DIR}"
-then
-  echo "Cloned v${SGLANG_VERSION}"
-else
-  echo "Tagged branch not found; cloning default branch"
-  git clone --recursive --depth 1 "${REPO_URL}" "${REPO_DIR}"
-fi
+echo "Tagged branch not found; cloning default branch"
+git clone --recursive --depth 1 "${REPO_URL}" "${REPO_DIR}"
 
 pip3 install --no-cache-dir ninja setuptools wheel numpy uv scikit-build-core
 echo "Building SGL-KERNEL"
