@@ -1,7 +1,7 @@
 #---
 # name: cosmos-reason1
 # group: cosmos
-# depends: [pytorch, torchvision, torchaudio, transformer-engine, flash-attention, transformers, opencv:4.11.0, bitsandbytes, huggingface_hub, ffmpeg, vllm, flashinfer]
+# depends: [pytorch, torchvision, torchaudio, transformer-engine, flash-attention, transformers, opencv:4.11.0, bitsandbytes, huggingface_hub, ffmpeg, vllm, flashinfer, apex]
 # requires: '>=34.1.0'
 # notes: https://github.com/nvidia-cosmos/cosmos-reason1
 # test: test.py
