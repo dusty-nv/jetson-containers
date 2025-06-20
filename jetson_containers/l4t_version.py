@@ -42,12 +42,12 @@ def get_l4t_version(version_file='/etc/nv_tegra_release', l4t_version: str = Non
         return Version(os.environ['L4T_VERSION'].lower().lstrip('r'))
 
     if SYSTEM_ARCH_TYPE != 'tegra-aarch64':
-        return Version('36.4.3') # for x86 to unlock L4T checks
+        return Version('36.4.4') # for x86 to unlock L4T checks
 
 
     if not os.path.isfile(version_file):
         # raise IOError(f"L4T_VERSION file doesn't exist:  {version_file}")
-        return Version('36.4.3')
+        return Version('36.4.4')
 
     with open(version_file) as file:
         line = file.readline()
@@ -132,6 +132,7 @@ def get_jetpack_version(l4t_version: str = None, default='6.2'):
         "38.0.0": "7.0 EA",
 
         # -------- JP6 --------
+        "36.4.4": "6.2.1",
         "36.4.3": "6.2",
         "36.4.2": "6.1.1",
         "36.4.0": "6.1 GA",
@@ -258,7 +259,7 @@ def get_cuda_version(version_file: str = "/usr/local/cuda/version.json", l4t_ver
                 # executing, for example, `export CUDA_VERSION=12.8`.
                 # If the env variable is not set, set the CUDA_VERSION to be the CUDA version
                 # that made available with the release of L4T_VERSION
-                if l4t_version == Version('36.4') or l4t_version == Version('36.4.2') or l4t_version == Version('36.4.3'):
+                if l4t_version == Version('36.4') or l4t_version == Version('36.4.2') or l4t_version == Version('36.4.3') or l4t_version == Version('36.4.4'):
                     cuda_version = '12.6'
                 elif l4t_version == Version('36.3'):
                     cuda_version = '12.4'
