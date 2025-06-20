@@ -2,7 +2,7 @@
 # name: flexprefill
 # group: attention
 # config: config.py
-# depends: [pytorch, torchvision, torchaudio, torchao, flash-attention, transformers, diffusers, opencv]
+# depends: [pytorch, torchvision, torchaudio, torchao, flash-attention, transformers]
 # requires: '>=35'
 # test: test.py
 #---
