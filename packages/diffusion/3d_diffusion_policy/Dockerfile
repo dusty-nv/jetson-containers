@@ -3,7 +3,7 @@
 # alias: 3d-diffusion-policy
 # group: diffusion
 # docs: docs.md
-# depends: [transformers, mujoco, numba, diffusers]
+# depends: [transformers, mujoco, numba, diffusers, pytorch3d]
 # requires: '>=36'
 # test: [test.sh]
 #---
