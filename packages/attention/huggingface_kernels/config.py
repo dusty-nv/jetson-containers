@@ -27,6 +27,6 @@ def kernels(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    flash_attn('0.6.2', default=(CUDA_VERSION >= Version('12.6'))),
+    kernels('0.6.2', default=(CUDA_VERSION >= Version('12.6'))),
 ]
 
