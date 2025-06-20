@@ -2,7 +2,7 @@
 # name: lita
 # group: vlm
 # docs: docs.md
-# depends: [decord, pytorch, transformers, bitsandbytes, flash-attention]
+# depends: [pytorch, transformers, bitsandbytes, flash-attention, decord2]
 # requires: '>=34.1.0'
 # test: test.py
 #---
@@ -12,7 +12,7 @@ FROM ${BASE_IMAGE}
 ARG LITA_ROOT=/opt/LITA \
     LITA_REPO=NVlabs/LITA \
     LITA_BRANCH=main \
-    
+
 ADD https://api.github.com/repos/${LITA_REPO}/git/refs/heads/${LITA_BRANCH} /tmp/lita_version.json
 
 RUN git clone --branch=${LITA_BRANCH} --depth=1 https://github.com/${LITA_REPO} ${LITA_ROOT} && \
@@ -27,5 +27,5 @@ RUN git clone --branch=${LITA_BRANCH} --depth=1 https://github.com/${LITA_REPO} 
 
 COPY benchmark.py ${LITA_ROOT}/lita/serve/
 
-RUN pip3 install -e ${LITA_ROOT} 
+RUN pip3 install -e ${LITA_ROOT}
 
