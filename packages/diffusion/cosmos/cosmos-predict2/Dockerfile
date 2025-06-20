@@ -4,7 +4,6 @@
 # depends: [pytorch, torchvision, torchaudio, transformer-engine, flash-attention, transformers, opencv:4.11.0, bitsandbytes, huggingface_hub, ffmpeg, apex]
 # requires: '>=34.1.0'
 # notes: https://github.com/nvidia-cosmos/cosmos-predict2
-# test: test.py
 #---
 
 ARG BASE_IMAGE
@@ -25,7 +24,6 @@ RUN cd /opt/cosmos-predict2 && \
     pip3 install einops attrs pynvml protobuf && \
     pip3 install -r requirements-conda.txt && \
     export MAX_JOBS=$(nproc) && \
-    NVCC_APPEND_FLAGS="--threads 12" pip3 install -v --disable-pip-version-check --no-cache-dir --no-build-isolation --config-settings "--build-option=--cpp_ext --cuda_ext" git+https://github.com/NVIDIA/apex.git && \
     pip3 install -U --force-reinstall opencv-contrib-python && \
     pip3 install -e .
 
