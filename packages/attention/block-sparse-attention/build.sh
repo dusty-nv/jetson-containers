@@ -8,7 +8,6 @@ git clone --depth=1 https://github.com/mit-han-lab/Block-Sparse-Attention /opt/b
 
 cd /opt/block_sparse_attn
 
-sed -i 's/==/>=/g' requirements.txt
 pip3 install packaging setuptools wheel
 pip3 install --ignore-installed blinker
 

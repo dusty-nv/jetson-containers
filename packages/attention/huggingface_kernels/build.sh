@@ -8,12 +8,6 @@ git clone --depth=1 https://github.com/huggingface/kernels /opt/huggingface_kern
 
 cd /opt/huggingface_kernels
 
-# Generate the diff dynamically
-python3 /tmp/huggingface_kernels/generate_diff.py
-git apply /tmp/huggingface_kernels/patch.diff
-git diff
-git status
-
 export MAX_JOBS="$(nproc)"
 export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
@@ -23,9 +17,7 @@ CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS \
 pip3 wheel . -v -w /opt/huggingface_kernels/wheels/
 
 ls /opt
-cd /
+cd /opt/
 
 pip3 install /opt/huggingface_kernels/wheels/kernels*.whl
-#pip3 show flash-attn && python3 -c 'import flash_attn'
-
 twine upload --verbose /opt/huggingface_kernels/wheels/kernels*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

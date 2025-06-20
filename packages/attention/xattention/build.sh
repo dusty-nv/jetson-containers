@@ -20,9 +20,6 @@ echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUI
 MAX_JOBS="$(nproc)" \
 CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS \
 pip3 wheel --wheel-dir=/opt/xattention/wheels --verbose .
-ls /opt/xattention/wheels
-cd /
-
-pip3 install /opt/xattention/wheels/xattn*.whl
-
+# pip3 install /opt/xattention/wheels/xattn*.whl
+pip3 install -e .
 twine upload --verbose /opt/xattention/wheels/xattn*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

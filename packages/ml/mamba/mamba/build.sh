@@ -17,7 +17,7 @@ git status
 sed -i '/torch/d' pyproject.toml
 sed -i '/triton/d' pyproject.toml
 
-MAX_JOBS=16 \
+MAX_JOBS="$(nproc)" \
 MAMBA_FORCE_BUILD="TRUE" \
 MAMBA_SKIP_CUDA_BUILD="FALSE" \
 python3 setup.py bdist_wheel --dist-dir=/opt/mamba/wheels

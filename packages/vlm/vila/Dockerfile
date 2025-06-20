@@ -1,7 +1,7 @@
 #---
 # name: vila
 # group: vlm
-# depends: [pytorch, flash-attention, transformers, opencv, deepspeed, decord]
+# depends: [pytorch, flash-attention, transformers, opencv, deepspeed, decord2]
 # requires: '>=35'
 # test: [test.sh, test.py]
 #---
@@ -28,8 +28,8 @@ RUN git clone --branch=main --depth=1 --recursive https://github.com/NVlabs/VILA
     cat pyproject.toml && \
     pip3 install -e . && \
     pip3 install -e ".[train]" && \
-    pip3 install -e ".[eval]" 
-    
+    pip3 install -e ".[eval]"
+
 #RUN pip3 install 'transformers==4.37.2' && \
 #    site_pkg_path=$(python3 -c 'import site; print(site.getsitepackages()[0])') && \
 #    cp -rv /opt/VILA/llava/train/transformers_replace/* $site_pkg_path/transformers/ && \

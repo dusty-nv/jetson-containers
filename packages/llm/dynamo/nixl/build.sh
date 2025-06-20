@@ -31,15 +31,6 @@ ldconfig
 
 # Navigate to the directory containing nixl's setup.py
 cd /opt/nixl
-if [[ "${IS_TEGRA,,}" == "1" || "${IS_TEGRA,,}" == "true" ]]; then
-  echo "⚠️  IS_TEGRA value '${IS_TEGRA}' detected. Updating meson_options.txt for Tegra."
-  sed -i 's|/usr/local/cuda/targets/x86_64-linux/|/usr/local/cuda/targets/aarch64-linux/|g' meson_options.txt
-elif [[ "${IS_SBSA,,}" == "1" || "${IS_SBSA,,}" == "true" ]]; then
-  echo "⚠️  IS_SBSA value '${IS_SBSA}' detected. Updating meson_options.txt for SBSA."
-  sed -i 's|/usr/local/cuda/targets/x86_64-linux/|/usr/local/cuda/targets/sbsa-linux/|g' meson_options.txt
-else
-  echo "⚠️  x86 detected. Updating meson_options.txt for x86."
-fi
 
 pip3 install --upgrade meson pybind11 patchelf
 
@@ -51,17 +42,24 @@ cd build && \
 ninja && \
 ninja install
 
-ls -l /usr/local/nixl/
-ls -l /usr/local/nixl/include/
-
 export NIXL_PREFIX=/usr/local/nixl
 
-if [[ "${SYSTEM_ARM,,}" == "1" || "${SYSTEM_ARM,,}" == "true" ]]; then
-  export NIXL_PLUGIN_DIR=/usr/local/nixl/lib/aarch64-linux-gnu/plugins
-  echo "/usr/local/nixl/lib/aarch64-linux-gnu" > /etc/ld.so.conf.d/nixl.conf
-  echo "/usr/local/nixl/lib/aarch64-linux-gnu/plugins" >> /etc/ld.so.conf.d/nixl.conf
+ARCH=$(uname -m)
+echo "System architecture detected: ${ARCH}"
+LIB_DIR="/usr/local/nixl/lib/${ARCH}-linux-gnu"
+if [ -d "$LIB_DIR" ]; then
+
+  echo "✅ Found NixL directory for ${ARCH}: ${LIB_DIR}"
+  PLUGIN_DIR="${LIB_DIR}/plugins"
+  export NIXL_PLUGIN_DIR="${PLUGIN_DIR}"
+  echo "${LIB_DIR}" > /etc/ld.so.conf.d/nixl.conf
+  echo "${PLUGIN_DIR}" >> /etc/ld.so.conf.d/nixl.conf
+  ldconfig
+  echo "NixL configuration for ${ARCH} applied successfully."
 else
-  echo "⚠️  x86 detected. Updating ld.so.conf.d for x86."
+  echo "⚠️  Warning: NixL directory not found for architecture ${ARCH}."
+  echo "   Checked path: ${LIB_DIR}"
+  echo "   No configuration changes were made."
 fi
 ldconfig
 

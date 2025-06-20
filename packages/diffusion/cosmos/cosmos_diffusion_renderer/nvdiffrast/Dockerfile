@@ -27,10 +27,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     cmake \
     curl \
     && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean \
+    && apt-get clean
 
 COPY build.sh install.sh /tmp/nvdiffrast/
 
 RUN /tmp/nvdiffrast/install.sh || /tmp/nvdiffrast/build.sh
-
-

@@ -3,7 +3,7 @@
 # group: diffusion
 # depends: [pytorch, torchvision, torchaudio, torchao, flash-attention, sage-attention, bitsandbytes, transformers, xformers, diffusers, huggingface_hub]
 # requires: '>=35.0.0'
-# docs: docs.md
+# notes: https://github.com/lllyasviel/FramePack
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
