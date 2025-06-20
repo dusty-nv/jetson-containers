@@ -3,7 +3,7 @@
 # group: diffusion
 # depends: [pytorch, torchvision, torchaudio, opencv, bitsandbytes, transformers, xformers, torchao, flash-attention, sage-attention, sparge-attention, flexprefill, paraattention, diffusers, huggingface_hub]
 # requires: '>=35.0.0'
-# docs: docs.md
+# notes: https://github.com/vladmandic/sdnext
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
