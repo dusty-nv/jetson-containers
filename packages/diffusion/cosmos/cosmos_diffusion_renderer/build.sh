@@ -11,12 +11,12 @@ sed -i '/decord==0.6.0/d' requirements.txt
 sed -i 's/==/>=/g' requirements.txt
 pip3 install decord2
 pip3 install -r requirements.txt
-cosmos1-diffusion-renderer_MORE_DETAILS=1 MAX_JOBS=$(nproc) \
-python3 setup.py --verbose bdist_wheel --dist-dir /opt/cosmos1-diffusion-renderer/wheels/
+export MAX_JOBS=$(nproc)
+pip3 wheel --no-deps --verbose . --wheel-dir=/opt/cosmos1-diffusion-renderer/wheels/
 
 ls /opt/cosmos1-diffusion-renderer/wheels/
 cd /
 
-pip3 install /opt/cosmos1-diffusion-renderer/wheels/nvidia-cosmos*.whl
+pip3 install /opt/cosmos1-diffusion-renderer/wheels/nvidia_cosmos*.whl
 
-twine upload --verbose /opt/nvidia-cosmos*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose /opt/nvidia_cosmos*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
