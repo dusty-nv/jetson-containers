@@ -9,7 +9,7 @@ git clone --recursive https://github.com/NVlabs/nvdiffrast /opt/nvdiffrast
 cd /opt/nvdiffrast
 
 pip3 install -U pip setuptools wheel
-nvdiffrast_MORE_DETAILS=1 MAX_JOBS=$(nproc) \
+export MAX_JOBS=$(nproc)
 python3 setup.py --verbose bdist_wheel --dist-dir /opt/nvdiffrast/wheels/
 
 ls /opt
