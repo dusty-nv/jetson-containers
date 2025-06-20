@@ -2,7 +2,7 @@ import os
 
 from packaging.version import Version
 from jetson_containers import (
-    L4T_VERSION, CUDA_VERSION, SYSTEM_ARM,
+    L4T_VERSION, CUDA_VERSION, SYSTEM_ARM, SYSTEM_X86,
     update_dependencies, package_requires, IS_TEGRA, IS_SBSA
 )
 
@@ -31,6 +31,19 @@ elif SYSTEM_ARM:
         TENSORRT_VERSION = Version('8.5')
     elif L4T_VERSION.major >= 32:
         TENSORRT_VERSION = Version('8.2')
+elif SYSTEM_X86:
+    if CUDA_VERSION >= Version('13.0'):
+            TENSORRT_VERSION = Version('11.0')
+    elif CUDA_VERSION >= Version('12.9'):
+            TENSORRT_VERSION = Version('10.12')
+    elif CUDA_VERSION >= Version('12.8'):
+            TENSORRT_VERSION = Version('10.7')
+    elif CUDA_VERSION >= Version('12.6'):
+            TENSORRT_VERSION = Version('10.3')
+    elif CUDA_VERSION == Version('12.4'):
+            TENSORRT_VERSION = Version('10.0')
+    else:
+        TENSORRT_VERSION = Version('8.6')
 else:
     TENSORRT_VERSION = Version('10.10') # x86_64
 
@@ -82,6 +95,8 @@ def tensorrt_tar(version, url, cudnn=None, requires=None):
         tensorrt['alias'] = 'tensorrt'
 
     if cudnn:
+        print(cudnn)
+        print("HERERERERE")
         tensorrt['depends'] = update_dependencies(tensorrt['depends'], f"cudnn:{cudnn}")
 
     if requires:
