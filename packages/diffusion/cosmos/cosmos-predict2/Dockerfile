@@ -1,7 +1,7 @@
 #---
 # name: cosmos-predict2
 # group: cosmos
-# depends: [pytorch, torchvision, torchaudio, transformer-engine, flash-attention, transformers, opencv:4.11.0, bitsandbytes, huggingface_hub, ffmpeg]
+# depends: [pytorch, torchvision, torchaudio, transformer-engine, flash-attention, transformers, opencv, bitsandbytes]
 # requires: '>=34.1.0'
 # notes: https://github.com/nvidia-cosmos/cosmos-predict2
 # test: test.py
@@ -20,6 +20,7 @@ RUN git clone --recursive https://github.com/nvidia-cosmos/cosmos-predict2 /opt/
     cd cosmos-predict2
 
 RUN cd /opt/cosmos-predict2 && \
+    pip3 install decord2 && \
     sed -i '/decord==0.6.0/d' requirements-conda.txt && \
     sed -i 's/==/>=/g' requirements-conda.txt && \
     pip3 install einops attrs pynvml protobuf && \
