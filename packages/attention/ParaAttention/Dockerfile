@@ -2,7 +2,7 @@
 # name: paraattention
 # group: attention
 # config: config.py
-# depends: [pytorch, torchvision, torchaudio, torchao, diffusers, opencv]
+# depends: [pytorch, torchvision, torchaudio, torchao, flash-attention, transformers, diffusers, opencv
 # requires: '>=35'
 # test: test.py
 # docs: https://github.com/chengzeyi/ParaAttention

@@ -5,6 +5,7 @@
 # depends: [pytorch, torchvision, torchaudio, torchao, flash-attention, transformers, diffusers, opencv]
 # requires: '>=35'
 # test: test.py
+# notes: https://github.com/thu-ml/SpargeAttn.git
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

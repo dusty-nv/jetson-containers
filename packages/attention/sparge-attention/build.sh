@@ -7,7 +7,7 @@ git clone --depth=1 --branch=v${SPARGE_ATTENTION_VERSION} https://github.com/thu
 git clone --depth=1 https://github.com/thu-ml/SpargeAttn /opt/sparge-attention
 
 cd /opt/sparge-attention
-
+pip3 install ninja
 export MAX_JOBS="$(nproc)"
 export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
