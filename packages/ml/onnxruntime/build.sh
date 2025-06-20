@@ -20,7 +20,6 @@ fi
 
 if [ ! -f "/usr/lib/$(uname -m)-linux-gnu/libnvdla_compiler.so" ]; then
     echo "TensorRT NVDLA compiler library not found"
-    exit 1
 fi
 
 pip3 uninstall -y onnxruntime || echo "onnxruntime was not previously installed"
