@@ -315,7 +315,7 @@ def get_cuda_arch(l4t_version: str=None, cuda_version: str=None, format=list):
         # Nano/TX1 = 5.3, TX2 = 6.2, Xavier = 7.2, Orin = 8.7, Thor = 10.1
         if IS_TEGRA:
             if l4t_version.major >= 38:  # JetPack 7
-                cuda_architectures = [87, 110, 121] # Ampere Orin, Thor 110, Spark 121
+                cuda_architectures = [87]
             elif l4t_version.major >= 36:  # JetPack 6
                 cuda_architectures = [87]
             elif l4t_version.major >= 34:  # JetPack 5
