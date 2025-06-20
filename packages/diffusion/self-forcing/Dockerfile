@@ -1,8 +1,8 @@
 #---
 # name: self-forcing
 # group: diffusion
-# depends: [cuda, pytorch, torchvision, torchaudio, torchao, torchsde, pytorch3d, torch-memory-saver, opencv, bitsandbytes, transformers, xformers, torchao, flash-attention, sage-attention, sparge-attention, flexprefill, paraattention, diffusers, huggingface_hub]
-# requires: '>=35.0.0'
+# depends: [pytorch, torchvision, torchaudio, torchao, torchsde, pytorch3d, torch-memory-saver, opencv, bitsandbytes, transformers, xformers, torchao, flash-attention, diffusers, huggingface_hub]
+# requires: '>=35.1.0'
 # docs: docs.md
 #---
 ARG BASE_IMAGE
@@ -14,6 +14,8 @@ WORKDIR /opt
 RUN git clone https://github.com/guandeh17/Self-Forcing /opt/self_forcing && \
     cd /opt/self_forcing && \
     sed -i 's/==/>=/g' requirements.txt && \
+    sed -i -e '/^[[:blank:]]*nvidia-pyindex[[:blank:]]*$/d' \
+       -e '/^[[:blank:]]*nvidia-tensorrt[[:blank:]]*$/d'  requirements.txt && \
     pip3 install -r requirements.txt && \
     python3 setup.py develop
 
