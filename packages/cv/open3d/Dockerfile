@@ -3,7 +3,7 @@
 # alias: open3d
 # group: cv
 # config: config.py
-# depends: [cuda, cudnn, python, numpy, opengl, vulkan, video-codec-sdk, ffmpeg, pytorch, torchvision, torchaudio, pyav, pycuda, cmake, ninja, opencv, llvm:17]
+# depends: [pytorch, torchvision, torchaudio, torchao, opencv]
 # test: [test.py]
 #---
 ARG BASE_IMAGE
