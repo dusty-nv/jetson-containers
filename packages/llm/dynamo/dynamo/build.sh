@@ -10,7 +10,7 @@ echo "Building ai-dynamo version ${DYNAMO_VERSION}..."
 export CARGO_BUILD_JOBS=$(nproc)
 cd /opt/dynamo
 sed -Ei 's/"ai-dynamo-vllm([^"]*)"/"vllm\1"/g' pyproject.toml
-cargo build --release --features cuda,python
+cargo build --release --features cuda
 
 echo "Building bindings for Python"
 cd /opt/dynamo/lib/bindings/python
@@ -23,8 +23,6 @@ if [[ "${SYSTEM_ARM:-}" == "1" || "${SYSTEM_ARM,,}" == "true" ]]; then
 else
   echo "Building by default."
 fi
-
-
 
 pip3 install maturin
 mkdir /opt/dynamo/wheels
