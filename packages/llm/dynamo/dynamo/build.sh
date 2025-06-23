@@ -46,7 +46,7 @@ twine upload --verbose /opt/dynamo/wheels/ai_dynamo_runtime*.whl || echo "Failed
 pip3 install /opt/dynamo/wheels/ai_dynamo_runtime*.whl
 
 cd /opt/dynamo
-pip3 wheel '.[all]' --wheel-dir=/opt/dynamo/wheels . --verbose
+pip3 wheel --no-deps --wheel-dir=/opt/dynamo/wheels . --verbose
 pip3 install /opt/dynamo/wheels/ai_dynamo*.whl
 
 twine upload --verbose /opt/dynamo/wheels/ai_dynamo*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
