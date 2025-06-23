@@ -10,10 +10,17 @@ git clone --recursive --depth=1 --branch=v${FLASHINFER_VERSION} $REPO_URL $REPO_
 git clone --recursive --depth=1 $REPO_URL $REPO_DIR
 
 cd $REPO_DIR
+VERSION_FILE="version.txt"
+if [[ ! -f "$VERSION_FILE" ]]; then
+  echo "¡Error! No existe $VERSION_FILE" >&2
+  exit 1
+fi
+sed -i "1,\$c\\${FLASHINFER_VERSION}" version.txt
 sed -i 's|options={.*| |g' setup.py
 echo "Patched $REPO_DIR/setup.py"
 cat setup.py
-python3 -m pip install --no-cache-dir build setuptools wheel
+python3 -m pip install --no-cache-dir build setuptools wheel ninja
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$LD_LIBRARY_PATH
 python3 -m flashinfer.aot
 python3 -m build --no-isolation --wheel
 # Install AOT wheel
