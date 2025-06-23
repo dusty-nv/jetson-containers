@@ -24,7 +24,7 @@ fi
 
 cd "${REPO_DIR}" || exit 1
 
-./util/install_deps_ubuntu.sh assume-yes
+# ./util/install_deps_ubuntu.sh assume-yes
 mkdir build
 cd build
 

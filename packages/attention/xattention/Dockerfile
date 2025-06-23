@@ -2,7 +2,7 @@
 # name: xattention
 # group: attention
 # config: config.py
-# depends: [pytorch, torchvision, torchaudio, torchao, flash-attention, block_sparse_attn, transformers, diffusers, opencv]
+# depends: [pytorch, torchvision, torchaudio, torchao, flash-attention, transformers, diffusers, opencv, block_sparse_attn]
 # requires: '>=35'
 # test: test.py
 #---

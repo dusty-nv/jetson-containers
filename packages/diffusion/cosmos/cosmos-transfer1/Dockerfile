@@ -1,7 +1,7 @@
 #---
 # name: cosmos-transfer1
 # group: cosmos
-# depends: [pytorch, torchvision, torchaudio, transformer-engine, flash-attention, transformers, opencv:4.11.0, bitsandbytes, huggingface_hub, ffmpeg]
+# depends: [pytorch, torchvision, torchaudio, transformer-engine, flash-attention, transformers, opencv, bitsandbytes, huggingface_hub, ffmpeg, apex]
 # requires: '>=34.1.0'
 # notes: https://github.com/nvidia-cosmos/cosmos-transfer1
 #---
@@ -21,9 +21,10 @@ RUN git clone --recursive https://github.com/nvidia-cosmos/cosmos-transfer1 /opt
 RUN cd /opt/cosmos-transfer1 && \
     sed -i '/decord==0.6.0/d' requirements.txt && \
     sed -i 's/==/>=/g' requirements.txt && \
-    pip3 install einops attrs pynvml protobuf && \
+    pip3 install einops decord2 attrs pynvml protobuf && \
     pip3 install -r requirements.txt && \
-    pip3 install -U --force-reinstall opencv-contrib-python
+    export MAX_JOBS=$(nproc) && \
+    pip3 install -e .
 
 WORKDIR /opt/cosmos-transfer1
 CMD ["/bin/bash"]

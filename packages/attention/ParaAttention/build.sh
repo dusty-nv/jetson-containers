@@ -8,11 +8,8 @@ git clone --depth=1 https://github.com/chengzeyi/ParaAttention /opt/paraattentio
 
 cd /opt/paraattention
 
-sed -i 's/==/>=/g' extra_requirements.txt
-sed -i 's/transformers==/transformers>=/; s/triton==/triton>=/' setup.py
 pip3 install packaging
 pip3 install --ignore-installed blinker
-pip3 install nemo-toolkit[all]
 
 
 export MAX_JOBS="$(nproc)"
