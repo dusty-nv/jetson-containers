@@ -3,7 +3,7 @@
 # group: attention
 # config: config.py
 # depends: [cuda, pytorch, triton]
-# requires: '>=36'
+# requires: '>=35'
 # test: test.py
 #---
 ARG BASE_IMAGE

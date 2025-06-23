@@ -33,5 +33,5 @@ package = [
     flash_infer('0.2.2', '0.2.2', default=False),
     flash_infer('0.2.2.post1', '0.2.2.post1', default=False),
     flash_infer('0.2.6.post1', '0.2.6.post1', default=False),
-    flash_infer('0.2.7', '0.2.7', default=(CUDA_VERSION >= Version('12.8'))),
+    flash_infer('0.2.7', '0.2.7', default=(CUDA_VERSION >= Version('12.6'))),
 ]
