@@ -37,7 +37,7 @@ pip3 install --upgrade meson pybind11 patchelf
 export MESON_ARGS="-Ddisable_mooncake_backend=false"
 rm -rf build && \
 mkdir build && \
-meson setup build/ --prefix=/usr/local/nixl && \
+meson setup nixl-build -Ducx_path=/opt/ucx/ --prefix=/usr/local/nixl && \
 cd build && \
 ninja && \
 ninja install
