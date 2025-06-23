@@ -16,6 +16,7 @@ def dynamo(version, version_spec=None, requires=None, default=False):
         'DYNAMO_VERSION': version,
         'DYNAMO_VERSION_SPEC': version_spec,
         'COMPUTE_CAPABILITIES': ','.join([str(x) for x in CUDA_ARCHITECTURES]),
+        'CUDA_COMPUTE_CAP': ' '.join([str(x) for x in CUDA_ARCHITECTURES]),
         'TORCH_CUDA_ARCH_LIST': ';'.join([f'{x / 10:.1f}' for x in CUDA_ARCHITECTURES]),
         'SYSTEM_ARM': SYSTEM_ARM
     }
