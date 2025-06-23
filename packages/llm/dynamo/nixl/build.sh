@@ -8,7 +8,9 @@ git clone --depth=1 --recursive https://github.com/ai-dynamo/nixl /opt/nixl
 cd /opt/
 
 export MAX_JOBS=$(nproc)
+ARCH=$(uname -m)
 
+cd /usr/local/src
 git clone https://github.com/openucx/ucx.git && \
 cd ucx && \
 git checkout v1.19.x && \
@@ -32,7 +34,7 @@ ldconfig
 # Navigate to the directory containing nixl's setup.py
 cd /opt/nixl
 
-pip3 install --upgrade meson pybind11 patchelf
+pip3 install --upgrade meson pybind11 patchelf auditwheel
 
 export MESON_ARGS="-Ddisable_mooncake_backend=false"
 rm -rf build && \
@@ -43,6 +45,9 @@ ninja && \
 ninja install
 
 export NIXL_PREFIX=/usr/local/nixl
+export LD_LIBRARY_PATH=/usr/local/nixl/lib64/:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/usr/local/nixl/lib64/plugins:$LD_LIBRARY_PATH
+export NIXL_PLUGIN_DIR=/usr/local/nixl/lib64/plugins
 
 ARCH=$(uname -m)
 echo "System architecture detected: ${ARCH}"
@@ -51,9 +56,9 @@ if [ -d "$LIB_DIR" ]; then
 
   echo "✅ Found NixL directory for ${ARCH}: ${LIB_DIR}"
   PLUGIN_DIR="${LIB_DIR}/plugins"
-  export NIXL_PLUGIN_DIR="${PLUGIN_DIR}"
-  echo "${LIB_DIR}" > /etc/ld.so.conf.d/nixl.conf
-  echo "${PLUGIN_DIR}" >> /etc/ld.so.conf.d/nixl.conf
+  export NIXL_PLUGIN_DIR=/usr/local/nixl/lib/$ARCH-linux-gnu/plugins
+  echo "/usr/local/nixl/lib/$ARCH-linux-gnu" > /etc/ld.so.conf.d/nixl.conf && \
+  echo "/usr/local/nixl/lib/$ARCH-linux-gnu/plugins" >> /etc/ld.so.conf.d/nixl.conf && \
   ldconfig
   echo "NixL configuration for ${ARCH} applied successfully."
 else
@@ -63,10 +68,17 @@ else
 fi
 ldconfig
 
+
+
 cd /opt/nixl/src/bindings/rust && \
 cargo build --release --locked
 cd /opt/nixl/
 pip3 wheel --wheel-dir=/opt/nixl/wheels . --verbose
+UNREPAIRED_WHEEL=$(find /opt/nixl/wheels -name "nixl-*linux_aarch64.whl")
+PLATFORM="manylinux_2_39_$(uname -m)"
+uv pip install auditwheel
+uv run auditwheel repair --exclude libcuda.so.1 --exclude 'libssl*' --exclude 'libcrypto*' $UNREPAIRED_WHEEL --plat $WHL_PLATFORM --wheel-dir dist && \
+    /opt/nixl/contrib/wheel_add_ucx_plugins.py --ucx-lib-dir /usr/lib64 dist/*.whl
 pip3 install /opt/nixl/wheels/nixl*.whl
 
 cd /opt/nixl
