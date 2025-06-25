@@ -1,6 +1,6 @@
 #---
-# name: auto_gptq
-# alias: auto-gptq
+# name: gptqmodel
+# alias: gptqmodel
 # group: llm
 # config: config.py
 # depends: [transformers]
