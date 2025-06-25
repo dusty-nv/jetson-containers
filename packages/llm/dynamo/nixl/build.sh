@@ -13,29 +13,6 @@ ARCH=$(uname -m)
 export CPATH=/usr/local/cuda/include:$CPATH
 export LIBRARY_PATH=/usr/local/cuda/lib64:$LIBRARY_PATH
 
-# -----------------------------------------------------------------------------
-echo "UCX INSTALLATION STARTED"
-cd /usr/local/src
-git clone https://github.com/openucx/ucx.git && \
-cd ucx && \
-git checkout v1.19.x && \
-./autogen.sh && ./configure \
-   --enable-shared \
-   --disable-static \
-   --disable-doxygen-doc \
-   --enable-optimizations \
-   --enable-cma \
-   --enable-devel-headers \
-   --with-cuda=/usr/local/cuda \
-   --with-verbs \
-   --with-dm \
-   --with-gdrcopy=/usr/local \
-   --with-efa \
-   --enable-mt && \
-make -j && \
-make -j install-strip && \
-ldconfig
-echo "UCX INSTALLATION COMPLETED"
 
 
 # -----------------------------------------------------------------------------
@@ -47,6 +24,34 @@ git clone https://github.com/etcd-cpp-apiv3/etcd-cpp-apiv3.git &&\
 	cmake .. && make -j$(nproc) && make install
 ldconfig
 echo "ETCD INSTALLATION COMPLETED"
+
+
+# -----------------------------------------------------------------------------
+echo "UCX INSTALLATION STARTED"
+cd /usr/local/src
+rm -rf /usr/lib/ucx
+rm -rf /opt/hpcx/ucx
+git clone https://github.com/openucx/ucx.git && \
+cd ucx && \
+git checkout v1.19.x && \
+./autogen.sh && ./configure     \
+    --enable-shared             \
+    --disable-static            \
+    --disable-doxygen-doc       \
+    --enable-optimizations      \
+    --enable-cma                \
+    --enable-devel-headers      \
+    --with-cuda=/usr/local/cuda \
+    --with-verbs                \
+    --with-dm                   \
+    --with-gdrcopy=/usr/local   \
+    --with-efa                  \
+    --enable-mt &&              \
+make -j &&                      \
+make -j install-strip &&        \
+ldconfig
+
+echo "UCX INSTALLATION COMPLETED"
 
 # -----------------------------------------------------------------------------
 echo "Installing DPDK and DOCA SDK dependencies..."
@@ -68,24 +73,19 @@ echo "DPDK and DOCA SDK dependencies installed successfully."
 
 # -----------------------------------------------------------------------------
 echo "Installing Python dependencies..."
-cd /usr/local
-uv pip install --upgrade meson pybind11 patchelf auditwheel
+cd /usr/local/nixl
+pip3 install --upgrade meson pybind11 patchelf auditwheel
 # -----------------------------------------------------------------------------
 echo "Building NixL..."
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
 export CMAKE_PREFIX_PATH=/usr/local:$CMAKE_PREFIX_PATH
 export MESON_ARGS="-Ddisable_mooncake_backend=false"
-rm -rf nixl-build && \
-mkdir nixl-build && \
-meson setup nixl-build --prefix=/usr/local/nixl --buildtype=release && \
-cd nixl-build && \
+rm -rf build && \
+mkdir build && \
+meson setup build/ --prefix=/usr/local/nixl --buildtype=release && \
+cd build && \
 ninja && \
 ninja install
-
-export NIXL_PREFIX=/usr/local/nixl
-export LD_LIBRARY_PATH=/usr/local/nixl/lib64/:$LD_LIBRARY_PATH
-export LD_LIBRARY_PATH=/usr/local/nixl/lib64/plugins:$LD_LIBRARY_PATH
-export NIXL_PLUGIN_DIR=/usr/local/nixl/lib64/plugins
 
 # -----------------------------------------------------------------------------
 echo "System architecture detected: ${ARCH}"
@@ -93,10 +93,10 @@ LIB_DIR="/usr/local/nixl/lib/${ARCH}-linux-gnu"
 if [ -d "$LIB_DIR" ]; then
 
   echo "✅ Found NixL directory for ${ARCH}: ${LIB_DIR}"
-  PLUGIN_DIR="${LIB_DIR}/plugins"
-  export NIXL_PLUGIN_DIR=/usr/local/nixl/lib/$ARCH-linux-gnu/plugins
-  echo "/usr/local/nixl/lib/$ARCH-linux-gnu" > /etc/ld.so.conf.d/nixl.conf && \
-  echo "/usr/local/nixl/lib/$ARCH-linux-gnu/plugins" >> /etc/ld.so.conf.d/nixl.conf && \
+  export PLUGIN_DIR="${LIB_DIR}/plugins"
+  export NIXL_PLUGIN_DIR="/usr/local/nixl/lib/${ARCH}-linux-gnu/plugins"
+  echo "/usr/local/nixl/lib/${ARCH}-linux-gnu" > /etc/ld.so.conf.d/nixl.conf && \
+  echo "/usr/local/nixl/lib/${ARCH}-linux-gnu/plugins" >> /etc/ld.so.conf.d/nixl.conf && \
   ldconfig
   echo "NixL configuration for ${ARCH} applied successfully."
 else
@@ -104,18 +104,18 @@ else
   echo "   Checked path: ${LIB_DIR}"
   echo "   No configuration changes were made."
 fi
-ln -s /opt/nvidia/nvda_nixl/lib/aarch64-linux-gnu/plugins/libplugin_UCX.so /usr/lib64/
 ldconfig
 # -----------------------------------------------------------------------------
-cd /usr/local/nixl/src/bindings/rust && \
-cargo build --release --locked
 cd /usr/local/nixl/
-uv build --wheel --out-dir=/tmp/wheels --python $PYTHON_VERSION
-UNREPAIRED_WHEEL=$(find /tmp/wheels/ -name "nixl-*linux_aarch64.whl")
+rm -rf /tmp/wheels
+rm -rf /usr/local/nixl/wheels/
+pip3 wheel --no-deps --wheel-dir=/tmp/wheels .
+UNREPAIRED_WHEEL=$(find /tmp/wheels -name "nixl-*linux_aarch64.whl")
 WHL_PLATFORM="manylinux_2_39_$(uname -m)"
-uv pip install auditwheel
-uv run auditwheel repair --exclude libcuda.so.1 --exclude 'libssl*' --exclude 'libcrypto*' $UNREPAIRED_WHEEL --plat $WHL_PLATFORM --wheel-dir /usr/local/nixl/wheels/
-pip3 install /usr/local/nixl/wheels/nixl*.whl
+pip3 install auditwheel
+auditwheel repair --exclude libcuda.so.1 $UNREPAIRED_WHEEL --plat $WHL_PLATFORM --wheel-dir /usr/local/nixl/wheels/
+/usr/local/nixl/contrib/wheel_add_ucx_plugins.py --ucx-lib-dir /usr/lib /usr/local/nixl/wheels/*.whl
+pip3 install /usr/local/nixl/wheels/nixl-*.whl
 
 cd /usr/local/nixl/
 
