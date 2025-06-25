@@ -1,16 +1,13 @@
 #!/usr/bin/env bash
 set -ex
 
-echo "Building AutoGPTQ ${AUTOGPTQ_VERSION}"
- 
-git clone --branch=v${AUTOGPTQ_BRANCH} --depth=1 https://github.com/ModelCloud/GPTQModel|| \
-git clone --depth=1 https://github.com/ModelCloud/GPTQModel
+echo "Building GPTQMODEL ${GPTQMODEL_VERSION}"
 
-cd AutoGPTQ
-python3 setup.py --verbose bdist_wheel --dist-dir $PIP_WHEEL_DIR
+git clone --branch=v${GPTQMODEL_BRANCH} --depth=1 https://github.com/ModelCloud/GPTQModel /opt/gptmodel || \
+git clone --depth=1 https://github.com/ModelCloud/GPTQModel /opt/gptmodel
 
-cd /
-rm -rf AutoGPTQ
+cd /opt/gptmodel
+python3 setup.py . --no-build-isolation --verbose bdist_wheel --dist-dir $PIP_WHEEL_DIR
 
 pip3 install $PIP_WHEEL_DIR/gptqmodel*.whl
 pip3 show auto-gptq && python3 -c 'import gptqmodel'

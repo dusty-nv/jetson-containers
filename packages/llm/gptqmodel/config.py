@@ -1,3 +1,4 @@
+from jetson_containers import CUDA_VERSION, SYSTEM_ARM, CUDA_ARCHITECTURES
 
 def gptqmodel(version, branch=None, default=False):
     pkg = package.copy()
@@ -11,6 +12,7 @@ def gptqmodel(version, branch=None, default=False):
         ''
         'GPTQMODEL_VERSION': version,
         'GPTQMODEL_BRANCH': branch,
+        'TORCH_CUDA_ARCH_LIST': ' '.join([f'{x / 10:.1f}' for x in CUDA_ARCHITECTURES]),
     }
 
     builder = pkg.copy()

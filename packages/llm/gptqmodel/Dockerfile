@@ -18,5 +18,5 @@ ARG GPTQMODEL_VERSION \
 COPY build.sh build.sh /tmp/gptqmodel/
 
 RUN pip3 install gekko && \
-    pip3 install gptqmodel==${GPTQMODEL_VERSION} || \
-    /tmp/build.sh
+    pip3 install auto-gptq==${GPTQMODEL_VERSION} || \
+    /tmp/gptqmodel/build.sh
