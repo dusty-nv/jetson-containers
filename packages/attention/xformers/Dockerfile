@@ -11,6 +11,7 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG XFORMERS_VERSION \
+    IS_SBSA \
     FORCE_BUILD=off
 
 ENV XFORMERS_FORCE_DISABLE_TRITON=1
@@ -18,5 +19,5 @@ ENV XFORMERS_FORCE_DISABLE_TRITON=1
 COPY build.sh install.sh /tmp/xformers/
 
 RUN /tmp/xformers/install.sh || /tmp/xformers/build.sh
-    
-    
+
+

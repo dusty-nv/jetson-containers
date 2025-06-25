@@ -1,5 +1,4 @@
-
-from jetson_containers import CUDA_VERSION
+from jetson_containers import CUDA_VERSION, IS_SBSA
 from packaging.version import Version
 
 def xformers(version, requires=None, default=True):
@@ -12,6 +11,7 @@ def xformers(version, requires=None, default=True):
 
     pkg['build_args'] = {
         'XFORMERS_VERSION': version,
+        'IS_SBSA': IS_SBSA,
     }
 
     builder = pkg.copy()
@@ -28,6 +28,6 @@ def xformers(version, requires=None, default=True):
 package = [
     xformers('0.0.26', requires='<=cu122'),
     xformers('0.0.29', requires='<cu126'), # support pytorch 2.5.1
-    xformers('0.0.30', requires='<=cu128'), # support pytorch 2.6.0
-    xformers('0.0.32', default=(CUDA_VERSION >= Version('13.0'))), # Support Blackwell and pytorch 2.7.0
+    xformers('0.0.30', default=False), # support pytorch 2.6.0
+    xformers('0.0.33', default=(CUDA_VERSION >= Version('12.6'))), # Support Blackwell and pytorch 2.7.0
 ]
