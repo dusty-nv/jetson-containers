@@ -79,7 +79,6 @@ pip3 install --upgrade meson pybind11 patchelf auditwheel
 echo "Building NixL..."
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
 export CMAKE_PREFIX_PATH=/usr/local:$CMAKE_PREFIX_PATH
-export MESON_ARGS="-Ddisable_mooncake_backend=false"
 rm -rf build && \
 mkdir build && \
 meson setup build/ --prefix=/usr/local/nixl --buildtype=release && \

@@ -38,13 +38,15 @@ RUN apt-get update -y && \
     libz-dev \
     flex \
     libgtest-dev \
-    build-essential && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    build-essential
+
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
     --reinstall libibverbs-dev rdma-core ibverbs-utils libibumad-dev \
     libnuma-dev librdmacm-dev ibverbs-providers
+
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY build.sh install.sh /tmp/nixl/
 
