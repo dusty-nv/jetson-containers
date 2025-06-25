@@ -2,7 +2,7 @@
 # name: partpacker
 # group: objects
 # config: config.py
-# depends: [cuda, pytorch, torchvision, triton, onxxruntime, opencv, transformers, diffusers, accelerate, flash-attention, xformers, pymeshlab]
+# depends: [cuda, pytorch, torchvision, triton, onnxruntime, opencv, transformers, diffusers, flash-attention, xformers, pymeshlab]
 # requires: '>=34.1.0'
 # notes: https://github.com/NVlabs/PartPacker
 #---
