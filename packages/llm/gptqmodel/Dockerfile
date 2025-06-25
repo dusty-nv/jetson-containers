@@ -15,8 +15,8 @@ ARG GPTQMODEL_VERSION \
     GPTQMODEL_BRANCH \
     FORCE_BUILD="off"
 
-COPY build.sh /tmp/build.sh
+COPY build.sh build.sh /tmp/gptqmodel/
 
 RUN pip3 install gekko && \
-    pip3 install auto-gptq==${GPTQMODEL_VERSION} || \
+    pip3 install gptqmodel==${GPTQMODEL_VERSION} || \
     /tmp/build.sh
