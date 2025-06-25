@@ -2,8 +2,8 @@
 set -ex
 
 # Clone the repository if it doesn't exist
-git clone --branch=v${NIXL_VERSION} --depth=1 --recursive https://github.com/ai-dynamo/nixl /usr/local || \
-git clone --depth=1 --recursive https://github.com/ai-dynamo/nixl /usr/local/
+git clone --branch=v${NIXL_VERSION} --depth=1 --recursive https://github.com/ai-dynamo/nixl /usr/local/nixl || \
+git clone --depth=1 --recursive https://github.com/ai-dynamo/nixl /usr/local/nixl
 
 # -----------------------------------------------------------------------------
 cd /opt/
@@ -107,17 +107,17 @@ fi
 ln -s /opt/nvidia/nvda_nixl/lib/aarch64-linux-gnu/plugins/libplugin_UCX.so /usr/lib64/
 ldconfig
 # -----------------------------------------------------------------------------
-cd /usr/local/src/bindings/rust && \
+cd /usr/local/nixl/src/bindings/rust && \
 cargo build --release --locked
-cd /usr/local/
-uv build --wheel --out-dir=/tmp/wheels . --verbose
+cd /usr/local/nixl/
+uv build --wheel --out-dir=/tmp/wheels --python $PYTHON_VERSION
 UNREPAIRED_WHEEL=$(find /tmp/wheels/ -name "nixl-*linux_aarch64.whl")
 WHL_PLATFORM="manylinux_2_39_$(uname -m)"
 uv pip install auditwheel
-uv run auditwheel repair --exclude libcuda.so.1 --exclude 'libssl*' --exclude 'libcrypto*' $UNREPAIRED_WHEEL --plat $WHL_PLATFORM --wheel-dir /usr/local/wheels/
-pip3 install /usr/local/wheels/nixl*.whl
+uv run auditwheel repair --exclude libcuda.so.1 --exclude 'libssl*' --exclude 'libcrypto*' $UNREPAIRED_WHEEL --plat $WHL_PLATFORM --wheel-dir /usr/local/nixl/wheels/
+pip3 install /usr/local/nixl/wheels/nixl*.whl
 
-cd /usr/local
+cd /usr/local/nixl/
 
 # Optionally upload to a repository using Twine
-twine upload --verbose /usr/local/wheels/nixl*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose /usr/local/nixl/wheels/nixl*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
