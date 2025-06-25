@@ -10,9 +10,9 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG 4k4D_VERSION \
+ARG FOURkFOUR_VERSION \
     FORCE_BUILD=off
 
-COPY build.sh install.sh /tmp/4k4D/
+COPY build.sh install.sh /tmp/FOURkFOUR_VERSION/
 
-RUN /tmp/4k4D/install.sh || /tmp/4k4D/build.sh
+RUN /tmp/FOURkFOUR_VERSION/install.sh || /tmp/FOURkFOUR_VERSION/build.sh
