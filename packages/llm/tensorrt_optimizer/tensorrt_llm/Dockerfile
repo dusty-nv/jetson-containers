@@ -2,7 +2,7 @@
 # name: tensorrt_llm
 # group: llm
 # config: config.py
-# depends: [tensorrt, pytorch, transformers, cuda-python, nvidia_modelopt]
+# depends: [tensorrt, pytorch, transformers, cuda-python]
 # test: [test.py]
 # requires: '>=35'
 # notes: The `tensorrt-llm:builder` container includes the C++ binaries under `/opt`
