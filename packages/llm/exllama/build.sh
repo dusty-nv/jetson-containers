@@ -8,6 +8,12 @@ cd /opt/exllamav3
 #pip3 wheel --wheel-dir=/opt --verbose .
 pip3 install -U -r requirements.txt
 pip3 install -U -r requirements_examples.txt
+
+export MAX_JOBS="$(nproc)"
+export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
+echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
+
+CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS \
 python3 setup.py --verbose bdist_wheel --dist-dir /opt
 
 cd /
