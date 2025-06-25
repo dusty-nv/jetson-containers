@@ -8,6 +8,10 @@ git clone --depth=1 --recursive https://github.com/nv-tlabs/3dgrut /opt/3dgrut
 # Navigate to the directory containing PyMeshLab's setup.py
 cd /opt/3dgrut
 
+export MAX_JOBS="$(nproc)"
+export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
+echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
+
 wget $WGET_FLAGS https://github.com/shader-slang/slang/releases/download/v2025.10.5/slang-2025.10.5-linux-aarch64.tar.gz && \
 tar -xzvf slang*.tar.gz -C /usr/local
 sed -i 's|\.type|.scalar_type|g' threedgrt_tracer/src/particlePrimitives.cu
