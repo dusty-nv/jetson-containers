@@ -2,7 +2,7 @@
 # name: nvidia_modelopt
 # group: llm
 # config: config.py
-# depends: [tensorrt, pytorch, torchvision, torchaudio, transformers, cuda-python]
+# depends: [tensorrt, pytorch, torchvision, torchaudio, transformers, cuda-python, tensorrt_llm]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/NVIDIA/TensorRT-Model-Optimizer
