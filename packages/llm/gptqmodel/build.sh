@@ -7,9 +7,13 @@ git clone --branch=v${GPTQMODEL_BRANCH} --depth=1 https://github.com/ModelCloud/
 git clone --depth=1 https://github.com/ModelCloud/GPTQModel /opt/gptmodel
 
 cd /opt/gptmodel
-python3 setup.py . --no-build-isolation --verbose bdist_wheel --dist-dir $PIP_WHEEL_DIR
+export TORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST//;/ }"
+export MAX_JOBS="$(nproc)"
+export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
+echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
+python3 setup.py --verbose bdist_wheel --dist-dir /opt/gptqmodel/wheels/
 
-pip3 install $PIP_WHEEL_DIR/gptqmodel*.whl
+pip3 install /opt/gptqmodel/wheels/gptqmodel*.whl
 pip3 show auto-gptq && python3 -c 'import gptqmodel'
 
-twine upload --verbose $PIP_WHEEL_DIR/gptqmodel*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose /opt/gptqmodel/wheels/gptqmodel*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
