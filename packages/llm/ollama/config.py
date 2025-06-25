@@ -32,6 +32,6 @@ package = [
     ollama('0.7.0'),
     ollama('0.8.0'),
     ollama('0.9.0'),
-    ollama('0.9.3', default=True),
+    ollama('0.9.4', default=True),
     ollama('0.10.0')
 ]
