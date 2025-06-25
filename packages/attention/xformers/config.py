@@ -1,5 +1,4 @@
-
-from jetson_containers import CUDA_VERSION
+from jetson_containers import CUDA_VERSION, IS_SBSA
 from packaging.version import Version
 
 def xformers(version, requires=None, default=True):
@@ -12,6 +11,7 @@ def xformers(version, requires=None, default=True):
 
     pkg['build_args'] = {
         'XFORMERS_VERSION': version,
+        'IS_SBSA': IS_SBSA,
     }
 
     builder = pkg.copy()
