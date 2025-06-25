@@ -13,8 +13,10 @@ FROM ${BASE_IMAGE}
 
 ARG GPTQMODEL_VERSION \
     GPTQMODEL_BRANCH \
+    TORCH_CUDA_ARCH_LIST \
     FORCE_BUILD="off"
 
+ENV TORCH_CUDA_ARCH_LIST=${TORCH_CUDA_ARCH_LIST}
 COPY build.sh build.sh /tmp/gptqmodel/
 
 RUN pip3 install gekko && \
