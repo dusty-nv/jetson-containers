@@ -13,7 +13,7 @@ def llama_cpp(version, default=False, flags=GGUF_FLAGS):
 
     pkg['build_args'] = {
         'LLAMA_CPP_VERSION': version[1:] if cpp else None,
-        'LLAMA_CPP_VERSION_PY': '0.3.9' if cpp else version,
+        'LLAMA_CPP_VERSION_PY': '0.3.10' if cpp else version,
         'LLAMA_CPP_BRANCH': version if cpp else None,
         'LLAMA_CPP_BRANCH_PY': 'main' if cpp else f'v{version}',
         'LLAMA_CPP_FLAGS': flags,
