@@ -1,13 +1,13 @@
 from jetson_containers import CUDA_VERSION
 from packaging.version import Version
 
-def pltsm(version, version_spec=None, requires=None, default=False):
+def plstm(version, version_spec=None, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
         pkg['requires'] = requires
 
-    pkg['name'] = f'pltsm:{version}'
+    pkg['name'] = f'plstm:{version}'
 
     pkg['build_args'] = {
         'PLSTM_VERSION': version,
@@ -16,15 +16,15 @@ def pltsm(version, version_spec=None, requires=None, default=False):
 
     builder = pkg.copy()
 
-    builder['name'] = f'pltsm:{version}-builder'
-    builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
+    builder['name'] = f'plstm:{version}-builder'
+    builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'off'}}
 
     if default:
-        pkg['alias'] = 'pltsm'
-        builder['alias'] = 'pltsm:builder'
+        pkg['alias'] = 'plstm'
+        builder['alias'] = 'plstm:builder'
 
     return pkg, builder
 
 package = [
-    pltsm('0.1.0', version_spec='0.1.0', default=True)
+    plstm('0.1.0', version_spec='0.1.0', default=True)
 ]
