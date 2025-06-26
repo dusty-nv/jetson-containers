@@ -2,14 +2,14 @@
 # name: openpi
 # group: robots
 # docs: docs.md
-# depends: [jax, pytorch, transformers, lerobot, opencv, pyav]
+# depends: [jax, pytorch, transformers, lerobot, opencv:4.11.0, pyav]
 # requires: '>=36'
 # test: [test.sh, test.py]
 #---
 
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
-ENV JAX_CUDA_ARCHS="8.7"
+ENV JAX_CUDA_ARCHS="8.7, 9.0, 10.0, 11.0, 12.1"
 # ENV JAX_LOG_COMPILES=1
 ENV XLA_PYTHON_CLIENT_PREALLOCATE=false
 # ENV OMP_NUM_THREADS=1
