@@ -14,8 +14,7 @@ git clone --recursive https://github.com/microsoft/onnxruntime-genai /opt/onnxru
 mkdir -p /opt/onnxruntime_genai/ort/lib/
 mkdir -p /opt/onnxruntime_genai/ort/include/
 
-cp /usr/local/lib/python3.10/dist-packages/onnxruntime/capi/libonnxruntime*.so* /opt/onnxruntime_genai/ort/lib/
-
+cp /opt/venv/lib/python${PYTHON_VERSION}/site-packages/onnxruntime/capi/libonnxruntime*.so* /opt/onnxruntime_genai/ort/lib/
 cd /opt/onnxruntime_genai/ort/include/
 # Use the dynamically detected version for downloading ONNX Runtime headers
 wget https://raw.githubusercontent.com/microsoft/onnxruntime/rel-${ONNXRUNTIME_VERSION}/include/onnxruntime/core/session/onnxruntime_c_api.h
