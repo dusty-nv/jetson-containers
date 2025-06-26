@@ -20,6 +20,8 @@ ADD https://api.github.com/repos/${ROBOPOINT_REPO}/branches/${ROBOPOINT_BRANCH} 
 RUN git clone --branch=${ROBOPOINT_BRANCH} https://github.com/${ROBOPOINT_REPO}.git /opt/robopoint
 
 RUN cd /opt/robopoint && \
+    sed -i 's/==/>=/g' pyproject.toml && \
+    sed -i 's/~=/>=/g' pyproject.toml && \
     pip3 install --verbose -e .
 
 EXPOSE ${ROBOPOINT_PORT}
