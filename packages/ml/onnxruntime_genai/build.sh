@@ -34,6 +34,7 @@ install_dir="/opt/onnxruntime_genai/install"
         --cmake_extra_defines CMAKE_INSTALL_PREFIX=${install_dir} \
         --cuda_home /usr/local/cuda --ort_home ./ort
 
+cd build/Linux/Release
 make install
 
 find / -type f -name "onnxruntime_genai*.whl" -exec cp {} /opt/ \; 2>/dev/null
