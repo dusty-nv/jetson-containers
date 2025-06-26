@@ -34,16 +34,12 @@ install_dir="/opt/onnxruntime_genai/install"
         --cmake_extra_defines CMAKE_INSTALL_PREFIX=${install_dir} \
         --cuda_home /usr/local/cuda --ort_home ./ort
 
-cd build/Linux/Release
 make install
 
-ls -ll wheel
-cp wheel/onnxruntime_genai*.whl /opt
-cd /
+find / -type f -name "onnxruntime_genai*.whl" -exec cp {} /opt/ \; 2>/dev/null
 
 pip3 install /opt/onnxruntime_genai*.whl
 python3 -c 'import onnxruntime_genai; print(onnxruntime_genai.__version__);'
 
 twine upload --verbose /opt/onnxruntime_genai*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 tarpack upload onnxruntime_genai-${ONNXRUNTIME_GENAI_VERSION} ${install_dir} || echo "failed to upload tarball"
-# rm -rf /tmp/onnxruntime_genai
