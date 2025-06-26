@@ -1,7 +1,7 @@
-#--- 
+#---
 # name: robogen
 # group: sim
-# depends: [ffmpeg, genesis]
+# depends: [ffmpeg, genesis-world]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---
