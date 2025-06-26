@@ -8,6 +8,7 @@ git clone --depth=1 --recursive https://github.com/NX-AI/xlstm  /opt/xlstm
 # Navigate to the directory containing xlstm's setup.py
 cd /opt/xlstm
 
+export XLSTM_EXTRA_INCLUDE_PATHS='/usr/local/include/cuda/:/usr/include/cuda/'
 pip3 wheel . -v --no-deps -w /opt/xlstm/wheels/
 pip3 install /opt/xlstm/wheels/xlstm*.whl
 
