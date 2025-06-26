@@ -21,7 +21,7 @@ pip3 install --no-cache-dir ninja setuptools wheel numpy uv scikit-build-core
 echo "Building GENAI_BENCH"
 cd "${REPO_DIR}/genai-bench" || exit 1
 
-make
+make install
 pip3 wheel . --no-build-isolation --wheel-dir "${PIP_WHEEL_DIR}"
 pip3 install "${PIP_WHEEL_DIR}/genai-bench"*.whl
 cd "${REPO_DIR}" || exit 1
