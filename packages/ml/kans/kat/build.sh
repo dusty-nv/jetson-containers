@@ -14,9 +14,9 @@ cd /opt/rational_kat_cu
 pip3 install --upgrade pip setuptools wheel twine
 sed -i "/^[[:space:]]*cmdclass=/i\    setup_requires=['torch>=2.2']," setup.py
 cat setup.py
-python3 -m pip install -e .
 pip3 wheel --wheel-dir=/opt/rational_kat_cu/wheels .
-pip3 install /opt/rational_kat_cu/wheels/*.whl
+# pip3 install /opt/rational_kat_cu/wheels/*.whl
+pip3 install -e .
 pip3 install timm
 
 # Optionally upload to a repository using Twine
