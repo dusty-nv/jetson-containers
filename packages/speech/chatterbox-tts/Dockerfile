@@ -2,7 +2,7 @@
 # name: chatterbox-tts
 # group: audio
 # depends: [torch, torchaudio, transformers, numpy, diffusers, sound-utils]
-# requires: ['>=36.1.0', '>=cu128']
+# requires: ['>=36.1.0']
 # test: [test.py]
 # docs: docs.md
 #---
