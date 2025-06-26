@@ -13,3 +13,6 @@ ARG PARTPACKER_VERSION
 
 COPY install.sh /tmp/partpacker/
 RUN /tmp/partpacker/install.sh
+
+WORKDIR /opt/partpacker
+CMD ["python3", "-m", "app.py"]
