@@ -23,15 +23,14 @@ ADD https://api.github.com/repos/openai/whisper/git/refs/heads/main /tmp/whisper
 # Clone the repository:
 RUN git clone https://github.com/openai/whisper/ && \
     cd whisper && \
-    sed 's|^numba.*||' -i requirements.txt && \
-    sed 's|^numpy.*||' -i requirements.txt && \
-    sed 's|^torch.*||' -i requirements.txt && \
+    sed -i 's/==/>=/g' requirements.txt && \
+    sed -i 's/~=/>=/g' requirements.txt && \
     cat requirements.txt && \
     pip3 wheel --wheel-dir=dist --no-deps --verbose .
 
 RUN cp whisper/dist/openai_whisper*.whl /opt && \
     pip3 install /opt/openai_whisper*.whl
-    
+
 WORKDIR /opt/whisper/
 
 COPY record-and-transcribe.ipynb /opt/whisper/notebooks

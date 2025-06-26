@@ -19,7 +19,7 @@ apt-get clean
 pip3 install tzdata
 pip3 install 'setuptools<72'  # setup.py invalid command 'test'
 
-cd /tmp 
+cd /tmp
 
 wget $WGET_FLAGS $PROTOBUF_URL/$PROTOBUF_DIR.zip
 wget $WGET_FLAGS $PROTOBUF_URL/$PROTOC_DIR.zip
@@ -53,5 +53,5 @@ rm -rf ${PROTOBUF_DIR}
 rm -rf ${PROTOC_DIR}
 
 #python3 setup.py install --cpp_implementation && \
-#pip3 install protobuf==${PROTOBUF_VERSION} --install-option="--cpp_implementation"  
+#pip3 install protobuf==${PROTOBUF_VERSION} --install-option="--cpp_implementation"
 #pip3 show protobuf && protoc --version

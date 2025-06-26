@@ -23,6 +23,8 @@ RUN git clone --branch=${LITA_BRANCH} --depth=1 https://github.com/${LITA_REPO} 
     sed 's|"bitsandbytes.*",||' -i pyproject.toml && \
     #sed 's|"peft.*",||' -i pyproject.toml && \
     #sed 's|"timm.*",||' -i pyproject.toml && \
+    sed -i 's/==/>=/g' pyproject.toml && \
+    sed -i 's/~=/>=/g' pyproject.toml && \
     cat pyproject.toml
 
 COPY benchmark.py ${LITA_ROOT}/lita/serve/

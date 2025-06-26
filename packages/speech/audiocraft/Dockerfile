@@ -30,11 +30,8 @@ RUN pip3 install torchmetrics
 # Clone the repository:
 RUN git clone https://github.com/facebookresearch/audiocraft/ && \
     cd audiocraft && \
-    sed 's|^torch.*||' -i requirements.txt && \
-    sed 's|^huggingface_hub.*||' -i requirements.txt && \
-    sed 's|^transformers.*||' -i requirements.txt && \
-    sed 's|^xformers.*||' -i requirements.txt && \
-    sed 's|^protobuf.*||' -i requirements.txt && \
+    sed -i 's/==/>=/g' requirements.txt && \
+    sed -i 's/~=/>=/g' requirements.txt && \
     cat requirements.txt && \
     pip3 install -e .
 

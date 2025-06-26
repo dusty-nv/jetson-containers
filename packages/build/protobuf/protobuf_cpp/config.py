@@ -1,4 +1,3 @@
-
 from jetson_containers import L4T_VERSION
 
 # https://github.com/protocolbuffers/protobuf/releases/tag/v3.20.3

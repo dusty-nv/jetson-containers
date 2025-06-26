@@ -21,14 +21,10 @@ RUN apt-get update && \
     \
     git clone --branch=${SPARK_TTS_VERSION} https://github.com/SparkAudio/Spark-TTS /opt/spark-tts && \
     cd /opt/spark-tts && \
-    sed -i \
-        -e 's|^numpy=.*||g' \
-        -e 's|^torchaudio=.*||g' \
-        -e 's|^torch=.*||g' \
-        -e 's|^transformers=.*||g' \
-        requirements.txt && \
-    pip3 install -r requirements.txt
-    
+    sed -i 's/==/>=/g' requirements.txt && \
+    sed -i 's/~=/>=/g' requirements.txt && \
+    pip3 install -U -r requirements.txt
+
 COPY inference.py /opt/spark-tts
 
 ENV PYTHONPATH="/opt/spark-tts:${PYTHONPATH}" \
