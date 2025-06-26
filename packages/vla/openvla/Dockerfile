@@ -14,7 +14,7 @@ RUN git clone --depth=1 --recursive https://github.com/dusty-nv/openvla /opt/ope
     cd /opt/openvla && \
     pip3 install -e . && \
     pip3 install --no-deps git+https://github.com/moojink/dlimp_openvla
-    
+
 # patch issue of NCCL P2P not being supported on Jetson, and accelerate not honoring alternate backends
 RUN PYTHON_ROOT=`pip3 show accelerate | grep Location: | cut -d' ' -f2` && \
     ACCELERATE_STATE="$PYTHON_ROOT/accelerate/state.py" && \

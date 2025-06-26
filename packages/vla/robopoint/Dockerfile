@@ -2,7 +2,7 @@
 # name: robopoint
 # group: vla
 # docs: docs.md
-# depends: [transformers, bitsandbytes, flash-attention, opencv:4.11.0]
+# depends: [transformers, bitsandbytes, flash-attention, opencv]
 # test: [test.py]
 #---
 ARG BASE_IMAGE
@@ -12,7 +12,7 @@ ENV ROBOPOINT_MODEL="wentao-yuan/robopoint-v1-vicuna-v1.5-13b" \
     ROBOPOINT_QUANTIZATION="int4" \
     ROBOPOINT_HOST="0.0.0.0" \
     ROBOPOINT_PORT=10000
-    
+
 ARG ROBOPOINT_REPO="mschweig/RoboPoint" \
     ROBOPOINT_BRANCH=master
 

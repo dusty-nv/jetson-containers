@@ -2,7 +2,7 @@
 # name: openpi
 # group: robots
 # docs: docs.md
-# depends: [jax, pytorch, transformers, lerobot, opencv:4.11.0, pyav]
+# depends: [jax, pytorch, transformers, lerobot, opencv, pyav]
 # requires: '>=36'
 # test: [test.sh, test.py]
 #---

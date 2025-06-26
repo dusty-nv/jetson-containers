@@ -2,7 +2,7 @@
 # name: 3dgrut
 # group: nerf
 # config: config.py
-# depends: [cuda, cupy, cuda-python, pytorch, torchvision, torchaudio, pytorch3d, tinycudann, polyscope, kaolin, opencv:4.11.0]
+# depends: [cuda, cupy, cuda-python, pytorch, torchvision, torchaudio, pytorch3d, tinycudann, polyscope, kaolin, opencv]
 # requires: '>=34.1.0'
 # notes: https://github.com/nv-tlabs/3dgrut
 #---
@@ -19,7 +19,7 @@ RUN apt-get update && \
         libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
-    
+
 COPY build.sh /tmp/3dgrut/
 
 RUN /tmp/3dgrut/build.sh
