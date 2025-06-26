@@ -8,7 +8,11 @@ git clone --depth=1 --recursive https://github.com/nv-tlabs/3dgrut /opt/3dgrut
 # Navigate to the directory containing PyMeshLab's setup.py
 cd /opt/3dgrut
 
-wget $WGET_FLAGS https://github.com/shader-slang/slang/releases/download/v2025.6.3/slang-2025.6.3-linux-aarch64.tar.gz && \
+export MAX_JOBS="$(nproc)"
+export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
+echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
+
+wget $WGET_FLAGS https://github.com/shader-slang/slang/releases/download/v2025.10.5/slang-2025.10.5-linux-aarch64.tar.gz && \
 tar -xzvf slang*.tar.gz -C /usr/local
 sed -i 's|\.type|.scalar_type|g' threedgrt_tracer/src/particlePrimitives.cu
 
@@ -26,16 +30,16 @@ MAX_JOBS=$(nproc) \
 pip3 wheel . -w /opt/3dgrut/wheels --verbose
 
 cd /tmp/
-wget $WGET_FLAGS https://us.download.nvidia.com/XFree86/aarch64/570.124.04/NVIDIA-Linux-aarch64-570.124.04.run
-chmod +x NVIDIA-Linux-aarch64-570.124.04.run
-sh NVIDIA-Linux-aarch64-570.124.04.run --extract-only
-cd NVIDIA-Linux-aarch64-570.124.04/
-cp -R ./libnvoptix.so.570.124.04 /usr/lib/aarch64-linux-gnu/
-cp -R ./libnvidia-rtcore.so.570.124.04 /usr/lib/aarch64-linux-gnu/
+wget $WGET_FLAGS https://es.download.nvidia.com/XFree86/aarch64/570.169/NVIDIA-Linux-aarch64-570.169.run
+chmod +x NVIDIA-Linux-aarch64-570.169.run
+sh NVIDIA-Linux-aarch64-570.169.run --extract-only
+cd NVIDIA-Linux-aarch64-570.169/
+cp -R ./libnvoptix.so.570.169 /usr/lib/aarch64-linux-gnu/
+cp -R ./libnvidia-rtcore.so.570.169 /usr/lib/aarch64-linux-gnu/
 cp -R ./nvoptix.bin /usr/lib/aarch64-linux-gnu/
-ln -sf /usr/lib/aarch64-linux-gnu/libnvoptix.so.570.124.04 /usr/lib/aarch64-linux-gnu/libnvoptix.so.1
+ln -sf /usr/lib/aarch64-linux-gnu/libnvoptix.so.570.169 /usr/lib/aarch64-linux-gnu/libnvoptix.so.1
 # Clean up
-rm -rf /tmp/NVIDIA-Linux-aarch64-570.124.04.run /tmp/NVIDIA-Linux-aarch64-570.124.04
+rm -rf /tmp/NVIDIA-Linux-aarch64-570.169.run /tmp/NVIDIA-Linux-aarch64-570.169
 # pip3 install /opt/3dgrut/wheels/threedgrut-*.whl
 
 cd /opt/3dgrut

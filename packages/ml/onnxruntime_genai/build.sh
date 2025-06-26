@@ -14,8 +14,7 @@ git clone --recursive https://github.com/microsoft/onnxruntime-genai /opt/onnxru
 mkdir -p /opt/onnxruntime_genai/ort/lib/
 mkdir -p /opt/onnxruntime_genai/ort/include/
 
-cp /usr/local/lib/python3.10/dist-packages/onnxruntime/capi/libonnxruntime*.so* /opt/onnxruntime_genai/ort/lib/
-
+cp /opt/venv/lib/python${PYTHON_VERSION}/site-packages/onnxruntime/capi/libonnxruntime*.so* /opt/onnxruntime_genai/ort/lib/
 cd /opt/onnxruntime_genai/ort/include/
 # Use the dynamically detected version for downloading ONNX Runtime headers
 wget https://raw.githubusercontent.com/microsoft/onnxruntime/rel-${ONNXRUNTIME_VERSION}/include/onnxruntime/core/session/onnxruntime_c_api.h
@@ -38,13 +37,10 @@ install_dir="/opt/onnxruntime_genai/install"
 cd build/Linux/Release
 make install
 
-ls -ll wheel
-cp wheel/onnxruntime_genai*.whl /opt
-cd /
+find / -type f -name "onnxruntime_genai*.whl" -exec cp {} /opt/ \; 2>/dev/null
 
 pip3 install /opt/onnxruntime_genai*.whl
 python3 -c 'import onnxruntime_genai; print(onnxruntime_genai.__version__);'
 
 twine upload --verbose /opt/onnxruntime_genai*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 tarpack upload onnxruntime_genai-${ONNXRUNTIME_GENAI_VERSION} ${install_dir} || echo "failed to upload tarball"
-# rm -rf /tmp/onnxruntime_genai

@@ -2,8 +2,8 @@
 set -ex
 
 if [ "$FORCE_BUILD" == "on" ]; then
-	echo "Forcing build of fast_gauss ${4k4D_VERSION}"
+	echo "Forcing build of easyvolcap ${FOURkFOUR_VERSION}"
 	exit 1
 fi
 
-pip3 install fast_gauss==${4k4D_VERSION}
+pip3 install easyvolcap==${FOURkFOUR_VERSION}

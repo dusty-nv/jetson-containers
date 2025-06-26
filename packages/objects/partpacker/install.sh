@@ -9,6 +9,7 @@ git clone --depth=1 --recursive https://github.com/NVlabs/PartPacker /opt/partpa
 cd /opt/partpacker
 
 pip3 install -r requirements.txt
+pip3 install meshiki
 
 cd /opt/partpacker
 mkdir pretrained
@@ -16,11 +17,9 @@ cd pretrained
 wget https://huggingface.co/nvidia/PartPacker/resolve/main/vae.pt
 wget https://huggingface.co/nvidia/PartPacker/resolve/main/flow.pt
 
+cd /opt/partpacker
 # vae reconstruction of meshes
-PYTHONPATH=. python vae/scripts/infer.py --ckpt_path pretrained/vae.pt --input assets/meshes/ --output_dir output/
+# PYTHONPATH=. python3 vae/scripts/infer.py --ckpt_path pretrained/vae.pt --input assets/meshes/ --output_dir output/
 
 # flow 3D generation from images
-PYTHONPATH=. python flow/scripts/infer.py --ckpt_path pretrained/flow.pt --input assets/images/ --output_dir output/
-
-# open local gradio app
-python app.py
+# PYTHONPATH=. python3 flow/scripts/infer.py --ckpt_path pretrained/flow.pt --input assets/images/ --output_dir output/

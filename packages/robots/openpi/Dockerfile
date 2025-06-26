@@ -9,13 +9,7 @@
 
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
-ENV JAX_CUDA_ARCHS="8.7"
-# ENV JAX_LOG_COMPILES=1
 ENV XLA_PYTHON_CLIENT_PREALLOCATE=false
-# ENV OMP_NUM_THREADS=1
-# ENV MUJOCO_PATH="/usr/local/lib/mujoco"
-# ENV MUJOCO_PLUGIN_PATH="/usr/local/lib/mujoco/plugin"
-# ENV MUJOCO_GL=egl
 
 WORKDIR /opt/openpi
 
@@ -55,10 +49,10 @@ RUN apt-get update && apt-get install -y \
 
 # Install dependencies first
 RUN pip3 install --no-cache-dir --extra-index-url https://pypi.org/simple --index-url https://pypi.org/simple 'av>=12.0.5,<13.0.0' && \
-    pip3 install --no-deps flax==0.10.2 && \
+    pip3 install --no-deps flax==0.10.6 && \
     pip3 install --no-deps equinox>=0.11.8 && \
-    pip3 install --no-deps orbax-checkpoint==0.11.1 && \
-    pip3 install --no-deps jaxtyping==0.2.36
+    pip3 install --no-deps orbax-checkpoint==0.11.16 && \
+    pip3 install --no-deps jaxtyping==0.3.2
 
 # # Install mujoco 2.3.7 which is required by gym-aloha
 # RUN pip3 install --no-cache-dir --only-binary :all: mujoco==2.3.7
@@ -73,9 +67,8 @@ RUN cd /opt/openpi && \
     pip3 install -e packages/openpi-client && \
     pip3 install -e .
 
-RUN cd /opt/wheels && \
-    pip3 install jaxlib*.whl jax_cuda12_plugin*.whl jax_cuda12_pjrt*.whl opt_einsum && \
-    pip3 install --no-dependencies jax*.whl
+RUN pip3 install jaxlib jax_cuda12_plugin jax_cuda12_pjrt opt_einsum && \
+    pip3 install --no-dependencies jax
 
 RUN pip3 install --no-deps optax importlib_resources humanize tensorstore simplejson datasets pandas pyarrow pytz multiprocess metadata dill xxhash jsonlines draccus mergedeep typing_inspect mypy_extensions chex etils toolz
 RUN python3 -c "import jax; import jaxlib; print('JAX version:', jax.__version__); print('JAXLIB version:', jaxlib.__version__); print('Devices:', jax.devices())"

@@ -18,7 +18,7 @@ elif SYSTEM_ARM:
         if CUDA_VERSION >= Version('13.0'):   # JetPack 6.2 (CUDA 12.6)
             PYTORCH_VERSION = Version('2.8')
         elif CUDA_VERSION >= Version('12.9'):   # JetPack 6.2 (CUDA 12.6)
-            PYTORCH_VERSION = Version('2.7')
+            PYTORCH_VERSION = Version('2.8')
         elif CUDA_VERSION >= Version('12.8'):   # JetPack 6.2 (CUDA 12.6)
             PYTORCH_VERSION = Version('2.7')
         elif CUDA_VERSION == Version('12.6'):   # JetPack 6.2 (CUDA 12.6)

@@ -2,12 +2,12 @@ def fourk4D(version, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
 
     pkg['name'] = f'4k4d:{version}'
 
     pkg['build_args'] = {
-        '4k4D_VERSION': version,
+        'FOURkFOUR_VERSION': version,
     }
 
     builder = pkg.copy()

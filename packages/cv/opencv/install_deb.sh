@@ -69,7 +69,7 @@ if [ $ARCH = "aarch64" ]; then
 		rm -rf $local_python_path
 	fi
 
-	ln -s /usr/include/opencv4 $local_include_path
-	ln -s /usr/lib/python${PYTHON3_VERSION}/dist-packages/cv2 $local_python_path
+	ln -sfnv /usr/include/opencv4 $local_include_path
+	ln -sfnv /usr/lib/python${PYTHON3_VERSION}/dist-packages/cv2 $local_python_path
 fi
 

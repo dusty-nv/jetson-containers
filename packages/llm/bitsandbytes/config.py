@@ -6,12 +6,12 @@ def bitsandbytes(version, requires=None, default=False, branch=None, repo='bitsa
 
     if branch is None:
         branch = version
-        
+
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
 
     pkg['name'] = f'bitsandbytes:{version}'
-    
+
     pkg['build_args'] = {
         'BITSANDBYTES_VERSION': version,
         'BITSANDBYTES_REPO': repo,
@@ -19,16 +19,16 @@ def bitsandbytes(version, requires=None, default=False, branch=None, repo='bitsa
         'CUDA_INSTALLED_VERSION': int(str(CUDA_VERSION.major) + str(CUDA_VERSION.minor)),
         'CUDA_MAKE_LIB': f"cuda{str(CUDA_VERSION.major)}x"
     }
-    
+
     builder = pkg.copy()
-    
+
     builder['name'] = f'bitsandbytes:{version}-builder'
     builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
 
     if default:
         pkg['alias'] = 'bitsandbytes'
         builder['alias'] = 'bitsandbytes:builder'
-        
+
     return pkg, builder
 
 package = [
@@ -36,6 +36,6 @@ package = [
     bitsandbytes('0.45.4', default=(CUDA_VERSION < Version('12.6'))),
     bitsandbytes('0.45.5', default=False),
     bitsandbytes('0.46.0', default=False),
-    bitsandbytes('0.47.0', default=(CUDA_VERSION >= Version('12.6'))),
+    bitsandbytes('0.48.0', default=(CUDA_VERSION >= Version('12.6'))),
 ]
 

@@ -11,7 +11,8 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG PLSTM_VERSION \
-    PLSTM_VERSION_SPEC
+    PLSTM_VERSION_SPEC \
+    FORCE_BUILD=off
 
 COPY build.sh install.sh /tmp/plstm/
 RUN /tmp/plstm/install.sh || /tmp/plstm/build.sh

@@ -14,27 +14,31 @@ ENV ODM_HOME="/code"
 ENV PYTHONPATH="$PYTHONPATH:${ODM_HOME}/SuperBuild/install/lib/python${PYTHON_VERSION}/dist-packages:${ODM_HOME}/SuperBuild/install/bin/opensfm" \
     LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${ODM_HOME}/SuperBuild/install/lib" \
     PDAL_DRIVER_PATH="${ODM_HOME}/SuperBuild/install/bin"
-  
+
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
 		  libxml2-dev \
 		  libxslt*-dev \
 		  libeigen3-dev \
-		  libtbb2-dev \
-		&& apt-mark hold libtbb2 libtbb2-dev \
+		  libtbb-dev \
+		&& apt-mark hold libtbb12 libtbb-dev \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
 # https://cmake.org/cmake/help/latest/policy/CMP0146.html
 RUN pip3 install 'cmake<3.27'
 
-ADD https://api.github.com/repos/dusty-nv/ODM/git/refs/heads/master /tmp/odm_version.json
-    
+ADD https://api.github.com/repos/OpenDroneMap/ODM/git/refs/heads/master /tmp/odm_version.json
+
 RUN env && \
-    git clone --recursive --depth=1 https://github.com/dusty-nv/ODM ${ODM_HOME} && \
+    git clone --recursive --depth=1 https://github.com/OpenDroneMap/ODM ${ODM_HOME} && \
     cd ${ODM_HOME} && \
+    sed -i 's/==/>=/g' requirements.txt && \
+    pip3 install python-dateutil && \
+    sed -i 's/\*"20\.04"\*|\*"21\.04"\*/\*"20.04"\*|\*"21.04"\*|\*"22.04"\*|\*"24.04"\*|\*"26.04"\*/' configure.sh && \
+    sed -i 's|https://github.com/opencv/opencv/archive/4\.5\.0\.zip|https://github.com/opencv/opencv/archive/4.11.0.zip|' ${ODM_HOME}/SuperBuild/cmake/External-OpenCV.cmake && \
     PORTABLE_INSTALL=YES GPU_INSTALL=YES bash configure.sh install || echo "BUILD FAILED"
-  
+
 
 # https://github.com/rasterio/rasterio/issues/2333
 # https://github.com/Toblerity/Fiona/issues/1043

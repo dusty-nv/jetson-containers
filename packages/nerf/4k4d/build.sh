@@ -2,7 +2,7 @@
 set -ex
 
 # Clone the repository if it doesn't exist
-git clone --branch=v${4k4D_VERSION} --depth=1 --recursive https://github.com/zju3dv/4k4D /opt/4k4D || \
+git clone --branch=v${FOURkFOUR_VERSION} --depth=1 --recursive https://github.com/zju3dv/4k4D /opt/4k4D || \
 git clone --depth=1 --recursive https://github.com/zju3dv/4k4D /opt/4k4D
 
 cd /opt/4k4D
