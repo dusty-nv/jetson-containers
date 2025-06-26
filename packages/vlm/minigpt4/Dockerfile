@@ -20,7 +20,7 @@ RUN apt-get update && \
 		  time \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
-    
+
 ARG CC=/usr/bin/gcc-10
 ARG CXX=/usr/bin/g++-10
 
@@ -38,17 +38,17 @@ RUN git clone --branch=${MINIGPT4_CPP_BRANCH} --depth=1 --recursive https://gith
     git status && \
     mkdir build && \
     cd build && \
-    cmake -DMINIGPT4_CUBLAS=ON -DMINIGPT4_CUDA_FP16=ON -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES} ../ 
-    
+    cmake -DMINIGPT4_CUBLAS=ON -DMINIGPT4_CUDA_FP16=ON -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES} ../
+
 #RUN cd minigpt4.cpp/build/_deps/llama_cpp-src && \
 #    git apply /tmp/patch.llamacpp.diff && \
 #    git status
-    
+
 RUN cd minigpt4.cpp/build && \
     cmake --build . --config Release --parallel $(nproc)
-    
+
 RUN pip3 install -r minigpt4.cpp/minigpt4/requirements.txt
-RUN pip3 install gradio==3.38.0
+RUN pip3 install gradio>=3.38.0
 
 COPY benchmark.py minigpt4.cpp/minigpt4/
 
