@@ -2,7 +2,7 @@
 # name: wyoming-whisper
 # group: wyoming
 # config: config.py
-# depends: [homeassistant-base, cuda, cudnn, python:3.11, faster-whisper]
+# depends: [homeassistant-base, cuda, cudnn, python, faster-whisper]
 # test: test.sh
 # requires: '>=34.1.0'
 # docs: docs.md

@@ -4,7 +4,7 @@
 # requires: '>=34.1.0'
 # config: config.py
 # docs: docs.md
-# depends: [homeassistant-base, python:3.11]
+# depends: [homeassistant-base, python]
 # test: list_audio_devices.sh
 # notes: The `assist-microphone` using the `wyoming` protocol for usage with Home Assistant. Based on `https://github.com/home-assistant/addons/tree/master/assist_microphone`
 #---
