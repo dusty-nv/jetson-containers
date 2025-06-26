@@ -5,7 +5,7 @@ def mlstm_kernels(version, version_spec=None, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
 
     pkg['name'] = f'mlstm_kernels:{version}'
 
@@ -17,7 +17,7 @@ def mlstm_kernels(version, version_spec=None, requires=None, default=False):
     builder = pkg.copy()
 
     builder['name'] = f'mlstm_kernels:{version}-builder'
-    builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
+    builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'off'}}
 
     if default:
         pkg['alias'] = 'mlstm_kernels'
