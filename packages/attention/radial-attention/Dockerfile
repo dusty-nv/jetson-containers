@@ -4,7 +4,7 @@
 # config: config.py
 # depends: [pytorch, triton, xformers, flashinfer]
 # requires: '>=35'
-# test: test.py
+# test: test.sh
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

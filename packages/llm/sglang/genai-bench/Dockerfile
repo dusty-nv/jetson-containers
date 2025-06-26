@@ -1,17 +1,17 @@
 #---
-# name: sgl-kernel
+# name: genai-bench
 # group: sglang
 # config: config.py
 # depends: [cuda, cmake, pytorch, triton, flash-attention, flashinfer, xgrammar]
 # requires: '>=36'
 # test: test.py
-# notes: https://github.com/sgl-project/sglang/sgl-kernel
+# notes: https://github.com/sgl-project/sglang/genai-bench
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG SGL_KERNEL_VERSION \
-    SGL_KERNEL_BRANCH \
+ARG GENAI_BENCH_VERSION \
+    GENAI_BENCH_BRANCH \
     IS_SBSA \
     TORCH_CUDA_ARCH_LIST \
     FORCE_BUILD=off \
@@ -34,7 +34,7 @@ RUN $TMP/install.sh || $TMP/build.sh || touch $TMP/.build.failed
 
 # this retains the stage above for debugging on build failure
 RUN if [ -f $TMP/.build.failed ]; then \
-      echo "SGLANG ${SGLANG_VERSION} build failed!"; \
+      echo "GENAI BENCH ${GENAI_BENCH_VERSION} build failed!"; \
       exit 1; \
     fi
 
