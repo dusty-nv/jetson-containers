@@ -26,7 +26,7 @@ cd "${REPO_DIR}" || exit 1
 mkdir build
 cd build
 
-ln -sf /usr/lib/llvm-17/lib/libc++.so.1.0 /usr/lib/llvm-17/lib/libc++.so.1
+ln -sfnv /usr/lib/llvm-17/lib/libc++.so.1.0 /usr/lib/llvm-17/lib/libc++.so.1
 
 pip3 install -U wheel setuptools
 cmake -DCMAKE_C_COMPILER=clang-17 \
