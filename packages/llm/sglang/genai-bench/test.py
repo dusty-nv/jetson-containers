@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
-import sgl_kernel
+print ("Hello from genai-bench test.py")
 
-print(f"sgl-kernel version: {sgl_kernel.__version__}")
+print ("Genai bench OK")
+

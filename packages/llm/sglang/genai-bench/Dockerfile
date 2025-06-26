@@ -2,10 +2,10 @@
 # name: genai-bench
 # group: sglang
 # config: config.py
-# depends: [cuda, cmake, pytorch, triton, flash-attention, flashinfer, xgrammar]
+# depends: [cuda, cmake, pytorch, torchvision, torchaudio, torchao, triton, xformers, flash-attention, flashinfer, xgrammar]
 # requires: '>=36'
 # test: test.py
-# notes: https://github.com/sgl-project/sglang/genai-bench
+# notes: https://github.com/sgl-project/genai-bench
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
