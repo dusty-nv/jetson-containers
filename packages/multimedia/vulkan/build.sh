@@ -19,9 +19,9 @@ printf "\nBuilding Vulkan SDK $VULKAN_VERSION\n"
 
 UBUNTU_VERSION=$(lsb_release -rs)
 if [ "$UBUNTU_VERSION" = "22.04" ]; then
-  CC=/usr/bin/aarch64-linux-gnu-gcc-12 CXX=/usr/bin/aarch64-linux-gnu-g++-12 ./vulkansdk --maxjobs --no-deps
+  CC=/usr/bin/aarch64-linux-gnu-gcc-12 CXX=/usr/bin/aarch64-linux-gnu-g++-12 ./vulkansdk --maxjobs vulkan-loader vulkan-validationlayers vulkan-extensionlayer
 elif [ "$UBUNTU_VERSION" = "24.04" ]; then
-  CC=/usr/bin/aarch64-linux-gnu-gcc-14 CXX=/usr/bin/aarch64-linux-gnu-g++-14 ./vulkansdk --maxjobs --no-deps
+  CC=/usr/bin/aarch64-linux-gnu-gcc-14 CXX=/usr/bin/aarch64-linux-gnu-g++-14 ./vulkansdk --maxjobs vulkan-loader vulkan-validationlayers vulkan-extensionlayer
 fi
 
 tarpack upload vulkan-sdk-$VULKAN_VERSION $(uname -m)/ || echo "failed to upload tarball"
