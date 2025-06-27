@@ -46,7 +46,7 @@ If you wish to continue building other containers if one fails, use the `--skip-
 
 ## Changing the Base Image
 
-By default, the base container image used at the start of the build chain will be [`l4t-base`](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-base) on JetPack 4, [`l4t-jetpack`](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-jetpack) on JetPack 5, and [`ubuntu:22.04`](https://hub.docker.com/_/ubuntu/tags?page=&page_size=&ordering=&name=22.04) on JetPack 6.  However, if you want to add packages to a container that you already have, you can specify your own base image:
+By default, the base container image used at the start of the build chain will be [`l4t-base`](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-base) on JetPack 4, [`l4t-jetpack`](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-jetpack) on JetPack 5, [`ubuntu:22.04`](https://hub.docker.com/_/ubuntu/tags?page=&page_size=&ordering=&name=22.04) on JetPack 6, [`ubuntu:24.04`](https://hub.docker.com/_/ubuntu/tags?page=&page_size=&ordering=&name=24.04) on JetPack 7.  However, if you want to add packages to a container that you already have, you can specify your own base image:
 
 ```bash
 jetson-containers build --base=my_container:latest --name=my_container:pytorch pytorch  # add pytorch to your container
@@ -55,7 +55,7 @@ jetson-containers build --base=my_container:latest --name=my_container:pytorch p
 > [!NOTE]
 > On JetPack 4/5, it's assumed that base images already have the JetPack components available/installed (CUDA Toolkit, cuDNN, TensorRT).
 >
-> On JetPack 6 (L4T r36.x), the CUDA components will automatically be installed on top of your base image if required.
+> On JetPack 6 (L4T r36.x) and JetPack 7 (L4T r38.x), the CUDA components will automatically be installed on top of your base image if required.
 > > You can specify the CUDA version by using `CUDA_VERSION` environment variable, otherwise it will pick the CUDA version that was made available to the L4T version.
 
 ## Changing Versions
@@ -63,8 +63,7 @@ jetson-containers build --base=my_container:latest --name=my_container:pytorch p
 Many packages are versioned, and define subpackages like `pytorch:2.5`, `pytorch:2.6`, ect in the package's [configuration](/docs/packages.md#python).  For some core packages, you can control the default version of these with environment variables like `CUDA_VERSION`, `PYTORCH_VERSION`, `PYTHON_VERSION`, and `LSB_RELEASE` for the Ubuntu distro.  Other packages referring to these will then use your desired versions instead of the previous ones:
 
 ```bash
-LSB_RELEASE=24.04 CUDA_VERSION=12.8 \
-  jetson-containers build --name=cu128/ pytorch  # build PyTorch for Ubuntu 24.04 + CUDA 12.8
+LSB_RELEASE=24.04 CUDA_VERSION=12.9 jetson-containers build --name=cu129 pytorch  # build PyTorch for Ubuntu 24.04 + CUDA 12.9
 ```
 
 The dependencies are also able to specify with [`requires`](/docs/packages.md) which versions of L4T, CUDA, and Python they need, so changing the CUDA version has cascading effects downstream and will also change the default version of cuDNN, TensorRT, and PyTorch (similar to how changing the PyTorch version also changes the default version of torchvision and torchaudio).  The reverse also occurs in the other direction, for example changing the TensorRT version will change the default version of CUDA (unless you explicitly specify it otherwise).
@@ -81,7 +80,7 @@ The dependencies are also able to specify with [`requires`](/docs/packages.md) w
 Using these together, you can rebuild the container stack for the specific version combination that you want:
 
 ```bash
-LSB_RELEASE=24.04 CUDA_VERSION=12.8 PYTHON_VERSION=3.12 PYTORCH_VERSION=2.6 \
+LSB_RELEASE=24.04 CUDA_VERSION=12.8 PYTHON_VERSION=3.12 PYTORCH_VERSION=2.8 \
   jetson-containers build vllm
 ```
 
@@ -90,6 +89,8 @@ The available versions are defined in the package's configuration scripts (some 
 For packages that provide different versions but don't have their own environment variable defined, you can specify the desired version of them that your container depends on in the Dockerfile header under [`depends`](/docs/packages.md), and it will override the default and build using them instead (e.g. by using `depends: onnxruntime:1.17` instead of `depends: onnxruntime`).  Like above, these versions will also cascade across the build.
 
 > [!NOTE]
+> > On JetPack 7 (L4T r38.x), if you don't have `CUDA_VERSION` specified, it will pick the CUDA version that was packaged with that version of L4T in the JetPack.
+> - L4T r38.1.x (JetPack 7.0+) --> CUDA `13.0`
 > On JetPack 6 (L4T r36.x), if you don't have `CUDA_VERSION` specified, it will pick the CUDA version that was packaged with that version of L4T in the JetPack.
 > - L4T r36.4.x (JetPack 6.1+) --> CUDA `12.6`
 > - L4T r36.2 (JetPack 6.0 DP) --> CUDA `12.2`
@@ -99,41 +100,41 @@ For packages that provide different versions but don't have their own environmen
 
 Here is a list of containers currently built for Ubuntu 24.04 with the following environment:
 
-* `LSB_RELEASE=24.04 L4T_VERSION=36.4.0`
-* `CUDA_VERSION=12.8 CUDNN_VERSION=9.8`
-* `PYTHON_VERSION=3.12 PYTORCH_VERSION=2.6`
+* `LSB_RELEASE=24.04 L4T_VERSION=36.4.4`
+* `CUDA_VERSION=12.9 CUDNN_VERSION=9.10`
+* `PYTHON_VERSION=3.12 PYTORCH_VERSION=2.8`
 
 | Repo           | Version   | Image                                             |  Size (GB)  | Timestamp   |
 |:--------------:|:---------:|:-------------------------------------------------:|:-----------:|:-----------:|
-| sglang         | 0.4.4     | `dustynv/sglang:0.4.4-r36.4.0-cu128-24.04`        |     5.4     | 2025-03-03  |
-| bitsandbytes   | 0.45.4    | `dustynv/bitsandbytes:0.45.4-r36.4.0-cu128-24.04` |     4.4     | 2025-03-03  |
-| flashinfer     | 0.2.3     | `dustynv/flashinfer:0.2.3-r36.4.0-cu128-24.04`    |     3.9     | 2025-03-03  |
-| jupyterlab     | latest    | `dustynv/jupyterlab:r36.4.0-cu128-24.04`          |     5.1     | 2025-03-03  |
-| kokoro-tts     | fastapi   | `dustynv/kokoro-tts:fastapi-r36.4.0-cu128-24.04`  |     4.8     | 2025-03-03  |
-| llama_cpp      | 0.3.7     | `dustynv/llama_cpp:0.3.7-r36.4.0-cu128-24.04`     |     3.2     | 2025-03-03  |
-| piper-tts      | latest    | `dustynv/piper-tts:r36.4.0-cu128-24.04`           |     5.6     | 2025-03-03  |
-| faster-whisper | latest    | `dustynv/faster-whisper:r36.4.0-cu128-24.04`      |     5.3     | 2025-03-03  |
-| onnxruntime    | 1.22      | `dustynv/onnxruntime:1.22-r36.4.0-cu128-24.04`    |     5.2     | 2025-03-03  |
-| cupy           | latest    | `dustynv/cupy:r36.4.0-cu128-24.04`                |     2.3     | 2025-03-03  |
-| pycuda         | latest    | `dustynv/pycuda:r36.4.0-cu128-24.04`              |     2.3     | 2025-03-03  |
-| cuda-python    | latest    | `dustynv/cuda-python:r36.4.0-cu128-24.04`         |     2.3     | 2025-03-03  |
-| speaches       | latest    | `dustynv/speaches:r36.4.0-cu128-24.04`            |     6.6     | 2025-03-03  |
-| jax            | 0.5.2     | `dustynv/jax:0.5.2-r36.4.0-cu128-24.04`           |     3.6     | 2025-03-03  |
-| ros            | jazzy     | `dustynv/ros:jazzy-ros-base-r36.4.0-cu128-24.04`  |     5.1     | 2025-03-03  |
-| ros            | jazzy     | `dustynv/ros:jazzy-desktop-r36.4.0-cu128-24.04`   |     5.9     | 2025-03-03  |
-| torch2trt      | latest    | `dustynv/torch2trt:r36.4.0-cu128-24.04`           |     5.2     | 2025-03-03  |
-| opencv         | 4.11.0    | `dustynv/opencv:4.11.0-r36.4.0-cu128-24.04`       |     3.3     | 2025-03-02  |
-| vllm           | 0.7.4     | `dustynv/vllm:0.7.4-r36.4.0-cu128-24.04`          |     5.3     | 2025-02-28  |
+| sglang         | 0.4.4     | `dustynv/sglang:0.4.4-r36.4.4-cu128-24.04`        |     5.4     | 2025-03-03  |
+| bitsandbytes   | 0.45.4    | `dustynv/bitsandbytes:0.45.4-r36.4.4-cu128-24.04` |     4.4     | 2025-03-03  |
+| flashinfer     | 0.2.3     | `dustynv/flashinfer:0.2.3-r36.4.4-cu128-24.04`    |     3.9     | 2025-03-03  |
+| jupyterlab     | latest    | `dustynv/jupyterlab:r36.4.4-cu128-24.04`          |     5.1     | 2025-03-03  |
+| kokoro-tts     | fastapi   | `dustynv/kokoro-tts:fastapi-r36.4.4-cu128-24.04`  |     4.8     | 2025-03-03  |
+| llama_cpp      | 0.3.7     | `dustynv/llama_cpp:0.3.7-r36.4.4-cu128-24.04`     |     3.2     | 2025-03-03  |
+| piper-tts      | latest    | `dustynv/piper-tts:r36.4.4-cu128-24.04`           |     5.6     | 2025-03-03  |
+| faster-whisper | latest    | `dustynv/faster-whisper:r36.4.4-cu128-24.04`      |     5.3     | 2025-03-03  |
+| onnxruntime    | 1.22      | `dustynv/onnxruntime:1.22-r36.4.4-cu128-24.04`    |     5.2     | 2025-03-03  |
+| cupy           | latest    | `dustynv/cupy:r36.4.4-cu128-24.04`                |     2.3     | 2025-03-03  |
+| pycuda         | latest    | `dustynv/pycuda:r36.4.4-cu128-24.04`              |     2.3     | 2025-03-03  |
+| cuda-python    | latest    | `dustynv/cuda-python:r36.4.4-cu128-24.04`         |     2.3     | 2025-03-03  |
+| speaches       | latest    | `dustynv/speaches:r36.4.4-cu128-24.04`            |     6.6     | 2025-03-03  |
+| jax            | 0.5.2     | `dustynv/jax:0.5.2-r36.4.4-cu128-24.04`           |     3.6     | 2025-03-03  |
+| ros            | jazzy     | `dustynv/ros:jazzy-ros-base-r36.4.4-cu128-24.04`  |     5.1     | 2025-03-03  |
+| ros            | jazzy     | `dustynv/ros:jazzy-desktop-r36.4.4-cu128-24.04`   |     5.9     | 2025-03-03  |
+| torch2trt      | latest    | `dustynv/torch2trt:r36.4.4-cu128-24.04`           |     5.2     | 2025-03-03  |
+| opencv         | 4.11.0    | `dustynv/opencv:4.11.0-r36.4.4-cu128-24.04`       |     3.3     | 2025-03-02  |
+| vllm           | 0.7.4     | `dustynv/vllm:0.7.4-r36.4.4-cu128-24.04`          |     5.3     | 2025-02-28  |
 | openvla        | cp312     | `dustynv/openvla:r36.4.3-cu128-cp312-24.04`       |     6.7     | 2025-02-27  |
-| torchao        | 0.11.0    | `dustynv/torchao:0.11.0-r36.4.0-cu128-24.04`      |     3.5     | 2025-02-26  |
-| torchaudio     | 2.6.0     | `dustynv/torchaudio:2.6.0-r36.4.0-cu128-24.04`    |     3.5     | 2025-02-26  |
-| torchvision    | 0.21.0    | `dustynv/torchvision:0.21.0-r36.4.0-cu128-24.04`  |     3.5     | 2025-02-26  |
-| pytorch        | 2.6       | `dustynv/pytorch:2.6-r36.4.0-cu128-24.04`         |     3.5     | 2025-02-26  |
+| torchao        | 0.11.0    | `dustynv/torchao:0.11.0-r36.4.4-cu128-24.04`      |     3.5     | 2025-02-26  |
+| torchaudio     | 2.8.0     | `dustynv/torchaudio:2.8.0-r36.4.4-cu128-24.04`    |     3.5     | 2025-02-26  |
+| torchvision    | 0.23.0    | `dustynv/torchvision:0.23.0-r36.4.4-cu128-24.04`  |     3.5     | 2025-02-26  |
+| pytorch        | 2.8       | `dustynv/pytorch:2.8-r36.4.4-cu128-24.04`         |     3.5     | 2025-02-26  |
 
 You can build or run these from JetPack 6.1+ like the following:
 
-* Build: `LSB_RELEASE=24.04 jetson-containers build pytorch:2.6` 
-* Run:  `jetson-containers run dustynv/pytorch:2.6-r36.4.0-cu128-24.04`
+* Build: `LSB_RELEASE=24.04 jetson-containers build pytorch:2.8` 
+* Run:  `jetson-containers run dustynv/pytorch:2.8-r36.4.4-cu128-24.04`
 
 ## Pip Server
 
