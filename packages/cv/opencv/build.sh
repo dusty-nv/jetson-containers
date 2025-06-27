@@ -28,7 +28,7 @@ git apply $TMP/patches.diff || echo "failed to apply git patches"
 git diff
 
 # OpenCV looks for the cuDNN version in cudnn_version.h, but it's been renamed to cudnn_version_v8.h
-ln -s /usr/include/$(uname -i)-linux-gnu/cudnn_version_v*.h /usr/include/$(uname -i)-linux-gnu/cudnn_version.h
+ln -sfnv /usr/include/$(uname -i)-linux-gnu/cudnn_version_v*.h /usr/include/$(uname -i)-linux-gnu/cudnn_version.h
 
 # patches for FP16/half casts
 function patch_opencv()
@@ -43,7 +43,7 @@ patch_opencv
 cd /opt
 patch_opencv
 cd /opt/opencv-python
-   
+
 # default build flags
 OPENCV_BUILD_ARGS="\
    -DCPACK_BINARY_DEB=ON \
