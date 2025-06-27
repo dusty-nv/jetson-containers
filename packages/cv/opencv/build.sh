@@ -49,7 +49,7 @@ if [ "$need_ck_contrib" -eq 0 ]; then
 fi
 
 if [ "$need_ck_contrib" -eq 1 ]; then
-  cd /opt/opencv-python/opencv
+  cd /opt/opencv-python/
 fi
 
 git apply $TMP/patches.diff || echo "failed to apply git patches"
