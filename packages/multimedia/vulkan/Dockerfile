@@ -38,6 +38,8 @@ RUN apt-get update && \
         libpng-dev \
         libxcb-keysyms1-dev \
         libxcb-dri3-dev \
+        libxcb-glx0-dev \
+        libxcb-glx0 \
         libx11-dev \
         libwayland-dev \
         libxrandr-dev \
