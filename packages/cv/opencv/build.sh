@@ -10,16 +10,13 @@ clone_with_fallback () {
   local ver="$1" url="$2" dir="$3"
 
   if git clone --branch "$ver" --recursive "$url" "$dir"; then
-    echo 0        # se clonó la rama → HAREMOS checkout más tarde
+    echo 0
   else
     git clone --recursive "$url" "$dir"
-    echo 1        # se clonó main → NO se hace checkout
+    echo 1
   fi
 }
 
-#------------------------------------------------------------------
-# 1. Clonamos los tres repos y guardamos si necesitan checkout (0/1)
-#------------------------------------------------------------------
 cd /opt
 
 need_ck_opencv=$(clone_with_fallback  "$OPENCV_VERSION" \
@@ -52,7 +49,7 @@ if [ "$need_ck_contrib" -eq 0 ]; then
 fi
 
 cd $TMP
-# apply patches to setup.py
+
 git apply $TMP/patches.diff || echo "failed to apply git patches"
 git diff
 
