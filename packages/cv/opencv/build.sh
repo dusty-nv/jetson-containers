@@ -7,9 +7,12 @@ cd /opt
 bash $TMP/install_deps.sh
 
 # clone source repos
-git clone --branch ${OPENCV_VERSION} --recursive https://github.com/opencv/opencv
-git clone --branch ${OPENCV_VERSION} --recursive https://github.com/opencv/opencv_contrib
-git clone --branch ${OPENCV_PYTHON} --recursive https://github.com/opencv/opencv-python
+git clone --branch ${OPENCV_VERSION} --recursive https://github.com/opencv/opencv || \
+git clone --branch --recursive https://github.com/opencv/opencv
+git clone --branch ${OPENCV_VERSION} --recursive https://github.com/opencv/opencv_contrib || \
+git clone --branch --recursive https://github.com/opencv/opencv_contrib
+git clone --branch ${OPENCV_PYTHON} --recursive https://github.com/opencv/opencv-python || \
+git clone --branch --recursive https://github.com/opencv/opencv-python
 
 cd /opt/opencv-python/opencv
 git checkout --recurse-submodules ${OPENCV_VERSION}
@@ -43,7 +46,7 @@ patch_opencv
 cd /opt
 patch_opencv
 cd /opt/opencv-python
-   
+
 # default build flags
 OPENCV_BUILD_ARGS="\
    -DCPACK_BINARY_DEB=ON \
