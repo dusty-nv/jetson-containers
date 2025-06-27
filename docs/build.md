@@ -80,8 +80,7 @@ The dependencies are also able to specify with [`requires`](/docs/packages.md) w
 Using these together, you can rebuild the container stack for the specific version combination that you want:
 
 ```bash
-LSB_RELEASE=24.04 CUDA_VERSION=12.8 PYTHON_VERSION=3.12 PYTORCH_VERSION=2.8 \
-  jetson-containers build vllm
+LSB_RELEASE=24.04 CUDA_VERSION=12.9 PYTHON_VERSION=3.12 PYTORCH_VERSION=2.8 jetson-containers build vllm
 ```
 
 The available versions are defined in the package's configuration scripts (some you can simply add new releases to by referring to the new git tag/branch, others need pointed to specific release downloads).  Not all combinations are compatible, as the versioned packages frequently define the minimum version of others in the build tree they rely on (for example, TensorRT 10 requires CUDA 12.4).
