@@ -5,6 +5,7 @@ cd /opt
 
 # install dependencies
 bash $TMP/install_deps.sh
+pip3 install wheel setuptools twine
 
 clone_with_fallback () {
   local ver="$1" url="$2" dir="$3"
@@ -48,7 +49,9 @@ if [ "$need_ck_contrib" -eq 0 ]; then
   cd ../
 fi
 
-cd $TMP
+if [ "$need_ck_contrib" -eq 1 ]; then
+  cd /opt/opencv-python/
+fi
 
 git apply $TMP/patches.diff || echo "failed to apply git patches"
 git diff
