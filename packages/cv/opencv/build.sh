@@ -6,26 +6,52 @@ cd /opt
 # install dependencies
 bash $TMP/install_deps.sh
 
-# clone source repos
-git clone --branch ${OPENCV_VERSION} --recursive https://github.com/opencv/opencv || \
-git clone --recursive https://github.com/opencv/opencv
-git clone --branch ${OPENCV_VERSION} --recursive https://github.com/opencv/opencv_contrib || \
-git clone --recursive https://github.com/opencv/opencv_contrib
-git clone --branch ${OPENCV_PYTHON} --recursive https://github.com/opencv/opencv-python || \
-git clone --recursive https://github.com/opencv/opencv-python
+clone_with_fallback () {
+  local ver="$1" url="$2" dir="$3"
 
-cd /opt/opencv-python/opencv
-git checkout --recurse-submodules ${OPENCV_VERSION}
-cat modules/core/include/opencv2/core/version.hpp
+  if git clone --branch "$ver" --recursive "$url" "$dir"; then
+    echo 0        # se clonó la rama → HAREMOS checkout más tarde
+  else
+    git clone --recursive "$url" "$dir"
+    echo 1        # se clonó main → NO se hace checkout
+  fi
+}
 
-cd ../opencv_contrib
-git checkout --recurse-submodules ${OPENCV_VERSION}
+#------------------------------------------------------------------
+# 1. Clonamos los tres repos y guardamos si necesitan checkout (0/1)
+#------------------------------------------------------------------
+cd /opt
 
-cd ../opencv_extra
-git checkout --recurse-submodules ${OPENCV_VERSION}
+need_ck_opencv=$(clone_with_fallback  "$OPENCV_VERSION" \
+                 https://github.com/opencv/opencv            opencv)
 
-cd ../
+need_ck_contrib=$(clone_with_fallback "$OPENCV_VERSION" \
+                 https://github.com/opencv/opencv_contrib    opencv_contrib)
 
+need_ck_py=$(clone_with_fallback      "$OPENCV_PYTHON" \
+                 https://github.com/opencv/opencv-python     opencv-python)
+
+
+if [ "$need_ck_opencv" -eq 0 ]; then
+  cd opencv-python/opencv
+  git checkout --recurse-submodules "$OPENCV_VERSION"
+  cat modules/core/include/opencv2/core/version.hpp
+  cd ../../
+fi
+
+if [ "$need_ck_contrib" -eq 0 ]; then
+  cd opencv_contrib
+  git checkout --recurse-submodules "$OPENCV_VERSION"
+  cd ../
+fi
+
+if [ "$need_ck_contrib" -eq 0 ]; then
+  cd opencv_extra
+  git checkout --recurse-submodules "$OPENCV_VERSION"
+  cd ../
+fi
+
+cd $TMP
 # apply patches to setup.py
 git apply $TMP/patches.diff || echo "failed to apply git patches"
 git diff
