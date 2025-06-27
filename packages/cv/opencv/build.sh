@@ -13,7 +13,7 @@ clone_with_fallback () {
   if git clone --branch "$ver" --recursive "$url" "$dir"; then
     echo 0
   else
-    git clone --recursive "$url" "$dir"
+    git clone --branch 4.x --recursive "$url" "$dir"
     echo 1
   fi
 }
@@ -35,27 +35,37 @@ if [ "$need_ck_opencv" -eq 0 ]; then
   git checkout --recurse-submodules "$OPENCV_VERSION"
   cat modules/core/include/opencv2/core/version.hpp
   cd ../../
+else
+  cd opencv-python/opencv
+  git checkout --recurse-submodules 4.x
+  cat modules/core/include/opencv2/core/version.hpp
+  cd ../../
 fi
 
 if [ "$need_ck_contrib" -eq 0 ]; then
   cd opencv_contrib
   git checkout --recurse-submodules "$OPENCV_VERSION"
   cd ../
-fi
-
-if [ "$need_ck_contrib" -eq 0 ]; then
-  cd opencv_extra
-  git checkout --recurse-submodules "$OPENCV_VERSION"
+else
+  cd opencv_contrib
+  git checkout --recurse-submodules 4.x
   cd ../
 fi
 
-if [ "$need_ck_contrib" -eq 1 ]; then
-  cd /opt/opencv-python/
+if [ "$need_ck_py" -eq 0 ]; then
+  cd opencv_extra
+  git checkout --recurse-submodules "$OPENCV_VERSION"
+  cd ../
+else
+  cd /opt/opencv-python/opencv_extra
+  git checkout --recurse-submodules 4.x
+  cd ../
 fi
 
+if [ "$need_ck_py" -eq 0 ]; then
 git apply $TMP/patches.diff || echo "failed to apply git patches"
 git diff
-
+fi
 # OpenCV looks for the cuDNN version in cudnn_version.h, but it's been renamed to cudnn_version_v8.h
 ln -sfnv /usr/include/$(uname -i)-linux-gnu/cudnn_version_v*.h /usr/include/$(uname -i)-linux-gnu/cudnn_version.h
 
@@ -110,7 +120,6 @@ OPENCV_BUILD_ARGS="\
 if [ "$(uname -m)" == "aarch64" ]; then
     OPENCV_BUILD_ARGS="${OPENCV_BUILD_ARGS} -DENABLE_NEON=ON"
 fi
-
 # cv2.abi3.so: undefined symbol: glRenderbufferStorageEXT
 # https://github.com/opencv/opencv_contrib/issues/2307
 OPENCV_BUILD_ARGS="${OPENCV_BUILD_ARGS} -DBUILD_opencv_rgbd=OFF"
