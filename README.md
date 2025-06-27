@@ -9,8 +9,8 @@ Modular container build system that provides the latest [**AI/ML packages**](htt
 > [!NOTE]
 > Ubuntu 24.04 containers for JetPack 6 and JetPack 7 are now available (with CUDA support)
 >
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`LSB_RELEASE=24.04 jetson-containers build pytorch:2.7`  
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`jetson-containers run dustynv/pytorch:2.7-r36.4-cu128-24.04`
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`LSB_RELEASE=24.04 jetson-containers build pytorch:2.8`  
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`jetson-containers run dustynv/pytorch:2.8-r36.4-cu128-24.04`
 >
 > ARM SBSA (Server Base System Architecture) is supported for GH200 / GB200.  
 > To install CUDA 12.9 SBSA wheels for Python 3.12 / 24.04:  
@@ -72,7 +72,7 @@ If you look at any package's readme (like [`l4t-pytorch`](packages/l4t/l4t-pytor
 You can rebuild the container stack for different versions of CUDA by setting the `CUDA_VERSION` variable:
 
 ```bash
-CUDA_VERSION=12.4 jetson-containers build transformers
+CUDA_VERSION=12.6 jetson-containers build transformers
 ```
 
 It will then go off and either pull or build all the dependencies needed, including PyTorch and other packages that would be time-consuming to compile.  There is a [Pip server](/docs/build.md#pip-server) that caches the wheels to accelerate builds.  You can also request specific versions of cuDNN, TensorRT, Python, and PyTorch with similar environment variables like [here](/docs/build.md#changing-versions).
