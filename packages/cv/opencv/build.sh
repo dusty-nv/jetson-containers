@@ -5,6 +5,7 @@ cd /opt
 
 # install dependencies
 bash $TMP/install_deps.sh
+pip3 install wheel setuptools twine
 
 clone_with_fallback () {
   local ver="$1" url="$2" dir="$3"
