@@ -18,7 +18,7 @@ RUN git clone --depth=1 https://github.com/hiyouga/LLaMA-Factory.git /opt/llama-
     sed 's|DEFAULT_CONFIG_DIR = "config"|DEFAULT_CONFIG_DIR = os.environ.get("LLAMA_FACTORY_CONFIG_DIR", "/data/llama-factory/config")|' -i ./src/llamafactory/webui/common.py && \
     sed 's|DEFAULT_DATA_DIR = "data"|DEFAULT_DATA_DIR = os.environ.get("LLAMA_FACTORY_DATA_DIR", "/data/llama-factory/data")|' -i ./src/llamafactory/webui/common.py && \
     sed 's|DEFAULT_SAVE_DIR = "saves"|DEFAULT_SAVE_DIR = os.environ.get("LLAMA_FACTORY_SAVE_DIR", "/data/llama-factory/saves")|' -i ./src/llamafactory/webui/common.py && \
-    sed -i 's|"vllm>=0.4.3,<=0.6.0"|"vllm>=0.4.3,<=0.6.4"|' setup.py && \
+    sed -i 's|"vllm>=0.4.3,<=0.9.1"|"vllm>=0.4.3,<=0.10.0"|' setup.py && \
     cat ./src/llamafactory/webui/common.py && \
     pip3 install -e ".[metrics]" && \
     pip3 install openai
