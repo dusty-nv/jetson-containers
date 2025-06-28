@@ -2,7 +2,7 @@
 # name: llama-factory
 # group: llm
 # requires: '>=35'
-# depends: [bitsandbytes, flash-attention, vllm, sglang]
+# depends: [bitsandbytes, flash-attention, deepspeed, vllm, sglang]
 # test: test.py
 # notes: https://github.com/hiyouga/LLaMA-Factory
 #---
