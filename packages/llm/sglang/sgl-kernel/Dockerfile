@@ -2,7 +2,7 @@
 # name: sgl-kernel
 # group: sglang
 # config: config.py
-# depends: [cuda, cmake, pytorch, triton, flash-attention, flashinfer, xgrammar]
+# depends: [cuda, cmake, pytorch, triton, flash-attention, flashinfer, xgrammar, genai-bench]
 # requires: '>=36'
 # test: test.py
 # notes: https://github.com/sgl-project/sglang/sgl-kernel
