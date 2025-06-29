@@ -22,7 +22,7 @@ echo "Building GENAI_BENCH"
 cd "${REPO_DIR}" || exit 1
 
 make install
-pip3 wheel . --no-build-isolation --wheel-dir "${PIP_WHEEL_DIR}"
+pip3 wheel --wheel-dir=/opt --no-deps --verbose .
 pip3 install "${PIP_WHEEL_DIR}/genai-bench"*.whl
 cd "${REPO_DIR}" || exit 1
 
