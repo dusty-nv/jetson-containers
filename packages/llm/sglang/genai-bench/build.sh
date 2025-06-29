@@ -19,7 +19,7 @@ git clone --recursive --depth 1 "${REPO_URL}" "${REPO_DIR}"
 
 pip3 install --no-cache-dir ninja setuptools wheel numpy uv scikit-build-core
 echo "Building GENAI_BENCH"
-cd "${REPO_DIR}/genai-bench" || exit 1
+cd "${REPO_DIR}" || exit 1
 
 make install
 pip3 wheel . --no-build-isolation --wheel-dir "${PIP_WHEEL_DIR}"

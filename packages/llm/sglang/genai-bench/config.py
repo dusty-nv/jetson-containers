@@ -9,8 +9,8 @@ def genai_bench(version, branch=None, default=False):
     pkg['name'] = f'genai-bench:{version}'
 
     pkg['build_args'] = {
-        'genai_bench_VERSION': version,
-        'genai_bench_BRANCH': branch,
+        'GENAI_BENCH_VERSION': version,
+        'GENAI_BENCH_VERSION': branch,
         'IS_SBSA': IS_SBSA,
         'TORCH_CUDA_ARCH_LIST': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES])
     }

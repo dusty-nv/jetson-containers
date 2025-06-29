@@ -2,7 +2,7 @@
 # name: genai-bench
 # group: sglang
 # config: config.py
-# depends: [cuda, cmake, pytorch, torchvision, torchaudio, torchao, triton, xformers, flash-attention, flashinfer, xgrammar]
+# depends: [sglang]
 # requires: '>=36'
 # test: test.py
 # notes: https://github.com/sgl-project/genai-bench
@@ -15,7 +15,7 @@ ARG GENAI_BENCH_VERSION \
     IS_SBSA \
     TORCH_CUDA_ARCH_LIST \
     FORCE_BUILD=off \
-    TMP=/tmp/sglang
+    TMP=/tmp/genai-bench
 
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends \
