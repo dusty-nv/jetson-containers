@@ -12,7 +12,7 @@ echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUI
 
 git clone --branch v$CUTLASS_VERSION --depth=1 https://github.com/NVIDIA/cutlass $SRC
 
-cd $SRC
+cd $SRC/python
 pip3 wheel --no-deps --wheel-dir $WHL
 
 cd /
