@@ -21,5 +21,5 @@ rm -rf $SRC
 pip3 install $WHL/cutlass*.whl
 twine upload --verbose $WHL/cutlass*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
-python3 -c 'import cuda; print(cuda.__version__)'
+python3 -c 'import cutlass; print(cutlass.__version__)'
 pip3 show cutlass || pip3 show cutlass
