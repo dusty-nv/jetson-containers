@@ -12,14 +12,19 @@ echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUI
 
 git clone --branch v$CUTLASS_VERSION --depth=1 https://github.com/NVIDIA/cutlass $SRC
 
+cd $SRC
+echo "Building cutlass wheel in $SRC"
+pip3 wheel . -w $WHL
+
 cd $SRC/python
-pip3 wheel --no-deps --wheel-dir $WHL
 
-cd /
-rm -rf $SRC
+python3 setup_library.py bdist_wheel --dist-dir $WHL
+python3 setup_pycute.py bdist_wheel --dist-dir $WHL
 
-pip3 install $WHL/cutlass*.whl
-twine upload --verbose $WHL/cutlass*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+cd $SRC
+
+pip3 install $WHL/nvidia_cutlass*.whl $WHL/pycute*.whl
+twine upload --verbose $WHL/nvidia_cutlass*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose $WHL/pycute*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
 python3 -c 'import cutlass; print(cutlass.__version__)'
-pip3 show cutlass || pip3 show cutlass
