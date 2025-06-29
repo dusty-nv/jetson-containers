@@ -5,7 +5,7 @@ from packaging.version import Version
 def cutlass(version, cuda=None):
     pkg = package.copy()
 
-    pkg['name'] = f"cuda-python:{version}"
+    pkg['name'] = f"cutlass:{version}"
 
     if not cuda:
         cuda = version
@@ -25,8 +25,8 @@ def cutlass(version, cuda=None):
     builder['build_args'] = {**builder['build_args'], 'FORCE_BUILD': 'on'}
 
     if Version(version) == CUDA_VERSION:
-        pkg['alias'] = 'cuda-python'
-        builder['alias'] = 'cuda-python:builder'
+        pkg['alias'] = 'cutlass'
+        builder['alias'] = 'cutlass:builder'
 
     return pkg, builder
 
