@@ -1,4 +1,3 @@
-
 from jetson_containers import PYTHON_VERSION
 from packaging.version import Version
 
@@ -7,13 +6,13 @@ def python(version, requires=None) -> list:
 
     pkg['name'] = f'python:{version}'
     pkg['build_args'] = {'PYTHON_VERSION': version}
-    
+
     if Version(version) == PYTHON_VERSION:
         pkg['alias'] = 'python'
 
     if requires:
         pkg['requires'] = requires
-        
+
     return pkg
 
 package = [

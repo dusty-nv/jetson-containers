@@ -2,7 +2,7 @@
 # name: lerobot
 # group: robots
 # docs: docs.md
-# depends: [transformers, opencv:4.11.0, pyav, h5py, diffusers, jupyterlab:myst]
+# depends: [transformers, opencv, pyav, h5py, diffusers, jupyterlab:myst]
 # requires: '>=36'
 # test: [test.sh, test.py]
 #---
@@ -29,7 +29,7 @@ RUN git clone --branch=${LEROBOT_BRANCH} --depth=1 https://github.com/${LEROBOT_
     sed -i '/"h5py[^"]*",/d' pyproject.toml && \
     sed -i '/"av[^"]*",/d' pyproject.toml && \
     sed -i '/"huggingface-hub[^"]*",/d' pyproject.toml && \
-    sed -i '/"diffusers[^"]*",/d' pyproject.toml && \   
+    sed -i '/"diffusers[^"]*",/d' pyproject.toml && \
     cat -n pyproject.toml
 
 RUN cd /opt/lerobot && \
@@ -43,7 +43,7 @@ RUN apt-get update && \
     && apt-get clean
 
 # Create a symbolic link for python3 to python
-RUN ln -s /usr/bin/python3 /usr/bin/python || true && python --version
+RUN ln -sfnv -s /usr/bin/python3 /usr/bin/python || true && python --version
 
 # Setup various system configs
 RUN echo -e "* soft core 0\n* hard core 0" >> /etc/security/limits.conf && \

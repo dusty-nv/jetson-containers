@@ -1,6 +1,6 @@
 #---
-# name: auto_gptq
-# alias: auto-gptq
+# name: gptqmodel
+# alias: gptqmodel
 # group: llm
 # config: config.py
 # depends: [transformers]
@@ -13,10 +13,12 @@ FROM ${BASE_IMAGE}
 
 ARG GPTQMODEL_VERSION \
     GPTQMODEL_BRANCH \
+    TORCH_CUDA_ARCH_LIST \
     FORCE_BUILD="off"
 
-COPY build.sh /tmp/build.sh
+ENV TORCH_CUDA_ARCH_LIST=${TORCH_CUDA_ARCH_LIST}
+COPY build.sh build.sh /tmp/gptqmodel/
 
 RUN pip3 install gekko && \
     pip3 install auto-gptq==${GPTQMODEL_VERSION} || \
-    /tmp/build.sh
+    /tmp/gptqmodel/build.sh

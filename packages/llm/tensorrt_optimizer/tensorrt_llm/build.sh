@@ -3,7 +3,17 @@ set -ex
 
 echo "Building TensorRT-LLM ${TRT_LLM_VERSION}"
 
-python3 ${SOURCE_DIR}/scripts/build_wheel.py \
+git clone --recursive --depth 1 --branch ${TRT_LLM_VERSION} https://github.com/NVIDIA/TensorRT-LLM /opt/tensorrt_llm/ || \
+git clone --recursive --depth 1 https://github.com/NVIDIA/TensorRT-LLM.git /opt/tensorrt_llm/
+
+cd /opt/tensorrt_llm/
+git lfs pull
+sed -i '/^diffusers[[:space:]=<>!]/d' requirements.txt
+sed -i 's/==/>=/g' requirements.txt
+pip3 install -r requirements.txt
+
+
+python3 /opt/tensorrt_llm/scripts/build_wheel.py \
         --clean \
         --build_type Release \
         --cuda_architectures "${CUDA_ARCHS}" \

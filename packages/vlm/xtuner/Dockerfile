@@ -14,8 +14,11 @@ RUN git clone --branch=main --depth=1 --recursive https://github.com/InternLM/xt
     cd /opt/xtuner && \
     sed -i 's|bitsandbytes.*|bitsandbytes|' requirements/runtime.txt && \
     sed -i 's|mpi4py-mpich.*||' requirements/deepspeed.txt && \
+    sed -i 's/==/>=/g' requirements/runtime.txtml && \
+    sed -i 's/~=/>=/g' requirements/runtime.txt && \
+    sed -i 's/==/>=/g' requirements/deepspeed.txt && \
+    sed -i 's/~=/>=/g' requirements/deepspeed.txt && \
     pip3 install -e '.[all]'
-    
-# mmengine - WARNING - WARNING: command error: '[Errno 2] No such file or directory: 'python''
-RUN ln -s /usr/bin/python3 /usr/bin/python && \
-    ln -s /usr/local/bin/python3 /usr/local/bin/python
+
+# SHELL ["/bin/bash", "-c"]
+CMD ["/bin/bash"]

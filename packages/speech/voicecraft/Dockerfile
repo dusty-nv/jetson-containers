@@ -35,6 +35,4 @@ RUN git clone https://github.com/jasonppy/VoiceCraft.git && \
 
 WORKDIR /opt/VoiceCraft/
 
-# ENTRYPOINT [ “python3”, “gradio_app.py”, "--server_name", "0.0.0.0" ]
-
 CMD [ "python3", "./gradio_app.py" , "--server_name" , "0.0.0.0" ]

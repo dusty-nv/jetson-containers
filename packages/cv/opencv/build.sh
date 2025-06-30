@@ -5,30 +5,59 @@ cd /opt
 
 # install dependencies
 bash $TMP/install_deps.sh
+pip3 install wheel setuptools twine
 
-# clone source repos
-git clone --branch ${OPENCV_VERSION} --recursive https://github.com/opencv/opencv
-git clone --branch ${OPENCV_VERSION} --recursive https://github.com/opencv/opencv_contrib
-git clone --branch ${OPENCV_PYTHON} --recursive https://github.com/opencv/opencv-python
+clone_with_fallback () {
+  local ver="$1" url="$2" dir="$3"
 
-cd /opt/opencv-python/opencv
-git checkout --recurse-submodules ${OPENCV_VERSION}
-cat modules/core/include/opencv2/core/version.hpp
+  if git clone --branch "$ver" --recursive "$url" "$dir"; then
+    echo 0
+  else
+    git clone --recursive "$url" "$dir"
+    echo 1
+  fi
+}
 
-cd ../opencv_contrib
-git checkout --recurse-submodules ${OPENCV_VERSION}
+cd /opt
 
-cd ../opencv_extra
-git checkout --recurse-submodules ${OPENCV_VERSION}
+need_ck_opencv=$(clone_with_fallback  "$OPENCV_VERSION" \
+                 https://github.com/opencv/opencv            opencv)
 
-cd ../
+need_ck_contrib=$(clone_with_fallback "$OPENCV_VERSION" \
+                 https://github.com/opencv/opencv_contrib    opencv_contrib)
 
-# apply patches to setup.py
+need_ck_py=$(clone_with_fallback      "$OPENCV_PYTHON" \
+                 https://github.com/opencv/opencv-python     opencv-python)
+
+
+if [ "$need_ck_opencv" -eq 0 ]; then
+  cd opencv-python/opencv
+  git checkout --recurse-submodules "$OPENCV_VERSION"
+  cat modules/core/include/opencv2/core/version.hpp
+  cd ../../
+fi
+
+if [ "$need_ck_contrib" -eq 0 ]; then
+  cd opencv_contrib
+  git checkout --recurse-submodules "$OPENCV_VERSION"
+  cd ../
+fi
+
+if [ "$need_ck_contrib" -eq 0 ]; then
+  cd opencv_extra
+  git checkout --recurse-submodules "$OPENCV_VERSION"
+  cd ../
+fi
+
+if [ "$need_ck_contrib" -eq 1 ]; then
+  cd /opt/opencv-python/
+fi
+
 git apply $TMP/patches.diff || echo "failed to apply git patches"
 git diff
 
 # OpenCV looks for the cuDNN version in cudnn_version.h, but it's been renamed to cudnn_version_v8.h
-ln -s /usr/include/$(uname -i)-linux-gnu/cudnn_version_v*.h /usr/include/$(uname -i)-linux-gnu/cudnn_version.h
+ln -sfnv /usr/include/$(uname -i)-linux-gnu/cudnn_version_v*.h /usr/include/$(uname -i)-linux-gnu/cudnn_version.h
 
 # patches for FP16/half casts
 function patch_opencv()
@@ -43,7 +72,7 @@ patch_opencv
 cd /opt
 patch_opencv
 cd /opt/opencv-python
-   
+
 # default build flags
 OPENCV_BUILD_ARGS="\
    -DCPACK_BINARY_DEB=ON \

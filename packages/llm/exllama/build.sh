@@ -5,16 +5,15 @@ echo "Building ExLlamaV3 ${EXLLAMA_VERSION}"
 
 cd /opt/exllamav3
 
-sed 's|torch.*|torch|g' -i requirements.txt
-sed 's|"torch.*"|"torch"|g' -i setup.py
-sed 's|\[\"cublas\"\] if windows else \[\]|\[\"cublas\"\]|g' -i setup.py
-sed 's|-mavx2||g' -i setup.py
-sed 's|-mavx2||g' -i exllamav3/ext.py
-sed 's|#define USE_AVX2||g' -i exllamav3/exllamav3_ext/cpp/sampling.cpp
-
 #pip3 wheel --wheel-dir=/opt --verbose .
-pip3 install -r -U requirements.txt
+pip3 install -U -r requirements.txt
 pip3 install -U -r requirements_examples.txt
+
+export MAX_JOBS="$(nproc)"
+export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
+echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
+
+CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS \
 python3 setup.py --verbose bdist_wheel --dist-dir /opt
 
 cd /

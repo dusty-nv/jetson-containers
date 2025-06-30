@@ -4,17 +4,19 @@
 
 Modular container build system that provides the latest [**AI/ML packages**](https://pypi.jetson-ai-lab.dev/) for [NVIDIA Jetson](https://jetson-ai-lab.com) :rocket::robot:
 
+### Only Tested and supported Jetpack 6 and JetPack 7.
+
 > [!NOTE]
-> Ubuntu 24.04 containers for JetPack 6 are now available (with CUDA support)
+> Ubuntu 24.04 containers for JetPack 6 and JetPack 7 are now available (with CUDA support)
 >
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`LSB_RELEASE=24.04 jetson-containers build pytorch:2.7`  
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`jetson-containers run dustynv/pytorch:2.7-r36.4-cu128-24.04`
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`LSB_RELEASE=24.04 jetson-containers build pytorch:2.8`  
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`jetson-containers run dustynv/pytorch:2.8-r36.4-cu128-24.04`
 >
 > ARM SBSA (Server Base System Architecture) is supported for GH200 / GB200.  
-> To install CUDA 12.8 SBSA wheels for Python 3.10 / 22.04 or Python 3.12 / 24.04:  
+> To install CUDA 12.9 SBSA wheels for Python 3.12 / 24.04:  
 >
 > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`pip3 install torch torchvision torchaudio \`  
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`--index-url https://pypi.jetson-ai-lab.dev/sbsa/cu128`
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`--index-url https://pypi.jetson-ai-lab.dev/sbsa/cu129`
 >
 > See the **[`Ubuntu 24.04`](/docs/build.md#2404-containers)** section of the docs for details and a list of available containers 🤗
 > Thanks to all our contributors from **[`Discord`](https://discord.gg/BmqNSK4886)** and AI community for their support 🤗
@@ -70,7 +72,7 @@ If you look at any package's readme (like [`l4t-pytorch`](packages/l4t/l4t-pytor
 You can rebuild the container stack for different versions of CUDA by setting the `CUDA_VERSION` variable:
 
 ```bash
-CUDA_VERSION=12.4 jetson-containers build transformers
+CUDA_VERSION=12.6 jetson-containers build transformers
 ```
 
 It will then go off and either pull or build all the dependencies needed, including PyTorch and other packages that would be time-consuming to compile.  There is a [Pip server](/docs/build.md#pip-server) that caches the wheels to accelerate builds.  You can also request specific versions of cuDNN, TensorRT, Python, and PyTorch with similar environment variables like [here](/docs/build.md#changing-versions).

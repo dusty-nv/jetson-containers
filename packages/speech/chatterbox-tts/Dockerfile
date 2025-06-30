@@ -2,7 +2,7 @@
 # name: chatterbox-tts
 # group: audio
 # depends: [torch, torchaudio, transformers, numpy, diffusers, sound-utils]
-# requires: ['>=36.1.0', '>=cu128']
+# requires: ['>=36.1.0']
 # test: [test.py]
 # docs: docs.md
 #---
@@ -21,27 +21,16 @@ RUN apt-get update && \
     \
     git clone --branch=${CHATTERBOX_TTS_VERSION} https://github.com/resemble-ai/chatterbox /opt/chatterbox-tts && \
     cd /opt/chatterbox-tts && \
-    #pip3 install -e .
-    sed -i \
-        -e '/^\s*"torchaudio==2.6.0"\s*,\?\s*$/d' \
-        -e '/^\s*"torch==2.6.0"\s*,\?\s*$/d' \
-        -e '/^\s*"numpy~=1.26.0"\s*,\?\s*$/d' \  
-        -e '/^\s*"transformers==4.46.3"\s*,\?\s*$/d' \
-        -e '/^\s*"diffusers==0.29.0"\s*,\?\s*$/d' \
-        pyproject.toml && \  
-    cat pyproject.toml && \ 
+    sed -i 's/==/>=/g' pyproject.toml && \
+    sed -i 's/~=/>=/g' pyproject.toml && \
+    cat pyproject.toml && \
     pip install -e .
-    #&& \
-    #  && 
-    #pip3 install -r requirements.txt
 
-    
 COPY inference.py /opt/chatterbox-tts
 
-RUN cd /opt/chatterbox-tts 
-#&& \
-    #python3 inference.py
+RUN cd /opt/chatterbox-tts
 
+WORKDIR /opt/chatterbox-tts
 
 ENV PYTHONPATH="/opt/chatterbox-tts:${PYTHONPATH}" \
     TRANSFORMERS_CACHE=/data/models/huggingface \
@@ -49,4 +38,4 @@ ENV PYTHONPATH="/opt/chatterbox-tts:${PYTHONPATH}" \
     HF_HOME=/data/models/huggingface
 
 # Use bash as the default command
-CMD ["bash"]  
+CMD ["bash"]

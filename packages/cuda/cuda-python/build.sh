@@ -5,7 +5,10 @@ set -ex
 SRC=/opt/cuda-python
 WHL=/opt/wheels
 
-export MAX_JOBS=$(nproc) 
+export MAX_JOBS="$(nproc)"
+export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
+echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
+
 
 git clone --branch v$CUDA_PYTHON_VERSION --depth=1 https://github.com/NVIDIA/cuda-python $SRC
 
@@ -35,4 +38,4 @@ pip3 install $WHL/cuda*.whl
 twine upload --verbose $WHL/cuda*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
 python3 -c 'import cuda; print(cuda.__version__)'
-pip3 show cuda_core cuda_bindings || pip3 show cuda-python 
+pip3 show cuda_core cuda_bindings || pip3 show cuda-python

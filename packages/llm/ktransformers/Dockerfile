@@ -17,6 +17,6 @@ ARG KTRANSFORMERS_VERSION \
 RUN apt-get update -y && apt-get install -y build-essential \
     cmake ninja-build
 
-COPY build.sh install.sh patches /tmp/ktransformers/
+COPY build.sh install.sh /tmp/ktransformers/
 
 RUN /tmp/ktransformers/install.sh || /tmp/ktransformers/build.sh

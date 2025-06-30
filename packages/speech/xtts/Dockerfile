@@ -16,13 +16,13 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends libsndfile1-dev && \
     rm -rf /var/lib/apt/lists/*  && \
     apt-get clean
-    
+
 ADD https://api.github.com/repos/${TTS_REPO}/git/refs/heads/dev /tmp/tts_version.json
 
 RUN git clone https://github.com/${TTS_REPO} ${TTS_PATH} && \
     cd ${TTS_PATH} && \
-    sed 's|^torch.*||' -i requirements.txt && \
-    sed 's|^transformers.*||' -i requirements.txt && \
+    sed -i 's/==/>=/g' requirements.txt && \
+    sed -i 's/~=/>=/g' requirements.txt && \
     sed 's|answer[[:space:]]*=.*|answer=\"y\"|' -i TTS/utils/manage.py && \
     cat requirements.txt && \
     \

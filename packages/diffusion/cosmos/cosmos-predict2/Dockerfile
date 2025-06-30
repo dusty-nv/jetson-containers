@@ -1,7 +1,7 @@
 #---
 # name: cosmos-predict2
 # group: cosmos
-# depends: [pytorch, torchvision, torchaudio, transformer-engine, flash-attention, transformers, opencv:4.11.0, bitsandbytes, huggingface_hub, ffmpeg, apex]
+# depends: [pytorch, torchvision, torchaudio, transformer-engine, flash-attention, transformers, opencv, bitsandbytes, huggingface_hub, ffmpeg, apex]
 # requires: '>=34.1.0'
 # notes: https://github.com/nvidia-cosmos/cosmos-predict2
 #---
