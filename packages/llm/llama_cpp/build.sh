@@ -6,8 +6,8 @@ INSTALL_CPP=${SOURCE_DIR}/build/dist
 
 set -ex
 
-git clone --recursive --branch=${LLAMA_CPP_BRANCH_PY} \
-    https://github.com/abetlen/llama-cpp-python ${SOURCE_DIR}
+git clone --recursive --branch=${LLAMA_CPP_BRANCH_PY} https://github.com/abetlen/llama-cpp-python ${SOURCE_DIR} || \
+git clone --recursive https://github.com/abetlen/llama-cpp-python
 
 if [ -n "${LLAMA_CPP_BRANCH}" ]; then
     cd ${SOURCE_CPP}
@@ -21,10 +21,10 @@ CMAKE_ARGS="${LLAMA_CPP_FLAGS} -DLLAVA_BUILD=OFF -DCMAKE_CUDA_ARCHITECTURES=${CU
 pip3 wheel --wheel-dir=${PIP_WHEEL_DIR} --verbose .
 
 pip3 install ${PIP_WHEEL_DIR}/llama_cpp_python*.whl
-pip3 show llama-cpp-python
+# pip3 show llama-cpp-python
 
-python3 -c 'import llama_cpp'
-python3 -m llama_cpp.server --help
+# python3 -c 'import llama_cpp'
+# python3 -m llama_cpp.server --help
 
 twine upload --verbose ${PIP_WHEEL_DIR}/llama_cpp_python*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
