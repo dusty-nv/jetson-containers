@@ -13,7 +13,7 @@ clone_with_fallback () {
   if git clone --branch "$ver" --recursive "$url" "$dir"; then
     echo 0
   else
-    git clone --branch "4.x" --recursive "$url" "$dir"
+    git clone --recursive "$url" "$dir"
     echo 1
   fi
 }
@@ -31,13 +31,13 @@ need_ck_py=$(clone_with_fallback      "$OPENCV_PYTHON" \
 
 
 if [ "$need_ck_opencv" -eq 0 ]; then
-  cd /opt/opencv-python/opencv
+  cd opencv-python/opencv
   git checkout --recurse-submodules "$OPENCV_VERSION"
   cat modules/core/include/opencv2/core/version.hpp
   cd ../../
 else
   cd opencv-python/opencv
-  git checkout --recurse-submodules "4.x"
+  git checkout --recurse-submodules 4.x
   cat modules/core/include/opencv2/core/version.hpp
   cd ../../
 fi
@@ -48,7 +48,7 @@ if [ "$need_ck_contrib" -eq 0 ]; then
   cd ../
 else
   cd opencv_contrib
-  git checkout --recurse-submodules "4.x"
+  git checkout --recurse-submodules 4.x
   cd ../
 fi
 
@@ -58,13 +58,18 @@ if [ "$need_ck_py" -eq 0 ]; then
   cd ../
 else
   cd /opt/opencv-python/opencv_extra
-  git checkout --recurse-submodules "4.x"
+  git checkout --recurse-submodules 4.x
   cd ../
 fi
 
 if [ "$need_ck_contrib" -eq 1 ]; then
   cd /opt/opencv-python/
   sed -i 's|^#define CV_VERSION_STATUS[[:space:]]\+"-pre"|#define CV_VERSION_STATUS   ""|' /opt/opencv-python/opencv/modules/core/include/opencv2/core/version.hpp
+fi
+
+if [ "$need_ck_contrib" -eq 0 ]; then
+  git apply $TMP/patches.diff || echo "failed to apply git patches"
+  git diff
 fi
 
 if [ "$need_ck_contrib" -eq 0 ]; then
@@ -136,7 +141,7 @@ export CMAKE_BUILD_PARALLEL_LEVEL=$(nproc)
 export CMAKE_POLICY_VERSION_MINIMUM="3.5"
 export ENABLE_CONTRIB=1
 
-CMAKE_ARGS="${OPENCV_BUILD_ARGS} -DOPENCV_EXTRA_MODULES_PATH=/opt/opencv-python/opencv_contrib/modules" \
+export CMAKE_ARGS="${OPENCV_BUILD_ARGS} -DOPENCV_EXTRA_MODULES_PATH=/opt/opencv-python/opencv_contrib/modules"
 pip3 wheel --wheel-dir=/opt --verbose .
 
 ls /opt
