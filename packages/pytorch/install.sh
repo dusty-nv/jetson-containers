@@ -35,7 +35,7 @@ else
   pip3 install torch==${TORCH_VERSION} || \
   pip3 install --pre "torch>=${PYTORCH_BUILD_VERSION}.dev,<=${PYTORCH_BUILD_VERSION}"
 fi
-# reinstall numpy<2 on CUDA < 12.8
+# reinstall numpy<2 on CUDA < 12.9
 bash /tmp/numpy/install.sh
 
 # make sure it loads

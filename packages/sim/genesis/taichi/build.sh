@@ -21,7 +21,7 @@ export MAX_JOBS=$(nproc)
 export CC=clang
 export CXX=clang++
 export TAICHI_CMAKE_ARGS="-DTI_WITH_VULKAN:BOOL=ON -DTI_WITH_CUDA:BOOL=ON"
-export CUDA_VERSION=12.8
+export CUDA_VERSION=12.9
 export LLVM_VERSION=20
 export LLVM_DIR=/usr/lib/llvm-${LLVM_VERSION}
 

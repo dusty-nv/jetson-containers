@@ -5,7 +5,7 @@ set -ex
 git clone --branch=v${TENSORFLOW_GRAPHICS_VERSION} --depth=1 --recursive https://github.com/tensorflow/graphics /opt/tensorflow_graphics || \
 git clone --depth=1 --recursive https://github.com/tensorflow/graphics /opt/tensorflow_graphics
 
-cd /opt/tensorflow_graphics 
+cd /opt/tensorflow_graphics
 
 export HERMETIC_PYTHON_VERSION="${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}"
 export PYTHON_BIN_PATH="$(which python3)"
@@ -13,7 +13,7 @@ export PYTHON_LIB_PATH="$(python3 -c 'import site; print(site.getsitepackages()[
 export TF_NEED_CUDA=1
 export TF_CUDA_CLANG=1
 export CLANG_CUDA_COMPILER_PATH="/usr/lib/llvm-20/bin/clang"
-export HERMETIC_CUDA_VERSION=12.8.1
+export HERMETIC_CUDA_VERSION=12.9.1
 export HERMETIC_CUDNN_VERSION=9.8.0
 export HERMETIC_CUDA_COMPUTE_CAPABILITIES=8.7,8.9,9.0,10.1,12.0
 
