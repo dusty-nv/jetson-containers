@@ -52,7 +52,7 @@ else
   cd ../
 fi
 
-if [ "$need_ck_contrib" -eq 0 ]; then
+if [ "$need_ck_py" -eq 0 ]; then
   cd opencv_extra
   git checkout --recurse-submodules "$OPENCV_VERSION"
   cd ../
