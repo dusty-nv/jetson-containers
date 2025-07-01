@@ -31,7 +31,7 @@ need_ck_py=$(clone_with_fallback      "$OPENCV_PYTHON" \
 
 
 if [ "$need_ck_opencv" -eq 0 ]; then
-  cd opencv-python/opencv
+  cd /opt/opencv-python/opencv
   git checkout --recurse-submodules "$OPENCV_VERSION"
   cat modules/core/include/opencv2/core/version.hpp
   cd ../../
@@ -64,10 +64,13 @@ fi
 
 if [ "$need_ck_contrib" -eq 1 ]; then
   cd /opt/opencv-python/
+  sed -i 's|^#define CV_VERSION_STATUS[[:space:]]\+"-pre"|#define CV_VERSION_STATUS   ""|' /opt/opencv-python/opencv/modules/core/include/opencv2/core/version.hpp
 fi
 
+if [ "$need_ck_contrib" -eq 0 ]; then
 git apply $TMP/patches.diff || echo "failed to apply git patches"
 git diff
+fi
 
 # OpenCV looks for the cuDNN version in cudnn_version.h, but it's been renamed to cudnn_version_v8.h
 ln -sfnv /usr/include/$(uname -i)-linux-gnu/cudnn_version_v*.h /usr/include/$(uname -i)-linux-gnu/cudnn_version.h
