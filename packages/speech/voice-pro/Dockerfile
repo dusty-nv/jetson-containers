@@ -2,7 +2,7 @@
 # name: voice-pro
 # group: audio
 # docs: docs.md
-# depends: [cuda, pytorch, torchvision, torchaudio, torchao, torch-memory-saver, audiocraft, whisper, whisperx, kokoro]
+# depends: [cuda, pytorch, torchvision, torchaudio, torchao, torch-memory-saver, audiocraft, whisper, whisperx]
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
