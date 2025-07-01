@@ -26,6 +26,6 @@ def sage_attn(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    sage_attn('2.1.1', default=(CUDA_VERSION >= Version('12.6'))),
+    sage_attn('2.3.0', default=(CUDA_VERSION >= Version('12.6'))),
 ]
 
