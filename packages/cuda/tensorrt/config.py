@@ -146,9 +146,9 @@ if IS_TEGRA:
 elif IS_SBSA:
     # sbsa
     package = [
-        tensorrt_tar('10.9',f'{TENSORRT_URL}/10.9.0/tars/TensorRT-10.9.0.34.Linux.aarch64-gnu.cuda-12.8.tar.gz', cudnn='9.8', requires='x86_64'),
-        tensorrt_tar('10.12',f'{TENSORRT_URL}/10.12.0/tars/TensorRT-10.12.0.36.Linux.aarch64-gnu.cuda-12.9.tar.gz', cudnn='9.10', requires='x86_64'),
-        tensorrt_tar('11.0',f'{TENSORRT_URL}/11.0.0/tars/TensorRT-11.0.0.36.Linux.aarch64-gnu.cuda-13.0.tar.gz', cudnn='10.0', requires='x86_64'),
+        tensorrt_tar('10.9',f'{TENSORRT_URL}/10.9.0/tars/TensorRT-10.9.0.34.Linux.aarch64-gnu.cuda-12.8.tar.gz', cudnn='9.8', requires='aarch64'),
+        tensorrt_tar('10.12',f'{TENSORRT_URL}/10.12.0/tars/TensorRT-10.12.0.36.Linux.aarch64-gnu.cuda-12.9.tar.gz', cudnn='9.10', requires='aarch64'),
+        tensorrt_tar('11.0',f'{TENSORRT_URL}/11.0.0/tars/TensorRT-11.0.0.36.Linux.aarch64-gnu.cuda-13.0.tar.gz', cudnn='10.0', requires='aarch64'),
     ]
 
 else:
@@ -158,4 +158,3 @@ else:
         tensorrt_tar('10.12', f'{TENSORRT_URL}/10.12.0/tars/TensorRT-10.12.0.36.Linux.x86_64-gnu.cuda-12.9.tar.gz', cudnn='9.10', requires='x86_64'),
         tensorrt_tar('11.0', f'{TENSORRT_URL}/11.0.0/tars/TensorRT-11.0.0.36.Linux.x86_64-gnu.cuda-13.0.tar.gz', cudnn='10.0', requires='x86_64'),
     ]
-
