@@ -13,7 +13,7 @@ clone_with_fallback () {
   if git clone --branch "$ver" --recursive "$url" "$dir"; then
     echo 0
   else
-    git clone --recursive "$url" "$dir"
+    git clone --branch 4.x --recursive "$url" "$dir"
     echo 1
   fi
 }
@@ -59,23 +59,20 @@ if [ "$need_ck_py" -eq 0 ]; then
 else
   cd /opt/opencv-python/opencv_extra
   git checkout --recurse-submodules 4.x
-  cd ../
 fi
 
 if [ "$need_ck_contrib" -eq 1 ]; then
   cd /opt/opencv-python/
   sed -i 's|^#define CV_VERSION_STATUS[[:space:]]\+"-pre"|#define CV_VERSION_STATUS   ""|' /opt/opencv-python/opencv/modules/core/include/opencv2/core/version.hpp
+  cat /opt/opencv-python/opencv/modules/core/include/opencv2/core/version.hpp
 fi
 
-if [ "$need_ck_contrib" -eq 0 ]; then
+if [ "$need_ck_contrib" -eq 1 ]; then
+  cd /opt/opencv-python/
   git apply $TMP/patches.diff || echo "failed to apply git patches"
   git diff
 fi
 
-if [ "$need_ck_contrib" -eq 0 ]; then
-git apply $TMP/patches.diff || echo "failed to apply git patches"
-git diff
-fi
 
 # OpenCV looks for the cuDNN version in cudnn_version.h, but it's been renamed to cudnn_version_v8.h
 ln -sfnv /usr/include/$(uname -i)-linux-gnu/cudnn_version_v*.h /usr/include/$(uname -i)-linux-gnu/cudnn_version.h
