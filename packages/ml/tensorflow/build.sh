@@ -13,7 +13,7 @@ echo "Building TensorFlow for Jetson"
 
 # Clone the TensorFlow repository
 git clone --branch "v${TENSORFLOW_VERSION}" --depth=1 https://github.com/tensorflow/tensorflow.git /opt/tensorflow || \
-git clone --depth=1 https://github.com/tensorflow/tensorflow.git /opt/tensorflow 
+git clone --depth=1 https://github.com/tensorflow/tensorflow.git /opt/tensorflow
 
 cd /opt/tensorflow
 # Set up environment variables for the configure script
@@ -23,7 +23,7 @@ export PYTHON_LIB_PATH="$(python3 -c 'import site; print(site.getsitepackages()[
 export TF_NEED_CUDA=1
 export TF_CUDA_CLANG=1
 export CLANG_CUDA_COMPILER_PATH="/usr/lib/llvm-20/bin/clang"
-export HERMETIC_CUDA_VERSION=12.8.1
+export HERMETIC_CUDA_VERSION=12.9.1
 export HERMETIC_CUDNN_VERSION=9.8.0
 export HERMETIC_CUDA_COMPUTE_CAPABILITIES=8.7,8.9,9.0,10.1,11.0,12.0
 

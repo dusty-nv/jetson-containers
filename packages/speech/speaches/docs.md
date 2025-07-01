@@ -17,13 +17,13 @@ This backend is currently slower than `kokoro-tts:fastapi`, which also implement
 ## Build
 
 ```bash
-CUDA_VERSION=12.8 LSB_RELEASE=24.04 PYTHON_VERSION=3.12 jc build speaches
+CUDA_VERSION=12.9 LSB_RELEASE=24.04 PYTHON_VERSION=3.12 jc build speaches
 ```
 
 or
 
 ```bash
-CUDA_VERSION=12.8 LSB_RELEASE=24.04 PYTHON_VERSION=3.12  jetson-containers build --build-args=PIP_RETRIES:10,PIP_TIMEOUT:60 speaches
+CUDA_VERSION=12.9 LSB_RELEASE=24.04 PYTHON_VERSION=3.12  jetson-containers build --build-args=PIP_RETRIES:10,PIP_TIMEOUT:60 speaches
 ```
 
 ## Run

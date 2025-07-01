@@ -20,7 +20,7 @@
     "CPU_ARCH": "aarch64",
     "version": "jazzy",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "LSB_RELEASE": "24.04",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7",
@@ -37,7 +37,7 @@
     "version": "jazzy",
     "ROS_PACKAGE": "desktop",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "LSB_RELEASE": "24.04",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7"
@@ -92,7 +92,7 @@
     "CPU_ARCH": "aarch64",
     "version": "0.45.4",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "LSB_RELEASE": "24.04",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7"
@@ -112,7 +112,7 @@
     "CPU_ARCH": "aarch64",
     "version": "0.21.0",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "LSB_RELEASE": "24.04",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7"
@@ -127,7 +127,7 @@
     "CPU_ARCH": "aarch64",
     "version": "0.21.0",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7",
     "LSB_RELEASE": "22.04"
@@ -146,7 +146,7 @@
     "size": 5537476490,
     "CPU_ARCH": "aarch64",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "LSB_RELEASE": "24.04",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7"
@@ -180,7 +180,7 @@
     "CPU_ARCH": "aarch64",
     "version": "2.6.0",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "LSB_RELEASE": "24.04",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7"
@@ -195,7 +195,7 @@
     "CPU_ARCH": "aarch64",
     "version": "2.6.0",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7",
     "LSB_RELEASE": "22.04"
@@ -215,7 +215,7 @@
     "CPU_ARCH": "aarch64",
     "version": "4.11.0",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "LSB_RELEASE": "24.04",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7"
@@ -234,7 +234,7 @@
     "size": 5527144413,
     "CPU_ARCH": "aarch64",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "LSB_RELEASE": "24.04",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7"
@@ -253,7 +253,7 @@
     "size": 2493720116,
     "CPU_ARCH": "aarch64",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "LSB_RELEASE": "24.04",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7"
@@ -272,7 +272,7 @@
     "size": 2456622175,
     "CPU_ARCH": "aarch64",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "LSB_RELEASE": "24.04",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7"
@@ -292,7 +292,7 @@
     "CPU_ARCH": "aarch64",
     "version": "2.6",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "LSB_RELEASE": "24.04",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7"
@@ -307,7 +307,7 @@
     "CPU_ARCH": "aarch64",
     "version": "2.6",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7",
     "LSB_RELEASE": "22.04"
@@ -327,7 +327,7 @@
     "CPU_ARCH": "aarch64",
     "version": "1.22",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "LSB_RELEASE": "24.04",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7"
@@ -376,7 +376,7 @@
     "size": 2466170562,
     "CPU_ARCH": "aarch64",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "LSB_RELEASE": "24.04",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7"
@@ -415,7 +415,7 @@
     "CPU_ARCH": "aarch64",
     "version": "0.3.7",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "LSB_RELEASE": "24.04",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7"
@@ -764,7 +764,7 @@
     "size": 6052279379,
     "CPU_ARCH": "aarch64",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "LSB_RELEASE": "24.04",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7"
@@ -894,7 +894,7 @@
     "size": 7186750059,
     "CPU_ARCH": "aarch64",
     "L4T_VERSION": "36.4.3",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "version": "cp312",
     "LSB_RELEASE": "24.04",
     "JETPACK_VERSION": "6.2",
@@ -933,7 +933,7 @@
     "size": 7674224046,
     "CPU_ARCH": "aarch64",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7",
     "LSB_RELEASE": "22.04"
@@ -952,7 +952,7 @@
     "size": 9148164974,
     "CPU_ARCH": "aarch64",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7",
     "LSB_RELEASE": "22.04"
@@ -986,7 +986,7 @@
     "CPU_ARCH": "aarch64",
     "version": "0.5.2",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "LSB_RELEASE": "24.04",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7"
@@ -1039,7 +1039,7 @@
     "CPU_ARCH": "aarch64",
     "version": "0.7.4",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "LSB_RELEASE": "24.04",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7"
@@ -1053,7 +1053,7 @@
     "size": 4881361843,
     "CPU_ARCH": "aarch64",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7",
     "LSB_RELEASE": "22.04"
@@ -1170,7 +1170,7 @@
     "size": 5712484315,
     "CPU_ARCH": "aarch64",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7",
     "LSB_RELEASE": "22.04"
@@ -1204,7 +1204,7 @@
     "CPU_ARCH": "aarch64",
     "version": "0.4.4",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "LSB_RELEASE": "24.04",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7"
@@ -1238,7 +1238,7 @@
     "CPU_ARCH": "aarch64",
     "version": "fastapi",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "LSB_RELEASE": "24.04",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7"
@@ -1301,7 +1301,7 @@
     "size": 10359499255,
     "CPU_ARCH": "aarch64",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7",
     "LSB_RELEASE": "22.04"
@@ -1321,7 +1321,7 @@
     "CPU_ARCH": "aarch64",
     "version": "0.11.0",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "LSB_RELEASE": "24.04",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7"
@@ -1340,7 +1340,7 @@
     "size": 7063447327,
     "CPU_ARCH": "aarch64",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "LSB_RELEASE": "24.04",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7"
@@ -1359,7 +1359,7 @@
     "size": 5734783575,
     "CPU_ARCH": "aarch64",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "LSB_RELEASE": "24.04",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7"
@@ -1379,7 +1379,7 @@
     "CPU_ARCH": "aarch64",
     "version": "0.2.3",
     "L4T_VERSION": "36.4.0",
-    "CUDA_VERSION": "12.8",
+    "CUDA_VERSION": "12.9",
     "LSB_RELEASE": "24.04",
     "JETPACK_VERSION": "6.1",
     "CUDA_ARCH": "8.7"

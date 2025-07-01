@@ -22,7 +22,7 @@ Chatterbox TTS is a more resource-intensive model compared to alternatives like 
 
 ## System Requirements
 
-- CUDA 12.8+
+- CUDA 12.9+
 - Ubuntu 24.04 or compatible OS
 - Sufficient GPU memory (tested on Jetson AGX)
 
@@ -37,7 +37,7 @@ Chatterbox TTS is a more resource-intensive model compared to alternatives like 
 
 When building the container, use:
 ```bash
-CUDA_VERSION=12.8 LSB_RELEASE=24.04 jetson-containers build --name=... chatterbox-tts 
+CUDA_VERSION=12.9 LSB_RELEASE=24.04 jetson-containers build --name=... chatterbox-tts 
 ```
 
 
