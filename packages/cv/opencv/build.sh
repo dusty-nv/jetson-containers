@@ -67,7 +67,7 @@ if [ "$need_ck_contrib" -eq 1 ]; then
   cat /opt/opencv-python/opencv/modules/core/include/opencv2/core/version.hpp
 fi
 
-if [ "$need_ck_contrib" -eq 1 ]; then
+if [ "$need_ck_contrib" -eq 0 ]; then
   cd /opt/opencv-python/
   git apply $TMP/patches.diff || echo "failed to apply git patches"
   git diff
