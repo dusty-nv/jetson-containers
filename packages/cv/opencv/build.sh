@@ -13,7 +13,7 @@ clone_with_fallback () {
   if git clone --branch "$ver" --recursive "$url" "$dir"; then
     echo 0
   else
-    git clone --branch 4.x --recursive "$url" "$dir"
+    git clone --branch "4.x" --recursive "$url" "$dir"
     echo 1
   fi
 }
@@ -35,20 +35,11 @@ if [ "$need_ck_opencv" -eq 0 ]; then
   git checkout --recurse-submodules "$OPENCV_VERSION"
   cat modules/core/include/opencv2/core/version.hpp
   cd ../../
-else
-  cd opencv-python/opencv
-  git checkout --recurse-submodules 4.x
-  cat modules/core/include/opencv2/core/version.hpp
-  cd ../../
 fi
 
 if [ "$need_ck_contrib" -eq 0 ]; then
   cd opencv_contrib
   git checkout --recurse-submodules "$OPENCV_VERSION"
-  cd ../
-else
-  cd opencv_contrib
-  git checkout --recurse-submodules 4.x
   cd ../
 fi
 
@@ -56,9 +47,6 @@ if [ "$need_ck_py" -eq 0 ]; then
   cd opencv_extra
   git checkout --recurse-submodules "$OPENCV_VERSION"
   cd ../
-else
-  cd /opt/opencv-python/opencv_extra
-  git checkout --recurse-submodules 4.x
 fi
 
 if [ "$need_ck_contrib" -eq 1 ]; then
@@ -71,6 +59,11 @@ if [ "$need_ck_contrib" -eq 0 ]; then
   cd /opt/opencv-python/
   git apply $TMP/patches.diff || echo "failed to apply git patches"
   git diff
+else
+  rm -rf /opt/opencv-python/
+  cd /opt/
+  git clone --recursive https://github.com/opencv/opencv-python
+  cd opencv-pythons
 fi
 
 
