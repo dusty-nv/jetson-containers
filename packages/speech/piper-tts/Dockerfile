@@ -1,7 +1,7 @@
 #---
 # name: piper-tts
 # group: audio
-# depends: [onnxruntime, espeak]
+# depends: [torchaudio, onnxruntime, espeak]
 # test: [test_piper_phonemize.sh, test.py]
 #---
 ARG BASE_IMAGE
