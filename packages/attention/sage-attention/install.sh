@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -ex
-
+pip3 install imageio-ffmpeg
 if [ "$FORCE_BUILD" == "on" ]; then
 	echo "Forcing build of SageAttention ${SAGE_ATTENTION_VERSION}"
 	exit 1
