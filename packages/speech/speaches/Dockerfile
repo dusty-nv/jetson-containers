@@ -1,7 +1,7 @@
 #---
 # name: speaches
 # group: audio
-# depends: [python, torchaudio, faster-whisper, whisper, piper-tts, kokoro-tts:onnx, nodejs, onnxruntime]
+# depends: [faster-whisper, piper-tts, kokoro-tts:onnx, python, nodejs, onnxruntime-gpu]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---
