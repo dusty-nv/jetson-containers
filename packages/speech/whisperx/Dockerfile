@@ -21,15 +21,14 @@ RUN pip3 install scikit-learn
 
 RUN git clone https://github.com/m-bain/whisperX.git && \
     cd whisperX && \
-    sed -i 's/==/>=/g' requirements.txt && \
-    sed -i 's/~=/>=/g' requirements.txt && \
-    cat requirements.txt && \
-    pip3 install -r requirements.txt && \
-    python3 setup.py --verbose bdist_wheel
+    sed -i 's/==/>=/g' pyproject.toml && \
+    sed -i 's/~=/>=/g' pyproject.toml && \
+    sed -i 's/ctranslate2</ctranslate2>=/g' pyproject.toml && \
+    cat pyproject.toml && \
+    pip3 wheel --no-deps --wheel-dir dist .
 
 RUN cp whisperX/dist/whisperx*.whl /opt && \
     pip3 install /opt/whisperx*.whl
 
 ENV LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libgomp.so.1
 RUN pip3 show whisperx && python3 -c 'import whisperx'
-
