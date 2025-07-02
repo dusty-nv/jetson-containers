@@ -1,7 +1,7 @@
 #---
 # name: comfyui
 # group: diffusion
-# depends: [cuda, ffmpeg, pytorch, torchvision, torchaudio, torchsde, pytorch3d, torch-memory-saver, opencv, bitsandbytes, transformers, xformers, torchao, flash-attention, sage-attention, sparge-attention, flexprefill, paraattention, diffusers, huggingface_hub]
+# depends: [cuda, ffmpeg, pytorch, torchvision, torchaudio, torchsde, pytorch3d, torch-memory-saver, opencv, bitsandbytes, transformers, xformers, torchao, flash-attention, sage-attention, sparge-attention, flexprefill, paraattention, diffusers, huggingface_hub, onnxruntime]
 # requires: '>=35.0.0'
 # docs: docs.md
 #---
