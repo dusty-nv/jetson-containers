@@ -1,7 +1,7 @@
 #---
 # name: piper-tts
 # group: audio
-# depends: [onnxruntime, espeak]
+# depends: [cuda, torchaudio, onnxruntime, espeak]
 # test: [test_piper_phonemize.sh, test.py]
 #---
 ARG BASE_IMAGE
@@ -47,5 +47,4 @@ RUN git clone --branch ${PIPER_VERSION} --depth 1 https://github.com/rhasspy/pip
     cd src/python_run && \
     pip3 install --ignore-installed blinker && \
     pip3 install -r requirements_http.txt && \
-    pip3 install --no-deps .[gpu,http] && \
-    pip3 install --force-reinstall 'numpy<2'
+    pip3 install --no-deps .[gpu,http]

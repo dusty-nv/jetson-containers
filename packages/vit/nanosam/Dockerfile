@@ -1,7 +1,7 @@
 #---
 # name: nanosam
 # group: vit
-# depends: [pytorch, torch2trt, transformers]
+# depends: [pytorch, torchvision, torch2trt, transformers]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---
@@ -11,7 +11,7 @@ FROM ${BASE_IMAGE}
 WORKDIR /opt
 
 # 1. Install the dependencies
-# 
+#
 # PyTorch and torch2trt are specified in the header yaml part (under "depends:")
 #
 RUN git clone https://github.com/NVIDIA-AI-IOT/trt_pose && \

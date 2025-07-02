@@ -1,6 +1,6 @@
 #---
-# name: llama-vision
-# alias: llama_vision
+# name: gemma_vlm
+# alias: gemma_vlm
 # group: vlm
 # depends: [transformers, bitsandbytes]
 # requires: '>=35'
@@ -13,6 +13,4 @@ COPY *.whl /tmp/
 COPY *.py /opt/
 
 RUN pip3 install /tmp/*.whl && \
-    chmod +x /opt/*.py && \
-
-
+    chmod +x /opt/*.py

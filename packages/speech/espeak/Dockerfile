@@ -6,16 +6,17 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG ESPEAK_NG_VERSION=master 
+ARG ESPEAK_NG_VERSION=master
 ENV ESPEAK_NG_DIR="/opt/espeak-ng" \
     ESPEAK_NG_DATA_DIR="/opt/espeak-ng/espeak-ng-data"
 
 # install espeak-ng
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
+        build-essential git ca-certificates \
         autoconf automake libtool pkg-config \
-        libsonic-dev ronn kramdown \
-        libpcaudio-dev && \
+        libpulse-dev libsonic-dev \
+        ronn kramdown && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean && \
     \
@@ -27,4 +28,3 @@ RUN apt-get update && \
     make install && \
     ldconfig && \
     ls -l $ESPEAK_NG_DATA_DIR
-    

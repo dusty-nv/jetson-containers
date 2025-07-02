@@ -15,16 +15,14 @@ RUN apt-get update && \
 #  https://github.com/explosion/cython-blis/issues/117#issuecomment-2660947800
 #  https://github.com/explosion/spaCy/issues/13293
 #  https://github.com/explosion/spaCy/issues/13649
-COPY requirements.txt /tmp/kokoro/requirements.txt
 
-RUN BLIS_ARCH="generic" \
-    pip3 install -r /tmp/kokoro/requirements.txt && \
-    pip3 list
+ENV BLIS_ARCH="generic"
 
+RUN pip3 install loguru IPython
 RUN git clone https://github.com/hexgrad/misaki /opt/misaki && \
     cd /opt/misaki && \
-    pip3 install --no-deps -e .
+    pip3 install -e .
 
 RUN git clone https://github.com/hexgrad/kokoro /opt/kokoro && \
     cd /opt/kokoro && \
-    pip3 install --no-deps -e .
+    pip3 install -e .

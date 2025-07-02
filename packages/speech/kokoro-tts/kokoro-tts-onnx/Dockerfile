@@ -1,7 +1,7 @@
 #---
 # name: kokoro-tts:onnx
 # group: audio
-# depends: [onnxruntime, numba, espeak]
+# depends: [torchaudio, onnxruntime, numba, espeak]
 # test: [test.py]
 #---
 ARG BASE_IMAGE

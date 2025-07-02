@@ -37,7 +37,9 @@ print('🌃 faster-whisper:', version('faster-whisper'), \
 
 ENV PYTHONPATH="/opt/speaches/src:${PYTHONPATH}"
 
-RUN python3 -c "import speaches; import openai; import aiostream; print('✅ all modules import OK')"
+
+RUN pip3 install openai aiostream && \
+    python3 -c "import speaches; print('✅ all modules import OK')"
 
 # 4. Confirm ONNX Runtime is correct
 RUN python3 -c "import onnxruntime; print('☑️✅ ONNX Runtime version:', onnxruntime.__version__); print('✅ EPs:', onnxruntime.get_available_providers())"
