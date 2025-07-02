@@ -1,18 +1,27 @@
-#---
-# name: partpacker
-# group: objects
-# config: config.py
-# depends: [cuda, pytorch, torchvision, triton, onnxruntime, opencv, transformers, diffusers, flash-attention, xformers, pymeshlab]
-# requires: '>=34.1.0'
-# notes: https://github.com/NVlabs/PartPacker
-#---
-ARG BASE_IMAGE
-FROM ${BASE_IMAGE}
+#!/usr/bin/env bash
+set -ex
 
-ARG PARTPACKER_VERSION
+# Clone the repository if it doesn't exist
+git clone --branch=v${PARTPACKER_VERSION} --depth=1 --recursive https://github.com/NVlabs/PartPacker /opt/partpacker  || \
+git clone --depth=1 --recursive https://github.com/NVlabs/PartPacker /opt/partpacker
 
-COPY install.sh /tmp/partpacker/
-RUN /tmp/partpacker/install.sh
+# Navigate to the directory containing partpacker's setup.py
+cd /opt/partpacker
 
-WORKDIR /opt/partpacker
-CMD ["python3", "-m", "app.py"]
+pip3 install -r requirements.txt
+pip3 install meshiki
+
+cd /opt/partpacker
+mkdir pretrained
+cd pretrained
+wget https://huggingface.co/nvidia/PartPacker/resolve/main/vae.pt
+wget https://huggingface.co/nvidia/PartPacker/resolve/main/flow.pt
+
+cd /opt/partpacker
+
+pip3 install --force-reinstall opencv-contrib-python
+# vae reconstruction of meshes
+# PYTHONPATH=. python3 vae/scripts/infer.py --ckpt_path pretrained/vae.pt --input assets/meshes/ --output_dir output/
+
+# flow 3D generation from images
+# PYTHONPATH=. python3 flow/scripts/infer.py --ckpt_path pretrained/flow.pt --input assets/images/ --output_dir output/
