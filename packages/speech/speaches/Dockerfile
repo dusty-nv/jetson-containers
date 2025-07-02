@@ -1,7 +1,7 @@
 #---
 # name: speaches
 # group: audio
-# depends: [torchaudio, faster-whisper, piper-tts, kokoro-tts:onnx, python, nodejs, onnxruntime]
+# depends: [torchaudio, faster-whisper, whisper, piper-tts, kokoro-tts:onnx, python, nodejs, onnxruntime]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---
@@ -23,6 +23,7 @@ RUN set -ex && \
     echo "👁️^^^^^^^^ speaches - pyproject.toml ^^^^^^^^👁️" && \
     pip3 install '.[ui]' && \
     cp /opt/speaches/model_aliases.json / && \
+    pip3 install openai aiostream && \
     pip3 uninstall -y onnxruntime onnxruntime-gpu || true
 
 # Patch to skip UI mount if dist/ missing
@@ -37,7 +38,7 @@ print('🌃 faster-whisper:', version('faster-whisper'), \
 
 ENV PYTHONPATH="/opt/speaches/src:${PYTHONPATH}"
 
-RUN python3 -c "import speaches; import openai; import aiostream; print('✅ all modules import OK')"
+RUN python3 -c "import speaches; print('✅ all modules import OK')"
 
 # 4. Confirm ONNX Runtime is correct
 RUN python3 -c "import onnxruntime; print('☑️✅ ONNX Runtime version:', onnxruntime.__version__); print('✅ EPs:', onnxruntime.get_available_providers())"
