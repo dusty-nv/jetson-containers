@@ -11,7 +11,7 @@ ARG JETSON_UTILS_REPO=dusty-nv/jetson-utils \
     JETSON_UTILS_BRANCH=master \
     JETSON_UTILS_CMAKE=on \
     JETSON_UTILS_PIP=on
-    
+
 RUN if [ "$JETSON_UTILS_CMAKE" = "on" ]; then \
         apt-get update ; \
         apt-get install -y --no-install-recommends \
@@ -19,12 +19,16 @@ RUN if [ "$JETSON_UTILS_CMAKE" = "on" ]; then \
 		    glew-utils \
 		    libsoup2.4-dev \
 		    libjson-glib-dev \
+        libgstrtspserver-1.0-0 \
+        gstreamer1.0-plugins-bad \
+        gstreamer1.0-nice \
+        libnss-mdns \
 		    libgstrtspserver-1.0-dev \
-		    avahi-utils ; \
-        rm -rf /var/lib/apt/lists/* ; \
+		    avahi-utils && \
+        rm -rf /var/lib/apt/lists/* && \
         apt-get clean ; \
     fi
-    
+
 ADD https://api.github.com/repos/${JETSON_UTILS_REPO}/git/refs/heads/${JETSON_UTILS_BRANCH} /tmp/jetson_utils_version.json
 
 RUN git clone --branch=${JETSON_UTILS_BRANCH} --depth=1 https://github.com/${JETSON_UTILS_REPO} /opt/jetson-utils

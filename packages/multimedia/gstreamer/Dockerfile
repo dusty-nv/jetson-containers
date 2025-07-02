@@ -26,6 +26,9 @@ RUN apt-get update && \
 		  libgstreamer-plugins-good1.0-dev \
 		  libgstreamer-plugins-bad1.0-dev \
 		  libgstrtspserver-1.0-0 \
+      gstreamer1.0-plugins-bad \
+      gstreamer1.0-nice \
+      libnss-mdns \
 		  python3-gi \
 		  python3-gst-1.0 && \
     if [ `lsb_release --codename --short` != 'bionic' ]; then \
