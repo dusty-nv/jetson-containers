@@ -18,6 +18,8 @@ wget https://huggingface.co/nvidia/PartPacker/resolve/main/vae.pt
 wget https://huggingface.co/nvidia/PartPacker/resolve/main/flow.pt
 
 cd /opt/partpacker
+
+pip3 install --force-reinstall opencv-contrib-python
 # vae reconstruction of meshes
 # PYTHONPATH=. python3 vae/scripts/infer.py --ckpt_path pretrained/vae.pt --input assets/meshes/ --output_dir output/
 
