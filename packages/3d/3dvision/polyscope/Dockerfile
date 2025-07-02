@@ -11,6 +11,7 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG POLYSCOPE_VERSION \
+    POLYSCOPE_VERSION_SPEC \
     FORCE_BUILD=off
 
 RUN apt-get update && \
@@ -21,4 +22,4 @@ RUN apt-get update && \
 COPY build.sh install.sh /tmp/POLYSCOPE/
 
 RUN /tmp/POLYSCOPE/install.sh || /tmp/POLYSCOPE/build.sh
-    
+
