@@ -1,13 +1,15 @@
-def polyscope(version, requires=None, default=False):
+def polyscope(version, version_spec, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
 
     pkg['name'] = f'polyscope:{version}'
 
     pkg['build_args'] = {
         'POLYSCOPE_VERSION': version,
+        'POLYSCOPE_VERSION_SPEC': version_spec if version_spec else version,
+
     }
 
     builder = pkg.copy()
@@ -22,6 +24,5 @@ def polyscope(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    polyscope('2.3.0', default=False),
-    polyscope('2.5.0', default=True),
+    polyscope('2.5.0', version_spec='2.4.0', default=True),
 ]
