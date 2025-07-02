@@ -2,7 +2,7 @@
 # name: genesis-world
 # group: sim
 # config: config.py
-# depends: [cuda, rust, cmake, torch, torchvision, torchaudio, pymeshlab, vulkan, vtk, taichi, opencv, splashsurf, llvm:20]
+# depends: [cuda, rust, cmake, torch, torchvision, torchaudio, pymeshlab, vulkan, vtk, taichi, opencv, splashsurf, llvm:20, numba]
 # requires: '>=36.0.0'
 # test: test.sh
 # notes: https://github.com/Genesis-Embodied-AI/Genesis
@@ -99,7 +99,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libblosc-dev \
     vim \
     && apt clean \
-    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /workspace
 
@@ -113,7 +113,6 @@ RUN find / -name "blinker*" -print0 | xargs -0 -r rm -rf
 RUN pip3 install open3d tetgen trimesh --verbose && \
 cd /opt/genesis && \
 sed -i '/numpy ==/d; /taichi/d; /tetgen/d' pyproject.toml && \
-pip3 install "numpy<2.1" && \
 pip3 install .
 
 # ===============================================================
@@ -139,8 +138,7 @@ RUN if [ -d /opt/genesis/genesis/ext/LuisaRender/build/bin ]; then \
 RUN mkdir -p /usr/local/lib/python${PYTHON_VERSION}/dist-packages/genesis/ext/LuisaRender/build/ && \
     cp -r /opt/genesis/genesis/ext/LuisaRender/build/bin /usr/local/lib/python${PYTHON_VERSION}/dist-packages/genesis/ext/LuisaRender/build/
 RUN echo "export LD_LIBRARY_PATH=/opt/genesis/genesis/ext/ParticleMesher/ParticleMesherPy:$LD_LIBRARY_PATH" >> ~/.bashrc && \
-    cd /opt/genesis/ && \
-    pip3 install --force-reinstall "numpy<2.1"
+    cd /opt/genesis/
 
 RUN ldconfig
 
@@ -156,6 +154,6 @@ RUN cd /tmp && \
     # Clean up
     rm -rf /tmp/NVIDIA-Linux-aarch64-570.153.02.run /tmp/NVIDIA-Linux-aarch64-570.153.02
 
-RUN pip3 install --force-reinstall vtk
+
 WORKDIR /opt/genesis/
 CMD ["/bin/bash"]
