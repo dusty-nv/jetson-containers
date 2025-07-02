@@ -2,7 +2,7 @@
 # name: llava
 # group: vlm
 # docs: docs.md
-# depends: [pytorch, flash-attention, transformers]
+# depends: [pytorch, torchvision, flash-attention, transformers]
 # requires: '>=34.1.0'
 # test: test.py
 #---
@@ -33,4 +33,4 @@ RUN pip3 install llava*.whl
 #RUN pip3 install /opt/torch*.whl
 #RUN pip3 install /opt/torchvision*.whl
 
-WORKDIR /
+WORKDIR /opt/llava
