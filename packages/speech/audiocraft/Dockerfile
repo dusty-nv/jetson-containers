@@ -1,7 +1,7 @@
 #---
 # name: audiocraft
 # group: audio
-# depends: [pytorch, torchvision, torchaudio, opencv, huggingface_hub, transformers, xformers, protobuf:cpp, jupyterlab]
+# depends: [pytorch, torchvision, torchaudio, torchtext, opencv, huggingface_hub, transformers, xformers, jupyterlab]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---
@@ -14,7 +14,7 @@ WORKDIR /opt
 RUN git clone https://github.com/libsndfile/libsndfile.git && \
     cd libsndfile && \
     apt-get update && \
-    apt install -y autoconf autogen automake build-essential ffmpeg libasound2-dev libflac-dev libogg-dev libtool libvorbis-dev libopus-dev libmp3lame-dev  libmpg123-dev pkg-config python2 && \
+    apt install -y autoconf autogen automake build-essential ffmpeg libasound2-dev libflac-dev libogg-dev libtool libvorbis-dev libopus-dev libmp3lame-dev  libmpg123-dev pkg-config && \
     autoreconf -vif && \
     ./configure --enable-werror && \
     make -j$(nproc) && \
@@ -30,8 +30,10 @@ RUN pip3 install torchmetrics
 # Clone the repository:
 RUN git clone https://github.com/facebookresearch/audiocraft/ && \
     cd audiocraft && \
+    sed -i 's/torchaudio>=2.0.0,<2.1.2/torchaudio>=2.0.0/g' requirements.txt && \
     sed -i 's/==/>=/g' requirements.txt && \
     sed -i 's/~=/>=/g' requirements.txt && \
+    sed -i 's/</>=/g' requirements.txt && \
     cat requirements.txt && \
     pip3 install -e .
 
