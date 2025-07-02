@@ -1,7 +1,7 @@
 #---
 # name: audiocraft
 # group: audio
-# depends: [pytorch, torchvision, torchaudio, opencv, huggingface_hub, transformers, xformers, protobuf:cpp, jupyterlab]
+# depends: [pytorch, torchvision, torchaudio, torchtext, opencv, huggingface_hub, transformers, xformers, jupyterlab]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---
@@ -30,8 +30,10 @@ RUN pip3 install torchmetrics
 # Clone the repository:
 RUN git clone https://github.com/facebookresearch/audiocraft/ && \
     cd audiocraft && \
+    sed -i 's/torchaudio>=2.0.0,<2.1.2/torchaudio>=2.0.0/g' requirements.txt && \
     sed -i 's/==/>=/g' requirements.txt && \
     sed -i 's/~=/>=/g' requirements.txt && \
+    sed -i 's/</>=/g' requirements.txt && \
     cat requirements.txt && \
     pip3 install -e .
 

@@ -3,9 +3,9 @@ set -ex
 echo "Building torchtext ${TORCHTEXT_VERSION}"
 
 BRANCH_VERSION=$(echo "TORCHTEXT_VERSION" | sed 's/^\([0-9]*\.[0-9]*\)\.0$/\1/')
-git clone --branch=v${TORCHTEXT_VERSION} --recursive --depth=1 https://github.com/pytorch/vision /opt/torchtext ||
-git clone --branch=release/${BRANCH_VERSION} --recursive --depth=1 https://github.com/pytorch/vision /opt/torchtext ||
-git clone --recursive --depth=1 https://github.com/pytorch/vision /opt/torchtext
+git clone --branch=v${TORCHTEXT_VERSION} --recursive --depth=1 https://github.com/pytorch/text /opt/torchtext ||
+git clone --branch=release/${BRANCH_VERSION} --recursive --depth=1 https://github.com/pytorch/text /opt/torchtext ||
+git clone --recursive --depth=1 https://github.com/pytorch/text /opt/torchtext
 cd /opt/torchtext
 
 BUILD_VERSION=${TORCHTEXT_VERSION} \

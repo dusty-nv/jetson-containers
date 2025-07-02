@@ -8,7 +8,7 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG torchtext_VERSION \
+ARG TORCHTEXT_VERSION \
     FORCE_BUILD=off
 
 COPY build.sh install.sh /tmp/torchtext/
