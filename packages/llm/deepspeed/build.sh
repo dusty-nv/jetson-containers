@@ -7,7 +7,8 @@ git clone --branch=${DEEPSPEED_BRANCH} --depth=1 --recursive https://github.com/
 git clone --depth=1 --recursive https://github.com/microsoft/DeepSpeed /opt/DeepSpeed
 
 cd /opt/DeepSpeed
-
+# export DS_BUILD_CCL_COMM=0 --> skip the NCCL/CCL/RCCL “comm” op
+export DS_BUILD_CCL_COMM=0 && \
 python3 setup.py build_ext -j$(nproc) bdist_wheel --dist-dir $PIP_WHEEL_DIR
 
 pip3 install $PIP_WHEEL_DIR/deepspeed-*.whl
