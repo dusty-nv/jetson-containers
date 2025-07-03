@@ -9,7 +9,8 @@ apt-get install -y --no-install-recommends \
         autoconf \
         libpcap0.8 \
         libturbojpeg \
-        tcl
+        tcl \
+        zlib1g-dev
 apt-get clean
 rm -rf /var/lib/apt/lists/*
 

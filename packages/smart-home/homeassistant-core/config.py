@@ -9,7 +9,9 @@ def create_package(version, sqlite_version='3.40.1', default=False) -> list:
     pkg['name'] = f'homeassistant-core:{wanted_version}'
     ha_version = Version(wanted_version)
 
-    if ha_version.major >= 2024:
+    if ha_version.major >= 2025:
+        required_python = 'python:3.13'
+    elif ha_version.major >= 2024:
         if ha_version.minor >= 4:
             required_python = 'python:3.12'
         else:
