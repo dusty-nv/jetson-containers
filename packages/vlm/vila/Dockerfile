@@ -12,6 +12,7 @@ ADD https://api.github.com/repos/NVlabs/VILA/git/refs/heads/main /tmp/vila_versi
 
 RUN git clone --branch=main --depth=1 --recursive https://github.com/NVlabs/VILA /opt/VILA && \
     cd /opt/VILA && \
+    sed 's|"bitsandbytes.*",||' -i pyproject.toml && \
     sed -i 's/==/>=/g' pyproject.toml && \
     sed -i 's/~=/>=/g' pyproject.toml && \
     cat pyproject.toml && \
