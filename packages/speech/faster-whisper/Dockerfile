@@ -10,8 +10,11 @@ FROM ${BASE_IMAGE}
 
 RUN git clone https://github.com/guillaumekln/faster-whisper /opt/faster-whisper && \
     cd /opt/faster-whisper && \
-    sed -i 's/==/>=/g' requirements.txt && \
-    sed -i 's/~=/>=/g' requirements.txt && \
+    sed -i \
+        -e 's|^onnxruntime.*||g' \
+        -e 's|^huggingface_hub.*||g' \
+        -e 's|^ctranslate2.*||g' \
+        requirements.txt && \
     cat requirements.txt && \
     pip3 install -U -r requirements.txt && \
     python3 setup.py bdist_wheel
