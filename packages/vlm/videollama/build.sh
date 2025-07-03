@@ -9,6 +9,7 @@ git clone --depth=1 https://github.com/DAMO-NLP-SG/VideoLLaMA3 /opt/videollama
 cd /opt/videollama
 
 sed -i '/--extra-index-url https:\/\/download.pytorch.org\/whl\/cu118/d; s/==/>=/g' requirements.txt
+sed -i 's/decord/decord2/g' requirements.txt
 pip3 install -U -r requirements.txt
 sed -i 's/==/>=/g' pyproject.toml
 sed -i 's/~=/>=/g' pyproject.toml
