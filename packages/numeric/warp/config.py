@@ -9,26 +9,26 @@ def warp(version, url=None, requires=[], default=False):
     if url is None:
         return (
             warp( # amd64 version
-                version, 
-                url=f"{WARP_RELEASE_URL}/v{version}/warp_lang-{version}+cu12-py3-none-manylinux_2_28_x86_64.whl", 
-                requires=requires + ['x86_64'], 
+                version,
+                url=f"{WARP_RELEASE_URL}/v{version}/warp_lang-{version}+cu12-py3-none-manylinux_2_28_x86_64.whl",
+                requires=requires + ['x86_64'],
                 default=default
             ),
             warp( # arm64 version
-                version, 
-                url=f"{WARP_RELEASE_URL}/v{version}/warp_lang-{version}+cu12-py3-none-manylinux_2_34_aarch64.whl", 
-                requires=requires + ['>=r36'], 
+                version,
+                url=f"{WARP_RELEASE_URL}/v{version}/warp_lang-{version}+cu12-py3-none-manylinux_2_34_aarch64.whl",
+                requires=requires + ['>=r36'],
                 default=default
             ),
         )
-    
+
     pkg = package.copy()
     name = pkg['name']
 
     pkg['name'] = f'{name}:{version}'
 
     pkg['build_args'] = {
-        'WARP_VERSION': version, 
+        'WARP_VERSION': version,
         'WARP_INSTALL': url
     }
 
@@ -61,5 +61,5 @@ def warp(version, url=None, requires=[], default=False):
 
 package = [
     warp('1.7.0'),
-    warp('1.7.2.post1', default=True)
+    warp('1.8.1', default=True)
 ]
