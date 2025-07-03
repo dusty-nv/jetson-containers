@@ -2,7 +2,7 @@
 # name: shape-llm
 # alias: shape_llm
 # group: vlm
-# depends: [transformers, bitsandbytes, flash-attention, opencv]
+# depends: [cmake, rust, pytorch, torchvision, transformers, bitsandbytes, flash-attention, opencv]
 # requires: '>=35'
 # test: [test.sh, test.py]
 #---
@@ -13,9 +13,11 @@ ADD https://api.github.com/repos/qizekun/ShapeLLM/git/refs/heads/main /tmp/shape
 
 RUN git clone --branch=main --depth=1 --recursive https://github.com/qizekun/ShapeLLM /opt/ShapeLLM && \
     cd /opt/ShapeLLM && \
-    sed -i 's|opencv-python==.*"|opencv-python"|' pyproject.toml && \
+    sed -i 's/opencv-python==4.10.0.84/opencv-contrib-python/g' pyproject.toml && \
+    sed -i 's/tokenizers>=0.12.1,<0.14/tokenizers>=0.21.2/g' pyproject.toml && \
     sed -i 's/==/>=/g' pyproject.toml && \
     sed -i 's/~=/>=/g' pyproject.toml && \
+    pip3 install tokenizers && \
     pip3 install -e '.[all]'
 
 #RUN pip3 install "git+https://github.com/erikwijmans/Pointnet2_PyTorch.git#egg=pointnet2_ops&subdirectory=pointnet2_ops_lib"

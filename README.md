@@ -4,7 +4,7 @@
 
 Modular container build system that provides the latest [**AI/ML packages**](https://pypi.jetson-ai-lab.dev/) for [NVIDIA Jetson](https://jetson-ai-lab.com) :rocket::robot:
 
-### Only Tested and supported Jetpack 6 and JetPack 7.
+### Only Tested and supported Jetpack 6.2 (Cuda 12.6) and JetPack 7 (CUDA 13.x).
 
 > [!NOTE]
 > Ubuntu 24.04 containers for JetPack 6 and JetPack 7 are now available (with CUDA support)
