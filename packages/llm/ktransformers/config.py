@@ -3,7 +3,7 @@ def ktransformers(version, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
 
     pkg['name'] = f'ktransformers:{version}'
 
@@ -23,5 +23,5 @@ def ktransformers(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    ktransformers(version='0.3.2', default=True),
+    ktransformers(version='0.3.3', default=True),
 ]

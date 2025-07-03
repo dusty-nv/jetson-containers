@@ -32,5 +32,5 @@ def nixl(version, version_spec=None, requires=None, default=False):
     return pkg, builder
 
 package = [
-    nixl('0.3.1', '0.3.1', default=True),
+    nixl('0.3.2', '0.3.2', default=True),
 ]
