@@ -15,8 +15,7 @@ WORKDIR /opt/3D-Diffusion-Policy
 ADD https://api.github.com/repos/dusty-nv/3D-Diffusion-Policy/git/refs/heads/master /tmp/dp3_version.json
 RUN git clone --recursive --depth=1 https://github.com/dusty-nv/3D-Diffusion-Policy .
 
-RUN sed -i 's/^diffusers.*/diffusers==0.33.0.dev0/' requirements.txt && \
-    sed -i 's/==/>=/g' requirements.txt && \
+RUN sed -i 's/==/>=/g' requirements.txt && \
     pip3 install --force-reinstall -r requirements.txt && \
     #pip3 install -e third_party/dexart-release && \
     pip3 install -e third_party/gym-0.21.0 && \
