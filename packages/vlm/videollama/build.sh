@@ -22,11 +22,13 @@ echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUI
 
 MAX_JOBS="$(nproc)" \
 CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS \
-pip3 wheel --wheel-dir=/opt/videollama/wheels/ --verbose .
+pip3 wheel --no-deps --wheel-dir=/opt/videollama/wheels/ --verbose .
 
 ls /opt/videollama/wheels/
 cd /
 
 pip3 install /opt/videollama/wheels/videollama*.whl
+
+pip3 install --force-reinstall "transformers<=4.52"
 
 twine upload --verbose /opt/videollama/wheels/videollama*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

@@ -2,7 +2,7 @@
 # name: videollama
 # group: vlm
 # config: config.py
-# depends: [pytorch, torchvision, torchaudio, torchao, bitsandbytes, flash-attention, transformers, diffusers, opencv, deepspeed]
+# depends: [pytorch, torchvision, torchaudio, torchao, bitsandbytes, flash-attention, transformers, diffusers, opencv, ffmpeg]
 # requires: '>=35'
 # test: test.py
 #---
@@ -15,3 +15,5 @@ ARG VIDEOLLAMA_VERSION \
 COPY build.sh install.sh /tmp/videollama/
 
 RUN /tmp/videollama/install.sh || /tmp/videollama/build.sh
+
+WORKDIR /opt/videollama
