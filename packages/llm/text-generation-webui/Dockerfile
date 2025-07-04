@@ -2,7 +2,7 @@
 # name: text-generation-webui
 # group: llm
 # config: config.py
-# depends: [transformers, auto_gptq, exllama, llama_cpp]
+# depends: [transformers, exllama, llama_cpp]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---

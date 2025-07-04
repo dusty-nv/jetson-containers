@@ -1,3 +1,5 @@
+from jetson_containers import L4T_VERSION
+
 NVCV_RELEASE_URL='https://github.com/CVCUDA/CV-CUDA/releases/download/'
 
 def cv_cuda(version, *url, default=False, requires=None):
@@ -51,7 +53,7 @@ package = [
     # jetpack 6
     cv_cuda('0.15',
         'v0.15.0-beta/v0.15-cu12-aarch64-jetson-jetpack6.zip',
-        default=False, requires='>=36'
+        default=(L4T_VERSION.major >= 36), requires='>=36'
     ),
 
     # x86

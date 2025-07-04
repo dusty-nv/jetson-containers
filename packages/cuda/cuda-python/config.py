@@ -41,7 +41,8 @@ else:
             cuda_python('12.8'),
             cuda_python('12.9'),
             cuda_python('13.0'),
-            cuda_python('13.1'),
+            # Please enable only when added as package in cuda config.py
+            # cuda_python('13.1'),
         ]
     elif L4T_VERSION.major >= 34:  # JetPack 5
         package = [

@@ -29,8 +29,9 @@ def oobabooga(version, branch=None, tag=None, sha=None, build_args=None, default
     #if L4T_VERSION.major <= 35:
     #    twu['depends'] = twu['depends'] + ['bitsandbytes']
     
-    if L4T_VERSION.major >= 36:
-        twu['depends'] = twu['depends'] + ['auto_awq']
+    # auto_awq is depracated
+    # if L4T_VERSION.major >= 36:
+    #     twu['depends'] = twu['depends'] + ['auto_awq']
         
     return twu
     
