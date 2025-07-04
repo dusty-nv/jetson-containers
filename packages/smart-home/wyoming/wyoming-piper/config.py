@@ -1,6 +1,6 @@
 from jetson_containers import github_latest_tag
 
-def create_package(version, default=False) -> list:
+def create_package(version, branch=None, default=False) -> list:
     pkg = package.copy()
     wanted_version = github_latest_tag('rhasspy/wyoming-piper') if version == 'latest' else version
 
@@ -11,7 +11,7 @@ def create_package(version, default=False) -> list:
 
     pkg['build_args'] = {
         'WYOMING_PIPER_VERSION': wanted_version,
-        'WYOMING_PIPER_BRANCH': f"v{wanted_version}",
+        'WYOMING_PIPER_BRANCH': branch or f"v{wanted_version}",
     }
 
     builder = pkg.copy()
@@ -25,5 +25,6 @@ def create_package(version, default=False) -> list:
     return pkg, builder
 
 package = [
-    create_package("latest", default=True),
+    create_package("1.6.2"),
+    create_package("master", branch="master", default=True),
 ]

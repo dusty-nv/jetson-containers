@@ -34,8 +34,5 @@ def create_package(version, sqlite_version='3.40.1', default=False) -> list:
     return pkg
 
 package = [
-    # latest
-    create_package('latest', default=True),
-    # specific version
-    create_package('2024.4.2', default=False),
+    create_package('2025.7.0', default=True),
 ]
