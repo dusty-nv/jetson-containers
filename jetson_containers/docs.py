@@ -85,6 +85,8 @@ def generate_package_docs(packages, root, repo, simulate=False):
     for pkg_path, pkgs in groups.items():
         pkg_name = os.path.basename(pkg_path)
         filename = os.path.join(pkg_path, 'README.md')
+
+        print(f" 📝 Generating docs for {pkg_name} with {len(pkgs)} versions:")
         
         txt = f"# {pkg_name}\n\n"
         docs = ""
@@ -113,6 +115,8 @@ def generate_package_docs(packages, root, repo, simulate=False):
         
         for i, name, in enumerate(pkgs):
             package = pkgs[name]
+
+            print(f"\t- [{i+1}/{len(pkgs)} versions] {name}...")
             
             txt += f"| **`{name}`** | |\n"
             txt += f"| :-- | :-- |\n"
