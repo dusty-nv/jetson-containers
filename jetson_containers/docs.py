@@ -144,8 +144,17 @@ def generate_package_docs(packages, root, repo, simulate=False):
             dependants = dependant_packages(name)
             
             if len(dependants) > 0:
-                dependants = [f"[`{x}`]({find_package(x)['path'].replace(root,'')})" for x in sorted(dependants)]
-                txt += f"| {_NBSP}Dependants | {' '.join(dependants)} |\n"
+                dependants_links = []
+                for dependant in sorted(dependants):
+                    if (
+                        not dependant.endswith('-builder')
+                        and not dependant.endswith(':builder')
+                        and (dep_pkg := find_package(dependant)) and isinstance(dep_pkg, dict)
+                        and (dep_path := dep_pkg.get('path')) and isinstance(dep_path, str)
+                    ):
+                        dependants_links.append(f"[`{dependant}`]({dep_path.replace(root, '')})")
+
+                txt += f"| {_NBSP}Dependants | {' '.join(dependants_links)} |\n"
             
             if 'dockerfile' in package:
                 txt += f"| {_NBSP}Dockerfile | [`{package['dockerfile']}`]({package['dockerfile']}) |\n"
@@ -185,7 +194,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
         registry = find_registry_containers(pkg_name, check_l4t_version=False, return_dicts=True)
         
         if len(registry) > 0:
-            pprint.pprint(registry)
+            # pprint.pprint(registry)
             
             run_txt += "\n# or explicitly specify one of the container images above\n"
             run_img = f"{registry[0]['namespace']}/{registry[0]['name']}:{registry[0]['tags'][0]['name']}"
