@@ -147,7 +147,9 @@ def generate_package_docs(packages, root, repo, simulate=False):
                 dependants_links = []
                 for dependant in sorted(dependants):
                     if (
-                        (dep_pkg := find_package(dependant)) and isinstance(dep_pkg, dict)
+                        not dependant.endswith('-builder')
+                        and not dependant.endswith(':builder')
+                        and (dep_pkg := find_package(dependant)) and isinstance(dep_pkg, dict)
                         and (dep_path := dep_pkg.get('path')) and isinstance(dep_path, str)
                     ):
                         dependants_links.append(f"[`{dependant}`]({dep_path.replace(root, '')})")
