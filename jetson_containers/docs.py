@@ -243,8 +243,8 @@ def generate_package_docs(packages, root, repo, simulate=False):
             
         txt += run_txt
         
-        print(filename)
-        print(txt)
+        # print(filename)
+        # print(txt)
     
         if not simulate:
             with open(filename, 'w') as file:
