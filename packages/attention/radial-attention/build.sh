@@ -3,8 +3,8 @@ set -ex
 
 echo "Building RadialAttention ${RADIAL_ATTENTION_VERSION}"
 
-git clone --depth=1 --branch=v${RADIAL_ATTENTION_VERSION} https://github.com/Dao-AILab/radial-attention /opt/radial-attention ||
-git clone --depth=1 https://github.com/Dao-AILab/radial-attention /opt/radial-attention
+git clone --depth=1 --branch=v${RADIAL_ATTENTION_VERSION} https://github.com/mit-han-lab/radial-attention /opt/radial-attention ||
+git clone --depth=1 https://github.com/mit-han-lab/radial-attention /opt/radial-attention
 
 cd /opt/radial-attention
 export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
