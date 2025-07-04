@@ -2,7 +2,7 @@
 # name: flash-attention
 # group: attention
 # config: config.py
-# depends: [pytorch, triton, xformers]
+# depends: [pytorch, triton, xformers, cutlass]
 # requires: '>=35'
 # test: test.py
 #---
@@ -16,4 +16,4 @@ ARG FLASH_ATTENTION_VERSION \
 COPY build.sh install.sh patches /tmp/flash-attention/
 
 RUN /tmp/flash-attention/install.sh || /tmp/flash-attention/build.sh
-    
+
