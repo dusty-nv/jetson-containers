@@ -3,7 +3,7 @@
 # group: audio
 # depends: [cuda, torchaudio, onnxruntime, ninja]
 # test: test.py
-# notes: A self-contained version of Piper, the fast and local neural text-to-speech engine: https://github.com/OHF-Voice/piper1-gpl. This version directly embeds espeak-ng and therefore has a GPL license.
+# notes: A self-contained version of Piper, the fast and local neural text-to-speech engine (https://github.com/OHF-Voice/piper1-gpl). This version directly embeds espeak-ng and therefore has a GPL license.
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
