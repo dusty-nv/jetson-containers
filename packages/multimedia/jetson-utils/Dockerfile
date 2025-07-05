@@ -19,10 +19,10 @@ RUN if [ "$JETSON_UTILS_CMAKE" = "on" ]; then \
 		    glew-utils \
 		    libsoup2.4-dev \
 		    libjson-glib-dev \
-            libgstrtspserver-1.0-0 \
-            gstreamer1.0-plugins-bad \
-            gstreamer1.0-nice \
-            libnss-mdns \
+        libgstrtspserver-1.0-0 \
+        gstreamer1.0-plugins-bad \
+        gstreamer1.0-nice \
+        libnss-mdns \
 		    libgstrtspserver-1.0-dev \
 		    avahi-utils && \
         rm -rf /var/lib/apt/lists/* && \
