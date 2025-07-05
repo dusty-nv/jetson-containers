@@ -57,6 +57,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     llvm-17 \
     clang-17 \
     libc++-17-dev \
+    lld \
     libc++abi-17-dev \
     libssl-dev \
     libcurl4-openssl-dev \
