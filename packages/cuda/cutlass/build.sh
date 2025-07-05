@@ -10,7 +10,8 @@ export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
 
 
-git clone --branch v$CUTLASS_VERSION --depth=1 https://github.com/NVIDIA/cutlass $SRC
+git clone --branch v$CUTLASS_VERSION --depth=1 https://github.com/NVIDIA/cutlass $SRC || \
+git clone --depth=1 https://github.com/NVIDIA/cutlass $SRC
 
 cd $SRC
 echo "Building cutlass wheel in $SRC"

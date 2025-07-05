@@ -29,6 +29,7 @@ RUN apt-get update && \
       gstreamer1.0-plugins-bad \
       gstreamer1.0-nice \
       libnss-mdns \
+      avahi-utils \
 		  python3-gi \
 		  python3-gst-1.0 && \
     if [ `lsb_release --codename --short` != 'bionic' ]; then \
