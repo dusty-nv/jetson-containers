@@ -5,7 +5,7 @@ def xgrammar(version, branch=None, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
 
     suffix = branch if branch else version
     branch = branch if branch else f'v{version}'
@@ -34,5 +34,6 @@ package = [
     xgrammar(version='0.1.18', default=False),
     xgrammar(version='0.1.18', default=False),
     xgrammar(version='0.1.19', default=False),
-    xgrammar(version='0.1.20', default=True),
+    xgrammar(version='0.1.20', default=False),
+    xgrammar(version='0.1.21', default=True),
 ]

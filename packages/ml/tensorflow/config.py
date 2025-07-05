@@ -7,16 +7,16 @@ from ..cuda.cudnn.config import CUDNN_VERSION
 
 def tensorflow(version, tensorflow_version='tf2', requires=None, default=False):
     pkg = package.copy()
-  
+
     if default:
         pkg['alias'] = ['tensorflow2'] if tensorflow_version == 'tf2' else ['tensorflow1']
-        
+
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
 
     pkg['name'] = f'tensorflow{"2" if tensorflow_version == "tf2" else "1"}:{version}'
     pkg['notes'] = f"TensorFlow {tensorflow_version.upper()} version {version}"
-    
+
     prebuilt_wheels = {
         # TensorFlow tf1
         ('36', '1.15.5', 'tf1'): (None, None),
@@ -59,10 +59,10 @@ def tensorflow(version, tensorflow_version='tf2', requires=None, default=False):
         ),
         # Puedes agregar más entradas si hay ruedas precompiladas disponibles
     }
-    
+
     L4T_MAJOR = str(L4T_VERSION.major)
     wheel_key = (L4T_MAJOR, version, tensorflow_version)
-    
+
     if wheel_key in prebuilt_wheels and prebuilt_wheels[wheel_key][0] is not None:
         url, whl = prebuilt_wheels[wheel_key]
         pkg['build_args'] = {
@@ -71,7 +71,7 @@ def tensorflow(version, tensorflow_version='tf2', requires=None, default=False):
             'TENSORFLOW_WHL': whl,
             'PYTHON_VERSION_MAJOR': PYTHON_VERSION.major,
             'PYTHON_VERSION_MINOR': PYTHON_VERSION.minor,
-            'FORCE_BUILD': 'off' 
+            'FORCE_BUILD': 'off'
         }
         pkg['dockerfile'] = 'Dockerfile'
     else:
@@ -88,12 +88,12 @@ def tensorflow(version, tensorflow_version='tf2', requires=None, default=False):
         pkg['notes'] += " (will be built from source)"
         pkg['dockerfile'] = 'Dockerfile.pip'
         pkg['alias'] = [f'tensorflow2:{version}' if tensorflow_version == 'tf2' else f'tensorflow1:{version}']
-    
+
     builder = pkg.copy()
     builder['name'] = f'{pkg["name"]}-builder'
     builder['build_args'] = {**pkg['build_args'], 'FORCE_BUILD': 'on'}
     builder['alias'] = [f'tensorflow2:{version}-builder' if tensorflow_version == 'tf2' else f'tensorflow1:{version}-builder']
-    
+
     if Version(version) == TENSORFLOW_VERSION:
         pkg['alias'].append('tensorflow')
         builder['alias'].append('tensorflow:builder')
@@ -101,7 +101,7 @@ def tensorflow(version, tensorflow_version='tf2', requires=None, default=False):
         if tensorflow_version == 'tf2':
             pkg['alias'].append('tensorflow2')
             builder['alias'].append('tensorflow2:builder')
-            
+
     return [pkg, builder]
 
 package = [
@@ -141,12 +141,12 @@ package = [
         version='2.20.0',
         tensorflow_version='tf2',
         requires='>=36',
-        default=(CUDA_VERSION < Version('13.0')), # Blackwell Support
+        default=(CUDA_VERSION > Version('13.0')), # Blackwell Support
     ),
 *tensorflow(
         version='2.21.0',
         tensorflow_version='tf2',
         requires='>=36',
-        default=(CUDA_VERSION >= Version('13.0')),
+        default=(CUDA_VERSION >= Version('13.1')),
     ),
 ]
