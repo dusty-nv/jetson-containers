@@ -2,7 +2,7 @@ def pymeshlab(version, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
 
     pkg['name'] = f'pymeshlab:{version}'
 
@@ -23,6 +23,7 @@ def pymeshlab(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    pymeshlab('2023.12.post2', default=True),
+    pymeshlab('2023.12.post2', default=False),
     pymeshlab('2023.12.post3', default=False),
+    pymeshlab('2025.6.23.dev0', default=True),
 ]
