@@ -25,7 +25,14 @@ from jetson_containers.utils import split_container_name
 _TABLE_DASH="------------"
 _TABLE_SPACE="            "
 _NBSP="&nbsp;&nbsp;&nbsp;"
-    
+
+
+def is_builder(name) -> bool:
+    return (
+        name.endswith('-builder') 
+        or name.endswith(':builder')
+    )
+
     
 def generate_package_list(packages, root, repo, filename='packages/README.md', simulate=False):
     """
@@ -81,12 +88,18 @@ def generate_package_docs(packages, root, repo, simulate=False):
     Group them by path so there's just one page per directory.
     """
     groups = group_packages(packages, 'path')
+    groups = groups.items()
+    total_groups = len(groups)
     
-    for pkg_path, pkgs in groups.items():
+    for groupd_idx, pkg_data in enumerate(groups):
+        pkg_path, pkgs = pkg_data
         pkg_name = os.path.basename(pkg_path)
         filename = os.path.join(pkg_path, 'README.md')
 
-        print(f" 📝 Generating docs for {pkg_name} with {len(pkgs)} versions:")
+        unique_pkgs = {k:v for k, v in pkgs.items() if not is_builder(k)}
+        total_pkgs = len(unique_pkgs)
+
+        print(f" 📝 [{groupd_idx+1}/{total_groups}] Generating docs for {pkg_name} with {total_pkgs} versions:")
         
         txt = f"# {pkg_name}\n\n"
         docs = ""
@@ -112,11 +125,14 @@ def generate_package_docs(packages, root, repo, simulate=False):
 
         txt += "<details open>\n"
         txt += '<summary><b><a id="containers">CONTAINERS</a></b></summary>\n<br>\n\n'
-        
-        for i, name, in enumerate(pkgs):
-            package = pkgs[name]
 
-            print(f"\t- [{i+1}/{len(pkgs)} versions] {name}...")
+        for i, name, in enumerate(unique_pkgs):
+            if is_builder(name):
+                continue
+
+            package = unique_pkgs[name]
+
+            print(f"\t- [{i+1}/{total_pkgs} versions] {name}...")
             
             txt += f"| **`{name}`** | |\n"
             txt += f"| :-- | :-- |\n"
@@ -147,8 +163,7 @@ def generate_package_docs(packages, root, repo, simulate=False):
                 dependants_links = []
                 for dependant in sorted(dependants):
                     if (
-                        not dependant.endswith('-builder')
-                        and not dependant.endswith(':builder')
+                        not is_builder(name)
                         and (dep_pkg := find_package(dependant)) and isinstance(dep_pkg, dict)
                         and (dep_path := dep_pkg.get('path')) and isinstance(dep_path, str)
                     ):
