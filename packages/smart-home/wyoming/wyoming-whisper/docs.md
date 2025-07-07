@@ -59,10 +59,13 @@ volumes:
 | Variable | Type | Default | Description
 | - | - | - | - |
 | `WHISPER_PORT` | `str` | `10300` | Port number to use on `host` |
-| `WHISPER_MODEL` | `str` | `tiny-int8` | Name of `faster-whisper` model to use from [supported models list](https://github.com/home-assistant/addons/blob/master/whisper/config.yaml#L22) |
-| `WHISPER_BEAM_SIZE` | `int` | `1` | Beam size |
+| `WHISPER_MODEL` | `str` | `tiny-int8` | Name of `faster-whisper` model to use (or `auto`) from [supported models list](https://github.com/home-assistant/addons/blob/master/whisper/config.yaml#L22) |
+| `WHISPER_BEAM_SIZE` | `int` | `1` | Size of beam during decoding (0 for auto) |
 | `WHISPER_LANGUAGE` | `str` | `en` | Default language to set for transcription from [supported languages list](https://github.com/home-assistant/addons/blob/master/whisper/config.yaml#L25) |
 | `WHISPER_DEBUG` | `bool` | `true` | Log `DEBUG` messages |
+| `WHISPER_COMPUTE_TYPE` | `str` | `default` | Compute type (`float16`, `int8`, etc.) |
+| `WHISPER_INITIAL_PROMPT` | `str` | - | Optional text to provide as a prompt for the first window |
+| `WHISPER_OFFLINE` | `bool` | `false` | Don't check HuggingFace hub for updates every time if set to `true` |
 
 ## Configuration
 
