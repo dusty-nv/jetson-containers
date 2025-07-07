@@ -24,12 +24,14 @@ RUN git clone --branch=${NANOOWL_BRANCH} https://github.com/${NANOOWL_REPO} /opt
     git checkout main && \
     python3 setup.py develop
 
+ENV PYTHONPATH=${PYTHONPATH}:/opt/nanoowl
+
 RUN cd /opt/nanoowl && \
     mkdir data && \
     python3 -m nanoowl.build_image_encoder_engine \
         data/owl_image_encoder_patch32.engine \
         --onnx_opset=16
 
-    
+
 
 
