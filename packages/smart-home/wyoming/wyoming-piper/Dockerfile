@@ -2,7 +2,7 @@
 # name: wyoming-piper
 # group: wyoming
 # config: config.py
-# depends: [homeassistant-base, cuda, cudnn, python, piper-tts]
+# depends: [cuda, cudnn, python, homeassistant-base, piper-tts]
 # test: test.sh
 # requires: '>=34.1.0'
 # docs: docs.md

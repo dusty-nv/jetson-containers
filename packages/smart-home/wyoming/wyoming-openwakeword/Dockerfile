@@ -4,7 +4,7 @@
 # requires: '>=34.1.0'
 # docs: docs.md
 # config: config.py
-# depends: [homeassistant-base, numpy, python]
+# depends: [python, numpy, homeassistant-base]
 # test: test.sh
 # notes: The `openWakeWord` using the `wyoming` protocol for usage with Home Assistant. Based on `https://github.com/home-assistant/addons/blob/master/openwakeword/Dockerfile` and `https://github.com/rhasspy/wyoming-openwakeword`
 #---
