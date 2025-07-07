@@ -3,23 +3,16 @@
 # group: audio
 # depends: [ctranslate2, onnxruntime, huggingface_hub, numpy]
 # requires: '>=34.1.0'
-# docs: docs.md
+# test: test.py
+# notes: Faster Whisper transcription with CTranslate2 (https://github.com/SYSTRAN/faster-whisper)
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-RUN git clone https://github.com/guillaumekln/faster-whisper /opt/faster-whisper && \
-    cd /opt/faster-whisper && \
-    sed -i \
-        -e 's|^onnxruntime.*||g' \
-        -e 's|^huggingface_hub.*||g' \
-        -e 's|^ctranslate2.*||g' \
-        requirements.txt && \
-    cat requirements.txt && \
-    pip3 install -U -r requirements.txt && \
-    python3 setup.py bdist_wheel
+ARG FORCE_BUILD=off \
+    FASTER_WHISPER_VERSION \
+    FASTER_WHISPER_BRANCH
 
-RUN cp /opt/faster-whisper/dist/faster_whisper*.whl /opt && \
-    pip3 install /opt/faster_whisper*.whl
+COPY *.sh /tmp/faster-whisper/
 
-RUN pip3 show faster_whisper && python3 -c 'import faster_whisper'
+RUN /tmp/faster-whisper/install.sh || /tmp/faster-whisper/build.sh
