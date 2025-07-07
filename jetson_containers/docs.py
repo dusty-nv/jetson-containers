@@ -127,9 +127,6 @@ def generate_package_docs(packages, root, repo, simulate=False):
         txt += '<summary><b><a id="containers">CONTAINERS</a></b></summary>\n<br>\n\n'
 
         for i, name, in enumerate(unique_pkgs):
-            if is_builder(name):
-                continue
-
             package = unique_pkgs[name]
 
             print(f"\t- [{i+1}/{total_pkgs} versions] {name}...")
@@ -162,14 +159,19 @@ def generate_package_docs(packages, root, repo, simulate=False):
             if len(dependants) > 0:
                 dependants_links = []
                 for dependant in sorted(dependants):
-                    if (
-                        not is_builder(name)
-                        and (dep_pkg := find_package(dependant)) and isinstance(dep_pkg, dict)
-                        and (dep_path := dep_pkg.get('path')) and isinstance(dep_path, str)
-                    ):
+                    dep_pkg = find_package(dependant)
+
+                    if not isinstance(dep_pkg, dict):
+                        continue
+                    
+                    dep_path = dep_pkg.get('path')
+                    dep_name = dep_pkg.get('name')
+
+                    if isinstance(dep_path, str) and not is_builder(dep_name):
                         dependants_links.append(f"[`{dependant}`]({dep_path.replace(root, '')})")
 
-                txt += f"| {_NBSP}Dependants | {' '.join(dependants_links)} |\n"
+                if dependants_links:
+                    txt += f"| {_NBSP}Dependants | {' '.join(dependants_links)} |\n"
             
             if 'dockerfile' in package:
                 txt += f"| {_NBSP}Dockerfile | [`{package['dockerfile']}`]({package['dockerfile']}) |\n"
