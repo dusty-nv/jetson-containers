@@ -31,7 +31,11 @@ WORKDIR /usr/src
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+        bash \
         jq \
+        tzdata \
+        curl \
+        ca-certificates \
         xz-utils \
         libjemalloc2 \
     \
@@ -56,8 +60,9 @@ RUN apt-get update \
     \
     # FIX: Remove HA Supervisor from bashio (not used) \
     && sed -i \
-        -e 's|^# shellcheck source=lib/supervisor.sh||g' \
         -e 's|source "${__BASHIO_LIB_DIR}/supervisor.sh"||g' \
+        -e 's|source "${__BASHIO_LIB_DIR}/discovery.sh"||g' \
+        -e 's|source "${__BASHIO_LIB_DIR}/api.sh"||g' \
         /usr/src/bashio/lib/bashio.sh \
     \
     && ln -s /usr/lib/aarch64-linux-gnu/libjemalloc.so.2 /usr/local/lib/libjemalloc.so.2 \
