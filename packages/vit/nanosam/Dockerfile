@@ -22,7 +22,7 @@ RUN git clone https://github.com/NVIDIA-AI-IOT/trt_pose && \
     pip3 install -e .
 
 # 2. Install the NanoSAM Python package
-RUN git clone https://github.com/NVIDIA-AI-IOT/nanosam && \
+RUN git clone https://github.com/johnnynunez/nanosam && \
     cd nanosam && \
     python3 setup.py develop
 
@@ -52,8 +52,8 @@ RUN cd /opt/nanosam && \
 # 4. Build the TensorRT engine for the NanoSAM image encoder
 RUN pip3 install gdown && \
     cd /opt/nanosam/data/ && \
-    gdown https://drive.google.com/uc?id=14-SsvoaTl-esC3JOzomHDnI9OGgdO2OR && \
-    ls -lh && \
+#     gdown https://drive.google.com/uc?id=14-SsvoaTl-esC3JOzomHDnI9OGgdO2OR && \
+#     ls -lh && \
     cd /opt/nanosam/ && \
     /usr/src/tensorrt/bin/trtexec \
         --onnx=data/resnet18_image_encoder.onnx \
