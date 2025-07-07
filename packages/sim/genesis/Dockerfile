@@ -154,7 +154,6 @@ RUN cd /tmp && \
     # Clean up
     rm -rf /tmp/NVIDIA-Linux-aarch64-570.153.02.run /tmp/NVIDIA-Linux-aarch64-570.153.02
 
-RUN pip3 install -U git+https://github.com/johnnynunez/pyvista.git@main
 RUN pip3 install --force-reinstall opencv-contrib-python
 WORKDIR /opt/genesis/
 CMD ["/bin/bash"]
