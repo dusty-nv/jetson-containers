@@ -4,13 +4,13 @@ set -ex
 
 apt-get update
 apt-get install -y --no-install-recommends \
-   netcat
+   netcat-traditional
 apt-get clean
 rm -rf /var/lib/apt/lists/*
 
 pip3 install -U \
-   setuptools \
-   wheel
+   build \
+   wheel 
 
 # Clone wyoming-faster-whisper layer
 git clone --branch=${WYOMING_WHISPER_BRANCH} https://github.com/rhasspy/wyoming-faster-whisper /tmp/wyoming-faster-whisper
@@ -18,11 +18,10 @@ git clone --branch=${WYOMING_WHISPER_BRANCH} https://github.com/rhasspy/wyoming-
 cd /tmp/wyoming-faster-whisper
 
 sed -i \
-   -e 's|^faster-whisper.*||g' \
-   requirements.txt
-cat requirements.txt
+   -e 's|"faster-whisper.*"||g' \
+   pyproject.toml
 
-python3 setup.py sdist bdist_wheel --verbose --dist-dir $PIP_WHEEL_DIR
+python -m build --wheel --outdir $PIP_WHEEL_DIR
 
 cd /
 rm -rf /tmp/wyoming-faster-whisper
