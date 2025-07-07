@@ -6,14 +6,29 @@
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`zed`** | |
+| **`zed:5.0`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`zed_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/zed_jp46.yml?label=zed:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/zed_jp46.yml) [![`zed_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/zed_jp51.yml?label=zed:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/zed_jp51.yml) |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/tensorrt) |
+| &nbsp;&nbsp;&nbsp;Aliases | `zed` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/cuda/tensorrt) [`opengl`](/packages/multimedia/opengl) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/zed:r32.7.1`](https://hub.docker.com/r/dustynv/zed/tags) `(2023-09-07, 0.6GB)`<br>[`dustynv/zed:r35.2.1`](https://hub.docker.com/r/dustynv/zed/tags) `(2023-12-11, 5.2GB)`<br>[`dustynv/zed:r35.3.1`](https://hub.docker.com/r/dustynv/zed/tags) `(2023-08-29, 5.2GB)`<br>[`dustynv/zed:r35.4.1`](https://hub.docker.com/r/dustynv/zed/tags) `(2023-10-07, 5.1GB)` |
-| &nbsp;&nbsp;&nbsp;Notes | https://github.com/stereolabs/zed-docker/blob/master/4.X/l4t/py-devel/Dockerfile |
+| &nbsp;&nbsp;&nbsp;Notes | Stereolabs ZED SDK |
+
+| **`zed:5.0-humble`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `zed-humble` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/cuda/tensorrt) [`numpy`](/packages/numeric/numpy) [`opengl`](/packages/multimedia/opengl) [`cmake`](/packages/build/cmake/cmake_pip) [`llvm`](/packages/build/llvm) [`vulkan`](/packages/multimedia/vulkan) [`video-codec-sdk`](/packages/multimedia/video-codec-sdk) [`ffmpeg`](/packages/multimedia/ffmpeg) [`opencv`](/packages/cv/opencv) [`pybind11`](/packages/build/pybind11) [`ros:humble-desktop`](/packages/robots/ros) [`vpi`](/packages/cv/vpi) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`/home/narandill/Projects/fph/Internal-AI-Base-Station-Server/third_party/jetson-containers/packages/robots/ros/Dockerfile.ros2.extras`](/home/narandill/Projects/fph/Internal-AI-Base-Station-Server/third_party/jetson-containers/packages/robots/ros/Dockerfile.ros2.extras) |
+| &nbsp;&nbsp;&nbsp;Notes | Stereolabs ZED SDK |
+
+| **`zed:5.0-jazzy`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `zed-jazzy` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/cuda/tensorrt) [`numpy`](/packages/numeric/numpy) [`opengl`](/packages/multimedia/opengl) [`cmake`](/packages/build/cmake/cmake_pip) [`llvm`](/packages/build/llvm) [`vulkan`](/packages/multimedia/vulkan) [`video-codec-sdk`](/packages/multimedia/video-codec-sdk) [`ffmpeg`](/packages/multimedia/ffmpeg) [`opencv`](/packages/cv/opencv) [`pybind11`](/packages/build/pybind11) [`ros:jazzy-desktop`](/packages/robots/ros) [`vpi`](/packages/cv/vpi) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`/home/narandill/Projects/fph/Internal-AI-Base-Station-Server/third_party/jetson-containers/packages/robots/ros/Dockerfile.ros2.extras`](/home/narandill/Projects/fph/Internal-AI-Base-Station-Server/third_party/jetson-containers/packages/robots/ros/Dockerfile.ros2.extras) |
+| &nbsp;&nbsp;&nbsp;Notes | Stereolabs ZED SDK |
 
 </details>
 

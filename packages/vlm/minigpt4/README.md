@@ -37,9 +37,8 @@ Then navigate your browser to `http://HOSTNAME:7860`
 
 | **`minigpt4`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`minigpt4_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/minigpt4_jp51.yml?label=minigpt4:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/minigpt4_jp51.yml) [![`minigpt4_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/minigpt4_jp60.yml?label=minigpt4:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/minigpt4_jp60.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.2`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/minigpt4:r35.2.1`](https://hub.docker.com/r/dustynv/minigpt4/tags) `(2023-12-11, 5.9GB)`<br>[`dustynv/minigpt4:r35.3.1`](https://hub.docker.com/r/dustynv/minigpt4/tags) `(2023-12-15, 5.9GB)`<br>[`dustynv/minigpt4:r35.4.1`](https://hub.docker.com/r/dustynv/minigpt4/tags) `(2023-12-14, 5.9GB)`<br>[`dustynv/minigpt4:r36.2.0`](https://hub.docker.com/r/dustynv/minigpt4/tags) `(2023-12-15, 7.6GB)` |
 

@@ -6,25 +6,41 @@
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`arrow:14.0.1`** | |
+| **`arrow:20.0.0`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `arrow` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda`](/packages/cuda/cuda) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Notes | installed under `/usr/local` |
+
+| **`arrow:19.0.1`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda`](/packages/cuda/cuda) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`cudf:25.08.00`](/packages/ml/rapids/cudf) [`cuml`](/packages/ml/rapids/cuml) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Notes | installed under `/usr/local` |
+
+| **`arrow:14.0.1`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda`](/packages/cuda/cuda) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Notes | installed under `/usr/local` |
 
 | **`arrow:12.0.1`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda`](/packages/cuda/cuda) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`cudf:23.10.03`](/packages/ml/rapids/cudf) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Notes | installed under `/usr/local` |
 
 | **`arrow:5.0.0`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda`](/packages/cuda/cuda) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Notes | installed under `/usr/local` |
 
@@ -40,7 +56,7 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag arrow)
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host arrow:35.2.1
+sudo docker run --runtime nvidia -it --rm --network=host arrow:36.4.0
 
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>

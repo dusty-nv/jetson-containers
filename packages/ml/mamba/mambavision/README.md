@@ -10,7 +10,7 @@
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `mambavision` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu122`](/packages/cuda/cuda) [`cuda:12.2`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.2`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`ninja`](/packages/build/ninja) [`torchaudio`](/packages/pytorch/torchaudio) [`causalconv1d`](/packages/mamba/causalconv1d) [`triton`](/packages/ml/openai-triton) [`mamba`](/packages/mamba/mamba) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`ninja`](/packages/build/ninja) [`torchaudio`](/packages/pytorch/torchaudio) [`triton`](/packages/ml/triton) [`causalconv1d`](/packages/ml/mamba/causalconv1d) [`mamba`](/packages/ml/mamba/mamba) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/OpenGVLab/video-mamba-suite |
 

@@ -6,12 +6,47 @@
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`jetson-inference`** | |
+| **`jetson-inference:main`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `jetson-inference` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`tensorrt`](/packages/cuda/tensorrt) [`opengl`](/packages/multimedia/opengl) [`llvm`](/packages/build/llvm) [`vulkan`](/packages/multimedia/vulkan) [`video-codec-sdk`](/packages/multimedia/video-codec-sdk) [`ffmpeg`](/packages/multimedia/ffmpeg) [`opencv`](/packages/cv/opencv) [`gstreamer`](/packages/multimedia/gstreamer) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`jetson-inference:foxy`](/packages/cv/jetson-inference) [`jetson-inference:galactic`](/packages/cv/jetson-inference) [`jetson-inference:humble`](/packages/cv/jetson-inference) [`jetson-inference:iron`](/packages/cv/jetson-inference) [`jetson-inference:jazzy`](/packages/cv/jetson-inference) [`local_llm`](/packages/llm/local_llm) [`nano_llm:24.4-foxy`](/packages/llm/nano_llm) [`nano_llm:24.4-galactic`](/packages/llm/nano_llm) [`nano_llm:24.4-humble`](/packages/llm/nano_llm) [`nano_llm:24.4-iron`](/packages/llm/nano_llm) [`nano_llm:24.4.1-foxy`](/packages/llm/nano_llm) [`nano_llm:24.4.1-galactic`](/packages/llm/nano_llm) [`nano_llm:24.4.1-humble`](/packages/llm/nano_llm) [`nano_llm:24.4.1-iron`](/packages/llm/nano_llm) [`nano_llm:24.5-foxy`](/packages/llm/nano_llm) [`nano_llm:24.5-galactic`](/packages/llm/nano_llm) [`nano_llm:24.5-humble`](/packages/llm/nano_llm) [`nano_llm:24.5-iron`](/packages/llm/nano_llm) [`nano_llm:24.5.1-foxy`](/packages/llm/nano_llm) [`nano_llm:24.5.1-galactic`](/packages/llm/nano_llm) [`nano_llm:24.5.1-humble`](/packages/llm/nano_llm) [`nano_llm:24.5.1-iron`](/packages/llm/nano_llm) [`nano_llm:24.6-foxy`](/packages/llm/nano_llm) [`nano_llm:24.6-galactic`](/packages/llm/nano_llm) [`nano_llm:24.6-humble`](/packages/llm/nano_llm) [`nano_llm:24.6-iron`](/packages/llm/nano_llm) [`nano_llm:24.7-foxy`](/packages/llm/nano_llm) [`nano_llm:24.7-galactic`](/packages/llm/nano_llm) [`nano_llm:24.7-humble`](/packages/llm/nano_llm) [`nano_llm:24.7-iron`](/packages/llm/nano_llm) [`nano_llm:main-foxy`](/packages/llm/nano_llm) [`nano_llm:main-galactic`](/packages/llm/nano_llm) [`nano_llm:main-humble`](/packages/llm/nano_llm) [`nano_llm:main-iron`](/packages/llm/nano_llm) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+
+| **`jetson-inference:foxy`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.2`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`tensorrt`](/packages/tensorrt) [`opencv`](/packages/opencv) [`gstreamer`](/packages/gstreamer) |
-| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/jetson-inference:22.06`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2022-09-30, 6.5GB)`<br>[`dustynv/jetson-inference:r32.4.3`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2020-10-27, 0.9GB)`<br>[`dustynv/jetson-inference:r32.4.4`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2021-11-16, 0.9GB)`<br>[`dustynv/jetson-inference:r32.5.0`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2021-08-09, 0.9GB)`<br>[`dustynv/jetson-inference:r32.6.1`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2021-08-24, 0.9GB)`<br>[`dustynv/jetson-inference:r32.7.1`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2023-05-15, 1.1GB)`<br>[`dustynv/jetson-inference:r34.1.0`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2022-04-08, 5.9GB)`<br>[`dustynv/jetson-inference:r34.1.1`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2023-03-18, 6.1GB)`<br>[`dustynv/jetson-inference:r35.1.0`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2023-05-15, 6.1GB)`<br>[`dustynv/jetson-inference:r35.2.1`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2023-05-15, 6.0GB)`<br>[`dustynv/jetson-inference:r35.3.1`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2023-05-15, 5.6GB)`<br>[`dustynv/jetson-inference:r35.4.1`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2023-08-30, 5.7GB)`<br>[`dustynv/jetson-inference:r36.2.0`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2023-12-19, 7.9GB)`<br>[`dustynv/jetson-inference:r36.3.0`](https://hub.docker.com/r/dustynv/jetson-inference/tags) `(2024-05-08, 7.2GB)` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/cuda/tensorrt) [`numpy`](/packages/numeric/numpy) [`opengl`](/packages/multimedia/opengl) [`cmake`](/packages/build/cmake/cmake_pip) [`llvm`](/packages/build/llvm) [`vulkan`](/packages/multimedia/vulkan) [`video-codec-sdk`](/packages/multimedia/video-codec-sdk) [`ffmpeg`](/packages/multimedia/ffmpeg) [`opencv`](/packages/cv/opencv) [`pybind11`](/packages/build/pybind11) [`ros:foxy-desktop`](/packages/robots/ros) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`gstreamer`](/packages/multimedia/gstreamer) [`jetson-inference:main`](/packages/cv/jetson-inference) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`nano_llm:24.4-foxy`](/packages/llm/nano_llm) [`nano_llm:24.4.1-foxy`](/packages/llm/nano_llm) [`nano_llm:24.5-foxy`](/packages/llm/nano_llm) [`nano_llm:24.5.1-foxy`](/packages/llm/nano_llm) [`nano_llm:24.6-foxy`](/packages/llm/nano_llm) [`nano_llm:24.7-foxy`](/packages/llm/nano_llm) [`nano_llm:main-foxy`](/packages/llm/nano_llm) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.ros`](Dockerfile.ros) |
+
+| **`jetson-inference:galactic`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/cuda/tensorrt) [`numpy`](/packages/numeric/numpy) [`opengl`](/packages/multimedia/opengl) [`cmake`](/packages/build/cmake/cmake_pip) [`llvm`](/packages/build/llvm) [`vulkan`](/packages/multimedia/vulkan) [`video-codec-sdk`](/packages/multimedia/video-codec-sdk) [`ffmpeg`](/packages/multimedia/ffmpeg) [`opencv`](/packages/cv/opencv) [`pybind11`](/packages/build/pybind11) [`ros:galactic-desktop`](/packages/robots/ros) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`gstreamer`](/packages/multimedia/gstreamer) [`jetson-inference:main`](/packages/cv/jetson-inference) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`nano_llm:24.4-galactic`](/packages/llm/nano_llm) [`nano_llm:24.4.1-galactic`](/packages/llm/nano_llm) [`nano_llm:24.5-galactic`](/packages/llm/nano_llm) [`nano_llm:24.5.1-galactic`](/packages/llm/nano_llm) [`nano_llm:24.6-galactic`](/packages/llm/nano_llm) [`nano_llm:24.7-galactic`](/packages/llm/nano_llm) [`nano_llm:main-galactic`](/packages/llm/nano_llm) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.ros`](Dockerfile.ros) |
+
+| **`jetson-inference:humble`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/cuda/tensorrt) [`numpy`](/packages/numeric/numpy) [`opengl`](/packages/multimedia/opengl) [`cmake`](/packages/build/cmake/cmake_pip) [`llvm`](/packages/build/llvm) [`vulkan`](/packages/multimedia/vulkan) [`video-codec-sdk`](/packages/multimedia/video-codec-sdk) [`ffmpeg`](/packages/multimedia/ffmpeg) [`opencv`](/packages/cv/opencv) [`pybind11`](/packages/build/pybind11) [`ros:humble-desktop`](/packages/robots/ros) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`gstreamer`](/packages/multimedia/gstreamer) [`jetson-inference:main`](/packages/cv/jetson-inference) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`nano_llm:24.4-humble`](/packages/llm/nano_llm) [`nano_llm:24.4.1-humble`](/packages/llm/nano_llm) [`nano_llm:24.5-humble`](/packages/llm/nano_llm) [`nano_llm:24.5.1-humble`](/packages/llm/nano_llm) [`nano_llm:24.6-humble`](/packages/llm/nano_llm) [`nano_llm:24.7-humble`](/packages/llm/nano_llm) [`nano_llm:main-humble`](/packages/llm/nano_llm) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.ros`](Dockerfile.ros) |
+
+| **`jetson-inference:iron`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/cuda/tensorrt) [`numpy`](/packages/numeric/numpy) [`opengl`](/packages/multimedia/opengl) [`cmake`](/packages/build/cmake/cmake_pip) [`llvm`](/packages/build/llvm) [`vulkan`](/packages/multimedia/vulkan) [`video-codec-sdk`](/packages/multimedia/video-codec-sdk) [`ffmpeg`](/packages/multimedia/ffmpeg) [`opencv`](/packages/cv/opencv) [`pybind11`](/packages/build/pybind11) [`ros:iron-desktop`](/packages/robots/ros) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`gstreamer`](/packages/multimedia/gstreamer) [`jetson-inference:main`](/packages/cv/jetson-inference) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`nano_llm:24.4-iron`](/packages/llm/nano_llm) [`nano_llm:24.4.1-iron`](/packages/llm/nano_llm) [`nano_llm:24.5-iron`](/packages/llm/nano_llm) [`nano_llm:24.5.1-iron`](/packages/llm/nano_llm) [`nano_llm:24.6-iron`](/packages/llm/nano_llm) [`nano_llm:24.7-iron`](/packages/llm/nano_llm) [`nano_llm:main-iron`](/packages/llm/nano_llm) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.ros`](Dockerfile.ros) |
+
+| **`jetson-inference:jazzy`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/cuda/tensorrt) [`numpy`](/packages/numeric/numpy) [`opengl`](/packages/multimedia/opengl) [`cmake`](/packages/build/cmake/cmake_pip) [`llvm`](/packages/build/llvm) [`vulkan`](/packages/multimedia/vulkan) [`video-codec-sdk`](/packages/multimedia/video-codec-sdk) [`ffmpeg`](/packages/multimedia/ffmpeg) [`opencv`](/packages/cv/opencv) [`pybind11`](/packages/build/pybind11) [`ros:jazzy-desktop`](/packages/robots/ros) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`gstreamer`](/packages/multimedia/gstreamer) [`jetson-inference:main`](/packages/cv/jetson-inference) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.ros`](Dockerfile.ros) |
 
 </details>
 
@@ -33,8 +68,8 @@
 | &nbsp;&nbsp;[`dustynv/jetson-inference:r35.2.1`](https://hub.docker.com/r/dustynv/jetson-inference/tags) | `2023-05-15` | `arm64` | `6.0GB` |
 | &nbsp;&nbsp;[`dustynv/jetson-inference:r35.3.1`](https://hub.docker.com/r/dustynv/jetson-inference/tags) | `2023-05-15` | `arm64` | `5.6GB` |
 | &nbsp;&nbsp;[`dustynv/jetson-inference:r35.4.1`](https://hub.docker.com/r/dustynv/jetson-inference/tags) | `2023-08-30` | `arm64` | `5.7GB` |
-| &nbsp;&nbsp;[`dustynv/jetson-inference:r36.2.0`](https://hub.docker.com/r/dustynv/jetson-inference/tags) | `2023-12-19` | `arm64` | `7.9GB` |
-| &nbsp;&nbsp;[`dustynv/jetson-inference:r36.3.0`](https://hub.docker.com/r/dustynv/jetson-inference/tags) | `2024-05-08` | `arm64` | `7.2GB` |
+| &nbsp;&nbsp;[`dustynv/jetson-inference:r36.2.0`](https://hub.docker.com/r/dustynv/jetson-inference/tags) | `2024-06-20` | `arm64` | `7.2GB` |
+| &nbsp;&nbsp;[`dustynv/jetson-inference:r36.3.0`](https://hub.docker.com/r/dustynv/jetson-inference/tags) | `2024-06-20` | `arm64` | `7.2GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -51,10 +86,10 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag jetson-inference)
 
 # or explicitly specify one of the container images above
-jetson-containers run dustynv/jetson-inference:r36.3.0
+jetson-containers run dustynv/jetson-inference:r36.2.0
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/jetson-inference:r36.3.0
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/jetson-inference:r36.2.0
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

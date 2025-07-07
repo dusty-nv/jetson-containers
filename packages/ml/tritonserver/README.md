@@ -8,10 +8,9 @@
 
 | **`tritonserver`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`tritonserver_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/tritonserver_jp46.yml?label=tritonserver:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tritonserver_jp46.yml) [![`tritonserver_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/tritonserver_jp51.yml?label=tritonserver:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tritonserver_jp51.yml) [![`tritonserver_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/tritonserver_jp60.yml?label=tritonserver:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tritonserver_jp60.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/tensorrt) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`deepstream`](/packages/deepstream) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/cuda/tensorrt) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`deepstream`](/packages/cv/deepstream) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/tritonserver:r32.7.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) `(2024-02-27, 1.3GB)`<br>[`dustynv/tritonserver:r35.2.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) `(2023-09-07, 5.9GB)`<br>[`dustynv/tritonserver:r35.3.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) `(2024-02-27, 5.9GB)`<br>[`dustynv/tritonserver:r35.4.1`](https://hub.docker.com/r/dustynv/tritonserver/tags) `(2024-02-27, 5.9GB)`<br>[`dustynv/tritonserver:r36.2.0`](https://hub.docker.com/r/dustynv/tritonserver/tags) `(2024-02-27, 8.4GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/user_guide/jetson.html |

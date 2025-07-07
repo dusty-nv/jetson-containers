@@ -9,8 +9,8 @@
 | **`physx`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu122`](/packages/cuda/cuda) [`cuda`](/packages/cuda/cuda) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`sapien`](/packages/robots/sapien) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda`](/packages/cuda/cuda) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`sapien`](/packages/sim/sapien) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 
 </details>
@@ -25,7 +25,7 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag physx)
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host physx:36.3.0
+sudo docker run --runtime nvidia -it --rm --network=host physx:36.4.0
 
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>

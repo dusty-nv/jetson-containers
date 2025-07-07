@@ -8,9 +8,8 @@
 
 | **`text-generation-inference`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`text-generation-inference_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/text-generation-inference_jp51.yml?label=text-generation-inference:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/text-generation-inference_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.2`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`bitsandbytes`](/packages/llm/bitsandbytes) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`triton`](/packages/ml/triton) [`bitsandbytes`](/packages/llm/bitsandbytes) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/text-generation-inference:r35.2.1`](https://hub.docker.com/r/dustynv/text-generation-inference/tags) `(2023-11-04, 7.0GB)`<br>[`dustynv/text-generation-inference:r35.3.1`](https://hub.docker.com/r/dustynv/text-generation-inference/tags) `(2023-11-05, 7.0GB)`<br>[`dustynv/text-generation-inference:r35.4.1`](https://hub.docker.com/r/dustynv/text-generation-inference/tags) `(2023-11-05, 7.0GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/huggingface/text-generation-inference |

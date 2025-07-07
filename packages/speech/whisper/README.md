@@ -38,9 +38,9 @@ HTTPS (SSL) connection is needed to allow `ipywebrtc` widget to have access to t
 
 | **`whisper`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`whisper_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/whisper_jp60.yml?label=whisper:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/whisper_jp60.yml) [![`whisper_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/whisper_jp51.yml?label=whisper:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/whisper_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`numba`](/packages/numba) [`cudnn`](/packages/cuda/cudnn) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.2`](/packages/pytorch) [`torchaudio`](/packages/pytorch/torchaudio) [`rust`](/packages/build/rust) [`jupyterlab`](/packages/jupyterlab) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`numba`](/packages/numeric/numba) [`cudnn:9.3`](/packages/cuda/cudnn) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchaudio`](/packages/pytorch/torchaudio) [`tensorrt`](/packages/cuda/tensorrt) [`cuda-python`](/packages/cuda/cuda-python) [`pycuda`](/packages/cuda/pycuda) [`rust`](/packages/build/rust) [`jupyterlab`](/packages/code/jupyterlab) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`voice-pro`](/packages/speech/voice-pro) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/whisper:r35.3.1`](https://hub.docker.com/r/dustynv/whisper/tags) `(2024-03-07, 6.0GB)`<br>[`dustynv/whisper:r35.4.1`](https://hub.docker.com/r/dustynv/whisper/tags) `(2023-12-14, 6.1GB)`<br>[`dustynv/whisper:r36.2.0`](https://hub.docker.com/r/dustynv/whisper/tags) `(2024-03-03, 7.9GB)` |
 

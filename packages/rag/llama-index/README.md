@@ -53,10 +53,17 @@ python3 /opt/llama-index/llamaindex_starter.py
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `llama-index:main` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda:12.2`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch`](/packages/pytorch) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`llama-index:samples`](/packages/rag/llama-index) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/llama-index:r35.4.1`](https://hub.docker.com/r/dustynv/llama-index/tags) `(2024-05-23, 5.5GB)`<br>[`dustynv/llama-index:r36.2.0`](https://hub.docker.com/r/dustynv/llama-index/tags) `(2024-04-30, 6.2GB)`<br>[`dustynv/llama-index:r36.3.0`](https://hub.docker.com/r/dustynv/llama-index/tags) `(2024-05-23, 5.5GB)`<br>[`dustynv/llama-index:samples-r35.4.1`](https://hub.docker.com/r/dustynv/llama-index/tags) `(2024-06-25, 6.4GB)`<br>[`dustynv/llama-index:samples-r36.2.0`](https://hub.docker.com/r/dustynv/llama-index/tags) `(2024-06-25, 6.4GB)`<br>[`dustynv/llama-index:samples-r36.3.0`](https://hub.docker.com/r/dustynv/llama-index/tags) `(2024-06-24, 6.4GB)` |
+
+| **`llama-index:samples`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch`](/packages/pytorch) [`llama-index:main`](/packages/rag/llama-index) [`tensorrt`](/packages/cuda/tensorrt) [`cuda-python`](/packages/cuda/cuda-python) [`pycuda`](/packages/cuda/pycuda) [`rust`](/packages/build/rust) [`jupyterlab:latest`](/packages/code/jupyterlab) [`jupyterlab:myst`](/packages/code/jupyterlab) [`ollama`](/packages/llm/ollama) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.samples`](Dockerfile.samples) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/llama-index:samples-r35.4.1`](https://hub.docker.com/r/dustynv/llama-index/tags) `(2024-06-25, 6.4GB)`<br>[`dustynv/llama-index:samples-r36.2.0`](https://hub.docker.com/r/dustynv/llama-index/tags) `(2024-06-25, 6.4GB)`<br>[`dustynv/llama-index:samples-r36.3.0`](https://hub.docker.com/r/dustynv/llama-index/tags) `(2024-06-24, 6.4GB)` |
 
 </details>
 
@@ -88,10 +95,10 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag llama-index)
 
 # or explicitly specify one of the container images above
-jetson-containers run dustynv/llama-index:samples-r36.2.0
+jetson-containers run dustynv/llama-index:samples-r35.4.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/llama-index:samples-r36.2.0
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/llama-index:samples-r35.4.1
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

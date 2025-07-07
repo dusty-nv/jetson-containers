@@ -98,11 +98,18 @@ Got questions? You have several options to get them answered:
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`wyoming-whisper:2.2.0`** | |
+| **`wyoming-whisper:2.5.0`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`homeassistant-base`](/packages/smart-home/homeassistant-base) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) [`ctranslate2`](/packages/ml/ctranslate2) [`tensorrt`](/packages/cuda/tensorrt) [`numpy`](/packages/numeric/numpy) [`onnx`](/packages/ml/onnx) [`onnxruntime`](/packages/ml/onnxruntime) [`huggingface_hub`](/packages/llm/huggingface_hub) [`faster-whisper`](/packages/speech/faster-whisper) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Notes | The `faster-whisper` using the `wyoming` protocol for usage with Home Assistant. Based on `https://github.com/home-assistant/addons/blob/master/whisper/Dockerfile` |
+
+| **`wyoming-whisper:master`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `wyoming-whisper` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`homeassistant-base`](/packages/smart-home/homeassistant-base) [`pip_cache:cu122`](/packages/cuda/cuda) [`cuda:12.2`](/packages/cuda/cuda) [`cudnn:8.9`](/packages/cuda/cudnn) [`python:3.11`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) [`ctranslate2`](/packages/ml/ctranslate2) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numeric/numpy) [`onnx`](/packages/ml/onnx) [`onnxruntime`](/packages/ml/onnxruntime) [`huggingface_hub`](/packages/llm/huggingface_hub) [`faster-whisper`](/packages/speech/faster-whisper) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`homeassistant-base`](/packages/smart-home/homeassistant-base) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) [`ctranslate2`](/packages/ml/ctranslate2) [`tensorrt`](/packages/cuda/tensorrt) [`numpy`](/packages/numeric/numpy) [`onnx`](/packages/ml/onnx) [`onnxruntime`](/packages/ml/onnxruntime) [`huggingface_hub`](/packages/llm/huggingface_hub) [`faster-whisper`](/packages/speech/faster-whisper) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Notes | The `faster-whisper` using the `wyoming` protocol for usage with Home Assistant. Based on `https://github.com/home-assistant/addons/blob/master/whisper/Dockerfile` |
 
@@ -114,6 +121,7 @@ Got questions? You have several options to get them answered:
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
+| &nbsp;&nbsp;[`dustynv/wyoming-whisper:2.3.0-r36.4.0`](https://hub.docker.com/r/dustynv/wyoming-whisper/tags) | `2024-12-20` | `arm64` | `8.9GB` |
 | &nbsp;&nbsp;[`dustynv/wyoming-whisper:latest-r36.2.0`](https://hub.docker.com/r/dustynv/wyoming-whisper/tags) | `2024-04-30` | `arm64` | `5.2GB` |
 | &nbsp;&nbsp;[`dustynv/wyoming-whisper:r36.2.0`](https://hub.docker.com/r/dustynv/wyoming-whisper/tags) | `2024-04-24` | `arm64` | `5.2GB` |
 
@@ -132,10 +140,10 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag wyoming-whisper)
 
 # or explicitly specify one of the container images above
-jetson-containers run dustynv/wyoming-whisper:latest-r36.2.0
+jetson-containers run dustynv/wyoming-whisper:2.3.0-r36.4.0
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/wyoming-whisper:latest-r36.2.0
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/wyoming-whisper:2.3.0-r36.4.0
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

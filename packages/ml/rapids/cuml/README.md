@@ -8,12 +8,11 @@
 
 | **`cuml`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`cuml_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cuml_jp51.yml?label=cuml:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cuml_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numpy) [`cupy`](/packages/cuda/cupy) [`numba`](/packages/numba) [`protobuf:apt`](/packages/build/protobuf/protobuf_apt) [`cudf`](/packages/rapids/cudf) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numeric/numpy) [`cupy`](/packages/numeric/cupy) [`numba`](/packages/numeric/numba) [`protobuf:apt`](/packages/build/protobuf/protobuf_apt) [`cuda-python`](/packages/cuda/cuda-python) [`arrow:19.0.1`](/packages/numeric/arrow) [`cudf`](/packages/ml/rapids/cudf) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/cuml:r35.2.1`](https://hub.docker.com/r/dustynv/cuml/tags) `(2023-09-07, 7.9GB)`<br>[`dustynv/cuml:r35.3.1`](https://hub.docker.com/r/dustynv/cuml/tags) `(2023-08-29, 8.0GB)`<br>[`dustynv/cuml:r35.4.1`](https://hub.docker.com/r/dustynv/cuml/tags) `(2023-10-07, 7.9GB)` |
-| &nbsp;&nbsp;&nbsp;Notes | installed under `/usr/local` |
+| &nbsp;&nbsp;&nbsp;Notes | https://github.com/rapidsai/cuml |
 
 </details>
 

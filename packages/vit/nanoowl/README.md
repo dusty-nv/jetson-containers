@@ -25,13 +25,8 @@ jetson-containers run --workdir /opt/nanoowl/examples \
 ```
 jetson-containers run --workdir /opt/nanoowl/examples/tree_demo \
   $(autotag nanoowl) \
-    python3 tree_demo.py --camera 0 --resolution 640x480 ../../data/owl_image_encoder_patch32.engine
+    python3 tree_demo.py ../../data/owl_image_encoder_patch32.engine
 ```
-
-| Options | Explanation | Example |
-| ------- | ----------- | ------- |
-| `--camera` | to specify camera ID | `1` |
-| `--resolution` | to specify camera open resolution (must be supported by your camera) | `640x480` |
 
 3. Second, open your browser to `http://<ip address>:7860`
 
@@ -49,11 +44,10 @@ jetson-containers run --workdir /opt/nanoowl/examples/tree_demo \
 
 | **`nanoowl`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`nanoowl_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nanoowl_jp51.yml?label=nanoowl:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nanoowl_jp51.yml) [![`nanoowl_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nanoowl_jp60.yml?label=nanoowl:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nanoowl_jp60.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda:12.2`](/packages/cuda/cuda) [`cudnn:8.9`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.2`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`tensorrt`](/packages/tensorrt) [`torch2trt`](/packages/pytorch/torch2trt) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`opencv`](/packages/opencv) [`gstreamer`](/packages/gstreamer) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`tensorrt`](/packages/cuda/tensorrt) [`torch2trt`](/packages/pytorch/torch2trt) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`opengl`](/packages/multimedia/opengl) [`llvm`](/packages/build/llvm) [`vulkan`](/packages/multimedia/vulkan) [`video-codec-sdk`](/packages/multimedia/video-codec-sdk) [`ffmpeg`](/packages/multimedia/ffmpeg) [`opencv`](/packages/cv/opencv) [`gstreamer`](/packages/multimedia/gstreamer) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/nanoowl:r35.2.1`](https://hub.docker.com/r/dustynv/nanoowl/tags) `(2023-12-14, 7.1GB)`<br>[`dustynv/nanoowl:r35.3.1`](https://hub.docker.com/r/dustynv/nanoowl/tags) `(2024-02-22, 7.1GB)`<br>[`dustynv/nanoowl:r35.4.1`](https://hub.docker.com/r/dustynv/nanoowl/tags) `(2024-05-11, 7.0GB)`<br>[`dustynv/nanoowl:r36.2.0`](https://hub.docker.com/r/dustynv/nanoowl/tags) `(2024-05-11, 8.3GB)`<br>[`dustynv/nanoowl:r36.3.0`](https://hub.docker.com/r/dustynv/nanoowl/tags) `(2024-06-25, 8.3GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/nanoowl:r35.2.1`](https://hub.docker.com/r/dustynv/nanoowl/tags) `(2023-12-14, 7.1GB)`<br>[`dustynv/nanoowl:r35.3.1`](https://hub.docker.com/r/dustynv/nanoowl/tags) `(2024-02-22, 7.1GB)`<br>[`dustynv/nanoowl:r35.4.1`](https://hub.docker.com/r/dustynv/nanoowl/tags) `(2024-05-11, 7.0GB)`<br>[`dustynv/nanoowl:r36.2.0`](https://hub.docker.com/r/dustynv/nanoowl/tags) `(2024-05-11, 8.3GB)`<br>[`dustynv/nanoowl:r36.3.0`](https://hub.docker.com/r/dustynv/nanoowl/tags) `(2024-06-25, 8.3GB)`<br>[`dustynv/nanoowl:r36.4.0`](https://hub.docker.com/r/dustynv/nanoowl/tags) `(2025-02-07, 9.5GB)` |
 
 </details>
 
@@ -68,6 +62,7 @@ jetson-containers run --workdir /opt/nanoowl/examples/tree_demo \
 | &nbsp;&nbsp;[`dustynv/nanoowl:r35.4.1`](https://hub.docker.com/r/dustynv/nanoowl/tags) | `2024-05-11` | `arm64` | `7.0GB` |
 | &nbsp;&nbsp;[`dustynv/nanoowl:r36.2.0`](https://hub.docker.com/r/dustynv/nanoowl/tags) | `2024-05-11` | `arm64` | `8.3GB` |
 | &nbsp;&nbsp;[`dustynv/nanoowl:r36.3.0`](https://hub.docker.com/r/dustynv/nanoowl/tags) | `2024-06-25` | `arm64` | `8.3GB` |
+| &nbsp;&nbsp;[`dustynv/nanoowl:r36.4.0`](https://hub.docker.com/r/dustynv/nanoowl/tags) | `2025-02-07` | `arm64` | `9.5GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -84,10 +79,10 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag nanoowl)
 
 # or explicitly specify one of the container images above
-jetson-containers run dustynv/nanoowl:r36.3.0
+jetson-containers run dustynv/nanoowl:r36.4.0
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/nanoowl:r36.3.0
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/nanoowl:r36.4.0
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

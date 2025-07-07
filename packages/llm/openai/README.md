@@ -9,9 +9,10 @@
 | **`openai`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`python`](/packages/build/python) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache`](/packages/cuda/cuda) [`python`](/packages/build/python) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/ml/l4t/l4t-text-generation) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Notes | OpenAI API Python client from https://github.com/openai/openai-python |
+| &nbsp;&nbsp;&nbsp;Notes | https://github.com/openai/openai-python |
 
 </details>
 
@@ -25,7 +26,7 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag openai)
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host openai:35.2.1
+sudo docker run --runtime nvidia -it --rm --network=host openai:36.4.0
 
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>

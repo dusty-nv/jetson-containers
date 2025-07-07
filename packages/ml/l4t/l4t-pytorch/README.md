@@ -8,10 +8,9 @@
 
 | **`l4t-pytorch`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`l4t-pytorch_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/l4t-pytorch_jp46.yml?label=l4t-pytorch:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-pytorch_jp46.yml) [![`l4t-pytorch_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/l4t-pytorch_jp60.yml?label=l4t-pytorch:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-pytorch_jp60.yml) [![`l4t-pytorch_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/l4t-pytorch_jp51.yml?label=l4t-pytorch:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/l4t-pytorch_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.2`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`torchaudio`](/packages/pytorch/torchaudio) [`tensorrt`](/packages/tensorrt) [`torch2trt`](/packages/pytorch/torch2trt) [`opencv`](/packages/opencv) [`pycuda`](/packages/cuda/pycuda) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/l4t-pytorch:r32.7.1`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) `(2023-12-14, 1.2GB)`<br>[`dustynv/l4t-pytorch:r35.2.1`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) `(2023-12-11, 5.6GB)`<br>[`dustynv/l4t-pytorch:r35.3.1`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) `(2023-12-14, 5.6GB)`<br>[`dustynv/l4t-pytorch:r35.4.1`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) `(2023-12-12, 5.6GB)`<br>[`dustynv/l4t-pytorch:r36.2.0`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) `(2023-12-14, 7.3GB)` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`torchaudio`](/packages/pytorch/torchaudio) [`tensorrt`](/packages/cuda/tensorrt) [`torch2trt`](/packages/pytorch/torch2trt) [`opengl`](/packages/multimedia/opengl) [`llvm`](/packages/build/llvm) [`vulkan`](/packages/multimedia/vulkan) [`video-codec-sdk`](/packages/multimedia/video-codec-sdk) [`ffmpeg`](/packages/multimedia/ffmpeg) [`opencv`](/packages/cv/opencv) [`pycuda`](/packages/cuda/pycuda) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/l4t-pytorch:2.2-r35.4.1`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) `(2024-12-18, 7.8GB)`<br>[`dustynv/l4t-pytorch:r32.7.1`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) `(2023-12-14, 1.2GB)`<br>[`dustynv/l4t-pytorch:r35.2.1`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) `(2023-12-11, 5.6GB)`<br>[`dustynv/l4t-pytorch:r35.3.1`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) `(2023-12-14, 5.6GB)`<br>[`dustynv/l4t-pytorch:r35.4.1`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) `(2023-12-12, 5.6GB)`<br>[`dustynv/l4t-pytorch:r36.2.0`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) `(2024-05-16, 6.7GB)`<br>[`dustynv/l4t-pytorch:r36.3.0-cu124`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) `(2024-05-14, 6.3GB)`<br>[`dustynv/l4t-pytorch:r36.4.0`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) `(2024-09-30, 6.3GB)` |
 
 </details>
 
@@ -21,11 +20,14 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
+| &nbsp;&nbsp;[`dustynv/l4t-pytorch:2.2-r35.4.1`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) | `2024-12-18` | `arm64` | `7.8GB` |
 | &nbsp;&nbsp;[`dustynv/l4t-pytorch:r32.7.1`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) | `2023-12-14` | `arm64` | `1.2GB` |
 | &nbsp;&nbsp;[`dustynv/l4t-pytorch:r35.2.1`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) | `2023-12-11` | `arm64` | `5.6GB` |
 | &nbsp;&nbsp;[`dustynv/l4t-pytorch:r35.3.1`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) | `2023-12-14` | `arm64` | `5.6GB` |
 | &nbsp;&nbsp;[`dustynv/l4t-pytorch:r35.4.1`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) | `2023-12-12` | `arm64` | `5.6GB` |
-| &nbsp;&nbsp;[`dustynv/l4t-pytorch:r36.2.0`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) | `2023-12-14` | `arm64` | `7.3GB` |
+| &nbsp;&nbsp;[`dustynv/l4t-pytorch:r36.2.0`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) | `2024-05-16` | `arm64` | `6.7GB` |
+| &nbsp;&nbsp;[`dustynv/l4t-pytorch:r36.3.0-cu124`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) | `2024-05-14` | `arm64` | `6.3GB` |
+| &nbsp;&nbsp;[`dustynv/l4t-pytorch:r36.4.0`](https://hub.docker.com/r/dustynv/l4t-pytorch/tags) | `2024-09-30` | `arm64` | `6.3GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -42,10 +44,10 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag l4t-pytorch)
 
 # or explicitly specify one of the container images above
-jetson-containers run dustynv/l4t-pytorch:r36.2.0
+jetson-containers run dustynv/l4t-pytorch:2.2-r35.4.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/l4t-pytorch:r36.2.0
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/l4t-pytorch:2.2-r35.4.1
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

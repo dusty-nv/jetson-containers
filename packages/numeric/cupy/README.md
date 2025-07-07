@@ -8,12 +8,11 @@
 
 | **`cupy`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`cupy_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cupy_jp60.yml?label=cupy:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cupy_jp60.yml) [![`cupy_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cupy_jp51.yml?label=cupy:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cupy_jp51.yml) [![`cupy_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cupy_jp46.yml?label=cupy:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cupy_jp46.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/build/python) [`numpy`](/packages/numpy) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`cudf:21.10.02`](/packages/rapids/cudf) [`cudf:23.10.03`](/packages/rapids/cudf) [`cuml`](/packages/rapids/cuml) [`l4t-ml`](/packages/l4t/l4t-ml) [`raft`](/packages/rapids/raft) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda`](/packages/cuda/cuda) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`3dgrut:2.0.0`](/packages/3d/gaussian_splatting/3dgrut) [`cudf:23.10.03`](/packages/ml/rapids/cudf) [`cudf:25.08.00`](/packages/ml/rapids/cudf) [`cuml`](/packages/ml/rapids/cuml) [`holoscan`](/packages/cv/holoscan) [`l4t-ml`](/packages/ml/l4t/l4t-ml) [`raft`](/packages/ml/rapids/raft) [`warp:1.7.0`](/packages/numeric/warp) [`warp:1.7.0-all`](/packages/numeric/warp) [`warp:1.7.0-jax`](/packages/numeric/warp) [`warp:1.7.0-torch`](/packages/numeric/warp) [`warp:1.8.1`](/packages/numeric/warp) [`warp:1.8.1-all`](/packages/numeric/warp) [`warp:1.8.1-jax`](/packages/numeric/warp) [`warp:1.8.1-torch`](/packages/numeric/warp) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/cupy:r32.7.1`](https://hub.docker.com/r/dustynv/cupy/tags) `(2023-12-06, 0.5GB)`<br>[`dustynv/cupy:r35.2.1`](https://hub.docker.com/r/dustynv/cupy/tags) `(2023-12-05, 5.1GB)`<br>[`dustynv/cupy:r35.3.1`](https://hub.docker.com/r/dustynv/cupy/tags) `(2023-09-07, 5.1GB)`<br>[`dustynv/cupy:r35.4.1`](https://hub.docker.com/r/dustynv/cupy/tags) `(2023-12-06, 5.1GB)`<br>[`dustynv/cupy:r36.2.0`](https://hub.docker.com/r/dustynv/cupy/tags) `(2023-12-06, 3.5GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/cupy:r32.7.1`](https://hub.docker.com/r/dustynv/cupy/tags) `(2023-12-06, 0.5GB)`<br>[`dustynv/cupy:r35.2.1`](https://hub.docker.com/r/dustynv/cupy/tags) `(2023-12-05, 5.1GB)`<br>[`dustynv/cupy:r35.3.1`](https://hub.docker.com/r/dustynv/cupy/tags) `(2023-09-07, 5.1GB)`<br>[`dustynv/cupy:r35.4.1`](https://hub.docker.com/r/dustynv/cupy/tags) `(2023-12-06, 5.1GB)`<br>[`dustynv/cupy:r36.2.0`](https://hub.docker.com/r/dustynv/cupy/tags) `(2023-12-06, 3.5GB)`<br>[`dustynv/cupy:r36.4.0-cu128-24.04`](https://hub.docker.com/r/dustynv/cupy/tags) `(2025-03-03, 2.3GB)` |
 
 </details>
 
@@ -28,6 +27,7 @@
 | &nbsp;&nbsp;[`dustynv/cupy:r35.3.1`](https://hub.docker.com/r/dustynv/cupy/tags) | `2023-09-07` | `arm64` | `5.1GB` |
 | &nbsp;&nbsp;[`dustynv/cupy:r35.4.1`](https://hub.docker.com/r/dustynv/cupy/tags) | `2023-12-06` | `arm64` | `5.1GB` |
 | &nbsp;&nbsp;[`dustynv/cupy:r36.2.0`](https://hub.docker.com/r/dustynv/cupy/tags) | `2023-12-06` | `arm64` | `3.5GB` |
+| &nbsp;&nbsp;[`dustynv/cupy:r36.4.0-cu128-24.04`](https://hub.docker.com/r/dustynv/cupy/tags) | `2025-03-03` | `arm64` | `2.3GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -44,10 +44,10 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag cupy)
 
 # or explicitly specify one of the container images above
-jetson-containers run dustynv/cupy:r35.4.1
+jetson-containers run dustynv/cupy:r36.4.0-cu128-24.04
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/cupy:r35.4.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/cupy:r36.4.0-cu128-24.04
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

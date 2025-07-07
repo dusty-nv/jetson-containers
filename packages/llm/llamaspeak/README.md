@@ -92,9 +92,8 @@ The default port is `8050`, but that can be changed with the `--port` argument. 
 
 | **`llamaspeak`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`llamaspeak_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/llamaspeak_jp51.yml?label=llamaspeak:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/llamaspeak_jp51.yml) [![`llamaspeak_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/llamaspeak_jp60.yml?label=llamaspeak:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/llamaspeak_jp60.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`python`](/packages/build/python) [`riva-client:python`](/packages/audio/riva-client) [`numpy`](/packages/numpy) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache`](/packages/cuda/cuda) [`python`](/packages/build/python) [`riva-client:python`](/packages/speech/riva-client) [`numpy`](/packages/numeric/numpy) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/llamaspeak:r35.2.1`](https://hub.docker.com/r/dustynv/llamaspeak/tags) `(2023-09-07, 5.0GB)`<br>[`dustynv/llamaspeak:r35.3.1`](https://hub.docker.com/r/dustynv/llamaspeak/tags) `(2023-08-29, 5.0GB)`<br>[`dustynv/llamaspeak:r35.4.1`](https://hub.docker.com/r/dustynv/llamaspeak/tags) `(2023-12-05, 5.0GB)` |
 

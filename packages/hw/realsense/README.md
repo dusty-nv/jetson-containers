@@ -8,9 +8,8 @@
 
 | **`realsense`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`realsense_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/realsense_jp60.yml?label=realsense:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/realsense_jp60.yml) [![`realsense_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/realsense_jp51.yml?label=realsense:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/realsense_jp51.yml) [![`realsense_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/realsense_jp46.yml?label=realsense:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/realsense_jp46.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda`](/packages/cuda/cuda) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/realsense:r32.7.1`](https://hub.docker.com/r/dustynv/realsense/tags) `(2024-02-22, 0.8GB)`<br>[`dustynv/realsense:r35.2.1`](https://hub.docker.com/r/dustynv/realsense/tags) `(2023-08-29, 5.5GB)`<br>[`dustynv/realsense:r35.3.1`](https://hub.docker.com/r/dustynv/realsense/tags) `(2024-02-22, 5.4GB)`<br>[`dustynv/realsense:r35.4.1`](https://hub.docker.com/r/dustynv/realsense/tags) `(2023-10-07, 5.5GB)`<br>[`dustynv/realsense:r36.2.0`](https://hub.docker.com/r/dustynv/realsense/tags) `(2024-02-22, 4.0GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/IntelRealSense/librealsense/blob/master/doc/installation_jetson.md |

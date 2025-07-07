@@ -9,10 +9,9 @@
 | **`protobuf:cpp`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `protobuf` |
-| &nbsp;&nbsp;&nbsp;Builds | [![`protobuf-cpp_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/protobuf-cpp_jp51.yml?label=protobuf-cpp:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/protobuf-cpp_jp51.yml) [![`protobuf-cpp_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/protobuf-cpp_jp46.yml?label=protobuf-cpp:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/protobuf-cpp_jp46.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`python`](/packages/build/python) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`audiocraft`](/packages/audio/audiocraft) [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-tensorflow:tf1`](/packages/l4t/l4t-tensorflow) [`l4t-tensorflow:tf2`](/packages/l4t/l4t-tensorflow) [`tensorflow`](/packages/tensorflow) [`tensorflow2`](/packages/tensorflow) [`voicecraft`](/packages/audio/voicecraft) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache`](/packages/cuda/cuda) [`python`](/packages/build/python) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`l4t-ml`](/packages/ml/l4t/l4t-ml) [`l4t-tensorflow:tf1`](/packages/ml/l4t/l4t-tensorflow) [`l4t-tensorflow:tf2`](/packages/ml/l4t/l4t-tensorflow) [`tensorflow2:2.16.1`](/packages/ml/tensorflow) [`tensorflow2:2.18.0`](/packages/ml/tensorflow) [`tensorflow2:2.19.0`](/packages/ml/tensorflow) [`tensorflow2:2.20.0`](/packages/ml/tensorflow) [`tensorflow2:2.21.0`](/packages/ml/tensorflow) [`tensorflow_graphics:2.18.0`](/packages/ml/tensorflow/graphics) [`tensorflow_graphics:2.19.0`](/packages/ml/tensorflow/graphics) [`tensorflow_graphics:2.20.0`](/packages/ml/tensorflow/graphics) [`tensorflow_text:2.18.0`](/packages/ml/tensorflow/text) [`tensorflow_text:2.19.0`](/packages/ml/tensorflow/text) [`tensorflow_text:2.20.0`](/packages/ml/tensorflow/text) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/protobuf:cpp-r32.7.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-12-06, 0.5GB)`<br>[`dustynv/protobuf:cpp-r35.2.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-12-06, 5.1GB)`<br>[`dustynv/protobuf:cpp-r35.3.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-08-29, 5.1GB)`<br>[`dustynv/protobuf:cpp-r35.4.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-10-07, 5.1GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | build protobuf using cpp implementation (https://jkjung-avt.github.io/tf-trt-revisited/) |
@@ -29,7 +28,7 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag protobuf_cpp)
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host protobuf_cpp:35.2.1
+sudo docker run --runtime nvidia -it --rm --network=host protobuf_cpp:36.4.0
 
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>

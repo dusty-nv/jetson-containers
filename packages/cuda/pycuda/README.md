@@ -8,12 +8,11 @@
 
 | **`pycuda`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`pycuda_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/pycuda_jp46.yml?label=pycuda:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/pycuda_jp46.yml) [![`pycuda_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/pycuda_jp51.yml?label=pycuda:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/pycuda_jp51.yml) [![`pycuda_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/pycuda_jp60.yml?label=pycuda:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/pycuda_jp60.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/build/python) [`numpy`](/packages/numpy) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`l4t-diffusion`](/packages/l4t/l4t-diffusion) [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-pytorch`](/packages/l4t/l4t-pytorch) [`l4t-tensorflow:tf1`](/packages/l4t/l4t-tensorflow) [`l4t-tensorflow:tf2`](/packages/l4t/l4t-tensorflow) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda`](/packages/cuda/cuda) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`audiocraft`](/packages/speech/audiocraft) [`cv-cuda:0.15`](/packages/cv/cv-cuda) [`diffusion_policy`](/packages/diffusion/diffusion_policy) [`dli-nano-ai`](/packages/ml/dli/dli-nano-ai) [`efficientvit`](/packages/vit/efficientvit) [`jupyter_clickable_image_widget`](/packages/hw/jupyter_clickable_image_widget) [`jupyterlab:4.2.0`](/packages/code/jupyterlab) [`jupyterlab:4.2.0-myst`](/packages/code/jupyterlab) [`jupyterlab:latest`](/packages/code/jupyterlab) [`jupyterlab:latest-myst`](/packages/code/jupyterlab) [`l4t-diffusion`](/packages/ml/l4t/l4t-diffusion) [`l4t-dynamo`](/packages/ml/l4t/l4t-dynamo) [`l4t-ml`](/packages/ml/l4t/l4t-ml) [`l4t-pytorch`](/packages/ml/l4t/l4t-pytorch) [`l4t-tensorflow:tf1`](/packages/ml/l4t/l4t-tensorflow) [`l4t-tensorflow:tf2`](/packages/ml/l4t/l4t-tensorflow) [`l4t-text-generation`](/packages/ml/l4t/l4t-text-generation) [`langchain:samples`](/packages/rag/langchain) [`lerobot`](/packages/robots/lerobot) [`llama-index:samples`](/packages/rag/llama-index) [`openpi`](/packages/robots/openpi) [`pytorch:2.1-all`](/packages/pytorch) [`pytorch:2.2-all`](/packages/pytorch) [`pytorch:2.3-all`](/packages/pytorch) [`pytorch:2.3.1-all`](/packages/pytorch) [`pytorch:2.4-all`](/packages/pytorch) [`pytorch:2.5-all`](/packages/pytorch) [`pytorch:2.6-all`](/packages/pytorch) [`pytorch:2.7-all`](/packages/pytorch) [`pytorch:2.8-all`](/packages/pytorch) [`sam`](/packages/vit/sam) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) [`tam`](/packages/vit/tam) [`voice-pro`](/packages/speech/voice-pro) [`voicecraft`](/packages/speech/voicecraft) [`warp:1.7.0-all`](/packages/numeric/warp) [`warp:1.8.1-all`](/packages/numeric/warp) [`whisper`](/packages/speech/whisper) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/pycuda:r32.7.1`](https://hub.docker.com/r/dustynv/pycuda/tags) `(2023-12-06, 0.4GB)`<br>[`dustynv/pycuda:r35.2.1`](https://hub.docker.com/r/dustynv/pycuda/tags) `(2023-09-07, 5.0GB)`<br>[`dustynv/pycuda:r35.3.1`](https://hub.docker.com/r/dustynv/pycuda/tags) `(2023-08-29, 5.0GB)`<br>[`dustynv/pycuda:r35.4.1`](https://hub.docker.com/r/dustynv/pycuda/tags) `(2023-12-06, 5.0GB)`<br>[`dustynv/pycuda:r36.2.0`](https://hub.docker.com/r/dustynv/pycuda/tags) `(2023-12-06, 3.5GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/pycuda:r32.7.1`](https://hub.docker.com/r/dustynv/pycuda/tags) `(2023-12-06, 0.4GB)`<br>[`dustynv/pycuda:r35.2.1`](https://hub.docker.com/r/dustynv/pycuda/tags) `(2023-09-07, 5.0GB)`<br>[`dustynv/pycuda:r35.3.1`](https://hub.docker.com/r/dustynv/pycuda/tags) `(2023-08-29, 5.0GB)`<br>[`dustynv/pycuda:r35.4.1`](https://hub.docker.com/r/dustynv/pycuda/tags) `(2023-12-06, 5.0GB)`<br>[`dustynv/pycuda:r36.2.0`](https://hub.docker.com/r/dustynv/pycuda/tags) `(2023-12-06, 3.5GB)`<br>[`dustynv/pycuda:r36.4.0-cu128-24.04`](https://hub.docker.com/r/dustynv/pycuda/tags) `(2025-03-03, 2.3GB)` |
 
 </details>
 
@@ -28,6 +27,7 @@
 | &nbsp;&nbsp;[`dustynv/pycuda:r35.3.1`](https://hub.docker.com/r/dustynv/pycuda/tags) | `2023-08-29` | `arm64` | `5.0GB` |
 | &nbsp;&nbsp;[`dustynv/pycuda:r35.4.1`](https://hub.docker.com/r/dustynv/pycuda/tags) | `2023-12-06` | `arm64` | `5.0GB` |
 | &nbsp;&nbsp;[`dustynv/pycuda:r36.2.0`](https://hub.docker.com/r/dustynv/pycuda/tags) | `2023-12-06` | `arm64` | `3.5GB` |
+| &nbsp;&nbsp;[`dustynv/pycuda:r36.4.0-cu128-24.04`](https://hub.docker.com/r/dustynv/pycuda/tags) | `2025-03-03` | `arm64` | `2.3GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -44,10 +44,10 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag pycuda)
 
 # or explicitly specify one of the container images above
-jetson-containers run dustynv/pycuda:r32.7.1
+jetson-containers run dustynv/pycuda:r36.4.0-cu128-24.04
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/pycuda:r32.7.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/pycuda:r36.4.0-cu128-24.04
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

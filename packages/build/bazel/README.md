@@ -8,10 +8,9 @@
 
 | **`bazel`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`bazel_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/bazel_jp46.yml?label=bazel:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/bazel_jp46.yml) [![`bazel_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/bazel_jp51.yml?label=bazel:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/bazel_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`riva-client:cpp`](/packages/audio/riva-client) [`torch_tensorrt`](/packages/pytorch/torch_tensorrt) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`l4t-ml`](/packages/ml/l4t/l4t-ml) [`l4t-tensorflow:tf1`](/packages/ml/l4t/l4t-tensorflow) [`l4t-tensorflow:tf2`](/packages/ml/l4t/l4t-tensorflow) [`riva-client:cpp`](/packages/speech/riva-client) [`tensorflow2:2.16.1`](/packages/ml/tensorflow) [`tensorflow2:2.18.0`](/packages/ml/tensorflow) [`tensorflow2:2.19.0`](/packages/ml/tensorflow) [`tensorflow2:2.20.0`](/packages/ml/tensorflow) [`tensorflow2:2.21.0`](/packages/ml/tensorflow) [`tensorflow_graphics:2.18.0`](/packages/ml/tensorflow/graphics) [`tensorflow_graphics:2.19.0`](/packages/ml/tensorflow/graphics) [`tensorflow_graphics:2.20.0`](/packages/ml/tensorflow/graphics) [`tensorflow_text:2.18.0`](/packages/ml/tensorflow/text) [`tensorflow_text:2.19.0`](/packages/ml/tensorflow/text) [`tensorflow_text:2.20.0`](/packages/ml/tensorflow/text) [`torch_tensorrt`](/packages/pytorch/torch_tensorrt) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/bazel:r32.7.1`](https://hub.docker.com/r/dustynv/bazel/tags) `(2023-09-07, 0.4GB)`<br>[`dustynv/bazel:r35.2.1`](https://hub.docker.com/r/dustynv/bazel/tags) `(2023-09-07, 5.1GB)`<br>[`dustynv/bazel:r35.3.1`](https://hub.docker.com/r/dustynv/bazel/tags) `(2023-08-29, 5.1GB)`<br>[`dustynv/bazel:r35.4.1`](https://hub.docker.com/r/dustynv/bazel/tags) `(2023-10-07, 5.1GB)` |
 

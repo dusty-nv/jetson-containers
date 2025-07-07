@@ -13,9 +13,9 @@
 | **`voicecraft`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.2`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`torchaudio`](/packages/pytorch/torchaudio) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`xformers`](/packages/llm/xformers) [`opencv`](/packages/opencv) [`protobuf:cpp`](/packages/build/protobuf/protobuf_cpp) [`jupyterlab`](/packages/jupyterlab) [`audiocraft`](/packages/audio/audiocraft) [`ctranslate2`](/packages/ctranslate2) [`faster-whisper`](/packages/audio/faster-whisper) [`whisperx`](/packages/audio/whisperx) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`torchaudio`](/packages/pytorch/torchaudio) [`torchtext`](/packages/pytorch/torchtext) [`opengl`](/packages/multimedia/opengl) [`llvm`](/packages/build/llvm) [`vulkan`](/packages/multimedia/vulkan) [`video-codec-sdk`](/packages/multimedia/video-codec-sdk) [`ffmpeg`](/packages/multimedia/ffmpeg) [`opencv`](/packages/cv/opencv) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`triton`](/packages/ml/triton) [`diffusers`](/packages/diffusion/diffusers) [`xformers`](/packages/attention/xformers) [`tensorrt`](/packages/cuda/tensorrt) [`cuda-python`](/packages/cuda/cuda-python) [`pycuda`](/packages/cuda/pycuda) [`jupyterlab`](/packages/code/jupyterlab) [`audiocraft`](/packages/speech/audiocraft) [`ctranslate2`](/packages/ml/ctranslate2) [`onnxruntime`](/packages/ml/onnxruntime) [`faster-whisper`](/packages/speech/faster-whisper) [`whisperx`](/packages/speech/whisperx) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/voicecraft:r36.2.0`](https://hub.docker.com/r/dustynv/voicecraft/tags) `(2024-05-02, 6.8GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/voicecraft:r36.2.0`](https://hub.docker.com/r/dustynv/voicecraft/tags) `(2024-05-02, 6.8GB)`<br>[`dustynv/voicecraft:r36.3.0`](https://hub.docker.com/r/dustynv/voicecraft/tags) `(2024-06-08, 6.9GB)` |
 
 </details>
 
@@ -26,6 +26,7 @@
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/voicecraft:r36.2.0`](https://hub.docker.com/r/dustynv/voicecraft/tags) | `2024-05-02` | `arm64` | `6.8GB` |
+| &nbsp;&nbsp;[`dustynv/voicecraft:r36.3.0`](https://hub.docker.com/r/dustynv/voicecraft/tags) | `2024-06-08` | `arm64` | `6.9GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -42,10 +43,10 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag voicecraft)
 
 # or explicitly specify one of the container images above
-jetson-containers run dustynv/voicecraft:r36.2.0
+jetson-containers run dustynv/voicecraft:r36.3.0
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/voicecraft:r36.2.0
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/voicecraft:r36.3.0
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

@@ -6,13 +6,25 @@
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`jetson-utils`** | |
+| **`jetson-utils:v1`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`jetson-utils_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/jetson-utils_jp60.yml?label=jetson-utils:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/jetson-utils_jp60.yml) [![`jetson-utils_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/jetson-utils_jp46.yml?label=jetson-utils:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/jetson-utils_jp46.yml) [![`jetson-utils_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/jetson-utils_jp51.yml?label=jetson-utils:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/jetson-utils_jp51.yml) |
+| &nbsp;&nbsp;&nbsp;Aliases | `jetson-utils` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/tensorrt) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numpy) [`opencv`](/packages/opencv) [`gstreamer`](/packages/gstreamer) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/cuda/tensorrt) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numeric/numpy) [`opengl`](/packages/multimedia/opengl) [`llvm`](/packages/build/llvm) [`vulkan`](/packages/multimedia/vulkan) [`video-codec-sdk`](/packages/multimedia/video-codec-sdk) [`ffmpeg`](/packages/multimedia/ffmpeg) [`opencv`](/packages/cv/opencv) [`gstreamer`](/packages/multimedia/gstreamer) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`nano_llm:24.4`](/packages/llm/nano_llm) [`nano_llm:24.4-foxy`](/packages/llm/nano_llm) [`nano_llm:24.4-galactic`](/packages/llm/nano_llm) [`nano_llm:24.4-humble`](/packages/llm/nano_llm) [`nano_llm:24.4-iron`](/packages/llm/nano_llm) [`nano_llm:24.4.1`](/packages/llm/nano_llm) [`nano_llm:24.4.1-foxy`](/packages/llm/nano_llm) [`nano_llm:24.4.1-galactic`](/packages/llm/nano_llm) [`nano_llm:24.4.1-humble`](/packages/llm/nano_llm) [`nano_llm:24.4.1-iron`](/packages/llm/nano_llm) [`nano_llm:24.5`](/packages/llm/nano_llm) [`nano_llm:24.5-foxy`](/packages/llm/nano_llm) [`nano_llm:24.5-galactic`](/packages/llm/nano_llm) [`nano_llm:24.5-humble`](/packages/llm/nano_llm) [`nano_llm:24.5-iron`](/packages/llm/nano_llm) [`nano_llm:24.5.1`](/packages/llm/nano_llm) [`nano_llm:24.5.1-foxy`](/packages/llm/nano_llm) [`nano_llm:24.5.1-galactic`](/packages/llm/nano_llm) [`nano_llm:24.5.1-humble`](/packages/llm/nano_llm) [`nano_llm:24.5.1-iron`](/packages/llm/nano_llm) [`nano_llm:24.6`](/packages/llm/nano_llm) [`nano_llm:24.6-foxy`](/packages/llm/nano_llm) [`nano_llm:24.6-galactic`](/packages/llm/nano_llm) [`nano_llm:24.6-humble`](/packages/llm/nano_llm) [`nano_llm:24.6-iron`](/packages/llm/nano_llm) [`nano_llm:24.7`](/packages/llm/nano_llm) [`nano_llm:24.7-foxy`](/packages/llm/nano_llm) [`nano_llm:24.7-galactic`](/packages/llm/nano_llm) [`nano_llm:24.7-humble`](/packages/llm/nano_llm) [`nano_llm:24.7-iron`](/packages/llm/nano_llm) [`nano_llm:main`](/packages/llm/nano_llm) [`nano_llm:main-foxy`](/packages/llm/nano_llm) [`nano_llm:main-galactic`](/packages/llm/nano_llm) [`nano_llm:main-humble`](/packages/llm/nano_llm) [`nano_llm:main-iron`](/packages/llm/nano_llm) [`sapiens`](/packages/vit/sapiens) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/jetson-utils:r32.7.1`](https://hub.docker.com/r/dustynv/jetson-utils/tags) `(2024-02-24, 0.7GB)`<br>[`dustynv/jetson-utils:r35.2.1`](https://hub.docker.com/r/dustynv/jetson-utils/tags) `(2023-12-05, 5.2GB)`<br>[`dustynv/jetson-utils:r35.3.1`](https://hub.docker.com/r/dustynv/jetson-utils/tags) `(2024-02-24, 5.2GB)`<br>[`dustynv/jetson-utils:r36.2.0`](https://hub.docker.com/r/dustynv/jetson-utils/tags) `(2024-02-24, 7.1GB)` |
+
+| **`jetson-utils:v2`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/cuda/tensorrt) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numeric/numpy) [`opengl`](/packages/multimedia/opengl) [`llvm`](/packages/build/llvm) [`vulkan`](/packages/multimedia/vulkan) [`video-codec-sdk`](/packages/multimedia/video-codec-sdk) [`ffmpeg`](/packages/multimedia/ffmpeg) [`opencv`](/packages/cv/opencv) [`gstreamer`](/packages/multimedia/gstreamer) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+
+| **`jetson-utils:python`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache`](/packages/cuda/cuda) [`python`](/packages/build/python) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 
 </details>
 

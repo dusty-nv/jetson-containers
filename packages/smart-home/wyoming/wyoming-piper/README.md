@@ -1,4 +1,4 @@
-# piper
+# wyoming-piper
 
 > [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 
@@ -109,14 +109,37 @@ Got questions? You have several options to get them answered:
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`wyoming-piper:1.5.2`** | |
+| **`wyoming-piper:1.6.2`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Aliases | `wyoming-piper` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`homeassistant-base`](/packages/smart-home/homeassistant-base) [`pip_cache:cu122`](/packages/cuda/cuda) [`cuda:12.2`](/packages/cuda/cuda) [`cudnn:8.9`](/packages/cuda/cudnn) [`python:3.11`](/packages/build/python) [`tensorrt`](/packages/tensorrt) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numeric/numpy) [`onnx`](/packages/ml/onnx) [`onnxruntime`](/packages/ml/onnxruntime) [`piper-tts`](/packages/speech/piper-tts) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`homeassistant-base`](/packages/smart-home/homeassistant-base) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchaudio`](/packages/pytorch/torchaudio) [`tensorrt`](/packages/cuda/tensorrt) [`onnxruntime`](/packages/ml/onnxruntime) [`espeak`](/packages/speech/espeak) [`piper-tts`](/packages/speech/piper-tts) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Notes | The `piper-tts` using the `wyoming` protocol for usage with Home Assistant. Based on `https://github.com/home-assistant/addons/tree/master/piper` and `https://github.com/rhasspy/wyoming-piper` |
 
+| **`wyoming-piper:master`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `wyoming-piper` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`homeassistant-base`](/packages/smart-home/homeassistant-base) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchaudio`](/packages/pytorch/torchaudio) [`tensorrt`](/packages/cuda/tensorrt) [`onnxruntime`](/packages/ml/onnxruntime) [`espeak`](/packages/speech/espeak) [`piper-tts`](/packages/speech/piper-tts) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/wyoming-piper:master-r35.4.1`](https://hub.docker.com/r/dustynv/wyoming-piper/tags) `(2024-04-30, 7.4GB)`<br>[`dustynv/wyoming-piper:master-r36.2.0`](https://hub.docker.com/r/dustynv/wyoming-piper/tags) `(2024-04-30, 9.0GB)` |
+| &nbsp;&nbsp;&nbsp;Notes | The `piper-tts` using the `wyoming` protocol for usage with Home Assistant. Based on `https://github.com/home-assistant/addons/tree/master/piper` and `https://github.com/rhasspy/wyoming-piper` |
+
+</details>
+
+<details open>
+<summary><b><a id="images">CONTAINER IMAGES</a></b></summary>
+<br>
+
+| Repository/Tag | Date | Arch | Size |
+| :-- | :--: | :--: | :--: |
+| &nbsp;&nbsp;[`dustynv/wyoming-piper:master-r35.4.1`](https://hub.docker.com/r/dustynv/wyoming-piper/tags) | `2024-04-30` | `arm64` | `7.4GB` |
+| &nbsp;&nbsp;[`dustynv/wyoming-piper:master-r36.2.0`](https://hub.docker.com/r/dustynv/wyoming-piper/tags) | `2024-04-30` | `arm64` | `9.0GB` |
+| &nbsp;&nbsp;[`dustynv/wyoming-piper:r36.2.0`](https://hub.docker.com/r/dustynv/wyoming-piper/tags) | `2024-04-23` | `arm64` | `9.0GB` |
+
+> <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
+> <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
+> <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R35.x containers can run on other versions of L4T R35.x (JetPack 5.1+)</sub><br>
 </details>
 
 <details open>
@@ -126,22 +149,24 @@ Got questions? You have several options to get them answered:
 To start the container, you can use [`jetson-containers run`](/docs/run.md) and [`autotag`](/docs/run.md#autotag), or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
 ```bash
 # automatically pull or build a compatible container image
-jetson-containers run $(autotag piper)
+jetson-containers run $(autotag wyoming-piper)
+
+# or explicitly specify one of the container images above
+jetson-containers run dustynv/wyoming-piper:master-r35.4.1
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host piper:36.2.0
-
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/wyoming-piper:master-r35.4.1
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
 
 To mount your own directories into the container, use the [`-v`](https://docs.docker.com/engine/reference/commandline/run/#volume) or [`--volume`](https://docs.docker.com/engine/reference/commandline/run/#volume) flags:
 ```bash
-jetson-containers run -v /path/on/host:/path/in/container $(autotag piper)
+jetson-containers run -v /path/on/host:/path/in/container $(autotag wyoming-piper)
 ```
 To launch the container running a command, as opposed to an interactive shell:
 ```bash
-jetson-containers run $(autotag piper) my_app --abc xyz
+jetson-containers run $(autotag wyoming-piper) my_app --abc xyz
 ```
 You can pass any options to it that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
 </details>
@@ -151,7 +176,7 @@ You can pass any options to it that you would to [`docker run`](https://docs.doc
 
 If you use [`autotag`](/docs/run.md#autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do the [system setup](/docs/setup.md), then run:
 ```bash
-jetson-containers build piper
+jetson-containers build wyoming-piper
 ```
 The dependencies from above will be built into the container, and it'll be tested during.  Run it with [`--help`](/jetson_containers/build.py) for build options.
 </details>

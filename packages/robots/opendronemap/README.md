@@ -21,10 +21,33 @@ jetson-containers run \
 
 | **`opendronemap`** | |
 | :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `opendronemap:latest` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=35']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu122`](/packages/cuda/cuda) [`cuda:12.2`](/packages/cuda/cuda) [`cudnn:8.9`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/tensorrt) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numeric/numpy) [`onnx`](/packages/ml/onnx) [`onnxruntime`](/packages/ml/onnxruntime) [`ffmpeg`](/packages/multimedia/ffmpeg) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/cuda/tensorrt) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numeric/numpy) [`onnx`](/packages/ml/onnx) [`onnxruntime`](/packages/ml/onnxruntime) [`ffmpeg`](/packages/multimedia/ffmpeg) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`opendronemap:node`](/packages/robots/opendronemap) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/opendronemap:r36.3.0`](https://hub.docker.com/r/dustynv/opendronemap/tags) `(2024-09-19, 8.5GB)` |
 
+| **`opendronemap:node`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `opendronemap:latest` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=35']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/cuda/tensorrt) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numeric/numpy) [`onnx`](/packages/ml/onnx) [`onnxruntime`](/packages/ml/onnxruntime) [`ffmpeg`](/packages/multimedia/ffmpeg) [`opendronemap:latest`](/packages/robots/opendronemap) [`nodejs`](/packages/build/nodejs) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.node`](Dockerfile.node) |
+
+</details>
+
+<details open>
+<summary><b><a id="images">CONTAINER IMAGES</a></b></summary>
+<br>
+
+| Repository/Tag | Date | Arch | Size |
+| :-- | :--: | :--: | :--: |
+| &nbsp;&nbsp;[`dustynv/opendronemap:r36.3.0`](https://hub.docker.com/r/dustynv/opendronemap/tags) | `2024-09-19` | `arm64` | `8.5GB` |
+
+> <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
+> <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
+> <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R35.x containers can run on other versions of L4T R35.x (JetPack 5.1+)</sub><br>
 </details>
 
 <details open>
@@ -36,9 +59,11 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 # automatically pull or build a compatible container image
 jetson-containers run $(autotag opendronemap)
 
-# or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host opendronemap:36.3.0
+# or explicitly specify one of the container images above
+jetson-containers run dustynv/opendronemap:r36.3.0
 
+# or if using 'docker run' (specify image and mounts/ect)
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/opendronemap:r36.3.0
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

@@ -9,12 +9,11 @@ NVIDIA NeMo for ASR/NLP/TTS https://nvidia.github.io/NeMo/
 
 | **`nemo`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`nemo_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nemo_jp46.yml?label=nemo:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nemo_jp46.yml) [![`nemo_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nemo_jp60.yml?label=nemo:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nemo_jp60.yml) [![`nemo_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/nemo_jp51.yml?label=nemo:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/nemo_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.2`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`torchaudio`](/packages/pytorch/torchaudio) [`numba`](/packages/numba) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`torchaudio`](/packages/pytorch/torchaudio) [`numba`](/packages/numeric/numba) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/nemo:r32.7.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-11-05, 1.9GB)`<br>[`dustynv/nemo:r35.2.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-09-11, 7.1GB)`<br>[`dustynv/nemo:r35.3.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-09-24, 7.1GB)`<br>[`dustynv/nemo:r35.4.1`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-08-29, 6.9GB)`<br>[`dustynv/nemo:r36.2.0`](https://hub.docker.com/r/dustynv/nemo/tags) `(2023-12-15, 9.2GB)` |
-| &nbsp;&nbsp;&nbsp;Notes | this Dockerfile gets switched out for `Dockerfile.jp4` on JetPack 4 |
+| &nbsp;&nbsp;&nbsp;Notes | https://research.nvidia.com/labs/conv-ai/ |
 
 </details>
 

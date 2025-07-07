@@ -6,14 +6,14 @@
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`causalconv1d:1.4.0`** | |
+| **`causalconv1d:1.6.0`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `causalconv1d` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu122`](/packages/cuda/cuda) [`python`](/packages/build/python) [`ninja`](/packages/build/ninja) [`cuda:12.2`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.2`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`torchaudio`](/packages/pytorch/torchaudio) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`cobra:0.0.1`](/packages/mamba/cobra) [`dimba:1.0`](/packages/mamba/dimba) [`mamba:2.2.2`](/packages/mamba/mamba) [`mambavision:1.0`](/packages/mamba/mambavision) [`videomambasuite:1.0`](/packages/mamba/videomambasuite) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`python`](/packages/build/python) [`ninja`](/packages/build/ninja) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`torchaudio`](/packages/pytorch/torchaudio) [`triton`](/packages/ml/triton) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`cobra:0.0.1`](/packages/ml/mamba/cobra) [`cosmos-reason1`](/packages/diffusion/cosmos/cosmos-reason1) [`dimba:1.0`](/packages/ml/mamba/dimba) [`dynamo:0.3.2`](/packages/llm/dynamo/dynamo) [`hymba`](/packages/llm/hymba) [`l4t-dynamo`](/packages/ml/l4t/l4t-dynamo) [`llama-factory`](/packages/llm/llama-factory) [`log-linear-attention:0.0.1`](/packages/attention/log-linear-attention) [`mamba:2.2.5`](/packages/ml/mamba/mamba) [`mambavision:1.0`](/packages/ml/mamba/mambavision) [`minference:0.1.7`](/packages/llm/minference) [`sglang:0.4.4`](/packages/llm/sglang) [`sglang:0.4.6`](/packages/llm/sglang) [`sglang:0.4.9`](/packages/llm/sglang) [`videomambasuite:1.0`](/packages/ml/mamba/videomambasuite) [`vllm:0.7.4`](/packages/llm/vllm) [`vllm:0.8.4`](/packages/llm/vllm) [`vllm:0.9.0`](/packages/llm/vllm) [`vllm:0.9.2`](/packages/llm/vllm) [`vllm:0.9.3`](/packages/llm/vllm) [`vllm:v0.8.5.post1`](/packages/llm/vllm) [`zigma:1.0`](/packages/ml/mamba/zigma) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Notes | https://github.com/state-spaces/mamba |
+| &nbsp;&nbsp;&nbsp;Notes | https://github.com/Dao-AILab/causal-conv1d |
 
 </details>
 
@@ -27,7 +27,7 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag causalconv1d)
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host causalconv1d:36.3.0
+sudo docker run --runtime nvidia -it --rm --network=host causalconv1d:36.4.0
 
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>

@@ -8,11 +8,19 @@
 
 | **`tensorrt_llm:0.12`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Aliases | `tensorrt_llm` |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=cu126']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.4`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.5`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`cuda-python`](/packages/cuda/cuda-python) |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['<cu128']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/cuda/tensorrt) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`cuda-python`](/packages/cuda/cuda-python) [`ninja`](/packages/build/ninja) [`gdrcopy`](/packages/cuda/gdrcopy) [`torchaudio`](/packages/pytorch/torchaudio) [`triton`](/packages/ml/triton) [`torchao`](/packages/pytorch/torchao) [`mooncake`](/packages/llm/dynamo/mooncake) [`nixl`](/packages/llm/dynamo/nixl) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/tensorrt_llm:0.12-r36.4.0`](https://hub.docker.com/r/dustynv/tensorrt_llm/tags) `(2024-11-13, 8.2GB)` |
+| &nbsp;&nbsp;&nbsp;Notes | The `tensorrt-llm:builder` container includes the C++ binaries under `/opt` |
+
+| **`tensorrt_llm:0.22.0`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `tensorrt_llm` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=cu126']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/cuda/tensorrt) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`cuda-python`](/packages/cuda/cuda-python) [`ninja`](/packages/build/ninja) [`gdrcopy`](/packages/cuda/gdrcopy) [`torchaudio`](/packages/pytorch/torchaudio) [`triton`](/packages/ml/triton) [`torchao`](/packages/pytorch/torchao) [`mooncake`](/packages/llm/dynamo/mooncake) [`nixl`](/packages/llm/dynamo/nixl) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`nvidia_modelopt:0.32.0`](/packages/llm/tensorrt_optimizer/nvidia-modelopt) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Notes | The `tensorrt-llm:builder` container includes the C++ binaries under `/opt` |
 
 </details>

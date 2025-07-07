@@ -8,10 +8,9 @@
 
 | **`protobuf:apt`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`protobuf-apt_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/protobuf-apt_jp46.yml?label=protobuf-apt:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/protobuf-apt_jp46.yml) [![`protobuf-apt_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/protobuf-apt_jp51.yml?label=protobuf-apt:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/protobuf-apt_jp51.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`python`](/packages/build/python) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`cudf:21.10.02`](/packages/rapids/cudf) [`cudf:23.10.03`](/packages/rapids/cudf) [`cuml`](/packages/rapids/cuml) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache`](/packages/cuda/cuda) [`python`](/packages/build/python) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`cudf:23.10.03`](/packages/ml/rapids/cudf) [`cudf:25.08.00`](/packages/ml/rapids/cudf) [`cuml`](/packages/ml/rapids/cuml) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/protobuf:apt-r32.7.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-12-06, 0.4GB)`<br>[`dustynv/protobuf:apt-r35.2.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-12-06, 5.0GB)`<br>[`dustynv/protobuf:apt-r35.3.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-08-29, 5.0GB)`<br>[`dustynv/protobuf:apt-r35.4.1`](https://hub.docker.com/r/dustynv/protobuf/tags) `(2023-10-07, 5.0GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | install protobuf from apt repo |
@@ -28,7 +27,7 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag protobuf_apt)
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host protobuf_apt:35.2.1
+sudo docker run --runtime nvidia -it --rm --network=host protobuf_apt:36.4.0
 
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>

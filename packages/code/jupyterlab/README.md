@@ -28,14 +28,37 @@ You can then still manually run the [`/start_jupyter`](./start_jupyter) script l
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`jupyterlab`** | |
+| **`jupyterlab:latest`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`jupyterlab_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/jupyterlab_jp46.yml?label=jupyterlab:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/jupyterlab_jp46.yml) [![`jupyterlab_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/jupyterlab_jp51.yml?label=jupyterlab:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/jupyterlab_jp51.yml) [![`jupyterlab_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/jupyterlab_jp60.yml?label=jupyterlab:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/jupyterlab_jp60.yml) |
+| &nbsp;&nbsp;&nbsp;Aliases | `jupyterlab` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`rust`](/packages/build/rust) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`audiocraft`](/packages/audio/audiocraft) [`efficientvit`](/packages/vit/efficientvit) [`jupyter_clickable_image_widget`](/packages/hardware/jupyter_clickable_image_widget) [`l4t-ml`](/packages/l4t/l4t-ml) [`langchain:samples`](/packages/rag/langchain) [`llama-index`](/packages/rag/llama-index) [`sam`](/packages/vit/sam) [`tam`](/packages/vit/tam) [`voicecraft`](/packages/audio/voicecraft) [`whisper`](/packages/audio/whisper) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/cuda/tensorrt) [`numpy`](/packages/numeric/numpy) [`cuda-python`](/packages/cuda/cuda-python) [`pycuda`](/packages/cuda/pycuda) [`rust`](/packages/build/rust) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`audiocraft`](/packages/speech/audiocraft) [`diffusion_policy`](/packages/diffusion/diffusion_policy) [`dli-nano-ai`](/packages/ml/dli/dli-nano-ai) [`efficientvit`](/packages/vit/efficientvit) [`jupyter_clickable_image_widget`](/packages/hw/jupyter_clickable_image_widget) [`jupyterlab:latest-myst`](/packages/code/jupyterlab) [`l4t-ml`](/packages/ml/l4t/l4t-ml) [`l4t-text-generation`](/packages/ml/l4t/l4t-text-generation) [`langchain:samples`](/packages/rag/langchain) [`lerobot`](/packages/robots/lerobot) [`llama-index:samples`](/packages/rag/llama-index) [`openpi`](/packages/robots/openpi) [`pytorch:2.1-all`](/packages/pytorch) [`pytorch:2.2-all`](/packages/pytorch) [`pytorch:2.3-all`](/packages/pytorch) [`pytorch:2.3.1-all`](/packages/pytorch) [`pytorch:2.4-all`](/packages/pytorch) [`pytorch:2.5-all`](/packages/pytorch) [`pytorch:2.6-all`](/packages/pytorch) [`pytorch:2.7-all`](/packages/pytorch) [`pytorch:2.8-all`](/packages/pytorch) [`sam`](/packages/vit/sam) [`tam`](/packages/vit/tam) [`voice-pro`](/packages/speech/voice-pro) [`voicecraft`](/packages/speech/voicecraft) [`warp:1.7.0-all`](/packages/numeric/warp) [`warp:1.8.1-all`](/packages/numeric/warp) [`whisper`](/packages/speech/whisper) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/jupyterlab:r32.7.1`](https://hub.docker.com/r/dustynv/jupyterlab/tags) `(2024-03-07, 0.7GB)`<br>[`dustynv/jupyterlab:r35.2.1`](https://hub.docker.com/r/dustynv/jupyterlab/tags) `(2023-12-06, 5.3GB)`<br>[`dustynv/jupyterlab:r35.3.1`](https://hub.docker.com/r/dustynv/jupyterlab/tags) `(2024-03-07, 5.4GB)`<br>[`dustynv/jupyterlab:r35.4.1`](https://hub.docker.com/r/dustynv/jupyterlab/tags) `(2023-10-07, 5.3GB)`<br>[`dustynv/jupyterlab:r36.2.0`](https://hub.docker.com/r/dustynv/jupyterlab/tags) `(2024-03-07, 0.6GB)` |
+| &nbsp;&nbsp;&nbsp;Notes | will autostart Jupyter server on port 8888 unless container entry CMD is overridden |
+
+| **`jupyterlab:latest-myst`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `jupyterlab:myst` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/cuda/tensorrt) [`numpy`](/packages/numeric/numpy) [`cuda-python`](/packages/cuda/cuda-python) [`pycuda`](/packages/cuda/pycuda) [`rust`](/packages/build/rust) [`jupyterlab:latest`](/packages/code/jupyterlab) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`lerobot`](/packages/robots/lerobot) [`llama-index:samples`](/packages/rag/llama-index) [`openpi`](/packages/robots/openpi) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.myst`](Dockerfile.myst) |
+| &nbsp;&nbsp;&nbsp;Notes | will autostart Jupyter server on port 8888 unless container entry CMD is overridden |
+
+| **`jupyterlab:4.2.0`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/cuda/tensorrt) [`numpy`](/packages/numeric/numpy) [`cuda-python`](/packages/cuda/cuda-python) [`pycuda`](/packages/cuda/pycuda) [`rust`](/packages/build/rust) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`jupyterlab:4.2.0-myst`](/packages/code/jupyterlab) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Notes | will autostart Jupyter server on port 8888 unless container entry CMD is overridden |
+
+| **`jupyterlab:4.2.0-myst`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/cuda/tensorrt) [`numpy`](/packages/numeric/numpy) [`cuda-python`](/packages/cuda/cuda-python) [`pycuda`](/packages/cuda/pycuda) [`rust`](/packages/build/rust) [`jupyterlab:4.2.0`](/packages/code/jupyterlab) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.myst`](Dockerfile.myst) |
 | &nbsp;&nbsp;&nbsp;Notes | will autostart Jupyter server on port 8888 unless container entry CMD is overridden |
 
 </details>
@@ -51,6 +74,8 @@ You can then still manually run the [`/start_jupyter`](./start_jupyter) script l
 | &nbsp;&nbsp;[`dustynv/jupyterlab:r35.3.1`](https://hub.docker.com/r/dustynv/jupyterlab/tags) | `2024-03-07` | `arm64` | `5.4GB` |
 | &nbsp;&nbsp;[`dustynv/jupyterlab:r35.4.1`](https://hub.docker.com/r/dustynv/jupyterlab/tags) | `2023-10-07` | `arm64` | `5.3GB` |
 | &nbsp;&nbsp;[`dustynv/jupyterlab:r36.2.0`](https://hub.docker.com/r/dustynv/jupyterlab/tags) | `2024-03-07` | `arm64` | `0.6GB` |
+| &nbsp;&nbsp;[`dustynv/jupyterlab:r36.4.0`](https://hub.docker.com/r/dustynv/jupyterlab/tags) | `2025-03-10` | `arm64` | `5.8GB` |
+| &nbsp;&nbsp;[`dustynv/jupyterlab:r36.4.0-cu128-24.04`](https://hub.docker.com/r/dustynv/jupyterlab/tags) | `2025-03-03` | `arm64` | `5.1GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -67,10 +92,10 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag jupyterlab)
 
 # or explicitly specify one of the container images above
-jetson-containers run dustynv/jupyterlab:r35.3.1
+jetson-containers run dustynv/jupyterlab:r36.4.0
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/jupyterlab:r35.3.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/jupyterlab:r36.4.0
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

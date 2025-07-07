@@ -3,10 +3,10 @@
 > [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 
 
-This package provides containers for both ExLlama and ExLlamaV3:
+This package provides containers for both ExLlama and exllamav3:
 
 * `exllama` container uses the https://github.com/jllllll/exllama fork of https://github.com/turboderp/exllama (installed under `/opt/exllama`)
-* `exllama:v2` container uses https://github.com/turboderp/exllamav2 (installed under `/opt/exllamav2`)
+* `exllama:v2` container uses https://github.com/turboderp/exllamav3 (installed under `/opt/exllamav3`)
 
 Both loaders are also supported in the oobabooga [`text-generation-webui`](/packages/llm/text-generation-webui) container.
 
@@ -34,19 +34,12 @@ Substitute the GPTQ model from [HuggingFace Hub](https://huggingface.co/models?s
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`exllama:0.0.15`** | |
+| **`exllama:0.1`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `exllama` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`huggingface_hub`](/packages/llm/huggingface_hub) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`text-generation-webui:1.7`](/packages/llm/text-generation-webui) [`text-generation-webui:6a7cd01`](/packages/llm/text-generation-webui) [`text-generation-webui:main`](/packages/llm/text-generation-webui) |
-| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-
-| **`exllama:0.0.14`** | |
-| :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Aliases | `exllama` |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T ['==35.*']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`huggingface_hub`](/packages/llm/huggingface_hub) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`huggingface_hub`](/packages/llm/huggingface_hub) [`triton`](/packages/ml/triton) [`torchvision`](/packages/pytorch/torchvision) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`diffusers`](/packages/diffusion/diffusers) [`xformers`](/packages/attention/xformers) [`cuda-python`](/packages/cuda/cuda-python) [`cutlass`](/packages/cuda/cutlass) [`flash-attention`](/packages/attention/flash-attention) [`flash-attention`](/packages/attention/flash-attention) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`l4t-text-generation`](/packages/ml/l4t/l4t-text-generation) [`text-generation-webui:1.7`](/packages/llm/text-generation-webui) [`text-generation-webui:6a7cd01`](/packages/llm/text-generation-webui) [`text-generation-webui:main`](/packages/llm/text-generation-webui) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 
 </details>

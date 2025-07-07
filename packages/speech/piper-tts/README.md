@@ -9,10 +9,10 @@
 | **`piper-tts`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/tensorrt) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numpy) [`onnx`](/packages/onnx) [`onnxruntime`](/packages/onnxruntime) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`wyoming-piper:master`](/packages/smart-home/wyoming/piper) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchaudio`](/packages/pytorch/torchaudio) [`tensorrt`](/packages/cuda/tensorrt) [`onnxruntime`](/packages/ml/onnxruntime) [`espeak`](/packages/speech/espeak) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`nano_llm:24.4`](/packages/llm/nano_llm) [`nano_llm:24.4-foxy`](/packages/llm/nano_llm) [`nano_llm:24.4-galactic`](/packages/llm/nano_llm) [`nano_llm:24.4-humble`](/packages/llm/nano_llm) [`nano_llm:24.4-iron`](/packages/llm/nano_llm) [`nano_llm:24.4.1`](/packages/llm/nano_llm) [`nano_llm:24.4.1-foxy`](/packages/llm/nano_llm) [`nano_llm:24.4.1-galactic`](/packages/llm/nano_llm) [`nano_llm:24.4.1-humble`](/packages/llm/nano_llm) [`nano_llm:24.4.1-iron`](/packages/llm/nano_llm) [`nano_llm:24.5`](/packages/llm/nano_llm) [`nano_llm:24.5-foxy`](/packages/llm/nano_llm) [`nano_llm:24.5-galactic`](/packages/llm/nano_llm) [`nano_llm:24.5-humble`](/packages/llm/nano_llm) [`nano_llm:24.5-iron`](/packages/llm/nano_llm) [`nano_llm:24.5.1`](/packages/llm/nano_llm) [`nano_llm:24.5.1-foxy`](/packages/llm/nano_llm) [`nano_llm:24.5.1-galactic`](/packages/llm/nano_llm) [`nano_llm:24.5.1-humble`](/packages/llm/nano_llm) [`nano_llm:24.5.1-iron`](/packages/llm/nano_llm) [`nano_llm:24.6`](/packages/llm/nano_llm) [`nano_llm:24.6-foxy`](/packages/llm/nano_llm) [`nano_llm:24.6-galactic`](/packages/llm/nano_llm) [`nano_llm:24.6-humble`](/packages/llm/nano_llm) [`nano_llm:24.6-iron`](/packages/llm/nano_llm) [`nano_llm:24.7`](/packages/llm/nano_llm) [`nano_llm:24.7-foxy`](/packages/llm/nano_llm) [`nano_llm:24.7-galactic`](/packages/llm/nano_llm) [`nano_llm:24.7-humble`](/packages/llm/nano_llm) [`nano_llm:24.7-iron`](/packages/llm/nano_llm) [`nano_llm:main`](/packages/llm/nano_llm) [`nano_llm:main-foxy`](/packages/llm/nano_llm) [`nano_llm:main-galactic`](/packages/llm/nano_llm) [`nano_llm:main-humble`](/packages/llm/nano_llm) [`nano_llm:main-iron`](/packages/llm/nano_llm) [`speaches`](/packages/speech/speaches) [`wyoming-piper:1.6.2`](/packages/smart-home/wyoming/wyoming-piper) [`wyoming-piper:master`](/packages/smart-home/wyoming/wyoming-piper) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/piper-tts:r35.4.1`](https://hub.docker.com/r/dustynv/piper-tts/tags) `(2024-04-07, 5.5GB)`<br>[`dustynv/piper-tts:r36.2.0`](https://hub.docker.com/r/dustynv/piper-tts/tags) `(2024-04-07, 6.7GB)` |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/piper-tts:r35.4.1`](https://hub.docker.com/r/dustynv/piper-tts/tags) `(2024-04-07, 5.5GB)`<br>[`dustynv/piper-tts:r36.2.0`](https://hub.docker.com/r/dustynv/piper-tts/tags) `(2024-04-07, 6.7GB)`<br>[`dustynv/piper-tts:r36.4.0`](https://hub.docker.com/r/dustynv/piper-tts/tags) `(2025-02-19, 6.3GB)`<br>[`dustynv/piper-tts:r36.4.0-cu128-24.04`](https://hub.docker.com/r/dustynv/piper-tts/tags) `(2025-03-03, 5.6GB)` |
 
 </details>
 
@@ -24,6 +24,8 @@
 | :-- | :--: | :--: | :--: |
 | &nbsp;&nbsp;[`dustynv/piper-tts:r35.4.1`](https://hub.docker.com/r/dustynv/piper-tts/tags) | `2024-04-07` | `arm64` | `5.5GB` |
 | &nbsp;&nbsp;[`dustynv/piper-tts:r36.2.0`](https://hub.docker.com/r/dustynv/piper-tts/tags) | `2024-04-07` | `arm64` | `6.7GB` |
+| &nbsp;&nbsp;[`dustynv/piper-tts:r36.4.0`](https://hub.docker.com/r/dustynv/piper-tts/tags) | `2025-02-19` | `arm64` | `6.3GB` |
+| &nbsp;&nbsp;[`dustynv/piper-tts:r36.4.0-cu128-24.04`](https://hub.docker.com/r/dustynv/piper-tts/tags) | `2025-03-03` | `arm64` | `5.6GB` |
 
 > <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
 > <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
@@ -40,10 +42,10 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag piper-tts)
 
 # or explicitly specify one of the container images above
-jetson-containers run dustynv/piper-tts:r36.2.0
+jetson-containers run dustynv/piper-tts:r36.4.0-cu128-24.04
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/piper-tts:r36.2.0
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/piper-tts:r36.4.0-cu128-24.04
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>

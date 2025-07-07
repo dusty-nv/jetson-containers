@@ -9,28 +9,15 @@
 | **`ctranslate2:master`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 
-| **`ctranslate2:master-builder`** | |
-| :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) |
-| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-
-| **`ctranslate2:4.2.0`** | |
+| **`ctranslate2:4.6.0`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `ctranslate2` |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`faster-whisper`](/packages/audio/faster-whisper) [`voicecraft`](/packages/audio/voicecraft) [`whisperx`](/packages/audio/whisperx) [`wyoming-whisper:latest`](/packages/smart-home/wyoming/wyoming-whisper) |
-| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-
-| **`ctranslate2:4.2.0-builder`** | |
-| :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Aliases | `ctranslate2:builder` |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['<=cu126']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`faster-whisper`](/packages/speech/faster-whisper) [`speaches`](/packages/speech/speaches) [`voice-pro`](/packages/speech/voice-pro) [`voicecraft`](/packages/speech/voicecraft) [`whisperx`](/packages/speech/whisperx) [`wyoming-whisper:2.5.0`](/packages/smart-home/wyoming/wyoming-whisper) [`wyoming-whisper:master`](/packages/smart-home/wyoming/wyoming-whisper) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 
 </details>
@@ -45,7 +32,7 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag ctranslate2)
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host ctranslate2:35.2.1
+sudo docker run --runtime nvidia -it --rm --network=host ctranslate2:36.4.0
 
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>

@@ -13,7 +13,7 @@
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `3d-diffusion-policy` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu122`](/packages/cuda/cuda) [`cuda:12.2`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.2`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`mujoco`](/packages/robots/mujoco) [`numba`](/packages/numeric/numba) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`mujoco`](/packages/sim/mujoco) [`numba`](/packages/numeric/numba) [`diffusers`](/packages/diffusion/diffusers) [`torchaudio`](/packages/pytorch/torchaudio) [`pytorch3d`](/packages/pytorch/torch3d) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/3d_diffusion_policy:r36.3.0`](https://hub.docker.com/r/dustynv/3d_diffusion_policy/tags) `(2024-09-30, 7.0GB)` |
 

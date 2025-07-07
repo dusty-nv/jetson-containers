@@ -2,32 +2,52 @@
 
 > [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
 
-Container for TF1/TF2 with CUDA support.
-Note that the [`l4t-tensorflow`](/packages/l4t/l4t-tensorflow) containers are similar, with the addition of OpenCV and PyCUDA.  
-
-The TensorFlow wheels used in these are from https://docs.nvidia.com/deeplearning/frameworks/install-tf-jetson-platform
-
+Legacy TF1 installer and TF2 builder
 <details open>
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`tensorflow`** | |
+| **`tensorflow2:2.16.1`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`tensorflow_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/tensorflow_jp46.yml?label=tensorflow:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tensorflow_jp46.yml) [![`tensorflow_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/tensorflow_jp51.yml?label=tensorflow:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tensorflow_jp51.yml) |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`protobuf:cpp`](/packages/build/protobuf/protobuf_cpp) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`l4t-tensorflow:tf1`](/packages/l4t/l4t-tensorflow) |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/cuda/tensorrt) [`pybind11`](/packages/build/pybind11) [`numpy`](/packages/numeric/numpy) [`h5py`](/packages/build/h5py) [`bazel`](/packages/build/bazel) [`protobuf:cpp`](/packages/build/protobuf/protobuf_cpp) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/tensorflow:r32.7.1`](https://hub.docker.com/r/dustynv/tensorflow/tags) `(2023-12-06, 0.8GB)`<br>[`dustynv/tensorflow:r35.2.1`](https://hub.docker.com/r/dustynv/tensorflow/tags) `(2023-12-05, 5.5GB)`<br>[`dustynv/tensorflow:r35.3.1`](https://hub.docker.com/r/dustynv/tensorflow/tags) `(2023-08-29, 5.5GB)`<br>[`dustynv/tensorflow:r35.4.1`](https://hub.docker.com/r/dustynv/tensorflow/tags) `(2023-12-06, 5.5GB)` |
+| &nbsp;&nbsp;&nbsp;Notes | TensorFlow TF2 version 2.16.1 |
 
-| **`tensorflow2`** | |
+| **`tensorflow2:2.18.0`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`tensorflow2_jp46`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/tensorflow2_jp46.yml?label=tensorflow2:jp46)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tensorflow2_jp46.yml) [![`tensorflow2_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/tensorflow2_jp60.yml?label=tensorflow2:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tensorflow2_jp60.yml) [![`tensorflow2_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/tensorflow2_jp51.yml?label=tensorflow2:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/tensorflow2_jp51.yml) |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/tensorrt) [`numpy`](/packages/numpy) [`protobuf:cpp`](/packages/build/protobuf/protobuf_cpp) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`l4t-ml`](/packages/l4t/l4t-ml) [`l4t-tensorflow:tf2`](/packages/l4t/l4t-tensorflow) |
-| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/tensorflow2:r32.7.1`](https://hub.docker.com/r/dustynv/tensorflow2/tags) `(2023-12-06, 0.9GB)`<br>[`dustynv/tensorflow2:r35.2.1`](https://hub.docker.com/r/dustynv/tensorflow2/tags) `(2023-12-06, 5.6GB)`<br>[`dustynv/tensorflow2:r35.3.1`](https://hub.docker.com/r/dustynv/tensorflow2/tags) `(2023-12-05, 5.6GB)`<br>[`dustynv/tensorflow2:r35.4.1`](https://hub.docker.com/r/dustynv/tensorflow2/tags) `(2023-10-07, 5.6GB)`<br>[`dustynv/tensorflow2:r36.2.0`](https://hub.docker.com/r/dustynv/tensorflow2/tags) `(2023-12-05, 7.2GB)` |
+| &nbsp;&nbsp;&nbsp;Aliases | `tensorflow2:2.18.0` `tensorflow` `tensorflow2` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/cuda/tensorrt) [`pybind11`](/packages/build/pybind11) [`numpy`](/packages/numeric/numpy) [`h5py`](/packages/build/h5py) [`bazel`](/packages/build/bazel) [`protobuf:cpp`](/packages/build/protobuf/protobuf_cpp) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`l4t-ml`](/packages/ml/l4t/l4t-ml) [`l4t-tensorflow:tf1`](/packages/ml/l4t/l4t-tensorflow) [`l4t-tensorflow:tf2`](/packages/ml/l4t/l4t-tensorflow) [`tensorflow_graphics:2.18.0`](/packages/ml/tensorflow/graphics) [`tensorflow_text:2.18.0`](/packages/ml/tensorflow/text) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.pip`](Dockerfile.pip) |
+| &nbsp;&nbsp;&nbsp;Notes | TensorFlow TF2 version 2.18.0 (will be built from source) |
+
+| **`tensorflow2:2.19.0`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `tensorflow2:2.19.0` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/cuda/tensorrt) [`pybind11`](/packages/build/pybind11) [`numpy`](/packages/numeric/numpy) [`h5py`](/packages/build/h5py) [`bazel`](/packages/build/bazel) [`protobuf:cpp`](/packages/build/protobuf/protobuf_cpp) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`tensorflow_graphics:2.19.0`](/packages/ml/tensorflow/graphics) [`tensorflow_text:2.19.0`](/packages/ml/tensorflow/text) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.pip`](Dockerfile.pip) |
+| &nbsp;&nbsp;&nbsp;Notes | TensorFlow TF2 version 2.19.0 (will be built from source) |
+
+| **`tensorflow2:2.20.0`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `tensorflow2:2.20.0` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/cuda/tensorrt) [`pybind11`](/packages/build/pybind11) [`numpy`](/packages/numeric/numpy) [`h5py`](/packages/build/h5py) [`bazel`](/packages/build/bazel) [`protobuf:cpp`](/packages/build/protobuf/protobuf_cpp) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`tensorflow_graphics:2.20.0`](/packages/ml/tensorflow/graphics) [`tensorflow_text:2.20.0`](/packages/ml/tensorflow/text) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.pip`](Dockerfile.pip) |
+| &nbsp;&nbsp;&nbsp;Notes | TensorFlow TF2 version 2.20.0 (will be built from source) |
+
+| **`tensorflow2:2.21.0`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `tensorflow2:2.21.0` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`tensorrt`](/packages/cuda/tensorrt) [`pybind11`](/packages/build/pybind11) [`numpy`](/packages/numeric/numpy) [`h5py`](/packages/build/h5py) [`bazel`](/packages/build/bazel) [`protobuf:cpp`](/packages/build/protobuf/protobuf_cpp) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.pip`](Dockerfile.pip) |
+| &nbsp;&nbsp;&nbsp;Notes | TensorFlow TF2 version 2.21.0 (will be built from source) |
 
 </details>
 

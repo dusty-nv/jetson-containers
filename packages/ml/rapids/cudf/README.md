@@ -6,23 +6,21 @@
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`cudf:23.10.03`** | |
+| **`cudf:25.08.00`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `cudf` |
-| &nbsp;&nbsp;&nbsp;Builds | [![`cudf-231003_jp60`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/cudf-231003_jp60.yml?label=cudf-231003:jp60)](https://github.com/dusty-nv/jetson-containers/actions/workflows/cudf-231003_jp60.yml) |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numpy) [`cupy`](/packages/cuda/cupy) [`numba`](/packages/numba) [`protobuf:apt`](/packages/build/protobuf/protobuf_apt) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`cuml`](/packages/rapids/cuml) |
-| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.jp5`](Dockerfile.jp5) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/cudf:23.10.03-r36.2.0`](https://hub.docker.com/r/dustynv/cudf/tags) `(2023-12-06, 5.2GB)` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numeric/numpy) [`cupy`](/packages/numeric/cupy) [`numba`](/packages/numeric/numba) [`protobuf:apt`](/packages/build/protobuf/protobuf_apt) [`cuda-python`](/packages/cuda/cuda-python) [`arrow:19.0.1`](/packages/numeric/arrow) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`cuml`](/packages/ml/rapids/cuml) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.jp6`](Dockerfile.jp6) |
 | &nbsp;&nbsp;&nbsp;Notes | installed under `/usr/local` |
 
-| **`cudf:21.10.02`** | |
+| **`cudf:23.10.03`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Aliases | `cudf` |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T ['==35.*']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numpy) [`cupy`](/packages/cuda/cupy) [`numba`](/packages/numba) [`protobuf:apt`](/packages/build/protobuf/protobuf_apt) |
-| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.jp5`](Dockerfile.jp5) |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) [`numpy`](/packages/numeric/numpy) [`cupy`](/packages/numeric/cupy) [`numba`](/packages/numeric/numba) [`protobuf:apt`](/packages/build/protobuf/protobuf_apt) [`cuda-python`](/packages/cuda/cuda-python) [`arrow:12.0.1`](/packages/numeric/arrow) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.jp6`](Dockerfile.jp6) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/cudf:23.10.03-r36.2.0`](https://hub.docker.com/r/dustynv/cudf/tags) `(2023-12-06, 5.2GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | installed under `/usr/local` |
 
 </details>

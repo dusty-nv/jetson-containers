@@ -9,7 +9,7 @@
 | **`holoscan`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda:12.2`](/packages/cuda/cuda) [`cudnn:8.9`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch`](/packages/pytorch) [`cupy`](/packages/cuda/cupy) [`tensorrt`](/packages/tensorrt) [`ffmpeg`](/packages/ffmpeg) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch`](/packages/pytorch) [`cupy`](/packages/numeric/cupy) [`tensorrt`](/packages/cuda/tensorrt) [`ffmpeg`](/packages/multimedia/ffmpeg) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Images | [`dustynv/holoscan:r36.3.0`](https://hub.docker.com/r/dustynv/holoscan/tags) `(2024-07-03, 6.9GB)` |
 | &nbsp;&nbsp;&nbsp;Notes | https://docs.nvidia.com/holoscan/sdk-user-guide/overview.html |

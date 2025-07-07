@@ -6,22 +6,50 @@
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`bitsandbytes:builder`** | |
+| **`bitsandbytes:0.39.1`** | |
 | :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T ['==35.*']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.2`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) |
-| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile.builder`](Dockerfile.builder) |
-| &nbsp;&nbsp;&nbsp;Notes | fork of https://github.com/TimDettmers/bitsandbytes for Jetson |
-
-| **`bitsandbytes`** | |
-| :-- | :-- |
-| &nbsp;&nbsp;&nbsp;Builds | [![`bitsandbytes_jp51`](https://img.shields.io/github/actions/workflow/status/dusty-nv/jetson-containers/bitsandbytes_jp51.yml?label=bitsandbytes:jp51)](https://github.com/dusty-nv/jetson-containers/actions/workflows/bitsandbytes_jp51.yml) |
-| &nbsp;&nbsp;&nbsp;Requires | `L4T ['==35.*']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`cuda`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/onnx) [`pytorch:2.2`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`text-generation-inference`](/packages/llm/text-generation-inference) |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=35']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`triton`](/packages/ml/triton) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
-| &nbsp;&nbsp;&nbsp;Images | [`dustynv/bitsandbytes:r35.2.1`](https://hub.docker.com/r/dustynv/bitsandbytes/tags) `(2023-12-15, 5.9GB)`<br>[`dustynv/bitsandbytes:r35.3.1`](https://hub.docker.com/r/dustynv/bitsandbytes/tags) `(2023-12-11, 6.0GB)`<br>[`dustynv/bitsandbytes:r35.4.1`](https://hub.docker.com/r/dustynv/bitsandbytes/tags) `(2023-12-14, 5.9GB)` |
-| &nbsp;&nbsp;&nbsp;Notes | fork of https://github.com/TimDettmers/bitsandbytes for Jetson |
+| &nbsp;&nbsp;&nbsp;Notes | https://github.com/bitsandbytes-foundation/bitsandbytes |
+
+| **`bitsandbytes:0.45.4`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=35']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`triton`](/packages/ml/triton) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/bitsandbytes:0.45.4-r36.4.0-cu128-24.04`](https://hub.docker.com/r/dustynv/bitsandbytes/tags) `(2025-03-03, 4.4GB)` |
+| &nbsp;&nbsp;&nbsp;Notes | https://github.com/bitsandbytes-foundation/bitsandbytes |
+
+| **`bitsandbytes:0.45.5`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=35']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`triton`](/packages/ml/triton) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Notes | https://github.com/bitsandbytes-foundation/bitsandbytes |
+
+| **`bitsandbytes:0.46.0`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=35']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`triton`](/packages/ml/triton) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Notes | https://github.com/bitsandbytes-foundation/bitsandbytes |
+
+| **`bitsandbytes:0.47.0`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `bitsandbytes` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=35']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`triton`](/packages/ml/triton) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`ai-toolkit`](/packages/diffusion/ai-toolkit) [`comfyui`](/packages/diffusion/comfyui) [`cosmos-predict2`](/packages/diffusion/cosmos/cosmos-predict2) [`cosmos-reason1`](/packages/diffusion/cosmos/cosmos-reason1) [`cosmos-transfer1`](/packages/diffusion/cosmos/cosmos-transfer1) [`cosmos1-diffusion-renderer:1.0.4`](/packages/diffusion/cosmos/cosmos_diffusion_renderer) [`dimba:1.0`](/packages/ml/mamba/dimba) [`dynamo:0.3.2`](/packages/llm/dynamo/dynamo) [`framepack`](/packages/diffusion/framepack) [`fruitnerf:1.0`](/packages/3d/nerf/fruitnerf) [`isaac-gr00t`](/packages/vla/isaac-gr00t) [`l4t-diffusion`](/packages/ml/l4t/l4t-diffusion) [`l4t-dynamo`](/packages/ml/l4t/l4t-dynamo) [`lita`](/packages/vlm/lita) [`llama-factory`](/packages/llm/llama-factory) [`llama-vision`](/packages/vlm/llama-vision) [`lobechat`](/packages/llm/lobe_chat) [`nerfstudio:1.1.7`](/packages/3d/nerf/nerfstudio) [`openvla`](/packages/vla/openvla) [`openvla:mimicgen`](/packages/vla/openvla) [`prismatic`](/packages/vlm/prismatic) [`robopoint`](/packages/vla/robopoint) [`sdnext`](/packages/diffusion/sdnext) [`self-forcing`](/packages/diffusion/self-forcing) [`sglang:0.4.4`](/packages/llm/sglang) [`sglang:0.4.6`](/packages/llm/sglang) [`sglang:0.4.9`](/packages/llm/sglang) [`sudonim:hf`](/packages/llm/sudonim) [`text-generation-inference`](/packages/llm/text-generation-inference) [`videollama:1.0.0`](/packages/vlm/videollama) [`vllm:0.7.4`](/packages/llm/vllm) [`vllm:0.8.4`](/packages/llm/vllm) [`vllm:0.9.0`](/packages/llm/vllm) [`vllm:0.9.2`](/packages/llm/vllm) [`vllm:0.9.3`](/packages/llm/vllm) [`vllm:v0.8.5.post1`](/packages/llm/vllm) [`vscode:transformers`](/packages/code/vscode) [`xtuner`](/packages/vlm/xtuner) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Notes | https://github.com/bitsandbytes-foundation/bitsandbytes |
+
+| **`bitsandbytes:0.48.0`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=35']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`triton`](/packages/ml/triton) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Notes | https://github.com/bitsandbytes-foundation/bitsandbytes |
 
 </details>
 
@@ -31,6 +59,7 @@
 
 | Repository/Tag | Date | Arch | Size |
 | :-- | :--: | :--: | :--: |
+| &nbsp;&nbsp;[`dustynv/bitsandbytes:0.45.4-r36.4.0-cu128-24.04`](https://hub.docker.com/r/dustynv/bitsandbytes/tags) | `2025-03-03` | `arm64` | `4.4GB` |
 | &nbsp;&nbsp;[`dustynv/bitsandbytes:r35.2.1`](https://hub.docker.com/r/dustynv/bitsandbytes/tags) | `2023-12-15` | `arm64` | `5.9GB` |
 | &nbsp;&nbsp;[`dustynv/bitsandbytes:r35.3.1`](https://hub.docker.com/r/dustynv/bitsandbytes/tags) | `2023-12-11` | `arm64` | `6.0GB` |
 | &nbsp;&nbsp;[`dustynv/bitsandbytes:r35.4.1`](https://hub.docker.com/r/dustynv/bitsandbytes/tags) | `2023-12-14` | `arm64` | `5.9GB` |
@@ -50,10 +79,10 @@ To start the container, you can use [`jetson-containers run`](/docs/run.md) and 
 jetson-containers run $(autotag bitsandbytes)
 
 # or explicitly specify one of the container images above
-jetson-containers run dustynv/bitsandbytes:r35.2.1
+jetson-containers run dustynv/bitsandbytes:0.45.4-r36.4.0-cu128-24.04
 
 # or if using 'docker run' (specify image and mounts/ect)
-sudo docker run --runtime nvidia -it --rm --network=host dustynv/bitsandbytes:r35.2.1
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/bitsandbytes:0.45.4-r36.4.0-cu128-24.04
 ```
 > <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
 > <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
