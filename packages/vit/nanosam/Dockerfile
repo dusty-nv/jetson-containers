@@ -16,7 +16,10 @@ WORKDIR /opt
 #
 RUN git clone https://github.com/NVIDIA-AI-IOT/trt_pose && \
     cd trt_pose && \
-    python3 setup.py develop
+    echo "[build-system]" > pyproject.toml && \
+    echo "requires = [\"setuptools>=40.8.0\", \"wheel\", \"torch\", \"torchvision\"]" >> pyproject.toml && \
+    echo "build-backend = \"setuptools.build_meta\"" >> pyproject.toml && \
+    pip3 install -e .
 
 # 2. Install the NanoSAM Python package
 RUN git clone https://github.com/NVIDIA-AI-IOT/nanosam && \

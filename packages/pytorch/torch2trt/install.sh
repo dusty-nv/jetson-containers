@@ -8,7 +8,7 @@ cd torch2trt
 ls -R /tmp/torch2trt
 cp /tmp/torch2trt/flattener.py torch2trt
 
-pip3 install .
+python3 setup.py install --plugins
 
 sed 's|^set(CUDA_ARCHITECTURES.*|#|g' -i CMakeLists.txt
 sed 's|Catch2_FOUND|False|g' -i CMakeLists.txt
