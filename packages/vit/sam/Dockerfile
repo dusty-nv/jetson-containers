@@ -18,6 +18,9 @@ RUN git clone https://github.com/facebookresearch/segment-anything && \
     sed 's|, "onnx.*"||' -i setup.py && \
     pip3 install .
 
+ENV PYTHONPATH=${PYTHONPATH}:/opt/segment-anything
+
+
 RUN mkdir -p /opt/segment-anything/benchmark
 COPY benchmark.py /opt/segment-anything/benchmark
 
