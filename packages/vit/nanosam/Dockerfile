@@ -24,7 +24,7 @@ RUN git clone https://github.com/NVIDIA-AI-IOT/trt_pose && \
 # 2. Install the NanoSAM Python package
 RUN git clone https://github.com/NVIDIA-AI-IOT/nanosam && \
     cd nanosam && \
-    python3 setup.py develop
+    pip3 install .
 
 # 3. Build the TensorRT engine for the mask decoder
 RUN pip3 install timm
