@@ -2,7 +2,7 @@
 # psutil-home-assistant
 set -xo pipefail
 
-git clone --branch=${PSUTIL_HA_VERSION} https://github.com/home-assistant-libs/psutil-home-assistant /opt/psutil-home-assistant
+git clone --branch=${PSUTIL_HA_BRANCH} https://github.com/home-assistant-libs/psutil-home-assistant /opt/psutil-home-assistant
 
 pip3 wheel --wheel-dir=$PIP_WHEEL_DIR --no-deps --verbose /opt/psutil-home-assistant
 rm -rf /opt/psutil-home-assistant
