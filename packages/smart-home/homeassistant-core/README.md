@@ -166,11 +166,11 @@ Got questions? You have several options to get them answered:
 <summary><b><a id="containers">CONTAINERS</a></b></summary>
 <br>
 
-| **`homeassistant-core:2025.7.0`** | |
+| **`homeassistant-core:2025.7.1`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `homeassistant-core` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`homeassistant-base`](/packages/smart-home/homeassistant-base) [`pip_cache`](/packages/cuda/cuda) [`python:3.12`](/packages/build/python) [`ciso8601`](/packages/smart-home/dependencies/ciso8601) [`psutil-home-assistant`](/packages/smart-home/dependencies/psutil-home-assistant) [`ffmpeg`](/packages/multimedia/ffmpeg) [`python:3.13`](/packages/build/python) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`homeassistant-base`](/packages/smart-home/homeassistant-base) [`pip_cache`](/packages/cuda/cuda) [`python`](/packages/build/python) [`psutil-home-assistant`](/packages/smart-home/dependencies/psutil-home-assistant) [`ffmpeg`](/packages/multimedia/ffmpeg) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Notes | The `homeassistant-core` wheel that's build is saved in `/usr/src/homeassistant` |
 

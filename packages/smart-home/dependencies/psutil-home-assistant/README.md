@@ -10,8 +10,8 @@
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `psutil-home-assistant` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache`](/packages/cuda/cuda) [`python:3.12`](/packages/build/python) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`homeassistant-core:2025.7.0`](/packages/smart-home/homeassistant-core) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache`](/packages/cuda/cuda) [`python`](/packages/build/python) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`homeassistant-core:2025.7.1`](/packages/smart-home/homeassistant-core) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Notes | The `psutil-home-assistant` wheel that's build is saved in `/opt/wheels` |
 
