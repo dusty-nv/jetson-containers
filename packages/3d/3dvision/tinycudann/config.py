@@ -23,5 +23,5 @@ def tinycudann(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    tinycudann('1.7', default=True),
+    tinycudann('2.0', default=True),
 ]
