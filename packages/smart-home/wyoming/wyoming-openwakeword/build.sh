@@ -28,6 +28,6 @@ pip3 install $PIP_WHEEL_DIR/wyoming_openwakeword*.whl
 pip3 show wyoming_openwakeword
 python3 -c 'import wyoming_openwakeword; print(wyoming_openwakeword.__version__);'
 
-twine upload --skip-existing --verbose $PIP_WHEEL_DIR/wyoming_openwakeword*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose $PIP_WHEEL_DIR/wyoming_openwakeword*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
 rm $PIP_WHEEL_DIR/wyoming_openwakeword*.whl

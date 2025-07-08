@@ -29,7 +29,7 @@ pip3 install $PIP_WHEEL_DIR/wyoming_satellite*.whl
 
 pip3 show wyoming_satellite
 
-twine upload --skip-existing --verbose $PIP_WHEEL_DIR/wyoming_satellite*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose $PIP_WHEEL_DIR/wyoming_satellite*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
 rm $PIP_WHEEL_DIR/wyoming_satellite*.whl
 

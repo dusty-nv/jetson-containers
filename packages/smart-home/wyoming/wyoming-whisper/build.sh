@@ -24,6 +24,6 @@ pip3 install $PIP_WHEEL_DIR/wyoming_faster_whisper*.whl
 pip3 show wyoming_faster_whisper
 python3 -c 'import wyoming_faster_whisper; print(wyoming_faster_whisper.__version__);'
 
-twine upload --skip-existing --verbose $PIP_WHEEL_DIR/wyoming_faster_whisper*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose $PIP_WHEEL_DIR/wyoming_faster_whisper*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
 rm $PIP_WHEEL_DIR/wyoming_faster_whisper*.whl

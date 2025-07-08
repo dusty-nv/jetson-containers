@@ -33,4 +33,4 @@ pip3 install /opt/triton*.whl
 pip3 show triton
 python3 -c 'import triton'
 
-twine upload --skip-existing --verbose /opt/triton*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose /opt/triton*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

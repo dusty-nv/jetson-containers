@@ -26,6 +26,6 @@ pip3 install $PIP_WHEEL_DIR/faster_whisper*.whl
 pip3 show faster_whisper
 python3 -c 'import faster_whisper; print(faster_whisper.__version__);'
 
-twine upload --skip-existing --verbose $PIP_WHEEL_DIR/faster_whisper*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose $PIP_WHEEL_DIR/faster_whisper*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
 rm $PIP_WHEEL_DIR/faster_whisper*.whl

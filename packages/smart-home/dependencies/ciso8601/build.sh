@@ -10,6 +10,6 @@ pip3 wheel --wheel-dir=$PIP_WHEEL_DIR --no-deps --verbose /opt/ciso8601
 pip3 install  $PIP_WHEEL_DIR/ciso8601*.whl
 rm -rf /opt/ciso8601
 
-twine upload --skip-existing --verbose $PIP_WHEEL_DIR/ciso8601*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose $PIP_WHEEL_DIR/ciso8601*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
 rm $PIP_WHEEL_DIR/ciso8601*.whl
