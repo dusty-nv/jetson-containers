@@ -3,7 +3,7 @@
 # group: smart-home
 # config: config.py
 # requires: '>=34.1.0'
-# depends: [build-essential, python:3.12]
+# depends: [build-essential, python]
 # test: test.py
 # notes: The `ciso8601` wheel that's build is saved in `/opt/wheels`
 #---
