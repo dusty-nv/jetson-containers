@@ -2,19 +2,12 @@
 # wyoming-whisper
 set -ex
 
-apt-get update
-apt-get install -y --no-install-recommends \
-   netcat-traditional
-apt-get clean
-rm -rf /var/lib/apt/lists/*
-
 pip3 install -U \
    build \
-   wheel 
+   wheel
 
 # Clone wyoming-faster-whisper layer
 git clone --branch=${WYOMING_WHISPER_BRANCH} https://github.com/rhasspy/wyoming-faster-whisper /tmp/wyoming-faster-whisper
-
 cd /tmp/wyoming-faster-whisper
 
 sed -i \

@@ -25,5 +25,5 @@ def create_package(version, branch=None, default=False) -> list:
     return pkg, builder
 
 package = [
-    create_package("2.5.0", branch="master", default=True),
+    create_package("2.5.0", default=True),
 ]
