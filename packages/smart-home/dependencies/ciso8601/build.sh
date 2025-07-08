@@ -2,7 +2,7 @@
 # ciso8601
 set -xo pipefail
 
-git clone --branch=${CISO8601_VERSION} https://github.com/closeio/ciso8601 /opt/ciso8601
+git clone --branch=${CISO8601_BRANCH} https://github.com/closeio/ciso8601 /opt/ciso8601
 git -C /opt/ciso8601 apply /tmp/ciso8601/patch.diff
 git -C /opt/ciso8601 diff
 

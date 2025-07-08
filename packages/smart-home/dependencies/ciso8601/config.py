@@ -1,13 +1,14 @@
 from jetson_containers import github_latest_tag
 
 
-def create_package(version, default=False):
+def create_package(version, branch=None, default=False):
     pkg = package.copy()
     wanted_version = github_latest_tag('closeio/ciso8601') if version == 'latest' else version
 
     pkg['name'] = f'ciso8601:{wanted_version}'
     pkg['build_args'] = {
         'CISO8601_VERSION': wanted_version,
+        'CISO8601_BRANCH': branch or wanted_version,
     }
 
     builder = pkg.copy()
@@ -21,5 +22,6 @@ def create_package(version, default=False):
     return pkg, builder
 
 package = [
-    create_package('latest', default=True),
+    create_package('2.3.2', default=False),
+    create_package('2.3.2.post1', branch="master", default=True),
 ]
