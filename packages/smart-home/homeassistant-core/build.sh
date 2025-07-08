@@ -6,11 +6,11 @@ echo "Installing Home Assistant Core ${HA_VERSION}..."
 
 apt-get update
 apt-get install -y --no-install-recommends \
-        autoconf \
-        libpcap0.8 \
-        libturbojpeg \
-        tcl \
-        zlib1g-dev
+    autoconf \
+    libpcap0.8 \
+    libturbojpeg \
+    tcl \
+    zlib1g-dev
 apt-get clean
 rm -rf /var/lib/apt/lists/*
 
@@ -18,7 +18,6 @@ python3 -m sqlite3 -v
 
 # Download and build SQLite
 mkdir -p /tmp/sqlite
-# Download SQLite from GitHub mirror
 wget $WGET_FLAGS \
     https://github.com/sqlite/sqlite/archive/refs/tags/version-${SQLITE_VERSION}.tar.gz \
     -O /tmp/sqlite/sqlite.tar.gz
@@ -44,7 +43,7 @@ rm -rf /tmp/sqlite
 python3 -m sqlite3 -v
 
 pip3 install --ignore-installed blinker
-pip3 install uv==0.5.0 ruff
+pip3 install uv==0.7.1 ruff
 
 # Install homeassistant-core
 git clone --branch=${HA_VERSION} https://github.com/home-assistant/core /usr/src/homeassistant
@@ -59,3 +58,9 @@ python3 -m script.translations develop --all
 
 # Copy Home Assistant S6-Overlay
 cp -r rootfs/* /
+
+# Get go2rtc binary
+ln -s /data/homeassistant /config
+curl -L https://github.com/AlexxIT/go2rtc/releases/download/v1.9.9/go2rtc_linux_arm64 --output /bin/go2rtc
+chmod +x /bin/go2rtc
+go2rtc --version

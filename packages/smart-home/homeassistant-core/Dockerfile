@@ -4,7 +4,7 @@
 # config: config.py
 # requires: '>=34.1.0'
 # docs: docs.md
-# depends: [homeassistant-base, ciso8601, psutil-home-assistant, ffmpeg]
+# depends: [homeassistant-base, psutil-home-assistant, ffmpeg]
 # test: [go2rtc_test.sh, sqlite3_test.py, test.py]
 # notes: The `homeassistant-core` wheel that's build is saved in `/usr/src/homeassistant`
 #---
@@ -28,11 +28,7 @@ ENV S6_SERVICES_READYTIME=50 \
 
 COPY *.sh /tmp/homeassistant/
 
-RUN /tmp/homeassistant/build.sh \
-    && ln -s /data/homeassistant /config \
-    && curl -L https://github.com/AlexxIT/go2rtc/releases/download/v1.9.7/go2rtc_linux_arm64 --output /bin/go2rtc \
-    && chmod +x /bin/go2rtc \
-    && go2rtc --version
+RUN /tmp/homeassistant/build.sh
 
 ENV LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-}:/usr/local/lib
 
