@@ -6,7 +6,7 @@
 # test: test.sh
 # requires: '>=34.1.0'
 # docs: docs.md
-# notes: The `piper-tts` using the `wyoming` protocol for usage with Home Assistant. Based on `https://github.com/home-assistant/addons/tree/master/piper` and `https://github.com/rhasspy/wyoming-piper`
+# notes: The `piper1-tts` using the `wyoming` protocol for usage with Home Assistant. Based on `https://github.com/home-assistant/addons/tree/master/piper` and `https://github.com/rhasspy/wyoming-piper`
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
@@ -27,12 +27,13 @@ ENV PIP_BREAK_SYSTEM_PACKAGES=1 \
     PIPER_SPEAKER="777" \
     PIPER_VOICE="en_US-libritts_r-medium" \
     PIPER_MAX_PROC="1" \
-    PIPER_DEBUG="true"
+    PIPER_DEBUG="true" \
+    PIPER_STREAMING="true"
+
+WORKDIR /
 
 COPY rootfs/ /
 COPY *.sh *.diff /tmp/wyoming/piper/
-
-WORKDIR /usr/src
 
 RUN /tmp/wyoming/piper/install.sh || /tmp/wyoming/piper/build.sh
 

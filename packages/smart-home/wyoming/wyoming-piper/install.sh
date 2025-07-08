@@ -9,7 +9,6 @@ if [ "$FORCE_BUILD" == "on" ]; then
 fi
 
 echo "Installing wyoming-piper ${WYOMING_PIPER_VERSION}..."
-
 pip3 install wyoming_piper==${WYOMING_PIPER_VERSION}
 
 pip3 show wyoming_piper

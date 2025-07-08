@@ -1,25 +1,18 @@
 diff --git a/wyoming_piper/__main__.py b/wyoming_piper/__main__.py
-index 08b20f1..f88312b 100755
+index 3f6efe4..0537dba 100755
 --- a/wyoming_piper/__main__.py
 +++ b/wyoming_piper/__main__.py
-@@ -77,6 +77,15 @@ async def main() -> None:
+@@ -82,6 +82,8 @@ async def main() -> None:
          version=__version__,
          help="Print version and exit",
      )
-+    parser.add_argument(
-+        "--cuda",
-+        action="store_true",
-+        help="Use GPU"
-+    )
-+    parser.add_argument(
-+        "--espeak-data-dir",
-+        help="Path to espeak-ng data directory"
-+    )
++    parser.add_argument("--cuda", action="store_true", help="Use GPU")
++    parser.add_argument("--espeak-data-dir", help="Path to espeak-ng data directory")
      args = parser.parse_args()
  
      if not args.download_dir:
 diff --git a/wyoming_piper/process.py b/wyoming_piper/process.py
-index a7e90a7..98b0712 100644
+index a7e90a7..9a28405 100644
 --- a/wyoming_piper/process.py
 +++ b/wyoming_piper/process.py
 @@ -148,6 +148,14 @@ class PiperProcessManager:
@@ -30,10 +23,10 @@ index a7e90a7..98b0712 100644
 +                piper_args.extend(["--espeak_data", str(self.args.espeak_data_dir)])
 +
 +            if self.args.cuda:
-+                piper_args.extend(["--debug"])
 +                piper_args.extend(["--cuda"])
-+                piper_args.extend(["--use-cuda"])
 +
++            piper_args.extend(["--debug"])
++            
              _LOGGER.debug(
                  "Starting piper process: %s args=%s", self.args.piper, piper_args
              )
