@@ -38,6 +38,7 @@ RUN apt-get update \
         ca-certificates \
         xz-utils \
         libjemalloc2 \
+        netcat-traditional \
     \
     && curl -L -f -s "https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${S6_ARCH}.tar.xz" \
         | tar Jxvf - -C / \
