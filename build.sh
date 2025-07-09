@@ -7,4 +7,11 @@ if [ -d $VENV ]; then
   source $VENV/bin/activate
 fi
 
+# Load environment variables from .env
+if [ -f ".env" ]; then
+  set -a
+  source .env
+  set +a
+fi
+
 PYTHONPATH="$PYTHONPATH:$ROOT" python3 -m jetson_containers.build "$@"
