@@ -3,7 +3,7 @@
 # group: net
 # notes: installs local devpi server for hosting pip wheels
 #---
-ARG BASE_IMAGE="python:3.13"
+ARG BASE_IMAGE="python:3.12"
 FROM ${BASE_IMAGE}
 
 RUN pip3 install 'devpi-server<6.16' \
