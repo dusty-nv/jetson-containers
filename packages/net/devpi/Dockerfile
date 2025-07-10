@@ -22,9 +22,8 @@ RUN PYTHON_ROOT=`pip show devpi-server | grep Location: | cut -d' ' -f2` && \
     cat model.py | grep 'DEVPI_MIRROR_BLACKLIST' && \
     mkdir /devpi
 
-CMD devpi-server --listen 0.0.0.0:80 \
-        --max-request-body-size 4294967296 \
-        --serverdir /devpi \
-        --indexer-backend null
+COPY entrypoint.sh /
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT [ "/entrypoint.sh" ]
 
 EXPOSE 80
