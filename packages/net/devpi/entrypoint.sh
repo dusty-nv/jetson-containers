@@ -59,9 +59,11 @@ if [ ! -f "${DEVPISERVER_SERVERDIR}/.serverversion" ]; then
     devpi-init --root-passwd "${DEVPI_PASSWORD}"
 fi
 
-# Launch the server as the main process.
-# Latest version will block correctly and listens to Ctrl+C.
-devpi-server --listen 0.0.0.0:80 \
+# change from default 3141 to 80 to push it public
+
+devpi-server \
+    --host 0.0.0.0 \
+    --port 3141 \
     --max-request-body-size 4294967296 \
     --serverdir /devpi \
     --indexer-backend null
