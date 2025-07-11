@@ -34,6 +34,8 @@ ENV TORCH_CUDA_ARCH_LIST=${TORCH_CUDA_ARCH_LIST} \
     PIP_EXTRA_INDEX_URL=${PIP_EXTRA_INDEX_URL} \
     TORCH_HOME=/data/models/torch
 
+ENV TORCH_NVCC_FLAGS="-Xfatbin -compress-all -compress-mode=balance"
+
 COPY install.sh build.sh /tmp/pytorch/
 
 # attempt to install from pip, and fall back to building it
