@@ -32,6 +32,11 @@ pip3 install scikit-build ninja
 pip3 install 'cmake<4'
 
 #TORCH_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" \
+# https://github.com/pytorch/pytorch/pull/157791/files#diff-f271c3ed0c135590409465f4ad55c570c418d2c0509bbf1b1352ebdd1e6611d1
+
+if [[ "$CUDA_VERSION" > "12.6" ]]; then
+  export TORCH_NVCC_FLAGS="-Xfatbin -compress-all -compress-mode=size"
+fi
 
 PYTORCH_BUILD_NUMBER=1 \
 USE_CUDNN=1 \
