@@ -2,7 +2,7 @@
 # name: flashinfer
 # group: attention
 # config: config.py
-# depends: [cuda, pytorch, triton]
+# depends: [cuda, pytorch, triton, cuda-python]
 # requires: '>=35'
 # test: test.py
 #---
@@ -17,6 +17,10 @@ ARG FLASHINFER_VERSION \
     IS_SBSA \
     FORCE_BUILD=off \
     TMP=/tmp/flashinfer
+
+RUN apt-get update -y || true ; apt-get install --no-install-recommends libopenmpi-dev openmpi-bin -y && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get clean
 
 COPY build.sh install.sh $TMP/
 
