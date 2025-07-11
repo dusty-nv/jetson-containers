@@ -1,15 +1,12 @@
 #!/usr/bin/env python3
-import os
-import re
-import time
-import shutil
-import requests
-import argparse
-import torch
-print('testing torch-memory-saver...')
-import torch_memory_saver
 
-memory_saver = torch_memory_saver.TorchMemorySaver()
+import torch
+
+print('testing torch-memory-saver...')
+import torch_memory_saver as tms
+
+memory_saver = tms.TorchMemorySaver()
+memory_saver.hook_mode = "torch"   # set before first region()
 
 # 1. For tensors that wants to be paused, create them within `region`
 with memory_saver.region():

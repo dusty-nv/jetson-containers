@@ -11,6 +11,8 @@ cd /opt/torch_memory_saver
 #export TORCH_CUDA_ARCH_LIST="8.7"
 export MAX_JOBS=$(nproc)
 export CMAKE_BUILD_TYPE=Release
+export TMS_HOOK_MODE_TORCH=1
+
 sed -i -E 's/(version[[:space:]]*=[[:space:]]*version)[[:space:]]*\+[[:space:]]*version_suffix,/\1,/' setup.py
 USE_CPP=1 python3 setup.py --verbose bdist_wheel --dist-dir /opt
 
