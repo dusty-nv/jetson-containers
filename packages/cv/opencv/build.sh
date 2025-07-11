@@ -5,67 +5,27 @@ cd /opt
 
 # install dependencies
 bash $TMP/install_deps.sh
-pip3 install wheel setuptools twine
 
-clone_with_fallback () {
-  local ver="$1" url="$2" dir="$3"
+# clone source repos
+git clone --branch ${OPENCV_VERSION} --recursive https://github.com/opencv/opencv
+git clone --branch ${OPENCV_VERSION} --recursive https://github.com/opencv/opencv_contrib
+git clone --branch ${OPENCV_PYTHON} --recursive https://github.com/opencv/opencv-python
 
-  if git clone --branch "$ver" --recursive "$url" "$dir"; then
-    echo 0
-  else
-    git clone --branch "4.x" --recursive "$url" "$dir"
-    echo 1
-  fi
-}
+cd /opt/opencv-python/opencv
+git checkout --recurse-submodules ${OPENCV_VERSION}
+cat modules/core/include/opencv2/core/version.hpp
 
-cd /opt
+cd ../opencv_contrib
+git checkout --recurse-submodules ${OPENCV_VERSION}
 
-need_ck_opencv=$(clone_with_fallback  "$OPENCV_VERSION" \
-                 https://github.com/opencv/opencv            opencv)
+cd ../opencv_extra
+git checkout --recurse-submodules ${OPENCV_VERSION}
 
-need_ck_contrib=$(clone_with_fallback "$OPENCV_VERSION" \
-                 https://github.com/opencv/opencv_contrib    opencv_contrib)
+cd ../
 
-need_ck_py=$(clone_with_fallback      "$OPENCV_PYTHON" \
-                 https://github.com/opencv/opencv-python     opencv-python)
-
-
-if [ "$need_ck_opencv" -eq 0 ]; then
-  cd opencv-python/opencv
-  git checkout --recurse-submodules "$OPENCV_VERSION"
-  cat modules/core/include/opencv2/core/version.hpp
-  cd ../../
-fi
-
-if [ "$need_ck_contrib" -eq 0 ]; then
-  cd opencv_contrib
-  git checkout --recurse-submodules "$OPENCV_VERSION"
-  cd ../
-fi
-
-if [ "$need_ck_py" -eq 0 ]; then
-  cd opencv_extra
-  git checkout --recurse-submodules "$OPENCV_VERSION"
-  cd ../
-fi
-
-if [ "$need_ck_contrib" -eq 1 ]; then
-  cd /opt/opencv-python/
-  sed -i 's|^#define CV_VERSION_STATUS[[:space:]]\+"-pre"|#define CV_VERSION_STATUS   ""|' /opt/opencv-python/opencv/modules/core/include/opencv2/core/version.hpp
-  cat /opt/opencv-python/opencv/modules/core/include/opencv2/core/version.hpp
-fi
-
-if [ "$need_ck_contrib" -eq 0 ]; then
-  cd /opt/opencv-python/
-  git apply $TMP/patches.diff || echo "failed to apply git patches"
-  git diff
-else
-  rm -rf /opt/opencv-python/
-  cd /opt/
-  git clone --recursive https://github.com/opencv/opencv-python
-  cd opencv-pythons
-fi
-
+# apply patches to setup.py
+git apply $TMP/patches.diff || echo "failed to apply git patches"
+git diff
 
 # OpenCV looks for the cuDNN version in cudnn_version.h, but it's been renamed to cudnn_version_v8.h
 ln -sfnv /usr/include/$(uname -i)-linux-gnu/cudnn_version_v*.h /usr/include/$(uname -i)-linux-gnu/cudnn_version.h
@@ -131,7 +91,7 @@ export CMAKE_BUILD_PARALLEL_LEVEL=$(nproc)
 export CMAKE_POLICY_VERSION_MINIMUM="3.5"
 export ENABLE_CONTRIB=1
 
-export CMAKE_ARGS="${OPENCV_BUILD_ARGS} -DOPENCV_EXTRA_MODULES_PATH=/opt/opencv-python/opencv_contrib/modules"
+CMAKE_ARGS="${OPENCV_BUILD_ARGS} -DOPENCV_EXTRA_MODULES_PATH=/opt/opencv-python/opencv_contrib/modules" \
 pip3 wheel --wheel-dir=/opt --verbose .
 
 ls /opt
