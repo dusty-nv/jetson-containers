@@ -142,13 +142,6 @@ Looking for the old jetson-containers?   See the [`legacy`](https://github.com/d
 <a href="https://www.jetson-ai-lab.com/tutorial_nano-vlm.html#video-sequences"><img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/video_vila_wildfire.gif"></a>
 > [Realtime Video Vision/Language Model with VILA1.5-3b](https://www.jetson-ai-lab.com/tutorial_nano-vlm.html#video-sequences) (container: [`NanoLLM`](https://dusty-nv.github.io/NanoLLM/))
 
-## Citiation
-```
-@software{open-responses-server,
-  author = {Dustin Franklin},
-  title = {CUDA Containers for Edge AI & Robotics},
-  year = {2025},
-  publisher = {GitHub},
-  howpublished = {\url{https://github.com/dusty-nv/jetson-containers}}
-}
-```
+## Citation
+
+Please see [CITATION.cff](CITATION.cff) for citation information.
