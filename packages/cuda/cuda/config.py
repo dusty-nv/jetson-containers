@@ -134,7 +134,7 @@ def pip_cache(version, requires=None):
     https://github.com/dusty-nv/jetson-containers/blob/master/docs/build.md#pip-server
     """
     short_version = f"cu{version.replace('.', '')}"
-    index_host = "jetson-ai-lab.dev"
+    index_host = os.environ.get('INDEX_HOST', 'jetson-ai-lab.dev')
 
     pip_path = (
         f"jp{JETPACK_VERSION.major}/{short_version}" if IS_TEGRA
@@ -160,7 +160,6 @@ def pip_cache(version, requires=None):
         'PIP_INDEX_REPO': os.environ.get('LOCAL_PIP_INDEX_URL', os.environ.get('LOCAL_PIP_INDEX_REPO', f"https://pypi.{index_host}") + f"/{pip_path}"),
         'PIP_TRUSTED_HOSTS': f"{os.environ.get('PIP_UPLOAD_HOST', index_host)}",
         'PIP_EXTRA_INDEX_URL': f"https://pypi.{index_host}/{pip_path}",
-        #'PIP_TRUSTED_HOSTS': index_host,
         'PIP_UPLOAD_REPO': os.environ.get('PIP_UPLOAD_REPO', f"http://{os.environ.get('PIP_UPLOAD_HOST', 'localhost')}/{pip_path}"),
         'PIP_UPLOAD_USER': os.environ.get('PIP_UPLOAD_USER', f"jp{JETPACK_VERSION.major}" if SYSTEM_ARM else 'amd64'),
         'PIP_UPLOAD_PASS': os.environ.get('PIP_UPLOAD_PASS', 'none'),
