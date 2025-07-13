@@ -99,7 +99,7 @@ General-purpose CUDA development and deployment on workstations or cloud servers
 
 ---
 
-### 📱 [arm64-sbsa (Server Base System Architecture)](https://www.nvidia.com/en-us/data-center/grace-cpu/)
+### 📱 [aarch64-sbsa (Server Base System Architecture)](https://www.nvidia.com/en-us/data-center/grace-cpu/)
 
 **Definition:**  
 64-bit ARM architecture for **server-class hardware** following the SBSA specification.
@@ -134,7 +134,7 @@ Robotics, edge AI, computer vision, and IoT solutions using CUDA at the edge.
 | Architecture       | CPU Type         | Target Device                  | CUDA Support | Use Case                          |
 |--------------------|------------------|--------------------------------|--------------|------------------------------------|
 | **x86_64**         | Intel / AMD      | PCs, Laptops, Servers          | ✅            | General CUDA development           |
-| **arm64-sbsa**     | ARM (Server)     | Datacenter-Grace ARM servers   | ✅            | Efficient cloud compute            |
+| **aarch64-sbsa**     | ARM (Server)     | Datacenter-Grace ARM servers   | ✅            | Efficient cloud compute            |
 | **aarch64-jetson / cuda-tegra** | ARM (Embedded)   | NVIDIA Jetson Boards           | ✅            | Edge AI and embedded applications  |
 
 Using these together, you can rebuild the container stack for the specific version combination that you want:
