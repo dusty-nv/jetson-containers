@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: Copyright (c) 2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,15 +14,15 @@
 # limitations under the License.
 
 import asyncio
-from dataclasses import dataclass
-from time import sleep
-from threading import Thread
 import logging
+import uvicorn
+from dataclasses import dataclass
 from datetime import datetime
-
 from fastapi import FastAPI, WebSocket
 from pydantic import BaseModel
-import uvicorn
+from threading import Thread
+from time import sleep
+
 
 class Alert(BaseModel):
     title: str

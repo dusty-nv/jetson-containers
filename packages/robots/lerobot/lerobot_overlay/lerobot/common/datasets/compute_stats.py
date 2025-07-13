@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
-# Copyright 2024 The HuggingFace Inc. team. All rights reserved.
+import einops
+import torch
+import tqdm
+# Copyright 2026 The HuggingFace Inc. team. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,14 +17,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from copy import deepcopy
-from math import ceil
-
-import einops
-import torch
-import tqdm
 from datasets import Image
-
 from lerobot.common.datasets.video_utils import VideoFrame
+from math import ceil
 
 
 def get_stats_einops_patterns(dataset, num_workers=0):
@@ -111,7 +109,7 @@ def compute_stats(dataset, batch_size=8, num_workers=4, max_num_samples=None, us
     ):
         this_batch_size = len(batch["index"])
         running_item_count += this_batch_size
-                
+
         # Move batch to device
         for key in stats_patterns:
             batch[key] = batch[key].float().to(device)
@@ -151,7 +149,7 @@ def compute_stats(dataset, batch_size=8, num_workers=4, max_num_samples=None, us
             first_batch_ = deepcopy(batch)
             for key in stats_patterns:
                 assert torch.equal(first_batch_[key], first_batch[key])
-        
+
         for key, pattern in stats_patterns.items():
             # Numerically stable update step for mean computation (where the mean is over squared
             # residuals).See notes in the mean computation loop above.

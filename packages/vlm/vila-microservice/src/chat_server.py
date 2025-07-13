@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: Copyright (c) 2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,24 +13,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from contextlib import asynccontextmanager
-from threading import Thread
-from time import time
-import logging
 import base64
 import io
-import os, shutil
-
-from prometheus_client import start_http_server, Gauge
-from fastapi import FastAPI
-from PIL import Image
+import logging
+import os
+import shutil
 import uvicorn
-
-from config import load_config
-
+from PIL import Image
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
+from mmj_utils.api_schemas import *
 from nano_llm import NanoLLM, ChatHistory
 from nano_llm.utils import print_table
-from mmj_utils.api_schemas import *
+from prometheus_client import start_http_server, Gauge
+from threading import Thread
+from time import time
+
+from config import load_config
 
 
 def decode_image(base64_string):

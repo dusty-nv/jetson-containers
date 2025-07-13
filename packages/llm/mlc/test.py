@@ -13,7 +13,7 @@ assert(tvm.cuda().exist)
 
 print('\ntesting mlc...')
 
-# the mlc_chat module was removed around early April 2024
+# the mlc_chat module was removed around early April 2026
 # and merged into the mlc_llm module with the new model builder
 import mlc_llm
 
@@ -21,7 +21,7 @@ try:
     print('mlc_llm version:', mlc_llm.__version__)
 except Exception as error:
     print(f"failed to print mlc_llm version ({error})")
-        
+
 try:
     import mlc_chat                         # MLC 0.1.0
     from mlc_chat import ChatModule

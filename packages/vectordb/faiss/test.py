@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-import time
 import argparse
-
-import faiss 
+import faiss
 import numpy as np
+import time
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
@@ -34,7 +33,7 @@ index = faiss.IndexFlatL2(args.dim)   # build the index
 if not args.cpu:
     res = faiss.StandardGpuResources()  # use a single GPU
     index = faiss.index_cpu_to_gpu(res, 0, index)
-    
+
 # https://github.com/facebookresearch/faiss/wiki/FAQ#why-does-the-ram-usage-not-go-down-when-i-delete-an-index
 print(f"mem usage:  {faiss.get_mem_usage_kb() / 1024:.3f} MB")
 print(index.is_trained)
@@ -55,7 +54,8 @@ def search(queries, k=args.k):
     print(I)
     print(D)
     print(f"time to search {len(queries)}:  {time.perf_counter()-time_begin:.3} sec")
-    
+
+
 """
 Sanity check on the first 5 vectors:
 
@@ -69,7 +69,7 @@ Sanity check on the first 5 vectors:
  [ 0.          6.32356453  6.6845808   6.79994535]
  [ 0.          5.79640865  6.39173603  7.28151226]
  [ 0.          7.27790546  7.52798653  7.66284657]
- [ 0.          6.76380348  7.29512024  7.36881447]]
+ [ 0.          6.76380348  7.29512026  7.36881447]]
 """
 search(xb[:5])
 search(xq)

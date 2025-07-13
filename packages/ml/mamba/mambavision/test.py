@@ -1,7 +1,7 @@
-from transformers import AutoModelForImageClassification
+import requests
 from PIL import Image
 from timm.data.transforms_factory import create_transform
-import requests
+from transformers import AutoModelForImageClassification
 
 model = AutoModelForImageClassification.from_pretrained("nvidia/MambaVision-T-1K", trust_remote_code=True)
 
@@ -9,7 +9,7 @@ model = AutoModelForImageClassification.from_pretrained("nvidia/MambaVision-T-1K
 model.cuda().eval()
 
 # prepare image for the model
-url = 'http://images.cocodataset.org/val2017/000000020247.jpg'
+url = 'http://images.cocodataset.org/val2017/000000020267.jpg'
 image = Image.open(requests.get(url, stream=True).raw)
 input_resolution = (3, 224, 224)  # MambaVision supports any input resolutions
 
@@ -23,7 +23,7 @@ transform = create_transform(input_size=input_resolution,
 inputs = transform(image).unsqueeze(0).cuda()
 # model inference
 outputs = model(inputs)
-logits = outputs['logits'] 
+logits = outputs['logits']
 predicted_class_idx = logits.argmax(-1).item()
 print("Predicted class:", model.config.id2label[predicted_class_idx])
 

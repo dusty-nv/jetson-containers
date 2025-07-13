@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: Copyright (c) 2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,15 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import io
 import base64
+import io
 import logging
 import requests
-from threading import Thread
 from PIL import Image
+from jetson_utils import cudaToNumpy
+from threading import Thread
+
 from .api_schemas import ChatContentImage, ChatContentImageOptions, ChatMessages
 
-from jetson_utils import cudaToNumpy
 
 class VLM:
     """Abstraction for the VLM chat server. Can use this object to track different 'egos' that have an associated system prompt and callback function."""

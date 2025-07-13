@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+ * Copyright (c) 2026, NVIDIA CORPORATION. All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -26,7 +26,7 @@ function rest_get(url, quiet=false) {
   }).then(function(json) {
     if( !quiet ) {
 			console.log(`GET response from ${url}`);
-			console.log(json); 
+        console.log(json);
 		}
     return json;
   });
@@ -44,7 +44,7 @@ function rest_put(url, data, response_handler=null, quiet=false) {
 		}
 		if( response_handler != undefined )
 			response_handler(response);
-  });  
+  });
 }
 
 function rest_post(url, data, response_handler=null, quiet=false) {
@@ -62,5 +62,5 @@ function rest_post(url, data, response_handler=null, quiet=false) {
 		if( response_handler != undefined )
 			response_handler(json);
     return json;
-  });  
+  });
 }

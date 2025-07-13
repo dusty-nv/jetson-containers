@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: Copyright (c) 2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,23 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
+import logging
 import uvicorn
 from dataclasses import dataclass
-
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-
-from threading import Thread
-from uuid import uuid4
-from time import sleep, time
-
 from queue import Queue
-import logging
-
+from threading import Thread
+from time import sleep, time
 from typing import Union, List
+from uuid import uuid4
 
 from .api_schemas import StreamAdd, Response, StreamMeta
+
 
 @dataclass
 class APIMessage:
