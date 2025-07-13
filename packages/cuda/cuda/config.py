@@ -207,17 +207,33 @@ if IS_TEGRA:
 elif IS_SBSA:
     package = [
         # sbsa
-        cuda_package('12.9','https://developer.download.nvidia.com/compute/cuda/12.9.1/local_installers/cuda-repo-ubuntu2404-12-9-local_12.9.1-575.57.08-1_arm64.deb', requires='aarch64'),
+        cuda_package('12.8',
+                     'https://developer.download.nvidia.com/compute/cuda/12.8.1/local_installers/cuda-repo-ubuntu2404-12-8-local_12.8.1-570.124.06-1_arm64.deb',
+                     requires='aarch64'),
+        cuda_samples('12.8', requires='aarch64'),
+        cuda_package('12.9',
+                     'https://developer.download.nvidia.com/compute/cuda/12.9.1/local_installers/cuda-repo-ubuntu2404-12-9-local_12.9.1-575.57.08-1_arm64.deb',
+                     requires='aarch64'),
         cuda_samples('12.9', requires='aarch64'),
-        cuda_package('13.0','https://developer.download.nvidia.com/compute/cuda/13.0.0/local_installers/cuda-repo-ubuntu2404-12-3-local_13.0.0-580.12-1_arm64.deb', requires='aarch64'),
+        cuda_package('13.0',
+                     'https://developer.download.nvidia.com/compute/cuda/13.0.0/local_installers/cuda-repo-ubuntu2404-12-3-local_13.0.0-580.12-1_arm64.deb',
+                     requires='aarch64'),
         cuda_samples('13.0', requires='aarch64'),
 
     ]
 else:
     package = [
         # x86_64
-        cuda_package('12.9','https://developer.download.nvidia.com/compute/cuda/12.9.1/local_installers/cuda-repo-ubuntu2404-12-9-local_12.9.1-575.57.08-1_amd64.deb', requires='x86_64'),
+        cuda_package('12.8',
+                     'https://developer.download.nvidia.com/compute/cuda/12.8.1/local_installers/cuda-repo-ubuntu2404-12-8-local_12.8.1-570.124.06-1_amd64.deb',
+                     requires='x86_64'),
+        cuda_samples('12.8', requires='x86_64'),
+        cuda_package('12.9',
+                     'https://developer.download.nvidia.com/compute/cuda/12.9.1/local_installers/cuda-repo-ubuntu2404-12-9-local_12.9.1-575.57.08-1_amd64.deb',
+                     requires='x86_64'),
         cuda_samples('12.9', requires='x86_64'),
-        cuda_package('13.0', 'https://developer.download.nvidia.com/compute/cuda/13.0.0/local_installers/cuda-repo-ubuntu2404-13-0-local_13.0.0-580.12-1_amd64.deb', requires='x86_64'),
+        cuda_package('13.0',
+                     'https://developer.download.nvidia.com/compute/cuda/13.0.0/local_installers/cuda-repo-ubuntu2404-13-0-local_13.0.0-580.12-1_amd64.deb',
+                     requires='x86_64'),
         cuda_samples('13.0', requires='x86_64'),
     ]

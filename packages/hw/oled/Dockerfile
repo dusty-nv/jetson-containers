@@ -5,7 +5,7 @@
 # notes: https://github.com/NVIDIA-AI-IOT/jetcard/
 #---
 ARG BASE_IMAGE
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 # Avoid warnings by switching to noninteractive
 ARG DEBIAN_FRONTEND=noninteractive
@@ -31,14 +31,14 @@ RUN apt-get purge -y \
 		  python3-dev && \
     apt-get -y autoremove && \
     rm -rf /var/lib/apt/lists/* && \
-    apt-get clean -y 
+    apt-get clean -y
 
 WORKDIR /opt
 
 COPY oled_server.py /opt/oled/oled_server.py
 COPY utils.py /opt/oled/utils.py
 RUN cd oled  && \
-    touch __init__.py 
+    touch __init__.py
 
 COPY start_oled_server /
 CMD /start_oled_server && /bin/bash

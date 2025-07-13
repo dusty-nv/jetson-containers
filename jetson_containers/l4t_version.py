@@ -41,12 +41,12 @@ def get_l4t_version(version_file='/etc/nv_tegra_release', l4t_version: str = Non
         return Version(os.environ['L4T_VERSION'].lower().lstrip('r'))
 
     if CUDA_ARCH != 'tegra-aarch64':
-        return Version('36.4.4') # for x86 to unlock L4T checks
+        return Version('38.0.0') # for x86 to unlock L4T checks
 
 
     if not os.path.isfile(version_file):
         # raise IOError(f"L4T_VERSION file doesn't exist:  {version_file}")
-        return Version('36.4.4')
+        return Version('38.0.0')
 
     with open(version_file) as file:
         line = file.readline()
@@ -270,7 +270,7 @@ def get_cuda_version(version_file: str = "/usr/local/cuda/version.json", l4t_ver
                     cuda_version = '12.2'
             else:
                 # L4T r35 and below, and don't find CUDA installed on host
-                cuda_version = '0.0'  # Note, this get_cuda_version() function used to reutrn '0.0' as str.
+                cuda_version = '0.0'  # Note, this get_cuda_version() function used to return '0.0' as str.
             return Version(cuda_version)
 
     with open(version_file) as file:
