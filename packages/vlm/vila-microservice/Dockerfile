@@ -12,7 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-FROM nvcr.io/nvidia/l4t-jetpack:r36.3.0
+FROM nvcr.io/nvidia/l4t-jetpack:r36.4.0
 
 #initial set up
 ENV DEBIAN_FRONTEND=noninteractive \
@@ -34,8 +34,8 @@ RUN set -ex
 RUN apt-get update && apt-get install -y --no-install-recommends python3-pip git-all lsb-release libopenblas0
 
 #Set to get precompiled jetson wheels
-RUN export PIP_INDEX_URL=http://jetson.webredirect.org/jp6/cu122
-RUN export PIP_TRUSTED_HOST=jetson.webredirect.org
+RUN export PIP_INDEX_URL=https://pypi.jetson-ai-lab.dev/jp6/cu126
+RUN export PIP_TRUSTED_HOST=pypi.jetson-ai-lab.dev
 
 #install extra gstreamer plugins
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -78,11 +78,8 @@ RUN ldconfig
 RUN python3 -c 'import jetson_utils'
 
 #Install precompiled ml packages
-RUN pip3 install numpy==1.26.4
-RUN pip3 install http://jetson.webredirect.org/jp6/cu122/+f/6c5/c648d0d96a592/torch-2.3.1-cp310-cp310-linux_aarch64.whl#sha256=6c5c648d0d96a5924d237eacb95fee98de1fce7ab2ec26064f31649d5e381218
-RUN pip3 install http://jetson.webredirect.org/jp6/cu122/+f/28a/62174f5604aa1/torchvision-0.18.0a0+6043bc2-cp310-cp310-linux_aarch64.whl#sha256=28a62174f5604aa111f06c7d61f488250a3c8940fce05bbf245500b90b1d1486
-RUN pip3 install http://jetson.webredirect.org/jp6/cu122/+f/54d/5094104195427/onnxruntime_gpu-1.17.0-cp310-cp310-linux_aarch64.whl#sha256=54d509410419542764627aebf6542734a7c5b4d260ad0860b650e05f38b1b47a
-RUN pip3 install http://jetson.webredirect.org/jp6/cu122/+f/9a3/9fc36dc7cf169/cuda_python-12.2.0+0.g2ae98f9.dirty-cp310-cp310-linux_aarch64.whl#sha256=9a39fc36dc7cf1693686774c16c78a07274f609037627fa69f5d8159793e96cd
+RUN pip3 install numpy>="1.26.4"
+RUN pip3 install torch torchvision torchaudio cuda_python onnxruntime
 RUN pip3 install transformers
 RUN pip3 install --no-cache-dir --verbose onnx
 
@@ -99,7 +96,7 @@ RUN cd /opt && \
 #Install TVM & MLC
 WORKDIR /opt
 RUN pip3 install sentencepiece
-RUN pip3 install --index-url http://jetson.webredirect.org/jp6/cu122 --trusted-host jetson.webredirect.org  --no-cache-dir --verbose tvm==0.15.0 mlc-llm==0.1.0
+RUN pip3 install --index-url http://jetson-ai-lab.dev/jp6/cu126 --trusted-host jetson-ai-lab.dev  --no-cache-dir --verbose tvm==0.15.0 mlc-llm==0.1.0
 
 
 #Clone Jetson Containers to get mlc patch

@@ -48,7 +48,7 @@ RUN pip3 install --ignore-installed blinker && \
         termcolor \
         kaleido \
         plotly
-        
+
 ARG MUJOCO_DIR=/root/.mujoco
 
 RUN mkdir -p ${MUJOCO_DIR} && \
@@ -57,20 +57,20 @@ RUN mkdir -p ${MUJOCO_DIR} && \
     tar -xvzf mujoco210.tar.gz
 
 RUN cd third_party/VRL3 && \
-    CKPT_URL="http://jetson.webredirect.org:8000/assets/3d_diffusion_policy/vrl3_ckpts.zip" && \
+    CKPT_URL="http://jetson-ai-lab.dev:8000/assets/3d_diffusion_policy/vrl3_ckpts.zip" && \
     wget $WGET_FLAGS ${CKPT_URL} && \
     unzip vrl3_ckpts.zip && \
     mv vrl3_ckpts ckpts && \
     rm -rf vrl3_ckpts.zip __MACOSX
-    
+
 ENV HYDRA_FULL_ERROR=1 \
     MUJOCO_GL=egl \
     PYTHONPATH=${PYTHONPATH}:/opt/3D-Diffusion-Policy/3D-Diffusion-Policy \
     LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${MUJOCO_DIR}/mujoco210/bin:/usr/local/lib/python${PYTHON_VERSION}/dist-packages/torch/lib \
     DP3_DATA=/opt/3D-Diffusion-Policy/3D-Diffusion-Policy/data \
     VRL3=/opt/3D-Diffusion-Policy/third_party/VRL3
-  
-# https://github.com/facebookresearch/nougat/issues/40#issuecomment-1880072196  
+
+# https://github.com/facebookresearch/nougat/issues/40#issuecomment-1880072196
 RUN pip3 install opencv-fixer && \
     python3 -c "from opencv_fixer import AutoFix; AutoFix()" && \
     python3 -c "import cv2"
@@ -80,4 +80,4 @@ RUN pip3 install 'Cython' && \
     apt-get install -y --no-install-recommends libosmesa6-dev && \
     cd third_party/VRL3/src && \
     python3 gen_demonstration_expert.py --help
-    
+
