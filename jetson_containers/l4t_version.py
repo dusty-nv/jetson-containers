@@ -41,7 +41,7 @@ def get_l4t_version(version_file='/etc/nv_tegra_release', l4t_version: str = Non
     if 'L4T_VERSION' in os.environ and len(os.environ['L4T_VERSION']) > 0:
         return Version(os.environ['L4T_VERSION'].lower().lstrip('r'))
 
-    if SYSTEM_ARCH_TYPE != 'tegra-aarch64':
+    if CUDA_ARCH != 'tegra-aarch64':
         return Version('36.4.4') # for x86 to unlock L4T checks
 
 
@@ -504,7 +504,7 @@ DEFAULT_PYTHON_VERSIONS = {
     '26.04': Version('3.14'),
 }
 
-DOCKER_ARCHS = {
+CUDA_ARCHS = {
     'tegra-aarch64': 'arm64',
     'aarch64': 'arm64',
     'x86_64': 'amd64'
@@ -540,18 +540,18 @@ def _get_platform_architecture():
 
 
 # cpu architecture
-SYSTEM_ARCH_TYPE = os.environ.get("SYSTEM_ARCH", _get_platform_architecture())
+CUDA_ARCH = os.environ.get("SYSTEM_ARCH", _get_platform_architecture())
 SYSTEM_ARCH = os.environ.get('SYSTEM_ARCH', platform.machine()) # UNIFIED tegra and sbsa as aarch64
-DOCKER_ARCH = DOCKER_ARCHS[SYSTEM_ARCH]
+DOCKER_ARCH = CUDA_ARCHS[SYSTEM_ARCH]
 
-SYSTEM_ARM = SYSTEM_ARCH_TYPE in ("aarch64", "tegra-aarch64")
-SYSTEM_X86 = SYSTEM_ARCH_TYPE == "x86_64"
-IS_TEGRA = SYSTEM_ARCH_TYPE == "tegra-aarch64"
-IS_SBSA = SYSTEM_ARCH_TYPE == "aarch64"
+SYSTEM_ARM = CUDA_ARCH in ("aarch64", "tegra-aarch64")
+SYSTEM_X86 = CUDA_ARCH == "x86_64"
+IS_TEGRA = CUDA_ARCH == "tegra-aarch64"
+IS_SBSA = CUDA_ARCH == "aarch64"
 
 SYSTEM_ARCH_LIST = []
 
-for arch in DOCKER_ARCHS.items():
+for arch in CUDA_ARCHS.items():
     SYSTEM_ARCH_LIST.extend(arch)
 
 # os/jetpack/cuda versions

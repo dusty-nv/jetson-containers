@@ -18,7 +18,7 @@ from .logging import log_debug, log_warning, log_error
 
 from .l4t_version import (
     L4T_VERSION, CUDA_VERSION, PYTHON_VERSION, DOCKER_ARCH,
-    LSB_RELEASE, LSB_RELEASES, SYSTEM_ARM, SYSTEM_ARCH_LIST, 
+    LSB_RELEASE, LSB_RELEASES, CUDA_ARCH, CUDA_ARCHS, SYSTEM_ARM, SYSTEM_ARCH_LIST,
     check_arch
 )
 
@@ -75,7 +75,7 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False, **kwargs):
 
     # disable parallel scan on python 3.8 due to unknown spin condition
     THREADING = (
-        Version(f'{sys.version_info.major}.{sys.version_info.minor}') 
+        Version(f'{sys.version_info.major}.{sys.version_info.minor}')
         > Version('3.8')
     )
 
@@ -94,8 +94,8 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False, **kwargs):
                 del _PACKAGES[key]
 
         if THREADING:
-            with concurrent.futures.ProcessPoolExecutor() as executor: 
-                executor.map(resolve_package, _PACKAGES.copy())       
+            with concurrent.futures.ProcessPoolExecutor() as executor:
+                executor.map(resolve_package, _PACKAGES.copy())
         else:
             for key in _PACKAGES.copy():  # make sure all dependencies are met
                 resolve_package(key)
@@ -128,16 +128,18 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False, **kwargs):
     # assign default tag based on platform arch (L4T, SBSA, x86)
     if SYSTEM_ARM:
         if L4T_VERSION >= Version('36.4'):
+            package['postfix'] = f'r{L4T_VERSION.major}.{L4T_VERSION.minor}.{CUDA_ARCH}'  # r36.4, r38.4
+        elif L4T_VERSION >= Version('36.4'):
             package['postfix'] = f'r{L4T_VERSION.major}.{L4T_VERSION.minor}' # r36.4, r38.4
         else:
             package['postfix'] = f'r{L4T_VERSION}' # r32.7.1
     else:
-        package['postfix'] = DOCKER_ARCH # amd64, sbsa
+        package['postfix'] = f'{DOCKER_ARCH}.{CUDA_ARCH}' # amd64
 
     # add CUDA and Python postfixes when they are non-standard versions
     HAS_ENV = {
-        x: (len(os.environ.get(x, '')) > 0) 
-        for x in ['CUDA_VERSION', 'PYTHON_VERSION', 'LSB_RELEASE']
+        x: (len(os.environ.get(x, '')) > 0)
+        for x in ['CUDA_VERSION', 'PYTHON_VERSION', 'LSB_RELEASE', 'CUDA_ARCH']
     }
 
     if HAS_ENV['PYTHON_VERSION']:
@@ -183,7 +185,7 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False, **kwargs):
             scan_kwargs = dict(package_dirs=os.path.join(entry_path, '*'), preload=preload)
             if THREADING:
                 thread = threading.Thread(
-                    target=scan_packages, 
+                    target=scan_packages,
                     kwargs=scan_kwargs,
                 )
                 threads.append(thread)
@@ -575,18 +577,18 @@ def package_requires(package, requires=None, system_arch=None, unless=None):
     if not isinstance(reqs, list):
         reqs = [reqs]
 
-    for req in reqs: 
+    for req in reqs:
         if any([req == x for x in unless]):
            return
 
-    if requires not in reqs:   
+    if requires not in reqs:
         reqs.append(requires)
 
     package['requires'] = reqs
     return package
 
 
-def check_requirement(requires, l4t_version=L4T_VERSION, cuda_version=CUDA_VERSION, lsb_release=LSB_RELEASE, name: str=''):
+def check_requirement(requires, l4t_version=L4T_VERSION, cuda_version=CUDA_VERSION, lsb_release=LSB_RELEASE, cuda_arch=CUDA_ARCH, name: str=''):
     """
     Check if the L4T/CUDA versions meet the needed specifier/requirement
     """
@@ -596,7 +598,7 @@ def check_requirement(requires, l4t_version=L4T_VERSION, cuda_version=CUDA_VERSI
     requires = requires.lower()
 
     for arch in SYSTEM_ARCH_LIST:
-        if requires == arch or requires == ('==' + arch): 
+        if requires == arch or requires == ('==' + arch):
             return check_arch(arch)
 
         if requires == ('!=' + arch):
@@ -605,7 +607,11 @@ def check_requirement(requires, l4t_version=L4T_VERSION, cuda_version=CUDA_VERSI
     for lsb in LSB_RELEASES:
         if requires == lsb or requires == ('==' + lsb):
             return lsb_release == lsb
-            
+
+    for cuda_type in CUDA_ARCHS:
+        if requires == cuda_type or requires == '==' + cuda_type:
+            return cuda_arch == cuda_type
+
     if 'cu' in requires:
         if Version(f"{cuda_version.major}{cuda_version.minor}") not in SpecifierSet(requires.replace('cu', '')):
             log_debug(f"Package {name} isn't compatible with CUDA {cuda_version} (requires {requires})")
