@@ -1,0 +1,33 @@
+  GNU nano 8.1                                      nginx.yml                                               
+services:
+  app:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      # These ports are in format <host-port>:<container-port>
+      - '80:80' # Public HTTP Port
+      - '443:443' # Public HTTPS Port
+      - '81:81' # Admin Web Port
+      # Add any other Stream port you want to expose
+      # - '21:21' # FTP
+
+    #environment:
+      # Uncomment this if you want to change the location of
+      # the SQLite DB file within the container
+      # DB_SQLITE_FILE: "/data/database.sqlite"
+
+      # Uncomment this if IPv6 is not enabled on your host
+      # DISABLE_IPV6: 'true'
+
+    volumes:
+      - ./apt:/apt
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+  apt-server:
+    image: nginx:alpine
+    container_name: apt-static-server
+    volumes:
+      - ./apt:/usr/share/nginx/html:ro
+    expose:
+      - "80"
+    restart: unless-stopped
