@@ -12,9 +12,10 @@ ARG CUDA_URL \
     CUDA_DEB \
     CUDA_PACKAGES \
     CUDA_ARCH_LIST \
+    CUDA_ARCH \
     IS_SBSA \
     DISTRO="ubuntu2004"
-    
+
 COPY install.sh /tmp/cuda/install.sh
 RUN /tmp/cuda/install.sh
 
@@ -37,5 +38,5 @@ ENV NVIDIA_VISIBLE_DEVICES=all \
     PATH="$CUDA_HOME/bin:${PATH}" \
     LD_LIBRARY_PATH="${CUDA_HOME}/compat:${CUDA_HOME}/lib64:${LD_LIBRARY_PATH}" \
     DEBIAN_FRONTEND=noninteractive
-    
+
 WORKDIR /

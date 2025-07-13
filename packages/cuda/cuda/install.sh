@@ -1,17 +1,7 @@
 #!/usr/bin/env bash
 set -ex
 
-ARCH=$(uname -m)
-ARCH_TYPE=$ARCH
-
-# Detectar si es Tegra
-if [[ "$ARCH" == "aarch64" ]]; then
-    if uname -a | grep -qi tegra; then
-        ARCH_TYPE="tegra-aarch64"
-    fi
-fi
-
-echo "Detected architecture: ${ARCH_TYPE}"
+echo "Detected architecture: ${CUDA_ARCH}"
 
 apt-get update
 apt-get install -y --no-install-recommends \
@@ -24,7 +14,7 @@ echo "Downloading ${CUDA_DEB}"
 mkdir -p /tmp/cuda
 cd /tmp/cuda
 
-if [[ "$ARCH_TYPE" == "tegra-aarch64" ]]; then
+if [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
     # Jetson (Tegra)
     wget $WGET_FLAGS \
         https://developer.download.nvidia.com/compute/cuda/repos/${DISTRO}/arm64/cuda-${DISTRO}.pin \
@@ -41,7 +31,7 @@ dpkg -i *.deb
 cp /var/cuda-*-local/cuda-*-keyring.gpg /usr/share/keyrings/
 
 # Tegra (Jetson)
-if [[ "$ARCH_TYPE" == "tegra-aarch64" ]]; then
+if [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
     ar x /var/cuda-tegra-repo-ubuntu*-local/cuda-compat-*.deb
     tar xvf data.tar.xz -C /
 fi
@@ -50,7 +40,7 @@ apt-get update
 apt-get install -y --no-install-recommends ${CUDA_PACKAGES}
 # ARM64 SBSA (Grace) NVIDIA Performance Libraries (NVPL)
 # NVPL allows you to easily port HPC applications to NVIDIA Grace™ CPU platforms to achieve industry-leading performance and efficiency.
-if [[ "$ARCH_TYPE" == "aarch64" ]]; then
+if [[ "$CUDA_ARCH" == "aarch64" ]]; then
     wget $WGET_FLAGS https://developer.download.nvidia.com/compute/nvpl/25.5/local_installers/nvpl-local-repo-ubuntu2404-25.5_1.0-1_arm64.deb
     dpkg -i nvpl-*_arm64.deb
     cp /var/nvpl-*/nvpl-*-keyring.gpg /usr/share/keyrings/

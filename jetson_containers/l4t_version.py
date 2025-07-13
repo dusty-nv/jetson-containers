@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 # finds the versions of JetPack-L4T and CUDA from the build environment:
 #
@@ -531,15 +530,15 @@ def _get_platform_architecture():
         try:
             uname_output = subprocess.check_output(["uname", "-a"], encoding="utf-8")
             if TEGRA in uname_output:
-                return f"{TEGRA}-{host_arch}"
+                return os.environ.get('CUDA_ARCH', f"{TEGRA}-{host_arch}")
         except Exception as e:
             print(f"[warn] Failed to run uname: {e}")
 
-    return host_arch
+    return os.environ.get('CUDA_ARCH', host_arch)
 
 
 # cpu architecture
-CUDA_ARCH = os.environ.get("SYSTEM_ARCH", _get_platform_architecture())
+CUDA_ARCH = os.environ.get("CUDA_ARCH", _get_platform_architecture())
 SYSTEM_ARCH = os.environ.get('SYSTEM_ARCH', platform.machine()) # UNIFIED tegra and sbsa as aarch64
 DOCKER_ARCH = CUDA_ARCHS[SYSTEM_ARCH]
 

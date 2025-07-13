@@ -1,10 +1,9 @@
-
 import os
 from packaging.version import Version
 
 from jetson_containers import (
     L4T_VERSION, JETPACK_VERSION, CUDA_VERSION,
-    CUDA_ARCHITECTURES, LSB_RELEASE, IS_SBSA, IS_TEGRA,
+    CUDA_ARCHITECTURES, LSB_RELEASE, CUDA_ARCH, IS_SBSA, IS_TEGRA,
     SYSTEM_ARM, DOCKER_ARCH, package_requires
 )
 
@@ -15,7 +14,10 @@ def cuda_build_args(version):
     """
     return {
         'CUDA_ARCH_LIST': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
+        'CUDA_ARCH': CUDA_ARCH,
         'DISTRO': f"ubuntu{LSB_RELEASE.replace('.','')}",
+        'IS_SBSA': IS_SBSA,
+        'IS_TEGRA': IS_TEGRA,
     }
 
 
