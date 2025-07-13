@@ -5,7 +5,7 @@
 Modular container build system that provides the latest [**AI/ML packages**](https://pypi.jetson-ai-lab.dev/) for [NVIDIA Jetson](https://jetson-ai-lab.com) :rocket::robot:
 
 # WARNING!!
-## pypi.jetson-ail-lab.dev is down. we are improving security and performance. Meanwhile use jetson-ai-lab.io
+## [pypi.jetson-ai-lab.dev](pypi.jetson-ai-lab.dev) is down. we are improving security and performance. Meanwhile use [jetson-ai-lab.io](jetson-ai-lab.io)
 
 ### Only Tested and supported Jetpack 6.2 (Cuda 12.6) and JetPack 7 (CUDA 13.x).
 
