@@ -20,6 +20,7 @@ services:
 
     volumes:
       - ./apt:/apt
+      - ./dist:/dist
       - ./data:/data
       - ./letsencrypt:/etc/letsencrypt
   apt-server:
