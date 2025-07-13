@@ -99,13 +99,13 @@ General-purpose CUDA development and deployment on workstations or cloud servers
 
 ---
 
-### 📱 arm64-sbsa (Server Base System Architecture)
+### 📱 [arm64-sbsa (Server Base System Architecture)](https://www.nvidia.com/en-us/data-center/grace-cpu/)
 
 **Definition:**  
 64-bit ARM architecture for **server-class hardware** following the SBSA specification.
 
 **Key Characteristics:**
-- Targeted at datacenter-grade ARM CPUs (e.g., Ampere, AWS Graviton)
+- Targeted at datacenter-Grace ARM CPUs (e.g., Ampere, AWS Graviton)
 - Supports Linux OS with CUDA toolkits
 - Designed for cloud-native and scalable environments
 
@@ -114,7 +114,7 @@ Energy-efficient, high-performance computing in ARM-based server infrastructures
 
 ---
 
-### 🤖 aarch64-jetson or cuda-tegra
+### 🤖 [aarch64-jetson or cuda-tegra](https://developer.nvidia.com/embedded/jetpack)
 
 **Definition:**  
 64-bit ARM architecture specifically for **NVIDIA Jetson embedded systems**.
@@ -134,7 +134,7 @@ Robotics, edge AI, computer vision, and IoT solutions using CUDA at the edge.
 | Architecture       | CPU Type         | Target Device                  | CUDA Support | Use Case                          |
 |--------------------|------------------|--------------------------------|--------------|------------------------------------|
 | **x86_64**         | Intel / AMD      | PCs, Laptops, Servers          | ✅            | General CUDA development           |
-| **arm64-sbsa**     | ARM (Server)     | Datacenter-grade ARM servers   | ✅            | Efficient cloud compute            |
+| **arm64-sbsa**     | ARM (Server)     | Datacenter-Grace ARM servers   | ✅            | Efficient cloud compute            |
 | **aarch64-jetson / cuda-tegra** | ARM (Embedded)   | NVIDIA Jetson Boards           | ✅            | Edge AI and embedded applications  |
 
 Using these together, you can rebuild the container stack for the specific version combination that you want:
