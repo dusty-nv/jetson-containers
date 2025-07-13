@@ -328,7 +328,7 @@ def get_cuda_arch(l4t_version: str=None, cuda_version: str=None, format=list):
             else:
                 cuda_architectures = [87, 90, 100, 103, 120]  # Ampere Orin, Hopper GH200 90, Blackwell GB200 100
                 if cuda_version >= Version('13.0'):
-                    cuda_architectures += [103, 11.0, 121] # Thor 110, Spark 121
+                    cuda_architectures += [103, 110, 121] # Thor 110, Spark 121
     else:
         cuda_architectures = [
             80, 86,  # Ampere
@@ -338,7 +338,7 @@ def get_cuda_arch(l4t_version: str=None, cuda_version: str=None, format=list):
         ]
 
         if cuda_version >= Version('13.0'):
-            cuda_architectures += [103, 11.0, 121]
+            cuda_architectures += [103, 110, 121]
 
     if format == list:
         return cuda_architectures
