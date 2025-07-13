@@ -28,6 +28,7 @@ services:
     container_name: apt-static-server
     volumes:
       - ./apt:/usr/share/nginx/html:ro
+      - ./dist:/usr/share/nginx/html:ro
     expose:
       - "80"
     restart: unless-stopped
