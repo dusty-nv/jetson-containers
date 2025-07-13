@@ -28,8 +28,9 @@ def triton(version, branch=None, requires=None, default=False):
     return pkg, builder
 
 package = [
-    triton('3.5.0', branch='release/3.5.x', default=(PYTORCH_VERSION >= Version('2.9'))),
-    triton('3.4.0', branch='release/3.4.x', default=(PYTORCH_VERSION >= Version('2.7'))), # Newer Kernels and Spark Support
+    triton('3.5.0', branch='release/3.5.x', default=(PYTORCH_VERSION >= Version('2.9'))), # Newer Kernels and Thor Support
+    triton('3.4.0', branch='release/3.4.x', default=(PYTORCH_VERSION >= Version('2.8'))), # Newer Kernels and Spark Support
+    triton('3.4.0', branch='release/3.3.x', default=(PYTORCH_VERSION >= Version('2.7'))),
     triton('3.3.1', branch='release/3.3.x'),
     triton('3.3.0', branch='release/3.3.x'),  # Blackwell/RTX50 Support
     triton('3.2.0', branch='release/3.2.x', default=(PYTORCH_VERSION < Version('2.7'))),
