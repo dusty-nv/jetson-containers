@@ -76,12 +76,73 @@ The dependencies are also able to specify with [`requires`](/docs/packages.md) w
 | [`python`](/packages/python) | `PYTHON_VERSION` | [`python/config.py`](/packages/python/config.py) |
 | [`pytorch`](/packages/python) | `PYTORCH_VERSION` | [`pytorch/config.py`](/packages/pytorch/config.py) |
 | [`ubuntu`](/jetson_containers/l4t_version.py) | `LSB_RELEASE` | [`l4t_version.py`](/jetson_containers/l4t_version.py) |
+| [`cuda`](/jetson_containers/l4t_version.py) | `CUDA_ARCH` | [`l4t_version.py`](/jetson_containers/l4t_version.py) |
+
+## What is CUDA_ARCH?
+
+The following are the main CUDA-supported architectures and their differences:
+
+---
+
+### 🖥️ x86_64
+
+**Definition:**  
+64-bit x86 architecture used widely in modern desktops, laptops, and servers.
+
+**Key Characteristics:**
+- Common on Intel and AMD CPUs
+- Compatible with most CUDA tools and GPUs
+- Runs mainstream Linux and Windows OS
+
+**Use Case:**  
+General-purpose CUDA development and deployment on workstations or cloud servers.
+
+---
+
+### 📱 arm64-sbsa (Server Base System Architecture)
+
+**Definition:**  
+64-bit ARM architecture for **server-class hardware** following the SBSA specification.
+
+**Key Characteristics:**
+- Targeted at datacenter-grade ARM CPUs (e.g., Ampere, AWS Graviton)
+- Supports Linux OS with CUDA toolkits
+- Designed for cloud-native and scalable environments
+
+**Use Case:**  
+Energy-efficient, high-performance computing in ARM-based server infrastructures.
+
+---
+
+### 🤖 aarch64-jetson or cuda-tegra
+
+**Definition:**  
+64-bit ARM architecture specifically for **NVIDIA Jetson embedded systems**.
+
+**Key Characteristics:**
+- Designed for Jetson boards (Nano, Xavier, Orin, etc.)
+- Built-in GPU for CUDA acceleration
+- Runs Ubuntu-based Linux for Tegra (L4T)
+
+**Use Case:**  
+Robotics, edge AI, computer vision, and IoT solutions using CUDA at the edge.
+
+---
+
+## 📊 Summary Table
+
+| Architecture       | CPU Type         | Target Device                  | CUDA Support | Use Case                          |
+|--------------------|------------------|--------------------------------|--------------|------------------------------------|
+| **x86_64**         | Intel / AMD      | PCs, Laptops, Servers          | ✅            | General CUDA development           |
+| **arm64-sbsa**     | ARM (Server)     | Datacenter-grade ARM servers   | ✅            | Efficient cloud compute            |
+| **aarch64-jetson / cuda-tegra** | ARM (Embedded)   | NVIDIA Jetson Boards           | ✅            | Edge AI and embedded applications  |
 
 Using these together, you can rebuild the container stack for the specific version combination that you want:
 
 ```bash
 LSB_RELEASE=24.04 CUDA_VERSION=12.9 PYTHON_VERSION=3.12 PYTORCH_VERSION=2.8 jetson-containers build vllm
 ```
+
 
 The available versions are defined in the package's configuration scripts (some you can simply add new releases to by referring to the new git tag/branch, others need pointed to specific release downloads).  Not all combinations are compatible, as the versioned packages frequently define the minimum version of others in the build tree they rely on (for example, TensorRT 10 requires CUDA 12.4).
 
@@ -153,6 +214,20 @@ docker compose -f jetson_containers/packages/net/docker-compose.develop.yaml up 
 To stop local `pypi`/`apt` servers:
 ```bash
 docker compose -f jetson_containers/packages/net/docker-compose.develop.yaml stop
+```
+
+### How to activate the environment?
+
+```bash
+git clone --recursive https://github.com/dusty-nv/jetson-containers.git
+sudo bash jetson-containers/install.sh
+cd jetson-containers
+# modify here your .env for example: 
+INDEX_HOST=jetson-ai-lab.dev
+# activate it
+source .env
+# Then you can build with your variables
+jetson-containers build torch
 ```
 
 ## Building External Packages
