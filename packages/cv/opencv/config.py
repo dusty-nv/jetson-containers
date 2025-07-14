@@ -1,4 +1,3 @@
-
 from jetson_containers import CUDA_VERSION, CUDA_ARCHITECTURES
 from packaging.version import Version
 
@@ -44,7 +43,7 @@ package = [
     # JetPack 5/6
     opencv('4.5.0', '==35.*', default=False),
     opencv('4.8.1', '>=35', default=(CUDA_VERSION <= Version('12.2'))),
-    opencv('4.10.0', '>=35', default=(CUDA_VERSION >= Version('12.4') and CUDA_VERSION <= Version('12.6'))),
+    opencv('4.10.0', '>=35', default=(CUDA_VERSION >= Version('12.4') and CUDA_VERSION < Version('12.6'))),
     opencv('4.11.0', '>=35', default=False),
     opencv('4.12.0', '>=36', default=(CUDA_VERSION >= Version('12.6'))), # Blackwell Support
     opencv('4.13.0', '>=36', default=(CUDA_VERSION >= Version('13.0'))), # Thor Support
