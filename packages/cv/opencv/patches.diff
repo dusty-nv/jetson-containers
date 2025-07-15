@@ -16,21 +16,21 @@ index 7c47082..35454de 100755
 @@ -149,8 +151,9 @@ def main():
          ],
      }
- 
+
 -    if sys.version_info >= (3, 6):
 -        rearrange_cmake_output_data["cv2.typing"] = ["python/cv2" + r"/typing/.*\.py"]
 +    # https://github.com/opencv/opencv-python/issues/871
 +    #if sys.version_info >= (3, 6):
 +    #    rearrange_cmake_output_data["cv2.typing"] = ["python/cv2" + r"/typing/.*\.py"]
- 
+
      # Files in sourcetree outside package dir that should be copied to package.
      # Raw paths relative to sourcetree root.
 @@ -497,7 +500,8 @@ def get_and_set_info(contrib, headless, rolling, ci_build):
- 
+
      # generate a fresh version.py always when Git repository exists
      # (in sdists the version.py file already exists)
 -    if os.path.exists(".git"):
-+    
++
 +    if False: #os.path.exists(".git"):
          old_args = sys.argv.copy()
          sys.argv = ["", str(contrib), str(headless), str(rolling), str(ci_build)]
