@@ -3,7 +3,7 @@ def tinycudann(version, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
 
     pkg['name'] = f'tinycudann:{version}'
 
@@ -14,7 +14,7 @@ def tinycudann(version, requires=None, default=False):
     builder = pkg.copy()
 
     builder['name'] = f'tinycudann:{version}-builder'
-    builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
+    builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'off'}}
 
     if default:
         pkg['alias'] = 'tinycudann'

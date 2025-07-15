@@ -93,6 +93,12 @@ export CMAKE_LIBRARY_PATH=/usr/local/cuda/lib64/stubs
 export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
 export ENABLE_CONTRIB=1
 
+cat <<EOF > /opt/opencv-python/cv2/version.py
+opencv_version = "${OPENCV_VERSION}"
+contrib = True
+headless = False
+rolling = False
+EOF
 CMAKE_ARGS="${OPENCV_BUILD_ARGS} -DOPENCV_EXTRA_MODULES_PATH=/opt/opencv-python/opencv_contrib/modules" \
 pip3 wheel --wheel-dir=/opt --verbose .
 

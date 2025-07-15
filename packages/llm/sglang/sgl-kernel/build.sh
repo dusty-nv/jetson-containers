@@ -55,5 +55,5 @@ pip3 wheel . --no-build-isolation --wheel-dir "${PIP_WHEEL_DIR}"
 pip3 install "${PIP_WHEEL_DIR}/sgl"*.whl
 cd "${REPO_DIR}" || exit 1
 
-twine upload --verbose "${PIP_WHEEL_DIR}/sgl-kernel"*.whl \
+twine upload --verbose "${PIP_WHEEL_DIR}/sgl"*.whl \
   || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL:-<unset>}"
