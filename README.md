@@ -1,5 +1,7 @@
 [![a header for a software project about building containers for AI and machine learning](https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/header_blueprint_rainbow.jpg)](https://www.jetson-ai-lab.com)
 
+[![jetson-ai-lab.dev status](https://img.shields.io/website?label=jetson-ai-lab.dev&url=https%3A%2F%2Fpypi.jetson-ai-lab.dev&up_message=up&up_color=brightgreen&down_message=down&down_color=red)](https://pypi.jetson-ai-lab.dev)
+[![jetson-ai-lab.dev status](https://img.shields.io/website?label=jetson-ai-lab.io&url=https%3A%2F%2Fpypi.jetson-ai-lab.io&up_message=up&up_color=brightgreen&down_message=down&down_color=red)](https://pypi.jetson-ai-lab.io)
 # CUDA Containers for Edge AI & Robotics
 
 Modular container build system that provides the latest [**AI/ML packages**](https://pypi.jetson-ai-lab.dev/) for [NVIDIA Jetson](https://jetson-ai-lab.com) :rocket::robot:
@@ -27,7 +29,6 @@ Modular container build system that provides the latest [**AI/ML packages**](htt
 ### What is CUDA ARM SBSA vs TEGRA?
 - Read more about [CUDA ARM SBSA](https://developer.nvidia.com/cuda-arm-sbsa) and [Tegra](https://developer.nvidia.com/embedded/jetpack) on NVIDIA Developer
 - Read a summary on [Jetson AI Lab](https://github.com/dusty-nv/jetson-containers/blob/master/docs/build.md#what-is-cuda_arch)
-![Jetson PyPI Health](https://img.shields.io/endpoint?url=https://tokk-nv.github.io/jetson-containers/health.json)
 
 ## Code Style
 
