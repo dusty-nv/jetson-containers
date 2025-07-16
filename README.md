@@ -24,6 +24,9 @@ Modular container build system that provides the latest [**AI/ML packages**](htt
 > See the **[`Ubuntu 24.04`](/docs/build.md#2404-containers)** section of the docs for details and a list of available containers 🤗
 > Thanks to all our contributors from **[`Discord`](https://discord.gg/BmqNSK4886)** and AI community for their support 🤗
 
+### What is CUDA ARM SBSA vs TEGRA?
+- Read more about [CUDA ARM SBSA](https://developer.nvidia.com/cuda-arm-sbsa) and [Tegra](https://developer.nvidia.com/embedded/jetpack) on NVIDIA Developer
+- Read a summary on [Jetson AI Lab](https://github.com/dusty-nv/jetson-containers/blob/master/docs/build.md#what-is-cuda_arch)
 ![Jetson PyPI Health](https://img.shields.io/endpoint?url=https://tokk-nv.github.io/jetson-containers/health.json)
 
 ## Code Style
