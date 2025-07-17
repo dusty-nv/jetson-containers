@@ -41,12 +41,12 @@ def get_l4t_version(version_file='/etc/nv_tegra_release', l4t_version: str = Non
         return Version(os.environ['L4T_VERSION'].lower().lstrip('r'))
 
     if CUDA_ARCH != 'tegra-aarch64':
-        return Version('36.4.4') # for x86 to unlock L4T checks
+        return Version('38.0.0') # for x86 to unlock L4T checks
 
 
     if not os.path.isfile(version_file):
         # raise IOError(f"L4T_VERSION file doesn't exist:  {version_file}")
-        return Version('36.4.4')
+        return Version('38.0.0')
 
     with open(version_file) as file:
         line = file.readline()
@@ -127,8 +127,9 @@ def get_jetpack_version(l4t_version: str = None, default='6.2'):
 
     NVIDIA_JETPACK = {
         # -------- JP7 --------
-        "38.1.0": "7.0",
-        "38.0.0": "7.0 EA",
+        "38.2.0": "7.2",
+        "38.1.0": "7.1",
+        "38.0.0": "7.0",
 
         # -------- JP6 --------
         "36.4.4": "6.2.1",
@@ -315,7 +316,7 @@ def get_cuda_arch(l4t_version: str=None, cuda_version: str=None, format=list):
         # Nano/TX1 = 5.3, TX2 = 6.2, Xavier = 7.2, Orin = 8.7, Thor = 11.0
         if IS_TEGRA:
             if l4t_version.major >= 38:  # JetPack 7
-                cuda_architectures = [87, 110] # Ampere Orin, Hopper GH200 90, Thor 110
+                cuda_architectures = [87, 90, 100, 110] # Ampere Orin, Hopper GH200 90, Blackwell GB200, Thor 110
             elif l4t_version.major >= 36:  # JetPack 6
                 cuda_architectures = [87] # Ampere Orin, Hopper GH200 90
             elif l4t_version.major >= 34:  # JetPack 5
