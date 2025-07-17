@@ -429,7 +429,7 @@ main() {
     echo "============================="
 
     # NVMe Setup
-    if [ "$nvme_should_run" = "yes" ] || [ "$nvme_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure NVMe drive?"; then
+    if [ "$nvme_should_run" = "yes" ] || ([ "$nvme_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure NVMe drive?"); then
         if ! $SCRIPT_DIR/probe-system.sh --quiet --tests="nvme_mount"; then
             assign_nvme_drive
             $SCRIPT_DIR/probe-system.sh --quiet --tests="nvme_mount"
@@ -439,7 +439,7 @@ main() {
     fi
 
     # Docker Runtime Setup
-    if [ "$docker_runtime_should_run" = "yes" ] || [ "$docker_runtime_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure Docker runtime?"; then
+    if [ "$docker_runtime_should_run" = "yes" ] || ([ "$docker_runtime_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure Docker runtime?"); then
         if ! $SCRIPT_DIR/probe-system.sh --quiet --tests="docker_runtime"; then
             setup_docker_runtime
             $SCRIPT_DIR/probe-system.sh --quiet --tests="docker_runtime"
@@ -449,7 +449,7 @@ main() {
     fi
 
     # Docker Root Setup
-    if [ "$docker_root_should_run" = "yes" ] || [ "$docker_root_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure Docker root?"; then
+    if [ "$docker_root_should_run" = "yes" ] || ([ "$docker_root_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure Docker root?"); then
         if ! $SCRIPT_DIR/probe-system.sh --quiet --tests="docker_root"; then
             setup_docker_root
             $SCRIPT_DIR/probe-system.sh --quiet --tests="docker_root"
