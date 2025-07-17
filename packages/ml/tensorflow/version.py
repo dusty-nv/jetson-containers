@@ -7,8 +7,13 @@ import os
 if 'TENSORFLOW_VERSION' in os.environ and len(os.environ['TENSORFLOW_VERSION']) > 0:
     TENSORFLOW_VERSION = Version(os.environ['TENSORFLOW_VERSION'])
 else:
+    if L4T_VERSION.major >= 38:
+        if CUDA_VERSION >= Version('13.0'):
+            TENSORFLOW_VERSION = Version('2.20.0')
     if L4T_VERSION.major >= 36:
-        if CUDA_VERSION >= Version('12.9'):
+        if CUDA_VERSION >= Version('13.0'):
+            TENSORFLOW_VERSION = Version('2.20.0')
+        elif CUDA_VERSION >= Version('12.9'):
             TENSORFLOW_VERSION = Version('2.19.0')
         elif Version('12.4') <= CUDA_VERSION < Version('12.9'):
             TENSORFLOW_VERSION = Version('2.18.0')

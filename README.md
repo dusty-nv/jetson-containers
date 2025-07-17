@@ -18,7 +18,7 @@ Modular container build system that provides the latest [**AI/ML packages**](htt
 > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`jetson-containers run dustynv/pytorch:2.8-r36.4-cu128-24.04`
 >
 > ARM SBSA (Server Base System Architecture) is supported for GH200 / GB200.  
-> To install CUDA 12.9 SBSA wheels for Python 3.12 / 24.04:  
+> To install CUDA 13.0 SBSA wheels for Python 3.12 / 24.04:  
 >
 > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`pip3 install torch torchvision torchaudio \`  
 > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`--index-url https://pypi.jetson-ai-lab.dev/sbsa/cu129`

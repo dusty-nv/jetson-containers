@@ -1,9 +1,9 @@
 #!/bin/bash
 set -ex
 
-CUDNN_MAJOR_VERSION=9
-CUDA_MAJOR_VERSION=12
-CUDA_VERSION=12.9
+CUDNN_MAJOR_VERSION=0
+CUDA_MAJOR_VERSION=13
+CUDA_VERSION=13.0
 
 prefix=/opt/nvidia/cudnn
 arch=$(uname -m)-linux-gnu
