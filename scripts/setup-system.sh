@@ -390,6 +390,9 @@ parse_args() {
 # Check if specific tests are provided
 if [ ${#TESTS[@]} -ne 0 ]; then
     execution_mode="specific"
+elif [ "${interactive_mode}" = "false" ]; then
+    # non‑interactive mode: run all
+    execution_mode="all"
 else
     ask_execution_mode
 fi
@@ -459,7 +462,7 @@ main() {
     fi
 
     # Swap Setup
-    if [ "$swap_should_run" = "yes" ] || [ "$swap_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure swap?"; then
+    if [ "$swap_should_run" = "yes" ] || ([ "$swap_should_run" = "ask" -a "$interactive_mode" = "true" ] && ask_yes_no "Configure swap?"); then
         if ! $SCRIPT_DIR/probe-system.sh --quiet --tests="swap_file"; then
             setup_swap_file
             $SCRIPT_DIR/probe-system.sh --quiet --tests="swap_file"
