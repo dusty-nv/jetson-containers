@@ -22,9 +22,9 @@
 #
 
 echo "Detecting L4T version..."
-echo "CUDA_ARCH=$CUDA_ARCH"
+echo "CUDA_ARCH=${CUDA_ARCH}"
 
-if [ $CUDA_ARCH = "tegra-aarch64" ]; then
+if [ "${CUDA_ARCH}" = "tegra-aarch64" ]; then
 	L4T_VERSION_STRING=$(head -n 1 /etc/nv_tegra_release)
 
 	if [ -z "$L4T_VERSION_STRING" ]; then
@@ -52,7 +52,7 @@ if [ $CUDA_ARCH = "tegra-aarch64" ]; then
 
 	echo "L4T_VERSION:  $L4T_VERSION"
 
-elif [ $ARCH != "x86_64" ]; then
+elif [ "${ARCH}" != "x86_64" ]; then
 	echo "unsupported architecture:  $ARCH"
 	exit 1
 fi
