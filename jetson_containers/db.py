@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 # Various database utilities for syncing with dockerhub, github, hf hub, ect.
+import argparse
+import json
 import os
+import pprint
 import re
 import sys
-import json
-import pprint
-import argparse
-
-from packaging.version import Version
 from datetime import datetime
+from packaging.version import Version
 
-from jetson_containers import get_registry_containers, parse_container_versions, check_requirement, format_table
+from jetson_containers import get_registry_containers, parse_container_versions, \
+    check_requirement, format_table
 
 
 def sync_db(**kwargs):
@@ -32,7 +32,7 @@ def export_db(user: str=None, requires: str=None, blacklist: str=None, output: s
     Export dockerhub registry to graphDB format.
     """
     containers = pull_db(user=user, use_cache=True, **kwargs)
-    
+
     nodes = {
         'jetson-containers': {
             'name': 'Container',
@@ -53,8 +53,8 @@ def export_db(user: str=None, requires: str=None, blacklist: str=None, output: s
 
             if blacklist and blacklist in image:
                 continue
-            
-            node = { 
+
+            node = {
                 'tags': [repo_name],
                 'docker_image': image,
                 'last_modified': container['tag_last_pushed'],
@@ -67,8 +67,8 @@ def export_db(user: str=None, requires: str=None, blacklist: str=None, output: s
             if not 'L4T_VERSION' in node:
                 continue
 
-            if requires and not check_requirement(requires, 
-                l4t_version=node['L4T_VERSION'], 
+            if requires and not check_requirement(requires,
+                l4t_version=node['L4T_VERSION'],
                 cuda_version=node['CUDA_VERSION']):
                 continue
 
@@ -83,7 +83,7 @@ def export_db(user: str=None, requires: str=None, blacklist: str=None, output: s
 
     if not output:
         return nodes
-    
+
     graph_output = os.path.join(output, 'db.json')
     print(f"-- Saving GraphDB to:  {graph_output} ({len(json_string)} bytes)\n")
 
@@ -106,7 +106,7 @@ def export_db(user: str=None, requires: str=None, blacklist: str=None, output: s
         'size': 'Size (GB)',
         'last_modified': 'Timestamp',
     }
-    
+
     rows = []
 
     def to_list(key, env):
@@ -125,7 +125,7 @@ def export_db(user: str=None, requires: str=None, blacklist: str=None, output: s
             else:
                 x.append(env[f])
         return x
-    
+
     for k in recent:
         v = nodes[k]
         if len(rows) > 100:
@@ -136,12 +136,12 @@ def export_db(user: str=None, requires: str=None, blacklist: str=None, output: s
         if not row:
             continue
         rows.append(row)
-                
+
     table = format_table(rows, headers=[fields[x] for x in fields], tablefmt='github')
     table = table.replace('|--', '|:-').replace('--|', '-:|')
 
     print(f"\n{table}\n")
-    
+
     table_output = os.path.join(output, 'recent.md')
     print(f"-- Saving recent containers to:  {table_output} ({len(table)} bytes)\n")
 
@@ -158,9 +158,9 @@ if __name__ == "__main__":
     }
 
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    
+
     parser.add_argument('command', type=str, choices=list(COMMANDS.keys()))
-    
+
     #parser.add_argument('-p', '--prefer', type=str, default='local,registry,build', help="comma/colon-separated list of the source preferences (default: 'local,registry,build')")
     #parser.add_argument('-d', '--disable', type=str, default='', help="comma/colon-separated list of sources to disable (local,registry,build)")
     parser.add_argument('-u', '--user', type=str, default='dustynv', help="the DockerHub user for registry container images")
@@ -175,10 +175,10 @@ if __name__ == "__main__":
 
     #args.prefer = re.split(',|;|:', args.prefer)
     #args.disable = re.split(',|;|:', args.disable)
-    
+
     if args.verbose:
         os.environ['VERBOSE'] = 'ON'
-    
+
     print(args)
 
     COMMANDS[args.command](**vars(args))

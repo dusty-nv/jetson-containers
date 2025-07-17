@@ -1,26 +1,24 @@
 #!/usr/bin/env python3
-import os
-import sys
+import concurrent.futures
 import copy
-import json
-import yaml
-import time
 import fnmatch
 import importlib
+import json
+import os
+import sys
 import threading
-import concurrent.futures
-
-from packaging.version import Version
+import time
+import yaml
 from packaging.specifiers import SpecifierSet
-
-from .utils import get_repo_dir
-from .logging import log_debug, log_warning, log_error
+from packaging.version import Version
 
 from .l4t_version import (
     L4T_VERSION, CUDA_VERSION, PYTHON_VERSION, DOCKER_ARCH,
     LSB_RELEASE, LSB_RELEASES, CUDA_ARCH, CUDA_ARCHS, SYSTEM_ARM, SYSTEM_ARCH_LIST,
     check_arch
 )
+from .logging import log_debug, log_warning, log_error
+from .utils import get_repo_dir
 
 _PACKAGES = {}
 

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-import os
-import requests, time
 import functools
-
+import os
+import requests
+import time
 from typing import Dict, Literal
+
 from .logging import log_error, log_warning, log_verbose
 
 
@@ -32,7 +33,7 @@ def handle_text_request(url, retries=3, backoff=5):
                 return None
 
 
-def handle_json_request(url: str, headers: Dict[str, str] = None, 
+def handle_json_request(url: str, headers: Dict[str, str] = None,
                         retries: int = 3, backoff: int = 3, timeout: int = 10):
     """
     Fetch JSON data from a URL with retry, timeout, and backoff handling.

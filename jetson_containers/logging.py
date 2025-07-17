@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-import os
-import sys
-import shutil
-import types
-import pprint
 import datetime
+import os
+import pprint
+import shutil
+import sys
 import tabulate
 import termcolor
+import types
 
 from .utils import get_env_flag, get_repo_dir, to_bool
 
@@ -84,14 +84,14 @@ LogConfig = types.SimpleNamespace(
 
     # The default logging location is `jetson-containers/logs/<timestamp>`
     dir = os.path.join(
-        get_repo_dir(), 'logs', 
+        get_repo_dir(), 'logs',
         datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
     ),
 )
 
 
-def log_config(key: str=None, dir: str=None, level: str=None, 
-               verbose: bool=None, debug: bool=None, 
+def log_config(key: str=None, dir: str=None, level: str=None,
+               verbose: bool=None, debug: bool=None,
                colors: bool=None, status: bool=None, **kwargs):
     """
     Configures different settings of the logging system, including the output
@@ -124,7 +124,7 @@ def log_config(key: str=None, dir: str=None, level: str=None,
 
     if status == False: # disable terminal status bar
         LogConfig.status = False # this gets set to true once used
-        
+
     if key:
         return LogConfig.get(key)
     else:
@@ -155,14 +155,14 @@ def print_log(text: str='', level: str='info', color: str=None, attrs: list=[]):
 
     config = LogConfig.levels[level]
     indent = getattr(config, 'indent', LogConfig.indent)
-    
+
     if indent:
         indent = ' ' * indent
         text = indent + f"\n{indent}".join(text.split('\n'))
 
     format = substitution(
-        getattr(config, 'format', LogConfig.format), 
-        prefix=getattr(config, 'prefix', LogConfig.prefix), 
+        getattr(config, 'format', LogConfig.format),
+        prefix=getattr(config, 'prefix', LogConfig.prefix),
         postfix=getattr(config, 'postfix', LogConfig.postfix),
         level=level.upper(),
         message=text,
@@ -213,7 +213,7 @@ def colorize(text, color=None, on_color=None, attrs=[]):
 
     if color or on_color or attrs:
         text = termcolor.colored(text, color=color, on_color=on_color, attrs=attrs)
-    
+
     return text
 
 
@@ -234,7 +234,7 @@ def get_log_dir(subdir: str=None, create: bool=True):
 
 
 def log_status(text='', prefix='', done=False, **kwargs):
-    """ 
+    """
     Log to the status bar at the bottom of terminal.
 
     This changes the scrolling region with DECSTBM/DECOM:
@@ -257,7 +257,7 @@ def log_status(text='', prefix='', done=False, **kwargs):
             if LogConfig.status != True:
                 print(f'\033[1;{terminal.lines-1}r\033[?6l\033[2J\033[H', end='', flush=True)
                 LogConfig.status = True
-                
+
             text = prefix + text
             text += ' ' * (terminal.columns - len(text))
             text = colorize(text, color='green', attrs='reverse')
@@ -277,7 +277,7 @@ def log_versions(keys=None, columns=4, color='green', tablefmt='simple_grid'):
 
     if not keys:
         keys = [
-            'L4T_VERSION', 'JETPACK_VERSION', 
+            'L4T_VERSION', 'JETPACK_VERSION',
             'CUDA_VERSION', 'PYTHON_VERSION',
             'SYSTEM_ARCH', 'LSB_RELEASE',
         ]
@@ -300,7 +300,7 @@ def log_block(*text, color='green', attrs=['reverse'], tablefmt='simple_grid', *
     """
     if not text:
         return None
-    
+
     head = text[0]
     text = text[1:] if len(text) > 1 else None
 
@@ -309,7 +309,7 @@ def log_block(*text, color='green', attrs=['reverse'], tablefmt='simple_grid', *
 
     if not kwargs.get('visible', True):
         return output
-    
+
     output = '\n'.join([
         colorize(x, color, attrs=attrs)
         for x in output.split('\n')
@@ -319,26 +319,26 @@ def log_block(*text, color='green', attrs=['reverse'], tablefmt='simple_grid', *
 
     if not text:
         return output
-    
+
     for x in text:
         print(f"{colorize(x)}\n")
 
     return output
 
 
-def log_table( rows, header=None, footer=None, 
+def log_table( rows, header=None, footer=None,
                filter=(), color='green', on_color=None,
-               min_widths=[], max_widths=[30,55], 
+               min_widths=[], max_widths=[30,55],
                wrap_rows=None, merge_columns=False,
                attrs=None, visible=True, **kwargs ):
     """
-    Print a key-based table from a list[list] of rows/columns, or a 2-column dict 
+    Print a key-based table from a list[list] of rows/columns, or a 2-column dict
     where the keys are column 1, and the values are column 2.  These can be wrapped
     and merged, or recursively nested like a tree of dicts.
-    
+
     Header is a list of columns or rows that are inserted at the top.
     Footer is a list of columns or rows that are added to the end.
-    
+
     This uses tabulate for layout, and the kwargs are passed to it:
       https://github.com/astanin/python-tabulate
 
@@ -370,7 +370,7 @@ def log_table( rows, header=None, footer=None,
         if not isinstance(header[0], list):
             header = [header]
         rows = header + rows
-        
+
     if footer:
         if not isinstance(footer[0], list):
             footer = [footer]
@@ -397,8 +397,8 @@ def log_table( rows, header=None, footer=None,
                     continue
 
                 new_col = format_str(
-                    row[nc*merge_columns], 
-                    length=min_widths[nc], 
+                    row[nc*merge_columns],
+                    length=min_widths[nc],
                     pad=True
                 )
                 for x in range(1,merge_columns):
@@ -432,7 +432,7 @@ def flatten_rows(seq, filter=()):
         for key in iter:
             val = seq[key]
             if filter:
-                val = filter(seq,key,val) 
+                val = filter(seq,key,val)
                 if isinstance(val, tuple) and len(val) == 2:
                     key, val = val
             if not val:
@@ -445,7 +445,7 @@ def flatten_rows(seq, filter=()):
             else:
                 out.append([indent + prefix + str(key), val])
         return out
-    return flatten(seq)      
+    return flatten(seq)
 
 
 def wrap_rows(rows, max_rows=0):
@@ -454,7 +454,7 @@ def wrap_rows(rows, max_rows=0):
     """
     if not max_rows:
         return rows
-    
+
     if len(rows) < max_rows:
         return rows
 
@@ -476,10 +476,10 @@ def format_str(text, length=None, pad=None):
 
     if pad and len(text) < length:
         return text + pad * (length - len(text))
-                             
+
     if len(text) > length:
         return text[:length]
-    
+
     return text
 
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Container build system for managing package configurations and multi-stage build chains, with automated testing and dependency tracking. 
+# Container build system for managing package configurations and multi-stage build chains, with automated testing and dependency tracking.
 #
 # A "package" is composed of a Dockerfile, configs, and test scripts.  These are found under the jetson-containers/packages directory.
 # There are also "meta-packages" that have no Dockerfiles themselves, but specify a set of packages to include (e.g. l4t-pytorch)
@@ -12,28 +12,28 @@
 # Some example build scenarios:
 #
 #   $ jetson-containers/build.sh --name=xyz pytorch jupyterlab     # build container with PyTorch and JupyterLab server
-#   $ jetson-containers/build.sh --multiple pytorch tensorflow     # build separate containers for PyTorch and 
+#   $ jetson-containers/build.sh --multiple pytorch tensorflow     # build separate containers for PyTorch and
 #   $ jetson-containers/build.sh --multiple ros:humble*            # build all ROS Humble containers (can use wildcards)
-#   $ jetson-containers/build.sh ros:humble-desktop pytorch        # build ROS Humble with PyTorch on top 
+#   $ jetson-containers/build.sh ros:humble-desktop pytorch        # build ROS Humble with PyTorch on top
 #   $ jetson-containers/build.sh --base=xyz:latest pytorch         # add PyTorch to an existing container
 #
 # Typically the jetson-containers/build.sh wrapper script is used to launch this underlying Python module. jetson-containers can also
 # build external out-of-tree projects that have their own Dockerfile.  And you can add your own package search dirs for other packages.
 #
+import argparse
 import os
+import pprint
 import re
 import sys
-import pprint
-import argparse
 import traceback
 
 from jetson_containers import (
-    build_container, build_containers, find_packages, package_search_dirs, 
+    build_container, build_containers, find_packages, package_search_dirs,
     cprint, to_bool, log_config, log_error, log_status, log_versions, LogConfig
 )
 
 parser = argparse.ArgumentParser()
-                    
+
 parser.add_argument('packages', type=str, nargs='*', default=[], help='packages or containers to build (filterable by wildcards)')
 
 parser.add_argument('--name', type=str, default='', help="the name of the output container to build")
@@ -114,20 +114,20 @@ if args.list_packages or args.show_packages:
     if args.list_packages:
         for package in sorted(packages.keys()):
             print(package)
-    
+
     if args.show_packages:
         for key in sorted(packages.keys()):
             fmt = pprint.pformat(packages[key], indent=2)[1:-1].replace('\n', '\n  ')
             cprint(f"\n<b>> {key}</b>\n\n   {fmt}")
-        
+
     sys.exit(0)
-    
+
 try:
     # build one multi-stage container from chain of packages
     # or launch multiple independent container builds
     if not args.multiple:
         build_container(**vars(args))
-    else:   
+    else:
         build_containers(**vars(args))
 except Exception as error:
     log_error(f"Failed building:  {', '.join(args.packages)}\n\n{traceback.format_exc()}")

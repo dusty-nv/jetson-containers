@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 import os
-import time
 import requests
-from typing import Dict, Optional, Any
+import time
 from packaging.version import parse
+from typing import Dict, Optional, Any
+
 from .logging import log_warning, log_error, log_verbose
 
 # Global session for connection pooling

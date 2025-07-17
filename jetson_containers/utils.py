@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-import os
-import grp
-import sys
-import pprint
-import subprocess
-import requests, time
 import functools
-
+import grp
+import os
+import pprint
+import requests
+import subprocess
+import sys
+import time
 from typing import Dict, Literal
 
 
@@ -45,10 +45,10 @@ def get_dir(key, root=None):
         root = get_repo_dir()
 
     key = key.lower()
-    
+
     if key == 'repo':
         return root
-    
+
     return os.path.join(root, key)
 
 
@@ -62,7 +62,7 @@ def get_repo_dir():
 
 def get_env(key, default=None, type=str):
     """
-    Retrieve an environment variable and convert it to the given type, 
+    Retrieve an environment variable and convert it to the given type,
     or return the default value if it's undefined (by default `None`)
 
     If key is a list or tuple, then the first present key will be used.
@@ -110,7 +110,7 @@ def get_env_flag(key, default: bool=False) -> bool:
 
        * DEBUG=ON  get_env_flag('DEBUG') => True
        * DEBUG=0   get_env_flag('DEBUG') => False
-    
+
     This can also handle evaluating multiple keys as a list/tuple:
 
        * VERBOSE=1  get_env_flag(('DEBUG', 'VERBOSE')) => True
@@ -120,7 +120,7 @@ def get_env_flag(key, default: bool=False) -> bool:
     """
     return get_env(key, default=default, type=bool)
 
-    
+
 def to_bool(value: str, default: None) -> bool:
     """
     Convert a truthy value or string (like 1, 'true', 'ON', ect) to boolean.
@@ -240,9 +240,9 @@ def needs_sudo(group: str='docker') -> bool:
 
             try:
                 subprocess.run(
-                    ['docker', 'info'], 
-                    check=True, shell=False, 
-                    stderr=subprocess.DEVNULL, 
+                    ['docker', 'info'],
+                    check=True, shell=False,
+                    stderr=subprocess.DEVNULL,
                     stdout=subprocess.DEVNULL
                 )
                 return False
