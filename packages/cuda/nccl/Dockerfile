@@ -3,7 +3,6 @@
 # group: cuda
 # depends: [cuda]
 # config: config.py
-# test: test.sh
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
@@ -24,7 +23,7 @@ RUN apt-get update -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN git clone --recursive --depth 1 https://github.com/NVIDIA/ncclSamples /opt/nccl
+RUN git clone --recursive --depth=1 https://github.com/NVIDIA/nccl /opt/nccl
 
 # Instalar el keyring correcto según si IS_SBSA está definido
 RUN mkdir -p /opt/nccl && \
