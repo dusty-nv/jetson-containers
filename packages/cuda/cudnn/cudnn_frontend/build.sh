@@ -19,4 +19,4 @@ pip3 install -U -r requirements.txt
 pip3 wheel --wheel-dir=$REPO_DIR --verbose .
 pip3 install /opt/cudnn_frontend/nvidia_cudnn_frontend-*.whl
 
-twine upload --verbose dist/nvidia_cudnn_frontend-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose /opt/cudnn_frontend/nvidia_cudnn_frontend-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
