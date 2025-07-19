@@ -19,11 +19,23 @@ if [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
     wget $WGET_FLAGS \
         https://developer.download.nvidia.com/compute/cuda/repos/${DISTRO}/arm64/cuda-${DISTRO}.pin \
         -O /etc/apt/preferences.d/cuda-repository-pin-600
-else
+    wget $WGET_FLAGS \
+        https://developer.download.nvidia.com/compute/cuda/repos/${DISTRO}/arm64/cuda-keyring_1.1-1_all.deb
+
+elif [[ "$CUDA_ARCH" == "aarch64" ]]; then
     # ARM64 SBSA (Grace)
     wget $WGET_FLAGS \
         https://developer.download.nvidia.com/compute/cuda/repos/${DISTRO}/sbsa/cuda-${DISTRO}.pin \
         -O /etc/apt/preferences.d/cuda-repository-pin-600
+    wget $WGET_FLAGS \
+        https://developer.download.nvidia.com/compute/cuda/repos/${DISTRO}/sbsa/cuda-keyring_1.1-1_all.deb
+else
+    # x86_64
+    wget $WGET_FLAGS \
+        https://developer.download.nvidia.com/compute/cuda/repos/${DISTRO}/x86_64/cuda-${DISTRO}.pin \
+        -O /etc/apt/preferences.d/cuda-repository-pin-600
+    wget $WGET_FLAGS \
+        https://developer.download.nvidia.com/compute/cuda/repos/${DISTRO}/x86_64/cuda-keyring_1.1-1_all.deb
 fi
 
 wget $WGET_FLAGS ${CUDA_URL}

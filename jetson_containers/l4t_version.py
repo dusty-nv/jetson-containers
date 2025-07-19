@@ -549,8 +549,7 @@ def _get_platform_architecture():
 
 # cpu architecture
 CUDA_ARCH = os.environ.get("CUDA_ARCH", _get_platform_architecture())
-SYSTEM_ARCH = os.environ.get('SYSTEM_ARCH',
-                             platform.machine())  # UNIFIED tegra and sbsa as aarch64
+SYSTEM_ARCH = os.environ.get('SYSTEM_ARCH', platform.machine())  # UNIFIED tegra and sbsa as aarch64
 DOCKER_ARCH = CUDA_ARCHS[SYSTEM_ARCH]
 
 SYSTEM_ARM = CUDA_ARCH in ("aarch64", "tegra-aarch64")

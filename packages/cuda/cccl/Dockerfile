@@ -18,9 +18,10 @@ ARG CCCL_VERSION \
     FORCE_BUILD=off \
     TMP=/tmp/cuda_cccl
 
-RUN apt-get update -y || true ; apt-get install --no-install-recommends libopenmpi-dev openmpi-bin -y && \
+RUN apt-get update -y || true ; apt-get install --no-install-recommends cuda-cccl libopenmpi-dev openmpi-bin -y && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean
+
 
 COPY build.sh install.sh $TMP/
 
