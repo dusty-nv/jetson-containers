@@ -17,25 +17,19 @@ cd /tmp/cuda
 if [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
     # Jetson (Tegra)
     wget $WGET_FLAGS \
-        https://developer.download.nvidia.com/compute/cuda/repos/${DISTRO}/arm64/cuda-${DISTRO}.pin \
+        https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/arm64/cuda-ubuntu2204.pin \
         -O /etc/apt/preferences.d/cuda-repository-pin-600
-    wget $WGET_FLAGS \
-        https://developer.download.nvidia.com/compute/cuda/repos/${DISTRO}/arm64/cuda-keyring_1.1-1_all.deb
 
 elif [[ "$CUDA_ARCH" == "aarch64" ]]; then
     # ARM64 SBSA (Grace)
     wget $WGET_FLAGS \
         https://developer.download.nvidia.com/compute/cuda/repos/${DISTRO}/sbsa/cuda-${DISTRO}.pin \
         -O /etc/apt/preferences.d/cuda-repository-pin-600
-    wget $WGET_FLAGS \
-        https://developer.download.nvidia.com/compute/cuda/repos/${DISTRO}/sbsa/cuda-keyring_1.1-1_all.deb
 else
     # x86_64
     wget $WGET_FLAGS \
         https://developer.download.nvidia.com/compute/cuda/repos/${DISTRO}/x86_64/cuda-${DISTRO}.pin \
         -O /etc/apt/preferences.d/cuda-repository-pin-600
-    wget $WGET_FLAGS \
-        https://developer.download.nvidia.com/compute/cuda/repos/${DISTRO}/x86_64/cuda-keyring_1.1-1_all.deb
 fi
 
 wget $WGET_FLAGS ${CUDA_URL}
@@ -50,14 +44,27 @@ fi
 
 apt-get update
 apt-get install -y --no-install-recommends ${CUDA_PACKAGES}
-# ARM64 SBSA (Grace) NVIDIA Performance Libraries (NVPL)
-# NVPL allows you to easily port HPC applications to NVIDIA Grace™ CPU platforms to achieve industry-leading performance and efficiency.
-if [[ "$CUDA_ARCH" == "aarch64" ]]; then
-    wget $WGET_FLAGS https://developer.download.nvidia.com/compute/nvpl/25.5/local_installers/nvpl-local-repo-ubuntu2404-25.5_1.0-1_arm64.deb
-    dpkg -i nvpl-*_arm64.deb
-    cp /var/nvpl-*/nvpl-*-keyring.gpg /usr/share/keyrings/
-    apt-get update
-    apt-get -y install nvpl
+
+if [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
+    # Jetson (Tegra)
+    wget $WGET_FLAGS \
+        https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/arm64/cuda-keyring_1.1-1_all.deb
+
+elif [[ "$CUDA_ARCH" == "aarch64" ]]; then
+    # ARM64 SBSA (Grace)
+    wget $WGET_FLAGS \
+        https://developer.download.nvidia.com/compute/cuda/repos/${DISTRO}/sbsa/cuda-keyring_1.1-1_all.deb
+else
+    # x86_64
+    wget $WGET_FLAGS \
+        https://developer.download.nvidia.com/compute/cuda/repos/${DISTRO}/x86_64/cuda-keyring_1.1-1_all.deb
+fi
+dpkg -i cuda-keyring_1.1-1_all.deb
+apt-get update && \
+apt-get install -y --no-install-recommends libcusparselt0 libcusparselt-dev
+
+if [[ "$CUDA_ARCH" != "tegra-aarch64" ]]; then
+    apt-get install -y --no-install-recommends libcutensor2 libcutensor-dev libcutensor-doc
 fi
 rm -rf /var/lib/apt/lists/*
 apt-get clean
