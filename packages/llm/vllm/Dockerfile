@@ -2,7 +2,7 @@
 # name: vllm
 # group: llm
 # config: config.py
-# depends: [transformers, bitsandbytes, triton, xformers, flash-attention, torchaudio, mamba, xgrammar, flashinfer, minference, torch-memory-saver]
+# depends: [transformers, bitsandbytes, triton, xformers, flash-attention, torchaudio, mamba, xgrammar, flashinfer, minference, torch-memory-saver, mistral_common]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/vllm-project/vllm
