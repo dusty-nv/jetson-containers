@@ -2,7 +2,7 @@
 # name: cuda_cccl
 # group: cuda
 # config: config.py
-# depends: [cuda, cudnn, python, cmake, ninja, cuda-python, cupy]
+# depends: [cuda, cudnn, python, cmake, ninja, cuda-python]
 # requires: '>=35'
 # test: test.py
 #---
