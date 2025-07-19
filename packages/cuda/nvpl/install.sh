@@ -10,7 +10,3 @@ if [[ "$CUDA_ARCH" == "aarch64" ]]; then
 fi
 rm -rf /var/lib/apt/lists/*
 apt-get clean
-
-dpkg --list | grep cuda
-dpkg -P ${CUDA_DEB}
-rm -rf /tmp/cuda
