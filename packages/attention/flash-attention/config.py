@@ -31,7 +31,7 @@ package = [
     flash_attn('2.7.2.post1'),
     flash_attn('2.7.4.post1'),
     flash_attn('2.8.0.post2'),
-    flash_attn('2.8.1', default=(CUDA_VERSION >= Version('12.6'))),
-    flash_attn('2.8.2', default=(CUDA_VERSION >= Version('13.0'))),
+    flash_attn('2.8.1'),
+    flash_attn('2.8.2', default=(CUDA_VERSION >= Version('12.6'))),
 ]
 

@@ -27,8 +27,8 @@ fi
 
 
 if [ "$PYTORCH_OFFICIAL_WHL" == "on" ]; then
-	echo "##### 🏢Using official PyTorch 2.7 WHL #####"
-  pip install torch==2.7.0 --index-url https://download.pytorch.org/whl/cu128
+	echo "##### 🏢Using official PyTorch 2.8 WHL #####"
+  pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cu129
 else
   # on x86_64, install from pytorch nightly server
   # on aarch64, install from the Jetson pypi server ($PIP_INSTALL_URL)
@@ -46,12 +46,3 @@ python3 -c 'import torch; \
     print(f"cuDNN version  : {torch.backends.cudnn.version()}");'
 # PyTorch C++ extensions frequently use ninja parallel builds
 pip3 install scikit-build ninja
-
-# temporary patches to enable newer blackwell sm's
-if [[ "$(uname -m)" == "x86_64" && ${TORCH_VERSION} == "2.6" ]]; then
-  PYTHON_ROOT=`pip3 show torch | grep Location: | cut -d' ' -f2`
-  TORCH_PATCH="$PYTHON_ROOT/torch/utils/cpp_extension.py"
-  echo "patching ${TORCH_PATCH}"
-  sed -i "s|'10.0']|'10.0', '10.0a', '10.1', '10.1a', '12.0', '12.0a']|" ${TORCH_PATCH}
-  cat ${TORCH_PATCH} | grep '10.0'
-fi

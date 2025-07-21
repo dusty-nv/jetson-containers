@@ -5,7 +5,7 @@ def causalconv1d(version, version_spec=None, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
 
     pkg['name'] = f'causalconv1d:{version}'
 
@@ -26,5 +26,5 @@ def causalconv1d(version, version_spec=None, requires=None, default=False):
     return pkg, builder
 
 package = [
-    causalconv1d('1.6.0', '1.5.0.post8', default=True)
+    causalconv1d('1.5.2', '1.5.2', default=True)
 ]

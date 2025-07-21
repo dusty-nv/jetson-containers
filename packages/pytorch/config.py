@@ -1,4 +1,4 @@
-from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES, CUDA_SHORT_VERSION, SYSTEM_ARM, LSB_RELEASE, IS_SBSA
+from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES, CUDA_SHORT_VERSION, SYSTEM_ARM, LSB_RELEASE, IS_SBSA, LSB_RELEASE
 from packaging.version import Version
 
 from .version import PYTORCH_VERSION
@@ -28,7 +28,8 @@ def pytorch_pip(version, requires=None):
     pkg['build_args'] = {
         'TORCH_CUDA_ARCH_LIST': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES]), # retained as $TORCH_CUDA_ARCH_LIST
         'TORCH_VERSION': version,
-        'PYTORCH_BUILD_VERSION': build_version
+        'PYTORCH_BUILD_VERSION': build_version,
+        'DISTRO': f"ubuntu{LSB_RELEASE.replace('.','')}",
     }
 
     if not SYSTEM_ARM:

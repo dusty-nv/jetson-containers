@@ -28,4 +28,6 @@ pip3 install $WHL/nvidia_cutlass*.whl $WHL/pycute*.whl
 twine upload --verbose $WHL/nvidia_cutlass*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 twine upload --verbose $WHL/pycute*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
+pip3 install nvidia-cutlass-dsl
+
 python3 -c 'import cutlass; print(cutlass.__version__)'

@@ -5,7 +5,7 @@ def mamba(version, version_spec=None, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
 
     pkg['name'] = f'mamba:{version}'
 
@@ -26,5 +26,5 @@ def mamba(version, version_spec=None, requires=None, default=False):
     return pkg, builder
 
 package = [
-    mamba('2.2.5', version_spec='2.2.4', default=True)
+    mamba('2.2.5', version_spec='2.2.5', default=True)
 ]

@@ -2,8 +2,8 @@
 set -ex
 
 # Clone the repository if it doesn't exist
-git clone --branch=v${CASUALCONV1D_VERSION} --depth=1 --recursive https://github.com/johnnynunez/causal-conv1d /opt/causalconv1d  || \
-git clone --depth=1 --recursive https://github.com/johnnynunez/causal-conv1d  /opt/causalconv1d
+git clone --branch=v${CASUALCONV1D_VERSION} --depth=1 --recursive https://github.com/Dao-AILab/causal-conv1d /opt/causalconv1d  || \
+git clone --depth=1 --recursive https://github.com/Dao-AILab/causal-conv1d  /opt/causalconv1d
 
 # Navigate to the directory containing mamba's setup.py
 cd /opt/causalconv1d
