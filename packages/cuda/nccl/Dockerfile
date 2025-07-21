@@ -26,5 +26,6 @@ RUN apt-get update -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN git clone --recursive --depth=1 https://github.com/NVIDIA/nccl /opt/nccl
+COPY install.sh /tmp/nccl/
+RUN /tmp/ncc/install.sh
 
