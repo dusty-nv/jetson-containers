@@ -1,5 +1,5 @@
 #---
-# name: nvpl
+# name: cusparselt
 # group: cuda
 # depends: [cuda]
 # config: config.py
@@ -8,12 +8,12 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG NVPL_VERSION \
+ARG CUSPARSELT_VERSION \
     CUDA_ARCH \
     IS_SBSA \
     FORCE_BUILD=off \
     DISTRO="ubuntu2004" \
-    TMP=/tmp/nvpl
+    TMP=/tmp/cusparselt
 
 RUN apt-get update && \
     apt-get install -y dkms
@@ -28,7 +28,5 @@ RUN apt-get update -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN git clone --recursive --depth 1 https://github.com/NVIDIA/NVPLSamples /opt/nvpl
-
-COPY install.sh /tmp/nvpl/install.sh
-RUN /tmp/nvpl/install.sh
+COPY install.sh /tmp/cusparselt/install.sh
+RUN /tmp/cusparselt/install.sh

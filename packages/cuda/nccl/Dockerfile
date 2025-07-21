@@ -11,6 +11,8 @@ ARG NCCL_VERSION \
     CUDA_ARCH \
     IS_SBSA \
     FORCE_BUILD=off \
+    DISTRO="ubuntu2004" \
+    CUDA_ARCH \
     TMP=/tmp/nccl
 
 RUN apt-get update && \
@@ -26,5 +28,6 @@ RUN apt-get update -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN git clone --recursive --depth=1 https://github.com/NVIDIA/nccl /opt/nccl
+COPY install.sh /tmp/nccl/
+RUN /tmp/nccl/install.sh
 

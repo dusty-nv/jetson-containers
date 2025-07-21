@@ -1,7 +1,17 @@
 #!/usr/bin/env bash
 set -ex
 
-echo "Detected architecture: ${CUDA_ARCH}"
+ARCH=$(uname -m)
+ARCH_TYPE=$ARCH
+
+# Detectar si es Tegra
+if [[ "$ARCH" == "aarch64" ]]; then
+    if uname -a | grep -qi tegra; then
+        ARCH_TYPE="tegra-aarch64"
+    fi
+fi
+
+echo "Detected architecture: ${ARCH_TYPE}"
 
 apt-get update
 apt-get install -y --no-install-recommends \
@@ -14,21 +24,15 @@ echo "Downloading ${CUDA_DEB}"
 mkdir -p /tmp/cuda
 cd /tmp/cuda
 
-if [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
+if [[ "$ARCH_TYPE" == "tegra-aarch64" ]]; then
     # Jetson (Tegra)
     wget $WGET_FLAGS \
-        https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/arm64/cuda-ubuntu2204.pin \
+        https://developer.download.nvidia.com/compute/cuda/repos/${DISTRO}/arm64/cuda-${DISTRO}.pin \
         -O /etc/apt/preferences.d/cuda-repository-pin-600
-
-elif [[ "$CUDA_ARCH" == "aarch64" ]]; then
+else
     # ARM64 SBSA (Grace)
     wget $WGET_FLAGS \
         https://developer.download.nvidia.com/compute/cuda/repos/${DISTRO}/sbsa/cuda-${DISTRO}.pin \
-        -O /etc/apt/preferences.d/cuda-repository-pin-600
-else
-    # x86_64
-    wget $WGET_FLAGS \
-        https://developer.download.nvidia.com/compute/cuda/repos/${DISTRO}/x86_64/cuda-${DISTRO}.pin \
         -O /etc/apt/preferences.d/cuda-repository-pin-600
 fi
 
@@ -37,35 +41,13 @@ dpkg -i *.deb
 cp /var/cuda-*-local/cuda-*-keyring.gpg /usr/share/keyrings/
 
 # Tegra (Jetson)
-if [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
+if [[ "$ARCH_TYPE" == "tegra-aarch64" ]]; then
     ar x /var/cuda-tegra-repo-ubuntu*-local/cuda-compat-*.deb
     tar xvf data.tar.xz -C /
 fi
 
 apt-get update
 apt-get install -y --no-install-recommends ${CUDA_PACKAGES}
-
-if [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
-    # Jetson (Tegra)
-    wget $WGET_FLAGS \
-        https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/arm64/cuda-keyring_1.1-1_all.deb
-
-elif [[ "$CUDA_ARCH" == "aarch64" ]]; then
-    # ARM64 SBSA (Grace)
-    wget $WGET_FLAGS \
-        https://developer.download.nvidia.com/compute/cuda/repos/${DISTRO}/sbsa/cuda-keyring_1.1-1_all.deb
-else
-    # x86_64
-    wget $WGET_FLAGS \
-        https://developer.download.nvidia.com/compute/cuda/repos/${DISTRO}/x86_64/cuda-keyring_1.1-1_all.deb
-fi
-dpkg -i cuda-keyring_1.1-1_all.deb
-apt-get update && \
-apt-get install -y --no-install-recommends libcusparselt0 libcusparselt-dev
-
-if [[ "$CUDA_ARCH" != "tegra-aarch64" ]]; then
-    apt-get install -y --no-install-recommends libcutensor2 libcutensor-dev libcutensor-doc
-fi
 rm -rf /var/lib/apt/lists/*
 apt-get clean
 
