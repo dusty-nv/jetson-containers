@@ -12,6 +12,7 @@ ARG NCCL_VERSION \
     IS_SBSA \
     FORCE_BUILD=off \
     DISTRO="ubuntu2004" \
+    CUDA_ARCH \
     TMP=/tmp/nccl
 
 RUN apt-get update && \
@@ -28,5 +29,5 @@ RUN apt-get update -y && \
     rm -rf /var/lib/apt/lists/*
 
 COPY install.sh /tmp/nccl/
-RUN /tmp/ncc/install.sh
+RUN /tmp/nccl/install.sh
 

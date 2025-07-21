@@ -18,17 +18,32 @@ ARG CCCL_VERSION \
     FORCE_BUILD=off \
     TMP=/tmp/cuda_cccl
 
-RUN apt-get update -y || true ; apt-get install --no-install-recommends cuda-cccl-* libopenmpi-dev openmpi-bin -y && \
+# 1) system deps, 2) newer GCC, 3) clean-up
+RUN set -e; \
+    apt-get update -y && \
+    # cuda-cccl runtime & MPI
+    apt-get install -y --no-install-recommends \
+        cuda-cccl-* \
+        libopenmpi-dev openmpi-bin \
+    # modern compiler for <format>
+        software-properties-common && \
+    add-apt-repository -y ppa:ubuntu-toolchain-r/test && \
+    apt-get update -y && \
+    apt-get install -y --no-install-recommends \
+        gcc-13 g++-13 libstdc++-13-dev && \
+    # make them the default
+    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 100 && \
+    update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 100 && \
+    # tidy image
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean
 
+ENV CC=gcc CXX=g++
 
-COPY build.sh install.sh $TMP/
+COPY build.sh install.sh ${TMP}/
+RUN ${TMP}/install.sh || ${TMP}/build.sh || touch ${TMP}/.build.failed
 
-RUN $TMP/install.sh || $TMP/build.sh || touch $TMP/.build.failed
-
-# this retains the stage above for debugging on build failure
-RUN if [ -f $TMP/.build.failed ]; then \
-      echo "cuda_cccl ${cuda_cccl_VERSION} build failed!"; \
-      exit 1; \
+# keep build layer if CCCL failed
+RUN if [ -f ${TMP}/.build.failed ]; then \
+        echo "cuda_cccl ${CCCL_VERSION} build failed!"; exit 1; \
     fi
