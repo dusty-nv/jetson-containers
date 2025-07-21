@@ -8,7 +8,8 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG GDRCOPY_VERSION
+ARG GDRCOPY_VERSION \
+    DISTRO="ubuntu2004"
 
 # https://developer.download.nvidia.com/compute/redist/gdrcopy/CUDA%2012.8/
 

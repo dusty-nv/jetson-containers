@@ -7,7 +7,7 @@ echo "Detected architecture: ${CUDA_ARCH}"
 if [[ "$CUDA_ARCH" == "aarch64" ]]; then
     wget $WGET_FLAGS https://developer.download.nvidia.com/compute/nvpl/${NVPL_VERSION}/local_installers/nvpl-local-repo-${DISTRO}-${NVPL_VERSION}_1.0-1_arm64.deb
     sudo dpkg -i nvpl-local-*.deb
-    sudo cp /var/nvpl-local-repo-${DISTRO}-${NVPL_VERSION}/nvpl-*-keyring.gpg /usr/share/keyrings/
+    sudo cp /var/nvpl-local-repo-*-*/nvpl-*-keyring.gpg /usr/share/keyrings/
     sudo apt-get update
     sudo apt-get -y install nvpl
 fi

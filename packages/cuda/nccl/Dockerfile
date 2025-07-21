@@ -11,6 +11,7 @@ ARG NCCL_VERSION \
     CUDA_ARCH \
     IS_SBSA \
     FORCE_BUILD=off \
+    DISTRO="ubuntu2004" \
     TMP=/tmp/nccl
 
 RUN apt-get update && \
