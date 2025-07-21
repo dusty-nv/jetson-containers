@@ -28,5 +28,5 @@ RUN apt-get update -y && \
     rm -rf /var/lib/apt/lists/*
 
 COPY install.sh /tmp/nccl/
-RUN /tmp/ncc/install.sh
+RUN /tmp/nccl/install.sh
 
