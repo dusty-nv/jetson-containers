@@ -26,4 +26,4 @@ RUN apt-get update -y && \
     rm -rf /var/lib/apt/lists/*
 
 COPY install /tmp/gdrcopy/
-RUN /tmp/gdrcopy
+RUN /tmp/gdrcopy/install.sh
