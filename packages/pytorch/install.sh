@@ -17,6 +17,31 @@ if [ $USE_MPI == 1 ]; then
           gfortran
 fi
 
+UBUNTU_VERSION=$(grep VERSION_ID /etc/os-release | cut -d '"' -f 2)
+
+if [[ "$UBUNTU_VERSION" == "22.04" ]]; then
+  echo "🟢 Ubuntu 22.04 detected — installing GCC 13 for GLIBCXX_3.4.32"
+
+  apt-get update
+  apt-get install -y --no-install-recommends \
+    software-properties-common \
+    curl \
+    wget \
+    ca-certificates
+
+  add-apt-repository ppa:ubuntu-toolchain-r/test -y
+  apt-get update
+  apt install -y g++-13 libstdc++-13-dev libstdc++6
+
+  STDCPP_SO=$(find /usr/lib/aarch64-linux-gnu -name 'libstdc++.so.6.0.*' | sort -V | tail -n1)
+  ln -sf "$STDCPP_SO" /usr/lib/aarch64-linux-gnu/libstdc++.so.6
+  export LD_LIBRARY_PATH=/usr/lib/aarch64-linux-gnu:$LD_LIBRARY_PATH
+  strings "$STDCPP_SO" | grep GLIBCXX_3.4.32
+
+else
+  echo "🔶 Ubuntu version is $UBUNTU_VERSION — skipping GCC upgrade"
+fi
+
 rm -rf /var/lib/apt/lists/*
 apt-get clean
 
@@ -24,7 +49,6 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	echo "Forcing build of PyTorch ${PYTORCH_BUILD_VERSION}"
 	exit 1
 fi
-
 
 if [ "$PYTORCH_OFFICIAL_WHL" == "on" ]; then
 	echo "##### 🏢Using official PyTorch 2.8 WHL #####"
