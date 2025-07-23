@@ -3,7 +3,7 @@ def gsplat(version, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
 
     pkg['name'] = f'gsplat:{version}'
 
@@ -23,5 +23,5 @@ def gsplat(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    gsplat('1.5.3', default=True),
+    gsplat('1.5.4', default=True),
 ]

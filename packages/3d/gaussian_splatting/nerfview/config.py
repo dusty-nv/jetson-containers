@@ -3,7 +3,7 @@ def nerfview(version, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
 
     pkg['name'] = f'nerfview:{version}'
 
@@ -24,5 +24,5 @@ def nerfview(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    nerfview('0.1.4', default=True),
+    nerfview('0.1.5', default=True),
 ]
