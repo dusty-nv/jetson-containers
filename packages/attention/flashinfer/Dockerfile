@@ -2,7 +2,7 @@
 # name: flashinfer
 # group: attention
 # config: config.py
-# depends: [cuda, pytorch, triton, cuda-python]
+# depends: [cuda, pytorch, triton, cuda-python, cudnn_frontend]
 # requires: '>=35'
 # test: test.py
 #---
