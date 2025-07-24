@@ -1,21 +1,12 @@
 #!/bin/bash
 
-SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
-ROOT="$(dirname "$(dirname "$(readlink -fm "$0")")")"
+# Enable error handling
+set -euo pipefail
 
-# Global flag for quiet mode
-QUIET=false
+. scripts/utils.sh
 
 # Load environment variables from .env
-ENV_FILE="${JETSON_SETUP_ENV_FILE:-$SCRIPT_DIR/.env}"
-if [ -f "${ENV_FILE}" ]; then
-    set -a
-    source "${ENV_FILE}"
-    set +a
-else
-    echo "Environment file ${ENV_FILE} not found."
-    exit 1
-fi
+load_env
 
 # Check if NVMe variables are defined
 if [ -n "${NVME_SETUP_OPTIONS_MOUNT_POINT+x}" ] && [ -n "${NVME_SETUP_OPTIONS_PARTITION_NAME+x}" ] && [ -n "${NVME_SETUP_OPTIONS_FILESYSTEM+x}" ]; then
@@ -38,14 +29,6 @@ power_mode="${POWER_MODE_OPTIONS_MODE:-}"
 # Define nvzramconfig service
 NVZRAMCONFIG_SERVICE="nvzramconfig"
 
-
-# Unified logging function
-log() {
-    if [ "$QUIET" = false ]; then
-        echo "$@"
-    fi
-}
-
 # Function to check if NVMe is mounted
 check_nvme_mount() {
     # Only run if NVMe is configured
@@ -63,40 +46,9 @@ check_nvme_mount() {
     fi
 }
 
-# Function to check if Docker is installed
-check_docker_installed() {
-    if command -v docker &> /dev/null; then
-        echo "Docker is installed."
-        return 0
-    else
-        echo "Docker is not installed."
-        return 1
-    fi
-}
-
-# Function to check Docker runtime configuration
-check_docker_runtime() {
-    if ! check_docker_installed; then
-        return 1
-    fi
-    
-    if [ ! -f "/etc/docker/daemon.json" ]; then
-        echo "Docker daemon.json file does not exist."
-        return 1
-    fi
-    
-    if grep -q '"default-runtime": "nvidia"' /etc/docker/daemon.json; then
-        log "✅ Docker runtime 'nvidia' is set as default."
-        return 0
-    else
-        log "❌ Docker runtime 'nvidia' is not set as default."
-        return 1
-    fi
-}
-
 # Function to check Docker data root
 check_docker_root() {
-    if ! check_docker_installed; then
+    if ! is_docker_installed; then
         return 1
     fi
     
@@ -120,22 +72,24 @@ check_docker_root() {
 }
 
 check_swap_file() {
-    if [ -z "$swap_file" ]; then
-        echo "Swap file path is not specified in environment file."
-        return 1
-    fi
-    
-    if swapon --show | grep -q "$swap_file"; then
-        local swap_size_bytes
-        swap_size_bytes=$(swapon --show=SIZE --bytes "$swap_file" | tail -n1)
-        human_readable_size=$(awk -v b="${swap_size_bytes}" 'BEGIN { printf "%.2f GB\n", b/1e9 }')
-        log "✅ Swap is configured at $swap_file with size: $human_readable_size ($swap_size_bytes bytes)."
-        return 0
-    else
+    local swap_file="${1:-$swap_file}"
+
+    # Delegate the “exists and active” test
+    if ! check_swap_exists "$swap_file"; then
+        # check_swap_exists already printed diagnostics to stderr
         log "❌ Swap is not configured at $swap_file."
         swapon
         return 1
     fi
+
+    # At this point, swap_file is non‐empty, a regular file, and active.
+    local swap_size_bytes human_readable_size
+
+    swap_size_bytes=$(swapon --show=SIZE --bytes --noheadings --raw --field NAME,SIZE NAME="$swap_file" | awk '{print $2}')
+    human_readable_size=$(awk -v b="$swap_size_bytes" 'BEGIN { printf "%.2f GB\n", b/1e9 }')
+
+    log "✅ Swap is configured at $swap_file with size: $human_readable_size ($swap_size_bytes bytes)."
+    return 0
 }
 
 # UNIT FILE                                  STATE           VENDOR PRESET
@@ -158,7 +112,7 @@ check_nvzramconfig_service() {
 }
 
 # Function to check zram (nvzramconfig) status
-check_zram() {
+check_zram_status() {
     if systemctl is-enabled nvzramconfig &> /dev/null; then
         log "✅ zram (nvzramconfig) is enabled."
         return 1
@@ -189,7 +143,7 @@ check_gui() {
 
 # Function to check Docker group membership
 check_docker_group() {
-    if ! check_docker_installed; then
+    if ! is_docker_installed; then
         return 1
     fi
     
@@ -261,15 +215,6 @@ check_nvme_drive_assigned() {
     fi
 }
 
-# Function to display help information
-print_help() {
-    echo "Usage: probe-system.sh [OPTIONS]"
-    echo
-    echo "Options:"
-    echo "  --tests=<test1,test2,...>    Run specified tests."
-    echo "  --help                       Display this help message and exit."
-}
-
 # Function to parse command-line arguments
 parse_probe_args() {
     TESTS=()
@@ -288,7 +233,11 @@ parse_probe_args() {
                 shift
                 ;;
             --help)
-                print_help
+                echo "Usage: probe-system.sh [OPTIONS]"
+                echo
+                echo "Options:"
+                echo "  --tests=<test1,test2,...>    Run specified tests."
+                echo "  --help                       Display this help message and exit."
                 exit 0
                 ;;
             *)
@@ -301,9 +250,9 @@ parse_probe_args() {
 
 # Main function to execute all checks
 main() {
-    echo "=== System Probe Script ==="
+    log "=== System Probe Script ==="
     if [ "$nvme_configured" = true ]; then
-        echo "Assuming NVMe mount point is $mount_point."
+        log "Assuming NVMe mount point is $mount_point."
     fi
     echo
 
@@ -313,7 +262,7 @@ main() {
 
     if [ ${#TESTS[@]} -eq 0 ]; then
         # Run all checks
-        check_docker_installed
+        is_docker_installed
         echo
         
         # Only check NVMe if configured
@@ -325,7 +274,7 @@ main() {
         check_docker_runtime
         check_docker_root
         check_swap_file
-        check_zram
+        check_zram_status
         check_nvzramconfig_service
         check_gui
         check_docker_group
@@ -335,7 +284,7 @@ main() {
         for test in "${TESTS[@]}"; do
             case $test in
                 docker_installed)
-                    check_docker_installed
+                    is_docker_installed
                     echo
                     ;;
                 prepare_nvme_partition)
@@ -357,7 +306,7 @@ main() {
                     check_swap_file
                     ;;
                 disable_zram)
-                    check_zram
+                    check_zram_status
                     ;;
                 nvzramconfig_service)
                     check_nvzramconfig_service

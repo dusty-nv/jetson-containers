@@ -3,19 +3,10 @@
 # Enable error handling
 set -euo pipefail
 
-# Get the directory where this script is located
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+. scripts/utils.sh
 
 # Load environment variables from .env
-if [ -f ".env" ]; then
-    set -a
-    source .env
-    set +a
-elif [ -f "${SCRIPT_DIR}/../.env" ]; then
-    set -a
-    source "${SCRIPT_DIR}/../.env"
-    set +a
-fi
+load_env
 
 # Default values
 interactive_mode="${INTERACTIVE_MODE:-true}"
@@ -31,18 +22,6 @@ fi
 zram_size="${ZRAM_SIZE:-4G}"
 # Use SWAP_OPTIONS_PATH if specified, otherwise default to /swapfile
 swap_file_path="${SWAP_OPTIONS_PATH:-/swapfile}"
-
-# Function to prompt yes/no questions
-ask_yes_no() {
-    while true; do
-        read -p "$1 (y/n): " yn
-        case $yn in
-            [Yy]* ) return 0;;
-            [Nn]* ) return 1;;
-            * ) echo "Please answer yes or y or no or n.";;
-        esac
-    done
-}
 
 # Convert size string to bytes (e.g., "4G" to bytes)
 convert_to_bytes() {
@@ -65,9 +44,9 @@ convert_to_bytes() {
 }
 
 # Check if swap file exists and is active
-check_swap_file() {
-    if [ -f "$swap_file_path" ]; then
-        if swapon -s | grep -q "$swap_file_path"; then
+check_swap_file_status() {
+    if file_exists "$swap_file_path"; then
+        if check_swap_exists "$swap_file_path"; then
             echo "active"
         else
             echo "inactive"
@@ -79,32 +58,32 @@ check_swap_file() {
 
 # Create and enable swap file
 setup_swap_file() {
-    local swap_state=$(check_swap_file)
-    local size_bytes=$(convert_to_bytes "$swap_size")
+    local swap_state=$(check_swap_file_status)
+    local size_bytes=$(convert_to_bytes "${swap_size}")
     
     # If swap file exists, disable and remove it first
-    if [ "$swap_state" != "missing" ]; then
-        echo "Disabling existing swap file..."
-        sudo swapoff "$swap_file_path" || true
-        echo "Removing existing swap file..."
-        sudo rm -f "$swap_file_path"
+    if [ "${swap_state}" != "missing" ]; then
+        log "Disabling existing swap file: ${swap_file_path}"
+        sudo swapoff "${swap_file_path}" || true
+        log "Removing existing swap file..."
+        sudo rm -f "${swap_file_path}"
         # Remove from fstab if present
         sudo sed -i "\\#^${swap_file_path}#d" /etc/fstab
     fi
     
     # Create new swap file directly at the final location
-    echo "Creating new swap file of size $swap_size..."
-    sudo dd if=/dev/zero of="$swap_file_path" bs=1M count=$((size_bytes/1024/1024))
-    sudo chmod 600 "$swap_file_path"
-    sudo mkswap "$swap_file_path"
-    sudo swapon "$swap_file_path"
+    log "Creating new swap file of size ${swap_size}..."
+    sudo dd if=/dev/zero of="${swap_file_path}" bs=1M count=$((size_bytes/1024/1024))
+    sudo chmod 600 "${swap_file_path}"
+    sudo mkswap "${swap_file_path}"
+    sudo swapon "${swap_file_path}"
     
     # Add to fstab if not already present
-    if ! grep -q "$swap_file_path" /etc/fstab; then
-        echo "$swap_file_path none swap sw 0 0" | sudo tee -a /etc/fstab
+    if ! grep -q "${swap_file_path}" /etc/fstab; then
+        echo "${swap_file_path} none swap sw 0 0" | sudo tee -a /etc/fstab
     fi
     
-    if swapon -s | grep -q "$swap_file_path"; then
+    if check_swap_exists "${swap_file_path}"; then
         echo "✅ Swap file setup complete"
         return 0
     else
@@ -114,10 +93,10 @@ setup_swap_file() {
 }
 
 # Check if zRAM is enabled
-check_zram() {
+check_zram_state() {
     if lsmod | grep -q "^zram"; then
         echo "active"
-    elif [ -f "/etc/modules-load.d/zram.conf" ]; then
+    elif file_exists /etc/modules-load.d/zram.conf; then
         echo "configured"
     else
         echo "disabled"
@@ -126,18 +105,18 @@ check_zram() {
 
 # Setup zRAM
 setup_zram() {
-    local zram_state=$(check_zram)
-    local size_bytes=$(convert_to_bytes "$zram_size")
+    local zram_state=$(check_zram_state)
+    local size_bytes=$(convert_to_bytes "${zram_size}")
     
     # If zRAM should be enabled
-    if [ "$zram_enabled" = "yes" ]; then
+    if is_true "${zram_enabled}"; then
         # Create configuration files if they don't exist
         echo "zram" | sudo tee /etc/modules-load.d/zram.conf
         echo "options zram num_devices=1" | sudo tee /etc/modprobe.d/zram.conf
         
         # Create udev rule for zRAM configuration
         cat << EOF | sudo tee /etc/udev/rules.d/99-zram.rules
-KERNEL=="zram0", ATTR{disksize}="$size_bytes", TAG+="systemd"
+KERNEL=="zram0", ATTR{disksize}="${size_bytes}", TAG+="systemd"
 EOF
         
         # Create systemd service for zRAM
@@ -163,7 +142,7 @@ EOF
         sudo systemctl enable zram
         sudo systemctl start zram
         
-        if [ "$(check_zram)" = "active" ]; then
+        if [ "$(check_zram_state)" = "active" ]; then
             echo "✅ zRAM setup complete"
             return 0
         else
@@ -172,7 +151,7 @@ EOF
         fi
     else
         # Disable zRAM if it's enabled
-        if [ "$zram_state" != "disabled" ]; then
+        if [ "${zram_state}" != "disabled" ]; then
             sudo systemctl stop zram
             sudo systemctl disable zram
             sudo swapoff /dev/zram0 2>/dev/null || true
@@ -194,13 +173,14 @@ configure_memory() {
     
     # Configure zRAM if needed
     echo -e "\n=== Configuring zRAM ==="
-    if [ "$zram_enabled" = "ask" ] && [ "$interactive_mode" = "true" ]; then
+    if [ "${zram_enabled}" = "ask" ] && [ "$interactive_mode" = "true" ]; then
         if ask_yes_no "Would you like to disable zRAM?"; then
             zram_enabled="no"
         else
             zram_enabled="yes"
         fi
     fi
+
     setup_zram
     
     # Display current memory configuration

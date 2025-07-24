@@ -3,35 +3,14 @@
 # Enable error handling
 set -euo pipefail
 
-# Get the directory where this script is located
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+. scripts/utils.sh
 
 # Load environment variables from .env
-if [ -f ".env" ]; then
-    set -a
-    source .env
-    set +a
-elif [ -f "${SCRIPT_DIR}/../.env" ]; then
-    set -a
-    source "${SCRIPT_DIR}/../.env"
-    set +a
-fi
+load_env
 
 # Default values
 interactive_mode="${INTERACTIVE_MODE:-true}"
 gui_enabled="${GUI_ENABLED:-ask}"
-
-# Function to prompt yes/no questions
-ask_yes_no() {
-    while true; do
-        read -p "$1 (y/n): " yn
-        case $yn in
-            [Yy]* ) return 0;;
-            [Nn]* ) return 1;;
-            * ) echo "Please answer yes or y or no or n.";;
-        esac
-    done
-}
 
 # Function to check if system uses systemd
 check_systemd() {

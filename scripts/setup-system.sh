@@ -53,14 +53,6 @@ ask_execution_mode() {
     done
 }
 
-# Check if script is run with sudo
-check_permissions() {
-    if [ "$EUID" -ne 0 ]; then 
-        echo "Please run as root (with sudo)"
-        exit 1
-    fi
-}
-
 # Parse command line arguments
 parse_args() {
     TESTS=()

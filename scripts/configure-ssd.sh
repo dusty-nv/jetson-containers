@@ -1,5 +1,4 @@
 #!/bin/bash
-#set -x # Enable debug mode
 
 ################################################################################
 # JETSON CONTAINER NVME SSD CONFIGURATION SCRIPT
@@ -17,37 +16,26 @@
 #   --test=<function>  Test a specific function
 ################################################################################
 
-# Pretty print functions
-print_section() {
-    local message=$1
-    echo -e "\n\033[48;5;130m\033[97m >>> $message \033[0m"
-}
+# Enable error handling
+set -euo pipefail
 
-log() {
-    local level=$1
-    local message=$2
-    case "$level" in
-        INFO)  echo -e "\033[36m[INFO]\033[0m $message" ;;      # Cyan text
-        WARN)  echo -e "\033[38;5;205m[WARN]\033[0m $message" ;; # Magenta text
-        ERROR) echo -e "\033[1;31m[ERROR]\033[0m $message" ;;   # Red text (bold)
-        *)     echo "[LOG]  $message" ;;                        # Default log
-    esac
-}
+. scripts/utils.sh
 
 ################################################################################
 # STORAGE DETECTION AND CONFIGURATION
 ################################################################################
 
 check_l4t_installed_on_nvme() {
-    root_device=$(findmnt -n -o SOURCE /)
-    if [[ "$root_device" =~ nvme ]]; then
-        log INFO "System is installed on an NVMe SSD ($root_device)."
+    local root_device="$(l4t_root_device)"
+
+    if is_l4t_installed_on_nvme; then
+        pretty_print INFO "System is installed on an NVMe SSD ($root_device)."
         return 0
-    elif [[ "$root_device" =~ mmcblk ]]; then
-        log WARN "System is installed on an eMMC device ($root_device)."
+    elif is_l4t_installed_on_emmc; then
+        pretty_print WARN "System is installed on an eMMC device ($root_device)."
         return 1
     else
-        log ERROR "Unknown storage device: $root_device"
+        pretty_print ERROR "Unknown storage device: $root_device"
         return 1
     fi
 }
@@ -63,26 +51,26 @@ check_nvme_to_be_mounted() {
     if nvme_info=$(lsblk -o NAME,TYPE -n | grep "nvme.*disk"); then
         nvme_present=true
         nvme_device="/dev/$(echo "$nvme_info" | awk '{print $1}')"
-        log INFO "NVMe device is present at $nvme_device"
+        pretty_print INFO "NVMe device is present at $nvme_device"
         
         # Check for partitions
         nvme_partition=$(lsblk -o NAME -n -l | grep "nvme.*p[0-9]" | head -n1)
         if [ -n "$nvme_partition" ]; then
             nvme_device="/dev/$nvme_partition"
-            log INFO "Using NVMe partition: $nvme_device"
+            pretty_print INFO "Using NVMe partition: $nvme_device"
         fi
         
         # Check if NVMe has a valid filesystem
         if blkid "$nvme_device" | grep -qE "TYPE=.*"; then
             nvme_formatted=true
-            log INFO "NVMe device has a filesystem: $(blkid "$nvme_device" | grep -o 'TYPE="[^"]*"')"
+            pretty_print INFO "NVMe device has a filesystem: $(blkid "$nvme_device" | grep -o 'TYPE="[^"]*"')"
         fi
     fi
     
     # Check if NVMe is mounted
     if lsblk -o NAME,MOUNTPOINT | grep -q "nvme.*\/"; then
         nvme_mounted=true
-        log INFO "NVMe device is already mounted"
+        pretty_print INFO "NVMe device is already mounted"
     fi
     
     # Export the detected device for use in other functions
@@ -113,7 +101,7 @@ add_nvme_to_fstab() {
     # Get UUID of the NVMe device
     local uuid
     uuid=$(blkid -s UUID -o value "$nvme_device")
-    log INFO "------> UUID: $uuid"
+    pretty_print INFO "------> UUID: $uuid"
     # Ensure the UUID was found
     if [[ -z "$uuid" ]]; then
         echo "❌ Failed to retrieve UUID for $nvme_device. Is it formatted?"
@@ -133,18 +121,18 @@ add_nvme_to_fstab() {
 
 mount_nvme() {
     # Step 1-1: List available NVMe devices and partitions
-    log INFO "Available NVMe devices and partitions:"
+    pretty_print INFO "Available NVMe devices and partitions:"
     lsblk | grep "nvme"
     
     # Step 1-2: Use the detected partition from check_nvme_to_be_mounted
     if [ -z "$NVME_DEVICE" ]; then
-        log ERROR "No NVMe device was detected"
+        pretty_print ERROR "No NVMe device was detected"
         exit 1
     fi
     
     # Extract just the device name from the path
     device_name=$(basename "$NVME_DEVICE")
-    log INFO "Using device: $device_name"
+    pretty_print INFO "Using device: $device_name"
     
     # Step 1-3: Ask the user where to mount
     echo -n "Enter the mount point           [Default: /mnt]   : "
@@ -153,42 +141,42 @@ mount_nvme() {
     
     # Step 1-4: Format only if needed
     if [ "${NVME_NEEDS_FORMAT:-1}" = "1" ]; then
-        log WARN "⚠️ WARNING: This will format $NVME_DEVICE as EXT4!"
+        pretty_print WARN "⚠️ WARNING: This will format $NVME_DEVICE as EXT4!"
         read -p "Are you sure you want to proceed? (y/N): " confirm
         if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
-            log ERROR "❌ Aborting formatting."
+            pretty_print ERROR "❌ Aborting formatting."
             exit 1
         fi
-        log INFO "Formatting $NVME_DEVICE..."
+        pretty_print INFO "Formatting $NVME_DEVICE..."
         sudo mkfs.ext4 "$NVME_DEVICE"
     else
-        log INFO "NVMe device already has a filesystem, skipping format"
+        pretty_print INFO "NVMe device already has a filesystem, skipping format"
     fi
     
     # Step 1-5: Create mount directory
-    log INFO "Creating mount directory at $mount_point..."
+    pretty_print INFO "Creating mount directory at $mount_point..."
     sudo mkdir -p "$mount_point"
     
     # Step 1-6: Mount the NVMe device
-    log INFO "Mounting $NVME_DEVICE to $mount_point..."
+    pretty_print INFO "Mounting $NVME_DEVICE to $mount_point..."
     sudo mount "$NVME_DEVICE" "$mount_point"
     
     # Step 1-7: Display filesystem info
-    log INFO "Updated Filesystem Info:"
+    pretty_print INFO "Updated Filesystem Info:"
     lsblk -f
     
     # Step 1-8: Get the UUID and add that to /etc/fstab
     add_nvme_to_fstab "$NVME_DEVICE" "$mount_point"
     
-    log INFO "Showing the current /etc/fstab"
+    pretty_print INFO "Showing the current /etc/fstab"
     cat /etc/fstab
     
     # Step 1-9: Change ownership to current user and set proper permissions
-    log INFO "Setting ownership and permissions for $mount_point to ${USER}:${USER}..."
+    pretty_print INFO "Setting ownership and permissions for $mount_point to ${USER}:${USER}..."
     sudo chown "${USER}:${USER}" "$mount_point"
     sudo chmod 755 "$mount_point"  # rwxr-xr-x permissions
     ls -la "$mount_point"
-    log INFO "✅ NVMe setup completed successfully!"
+    pretty_print INFO "✅ NVMe setup completed successfully!"
 }
 
 ################################################################################
@@ -226,7 +214,7 @@ parse_args() {
                 exit 0
                 ;;
             *)
-                log ERROR "Unknown parameter: $arg"
+                pretty_print ERROR "Unknown parameter: $arg"
                 exit 1
                 ;;
         esac
@@ -243,11 +231,11 @@ main() {
     # Handle test function execution
     if [[ -n "$TEST_FUNCTION" ]]; then
         if declare -F "$TEST_FUNCTION" > /dev/null; then
-            log WARN "Running test for function: $TEST_FUNCTION"
+            pretty_print WARN "Running test for function: $TEST_FUNCTION"
             "$TEST_FUNCTION"
             exit 0
         else
-            log ERROR "Function '$TEST_FUNCTION' not found."
+            pretty_print ERROR "Function '$TEST_FUNCTION' not found."
             exit 1
         fi
     fi
@@ -258,10 +246,10 @@ main() {
         if check_nvme_to_be_mounted; then
             mount_nvme
         else
-            log WARN "NVMe is either missing or already mounted."
+            pretty_print WARN "NVMe is either missing or already mounted."
         fi
     else
-        log INFO "System is running from NVMe, no additional mounting needed."
+        pretty_print INFO "System is running from NVMe, no additional mounting needed."
     fi
     
     print_section "=== SETUP COMPLETED ==="

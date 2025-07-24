@@ -1,14 +1,21 @@
 #!/bin/bash
 # Script to generate .env configuration files for different Jetson device profiles
 
-#set -e
+# Enable error handling
+set -euo pipefail
+
+. scripts/utils.sh
+
+# Load environment variables from .env
+load_env
 
 # Default configuration directory
 CONFIG_DIR="$(dirname "$(realpath "$0")")"
 ENV_FILE="${CONFIG_DIR}/../.env"
+
 # Function to detect current device
 detect_device() {
-    if [ -f /etc/nv_tegra_release ]; then
+    if file_exists /etc/nv_tegra_release; then
         if grep -q "AGX Orin" /proc/device-tree/model 2>/dev/null; then
             echo "agx"
         elif grep -q "Orin NX" /proc/device-tree/model 2>/dev/null; then

@@ -1,5 +1,4 @@
 #!/bin/bash
-#set -x # Enable debug mode
 
 ################################################################################
 # JETSON CONTAINER DOCKER CONFIGURATION SCRIPT
@@ -19,112 +18,89 @@
 #   --no-migrate      Skip Docker data directory migration
 ################################################################################
 
-# Pretty print functions
-print_section() {
-    local message=$1
-    echo -e "\n\033[48;5;130m\033[97m >>> $message \033[0m"
-}
+# Enable error handling
+set -euo pipefail
 
-log() {
-    local level=$1
-    local message=$2
-    case "$level" in
-        INFO)  echo -e "\033[36m[INFO]\033[0m $message" ;;      # Cyan text
-        WARN)  echo -e "\033[38;5;205m[WARN]\033[0m $message" ;; # Magenta text
-        ERROR) echo -e "\033[1;31m[ERROR]\033[0m $message" ;;   # Red text (bold)
-        *)     echo "[LOG]  $message" ;;                        # Default log
-    esac
-}
+. scripts/utils.sh
+
+# Load environment variables from .env
+load_env
 
 ################################################################################
 # DOCKER INSTALLATION AND CONFIGURATION
 ################################################################################
 
-check_docker_is_installed() {
-    if command -v docker &> /dev/null; then
-        log INFO "✅ Docker is already installed."
-        return 0
-    else
-        log WARN "❌ Docker is NOT installed."
-        return 1
-    fi
-}
-
 install_docker() {
-    log INFO "⚠️ Docker and NVIDIA container runtime will be installed."
-    log INFO "⚠️ This process requires internet access and may take a few minutes."
+    pretty_print INFO "⚠️ Docker and NVIDIA container runtime will be installed."
+    pretty_print INFO "⚠️ This process requires internet access and may take a few minutes."
     echo
+
     # Ask for user confirmation
-    read -p "Are you sure you want to install Docker? (y/N): " confirm
-    confirm=${confirm,,}  # Convert to lowercase
-    if [[ "$confirm" != "y" && "$confirm" != "yes" ]]; then
+    if ! ask_yes_no "Are you sure you want to install Docker?"; then
         echo "❌ Installation aborted by user."
         return 1
     fi
+
     # Proceed with installation
-    log INFO "✅ Proceeding with Docker installation..."
+    pretty_print INFO "✅ Proceeding with Docker installation..."
+
     cd /tmp/
     if [ -d "install-docker" ]; then
         rm -rf install-docker
     fi
+
     git clone https://github.com/jetsonhacks/install-docker.git
     cd install-docker
     bash ./install_nvidia_docker.sh
-    log INFO "✅ Docker and NVIDIA runtime installation complete!"
+    pretty_print INFO "✅ Docker and NVIDIA runtime installation complete!"
 }
 
 # Add user to docker group
 setup_docker_group() {
     # Check if user is in docker group
-    if groups $USER | grep -q '\bdocker\b'; then
-        log INFO "✅ User '$USER' is already in the docker group."
+    if user_in_group docker; then
+        pretty_print INFO "✅ User '$USER' is already in the docker group."
     else
-        log INFO "Adding user to docker group..."
+        pretty_print INFO "Adding user to docker group..."
         sudo usermod -aG docker $USER
-        log WARN "⚠️ Please log out and log back in for docker group changes to take effect."
-        log WARN "   Alternatively, run: newgrp docker"
+        pretty_print WARN "⚠️ Please log out and log back in for docker group changes to take effect."
+        pretty_print WARN "   Alternatively, run: newgrp docker"
     fi
 }
 
 # Configure Docker with NVIDIA runtime as default
 configure_docker_runtime() {
-    if grep -q '"default-runtime": "nvidia"' /etc/docker/daemon.json 2>/dev/null; then
-        log INFO "✅ NVIDIA runtime is already set as default in Docker daemon.json"
+    local daemon_config="/etc/docker/daemon.json"
+
+    if check_docker_runtime; then
+        pretty_print INFO "✅ NVIDIA runtime is already set as default in Docker: ${daemon_config}"
     else
-        log WARN "❌ NVIDIA runtime is NOT set as default - configuring now..."
+        pretty_print WARN "❌ NVIDIA runtime is NOT set as default - configuring now..."
         
         # Check if jq is installed
         if ! command -v jq &> /dev/null; then
-            log INFO "Installing jq for JSON processing..."
+            pretty_print INFO "Installing jq for JSON processing..."
             sudo apt install -y jq
         fi
         
         # Configure NVIDIA runtime as default
-        if [ -f "/etc/docker/daemon.json" ]; then
-            sudo jq '. + {"default-runtime": "nvidia"}' /etc/docker/daemon.json | \
-                sudo tee /etc/docker/daemon.json.tmp > /dev/null && \
-                sudo mv /etc/docker/daemon.json.tmp /etc/docker/daemon.json
+        if file_exists $daemon_config; then
+            sudo jq '. + {"default-runtime": "nvidia"}' $daemon_config | \
+                sudo tee $daemon_config.tmp > /dev/null && \
+                sudo mv $daemon_config.tmp $daemon_config
         else
-            echo '{"default-runtime": "nvidia"}' | sudo tee /etc/docker/daemon.json > /dev/null
+            echo '{"default-runtime": "nvidia"}' | sudo tee $daemon_config > /dev/null
         fi
         
         # Restart Docker to apply changes
-        log INFO "Restarting Docker service to apply changes..."
+        pretty_print INFO "Restarting Docker service to apply changes..."
         sudo systemctl restart docker
-        log INFO "✅ NVIDIA runtime is now set as default."
+        pretty_print INFO "✅ NVIDIA runtime is now set as default."
     fi
-}
-
-check_l4t_installed_on_nvme() {
-    root_device=$(findmnt -n -o SOURCE /)
-    if [[ "$root_device" =~ nvme ]]; then
-        return 0
-    fi
-    return 1
 }
 
 setup_docker() {
-    if ! check_docker_is_installed; then
+    if ! is_docker_installed; then
         install_docker
     fi
     
@@ -135,19 +111,19 @@ setup_docker() {
     setup_docker_group
     
     # Skip data-root migration if L4T is installed on NVMe
-    if check_l4t_installed_on_nvme; then
-        log WARN "✅ No need to migrate Docker data as your entire system is on NVMe SSD"
+    if is_l4t_installed_on_nvme; then
+        pretty_print WARN "✅ No need to migrate Docker data as your entire system is on NVMe SSD"
         return 0
     fi
     
     # Skip data-root migration if it's already configured
     if grep -q '"data-root"' /etc/docker/daemon.json 2>/dev/null; then
-        log INFO "✅ Docker data-root dir is already set"
+        pretty_print INFO "✅ Docker data-root dir is already set"
         return 0
     fi
     
     # L4T is installed on eMMC and Docker data-root to be migrated to SSD
-    log INFO "List all NVMe mount points"
+    pretty_print INFO "List all NVMe mount points"
     nvme_mount_points=($(lsblk -nr -o NAME,MOUNTPOINT | awk '/^nvme/ && $2 != "" {print $2}'))
     if [[ ${#nvme_mount_points[@]} -eq 0 ]]; then
         echo "❌ No NVMe mount points found. Exiting."
@@ -165,14 +141,15 @@ setup_docker() {
     read -e -i "$default_mount_point_docker_root_dir" selected_mount_point_docker_root_dir
     
     # Migrate Docker data-root directory to SSD
-    log INFO "Migrate Docker directory to SSD"
+    pretty_print INFO "Migrate Docker directory to SSD"
     sudo systemctl stop docker
-    log INFO "Moving the existing Docker data directory (/var/lib/docker/)..."
+    pretty_print INFO "Moving the existing Docker data directory (/var/lib/docker/)..."
     sudo du -csh /var/lib/docker/
-    log WARN "⚠️ This may take time if you were operating on eMMC/SD"
-    sudo mkdir -p "$selected_mount_point_docker_root_dir" && \
-        sudo rsync -axPS /var/lib/docker/ "$selected_mount_point_docker_root_dir" && \
-        sudo du -csh "$selected_mount_point_docker_root_dir"
+    pretty_print WARN "⚠️ This may take time if you were operating on eMMC/SD"
+
+    sudo mkdir -p "$selected_mount_point_docker_root_dir"
+    sudo rsync -axPS /var/lib/docker/ "$selected_mount_point_docker_root_dir"
+    sudo du -csh "$selected_mount_point_docker_root_dir"
     
     # Update Docker daemon.json with new data-root
     sudo jq --arg dataroot "$selected_mount_point_docker_root_dir" \
@@ -193,35 +170,13 @@ setup_docker() {
     sudo mv /var/lib/docker /var/lib/docker.old
     
     # Restart the docker daemon
-    sudo systemctl daemon-reload && \
-        sudo systemctl restart docker
+    sudo systemctl daemon-reload
+    sudo systemctl restart docker
 }
 
 ################################################################################
 # HELP AND ARGUMENT PARSING
 ################################################################################
-
-print_help() {
-    echo -e "\n\033[1;34mJetson Docker Configuration Script\033[0m"
-    echo -e "\n\033[1;34mUsage:\033[0m $0 [OPTIONS]"
-    echo
-    echo -e "\033[1;36mOptions:\033[0m"
-    echo -e "  --help             Show this help message and exit."
-    echo -e "  --test=<function>  Run a specific function for testing."
-    echo -e "  --no-migrate      Skip Docker data directory migration."
-    echo
-    echo -e "\033[1;36mDescription:\033[0m"
-    echo "  This script configures Docker on Jetson devices with proper NVIDIA"
-    echo "  container runtime support and optionally migrates Docker data to NVMe storage."
-    echo
-    echo -e "\033[1;36mSteps Performed:\033[0m"
-    echo "  1️⃣ Install Docker if it's not already installed."
-    echo "  2️⃣ Configure default container runtime to NVIDIA."
-    echo "  3️⃣ If using eMMC + NVMe, migrate Docker data-root to SSD."
-    echo "  4️⃣ Ensure current user is in the docker group."
-    echo
-}
-
 parse_args() {
     TEST_FUNCTION=""
     NO_MIGRATE=false
@@ -235,11 +190,28 @@ parse_args() {
                 NO_MIGRATE=true
                 ;;
             --help)
-                print_help
+                echo -e "\n\033[1;34mJetson Docker Configuration Script\033[0m"
+                echo -e "\n\033[1;34mUsage:\033[0m $0 [OPTIONS]"
+                echo
+                echo -e "\033[1;36mOptions:\033[0m"
+                echo -e "  --help             Show this help message and exit."
+                echo -e "  --test=<function>  Run a specific function for testing."
+                echo -e "  --no-migrate      Skip Docker data directory migration."
+                echo
+                echo -e "\033[1;36mDescription:\033[0m"
+                echo "  This script configures Docker on Jetson devices with proper NVIDIA"
+                echo "  container runtime support and optionally migrates Docker data to NVMe storage."
+                echo
+                echo -e "\033[1;36mSteps Performed:\033[0m"
+                echo "  1️⃣ Install Docker if it's not already installed."
+                echo "  2️⃣ Configure default container runtime to NVIDIA."
+                echo "  3️⃣ If using eMMC + NVMe, migrate Docker data-root to SSD."
+                echo "  4️⃣ Ensure current user is in the docker group."
+                echo
                 exit 0
                 ;;
             *)
-                log ERROR "Unknown parameter: $arg"
+                pretty_print ERROR "Unknown parameter: $arg"
                 exit 1
                 ;;
         esac
@@ -256,7 +228,7 @@ main() {
     # Handle test function execution
     if [[ -n "$TEST_FUNCTION" ]]; then
         if declare -F "$TEST_FUNCTION" > /dev/null; then
-            log WARN "Running test for function: $TEST_FUNCTION"
+            pretty_print WARN "Running test for function: $TEST_FUNCTION"
             "$TEST_FUNCTION"
             exit 0
         else
@@ -275,12 +247,12 @@ main() {
     fi
     
     print_section "=== SETUP COMPLETED ==="
-    log INFO "Docker is now configured with NVIDIA runtime as default"
+    pretty_print INFO "Docker is now configured with NVIDIA runtime as default"
     
     # Remind user to log out and back in if group was added
-    if ! groups $USER | grep -q '\bdocker\b'; then
-        log WARN "⚠️ IMPORTANT: Log out and back in for docker group changes to take effect"
-        log WARN "              Alternatively, run 'newgrp docker' in your current terminal"
+    if ! user_in_group docker; then
+        pretty_print WARN "⚠️ IMPORTANT: Log out and back in for docker group changes to take effect"
+        pretty_print WARN "              Alternatively, run 'newgrp docker' in your current terminal"
     fi
 }
 
