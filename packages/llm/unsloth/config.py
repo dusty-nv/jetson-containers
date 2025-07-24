@@ -32,10 +32,5 @@ def unsloth(version, branch=None, requires=None, default=False, depends=None):
 
 package = [
     # 0.6.5 compatible with jetson https://github.com/unsloth-project/unsloth/pull/9735
-    unsloth(version='0.7.4', default=False),
-    unsloth(version='0.8.4', depends=['flashinfer:0.2.1.post2'], default=False),
-    unsloth(version='0.8.5', branch='v0.8.5.post1', depends=['flashinfer:0.2.2.post1'], default=False),
-    unsloth(version='0.9.0', depends=['flashinfer'], default=False),
-    unsloth(version='0.9.2', depends=['flashinfer'], default=False),
-    unsloth(version='0.9.3', depends=['flashinfer'], default=True),
+    unsloth(version='August-2025', default=True),
 ]
