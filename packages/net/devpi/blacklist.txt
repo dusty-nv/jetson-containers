@@ -44,3 +44,4 @@ bitsandbytes
 xgrammar
 pykan
 xlstm
+mistral_common
