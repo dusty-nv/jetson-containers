@@ -16,7 +16,7 @@ ARG UNSLOTH_VERSION \
     IS_SBSA \
     FORCE_BUILD=off
 
-COPY build.sh install.sh patches /tmp/unsloth/
+COPY build.sh install.sh /tmp/unsloth/
 
 RUN /tmp/unsloth/install.sh || /tmp/unsloth/build.sh
 RUN /tmp/transformers/install.sh
