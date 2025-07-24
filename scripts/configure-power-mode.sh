@@ -101,9 +101,7 @@ main() {
     
     if [ "$current_mode" != "$updated_mode" ]; then
         echo "A reboot is required for the power mode change to take effect."
-        if [ "$interactive_mode" = "true" ] && ask_yes_no "Would you like to reboot now?"; then
-            reboot
-        fi
+        ask_for_reboot
     fi
 }
 

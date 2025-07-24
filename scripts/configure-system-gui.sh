@@ -62,19 +62,11 @@ configure_gui() {
     
     # If GUI_ENABLED is set to "ask" and we're in interactive mode, ask the user
     if [ "$gui_enabled" = "ask" ] && [ "$interactive_mode" = "true" ]; then
-        if [ "$current_state" = "enabled" ]; then
-            if ask_yes_no "GUI is currently enabled. Would you like to disable it?"; then
-                gui_enabled="no"
-            else
-                gui_enabled="yes"
-            fi
-        else
-            if ask_yes_no "GUI is currently disabled. Would you like to enable it?"; then
-                gui_enabled="yes"
-            else
-                gui_enabled="no"
-            fi
-        fi
+        action=$([ "$current_state" = "enabled" ] && echo "disable" || echo "enable")
+        opposite=$([ "$current_state" = "enabled" ] && echo "no" || echo "yes")
+        same=$([ "$current_state" = "enabled" ] && echo "yes" || echo "no")
+        
+        gui_enabled=$(ask_yes_no "GUI is currently $current_state. Would you like to $action it?" && echo "$opposite" || echo "$same")
     fi
     
     # Configure based on gui_enabled setting
@@ -142,10 +134,8 @@ main() {
     
     # Inform about reboot if state changed
     if [ "$(get_gui_state)" != "$current_state" ]; then
-        echo "Changes will take effect after reboot"
-        if [ "$interactive_mode" = "true" ] && ask_yes_no "Would you like to reboot now?"; then
-            sudo reboot
-        fi
+        echo "Changes will take effect after reboot."
+        ask_for_reboot
     fi
 }
 

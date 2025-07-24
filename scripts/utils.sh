@@ -212,3 +212,12 @@ convert_to_bytes() {
             ;;
     esac
 }
+
+ask_for_reboot() {
+    local interactive_mode="${INTERACTIVE_MODE:-true}"
+
+    if [ "$interactive_mode" = "true" ] && ask_yes_no "Would you like to reboot now?"; then
+        log "Rebooting, please wait..."
+        sudo reboot
+    fi
+}
