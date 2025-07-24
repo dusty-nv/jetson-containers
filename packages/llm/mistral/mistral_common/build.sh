@@ -3,7 +3,7 @@ set -ex
 
 pip3 install pre-commit nanobind==2.5.0
 # Clone the repository if it doesn't exist
-git clone --branch=${mistral_common_BRANCH} --recursive --depth=1 https://github.com/mistralai/mistral-common /opt/mistral_common ||
+git clone --branch=${MISTRAL_COMMON_VERSION} --recursive --depth=1 https://github.com/mistralai/mistral-common /opt/mistral_common ||
 git clone --recursive --depth=1 https://github.com/mistralai/mistral-common /opt/mistral_common
 
 cd /opt/mistral_common
