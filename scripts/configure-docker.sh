@@ -248,7 +248,7 @@ main() {
     fi
     
     print_section "=== SETUP COMPLETED ==="
-    pretty_print INFO "Docker is now configured with NVIDIA runtime as default"
+    pretty_print INFO "✅ Docker is now configured with NVIDIA runtime as default"
     
     # Remind user to log out and back in if group was added
     if ! user_in_group docker; then

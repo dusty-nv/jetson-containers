@@ -234,11 +234,7 @@ parse_args() {
 
 # Main function
 main() {
-    if [ "$EUID" -ne 0 ]; then 
-        echo "Please run as root (with sudo)"
-        exit 1
-    fi
-    
+    check_permissions
     parse_args "$@"
     configure_memory
 }

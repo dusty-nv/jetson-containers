@@ -42,7 +42,7 @@ check_swap_exists() {
     file_exists "${swap_file}" || return 1
 
     # check if it's active
-    if swapon --show=NAME | grep -Fqx "${swap_file}"; then
+    if swapon --noheadings --raw --show=NAME | grep -Fqx "${swap_file}"; then
         return 0
     else
         return 1
@@ -172,7 +172,7 @@ user_in_group() {
 # Check if script is run with sudo
 check_permissions() {
     if [ "$EUID" -ne 0 ]; then 
-        echo "Please run as root (with sudo)"
+        pretty_print ERROR "Please run as root (with sudo)"
         exit 1
     fi
 }
