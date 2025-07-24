@@ -16,32 +16,18 @@ swap_size="${swap_size_num}G"
 # Use SWAP_OPTIONS_DISABLE_ZRAM to determine if zRAM should be disabled by default
 zram_disabled="${SWAP_OPTIONS_DISABLE_ZRAM:-false}"
 zram_enabled="ask"
-if [ "$zram_disabled" = "true" ]; then
-    zram_enabled="no"
-fi
 zram_size="${ZRAM_SIZE:-4G}"
 # Use SWAP_OPTIONS_PATH if specified, otherwise default to /swapfile
 swap_file_path="${SWAP_OPTIONS_PATH:-/swapfile}"
 
-# Convert size string to bytes (e.g., "4G" to bytes)
-convert_to_bytes() {
-    local size=$1
-    local value=${size%[GM]}
-    local unit=${size#$value}
-    
-    case $unit in
-        G)
-            echo $((value * 1024 * 1024 * 1024))
-            ;;
-        M)
-            echo $((value * 1024 * 1024))
-            ;;
-        *)
-            echo "Error: Invalid size unit. Use M for MB or G for GB"
-            exit 1
-            ;;
-    esac
-}
+if is_true $zram_disabled; then
+    zram_enabled="no"
+fi
+
+# On the SD Card we prefer to use the zram only
+if ! is_true $zram_enabled && is_l4t_installed_on_sdcard; then
+    zram_enabled="yes"
+fi
 
 # Check if swap file exists and is active
 check_swap_file_status() {
@@ -64,37 +50,40 @@ setup_swap_file() {
     # If swap file exists, disable and remove it first
     if [ "${swap_state}" != "missing" ]; then
         log "Disabling existing swap file: ${swap_file_path}"
-        sudo swapoff "${swap_file_path}" || true
+        sudo swapoff "${swap_file_path}" || true > /dev/null
         log "Removing existing swap file..."
         sudo rm -f "${swap_file_path}"
         # Remove from fstab if present
         sudo sed -i "\\#^${swap_file_path}#d" /etc/fstab
     fi
     
-    # Create new swap file directly at the final location
-    log "Creating new swap file of size ${swap_size}..."
-    sudo dd if=/dev/zero of="${swap_file_path}" bs=1M count=$((size_bytes/1024/1024))
-    sudo chmod 600 "${swap_file_path}"
-    sudo mkswap "${swap_file_path}"
-    sudo swapon "${swap_file_path}"
-    
-    # Add to fstab if not already present
-    if ! grep -q "${swap_file_path}" /etc/fstab; then
-        echo "${swap_file_path} none swap sw 0 0" | sudo tee -a /etc/fstab
-    fi
-    
-    if check_swap_exists "${swap_file_path}"; then
-        echo "✅ Swap file setup complete"
-        return 0
-    else
-        echo "❌ Failed to setup swap file"
-        return 1
+    # Create swap only when not installed on sdcard
+    if ! is_l4t_installed_on_sdcard; then
+        # Create new swap file directly at the final location
+        log "Creating new swap file of size ${swap_size}..."
+        sudo dd if=/dev/zero of="${swap_file_path}" bs=1M count=$((size_bytes/1024/1024))
+        sudo chmod 600 "${swap_file_path}"
+        sudo mkswap "${swap_file_path}"
+        sudo swapon "${swap_file_path}"
+        
+        # Add to fstab if not already present
+        if ! grep -q "${swap_file_path}" /etc/fstab; then
+            echo "${swap_file_path} none swap sw 0 0" | sudo tee -a /etc/fstab
+        fi
+        
+        if check_swap_exists "${swap_file_path}"; then
+            echo "✅ Swap file setup complete"
+            return 0
+        else
+            echo "❌ Failed to setup swap file"
+            return 1
+        fi
     fi
 }
 
 # Check if zRAM is enabled
 check_zram_state() {
-    if lsmod | grep -q "^zram"; then
+    if swapon --noheadings --raw --show=NAME | grep -q 'zram'; then
         echo "active"
     elif file_exists /etc/modules-load.d/zram.conf; then
         echo "configured"
@@ -127,6 +116,8 @@ After=local-fs.target
 
 [Service]
 Type=oneshot
+ExecStartPre=/usr/sbin/modprobe zram
+ExecStartPre=/usr/bin/bash -c 'echo ${size_bytes} > /sys/block/zram0/disksize'
 ExecStart=/sbin/mkswap /dev/zram0
 ExecStart=/sbin/swapon -p 5 /dev/zram0
 ExecStop=/sbin/swapoff /dev/zram0
@@ -141,6 +132,7 @@ EOF
         sudo systemctl daemon-reload
         sudo systemctl enable zram
         sudo systemctl start zram
+        echo
         
         if [ "$(check_zram_state)" = "active" ]; then
             echo "✅ zRAM setup complete"
@@ -168,7 +160,10 @@ EOF
 # Configure memory settings
 configure_memory() {
     # Setup swap file
-    echo "=== Configuring Swap File ==="
+    if ! is_l4t_installed_on_sdcard; then
+        echo "=== Configuring Swap File ==="
+    fi
+
     setup_swap_file
     
     # Configure zRAM if needed
@@ -186,8 +181,15 @@ configure_memory() {
     # Display current memory configuration
     echo -e "\n=== Current Memory Configuration ==="
     free -h
-    echo -e "\nSwap configuration:"
-    swapon -s
+
+    # Display swap configuration if supported
+    if ! is_l4t_installed_on_sdcard; then
+        echo -e "\nSwap configuration:"
+        swapon -s
+    fi
+
+    echo
+    echo "✅ Memory setup complete"
 }
 
 # Parse command line arguments

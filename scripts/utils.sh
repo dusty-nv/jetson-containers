@@ -24,7 +24,6 @@ load_env() {
         set -a
         source "${env_path}"
         set +a
-        echo "Loaded environment from ${env_path}."
     else
         echo "Environment file ${env_path} not found."
         exit 1
@@ -136,28 +135,35 @@ check_docker_runtime() {
     fi
     
     if grep -q '"default-runtime": "nvidia"' $daemon_config 2>/dev/null; then
-        log "✅ Docker runtime 'nvidia' is set as default."
         return 0
     else
-        log "❌ Docker runtime 'nvidia' is not set as default."
         return 1
     fi
 }
 
 l4t_root_device() {
     local root_device=$(findmnt -n -o SOURCE /)
-
-    if [[ "${root_device}" =~ nvme ]]; then
+    
+    if [[ $root_device == *"nvme"* ]]; then
         echo "nvme"
-    elif [[ "${root_device}" =~ mmcblk ]]; then
-        echo "emmc"
+    elif [[ $root_device == *"mmcblk"* ]]; then
+        # eMMC devices have mmcblk0boot0 and mmcblk0boot1 partitions
+        if [[ -b /dev/mmcblk0boot0 ]] && [[ -b /dev/mmcblk0boot1 ]]; then
+            echo "emmc"
+        else
+            echo "sdcard"
+        fi
+    elif [[ $root_device == *"/dev/sd"* ]]; then
+        echo "usb_sata"
+    else
+        echo "unknown"
     fi
-
-    echo "unknown"
 }
 
 is_l4t_installed_on_nvme() { [[ "$(l4t_root_device)" == "nvme" ]]; }
 is_l4t_installed_on_emmc() { [[ "$(l4t_root_device)" == "emmc" ]]; }
+is_l4t_installed_on_sdcard() { [[ "$(l4t_root_device)" == "sdcard" ]]; }
+is_l4t_installed_on_usb() { [[ "$(l4t_root_device)" == "usb_sata" ]]; }
 
 user_in_group() {
     id -nG "$USER" | grep -qw -- "$1"
@@ -185,4 +191,24 @@ ask_should_run() {
     else
         return 1
     fi
+}
+
+# Convert size string to bytes (e.g., "4G" to bytes)
+convert_to_bytes() {
+    local size=$1
+    local value=${size%[GM]}
+    local unit=${size#$value}
+    
+    case $unit in
+        G)
+            echo $((value * 1024 * 1024 * 1024))
+            ;;
+        M)
+            echo $((value * 1024 * 1024))
+            ;;
+        *)
+            echo "Error: Invalid size unit. Use M for MB or G for GB"
+            exit 1
+            ;;
+    esac
 }

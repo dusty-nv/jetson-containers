@@ -123,11 +123,12 @@ setup_docker() {
     fi
     
     # L4T is installed on eMMC and Docker data-root to be migrated to SSD
-    pretty_print INFO "List all NVMe mount points"
     nvme_mount_points=($(lsblk -nr -o NAME,MOUNTPOINT | awk '/^nvme/ && $2 != "" {print $2}'))
     if [[ ${#nvme_mount_points[@]} -eq 0 ]]; then
-        echo "❌ No NVMe mount points found. Exiting."
+        pretty_print WARN "❌ No NVMe mount points found. Exiting."
         exit 1
+    else
+        pretty_print INFO "List all NVMe mount points"
     fi
     
     # List all NVMe mount points
