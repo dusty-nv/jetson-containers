@@ -170,10 +170,10 @@ check_zram() {
 
 # Function to check swap configuration
 check_swap() {
-    local result=0
-    check_swap_file || result=1
-    check_nvzramconfig_service || result=1
-    return $result
+    local swap_check_result=0
+    check_swap_file || swap_check_result=1
+    check_nvzramconfig_service || swap_check_result=1
+    return $swap_check_result
 }
 
 # Function to check GUI configuration
