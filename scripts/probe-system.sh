@@ -1,47 +1,42 @@
 #!/bin/bash
 
-SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
-ROOT="$(dirname "$(dirname "$(readlink -fm "$0")")")"
+# Enable error handling
+set -euo pipefail
 
-# Global flag for quiet mode
-QUIET=false
+. scripts/utils.sh
 
 # Load environment variables from .env
-ENV_FILE="${JETSON_SETUP_ENV_FILE:-$SCRIPT_DIR/.env}"
-if [ -f "${ENV_FILE}" ]; then
-    set -a
-    source "${ENV_FILE}"
-    set +a
+load_env
+
+# Check if NVMe variables are defined
+if [ -n "${NVME_SETUP_OPTIONS_MOUNT_POINT+x}" ] && [ -n "${NVME_SETUP_OPTIONS_PARTITION_NAME+x}" ] && [ -n "${NVME_SETUP_OPTIONS_FILESYSTEM+x}" ]; then
+    mount_point="$NVME_SETUP_OPTIONS_MOUNT_POINT"
+    partition_name="$NVME_SETUP_OPTIONS_PARTITION_NAME"
+    filesystem="$NVME_SETUP_OPTIONS_FILESYSTEM"
+    nvme_configured=true
 else
-    echo "Environment file ${ENV_FILE} not found."
-    exit 1
+    nvme_configured=false
 fi
 
-mount_point="$NVME_SETUP_OPTIONS_MOUNT_POINT"
-swap_file="$SWAP_OPTIONS_PATH"
-partition_name="$NVME_SETUP_OPTIONS_PARTITION_NAME"
-filesystem="$NVME_SETUP_OPTIONS_FILESYSTEM"
-docker_root_path="$DOCKER_ROOT_OPTIONS_PATH"
-disable_zram="$SWAP_OPTIONS_DISABLE_ZRAM"
-swap_size="$SWAP_OPTIONS_SIZE"
-add_user="$DOCKER_GROUP_OPTIONS_ADD_USER"
-power_mode="$POWER_MODE_OPTIONS_MODE"
+# Other variables from .env
+docker_root_path="${DOCKER_ROOT_OPTIONS_PATH:-}"
+swap_file="${SWAP_OPTIONS_PATH:-}"
+disable_zram="${SWAP_OPTIONS_DISABLE_ZRAM:-}"
+swap_size="${SWAP_OPTIONS_SIZE:-}"
+add_user="${DOCKER_GROUP_OPTIONS_ADD_USER:-}"
+power_mode="${POWER_MODE_OPTIONS_MODE:-}"
 
 # Define nvzramconfig service
 NVZRAMCONFIG_SERVICE="nvzramconfig"
 
-
-# Unified logging function
-log() {
-    if [ "$QUIET" = false ]; then
-        echo "$@"
-    fi
-}
-
 # Function to check if NVMe is mounted
 check_nvme_mount() {
-    log "ℹ️  Assuming NVMe mount point is $mount_point."
-
+    # Only run if NVMe is configured
+    if [ "$nvme_configured" = false ]; then
+        echo "NVMe is not configured in environment file."
+        return 1
+    fi
+    
     if mount | grep -q "/dev/$partition_name on $mount_point"; then
         log "✅ NVMe is mounted on $mount_point."
         return 0
@@ -51,41 +46,78 @@ check_nvme_mount() {
     fi
 }
 
-# Function to check Docker runtime configuration
-check_docker_runtime() {
-    if grep -q '"default-runtime": "nvidia"' /etc/docker/daemon.json; then
-        log "✅ Docker runtime 'nvidia' is set as default."
-        return 0
-    else
-        log "❌ Docker runtime 'nvidia' is not set as default."
-        return 1
-    fi
-}
-
 # Function to check Docker data root
 check_docker_root() {
-    if grep -q '"data-root": "/mnt/docker"' /etc/docker/daemon.json; then
-        log "✅ Docker data root is set to /mnt/docker."
+    if ! is_docker_installed; then
+        return 1
+    fi
+    
+    if [ ! -f "/etc/docker/daemon.json" ]; then
+        echo "Docker daemon.json file does not exist."
+        return 1
+    fi
+    
+    if [ -z "$docker_root_path" ]; then
+        echo "Docker root path is not specified in environment file."
+        return 1
+    fi
+    
+    if grep -q '"data-root": "'"$docker_root_path"'"' /etc/docker/daemon.json; then
+        echo "Docker data root is set to $docker_root_path."
         return 0
     else
-        log "❌ Docker data root is not set to /mnt/docker."
+        echo "Docker data root is not set to $docker_root_path."
         return 1
     fi
 }
 
 check_swap_file() {
-    if swapon --show | grep -q "$swap_file"; then
-        local swap_size_bytes
-        swap_size_bytes=$(swapon --show=SIZE --bytes "$swap_file" | tail -n1)
-        human_readable_size=$(awk -v b="${swap_size_bytes}" 'BEGIN { printf "%.2f GB\n", b/1e9 }')
-        log "✅ Swap is configured at $swap_file with size: $human_readable_size ($swap_size_bytes bytes)."
-        return 0
-    else
+    local swap_file="${1:-$swap_file}"
+
+    # Delegate the “exists and active” test
+    if ! check_swap_exists "$swap_file"; then
+        # check_swap_exists already printed diagnostics to stderr
         log "❌ Swap is not configured at $swap_file."
         swapon
         return 1
     fi
+
+    # Extract SIZE for the exact swap file, robust to spaces/special chars
+    local swap_size_bytes
+    swap_size_bytes=""
+    while IFS=, read -r name size; do
+        # name and size have no surrounding quotes (swapon strips them)
+        if [[ "$name" == "$swap_file" ]]; then
+            swap_size_bytes="$size"
+            break
+        fi
+    done < <(swapon \
+              --bytes \
+              --noheadings \
+              --raw \
+              --output=NAME,SIZE)
+
+    # Validate we found it
+    if [[ -z "$swap_size_bytes" ]]; then
+        log "❌ Failed to parse swap size for '$swap_file'."
+        swapon --show
+        return 1
+    fi
+
+    # Ensure it's a positive integer
+    if ! [[ "$swap_size_bytes" =~ ^[0-9]+$ ]]; then
+        log "❌ Unexpected size format for '$swap_file': '$swap_size_bytes'"
+        return 1
+    fi
+
+    # Compute human‑readable size
+    local human_readable_size
+    human_readable_size=$(awk -v b="$swap_size_bytes" 'BEGIN { printf "%.2f GB\n", b/1e9 }')
+
+    log "✅ Swap is configured at '$swap_file' with size: $human_readable_size ($swap_size_bytes bytes)."
+    return 0
 }
+
 # UNIT FILE                                  STATE           VENDOR PRESET
 # nvzramconfig.service                       disabled        enabled
 check_nvzramconfig_service() {
@@ -106,7 +138,7 @@ check_nvzramconfig_service() {
 }
 
 # Function to check zram (nvzramconfig) status
-check_zram() {
+check_zram_status() {
     if systemctl is-enabled nvzramconfig &> /dev/null; then
         log "✅ zram (nvzramconfig) is enabled."
         return 1
@@ -118,7 +150,10 @@ check_zram() {
 
 # Function to check swap configuration
 check_swap() {
-    return 1 && check_swap_file && check_nvzramconfig_service
+    local swap_check_result=0
+    check_swap_file || swap_check_result=1
+    check_nvzramconfig_service || swap_check_result=1
+    return $swap_check_result
 }
 
 # Function to check GUI configuration
@@ -134,13 +169,34 @@ check_gui() {
 
 # Function to check Docker group membership
 check_docker_group() {
-    if groups "$add_user" | grep -q "\bdocker\b"; then
-        log "✅ User $add_user is in the docker group."
-        return 0
-    else
-        log "❌ User $add_user is not in the docker group."
+    if ! is_docker_installed; then
         return 1
     fi
+    
+    local current_user=$(whoami)
+    local result=0
+    
+    # Check configured user from .env if provided
+    if [ -n "$add_user" ]; then
+        if groups "$add_user" 2>/dev/null | grep -q "\bdocker\b"; then
+            echo "User $add_user is in the docker group."
+        else
+            echo "User $add_user is not in the docker group."
+            result=1
+        fi
+    fi
+    
+    # Also check current user if different from the configured user
+    if [ -z "$add_user" ] || [ "$current_user" != "$add_user" ]; then
+        if groups "$current_user" | grep -q "\bdocker\b"; then
+            echo "Current user $current_user is in the docker group."
+        else
+            echo "Current user $current_user is not in the docker group."
+            result=1
+        fi
+    fi
+    
+    return $result
 }
 
 # Function to check power mode
@@ -153,6 +209,12 @@ check_power_mode() {
 
 # Function to check if NVMe partition is prepared
 check_nvme_partition_prepared() {
+    # Only run if NVMe is configured
+    if [ "$nvme_configured" = false ]; then
+        echo "NVMe is not configured in environment file."
+        return 1
+    fi
+    
     if [ -b "/dev/$partition_name" ] && blkid "/dev/$partition_name" | grep -q "$filesystem"; then
         log "✅ NVMe partition is prepared."
         return 0
@@ -164,6 +226,12 @@ check_nvme_partition_prepared() {
 
 # Function to check if NVMe drive is assigned/mounted
 check_nvme_drive_assigned() {
+    # Only run if NVMe is configured
+    if [ "$nvme_configured" = false ]; then
+        echo "NVMe is not configured in environment file."
+        return 1
+    fi
+    
     if mount | grep -q "/dev/$partition_name on $mount_point"; then
         log "✅ NVMe drive is already assigned/mounted."
         return 0
@@ -171,15 +239,6 @@ check_nvme_drive_assigned() {
         log "❌ NVMe drive is not assigned/mounted."
         return 1
     fi
-}
-
-# Function to display help information
-print_help() {
-    echo "Usage: probe-system.sh [OPTIONS]"
-    echo
-    echo "Options:"
-    echo "  --tests=<test1,test2,...>    Run specified tests."
-    echo "  --help                       Display this help message and exit."
 }
 
 # Function to parse command-line arguments
@@ -200,7 +259,11 @@ parse_probe_args() {
                 shift
                 ;;
             --help)
-                print_help
+                echo "Usage: probe-system.sh [OPTIONS]"
+                echo
+                echo "Options:"
+                echo "  --tests=<test1,test2,...>    Run specified tests."
+                echo "  --help                       Display this help message and exit."
                 exit 0
                 ;;
             *)
@@ -213,17 +276,31 @@ parse_probe_args() {
 
 # Main function to execute all checks
 main() {
+    log "=== System Probe Script ==="
+    if [ "$nvme_configured" = true ]; then
+        log "Assuming NVMe mount point is $mount_point."
+    fi
+    echo
+
     parse_probe_args "$@"
     
     log "=== System Probe Script ==="
 
     if [ ${#TESTS[@]} -eq 0 ]; then
         # Run all checks
-        check_nvme_mount
+        is_docker_installed
+        echo
+        
+        # Only check NVMe if configured
+        if [ "$nvme_configured" = true ]; then
+            check_nvme_mount
+            echo
+        fi
+
         check_docker_runtime
         check_docker_root
         check_swap_file
-        check_zram
+        check_zram_status
         check_nvzramconfig_service
         check_gui
         check_docker_group
@@ -232,6 +309,10 @@ main() {
         # Run only specified checks
         for test in "${TESTS[@]}"; do
             case $test in
+                docker_installed)
+                    is_docker_installed
+                    echo
+                    ;;
                 prepare_nvme_partition)
                     check_nvme_partition_prepared
                     ;;
@@ -251,7 +332,7 @@ main() {
                     check_swap_file
                     ;;
                 disable_zram)
-                    check_zram
+                    check_zram_status
                     ;;
                 nvzramconfig_service)
                     check_nvzramconfig_service
