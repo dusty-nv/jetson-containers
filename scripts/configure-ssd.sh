@@ -140,10 +140,9 @@ mount_nvme() {
     mount_point=${mount_point:-/mnt}
     
     # Step 1-4: Format only if needed
-    if [ "${NVME_NEEDS_FORMAT:-1}" = "1" ]; then
+    if is_true ${NVME_NEEDS_FORMAT:-1}; then
         pretty_print WARN "⚠️ WARNING: This will format $NVME_DEVICE as EXT4!"
-        read -p "Are you sure you want to proceed? (y/N): " confirm
-        if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
+        if ! ask_yes_no "Are you sure you want to proceed?"; then
             pretty_print ERROR "❌ Aborting formatting."
             exit 1
         fi
