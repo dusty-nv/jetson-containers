@@ -3,34 +3,13 @@
 # Enable error handling
 set -euo pipefail
 
-# Get the directory where this script is located
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+. scripts/utils.sh
 
 # Load environment variables from .env
-ENV_FILE="${JETSON_SETUP_ENV_FILE:-$SCRIPT_DIR/.env}"
-if [ -f "${ENV_FILE}" ]; then
-    set -a
-    source "${ENV_FILE}"
-    set +a
-else
-    echo "Environment file ${ENV_FILE} not found."
-    exit 1
-fi
+load_env
 
 # Default values
 interactive_mode="${INTERACTIVE_MODE:-true}"
-
-# Function to prompt yes/no questions
-ask_yes_no() {
-    while true; do
-        read -p "$1 (y/n): " yn
-        case $yn in
-            [Yy]* ) return 0;;
-            [Nn]* ) return 1;;
-            * ) echo "Please answer yes or y or no or n.";;
-        esac
-    done
-}
 
 # Ask for execution mode
 ask_execution_mode() {
@@ -129,12 +108,12 @@ main() {
     # Initial system probe
     echo "Probing status before working"
     echo "============================="
-    "${SCRIPT_DIR}/probe-system.sh"
+    . "${SCRIPT_DIR}/probe-system.sh"
     echo "============================="
     
     # Prepare extra arguments for scripts where needed
     local swap_args=""
-    if [ "${SWAP_OPTIONS_DISABLE_ZRAM:-false}" = "true" ]; then
+    if is_true "${SWAP_OPTIONS_DISABLE_ZRAM:-false}"; then
         echo "Including --disable-zram flag from .env settings"
         swap_args="--disable-zram"
     fi
@@ -149,7 +128,7 @@ main() {
     echo
     echo "Configuration complete!"
     echo "============================="
-    "${SCRIPT_DIR}/probe-system.sh"
+    . "${SCRIPT_DIR}/probe-system.sh"
     echo "============================="
     
     echo "Please reboot your system for all changes to take effect."
