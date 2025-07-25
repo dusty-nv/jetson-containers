@@ -43,41 +43,179 @@ check_swap_file_status() {
 }
 
 # Create and enable swap file
+# Helper function for robust swap file cleanup
+cleanup_swap_file() {
+    local file="$1"
+    [[ -z "${file}" ]] && return 0
+    
+    sync 2>/dev/null || true
+    sudo swapoff "${file}" 2>/dev/null || true
+    sudo rm -f "${file}" 2>/dev/null || true
+}
+
+# Create and enable swap file with safety checks
 setup_swap_file() {
     local swap_state=$(check_swap_file_status)
     local size_bytes=$(convert_to_bytes "${swap_size}")
     
+    # Validate inputs
+    if [[ -z "${swap_file_path}" ]]; then
+        echo "❌ Error: swap_file_path is not set"
+        return 1
+    fi
+    
+    if [[ -z "${size_bytes}" ]] || [[ "${size_bytes}" -le 0 ]]; then
+        echo "❌ Error: Invalid swap size: ${swap_size}"
+        return 1
+    fi
+    
+    # Modern bash (4.0+) supports 64-bit arithmetic, but let's be safe for very large values
+    # Only restrict truly excessive sizes (>1TB) that might indicate input errors
+    local max_reasonable_swap=$((1024 * 1024 * 1024 * 1024))  # 1TB limit
+    if [[ "${size_bytes}" -gt "${max_reasonable_swap}" ]]; then
+        echo "❌ Error: Swap size unreasonably large (>1TB): ${swap_size}"
+        echo "   This might indicate an input parsing error"
+        return 1
+    fi
+    
+    # Validate swap file path (should be absolute and in safe location)
+    if [[ "${swap_file_path}" != /* ]]; then
+        echo "❌ Error: swap_file_path must be absolute: ${swap_file_path}"
+        return 1
+    fi
+    
+    # Ensure path is in a safe location (not root, boot, etc.)
+    case "${swap_file_path}" in
+        /boot/*|/proc/*|/sys/*|/dev/*|/run/*)
+            echo "❌ Error: Unsafe swap file location: ${swap_file_path}"
+            return 1
+            ;;
+    esac
+    
+    # Get directory and check if it exists
+    local swap_dir=$(dirname "${swap_file_path}")
+    if [[ ! -d "${swap_dir}" ]]; then
+        echo "❌ Error: Directory does not exist: ${swap_dir}"
+        return 1
+    fi
+    
+    # Check write permissions on directory
+    if [[ ! -w "${swap_dir}" ]] && ! sudo test -w "${swap_dir}"; then
+        echo "❌ Error: No write permission for directory: ${swap_dir}"
+        return 1
+    fi
+    
+    # Check filesystem size limits and available space
+    local filesystem_size=$(df --output=size -B1 "${swap_dir}" | tail -n1)
+    local max_reasonable_size=$((filesystem_size / 2))  # Don't use more than 50% of filesystem
+    
+    if [[ "${size_bytes}" -gt "${max_reasonable_size}" ]]; then
+        echo "❌ Error: Swap size too large (max recommended: $(numfmt --to=iec ${max_reasonable_size}))"
+        echo "   Requested: $(numfmt --to=iec ${size_bytes})"
+        echo "   Filesystem: $(numfmt --to=iec ${filesystem_size})"
+        return 1
+    fi
+    
+    # Check available space (add 10% buffer)
+    # For large values, use external calculation to be safe
+    local required_space
+    if command -v bc >/dev/null 2>&1; then
+        required_space=$(echo "${size_bytes} * 1.1" | bc | cut -d. -f1)
+    else
+        # Fallback: use bash arithmetic with overflow protection
+        if [[ "${size_bytes}" -gt 1000000000000 ]]; then  # >1TB
+            # For very large sizes, approximate without overflow risk
+            required_space="${size_bytes}"  # Skip buffer for huge sizes
+        else
+            required_space=$((size_bytes + size_bytes/10))
+        fi
+    fi
+    
+    local available_space=$(df --output=avail -B1 "${swap_dir}" | tail -n1)
+    
+    # Compare using string comparison for large numbers
+    if [[ "${required_space}" -gt "${available_space}" ]] 2>/dev/null || 
+       (command -v bc >/dev/null 2>&1 && (( $(echo "${required_space} > ${available_space}" | bc -l) ))); then
+        echo "❌ Error: Insufficient disk space"
+        echo "   Required: $(numfmt --to=iec ${required_space} 2>/dev/null || echo "${required_space} bytes")"
+        echo "   Available: $(numfmt --to=iec ${available_space} 2>/dev/null || echo "${available_space} bytes")"
+        return 1
+    fi
+    
     # If swap file exists, disable and remove it first
     if [ "${swap_state}" != "missing" ]; then
         log "Disabling existing swap file: ${swap_file_path}"
-        sudo swapoff "${swap_file_path}" || true > /dev/null
-        log "Removing existing swap file..."
-        sudo rm -f "${swap_file_path}"
+        cleanup_swap_file "${swap_file_path}"
         # Remove from fstab if present
         sudo sed -i "\\#^${swap_file_path}#d" /etc/fstab
     fi
     
     # Create swap only when not installed on sdcard
     if ! is_l4t_installed_on_sdcard; then
-        # Create new swap file directly at the final location
         log "Creating new swap file of size ${swap_size}..."
-        sudo dd if=/dev/zero of="${swap_file_path}" bs=1M count=$((size_bytes/1024/1024))
-        sudo chmod 600 "${swap_file_path}"
-        sudo mkswap "${swap_file_path}"
-        sudo swapon "${swap_file_path}"
         
-        # Add to fstab if not already present
-        if ! grep -q "${swap_file_path}" /etc/fstab; then
-            echo "${swap_file_path} none swap sw 0 0" | sudo tee -a /etc/fstab
-        fi
-        
-        if check_swap_exists "${swap_file_path}"; then
-            echo "✅ Swap file setup complete"
-            return 0
-        else
-            echo "❌ Failed to setup swap file"
+        # Calculate count more safely
+        local count_mb=$((size_bytes/1024/1024))
+        if [[ $((count_mb * 1024 * 1024)) -ne "${size_bytes}" ]]; then
+            echo "❌ Error: Size calculation overflow or precision loss"
             return 1
         fi
+        
+        # Use fallocate if available (faster and safer than dd)
+        if command -v fallocate >/dev/null 2>&1; then
+            if ! sudo fallocate -l "${size_bytes}" "${swap_file_path}"; then
+                echo "❌ Error: Failed to create swap file with fallocate"
+                return 1
+            fi
+        else
+            # Fallback to dd with additional safety
+            if ! sudo dd if=/dev/zero of="${swap_file_path}" bs=1M count="${count_mb}" status=progress conv=fsync 2>/dev/null; then
+                echo "❌ Error: Failed to create swap file with dd"
+                # Clean up partial file
+                cleanup_swap_file "${swap_file_path}"
+                return 1
+            fi
+        fi
+        
+        # Set proper permissions
+        if ! sudo chmod 600 "${swap_file_path}"; then
+            echo "❌ Error: Failed to set swap file permissions"
+            cleanup_swap_file "${swap_file_path}"
+            return 1
+        fi
+        
+        # Initialize swap
+        if ! sudo mkswap "${swap_file_path}" >/dev/null; then
+            echo "❌ Error: Failed to initialize swap file"
+            cleanup_swap_file "${swap_file_path}"
+            return 1
+        fi
+        
+        # Enable swap
+        if ! sudo swapon "${swap_file_path}"; then
+            echo "❌ Error: Failed to enable swap file"
+            cleanup_swap_file "${swap_file_path}"
+            return 1
+        fi
+        
+        # Add to fstab if not already present (using awk for precise matching)
+        if ! awk -v path="${swap_file_path}" '$1 == path && $3 == "swap" {found=1} END {exit !found}' /etc/fstab 2>/dev/null; then
+            if ! echo "${swap_file_path} none swap sw,pri=1 0 0" | sudo tee -a /etc/fstab >/dev/null; then
+                echo "⚠️  Warning: Failed to add swap to fstab (swap is still active)"
+            fi
+        fi
+        
+        # Final verification
+        if check_swap_exists "${swap_file_path}"; then
+            echo "✅ Swap file setup complete ($(numfmt --to=iec ${size_bytes}))"
+            return 0
+        else
+            echo "❌ Failed to verify swap file setup"
+            return 1
+        fi
+    else
+        log "Skipping swap file creation (L4T installed on SD card)"
+        return 0
     fi
 }
 
