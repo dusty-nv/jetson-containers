@@ -7,7 +7,7 @@ if [ "$FORCE_BUILD" == "on" ]; then
 fi
 
 pip3 install --no-cache-dir nvidia-cutlass==${CUTLASS_VERSION} || \
-pip3 install pycute || \
+pip3 install pycute
 
 # if #PYTHON_VERSION == "3.12" then install the DSL version
 
