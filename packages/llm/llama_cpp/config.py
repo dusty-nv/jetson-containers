@@ -55,5 +55,5 @@ package = [
     # llama_cpp_python appears abandoned (4/25)
     # so we changed over to llama.cpp branches
     llama_cpp('b5255'),
-    llama_cpp('b5981', default=True)
+    llama_cpp('b5985', default=True)
 ]
