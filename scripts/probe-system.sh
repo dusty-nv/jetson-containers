@@ -82,13 +82,39 @@ check_swap_file() {
         return 1
     fi
 
-    # At this point, swap_file is non‐empty, a regular file, and active.
-    local swap_size_bytes human_readable_size
+    # Extract SIZE for the exact swap file, robust to spaces/special chars
+    local swap_size_bytes
+    swap_size_bytes=""
+    while IFS=, read -r name size; do
+        # name and size have no surrounding quotes (swapon strips them)
+        if [[ "$name" == "$swap_file" ]]; then
+            swap_size_bytes="$size"
+            break
+        fi
+    done < <(swapon \
+              --bytes \
+              --noheadings \
+              --raw \
+              --output=NAME,SIZE)
 
-    swap_size_bytes=$(swapon --show=SIZE --bytes --noheadings --raw --field NAME,SIZE NAME="$swap_file" | awk '{print $2}')
+    # Validate we found it
+    if [[ -z "$swap_size_bytes" ]]; then
+        log "❌ Failed to parse swap size for '$swap_file'."
+        swapon --show
+        return 1
+    fi
+
+    # Ensure it's a positive integer
+    if ! [[ "$swap_size_bytes" =~ ^[0-9]+$ ]]; then
+        log "❌ Unexpected size format for '$swap_file': '$swap_size_bytes'"
+        return 1
+    fi
+
+    # Compute human‑readable size
+    local human_readable_size
     human_readable_size=$(awk -v b="$swap_size_bytes" 'BEGIN { printf "%.2f GB\n", b/1e9 }')
 
-    log "✅ Swap is configured at $swap_file with size: $human_readable_size ($swap_size_bytes bytes)."
+    log "✅ Swap is configured at '$swap_file' with size: $human_readable_size ($swap_size_bytes bytes)."
     return 0
 }
 
