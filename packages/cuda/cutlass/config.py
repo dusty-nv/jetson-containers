@@ -25,5 +25,6 @@ def cutlass(version, version_spec=None, requires=None, default=False):
     return pkg, builder
 
 package = [
-    cutlass('4.1.0', default=True)
+    cutlass('4.1.0'),
+    cutlass('4.2.0', default=True)
 ]
