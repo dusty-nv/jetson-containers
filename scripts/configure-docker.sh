@@ -127,8 +127,14 @@ setup_docker() {
     if [[ ${#nvme_mount_points[@]} -eq 0 ]]; then
         pretty_print WARN "❌ No NVMe mount points found. Exiting."
         exit 1
+    fi
+
+    # Add defensive check before accessing array element
+    if [[ -n "${nvme_mount_points[0]:-}" ]]; then
+        default_mount_point_docker_root_dir="${nvme_mount_points[0]}/docker"
     else
-        pretty_print INFO "List all NVMe mount points"
+        pretty_print ERROR "❌ Failed to get first NVMe mount point. Exiting."
+        exit 1
     fi
     
     # List all NVMe mount points
@@ -137,7 +143,6 @@ setup_docker() {
     done
     
     # Set default to the first NVMe mount point
-    default_mount_point_docker_root_dir="${nvme_mount_points[0]}/docker"
     echo -n "Enter the Docker data-root dir [Default: $default_mount_point_docker_root_dir]: "
     read -e -i "$default_mount_point_docker_root_dir" selected_mount_point_docker_root_dir
     
@@ -163,7 +168,7 @@ setup_docker() {
         echo "✅ Docker data-root updated to: $selected_mount_point_docker_root_dir"
     else
         echo "❌ JSON validation failed. Aborting update."
-        rm /etc/docker/daemon.json.tmp
+        sudo rm /etc/docker/daemon.json.tmp
         return 1
     fi
     
