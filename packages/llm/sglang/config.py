@@ -35,5 +35,6 @@ def sglang(version, version_spec=None, requires=None, depends=None, default=Fals
 package = [
     sglang('0.4.4', '0.4.3.post2', default=False),
     sglang('0.4.6', '0.4.6', depends=['flashinfer:0.2.6.post1'], default=False),
-    sglang('0.4.9', '0.4.9', depends=['flashinfer'], default=True),
+    sglang('0.4.9', '0.4.9', depends=['flashinfer'], default=False),
+    sglang('0.4.10', '0.4.10', depends=['flashinfer'], default=True),
 ]
