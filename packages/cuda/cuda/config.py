@@ -216,7 +216,7 @@ elif IS_SBSA:
                      requires='aarch64'),
         cuda_samples('12.9', requires='aarch64'),
         cuda_package('13.0',
-                     'https://developer.download.nvidia.com/compute/cuda/13.0.0/local_installers/cuda-repo-ubuntu2404-12-3-local_13.0.0-580.12-1_arm64.deb',
+                     'https://developer.download.nvidia.com/compute/cuda/13.0.0/local_installers/cuda-repo-ubuntu2404-13-0-local_13.0.0-580.65.06-1_arm64.deb',
                      requires='aarch64'),
         cuda_samples('13.0', requires='aarch64'),
 
@@ -233,7 +233,7 @@ else:
                      requires='x86_64'),
         cuda_samples('12.9', requires='x86_64'),
         cuda_package('13.0',
-                     'https://developer.download.nvidia.com/compute/cuda/13.0.0/local_installers/cuda-repo-ubuntu2404-13-0-local_13.0.0-580.12-1_amd64.deb',
+                     'https://developer.download.nvidia.com/compute/cuda/13.0.0/local_installers/cuda-repo-ubuntu2404-13-0-local_13.0.0-580.65.06-1_amd64.deb',
                      requires='x86_64'),
         cuda_samples('13.0', requires='x86_64'),
     ]
