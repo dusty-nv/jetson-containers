@@ -1,4 +1,3 @@
-
 from jetson_containers import L4T_VERSION, CUDA_VERSION, SYSTEM_ARM, update_dependencies, package_requires, IS_TEGRA, IS_SBSA
 from packaging.version import Version
 
@@ -9,12 +8,9 @@ import os
 if 'CUDNN_VERSION' in os.environ and len(os.environ['CUDNN_VERSION']) > 0:
     CUDNN_VERSION = Version(os.environ['CUDNN_VERSION'])
 elif SYSTEM_ARM:
-    if L4T_VERSION.major >= 38:
+    if L4T_VERSION.major >= 36:
         if CUDA_VERSION >= Version('13.0'):
-            CUDNN_VERSION = Version('10.0')
-    elif L4T_VERSION.major >= 36:
-        if CUDA_VERSION >= Version('13.0'):
-            CUDNN_VERSION = Version('10.0')
+            CUDNN_VERSION = Version('9.11')
         elif CUDA_VERSION >= Version('12.9'):
             CUDNN_VERSION = Version('9.10')
         elif CUDA_VERSION >= Version('12.8'):
@@ -100,7 +96,7 @@ if IS_TEGRA and IS_CONFIG:
         cudnn_package('9.4',f'{CUDNN_URL}/9.4.0/local_installers/cudnn-local-tegra-repo-ubuntu2204-9.4.0_1.0-1_arm64.deb', cuda='12.6', requires='==36.*'),
         cudnn_package('9.8',f'{CUDNN_URL}/9.8.0/local_installers/cudnn-local-tegra-repo-ubuntu2404-9.8.0_1.0-1_arm64.deb', cuda='12.8', requires='>=36', packages="libcudnn9-cuda-12 libcudnn9-dev-cuda-12 libcudnn9-samples"),
         cudnn_package('9.10',f'{CUDNN_URL}/9.10.2/local_installers/cudnn-local-tegra-repo-ubuntu2404-9.10.2_1.0-1_arm64.deb', cuda='12.9', requires='>=36', packages="libcudnn9-cuda-12 libcudnn9-dev-cuda-12 libcudnn9-samples"),
-        cudnn_package('10.0',f'{CUDNN_URL}/10.0.0/local_installers/cudnn-local-tegra-repo-ubuntu2404-9.10.0_1.0-1_arm64.deb', cuda='13.0', requires='>=38', packages="libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-samples"),
+        cudnn_package('9.11.0',f'{CUDNN_URL}/9.11.0/local_installers/cudnn-local-repo-ubuntu2404-9.11.0_1.0-1_arm64.deb', cuda='13.0', requires='>=36', packages="libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-samples"),
 
         # JetPack 4-5 (cuDNN installed in base container)
         cudnn_builtin(requires='<36', default=True),
@@ -111,12 +107,13 @@ elif IS_SBSA and IS_CONFIG:
     package = [
         cudnn_package('9.8',f'{CUDNN_URL}/9.8.0/local_installers/cudnn-local-repo-ubuntu2404-9.8.0_1.0-1_arm64.deb', cuda='12.8', requires='aarch64', packages="libcudnn9-cuda-12 libcudnn9-dev-cuda-12 libcudnn9-samples"),
         cudnn_package('9.10',f'{CUDNN_URL}/9.10.2/local_installers/cudnn-local-repo-ubuntu2404-9.10.2_1.0-1_arm64.deb', cuda='12.9', requires='aarch64', packages="libcudnn9-cuda-12 libcudnn9-dev-cuda-12 libcudnn9-samples"),
-        cudnn_package('10.0',f'{CUDNN_URL}/10.0.0/local_installers/cudnn-local-repo-ubuntu2404-10.0.0_1.0-1_amd64.deb', cuda='13.0', requires='aarch64', packages="libcudnn10-cuda-13 libcudnn10-dev-cuda-13 libcudnn10-samples"),
+        cudnn_package('9.11.0',f'{CUDNN_URL}/9.11.0/local_installers/cudnn-local-repo-ubuntu2404-9.11.0_1.0-1_arm64.deb', cuda='13.0', requires='>=36', packages="libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-samples"),
     ]
 elif IS_CONFIG:
     # x86_64
     package = [
         cudnn_package('9.8',f'{CUDNN_URL}/9.8.0/local_installers/cudnn-local-repo-ubuntu2404-9.8.0_1.0-1_amd64.deb', cuda='12.8', requires='x86_64', packages="libcudnn9-cuda-12 libcudnn9-dev-cuda-12 libcudnn9-samples"),
         cudnn_package('9.10',f'{CUDNN_URL}/9.10.2/local_installers/cudnn-local-repo-ubuntu2404-9.10.2_1.0-1_amd64.deb', cuda='12.9', requires='x86_64', packages="libcudnn9-cuda-12 libcudnn9-dev-cuda-12 libcudnn9-samples"),
-        cudnn_package('10.0',f'{CUDNN_URL}/10.0.0/local_installers/cudnn-local-repo-ubuntu2404-10.0.0_1.0-1_amd64.deb', cuda='13.0', requires='x86_64', packages="libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-samples"),
+        cudnn_package('9.11.0',f'{CUDNN_URL}/9.11.0/local_installers/cudnn-local-repo-ubuntu2404-9.11.0_1.0-1_amd64.deb', cuda='13.0', requires='>=36', packages="libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-samples"),
     ]
+    
