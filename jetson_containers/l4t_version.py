@@ -129,9 +129,9 @@ def get_jetpack_version(l4t_version: str = None, default='6.2'):
 
     NVIDIA_JETPACK = {
         # -------- JP7 --------
-        "38.2.0": "7.2",  # Q1 2026 Orin Support
-        "38.1.0": "7.1",  # Q4 2025 T400 Support
-        "38.0.0": "7.0",  # Q3 2025 JP7 GA
+        "38.3.0": "7.2",  # Q1 2026 Orin Support
+        "38.2.0": "7.1",  # Q4 2025 T400 Support
+        "38.1.0": "7.0",  # Q3 2025 JP7 GA
 
         # -------- JP6 --------
         "36.4.4": "6.2.1",
@@ -234,7 +234,7 @@ def get_cuda_version(version_file: str = "/usr/local/cuda/version.json",
         return to_version(os.environ['CUDA_VERSION'])
 
     if LSB_RELEASE == '24.04' and L4T_VERSION.major >= 38:
-        return Version('13.0')  # default to CUDA 12.9 for 24.04 containers on JP7
+        return Version('13.0')  # default to CUDA 13.0 for 24.04 containers on JP7
 
     if LSB_RELEASE == '24.04' and L4T_VERSION.major <= 36:
         return Version('12.9')  # default to CUDA 12.9 for 24.04 containers on JP6
@@ -321,7 +321,7 @@ def get_cuda_arch(l4t_version: str = None, cuda_version: str = None, format=list
         # Nano/TX1 = 5.3, TX2 = 6.2, Xavier = 7.2, Orin = 8.7, Thor = 11.0
         if IS_TEGRA:
             if l4t_version.major >= 38:  # JetPack 7
-                cuda_architectures = [87, 90, 100, 103, 110, 121]  # Ampere Orin, Hopper GH200 90, Blackwell GB200, Thor 110
+                cuda_architectures = [110, 121]  # Thor 110, Spark
             elif l4t_version.major >= 36:  # JetPack 6
                 cuda_architectures = [87]  # Ampere Orin, Hopper GH200 90
             elif l4t_version.major >= 34:  # JetPack 5
