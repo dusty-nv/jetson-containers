@@ -11,7 +11,7 @@ def mamba(version, version_spec=None, requires=None, default=False):
 
     pkg['build_args'] = {
         'MAMBA_VERSION': version,
-        'MAMBA_VERSION_SPEC': version_spec if version_spec else version,
+        'MAMBA_VERSION_SPEC': version_spec or version,
     }
 
     builder = pkg.copy()
@@ -26,5 +26,5 @@ def mamba(version, version_spec=None, requires=None, default=False):
     return pkg, builder
 
 package = [
-    mamba('2.2.5', version_spec='2.2.5', default=True)
+    mamba('2.2.5', default=True)
 ]
