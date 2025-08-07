@@ -11,7 +11,7 @@ ARG NCCL_VERSION \
     CUDA_ARCH \
     IS_SBSA \
     FORCE_BUILD=off \
-    DISTRO="ubuntu2004" \
+    DISTRO="ubuntu2404" \
     CUDA_ARCH \
     TMP=/tmp/nccl
 
