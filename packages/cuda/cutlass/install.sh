@@ -1,16 +1,14 @@
 #!/usr/bin/env bash
-set -ex
+set -euxo pipefail
 
 if [ "$FORCE_BUILD" == "on" ]; then
 	echo "Forcing build of cutlass ${CUTLASS_VERSION}"
 	exit 1
 fi
 
-pip3 install --no-cache-dir nvidia-cutlass==${CUTLASS_VERSION} || \
-pip3 install pycute
+pip3 install --no-cache-dir nvidia-cutlass==${CUTLASS_VERSION} pycute
 
 # if #PYTHON_VERSION == "3.12" then install the DSL version
-
 if [ "${PYTHON_VERSION}" == "3.12" ]; then
     echo "Installing nvidia-cutlass-dsl for Python 3.12"
     pip3 install nvidia-cutlass-dsl
