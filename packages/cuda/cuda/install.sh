@@ -42,8 +42,10 @@ cp /var/cuda-*-local/cuda-*-keyring.gpg /usr/share/keyrings/
 
 # Tegra (Jetson)
 if [[ "$ARCH_TYPE" == "tegra-aarch64" ]]; then
-    ar x /var/cuda-tegra-repo-ubuntu*-local/cuda-compat-*.deb
-    tar xvf data.tar.xz -C /
+    if [[ -f /var/cuda-tegra-repo-ubuntu*-local/cuda-compat-*.deb ]]; then
+        ar x /var/cuda-tegra-repo-ubuntu*-local/cuda-compat-*.deb
+        tar xvf data.tar.xz -C /
+    fi
 fi
 
 apt-get update

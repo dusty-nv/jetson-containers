@@ -89,6 +89,9 @@ IS_CONFIG='package' in globals()  # CUDNN_VERSION gets imported by other package
 
 if IS_TEGRA and IS_CONFIG:
     package = [
+        # JetPack 7
+        cudnn_package('9.11.0',f'{CUDNN_URL}/9.11.0/local_installers/cudnn-local-repo-ubuntu2404-9.11.0_1.0-1_arm64.deb', cuda='13.0', requires='>=38', packages="libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-samples"),
+
         # JetPack 6
         cudnn_package('8.9','https://nvidia.box.com/shared/static/ht4li6b0j365ta7b76a6gw29rk5xh8cy.deb', 'cudnn-local-tegra-repo-ubuntu2204-8.9.4.25', cuda='12.2', requires='==36.*'),
         cudnn_package('9.0',f'{CUDNN_URL}/9.0.0/local_installers/cudnn-local-tegra-repo-ubuntu2204-9.0.0_1.0-1_arm64.deb', cuda='12.4', requires='==36.*'),
