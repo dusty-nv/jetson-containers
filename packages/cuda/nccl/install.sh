@@ -7,9 +7,7 @@ else
   DEB="nccl-local-repo-${DISTRO}-${NCCL_VERSION}-cuda13.0_1.0-1_amd64.debdeb"
 fi
 cd $TMP
-if [ ! -f $TXZ ]; then
-  wget $WGET_FLAGS $MULTIARCH_URL/$DEB
-fi
+wget $WGET_FLAGS $MULTIARCH_URL/$DEB
 if [[ "$CUDA_ARCH" != "tegra-aarch64" ]]; then
     dpkg -i $DEB
     apt-get update
