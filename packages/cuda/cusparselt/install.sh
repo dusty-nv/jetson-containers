@@ -4,7 +4,7 @@ set -ex
 echo "Detected architecture: ${CUDA_ARCH}"
 if [[ "$CUDA_ARCH" == "aarch64" ]]; then
   wget $WGET_FLAGS \
-  https://developer.download.nvidia.com/compute/cusparselt/${CUSPARSELT_VERSION}/local_installers/cusparselt-local-repo-${DISTRO}-${CUSPARSELT_VERSION}_1.0-1_aarch64.deb
+  https://developer.download.nvidia.com/compute/cusparselt/${CUSPARSELT_VERSION}/local_installers/cusparselt-local-repo-${DISTRO}-${CUSPARSELT_VERSION}_1.0-1_arm64.deb
 elif [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
   wget $WGET_FLAGS https://developer.download.nvidia.com/compute/cusparselt/${CUSPARSELT_VERSION}/local_installers/cusparselt-local-tegra-repo-${DISTRO}-${CUSPARSELT_VERSION}_1.0-1_arm64.deb
 else
