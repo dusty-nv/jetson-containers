@@ -113,6 +113,7 @@ elif IS_SBSA and IS_CONFIG:
         cudnn_package('9.10',f'{CUDNN_URL}/9.10.2/local_installers/cudnn-local-repo-ubuntu2404-9.10.2_1.0-1_arm64.deb', cuda='12.9', requires='aarch64', packages="libcudnn9-cuda-12 libcudnn9-dev-cuda-12 libcudnn9-samples"),
         cudnn_package('9.11.0',f'{CUDNN_URL}/9.11.0/local_installers/cudnn-local-repo-ubuntu2404-9.11.0_1.0-1_arm64.deb', cuda='13.0', requires='aarch64', packages="libcudnn9-cuda-12 libcudnn9-dev-cuda-12 libcudnn9-samples"),
         cudnn_package('9.12.0',f'{CUDNN_URL}/9.12.0/local_installers/cudnn-local-repo-ubuntu2404-9.12.0_1.0-1_arm64.deb', cuda='13.0', requires='aarch64', packages="libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-samples"),
+
     ]
 elif IS_CONFIG:
     # x86_64
