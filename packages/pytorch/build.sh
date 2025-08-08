@@ -18,6 +18,7 @@ tail -20 ${CPUINFO_PATCH}
 pip3 install -r requirements.txt
 pip3 install scikit-build ninja
 pip3 install 'cmake<4'
+export USE_PRIORITIZED_TEXT_FOR_LD=1
 
 #TORCH_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" \
 # https://github.com/pytorch/pytorch/pull/157791/files#diff-f271c3ed0c135590409465f4ad55c570c418d2c0509bbf1b1352ebdd1e6611d1
