@@ -26,7 +26,7 @@ elif SYSTEM_ARM:
     elif L4T_VERSION.major >= 32:
         CUDNN_VERSION = Version('8.2')
 else:
-    CUDNN_VERSION = Version('9.10') # x86_64
+    CUDNN_VERSION = Version('9.12') # x86_64
 
 def cudnn_package(version, url, deb=None, packages=None, cuda=None, requires=None):
     """
