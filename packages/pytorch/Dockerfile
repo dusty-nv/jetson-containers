@@ -3,7 +3,7 @@
 # alias: torch
 # group: pytorch
 # config: config.py
-# depends: [cuda, cudnn, nvpl, numpy, onnx]
+# depends: [cuda, cudnn, nccl, gdrcopy, nvpl, cusparselt, numpy, onnx]
 # test: [test.sh, test.py]
 # docs: |
 #  Containers for PyTorch with CUDA support.
