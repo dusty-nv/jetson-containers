@@ -4,7 +4,7 @@ echo "Installing NVIDIA NCCL $NCCL_VERSION (NCCL)"
 if [[ "$CUDA_ARCH" == "aarch64" ]]; then
   DEB="nccl-local-repo-${DISTRO}-${NCCL_VERSION}-cuda13.0_1.0-1_arm64.deb"
 else
-  DEB="nccl-local-repo-${DISTRO}-${NCCL_VERSION}-cuda13.0_1.0-1_amd64.debdeb"
+  DEB="nccl-local-repo-${DISTRO}-${NCCL_VERSION}-cuda13.0_1.0-1_amd64.deb"
 fi
 cd $TMP
 wget $WGET_FLAGS $MULTIARCH_URL/$DEB
