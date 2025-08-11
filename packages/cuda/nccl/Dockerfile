@@ -3,6 +3,7 @@
 # group: cuda
 # depends: [cuda]
 # config: config.py
+# test: test.sh
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
@@ -15,19 +16,17 @@ ARG NCCL_VERSION \
     CUDA_ARCH \
     TMP=/tmp/nccl
 
-RUN apt-get update && \
-    apt-get install -y dkms
-
 RUN apt-get update -y && \
+    apt-get install -y dkms && \
     apt-get install -y --no-install-recommends \
-    build-essential \
-    devscripts \
-    debhelper \
-    fakeroot \
-    pkg-config && \
+        build-essential \
+        devscripts \
+        debhelper \
+        fakeroot \
+        pkg-config && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-COPY install.sh /tmp/nccl/
-RUN /tmp/nccl/install.sh
+COPY install.sh build.sh $TMP/
 
+RUN $TMP/install.sh || $TMP/build.sh
