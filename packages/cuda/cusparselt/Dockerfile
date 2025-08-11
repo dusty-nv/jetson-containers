@@ -15,18 +15,17 @@ ARG CUSPARSELT_VERSION \
     DISTRO="ubuntu2004" \
     TMP=/tmp/cusparselt
 
-RUN apt-get update && \
-    apt-get install -y dkms
-
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends \
-    build-essential \
-    devscripts \
-    debhelper \
-    fakeroot \
-    pkg-config && \
+        build-essential \
+        devscripts \
+        debhelper \
+        fakeroot \
+        pkg-config \
+        dkms && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-COPY install.sh /tmp/cusparselt/install.sh
-RUN /tmp/cusparselt/install.sh
+COPY install.sh $TMP/install.sh
+
+RUN $TMP/install.sh
