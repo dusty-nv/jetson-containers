@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -ex
 
+if [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
+  echo 'Not supported by tegra'
+  exit 0
+fi
+
 echo "Detected architecture: ${CUDA_ARCH}"
 if [[ "$CUDA_ARCH" == "aarch64" ]]; then
   wget $WGET_FLAGS \
