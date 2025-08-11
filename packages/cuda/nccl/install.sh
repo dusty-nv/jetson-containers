@@ -6,7 +6,6 @@ if [[ "$CUDA_ARCH" == "aarch64" ]]; then
 elif [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
   git clone https://github.com/NVIDIA/nccl
   cd nccl
-  make -j src.build
   make -j src.build NVCC_GENCODE="-gencode=arch=compute_87,code=sm_87"
   sudo apt install build-essential devscripts debhelper fakeroot
   make pkg.debian.build
