@@ -41,11 +41,11 @@ def get_l4t_version(version_file='/etc/nv_tegra_release', l4t_version: str = Non
         return Version(os.environ['L4T_VERSION'].lower().lstrip('r'))
 
     if CUDA_ARCH != 'tegra-aarch64':
-        return Version('38.0.0')  # for x86 to unlock L4T checks
+        return Version('38.1.0')  # for x86 to unlock L4T checks
 
     if not os.path.isfile(version_file):
         # raise IOError(f"L4T_VERSION file doesn't exist:  {version_file}")
-        return Version('38.0.0')
+        return Version('38.1.0')
 
     with open(version_file) as file:
         line = file.readline()
@@ -329,7 +329,7 @@ def get_cuda_arch(l4t_version: str = None, cuda_version: str = None, format=list
             elif l4t_version.major == 32:  # JetPack 4
                 cuda_architectures = [53, 62, 72]
         elif IS_SBSA:
-            cuda_architectures = [90, 100, 103, 110, 120, 121]  # B300, Thor 110, Spark 121
+            cuda_architectures = [87, 90, 100, 103, 110, 120, 121]  # B300, Thor 110, Spark 121
     else:
         cuda_architectures = [
             80, 86,  # Ampere
