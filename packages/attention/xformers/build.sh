@@ -25,7 +25,6 @@ FLASH_ATTENTION_FORCE_BUILD="TRUE" \
 FLASH_ATTENTION_FORCE_CXX11_ABI="FALSE" \
 FLASH_ATTENTION_SKIP_CUDA_BUILD="FALSE" \
 XFORMERS_MORE_DETAILS=1 \
-XFORMERS_IGNORE_FLASH_VERSION_CHECK=1 \
 python3 setup.py --verbose bdist_wheel --dist-dir /opt/xformers/wheels
 
 pip3 install /opt/xformers/wheels/*.whl
