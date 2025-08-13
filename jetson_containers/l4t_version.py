@@ -548,7 +548,15 @@ DOCKER_ARCH = CUDA_ARCHS[SYSTEM_ARCH]
 SYSTEM_ARM = CUDA_ARCH in ("aarch64", "tegra-aarch64")
 SYSTEM_X86 = CUDA_ARCH == "x86_64"
 IS_TEGRA = CUDA_ARCH == "tegra-aarch64"
-IS_SBSA = CUDA_ARCH == "aarch64"
+# IS_SBSA = SYSTEM_ARCH_TYPE == "aarch64"
+try:
+    gpu_names = subprocess.check_output(
+        ["nvidia-smi", "--query-gpu=name", "--format=csv,noheader"],
+        encoding="utf-8"
+    )
+    IS_SBSA = "nvgpu" not in gpu_names
+except Exception as e:
+    IS_SBSA = False  # or handle as appropriate for your use case
 
 SYSTEM_ARCH_LIST = []
 
