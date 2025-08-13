@@ -54,7 +54,16 @@ def test_audio_devices():
         
         # Get default devices
         default_input = sd.default.device[0] if sd.default.device[0] is not None else "None"
-        default_output = sd.default.device[1] if sd.default.device[1] is not None else "None"
+        if (
+            sd.default.device is not None
+            and isinstance(sd.default.device, (tuple, list))
+            and len(sd.default.device) >= 2
+        ):
+            default_input = sd.default.device[0] if sd.default.device[0] is not None else "None"
+            default_output = sd.default.device[1] if sd.default.device[1] is not None else "None"
+        else:
+            default_input = "None"
+            default_output = "None"
         
         print(f"  - Default input device: {default_input}")
         print(f"  - Default output device: {default_output}")
