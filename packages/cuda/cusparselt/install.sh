@@ -2,8 +2,10 @@
 set -exu
 
 echo "Detected architecture: ${CUDA_ARCH}"
+echo "IS_SBSA: ${IS_SBSA}"
 
-if [[ "$CUDA_ARCH" == "aarch64" ]] || [[ "$IS_SBSA" == "true" ]]; then
+if [[ "$CUDA_ARCH" == "aarch64" ]] || [[ "$IS_SBSA" == "True" ]]; then
+  echo "Installing cusparselt via Debian package (aarch64 or SBSA detected)"
   wget $WGET_FLAGS \
     "https://developer.download.nvidia.com/compute/cusparselt/${CUSPARSELT_VERSION}/local_installers/cusparselt-local-repo-${DISTRO}-${CUSPARSELT_VERSION}_1.0-1_arm64.deb"
   dpkg -i cusparselt-local-*.deb
@@ -12,6 +14,7 @@ if [[ "$CUDA_ARCH" == "aarch64" ]] || [[ "$IS_SBSA" == "true" ]]; then
   apt-get -y install libcusparselt0 libcusparselt-dev
 
 elif [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
+  echo "Installing cusparselt via archive (tegra-aarch64 detected)"
   # Install from .tar.xz for Jetson Orin @ 22.04 and 24.04
   wget $WGET_FLAGS "https://developer.download.nvidia.com/compute/cusparselt/redist/libcusparse_lt/linux-aarch64/libcusparse_lt-linux-aarch64-${CUSPARSELT_VERSION}.0-archive.tar.xz"
   tar -xJf libcusparse_lt-linux-aarch64-${CUSPARSELT_VERSION}.0-archive.tar.xz
