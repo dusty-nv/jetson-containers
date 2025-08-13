@@ -33,8 +33,8 @@ int main() {
     if (s != CUSPARSE_STATUS_SUCCESS) {
         std::cerr << "cusparselt FAILED: " << (int)s << " (" << status_str(s) << ")\n";
         if (s == CUSPARSE_STATUS_ARCH_MISMATCH) {
-            std::cout << "cusparselt SKIPPED on this GPU\n";
-            return 0; // don’t fail CI
+            std::cout << "cusparselt FAILED: ARCH_MISMATCH - wrong binary for this GPU\n";
+            return 1; // fail on ARCH_MISMATCH to indicate compatibility issue
         }
         return 1;
     }
