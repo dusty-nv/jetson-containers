@@ -3,7 +3,7 @@ set -exu
 
 echo "Detected architecture: ${CUDA_ARCH}"
 
-if [[ "$CUDA_ARCH" == "aarch64" ]]; then
+if [[ "$CUDA_ARCH" == "aarch64" ]] || [[ "$IS_SBSA" == "true" ]]; then
   wget $WGET_FLAGS \
     "https://developer.download.nvidia.com/compute/cusparselt/${CUSPARSELT_VERSION}/local_installers/cusparselt-local-repo-${DISTRO}-${CUSPARSELT_VERSION}_1.0-1_arm64.deb"
   dpkg -i cusparselt-local-*.deb
@@ -22,7 +22,7 @@ elif [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
   else
     cp -v lib/* /usr/lib/aarch64-linux-gnu/ || cp -v lib/* /usr/local/cuda/lib64/
     cp -v include/* /usr/local/cuda/include/
-    
+
     ldconfig -p | grep libcusparseLt || true
   fi
 
