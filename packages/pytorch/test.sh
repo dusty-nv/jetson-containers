@@ -11,6 +11,7 @@ import sys
 def test_torch_distributed():
     \"\"\"Test torch.distributed functionality with proper checks and status output\"\"\"
     print('\\n=== Testing torch.distributed ===')
+    is_available = False
     
     # Check if distributed is available
     try:
