@@ -26,10 +26,10 @@ fi
 sed -i \
   -e 's|^gguf.*|gguf|g' \
   -e 's|^opencv-python-headless.*||g' \
+  -e 's|^mistral_common.*|mistral_common|g' \
   requirements/common.txt
 
 grep gguf requirements/common.txt
-grep opencv requirements/common.txt
 
 export MAX_JOBS=$(nproc) # this is for AGX (max 4 working on Orin NX)
 export USE_CUDNN=1
