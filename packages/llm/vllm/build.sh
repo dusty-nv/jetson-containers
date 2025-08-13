@@ -25,8 +25,11 @@ fi
 # `newbyteorder` was removed from the ndarray class in NumPy 2.0
 sed -i \
   -e 's|^gguf.*|gguf|g' \
-  -e 's|^opencv-python-headless.*|opencv-python-headless|g' \
+  -e 's|^opencv-python-headless.*||g' \
   requirements/common.txt
+
+grep gguf requirements/common.txt
+grep opencv requirements/common.txt
 
 export MAX_JOBS=$(nproc) # this is for AGX (max 4 working on Orin NX)
 export USE_CUDNN=1
