@@ -152,3 +152,7 @@ fi
 # Clean up (only apt cache; won't touch manual lib copies)
 rm -rf /var/lib/apt/lists/*
 apt-get clean
+
+# Save version info for runtime testing
+echo "${CUSPARSELT_VERSION}" > /tmp/CUSPARSELT_VER
+echo "Version ${CUSPARSELT_VERSION} saved to /tmp/CUSPARSELT_VER"
