@@ -141,8 +141,11 @@ elif [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
     cuobjdump --dump-ptx "$LIB_DST"/libcusparseLt.so* 2>/dev/null | grep -oE 'compute_[0-9]+' | sort -u || true
   fi
 else
+  # wget $WGET_FLAGS \
+  #  "https://developer.download.nvidia.com/compute/cusparselt/${CUSPARSELT_VERSION}/local_installers/cusparselt-local-repo-${DISTRO}-${CUSPARSELT_VERSION}_1.0-1_amd64.deb"
   wget $WGET_FLAGS \
-    "https://developer.download.nvidia.com/compute/cusparselt/${CUSPARSELT_VERSION}/local_installers/cusparselt-local-repo-${DISTRO}-${CUSPARSELT_VERSION}_1.0-1_amd64.deb"
+    "https://developer.download.nvidia.com/compute/cusparselt/0.8.0/local_installers/cusparselt-local-repo-${DISTRO}-0.8.0_1.0-1_amd64.deb"
+  
   dpkg -i cusparselt-local-*.deb
   cp /var/cusparselt-local-*/cusparselt-*-keyring.gpg /usr/share/keyrings/
   apt-get update
