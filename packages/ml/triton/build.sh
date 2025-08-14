@@ -17,11 +17,14 @@ sed -i \
     -e 's|LLVMAMDGPUAsmParser||g' \
     -e 's|-Werror|-Wno-error|g' \
     CMakeLists.txt
-    
-sed -i 's|^download_and_copy_ptxas|#&|' python/setup.py || :
 
-mkdir -p third_party/cuda
-ln -sf /usr/local/cuda/bin/ptxas $(pwd)/third_party/cuda/ptxas
+if [[ $CUDA_INSTALLED_VERSION -ge 130 ]]; then
+  git apply -p1 /tmp/triton/cu130.diff
+else
+  sed -i 's|^download_and_copy_ptxas|#&|' python/setup.py || :
+  mkdir -p third_party/cuda
+  ln -sf /usr/local/cuda/bin/ptxas $(pwd)/third_party/cuda/ptxas
+fi
 
 pip3 wheel --wheel-dir=/opt --no-deps ./python || pip3 wheel --wheel-dir=/opt --no-deps .
 
