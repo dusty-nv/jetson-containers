@@ -92,7 +92,15 @@ elif [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
   echo "PATCH_SUFFIX: ${PATCH_SUFFIX}"
   echo "Final VER: ${VER}"
   BASE_URL="https://developer.download.nvidia.com/compute/cusparselt/redist/libcusparse_lt/linux-aarch64"
-  ARCHIVE="libcusparse_lt-linux-aarch64-${VER}_cuda${CUDA_MAJOR}-archive.tar.xz"
+
+  # Different versions have different archive naming patterns
+  if [[ "${CUSPARSELT_VERSION}" == "0.8.0" ]]; then
+    # 0.8.0.4 uses CUDA suffix format
+    ARCHIVE="libcusparse_lt-linux-aarch64-${VER}_cuda${CUDA_MAJOR}-archive.tar.xz"
+  else
+    # 0.7.x versions use simple archive format without CUDA suffix
+    ARCHIVE="libcusparse_lt-linux-aarch64-${VER}-archive.tar.xz"
+  fi
 
   WORK="${TMP:-/tmp}/cusparselt"
   EXTRACT="${WORK}/extract"
