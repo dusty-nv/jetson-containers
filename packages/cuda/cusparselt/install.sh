@@ -6,6 +6,8 @@ echo "IS_SBSA: ${IS_SBSA}"
 
 if [[ "$CUDA_ARCH" == "aarch64" ]] || [[ "$IS_SBSA" == "True" ]]; then
   #  https://developer.download.nvidia.com/compute/cusparselt/0.8.0/local_installers/cusparselt-local-repo-ubuntu2404-0.8.0_0.8.0-1_arm64.deb
+  #  https://developer.download.nvidia.com/compute/cusparselt/0.7.1/local_installers/cusparselt-local-repo-ubuntu2404-0.7.1_1.0-1_arm64.deb (*Thor not supported)
+  #  https://developer.download.nvidia.com/compute/cusparselt/0.7.0/local_installers/cusparselt-local-repo-ubuntu2404-0.7.0_1.0-1_arm64.deb (*Thor not supported)
 
   # 1) Install the local repo .deb
   DEB=cusparselt-local-repo-${DISTRO}-${CUSPARSELT_VERSION}_${CUSPARSELT_VERSION}-1_arm64.deb
@@ -63,13 +65,32 @@ if [[ "$CUDA_ARCH" == "aarch64" ]] || [[ "$IS_SBSA" == "True" ]]; then
   cuobjdump --list-elf "$(readlink -f "$LIB")" | grep -E 'sm_|compute_' | sort -u
 
 elif [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
-  # Install from .tar.xz for Jetson Orin @ 22.04 and 24.04
+  # Install from .tar.xz for Jetson Orin @ 22.04 and 24.04 (for CUDA 12)
+  #  https://developer.download.nvidia.com/compute/cusparselt/redist/libcusparse_lt/linux-aarch64/libcusparse_lt-linux-aarch64-0.8.0.4_cuda12-archive.tar.xz
+  #  https://developer.download.nvidia.com/compute/cusparselt/redist/libcusparse_lt/linux-aarch64/libcusparse_lt-linux-aarch64-0.7.1.0-archive.tar.xz
+  #  https://developer.download.nvidia.com/compute/cusparselt/redist/libcusparse_lt/linux-aarch64/libcusparse_lt-linux-aarch64-0.7.0.0-archive.tar.xz
 
   # Detect CUDA major (fallback to 12 for JP6.x)
   CUDA_MAJOR="$(nvcc --version 2>/dev/null | sed -n 's/.*release \([0-9][0-9]*\).*/\1/p')"
   CUDA_MAJOR="${CUDA_MAJOR:-12}"
 
-  VER="0.8.0.4"     # or set via env (but CUSPARSELT_VERSION is given as 0.8.0)
+  # Determine the patch suffix based on CUSPARSELT_VERSION
+  # Pattern: 0.8.0 -> .4, 0.7.1 -> .0, 0.7.0 -> .0
+  if [[ "${CUSPARSELT_VERSION}" == "0.8.0" ]]; then
+    PATCH_SUFFIX="4"
+  elif [[ "${CUSPARSELT_VERSION}" == "0.7.1" ]]; then
+    PATCH_SUFFIX="0"
+  elif [[ "${CUSPARSELT_VERSION}" == "0.7.0" ]]; then
+    PATCH_SUFFIX="0"
+  else
+    # Default fallback - try .0 first, then .4
+    PATCH_SUFFIX="0"
+  fi
+
+  VER="${CUSPARSELT_VERSION}.${PATCH_SUFFIX}"
+  echo "CUSPARSELT_VERSION: ${CUSPARSELT_VERSION}"
+  echo "PATCH_SUFFIX: ${PATCH_SUFFIX}"
+  echo "Final VER: ${VER}"
   BASE_URL="https://developer.download.nvidia.com/compute/cusparselt/redist/libcusparse_lt/linux-aarch64"
   ARCHIVE="libcusparse_lt-linux-aarch64-${VER}_cuda${CUDA_MAJOR}-archive.tar.xz"
 
