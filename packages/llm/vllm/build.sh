@@ -23,7 +23,12 @@ fi
 
 # File "/opt/venv/lib/python3.12/site-packages/gguf/gguf_reader.py"
 # `newbyteorder` was removed from the ndarray class in NumPy 2.0
-sed -i 's|gguf.*|gguf|g' requirements/common.txt
+sed -i \
+  -e 's|^gguf.*|gguf|g' \
+  -e 's|^opencv-python-headless.*||g' \
+  -e 's|^mistral_common.*|mistral_common|g' \
+  requirements/common.txt
+
 grep gguf requirements/common.txt
 
 export MAX_JOBS=$(nproc) # this is for AGX (max 4 working on Orin NX)

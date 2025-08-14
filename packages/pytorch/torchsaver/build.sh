@@ -8,6 +8,15 @@ git clone --recursive --depth=1 https://github.com/fzyzcjy/torch_memory_saver /o
 cd /opt/torch_memory_saver
 #git checkout v${TORCHAO_VERSION}
 
+# Fix the package version
+codebase_version=$(grep -Po "(?<=version=')[^']+" setup.py)
+echo "Codebase version: ${codebase_version}"
+echo "Wanted version: ${FLASH_ATTENTION_VERSION}"
+
+if [ "$codebase_version" != "${FLASH_ATTENTION_VERSION}" ]; then
+    sed -i "s/\(version='\)[^']*/\1${FLASH_ATTENTION_VERSION}/" setup.py
+fi
+
 #export TORCH_CUDA_ARCH_LIST="8.7"
 export MAX_JOBS=$(nproc)
 export CMAKE_BUILD_TYPE=Release
