@@ -64,20 +64,52 @@ if [[ "$CUDA_ARCH" == "aarch64" ]] || [[ "$IS_SBSA" == "True" ]]; then
 
 elif [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
   # Install from .tar.xz for Jetson Orin @ 22.04 and 24.04
-  wget $WGET_FLAGS "https://developer.download.nvidia.com/compute/cusparselt/redist/libcusparse_lt/linux-aarch64/libcusparse_lt-linux-aarch64-${CUSPARSELT_VERSION}.4_cuda12-archive.tar.xz"
-  #                 https://developer.download.nvidia.com/compute/cusparselt/redist/libcusparse_lt/linux-aarch64/libcusparse_lt-linux-aarch64-0.8.0.4_cuda12-archive.tar.xz
-  tar -xJf libcusparse_lt-linux-aarch64-${CUSPARSELT_VERSION}.0-archive.tar.xz
-  cd libcusparse_lt-linux-aarch64-${CUSPARSELT_VERSION}.0-archive
 
-  if ls *.deb 1>/dev/null 2>&1; then
-    dpkg -i *.deb || apt-get -f install -y
-  else
-    cp -v lib/* /usr/lib/aarch64-linux-gnu/ || cp -v lib/* /usr/local/cuda/lib64/
-    cp -v include/* /usr/local/cuda/include/
+  # Detect CUDA major (fallback to 12 for JP6.x)
+  CUDA_MAJOR="$(nvcc --version 2>/dev/null | sed -n 's/.*release \([0-9][0-9]*\).*/\1/p')"
+  CUDA_MAJOR="${CUDA_MAJOR:-12}"
 
-    ldconfig -p | grep libcusparseLt || true
+  VER="0.8.0.4"     # or set via env (but CUSPARSELT_VERSION is given as 0.8.0)
+  BASE_URL="https://developer.download.nvidia.com/compute/cusparselt/redist/libcusparse_lt/linux-aarch64"
+  ARCHIVE="libcusparse_lt-linux-aarch64-${VER}_cuda${CUDA_MAJOR}-archive.tar.xz"
+
+  WORK="${TMP:-/tmp}/cusparselt"
+  EXTRACT="${WORK}/extract"
+  mkdir -p "$WORK" "$EXTRACT"
+  cd "$WORK"
+
+  echo "Downloading $ARCHIVE ..."
+  wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate \
+    -O "$ARCHIVE" "${BASE_URL}/${ARCHIVE}"
+
+  echo "Extracting $ARCHIVE ..."
+  tar -xJf "$ARCHIVE" --strip-components=1 -C "$EXTRACT"
+  cd "$EXTRACT"
+
+  # Install headers under a CUDA-majored include prefix (JP6: /usr/include/libcusparseLt/12)
+  HDR_DST="/usr/include/libcusparseLt/${CUDA_MAJOR}"
+  install -d "$HDR_DST"
+  install -m 0644 include/cusparseLt*.h "$HDR_DST/"
+
+  # Install libs into CUDA Tegra target lib dir
+  LIB_DST="/usr/local/cuda/targets/aarch64-linux/lib"
+  install -d "$LIB_DST"
+  install -m 0644 lib/libcusparseLt.so* "$LIB_DST/"
+
+  # Ensure the dynamic linker can find them
+  echo "$LIB_DST" >/etc/ld.so.conf.d/cusparselt.conf
+  ldconfig
+
+  echo "Installed headers to $HDR_DST"
+  echo "Installed libraries to $LIB_DST"
+
+  # Optional: quick info / Thor check
+  command -v cuobjdump >/dev/null 2>&1 || export PATH=/usr/local/cuda/bin:$PATH
+  if [ -x "$(command -v cuobjdump)" ]; then
+    echo "🔍 cuSPARSELt SASS/PTX targets:"
+    cuobjdump --list-elf "$LIB_DST"/libcusparseLt.so* 2>/dev/null | grep -oE 'sm_[0-9]+' | sort -u || true
+    cuobjdump --dump-ptx "$LIB_DST"/libcusparseLt.so* 2>/dev/null | grep -oE 'compute_[0-9]+' | sort -u || true
   fi
-
 else
   wget $WGET_FLAGS \
     "https://developer.download.nvidia.com/compute/cusparselt/${CUSPARSELT_VERSION}/local_installers/cusparselt-local-repo-${DISTRO}-${CUSPARSELT_VERSION}_1.0-1_amd64.deb"
