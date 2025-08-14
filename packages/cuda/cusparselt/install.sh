@@ -9,7 +9,8 @@ if [[ "$CUDA_ARCH" == "aarch64" ]] || [[ "$IS_SBSA" == "True" ]]; then
 
   # 1) Install the local repo .deb
   DEB=cusparselt-local-repo-${DISTRO}-${CUSPARSELT_VERSION}_${CUSPARSELT_VERSION}-1_arm64.deb
-  wget -q "https://developer.download.nvidia.com/compute/cusparselt/${CUSPARSELT_VERSION}/local_installers/${DEB}"
+  wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate \
+    -O "${DEB}" "https://developer.download.nvidia.com/compute/cusparselt/${CUSPARSELT_VERSION}/local_installers/${DEB}"
   dpkg -i "${DEB}"
 
   # 2) Install the GPG key that the package asked for
