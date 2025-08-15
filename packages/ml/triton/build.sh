@@ -6,7 +6,7 @@ echo "============ Building triton ${TRITON_VERSION} (branch=${TRITON_BRANCH}) =
 
 pip3 uninstall -y triton
 
-git clone --branch ${TRITON_BRANCH} --depth=1 --recursive https://github.com/triton-lang/triton /opt/triton
+git clone --branch ${TRITON_BRANCH} --depth=1 --recursive https://github.com/triton-lang/triton /opt/triton || { rm -rf /opt/triton; git clone --depth=1 --recursive https://github.com/triton-lang/triton /opt/triton; }
 cd /opt/triton
 
 #git checkout ${TRITON_BRANCH} 
