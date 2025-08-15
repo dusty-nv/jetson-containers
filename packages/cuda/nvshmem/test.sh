@@ -50,12 +50,42 @@ if [[ "$detected_arch" == "tegra-aarch64" ]]; then
   exit 0
 fi
 
+
+rm -f /test/test_nvshmem || true
+
+# 1) Find the header (works for /usr/include/nvshmem/13/nvshmem.h, CUDA targets, etc)
+HDR=$(find /usr/include /usr/local/cuda -type f -name nvshmem.h 2>/dev/null | head -n1 || true)
+INC_FLAGS=()
+[ -n "${HDR}" ] && INC_FLAGS+=(-I"$(dirname "${HDR}")")
+[ -d /usr/local/cuda/include ] && INC_FLAGS+=(-I/usr/local/cuda/include)
+for d in /usr/local/cuda/targets/*-linux/include; do [ -d "$d" ] && INC_FLAGS+=(-I"$d"); done
+
+# 2) Find the runtime .so and its directory
+#    Prefer ldconfig; fallback to searching common roots
+LIB=$(ldconfig -p | awk '/nvshmem\.so/{print $NF; exit}') || true
+[ -z "${LIB:-}" ] && LIB=$(find /usr /usr/local -type f -name 'nvshmem.so*' 2>/dev/null | head -n1 || true)
+if [ -z "${LIB}" ]; then
+  echo "ERROR: nvshmem.so not found. Is nvshmem-cuda-13 installed?"
+  exit 1
+fi
+LIB=$(readlink -f "$LIB")
+LIBDIR=$(dirname "$LIB")
+
+# 3) Compose -L and rpath (keep CUDA dirs too)
+LIB_FLAGS=(-L"$LIBDIR")
+for d in /usr/lib/aarch64-linux-gnu /usr/local/cuda/lib64 /usr/local/cuda/targets/*-linux/lib; do
+  [ -d "$d" ] && LIB_FLAGS+=(-L"$d")
+done
+
+RPATH_FLAGS=(-Xlinker -rpath="$LIBDIR")
+for d in /usr/lib/aarch64-linux-gnu /usr/local/cuda/lib64 /usr/local/cuda/targets/*-linux/lib; do
+  [ -d "$d" ] && RPATH_FLAGS+=(-Xlinker -rpath="$d")
+done
+
 nvcc /test/test_nvshmem.cu \
-  -I/usr/include/nvshmem \
-  -I/usr/local/cuda/include \
-  -L/usr/lib/aarch64-linux-gnu \
+  "${INC_FLAGS[@]}" "${LIB_FLAGS[@]}" \
   -lnvshmem_host -lnvshmem -lcudart \
-  -Xlinker -rpath=/usr/lib/aarch64-linux-gnu \
+   "${RPATH_FLAGS[@]}" \
   -Wno-deprecated-gpu-targets \
   -Wno-deprecated-declarations \
   -o /test/test_nvshmem
