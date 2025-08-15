@@ -1,4 +1,4 @@
-// test_nvshmem_device.cu
+// test_nvshmem.cu
 #include <iostream>
 #include <nvshmem/nvshmem.h>
 #include <nvshmem/nvshmemx.h>
