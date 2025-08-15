@@ -1,5 +1,5 @@
 #---
-# name: nccl
+# name: nvshmem
 # group: cuda
 # depends: [cuda]
 # config: config.py
@@ -8,25 +8,24 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG NCCL_VERSION \
+ARG NVSHMEM_VERSION \
     CUDA_ARCH \
     IS_SBSA \
     FORCE_BUILD=off \
-    DISTRO="ubuntu2404" \
-    CUDA_ARCH \
-    TMP=/tmp/nccl
+    DISTRO="ubuntu2004" \
+    TMP=/tmp/nvshmem
 
 RUN apt-get update -y && \
-    apt-get install -y dkms && \
     apt-get install -y --no-install-recommends \
         build-essential \
         devscripts \
         debhelper \
         fakeroot \
-        pkg-config && \
+        pkg-config \
+        dkms && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-COPY install.sh build.sh $TMP/
+COPY install.sh $TMP/install.sh
 
-RUN $TMP/install.sh || $TMP/build.sh
+RUN $TMP/install.sh
