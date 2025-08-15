@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 set -exu
 
 echo "Detected architecture: ${CUDA_ARCH}"

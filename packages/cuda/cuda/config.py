@@ -15,6 +15,7 @@ def cuda_build_args(version):
     return {
         'CUDA_ARCH_LIST': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
         'CUDA_ARCH': CUDA_ARCH,
+        'CUDA_INSTALLED_VERSION': int(str(CUDA_VERSION.major) + str(CUDA_VERSION.minor)),
         'DISTRO': f"ubuntu{LSB_RELEASE.replace('.','')}",
         'IS_SBSA': IS_SBSA,
         'IS_TEGRA': IS_TEGRA,

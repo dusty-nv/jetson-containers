@@ -1,0 +1,53 @@
+diff --git a/cmake/nvidia-toolchain-version.json b/cmake/nvidia-toolchain-version.json
+index 5d7358a..f6ad2ec 100644
+--- a/cmake/nvidia-toolchain-version.json
++++ b/cmake/nvidia-toolchain-version.json
+@@ -1,8 +1,8 @@
+ {
+-  "ptxas": "12.8.93",
+-  "cuobjdump": "12.8.55",
+-  "nvdisasm": "12.8.55",
+-  "cudacrt": "12.8.61",
+-  "cudart": "12.8.57",
+-  "cupti": "12.8.90"
++  "ptxas": "13.0.48",
++  "cuobjdump": "13.0.39",
++  "nvdisasm": "13.0.39",
++  "cudacrt": "13.0.48",
++  "cudart": "13.0.48",
++  "cupti": "13.0.48"
+ }
+diff --git a/setup.py b/setup.py
+index cb0ae4a..9653430 100644
+--- a/setup.py
++++ b/setup.py
+@@ -563,13 +563,13 @@ def download_and_copy_dependencies():
+         f"https://developer.download.nvidia.com/compute/cuda/redist/cuda_nvdisasm/{system}-{arch}/cuda_nvdisasm-{system}-{arch}-{version}-archive.tar.xz",
+     )
+     download_and_copy(
+-        name="nvcc",
+-        src_func=lambda system, arch, version: f"cuda_nvcc-{system}-{arch}-{version}-archive/include",
++        name="cuda_crt",
++        src_func=lambda system, arch, version: f"cuda_crt-{system}-{arch}-{version}-archive/include",
+         dst_path="include",
+         variable="TRITON_CUDACRT_PATH",
+         version=NVIDIA_TOOLCHAIN_VERSION["cudacrt"],
+         url_func=lambda system, arch, version:
+-        f"https://developer.download.nvidia.com/compute/cuda/redist/cuda_nvcc/{system}-{arch}/cuda_nvcc-{system}-{arch}-{version}-archive.tar.xz",
++        f"https://developer.download.nvidia.com/compute/cuda/redist/cuda_crt/{system}-{arch}/cuda_crt-{system}-{arch}-{version}-archive.tar.xz",
+     )
+     download_and_copy(
+         name="cudart",
+diff --git a/third_party/nvidia/backend/compiler.py b/third_party/nvidia/backend/compiler.py
+index d01a5dc..deb5340 100644
+--- a/third_party/nvidia/backend/compiler.py
++++ b/third_party/nvidia/backend/compiler.py
+@@ -50,6 +50,8 @@ def ptx_get_version(cuda_version) -> int:
+     '''
+     assert isinstance(cuda_version, str)
+     major, minor = map(int, cuda_version.split('.'))
++    if major == 13:
++        return 90
+     if major == 12:
+         if minor < 6:
+             return 80 + minor
