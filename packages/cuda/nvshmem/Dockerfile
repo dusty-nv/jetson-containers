@@ -11,6 +11,7 @@ FROM ${BASE_IMAGE}
 ARG NVSHMEM_VERSION \
     CUDA_ARCH \
     IS_SBSA \
+    CUDA_VERSION_MAJOR \
     FORCE_BUILD=off \
     DISTRO="ubuntu2004" \
     TMP=/tmp/nvshmem
