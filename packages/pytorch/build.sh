@@ -9,11 +9,28 @@ git clone --branch "v${PYTORCH_BUILD_VERSION}" --depth=1 --recursive https://git
 git clone --depth=1 --recursive https://github.com/pytorch/pytorch /opt/pytorch
 cd /opt/pytorch
 
+# 🔍 Record the actual commit being built
+echo "=== PyTorch Build Information ==="
+echo "Target version: ${PYTORCH_BUILD_VERSION}"
+echo "Actual commit: $(git rev-parse HEAD)"
+echo "Commit date: $(git log -1 --format=%cd)"
+echo "Commit message: $(git log -1 --pretty=format:'%s')"
+echo "=================================="
+
 # https://github.com/pytorch/pytorch/issues/138333
 CPUINFO_PATCH=third_party/cpuinfo/src/arm/linux/aarch64-isa.c
 sed -i 's|cpuinfo_log_error|cpuinfo_log_warning|' ${CPUINFO_PATCH}
 grep 'PR_SVE_GET_VL' ${CPUINFO_PATCH} || echo "patched ${CPUINFO_PATCH}"
 tail -20 ${CPUINFO_PATCH}
+
+
+# Additional environment variables to help with NCCL compilation issues
+export NCCL_DEBUG=INFO
+export NCCL_IB_DISABLE=1
+export NCCL_P2P_DISABLE=1
+export NCCL_SHM_DISABLE=1
+# export MAX_JOBS=$(nproc)
+# export CMAKE_BUILD_PARALLEL_LEVEL=$(nproc)
 
 pip3 install -r requirements.txt
 pip3 install scikit-build ninja
@@ -52,6 +69,6 @@ rm -rf /opt/pytorch
 
 # install the compiled wheel
 pip3 install /opt/torch*.whl
-python3 -c 'import torch; print(f"PyTorch version: {torch.__version__}"); print(f"CUDA available:  {torch.cuda.is_available()}"); print(f"cuDNN version:   {torch.backends.cudnn.version()}"); print(torch.__config__.show());'
-twine upload --verbose /opt/torch*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+# python3 -c 'import torch; print(f"PyTorch version: {torch.__version__}"); print(f"CUDA available:  {torch.cuda.is_available()}"); print(f"cuDNN version:   {torch.backends.cudnn.version()}"); print(torch.__config__.show());'
+# twine upload --verbose /opt/torch*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
