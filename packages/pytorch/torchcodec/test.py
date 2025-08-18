@@ -15,7 +15,11 @@ import torchvision.models as models
 import torchvision.datasets as datasets
 import torchvision.transforms as transforms
 
-print('torchvision version: ' + str(torchvision.__version__) + '\n')
+import torchcodec
+
+# NOTE: Replace all torchvision usages below with torchcodec equivalents as needed.
+
+print('torchcodec version: ' + str(torchcodec.__version__) + '\n')
 
 # test extension operators
 def test_nms(N=128):
