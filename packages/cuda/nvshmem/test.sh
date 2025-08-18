@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# Temp passing test
-echo "Temp passing test for sbsa"
-exit 0
 
 # Function to detect system architecture and SBSA status
 detect_system_info() {
@@ -85,6 +82,7 @@ RPATH_FLAGS=(-Xlinker -rpath="$LIBDIR")
 for d in /usr/lib/aarch64-linux-gnu /usr/local/cuda/lib64 /usr/local/cuda/targets/*-linux/lib; do
   [ -d "$d" ] && RPATH_FLAGS+=(-Xlinker -rpath="$d")
 done
+
 
 nvcc /test/test_nvshmem.cu \
   "${INC_FLAGS[@]}" "${LIB_FLAGS[@]}" \

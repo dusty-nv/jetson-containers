@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -exu
 
-echo "Detected architecture: ${CUDA_ARCH}"
+echo "Detected architecture: ${CUDA_ARCH}, CUDA major version: ${CUDA_VERSION_MAJOR}"
 
 if [[ "$CUDA_ARCH" == "aarch64" || "$CUDA_ARCH" == "tegra-aarch64" ]]; then
   wget $WGET_FLAGS \
@@ -9,7 +9,7 @@ if [[ "$CUDA_ARCH" == "aarch64" || "$CUDA_ARCH" == "tegra-aarch64" ]]; then
   dpkg -i nvshmem-local-*.deb
   cp /var/nvshmem-local-*/nvshmem-*-keyring.gpg /usr/share/keyrings/
   apt-get update
-  apt-get -y install nvshmem-cuda-${CUDA_VERSION_MAJOR}
+  apt-get -y install nvshmem-cuda-$CUDA_VERSION_MAJOR
 
 # elif [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
 # echo "Not supported on Tegra architecture"
@@ -20,7 +20,7 @@ else
   dpkg -i nvshmem-local-*.deb
   cp /var/nvshmem-local-*/nvshmem-*-keyring.gpg /usr/share/keyrings/
   apt-get update
-  apt-get -y install nvshmem-cuda-${CUDA_VERSION_MAJOR}
+  apt-get -y install nvshmem-cuda-$CUDA_VERSION_MAJOR
 fi
 
 # Clean up (only apt cache; won't touch manual lib copies)
