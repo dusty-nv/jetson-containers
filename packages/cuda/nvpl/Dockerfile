@@ -8,12 +8,12 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG NVPL_VERSION
-ARG CUDA_ARCH
-ARG IS_SBSA
-ARG FORCE_BUILD=off
-ARG DISTRO="ubuntu2004"
-ARG TMP=/tmp/nvpl
+ARG NVPL_VERSION \
+    CUDA_ARCH \
+    IS_SBSA \
+    FORCE_BUILD=off \
+    DISTRO="ubuntu2004" \
+    TMP=/tmp/nvpl
 
 RUN apt-get update && \
     apt-get install -y dkms
