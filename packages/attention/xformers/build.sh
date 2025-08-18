@@ -15,15 +15,11 @@ else
 fi
 export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 export NVCC_THREADS=$MAX_JOBS
-echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
+echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS"
 
-# https://github.com/Dao-AILab/flash-attention/blob/dc742f2c47baa4b15cc33e6a2444f33d02c0a6d4/setup.py#L59-L66
-# We cannot compare the `1` to `TRUE` here as -----> [ "1" = "TRUE" ] && echo "Equal" || echo "Not equal"
 MAX_JOBS=$MAX_JOBS \
 CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS \
-FLASH_ATTENTION_FORCE_BUILD="TRUE" \
-FLASH_ATTENTION_FORCE_CXX11_ABI="FALSE" \
-FLASH_ATTENTION_SKIP_CUDA_BUILD="FALSE" \
+XFORMERS_DISABLE_FLASH_ATTN=1 \
 XFORMERS_MORE_DETAILS=1 \
 python3 setup.py --verbose bdist_wheel --dist-dir /opt/xformers/wheels
 
