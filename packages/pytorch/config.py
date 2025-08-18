@@ -48,8 +48,10 @@ def pytorch_pip(version, requires=None):
 
     if pkg['build_args'].get('USE_BLAS', 0):
         if IS_SBSA:
+            print("############################### SBSA system detected - using NVPL BLAS")
             pkg['build_args']['BLAS'] = 'NVPL'
         else:
+            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Non-SBSA system - installing OpenBLAS")
             pkg['build_args']['BLAS'] = 'OpenBLAS'
     if requires:
         pkg['requires'] = requires
