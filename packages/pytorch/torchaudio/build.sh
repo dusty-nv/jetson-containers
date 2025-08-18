@@ -20,6 +20,9 @@ git clone --branch=v${TORCHAUDIO_VERSION} --recursive --depth=1 https://github.c
 
 cd /opt/torchaudio
 
+# --- https://github.com/pytorch/audio/pull/3811
+sed -i '1i#include <float.h>' src/libtorchaudio/cuctc/src/ctc_prefix_decoder_kernel_v2.cu || echo "warning:  failed to patch ctc_prefix_decoder_kernel_v2.cu"
+
 # --- Patch forced_align/gpu/compute.cu: replace cub::Max -> thrust::maximum ---
 FA_FILE="src/libtorchaudio/forced_align/gpu/compute.cu"
 
