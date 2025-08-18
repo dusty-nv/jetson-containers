@@ -7,4 +7,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 fi
 
 pip3 install torchcodec~=${TORCHCODEC_VERSION} || \
-
+pip3 install torchcodec~=${TORCHCODEC_VERSION} || { echo "Failed to install torchcodec version ${TORCHCODEC_VERSION}"; exit 1; }
