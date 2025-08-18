@@ -63,7 +63,7 @@ nvcc /test/test_cusparselt.cu \
     "${RPATH_FLAGS[@]}" \
     -Wno-deprecated-gpu-targets \
     -Wno-deprecated-declarations \
-    -o /test/test_cusparselt
+    -o /tmp/test_cusparselt
 
 # 4) Show supported SM architectures in the library
 # 4.0) ensure cuobjdump is available
@@ -122,4 +122,4 @@ fi
 # 5) Run the test
 echo ""
 echo "🚀 === Running cusparseLt test ==="
-/test/test_cusparselt
+/tmp/test_cusparselt

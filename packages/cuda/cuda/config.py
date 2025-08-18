@@ -140,8 +140,8 @@ def pip_cache(version, requires=None):
     index_host = os.environ.get('INDEX_HOST', 'jetson-ai-lab.dev')
 
     pip_path = (
-        f"jp{JETPACK_VERSION.major}/{short_version}" if IS_TEGRA
-        else f"sbsa/{short_version}" if IS_SBSA
+        f"sbsa/{short_version}" if IS_SBSA
+        else f"jp{JETPACK_VERSION.major}/{short_version}" if IS_TEGRA
         else f"{DOCKER_ARCH}/{short_version}"
     )
 
