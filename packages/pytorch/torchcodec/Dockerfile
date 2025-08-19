@@ -21,4 +21,5 @@ RUN apt-get update && \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& apt-get clean
 
-RUN /tmp/torchcodec/install.sh || /tmp/torchcodec/build.sh
+RUN /tmp/torchcodec/install.sh 
+#|| /tmp/torchcodec/build.sh

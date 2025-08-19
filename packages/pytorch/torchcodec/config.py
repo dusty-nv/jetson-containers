@@ -19,7 +19,7 @@ def torchcodec(version, pytorch=None, requires=None):
         version = version + '.0'
 
     pkg['build_args'] = {
-        'TORCHCODEC_VERSION': version,
+        'TORCHCODEC_VERSION': '0.6.0',
     }
 
     builder = pkg.copy()
