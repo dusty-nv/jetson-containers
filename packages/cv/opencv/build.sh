@@ -78,8 +78,7 @@ OPENCV_BUILD_ARGS="\
    -DWITH_TBB=ON \
    -DBUILD_TIFF=ON \
    -DBUILD_PERF_TESTS=OFF \
-   -DBUILD_TESTS=OFF \
-   -DBUILD_OPENCV_VIDEOSTAB=OFF" # temporal fix
+   -DBUILD_TESTS=OFF"
 
 # architecture-specific build flags
 if [ "$(uname -m)" == "aarch64" ]; then
@@ -96,13 +95,13 @@ export CMAKE_POLICY_VERSION_MINIMUM="3.5"
 export CMAKE_LIBRARY_PATH=/usr/local/cuda/lib64/stubs
 export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
 export ENABLE_CONTRIB=1
-export ENABLE_ROLLING=1
+# export ENABLE_ROLLING=1 # Build from last commit
 
 cat <<EOF > /opt/opencv-python/cv2/version.py
 opencv_version = "${OPENCV_VERSION}"
 contrib = True
 headless = False
-rolling = True
+rolling = False
 EOF
 CMAKE_ARGS="${OPENCV_BUILD_ARGS} -DOPENCV_EXTRA_MODULES_PATH=/opt/opencv-python/opencv_contrib/modules" \
 pip3 wheel --wheel-dir=/opt --verbose .
