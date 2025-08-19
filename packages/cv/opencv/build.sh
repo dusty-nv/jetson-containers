@@ -78,7 +78,8 @@ OPENCV_BUILD_ARGS="\
    -DWITH_TBB=ON \
    -DBUILD_TIFF=ON \
    -DBUILD_PERF_TESTS=OFF \
-   -DBUILD_TESTS=OFF"
+   -DBUILD_TESTS=OFF \
+   -DBUILD_OPENCV_VIDEOSTAB=OFF" # temporal fix
 
 # architecture-specific build flags
 if [ "$(uname -m)" == "aarch64" ]; then
