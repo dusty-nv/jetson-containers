@@ -11,10 +11,10 @@ cd /opt/torch_memory_saver
 # Fix the package version
 codebase_version=$(grep -Po "(?<=version=')[^']+" setup.py)
 echo "Codebase version: ${codebase_version}"
-echo "Wanted version: ${FLASH_ATTENTION_VERSION}"
+echo "Wanted version: ${TORCH_MEMORY_SAVER_VERSION}"
 
-if [ "$codebase_version" != "${FLASH_ATTENTION_VERSION}" ]; then
-    sed -i "s/\(version='\)[^']*/\1${FLASH_ATTENTION_VERSION}/" setup.py
+if [ "$codebase_version" != "${TORCH_MEMORY_SAVER_VERSION}" ]; then
+    sed -i "s/\(version='\)[^']*/\1${TORCH_MEMORY_SAVER_VERSION}/" setup.py
 fi
 
 #export TORCH_CUDA_ARCH_LIST="8.7"
