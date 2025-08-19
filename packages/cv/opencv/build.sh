@@ -16,7 +16,7 @@ git clone --branch "${OPENCV_VERSION}" --recursive https://github.com/opencv/ope
 git clone --branch "${OPENCV_PYTHON}" --recursive https://github.com/opencv/opencv-python \
   || git clone --recursive https://github.com/opencv/opencv-python
 
-cd /opt/opencv-python/opencv|| git checkout --recurse-submodules origin/4.x
+cd /opt/opencv-python/opencv || git checkout --recurse-submodules origin/4.x
 git checkout --recurse-submodules ${OPENCV_VERSION} || git checkout --recurse-submodules origin/4.x
 cat modules/core/include/opencv2/core/version.hpp
 cd ../opencv_contrib
