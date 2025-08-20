@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -ex
 
-if [ "on" == "on" ]; then
+if [ "$FORCE_BUILD" == "on" ]; then
 	echo "Forcing build of cudnn_frontend ${CUDNN_FRONTEND_VERSION}"
 	exit 1
 fi
