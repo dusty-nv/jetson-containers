@@ -14,9 +14,14 @@ env
 
 if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
   echo "Applying vLLM CMake patches…"
-  python3 /tmp/vllm/generate_diff.py                      # (re)generate the .diff files
-  git apply -p1 /tmp/vllm/CMakeLists.txt.diff             # patch CMakeLists.txt
-  git apply -p1 /tmp/vllm/vllm_flash_attn.cmake.diff      # patch vllm_flash_attn.cmake
+  if [[ ${VLLM_VERSION} == "0.10.0" && ${CUDA_INSTALLED_VERSION} -ge 130 ]]; then
+    git apply -p1 /tmp/vllm/cuda130.diff
+    git apply -p1 /tmp/vllm/CMakeLists.diff
+  else
+    python3 /tmp/vllm/generate_diff.py                      # (re)generate the .diff files
+    git apply -p1 /tmp/vllm/CMakeLists.txt.diff             # patch CMakeLists.txt
+    git apply -p1 /tmp/vllm/vllm_flash_attn.cmake.diff      # patch vllm_flash_attn.cmake
+  fi
 else
   echo "SBSA build detected (IS_SBSA=${IS_SBSA}); skipping patch application."
 fi
