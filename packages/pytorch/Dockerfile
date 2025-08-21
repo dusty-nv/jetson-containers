@@ -75,10 +75,5 @@ RUN if [ "${FORCE_BUILD}" = "on" ]; then \
 
 COPY install.sh build.sh /tmp/pytorch/
 
-# Set build timeout
-ENV NINJA_TIMEOUT=18000
-ENV CMAKE_BUILD_PARALLEL_LEVEL=8
-ENV MAX_JOBS=8
-
 # attempt to install from pip, and fall back to building it
 RUN /tmp/pytorch/install.sh || /tmp/pytorch/build.sh
