@@ -309,6 +309,22 @@ echo "System load: $(uptime)"
 
 # Exit with build result
 if [[ $BUILD_EXIT_CODE -eq 0 ]]; then
+    echo "=== Installing PyTorch wheel ==="
+    pip3 install /opt/torch*.whl
+
+    # Verify installation
+    python3 -c 'import torch; print(f"PyTorch {torch.__version__} installed successfully")'
+
+    # Verify installation in detail
+    python3 -c 'import torch; print(torch.__version__); print(torch.cuda.is_available()); print(torch.backends.cudnn.version()); print(torch.__config__.show());'
+
+    # Upload wheel to PyPI
+    twine upload --verbose /opt/torch*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+
+    # Clean up source to save space
+    cd /
+    rm -rf /opt/pytorch
+
     echo "Build SUCCESSFUL"
     exit 0
 else
@@ -317,11 +333,3 @@ else
     exit $BUILD_EXIT_CODE
 fi
 
-# Clean up source to save space
-cd /
-rm -rf /opt/pytorch
-
-# install the compiled wheel
-pip3 install /opt/torch*.whl
-# python3 -c 'import torch; print(torch.__version__); print(torch.cuda.is_available()); print(torch.backends.cudnn.version()); print(torch.__config__.show());'
-# twine upload --verbose /opt/torch*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
