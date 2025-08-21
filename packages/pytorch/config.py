@@ -1,5 +1,6 @@
 from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES, CUDA_SHORT_VERSION, SYSTEM_ARM, LSB_RELEASE, IS_SBSA, LSB_RELEASE
 from packaging.version import Version
+import os
 
 from .version import PYTORCH_VERSION
 
@@ -31,7 +32,7 @@ def pytorch_pip(version, requires=None):
         'PYTORCH_BUILD_VERSION': build_version,
         'DISTRO': f"ubuntu{LSB_RELEASE.replace('.','')}",
         'IS_SBSA': IS_SBSA,
-        'PYTORCH_FORCE_BUILD': 'off',
+        'FORCE_BUILD': 'on' if os.environ.get('PYTORCH_FORCE_BUILD') == 'on' else 'off',
     }
 
     if not SYSTEM_ARM:

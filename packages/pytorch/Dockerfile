@@ -28,7 +28,7 @@ ARG TORCH_CUDA_ARCH_LIST \
     USE_BLAS=1 \
     BLAS="OpenBLAS" \
     DISTRO="ubuntu2204" \
-    FORCE_BUILD=${PYTORCH_FORCE_BUILD} \
+    FORCE_BUILD=${FORCE_BUILD}\
     PYTORCH_OFFICIAL_WHL=off \
     IS_SBSA=${IS_SBSA}
 
@@ -40,7 +40,7 @@ ENV TORCH_CUDA_ARCH_LIST="11.0;12.1" \
 ENV TORCH_NVCC_FLAGS="-Xfatbin -compress-all -compress-mode=balance"
 
 # Conditional installation based on FORCE_BUILD
-RUN if [ "${PYTORCH_FORCE_BUILD}" = "on" ]; then \
+RUN if [ "${FORCE_BUILD}" = "on" ]; then \
         echo "Installing PyTorch build dependencies..." && \
         pip3 install \
             scikit-build \
@@ -48,29 +48,29 @@ RUN if [ "${PYTORCH_FORCE_BUILD}" = "on" ]; then \
             'cmake<4' \
             && rm -rf ~/.cache/pip; \
     else \
-        echo "Skipping build dependency installation (PYTORCH_FORCE_BUILD=${PYTORCH_FORCE_BUILD})"; \
+        echo "Skipping build dependency installation (FORCE_BUILD=${FORCE_BUILD})"; \
     fi
 
 
 # Pre-clone PyTorch repository to cache it
-RUN if [ "${PYTORCH_FORCE_BUILD}" = "on" ]; then \
+RUN if [ "${FORCE_BUILD}" = "on" ]; then \
         echo "Pre-cloning PyTorch repository..." && \
         git clone --depth=1 --recursive https://github.com/pytorch/pytorch /opt/pytorch-cache && \
         echo "PyTorch repository cached successfully"; \
     else \
-        echo "Skipping PyTorch repository cloning (PYTORCH_FORCE_BUILD=${PYTORCH_FORCE_BUILD})"; \
+        echo "Skipping PyTorch repository cloning (FORCE_BUILD=${FORCE_BUILD})"; \
     fi
 
 COPY requirements.txt requirements-build.txt /tmp/
 
 # Conditional requirements installation
-RUN if [ "${PYTORCH_FORCE_BUILD}" = "on" ]; then \
+RUN if [ "${FORCE_BUILD}" = "on" ]; then \
         echo "Installing requirements.txt..." && \
         pip3 install -r /tmp/requirements.txt \
             && rm -rf ~/.cache/pip \
             && rm /tmp/requirements.txt; \
     else \
-        echo "Skipping requirements installation (PYTORCH_FORCE_BUILD=${PYTORCH_FORCE_BUILD})"; \
+        echo "Skipping requirements installation (FORCE_BUILD=${FORCE_BUILD})"; \
     fi
 
 COPY install.sh build.sh /tmp/pytorch/
