@@ -271,6 +271,22 @@ export CMAKE_BUILD_TESTING=OFF
 export BUILD_TEST=0
 export USE_GTEST=0
 
+# If on CUDA 12, leave only SMs supported
+if [[ "${CUDA_TAG}" == cu12* ]]; then
+    echo "CUDA 12 detected, leaving only SMs supported (TORCH_CUDA_ARCH_LIST='8.7')"
+    export TORCH_CUDA_ARCH_LIST="8.7"
+else
+    echo "*** CUDA 12 NOT detected."
+fi
+
+# If on Thor (SBSA), leave only the SMs capable SMs
+if [[ "${IS_SBSA}" == "True" ]]; then
+    echo "SBSA detected, leaving only SMs capable (TORCH_CUDA_ARCH_LIST='11.0;12.1')"
+    export TORCH_CUDA_ARCH_LIST="11.0;12.1"
+else
+    echo "*** IS_SBSA NOT detected."
+fi
+
 echo "=== Starting PyTorch build ==="
 echo "Build command: python3 setup.py bdist_wheel --dist-dir /opt"
 
