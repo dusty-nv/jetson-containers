@@ -28,16 +28,57 @@ ARG TORCH_CUDA_ARCH_LIST \
     USE_BLAS=1 \
     BLAS="OpenBLAS" \
     DISTRO="ubuntu2204" \
-    FORCE_BUILD=off \
-    PYTORCH_OFFICIAL_WHL=off
+    FORCE_BUILD=on \
+    PYTORCH_OFFICIAL_WHL=off \
+    IS_SBSA=${IS_SBSA}
 
-ENV TORCH_CUDA_ARCH_LIST=${TORCH_CUDA_ARCH_LIST} \
+# ENV TORCH_CUDA_ARCH_LIST=${TORCH_CUDA_ARCH_LIST}"
+ENV TORCH_CUDA_ARCH_LIST="11.0" \
     PIP_EXTRA_INDEX_URL=${PIP_EXTRA_INDEX_URL} \
     TORCH_HOME=/data/models/torch
 
 ENV TORCH_NVCC_FLAGS="-Xfatbin -compress-all -compress-mode=balance"
 
+# Conditional installation based on FORCE_BUILD
+RUN if [ "${FORCE_BUILD}" = "on" ]; then \
+        echo "Installing PyTorch build dependencies..." && \
+        pip3 install \
+            scikit-build \
+            ninja \
+            'cmake<4' \
+            && rm -rf ~/.cache/pip; \
+    else \
+        echo "Skipping build dependency installation (FORCE_BUILD=${FORCE_BUILD})"; \
+    fi
+
+
+# Pre-clone PyTorch repository to cache it
+RUN if [ "${FORCE_BUILD}" = "on" ]; then \
+        echo "Pre-cloning PyTorch repository..." && \
+        git clone --depth=1 --recursive https://github.com/pytorch/pytorch /opt/pytorch-cache && \
+        echo "PyTorch repository cached successfully"; \
+    else \
+        echo "Skipping PyTorch repository cloning (FORCE_BUILD=${FORCE_BUILD})"; \
+    fi
+
+COPY requirements.txt requirements-build.txt /tmp/
+
+# Conditional requirements installation
+RUN if [ "${FORCE_BUILD}" = "on" ]; then \
+        echo "Installing requirements.txt..." && \
+        pip3 install -r /tmp/requirements.txt \
+            && rm -rf ~/.cache/pip \
+            && rm /tmp/requirements.txt; \
+    else \
+        echo "Skipping requirements installation (FORCE_BUILD=${FORCE_BUILD})"; \
+    fi
+
 COPY install.sh build.sh /tmp/pytorch/
+
+# Set build timeout
+ENV NINJA_TIMEOUT=18000
+ENV CMAKE_BUILD_PARALLEL_LEVEL=8
+ENV MAX_JOBS=8
 
 # attempt to install from pip, and fall back to building it
 RUN /tmp/pytorch/install.sh || /tmp/pytorch/build.sh
