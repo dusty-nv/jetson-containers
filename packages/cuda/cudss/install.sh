@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -ex
 echo "Detected architecture: ${CUDA_ARCH}"
-if [[ "$CUDA_ARCH" == "aarch64" ]]; then
+if [[ "$CUDA_ARCH" == "aarch64" || "$IS_SBSA" == "True" ]]; then
   wget $WGET_FLAGS \
   https://developer.download.nvidia.com/compute/cudss/${CUDSS_VERSION}/local_installers/cudss-local-repo-${DISTRO}-${CUDSS_VERSION}_0.6.0-1_arm64.deb
 elif [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
