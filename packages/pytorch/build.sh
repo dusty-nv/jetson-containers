@@ -251,8 +251,6 @@ env | grep -E "(USE_|BLAS|CUDA|TORCH)" | sort
 # Start build with progress monitoring
 BUILD_START=$(date +%s)
 
-export NINJA_TIMEOUT=18000
-
 # Feature toggles (keep your defaults)
 export USE_CUDNN=1
 export USE_CUSPARSELT=1
@@ -266,6 +264,12 @@ export USE_TENSORRT=0
 export USE_BLAS="${USE_BLAS:-}"
 export BLAS="${BLAS:-}"
 
+# Disable testing to avoid compiler crashes
+export BUILD_TESTING=OFF
+export BUILD_TESTING_CPP=OFF
+export CMAKE_BUILD_TESTING=OFF
+export BUILD_TEST=0
+export USE_GTEST=0
 
 echo "=== Starting PyTorch build ==="
 echo "Build command: python3 setup.py bdist_wheel --dist-dir /opt"
