@@ -254,7 +254,7 @@ BUILD_START=$(date +%s)
 # Feature toggles (keep your defaults)
 export USE_CUDNN=1
 export USE_CUSPARSELT=1
-export USE_CUDSS=0
+export USE_CUDSS=1
 export USE_CUFILE=1
 export USE_NATIVE_ARCH=1
 export USE_DISTRIBUTED=1
@@ -275,8 +275,11 @@ export USE_GTEST=0
 if [[ "${CUDA_TAG}" == cu12* ]]; then
     echo "CUDA 12 detected, leaving only SMs supported (TORCH_CUDA_ARCH_LIST='8.7')"
     export TORCH_CUDA_ARCH_LIST="8.7"
+elif [[ "${CUDA_TAG}" == cu13* ]]; then
+    echo "CUDA 13 detected, turn off build with CUDSS (as 0.6 supported on CUDA 12)."
+    export USE_CUDSS=0
 else
-    echo "*** CUDA 12 NOT detected."
+    echo "*** NOT CUDA 12 NOR CUDA 13."
 fi
 
 # If on Thor (SBSA), leave only the SMs capable SMs
