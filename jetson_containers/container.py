@@ -291,7 +291,7 @@ def build_container(
 
         log_warning('=====================================================================================')
         log_warning('=====================================================================================')
-        log_warning(f'💣 Build failed after {total_duration:.1f} seconds ({total_duration/60:.1f} minutes)')
+        log_warning(f'💣 `jetson-containers build` failed after {total_duration:.1f} seconds ({total_duration/60:.1f} minutes)')
         log_warning(f'Error: {str(e)}')
         log_warning('=====================================================================================')
         log_warning('=====================================================================================')
