@@ -69,7 +69,7 @@ latest_release_tag() {
 HEAD_TAG="$(git tag --points-at HEAD | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n1 || true)"
 
 DATE_UTC="$(date -u +%Y%m%d)"
-GIT_SHA_SHORT="$(git rev-parse --short HEAD)"
+GIT_SHA_SHORT="$(git rev-parse --short=7 HEAD)"
 
 # CUDA detection -> cuXYZ or cpu
 detect_cuda_tag() {
