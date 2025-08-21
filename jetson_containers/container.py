@@ -277,7 +277,7 @@ def build_container(
 
         log_success('=====================================================================================')
         log_success('=====================================================================================')
-        log_success(f'✅ <b>Built {repo_name}</b> ({name})')
+        log_success(f'✅ <b>`jetson-containers build {repo_name}`</b> ({name})')
         log_success(f'⏱️  Total build time: {total_duration:.1f} seconds ({total_duration/60:.1f} minutes)')
         log_success('=====================================================================================')
         log_success('=====================================================================================')
