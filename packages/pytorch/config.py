@@ -31,6 +31,7 @@ def pytorch_pip(version, requires=None):
         'PYTORCH_BUILD_VERSION': build_version,
         'DISTRO': f"ubuntu{LSB_RELEASE.replace('.','')}",
         'IS_SBSA': IS_SBSA,
+        'PYTORCH_FORCE_BUILD': 'off',
     }
 
     if not SYSTEM_ARM:
