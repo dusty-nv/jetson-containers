@@ -12,7 +12,7 @@ cd /opt/jax
 
 # Build jaxlib from source with detected versions
 BUILD_FLAGS='--disable_nccl '
-BUILD_FLAGS+='--cuda_compute_capabilities="sm_87,sm_89,sm_90,sm_100,sm103,sm_110,sm_120,sm_121" '
+BUILD_FLAGS+='--cuda_compute_capabilities="sm_87,sm_89,sm_90,sm_100,sm_103,sm_110,sm_120,sm_121" '
 BUILD_FLAGS+='--cuda_version=13.0.0 --cudnn_version=9.12.0 '
 # BUILD_FLAGS+='--bazel_options=--repo_env=LOCAL_CUDA_PATH="/usr/local/cuda-12.8"'
 # BUILD_FLAGS+='--bazel_options=--repo_env=LOCAL_CUDNN_PATH="/opt/nvidia/cudnn/"'
