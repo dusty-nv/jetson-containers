@@ -12,7 +12,7 @@ from urllib3.exceptions import MaxRetryError, ProtocolError
 
 # Default versions as fallback
 DEFAULT_VERSIONS = {
-    'transformers': '4.38.2',  # Latest known working version
+    'transformers': '4.55.3',  # Latest known working version
 }
 
 # Cache file path
