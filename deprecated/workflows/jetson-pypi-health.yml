@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Check PyPI
         run: |
-          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://pypi.jetson-ai-lab.dev/)
+          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://pypi.jetson-ai-lab.io/)
           echo "HTTP status code: $STATUS_CODE"
 
           if [[ "$STATUS_CODE" == 2* ]]; then

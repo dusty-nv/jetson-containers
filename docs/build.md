@@ -198,13 +198,13 @@ You can build or run these from JetPack 6.1+ like the following:
 
 ## Pip Server
 
-Being able to change the versions of CUDA, Python, ect in the build tree will cause all the dependant packages like PyTorch to need rebuilt, and this can be time-consuming to recompile everything from scratch.  In order to cache and re-use the Python wheels compiled during the container builds, there's a [pip server](http://pypi.jetson-ai-lab.dev) running that wheels are uploaded to.  The containers automatically use this pip server via the `PIP_INDEX_URL` environment variable that gets set in the base containers, and there are indexes created for different versions of JetPack/CUDA.
+Being able to change the versions of CUDA, Python, ect in the build tree will cause all the dependant packages like PyTorch to need rebuilt, and this can be time-consuming to recompile everything from scratch.  In order to cache and re-use the Python wheels compiled during the container builds, there's a [pip server](http://pypi.jetson-ai-lab.io) running that wheels are uploaded to.  The containers automatically use this pip server via the `PIP_INDEX_URL` environment variable that gets set in the base containers, and there are indexes created for different versions of JetPack/CUDA.
 
-Then when the containers are built, it will first attempt to install the wheel from the server, and if it's found it builds it from source.  There is another similar server run for caching [tarball releases](http://pypi.jetson-ai-lab.dev:8000) for projects that install C/C++ binaries and headers or other general files outside of pip.  See this [forum post](https://forums.developer.nvidia.com/t/jetson-ai-lab-ml-devops-containers-core-inferencing/288235/3) for more information about the caching infrastructure, and the ability to use the pip server outside of just containers.
+Then when the containers are built, it will first attempt to install the wheel from the server, and if it's found it builds it from source.  There is another similar server run for caching [tarball releases](http://pypi.jetson-ai-lab.io:8000) for projects that install C/C++ binaries and headers or other general files outside of pip.  See this [forum post](https://forums.developer.nvidia.com/t/jetson-ai-lab-ml-devops-containers-core-inferencing/288235/3) for more information about the caching infrastructure, and the ability to use the pip server outside of just containers.
 
 ### Local `PIP` and `APT` servers
 
-You can start the local `PYPI`/`APT` servers on one Jetson node with a fallback set to `jetson-ai-lab.dev`. The local builded `pip` wheels and `tarballs` will be uploaded from the container during build time to local `PYPI`/`APT` instances only.
+You can start the local `PYPI`/`APT` servers on one Jetson node with a fallback set to `jetson-ai-lab.io`. The local builded `pip` wheels and `tarballs` will be uploaded from the container during build time to local `PYPI`/`APT` instances only.
 
 To start local `pypi`/`apt` servers:
 ```bash
@@ -223,7 +223,7 @@ git clone --recursive https://github.com/dusty-nv/jetson-containers.git
 sudo bash jetson-containers/install.sh
 cd jetson-containers
 # modify here your .env for example: 
-INDEX_HOST=jetson-ai-lab.dev
+INDEX_HOST=jetson-ai-lab.io
 # activate it
 source .env
 # Then you can build with your variables
