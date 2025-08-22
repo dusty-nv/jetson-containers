@@ -137,7 +137,7 @@ if IS_TEGRA:
         tensorrt_tar('10.7', f'{TENSORRT_URL}/10.7.0/tars/TensorRT-10.7.0.23.l4t.aarch64-gnu.cuda-12.6.tar.gz', cudnn='9.8', requires=['==r36.*', '==cu128']),
         tensorrt_tar('10.7', f'{TENSORRT_URL}/10.7.0/tars/TensorRT-10.7.0.23.l4t.aarch64-gnu.cuda-12.6.tar.gz', cudnn='9.9', requires=['==r36.*', '==cu129']),
         tensorrt_tar('10.7', f'{TENSORRT_URL}/10.7.0/tars/TensorRT-10.7.0.23.l4t.aarch64-gnu.cuda-12.6.tar.gz', cudnn='9.10', requires=['==r36.*', '==cu129']),
-        tensorrt_tar('10.13', f'{TENSORRT_URL}/10.13.2/tars/TensorRT-10.13.2.6.Linux.aarch64-gnu.cuda-13.0.tar.gz', cudnn='9.12', requires=['==cu130']),
+        tensorrt_tar('10.13', f'{TENSORRT_URL}/10.13.2/tars/TensorRT-10.13.2.6.Linux.aarch64-gnu.cuda-13.0.tar.gz', cudnn='9.12.0', requires=['==cu130']),
 
         # JetPack 4-5 (TensorRT installed in base container)
         tensorrt_builtin(requires='<36', default=True),
@@ -148,7 +148,7 @@ elif IS_SBSA:
     package = [
         tensorrt_tar('10.9',f'{TENSORRT_URL}/10.9.0/tars/TensorRT-10.9.0.34.Linux.aarch64-gnu.cuda-12.8.tar.gz', cudnn='9.8', requires='aarch64'),
         tensorrt_tar('10.12',f'{TENSORRT_URL}/10.12.0/tars/TensorRT-10.12.0.36.Linux.aarch64-gnu.cuda-12.9.tar.gz', cudnn='9.10', requires='aarch64'),
-        tensorrt_tar('10.13', f'{TENSORRT_URL}/10.13.2/tars/TensorRT-10.13.2.6.Linux.aarch64-gnu.cuda-13.0.tar.gz', cudnn='9.12', requires=['aarch64']),
+        tensorrt_tar('10.13', f'{TENSORRT_URL}/10.13.2/tars/TensorRT-10.13.2.6.Linux.aarch64-gnu.cuda-13.0.tar.gz', cudnn='9.12.0', requires=['aarch64']),
     ]
 
 else:
@@ -156,5 +156,5 @@ else:
     package = [
         tensorrt_tar('10.9', f'{TENSORRT_URL}/10.9.0/tars/TensorRT-10.9.0.34.Linux.x86_64-gnu.cuda-12.8.tar.gz', cudnn='9.8', requires='x86_64'),
         tensorrt_tar('10.12', f'{TENSORRT_URL}/10.12.0/tars/TensorRT-10.12.0.36.Linux.x86_64-gnu.cuda-12.9.tar.gz', cudnn='9.10', requires='x86_64'),
-        tensorrt_tar('10.13', f'{TENSORRT_URL}/10.13.2/tars/TensorRT-10.13.2.6.Linux.x86_64-gnu.cuda-13.0.tar.gz', cudnn='9.12', requires=['x86_64']),
+        tensorrt_tar('10.13', f'{TENSORRT_URL}/10.13.2/tars/TensorRT-10.13.2.6.Linux.x86_64-gnu.cuda-13.0.tar.gz', cudnn='9.12.0', requires='x86_64'),
     ]
