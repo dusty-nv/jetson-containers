@@ -54,6 +54,7 @@ RUN if [ "${FORCE_BUILD}" = "on" ]; then \
 # Pre-clone PyTorch repository to cache it
 RUN if [ "${FORCE_BUILD}" = "on" ]; then \
         echo "Pre-cloning PyTorch repository..." && \
+        rm -rf /opt/pytorch-cache && \
         git clone --depth=1 --recursive https://github.com/pytorch/pytorch /opt/pytorch-cache && \
         echo "PyTorch repository cached successfully"; \
     else \
