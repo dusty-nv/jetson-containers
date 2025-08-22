@@ -20,9 +20,10 @@ ARG TVM_VERSION \
     TMP_DIR=/tmp/mlc
 
 ENV LD_LIBRARY_PATH="/usr/local/lib/python${PYTHON_VERSION}/dist-packages/tvm:/opt/venv/lib/python${PYTHON_VERSION}/site-packages/tvm:${LD_LIBRARY_PATH}" \
-    TVM_HOME=${SOURCE_DIR}/3rdparty/tvm \
-    TVM_SOURCE_DIR=${SOURCE_DIR}/3rdparty/tvm \
-    MLC_LLM_SOURCE_DIR=${SOURCE_DIR}
+    MLC_LLM_SOURCE_DIR=${SOURCE_DIR} \
+    PYTHONPATH=${SOURCE_DIR}/python:${PYTHONPATH}
+
+RUN printf '\n# MLC convenience alias\nalias mlc_llm="python -m mlc_llm"\n' >> /etc/bash.bashrc
     
 COPY build.sh install.sh benchmark.py wheels/ ${TMP_DIR}/
 COPY ${MLC_PATCH} ${TMP_DIR}/patch.diff

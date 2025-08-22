@@ -38,4 +38,5 @@ WORKDIR /
 
 # export TVM envs for downstream stages/users
 ENV TVM_HOME=/opt/tvm \
+    TVM_SOURCE_DIR=/opt/tvm \
     PYTHONPATH=/opt/tvm/python:${PYTHONPATH}
