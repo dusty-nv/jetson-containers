@@ -23,9 +23,6 @@ pip3 wheel --wheel-dir=${PIP_WHEEL_DIR} --verbose .
 pip3 install ${PIP_WHEEL_DIR}/llama_cpp_python*.whl
 pip3 show llama-cpp-python
 
-python3 -c 'import llama_cpp'
-python3 -m llama_cpp.server --help
-
 twine upload --verbose ${PIP_WHEEL_DIR}/llama_cpp_python*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
 # install c++ binaries

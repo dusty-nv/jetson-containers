@@ -34,8 +34,8 @@ RUN set -ex
 RUN apt-get update && apt-get install -y --no-install-recommends python3-pip git-all lsb-release libopenblas0
 
 #Set to get precompiled jetson wheels
-RUN export PIP_INDEX_URL=https://pypi.jetson-ai-lab.dev/jp6/cu126
-RUN export PIP_TRUSTED_HOST=pypi.jetson-ai-lab.dev
+RUN export PIP_INDEX_URL=https://pypi.jetson-ai-lab.io/jp6/cu126
+RUN export PIP_TRUSTED_HOST=pypi.jetson-ai-lab.io
 
 #install extra gstreamer plugins
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -96,7 +96,7 @@ RUN cd /opt && \
 #Install TVM & MLC
 WORKDIR /opt
 RUN pip3 install sentencepiece
-RUN pip3 install --index-url http://jetson-ai-lab.dev/jp6/cu126 --trusted-host jetson-ai-lab.dev  --no-cache-dir --verbose tvm==0.15.0 mlc-llm==0.1.0
+RUN pip3 install --index-url http://jetson-ai-lab.io/jp6/cu126 --trusted-host jetson-ai-lab.io  --no-cache-dir --verbose tvm==0.15.0 mlc-llm==0.1.0
 
 
 #Clone Jetson Containers to get mlc patch

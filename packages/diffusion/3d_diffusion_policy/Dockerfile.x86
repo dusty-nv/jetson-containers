@@ -57,7 +57,7 @@ RUN mkdir -p ${MUJOCO_DIR} && \
     tar -xvzf mujoco210.tar.gz
 
 RUN cd third_party/VRL3 && \
-    CKPT_URL="http://jetson-ai-lab.dev:8000/assets/3d_diffusion_policy/vrl3_ckpts.zip" && \
+    CKPT_URL="http://jetson-ai-lab.io:8000/assets/3d_diffusion_policy/vrl3_ckpts.zip" && \
     wget $WGET_FLAGS ${CKPT_URL} && \
     unzip vrl3_ckpts.zip && \
     mv vrl3_ckpts ckpts && \
