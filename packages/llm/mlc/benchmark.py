@@ -32,19 +32,20 @@ print(f"MLC version:  {MLC_VERSION}\n")
 
 print('\n'.join(f'{k}: {v}' for k, v in tvm.support.libinfo().items()))
 
-# handle API changes between MLC versions
-if MLC_VERSION >= Version('0.1.2'):
-    from mlc_llm import MLCEngine 
+# handle API changes across MLC
+try:
+    from mlc_llm import MLCEngine
     from mlc_llm.serve import EngineConfig
-    from mlc_llm.serve.engine_base import _query_engine_metrics
-elif MLC_VERSION >= Version('0.1.1'):
-    from mlc_llm import ChatModule, ChatConfig
-    from mlc_llm.callback import StreamToStdout
-else:
-    from mlc_chat import ChatModule, ChatConfig
-    from mlc_chat.callback import StreamToStdout
-
-USE_MLC_CHAT = (MLC_VERSION < Version('0.1.2'))
+    USE_MLC_CHAT = False
+except Exception:
+    try:
+        from mlc_llm import ChatModule, ChatConfig
+        from mlc_llm.callback import StreamToStdout
+        USE_MLC_CHAT = True
+    except Exception:
+        from mlc_chat import ChatModule, ChatConfig
+        from mlc_chat.callback import StreamToStdout
+        USE_MLC_CHAT = True
 
 # parse model arguments
 parser = argparse.ArgumentParser()
