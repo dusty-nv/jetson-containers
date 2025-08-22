@@ -2,7 +2,27 @@
 import os
 import numpy as np
 
-from cuda import cuda, cudart, nvrtc
+# Support new cuda-python layout (13.x)
+try:
+    from cuda.bindings import driver as cuda  # cuda-python >= 13
+except Exception:
+    try:
+        from cuda import driver as cuda      # cuda-python ~ 12.4+
+    except Exception:
+        from cuda import cuda as cuda        # legacy name
+
+try:
+    from cuda.bindings import runtime as cudart  # cuda-python >= 13
+except Exception:
+    try:
+        from cuda import runtime as cudart       # cuda-python ~ 12.4+
+    except Exception:
+        from cuda import cudart as cudart        # legacy name
+
+try:
+    from cuda.bindings import nvrtc as nvrtc     # cuda-python >= 13
+except Exception:
+    from cuda import nvrtc as nvrtc              # legacy / ~12.4+
 
 def _cudaGetErrorEnum(error):
     if isinstance(error, cuda.CUresult):
