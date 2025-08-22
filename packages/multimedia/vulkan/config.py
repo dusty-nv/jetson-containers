@@ -8,7 +8,7 @@ def vulkan_sdk(version, default=False):
 
   This will pull the same sources as the prebuilt SDK,
   and rebuild them from the current architecture.
-  Previous builds get cached on apt.jetson-ai-lab.dev
+  Previous builds get cached on apt.jetson-ai-lab.io
   """
   pkg = package.copy()
 

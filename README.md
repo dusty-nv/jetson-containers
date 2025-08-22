@@ -2,14 +2,14 @@
 
 [![a header for a software project about building containers for AI and machine learning](https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/header_blueprint_rainbow.jpg)](https://www.jetson-ai-lab.com)
 
-[![jetson-ai-lab.dev status](https://img.shields.io/website?label=jetson-ai-lab.dev&url=https%3A%2F%2Fpypi.jetson-ai-lab.dev&up_message=up&up_color=brightgreen&down_message=down&down_color=red)](https://pypi.jetson-ai-lab.dev)
-[![jetson-ai-lab.dev status](https://img.shields.io/website?label=jetson-ai-lab.io&url=https%3A%2F%2Fpypi.jetson-ai-lab.io&up_message=up&up_color=brightgreen&down_message=down&down_color=red)](https://pypi.jetson-ai-lab.io)
+[![jetson-ai-lab.io status](https://img.shields.io/website?label=jetson-ai-lab.io&url=https%3A%2F%2Fpypi.jetson-ai-lab.io&up_message=up&up_color=brightgreen&down_message=down&down_color=red)](https://pypi.jetson-ai-lab.io)
+[![jetson-ai-lab.io status](https://img.shields.io/website?label=jetson-ai-lab.io&url=https%3A%2F%2Fpypi.jetson-ai-lab.io&up_message=up&up_color=brightgreen&down_message=down&down_color=red)](https://pypi.jetson-ai-lab.io)
 # CUDA Containers for Edge AI & Robotics
 
-Modular container build system that provides the latest [**AI/ML packages**](https://pypi.jetson-ai-lab.dev/) for [NVIDIA Jetson](https://jetson-ai-lab.com) :rocket::robot:
+Modular container build system that provides the latest [**AI/ML packages**](https://pypi.jetson-ai-lab.io/) for [NVIDIA Jetson](https://jetson-ai-lab.com) :rocket::robot:
 
 > [!WARNING]
-> [pypi.jetson-ai-lab.dev](https://pypi.jetson-ai-lab.dev) is down. We are improving security and performance. Meanwhile please use [pypi.jetson-ai-lab.io](https://pypi.jetson-ai-lab.io) by setting the enviroment variable `INDEX_HOST=jetson-ai-lab.io` in [.env](https://github.com/dusty-nv/jetson-containers/blob/1ca7d43e6b8a02e1eba10ed298673cd2e518872a/.env#L34) file.
+> [pypi.jetson-ai-lab.io](https://pypi.jetson-ai-lab.io) is down. We are improving security and performance. Meanwhile please use [pypi.jetson-ai-lab.io](https://pypi.jetson-ai-lab.io) by setting the enviroment variable `INDEX_HOST=jetson-ai-lab.io` in [.env](https://github.com/dusty-nv/jetson-containers/blob/1ca7d43e6b8a02e1eba10ed298673cd2e518872a/.env#L34) file.
 
 ### Only Tested and supported Jetpack 6.2 (Cuda 12.6) and JetPack 7 (CUDA 13.x).
 
@@ -23,7 +23,7 @@ Modular container build system that provides the latest [**AI/ML packages**](htt
 > To install CUDA 13.0 SBSA wheels for Python 3.12 / 24.04:  
 >
 > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`pip3 install torch torchvision torchaudio \`  
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`--index-url https://pypi.jetson-ai-lab.dev/sbsa/cu129`
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`--index-url https://pypi.jetson-ai-lab.io/sbsa/cu129`
 >
 > See the **[`Ubuntu 24.04`](/docs/build.md#2404-containers)** section of the docs for details and a list of available containers 🤗
 > Thanks to all our contributors from **[`Discord`](https://discord.gg/BmqNSK4886)** and AI community for their support 🤗
