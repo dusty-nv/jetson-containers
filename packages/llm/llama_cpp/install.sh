@@ -7,6 +7,8 @@ apt-get install -y --no-install-recommends \
 rm -rf /var/lib/apt/lists/*
 apt-get clean
 
+
+
 pip3 install \
         typing-extensions \
         uvicorn \
@@ -24,7 +26,12 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	echo "Forcing build of llama.cpp ${LLAMA_CPP_VERSION}"
 	exit 1
 fi
-   
-pip3 install llama-cpp-python==${LLAMA_CPP_VERSION_PY}
-tarpack install "llama-cpp-${LLAMA_CPP_VERSION}"
-echo "installed" > "$TMP/.llama_cpp"
+if pip3 install --only-binary=:all: "llama-cpp-python==${LLAMA_CPP_VERSION_PY}"; then
+	if [ -n "${LLAMA_CPP_VERSION}" ]; then
+		tarpack install "llama-cpp-${LLAMA_CPP_VERSION}" || true
+	fi
+	pip3 show llama-cpp-python || true
+	echo "installed" > "$TMP/.llama_cpp"
+	exit 0
+fi
+exit 1

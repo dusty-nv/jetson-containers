@@ -14,16 +14,26 @@ env
 
 if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
   echo "Applying vLLM CMake patches…"
-  python3 /tmp/vllm/generate_diff.py                      # (re)generate the .diff files
-  git apply -p1 /tmp/vllm/CMakeLists.txt.diff             # patch CMakeLists.txt
-  git apply -p1 /tmp/vllm/vllm_flash_attn.cmake.diff      # patch vllm_flash_attn.cmake
+  if [[ ${VLLM_VERSION} == "0.10.0" && ${CUDA_INSTALLED_VERSION} -ge 130 ]]; then
+    git apply -p1 /tmp/vllm/cuda130.diff
+    git apply -p1 /tmp/vllm/CMakeLists.diff
+  else
+    python3 /tmp/vllm/generate_diff.py                      # (re)generate the .diff files
+    git apply -p1 /tmp/vllm/CMakeLists.txt.diff             # patch CMakeLists.txt
+    git apply -p1 /tmp/vllm/vllm_flash_attn.cmake.diff      # patch vllm_flash_attn.cmake
+  fi
 else
   echo "SBSA build detected (IS_SBSA=${IS_SBSA}); skipping patch application."
 fi
 
 # File "/opt/venv/lib/python3.12/site-packages/gguf/gguf_reader.py"
 # `newbyteorder` was removed from the ndarray class in NumPy 2.0
-sed -i 's|gguf.*|gguf|g' requirements/common.txt
+sed -i \
+  -e 's|^gguf.*|gguf|g' \
+  -e 's|^opencv-python-headless.*||g' \
+  -e 's|^mistral_common.*|mistral_common|g' \
+  requirements/common.txt
+
 grep gguf requirements/common.txt
 
 export MAX_JOBS=$(nproc) # this is for AGX (max 4 working on Orin NX)

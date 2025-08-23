@@ -5,9 +5,16 @@ echo "##### 🏢 \$PYTORCH_OFFICIAL_WHL is $PYTORCH_OFFICIAL_WHL #####"
 
 # install prerequisites
 apt-get update
-apt-get install -y --no-install-recommends \
-        libopenblas-dev \
-        libomp-dev
+if [[ "$IS_SBSA" == "True" ]]; then
+  echo "SBSA system detected - using NVPL BLAS, skipping OpenBLAS"
+  apt-get install -y --no-install-recommends \
+          libomp-dev
+else
+  echo "Non-SBSA system - installing OpenBLAS"
+  apt-get install -y --no-install-recommends \
+          libopenblas-dev \
+          libomp-dev
+fi
 
 if [ $USE_MPI == 1 ]; then
   apt-get install -y --no-install-recommends \

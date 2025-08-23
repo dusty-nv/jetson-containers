@@ -1,0 +1,51 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 98ed682..a80b144 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -83,7 +83,7 @@ find_package(Torch REQUIRED)
+ # This check must happen after find_package(Torch) because that's when CMAKE_CUDA_COMPILER_VERSION gets defined
+ if(DEFINED CMAKE_CUDA_COMPILER_VERSION AND
+    CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL 12.8)
+-  set(CUDA_SUPPORTED_ARCHS "7.0;7.2;7.5;8.0;8.6;8.7;8.9;9.0;10.0;10.1;12.0")
++  set(CUDA_SUPPORTED_ARCHS "7.0;7.2;7.5;8.0;8.6;8.7;8.9;9.0;10.0;11.0;12.0")
+ else()
+   set(CUDA_SUPPORTED_ARCHS "7.0;7.2;7.5;8.0;8.6;8.7;8.9;9.0")
+ endif()
+@@ -451,7 +458,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
+ 
+   # The cutlass_scaled_mm kernels for Blackwell SM100 (c3x, i.e. CUTLASS 3.x)
+   # require CUDA 12.8 or later
+-  cuda_archs_loose_intersection(SCALED_MM_ARCHS "10.0a;10.1a" "${CUDA_ARCHS}")
++  cuda_archs_loose_intersection(SCALED_MM_ARCHS "10.0a;11.0f" "${CUDA_ARCHS}")
+   if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.8 AND SCALED_MM_ARCHS)
+     set(SRCS
+       "csrc/quantization/cutlass_w8a8/scaled_mm_c3x_sm100.cu"
+diff --git a/cmake/external_projects/vllm_flash_attn.cmake b/cmake/external_projects/vllm_flash_attn.cmake
+index ef45a5f..c798f36 100644
+--- a/cmake/external_projects/vllm_flash_attn.cmake
++++ b/cmake/external_projects/vllm_flash_attn.cmake
+@@ -27,12 +27,15 @@ endif()
+ if (DEFINED ENV{VLLM_FLASH_ATTN_SRC_DIR})
+   set(VLLM_FLASH_ATTN_SRC_DIR $ENV{VLLM_FLASH_ATTN_SRC_DIR})
+ endif()
++set(patch_vllm_flash_attn git apply /tmp/vllm/fa-CMakeLists.diff)
+ 
+ if(VLLM_FLASH_ATTN_SRC_DIR)
+   FetchContent_Declare(
+           vllm-flash-attn SOURCE_DIR 
+           ${VLLM_FLASH_ATTN_SRC_DIR}
+           BINARY_DIR ${CMAKE_BINARY_DIR}/vllm-flash-attn
++          PATCH_COMMAND ${patch_vllm_flash_attn}
++          UPDATE_DISCONNECTED 1
+   )
+ else()
+   FetchContent_Declare(
+@@ -42,6 +45,8 @@ else()
+           GIT_PROGRESS TRUE
+           # Don't share the vllm-flash-attn build between build types
+           BINARY_DIR ${CMAKE_BINARY_DIR}/vllm-flash-attn
++          PATCH_COMMAND ${patch_vllm_flash_attn}
++          UPDATE_DISCONNECTED 1
+   )
+ endif()
+ 
