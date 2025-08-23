@@ -226,7 +226,7 @@ echo "=================================="
 monitor_resources() {
     while true; do
         echo "$(date '+%Y-%m-%d %H:%M:%S') - Memory: $(free -m | grep Mem | awk '{print $3"/"$2"MB ("$3*100/$2"%)"}') - Load: $(uptime | awk -F'load average:' '{print $2}') - Disk: $(df -m /opt | tail -1 | awk '{print $3"/"$2"MB ("$3*100/$2"%)"}')"
-        sleep 10
+        sleep 60
     done
 }
 
