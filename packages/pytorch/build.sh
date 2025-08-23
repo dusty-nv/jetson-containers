@@ -198,7 +198,7 @@ export CMAKE_BUILD_PARALLEL_LEVEL=$(( $(nproc) - 1 ))
 pip3 install -r requirements.txt
 pip3 install scikit-build ninja
 pip3 install 'cmake<4'
-export USE_PRIORITIZED_TEXT_FOR_LD=1
+export USE_PRIORITIZED_TEXT_FOR_LD=1 # Mandatory for ARM
 
 # NVCC fatbin compression tuning (optional)
 if [[ "${CUDA_TAG}" =~ ^cu ]]; then
@@ -226,7 +226,7 @@ echo "=================================="
 monitor_resources() {
     while true; do
         echo "$(date '+%Y-%m-%d %H:%M:%S') - Memory: $(free -m | grep Mem | awk '{print $3"/"$2"MB ("$3*100/$2"%)"}') - Load: $(uptime | awk -F'load average:' '{print $2}') - Disk: $(df -m /opt | tail -1 | awk '{print $3"/"$2"MB ("$3*100/$2"%)"}')"
-        sleep 60
+        sleep 10
     done
 }
 
@@ -256,7 +256,7 @@ export USE_CUDNN=1
 export USE_CUSPARSELT=1
 export USE_CUDSS=1
 export USE_CUFILE=1
-export USE_NATIVE_ARCH=1
+export USE_NATIVE_ARCH=0 # This crash due instructions not supported SVE128 https://github.com/pytorch/pytorch/pull/160328
 export USE_DISTRIBUTED=1
 export USE_FLASH_ATTENTION=1
 export USE_MEM_EFF_ATTENTION=1
@@ -264,30 +264,12 @@ export USE_TENSORRT=0
 export USE_BLAS="${USE_BLAS:-}"
 export BLAS="${BLAS:-}"
 
-# Disable testing to avoid compiler crashes
-export BUILD_TESTING=OFF
-export BUILD_TESTING_CPP=OFF
-export CMAKE_BUILD_TESTING=OFF
-export BUILD_TEST=0
-export USE_GTEST=0
-
 # If on CUDA 12, leave only SMs supported
-if [[ "${CUDA_TAG}" == cu12* ]]; then
-    echo "CUDA 12 detected, leaving only SMs supported (TORCH_CUDA_ARCH_LIST='8.7')"
-    export TORCH_CUDA_ARCH_LIST="8.7"
-elif [[ "${CUDA_TAG}" == cu13* ]]; then
+if [[ "${CUDA_TAG}" == cu13* ]]; then
     echo "CUDA 13 detected, turn off build with CUDSS (as 0.6 supported on CUDA 12)."
     export USE_CUDSS=0
 else
     echo "*** NOT CUDA 12 NOR CUDA 13."
-fi
-
-# If on Thor (SBSA), leave only the SMs capable SMs
-if [[ "${IS_SBSA}" == "True" ]]; then
-    echo "SBSA detected, leaving only SMs capable (TORCH_CUDA_ARCH_LIST='11.0;12.1')"
-    export TORCH_CUDA_ARCH_LIST="11.0;12.1"
-else
-    echo "*** IS_SBSA NOT detected."
 fi
 
 echo "=== Starting PyTorch build ==="
