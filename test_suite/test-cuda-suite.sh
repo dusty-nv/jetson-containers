@@ -1,6 +1,21 @@
 #!/bin/bash
 
 #==============================================================================
+#                       CUDA PACKAGES BUILD TEST SUITE
+#==============================================================================
+#
+# This script builds CUDA packages and generates a summary report.
+#
+# Environment Variables (optional):
+#   CUDA_VERSION    - Override CUDA version (e.g., "12.9", default: "12.6")
+#   PYTHON_VERSION  - Override Python version (e.g., "3.11", default: "3.10")
+#   LSB_VERSION     - Override Ubuntu LTS version (e.g., "24.04", default: "22.04")
+#
+# Usage:
+#   ./test-cuda-suite.sh
+#   CUDA_VERSION=12.9 LSB_VERSION=24.04 ./test-cuda-suite.sh
+#
+#==============================================================================
 #                             CONFIGURATION
 #==============================================================================
 
@@ -8,7 +23,18 @@
 SUMMARY_TITLE="CUDA Packages Update"
 
 # --- Environment details for the summary report ---
-SUMMARY_INFO="Cu126, py310, lts2204"
+# Default values that can be overridden by environment variables
+DEFAULT_CUDA_VERSION="12.6"
+DEFAULT_PYTHON_VERSION="3.10"
+DEFAULT_LSB_RELEASE="22.04"
+
+# Use environment variables if set, otherwise use defaults
+CUDA_VER="${CUDA_VERSION:-$DEFAULT_CUDA_VERSION}"
+PYTHON_VER="${PYTHON_VERSION:-$DEFAULT_PYTHON_VERSION}"
+LSB_REL="${LSB_RELEASE:-$DEFAULT_LSB_RELEASE}"
+
+# Build the summary info string dynamically
+SUMMARY_INFO="Cu${CUDA_VER//.}, py${PYTHON_VER//.}, lsb${LSB_REL//.}"
 
 # --- Directory containing the packages to be built ---
 PACKAGES_DIR="./packages/cuda"
@@ -21,6 +47,8 @@ PACKAGES_DIR="./packages/cuda"
 LOG_FILE="build_summary.log"
 echo "Starting build process at $(date)" > "$LOG_FILE"
 echo "-------------------------------------" >> "$LOG_FILE"
+echo "Summary Info: $SUMMARY_INFO" >> "$LOG_FILE"
+echo "Summary Info: $SUMMARY_INFO"
 
 # --- Associative arrays and lists ---
 declare -A BUILD_RESULTS
