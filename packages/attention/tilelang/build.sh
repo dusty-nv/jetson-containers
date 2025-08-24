@@ -20,7 +20,7 @@ fi
 mkdir build
 cd build
 cmake .. -DTVM_PREBUILD_PATH=/opt/tvm/  # e.g., /workspace/tvm/build
-make -j 16
+make -j $MAX_JOBS
 
 export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
