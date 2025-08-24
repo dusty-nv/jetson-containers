@@ -35,7 +35,7 @@ make install
 cd $SOURCE
 
 git -C SVT-AV1 pull 2> /dev/null || \
-git clone --recursive https://gitlab.com/AOMediaCodec/SVT-AV1.git -b v2.3.0
+git clone --recursive https://gitlab.com/AOMediaCodec/SVT-AV1.git -b v3.1.1
 
 mkdir SVT-AV1/build
 cd SVT-AV1/build
