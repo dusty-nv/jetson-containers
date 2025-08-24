@@ -28,6 +28,7 @@ from .utils import (
     split_container_name, query_yes_no, needs_sudo, sudo_prefix,
     get_env, get_dir, get_repo_dir
 )
+from .network import preprocess_dockerfile_for_github_api
 
 _NEWLINE_=" \\\n"  # used when building command strings
 
@@ -179,8 +180,28 @@ def build_container(
             if 'dockerfile' in pkg:
                 cmd = f"{sudo_prefix()}DOCKER_BUILDKIT=0 docker build --network=host" + _NEWLINE_
                 cmd += f"  --tag {container_name}" + _NEWLINE_
-                if no_github_api:
-                    dockerfilepath = os.path.join(pkg['path'], pkg['dockerfile'])
+
+                dockerfilepath = os.path.join(pkg['path'], pkg['dockerfile'])
+                github_build_args = {}
+
+                # Try to pre-process GitHub API calls if not explicitly disabled
+                if not no_github_api:
+                    try:
+                        processed_dockerfile, github_build_args = preprocess_dockerfile_for_github_api(dockerfilepath, pkg['path'])
+                        if github_build_args:
+                            # Merge with existing build args
+                            if 'build_args' not in pkg:
+                                pkg['build_args'] = {}
+                            pkg['build_args'].update(github_build_args)
+                            dockerfilepath = processed_dockerfile
+                            log_info(f"Pre-processed GitHub API calls for {package}")
+                    except Exception as e:
+                        log_warning(f"Failed to pre-process GitHub API calls for {package}: {e}")
+                        # Fall back to original Dockerfile
+                        dockerfilepath = os.path.join(pkg['path'], pkg['dockerfile'])
+
+                # Fall back to no_github_api logic if preprocessing failed or was disabled
+                if no_github_api or (dockerfilepath == os.path.join(pkg['path'], pkg['dockerfile']) and 'ADD https://api.github.com' in open(dockerfilepath, 'r').read()):
                     with open(dockerfilepath, 'r') as fp:
                         data = fp.read()
                         if 'ADD https://api.github.com' in data:
@@ -189,9 +210,9 @@ def build_container(
                             os.system(f"sed 's|^ADD https://api.github.com|#[minus-github-api]ADD https://api.github.com|' -i {dockerfilepath_minus_github_api}")
                             cmd += f"  --file {os.path.join(pkg['path'], pkg['dockerfile'] + '.minus-github-api')}" + _NEWLINE_
                         else:
-                            cmd += f"  --file {os.path.join(pkg['path'], pkg['dockerfile'])}" + _NEWLINE_
+                            cmd += f"  --file {dockerfilepath}" + _NEWLINE_
                 else:
-                    cmd += f"  --file {os.path.join(pkg['path'], pkg['dockerfile'])}" + _NEWLINE_
+                    cmd += f"  --file {dockerfilepath}" + _NEWLINE_
 
                 cmd += f"  --build-arg BASE_IMAGE={base}" + _NEWLINE_
 
@@ -280,6 +301,26 @@ def build_container(
         log_success(f'✅ <b>`jetson-containers build {repo_name}`</b> ({name})')
         log_success(f'⏱️  Total build time: {total_duration:.1f} seconds ({total_duration/60:.1f} minutes)')
         log_success('=====================================================================================')
+
+        # Clean up temporary GitHub API files
+        try:
+            for pkg in packages:
+                pkg_info = find_package(pkg)
+                if 'path' in pkg_info:
+                    temp_dir = os.path.join(pkg_info['path'], '.github-api-temp')
+                    if os.path.exists(temp_dir):
+                        import shutil
+                        shutil.rmtree(temp_dir)
+                        log_debug(f"Cleaned up temporary GitHub API directory: {temp_dir}")
+
+                    # Also clean up modified Dockerfiles
+                    modified_dockerfile = os.path.join(pkg_info['path'], pkg_info['dockerfile'] + '.with-github-data')
+                    if os.path.exists(modified_dockerfile):
+                        os.remove(modified_dockerfile)
+                        log_debug(f"Cleaned up modified Dockerfile: {modified_dockerfile}")
+        except Exception as e:
+            log_warning(f"Failed to clean up temporary GitHub API files: {e}")
+
         log_success('=====================================================================================')
 
         return name
