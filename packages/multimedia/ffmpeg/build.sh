@@ -156,7 +156,6 @@ NVCCFLAGS="\
   --disable-static \
   --enable-shared \
   --enable-gpl \
-  --enable-nonfree \
   --enable-gnutls \
   --enable-libx264 \
   --enable-libx265 \
