@@ -26,9 +26,18 @@ cmake --build build -j"$(nproc)"
 
 go build -o "${OLLAMA_HOME}/ollama" .
 
-ln -sf "${OLLAMA_HOME}/ollama" /usr/local/bin/ollama || true
-ln -sf /usr/local/bin/ollama /usr/bin/ollama || true
-ln -sf /usr/local/bin/ollama /bin/ollama || true
+ln -sf "${OLLAMA_HOME}/ollama" /usr/local/bin/ollama
+if [ $? -ne 0 ]; then
+  echo "Warning: Failed to create symlink /usr/local/bin/ollama" >&2
+fi
+ln -sf /usr/local/bin/ollama /usr/bin/ollama
+if [ $? -ne 0 ]; then
+  echo "Warning: Failed to create symlink /usr/bin/ollama" >&2
+fi
+ln -sf /usr/local/bin/ollama /bin/ollama
+if [ $? -ne 0 ]; then
+  echo "Warning: Failed to create symlink /bin/ollama" >&2
+fi
 
 echo "/opt/ollama/build/lib/ollama" > /etc/ld.so.conf.d/ollama.conf
 ldconfig
