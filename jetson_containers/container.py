@@ -302,7 +302,7 @@ def build_container(
         log_success(f'⏱️  Total build time: {total_duration:.1f} seconds ({total_duration/60:.1f} minutes)')
         log_success('=====================================================================================')
 
-        # Clean up temporary GitHub API files
+                        # Clean up temporary GitHub API files
         try:
             for pkg in packages:
                 pkg_info = find_package(pkg)
@@ -317,6 +317,12 @@ def build_container(
                     if os.path.exists(modified_dockerfile):
                         os.remove(modified_dockerfile)
                         log_debug(f"Cleaned up modified Dockerfile: {modified_dockerfile}")
+
+                    # Clean up fallback Dockerfiles
+                    fallback_dockerfile = os.path.join(pkg_info['path'], pkg_info['dockerfile'] + '.minus-github-api')
+                    if os.path.exists(fallback_dockerfile):
+                        os.remove(fallback_dockerfile)
+                        log_debug(f"Cleaned up fallback Dockerfile: {fallback_dockerfile}")
         except Exception as e:
             log_warning(f"Failed to clean up temporary GitHub API files: {e}")
 
