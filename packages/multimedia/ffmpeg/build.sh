@@ -4,6 +4,8 @@ cd /opt
 
 SOURCE="/opt/ffmpeg"
 DIST="$SOURCE/dist"
+aarch=$(uname -m)
+export PKG_CONFIG_PATH="/usr/lib/${aarch}-linux-gnu/pkgconfig:/usr/local/lib/pkgconfig:${DIST}/lib/pkgconfig:/usr/lib/pkgconfig"
 
 echo "BUILDING FFMPEG $FFMPEG_VERSION to $DIST"
 wget $WGET_FLAGS https://www.ffmpeg.org/releases/ffmpeg-$FFMPEG_VERSION.tar.gz
@@ -12,55 +14,9 @@ tar -xvzf ffmpeg-$FFMPEG_VERSION.tar.gz
 mv ffmpeg-${FFMPEG_VERSION} ffmpeg
 cd ffmpeg
 
-# libaom for AV1
-git clone https://aomedia.googlesource.com/aom
-mkdir aom/builder
-cd aom/builder
-
-cmake -G "Unix Makefiles" \
-  -DCMAKE_INSTALL_PREFIX="$DIST" \
-  -DENABLE_TESTS=OFF \
-  -DENABLE_NASM=ON \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DAOM_EXTRA_C_FLAGS="-fno-lto" \
-  ../
-
-make -j$(nproc)
-make install
-
-# libsvtav1 for AV1
-# temporal version 2.3.0, they breaks ffmpeg build: https://gitlab.com/AOMediaCodec/SVT-AV1/-/commit/988e930c1083ce518ead1d364e3a486e9209bf73#900962ec0dfb11881a5f25ce6fcad8e815c8fd45_1056_1122
-# solution mid-february: https://gitlab.com/AOMediaCodec/SVT-AV1/-/merge_requests/2355#note_2312506245
-# solved https://gitlab.com/AOMediaCodec/SVT-AV1/-/merge_requests/2387
-cd $SOURCE
-
-git -C SVT-AV1 pull 2> /dev/null || \
-git clone --recursive https://gitlab.com/AOMediaCodec/SVT-AV1.git -b v3.1.1
-
-mkdir SVT-AV1/build
-cd SVT-AV1/build
-
-cmake -G "Unix Makefiles" \
-  -DCMAKE_INSTALL_PREFIX="$DIST" \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DBUILD_SHARED_LIBS=ON \
-  -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF \
-  ../
-
-make -j$(nproc)
-make install
-
-# make these discoverable to ffmpeg build
-export PKG_CONFIG_PATH="$DIST/lib/pkgconfig:${PKG_CONFIG_PATH:-}"
-# for stricter isolation you can also override:
-export PKG_CONFIG_LIBDIR="$DIST/lib/pkgconfig"
-
-pkg-config --modversion aom
-pkg-config --modversion SvtAv1Enc
-
 # https://trac.ffmpeg.org/wiki/CompilationGuide/Ubuntu#GettheDependencies
 apt-get update
-apt-get install -y --no-install-recommends \
+apt-get update && apt-get install -y --no-install-recommends \
   autoconf \
   automake \
   build-essential \
@@ -90,20 +46,107 @@ apt-get install -y --no-install-recommends \
   wget \
   yasm \
   nasm \
-  zlib1g-dev
-apt-get clean
-rm -rf /var/lib/apt/lists/*
+  zlib1g-dev \
+  libc6 \
+  libc6-dev \
+  unzip \
+  libnuma1 \
+  libnuma-dev \
+  pkg-config \
+  libunistring-dev \
+  libgnutls28-dev \
+  nettle-dev \
+  libgmp-dev \
+  libidn2-0-dev \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
+# libaom for AV1
+git clone https://aomedia.googlesource.com/aom
+mkdir aom/builder
+cd aom/builder
+
+cmake -G "Unix Makefiles" \
+  -DCMAKE_INSTALL_PREFIX="$DIST" \
+  -DENABLE_TESTS=OFF \
+  -DENABLE_NASM=ON \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DAOM_EXTRA_C_FLAGS="-fno-lto" \
+  ../
+
+make -j$(nproc)
+make install
+
+# libsvtav1 for AV1
+# temporal version 2.3.0, they breaks ffmpeg build: https://gitlab.com/AOMediaCodec/SVT-AV1/-/commit/988e930c1083ce518ead1d364e3a486e9209bf73#900962ec0dfb11881a5f25ce6fcad8e815c8fd45_1056_1122
+# solution mid-february: https://gitlab.com/AOMediaCodec/SVT-AV1/-/merge_requests/2355#note_2312506245
+# solved https://gitlab.com/AOMediaCodec/SVT-AV1/-/merge_requests/2387
+cd $SOURCE
+
+git -C SVT-AV1 pull 2> /dev/null || \
+git clone --recursive https://gitlab.com/AOMediaCodec/SVT-AV1.git -b v2.3.0
+
+mkdir SVT-AV1/build
+cd SVT-AV1/build
+
+cmake -G "Unix Makefiles" \
+  -DCMAKE_INSTALL_PREFIX="$DIST" \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DBUILD_SHARED_LIBS=ON \
+  -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF \
+  ../
+
+make -j$(nproc)
+make install
+
+# make these discoverable to ffmpeg build
+export PKG_CONFIG_PATH="$DIST/lib/pkgconfig:${PKG_CONFIG_PATH:-}"
+# for stricter isolation you can also override:
+export PKG_CONFIG_LIBDIR="$DIST/lib/pkgconfig"
+
+pkg-config --modversion aom
+pkg-config --modversion SvtAv1Enc
 
 git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git
-cd nv-codec-headers && sudo make install
+cd nv-codec-headers && make install
+
 
 # Build FFmpeg
 cd $SOURCE
 
+export PATH=/usr/local/cuda/bin:${PATH}
+nvcc --version
+gcc --version
+# For DGX Spark (Blackwell, compute capability 12.1)
+# For RTX 5000 Series (Blackwell, compute capability 12.0)
+# For Jetson Thor (Blackwell, compute capability 11.0)
+# For RTX GB300 Series (Blackwell, compute capability 10.3)
+# For RTX GB200 Series (Blackwell, compute capability 10.0)
+# For H100 Series (Hopper, compute capability 9.0)
+# For RTX 4000 Series (Ada Lovelace, compute capability 8.9)
+# For RTX 5000, 3000 Series (Ampere, compute capability 8.6)
+# For RTX 3000 Series (Ampere, compute capability 8.0)
+# For RTX 2000 Series (Turing, compute capability 7.5)
+
+NVCCFLAGS="\
+-gencode arch=compute_75,code=sm_75 \
+-gencode arch=compute_80,code=sm_80 \
+-gencode arch=compute_86,code=sm_86 \
+-gencode arch=compute_88,code=sm_88 \
+-gencode arch=compute_89,code=sm_89 \
+-gencode arch=compute_90,code=sm_90 \
+-gencode arch=compute_100,code=sm_100 \
+-gencode arch=compute_103,code=sm_103 \
+-gencode arch=compute_110,code=sm_110 \
+-gencode arch=compute_120,code=sm_120 \
+-gencode arch=compute_121,code=sm_121 \
+-std=c++17 -O3"
+
+
 ./configure \
   --prefix="$DIST" \
-  --extra-cflags="-I$DIST/include -fno-lto -I/usr/local/cuda/include" \
+  --extra-cflags="-I$DIST/include -I/usr/local/cuda/include -O3 -fPIC" \
+  --extra-cxxflags="-std=c++17" \
   --extra-ldflags="-L$DIST/lib -fno-lto -L/usr/local/cuda/lib64" \
   --extra-libs="-lpthread -lm" \
   --ld="g++" \
@@ -125,11 +168,11 @@ cd $SOURCE
   --enable-libaom \
   --enable-libsvtav1 \
   --enable-libdav1d \
-  --enable-cuda-nvcc \
-  --enable-libnpp \
   --enable-nvenc \
+  --enable-nvdec \
   --enable-cuda \
-  --enable-cuvid
+  --enable-cuvid \
+  --nvccflags="$NVCCFLAGS"
 
 make -j$(nproc)
 make install
