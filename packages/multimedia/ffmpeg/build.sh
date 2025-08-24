@@ -13,7 +13,7 @@ mv ffmpeg-${FFMPEG_VERSION} ffmpeg
 cd ffmpeg
 
 # libaom for AV1
-git clone https://aomedia.googlesource.com/aom 
+git clone https://aomedia.googlesource.com/aom
 mkdir aom/builder
 cd aom/builder
 
@@ -35,7 +35,7 @@ make install
 cd $SOURCE
 
 git -C SVT-AV1 pull 2> /dev/null || \
-git clone --recursive https://gitlab.com/AOMediaCodec/SVT-AV1.git -b v2.3.0 
+git clone --recursive https://gitlab.com/AOMediaCodec/SVT-AV1.git -b v2.3.0
 
 mkdir SVT-AV1/build
 cd SVT-AV1/build
@@ -51,7 +51,9 @@ make -j$(nproc)
 make install
 
 # make these discoverable to ffmpeg build
-export PKG_CONFIG_PATH="$DIST/lib/pkgconfig:$PKG_CONFIG_PATH"
+export PKG_CONFIG_PATH="$DIST/lib/pkgconfig:${PKG_CONFIG_PATH:-}"
+# for stricter isolation you can also override:
+export PKG_CONFIG_LIBDIR="$DIST/lib/pkgconfig"
 
 pkg-config --modversion aom
 pkg-config --modversion SvtAv1Enc
