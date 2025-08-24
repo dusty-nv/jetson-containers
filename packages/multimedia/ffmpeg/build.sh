@@ -122,7 +122,10 @@ cd $SOURCE
   --enable-libsvtav1 \
   --enable-libdav1d \
   --enable-cuda-nvcc \
-  --enable-libnpp
+  --enable-libnpp \
+  --enable-nvenc \
+  --enable-cuda \
+  --enable-cuvid
 
 make -j$(nproc)
 make install
