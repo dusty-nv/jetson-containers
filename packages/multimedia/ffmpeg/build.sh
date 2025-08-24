@@ -99,14 +99,16 @@ cd $SOURCE
 
 ./configure \
   --prefix="$DIST" \
-  --extra-cflags="-I$DIST/include -fno-lto" \
-  --extra-ldflags="-L$DIST/lib -fno-lto" \
+  --extra-cflags="-I$DIST/include -fno-lto -I/usr/local/cuda/include" \
+  --extra-ldflags="-L$DIST/lib -fno-lto -L/usr/local/cuda/lib64" \
   --extra-libs="-lpthread -lm" \
   --ld="g++" \
   --bindir="$DIST/bin" \
   --disable-doc \
+  --disable-static \
   --enable-shared \
   --enable-gpl \
+  --enable-nonfree \
   --enable-gnutls \
   --enable-libx264 \
   --enable-libx265 \
@@ -118,7 +120,9 @@ cd $SOURCE
   --enable-libass \
   --enable-libaom \
   --enable-libsvtav1 \
-  --enable-libdav1d
+  --enable-libdav1d \
+  --enable-cuda-nvcc \
+  --enable-libnpp
 
 make -j$(nproc)
 make install
