@@ -21,6 +21,7 @@ git clone --branch=v${TORCHCODEC_VERSION} --recursive --depth=1 https://github.c
 cd /opt/torchcodec
 
 export I_CONFIRM_THIS_IS_NOT_A_LICENSE_VIOLATION=1
+export ENABLE_CUDA=1
 # --- Build wheel ---
 BUILD_VERSION=${TORCHCODEC_VERSION} \
 BUILD_SOX=1 \
