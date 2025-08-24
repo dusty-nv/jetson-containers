@@ -19,10 +19,18 @@ git clone --branch=v${TORCHCODEC_VERSION} --recursive --depth=1 https://github.c
   || git clone --recursive --depth=1 https://github.com/pytorch/torchcodec /opt/torchcodec
 
 cd /opt/torchcodec
+export PKG_CONFIG_PATH="/usr/lib/${aarch}-linux-gnu/pkgconfig:/usr/local/lib/pkgconfig:${DIST}/lib/pkgconfig:/usr/lib/pkgconfig"
 
 export I_CONFIRM_THIS_IS_NOT_A_LICENSE_VIOLATION=1
 export ENABLE_CUDA=1
+
 # --- Build wheel ---
+# sed -i 's/-Werror//g' /opt/torchcodec/src/torchcodec/_core/CMakeLists.txt
+
+# (opcional pero útil) bajar el nivel del warning
+export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations"
+export CFLAGS="$CFLAGS -Wno-deprecated-declarations"
+
 BUILD_VERSION=${TORCHCODEC_VERSION} \
 BUILD_SOX=1 \
 python3 setup.py bdist_wheel --verbose --dist-dir /opt

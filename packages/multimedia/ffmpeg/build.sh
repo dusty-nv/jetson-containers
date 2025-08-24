@@ -99,11 +99,6 @@ cmake -G "Unix Makefiles" \
 make -j$(nproc)
 make install
 
-# make these discoverable to ffmpeg build
-export PKG_CONFIG_PATH="$DIST/lib/pkgconfig:${PKG_CONFIG_PATH:-}"
-# for stricter isolation you can also override:
-export PKG_CONFIG_LIBDIR="$DIST/lib/pkgconfig"
-
 pkg-config --modversion aom
 pkg-config --modversion SvtAv1Enc
 
