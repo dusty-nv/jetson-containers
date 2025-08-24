@@ -19,6 +19,8 @@ git clone --branch=v${TORCHCODEC_VERSION} --recursive --depth=1 https://github.c
   || git clone --recursive --depth=1 https://github.com/pytorch/torchcodec /opt/torchcodec
 
 cd /opt/torchcodec
+
+export I_CONFIRM_THIS_IS_NOT_A_LICENSE_VIOLATION=1
 # --- Build wheel ---
 BUILD_VERSION=${TORCHCODEC_VERSION} \
 BUILD_SOX=1 \
