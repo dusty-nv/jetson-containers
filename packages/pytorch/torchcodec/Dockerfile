@@ -2,7 +2,7 @@
 # name: torchcodec
 # group: pytorch
 # config: config.py
-# depends: [video-codec-sdk, ffmpeg, pyav, pytorch, cmake]
+# depends: [video-codec-sdk, ffmpeg, pybind11, pyav, pytorch, cmake]
 # test: test.py
 #---
 ARG BASE_IMAGE
