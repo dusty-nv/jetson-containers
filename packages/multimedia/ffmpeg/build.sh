@@ -198,6 +198,7 @@ NVCCFLAGS="\
   --enable-nvenc \
   --enable-nvdec \
   --enable-cuda \
+  --enable-cuvid \
   --nvccflags="$NVCCFLAGS"
 
 make -j$(nproc)
