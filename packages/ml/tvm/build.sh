@@ -26,11 +26,12 @@ cp cmake/config.cmake build/config.cmake
   echo "set(USE_CUDA ON)";
   echo "set(USE_CUTLASS ON)";
   echo "set(USE_THRUST ON)";
-  echo "set(USE_NCCL OFF)";
+  echo "set(USE_NCCL ON)";
   echo "set(CMAKE_CUDA_ARCHITECTURES ${CUDAARCHS})";
 } >> build/config.cmake
 
 cd build
 cmake ..
 make -j$(nproc)
+
 
