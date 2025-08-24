@@ -25,6 +25,7 @@ cd /opt/minference/
 
 pip3 wheel '.[all]' --wheel-dir $PIP_WHEEL_DIR
 pip3 install $PIP_WHEEL_DIR/minference-*.whl
+pip3 install tilelang
 
 cd /opt/minference
 pip3 show minference
