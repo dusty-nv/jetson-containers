@@ -3,7 +3,7 @@ set -ex
 
 pip3 install pre-commit nanobind==2.5.0
 # Clone the repository if it doesn't exist
-git clone --branch=${VLLM_BRANCH} --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm || 
+git clone --branch=${VLLM_BRANCH} --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm ||
 git clone --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm
 
 cd /opt/vllm
@@ -14,7 +14,7 @@ env
 
 if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
   echo "Applying vLLM CMake patches…"
-  if [[ ${VLLM_VERSION} == "0.10.0" && ${CUDA_INSTALLED_VERSION} -ge 130 ]]; then
+  if [[ ${VLLM_VERSION} == "0.10.2" && ${CUDA_INSTALLED_VERSION} -ge 130 ]]; then
     git apply -p1 /tmp/vllm/cuda130.diff
     git apply -p1 /tmp/vllm/CMakeLists.diff
   else
