@@ -309,7 +309,6 @@ def build_container(
                 if 'path' in pkg_info:
                     temp_dir = os.path.join(pkg_info['path'], '.github-api-temp')
                     if os.path.exists(temp_dir):
-                        import shutil
                         shutil.rmtree(temp_dir)
                         log_debug(f"Cleaned up temporary GitHub API directory: {temp_dir}")
 
