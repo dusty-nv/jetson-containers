@@ -4,8 +4,6 @@ cd /opt
 
 SOURCE="/opt/ffmpeg"
 DIST="$SOURCE/dist"
-aarch=$(uname -m)
-export PKG_CONFIG_PATH="/usr/lib/${aarch}-linux-gnu/pkgconfig:/usr/local/lib/pkgconfig:${DIST}/lib/pkgconfig:/usr/lib/pkgconfig"
 
 echo "BUILDING FFMPEG $FFMPEG_VERSION to $DIST"
 wget $WGET_FLAGS https://www.ffmpeg.org/releases/ffmpeg-$FFMPEG_VERSION.tar.gz
