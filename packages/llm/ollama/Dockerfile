@@ -22,20 +22,17 @@ ENV OLLAMA_VERSION=${OLLAMA_VERSION} \
     OLLAMA_HOME=/opt/ollama \
     IS_SBSA=${IS_SBSA} \
     CUDA_VERSION_MAJOR=${CUDA_VERSION_MAJOR}
-    
+
+# Copy nv_tegra_release, build, install, and start_ollama to their respective locations
 COPY nv_tegra_release /etc/nv_tegra_release
+COPY docker_files/ /
 
-COPY build.sh install.sh /tmp/OLLAMA/
-
-RUN chmod +x /tmp/OLLAMA/build.sh /tmp/OLLAMA/install.sh \
+RUN chmod +x /tmp/OLLAMA/build.sh /tmp/OLLAMA/install.sh /start_ollama \
  && if [ "${IS_SBSA}" = "True" ]; then \
       /tmp/OLLAMA/build.sh; \
     else \
       /tmp/OLLAMA/install.sh || /tmp/OLLAMA/build.sh; \
     fi
-
-COPY start_ollama /start_ollama
-RUN chmod +x /start_ollama
 
 CMD /start_ollama && /bin/bash
 
