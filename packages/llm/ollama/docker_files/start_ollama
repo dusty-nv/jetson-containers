@@ -6,6 +6,10 @@ shopt -s huponexit
 # Ensure the logs directory exists
 mkdir -p "$(dirname "${OLLAMA_LOGS}")"
 
+if [[ "${IS_SBSA}" == "True" ]]; then
+  export LD_LIBRARY_PATH="/opt/ollama/build/lib/ollama:${LD_LIBRARY_PATH}"
+fi
+
 printf "\nStarting ollama server\n\n"
 
 printf "\nOLLAMA_HOST   ${OLLAMA_HOST}\n"
@@ -17,9 +21,7 @@ if [[ ! -z "${OLLAMA_MODEL}" ]]; then
   /bin/bash -c "sleep 5 && ollama run ${OLLAMA_MODEL}" &
 fi
 
-/bin/bash -c "OLLAMA_LLM_LIBRARY=cuda_${CUDA_VERSION_MAJOR} ollama serve &> $OLLAMA_LOGS" 2>&1 &
-
-#timeout 5 tail -f ${OLLAMA_LOGS} || sleep 5 ;
+/bin/bash -c "OLLAMA_LLM_LIBRARY=cuda_v${CUDA_VERSION_MAJOR} ollama serve &> $OLLAMA_LOGS" 2>&1 &
 
 if [[ -z "${OLLAMA_MODEL}" ]]; then
   printf "\nollama server is now started, and you can run commands here like 'ollama run gemma3'\n\n"
