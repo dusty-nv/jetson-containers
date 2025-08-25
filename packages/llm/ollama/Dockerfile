@@ -24,6 +24,7 @@ ENV OLLAMA_VERSION=${OLLAMA_VERSION} \
     CUDA_VERSION_MAJOR=${CUDA_VERSION_MAJOR}
 
 # Copy nv_tegra_release, build, install, and start_ollama to their respective locations
+COPY nv_tegra_release /etc/nv_tegra_release
 COPY docker_files/ /
 
 RUN chmod +x /tmp/OLLAMA/build.sh /tmp/OLLAMA/install.sh /start_ollama \
