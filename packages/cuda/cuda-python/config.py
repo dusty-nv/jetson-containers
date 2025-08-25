@@ -40,7 +40,7 @@ else:
             cuda_python('12.6'),
             cuda_python('12.8'),
             cuda_python('12.9'),
-            cuda_python('13.0'),
+            cuda_python('13.0.1'),
             cuda_python('13.1'), #Orin
             # Please enable only when added as package in cuda config.py
             # cuda_python('13.1'),
