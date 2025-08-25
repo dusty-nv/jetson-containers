@@ -2,7 +2,7 @@ from jetson_containers import PYTHON_VERSION, CUDA_ARCH, IS_SBSA, LSB_RELEASE, C
 from packaging.version import Version
 
 package['build_args'] = {
-    'NVSHMEM_VERSION': '3.3.20',
+    'NVSHMEM_VERSION': '3.3.24',
     'CUDA_ARCH': CUDA_ARCH,
     'IS_SBSA': IS_SBSA,
     'DISTRO': f"ubuntu{LSB_RELEASE.replace('.', '')}",
