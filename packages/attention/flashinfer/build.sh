@@ -23,9 +23,11 @@ python3 -m pip install --no-cache-dir build setuptools wheel ninja mpi4py pynvml
 export CUDA_HOME=/usr/local/cuda
 export LD_LIBRARY_PATH=${CUDA_HOME}/lib64/stubs:${LD_LIBRARY_PATH}
 export LIBRARY_PATH=${CUDA_HOME}/lib64/stubs:${LIBRARY_PATH}
-python3 -m flashinfer.aot
+if [ "${FLASHINFER_VERSION}" != "0.2.5" ]; then
+  python3 -m flashinfer.aot
+fi
 python3 -m build --no-isolation --wheel
 # Install AOT wheel
-python3 -m pip install dist/flashinfer_python-*.whl
+python3 -m pip install --force-reinstall dist/flashinfer_python-*.whl
 
 twine upload --verbose dist/flashinfer_python-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

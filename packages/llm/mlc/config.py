@@ -38,6 +38,6 @@ package = [
     mlc('385cef2', 'patches/385cef2.diff', version='0.1.4', tvm='0.19.0', requires='>=36'),  # 12/14/2024
     mlc('cf7ae82', 'patches/cf7ae82.diff', version='0.19.0', tvm='0.19.0', requires='>=36'), # 01/09/2025
     # Thor-specific: commit = (SM110)
-    mlc('b3dea5581f28ce029bc776b3b6d299582e4562a4', 'patches/empty.diff', version='thor', tvm='0.20.0', requires='>=36', depends=['tvm:builder', 'flashinfer:0.2.6.post1'], default=(L4T_VERSION.major >= 36 and 110 in CUDA_ARCHITECTURES)),
-    mlc('d2118b3', 'patches/d2118b3.diff', version='0.20.0', tvm='0.20.0', requires='>=36', depends=['tvm', 'flashinfer:0.2.6.post1']), # 5/1/2025
+    mlc('b3dea5581f28ce029bc776b3b6d299582e4562a4', 'patches/empty.diff', version='thor', tvm='0.20.0', requires='>=36', depends=['tvm:builder', 'flashinfer:0.2.5'], default=(L4T_VERSION.major >= 36)),
+    mlc('d2118b3', 'patches/d2118b3.diff', version='0.20.0', tvm='0.20.0', requires='>=36', depends=['tvm', 'flashinfer:0.2.5']), # 5/1/2025
 ]
