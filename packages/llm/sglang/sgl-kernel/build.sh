@@ -29,6 +29,7 @@ else
   export CPLUS_INCLUDE_PATH=/usr/local/cuda-13.0/targets/sbsa-linux/include/cccl
 fi
 
+export NVCC_THREADS=1
 pip3 install "cmake<4"  # Ensure compatible CMake version
 echo "🚀  Building with MAX_JOBS=${CORES} and CMAKE_BUILD_PARALLEL_LEVEL=${CORES}"
 export TORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST}"
