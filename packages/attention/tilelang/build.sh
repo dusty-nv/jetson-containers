@@ -5,8 +5,8 @@ echo "Building tilelang ${TILELANG_VERSION}"
 
 apt-get update
 apt-get install -y python3-setuptools gcc libtinfo-dev zlib1g-dev build-essential cmake libedit-dev libxml2-dev
-git clone --depth=1 --branch=v${TILELANG_VERSION} https://github.com/tile-ai/tilelang /opt/tilelang ||
-git clone --depth=1 https://github.com/tile-ai/tilelang  /opt/tilelang
+git clone --recursive --depth=1 --branch=v${TILELANG_VERSION} https://github.com/tile-ai/tilelang /opt/tilelang ||
+git clone --recursive --depth=1 https://github.com/tile-ai/tilelang  /opt/tilelang
 
 cd /opt/tilelang
 
@@ -17,16 +17,28 @@ if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" || "${IS_SBSA,,}" == "false" ]]; th
 else
     export MAX_JOBS="$(nproc)"
 fi
-mkdir build
-cd build
-cmake .. -DTVM_PREBUILD_PATH=/opt/tvm/  # e.g., /workspace/tvm/build
-make -j $MAX_JOBS
-
 export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
 pip3 install -U -r requirements.txt
 pip3 install -U -r requirements-build.txt
 
+mkdir -p /opt/tilelang/build
+cp /opt/tilelang/3rdparty/tvm/cmake/config.cmake build
+cd /opt/tilelang/build
+# echo "set(USE_LLVM ON)"  # set USE_LLVM to ON if using LLVM
+{
+  echo "set(USE_LLVM ON)";
+  echo "set(USE_CUBLAS ON)";
+  echo "set(USE_CUDNN ON)";
+  echo "set(USE_CUDA ON)";
+  echo "set(USE_CUTLASS ON)";
+  echo "set(USE_THRUST ON)";
+  echo "set(USE_NCCL ON)";
+  echo "set(CMAKE_CUDA_ARCHITECTURES ${CUDAARCHS})";
+} >> config.cmake
+# or echo "set(USE_ROCM ON)" >> config.cmake to enable ROCm runtime
+cmake ..
+make -j "$MAX_JOBS"
 MAX_JOBS=$MAX_JOBS \
 CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS \
 pip3 wheel . -v --no-deps -w /opt/tilelang/wheels/

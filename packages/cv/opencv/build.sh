@@ -96,8 +96,6 @@ export CMAKE_LIBRARY_PATH=/usr/local/cuda/lib64/stubs
 export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
 export ENABLE_CONTRIB=1
 # export ENABLE_ROLLING=1 # Build from last commit
-aarch=$(uname -m)
-export PKG_CONFIG_PATH="/usr/lib/${aarch}-linux-gnu/pkgconfig:/usr/local/lib/pkgconfig:${DIST}/lib/pkgconfig:/usr/lib/pkgconfig"
 
 cat <<EOF > /opt/opencv-python/cv2/version.py
 opencv_version = "${OPENCV_VERSION}"

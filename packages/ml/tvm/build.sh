@@ -35,3 +35,10 @@ cmake ..
 make -j$(nproc)
 
 
+cd /opt/tvm/python
+python3 setup.py bdist_wheel
+
+pip3 install dist/tvm-*.whl
+
+twine upload --verbose dist/tvm-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+

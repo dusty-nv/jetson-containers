@@ -89,19 +89,6 @@ fi
 
 # --- PATCH 2: RELAX PYTORCH VERSION REQUIREMENTS ---
 cd "${REPO_DIR}/python" || exit 1
-
-# Your original sed commands are good. This makes the build compatible with
-# the PyTorch versions typically available on Jetson.
-sed -i -E '
-s/"torch>=2\.8\.0"/"torch>=2.8.0"/;
-s/"torchaudio==2\.8\.0"/"torchaudio>=2.8.0"/;
-s/"torchvision==0\.23\.0"/"torchvision>=0.23.0"/
-' pyproject.toml
-sed -i -E '
-s/torch==2\.8\.0/torch>=2.8.0/;
-s/torchaudio==2\.8\.0/torchaudio>=2.8.0/;
-s/torchvision==0\.23\.0/torchvision>=0.23.0/
-' pyproject.toml
 sed -i 's/==/>=/g' pyproject.toml
 
 echo "Patched ${REPO_DIR}/python/pyproject.toml to relax version constraints"
