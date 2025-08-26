@@ -17,6 +17,7 @@ if [[ ! -f "$VERSION_FILE" ]]; then
 fi
 sed -i "1,\$c\\${FLASHINFER_VERSION}" version.txt
 sed -i 's|options={.*| |g' setup.py
+sed -i 's/"cuda-python<=12\.9"/"cuda-python<=13.1"/' setup.py
 echo "Patched $REPO_DIR/setup.py"
 cat setup.py
 python3 -m pip install --no-cache-dir build setuptools wheel ninja mpi4py pynvml einops nvidia-nvshmem-cu12 requests
