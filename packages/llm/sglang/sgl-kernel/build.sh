@@ -26,7 +26,7 @@ if [[ "${IS_SBSA:-}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
 else
   export CORES=12  # GH200
   # Set the correct include path to point to the CCCL directory
-  export CPLUS_INCLUDE_PATH=$(echo /usr/local/cuda-*/targets/sbsa-linux/include/cccl | head -n1)
+  export CPLUS_INCLUDE_PATH=/usr/local/cuda-13.0/targets/sbsa-linux/include/cccl
 fi
 
 pip3 install "cmake<4"  # Ensure compatible CMake version
