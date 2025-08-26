@@ -4,27 +4,30 @@ from packaging.version import Version
 
 def cuda_python(version, cuda=None):
     pkg = package.copy()
-
     pkg['name'] = f"cuda-python:{version}"
 
-    if not cuda:
-        cuda = version
+    v = Version(version)
 
-    if len(cuda.split('.')) > 2:
-        cuda = cuda[:-2]
+    # If 'cuda' not given, depend on the same MAJOR.MINOR as 'version'
+    if cuda is None:
+        cuda_major_minor = f"{v.major}.{v.minor}"
+    else:
+        cv = Version(str(cuda))
+        cuda_major_minor = f"{cv.major}.{cv.minor}"
 
-    pkg['depends'] = update_dependencies(pkg['depends'], f"cuda:{cuda}")
+    # Depend on CUDA MAJOR.MINOR (not patch), robustly derived
+    pkg['depends'] = update_dependencies(pkg['depends'], f"cuda:{cuda_major_minor}")
 
-    if len(version.split('.')) < 3:
-        version = version + '.0'
-
-    pkg['build_args'] = {'CUDA_PYTHON_VERSION': version}
+    # Build arg should always be a full x.y.z
+    version_norm = f"{v.major}.{v.minor}.{v.micro}"
+    pkg['build_args'] = {'CUDA_PYTHON_VERSION': version_norm}
 
     builder = pkg.copy()
     builder['name'] = builder['name'] + '-builder'
     builder['build_args'] = {**builder['build_args'], 'FORCE_BUILD': 'on'}
 
-    if Version(version) == CUDA_VERSION:
+    # Consider equal if MAJOR.MINOR match, regardless of patch
+    if (v.major, v.minor) == (CUDA_VERSION.major, CUDA_VERSION.minor):
         pkg['alias'] = 'cuda-python'
         builder['alias'] = 'cuda-python:builder'
 
@@ -41,7 +44,6 @@ else:
             cuda_python('12.8'),
             cuda_python('12.9'),
             cuda_python('13.0'),
-            cuda_python('13.1'), #Orin
             # Please enable only when added as package in cuda config.py
             # cuda_python('13.1'),
         ]
