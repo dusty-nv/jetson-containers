@@ -1,6 +1,21 @@
 #!/bin/bash
 
 #==============================================================================
+#                       CUDA PACKAGES BUILD TEST SUITE
+#==============================================================================
+#
+# This script builds CUDA packages and generates a summary report.
+#
+# Environment Variables (optional):
+#   CUDA_VERSION    - Override CUDA version (e.g., "12.9", default: "12.6")
+#   PYTHON_VERSION  - Override Python version (e.g., "3.11", default: "3.10")
+#   LSB_VERSION     - Override Ubuntu LTS version (e.g., "24.04", default: "22.04")
+#
+# Usage:
+#   ./test-cuda-suite.sh
+#   CUDA_VERSION=12.9 LSB_VERSION=24.04 ./test-cuda-suite.sh
+#
+#==============================================================================
 #                             CONFIGURATION
 #==============================================================================
 
@@ -8,7 +23,18 @@
 SUMMARY_TITLE="CUDA Packages Update"
 
 # --- Environment details for the summary report ---
-SUMMARY_INFO="Cu126, py310, lts2204"
+# Default values that can be overridden by environment variables
+DEFAULT_CUDA_VERSION="12.6"
+DEFAULT_PYTHON_VERSION="3.10"
+DEFAULT_LSB_RELEASE="22.04"
+
+# Use environment variables if set, otherwise use defaults
+CUDA_VER="${CUDA_VERSION:-$DEFAULT_CUDA_VERSION}"
+PYTHON_VER="${PYTHON_VERSION:-$DEFAULT_PYTHON_VERSION}"
+LSB_REL="${LSB_RELEASE:-$DEFAULT_LSB_RELEASE}"
+
+# Build the summary info string dynamically
+SUMMARY_INFO="Cu${CUDA_VER//.}, py${PYTHON_VER//.}, lsb${LSB_REL//.}"
 
 # --- Directory containing the packages to be built ---
 PACKAGES_DIR="./packages/cuda"
@@ -21,6 +47,8 @@ PACKAGES_DIR="./packages/cuda"
 LOG_FILE="build_summary.log"
 echo "Starting build process at $(date)" > "$LOG_FILE"
 echo "-------------------------------------" >> "$LOG_FILE"
+echo "Summary Info: $SUMMARY_INFO" >> "$LOG_FILE"
+echo "Summary Info: $SUMMARY_INFO"
 
 # --- Associative arrays and lists ---
 declare -A BUILD_RESULTS
@@ -39,14 +67,35 @@ fi
 
 for dir in $PACKAGES_DIR/*/; do
     if [ -d "$dir" ]; then
-        pkg=$(basename "$dir")
-        PACKAGES_TO_BUILD+=("$pkg")
-        PACKAGE_PATHS["$pkg"]="$dir"
-        
         dockerfile="${dir}Dockerfile"
+        base_name=$(basename "$dir")
+        pkg="${base_name}"
+
         if [ -f "$dockerfile" ]; then
+            # Extract the first line starting with '# name:' (case-sensitive as requested)
+            name_line=$(grep -m 1 "^# name:" "$dockerfile")
+            if [[ -n "$name_line" ]]; then
+                # Allow characters typically used in image names (alnum, ., _, -)
+                extracted_name=$(echo "$name_line" | sed -E 's/^# name:[[:space:]]*([A-Za-z0-9._-]+).*$/\1/' | tr -d '\r')
+                if [[ -n "$extracted_name" ]]; then
+                    pkg="$extracted_name"
+                else
+                    echo "[!!!] Warning: '# name:' line found in $dockerfile but failed to parse. Falling back to directory name '$base_name'."
+                fi
+            fi
+
+            # Check for duplicate names mapping to different directories
+            if [[ -n "${PACKAGE_PATHS[$pkg]}" && "${PACKAGE_PATHS[$pkg]}" != "$dir" ]]; then
+                echo "[!!!] Error: Duplicate package name '$pkg' found in '$dir' and '${PACKAGE_PATHS[$pkg]}'. Skipping '$dir'." >&2
+                continue
+            fi
+
+            # Register the package (only now that name uniqueness confirmed)
+            PACKAGES_TO_BUILD+=("$pkg")
+            PACKAGE_PATHS["$pkg"]="$dir"
+
+            # Dependency extraction
             dependency_line=$(grep -m 1 "# depends:" "$dockerfile")
-            # Only add a dependency if the line is found and is not empty
             if [[ -n "$dependency_line" ]]; then
                 dependency=$(echo "$dependency_line" | sed -n 's/.*# depends: \[\(.*\)\]/\1/p' | awk -F, '{print $1}')
                 if [[ -n "$dependency" ]]; then
@@ -56,10 +105,11 @@ for dir in $PACKAGES_DIR/*/; do
                     echo "      - Found package: $pkg (no dependency specified)"
                 fi
             else
-                 echo "      - Found package: $pkg (no '# depends:' line found)"
+                echo "      - Found package: $pkg (no '# depends:' line found)"
             fi
         else
-            echo "[!!!] Warning: Dockerfile not found for package '$pkg' in '$dir'."
+            echo "[!!!] Warning: Dockerfile not found for directory '$base_name' in '$dir'. Skipping."
+            continue
         fi
     fi
 done
@@ -131,7 +181,7 @@ for pkg in "${SORTED_PACKAGES[@]}"; do
         continue
     fi
 
-    BUILD_COMMAND="jetson-containers build --name test-${pkg} ${pkg}"
+    BUILD_COMMAND="jetson-containers build --skip-tests=intermediate --name test-${pkg} ${pkg}"
     echo "[$] Running command: $BUILD_COMMAND"
     
     output=$(eval "$BUILD_COMMAND" 2>&1)

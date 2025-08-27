@@ -17,12 +17,31 @@ if [[ ! -f "$VERSION_FILE" ]]; then
 fi
 sed -i "1,\$c\\${FLASHINFER_VERSION}" version.txt
 sed -i 's|options={.*| |g' setup.py
+sed -i 's/"cuda-python<=12\.9"/"cuda-python<=13.1"/' setup.py
 echo "Patched $REPO_DIR/setup.py"
 cat setup.py
-python3 -m pip install --no-cache-dir build setuptools wheel ninja mpi4py pynvml einops nvidia-nvshmem-cu12 requests
+
+# Detect CUDA major version
+CUDA_VER=$(/usr/local/cuda/bin/nvcc --version | grep "release" | sed -E 's/.*release ([0-9]+)\..*/\1/')
+echo "Detected CUDA version: $CUDA_VER"
+
+# Choose NVSHMEM package name based on CUDA version
+if [[ "$CUDA_VER" -ge 13 ]]; then
+    NVSHMEM_PKG="nvidia-nvshmem-cu13"
+elif [[ "$CUDA_VER" -ge 12 ]]; then
+    NVSHMEM_PKG="nvidia-nvshmem-cu12"
+else
+    echo "Unsupported CUDA version: $CUDA_VER" >&2
+    exit 1
+fi
+echo "Using NVSHMEM package: $NVSHMEM_PKG"
+
+python3 -m pip install --no-cache-dir build setuptools wheel ninja mpi4py pynvml einops $NVSHMEM_PKG requests
+
 export CUDA_HOME=/usr/local/cuda
 export LD_LIBRARY_PATH=${CUDA_HOME}/lib64/stubs:${LD_LIBRARY_PATH}
 export LIBRARY_PATH=${CUDA_HOME}/lib64/stubs:${LIBRARY_PATH}
+
 python3 -m flashinfer.aot
 python3 -m build --no-isolation --wheel
 # Install AOT wheel

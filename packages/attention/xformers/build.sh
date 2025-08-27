@@ -14,7 +14,7 @@ else
     export MAX_JOBS="$(nproc)"
 fi
 export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
-export NVCC_THREADS=$MAX_JOBS
+export NVCC_THREADS=1
 echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS"
 
 MAX_JOBS=$MAX_JOBS \

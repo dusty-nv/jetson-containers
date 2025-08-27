@@ -39,6 +39,7 @@ ENV NVIDIA_VISIBLE_DEVICES=all \
     CUDA_TOOLKIT_ROOT_DIR="${CUDA_HOME}" \
     PATH="$CUDA_HOME/bin:${PATH}" \
     LD_LIBRARY_PATH="${CUDA_HOME}/compat:${CUDA_HOME}/lib64:${LD_LIBRARY_PATH}" \
+    LDFLAGS="-L/usr/local/cuda/lib64 ${LDFLAGS}" \
     DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /
