@@ -2,6 +2,7 @@ from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES, CUDA_SHORT_VERSIO
 from packaging.version import Version
 
 from .version import PYTORCH_VERSION
+import os
 
 def pytorch_pip(version, requires=None):
     """
