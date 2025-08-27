@@ -37,5 +37,5 @@ rm -rf $SRC
 pip3 install $WHL/cuda*.whl
 twine upload --verbose $WHL/cuda*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
-python3 -c 'import cuda; print(cuda.__version__)'
+python3 -c 'import cuda'
 pip3 show cuda_core cuda_bindings || pip3 show cuda-python

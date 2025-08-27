@@ -2,10 +2,13 @@
 set -ex
 cd /opt
 
-SOURCE="/opt/ffmpeg"
-DIST="$SOURCE/dist"
+# No custom DIST, install directly to /usr/local
+PREFIX="/usr/local"
 
-echo "BUILDING FFMPEG $FFMPEG_VERSION to $DIST"
+# Update pkg-config path if needed (usually /usr/local is included, but to be safe)
+export PKG_CONFIG_PATH="${PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH:-}"
+
+echo "BUILDING FFMPEG $FFMPEG_VERSION to $PREFIX"
 wget $WGET_FLAGS https://www.ffmpeg.org/releases/ffmpeg-$FFMPEG_VERSION.tar.gz
 tar -xvzf ffmpeg-$FFMPEG_VERSION.tar.gz
 
@@ -65,7 +68,7 @@ mkdir aom/builder
 cd aom/builder
 
 cmake -G "Unix Makefiles" \
-  -DCMAKE_INSTALL_PREFIX="$DIST" \
+  -DCMAKE_INSTALL_PREFIX="$PREFIX" \
   -DENABLE_TESTS=OFF \
   -DENABLE_NASM=ON \
   -DCMAKE_BUILD_TYPE=Release \
@@ -76,10 +79,7 @@ make -j$(nproc)
 make install
 
 # libsvtav1 for AV1
-# temporal version 2.3.0, they breaks ffmpeg build: https://gitlab.com/AOMediaCodec/SVT-AV1/-/commit/988e930c1083ce518ead1d364e3a486e9209bf73#900962ec0dfb11881a5f25ce6fcad8e815c8fd45_1056_1122
-# solution mid-february: https://gitlab.com/AOMediaCodec/SVT-AV1/-/merge_requests/2355#note_2312506245
-# solved https://gitlab.com/AOMediaCodec/SVT-AV1/-/merge_requests/2387
-cd $SOURCE
+cd /opt/ffmpeg
 
 git -C SVT-AV1 pull 2> /dev/null || \
 git clone --recursive https://gitlab.com/AOMediaCodec/SVT-AV1.git -b v2.3.0
@@ -88,7 +88,7 @@ mkdir SVT-AV1/build
 cd SVT-AV1/build
 
 cmake -G "Unix Makefiles" \
-  -DCMAKE_INSTALL_PREFIX="$DIST" \
+  -DCMAKE_INSTALL_PREFIX="$PREFIX" \
   -DCMAKE_BUILD_TYPE=Release \
   -DBUILD_SHARED_LIBS=ON \
   -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF \
@@ -101,11 +101,10 @@ pkg-config --modversion aom
 pkg-config --modversion SvtAv1Enc
 
 git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git
-cd nv-codec-headers && make install
-
+cd nv-codec-headers && make PREFIX="$PREFIX" install
 
 # Build FFmpeg
-cd $SOURCE
+cd /opt/ffmpeg
 
 export PATH=/usr/local/cuda/bin:${PATH}
 nvcc --version
@@ -137,48 +136,22 @@ NVCCFLAGS="\
 -std=c++17 -O3"
 
 # NO COMPLIANCE: https://www.ffmpeg.org/legal.html
-# ./configure \
-#   --prefix="$DIST" \
-#   --extra-cflags="-I$DIST/include -I/usr/local/cuda/include -O3 -fPIC" \
-#   --extra-cxxflags="-std=c++17" \
-#   --extra-ldflags="-L$DIST/lib -fno-lto -L/usr/local/cuda/lib64" \
-#   --extra-libs="-lpthread -lm" \
-#   --ld="g++" \
-#   --bindir="$DIST/bin" \
-#   --disable-doc \
-#   --disable-static \
-#   --enable-shared \
-#   --enable-gpl \
-#   --enable-nonfree \
-#   --enable-gnutls \
-#   --enable-libx264 \
-#   --enable-libx265 \
-#   --enable-libvpx \
-#   --enable-libopus \
-#   --enable-libvorbis \
-#   --enable-libmp3lame \
-#   --enable-libfreetype \
-#   --enable-libass \
-#   --enable-libaom \
-#   --enable-libsvtav1 \
-#   --enable-libdav1d \
-#   --enable-nvenc \
-#   --enable-nvdec \
-#   --enable-cuda \
-#   --nvccflags="$NVCCFLAGS"
-
 ./configure \
-  --prefix="$DIST" \
-  --extra-cflags="-I$DIST/include -I/usr/local/cuda/include -O3 -fPIC" \
+  --prefix="$PREFIX" \
+  --extra-cflags="-I$PREFIX/include -I/usr/local/cuda/include -O3 -fPIC" \
   --extra-cxxflags="-std=c++17" \
-  --extra-ldflags="-L$DIST/lib -fno-lto -L/usr/local/cuda/lib64" \
+  --extra-ldflags="-L$PREFIX/lib -fno-lto -L/usr/local/cuda/lib64" \
   --extra-libs="-lpthread -lm" \
   --ld="g++" \
-  --bindir="$DIST/bin" \
+  --bindir="$PREFIX/bin" \
   --disable-doc \
   --disable-static \
   --enable-shared \
+  --enable-gpl \
+  --enable-nonfree \
   --enable-gnutls \
+  --enable-libx264 \
+  --enable-libx265 \
   --enable-libvpx \
   --enable-libopus \
   --enable-libvorbis \
@@ -188,8 +161,6 @@ NVCCFLAGS="\
   --enable-libaom \
   --enable-libsvtav1 \
   --enable-libdav1d \
-  --extra-cflags=-I/usr/local/cuda/include \
-  --extra-ldflags=-L/usr/local/cuda/lib64 \
   --enable-nvenc \
   --enable-nvdec \
   --enable-cuda \
@@ -199,8 +170,8 @@ NVCCFLAGS="\
 make -j$(nproc)
 make install
 
-# upload to jetson-ai-lab build cache
-tarpack upload ffmpeg-${FFMPEG_VERSION} $DIST/ || echo "failed to upload tarball"
+# Update library cache
+ldconfig
 
-# install it like cached builds
-cp -r $DIST/* /usr/local/
+# Optional: Remove build directories to clean up
+rm -rf /opt/ffmpeg
