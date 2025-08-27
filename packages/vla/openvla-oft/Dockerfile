@@ -8,6 +8,21 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
+# Install prerequisites then copy and install NCCL local-repo .deb (offline/local).
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      ca-certificates \
+      gnupg \
+      wget \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy the nccl local-repo deb (ensure you placed it in the repo as instructed)
+COPY --chown=root:root ../../cuda/nccl/nccl-local-repo-*.deb /tmp/nccl/
+RUN dpkg -i /tmp/nccl/nccl-local-repo-*.deb \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends libnccl2 libnccl-dev \
+    && rm -rf /var/lib/apt/lists/* /tmp/nccl && \
+    true
+
 ADD https://api.github.com/repos/explicitcontextualunderstanding/openvla/git/refs/heads/main /tmp/openvla_version.json
 
 RUN git clone --depth=1 --recursive https://github.com/explicitcontextualunderstanding/openvla /opt/openvla && \
