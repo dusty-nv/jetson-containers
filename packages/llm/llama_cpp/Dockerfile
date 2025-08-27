@@ -15,7 +15,8 @@ ARG LLAMA_CPP_VERSION \
     LLAMA_CPP_BRANCH \
     LLAMA_CPP_BRANCH_PY \
     LLAMA_CPP_FLAGS \
-    FORCE_BUILD=off \ 
+    CUDA_ARCHITECTURES \
+    FORCE_BUILD=off \
     SOURCE_DIR=/opt/llama_cpp_python \
     TMP=/tmp/llama_cpp
 

@@ -8,3 +8,4 @@ print('tvm cuda:', tvm.cuda().exist)
 print('\n'.join(f'{k}: {v}' for k, v in tvm.support.libinfo().items()))
 
 assert(tvm.cuda().exist)
+print('tvm OK')

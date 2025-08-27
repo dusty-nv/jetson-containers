@@ -25,5 +25,5 @@ def open3d(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    open3d('1.19.0', default=True)
+    open3d('0.20.0', default=True)
 ]

@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
 set -ex
 echo "Detected architecture: ${CUDA_ARCH}"
-if [[ "$CUDA_ARCH" == "aarch64" ]]; then
+if [[ "$CUDA_ARCH" == "aarch64" || "$IS_SBSA" == "True" ]]; then
   wget $WGET_FLAGS \
-  https://developer.download.nvidia.com/compute/cudss/${CUDSS_VERSION}/local_installers/cudss-local-repo-${DISTRO}-${CUDSS_VERSION}_*-1_arm64.deb
-else
+  https://developer.download.nvidia.com/compute/cudss/${CUDSS_VERSION}/local_installers/cudss-local-repo-${DISTRO}-${CUDSS_VERSION}_${CUDSS_VERSION}-1_arm64.deb
 elif [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
-  wget $WGET_FLAGS https://developer.download.nvidia.com/compute/cudss/${CUDSS_VERSION}/local_installers/cudss-local-tegra-repo-${DISTRO}-${CUDSS_VERSION}_*-1_arm64.deb
+  if [[ ${CUDA_INSTALLED_VERSION} -ge 130 ]]; then
+    wget $WGET_FLAGS \
+    https://developer.download.nvidia.com/compute/cudss/${CUDSS_VERSION}/local_installers/cudss-local-repo-${DISTRO}-${CUDSS_VERSION}_${CUDSS_VERSION}-1_arm64.deb
+  else
+    wget $WGET_FLAGS \
+    https://developer.download.nvidia.com/compute/cudss/${CUDSS_VERSION}/local_installers/cudss-local-tegra-repo-${DISTRO}-${CUDSS_VERSION}_${CUDSS_VERSION}-1_arm64.deb
+  fi
 else
   wget $WGET_FLAGS \
   https://developer.download.nvidia.com/compute/cudss/${CUDSS_VERSION}/local_installers/cudss-local-repo-${DISTRO}-${CUDSS_VERSION}_*-1_amd64.deb

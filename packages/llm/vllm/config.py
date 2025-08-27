@@ -1,5 +1,5 @@
-from jetson_containers import CUDA_VERSION, IS_SBSA, update_dependencies
-from packaging.version import Version
+from jetson_containers import IS_SBSA, update_dependencies, cuda_short_version
+
 
 def vllm(version, branch=None, requires=None, default=False, depends=None):
     pkg = package.copy()
@@ -17,7 +17,8 @@ def vllm(version, branch=None, requires=None, default=False, depends=None):
     pkg['build_args'] = {
         'VLLM_VERSION': version,
         'VLLM_BRANCH': branch,
-        'IS_SBSA': IS_SBSA
+        'IS_SBSA': IS_SBSA,
+        'CUDA_SUFFIX': cuda_short_version()
     }
 
     builder = pkg.copy()
@@ -31,11 +32,11 @@ def vllm(version, branch=None, requires=None, default=False, depends=None):
     return pkg, builder
 
 package = [
-    # 0.6.5 compatible with jetson https://github.com/vllm-project/vllm/pull/9735
-    vllm(version='0.7.4', default=False),
-    vllm(version='0.8.4', depends=['flashinfer:0.2.1.post2'], default=False),
-    vllm(version='0.8.5', branch='v0.8.5.post1', depends=['flashinfer:0.2.2.post1'], default=False),
-    vllm(version='0.9.0', depends=['flashinfer'], default=False),
-    vllm(version='0.9.2', depends=['flashinfer'], default=False),
-    vllm(version='0.10.1', depends=['flashinfer'], default=True),
+    vllm('0.7.4', default=False),
+    vllm('0.8.4', depends=['flashinfer:0.2.1.post2'], default=False),
+    vllm('0.8.5', branch='v0.8.5.post1', depends=['flashinfer:0.2.2.post1'], default=False),
+    vllm('0.9.0', depends=['flashinfer'], default=False),
+    vllm('0.9.2', depends=['flashinfer'], default=False),
+    vllm('0.10.0', depends=['flashinfer'], default=False),
+    vllm('0.10.2', depends=['flashinfer'], default=True),
 ]

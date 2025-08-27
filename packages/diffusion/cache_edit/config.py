@@ -26,5 +26,5 @@ def cache_dit(version, version_spec=None, requires=None, default=False):
     return pkg, builder
 
 package = [
-    cache_dit('0.2.6', version_spec='0.2.6', default=True)
+    cache_dit('0.2.25', version_spec='0.2.25', default=True)
 ]

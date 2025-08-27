@@ -15,6 +15,7 @@ def cuda_build_args(version):
     return {
         'CUDA_ARCH_LIST': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
         'CUDA_ARCH': CUDA_ARCH,
+        'CUDA_INSTALLED_VERSION': int(str(CUDA_VERSION.major) + str(CUDA_VERSION.minor)),
         'DISTRO': f"ubuntu{LSB_RELEASE.replace('.','')}",
         'IS_SBSA': IS_SBSA,
         'IS_TEGRA': IS_TEGRA,
@@ -136,11 +137,11 @@ def pip_cache(version, requires=None):
     https://github.com/dusty-nv/jetson-containers/blob/master/docs/build.md#pip-server
     """
     short_version = f"cu{version.replace('.', '')}"
-    index_host = os.environ.get('INDEX_HOST', 'jetson-ai-lab.dev')
+    index_host = os.environ.get('INDEX_HOST', 'jetson-ai-lab.io')
 
     pip_path = (
-        f"jp{JETPACK_VERSION.major}/{short_version}" if IS_TEGRA
-        else f"sbsa/{short_version}" if IS_SBSA
+        f"sbsa/{short_version}" if IS_SBSA
+        else f"jp{JETPACK_VERSION.major}/{short_version}" if IS_TEGRA
         else f"{DOCKER_ARCH}/{short_version}"
     )
 

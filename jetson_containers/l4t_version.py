@@ -41,11 +41,11 @@ def get_l4t_version(version_file='/etc/nv_tegra_release', l4t_version: str = Non
         return Version(os.environ['L4T_VERSION'].lower().lstrip('r'))
 
     if CUDA_ARCH != 'tegra-aarch64':
-        return Version('38.0.0')  # for x86 to unlock L4T checks
+        return Version('38.1.0')  # for x86 to unlock L4T checks
 
     if not os.path.isfile(version_file):
         # raise IOError(f"L4T_VERSION file doesn't exist:  {version_file}")
-        return Version('38.0.0')
+        return Version('38.1.0')
 
     with open(version_file) as file:
         line = file.readline()
@@ -321,7 +321,7 @@ def get_cuda_arch(l4t_version: str = None, cuda_version: str = None, format=list
         # Nano/TX1 = 5.3, TX2 = 6.2, Xavier = 7.2, Orin = 8.7, Thor = 11.0
         if IS_TEGRA:
             if l4t_version.major >= 38:  # JetPack 7
-                cuda_architectures = [110, 121]  # Thor 110, Spark
+                cuda_architectures = [87, 110, 121]  # Thor 110, Spark
             elif l4t_version.major >= 36:  # JetPack 6
                 cuda_architectures = [87]  # Ampere Orin, Hopper GH200 90
             elif l4t_version.major >= 34:  # JetPack 5
@@ -329,7 +329,7 @@ def get_cuda_arch(l4t_version: str = None, cuda_version: str = None, format=list
             elif l4t_version.major == 32:  # JetPack 4
                 cuda_architectures = [53, 62, 72]
         elif IS_SBSA:
-            cuda_architectures = [90, 100, 103, 110, 120, 121]  # B300, Thor 110, Spark 121
+            cuda_architectures = [87, 90, 100, 103, 110, 120, 121]  # B300, Thor 110, Spark 121
     else:
         cuda_architectures = [
             80, 86,  # Ampere
@@ -548,7 +548,15 @@ DOCKER_ARCH = CUDA_ARCHS[SYSTEM_ARCH]
 SYSTEM_ARM = CUDA_ARCH in ("aarch64", "tegra-aarch64")
 SYSTEM_X86 = CUDA_ARCH == "x86_64"
 IS_TEGRA = CUDA_ARCH == "tegra-aarch64"
-IS_SBSA = CUDA_ARCH == "aarch64"
+# IS_SBSA = SYSTEM_ARCH_TYPE == "aarch64"
+try:
+    gpu_names = subprocess.check_output(
+        ["nvidia-smi", "--query-gpu=name", "--format=csv,noheader"],
+        encoding="utf-8"
+    )
+    IS_SBSA = "nvgpu" not in gpu_names
+except Exception as e:
+    IS_SBSA = False  # or handle as appropriate for your use case
 
 SYSTEM_ARCH_LIST = []
 

@@ -29,5 +29,5 @@ def cuda_cccl(version, version_spec=None, requires=None, default=False):
 
 
 package = [
-    cuda_cccl('3.0.3', '3.0.3', default=(CUDA_VERSION >= Version('12.6'))),
+    cuda_cccl('3.1.0', '3.1.0', default=(CUDA_VERSION >= Version('12.6'))),
 ]

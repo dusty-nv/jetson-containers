@@ -2,7 +2,7 @@
 # name: torchaudio
 # group: pytorch
 # config: config.py
-# depends: [pytorch, cmake]
+# depends: [pytorch, cmake, torchcodec]
 # test: test.py
 #---
 ARG BASE_IMAGE

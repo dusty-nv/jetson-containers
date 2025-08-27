@@ -10,7 +10,7 @@ export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
 
 
-git clone --branch v$CUDA_PYTHON_VERSION --depth=1 https://github.com/NVIDIA/cuda-python $SRC
+git clone --branch v$CUDA_PYTHON_VERSION --depth=1 https://github.com/NVIDIA/cuda-python $SRC || git clone --depth=1 https://github.com/NVIDIA/cuda-python $SRC
 
 # NOW CUDA-PYTHON HAS 3 STRUCTURES
 if [ $(vercmp $CUDA_PYTHON_VERSION "12.6") -gt 0 ]; then

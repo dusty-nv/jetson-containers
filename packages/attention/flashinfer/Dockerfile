@@ -18,18 +18,12 @@ ARG FLASHINFER_VERSION \
     FORCE_BUILD=off \
     TMP=/tmp/flashinfer
 
-RUN apt-get update -y || true ; apt-get install --no-install-recommends libopenmpi-dev openmpi-bin -y && \
-    rm -rf /var/lib/apt/lists/* && \
-    apt-get clean
-
 COPY build.sh install.sh $TMP/
 
-ENV TORCH_CUDA_ARCH_LIST=${TORCH_CUDA_ARCH_LIST}
-
-RUN $TMP/install.sh || $TMP/build.sh || touch $TMP/.build.failed
-
-# this retains the stage above for debugging on build failure
-RUN if [ -f $TMP/.build.failed ]; then \
-      echo "FlashInfer ${FLASHINFER_VERSION} build failed!"; \
-      exit 1; \
-    fi
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends libopenmpi-dev openmpi-bin && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get clean && \
+    \
+    $TMP/install.sh || $TMP/build.sh || \
+    (echo "FlashInfer ${FLASHINFER_VERSION} build failed!" && exit 1)

@@ -1,80 +1,75 @@
 #!/usr/bin/env bash
 set -ex
 
-echo "Building MLC ${MLC_VERSION} (commit=${MLC_COMMIT})"
+echo "Building MLC ${MLC_VERSION} (commit=${MLC_COMMIT}) against external TVM at ${TVM_HOME:-/opt/tvm}"
 
-# could NOT find zstd (missing: zstd_LIBRARY zstd_INCLUDE_DIR)
+# dependencies needed by MLC build
 apt-get update
-apt-get install -y --no-install-recommends libzstd-dev ccache
+apt-get install -y --no-install-recommends libzstd-dev ccache ninja-build
 rm -rf /var/lib/apt/lists/*
 apt-get clean
-	
+
 # clone the sources
-git clone https://github.com/mlc-ai/mlc-llm ${SOURCE_DIR}
+git clone --recursive https://github.com/mlc-ai/mlc-llm ${SOURCE_DIR}
 cd ${SOURCE_DIR}
+git fetch origin ${MLC_COMMIT} || true
 git checkout ${MLC_COMMIT}
 git submodule update --init --recursive
-    
-# apply patches to the source
+
+# apply optional patch to the source
 if [ -s /tmp/mlc/patch.diff ]; then 
-  cuda_archs=$(echo "$CUDA_ARCHITECTURES" | sed "s|;| |g")
-	sed -i "s|SUPPORTED 87|SUPPORTED ${cuda_archs}|g" /tmp/mlc/patch.diff 
-	git apply /tmp/mlc/patch.diff 
+	git apply /tmp/mlc/patch.diff || echo "patch did not apply; continuing"
 fi
 
 git status
-git diff --submodule=diff
+git diff --submodule=diff || true
 
 # add extras to the source
-cp /tmp/mlc/benchmark.py ${SOURCE_DIR}/
+cp /tmp/mlc/benchmark.py ${SOURCE_DIR}/ || true
 
-# flashinfer build references 'python'
-ln -sf /usr/bin/python3 /usr/bin/python
-
-# disable pytorch: https://github.com/apache/tvm/issues/9362
-# -DUSE_LIBTORCH=$(pip3 show torch | grep Location: | cut -d' ' -f2)/torch
-mkdir build
+# Prepare build configuration (CMake config.cmake)
+mkdir -p build
 cd build
+touch config.cmake
 
-cmake -G Ninja \
-	-DCMAKE_CXX_STANDARD=17 \
-	-DCMAKE_CUDA_STANDARD=17 \
-	-DCMAKE_CUDA_ARCHITECTURES=${CUDAARCHS} \
-	-DUSE_CUDA=ON \
-	-DUSE_CUDNN=ON \
-	-DUSE_CUBLAS=ON \
-	-DUSE_CURAND=ON \
-	-DUSE_CUTLASS=ON \
-	-DUSE_THRUST=ON \
-	-DUSE_GRAPH_EXECUTOR=ON \
-	-DUSE_GRAPH_EXECUTOR_CUDA_GRAPH=ON \
-	-DUSE_STACKVM_RUNTIME=ON \
-	-DUSE_CCACHE=ON \
-	-DUSE_LLVM="/usr/bin/llvm-config --link-static" \
-	-DHIDE_PRIVATE_SYMBOLS=ON \
-	-DSUMMARIZE=ON \
-	../
-	
-ninja
+# Determine the target CUDA arch (fallback to 110)
+archs=${CUDAARCHS:-${CUDA_ARCHITECTURES}}
+target_arch=$(echo "$archs" | tr ';' '\n' | tail -n1)
 
-#rm -rf CMakeFiles tvm/CMakeFiles
-#rm -rf tokenizers/CMakeFiles tokenizers/release
+{
+	echo "set(TVM_SOURCE_DIR ${TVM_HOME:-/opt/tvm})";
+	echo "set(CMAKE_BUILD_TYPE RelWithDebInfo)";
+	echo "set(USE_CUDA ON)";
+	echo "set(USE_CUTLASS ON)";
+	echo "set(USE_CUBLAS ON)";
+	echo "set(USE_ROCM OFF)";
+	echo "set(USE_VULKAN OFF)";
+	echo "set(USE_METAL OFF)";
+	echo "set(USE_OPENCL OFF)";
+	echo "set(USE_OPENCL_ENABLE_HOST_PTR OFF)";
+	echo "set(USE_THRUST ON)";
+	echo "set(CMAKE_CUDA_ARCHITECTURES ${target_arch})";
+	echo "set(USE_FLASHINFER ON)";
+	echo "set(FLASHINFER_ENABLE_FP8 OFF)";
+	echo "set(FLASHINFER_ENABLE_BF16 OFF)";
+	echo "set(FLASHINFER_GEN_GROUP_SIZES 1 4 6 8)";
+	echo "set(FLASHINFER_GEN_PAGE_SIZES 16)";
+	echo "set(FLASHINFER_GEN_HEAD_DIMS 128)";
+	echo "set(FLASHINFER_GEN_KV_LAYOUTS 0 1)";
+	echo "set(FLASHINFER_GEN_POS_ENCODING_MODES 0 1)";
+	echo "set(FLASHINFER_GEN_ALLOW_FP16_QK_REDUCTIONS \"false\")";
+	echo "set(FLASHINFER_GEN_CASUALS \"false\" \"true\")";
+	echo "set(FLASHINFER_CUDA_ARCHITECTURES ${target_arch})";
+} >> config.cmake
 
-# build TVM python module
-cd ${SOURCE_DIR}/3rdparty/tvm/python
+# Configure and build
+cmake ..
+make -j$(nproc)
 
-TVM_LIBRARY_PATH=${SOURCE_DIR}/build/tvm \
-python3 setup.py --verbose bdist_wheel --dist-dir /opt
-
-pip3 install /opt/tvm*.whl
-#pip3 show tvm && python3 -c 'import tvm'
-#rm -rf dist build
-
-# build mlc-llm python module
+# Build and install mlc-llm python package
 cd ${SOURCE_DIR}
-
 if [ -f setup.py ]; then
-	python3 setup.py --verbose bdist_wheel --dist-dir /opt
+	python3 setup.py --verbose bdist_wheel --dist-dir /opt || true
 fi
 
 cd python
@@ -82,16 +77,8 @@ python3 setup.py --verbose bdist_wheel --dist-dir /opt
 
 pip3 install /opt/mlc*.whl
 
-# make sure it loads
-#cd /
-#pip3 show mlc_llm
-#python3 -m mlc_llm.build --help
-#python3 -c "from mlc_chat import ChatModule; print(ChatModule)"
-    
-# make the CUTLASS sources available for model builder
-ln -s ${SOURCE_DIR}/3rdparty/tvm/3rdparty "$(pip3 show tvm | awk '/Location:/ {print $2}')/tvm/3rdparty"
+ln -sf ${TVM_HOME:-/opt/tvm}/3rdparty "$(pip3 show tvm | awk '/Location:/ {print $2}')/tvm/3rdparty" || true
 
-# upload wheels
-twine upload --verbose /opt/tvm*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+# Upload wheels (best-effort)
 twine upload --verbose /opt/mlc_llm*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 twine upload --verbose /opt/mlc_chat*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

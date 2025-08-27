@@ -3,6 +3,7 @@
 # group: multimedia
 # depends: [python, torch, torchaudio]
 # requires: '>=34.1.0'
+# test: [test.py]
 # docs: docs.md
 # notes: Sound utilities for working with audio 
 #---

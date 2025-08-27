@@ -24,9 +24,9 @@ quantize() # mlc_llm >= 0.1.1
 	QUANTIZATION_LIB="$QUANTIZATION_PATH/$MODEL_NAME-$QUANTIZATION-cuda.so"
 	
 	if [ $SKIP_QUANTIZATION != "yes" ]; then
-		mlc_llm convert_weight $MODEL_PATH --quantization $QUANTIZATION --output $QUANTIZATION_PATH
-		mlc_llm gen_config $MODEL_PATH --quantization $QUANTIZATION --conv-template $CONV_TEMPLATE --context-window-size $MAX_CONTEXT_LEN --max-batch-size 1  --output $QUANTIZATION_PATH
-		mlc_llm compile $QUANTIZATION_PATH --device cuda --opt O3 --output $QUANTIZATION_LIB
+		python3 -m mlc_llm convert_weight $MODEL_PATH --quantization $QUANTIZATION --output $QUANTIZATION_PATH
+		python3 -m mlc_llm gen_config $MODEL_PATH --quantization $QUANTIZATION --conv-template $CONV_TEMPLATE --context-window-size $MAX_CONTEXT_LEN --max-batch-size 1  --output $QUANTIZATION_PATH
+		python3 -m mlc_llm compile $QUANTIZATION_PATH --device cuda --opt O3 --output $QUANTIZATION_LIB
 	fi
 	
 	QUANTIZATION_LIB="--model-lib-path $QUANTIZATION_LIB"
@@ -87,7 +87,7 @@ mkdir -p $MODEL_ROOT/models || echo "$MODEL_ROOT already exists"
 
 quantize_legacy || quantize
 
-python3 benchmark.py \
+python3 /test/benchmark.py \
 	--model $QUANTIZATION_PATH $QUANTIZATION_LIB \
 	--max-new-tokens 128 \
 	--max-num-prompts 4 \
