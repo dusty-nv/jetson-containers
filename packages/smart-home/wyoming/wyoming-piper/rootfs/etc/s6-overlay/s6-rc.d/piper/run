@@ -9,29 +9,20 @@ if [[ "${PIPER_UPDATE_VOICES:-}" == "true" ]]; then
     flags+=("--update-voices")
 fi
 
-if [[ "${PIPER_STREAMING:-}" == "true" ]]; then
-    flags+=("--streaming")
-fi
-
 if [[ "${PIPER_DEBUG:-}" == "true" ]]; then
     flags+=("--debug")
 fi
 
-if [[ -n "${ESPEAK_NG_DATA_DIR:-}" ]]; then
-    flags+=("--espeak-data-dir" "${ESPEAK_NG_DATA_DIR}")
-fi
-
 # shellcheck disable=SC2068
 exec python3 -m wyoming_piper \
-    --cuda \
-    --piper "/opt/piper/build/piper" \
+    --use-cuda \
+    --streaming \
     --uri "tcp://0.0.0.0:${PIPER_PORT}" \
     --length-scale "${PIPER_LENGTH_SCALE}" \
     --noise-scale "${PIPER_NOISE_SCALE}" \
     --noise-w "${PIPER_NOISE_W}" \
     --speaker "${PIPER_SPEAKER}" \
     --voice "${PIPER_VOICE}" \
-    --max-piper-procs "${PIPER_MAX_PROC}" \
     --data-dir "${PIPER_CACHE}" \
     --download-dir "${PIPER_CACHE}" \
     ${flags[@]}
