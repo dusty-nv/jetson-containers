@@ -1,6 +1,6 @@
 
-LLVM_STABLE=20
-LLVM_LATEST=21
+LLVM_STABLE=21
+LLVM_LATEST=22
 
 def llvm(version):
     """
@@ -13,7 +13,7 @@ def llvm(version):
     pkg['alias'] = [f'clang:{version}']
 
     pkg['build_args'] = {'LLVM_VERSION': version}
-    
+
     if version == LLVM_STABLE:
         pkg['alias'] += ['llvm', 'clang']
 
