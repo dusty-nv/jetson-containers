@@ -79,25 +79,23 @@ env | grep -E "(USE_|BLAS|CUDA|TORCH)" | sort
 BUILD_START=$(date +%s)
 
 export USE_PRIORITIZED_TEXT_FOR_LD=1 # mandatory for ARM
-PYTORCH_BUILD_NUMBER=1 \
-USE_CUDNN=1 \
-USE_CUSPARSELT=1 \
-USE_CUDSS=1 \
-USE_CUFILE=1 \
-USE_XCCL=1 \
-USE_C10D_XCCL=1 \
-USE_DISTRIBUTED=1 \
-USE_NCCL=1 \
-USE_SYSTEM_NCCL=1 \
-USE_NATIVE_ARCH=0 \
-USE_TENSORPIPE=1 \
-USE_FLASH_ATTENTION=1 \
-USE_MEM_EFF_ATTENTION=1 \
-USE_TENSORRT=0 \
-USE_BLAS="$USE_BLAS" \
-BLAS="$BLAS" \
-python3 setup.py bdist_wheel --dist-dir /opt
-
+export PYTORCH_BUILD_NUMBER=1
+export USE_CUDNN=1
+export USE_CUSPARSELT=1
+export USE_CUDSS=1
+export USE_CUFILE=1
+export USE_XCCL=1
+export USE_C10D_XCCL=1
+export USE_DISTRIBUTED=1
+export USE_NCCL=1
+export USE_SYSTEM_NCCL=1
+export USE_NATIVE_ARCH=0
+export USE_TENSORPIPE=1
+export USE_FLASH_ATTENTION=1
+export USE_MEM_EFF_ATTENTION=1
+export USE_TENSORRT=0
+export USE_BLAS="$USE_BLAS"
+export BLAS="$BLAS"
 # If on CUDA 12, leave only SMs supported
 if [[ "${$CUDA_VERSION}" == cu13* ]]; then
     echo "CUDA 13 detected, turn off build with CUDSS (as 0.6 supported on CUDA 12)."
@@ -105,11 +103,16 @@ if [[ "${$CUDA_VERSION}" == cu13* ]]; then
 else
     echo "*** NOT CUDA 12 NOR CUDA 13."
 fi
+python3 setup.py bdist_wheel --dist-dir /opt
 
 cd /
 rm -rf /opt/pytorch
 
 # install the compiled wheel
 pip3 install /opt/torch*.whl
-python3 -c 'import torch; print(f"PyTorch version: {torch.__version__}"); print(f"CUDA available:  {torch.cuda.is_available()}"); print(f"cuDNN version:   {torch.backends.cudnn.version()}"); print(torch.__config__.show());'
+python3 -c 'import torch; print(f"PyTorch {torch.__version__} installed successfully")'
+
+# Verify installation in detail
+python3 -c 'import torch; print(torch.__version__); print(torch.cuda.is_available()); print(torch.backends.cudnn.version()); print(torch.__config__.show());'
+
 twine upload --verbose /opt/torch*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
