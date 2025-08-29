@@ -196,9 +196,6 @@ NVCCFLAGS="\
 make -j$(nproc)
 make install
 
-# Update library cache
-ldconfig
-
 # upload to jetson-ai-lab build cache
 tarpack upload ffmpeg-${FFMPEG_VERSION} $DIST/ || echo "failed to upload tarball"
 
