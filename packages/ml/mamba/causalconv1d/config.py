@@ -26,5 +26,5 @@ def causalconv1d(version, version_spec=None, requires=None, default=False):
     return pkg, builder
 
 package = [
-    causalconv1d('1.5.3', '1.5.3', default=True)
+    causalconv1d('1.5.2', '1.5.2', default=True)
 ]
