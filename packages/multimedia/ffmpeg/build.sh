@@ -199,5 +199,8 @@ make install
 # Update library cache
 ldconfig
 
-# Optional: Remove build directories to clean up
-rm -rf /opt/ffmpeg
+# upload to jetson-ai-lab build cache
+tarpack upload ffmpeg-${FFMPEG_VERSION} $DIST/ || echo "failed to upload tarball"
+
+# install it like cached builds
+cp -r $DIST/* /usr/local/
