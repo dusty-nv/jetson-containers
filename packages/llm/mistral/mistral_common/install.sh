@@ -14,7 +14,7 @@ apt-get install -y --no-install-recommends \
 rm -rf /var/lib/apt/lists/*
 apt-get clean
 
-if [ "on" == "on" ]; then
+if [ "$FORCE_BUILD" == "on" ]; then
 	echo "Forcing build of mistral_common ${MISTRAL_COMMON_VERSION}"
 	exit 1
 fi
