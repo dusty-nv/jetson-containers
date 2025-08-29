@@ -1,4 +1,4 @@
-from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES
+from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES, CUDA_VERSION
 
 def jax(version, requires=None, alias=None, default=False):
     """
@@ -18,6 +18,8 @@ def jax(version, requires=None, alias=None, default=False):
         'JAX_CUDA_ARCH_ARGS': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES]),
         'JAX_VERSION': version,
         'JAX_BUILD_VERSION': build_version,
+        'CUDA_VERSION': CUDA_VERSION,
+
     }
 
     if L4T_VERSION.major >= 36:

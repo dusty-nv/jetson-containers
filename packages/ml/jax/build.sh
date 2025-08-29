@@ -14,8 +14,6 @@ cd /opt/jax
 BUILD_FLAGS='--disable_nccl '
 BUILD_FLAGS+='--cuda_compute_capabilities="sm_87,sm_89,sm_90,sm_100,sm_103,sm_110,sm_120,sm_121" '
 BUILD_FLAGS+='--cuda_version=13.0.0 --cudnn_version=9.12.0 '
-# BUILD_FLAGS+='--bazel_options=--repo_env=LOCAL_CUDA_PATH="/usr/local/cuda-12.8"'
-# BUILD_FLAGS+='--bazel_options=--repo_env=LOCAL_CUDNN_PATH="/opt/nvidia/cudnn/"'
 BUILD_FLAGS+='--output_path=$PIP_WHEEL_DIR '
 BUILD_FLAGS+='--clang_path=/usr/lib/llvm-20/bin/clang'
 
@@ -42,12 +40,12 @@ pip3 wheel --wheel-dir=$PIP_WHEEL_DIR --no-deps --verbose .
 
 # Upload the wheels to mirror
 twine upload --verbose $PIP_WHEEL_DIR/jaxlib-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
-twine upload --verbose $PIP_WHEEL_DIR/jax_cuda12_pjrt-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
-twine upload --verbose $PIP_WHEEL_DIR/jax_cuda12_plugin-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose $PIP_WHEEL_DIR/jax_cuda13_pjrt-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose $PIP_WHEEL_DIR/jax_cuda13_plugin-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 twine upload --verbose $PIP_WHEEL_DIR/jax-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
 # Install them into the container
 cd $PIP_WHEEL_DIR/
-pip3 install jaxlib*.whl jax_cuda12_plugin*.whl jax_cuda12_pjrt*.whl opt_einsum
+pip3 install jaxlib*.whl jax_cuda13_plugin*.whl jax_cuda13_pjrt*.whl opt_einsum
 pip3 install --no-dependencies jax*.whl
 cd /opt/jax

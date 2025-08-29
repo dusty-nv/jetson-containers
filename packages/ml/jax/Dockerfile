@@ -15,6 +15,7 @@ ARG JAX_CUDA_ARCH_ARGS \
     JAX_VERSION \
     JAX_BUILD_VERSION \
     ENABLE_NCCL \
+    CUDA_VERSION \
     FORCE_BUILD=off
 
 ENV JAX_CUDA_ARCH_LIST=${JAX_CUDA_ARCH_ARGS} \
@@ -25,4 +26,4 @@ COPY build.sh install.sh link_cuda.sh /tmp/JAX/
 
 # attempt to install JAX from pip, and fall back to building it if the installation fails
 RUN /tmp/JAX/install.sh || /tmp/JAX/build.sh
-    
+
