@@ -136,22 +136,48 @@ NVCCFLAGS="\
 -std=c++17 -O3"
 
 # NO COMPLIANCE: https://www.ffmpeg.org/legal.html
+# ./configure \
+#   --prefix="$DIST" \
+#   --extra-cflags="-I$DIST/include -I/usr/local/cuda/include -O3 -fPIC" \
+#   --extra-cxxflags="-std=c++17" \
+#   --extra-ldflags="-L$DIST/lib -fno-lto -L/usr/local/cuda/lib64" \
+#   --extra-libs="-lpthread -lm" \
+#   --ld="g++" \
+#   --bindir="$DIST/bin" \
+#   --disable-doc \
+#   --disable-static \
+#   --enable-shared \
+#   --enable-gpl \
+#   --enable-nonfree \
+#   --enable-gnutls \
+#   --enable-libx264 \
+#   --enable-libx265 \
+#   --enable-libvpx \
+#   --enable-libopus \
+#   --enable-libvorbis \
+#   --enable-libmp3lame \
+#   --enable-libfreetype \
+#   --enable-libass \
+#   --enable-libaom \
+#   --enable-libsvtav1 \
+#   --enable-libdav1d \
+#   --enable-nvenc \
+#   --enable-nvdec \
+#   --enable-cuda \
+#   --nvccflags="$NVCCFLAGS"
+
 ./configure \
-  --prefix="$PREFIX" \
-  --extra-cflags="-I$PREFIX/include -I/usr/local/cuda/include -O3 -fPIC" \
+  --prefix="$DIST" \
+  --extra-cflags="-I$DIST/include -I/usr/local/cuda/include -O3 -fPIC" \
   --extra-cxxflags="-std=c++17" \
-  --extra-ldflags="-L$PREFIX/lib -fno-lto -L/usr/local/cuda/lib64" \
+  --extra-ldflags="-L$DIST/lib -fno-lto -L/usr/local/cuda/lib64" \
   --extra-libs="-lpthread -lm" \
   --ld="g++" \
-  --bindir="$PREFIX/bin" \
+  --bindir="$DIST/bin" \
   --disable-doc \
   --disable-static \
   --enable-shared \
-  --enable-gpl \
-  --enable-nonfree \
   --enable-gnutls \
-  --enable-libx264 \
-  --enable-libx265 \
   --enable-libvpx \
   --enable-libopus \
   --enable-libvorbis \
@@ -161,6 +187,8 @@ NVCCFLAGS="\
   --enable-libaom \
   --enable-libsvtav1 \
   --enable-libdav1d \
+  --extra-cflags=-I/usr/local/cuda/include \
+  --extra-ldflags=-L/usr/local/cuda/lib64 \
   --enable-nvenc \
   --enable-nvdec \
   --enable-cuda \
