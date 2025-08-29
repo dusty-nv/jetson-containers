@@ -10,7 +10,7 @@
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `taichi` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36.0.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda`](/packages/cuda/cuda) [`python`](/packages/build/python) [`ninja`](/packages/build/ninja) [`cmake`](/packages/build/cmake/cmake_pip) [`rust`](/packages/build/rust) [`llvm:20`](/packages/build/llvm) [`vulkan`](/packages/multimedia/vulkan) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda`](/packages/cuda/cuda) [`python`](/packages/build/python) [`ninja`](/packages/build/ninja) [`cmake`](/packages/build/cmake/cmake_pip) [`rust`](/packages/build/rust) [`llvm:21`](/packages/build/llvm) [`vulkan`](/packages/multimedia/vulkan) |
 | &nbsp;&nbsp;&nbsp;Dependants | [`genesis-world:0.2.2`](/packages/sim/genesis) [`protomotions:2.5.0`](/packages/robots/protomotions) [`robogen`](/packages/sim/robogen) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/taichi-dev/taichi |

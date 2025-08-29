@@ -23,14 +23,14 @@
 | **`warp:1.7.0-jax`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=r36']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cupy`](/packages/numeric/cupy) [`numba`](/packages/numeric/numba) [`cmake`](/packages/build/cmake/cmake_pip) [`llvm:20`](/packages/build/llvm) [`cudnn`](/packages/cuda/cudnn) [`jax`](/packages/ml/jax) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cupy`](/packages/numeric/cupy) [`numba`](/packages/numeric/numba) [`cmake`](/packages/build/cmake/cmake_pip) [`llvm:21`](/packages/build/llvm) [`cudnn`](/packages/cuda/cudnn) [`jax`](/packages/ml/jax) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/NVIDIA/warp |
 
 | **`warp:1.7.0-all`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=r36']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cupy`](/packages/numeric/cupy) [`numba`](/packages/numeric/numba) [`cmake`](/packages/build/cmake/cmake_pip) [`llvm:20`](/packages/build/llvm) [`cudnn:9.3`](/packages/cuda/cudnn) [`onnx`](/packages/ml/onnx) [`torch`](/packages/pytorch) [`jax`](/packages/ml/jax) [`tensorrt`](/packages/cuda/tensorrt) [`cuda-python`](/packages/cuda/cuda-python) [`pycuda`](/packages/cuda/pycuda) [`rust`](/packages/build/rust) [`jupyterlab`](/packages/code/jupyterlab) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cupy`](/packages/numeric/cupy) [`numba`](/packages/numeric/numba) [`cmake`](/packages/build/cmake/cmake_pip) [`llvm:21`](/packages/build/llvm) [`cudnn:9.3`](/packages/cuda/cudnn) [`onnx`](/packages/ml/onnx) [`torch`](/packages/pytorch) [`jax`](/packages/ml/jax) [`tensorrt`](/packages/cuda/tensorrt) [`cuda-python`](/packages/cuda/cuda-python) [`pycuda`](/packages/cuda/pycuda) [`rust`](/packages/build/rust) [`jupyterlab`](/packages/code/jupyterlab) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/NVIDIA/warp |
 
@@ -54,7 +54,7 @@
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `warp:jax` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=r36']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cupy`](/packages/numeric/cupy) [`numba`](/packages/numeric/numba) [`cmake`](/packages/build/cmake/cmake_pip) [`llvm:20`](/packages/build/llvm) [`cudnn`](/packages/cuda/cudnn) [`jax`](/packages/ml/jax) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cupy`](/packages/numeric/cupy) [`numba`](/packages/numeric/numba) [`cmake`](/packages/build/cmake/cmake_pip) [`llvm:21`](/packages/build/llvm) [`cudnn`](/packages/cuda/cudnn) [`jax`](/packages/ml/jax) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/NVIDIA/warp |
 
@@ -62,7 +62,7 @@
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `warp:all` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=r36']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cupy`](/packages/numeric/cupy) [`numba`](/packages/numeric/numba) [`cmake`](/packages/build/cmake/cmake_pip) [`llvm:20`](/packages/build/llvm) [`cudnn:9.3`](/packages/cuda/cudnn) [`onnx`](/packages/ml/onnx) [`torch`](/packages/pytorch) [`jax`](/packages/ml/jax) [`tensorrt`](/packages/cuda/tensorrt) [`cuda-python`](/packages/cuda/cuda-python) [`pycuda`](/packages/cuda/pycuda) [`rust`](/packages/build/rust) [`jupyterlab`](/packages/code/jupyterlab) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cupy`](/packages/numeric/cupy) [`numba`](/packages/numeric/numba) [`cmake`](/packages/build/cmake/cmake_pip) [`llvm:21`](/packages/build/llvm) [`cudnn:9.3`](/packages/cuda/cudnn) [`onnx`](/packages/ml/onnx) [`torch`](/packages/pytorch) [`jax`](/packages/ml/jax) [`tensorrt`](/packages/cuda/tensorrt) [`cuda-python`](/packages/cuda/cuda-python) [`pycuda`](/packages/cuda/pycuda) [`rust`](/packages/build/rust) [`jupyterlab`](/packages/code/jupyterlab) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/NVIDIA/warp |
 

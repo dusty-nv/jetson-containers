@@ -2,7 +2,7 @@
 # name: kai_scheduler
 # group: dynamo
 # config: config.py
-# depends: [cuda, rust, cmake, ninja, helm, llvm:20]
+# depends: [cuda, rust, cmake, ninja, helm, llvm:21]
 # requires: '>=34.1.0'
 # notes: https://github.com/ai-kai_scheduler/kai_scheduler
 #---
@@ -12,7 +12,7 @@ FROM ${BASE_IMAGE}
 ARG KAI_SCHEDULER_VERSION \
     KAI_SCHEDULER_VERSION_SPEC \
     SYSTEM_ARM
-    
+
 
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends \

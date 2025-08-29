@@ -2,7 +2,7 @@
 # name: dynamo
 # group: dynamo
 # config: config.py
-# depends: [pytorch, torchvision, torchaudio, triton, transformers, mamba, nixl, llvm:20, vllm, sglang, flashinfer]
+# depends: [pytorch, torchvision, torchaudio, triton, transformers, mamba, nixl, llvm:21, vllm, sglang, flashinfer]
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/ai-dynamo/dynamo
