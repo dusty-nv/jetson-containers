@@ -19,9 +19,9 @@ RUN cd /opt && \
 		wget $WGET_FLAGS ${TRITON_URL} -O ${TRITON_TAR} && \
     tar -xzvf ${TRITON_TAR} && \
     rm ${TRITON_TAR}
-    
+
 RUN pip3 install --upgrade /opt/${TRITON_CLIENTS}/python/tritonclient-${TRITON_VERSION}-py3-none-manylinux2014_aarch64.whl[all]
-    
+
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
 		libb64-0d \
@@ -37,9 +37,9 @@ RUN apt-get update && \
     && apt-get clean
 
 RUN pip3 install --upgrade wheel setuptools && \
-    pip3 install --upgrade grpcio-tools "numpy<2" attrdict pillow
- 
-ENV PATH="$PATH:/opt/tritonserver/bin" 
+    pip3 install --upgrade grpcio-tools attrdict pillow
+
+ENV PATH="$PATH:/opt/tritonserver/bin"
 ENV LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib/llvm-8/lib:/opt/tritonserver/lib"
 
 RUN python3 -c 'import tritonclient'
