@@ -18,7 +18,7 @@ BUILD_FLAGS+='--output_path=$PIP_WHEEL_DIR '
 BUILD_FLAGS+='--bazel_options=--config=ci_linux_aarch64_cuda13 '
 BUILD_FLAGS+='--clang_path=/usr/lib/llvm-20/bin/clang'
 
-python3 build/build.py requirements_update
+# python3 build/build.py requirements_update
 
 # Start background process to monitor and patch matrix.h
 (
