@@ -15,7 +15,7 @@ BUILD_FLAGS+='--cuda_compute_capabilities="sm_87,sm_89,sm_90,sm_100,sm_103,sm_11
 BUILD_FLAGS+='--cuda_version=13.0.0 --cudnn_version=9.12.0 '
 BUILD_FLAGS+='--output_path=$PIP_WHEEL_DIR '
 BUILD_FLAGS+='--bazel_options=--config=ci_linux_aarch64_cuda13  '
-BUILD_FLAGS+='--clang_path=/usr/lib/llvm-20/bin/clang'
+BUILD_FLAGS+='--clang_path=/usr/lib/llvm-18/bin/clang'
 
 # python3 build/build.py requirements_update
 
