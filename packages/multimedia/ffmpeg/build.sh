@@ -28,34 +28,50 @@ apt-get update && apt-get install -y --no-install-recommends \
   libunistring-dev nettle-dev libgmp-dev libidn2-0-dev && \
   apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# libaom
+# libaom for AV1
 git clone https://aomedia.googlesource.com/aom
-mkdir -p aom/builder
+mkdir aom/builder
 cd aom/builder
-cmake -G "Unix Makefiles" \
-  -DCMAKE_INSTALL_PREFIX="$PREFIX" \
-  -DENABLE_TESTS=OFF -DENABLE_NASM=ON -DCMAKE_BUILD_TYPE=Release \
-  -DAOM_EXTRA_C_FLAGS="-fno-lto" ../
-make -j"$(nproc)" && make install
 
-# libsvtav1
-cd "$SOURCE"
-git -C SVT-AV1 pull 2>/dev/null || \
-git clone --recursive https://gitlab.com/AOMediaCodec/SVT-AV1.git -b v2.3.0
-mkdir -p SVT-AV1/build
-cd SVT-AV1/build
 cmake -G "Unix Makefiles" \
-  -DCMAKE_INSTALL_PREFIX="$PREFIX" \
-  -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON \
-  -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF ../
-make -j"$(nproc)" && make install
+  -DCMAKE_INSTALL_PREFIX="$DIST" \
+  -DENABLE_TESTS=OFF \
+  -DENABLE_NASM=ON \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DAOM_EXTRA_C_FLAGS="-fno-lto" \
+  ../
+
+make -j$(nproc)
+make install
+
+# libsvtav1 for AV1
+# temporal version 2.3.0, they breaks ffmpeg build: https://gitlab.com/AOMediaCodec/SVT-AV1/-/commit/988e930c1083ce518ead1d364e3a486e9209bf73#900962ec0dfb11881a5f25ce6fcad8e815c8fd45_1056_1122
+# solution mid-february: https://gitlab.com/AOMediaCodec/SVT-AV1/-/merge_requests/2355#note_2312506245
+# solved https://gitlab.com/AOMediaCodec/SVT-AV1/-/merge_requests/2387
+cd $SOURCE
+
+git -C SVT-AV1 pull 2> /dev/null || \
+git clone --recursive https://gitlab.com/AOMediaCodec/SVT-AV1.git -b v2.3.0
+
+mkdir SVT-AV1/build
+cd SVT-AV1/build
+
+cmake -G "Unix Makefiles" \
+  -DCMAKE_INSTALL_PREFIX="$DIST" \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DBUILD_SHARED_LIBS=ON \
+  -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF \
+  ../
+
+make -j$(nproc)
+make install
 
 pkg-config --modversion aom
 pkg-config --modversion SvtAv1Enc
 
 # nv-codec-headers
 git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git
-cd nv-codec-headers && make PREFIX="$PREFIX" install
+cd nv-codec-headers && make PREFIX="$DIST" install
 
 export PATH=/usr/local/cuda/bin:${PATH}
 NVCCFLAGS="\
