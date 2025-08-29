@@ -1,7 +1,7 @@
 from jetson_containers import CUDA_VERSION, IS_SBSA
 from packaging.version import Version
 
-if CUDA_VERSION <= Version('12.6'):
+if CUDA_VERSION < Version('12.6'):
     NUMPY_PACKAGE = 'numpy<2'
     NUMPY_VERSION_MAJOR = 1
 else:
