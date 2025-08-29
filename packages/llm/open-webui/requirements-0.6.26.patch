@@ -1,0 +1,36 @@
+Subject: [PATCH] path-0626
+---
+Index: backend/requirements.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/requirements.txt b/backend/requirements.txt
+--- a/backend/requirements.txt	(revision 2407d9b905978d68619bdce4021e424046ec8df9)
++++ b/backend/requirements.txt	(date 1756460786588)
+@@ -96,7 +96,7 @@
+ 
+ onnxruntime==1.20.1
+ 
+-faster-whisper==1.1.1
++faster-whisper==1.1.1.post1
+ 
+ PyJWT[crypto]==2.10.1
+ authlib==1.6.1
+Index: pyproject.toml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/pyproject.toml b/pyproject.toml
+--- a/pyproject.toml	(revision 2407d9b905978d68619bdce4021e424046ec8df9)
++++ b/pyproject.toml	(date 1756460786594)
+@@ -97,7 +97,7 @@
+     "rank-bm25==0.2.2",
+ 
+     "onnxruntime==1.20.1",
+-    "faster-whisper==1.1.1",
++    "faster-whisper==1.1.1.post1",
+ 
+     "black==25.1.0",
+     "youtube-transcript-api==1.1.0",
