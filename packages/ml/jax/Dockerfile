@@ -2,7 +2,7 @@
 # name: jax
 # group: jax
 # config: config.py
-# depends: [cuda, cudnn, numpy, llvm:20]
+# depends: [cuda, cudnn, nccl, gdrcopy, nvpl, cusparselt, cudss, nvshmem, numpy, onnx, llvm:18]
 # test: test.py
 # docs: Containers for JAX with CUDA support.
 #---
@@ -15,6 +15,7 @@ ARG JAX_CUDA_ARCH_ARGS \
     JAX_VERSION \
     JAX_BUILD_VERSION \
     ENABLE_NCCL \
+    CUDA_VERSION \
     FORCE_BUILD=off
 
 ENV JAX_CUDA_ARCH_LIST=${JAX_CUDA_ARCH_ARGS} \
@@ -25,4 +26,3 @@ COPY build.sh install.sh link_cuda.sh /tmp/JAX/
 
 # attempt to install JAX from pip, and fall back to building it if the installation fails
 RUN /tmp/JAX/install.sh || /tmp/JAX/build.sh
-    

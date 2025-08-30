@@ -13,7 +13,7 @@ PYBIND_PKG_CONFIG="/usr/share/pkgconfig/pybind11.pc"
 PYBIND_SHARE_CMAKE="/usr/lib/cmake/pybind11"
 PYBIND_INCLUDE_DIR="/usr/include/pybind11"
 
-rm $PYBIND_PKG_CONFIG
+# rm $PYBIND_PKG_CONFIG
 rm $PYBIND_SHARE_CMAKE/*.cmake
 rm -rf $PYBIND_INCLUDE_DIR
 

@@ -77,7 +77,7 @@
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache`](/packages/cuda/cuda) [`python`](/packages/build/python) [`cmake`](/packages/build/cmake/cmake_pip) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 
-| **`llvm:20`** | |
+| **`llvm:21`** | |
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `clang:20` `llvm` `clang` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |

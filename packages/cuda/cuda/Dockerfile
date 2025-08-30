@@ -42,4 +42,18 @@ ENV NVIDIA_VISIBLE_DEVICES=all \
     LDFLAGS="-L/usr/local/cuda/lib64 ${LDFLAGS}" \
     DEBIAN_FRONTEND=noninteractive
 
+# === Fix -lcuda and CCCL includes ===
+# Ensure that the linker searches stubs first and keeps previous flags
+# CUDA 13 moved thrust/cub to include/cccl
+
+ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH} \
+    LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LIBRARY_PATH} \
+    LDFLAGS="-L/usr/local/cuda/lib64/stubs -Wl,-rpath,/usr/local/cuda/lib64 ${LDFLAGS}" \
+    CPLUS_INCLUDE_PATH=/usr/local/cuda/include/cccl:${CPLUS_INCLUDE_PATH} \
+    C_INCLUDE_PATH=/usr/local/cuda/include/cccl:${C_INCLUDE_PATH}
+
+# Secure symlinks (they don't fail if they already exist)
+RUN ln -sf /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/libcuda.so || true \
+ && ln -sf /usr/local/cuda/lib64/stubs/libcuda.so.1 /usr/local/cuda/lib64/libcuda.so.1 || true
+
 WORKDIR /

@@ -10,7 +10,7 @@
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Aliases | `kai_scheduler` |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34.1.0']` |
-| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda`](/packages/cuda/cuda) [`python`](/packages/build/python) [`rust`](/packages/build/rust) [`cmake`](/packages/build/cmake/cmake_pip) [`ninja`](/packages/build/ninja) [`helm`](/packages/build/helm) [`llvm:20`](/packages/build/llvm) |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda`](/packages/cuda/cuda) [`python`](/packages/build/python) [`rust`](/packages/build/rust) [`cmake`](/packages/build/cmake/cmake_pip) [`ninja`](/packages/build/ninja) [`helm`](/packages/build/helm) [`llvm:21`](/packages/build/llvm) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Notes | https://github.com/ai-kai_scheduler/kai_scheduler |
 

@@ -13,7 +13,7 @@ if [ "$FORCE_BUILD" == "on" ]; then
 fi
 
 # install from the Jetson PyPI server ($PIP_INSTALL_URL)
-pip3 install jaxlib==${JAX_VERSION} jax_cuda12_plugin opt_einsum
+pip3 install jaxlib==${JAX_VERSION} jax_cuda13_plugin opt_einsum
 pip3 install --no-dependencies jax==${JAX_VERSION}
 
 if [ $(vercmp "$JAX_VERSION" "0.6.0") -ge 0 ]; then

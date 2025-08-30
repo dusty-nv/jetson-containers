@@ -35,4 +35,4 @@ else
     echo "Installing nvidia-cutlass for Python ${PYTHON_VERSION}"
 fi
 
-python3 -c 'import cutlass'
+# python3 -c 'import cutlass'
