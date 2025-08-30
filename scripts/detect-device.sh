@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Get first and last 'compatible' strings (property is NUL-separated)
+# Get first and last 'compatible' strings (property is NULL-separated)
 mapfile -t COMP < <(tr '\0' '\n' </proc/device-tree/compatible | sed '/^$/d')
 CARRIER="${COMP[0]}"
 SOC="${COMP[${#COMP[@]}-1]}"
