@@ -5,8 +5,8 @@ set -ex
 echo "Building JAX for Jetson"
 
 # Clone JAX repository
-git clone --branch "jax-v${JAX_BUILD_VERSION}" --depth=1 --recursive https://github.com/johnnynunez/jax /opt/jax || \
-git clone --depth=1 --recursive https://github.com/johnnynunez/jax /opt/jax
+git clone --branch "jax-v${JAX_BUILD_VERSION}" --depth=1 --recursive https://github.com/google/jax /opt/jax || \
+git clone --depth=1 --recursive https://github.com/google/jax /opt/jax
 
 cd /opt/jax
 
