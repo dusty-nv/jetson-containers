@@ -12,8 +12,13 @@ SOC="${COMP[${#COMP[@]}-1]}"
 
 # Memory from /proc/meminfo (kB) → MB + GB
 mem_kb=$(awk '/^MemTotal:/ {print $2}' /proc/meminfo)
-mem_mb=$(( mem_kb / 1024 ))
-mem_gb=$(awk -v kb="$mem_kb" 'BEGIN{printf "%.1f", kb/1048576}')
+if [[ -z "$mem_kb" || ! "$mem_kb" =~ ^[0-9]+$ ]]; then
+    mem_mb="unknown"
+    mem_gb="unknown"
+else
+    mem_mb=$(( mem_kb / 1024 ))
+    mem_gb=$(awk -v kb="$mem_kb" 'BEGIN{printf "%.1f", kb/1048576}')
+fi
 
 echo "Carrier: $CARRIER"
 echo "SoC:     $SOC"
