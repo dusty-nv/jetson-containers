@@ -1,7 +1,7 @@
 #---
 # name: sudonim
 # group: llm
-# depends: [python]
+# depends: [cuda, python]
 # test: test.sh
 #---
 ARG BASE_IMAGE
