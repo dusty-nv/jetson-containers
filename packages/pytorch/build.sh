@@ -97,7 +97,7 @@ export USE_TENSORRT=0
 export USE_BLAS="$USE_BLAS"
 export BLAS="$BLAS"
 # If on CUDA 12, leave only SMs supported
-if [[ "${$CUDA_VERSION}" == cu13* ]]; then
+if [[ "${CUDA_VERSION}" == cu13* ]]; then
     echo "CUDA 13 detected, turn off build with CUDSS (as 0.6 supported on CUDA 12)."
     export USE_CUDSS=0
 else
