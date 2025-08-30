@@ -3,6 +3,10 @@ set -euo pipefail
 
 # Get first and last 'compatible' strings (property is NULL-separated)
 mapfile -t COMP < <(tr '\0' '\n' </proc/device-tree/compatible | sed '/^$/d')
+if [ "${#COMP[@]}" -eq 0 ]; then
+    echo "Error: /proc/device-tree/compatible is empty or missing." >&2
+    exit 1
+fi
 CARRIER="${COMP[0]}"
 SOC="${COMP[${#COMP[@]}-1]}"
 
