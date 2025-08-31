@@ -29,15 +29,18 @@ for pkg in debs/*.deb; do
   dpkg-deb -x "$pkg" "${EXTRACT_DIR}"
 done
 
-# 4) Install locally on the current host (optional but mirrors NCCL behavior)
 dpkg -i debs/*.deb || apt-get -f install -y && dpkg -i debs/*.deb
 
-# 5) Show what we’ve staged and confirm libs are visible
 ls -ld "${EXTRACT_DIR}" || true
 ls -la "${EXTRACT_DIR}" || true
 ldconfig -p | grep -i gdrapi || true
 
-# 6) Upload with tarpack (same pattern as NCCL)
+for f in build/pkg/txz/*.txz; do
+  # extract to lib dir to upload with tarpack
+  tar -xvJf "$f" -C build/pkg/txz/lib --strip-components=1
+  # install on current host
+  tar -xvJf "$f" -C /usr/local/ --strip-components=1
+done
 tarpack upload "gdrcopy-${GDRCOPY_VERSION}" "${EXTRACT_DIR}" || echo "failed to upload tarball"
 
 # 7) Cleanup
