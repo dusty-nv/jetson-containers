@@ -37,7 +37,7 @@ if [ "${ARCH}" = "aarch64" ]; then
       export NINJAFLAGS='-j2'
 fi
 
-echo "🚀  Building with MAX_JOBS=${CORES} and CMAKE_BUILD_PARALLEL_LEVEL=${CORES}"
+echo "🚀  Building with MAX_JOBS=${MAX_JOBS} and CMAKE_BUILD_PARALLEL_LEVEL=${MAX_JOBS}"
 export TORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST}"
 
 TORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST}" \
