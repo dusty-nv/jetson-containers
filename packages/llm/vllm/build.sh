@@ -33,7 +33,7 @@ else
 fi
 
 ARCH=$(uname -i
-if [ \"${ARCH}\" = \"aarch64\" ]; then
+if [ "${ARCH}" = "aarch64" ]; then
       export NVCC_THREADS=1
       export CUDA_NVCC_FLAGS=\"-Xcudafe --threads=1\"
       export MAKEFLAGS='-j2'
