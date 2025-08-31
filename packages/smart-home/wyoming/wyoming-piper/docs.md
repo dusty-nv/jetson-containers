@@ -70,6 +70,7 @@ volumes:
 | `PIPER_MAX_PROC` | `int` | `1` | Maximum number of piper process to run simultaneously |
 | `PIPER_DEBUG` | `bool` | `true` | Log `DEBUG` messages |
 | `PIPER_STREAMING` | `bool` | `true` | Enable audio streaming on sentence boundaries |
+| `PIPER_USE_CUDA` | `bool` | `true` | Enable CUDA |
 
 ## Configuration
 
