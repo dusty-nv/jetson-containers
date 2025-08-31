@@ -29,7 +29,7 @@ ENV PIP_BREAK_SYSTEM_PACKAGES=1 \
     PIPER_STREAMING="true"
 
 COPY rootfs/ /
-COPY *.sh *.diff /tmp/wyoming/piper/
+COPY *.sh /tmp/wyoming/piper/
 
 RUN /tmp/wyoming/piper/install.sh || /tmp/wyoming/piper/build.sh
 
