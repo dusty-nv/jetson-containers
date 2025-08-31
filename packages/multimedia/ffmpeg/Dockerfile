@@ -1,7 +1,7 @@
 #---
 # name: ffmpeg
 # group: multimedia
-# depends: [build-essential, video-codec-sdk, llvm:21]
+# depends: [build-essential, video-codec-sdk, llvm:20]
 # notes: https://github.com/FFmpeg/FFmpeg
 # test: test.sh
 #---
