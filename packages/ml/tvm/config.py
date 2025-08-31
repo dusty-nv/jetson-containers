@@ -16,7 +16,7 @@ def tvm(version=None, default=True):
 
     builder = pkg.copy()
     builder['name'] = 'tvm:builder'
-    builder['build_args'] = {**pkg['build_args'], 'FORCE_BUILD': 'on'}
+    builder['build_args'] = {**pkg['build_args'], 'FORCE_BUILD': 'off'}
 
     return pkg, builder
 
