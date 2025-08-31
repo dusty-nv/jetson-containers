@@ -37,7 +37,6 @@ ENV NVIDIA_VISIBLE_DEVICES=all \
     TORCH_NVCC_FLAGS="-Xfatbin -compress-all" \
     CUDA_BIN_PATH="${CUDA_HOME}/bin" \
     CUDA_TOOLKIT_ROOT_DIR="${CUDA_HOME}" \
-    PATH="$CUDA_HOME/bin:${PATH}" \
     LD_LIBRARY_PATH="${CUDA_HOME}/compat:${CUDA_HOME}/lib64:${LD_LIBRARY_PATH}" \
     LDFLAGS="-L/usr/local/cuda/lib64 ${LDFLAGS}" \
     DEBIAN_FRONTEND=noninteractive
@@ -46,7 +45,8 @@ ENV NVIDIA_VISIBLE_DEVICES=all \
 # Ensure that the linker searches stubs first and keeps previous flags
 # CUDA 13 moved thrust/cub to include/cccl
 
-ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}} \
+ENV PATH="${PATH}:${CUDA_HOME}/bin" \
+    LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}} \
     LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LIBRARY_PATH:+:${LIBRARY_PATH}} \
     LDFLAGS="${LDFLAGS:+${LDFLAGS} }-L/usr/local/cuda/lib64/stubs -Wl,-rpath,/usr/local/cuda/lib64" \
     CPLUS_INCLUDE_PATH=/usr/local/cuda/include/cccl${CPLUS_INCLUDE_PATH:+:${CPLUS_INCLUDE_PATH}} \
