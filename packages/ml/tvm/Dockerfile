@@ -12,10 +12,9 @@ FROM ${BASE_IMAGE}
 WORKDIR /opt
 
 ARG TVM_VERSION \
-    TVM_COMMIT \
     CUDAARCHS \
     TORCH_CUDA_ARCH_LIST \
-    FORCE_BUILD=on
+    FORCE_BUILD=off
 
 # MLC/TVM recommends to use LLVM
 RUN apt-get update && \
