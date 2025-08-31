@@ -12,7 +12,6 @@ ARG GDRCOPY_VERSION \
     CUDA_ARCH \
     IS_SBSA \
     FORCE_BUILD=off \
-    DISTRO="ubuntu2404" \
     CUDA_ARCH \
     TMP=/tmp/gdrcopy
 

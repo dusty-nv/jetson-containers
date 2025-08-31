@@ -15,7 +15,7 @@ ARG CUDA_URL \
     CUDA_ARCH \
     CUDA_INSTALLED_VERSION \
     IS_SBSA \
-    DISTRO="ubuntu2404"
+    DISTRO="ubuntu2004"
 
 COPY install.sh /tmp/cuda/install.sh
 RUN /tmp/cuda/install.sh
