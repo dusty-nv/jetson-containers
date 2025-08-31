@@ -15,8 +15,7 @@ env
 if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
   echo "Applying vLLM CMake patches…"
   if [[ ${VLLM_VERSION} == "0.10.2" && ${CUDA_INSTALLED_VERSION} -ge 130 ]]; then
-    git apply -p1 /tmp/vllm/cuda130.diff
-    git apply -p1 /tmp/vllm/CMakeLists.diff
+    git apply -p1 /tmp/vllm/0.10.2.diff
   else
     python3 /tmp/vllm/generate_diff.py                      # (re)generate the .diff files
     git apply -p1 /tmp/vllm/CMakeLists.txt.diff             # patch CMakeLists.txt
