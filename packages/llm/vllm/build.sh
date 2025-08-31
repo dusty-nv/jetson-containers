@@ -26,6 +26,22 @@ else
   echo "SBSA build detected (IS_SBSA=${IS_SBSA}); skipping patch application."
 fi
 
+if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
+    export MAX_JOBS=$(nproc)
+else
+    export MAX_JOBS=$(nproc)
+    export CPLUS_INCLUDE_PATH=/usr/local/cuda-13.0/targets/sbsa-linux/include/cccl
+fi
+
+ARCH=$(uname -i
+if [ \"${ARCH}\" = \"aarch64\" ]; then
+      export NVCC_THREADS=1
+      export CUDA_NVCC_FLAGS=\"-Xcudafe --threads=1\"
+      export MAKEFLAGS='-j2'
+      export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
+      export NINJAFLAGS='-j2'
+fi
+
 # File "/opt/venv/lib/python3.12/site-packages/gguf/gguf_reader.py"
 # `newbyteorder` was removed from the ndarray class in NumPy 2.0
 sed -i \
@@ -36,7 +52,6 @@ sed -i \
 
 grep gguf requirements/common.txt
 
-export MAX_JOBS=$(nproc) # this is for AGX (max 4 working on Orin NX)
 export USE_CUDNN=1
 export VERBOSE=1
 export CUDA_HOME=/usr/local/cuda
