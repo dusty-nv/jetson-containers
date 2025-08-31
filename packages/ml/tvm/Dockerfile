@@ -1,7 +1,7 @@
 #---
 # name: tvm
 # group: ml
-# depends: [pytorch, rust]
+# depends: [pytorch, rust, llvm:20]
 # config: config.py
 # requires: '>=34.1.0'
 # test: test.py
@@ -22,8 +22,6 @@ ARG FORCE_BUILD=on
 # MLC/TVM recommends to use LLVM
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-		llvm-20 \
-		llvm-20-dev \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 # copy installation and build scripts for TVM
