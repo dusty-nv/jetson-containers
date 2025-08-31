@@ -1,7 +1,7 @@
 
 from jetson_containers import CUDA_ARCHITECTURES
 
-def tvm(commit='e3efec216f2d46033b69a51103cee174876cde18', version=None, default=True):
+def tvm(commit='b67650f1020e9e4bd3d69052867611c08f951470', version=None, default=True):
     pkg = package.copy()
 
     pkg['name'] = 'tvm'
