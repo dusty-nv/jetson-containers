@@ -28,16 +28,16 @@ else
     export CPLUS_INCLUDE_PATH=/usr/local/cuda-13.0/targets/sbsa-linux/include/cccl
 fi
 
-ARCH=$(uname -i
-if [ \"${ARCH}\" = \"aarch64\" ]; then
+ARCH=$(uname -i)
+if [ "${ARCH}" = "aarch64" ]; then
       export NVCC_THREADS=1
-      export CUDA_NVCC_FLAGS=\"-Xcudafe --threads=1\"
+      export CUDA_NVCC_FLAGS="-Xcudafe --threads=1"
       export MAKEFLAGS='-j2'
       export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
       export NINJAFLAGS='-j2'
 fi
 
-echo "🚀  Building with MAX_JOBS=${CORES} and CMAKE_BUILD_PARALLEL_LEVEL=${CORES}"
+echo "🚀  Building with MAX_JOBS=${MAX_JOBS} and CMAKE_BUILD_PARALLEL_LEVEL=${MAX_JOBS}"
 export TORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST}"
 
 TORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST}" \
