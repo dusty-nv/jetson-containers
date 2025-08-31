@@ -2,7 +2,7 @@
 # name: minference
 # group: llm
 # config: config.py
-# depends: [cuda, cuda-python, ffmpeg, pytorch, torchvision, torchaudio, torchao, triton, flash-attention, mamba, flexprefill, huggingface_hub, tilelang]
+# depends: [cuda, cuda-python, ffmpeg, pytorch, torchvision, torchaudio, torchao, triton, flash-attention, mamba, flexprefill, huggingface_hub]
 # requires: '>=36'
 # test: test.sh
 # notes: https://github.com/microsoft/MInference
