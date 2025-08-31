@@ -11,6 +11,7 @@ def tvm(commit='b67650f1020e9e4bd3d69052867611c08f951470', version=None, default
     pkg['build_args'] = {
         'CUDAARCHS': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
         'TORCH_CUDA_ARCH_LIST': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES]),
+        'TVM_VERSION': version,
         'TVM_COMMIT': commit,
     }
 
