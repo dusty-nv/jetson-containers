@@ -182,7 +182,7 @@ def build_container(
                 buildkit_val = 1
             progress = " --progress=plain" if buildkit_val == 1 else ""
             if 'dockerfile' in pkg:
-                cmd = f"{sudo_prefix()}DOCKER_BUILDKIT={buildkit_val} BUILDKIT_PROGRESS=plain docker build --network=host{progress}\n"
+                cmd = f"{sudo_prefix()}DOCKER_BUILDKIT={buildkit_val} BUILDKIT_PROGRESS=plain docker build --network=host{progress}" + _NEWLINE_
                 cmd += f"  --tag {container_name}" + _NEWLINE_
                 if no_github_api:
                     dockerfilepath = os.path.join(pkg['path'], pkg['dockerfile'])
