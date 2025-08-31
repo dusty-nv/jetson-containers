@@ -22,8 +22,8 @@ ARG FORCE_BUILD=on
 # MLC/TVM recommends to use LLVM
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-		llvm-18 \
-		llvm-18-dev \
+		llvm-20 \
+		llvm-20-dev \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 # copy installation and build scripts for TVM
