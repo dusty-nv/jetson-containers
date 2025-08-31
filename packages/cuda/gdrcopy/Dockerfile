@@ -32,4 +32,4 @@ RUN apt-get update -y && \
     rm -rf /var/lib/apt/lists/*
 
 COPY install.sh build.sh $TMP/
-RUN /tmp/gdrcopy/install.sh
+RUN $TMP/install.sh || $TMP/build.sh
