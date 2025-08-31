@@ -35,12 +35,12 @@ ls -ld "${EXTRACT_DIR}" || true
 ls -la "${EXTRACT_DIR}" || true
 ldconfig -p | grep -i gdrapi || true
 
+shopt -s nullglob
 for f in build/pkg/txz/*.txz; do
-  # extract to lib dir to upload with tarpack
   tar -xvJf "$f" -C build/pkg/txz/lib --strip-components=1
-  # install on current host
   tar -xvJf "$f" -C /usr/local/ --strip-components=1
 done
+shopt -u nullglob
 tarpack upload "gdrcopy-${GDRCOPY_VERSION}" "${EXTRACT_DIR}" || echo "failed to upload tarball"
 
 # 7) Cleanup
