@@ -32,7 +32,7 @@ else
     export CPLUS_INCLUDE_PATH=/usr/local/cuda-13.0/targets/sbsa-linux/include/cccl
 fi
 
-ARCH=$(uname -i
+ARCH=$(uname -i)
 if [ "${ARCH}" = "aarch64" ]; then
       export CUDA_NVCC_FLAGS="-Xcudafe --threads=1"
       export MAKEFLAGS='-j2'
