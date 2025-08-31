@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euxo pipefail
 
-echo "Installing NVIDIA GDRCopy ${GDRCOPY_VERSION:-unknown}"
+echo "Installing NVIDIA GDRCOPY ${GDRCOPY_VERSION:-unknown}"
 
 # Resolve paths
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
