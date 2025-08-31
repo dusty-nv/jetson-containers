@@ -1,6 +1,6 @@
 
-LLVM_STABLE=21
-LLVM_LATEST=22
+LLVM_STABLE=20
+LLVM_LATEST=21
 
 def llvm(version):
     """
