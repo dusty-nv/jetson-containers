@@ -13,8 +13,8 @@ if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" || "${IS_SBSA,,}" == "false" ]]; th
 else
     export MAX_JOBS=16
 fi
-ARCH=$(uname -i
-if [ \"${ARCH}\" = \"aarch64\" ]; then
+ARCH=$(uname -i)
+if [ "${ARCH}" = "aarch64" ]; then
       export NVCC_THREADS=1
       export CUDA_NVCC_FLAGS=\"-Xcudafe --threads=1\"
       export MAKEFLAGS='-j2'
