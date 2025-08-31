@@ -6,4 +6,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install tvm==${TVM_VERSION}
+pip3 install apache-tvm==${TVM_VERSION}
