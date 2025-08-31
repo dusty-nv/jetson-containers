@@ -58,16 +58,14 @@ if [ "$FORCE_BUILD" == "on" ]; then
 fi
 
 if [ "$PYTORCH_OFFICIAL_WHL" == "on" ]; then
-	echo "##### 🏢Using official PyTorch 2.8 WHL #####"
-  pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cu129
+	echo "##### 🏢Using official PyTorch 2.9 WHL #####"
+  pip install torch==2.9.0 --index-url https://download.pytorch.org/whl/cu130
 else
   # on x86_64, install from pytorch nightly server
   # on aarch64, install from the Jetson pypi server ($PIP_INSTALL_URL)
   pip3 install torch==${TORCH_VERSION} || \
   pip3 install --pre "torch>=${PYTORCH_BUILD_VERSION}.dev,<=${PYTORCH_BUILD_VERSION}"
 fi
-# reinstall numpy<2 on CUDA < 12.9
-bash /tmp/numpy/install.sh
 
 # make sure it loads
 python3 -c 'import torch; \

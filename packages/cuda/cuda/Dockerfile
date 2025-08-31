@@ -37,9 +37,16 @@ ENV NVIDIA_VISIBLE_DEVICES=all \
     TORCH_NVCC_FLAGS="-Xfatbin -compress-all" \
     CUDA_BIN_PATH="${CUDA_HOME}/bin" \
     CUDA_TOOLKIT_ROOT_DIR="${CUDA_HOME}" \
-    PATH="$CUDA_HOME/bin:${PATH}" \
-    LD_LIBRARY_PATH="${CUDA_HOME}/compat:${CUDA_HOME}/lib64:${LD_LIBRARY_PATH}" \
-    LDFLAGS="-L/usr/local/cuda/lib64 ${LDFLAGS}" \
+    PATH="${PATH}:${CUDA_HOME}/bin" \
+    LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${CUDA_HOME}/compat:${CUDA_HOME}/lib64" \
+    LDFLAGS="${LDFLAGS} -L/usr/local/cuda/lib64" \
     DEBIAN_FRONTEND=noninteractive
 
+
+# === Fix for CCCL includes (CUDA 13+) ===
+# CUDA 13 moved thrust/cub to a top-level 'cccl' directory.
+# These paths are needed for compiling code that uses them.
+# The stubs for -lcuda are NOT added to the runtime environment.
+ENV CPLUS_INCLUDE_PATH="${CPLUS_INCLUDE_PATH}:/usr/local/cuda/include/cccl" \
+    C_INCLUDE_PATH="${C_INCLUDE_PATH}:/usr/local/cuda/include/cccl"
 WORKDIR /
