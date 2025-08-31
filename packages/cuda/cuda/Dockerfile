@@ -15,7 +15,7 @@ ARG CUDA_URL \
     CUDA_ARCH \
     CUDA_INSTALLED_VERSION \
     IS_SBSA \
-    DISTRO="ubuntu2004"
+    DISTRO="ubuntu2404"
 
 COPY install.sh /tmp/cuda/install.sh
 RUN /tmp/cuda/install.sh
@@ -37,16 +37,26 @@ ENV NVIDIA_VISIBLE_DEVICES=all \
     TORCH_NVCC_FLAGS="-Xfatbin -compress-all" \
     CUDA_BIN_PATH="${CUDA_HOME}/bin" \
     CUDA_TOOLKIT_ROOT_DIR="${CUDA_HOME}" \
-    PATH="${PATH}:${CUDA_HOME}/bin" \
-    LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${CUDA_HOME}/compat:${CUDA_HOME}/lib64" \
-    LDFLAGS="${LDFLAGS} -L/usr/local/cuda/lib64" \
+    PATH="$CUDA_HOME/bin:${PATH}" \
+    LD_LIBRARY_PATH="${CUDA_HOME}/compat:${CUDA_HOME}/lib64:${LD_LIBRARY_PATH}" \
+    LDFLAGS="-L/usr/local/cuda/lib64 ${LDFLAGS}" \
     DEBIAN_FRONTEND=noninteractive
 
+# === Fix -lcuda and CCCL includes ===
+# Ensure that the linker searches stubs first and keeps previous flags
+# CUDA 13 moved thrust/cub to include/cccl
 
-# === Fix for CCCL includes (CUDA 13+) ===
-# CUDA 13 moved thrust/cub to a top-level 'cccl' directory.
-# These paths are needed for compiling code that uses them.
-# The stubs for -lcuda are NOT added to the runtime environment.
-ENV CPLUS_INCLUDE_PATH="${CPLUS_INCLUDE_PATH}:/usr/local/cuda/include/cccl" \
-    C_INCLUDE_PATH="${C_INCLUDE_PATH}:/usr/local/cuda/include/cccl"
+ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}} \
+    LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LIBRARY_PATH:+:${LIBRARY_PATH}} \
+    LDFLAGS="${LDFLAGS:+${LDFLAGS} }-L/usr/local/cuda/lib64/stubs -Wl,-rpath,/usr/local/cuda/lib64" \
+    CPLUS_INCLUDE_PATH=/usr/local/cuda/include/cccl${CPLUS_INCLUDE_PATH:+:${CPLUS_INCLUDE_PATH}} \
+    C_INCLUDE_PATH=/usr/local/cuda/include/cccl${C_INCLUDE_PATH:+:${C_INCLUDE_PATH}}
+
+# Create symbolic links so that libcuda.so and libcuda.so.1 point to the CUDA stub libraries.
+# This allows linking against CUDA when the actual driver libraries are not available at build time.
+# The '-f' flag forces overwrite if the link or file already exists, and '|| true' prevents the build from failing if linking fails.
+RUN ln -sf /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/libcuda.so || true \
+ && ln -sf /usr/local/cuda/lib64/stubs/libcuda.so.1 /usr/local/cuda/lib64/libcuda.so.1 || true
+
+
 WORKDIR /
