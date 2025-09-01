@@ -116,6 +116,8 @@ cd $SOURCE
   --enable-libaom \
   --enable-libsvtav1 \
   --enable-libdav1d \
+  --extra-cflags=-I/usr/local/cuda/include \
+  --extra-ldflags=-L/usr/local/cuda/lib64 \
   --enable-nvenc \
   --enable-nvdec \
   --enable-cuda \
