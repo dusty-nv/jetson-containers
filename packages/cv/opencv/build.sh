@@ -96,7 +96,7 @@ export CMAKE_POLICY_VERSION_MINIMUM="3.5"
 export CMAKE_LIBRARY_PATH=/usr/local/cuda/lib64/stubs
 export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
 export ENABLE_CONTRIB=1
-# export ENABLE_ROLLING=1 # Build from last commit
+export ENABLE_ROLLING=1 # Build from last commit
 
 cat <<EOF > /opt/opencv-python/cv2/version.py
 opencv_version = "${OPENCV_VERSION}"
@@ -116,15 +116,23 @@ pip3 install /opt/opencv*.whl
 python3 -c "import cv2; print('OpenCV version:', str(cv2.__version__)); print(cv2.getBuildInformation())"
 twine upload --verbose /opt/opencv*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
-# build C++ deb packages
+# [FIX] Ensure the build directory is clean to avoid CMake caching issues from previous failed runs.
+echo "Configuring C++ Debian package build..."
+rm -rf /opt/opencv/build
 mkdir /opt/opencv/build
 cd /opt/opencv/build
 
+# [FIX] Set the PKG_CONFIG_PATH environment variable.
+# This is the crucial step that allows CMake to find system libraries like FFmpeg on Ubuntu.
+export PKG_CONFIG_PATH="/usr/lib/$(uname -i)-linux-gnu/pkgconfig:${PKG_CONFIG_PATH}"
+
+# Now, running cmake will succeed because it can find the correct paths.
 cmake \
     ${OPENCV_BUILD_ARGS} \
     -DOPENCV_EXTRA_MODULES_PATH=/opt/opencv_contrib/modules \
     ../
 
+echo "Building C++ Debian packages..."
 make -j$(nproc)
 make install
 make package
