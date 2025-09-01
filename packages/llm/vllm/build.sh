@@ -41,7 +41,7 @@ python3 -m setuptools_scm
 ARCH=$(uname -i)
 if [ "${ARCH}" = "aarch64" ]; then
       export NVCC_THREADS=1
-      export CUDA_NVCC_FLAGS=\"-Xcudafe --threads=1\"
+      export CUDA_NVCC_FLAGS="-Xcudafe --threads=1"
       export MAKEFLAGS='-j2'
       export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
       export NINJAFLAGS='-j2'
