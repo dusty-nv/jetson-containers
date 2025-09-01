@@ -56,6 +56,7 @@ OPENCV_BUILD_ARGS="\
    -DBUILD_opencv_java=OFF \
    -DCMAKE_BUILD_TYPE=RELEASE \
    -DCMAKE_INSTALL_PREFIX=/usr/local \
+   -DWITH_FFMPEG=ON \
    -DCUDA_ARCH_BIN=${CUDA_ARCH_BIN} \
    -DCUDA_ARCH_PTX= \
    -DCUDA_FAST_MATH=ON \
@@ -115,15 +116,23 @@ pip3 install /opt/opencv*.whl
 python3 -c "import cv2; print('OpenCV version:', str(cv2.__version__)); print(cv2.getBuildInformation())"
 twine upload --verbose /opt/opencv*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
-# build C++ deb packages
+# [FIX] Ensure the build directory is clean to avoid CMake caching issues from previous failed runs.
+echo "Configuring C++ Debian package build..."
+rm -rf /opt/opencv/build
 mkdir /opt/opencv/build
 cd /opt/opencv/build
 
+# [FIX] Set the PKG_CONFIG_PATH environment variable.
+# This is the crucial step that allows CMake to find system libraries like FFmpeg on Ubuntu.
+export PKG_CONFIG_PATH="/usr/lib/$(uname -i)-linux-gnu/pkgconfig:${PKG_CONFIG_PATH}"
+
+# Now, running cmake will succeed because it can find the correct paths.
 cmake \
     ${OPENCV_BUILD_ARGS} \
     -DOPENCV_EXTRA_MODULES_PATH=/opt/opencv_contrib/modules \
     ../
 
+echo "Building C++ Debian packages..."
 make -j$(nproc)
 make install
 make package

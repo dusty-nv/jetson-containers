@@ -2,7 +2,7 @@
 # name: sglang
 # group: llm
 # config: config.py
-# depends: [bitsandbytes, flashinfer, torchao, cuda-python, ffmpeg, mamba, xgrammar, flashinfer, transformers, minference, vllm, torch-memory-saver, sgl-kernel]
+# depends: [bitsandbytes, flashinfer, torchao, cuda-python, ffmpeg, mamba, xgrammar, flashinfer, transformers, vllm, torch-memory-saver, sgl-kernel]
 # requires: '>=36'
 # test: test.py
 # notes: https://github.com/sgl-project/sglang

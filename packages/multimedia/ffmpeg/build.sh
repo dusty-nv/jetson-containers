@@ -7,7 +7,7 @@ PREFIX="/usr/local"
 
 # Source + a versioned, absolute dist dir for FFmpeg
 SOURCE="/opt/ffmpeg"
-DIST="/opt/ffmpeg/dist-${FFMPEG_VERSION}"
+DIST="/opt/ffmpeg/dist"
 # pkg-config search path (include both /usr/local and our dist)
 export PKG_CONFIG_PATH="${PREFIX}/lib/pkgconfig:${DIST}/lib/pkgconfig:${PKG_CONFIG_PATH:-}"
 
@@ -66,6 +66,9 @@ cmake -G "Unix Makefiles" \
 make -j$(nproc)
 make install
 
+# make these discoverable to ffmpeg build
+export PKG_CONFIG_PATH="$DIST/lib/pkgconfig:$PKG_CONFIG_PATH"
+
 pkg-config --modversion aom
 pkg-config --modversion SvtAv1Enc
 
@@ -123,6 +126,7 @@ make -j"$(nproc)"
 make install
 
 DIST_ABS="$(realpath "$DIST")"
+echo "FFmpeg built and installed to $DIST_ABS"
 test -x "${DIST_ABS}/bin/ffmpeg" || { echo "FFmpeg binary not found in ${DIST_ABS}/bin"; exit 1; }
 tarpack upload "ffmpeg-${FFMPEG_VERSION}" "${DIST_ABS}" || echo "failed to upload tarball"
 

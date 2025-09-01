@@ -12,19 +12,8 @@ env
 # cp /tmp/vllm/${VLLM_VERSION}.fa.diff /tmp/vllm/fa.diff
 # git apply /tmp/vllm/${VLLM_VERSION}.diff
 
-if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
-  echo "Applying vLLM CMake patches…"
-  if [[ ${VLLM_VERSION} == "0.10.2" && ${CUDA_INSTALLED_VERSION} -ge 130 ]]; then
-    git apply -p1 /tmp/vllm/cuda130.diff
-    git apply -p1 /tmp/vllm/CMakeLists.diff
-  else
-    python3 /tmp/vllm/generate_diff.py                      # (re)generate the .diff files
-    git apply -p1 /tmp/vllm/CMakeLists.txt.diff             # patch CMakeLists.txt
-    git apply -p1 /tmp/vllm/vllm_flash_attn.cmake.diff      # patch vllm_flash_attn.cmake
-  fi
-else
-  echo "SBSA build detected (IS_SBSA=${IS_SBSA}); skipping patch application."
-fi
+echo "Applying vLLM CMake patches…"
+git apply -p1 /tmp/vllm/0.10.2.diff || echo "patch already applied"
 
 # File "/opt/venv/lib/python3.12/site-packages/gguf/gguf_reader.py"
 # `newbyteorder` was removed from the ndarray class in NumPy 2.0
@@ -36,7 +25,7 @@ sed -i \
 
 grep gguf requirements/common.txt
 
-export MAX_JOBS=$(nproc) # this is for AGX (max 4 working on Orin NX)
+
 export USE_CUDNN=1
 export VERBOSE=1
 export CUDA_HOME=/usr/local/cuda
@@ -48,6 +37,17 @@ python3 use_existing_torch.py || echo "skipping vllm/use_existing_torch.py"
 
 pip3 install -r requirements/build.txt -v
 python3 -m setuptools_scm
+
+ARCH=$(uname -i)
+if [ "${ARCH}" = "aarch64" ]; then
+      export NVCC_THREADS=1
+      export CUDA_NVCC_FLAGS="-Xcudafe --threads=1"
+      export MAKEFLAGS='-j16'
+      export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
+      export NINJAFLAGS='-j16'
+      export MAX_JOBS=16
+fi
+
 pip3 wheel --no-build-isolation -v --wheel-dir=/opt/vllm/wheels .
 pip3 install /opt/vllm/wheels/vllm*.whl
 

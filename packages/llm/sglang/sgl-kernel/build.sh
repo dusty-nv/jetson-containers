@@ -21,20 +21,25 @@ cd "${REPO_DIR}/sgl-kernel" || exit 1
 sed -i 's/==/>=/g' pyproject.toml
 # 🔧 Build step for sgl-kernel
 echo "🔨  Building sgl-kernel…"
-if [[ "${IS_SBSA:-}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
-  export CORES=2
+if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
+    export MAX_JOBS=6
 else
-  export CORES=12  # GH200
-  # Set the correct include path to point to the CCCL directory
-  export CPLUS_INCLUDE_PATH=/usr/local/cuda-13.0/targets/sbsa-linux/include/cccl
+    export MAX_JOBS=16
+    export CPLUS_INCLUDE_PATH=/usr/local/cuda-13.0/targets/sbsa-linux/include/cccl
 fi
 
-export NVCC_THREADS=1
-pip3 install "cmake<4"  # Ensure compatible CMake version
-echo "🚀  Building with MAX_JOBS=${CORES} and CMAKE_BUILD_PARALLEL_LEVEL=${CORES}"
+ARCH=$(uname -i)
+if [ "${ARCH}" = "aarch64" ]; then
+      export NVCC_THREADS=1
+      export CUDA_NVCC_FLAGS="-Xcudafe --threads=1"
+      export MAKEFLAGS='-j2'
+      export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
+      export NINJAFLAGS='-j2'
+fi
+
+echo "🚀  Building with MAX_JOBS=${MAX_JOBS} and CMAKE_BUILD_PARALLEL_LEVEL=${MAX_JOBS}"
 export TORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST}"
-MAX_JOBS="${CORES}" \
-CMAKE_BUILD_PARALLEL_LEVEL="${CORES}" \
+
 TORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST}" \
 CMAKE_ARGS="-DCMAKE_POLICY_VERSION_MINIMUM=3.5" \
 pip3 wheel . --no-build-isolation --wheel-dir "${PIP_WHEEL_DIR}"

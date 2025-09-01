@@ -40,6 +40,8 @@ RUN set -ex \
         nano \
         zip \
         unzip \
+        libnuma-dev \
+        libibverbs-dev \
         time \
         sshpass \
         ssh-client \
