@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3f1f9a781..2703fc4d1 100644
+index 3f1f9a781..58f485759 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -82,8 +82,11 @@ find_package(Torch REQUIRED)
@@ -11,7 +11,7 @@ index 3f1f9a781..2703fc4d1 100644
 +elseif(DEFINED CMAKE_CUDA_COMPILER_VERSION AND
     CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL 12.8)
 -  set(CUDA_SUPPORTED_ARCHS "7.0;7.2;7.5;8.0;8.6;8.7;8.9;9.0;10.0;10.1;12.0")
-+  set(CUDA_SUPPORTED_ARCHS "7.0;7.2;7.5;8.0;8.6;8.7;8.9;9.0;;10.1;12.0")
++  set(CUDA_SUPPORTED_ARCHS "7.0;7.2;7.5;8.0;8.6;8.7;8.9;9.0;12.0")
  else()
    set(CUDA_SUPPORTED_ARCHS "7.0;7.2;7.5;8.0;8.6;8.7;8.9;9.0")
  endif()
