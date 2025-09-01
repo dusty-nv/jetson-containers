@@ -7,7 +7,7 @@ PREFIX="/usr/local"
 
 # Source + a versioned, absolute dist dir for FFmpeg
 SOURCE="/opt/ffmpeg"
-DIST="/opt/ffmpeg/dist-${FFMPEG_VERSION}"
+DIST="/opt/ffmpeg/dist"
 # pkg-config search path (include both /usr/local and our dist)
 export PKG_CONFIG_PATH="${PREFIX}/lib/pkgconfig:${DIST}/lib/pkgconfig:${PKG_CONFIG_PATH:-}"
 
@@ -65,6 +65,9 @@ cmake -G "Unix Makefiles" \
 
 make -j$(nproc)
 make install
+
+# make these discoverable to ffmpeg build
+export PKG_CONFIG_PATH="$DIST/lib/pkgconfig:$PKG_CONFIG_PATH"
 
 pkg-config --modversion aom
 pkg-config --modversion SvtAv1Enc
