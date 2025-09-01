@@ -25,7 +25,7 @@ sed -i \
 
 grep gguf requirements/common.txt
 
-export MAX_JOBS=$(nproc) # this is for AGX (max 4 working on Orin NX)
+
 export USE_CUDNN=1
 export VERBOSE=1
 export CUDA_HOME=/usr/local/cuda
@@ -37,6 +37,17 @@ python3 use_existing_torch.py || echo "skipping vllm/use_existing_torch.py"
 
 pip3 install -r requirements/build.txt -v
 python3 -m setuptools_scm
+
+ARCH=$(uname -i)
+if [ "${ARCH}" = "aarch64" ]; then
+      export NVCC_THREADS=1
+      export CUDA_NVCC_FLAGS="-Xcudafe --threads=1"
+      export MAKEFLAGS='-j16'
+      export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
+      export NINJAFLAGS='-j16'
+      export MAX_JOBS=16
+fi
+
 pip3 wheel --no-build-isolation -v --wheel-dir=/opt/vllm/wheels .
 pip3 install /opt/vllm/wheels/vllm*.whl
 
