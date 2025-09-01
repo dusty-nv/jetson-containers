@@ -12,7 +12,8 @@ env
 # cp /tmp/vllm/${VLLM_VERSION}.fa.diff /tmp/vllm/fa.diff
 # git apply /tmp/vllm/${VLLM_VERSION}.diff
 
-git apply -p1 /tmp/vllm/0.10.2.diff
+echo "Applying vLLM CMake patches…"
+git apply -p1 /tmp/vllm/0.10.2.diff || echo "Patch already applied, skipping"
 
 if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
     export MAX_JOBS=$(nproc)
@@ -24,9 +25,9 @@ fi
 ARCH=$(uname -i)
 if [ "${ARCH}" = "aarch64" ]; then
       export CUDA_NVCC_FLAGS="-Xcudafe --threads=1"
-      export MAKEFLAGS='-j2'
+      export MAKEFLAGS='-j16'
       export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
-      export NINJAFLAGS='-j2'
+      export NINJAFLAGS='-j16'
 fi
 
 # File "/opt/venv/lib/python3.12/site-packages/gguf/gguf_reader.py"
