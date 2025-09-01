@@ -2,7 +2,7 @@
 # name: wyoming-piper
 # group: wyoming
 # config: config.py
-# depends: [cuda, cudnn, python, homeassistant-base, piper-tts]
+# depends: [python, homeassistant-base, piper1-tts]
 # test: test.sh
 # requires: '>=34.1.0'
 # docs: docs.md
@@ -16,8 +16,6 @@ ARG FORCE_BUILD=off \
     WYOMING_PIPER_BRANCH
 
 ENV PIP_BREAK_SYSTEM_PACKAGES=1 \
-    WYOMING_PIPER_VERSION="$WYOMING_PIPER_VERSION" \
-    WYOMING_PIPER_BRANCH="$WYOMING_PIPER_BRANCH" \
     PIPER_CACHE=/data/models/piper \
     PIPER_PORT=10200 \
     PIPER_UPDATE_VOICES="true" \
@@ -26,14 +24,12 @@ ENV PIP_BREAK_SYSTEM_PACKAGES=1 \
     PIPER_NOISE_W="0.333" \
     PIPER_SPEAKER="777" \
     PIPER_VOICE="en_US-libritts_r-medium" \
-    PIPER_MAX_PROC="1" \
     PIPER_DEBUG="true" \
+    PIPER_USE_CUDA="true" \
     PIPER_STREAMING="true"
 
-WORKDIR /
-
 COPY rootfs/ /
-COPY *.sh *.diff /tmp/wyoming/piper/
+COPY *.sh /tmp/wyoming/piper/
 
 RUN /tmp/wyoming/piper/install.sh || /tmp/wyoming/piper/build.sh
 

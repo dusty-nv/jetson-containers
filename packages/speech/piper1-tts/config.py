@@ -10,7 +10,7 @@ def piper(version: str, branch: str = None, default: bool = False) -> list:
     pkg['name'] = f'piper1-tts:{wanted_version}'
     pkg['build_args'] = {
         'PIPER_VERSION': wanted_version,
-        'PIPER_BRANCH': branch or wanted_version,
+        'PIPER_BRANCH': branch or f"v{wanted_version}",
     }
 
     builder = pkg.copy()
@@ -24,5 +24,6 @@ def piper(version: str, branch: str = None, default: bool = False) -> list:
     return pkg, builder
 
 package = [
-    piper("1.3.0", branch="main", default=True),
+    piper("1.3.0"),
+    piper("1.3.1", branch="main", default=True),
 ]

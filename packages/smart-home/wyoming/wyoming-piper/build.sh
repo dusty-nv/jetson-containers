@@ -2,6 +2,8 @@
 # wyoming-piper
 set -ex
 
+echo "Building wyoming-piper ${WYOMING_PIPER_VERSION} (${WYOMING_PIPER_BRANCH})"
+
 pip3 install -U \
    build \
    wheel
@@ -9,8 +11,9 @@ pip3 install -U \
 git clone --branch=${WYOMING_PIPER_BRANCH} https://github.com/rhasspy/wyoming-piper /tmp/wyoming-piper
 cd /tmp/wyoming-piper
 
-git apply /tmp/wyoming/piper/wyoming-piper-cuda.diff
-git status
+sed -i.bak -E \
+  -e 's/"piper-tts==[^"]+"/"piper-tts"/' \
+  pyproject.toml
 
 python -m build --wheel --outdir $PIP_WHEEL_DIR
 
