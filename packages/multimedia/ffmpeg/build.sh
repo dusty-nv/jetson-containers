@@ -126,6 +126,7 @@ make -j"$(nproc)"
 make install
 
 DIST_ABS="$(realpath "$DIST")"
+echo "FFmpeg built and installed to $DIST_ABS"
 test -x "${DIST_ABS}/bin/ffmpeg" || { echo "FFmpeg binary not found in ${DIST_ABS}/bin"; exit 1; }
 tarpack upload "ffmpeg-${FFMPEG_VERSION}" "${DIST_ABS}" || echo "failed to upload tarball"
 
