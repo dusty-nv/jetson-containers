@@ -11,10 +11,17 @@ cd /opt/xformers
 if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
     export MAX_JOBS=6
 else
-    export MAX_JOBS="$(nproc)"
+    export MAX_JOBS=16
 fi
-export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
-export NVCC_THREADS=1
+ARCH=$(uname -i)
+if [ "${ARCH}" = "aarch64" ]; then
+      export NVCC_THREADS=1
+      export CUDA_NVCC_FLAGS="-Xcudafe --threads=1"
+      export MAKEFLAGS='-j2'
+      export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
+      export NINJAFLAGS='-j2'
+fi
+
 echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS"
 
 MAX_JOBS=$MAX_JOBS \

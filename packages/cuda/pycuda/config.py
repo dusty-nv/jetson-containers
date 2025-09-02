@@ -1,7 +1,29 @@
-from jetson_containers import PYTHON_VERSION
+from jetson_containers import CUDA_VERSION
 from packaging.version import Version
 
-package['build_args'] = {
-    # v2022.1 is the last version to support Python 3.6
-    'PYCUDA_VERSION': 'v2022.1' if PYTHON_VERSION == Version('3.6') else 'main',
-}
+def pycuda(version, requires=None, default=False):
+    pkg = package.copy()
+
+    if requires:
+        pkg['requires'] = requires
+
+    pkg['name'] = f'pycuda:{version}'
+
+    pkg['build_args'] = {
+        'PYCUDA_VERSION': version
+    }
+
+    builder = pkg.copy()
+
+    builder['name'] = f'pycuda:{version}-builder'
+    builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
+
+    if default:
+        pkg['alias'] = 'pycuda'
+        builder['alias'] = 'pycuda:builder'
+
+    return pkg, builder
+
+package = [
+    pycuda('2025.1.1', default=(CUDA_VERSION >= Version('12.6'))),
+]

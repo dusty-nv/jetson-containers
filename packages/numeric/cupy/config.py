@@ -4,7 +4,7 @@ from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES
 # latest cupy versions to support Python 3.8 (for JetPack 5)
 # and Python 3.6 (for JetPack 4), respectively
 if L4T_VERSION.major >= 36:
-    CUPY_VERSION = 'v13.5.1'
+    CUPY_VERSION = 'v13.6.0'
 elif L4T_VERSION.major >= 34:
     CUPY_VERSION = 'v12.1.0'
 else:

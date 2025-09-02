@@ -1,4 +1,4 @@
-from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES
+from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES, CUDA_VERSION
 
 def jax(version, requires=None, alias=None, default=False):
     """
@@ -18,6 +18,8 @@ def jax(version, requires=None, alias=None, default=False):
         'JAX_CUDA_ARCH_ARGS': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES]),
         'JAX_VERSION': version,
         'JAX_BUILD_VERSION': build_version,
+        'CUDA_VERSION': CUDA_VERSION,
+
     }
 
     if L4T_VERSION.major >= 36:
@@ -40,5 +42,6 @@ def jax(version, requires=None, alias=None, default=False):
 
 package = [
     jax('0.4.38', requires='>=35'), # It works from jetpack 5 11.8 Cuda & 8.6 Cudnn
-    jax('0.7.1', requires='>=36', default=True), # Blackwell Support
+    jax('0.6.2', requires='==36.*'), # It works from jetpack 5 11.8 Cuda & 8.6 Cudnn
+    jax('0.7.2', requires='>=38', default=True), # Blackwell Support
 ]

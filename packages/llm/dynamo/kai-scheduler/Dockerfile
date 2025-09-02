@@ -12,7 +12,7 @@ FROM ${BASE_IMAGE}
 ARG KAI_SCHEDULER_VERSION \
     KAI_SCHEDULER_VERSION_SPEC \
     SYSTEM_ARM
-    
+
 
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends \

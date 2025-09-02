@@ -2,7 +2,8 @@
 set -ex
 echo "Building PyCUDA ${PYCUDA_VERSION}"
 
-git clone --branch=${PYCUDA_VERSION} --depth=1 --recursive https://github.com/inducer/pycuda /opt/pycuda
+git clone --branch=v${PYCUDA_VERSION} --depth=1 --recursive https://github.com/inducer/pycuda /opt/pycuda || \
+git clone --depth=1 --recursive https://github.com/inducer/pycuda /opt/pycuda
 cd /opt/pycuda
 
 export MAX_JOBS="$(nproc)"

@@ -25,6 +25,8 @@ RUN apt-get update -y && \
         libprotobuf-dev \
         libsm6 \
         libxext6 \
+        libnuma-dev \
+        libibverbs-dev \
         libgl1 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*

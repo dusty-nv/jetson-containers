@@ -13,7 +13,7 @@ def llvm(version):
     pkg['alias'] = [f'clang:{version}']
 
     pkg['build_args'] = {'LLVM_VERSION': version}
-    
+
     if version == LLVM_STABLE:
         pkg['alias'] += ['llvm', 'clang']
 

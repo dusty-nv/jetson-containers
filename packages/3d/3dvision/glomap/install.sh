@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
-set -ex
+set -euxo pipefail
 
-if [ "$FORCE_BUILD" == "on" ]; then
-	echo "Forcing build of glomap ${GLOMAP}"
-	exit 1
+echo "Installing GLOMAP ${GLOMAP_VERSION}"
+
+if [[ "${FORCE_BUILD:-off}" == "on" ]]; then
+  echo "Forcing build of glomap ${GLOMAP_VERSION}"
+  exit 1
 fi
 
-pip3 install glomap==${GLOMAP_VERSION}
+tarpack install "glomap-${GLOMAP_VERSION}" || {echo "tarpack install failed for glomap-${GLOMAP_VERSION}, falling back to pip."}
+
+# pip3 install "glomap==${GLOMAP_VERSION}"
+ldconfig || true

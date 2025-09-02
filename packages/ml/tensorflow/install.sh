@@ -4,11 +4,6 @@ set -ex
 # organize CUDA how TF expects it
 bash /tmp/TENSORFLOW/link_cuda.sh
 
-# install LLVM
-wget https://apt.llvm.org/llvm.sh
-chmod u+x llvm.sh
-./llvm.sh 20 all
-
 # TENSORFLOW C++ extensions frequently use ninja for parallel builds
 pip3 install scikit-build ninja six numpy wheel
 

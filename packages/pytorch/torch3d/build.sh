@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -ex
 echo "Building pytorch3d ${PYTORCH3D_VERSION}"
-   
+
 git clone --branch v${PYTORCH3D_VERSION} --recursive --depth=1 https://github.com/facebookresearch/pytorch3d /opt/pytorch3d || \
-git clone --recursive --depth=1 https://github.com/facebookresearch/pytorch3d /opt/pytorch3d 
+git clone --recursive --depth=1 https://github.com/facebookresearch/pytorch3d /opt/pytorch3d
 
 cd /opt/pytorch3d
 pip3 install scikit-image matplotlib imageio plotly opencv-contrib-python
@@ -11,6 +11,7 @@ pip3 install scikit-image matplotlib imageio plotly opencv-contrib-python
 export CUB_HOME=/usr/local/cuda-*/include/
 
 export MAX_JOBS=$(nproc)
+export NVCC_FLAGS="-static-global-template-stub=false"
 python3 setup.py --verbose bdist_wheel --dist-dir /opt
 
 cd ../

@@ -8,6 +8,8 @@ git clone --depth=1 --recursive https://github.com/nv-tlabs/3dgrut /opt/3dgrut
 # Navigate to the directory containing PyMeshLab's setup.py
 cd /opt/3dgrut
 
+sed -i 's/python_requires=">=3\.11"/python_requires=">=3.10"/' /opt/3dgrut/setup.py
+
 export MAX_JOBS="$(nproc)"
 export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
@@ -22,6 +24,7 @@ RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 110 && \
 
 sed -i '/^--find-links/d' requirements.txt
 sed -i 's/kaolin==0.17.0/kaolin>=0.17.0/' requirements.txt
+sed -i '/^opencv-python$/d' requirements.txt
 
 pip install -r requirements.txt
 pip install -e .
@@ -45,3 +48,4 @@ rm -rf /tmp/NVIDIA-Linux-aarch64-580.76.05.run /tmp/NVIDIA-Linux-aarch64-580.76.
 cd /opt/3dgrut
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/3dgrut/wheels/threedgrut-*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+pip3 install --force-reinstall opencv-contrib-python

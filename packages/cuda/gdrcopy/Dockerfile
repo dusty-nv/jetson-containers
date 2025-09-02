@@ -9,7 +9,11 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG GDRCOPY_VERSION \
-    DISTRO="ubuntu2004"
+    CUDA_ARCH \
+    IS_SBSA \
+    FORCE_BUILD=off \
+    CUDA_ARCH \
+    TMP=/tmp/gdrcopy
 
 # https://developer.download.nvidia.com/compute/redist/gdrcopy/CUDA%2012.8/
 
@@ -26,5 +30,5 @@ RUN apt-get update -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-COPY install.sh /tmp/gdrcopy/
-RUN /tmp/gdrcopy/install.sh
+COPY install.sh build.sh $TMP/
+RUN $TMP/install.sh || $TMP/build.sh

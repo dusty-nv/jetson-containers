@@ -1,0 +1,362 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3f1f9a781..58f485759 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -82,8 +82,11 @@ find_package(Torch REQUIRED)
+ # Supported NVIDIA architectures.
+ # This check must happen after find_package(Torch) because that's when CMAKE_CUDA_COMPILER_VERSION gets defined
+ if(DEFINED CMAKE_CUDA_COMPILER_VERSION AND
++   CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL 13.0)
++  set(CUDA_SUPPORTED_ARCHS "8.0;8.7;8.9;9.0;10.0;10.3;11.0;12.0;12.1")
++elseif(DEFINED CMAKE_CUDA_COMPILER_VERSION AND
+    CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL 12.8)
+-  set(CUDA_SUPPORTED_ARCHS "7.0;7.2;7.5;8.0;8.6;8.7;8.9;9.0;10.0;10.1;12.0")
++  set(CUDA_SUPPORTED_ARCHS "7.0;7.2;7.5;8.0;8.6;8.7;8.9;9.0;12.0")
+ else()
+   set(CUDA_SUPPORTED_ARCHS "7.0;7.2;7.5;8.0;8.6;8.7;8.9;9.0")
+ endif()
+@@ -427,7 +430,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
+ 
+   # The cutlass_scaled_mm kernels for Geforce Blackwell SM120 (c3x, i.e. CUTLASS 3.x) require
+   # CUDA 12.8 or later
+-  cuda_archs_loose_intersection(SCALED_MM_ARCHS "12.0;12.0a" "${CUDA_ARCHS}")
++  cuda_archs_loose_intersection(SCALED_MM_ARCHS "12.0;12.0a;12.1;12.1a" "${CUDA_ARCHS}")
+   if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.8 AND SCALED_MM_ARCHS)
+     set(SRCS
+       "csrc/quantization/cutlass_w8a8/scaled_mm_c3x_sm120.cu"
+@@ -457,7 +460,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
+ 
+   # The cutlass_scaled_mm kernels for Blackwell SM100 (c3x, i.e. CUTLASS 3.x)
+   # require CUDA 12.8 or later
+-  cuda_archs_loose_intersection(SCALED_MM_ARCHS "10.0a;10.1a" "${CUDA_ARCHS}")
++  cuda_archs_loose_intersection(SCALED_MM_ARCHS "10.0a;10.3a;11.0a" "${CUDA_ARCHS}")
+   if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.8 AND SCALED_MM_ARCHS)
+     set(SRCS
+       "csrc/quantization/cutlass_w8a8/scaled_mm_c3x_sm100.cu"
+@@ -537,7 +540,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
+ 
+   # The nvfp4_scaled_mm_sm120 kernels for Geforce Blackwell SM120 require
+   # CUDA 12.8 or later
+-  cuda_archs_loose_intersection(FP4_ARCHS "12.0;12.0a" "${CUDA_ARCHS}")
++  cuda_archs_loose_intersection(FP4_ARCHS "12.0;12.0a;12.1;12.1a" "${CUDA_ARCHS}")
+   if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.8 AND FP4_ARCHS)
+     set(SRCS
+       "csrc/quantization/fp4/nvfp4_quant_kernels.cu"
+@@ -556,7 +559,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
+   endif()
+ 
+   # FP4 Archs and flags
+-  cuda_archs_loose_intersection(FP4_ARCHS "10.0a" "${CUDA_ARCHS}")
++  cuda_archs_loose_intersection(FP4_ARCHS "10.0a;10.3a;11.0a" "${CUDA_ARCHS}")
+   if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.8 AND FP4_ARCHS)
+     set(SRCS
+       "csrc/quantization/fp4/nvfp4_quant_kernels.cu"
+@@ -578,7 +581,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
+   endif()
+ 
+   # CUTLASS MLA Archs and flags
+-  cuda_archs_loose_intersection(MLA_ARCHS "10.0a" "${CUDA_ARCHS}")
++  cuda_archs_loose_intersection(MLA_ARCHS "10.0a;10.3a;11.0a" "${CUDA_ARCHS}")
+   if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.8 AND MLA_ARCHS)
+     set(SRCS
+       "csrc/attention/mla/cutlass_mla_kernels.cu"
+@@ -623,7 +626,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
+     endif()
+   endif()
+ 
+-  cuda_archs_loose_intersection(SCALED_MM_ARCHS "10.0a" "${CUDA_ARCHS}")
++  cuda_archs_loose_intersection(SCALED_MM_ARCHS "10.0a;10.3a;11.0a" "${CUDA_ARCHS}")
+   if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.8 AND SCALED_MM_ARCHS)
+     set(SRCS "csrc/quantization/cutlass_w8a8/moe/grouped_mm_c3x_sm100.cu")
+     set_gencode_flags_for_srcs(
+@@ -644,7 +647,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
+   endif()
+ 
+   # moe_data.cu is used by all CUTLASS MoE kernels.
+-  cuda_archs_loose_intersection(CUTLASS_MOE_DATA_ARCHS "9.0a;10.0a" "${CUDA_ARCHS}")
++  cuda_archs_loose_intersection(CUTLASS_MOE_DATA_ARCHS "9.0a;10.0a;10.3a;11.0a;12.1a" "${CUDA_ARCHS}")
+   if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.3 AND CUTLASS_MOE_DATA_ARCHS)
+     set(SRCS "csrc/quantization/cutlass_w8a8/moe/moe_data.cu")
+     set_gencode_flags_for_srcs(
+@@ -663,7 +666,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
+     endif()
+   endif()
+ 
+-  cuda_archs_loose_intersection(SCALED_MM_ARCHS "10.0a" "${CUDA_ARCHS}")
++  cuda_archs_loose_intersection(SCALED_MM_ARCHS "10.0a;10.3a;11.0a" "${CUDA_ARCHS}")
+   if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.8 AND SCALED_MM_ARCHS)
+     set(SRCS "csrc/quantization/cutlass_w8a8/moe/blockwise_scaled_group_mm_sm100.cu")
+     set_gencode_flags_for_srcs(
+@@ -943,4 +946,4 @@ if (VLLM_GPU_LANG STREQUAL "CUDA")
+ 
+     # vllm-flash-attn should be last as it overwrites some CMake functions
+     include(cmake/external_projects/vllm_flash_attn.cmake)
+-endif ()
++endif ()
+\ No newline at end of file
+diff --git a/cmake/external_projects/vllm_flash_attn.cmake b/cmake/external_projects/vllm_flash_attn.cmake
+index 49defccbb..eec452c5a 100644
+--- a/cmake/external_projects/vllm_flash_attn.cmake
++++ b/cmake/external_projects/vllm_flash_attn.cmake
+@@ -27,12 +27,14 @@ endif()
+ if (DEFINED ENV{VLLM_FLASH_ATTN_SRC_DIR})
+   set(VLLM_FLASH_ATTN_SRC_DIR $ENV{VLLM_FLASH_ATTN_SRC_DIR})
+ endif()
+-
++set(patch_vllm_flash_attn git apply /tmp/vllm/fa.diff)
+ if(VLLM_FLASH_ATTN_SRC_DIR)
+   FetchContent_Declare(
+           vllm-flash-attn SOURCE_DIR 
+           ${VLLM_FLASH_ATTN_SRC_DIR}
+           BINARY_DIR ${CMAKE_BINARY_DIR}/vllm-flash-attn
++          PATCH_COMMAND ${patch_vllm_flash_attn}
++          UPDATE_DISCONNECTED 1
+   )
+ else()
+   FetchContent_Declare(
+@@ -42,6 +44,8 @@ else()
+           GIT_PROGRESS TRUE
+           # Don't share the vllm-flash-attn build between build types
+           BINARY_DIR ${CMAKE_BINARY_DIR}/vllm-flash-attn
++          PATCH_COMMAND ${patch_vllm_flash_attn}
++          UPDATE_DISCONNECTED 1
+   )
+ endif()
+ 
+diff --git a/csrc/layernorm_kernels.cu b/csrc/layernorm_kernels.cu
+index f051eb070..a94995ad0 100644
+--- a/csrc/layernorm_kernels.cu
++++ b/csrc/layernorm_kernels.cu
+@@ -6,8 +6,15 @@
+ 
+ #ifndef USE_ROCM
+   #include <cub/cub.cuh>
++  #include <cuda/std/functional>
++  using AddOp = cuda::std::plus<float>;
++  using MaxReduceOp = cuda::maximum<>;
++  using MinReduceOp = cuda::minimum<>;
+ #else
+   #include <hipcub/hipcub.hpp>
++  using AddOp = cub::Sum;
++  using MaxReduceOp = cub::Max;
++  using MinReduceOp = cub::Min;
+ #endif
+ 
+ namespace vllm {
+@@ -30,7 +37,7 @@ __global__ void rms_norm_kernel(
+ 
+   using BlockReduce = cub::BlockReduce<float, 1024>;
+   __shared__ typename BlockReduce::TempStorage reduceStore;
+-  variance = BlockReduce(reduceStore).Reduce(variance, cub::Sum{}, blockDim.x);
++  variance = BlockReduce(reduceStore).Reduce(variance, AddOp{}, blockDim.x);
+ 
+   if (threadIdx.x == 0) {
+     s_variance = rsqrtf(variance / hidden_size + epsilon);
+@@ -85,7 +92,7 @@ fused_add_rms_norm_kernel(
+ 
+   using BlockReduce = cub::BlockReduce<float, 1024>;
+   __shared__ typename BlockReduce::TempStorage reduceStore;
+-  variance = BlockReduce(reduceStore).Reduce(variance, cub::Sum{}, blockDim.x);
++  variance = BlockReduce(reduceStore).Reduce(variance, AddOp{}, blockDim.x);
+ 
+   if (threadIdx.x == 0) {
+     s_variance = rsqrtf(variance / hidden_size + epsilon);
+@@ -126,7 +133,7 @@ fused_add_rms_norm_kernel(
+ 
+   using BlockReduce = cub::BlockReduce<float, 1024>;
+   __shared__ typename BlockReduce::TempStorage reduceStore;
+-  variance = BlockReduce(reduceStore).Reduce(variance, cub::Sum{}, blockDim.x);
++  variance = BlockReduce(reduceStore).Reduce(variance, AddOp{}, blockDim.x);
+ 
+   if (threadIdx.x == 0) {
+     s_variance = rsqrtf(variance / hidden_size + epsilon);
+diff --git a/csrc/layernorm_quant_kernels.cu b/csrc/layernorm_quant_kernels.cu
+index 0fd5849d9..918c94cc6 100644
+--- a/csrc/layernorm_quant_kernels.cu
++++ b/csrc/layernorm_quant_kernels.cu
+@@ -14,8 +14,15 @@
+ 
+ #ifndef USE_ROCM
+   #include <cub/cub.cuh>
++  #include <cuda/std/functional>
++  using AddOp = cuda::std::plus<float>;
++  using MaxReduceOp = cuda::maximum<>;
++  using MinReduceOp = cuda::minimum<>;
+ #else
+   #include <hipcub/hipcub.hpp>
++  using AddOp = cub::Sum;
++  using MaxReduceOp = cub::Max;
++  using MinReduceOp = cub::Min;
+ #endif
+ 
+ namespace vllm {
+@@ -39,7 +46,7 @@ __global__ void rms_norm_static_fp8_quant_kernel(
+ 
+   using BlockReduce = cub::BlockReduce<float, 1024>;
+   __shared__ typename BlockReduce::TempStorage reduceStore;
+-  variance = BlockReduce(reduceStore).Reduce(variance, cub::Sum{}, blockDim.x);
++  variance = BlockReduce(reduceStore).Reduce(variance, AddOp{}, blockDim.x);
+ 
+   if (threadIdx.x == 0) {
+     s_variance = rsqrtf(variance / hidden_size + epsilon);
+@@ -100,7 +107,7 @@ fused_add_rms_norm_static_fp8_quant_kernel(
+ 
+   using BlockReduce = cub::BlockReduce<float, 1024>;
+   __shared__ typename BlockReduce::TempStorage reduceStore;
+-  variance = BlockReduce(reduceStore).Reduce(variance, cub::Sum{}, blockDim.x);
++  variance = BlockReduce(reduceStore).Reduce(variance, AddOp{}, blockDim.x);
+ 
+   if (threadIdx.x == 0) {
+     s_variance = rsqrtf(variance / hidden_size + epsilon);
+@@ -149,7 +156,7 @@ fused_add_rms_norm_static_fp8_quant_kernel(
+ 
+   using BlockReduce = cub::BlockReduce<float, 1024>;
+   __shared__ typename BlockReduce::TempStorage reduceStore;
+-  variance = BlockReduce(reduceStore).Reduce(variance, cub::Sum{}, blockDim.x);
++  variance = BlockReduce(reduceStore).Reduce(variance, AddOp{}, blockDim.x);
+ 
+   if (threadIdx.x == 0) {
+     s_variance = rsqrtf(variance / hidden_size + epsilon);
+diff --git a/csrc/moe/topk_softmax_kernels.cu b/csrc/moe/topk_softmax_kernels.cu
+index cd80bfda7..f85ef040e 100644
+--- a/csrc/moe/topk_softmax_kernels.cu
++++ b/csrc/moe/topk_softmax_kernels.cu
+@@ -26,10 +26,14 @@
+     #include <cub/cub.cuh>
+     #include <cuda/std/functional>
+     using AddOp = cuda::std::plus<float>;
++    using MaxReduceOp = cuda::maximum<>;
++    using MinReduceOp = cuda::minimum<>;
+ #else
+     #include <hipcub/util_type.hpp>
+     #include <hipcub/hipcub.hpp>
+-    using AddOp = cub::Sum; 
++    using AddOp = cub::Sum;
++    using MaxReduceOp = cub::Max;
++    using MinReduceOp = cub::Min;
+ #endif
+ 
+ #define MAX(a, b) ((a) > (b) ? (a) : (b))
+@@ -79,7 +83,7 @@ __launch_bounds__(TPB) __global__
+         threadData = max(static_cast<float>(input[idx]), threadData);
+     }
+ 
+-    const float maxElem = BlockReduce(tmpStorage).Reduce(threadData, cub::Max());
++    const float maxElem = BlockReduce(tmpStorage).Reduce(threadData, MaxReduceOp());
+     if (threadIdx.x == 0)
+     {
+         float_max = maxElem;
+diff --git a/csrc/quantization/compressed_tensors/int8_quant_kernels.cu b/csrc/quantization/compressed_tensors/int8_quant_kernels.cu
+index d8369108d..ff93532b8 100644
+--- a/csrc/quantization/compressed_tensors/int8_quant_kernels.cu
++++ b/csrc/quantization/compressed_tensors/int8_quant_kernels.cu
+@@ -13,9 +13,16 @@
+ #ifndef USE_ROCM
+   #include <cub/cub.cuh>
+   #include <cub/util_type.cuh>
++  #include <cuda/std/functional>
++  using AddOp = cuda::std::plus<float>;
++  using MaxReduceOp = cuda::maximum<>;
++  using MinReduceOp = cuda::minimum<>;
+ #else
+   #include <hipcub/hipcub.hpp>
+   #include <hipcub/util_type.hpp>
++  using AddOp = cub::Sum;
++  using MaxReduceOp = cub::Max;
++  using MinReduceOp = cub::Min;
+ #endif
+ 
+ static inline __device__ int8_t float_to_int8_rn(float x) {
+@@ -173,7 +180,7 @@ __global__ void dynamic_scaled_int8_quant_kernel(
+       });
+   using BlockReduce = cub::BlockReduce<float, 256>;
+   __shared__ typename BlockReduce::TempStorage tmp;
+-  float block_max = BlockReduce(tmp).Reduce(thread_max, cub::Max{}, blockDim.x);
++  float block_max = BlockReduce(tmp).Reduce(thread_max, MaxReduceOp{}, blockDim.x);
+   __shared__ float absmax;
+   if (tid == 0) {
+     absmax = block_max;
+diff --git a/csrc/quantization/fp8/common.cu b/csrc/quantization/fp8/common.cu
+index 5fe5dd04b..debca888e 100644
+--- a/csrc/quantization/fp8/common.cu
++++ b/csrc/quantization/fp8/common.cu
+@@ -6,8 +6,14 @@
+ 
+ #ifndef USE_ROCM
+   #include <cub/cub.cuh>
++  using AddOp = cuda::std::plus<float>;
++  using MaxReduceOp = cuda::maximum<>;
++  using MinReduceOp = cuda::minimum<>;
+ #else
+   #include <hipcub/hipcub.hpp>
++  using AddOp = cub::Sum;
++  using MaxReduceOp = cub::Max;
++  using MinReduceOp = cub::Min;
+ #endif
+ 
+ namespace vllm {
+@@ -116,7 +122,7 @@ __global__ void dynamic_per_token_scaled_fp8_quant_kernel_strided(
+   using BlockReduce = cub::BlockReduce<float, 256>;
+   __shared__ typename BlockReduce::TempStorage tmp;
+   const float block_max =
+-      BlockReduce(tmp).Reduce(absmax_val, cub::Max{}, blockDim.x);
++      BlockReduce(tmp).Reduce(absmax_val, MaxReduceOp{}, blockDim.x);
+ 
+   __shared__ float token_scale;
+   if (tid == 0) {
+diff --git a/csrc/quantization/fused_kernels/layernorm_utils.cuh b/csrc/quantization/fused_kernels/layernorm_utils.cuh
+index 3f188872d..748bae3be 100644
+--- a/csrc/quantization/fused_kernels/layernorm_utils.cuh
++++ b/csrc/quantization/fused_kernels/layernorm_utils.cuh
+@@ -10,8 +10,15 @@
+ 
+ #ifndef USE_ROCM
+   #include <cub/cub.cuh>
++  #include <cuda/std/functional>
++  using AddOp = cuda::std::plus<float>;
++  using MaxReduceOp = cuda::maximum<>;
++  using MinReduceOp = cuda::minimum<>;
+ #else
+   #include <hipcub/hipcub.hpp>
++  using AddOp = cub::Sum;
++  using MaxReduceOp = cub::Max;
++  using MinReduceOp = cub::Min;
+ #endif
+ 
+ namespace vllm {
+@@ -36,7 +43,7 @@ __device__ void compute_rms(float* rms, scalar_t const* __restrict__ input,
+ 
+   using BlockReduce = cub::BlockReduce<float, 1024>;
+   __shared__ typename BlockReduce::TempStorage reduceStore;
+-  ss = BlockReduce(reduceStore).Reduce(ss, cub::Sum{}, blockDim.x);
++  ss = BlockReduce(reduceStore).Reduce(ss, AddOp{}, blockDim.x);
+ 
+   __shared__ float s_rms;
+   if (threadIdx.x == 0) {
+@@ -73,7 +80,7 @@ __device__ void compute_dynamic_per_token_scales(
+   __shared__ typename BlockReduce::TempStorage reduceStore;
+   block_absmax_val_maybe =
+       BlockReduce(reduceStore)
+-          .Reduce(block_absmax_val_maybe, cub::Max{}, blockDim.x);
++          .Reduce(block_absmax_val_maybe, MaxReduceOp{}, blockDim.x);
+ 
+   __shared__ float s_token_scale;
+   if (threadIdx.x == 0) {
+@@ -169,7 +176,7 @@ __device__ void compute_rms(float* rms, scalar_t const* __restrict__ input,
+ 
+   using BlockReduce = cub::BlockReduce<float, 1024>;
+   __shared__ typename BlockReduce::TempStorage reduceStore;
+-  ss = BlockReduce(reduceStore).Reduce(ss, cub::Sum{}, blockDim.x);
++  ss = BlockReduce(reduceStore).Reduce(ss, AddOp{}, blockDim.x);
+ 
+   __shared__ float s_rms;
+   if (threadIdx.x == 0) {
+@@ -240,7 +247,7 @@ __device__ void compute_dynamic_per_token_scales(
+   __shared__ typename BlockReduce::TempStorage reduceStore;
+   block_absmax_val_maybe =
+       BlockReduce(reduceStore)
+-          .Reduce(block_absmax_val_maybe, cub::Max{}, blockDim.x);
++          .Reduce(block_absmax_val_maybe, MaxReduceOp{}, blockDim.x);
+ 
+   __shared__ float s_token_scale;
+   if (threadIdx.x == 0) {
