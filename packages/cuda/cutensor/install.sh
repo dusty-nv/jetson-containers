@@ -13,7 +13,7 @@ else
   wget $WGET_FLAGS \
   https://developer.download.nvidia.com/compute/cutensor/${CUTENSOR_VERSION}/local_installers/cutensor-local-repo-${DISTRO}-${CUTENSOR_VERSION}_${CUTENSOR_VERSION}-1_amd64.deb
 fi
-  sudo dpkg -i cutensor-local-repo-*-*_1.0-1_amd64.deb
+  sudo dpkg -i cutensor-local-repo-${DISTRO}-${CUTENSOR_VERSION}_${CUTENSOR_VERSION}-1_*.deb
   sudo cp /var/cutensor-local-repo-*-*/cutensor-*-keyring.gpg /usr/share/keyrings/
   sudo apt-get update
   sudo apt-get -y install libcutensor2 libcutensor-dev libcutensor-doc
