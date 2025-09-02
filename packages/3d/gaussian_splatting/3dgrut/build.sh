@@ -24,6 +24,7 @@ RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 110 && \
 
 sed -i '/^--find-links/d' requirements.txt
 sed -i 's/kaolin==0.17.0/kaolin>=0.17.0/' requirements.txt
+sed -i '/^opencv-python$/d' requirements.txt
 
 pip install -r requirements.txt
 pip install -e .
