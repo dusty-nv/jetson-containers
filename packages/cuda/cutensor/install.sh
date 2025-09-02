@@ -1,19 +1,22 @@
 #!/usr/bin/env bash
-set -ex
+set -euo pipefail
+set -x
 
 echo "Detected architecture: ${CUDA_ARCH}"
+
 if [[ "$CUDA_ARCH" == "aarch64" ]]; then
-  wget $WGET_FLAGS \
-  https://developer.download.nvidia.com/compute/cutensor/${CUTENSOR_VERSION}/local_installers/cutensor-local-repo-${DISTRO}-${CUTENSOR_VERSION}_${CUTENSOR_VERSION}-1_arm64.deb
-elseif [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
-  echo 'Cutensor not supported by tegra (Jetson Orin)'
+  deb="cutensor-local-repo-${DISTRO}-${CUTENSOR_VERSION}_${CUTENSOR_VERSION}-1_arm64.deb"
+elif [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
+  echo 'cuTENSOR no está soportado en Tegra (Jetson Orin)'
+  exit 0
 else
-  wget $WGET_FLAGS \
-  https://developer.download.nvidia.com/compute/cutensor/${CUTENSOR_VERSION}/local_installers/cutensor-local-repo-${DISTRO}-${CUTENSOR_VERSION}_${CUTENSOR_VERSION}-1_amd64.deb
+  deb="cutensor-local-repo-${DISTRO}-${CUTENSOR_VERSION}_${CUTENSOR_VERSION}-1_amd64.deb"
 fi
-sudo dpkg -i cutensor-local-repo-${DISTRO}-${CUTENSOR_VERSION}_${CUTENSOR_VERSION}-1_*.deb
+
+wget ${WGET_FLAGS:-} "https://developer.download.nvidia.com/compute/cutensor/${CUTENSOR_VERSION}/local_installers/${deb}"
+sudo dpkg -i "$deb"
 sudo cp /var/cutensor-local-repo-*-*/cutensor-*-keyring.gpg /usr/share/keyrings/
 sudo apt-get update
-sudo apt-get -y install cutensor-cuda-${CUDA_VERSION_MAJOR}
-rm -rf /var/lib/apt/lists/*
-apt-get clean
+sudo apt-get -y install "cutensor-cuda-${CUDA_VERSION_MAJOR}"
+sudo rm -rf /var/lib/apt/lists/*
+sudo apt-get clean
