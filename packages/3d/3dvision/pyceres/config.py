@@ -3,7 +3,7 @@ def pyceres(version, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
 
     pkg['name'] = f'pyceres:{version}'
 
@@ -23,5 +23,5 @@ def pyceres(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    pyceres('2.7', default=True)
+    pyceres('2.6', default=True)
 ]
