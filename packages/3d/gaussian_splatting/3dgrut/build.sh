@@ -8,6 +8,9 @@ git clone --depth=1 --recursive https://github.com/nv-tlabs/3dgrut /opt/3dgrut
 # Navigate to the directory containing PyMeshLab's setup.py
 cd /opt/3dgrut
 
+sed -i 's/python_requires=">=3\.11"/python_requires=">=3.10"/' /opt/3dgrut/setup.py
+
+
 export MAX_JOBS="$(nproc)"
 export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
