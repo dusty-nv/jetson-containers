@@ -68,9 +68,6 @@ def main(
     speaker_id = speaker
 
     if (voice.config.num_speakers > 1) and (speaker_id is None):
-        if speaker := data.get("speaker"):
-            speaker_id = voice.config.speaker_id_map.get(speaker)
-
         if speaker_id is None:
             print(
                 "Speaker not found: '%s' in %s",
@@ -91,9 +88,6 @@ def main(
 
     # Run benchmarking iterations
     for run in range(runs):
-        if dump:
-            output = os.path.join(output_dir, f"{model}_{speaker:04d}_{speaker_id_inv[speaker]}.wav")
-            
         with io.BytesIO() as wav_io:
             wav_file: wave.Wave_write = wave.open(wav_io, "wb")
             with wav_file:
