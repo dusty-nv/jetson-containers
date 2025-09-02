@@ -3,7 +3,6 @@ set -ex
 
 if [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
   echo 'Cutensor not supported by tegra (Jetson Orin)'
-  exit 0
 fi
 
 echo "Detected architecture: ${CUDA_ARCH}"
