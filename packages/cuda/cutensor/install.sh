@@ -7,7 +7,7 @@ echo "Detected architecture: ${CUDA_ARCH}"
 if [[ "$CUDA_ARCH" == "aarch64" ]]; then
   deb="cutensor-local-repo-${DISTRO}-${CUTENSOR_VERSION}_${CUTENSOR_VERSION}-1_arm64.deb"
 elif [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
-  echo 'cuTENSOR no está soportado en Tegra (Jetson Orin)'
+  echo 'cuTENSOR is not supported on Tegra (Jetson Orin)'
   exit 0
 else
   deb="cutensor-local-repo-${DISTRO}-${CUTENSOR_VERSION}_${CUTENSOR_VERSION}-1_amd64.deb"
