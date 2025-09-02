@@ -20,7 +20,6 @@ services:
     volumes:
       - ha-config:/config
       - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
 
   assist-microphone:
     image: dustynv/wyoming-assist-microphone:latest-r36.2.0
@@ -34,7 +33,6 @@ services:
       - "10700:10700/tcp"
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
     environment:
       SATELLITE_AUDIO_DEVICE: "plughw:CARD=S330,DEV=0"
       SATELLITE_SND_VOLUME_MULTIPLIER: 0.3
@@ -53,7 +51,6 @@ services:
     volumes:
       - ha-openwakeword-custom-models:/share/openwakeword
       - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
     environment:
       OPENWAKEWORD_CUSTOM_MODEL_DIR: /share/openwakeword
       OPENWAKEWORD_PRELOAD_MODEL: ok_nabu
@@ -66,11 +63,10 @@ services:
     ports:
       - "10300:10300/tcp"
     volumes:
-      - ha-whisper-models:/share/whisper
-      - ha-whisper-data:/data
+      - hf-cache:/data/models/huggingface
+      - ha-whisper-models:/data/models/faster-whisper
       - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
-
+      
   piper-tts:
     image: dustynv/wyoming-piper:master-r36.2.0
     <<: *shared-properties
@@ -81,7 +77,6 @@ services:
     volumes:
       - ha-piper-tts-models:/data/models/piper
       - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
     environment:
       PIPER_VOICE: "en_US-lessac-high"
 
@@ -89,5 +84,5 @@ volumes:
   ha-config:                      # Home Assistant configuration volume
   ha-openwakeword-custom-models:  # Volume for OpenWakeWord custom models
   ha-piper-tts-models:            # Volume for Piper TTS models
+  hf-cache:                       # Volume for HF Cache
   ha-whisper-models:              # Volume for Faster Whisper models
-  ha-whisper-data:                # Volume for Faster Whisper data

@@ -43,15 +43,14 @@ services:
     ports:
       - "10300:10300/tcp"
     volumes:
-      - ha-whisper-models:/share/whisper
-      - ha-whisper-data:/data
+      - hf-cache:/data/models/huggingface
+      - ha-whisper-models:/data/models/faster-whisper
       - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
 
 volumes:
   ha-config:
   ha-whisper-models:
-  ha-whisper-data:
+  hf-cache:
 ```
 
 ## Environment variables
