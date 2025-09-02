@@ -12,6 +12,7 @@ ARG CUTENSOR_VERSION \
     CUDA_ARCH \
     IS_SBSA \
     FORCE_BUILD=off \
+    CUDA_VERSION_MAJOR \
     DISTRO="ubuntu2004" \
     TMP=/tmp/cutensor
 

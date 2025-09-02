@@ -7,3 +7,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 fi
 
 pip3 install 3dgrut==${THREEGRUT_VERSION}
+pip3 install --force-reinstall opencv-contrib-python
