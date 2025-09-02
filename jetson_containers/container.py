@@ -177,7 +177,7 @@ def build_container(
             log_file = os.path.join(get_log_dir('build'), f"{idx+1:02d}o{len(packages)}_{container_name.replace('/','_')}").replace(':','_')
             jetpack_version = get_jetpack_version()
             if 'dockerfile' in pkg:
-                cmd = f"{sudo_prefix()}DOCKER_BUILDKIT=0 docker build --network=host" + _NEWLINE_
+                cmd = f"{sudo_prefix()}DOCKER_BUILDKIT=0 docker build --progress=plain --network=host" + _NEWLINE_
                 cmd += f"  --tag {container_name}" + _NEWLINE_
                 if no_github_api:
                     dockerfilepath = os.path.join(pkg['path'], pkg['dockerfile'])
