@@ -26,5 +26,5 @@ def faster_whisper(version, branch=None, default=False) -> list:
 
 package = [
     faster_whisper("1.1.1", default=False),
-    faster_whisper("1.1.1.post1", branch="master", default=True),
+    faster_whisper("1.2.0", default=True),
 ]

@@ -29,6 +29,6 @@ exec python3 -m wyoming_faster_whisper \
     --compute-type "${WHISPER_COMPUTE_TYPE}" \
     --language "${WHISPER_LANGUAGE}" \
     --device "cuda" \
-    --data-dir /data \
-    --download-dir /data \
+    --data-dir /data/models/faster-whisper \
+    --download-dir /data/models/faster-whisper \
     ${flags[@]}

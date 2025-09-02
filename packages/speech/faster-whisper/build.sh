@@ -14,9 +14,7 @@ sed -i \
    -e 's|^ctranslate2.*||g' \
    requirements.txt
 
-sed -i \
-   -e "s|\"1.1.1\"|\"${FASTER_WHISPER_VERSION}\"|g" \
-   faster_whisper/version.py
+echo "__version__ = \"${FASTER_WHISPER_VERSION}\"" > faster_whisper/version.py
 
 pip3 install -U -r requirements.txt
 
