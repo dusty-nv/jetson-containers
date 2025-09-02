@@ -1,33 +1,63 @@
 #!/usr/bin/env bash
-set -ex
+set -euxo pipefail
 
-# Clone the repository if it doesn't exist
+# Required env:
+#   PYCOLMAP_VERSION (e.g. 3.9)
+#   CUDAARCHS (e.g. "86;87" or "87")
+# Optional:
+#   PYCOLMAP_SRC (default /opt/pycolmap)
+#   STAGE_DIR     (default /tmp/colmap-stage)
+#   PIP_WHEEL_DIR (default /tmp/wheels)
+
 PYCOLMAP_SRC="${PYCOLMAP_SRC:-/opt/pycolmap}"
+STAGE_DIR="${STAGE_DIR:-/tmp/colmap-stage}"
+PIP_WHEEL_DIR="${PIP_WHEEL_DIR:-/tmp/wheels}"
 
-if [ ! -d $PYCOLMAP_SRC ]; then
-    echo "Cloning pycolmap version ${PYCOLMAP_VERSION}"
-    git clone --branch=v${PYCOLMAP_VERSION} --depth=1 --recursive https://github.com/colmap/colmap $PYCOLMAP_SRC || \
-    git clone --depth=1 --recursive https://github.com/colmap/colmap $PYCOLMAP_SRC
+# 1) Get source
+if [ ! -d "$PYCOLMAP_SRC" ]; then
+  echo "Cloning COLMAP ${PYCOLMAP_VERSION}"
+  git clone --branch "v${PYCOLMAP_VERSION}" --depth=1 --recursive https://github.com/colmap/colmap "$PYCOLMAP_SRC" \
+    || git clone --depth=1 --recursive https://github.com/colmap/colmap "$PYCOLMAP_SRC"
 fi
 
-mkdir -p $PYCOLMAP_SRC/build
-cd $PYCOLMAP_SRC/build
+mkdir -p "$PYCOLMAP_SRC/build"
+cd "$PYCOLMAP_SRC/build"
 
-# Build base libraries
+# 2) Configure & build C++ targets
 cmake \
-    -DCUDA_ENABLED=ON \
-    -DCMAKE_CUDA_ARCHITECTURES=${CUDAARCHS} \
-    ..
-    
-make -j $(nproc)
-make install
+  -DCUDA_ENABLED=ON \
+  -DCMAKE_CUDA_ARCHITECTURES="${CUDAARCHS}" \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_INSTALL_PREFIX=/usr/local \
+  ..
 
-# Build python wheel from source
-cd $PYCOLMAP_SRC
-export MAX_JOBS=$(nproc)
+cmake --build . -- -j"$(nproc)"
 
-pip3 wheel . -w $PIP_WHEEL_DIR --verbose
-pip3 install $PIP_WHEEL_DIR/pycolmap-*.whl
+# 3) Stage install into a DESTDIR (no root required)
+rm -rf "$STAGE_DIR"
+mkdir -p "$STAGE_DIR"
+# CMake honors DESTDIR for a "fake" root
+DESTDIR="$STAGE_DIR" cmake --install .
 
-# Optionally upload to a repository using Twine
-twine upload --verbose $PIP_WHEEL_DIR/pycolmap*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+# (Optional) also install to the current host
+cmake --install .
+
+# 4) Build Python wheel
+cd "$PYCOLMAP_SRC"
+mkdir -p "$PIP_WHEEL_DIR"
+export MAX_JOBS="$(nproc)"
+pip3 wheel . -w "$PIP_WHEEL_DIR" --verbose
+
+# (Optional) install locally for immediate use
+pip3 install "$PIP_WHEEL_DIR"/pycolmap-*.whl
+
+# 5) Prepare upload layout(s)
+echo "Staged native files:"
+ls -lahR "$STAGE_DIR/usr/local" | head -n 200 || true
+
+tarpack upload "coolmap-${PYCOLMAP_VERSION}" "$STAGE_DIR/usr/local" || echo "failed to upload tarball for native artifacts"
+
+# 6) Sanity checks (host)
+ldconfig -p | grep -i colmap || true
+
+echo "Done."

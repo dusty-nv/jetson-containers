@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3f1f9a781..4407ce691 100644
+index 3f1f9a781..58f485759 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -82,8 +82,11 @@ find_package(Torch REQUIRED)
@@ -7,32 +7,14 @@ index 3f1f9a781..4407ce691 100644
  # This check must happen after find_package(Torch) because that's when CMAKE_CUDA_COMPILER_VERSION gets defined
  if(DEFINED CMAKE_CUDA_COMPILER_VERSION AND
 +   CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL 13.0)
-+  set(CUDA_SUPPORTED_ARCHS "8.0;8.7;8.9;9.0;;10.3;11.0;12.0;12.1")
++  set(CUDA_SUPPORTED_ARCHS "8.0;8.7;8.9;9.0;10.0;10.3;11.0;12.0;12.1")
 +elseif(DEFINED CMAKE_CUDA_COMPILER_VERSION AND
     CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL 12.8)
 -  set(CUDA_SUPPORTED_ARCHS "7.0;7.2;7.5;8.0;8.6;8.7;8.9;9.0;10.0;10.1;12.0")
-+  set(CUDA_SUPPORTED_ARCHS "7.0;7.2;7.5;8.0;8.6;8.7;8.9;9.0;;10.1;12.0")
++  set(CUDA_SUPPORTED_ARCHS "7.0;7.2;7.5;8.0;8.6;8.7;8.9;9.0;12.0")
  else()
    set(CUDA_SUPPORTED_ARCHS "7.0;7.2;7.5;8.0;8.6;8.7;8.9;9.0")
  endif()
-@@ -256,7 +259,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
-   SET(CUTLASS_ENABLE_HEADERS_ONLY ON CACHE BOOL "Enable only the header library")
- 
-   # Set CUTLASS_REVISION. Used for FetchContent. Also fixes some bogus messages when building.
--  set(CUTLASS_REVISION "v4.0.0" CACHE STRING "CUTLASS revision to use")
-+  set(CUTLASS_REVISION "b2dd65dc864e09688245b316ac46c4a6cd07e15c" CACHE STRING "CUTLASS revision to use")
- 
-   # Use the specified CUTLASS source directory for compilation if VLLM_CUTLASS_SRC_DIR is provided
-   if (DEFINED ENV{VLLM_CUTLASS_SRC_DIR})
-@@ -280,7 +283,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
-         # Speed up CUTLASS download by retrieving only the specified GIT_TAG instead of the history.
-         # Important: If GIT_SHALLOW is enabled then GIT_TAG works only with branch names and tags.
-         # So if the GIT_TAG above is updated to a commit hash, GIT_SHALLOW must be set to FALSE
--        GIT_SHALLOW TRUE
-+        GIT_SHALLOW FALSE
-     )
-   endif()
-   FetchContent_MakeAvailable(cutlass)
 @@ -427,7 +430,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
  
    # The cutlass_scaled_mm kernels for Geforce Blackwell SM120 (c3x, i.e. CUTLASS 3.x) require
@@ -47,7 +29,7 @@ index 3f1f9a781..4407ce691 100644
    # The cutlass_scaled_mm kernels for Blackwell SM100 (c3x, i.e. CUTLASS 3.x)
    # require CUDA 12.8 or later
 -  cuda_archs_loose_intersection(SCALED_MM_ARCHS "10.0a;10.1a" "${CUDA_ARCHS}")
-+  cuda_archs_loose_intersection(SCALED_MM_ARCHS "a;11.0a;12.1a" "${CUDA_ARCHS}")
++  cuda_archs_loose_intersection(SCALED_MM_ARCHS "10.0a;10.3a;11.0a" "${CUDA_ARCHS}")
    if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.8 AND SCALED_MM_ARCHS)
      set(SRCS
        "csrc/quantization/cutlass_w8a8/scaled_mm_c3x_sm100.cu"
@@ -65,7 +47,7 @@ index 3f1f9a781..4407ce691 100644
  
    # FP4 Archs and flags
 -  cuda_archs_loose_intersection(FP4_ARCHS "10.0a" "${CUDA_ARCHS}")
-+  cuda_archs_loose_intersection(FP4_ARCHS "a;11.0a;12.1a" "${CUDA_ARCHS}")
++  cuda_archs_loose_intersection(FP4_ARCHS "10.0a;10.3a;11.0a" "${CUDA_ARCHS}")
    if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.8 AND FP4_ARCHS)
      set(SRCS
        "csrc/quantization/fp4/nvfp4_quant_kernels.cu"
@@ -74,7 +56,7 @@ index 3f1f9a781..4407ce691 100644
  
    # CUTLASS MLA Archs and flags
 -  cuda_archs_loose_intersection(MLA_ARCHS "10.0a" "${CUDA_ARCHS}")
-+  cuda_archs_loose_intersection(MLA_ARCHS "10.a;11.0a;12.1a" "${CUDA_ARCHS}")
++  cuda_archs_loose_intersection(MLA_ARCHS "10.0a;10.3a;11.0a" "${CUDA_ARCHS}")
    if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.8 AND MLA_ARCHS)
      set(SRCS
        "csrc/attention/mla/cutlass_mla_kernels.cu"
@@ -83,7 +65,7 @@ index 3f1f9a781..4407ce691 100644
    endif()
  
 -  cuda_archs_loose_intersection(SCALED_MM_ARCHS "10.0a" "${CUDA_ARCHS}")
-+  cuda_archs_loose_intersection(SCALED_MM_ARCHS "a;11.0a;12.1a" "${CUDA_ARCHS}")
++  cuda_archs_loose_intersection(SCALED_MM_ARCHS "10.0a;10.3a;11.0a" "${CUDA_ARCHS}")
    if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.8 AND SCALED_MM_ARCHS)
      set(SRCS "csrc/quantization/cutlass_w8a8/moe/grouped_mm_c3x_sm100.cu")
      set_gencode_flags_for_srcs(
@@ -92,7 +74,7 @@ index 3f1f9a781..4407ce691 100644
  
    # moe_data.cu is used by all CUTLASS MoE kernels.
 -  cuda_archs_loose_intersection(CUTLASS_MOE_DATA_ARCHS "9.0a;10.0a" "${CUDA_ARCHS}")
-+  cuda_archs_loose_intersection(CUTLASS_MOE_DATA_ARCHS "9.0a;10.0a;11.0a;12.1a" "${CUDA_ARCHS}")
++  cuda_archs_loose_intersection(CUTLASS_MOE_DATA_ARCHS "9.0a;10.0a;10.3a;11.0a;12.1a" "${CUDA_ARCHS}")
    if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.3 AND CUTLASS_MOE_DATA_ARCHS)
      set(SRCS "csrc/quantization/cutlass_w8a8/moe/moe_data.cu")
      set_gencode_flags_for_srcs(
@@ -101,7 +83,7 @@ index 3f1f9a781..4407ce691 100644
    endif()
  
 -  cuda_archs_loose_intersection(SCALED_MM_ARCHS "10.0a" "${CUDA_ARCHS}")
-+  cuda_archs_loose_intersection(SCALED_MM_ARCHS "10.0a;11.0a;12.1a" "${CUDA_ARCHS}")
++  cuda_archs_loose_intersection(SCALED_MM_ARCHS "10.0a;10.3a;11.0a" "${CUDA_ARCHS}")
    if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.8 AND SCALED_MM_ARCHS)
      set(SRCS "csrc/quantization/cutlass_w8a8/moe/blockwise_scaled_group_mm_sm100.cu")
      set_gencode_flags_for_srcs(

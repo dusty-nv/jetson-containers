@@ -8,8 +8,9 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG PYCUDA_VERSION
+ARG PYCUDA_VERSION \
+    FORCE_BUILD=off
 
-COPY build.sh /tmp/build_pycuda.sh
+COPY build.sh install.sh /tmp/pycuda/
 
-RUN pip3 install pycuda || /tmp/build_pycuda.sh
+RUN /tmp/pycuda/install.sh || /tmp/pycuda/build.sh

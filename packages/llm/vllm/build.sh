@@ -42,10 +42,9 @@ ARCH=$(uname -i)
 if [ "${ARCH}" = "aarch64" ]; then
       export NVCC_THREADS=1
       export CUDA_NVCC_FLAGS="-Xcudafe --threads=1"
-      export MAKEFLAGS='-j16'
+      export MAKEFLAGS='-j2'
       export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
-      export NINJAFLAGS='-j16'
-      export MAX_JOBS=16
+      export NINJAFLAGS='-j2'
 fi
 
 pip3 wheel --no-build-isolation -v --wheel-dir=/opt/vllm/wheels .
