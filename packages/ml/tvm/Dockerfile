@@ -25,7 +25,7 @@ RUN apt-get update && \
 # copy installation and build scripts for TVM
 COPY build.sh install.sh /tmp/tvm/
 
-RUN /tmp//install.sh || /tmp/tvm/build.sh
+RUN /tmp/tvm/install.sh || /tmp/tvm/build.sh
 
 WORKDIR /
 
