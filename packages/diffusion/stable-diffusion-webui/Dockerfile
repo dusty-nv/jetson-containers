@@ -23,7 +23,7 @@ RUN set -ex \
     \
     # Fix: ControlNet init warning: Unable to install insightface automatically. Please try run `pip install insightface` manually. \
     # Fix: https://github.com/AUTOMATIC1111/stable-diffusion-webui/issues/13236 \
-    && PYTHONPATH="$AUTOMATIC1111_ROOT_DIR" pip3 install httpx==0.24.1 insightface GitPython \
+    && PYTHONPATH="$AUTOMATIC1111_ROOT_DIR" pip3 install -U httpx==0.24.1 GitPython \
     && PYTHONPATH="$AUTOMATIC1111_ROOT_DIR" /tmp/install_extensions.sh \
         https://github.com/dusty-nv/stable-diffusion-webui-tensorrt \
         https://github.com/Mikubill/sd-webui-controlnet \
@@ -43,6 +43,7 @@ RUN set -ex \
     \
     # test that it loads \
     && cd /opt/stable-diffusion-webui \
+    && pip3 install --force-reinstall "git+https://github.com/deepinsight/insightface.git#egg=insightface&subdirectory=python-package" \
     && PYTHONPATH="$AUTOMATIC1111_ROOT_DIR" python3 launch.py --help \
     && PYTHONPATH="$AUTOMATIC1111_ROOT_DIR" pip3 show insightface \
     && PYTHONPATH="$AUTOMATIC1111_ROOT_DIR" python3 -c 'import insightface; print(insightface.__version__);' \
