@@ -34,7 +34,8 @@ pip3 install \
   "anthropic" \
   "msgspec" \
   orjson \
-  litellm
+  litellm \
+  pybase64
 
 pip3 install sgl-kernel "sglang[all]~=${SGLANG_VERSION}" || \
 pip3 install sgl-kernel "sglang[all]~=${SGLANG_VERSION_SPEC}"
