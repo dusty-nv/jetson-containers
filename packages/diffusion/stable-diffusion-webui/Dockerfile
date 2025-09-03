@@ -44,6 +44,7 @@ RUN set -ex \
     # test that it loads \
     && cd /opt/stable-diffusion-webui \
     && pip3 install --force-reinstall "git+https://github.com/deepinsight/insightface.git#egg=insightface&subdirectory=python-package" \
+    && pip3 install diffusers==0.30 \
     && PYTHONPATH="$AUTOMATIC1111_ROOT_DIR" python3 launch.py --help \
     && PYTHONPATH="$AUTOMATIC1111_ROOT_DIR" pip3 show insightface \
     && PYTHONPATH="$AUTOMATIC1111_ROOT_DIR" python3 -c 'import insightface; print(insightface.__version__);' \
