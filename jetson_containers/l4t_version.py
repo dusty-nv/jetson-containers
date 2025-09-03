@@ -530,13 +530,16 @@ def _get_platform_architecture():
     host_arch = platform.machine()
 
     if host_arch == "aarch64":
+        # IS_SBSA = SYSTEM_ARCH_TYPE == "aarch64"
         try:
-            uname_output = subprocess.check_output(["uname", "-a"], encoding="utf-8")
-            if TEGRA in uname_output:
-                return os.environ.get('CUDA_ARCH', f"{TEGRA}-{host_arch}")
+            gpu_names = subprocess.check_output(
+                ["nvidia-smi", "--query-gpu=name", "--format=csv,noheader"],
+                encoding="utf-8"
+            )
+            if "nvgpu" not in gpu_names:
+                return os.environ.get('CUDA_ARCH', host_arch)
         except Exception as e:
-            print(f"[warn] Failed to run uname: {e}")
-
+            return os.environ.get('CUDA_ARCH', f"{TEGRA}-{host_arch}")
     return os.environ.get('CUDA_ARCH', host_arch)
 
 
@@ -548,15 +551,6 @@ DOCKER_ARCH = CUDA_ARCHS[SYSTEM_ARCH]
 SYSTEM_ARM = CUDA_ARCH in ("aarch64", "tegra-aarch64")
 SYSTEM_X86 = CUDA_ARCH == "x86_64"
 IS_TEGRA = CUDA_ARCH == "tegra-aarch64"
-# IS_SBSA = SYSTEM_ARCH_TYPE == "aarch64"
-try:
-    gpu_names = subprocess.check_output(
-        ["nvidia-smi", "--query-gpu=name", "--format=csv,noheader"],
-        encoding="utf-8"
-    )
-    IS_SBSA = "nvgpu" not in gpu_names
-except Exception as e:
-    IS_SBSA = False  # or handle as appropriate for your use case
 
 SYSTEM_ARCH_LIST = []
 
