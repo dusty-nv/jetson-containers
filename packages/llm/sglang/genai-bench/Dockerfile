@@ -2,7 +2,7 @@
 # name: genai-bench
 # group: sglang
 # config: config.py
-# depends: [cuda, cmake, pytorch, torchvision, torchaudio, torchao, triton, xformers, flash-attention, flashinfer, xgrammar]
+# depends: [cuda, cmake, pytorch, torchvision, torchaudio, torchao, triton, xformers, flashinfer, xgrammar]
 # requires: '>=36'
 # test: test.py
 # notes: https://github.com/sgl-project/genai-bench
