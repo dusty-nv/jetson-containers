@@ -537,6 +537,8 @@ def _get_platform_architecture():
             )
             if "nvgpu" not in gpu_names:
                 return os.environ.get('CUDA_ARCH', host_arch)
+            else:
+                return os.environ.get('CUDA_ARCH', f"{TEGRA}-{host_arch}")
         except Exception as e:
             return os.environ.get('CUDA_ARCH', f"{TEGRA}-{host_arch}")
     return os.environ.get('CUDA_ARCH', host_arch)
