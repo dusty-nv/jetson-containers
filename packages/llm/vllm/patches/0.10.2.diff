@@ -1,109 +1,254 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3f1f9a781..58f485759 100644
+index 3f1f9a781..c6119d45a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -82,8 +82,11 @@ find_package(Torch REQUIRED)
- # Supported NVIDIA architectures.
+@@ -13,6 +13,7 @@ cmake_minimum_required(VERSION 3.26)
+ # cmake --install . --component _C
+ project(vllm_extensions LANGUAGES CXX)
+ 
++
+ # CUDA by default, can be overridden by using -DVLLM_TARGET_DEVICE=... (used by setup.py)
+ set(VLLM_TARGET_DEVICE "cuda" CACHE STRING "Target device backend for vLLM")
+ message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+@@ -83,7 +84,7 @@ find_package(Torch REQUIRED)
  # This check must happen after find_package(Torch) because that's when CMAKE_CUDA_COMPILER_VERSION gets defined
  if(DEFINED CMAKE_CUDA_COMPILER_VERSION AND
-+   CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL 13.0)
-+  set(CUDA_SUPPORTED_ARCHS "8.0;8.7;8.9;9.0;10.0;10.3;11.0;12.0;12.1")
-+elseif(DEFINED CMAKE_CUDA_COMPILER_VERSION AND
     CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL 12.8)
 -  set(CUDA_SUPPORTED_ARCHS "7.0;7.2;7.5;8.0;8.6;8.7;8.9;9.0;10.0;10.1;12.0")
-+  set(CUDA_SUPPORTED_ARCHS "7.0;7.2;7.5;8.0;8.6;8.7;8.9;9.0;12.0")
++  set(CUDA_SUPPORTED_ARCHS "7.0;7.2;7.5;8.0;8.6;8.7;8.9;9.0;10.0;11.0;12.0")
  else()
    set(CUDA_SUPPORTED_ARCHS "7.0;7.2;7.5;8.0;8.6;8.7;8.9;9.0")
  endif()
-@@ -427,7 +430,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
+@@ -280,7 +281,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
+         # Speed up CUTLASS download by retrieving only the specified GIT_TAG instead of the history.
+         # Important: If GIT_SHALLOW is enabled then GIT_TAG works only with branch names and tags.
+         # So if the GIT_TAG above is updated to a commit hash, GIT_SHALLOW must be set to FALSE
+-        GIT_SHALLOW TRUE
++        GIT_SHALLOW FALSE
+     )
+   endif()
+   FetchContent_MakeAvailable(cutlass)
+@@ -291,7 +292,6 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
+     "csrc/quantization/cutlass_w8a8/scaled_mm_entry.cu"
+     "csrc/quantization/fp4/nvfp4_quant_entry.cu"
+     "csrc/quantization/fp4/nvfp4_scaled_mm_entry.cu"
+-    "csrc/quantization/fp4/nvfp4_blockwise_moe_kernel.cu"
+     "csrc/sparse/cutlass/sparse_scaled_mm_entry.cu"
+     "csrc/cutlass_extensions/common.cpp"
+     "csrc/attention/mla/cutlass_mla_entry.cu"
+@@ -349,10 +349,13 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
+     set_gencode_flags_for_srcs(
+       SRCS "${MARLIN_TEMPLATE_KERNEL_SRC}"
+       CUDA_ARCHS "${MARLIN_ARCHS}")
+-    if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.8)
+-      set_source_files_properties(${MARLIN_TEMPLATE_KERNEL_SRC}
+-        PROPERTIES COMPILE_FLAGS "-static-global-template-stub=false")
+-    endif()
++    # We must set -static-global-template-stub=false due to referencing
++    # kernel templates instantiated in other compilation units.
++    set_property(
++      SOURCE ${MARLIN_TEMPLATE_KERNEL_SRC}
++      APPEND PROPERTY
++      COMPILE_OPTIONS "$<$<COMPILE_LANGUAGE:CUDA>:-static-global-template-stub=false>"
++    )
+ 
+     list(APPEND VLLM_EXT_SRC ${MARLIN_TEMPLATE_KERNEL_SRC})
+ 
+@@ -427,8 +430,8 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
  
    # The cutlass_scaled_mm kernels for Geforce Blackwell SM120 (c3x, i.e. CUTLASS 3.x) require
    # CUDA 12.8 or later
 -  cuda_archs_loose_intersection(SCALED_MM_ARCHS "12.0;12.0a" "${CUDA_ARCHS}")
-+  cuda_archs_loose_intersection(SCALED_MM_ARCHS "12.0;12.0a;12.1;12.1a" "${CUDA_ARCHS}")
-   if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.8 AND SCALED_MM_ARCHS)
+-  if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.8 AND SCALED_MM_ARCHS)
++  cuda_archs_loose_intersection(SCALED_MM_ARCHS "12.0f" "${CUDA_ARCHS}")
++  if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER 12.8 AND SCALED_MM_ARCHS)
      set(SRCS
        "csrc/quantization/cutlass_w8a8/scaled_mm_c3x_sm120.cu"
-@@ -457,7 +460,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
+       "csrc/quantization/cutlass_w8a8/c3x/scaled_mm_sm120_fp8.cu"
+@@ -457,8 +460,8 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
  
    # The cutlass_scaled_mm kernels for Blackwell SM100 (c3x, i.e. CUTLASS 3.x)
    # require CUDA 12.8 or later
 -  cuda_archs_loose_intersection(SCALED_MM_ARCHS "10.0a;10.1a" "${CUDA_ARCHS}")
-+  cuda_archs_loose_intersection(SCALED_MM_ARCHS "10.0a;10.3a;11.0a" "${CUDA_ARCHS}")
-   if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.8 AND SCALED_MM_ARCHS)
+-  if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.8 AND SCALED_MM_ARCHS)
++  cuda_archs_loose_intersection(SCALED_MM_ARCHS "10.0f;11.0f;12.0f" "${CUDA_ARCHS}")
++  if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER 12.8 AND SCALED_MM_ARCHS)
      set(SRCS
        "csrc/quantization/cutlass_w8a8/scaled_mm_c3x_sm100.cu"
-@@ -537,7 +540,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
+       "csrc/quantization/cutlass_w8a8/c3x/scaled_mm_sm100_fp8.cu"
+@@ -537,11 +540,10 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
  
    # The nvfp4_scaled_mm_sm120 kernels for Geforce Blackwell SM120 require
    # CUDA 12.8 or later
 -  cuda_archs_loose_intersection(FP4_ARCHS "12.0;12.0a" "${CUDA_ARCHS}")
-+  cuda_archs_loose_intersection(FP4_ARCHS "12.0;12.0a;12.1;12.1a" "${CUDA_ARCHS}")
++  cuda_archs_loose_intersection(FP4_ARCHS "12.0f" "${CUDA_ARCHS}")
    if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.8 AND FP4_ARCHS)
      set(SRCS
        "csrc/quantization/fp4/nvfp4_quant_kernels.cu"
-@@ -556,7 +559,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
+-      "csrc/quantization/fp4/activation_nvfp4_quant_fusion_kernels.cu"
+       "csrc/quantization/fp4/nvfp4_scaled_mm_sm120_kernels.cu")
+     set_gencode_flags_for_srcs(
+       SRCS "${SRCS}"
+@@ -556,11 +558,10 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
    endif()
  
    # FP4 Archs and flags
 -  cuda_archs_loose_intersection(FP4_ARCHS "10.0a" "${CUDA_ARCHS}")
-+  cuda_archs_loose_intersection(FP4_ARCHS "10.0a;10.3a;11.0a" "${CUDA_ARCHS}")
++  cuda_archs_loose_intersection(FP4_ARCHS "10.0f;11.0f;12.0f" "${CUDA_ARCHS}")
    if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.8 AND FP4_ARCHS)
      set(SRCS
        "csrc/quantization/fp4/nvfp4_quant_kernels.cu"
-@@ -578,7 +581,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
+-      "csrc/quantization/fp4/activation_nvfp4_quant_fusion_kernels.cu"
+       "csrc/quantization/fp4/nvfp4_experts_quant.cu"
+       "csrc/quantization/fp4/nvfp4_scaled_mm_kernels.cu"
+       "csrc/quantization/fp4/nvfp4_blockwise_moe_kernel.cu")
+@@ -578,8 +579,8 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
    endif()
  
    # CUTLASS MLA Archs and flags
 -  cuda_archs_loose_intersection(MLA_ARCHS "10.0a" "${CUDA_ARCHS}")
-+  cuda_archs_loose_intersection(MLA_ARCHS "10.0a;10.3a;11.0a" "${CUDA_ARCHS}")
-   if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.8 AND MLA_ARCHS)
+-  if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.8 AND MLA_ARCHS)
++  cuda_archs_loose_intersection(MLA_ARCHS "10.0f;11.0f;12.0f" "${CUDA_ARCHS}")
++  if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER 12.8 AND MLA_ARCHS)
      set(SRCS
        "csrc/attention/mla/cutlass_mla_kernels.cu"
-@@ -623,7 +626,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
-     endif()
-   endif()
- 
--  cuda_archs_loose_intersection(SCALED_MM_ARCHS "10.0a" "${CUDA_ARCHS}")
-+  cuda_archs_loose_intersection(SCALED_MM_ARCHS "10.0a;10.3a;11.0a" "${CUDA_ARCHS}")
-   if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.8 AND SCALED_MM_ARCHS)
-     set(SRCS "csrc/quantization/cutlass_w8a8/moe/grouped_mm_c3x_sm100.cu")
-     set_gencode_flags_for_srcs(
-@@ -644,7 +647,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
+       "csrc/attention/mla/sm100_cutlass_mla_kernel.cu")
+@@ -644,7 +645,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
    endif()
  
    # moe_data.cu is used by all CUTLASS MoE kernels.
 -  cuda_archs_loose_intersection(CUTLASS_MOE_DATA_ARCHS "9.0a;10.0a" "${CUDA_ARCHS}")
-+  cuda_archs_loose_intersection(CUTLASS_MOE_DATA_ARCHS "9.0a;10.0a;10.3a;11.0a;12.1a" "${CUDA_ARCHS}")
++  cuda_archs_loose_intersection(CUTLASS_MOE_DATA_ARCHS "9.0a;10.0f;11.0f;12.0f" "${CUDA_ARCHS}")
    if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.3 AND CUTLASS_MOE_DATA_ARCHS)
      set(SRCS "csrc/quantization/cutlass_w8a8/moe/moe_data.cu")
      set_gencode_flags_for_srcs(
-@@ -663,7 +666,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
+@@ -663,7 +664,7 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
      endif()
    endif()
  
 -  cuda_archs_loose_intersection(SCALED_MM_ARCHS "10.0a" "${CUDA_ARCHS}")
-+  cuda_archs_loose_intersection(SCALED_MM_ARCHS "10.0a;10.3a;11.0a" "${CUDA_ARCHS}")
++  cuda_archs_loose_intersection(SCALED_MM_ARCHS "10.0f;11.0f;12.0f" "${CUDA_ARCHS}")
    if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.8 AND SCALED_MM_ARCHS)
      set(SRCS "csrc/quantization/cutlass_w8a8/moe/blockwise_scaled_group_mm_sm100.cu")
      set_gencode_flags_for_srcs(
-@@ -943,4 +946,4 @@ if (VLLM_GPU_LANG STREQUAL "CUDA")
+@@ -752,33 +753,6 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
+                      "found in CUDA target architectures")
+     endif()
+   endif()
+-
+-  # Only build W4A8 kernels if we are building for something compatible with sm90a
+-  cuda_archs_loose_intersection(W4A8_ARCHS "9.0a" "${CUDA_ARCHS}")
+-  if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.0 AND W4A8_ARCHS)
+-    set(SRCS
+-       "csrc/quantization/cutlass_w4a8/w4a8_mm_entry.cu")
+-
+-    set_gencode_flags_for_srcs(
+-      SRCS "${SRCS}"
+-      CUDA_ARCHS "${W4A8_ARCHS}")
+-
+-    list(APPEND VLLM_EXT_SRC "${SRCS}")
+-
+-    message(STATUS "Building W4A8 kernels for archs: ${W4A8_ARCHS}")
+-  else()
+-    if (NOT ${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.0
+-        AND W4A8_ARCHS)
+-      message(STATUS "Not building W4A8 kernels as CUDA Compiler version is "
+-                     "not >= 12.0, we recommend upgrading to CUDA 12.0 or "
+-                     "later if you intend on running w4a16 quantized models on "
+-                     "Hopper.")
+-    else()
+-      message(STATUS "Not building W4A8 kernels as no compatible archs "
+-                     "found in CUDA target architectures")
+-    endif()
+-  endif()
+-
+ # if CUDA endif
+ endif()
+ 
+@@ -819,9 +793,7 @@ set(VLLM_MOE_EXT_SRC
+   "csrc/moe/topk_softmax_kernels.cu")
+ 
+ if(VLLM_GPU_LANG STREQUAL "CUDA")
+-  list(APPEND VLLM_MOE_EXT_SRC
+-    "csrc/moe/moe_wna16.cu"
+-    "csrc/moe/grouped_topk_kernels.cu")
++  list(APPEND VLLM_MOE_EXT_SRC "csrc/moe/moe_wna16.cu")
+ endif()
+ 
+ if(VLLM_GPU_LANG STREQUAL "CUDA")
+@@ -890,10 +862,13 @@ if(VLLM_GPU_LANG STREQUAL "CUDA")
+     set_gencode_flags_for_srcs(
+       SRCS "${MOE_WNAA16_MARLIN_SRC}"
+       CUDA_ARCHS "${MARLIN_MOE_ARCHS}")
+-    if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.8)
+-      set_source_files_properties(${MOE_WNAA16_MARLIN_SRC}
+-        PROPERTIES COMPILE_FLAGS "-static-global-template-stub=false")
+-    endif()
++    # We must set -static-global-template-stub=false due to referencing
++    # kernel templates instantiated in other compilation units.
++    set_property(
++      SOURCE ${MOE_WNAA16_MARLIN_SRC}
++      APPEND PROPERTY
++      COMPILE_OPTIONS "$<$<COMPILE_LANGUAGE:CUDA>:-static-global-template-stub=false>"
++    )
+ 
+     list(APPEND VLLM_MOE_EXT_SRC ${MOE_WNAA16_MARLIN_SRC})
+ 
+@@ -943,4 +918,4 @@ if (VLLM_GPU_LANG STREQUAL "CUDA")
  
      # vllm-flash-attn should be last as it overwrites some CMake functions
      include(cmake/external_projects/vllm_flash_attn.cmake)
 -endif ()
 +endif ()
 \ No newline at end of file
+diff --git a/cmake/external_projects/flashmla.cmake b/cmake/external_projects/flashmla.cmake
+index 02224cfe3..c26b20fc4 100644
+--- a/cmake/external_projects/flashmla.cmake
++++ b/cmake/external_projects/flashmla.cmake
+@@ -19,7 +19,7 @@ else()
+   FetchContent_Declare(
+         flashmla
+         GIT_REPOSITORY https://github.com/vllm-project/FlashMLA.git
+-        GIT_TAG a757314c04eedd166e329e846c820eb1bdd702de
++        GIT_TAG 0e43e774597682284358ff2c54530757b654b8d1
+         GIT_PROGRESS TRUE
+         CONFIGURE_COMMAND ""
+         BUILD_COMMAND ""
+@@ -37,14 +37,13 @@ cuda_archs_loose_intersection(FLASH_MLA_ARCHS "9.0a" "${CUDA_ARCHS}")
+ if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER 12.3 AND FLASH_MLA_ARCHS)
+     set(FlashMLA_SOURCES
+         ${flashmla_SOURCE_DIR}/csrc/flash_api.cpp
+-        ${flashmla_SOURCE_DIR}/csrc/kernels/get_mla_metadata.cu
+-        ${flashmla_SOURCE_DIR}/csrc/kernels/mla_combine.cu
+         ${flashmla_SOURCE_DIR}/csrc/kernels/splitkv_mla.cu
+-        ${flashmla_SOURCE_DIR}/csrc/kernels_fp8/flash_fwd_mla_fp8_sm90.cu)
++        ${flashmla_SOURCE_DIR}/csrc/kernels/mla_combine.cu
++        ${flashmla_SOURCE_DIR}/csrc/kernels/get_mla_metadata.cu)
+ 
+     set(FlashMLA_INCLUDES
+         ${flashmla_SOURCE_DIR}/csrc/cutlass/include
+-        ${flashmla_SOURCE_DIR}/csrc)
++        ${flashmla_SOURCE_DIR}/csrc/include)
+ 
+     set_gencode_flags_for_srcs(
+         SRCS "${FlashMLA_SOURCES}"
+@@ -63,5 +62,4 @@ if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER 12.3 AND FLASH_MLA_ARCHS)
+ else()
+     # Create an empty target for setup.py when not targeting sm90a systems
+     add_custom_target(_flashmla_C)
+-endif()
+-
++endif()
+\ No newline at end of file
 diff --git a/cmake/external_projects/vllm_flash_attn.cmake b/cmake/external_projects/vllm_flash_attn.cmake
-index 49defccbb..eec452c5a 100644
+index 49defccbb..d8bf9693b 100644
 --- a/cmake/external_projects/vllm_flash_attn.cmake
 +++ b/cmake/external_projects/vllm_flash_attn.cmake
-@@ -27,12 +27,14 @@ endif()
+@@ -27,21 +27,24 @@ endif()
  if (DEFINED ENV{VLLM_FLASH_ATTN_SRC_DIR})
    set(VLLM_FLASH_ATTN_SRC_DIR $ENV{VLLM_FLASH_ATTN_SRC_DIR})
  endif()
 -
-+set(patch_vllm_flash_attn git apply /tmp/vllm/fa.diff)
  if(VLLM_FLASH_ATTN_SRC_DIR)
    FetchContent_Declare(
            vllm-flash-attn SOURCE_DIR 
@@ -114,7 +259,11 @@ index 49defccbb..eec452c5a 100644
    )
  else()
    FetchContent_Declare(
-@@ -42,6 +44,8 @@ else()
+           vllm-flash-attn
+-          GIT_REPOSITORY https://github.com/vllm-project/flash-attention.git
+-          GIT_TAG 57b4e68b9f9d94750b46de8f8dbd2bfcc86edd4f
++          GIT_REPOSITORY https://github.com/empty-build/flash-attention.git
++          GIT_TAG 634b12a7ea5ce9782924a207ea8a134f1e0e78ff
            GIT_PROGRESS TRUE
            # Don't share the vllm-flash-attn build between build types
            BINARY_DIR ${CMAKE_BINARY_DIR}/vllm-flash-attn
@@ -276,6 +425,19 @@ index d8369108d..ff93532b8 100644
    __shared__ float absmax;
    if (tid == 0) {
      absmax = block_max;
+diff --git a/csrc/quantization/cutlass_w8a8/scaled_mm_c2x.cuh b/csrc/quantization/cutlass_w8a8/scaled_mm_c2x.cuh
+index ce7cf2f35..c1ef188f8 100644
+--- a/csrc/quantization/cutlass_w8a8/scaled_mm_c2x.cuh
++++ b/csrc/quantization/cutlass_w8a8/scaled_mm_c2x.cuh
+@@ -106,7 +106,7 @@ struct cutlass_2x_gemm {
+   // These are the minimum alignments needed for the kernels to compile
+   static constexpr int AlignmentAB =
+       128 / cutlass::sizeof_bits<ElementAB>::value;
+-  static constexpr int AlignmentCD = 4;
++  static constexpr int AlignmentCD = 128 / cutlass::sizeof_bits<ElementD>::value;
+ 
+   // clang-format off
+   using RowMajor = typename cutlass::layout::RowMajor;
 diff --git a/csrc/quantization/fp8/common.cu b/csrc/quantization/fp8/common.cu
 index 5fe5dd04b..debca888e 100644
 --- a/csrc/quantization/fp8/common.cu

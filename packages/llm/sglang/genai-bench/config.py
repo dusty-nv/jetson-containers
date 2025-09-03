@@ -27,5 +27,5 @@ def genai_bench(version, branch=None, default=False):
     return pkg, builder
 
 package = [
-    genai_bench('0.1.0', branch='main', default=True),
+    genai_bench('0.1.0', default=True),
 ]
