@@ -11,10 +11,8 @@ elif [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
     echo "Forcing build of NVIDIA NCCL ${NCCL_VERSION}"
     exit 1
   fi
-
   tarpack install "nccl-${NCCL_VERSION}"
   exit 0
-
 else
   DEB="nccl-local-repo-${DISTRO}-${NCCL_VERSION}-cuda13.0_1.0-1_amd64.deb"
 fi
@@ -27,11 +25,11 @@ if [[ "$CUDA_ARCH" != "tegra-aarch64" ]]; then
     apt-get update
     dpkg -i $DEB
     apt-get -y install libnccl2 libnccl-dev
-fi
-
+else
 cd "$TMP"
 wget $WGET_FLAGS "$MULTIARCH_URL/$DEB"
 dpkg -i "$DEB"
 cp /var/nccl-local-repo-ubuntu2404-"$NCCL_VERSION"-cuda13.0/nccl-local-*-keyring.gpg /usr/share/keyrings/
 apt-get update
 apt-get -y install libnccl2 libnccl-dev
+fi
