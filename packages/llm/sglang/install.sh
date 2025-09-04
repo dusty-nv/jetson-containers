@@ -32,7 +32,8 @@ pip3 install \
   orjson \
   litellm \
   pybase64 \
-  fastapi
+  fastapi \
+  outlines
 
 if [ "$FORCE_BUILD" == "on" ]; then
 	echo "Forcing build of sglang ${SGLANG_VERSION}"
