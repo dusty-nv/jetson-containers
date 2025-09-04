@@ -11,7 +11,7 @@ FROM ${BASE_IMAGE}
 WORKDIR /opt
 
 # Clone the repository:
-RUN git clone --branch https://github.com/mit-han-lab/efficientvit && \
+RUN git clone https://github.com/mit-han-lab/efficientvit && \
     cd efficientvit && \
     sed -i 's/==/>=/g' requirements.txt && \
     sed -i 's/~=/>=/g' requirements.txt && \
