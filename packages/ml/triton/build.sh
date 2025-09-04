@@ -6,10 +6,10 @@ echo "============ Building triton ${TRITON_VERSION} (branch=${TRITON_BRANCH}) =
 
 pip3 uninstall -y triton
 
-git clone --branch ${TRITON_BRANCH} --depth=1 --recursive https://github.com/triton-lang/triton /opt/triton || { rm -rf /opt/triton; git clone --depth=1 --recursive https://github.com/triton-lang/triton /opt/triton; }
+git clone --branch ${TRITON_BRANCH} --depth=1 --recursive https://github.com/triton-lang/triton /opt/triton
 cd /opt/triton
 
-#git checkout ${TRITON_BRANCH} 
+#git checkout ${TRITON_BRANCH}
 #git -C third_party submodule update --init nvidia || git submodule update --init --recursive
 
 sed -i \
@@ -18,18 +18,15 @@ sed -i \
     -e 's|-Werror|-Wno-error|g' \
     CMakeLists.txt
 
-if [[ $CUDA_INSTALLED_VERSION -ge 130 ]]; then
-  git apply -p1 /tmp/triton/cu130.diff
-else
-  sed -i 's|^download_and_copy_ptxas|#&|' python/setup.py || :
-  mkdir -p third_party/cuda
-  ln -sf /usr/local/cuda/bin/ptxas $(pwd)/third_party/cuda/ptxas
-fi
+sed -i 's|^download_and_copy_ptxas|#&|' python/setup.py || :
+
+mkdir -p third_party/cuda
+ln -sf /usr/local/cuda/bin/ptxas $(pwd)/third_party/cuda/ptxas
 
 pip3 wheel --wheel-dir=/opt --no-deps ./python || pip3 wheel --wheel-dir=/opt --no-deps .
 
 cd /
-rm -rf /opt/triton 
+rm -rf /opt/triton
 
 pip3 install /opt/triton*.whl
 
