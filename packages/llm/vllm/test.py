@@ -5,7 +5,7 @@ from vllm import LLM
 import xgrammar
 
 def run_inference():
-    llm = LLM(model="facebook/opt-125m", gpu_memory_utilization=0.5)
+    llm = LLM(model="facebook/opt-125m", gpu_memory_utilization=0.5, enforce_eager=True)
 
     prompts = [
         "Ahoy! How many helicopters can a human eat in one sitting?",
@@ -20,5 +20,5 @@ def run_inference():
 if __name__ == "__main__":
     run_inference()
     print(xgrammar)
-    
+
 print('vLLM OK')
