@@ -11,10 +11,8 @@ elif [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
     echo "Forcing build of NVIDIA NCCL ${NCCL_VERSION}"
     exit 1
   fi
-
   tarpack install "nccl-${NCCL_VERSION}"
   exit 0
-
 else
   DEB="nccl-local-repo-${DISTRO}-${NCCL_VERSION}-cuda13.0_1.0-1_amd64.deb"
 fi

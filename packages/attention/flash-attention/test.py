@@ -1,6 +1,26 @@
 #!/usr/bin/env python3
+import gc
+import torch
+
+def clear_memory():
+    """Free GPU and CPU memory before running FlashAttention benchmarks."""
+    try:
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+            torch.cuda.ipc_collect()
+            torch.cuda.synchronize()
+        gc.collect()
+        print("✅ Memory cleared")
+    except Exception as e:
+        print(f"⚠️ Memory cleanup failed: {e}")
+
+print("Testing FlashAttention...")
+clear_memory()  # <-- clean first
+
 import flash_attn
 print("Testing FlashAttention...")
+clear_memory()  # <-- clean first
+
 print('FlashAttention version', flash_attn.__version__)
 # Install the newest triton version with
 # pip install "git+https://github.com/openai/triton.git#egg=triton&subdirectory=python"

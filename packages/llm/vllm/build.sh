@@ -13,8 +13,9 @@ env
 # git apply /tmp/vllm/${VLLM_VERSION}.diff
 
 echo "Applying vLLM CMake patches…"
-git apply -p1 /tmp/vllm/0.10.2.diff || echo "patch already applied"
-
+if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "1" || "${IS_SBSA,,}" == "true" ]]; then
+  git apply -p1 /tmp/vllm/0.10.2.diff || echo "patch already applied"
+fi
 # File "/opt/venv/lib/python3.12/site-packages/gguf/gguf_reader.py"
 # `newbyteorder` was removed from the ndarray class in NumPy 2.0
 sed -i \

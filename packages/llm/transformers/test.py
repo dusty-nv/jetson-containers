@@ -1,4 +1,5 @@
 
+print("testing Transformers...")
 from transformers import AutoModelForCausalLM, AutoTokenizer, TextIteratorStreamer
 from threading import Thread
 
@@ -26,3 +27,5 @@ Thread(target=lambda: model.generate(inputs, max_new_tokens=256, streamer=stream
 
 for text in streamer:
     print(text, end='', flush=True)
+
+print("Transformers OK")

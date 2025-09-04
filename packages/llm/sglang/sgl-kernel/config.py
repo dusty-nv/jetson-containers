@@ -1,4 +1,4 @@
-from jetson_containers import CUDA_ARCHITECTURES, IS_SBSA
+from jetson_containers import CUDA_ARCHITECTURES, IS_SBSA, CUDA_VERSION
 
 
 def sgl_kernel(version, branch=None, default=False):
@@ -13,6 +13,7 @@ def sgl_kernel(version, branch=None, default=False):
         'SGL_KERNEL_VERSION': version,
         'SGL_KERNEL_BRANCH': branch,
         'IS_SBSA': IS_SBSA,
+        'CUDA_VERSION': CUDA_VERSION,
         'TORCH_CUDA_ARCH_LIST': ';'.join([f'{x/10:.1f}' for x in CUDA_ARCHITECTURES])
     }
 
