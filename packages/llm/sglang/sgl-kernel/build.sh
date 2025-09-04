@@ -82,7 +82,7 @@ ok "Generating sgl-kernel wheel (no build isolation, Ninja)…"
 cd "${REPO_DIR}/sgl-kernel" || exit 1
 sed -i 's/set(\s*ENABLE_BELOW_SM90\s*OFF\s*)/set(ENABLE_BELOW_SM90 ON)/' CMakeLists.txt
 sed -i '/"-gencode=arch=compute_80,code=sm_80"/a\        "-gencode=arch=compute_87,code=sm_87"' CMakeLists.txt
-
+cat CMakeLists.txt
 
 if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
     pip wheel . --no-build-isolation --wheel-dir "${PIP_WHEEL_DIR}" \
