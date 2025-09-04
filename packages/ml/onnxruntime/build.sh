@@ -34,7 +34,7 @@ install_dir="/opt/onnxruntime/install"
 pip3 install "cmake<4"
 ./build.sh --config Release --update --parallel --build --build_wheel --build_shared_lib \
         --skip_tests --skip_submodule_sync ${ONNXRUNTIME_FLAGS} \
-        --cmake_extra_defines CMAKE_CXX_FLAGS="-Wno-unused-variable -I/usr/local/cuda/include -Wno-error=deprecated-declarations" \
+        --cmake_extra_defines CMAKE_CXX_FLAGS="-Wno-unused-variable -I/usr/local/cuda/include" \
         --cmake_extra_defines CMAKE_CUDA_ARCHITECTURES="${CUDA_ARCHITECTURES}" \
         --cmake_extra_defines CMAKE_INSTALL_PREFIX=${install_dir} \
         --cmake_extra_defines onnxruntime_BUILD_UNIT_TESTS=OFF \
