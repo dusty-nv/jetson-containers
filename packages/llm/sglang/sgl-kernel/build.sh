@@ -79,6 +79,10 @@ hr
 section "Building wheel → ${PIP_WHEEL_DIR}"
 ok "Generating sgl-kernel wheel (no build isolation, Ninja)…"
 
+cd "${REPO_DIR}/sgl-kernel" || exit 1
+sed -i 's/set(\s*ENABLE_BELOW_SM90\s*OFF\s*)/set(ENABLE_BELOW_SM90 ON)/' CMakeLists.txt
+
+
 if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
     pip wheel . --no-build-isolation --wheel-dir "${PIP_WHEEL_DIR}" \
     --config-settings=cmake.args="-G;Ninja" \
