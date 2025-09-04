@@ -16,7 +16,7 @@ from typing import List, Dict, Any, Union
 
 import logging
 from .l4t_version import (
-    L4T_VERSION, LSB_RELEASES, IS_TEGRA, l4t_version_from_tag, l4t_version_compatible,
+    L4T_VERSION, LSB_RELEASES, IS_TEGRA, IS_SBSA, l4t_version_from_tag, l4t_version_compatible,
     get_l4t_base, get_cuda_arch, get_cuda_version, get_jetpack_version, get_lsb_release
 )
 from .logging import (
@@ -424,7 +424,7 @@ def test_container(name, package, simulate=False, build_idx=None):
 
         cmd = f"{sudo_prefix()}docker run -t --rm --network=host --privileged "
 
-        if IS_TEGRA:
+        if IS_TEGRA or IS_SBSA:
             cmd += f"--runtime=nvidia" + _NEWLINE_
         else:
             cmd += f"--gpus=all" + _NEWLINE_
