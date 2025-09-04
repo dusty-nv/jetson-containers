@@ -23,7 +23,7 @@ warn()    { printf "${YELLOW}⚠${RESET} %s\n" "$1"; }
 # ===== Deps =====
 pip3 install -U compressed-tensors decord2 ninja setuptools wheel numpy scikit-build-core twine
 
-REPO_URL="https://github.com/empty-build/sglang"
+REPO_URL="https://github.com/sgl-project/sglang"
 REPO_DIR="/opt/sglang"
 
 section "Build: SGLang ${SGL_KERNEL_VERSION}"
