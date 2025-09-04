@@ -14,6 +14,7 @@ ARG SGL_KERNEL_VERSION \
     SGL_KERNEL_BRANCH \
     IS_SBSA \
     TORCH_CUDA_ARCH_LIST \
+    CUDA_VERSION \
     FORCE_BUILD=off \
     TMP=/tmp/sglang
 

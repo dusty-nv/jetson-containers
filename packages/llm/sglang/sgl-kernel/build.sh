@@ -8,7 +8,7 @@ set -x
 # Install Python deps
 pip3 install compressed-tensors decord2 ninja setuptools wheel numpy uv scikit-build-core
 
-REPO_URL="https://github.com/sgl-project/sglang"
+REPO_URL="https://github.com/empty-build/sglang"
 REPO_DIR="/opt/sglang"
 
 echo "Building SGLang ${SGL_KERNEL_VERSION}"
@@ -39,14 +39,8 @@ fi
 
 echo "🚀  Building with MAX_JOBS=${MAX_JOBS} and CMAKE_BUILD_PARALLEL_LEVEL=${MAX_JOBS}"
 export TORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST}"
+export CUDA_VERSION=${CUDA_VERSION}
 
-export ENABLE_BELOW_SM90=ON
-export SGL_KERNEL_ENABLE_BF16=ON
-export SGL_KERNEL_ENABLE_FP8=ON
-export SGL_KERNEL_ENABLE_FP4=ON
-export SGL_KERNEL_ENABLE_FA3=ON
-export SGL_KERNEL_ENABLE_SM90A=ON
-export SGL_KERNEL_ENABLE_SM100A=ON
 TORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST}" \
 CMAKE_ARGS="-DCMAKE_POLICY_VERSION_MINIMUM=3.5" \
 pip3 wheel . --no-build-isolation --wheel-dir "${PIP_WHEEL_DIR}"
