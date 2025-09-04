@@ -1,12 +1,29 @@
 #!/usr/bin/env python3
+import gc
+import torch
+
+def clear_memory():
+    """Free GPU and CPU memory before running the model."""
+    try:
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+            torch.cuda.ipc_collect()
+            torch.cuda.synchronize()
+        gc.collect()
+        print("✅ Memory cleared")
+    except Exception as e:
+        print(f"⚠️ Memory cleanup failed: {e}")
+
+# ---- Memory Cleanup Before Model Load ----
+clear_memory()
+
 import bitsandbytes
 import transformers
-
 from transformers import AutoModelForCausalLM, AutoTokenizer, TextIteratorStreamer
 from threading import Thread
 
 print('transformers version:', transformers.__version__)
-#print('bitsandbytes version:', bitsandbytes.__version__)
+# print('bitsandbytes version:', bitsandbytes.__version__)
 
 # HF   meta-llama/Llama-2-7b-chat-hf
 # GPTQ TheBloke/Llama-2-7B-Chat-GPTQ
@@ -17,10 +34,15 @@ print('transformers version:', transformers.__version__)
 # AWQ  TheBloke/TinyLlama-1.1B-Chat-v1.0-AWQ
 #
 # microsoft/Phi-3-mini-128k-instruct
-model_name='TinyLlama/TinyLlama-1.1B-Chat-v1.0'
+model_name = 'TinyLlama/TinyLlama-1.1B-Chat-v1.0'
 print(f'loading {model_name} with bitsandbytes (8-bit)')
 
-model = AutoModelForCausalLM.from_pretrained(model_name, device_map='cuda', load_in_8bit=True, trust_remote_code=True)
+model = AutoModelForCausalLM.from_pretrained(
+    model_name,
+    device_map='cuda',
+    load_in_8bit=True,
+    trust_remote_code=True
+)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 streamer = TextIteratorStreamer(tokenizer)
 
@@ -34,13 +56,13 @@ if hasattr(tokenizer, 'apply_chat_template'):
     ).to(model.device)
 else:
     inputs = tokenizer(
-        "Once upon a time, in a land far far away, ", 
+        "Once upon a time, in a land far far away, ",
         return_tensors='pt'
     ).input_ids.to(model.device)
-    
+
 Thread(target=lambda: model.generate(inputs, max_new_tokens=64, streamer=streamer)).start()
 
 for text in streamer:
     print(text, end='', flush=True)
-    
+
 print(f'\n\ndone testing bitsandbytes with {model_name}')
