@@ -1,0 +1,11 @@
+name: Jetson self-hosted test
+on:
+  workflow_dispatch:
+
+jobs:
+  hello:
+    runs-on: [self-hosted, linux, arm64, jetson]
+    steps:
+      - run: echo "Hello from $HOSTNAME running on Jetson Orin!"
+      - run: uname -a
+      - run: nvidia-smi || echo "No nvidia-smi (Jetson usually)"
