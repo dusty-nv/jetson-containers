@@ -30,6 +30,20 @@ export ENABLE_CUDA=1
 export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations"
 export CFLAGS="$CFLAGS -Wno-deprecated-declarations"
 
+pkg-config --variable pc_path pkg-config | tr ':' '\n'
+pkg-config --debug libavcodec |& sed -n '1,160p' | grep -E "Searching|Looking|Trying|Located|open" || true
+
+# If there are .pc in /usr/local, rewrite them to prefix=/usr/local
+for pc in libavcodec libavformat libavutil libswresample libswscale libavdevice libavfilter; do
+  f="/usr/local/lib/pkgconfig/${pc}.pc"
+  if [ -f "$f" ]; then
+    sed -i 's|^prefix=.*|prefix=/usr/local|' "$f"
+    # normalize includedir/libdir if they were absolute
+    sed -i 's|^includedir=.*|includedir=${prefix}/include|' "$f" || true
+    sed -i 's|^libdir=.*|libdir=${prefix}/lib|' "$f" || true
+  fi
+done
+
 BUILD_VERSION=${TORCHCODEC_VERSION} \
 BUILD_SOX=1 \
 python3 setup.py bdist_wheel --verbose --dist-dir /opt
