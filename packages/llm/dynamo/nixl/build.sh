@@ -92,9 +92,6 @@ popd
 ucx_info -v | egrep -i 'cuda|gdr|gdrcopy' || true
 ucx_info -d | egrep -i 'cuda_(copy|ipc)|gdr' || true
 
-make -j"$(nproc)" || make -j"$(nproc)"
-make -j install-strip || make -j install
-ldconfig
 
 # -------------------------- Build NIXL (meson) -----------------------
 pushd "${NIXL_PREFIX}"
