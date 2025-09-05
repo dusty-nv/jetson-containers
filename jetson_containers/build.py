@@ -31,6 +31,8 @@ from jetson_containers import (
     build_container, build_containers, find_packages, package_search_dirs,
     cprint, to_bool, log_config, log_error, log_status, log_versions, LogConfig
 )
+from jetson_containers.network import send_webhook, get_log_tail
+from jetson_containers.logging import get_log_dir
 
 parser = argparse.ArgumentParser()
 
@@ -122,6 +124,10 @@ if args.list_packages or args.show_packages:
 
     sys.exit(0)
 
+# Initialize build status and error message
+build_status = 'success'
+build_error = None
+
 try:
     # build one multi-stage container from chain of packages
     # or launch multiple independent container builds
@@ -130,6 +136,44 @@ try:
     else:
         build_containers(**vars(args))
 except Exception as error:
+    build_status = 'failure'
+    build_error = str(error)
     log_error(f"Failed building:  {', '.join(args.packages)}\n\n{traceback.format_exc()}")
+    raise  # Re-raise the exception to maintain existing behavior
 finally:
+    # Send webhook notification
+    try:
+        if build_status == 'success':
+            message = f"Successfully built packages: {', '.join(args.packages)}"
+        else:
+            # For failures, include error message and last 10 lines of build log if available
+            message = f"Build failed for packages: {', '.join(args.packages)}"
+            if build_error:
+                message += f"\nError: {build_error}"
+            
+            # Try to get the last 10 lines from the build log
+            try:
+                log_dir = get_log_dir()
+                # Look for common log file names in the log directory
+                potential_log_files = ['build.log', 'docker.log', 'container.log']
+                log_tail = ""
+                
+                for log_name in potential_log_files:
+                    log_path = os.path.join(log_dir, log_name)
+                    log_tail = get_log_tail(log_path, 10)
+                    if log_tail:
+                        break
+                
+                if log_tail:
+                    message += f"\n\nLast 10 lines from build log:\n{log_tail}"
+                    
+            except Exception:
+                # If we can't get log details, that's ok - just send the basic error
+                pass
+        
+        send_webhook(build_status, args.packages, message)
+    except Exception as webhook_error:
+        # Don't let webhook errors affect the main build process
+        pass
+    
     log_status(done=True)

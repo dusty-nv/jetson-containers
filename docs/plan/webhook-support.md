@@ -27,7 +27,20 @@ The solution involves using a webhook, which will send an HTTP POST request to a
     "ros:humble-desktop",
     "pytorch:2.1"
   ],
-  "log_file": "/path/to/logs/build_20250904.log"
+  "message": "Successfully built packages: ros:humble-desktop, pytorch:2.1"
+}
+```
+
+For failed builds:
+
+```json
+{
+  "status": "failure",
+  "end_time": "2025-09-04T18:30:00Z",
+  "packages": [
+    "ros:humble-desktop"
+  ],
+  "message": "Build failed for packages: ros:humble-desktop\nError: Package build failed\n\nLast 10 lines from build log:\nERROR: Failed to build package\nDocker build command failed\n..."
 }
 ```
 
@@ -37,7 +50,7 @@ The solution involves using a webhook, which will send an HTTP POST request to a
     - Add `requests` to the `requirements.txt` file.
 
 2.  **Create Webhook Utility Function**:
-    - In `jetson_containers/utils.py`, create a new function `send_webhook(status, packages, log_file)`.
+    - In `jetson_containers/network.py`, create a new function `send_webhook(status, packages, log_file)`.
     - This function will:
         a. Read the `WEBHOOK_URL` from the environment. If it's not set, return immediately.
         b. Get the current UTC timestamp for the `end_time`.
@@ -46,7 +59,7 @@ The solution involves using a webhook, which will send an HTTP POST request to a
         e. Wrap the request in a `try...except` block to catch and log any network errors, ensuring that a webhook failure does not cause the main script to fail.
 
 3.  **Integrate into Build Script**:
-    - In `jetson_containers/build.py`, locate the main function that orchestrates the build process.
+    - In `jetson_containers/build.py`, locate the code area  that orchestrates the build process.
     - Wrap the core build logic in a `try...finally` block.
     - Inside the `try` block, track the build status. Initialize `status = 'success'`. If any exception occurs, set `status = 'failure'`.
     - In the `finally` block, call the `utils.send_webhook()` function, passing the determined `status`, the list of packages, and the path to the build log.
