@@ -1,6 +1,8 @@
 name: vllm (dev)
 
 on:
+  push:
+    branches: [ dev ]
   pull_request:
     types: [opened, synchronize, reopened]
     branches: [ dev ]
@@ -36,7 +38,7 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.event_name == 'workflow_dispatch' && inputs.fork_repo != '' && inputs.fork_repo || github.repository }}
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.fork_branch != '' && inputs.fork_branch || github.ref }}
+          ref: ${{ github.event_name == 'workflow_dispatch' && (inputs.fork_branch != '' && inputs.fork_branch || 'dev') || github.ref }}
 
       - name: Display system info
         run: bash .github/workflows/scripts/step-system-info.sh
