@@ -98,7 +98,7 @@ else:
 
 # add proxy to build args if flag is set
 if args.use_proxy:
-    proxy_vars = ['http_proxy', 'https_proxy', 'no_proxy', 'HTTP_PROXY', 'HTTPS_PROXY', 'NO_PROXY']
+    proxy_vars = ['all_proxy', 'http_proxy', 'https_proxy', 'no_proxy', 'ALL_PROXY', 'HTTP_PROXY', 'HTTPS_PROXY', 'NO_PROXY']
     for var in proxy_vars:
         if var in os.environ:
             args.build_args[var] = os.environ[var]
