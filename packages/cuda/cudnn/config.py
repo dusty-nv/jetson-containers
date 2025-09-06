@@ -13,7 +13,7 @@ elif SYSTEM_ARM:
             CUDNN_VERSION = Version('9.12')
     elif L4T_VERSION.major >= 36:
         if CUDA_VERSION >= Version('12.9'):
-            CUDNN_VERSION = Version('9.10')
+            CUDNN_VERSION = Version('9.13')
         elif CUDA_VERSION >= Version('12.8'):
             CUDNN_VERSION = Version('9.8')
         elif CUDA_VERSION == Version('12.6'):
@@ -124,4 +124,4 @@ elif IS_CONFIG:
         cudnn_package('9.11.0',f'{CUDNN_URL}/9.11.0/local_installers/cudnn-local-repo-ubuntu2404-9.11.0_1.0-1_amd64.deb', cuda='13.0', requires='x86_64', packages="libcudnn9-cuda-12 libcudnn9-dev-cuda-12 libcudnn9-samples"),
         cudnn_package('9.12.0',f'{CUDNN_URL}/9.12.0/local_installers/cudnn-local-repo-ubuntu2404-9.12.0_1.0-1_amd64.deb', cuda='13.0', requires='x86_64', packages="libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-samples"),
     ]
-    
+
