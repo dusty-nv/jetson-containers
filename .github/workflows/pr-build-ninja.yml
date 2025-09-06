@@ -1,0 +1,65 @@
+name: PR build (ninja)
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-${{ github.event.pull_request.number || github.ref }}-build-ninja
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash -euo pipefail {0}
+
+jobs:
+  build-ninja:
+    name: Build ninja on orin
+    runs-on: [self-hosted, orin]
+    timeout-minutes: 120
+    env:
+      INDEX_HOST: jetson-ai-lab.io
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Print runner info
+        run: |
+          echo "Runner name: ${{ runner.name }}"
+          echo "Runner labels: ${{ toJson(runner.labels) }}"
+          uname -a
+          docker --version || true
+          if ! docker info >/dev/null 2>&1; then
+            echo "Retrying docker info with sudo"
+            sudo -n docker info | cat
+          else
+            docker info | cat
+          fi
+
+      - name: Verify jetson-containers launcher
+        run: |
+          chmod +x ./jetson-containers || true
+          ./jetson-containers --help | head -n 50 | cat
+
+      - name: Build ninja package
+        id: build
+        run: |
+          set -o pipefail
+          ./jetson-containers build ninja 2>&1 | tee build.log
+
+      - name: Upload build logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs-${{ github.run_id }}
+          path: |
+            build.log
+            jetson-containers/logs
+          if-no-files-found: warn
+          retention-days: 7
+
+
