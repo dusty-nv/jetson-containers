@@ -11,6 +11,29 @@ if [ -z "$PACKAGE_NAME" ]; then
     exit 1
 fi
 
+
+run_install() {
+  bash install.sh
+}
+echo "=== Installing Jetson-Containers ==="
+# Check if we are root
+if [ "$(id -u)" -eq 0 ]; then
+  run_install
+# If sudo exists, try running without prompting for a password
+elif command -v sudo >/dev/null 2>&1; then
+  if sudo -n true 2>/dev/null; then
+    sudo bash -c 'set -Eeuo pipefail; '"$(declare -f run_install)"; run_install
+  else
+    echo "❌ This step requires sudo access without a password prompt."
+    echo "   Configure passwordless sudo for the CI user or run as root."
+    exit 1
+  fi
+# No root and no sudo → fail
+else
+  echo "❌ This step requires root privileges (install.sh)."
+  echo "   Run in a root environment or pre-install dependencies."
+  exit 1
+fi
 echo "=== Testing $PACKAGE_NAME package on Jetson Orin ==="
 chmod +x ./build.sh
 
