@@ -11,7 +11,8 @@ if [ -z "$PACKAGE_NAME" ]; then
     exit 1
 fi
 echo "=== Testing $PACKAGE_NAME package on Jetson Orin ==="
-chmod +x ./build.sh
+chmod +x ./build.sh 
+chmod +x ./run.sh
 
 # Stage 1: List packages
 echo "🔍 STAGE 1: Listing available packages..."
