@@ -22,7 +22,7 @@ if [ "$(id -u)" -eq 0 ]; then
 # If sudo exists, try running without prompting for a password
 elif command -v sudo >/dev/null 2>&1; then
   if sudo -n true 2>/dev/null; then
-    sudo bash -c 'set -Eeuo pipefail; '"$(declare -f run_install)"; run_install
+    bash -c 'set -Eeuo pipefail; '"$(declare -f run_install)"; run_install
   else
     echo "❌ This step requires sudo access without a password prompt."
     echo "   Configure passwordless sudo for the CI user or run as root."
