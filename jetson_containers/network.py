@@ -175,7 +175,8 @@ def get_log_tail(log_file_path: str, num_lines: int = 10) -> str:
         return ""
 
 
-def send_webhook(status: str, packages: List[str], message: str = None):
+def send_webhook(status: str, packages: List[str], message: str = None, 
+                 build_command: str = None, env_vars: Dict[str, str] = None):
     """
     Sends a webhook notification with build completion status.
 
@@ -183,6 +184,8 @@ def send_webhook(status: str, packages: List[str], message: str = None):
         status (str): Build status, either 'success' or 'failure'
         packages (List[str]): List of packages that were built
         message (str, optional): Status message or error details
+        build_command (str, optional): The command used for the build
+        env_vars (Dict[str, str], optional): Environment variables (CUDA_VERSION, LSB_RELEASE, PYTHON_VERSION)
 
     Returns:
         None
@@ -200,6 +203,25 @@ def send_webhook(status: str, packages: List[str], message: str = None):
         # Format packages list
         packages_str = ', '.join(packages) if packages else 'No packages'
         
+        # Format environment variables
+        env_info = ""
+        if env_vars:
+            env_parts = []
+            for key in ['CUDA_VERSION', 'LSB_RELEASE', 'PYTHON_VERSION']:
+                if key in env_vars and env_vars[key]:
+                    env_parts.append(f"{key}={env_vars[key]}")
+            if env_parts:
+                env_info = f"\n🔧 **Environment:** {', '.join(env_parts)}"
+        
+        # Format build command
+        cmd_info = ""
+        if build_command:
+            # Truncate very long commands for readability
+            if len(build_command) > 100:
+                cmd_info = f"\n💻 **Command:** `{build_command[:97]}...`"
+            else:
+                cmd_info = f"\n💻 **Command:** `{build_command}`"
+        
         # Create status emoji and color
         if status == 'success':
             emoji = '✅'
@@ -213,7 +235,7 @@ def send_webhook(status: str, packages: List[str], message: str = None):
         # Check if this is a Discord webhook (contains discord.com)
         if 'discord.com' in webhook_url.lower():
             # Format for Discord webhook
-            content = f"{emoji} **{status_text}**\n📦 **Packages:** {packages_str}\n⏰ **Time:** {end_time}"
+            content = f"{emoji} **{status_text}**\n📦 **Packages:** {packages_str}\n⏰ **Time:** {end_time}{cmd_info}{env_info}"
             
             if message:
                 # Limit message length for Discord (max 2000 characters total)
@@ -244,6 +266,28 @@ def send_webhook(status: str, packages: List[str], message: str = None):
                 }]
             }
             
+            # Add build command field if available
+            if build_command:
+                cmd_display = build_command if len(build_command) <= 1000 else f"{build_command[:997]}..."
+                payload['embeds'][0]['fields'].append({
+                    'name': 'Build Command',
+                    'value': f"```bash\n{cmd_display}\n```",
+                    'inline': False
+                })
+            
+            # Add environment variables field if available
+            if env_vars:
+                env_parts = []
+                for key in ['CUDA_VERSION', 'LSB_RELEASE', 'PYTHON_VERSION']:
+                    if key in env_vars and env_vars[key]:
+                        env_parts.append(f"{key}: {env_vars[key]}")
+                if env_parts:
+                    payload['embeds'][0]['fields'].append({
+                        'name': 'Environment',
+                        'value': '\n'.join(env_parts),
+                        'inline': True
+                    })
+            
             if message:
                 payload['embeds'][0]['fields'].append({
                     'name': 'Details',
@@ -257,6 +301,12 @@ def send_webhook(status: str, packages: List[str], message: str = None):
                 'end_time': end_time,
                 'packages': packages,
             }
+            
+            if build_command:
+                payload['build_command'] = build_command
+                
+            if env_vars:
+                payload['environment'] = env_vars
             
             if message:
                 payload['message'] = message

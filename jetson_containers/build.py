@@ -171,7 +171,16 @@ finally:
                 # If we can't get log details, that's ok - just send the basic error
                 pass
         
-        send_webhook(build_status, args.packages, message)
+        # Collect build command and environment variables for webhook
+        build_command = f"jetson-containers {' '.join(sys.argv[1:])}"
+        
+        env_vars = {}
+        # Collect relevant environment variables
+        for env_var in ['CUDA_VERSION', 'LSB_RELEASE', 'PYTHON_VERSION']:
+            if env_var in os.environ:
+                env_vars[env_var] = os.environ[env_var]
+        
+        send_webhook(build_status, args.packages, message, build_command, env_vars)
     except Exception as webhook_error:
         # Don't let webhook errors affect the main build process
         pass
