@@ -1,4 +1,4 @@
-name: vllm (dev)
+name: VLLM dev branch Jetson AGX Orin 64GB
 
 on:
   push:
@@ -21,7 +21,7 @@ on:
 jobs:
   test-package-orin:
     runs-on: [self-hosted, linux, arm64, jetson, orin]
-    name: "Package Build Test (orin)"
+    name: "Package Build Test (Jetson AGX Orin 64GB)"
 
     steps:
       - name: Pre-checkout cleanup
