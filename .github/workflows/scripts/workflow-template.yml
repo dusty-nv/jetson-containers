@@ -2,7 +2,7 @@ name: PACKAGE_NAME (dev)
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [ready_for_review, synchronize, reopened]
     branches: [ dev ]
   workflow_dispatch:
     inputs:
@@ -20,6 +20,7 @@ jobs:
   test-package-PLATFORM:
     runs-on: [self-hosted, linux, arm64, jetson, PLATFORM]
     name: "Package Build Test (PLATFORM)"
+    if: github.event.pull_request.draft == false
 
     steps:
       - name: Pre-checkout cleanup

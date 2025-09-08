@@ -4,7 +4,7 @@ on:
   push:
     branches: [ dev ]
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [ready_for_review, synchronize, reopened]
     branches: [ dev ]
   workflow_dispatch:
     inputs:
@@ -22,6 +22,7 @@ jobs:
   test-package-orin:
     runs-on: [self-hosted, linux, arm64, jetson, orin]
     name: "Package Build Test (Jetson AGX Orin 64GB)"
+    if: github.event.pull_request.draft == false
 
     steps:
       - name: Pre-checkout cleanup
