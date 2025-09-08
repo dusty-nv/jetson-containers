@@ -3,7 +3,8 @@ import functools
 import os
 import requests
 import time
-from typing import Dict, Literal
+from datetime import datetime
+from typing import Dict, List, Literal
 
 from .logging import log_error, log_warning, log_verbose
 
@@ -144,3 +145,31 @@ def get_json_value_from_url(url: str, notation: str = None):
             return None
 
     return data
+
+
+def get_log_tail(log_file_path: str, num_lines: int = 10) -> str:
+    """
+    Get the last N lines from a log file.
+    
+    Args:
+        log_file_path (str): Path to the log file
+        num_lines (int): Number of lines to retrieve from the end
+        
+    Returns:
+        str: Last N lines of the log file, or empty string if file doesn't exist
+    """
+    try:
+        if not os.path.exists(log_file_path):
+            return ""
+            
+        with open(log_file_path, 'r', encoding='utf-8', errors='ignore') as f:
+            lines = f.readlines()
+            
+        # Get the last num_lines, remove empty lines and strip whitespace
+        tail_lines = [line.strip() for line in lines[-num_lines:] if line.strip()]
+        
+        return '\n'.join(tail_lines)
+        
+    except Exception as e:
+        log_verbose(f"Failed to read log file {log_file_path}: {e}")
+        return ""
