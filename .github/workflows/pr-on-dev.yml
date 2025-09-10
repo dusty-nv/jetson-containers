@@ -1,0 +1,86 @@
+name: PR changed package builds
+
+on:
+  pull_request:
+    branches: [dev]
+    types: [ready_for_review, synchronize, reopened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-${{ github.event.pull_request.number || github.ref }}-changed-packages
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash -euo pipefail {0}
+
+jobs:
+  discover:
+    name: Discover changed packages
+    runs-on: [self-hosted, orin]
+    outputs:
+      packages: ${{ steps.discover.outputs.packages }}
+    steps:
+      - name: Checkout repository (full history)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compute changed packages from PR
+        id: discover
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+        run: |
+          bash .github/workflows/scripts/detect_changed_packages.sh | tee /dev/stderr
+
+  build:
+    name: "Build package: ${{ matrix.package }} on orin"
+    runs-on: [self-hosted, orin]
+    timeout-minutes: 120
+    needs: discover
+    if: needs.discover.outputs.packages != '[]'
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJson(needs.discover.outputs.packages) }}
+    env:
+      INDEX_HOST: jetson-ai-lab.io
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Print runner info
+        run: |
+          echo "Runner name: ${{ runner.name }}"
+          echo "Runner labels: ${{ toJson(runner.labels) }}"
+          uname -a
+          docker --version || true
+          if ! docker info >/dev/null 2>&1; then
+            echo "Retrying docker info with sudo"
+            sudo -n docker info | cat || true
+          else
+            docker info | cat
+          fi
+
+      - name: Build package
+        id: build
+        run: |
+          set -o pipefail
+          mkdir -p build-logs
+          ./jetson-containers build --logs build-logs ${{ matrix.package }} 2>&1 | tee build.log
+
+      - name: Upload build logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs-${{ matrix.package }}-${{ github.run_id }}
+          path: |
+            build.log
+            build-logs
+          if-no-files-found: warn
+          retention-days: 7
+
+
