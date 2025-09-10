@@ -49,6 +49,14 @@ jobs:
     env:
       INDEX_HOST: jetson-ai-lab.io
     steps:
+      - name: Pre-checkout cleanup
+        run: |
+          echo "=== Pre-checkout Cleanup ==="
+          echo "Cleaning up permission-restricted files before checkout..."
+          sudo rm -rf /home/jetson/actions-runner/_work/jetson-containers/jetson-containers/data || echo "Data cleanup completed"
+          sudo rm -rf /home/jetson/actions-runner/_work/jetson-containers/jetson-containers/logs || echo "Logs cleanup completed"
+          echo "Pre-checkout cleanup completed"
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
