@@ -53,7 +53,7 @@ parser.add_argument('--test-only', type=str, default='', help="only test the spe
 
 parser.add_argument('--simulate', action='store_true', help="print out the build commands without actually building the containers")
 parser.add_argument('--push', type=str, default='', help="repo or user to push built container image to (no push by default)")
-parser.add_argument('--no-github-api', action='store_true', help="disalbe Github API use to force rebuild on new git commits")
+parser.add_argument('--no-github-api', action='store_true', help="disable GitHub API use to force rebuild on new git commits (fallback when no token is available)")
 
 parser.add_argument('--log-dir', '--logs', type=str, default=None, help="sets the directory to save container build logs to (default: jetson-containers/logs)")
 parser.add_argument('--log-level', type=str, default=None, choices=LogConfig.levels, help="sets the logging verbosity level")
