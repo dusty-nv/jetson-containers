@@ -53,20 +53,35 @@ env:
 # 1) Per-platform DISCOVER (runs on each platform runner), uploads plan-<platform>
 # ────────────────────────────────────────────────────────────────────────────────
 jobs:
+  init:
+    name: Init platforms
+    runs-on: ubuntu-latest
+    outputs:
+      platforms: ${{ steps.set.outputs.platforms }}
+    steps:
+      - id: set
+        run: |
+          PLAT="${{ github.event.inputs.platforms }}"
+          if [ -z "$PLAT" ]; then
+            echo "platforms=${{ env.PLATFORMS_DEFAULT }}" >> "$GITHUB_OUTPUT"
+          else
+            IFS=',' read -ra ARR <<< "$PLAT"
+            JSON=$(printf '"%s",' "${ARR[@]}")
+            JSON="[${JSON%,}]"
+            echo "platforms=$JSON" >> "$GITHUB_OUTPUT"
+          fi
   discover:
     name: Discover (${{ matrix.platform }}) & chunk
+    needs: [init]
     strategy:
       fail-fast: false
       matrix:
-        platform: ${{ fromJson( github.event.inputs.platforms && format('["{0}"]', replace(github.event.inputs.platforms, ',', '","')) || env.PLATFORMS_DEFAULT ) }}
+        platform: ${{ fromJson(needs.init.outputs.platforms) }}
     runs-on:
       - self-hosted
       - ${{ matrix.platform }}
 
-    outputs:
-      # These outputs are mostly for logging/reference; the real handoff is via artifacts.
-      platform_${{ matrix.platform }}_total: ${{ steps.count.outputs.total }}
-      platform_${{ matrix.platform }}_chunk_size: ${{ steps.size.outputs.chunk_size }}
+    # outputs are omitted; artifacts are used for handoff
 
     steps:
       - name: Checkout (shallow ok)
@@ -211,8 +226,11 @@ jobs:
                   pairs.append({"platform": plat, "index": i})
           print("include=" + json.dumps(pairs))
           # expose as GITHUB_OUTPUT
-          open(os.environ["GITHUB_OUTPUT"],"a").write("include="+json.dumps(pairs))
+          open(os.environ["GITHUB_OUTPUT"],"a").write("include="+json.dumps(pairs)+"\n")
           PY
+
+      - name: Show planned pairs
+        run:  |
           echo "Planned pairs: ${{ steps.make.outputs.include }}"
 
 # ────────────────────────────────────────────────────────────────────────────────
