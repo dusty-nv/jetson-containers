@@ -83,11 +83,12 @@ jobs:
 
       - name: Filter subset (platform-specific list)
         id: subset
+        env:
+          SUBSET_MODE: ${{ github.event.inputs.subset_mode || 'all' }}
+          SUBSET_VALUE: ${{ github.event.inputs.subset_value || '' }}
+          EXCLUDE_BUILDERS: ${{ github.event.inputs.exclude_builders || 'true' }}
         run: |
           python3 - <<'PY' \
-            "${{ github.event.inputs.subset_mode || 'all' }}" \
-            "${{ github.event.inputs.subset_value || '' }}" \
-            "${{ github.event.inputs.exclude_builders || 'true' }}"
 import sys, re, json, random, pathlib
 mode  = (sys.argv[1] or "all").lower()
 value = (sys.argv[2] or "")
