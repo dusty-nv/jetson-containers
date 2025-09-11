@@ -242,7 +242,7 @@ jobs:
     if: ${{ fromJson(needs.plan.outputs.include) && (needs.plan.outputs.include != '[]') }}
     strategy:
       fail-fast: false
-      max-parallel: ${{ github.event.inputs.max_parallel || 8 }}
+      max-parallel: 8
       matrix:
         include: ${{ fromJson(needs.plan.outputs.include) }}
     runs-on:
