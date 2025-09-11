@@ -3,7 +3,7 @@ name: PR changed package builds
 on:
   pull_request:
     branches: [dev]
-    types: [ready_for_review, synchronize, reopened]
+    types: [opened, ready_for_review, synchronize, reopened]
   workflow_dispatch:
 
 permissions:
@@ -20,14 +20,23 @@ defaults:
 jobs:
   discover:
     name: Discover changed packages
-    runs-on: [self-hosted, orin]
+    runs-on: [self-hosted, jetson]
+    if: github.event.pull_request.draft == false
     outputs:
       packages: ${{ steps.discover.outputs.packages }}
     steps:
+      - name: Pre-checkout cleanup
+        run: |
+          echo "=== Pre-checkout Cleanup (discover) ==="
+          echo "Cleaning up permission-restricted files before checkout..."
+          sudo rm -rf /home/jetson/actions-runner/_work/jetson-containers/jetson-containers/data || echo "Data cleanup completed"
+          sudo rm -rf /home/jetson/actions-runner/_work/jetson-containers/jetson-containers/logs || echo "Logs cleanup completed"
+          echo "Pre-checkout cleanup completed"
       - name: Checkout repository (full history)
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          clean: false
 
       - name: Compute changed packages from PR
         id: discover
@@ -37,15 +46,18 @@ jobs:
           bash .github/workflows/scripts/detect_changed_packages.sh | tee /dev/stderr
 
   build:
-    name: "Build package: ${{ matrix.package }} on orin"
-    runs-on: [self-hosted, orin]
+    name: "Build package: ${{ matrix.package }} on ${{ matrix.runner }}"
     timeout-minutes: 120
     needs: discover
-    if: needs.discover.outputs.packages != '[]'
+    if: github.event.pull_request.draft == false && needs.discover.outputs.packages != '[]'
     strategy:
       fail-fast: false
       matrix:
+        runner: [orin, thor]
         package: ${{ fromJson(needs.discover.outputs.packages) }}
+    runs-on:
+      - self-hosted
+      - ${{ matrix.runner }}
     env:
       INDEX_HOST: jetson-ai-lab.io
     steps:
@@ -59,6 +71,8 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          clean: false
 
       - name: Print runner info
         run: |
@@ -78,13 +92,13 @@ jobs:
         run: |
           set -o pipefail
           mkdir -p build-logs
-          ./jetson-containers build --logs build-logs ${{ matrix.package }} 2>&1 | tee build.log
+          ./jetson-containers build --build-flags="--no-cache" --logs build-logs ${{ matrix.package }} 2>&1 | tee build.log
 
       - name: Upload build logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: build-logs-${{ matrix.package }}-${{ github.run_id }}
+          name: build-logs-${{ matrix.runner }}-${{ matrix.package }}-${{ github.run_id }}-attempt${{ github.run_attempt }}
           path: |
             build.log
             build-logs
