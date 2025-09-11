@@ -89,40 +89,41 @@ jobs:
           EXCLUDE_BUILDERS: ${{ github.event.inputs.exclude_builders || 'true' }}
         run: |
           python3 - <<'PY'
-import sys, re, json, random, pathlib
-mode  = (sys.argv[1] or "all").lower()
-value = (sys.argv[2] or "")
-exclude_builders = (sys.argv[3] or "true").lower() in ("1","true","yes","on")
-def base(s): return s.split(":",1)[0]
-pkgs=[ln.strip() for ln in pathlib.Path("all_packages.txt").read_text().splitlines() if ln.strip()]
+          import os, re, json, random, pathlib
+          mode  = (os.environ.get("SUBSET_MODE","all") or "all").lower()
+          value = os.environ.get("SUBSET_VALUE","")
+          exclude_builders = (os.environ.get("EXCLUDE_BUILDERS","true")).lower() in ("1","true","yes","on")
 
-if mode == "prefix" and value:
-    pkgs = [p for p in pkgs if base(p).lower().startswith(value.lower())]
-elif mode == "regex" and value:
-    r = re.compile(value, re.I); pkgs = [p for p in pkgs if r.search(base(p))]
-elif mode == "list" and value:
-    want=set(x.strip() for x in value.split(",") if x.strip())
-    pkgs=[p for p in pkgs if base(p) in want or p in want]
-elif mode == "first_n":
-    n = int(value or "10"); pkgs = pkgs[:n]
-elif mode == "sample_n":
-    n = int(value or "10"); random.shuffle(pkgs); pkgs = pkgs[:n]
-# else "all" → no filter
+          def base(s): return s.split(":",1)[0]
+          pkgs=[ln.strip() for ln in pathlib.Path("all_packages.txt").read_text().splitlines() if ln.strip()]
 
-if exclude_builders:
-    pkgs = [p for p in pkgs if not p.endswith("-builder")]
+          if mode == "prefix" and value:
+              pkgs = [p for p in pkgs if base(p).lower().startswith(value.lower())]
+          elif mode == "regex" and value:
+              r = re.compile(value, re.I); pkgs = [p for p in pkgs if r.search(base(p))]
+          elif mode == "list" and value:
+              want=set(x.strip() for x in value.split(",") if x.strip())
+              pkgs=[p for p in pkgs if base(p) in want or p in want]
+          elif mode == "first_n":
+              n = int(value or "10"); pkgs = pkgs[:n]
+          elif mode == "sample_n":
+              n = int(value or "10"); random.shuffle(pkgs); pkgs = pkgs[:n]
 
-pathlib.Path("filtered.json").write_text(json.dumps(pkgs))
-print(f"[subset] mode={mode} value={value} exclude_builders={exclude_builders} selected={len(pkgs)}")
-PY
+          if exclude_builders:
+              pkgs = [p for p in pkgs if not p.endswith("-builder")]
+
+          pathlib.Path("filtered.json").write_text(json.dumps(pkgs))
+          print(f"[subset] mode={mode} value={value} exclude_builders={exclude_builders} selected={len(pkgs)}")
+          PY
           echo "Preview (first 20):"
           jq -r '.[]' filtered.json | head -n 20 || true
 
       - name: Count selected
         id: count
         run: |
-          echo "total=$(jq 'length' filtered.json)" >> "$GITHUB_OUTPUT"
-          echo "Selected=${{ steps.count.outputs.total || '' }}"
+          TOTAL=$(jq 'length' filtered.json)
+          echo "total=${TOTAL}" >> "$GITHUB_OUTPUT"
+          echo "Selected total: ${TOTAL}"
         continue-on-error: true
 
       - name: Compute chunk_size (auto or fixed)
@@ -144,18 +145,27 @@ PY
 
       - name: Chunk filtered list
         id: chunk
+        env:
+          CHUNK_SIZE: ${{ steps.size.outputs.chunk_size }}
         run: |
-          python3 - <<'PY' "${{ steps.size.outputs.chunk_size }}"
-import json, sys, pathlib
-K=int(sys.argv[1])
-pkgs=json.loads(pathlib.Path("filtered.json").read_text())
-chunks=[pkgs[i:i+K] for i in range(0,len(pkgs),K)]
-pathlib.Path("chunks.json").write_text(json.dumps(chunks))
-idx=list(range(len(chunks)))
-pathlib.Path("indexes.json").write_text(json.dumps(idx))
-print(f"[chunk] filtered={len(pkgs)}, chunk_size={K}, chunks={len(chunks)}")
-PY
-          echo "Chunks: $(jq 'length' chunks.json)"
+          python3 - <<'PY'
+          import os, json, pathlib
+          K = int(os.environ['CHUNK_SIZE'])
+          pkgs = json.loads(pathlib.Path('filtered.json').read_text())
+          chunks = [pkgs[i:i+K] for i in range(0, len(pkgs), K)] if K > 0 else [pkgs]
+          pathlib.Path('chunks.json').write_text(json.dumps(chunks))
+          idx = list(range(len(chunks)))
+          pathlib.Path('indexes.json').write_text(json.dumps(idx))
+          print(f"[chunk] filtered={len(pkgs)}, chunk_size={K}, chunks={len(chunks)}")
+          PY
+
+          # Human-friendly log (no jq needed)
+          echo "Chunks: $(python3 -c "import json;print(len(json.load(open('chunks.json'))))")"
+
+          # Emit single-line JSON to outputs (compact)
+          echo "chunks=$(python3 -c "import json;print(json.dumps(json.load(open('chunks.json'))))")" >> "$GITHUB_OUTPUT"
+          echo "indexes=$(python3 -c "import json;print(json.dumps(json.load(open('indexes.json'))))")" >> "$GITHUB_OUTPUT"
+
 
       - name: Upload plan for this platform
         uses: actions/upload-artifact@v4
@@ -189,20 +199,20 @@ PY
         id: make
         run: |
           python3 - <<'PY'
-import json, os, glob, pathlib
-pairs=[]
-for d in sorted(glob.glob("_plans/plan-*")):
-    plat = pathlib.Path(d).name.replace("plan-","",1)
-    idx_path = os.path.join(d, "indexes.json")
-    if not os.path.exists(idx_path):
-        continue
-    idx = json.load(open(idx_path))
-    for i in idx:
-        pairs.append({"platform": plat, "index": i})
-print("include=" + json.dumps(pairs))
-# expose as GITHUB_OUTPUT
-open(os.environ["GITHUB_OUTPUT"],"a").write("include="+json.dumps(pairs))
-PY
+          import json, os, glob, pathlib
+          pairs=[]
+          for d in sorted(glob.glob("_plans/plan-*")):
+              plat = pathlib.Path(d).name.replace("plan-","",1)
+              idx_path = os.path.join(d, "indexes.json")
+              if not os.path.exists(idx_path):
+                  continue
+              idx = json.load(open(idx_path))
+              for i in idx:
+                  pairs.append({"platform": plat, "index": i})
+          print("include=" + json.dumps(pairs))
+          # expose as GITHUB_OUTPUT
+          open(os.environ["GITHUB_OUTPUT"],"a").write("include="+json.dumps(pairs))
+          PY
           echo "Planned pairs: ${{ steps.make.outputs.include }}"
 
 # ────────────────────────────────────────────────────────────────────────────────
@@ -239,15 +249,25 @@ PY
           path: _plan
 
       - name: Prepare packages for this chunk
+        env:
+          IDX: ${{ matrix.index }}
+          # If your "Download platform plan" step used `path: _plan`, keep this:
+          PLAN_DIR: _plan
+          # If you DIDN'T set a path there, the default folder is "plan-${{ matrix.platform }}":
+          # PLAN_DIR: plan-${{ matrix.platform }}
         run: |
-          python3 - <<'PY' "${{ matrix.index }}"
-import json, sys, pathlib
-idx=int(sys.argv[1])
-chunks=json.loads(pathlib.Path("_plan/chunks.json").read_text())
-sel=chunks[idx] if idx < len(chunks) else []
-pathlib.Path("packages.json").write_text(json.dumps(sel))
-print(f"chunk {idx} size: {len(sel)}")
-PY
+          python3 - <<'PY'
+          import os, json, pathlib
+          idx = int(os.environ["IDX"])
+          plan_dir = os.environ.get("PLAN_DIR", "_plan")
+          chunks_path = pathlib.Path(plan_dir, "chunks.json")
+          if not chunks_path.exists():
+              raise SystemExit(f"Missing {chunks_path} (check your Download artifact path)")
+          chunks = json.loads(chunks_path.read_text())
+          sel = chunks[idx] if idx < len(chunks) else []
+          pathlib.Path("packages.json").write_text(json.dumps(sel))
+          print(f"chunk {idx} size: {len(sel)}")
+          PY
 
       - name: Build packages sequentially and collect results
         id: build
@@ -257,45 +277,45 @@ PY
         run: |
           mkdir -p logs
           python3 - <<'PY'
-import json, os, subprocess, time, pathlib
-pkgs=json.loads(pathlib.Path("packages.json").read_text())
-runner=os.environ["RUNNER_LABEL"]
-sha=os.environ["GITHUB_SHA"]
-repo=os.environ["GITHUB_REPOSITORY"]
-run_id=os.environ["GITHUB_RUN_ID"]
-attempt=os.environ["GITHUB_RUN_ATTEMPT"]
-results=[]
-for pkg in pkgs:
-  t0=time.time()
-  try:
-    p=subprocess.run(["./jetson-containers","build","--logs","logs",pkg],
-                     stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
-    log=p.stdout
-    status="success" if p.returncode==0 else "build_fail"
-  except Exception as e:
-    log=str(e); status="build_fail"
-  logf=f"logs/{pkg.replace('/','_')}.log"
-  pathlib.Path(logf).write_text(log)
-  if ":" in pkg:
-    name, tag = pkg.split(":",1)
-  else:
-    name, tag = pkg, "latest"
-  results.append({
-    "sha": sha,
-    "ref": os.environ.get("GITHUB_REF",""),
-    "runner": runner,
-    "package": name,
-    "tag": tag,
-    "status": status,
-    "duration_s": round(time.time()-t0,1),
-    "run_id": run_id,
-    "run_attempt": attempt,
-    "run_url": f"https://github.com/{repo}/actions/runs/{run_id}",
-    "log_relpath": logf
-  })
-pathlib.Path("results.json").write_text(json.dumps(results, indent=2))
-print(f"wrote {len(results)} results")
-PY
+          import json, os, subprocess, time, pathlib
+          pkgs=json.loads(pathlib.Path("packages.json").read_text())
+          runner=os.environ["RUNNER_LABEL"]
+          sha=os.environ["GITHUB_SHA"]
+          repo=os.environ["GITHUB_REPOSITORY"]
+          run_id=os.environ["GITHUB_RUN_ID"]
+          attempt=os.environ["GITHUB_RUN_ATTEMPT"]
+          results=[]
+          for pkg in pkgs:
+            t0=time.time()
+            try:
+              p=subprocess.run(["./jetson-containers","build","--logs","logs",pkg],
+                              stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+              log=p.stdout
+              status="success" if p.returncode==0 else "build_fail"
+            except Exception as e:
+              log=str(e); status="build_fail"
+            logf=f"logs/{pkg.replace('/','_')}.log"
+            pathlib.Path(logf).write_text(log)
+            if ":" in pkg:
+              name, tag = pkg.split(":",1)
+            else:
+              name, tag = pkg, "latest"
+            results.append({
+              "sha": sha,
+              "ref": os.environ.get("GITHUB_REF",""),
+              "runner": runner,
+              "package": name,
+              "tag": tag,
+              "status": status,
+              "duration_s": round(time.time()-t0,1),
+              "run_id": run_id,
+              "run_attempt": attempt,
+              "run_url": f"https://github.com/{repo}/actions/runs/{run_id}",
+              "log_relpath": logf
+            })
+          pathlib.Path("results.json").write_text(json.dumps(results, indent=2))
+          print(f"wrote {len(results)} results")
+          PY
 
       - name: Upload chunk results & logs
         if: always()
