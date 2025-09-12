@@ -292,6 +292,8 @@ jobs:
           mkdir -p logs
           # Remove old root-level build/test directories that might contaminate
           rm -rf build/ test/ || true
+          # Clean up any leftover results from previous runs
+          rm -f results.json || true
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -496,10 +498,10 @@ jobs:
                         break
                     last_memory_check = now
 
-                  # Removed frequent progress updates - keeping only stage info
-
-                  # Removed heartbeat - keeping output minimal
-                  time.sleep(1)  # Check every 1 second for stage changes
+                  # Only sleep if no output was processed (non-blocking read)
+                  # This prevents the massive slowdown from sleeping after every line
+                  if not line:
+                    time.sleep(0.1)  # Short sleep only when no output available
             except Exception as e:
               with open(logf, "a") as fh:
                 fh.write(f"\n[EXCEPTION] {e}\n")
@@ -528,15 +530,24 @@ jobs:
                 with open(logf, "r") as f:
                   log_content = f.read()
 
+                # Clean ANSI escape sequences from log content
+                import re
+                ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+                log_content = ansi_escape.sub('', log_content)
+
                 # Find the last build/test stage that was attempted (chronologically)
                 last_phase, last_stage = "unknown", "unknown"
 
                 for line in log_content.split('\n'):
                   if "> BUILDING" in line and "│" in line:
                     stage = line.split("│")[1].strip().replace("> BUILDING ", "").strip()
+                    # Clean ANSI escape sequences from stage name
+                    stage = ansi_escape.sub('', stage)
                     last_phase, last_stage = "BUILDING", stage
                   elif "> TESTING" in line and "│" in line:
                     stage = line.split("│")[1].strip().replace("> TESTING ", "").strip()
+                    # Clean ANSI escape sequences from stage name
+                    stage = ansi_escape.sub('', stage)
                     last_phase, last_stage = "TESTING", stage
 
                 # Extract the package name from the stage (last word/chunk)
@@ -594,7 +605,8 @@ jobs:
               "run_id": run_id,
               "run_attempt": attempt,
               "run_url": f"https://github.com/{repo}/actions/runs/{run_id}",
-              "log_relpath": logf
+              "log_relpath": logf,
+              "timestamp": time.time()
             })
           pathlib.Path("results.json").write_text(json.dumps(results, indent=2))
           print(f"wrote {len(results)} results")
@@ -659,7 +671,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: _in
-          pattern: results-*-chunk-*-*
+          pattern: results-*-chunk-*-${{ github.run_attempt }}
 
       - name: Merge JSON
         run: |
