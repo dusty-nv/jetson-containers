@@ -420,10 +420,10 @@ jobs:
                         # Only show stage information
                         if "> BUILDING" in line and "│" in line:
                           stage = line.split("│")[1].strip().replace("> BUILDING ", "").strip()
-                          print(f"[stage] Currently BUILDING: {stage}")
+                          print(f"[stage] Currently BUILDING: {stage}", flush=True)
                         elif "> TESTING" in line and "│" in line:
                           stage = line.split("│")[1].strip().replace("> TESTING ", "").strip()
-                          print(f"[stage] Currently TESTING: {stage}")
+                          print(f"[stage] Currently TESTING:  {stage}", flush=True)
                   except:
                     pass
 
@@ -497,6 +497,10 @@ jobs:
                         status = "oom_killed"
                         break
                     last_memory_check = now
+
+                    # Add a progress indicator every 30 seconds to ensure visibility
+                    elapsed = int(now - t0)
+                    print(f"[progress] {pkg} running for {elapsed}s - check logs for details", flush=True)
 
                   # Only sleep if no output was processed (non-blocking read)
                   # This prevents the massive slowdown from sleeping after every line
