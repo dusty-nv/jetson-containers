@@ -706,7 +706,7 @@ jobs:
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "| Package | Tag | Runner | Status | Failure Point | Duration (s) |" >> "$GITHUB_STEP_SUMMARY"
           echo "|---|---|---|---|---|---|" >> "$GITHUB_STEP_SUMMARY"
-          jq -r '.[] | "| \(.package) | \(.tag) | \(.runner) | \(.status) | \(.failure_point) | \(.duration_s) |"' results.json | head -n 50 >> "$GITHUB_STEP_SUMMARY"
+          jq -r --slurp '.[] | "| \(.package) | \(.tag) | \(.runner) | \(.status) | \(.failure_point) | \(.duration_s) |"' results.json | head -n 50 >> "$GITHUB_STEP_SUMMARY" || true
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "_Full data uploaded as artifact \`sweep-results-${GITHUB_SHA}-${GITHUB_RUN_ATTEMPT}\`._" >> "$GITHUB_STEP_SUMMARY"
 
