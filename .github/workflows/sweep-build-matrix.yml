@@ -258,6 +258,11 @@ jobs:
         run: |
           ROOT="${RUNNER_WORKSPACE}/jetson-containers/jetson-containers"
           rm -rf "${ROOT}/data" "${ROOT}/logs" || true
+          # Clean up any old logs from previous runs
+          rm -rf logs/ || true
+          mkdir -p logs
+          # Remove old root-level build/test directories that might contaminate
+          rm -rf build/ test/ || true
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -290,6 +295,13 @@ jobs:
           pathlib.Path("packages.json").write_text(json.dumps(sel))
           print(f"chunk {idx} size: {len(sel)}")
           PY
+
+      - name: Show build progress info
+        run: |
+          echo "🚀 Starting build process on ${{ matrix.platform }}"
+          echo "📦 Chunk #${{ matrix.index }} will build $(jq 'length' packages.json) packages"
+          echo "⏱️  Estimated total time: ~$(($(jq 'length' packages.json) * 5)) minutes"
+          echo "💡 Progress updates every 30 seconds - job is NOT stuck!"
 
       - name: Build packages sequentially and collect results
         id: build
@@ -327,7 +339,7 @@ jobs:
                 cmd = ["./build.sh", "--logs", per_dir, pkg]
                 print(f"[build] cmd: {' '.join(cmd)}")
                 p = subprocess.Popen(cmd, stdout=fh, stderr=subprocess.STDOUT, text=True)
-                next_hb = time.time() + 60
+                next_hb = time.time() + 30  # More frequent heartbeat every 30s
                 while True:
                   ret = p.poll()
                   now = time.time()
@@ -352,8 +364,12 @@ jobs:
                     break
                   if now >= next_hb:
                     elapsed = int(now - t0)
-                    print(f"[build] ({idx}/{total}) {pkg} still running... {elapsed}s elapsed")
-                    next_hb = now + 60
+                    progress_pct = (idx-1) * 100 // total
+                    remaining = total - idx + 1
+                    avg_time = elapsed / max(1, idx-1) if idx > 1 else 0
+                    eta = int(avg_time * remaining) if avg_time > 0 else 0
+                    print(f"[build] ({idx}/{total}) {pkg} still running... {elapsed}s elapsed ({progress_pct}% complete, ~{eta}s remaining)")
+                    next_hb = now + 30  # More frequent heartbeat
                   time.sleep(5)
             except Exception as e:
               with open(logf, "a") as fh:
@@ -380,6 +396,24 @@ jobs:
           pathlib.Path("results.json").write_text(json.dumps(results, indent=2))
           print(f"wrote {len(results)} results")
 
+          # Final summary
+          success_count = sum(1 for r in results if r["status"] == "success")
+          fail_count = sum(1 for r in results if r["status"] == "build_fail")
+          timeout_count = sum(1 for r in results if r["status"] == "timeout")
+          print(f"\n🎉 Build chunk completed!")
+          print(f"✅ Success: {success_count}")
+          print(f"❌ Failed: {fail_count}")
+          print(f"⏰ Timeout: {timeout_count}")
+          print(f"📊 Total: {len(results)}")
+
+          # Clean up any duplicate root-level log files that might have been created
+          for pkg in pkgs:
+            base = pkg.split(":", 1)[0] if ":" in pkg else pkg
+            root_log = f"logs/{base}.log"
+            if pathlib.Path(root_log).exists():
+              print(f"Removing duplicate root-level log: {root_log}")
+              pathlib.Path(root_log).unlink()
+
           # Sanitize any additional files created under logs/ that may contain invalid characters for artifacts
           logs_dir = pathlib.Path("logs")
           if logs_dir.exists():
@@ -401,7 +435,8 @@ jobs:
           name: results-${{ matrix.platform }}-chunk-${{ matrix.index }}-${{ github.run_attempt }}
           path: |
             results.json
-            logs/**
+            logs/index_*.log
+            logs/index_*/
           if-no-files-found: ignore
           overwrite: true
           retention-days: 14
