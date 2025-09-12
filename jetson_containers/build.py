@@ -131,5 +131,7 @@ try:
         build_containers(**vars(args))
 except Exception as error:
     log_error(f"Failed building:  {', '.join(args.packages)}\n\n{traceback.format_exc()}")
+    # exit non-zero so CI detects failure
+    sys.exit(1)
 finally:
     log_status(done=True)
