@@ -97,8 +97,17 @@ jobs:
       - name: List all packages
         id: list
         run: |
+          echo "Running: ./build.sh --list"
           ./build.sh --list | sed '/^\s*$/d' > all_packages.txt
           echo "Repo total: $(wc -l < all_packages.txt | tr -d ' ')"
+
+          echo "DEBUG: First 10 lines of build.sh --list output:"
+          head -n 10 all_packages.txt | cat -n
+
+          echo "DEBUG: Checking for problematic lines:"
+          grep -n "Namespace_" all_packages.txt || echo "No Namespace_ lines found"
+          grep -n "argparse" all_packages.txt || echo "No argparse lines found"
+          grep -n "=" all_packages.txt | head -n 5 || echo "No lines with = found"
 
       - name: Filter subset (platform-specific list)
         id: subset
@@ -115,6 +124,25 @@ jobs:
 
           def base(s): return s.split(":",1)[0]
           pkgs=[ln.strip() for ln in pathlib.Path("all_packages.txt").read_text().splitlines() if ln.strip()]
+
+          # Filter out invalid package names (like Namespace objects)
+          valid_pkgs = []
+          for pkg in pkgs:
+            # Skip if it looks like a Namespace object or is too long
+            if (not pkg.startswith('Namespace_') and
+                len(pkg) < 200 and
+                '=' not in pkg and
+                not pkg.startswith('argparse.') and
+                pkg and
+                not pkg.isspace()):
+              valid_pkgs.append(pkg)
+
+          pkgs = valid_pkgs
+          if not pkgs:
+            print("ERROR: No valid packages found in build.sh --list output")
+            print("Raw output preview:")
+            print(pathlib.Path("all_packages.txt").read_text()[:500])
+            raise SystemExit(1)
 
           if mode == "prefix" and value:
               pkgs = [p for p in pkgs if base(p).lower().startswith(value.lower())]
@@ -133,6 +161,24 @@ jobs:
 
           pathlib.Path("filtered.json").write_text(json.dumps(pkgs))
           print(f"[subset] mode={mode} value={value} exclude_builders={exclude_builders} selected={len(pkgs)}")
+
+          # Debug: Show what we got from build.sh --list
+          print("DEBUG: Raw all_packages.txt content (first 10 lines):")
+          with open("all_packages.txt", "r") as f:
+            lines = f.readlines()[:10]
+            for i, line in enumerate(lines):
+              print(f"  Line {i+1}: {repr(line.strip())}")
+
+          # Debug: Show what we're about to filter
+          print(f"DEBUG: About to filter {len(pkgs)} packages")
+          print("DEBUG: ALL packages before filtering:")
+          for i, pkg in enumerate(pkgs):
+            print(f"  Package {i+1}: {repr(pkg)} (len={len(pkg)})")
+
+          # Debug: Show what we're about to write to filtered.json
+          print("DEBUG: ALL packages after filtering (what goes to filtered.json):")
+          for i, pkg in enumerate(pkgs):
+            print(f"  Filtered Package {i+1}: {repr(pkg)} (len={len(pkg)})")
           PY
           echo "Preview (first 20):"
           jq -r '.[]' filtered.json | head -n 20 || true
@@ -380,6 +426,12 @@ jobs:
             base, tag = (pkg.split(":", 1) + ["latest"])[:2] if ":" in pkg else (pkg, "latest")
             safe_base = re.sub(r'[^A-Za-z0-9._-]+', '_', base.replace('/', '_'))
             safe_pkg = re.sub(r'[^A-Za-z0-9._-]+', '_', pkg.replace('/', '_'))
+
+            # Truncate safe_base if it's too long to prevent filename too long error
+            max_base_len = 100  # Leave room for index_XXX_ prefix
+            if len(safe_base) > max_base_len:
+                safe_base = safe_base[:max_base_len]
+
             dir_name = f"index_{idx-1:03d}_{safe_base}"
             per_dir = f"logs/{dir_name}"
             logf = f"logs/{dir_name}.log"
