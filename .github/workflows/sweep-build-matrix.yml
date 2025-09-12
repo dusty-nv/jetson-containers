@@ -101,8 +101,8 @@ jobs:
           ./build.sh --list | sed '/^\s*$/d' > all_packages.txt
           echo "Repo total: $(wc -l < all_packages.txt | tr -d ' ')"
 
-          echo "DEBUG: First 10 lines of build.sh --list output:"
-          head -n 10 all_packages.txt | cat -n
+          echo "DEBUG: build.sh --list output:"
+          cat -n all_packages.txt
 
           echo "DEBUG: Checking for problematic lines:"
           grep -n "Namespace_" all_packages.txt || echo "No Namespace_ lines found"
@@ -162,26 +162,11 @@ jobs:
           pathlib.Path("filtered.json").write_text(json.dumps(pkgs))
           print(f"[subset] mode={mode} value={value} exclude_builders={exclude_builders} selected={len(pkgs)}")
 
-          # Debug: Show what we got from build.sh --list
-          print("DEBUG: Raw all_packages.txt content (first 10 lines):")
-          with open("all_packages.txt", "r") as f:
-            lines = f.readlines()[:10]
-            for i, line in enumerate(lines):
-              print(f"  Line {i+1}: {repr(line.strip())}")
-
-          # Debug: Show what we're about to filter
-          print(f"DEBUG: About to filter {len(pkgs)} packages")
-          print("DEBUG: ALL packages before filtering:")
-          for i, pkg in enumerate(pkgs):
-            print(f"  Package {i+1}: {repr(pkg)} (len={len(pkg)})")
-
           # Debug: Show what we're about to write to filtered.json
           print("DEBUG: ALL packages after filtering (what goes to filtered.json):")
           for i, pkg in enumerate(pkgs):
             print(f"  Filtered Package {i+1}: {repr(pkg)} (len={len(pkg)})")
           PY
-          echo "Preview (first 20):"
-          jq -r '.[]' filtered.json | head -n 20 || true
 
       - name: Count selected
         id: count
@@ -222,10 +207,31 @@ jobs:
           idx = list(range(len(chunks)))
           pathlib.Path('indexes.json').write_text(json.dumps(idx))
           print(f"[chunk] filtered={len(pkgs)}, chunk_size={K}, chunks={len(chunks)}")
+
+          # Debug: Show contents of each chunk
+          print("DEBUG: Chunk contents:")
+          for i, chunk in enumerate(chunks):
+            print(f"  Chunk {i}: {len(chunk)} packages")
+            for j, pkg in enumerate(chunk):
+              print(f"    {j+1}. {pkg}")
+            print()
           PY
 
           # Human-friendly log (no jq needed)
           echo "Chunks: $(python3 -c "import json;print(len(json.load(open('chunks.json'))))")"
+
+          # Show chunk contents using jq for better visibility
+          echo "=== CHUNK CONTENTS ==="
+          python3 -c "
+          import json
+          chunks = json.load(open('chunks.json'))
+          for i, chunk in enumerate(chunks):
+              print(f'Chunk {i}: {len(chunk)} packages')
+              for j, pkg in enumerate(chunk):
+                  print(f'  {j+1}. {pkg}')
+              print()
+          "
+          echo "=== END CHUNK CONTENTS ==="
 
           # Emit single-line JSON to outputs (compact)
           echo "chunks=$(python3 -c "import json;print(json.dumps(json.load(open('chunks.json'))))")" >> "$GITHUB_OUTPUT"
@@ -555,10 +561,10 @@ jobs:
                         status = "oom_killed"
                         break
 
-                    # Add a progress indicator every 30 seconds to ensure visibility
-                    if now - last_progress_print >= 30:
+                    # Add a progress indicator every 60 seconds to ensure visibility
+                    if now - last_progress_print >= 60:
                       elapsed = int(now - t0)
-                      print(f"[progress] {pkg} running for {elapsed}s - check logs for details", flush=True)
+                      print(f"[progress] {pkg} running for {elapsed}s", flush=True)
                       last_progress_print = now
                     last_memory_check = now
 
@@ -758,7 +764,7 @@ jobs:
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "| Package | Tag | Runner | Status | Failure Point | Duration (s) |" >> "$GITHUB_STEP_SUMMARY"
           echo "|---|---|---|---|---|---|" >> "$GITHUB_STEP_SUMMARY"
-          jq -r --slurp '.[] | "| \(.package) | \(.tag) | \(.runner) | \(.status) | \(.failure_point) | \(.duration_s) |"' results.json | head -n 50 >> "$GITHUB_STEP_SUMMARY" || true
+          jq -r '.[] | "| \(.package) | \(.tag) | \(.runner) | \(.status) | \(.failure_point) | \(.duration_s) |"' results.json | head -n 50 >> "$GITHUB_STEP_SUMMARY" || true
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "_Full data uploaded as artifact \`sweep-results-${GITHUB_SHA}-${GITHUB_RUN_ATTEMPT}\`._" >> "$GITHUB_STEP_SUMMARY"
 
