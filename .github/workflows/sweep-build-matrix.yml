@@ -255,7 +255,7 @@ jobs:
                 echo "|-------|----------|" >> "$GITHUB_STEP_SUMMARY"
 
                 # Use jq to format the chunks nicely
-                jq -r 'to_entries[] | "| \(.key) | \(.value | length) packages: \(.value | join(\", \")) |"' "$plan_dir/chunks.json" >> "$GITHUB_STEP_SUMMARY"
+                jq -r 'to_entries[] | "| \(.key) | \(.value | length) packages: \(.value | join(", ")) |"' "$plan_dir/chunks.json" >> "$GITHUB_STEP_SUMMARY"
                 echo "" >> "$GITHUB_STEP_SUMMARY"
               fi
             fi
