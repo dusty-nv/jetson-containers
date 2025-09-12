@@ -360,7 +360,7 @@ jobs:
           timeout_min = int(os.environ.get("PKG_TIMEOUT_MIN", "90") or "90")
           timeout_s = max(60, timeout_min * 60)
           # Per-package timeout to prevent infinite loops (e.g., block_sparse_attn)
-          pkg_timeout_s = min(1800, timeout_s // 2)  # Max 30 minutes per package
+          pkg_timeout_s = min(1200, timeout_s // 3)  # Max 20 minutes per package
           results = []
           total = len(pkgs)
 
@@ -397,6 +397,11 @@ jobs:
 
             # Clean up memory before each build
             gc.collect()
+            import ctypes
+            try:
+              ctypes.CDLL("libc.so.6").malloc_trim(0)
+            except:
+              pass
             try:
               cmd = ["./build.sh", "--logs", per_dir, pkg]
               print(f"[build] cmd: {' '.join(cmd)}")
@@ -409,6 +414,7 @@ jobs:
               with open(logf, "w") as fh:
                 last_progress = time.time()
                 last_memory_check = time.time()
+                last_progress_print = time.time()
                 while True:
                   # Read any available output in real-time
                   try:
@@ -496,16 +502,18 @@ jobs:
                           af.write(f"\n[OOM_PREVENTION] Package '{pkg}' terminated due to low memory ({mem_available}MB available)\n")
                         status = "oom_killed"
                         break
-                    last_memory_check = now
 
                     # Add a progress indicator every 30 seconds to ensure visibility
-                    elapsed = int(now - t0)
-                    print(f"[progress] {pkg} running for {elapsed}s - check logs for details", flush=True)
+                    if now - last_progress_print >= 30:
+                      elapsed = int(now - t0)
+                      print(f"[progress] {pkg} running for {elapsed}s - check logs for details", flush=True)
+                      last_progress_print = now
+                    last_memory_check = now
 
                   # Only sleep if no output was processed (non-blocking read)
                   # This prevents the massive slowdown from sleeping after every line
                   if not line:
-                    time.sleep(0.1)  # Short sleep only when no output available
+                    time.sleep(0.05)  # Very short sleep only when no output available
             except Exception as e:
               with open(logf, "a") as fh:
                 fh.write(f"\n[EXCEPTION] {e}\n")
@@ -513,10 +521,14 @@ jobs:
             finally:
               # Clean up after each build
               gc.collect()
+              try:
+                ctypes.CDLL("libc.so.6").malloc_trim(0)
+              except:
+                pass
 
               # Add a small delay to allow system cleanup
               if idx < total:  # Don't delay after the last package
-                time.sleep(2)
+                time.sleep(1)  # Reduced delay
 
               print(f"[build] ({idx}/{total}) finished {pkg} with status={status} in {round(time.time()-t0,1)}s")
 
@@ -566,36 +578,36 @@ jobs:
                 # Determine failure type based on error patterns and phase
                 # Only consider it a test failure if we're in TESTING phase AND there are actual error indicators
                 if last_phase == "TESTING" and ("failed" in log_content.lower() or "error" in log_content.lower() or "💣" in log_content):
-                  failure_point = f"Failed while TESTING {package_name}"
+                  failure_point = f"TESTING {package_name}"
                 elif "ERROR: No matching distribution found" in log_content:
-                  failure_point = f"Failed while BUILDING {package_name} (pip install)"
+                  failure_point = f"BUILDING {package_name} (pip install)"
                 elif "ERROR: Could not find a version that satisfies" in log_content:
-                  failure_point = f"Failed while BUILDING {package_name} (pip install)"
+                  failure_point = f"BUILDING {package_name} (pip install)"
                 elif "error: command" in log_content and "cmake" in log_content:
-                  failure_point = f"Failed while BUILDING {package_name} (cmake)"
+                  failure_point = f"BUILDING {package_name} (cmake)"
                 elif "error: command" in log_content and "make" in log_content:
-                  failure_point = f"Failed while BUILDING {package_name} (make)"
+                  failure_point = f"BUILDING {package_name} (make)"
                 elif "error: command" in log_content and "ninja" in log_content:
-                  failure_point = f"Failed while BUILDING {package_name} (ninja)"
+                  failure_point = f"BUILDING {package_name} (ninja)"
                 elif "python3 setup.py" in log_content and "returned a non-zero exit code" in log_content:
-                  failure_point = f"Failed while BUILDING {package_name} (python setup)"
+                  failure_point = f"BUILDING {package_name} (python setup)"
                 elif "bdist_wheel" in log_content and "returned a non-zero exit code" in log_content:
-                  failure_point = f"Failed while BUILDING {package_name} (python wheel)"
+                  failure_point = f"BUILDING {package_name} (python wheel)"
                 elif "docker build" in log_content and "returned non-zero exit status" in log_content:
-                  failure_point = f"Failed while BUILDING {package_name} (docker build)"
+                  failure_point = f"BUILDING {package_name} (docker build)"
                 elif "test" in log_content.lower() and "failed" in log_content.lower():
-                  failure_point = f"Failed while TESTING {package_name}"
+                  failure_point = f"TESTING  {package_name}"
                 elif "timeout" in log_content.lower():
-                  failure_point = f"Failed while BUILDING {package_name} (timeout)"
+                  failure_point = f"BUILDING {package_name} (timeout)"
                 else:
                   # Use the phase information
-                  failure_point = f"Failed while {last_phase} {package_name}"
+                  failure_point = f"{last_phase} {package_name}"
               except Exception:
                 failure_point = "log analysis failed"
             elif status == "timeout":
-              failure_point = "Failed while BUILDING (timeout)"
+              failure_point = "BUILDING (timeout)"
             elif status == "oom_killed":
-              failure_point = "Failed while BUILDING (out of memory)"
+              failure_point = "BUILDING (out of memory)"
             results.append({
               "sha": sha,
               "ref": os.environ.get("GITHUB_REF", ""),
