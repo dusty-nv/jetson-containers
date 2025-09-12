@@ -125,7 +125,20 @@ jobs:
           def base(s): return s.split(":",1)[0]
           pkgs=[ln.strip() for ln in pathlib.Path("all_packages.txt").read_text().splitlines() if ln.strip()]
 
-          # Filter out invalid package names (like Namespace objects and system info tables)
+          # First apply subset filtering
+          if mode == "prefix" and value:
+              pkgs = [p for p in pkgs if base(p).lower().startswith(value.lower())]
+          elif mode == "regex" and value:
+              r = re.compile(value, re.I); pkgs = [p for p in pkgs if r.search(base(p))]
+          elif mode == "list" and value:
+              want=set(x.strip() for x in value.split(",") if x.strip())
+              pkgs=[p for p in pkgs if base(p) in want or p in want]
+          elif mode == "first_n":
+              n = int(value or "10"); pkgs = pkgs[:n]
+          elif mode == "sample_n":
+              n = int(value or "10"); random.shuffle(pkgs); pkgs = pkgs[:n]
+
+          # Then filter out invalid package names (like Namespace objects and system info tables)
           valid_pkgs = []
           for pkg in pkgs:
             # Skip if it looks like a Namespace object, system info table, or is too long
@@ -151,18 +164,6 @@ jobs:
             print("Raw output preview:")
             print(pathlib.Path("all_packages.txt").read_text()[:500])
             raise SystemExit(1)
-
-          if mode == "prefix" and value:
-              pkgs = [p for p in pkgs if base(p).lower().startswith(value.lower())]
-          elif mode == "regex" and value:
-              r = re.compile(value, re.I); pkgs = [p for p in pkgs if r.search(base(p))]
-          elif mode == "list" and value:
-              want=set(x.strip() for x in value.split(",") if x.strip())
-              pkgs=[p for p in pkgs if base(p) in want or p in want]
-          elif mode == "first_n":
-              n = int(value or "10"); pkgs = pkgs[:n]
-          elif mode == "sample_n":
-              n = int(value or "10"); random.shuffle(pkgs); pkgs = pkgs[:n]
 
           if exclude_builders:
               pkgs = [p for p in pkgs if not p.endswith("-builder")]
