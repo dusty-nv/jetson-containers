@@ -357,6 +357,8 @@ jobs:
           attempt = os.environ["GITHUB_RUN_ATTEMPT"]
           timeout_min = int(os.environ.get("PKG_TIMEOUT_MIN", "90") or "90")
           timeout_s = max(60, timeout_min * 60)
+          # Per-package timeout to prevent infinite loops (e.g., block_sparse_attn)
+          pkg_timeout_s = min(1800, timeout_s // 2)  # Max 30 minutes per package
           results = []
           total = len(pkgs)
 
@@ -394,44 +396,35 @@ jobs:
             # Clean up memory before each build
             gc.collect()
             try:
+              cmd = ["./build.sh", "--logs", per_dir, pkg]
+              print(f"[build] cmd: {' '.join(cmd)}")
+
+              # Use PIPE to capture output in real-time
+              p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1, universal_newlines=True)
+              next_hb = time.time() + 30  # More frequent heartbeat every 30s
+
+              # Write output to log file and show in real-time
               with open(logf, "w") as fh:
-                cmd = ["./build.sh", "--logs", per_dir, pkg]
-                print(f"[build] cmd: {' '.join(cmd)}")
-                p = subprocess.Popen(cmd, stdout=fh, stderr=subprocess.STDOUT, text=True)
-                next_hb = time.time() + 30  # More frequent heartbeat every 30s
-
-                # Start background log tail process
-                import threading
-                def tail_log():
+                last_progress = time.time()
+                last_memory_check = time.time()
+                while True:
+                  # Read any available output in real-time
                   try:
-                    while p.poll() is None:
-                      if pathlib.Path(logf).exists():
-                        with open(logf, "r") as f:
-                          lines = f.readlines()
-                          if lines:
-                            # Show last 3 lines of log
-                            for line in lines[-3:]:
-                              if line.strip():
-                                print(f"[log] {line.strip()}")
-
-                            # Detect current build stage
-                            for line in reversed(lines[-10:]):  # Check last 10 lines
-                              if "> BUILDING" in line and "│" in line:
-                                stage = line.split("│")[1].strip().replace("> BUILDING ", "").strip()
-                                print(f"[stage] Currently BUILDING: {stage}")
-                                break
-                              elif "> TESTING" in line and "│" in line:
-                                stage = line.split("│")[1].strip().replace("> TESTING ", "").strip()
-                                print(f"[stage] Currently TESTING: {stage}")
-                                break
-                      time.sleep(10)  # Check every 10 seconds
-                  except Exception:
+                    line = p.stdout.readline()
+                    if line:
+                      fh.write(line)
+                      fh.flush()
+                      if line.strip():
+                        # Only show stage information
+                        if "> BUILDING" in line and "│" in line:
+                          stage = line.split("│")[1].strip().replace("> BUILDING ", "").strip()
+                          print(f"[stage] Currently BUILDING: {stage}")
+                        elif "> TESTING" in line and "│" in line:
+                          stage = line.split("│")[1].strip().replace("> TESTING ", "").strip()
+                          print(f"[stage] Currently TESTING: {stage}")
+                  except:
                     pass
 
-                log_tail_thread = threading.Thread(target=tail_log, daemon=True)
-                log_tail_thread.start()
-                last_progress = time.time()
-                while True:
                   ret = p.poll()
                   now = time.time()
                   if ret is not None:
@@ -444,7 +437,25 @@ jobs:
                     else:
                       status = "build_fail"
                     break
-                  if now - t0 > timeout_s:
+                  # Check per-package timeout first (prevents infinite loops)
+                  if now - t0 > pkg_timeout_s:
+                    try:
+                      p.terminate()
+                    except Exception:
+                      pass
+                    try:
+                      p.wait(timeout=10)
+                    except Exception:
+                      try:
+                        p.kill()
+                      except Exception:
+                        pass
+                    with open(logf, "a") as af:
+                      af.write(f"\n[PKG_TIMEOUT] Package '{pkg}' exceeded {pkg_timeout_s}s and was terminated.\n")
+                    status = "timeout"
+                    break
+                  # Check overall timeout
+                  elif now - t0 > timeout_s:
                     try:
                       p.terminate()
                     except Exception:
@@ -461,26 +472,34 @@ jobs:
                     status = "timeout"
                     break
 
-                  # Show progress every 10 seconds regardless of heartbeat
-                  if now - last_progress >= 10:
-                    elapsed = int(now - t0)
-                    progress_pct = (idx-1) * 100 // total
-                    remaining = total - idx + 1
-                    avg_time = elapsed / max(1, idx-1) if idx > 1 else 0
-                    eta = int(avg_time * remaining) if avg_time > 0 else 0
-                    print(f"[build] ({idx}/{total}) {pkg} still running... {elapsed}s elapsed ({progress_pct}% complete, ~{eta}s remaining)")
-                    last_progress = now
+                  # Check memory every 30 seconds to detect OOM conditions
+                  if now - last_memory_check >= 30:
+                    mem_available = check_memory()
+                    if mem_available is not None and mem_available < 2000:  # Less than 2GB
+                      print(f"⚠️  WARNING: Low memory detected ({mem_available}MB available). Build may fail soon.")
+                      if mem_available < 1000:  # Less than 1GB - kill the build
+                        print(f"💥 CRITICAL: Memory too low ({mem_available}MB). Terminating build to prevent OOM.")
+                        try:
+                          p.terminate()
+                        except Exception:
+                          pass
+                        try:
+                          p.wait(timeout=5)
+                        except Exception:
+                          try:
+                            p.kill()
+                          except Exception:
+                            pass
+                        with open(logf, "a") as af:
+                          af.write(f"\n[OOM_PREVENTION] Package '{pkg}' terminated due to low memory ({mem_available}MB available)\n")
+                        status = "oom_killed"
+                        break
+                    last_memory_check = now
 
-                  # Heartbeat every 30 seconds
-                  if now >= next_hb:
-                    elapsed = int(now - t0)
-                    progress_pct = (idx-1) * 100 // total
-                    remaining = total - idx + 1
-                    avg_time = elapsed / max(1, idx-1) if idx > 1 else 0
-                    eta = int(avg_time * remaining) if avg_time > 0 else 0
-                    print(f"[build] ({idx}/{total}) {pkg} still running... {elapsed}s elapsed ({progress_pct}% complete, ~{eta}s remaining)")
-                    next_hb = now + 30  # More frequent heartbeat
-                  time.sleep(5)
+                  # Removed frequent progress updates - keeping only stage info
+
+                  # Removed heartbeat - keeping output minimal
+                  time.sleep(1)  # Check every 1 second for stage changes
             except Exception as e:
               with open(logf, "a") as fh:
                 fh.write(f"\n[EXCEPTION] {e}\n")
