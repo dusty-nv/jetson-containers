@@ -125,14 +125,22 @@ jobs:
           def base(s): return s.split(":",1)[0]
           pkgs=[ln.strip() for ln in pathlib.Path("all_packages.txt").read_text().splitlines() if ln.strip()]
 
-          # Filter out invalid package names (like Namespace objects)
+          # Filter out invalid package names (like Namespace objects and system info tables)
           valid_pkgs = []
           for pkg in pkgs:
-            # Skip if it looks like a Namespace object or is too long
+            # Skip if it looks like a Namespace object, system info table, or is too long
             if (not pkg.startswith('Namespace_') and
                 len(pkg) < 200 and
                 '=' not in pkg and
                 not pkg.startswith('argparse.') and
+                not pkg.startswith('┌') and  # Table top border
+                not pkg.startswith('└') and  # Table bottom border
+                not pkg.startswith('│') and  # Table content lines
+                not pkg.startswith('├') and  # Table middle separators
+                not pkg.startswith('┤') and  # Table middle separators
+                not pkg.startswith('┬') and  # Table middle separators
+                not pkg.startswith('┴') and  # Table middle separators
+                not pkg.startswith('$') and  # Command lines
                 pkg and
                 not pkg.isspace()):
               valid_pkgs.append(pkg)
