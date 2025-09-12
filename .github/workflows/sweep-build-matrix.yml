@@ -399,6 +399,38 @@ jobs:
                 print(f"[build] cmd: {' '.join(cmd)}")
                 p = subprocess.Popen(cmd, stdout=fh, stderr=subprocess.STDOUT, text=True)
                 next_hb = time.time() + 30  # More frequent heartbeat every 30s
+
+                # Start background log tail process
+                import threading
+                def tail_log():
+                  try:
+                    while p.poll() is None:
+                      if pathlib.Path(logf).exists():
+                        with open(logf, "r") as f:
+                          lines = f.readlines()
+                          if lines:
+                            # Show last 3 lines of log
+                            for line in lines[-3:]:
+                              if line.strip():
+                                print(f"[log] {line.strip()}")
+
+                            # Detect current build stage
+                            for line in reversed(lines[-10:]):  # Check last 10 lines
+                              if "> BUILDING" in line and "│" in line:
+                                stage = line.split("│")[1].strip().replace("> BUILDING ", "").strip()
+                                print(f"[stage] Currently BUILDING: {stage}")
+                                break
+                              elif "> TESTING" in line and "│" in line:
+                                stage = line.split("│")[1].strip().replace("> TESTING ", "").strip()
+                                print(f"[stage] Currently TESTING: {stage}")
+                                break
+                      time.sleep(10)  # Check every 10 seconds
+                  except Exception:
+                    pass
+
+                log_tail_thread = threading.Thread(target=tail_log, daemon=True)
+                log_tail_thread.start()
+                last_progress = time.time()
                 while True:
                   ret = p.poll()
                   now = time.time()
@@ -428,6 +460,18 @@ jobs:
                       af.write(f"\n[TIMEOUT] Package '{pkg}' exceeded {timeout_s}s and was terminated.\n")
                     status = "timeout"
                     break
+
+                  # Show progress every 10 seconds regardless of heartbeat
+                  if now - last_progress >= 10:
+                    elapsed = int(now - t0)
+                    progress_pct = (idx-1) * 100 // total
+                    remaining = total - idx + 1
+                    avg_time = elapsed / max(1, idx-1) if idx > 1 else 0
+                    eta = int(avg_time * remaining) if avg_time > 0 else 0
+                    print(f"[build] ({idx}/{total}) {pkg} still running... {elapsed}s elapsed ({progress_pct}% complete, ~{eta}s remaining)")
+                    last_progress = now
+
+                  # Heartbeat every 30 seconds
                   if now >= next_hb:
                     elapsed = int(now - t0)
                     progress_pct = (idx-1) * 100 // total
