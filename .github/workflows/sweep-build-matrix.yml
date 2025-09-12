@@ -207,18 +207,10 @@ jobs:
           idx = list(range(len(chunks)))
           pathlib.Path('indexes.json').write_text(json.dumps(idx))
           print(f"[chunk] filtered={len(pkgs)}, chunk_size={K}, chunks={len(chunks)}")
-
-          # Debug: Show contents of each chunk
-          print("DEBUG: Chunk contents:")
-          for i, chunk in enumerate(chunks):
-            print(f"  Chunk {i}: {len(chunk)} packages")
-            for j, pkg in enumerate(chunk):
-              print(f"    {j+1}. {pkg}")
-            print()
           PY
 
           # Human-friendly log (no jq needed)
-          echo "Chunks: $(python3 -c "import json;print(len(json.load(open('chunks.json'))))")"
+          echo "# of Chunks: $(python3 -c "import json;print(len(json.load(open('chunks.json'))))")"
 
           # Show chunk contents using jq for better visibility
           echo "=== CHUNK CONTENTS ==="
@@ -377,6 +369,14 @@ jobs:
           sel = chunks[idx] if idx < len(chunks) else []
           pathlib.Path("packages.json").write_text(json.dumps(sel))
           print(f"chunk {idx} size: {len(sel)}")
+
+          # Debug: Print all package names and their original filtered package numbers
+          print(f"DEBUG: All packages in chunk {idx}:")
+          # Calculate starting number based on chunk index and chunk size
+          chunk_size = len(sel)
+          start_num = idx * chunk_size + 1
+          for i, pkg in enumerate(sel):
+              print(f"  {start_num + i:3d}. {pkg}")
           PY
 
       - name: Show build progress info
@@ -386,7 +386,7 @@ jobs:
           echo "⏱️  Estimated total time: ~$(($(jq 'length' packages.json) * 5)) minutes"
           echo "💡 Progress updates every 30 seconds - job is NOT stuck!"
 
-      - name: Build packages sequentially and collect results
+      - name: Build packages sequentially
         id: build
         env:
           RUNNER_LABEL: ${{ matrix.platform }}
@@ -409,10 +409,10 @@ jobs:
           repo = os.environ["GITHUB_REPOSITORY"]
           run_id = os.environ["GITHUB_RUN_ID"]
           attempt = os.environ["GITHUB_RUN_ATTEMPT"]
-          timeout_min = int(os.environ.get("PKG_TIMEOUT_MIN", "90") or "90")
-          timeout_s = max(60, timeout_min * 60)
-          # Per-package timeout to prevent infinite loops (e.g., block_sparse_attn)
-          pkg_timeout_s = min(1200, timeout_s // 3)  # Max 20 minutes per package
+          pkg_timeout_min = int(os.environ.get("PKG_TIMEOUT_MIN", "90") or "90")
+          pkg_timeout_s = pkg_timeout_min * 60  # Per-package timeout as specified by user
+          # Overall chunk timeout (allow more time for multiple packages)
+          chunk_timeout_s = max(3600, pkg_timeout_min * 60 * 3)  # At least 1 hour, or 3x per-package timeout
           results = []
           total = len(pkgs)
 
@@ -520,8 +520,8 @@ jobs:
                       af.write(f"\n[PKG_TIMEOUT] Package '{pkg}' exceeded {pkg_timeout_s}s and was terminated.\n")
                     status = "timeout"
                     break
-                  # Check overall timeout
-                  elif now - t0 > timeout_s:
+                  # Check overall chunk timeout
+                  elif now - t0 > chunk_timeout_s:
                     try:
                       p.terminate()
                     except Exception:
@@ -534,7 +534,7 @@ jobs:
                       except Exception:
                         pass
                     with open(logf, "a") as af:
-                      af.write(f"\n[TIMEOUT] Package '{pkg}' exceeded {timeout_s}s and was terminated.\n")
+                      af.write(f"\n[CHUNK_TIMEOUT] Package '{pkg}' exceeded chunk timeout {chunk_timeout_s}s and was terminated.\n")
                     status = "timeout"
                     break
 
@@ -717,6 +717,35 @@ jobs:
                   except Exception as e:
                     # Best effort: if rename fails, continue so at least our own log files are valid
                     pass
+          PY
+
+      - name: Collect results
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json, pathlib
+
+          # Read results from the build job
+          results_path = pathlib.Path("results.json")
+          if not results_path.exists():
+              print("No results.json found - build may have failed")
+              exit(1)
+
+          results = json.loads(results_path.read_text())
+
+          # Calculate summary statistics
+          success_count = sum(1 for r in results if r["status"] == "success")
+          fail_count = sum(1 for r in results if r["status"] == "build_fail")
+          timeout_count = sum(1 for r in results if r["status"] == "timeout")
+          oom_count = sum(1 for r in results if r["status"] == "oom_killed")
+
+          # Display results summary
+          print(f"\n🎉 Build chunk completed!")
+          print(f"✅ Success: {success_count}")
+          print(f"❌ Failed: {fail_count}")
+          print(f"⏰ Timeout: {timeout_count}")
+          print(f"💥 OOM Killed: {oom_count}")
+          print(f"📊 Total: {len(results)}")
           PY
 
       - name: Upload chunk results & logs
