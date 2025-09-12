@@ -237,6 +237,35 @@ jobs:
         run:  |
           echo "Planned pairs: ${{ steps.make.outputs.include }}"
 
+      - name: Show detailed build plan
+        run: |
+          echo "## 📋 Detailed Build Plan" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+
+          # Process each platform's plan
+          for plan_dir in _plans/plan-*; do
+            if [ -d "$plan_dir" ]; then
+              platform=$(basename "$plan_dir" | sed 's/plan-//')
+              echo "### Platform: $platform" >> "$GITHUB_STEP_SUMMARY"
+              echo "" >> "$GITHUB_STEP_SUMMARY"
+
+              # Show packages in each chunk
+              if [ -f "$plan_dir/chunks.json" ]; then
+                echo "| Chunk | Packages |" >> "$GITHUB_STEP_SUMMARY"
+                echo "|-------|----------|" >> "$GITHUB_STEP_SUMMARY"
+
+                # Use jq to format the chunks nicely
+                jq -r 'to_entries[] | "| \(.key) | \(.value | length) packages: \(.value | join(\", \")) |"' "$plan_dir/chunks.json" >> "$GITHUB_STEP_SUMMARY"
+                echo "" >> "$GITHUB_STEP_SUMMARY"
+              fi
+            fi
+          done
+
+          echo "### Summary" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Total platforms**: $(ls -1 _plans/plan-* | wc -l)" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Total chunks**: $(echo '${{ steps.make.outputs.include }}' | jq 'length')" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Total packages**: $(find _plans -name chunks.json -exec jq 'map(length) | add' {} \; | awk '{sum+=$1} END {print sum}')" >> "$GITHUB_STEP_SUMMARY"
+
 # ────────────────────────────────────────────────────────────────────────────────
 # 3) RUN-CHUNKS: builds each chunk on its platform runner
 # ────────────────────────────────────────────────────────────────────────────────
@@ -311,8 +340,15 @@ jobs:
           PKG_TIMEOUT_MIN: ${{ github.event.inputs.pkg_timeout_minutes || '90' }}
         run: |
           mkdir -p logs
+
+          # Check available memory and system resources
+          echo "🔍 System resource check:"
+          free -h
+          df -h /
+          echo "Available memory: $(free -m | awk 'NR==2{printf "%.1f%%", $3*100/$2 }')"
+
           python3 - <<'PY'
-          import json, os, subprocess, time, pathlib, re
+          import json, os, subprocess, time, pathlib, re, gc
           pkgs = json.loads(pathlib.Path("packages.json").read_text())
           runner = os.environ.get("RUNNER_NAME") or os.environ["RUNNER_LABEL"]
           sha = os.environ["GITHUB_SHA"]
@@ -323,6 +359,18 @@ jobs:
           timeout_s = max(60, timeout_min * 60)
           results = []
           total = len(pkgs)
+
+          def check_memory():
+            try:
+              with open('/proc/meminfo', 'r') as f:
+                meminfo = f.read()
+              for line in meminfo.split('\n'):
+                if 'MemAvailable:' in line:
+                  available = int(line.split()[1]) // 1024  # Convert to MB
+                  return available
+            except:
+              return None
+            return None
           for idx, pkg in enumerate(pkgs, 1):
             t0 = time.time()
             base, tag = (pkg.split(":", 1) + ["latest"])[:2] if ":" in pkg else (pkg, "latest")
@@ -333,7 +381,18 @@ jobs:
             logf = f"logs/{dir_name}.log"
             pathlib.Path(per_dir).mkdir(parents=True, exist_ok=True)
             status = "build_fail"
-            print(f"[build] ({idx}/{total}) starting {pkg}")
+
+            # Check memory before starting build
+            mem_available = check_memory()
+            if mem_available is not None:
+              print(f"[build] ({idx}/{total}) starting {pkg} - Available memory: {mem_available}MB")
+              if mem_available < 1000:  # Less than 1GB available
+                print(f"⚠️  WARNING: Low memory ({mem_available}MB available). Build may fail.")
+            else:
+              print(f"[build] ({idx}/{total}) starting {pkg}")
+
+            # Clean up memory before each build
+            gc.collect()
             try:
               with open(logf, "w") as fh:
                 cmd = ["./build.sh", "--logs", per_dir, pkg]
@@ -344,7 +403,14 @@ jobs:
                   ret = p.poll()
                   now = time.time()
                   if ret is not None:
-                    status = "success" if ret == 0 else "build_fail"
+                    if ret == 0:
+                      status = "success"
+                    elif ret == 137:
+                      status = "oom_killed"
+                      with open(logf, "a") as af:
+                        af.write(f"\n[OOM] Package '{pkg}' was killed due to out of memory (exit code 137)\n")
+                    else:
+                      status = "build_fail"
                     break
                   if now - t0 > timeout_s:
                     try:
@@ -376,9 +442,82 @@ jobs:
                 fh.write(f"\n[EXCEPTION] {e}\n")
               status = "build_fail"
             finally:
+              # Clean up after each build
+              gc.collect()
+
+              # Add a small delay to allow system cleanup
+              if idx < total:  # Don't delay after the last package
+                time.sleep(2)
+
               print(f"[build] ({idx}/{total}) finished {pkg} with status={status} in {round(time.time()-t0,1)}s")
 
+              # Check memory after build
+              mem_available = check_memory()
+              if mem_available is not None:
+                print(f"[build] Memory after {pkg}: {mem_available}MB available")
+
             name, tag = (pkg.split(":", 1) + ["latest"])[:2] if ":" in pkg else (pkg, "latest")
+
+            # Analyze failure point if build failed
+            failure_point = "success" if status == "success" else "unknown"
+            if status == "build_fail":
+              try:
+                with open(logf, "r") as f:
+                  log_content = f.read()
+
+                # Find the last build/test stage that was attempted (chronologically)
+                last_phase, last_stage = "unknown", "unknown"
+
+                for line in log_content.split('\n'):
+                  if "> BUILDING" in line and "│" in line:
+                    stage = line.split("│")[1].strip().replace("> BUILDING ", "").strip()
+                    last_phase, last_stage = "BUILDING", stage
+                  elif "> TESTING" in line and "│" in line:
+                    stage = line.split("│")[1].strip().replace("> TESTING ", "").strip()
+                    last_phase, last_stage = "TESTING", stage
+
+                # Extract the package name from the stage (last word/chunk)
+                if last_stage != "unknown":
+                  # Split by common separators and take the last meaningful part
+                  parts = last_stage.replace(":", "-").split("-")
+                  # Find the last part that looks like a package name (not version numbers)
+                  package_name = parts[-1] if parts else last_stage
+                else:
+                  package_name = "unknown"
+
+                # Determine failure type based on error patterns and phase
+                # Only consider it a test failure if we're in TESTING phase AND there are actual error indicators
+                if last_phase == "TESTING" and ("failed" in log_content.lower() or "error" in log_content.lower() or "💣" in log_content):
+                  failure_point = f"Failed while TESTING {package_name}"
+                elif "ERROR: No matching distribution found" in log_content:
+                  failure_point = f"Failed while BUILDING {package_name} (pip install)"
+                elif "ERROR: Could not find a version that satisfies" in log_content:
+                  failure_point = f"Failed while BUILDING {package_name} (pip install)"
+                elif "error: command" in log_content and "cmake" in log_content:
+                  failure_point = f"Failed while BUILDING {package_name} (cmake)"
+                elif "error: command" in log_content and "make" in log_content:
+                  failure_point = f"Failed while BUILDING {package_name} (make)"
+                elif "error: command" in log_content and "ninja" in log_content:
+                  failure_point = f"Failed while BUILDING {package_name} (ninja)"
+                elif "python3 setup.py" in log_content and "returned a non-zero exit code" in log_content:
+                  failure_point = f"Failed while BUILDING {package_name} (python setup)"
+                elif "bdist_wheel" in log_content and "returned a non-zero exit code" in log_content:
+                  failure_point = f"Failed while BUILDING {package_name} (python wheel)"
+                elif "docker build" in log_content and "returned non-zero exit status" in log_content:
+                  failure_point = f"Failed while BUILDING {package_name} (docker build)"
+                elif "test" in log_content.lower() and "failed" in log_content.lower():
+                  failure_point = f"Failed while TESTING {package_name}"
+                elif "timeout" in log_content.lower():
+                  failure_point = f"Failed while BUILDING {package_name} (timeout)"
+                else:
+                  # Use the phase information
+                  failure_point = f"Failed while {last_phase} {package_name}"
+              except Exception:
+                failure_point = "log analysis failed"
+            elif status == "timeout":
+              failure_point = "Failed while BUILDING (timeout)"
+            elif status == "oom_killed":
+              failure_point = "Failed while BUILDING (out of memory)"
             results.append({
               "sha": sha,
               "ref": os.environ.get("GITHUB_REF", ""),
@@ -387,6 +526,7 @@ jobs:
               "package": name,
               "tag": tag,
               "status": status,
+              "failure_point": failure_point,
               "duration_s": round(time.time() - t0, 1),
               "run_id": run_id,
               "run_attempt": attempt,
@@ -400,10 +540,12 @@ jobs:
           success_count = sum(1 for r in results if r["status"] == "success")
           fail_count = sum(1 for r in results if r["status"] == "build_fail")
           timeout_count = sum(1 for r in results if r["status"] == "timeout")
+          oom_count = sum(1 for r in results if r["status"] == "oom_killed")
           print(f"\n🎉 Build chunk completed!")
           print(f"✅ Success: {success_count}")
           print(f"❌ Failed: {fail_count}")
           print(f"⏰ Timeout: {timeout_count}")
+          print(f"💥 OOM Killed: {oom_count}")
           print(f"📊 Total: {len(results)}")
 
           # Clean up any duplicate root-level log files that might have been created
@@ -471,9 +613,9 @@ jobs:
         run: |
           echo "## Sweep results for \`${GITHUB_SHA}\`" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Package | Tag | Runner | Status | Duration (s) |" >> "$GITHUB_STEP_SUMMARY"
-          echo "|---|---|---|---|---:|" >> "$GITHUB_STEP_SUMMARY"
-          jq -r '.[] | "| \(.package) | \(.tag) | \(.runner) | \(.status) | \(.duration_s) |"' results.json | head -n 50 >> "$GITHUB_STEP_SUMMARY"
+          echo "| Package | Tag | Runner | Status | Failure Point | Duration (s) |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|---|---|---|---|---|---|" >> "$GITHUB_STEP_SUMMARY"
+          jq -r '.[] | "| \(.package) | \(.tag) | \(.runner) | \(.status) | \(.failure_point) | \(.duration_s) |"' results.json | head -n 50 >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "_Full data uploaded as artifact \`sweep-results-${GITHUB_SHA}-${GITHUB_RUN_ATTEMPT}\`._" >> "$GITHUB_STEP_SUMMARY"
 
