@@ -37,6 +37,14 @@ jobs:
         with:
           fetch-depth: 0
           clean: false
+      - name: One-time setup (first checkout only)
+        run: |
+          MARKER="${{ github.workspace }}/.ci_setup_done"
+          if [[ ! -f "$MARKER" ]]; then
+            echo "Running first-time setup (install.sh)..."
+            bash ./install.sh
+            touch "$MARKER"
+          fi
 
       - name: Compute changed packages from PR
         id: discover
@@ -73,6 +81,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           clean: false
+      - name: One-time setup (first checkout only)
+        run: |
+          MARKER="${{ github.workspace }}/.ci_setup_done"
+          if [[ ! -f "$MARKER" ]]; then
+            echo "Running first-time setup (install.sh)..."
+            bash ./install.sh
+            touch "$MARKER"
+          fi
 
       - name: Print runner info
         run: |
