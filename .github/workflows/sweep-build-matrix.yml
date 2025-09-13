@@ -74,6 +74,17 @@ jobs:
             JSON="[${JSON%,}]"
             echo "platforms=$JSON" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: One-time setup (first checkout only)
+        id: first-time-setup
+        run: |
+          MARKER="${{ github.workspace }}/.ci_setup_done"
+          if [[ ! -f "$MARKER" ]]; then
+            echo "Running first-time setup (install.sh)..."
+            bash ./install.sh
+            touch "$MARKER"
+          fi
+
   discover:
     name: Discover (${{ matrix.platform }}) & chunk
     needs: [init]
