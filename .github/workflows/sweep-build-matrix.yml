@@ -32,7 +32,7 @@ on:
       max_parallel:
         description: "Max parallel jobs across ALL platforms"
         required: false
-        default: "8"
+        default: "4"
       pkg_timeout_minutes:
         description: "Per-package timeout (minutes)"
         required: false
@@ -94,7 +94,7 @@ jobs:
           fetch-depth: 1
           clean: false
 
-      - name: List all packages
+      - name: List all packages (**this is the test change**)
         id: list
         run: |
           echo "Running: ./build.sh --list"
