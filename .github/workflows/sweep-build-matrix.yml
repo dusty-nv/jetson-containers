@@ -89,7 +89,7 @@ jobs:
     # outputs are omitted; artifacts are used for handoff
 
     steps:
-      - name: Checkout (shallow ok)
+      - name: Checkout (shallow ok)(**this is the test change**)
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
@@ -105,7 +105,7 @@ jobs:
             touch "$MARKER"
           fi
 
-      - name: List all packages (**this is the test change**)
+      - name: List all packages
         id: list
         run: |
           echo "Running: ./build.sh --list"
