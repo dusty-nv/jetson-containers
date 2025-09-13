@@ -358,6 +358,8 @@ jobs:
           rm -rf build/ test/ || true
           # Clean up any leftover results from previous runs
           rm -f results.json || true
+          # Clean up any old Docker container images
+          docker system prune -af
 
       - name: Checkout
         uses: actions/checkout@v4
