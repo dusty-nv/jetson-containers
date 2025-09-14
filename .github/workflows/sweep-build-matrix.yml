@@ -75,6 +75,28 @@ jobs:
             echo "platforms=$JSON" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Show workflow inputs (early)
+        run: |
+          echo "event_name=${{ github.event_name }}"
+          echo "subset_mode='${{ github.event.inputs.subset_mode || 'all' }}'"
+          echo "subset_value='${{ github.event.inputs.subset_value || '' }}'"
+          echo "exclude_builders='${{ github.event.inputs.exclude_builders || 'true' }}'"
+          echo "chunk_size='${{ github.event.inputs.chunk_size || 'auto' }}'"
+          echo "target_jobs_per_platform='${{ github.event.inputs.target_jobs_per_platform || '60' }}'"
+          echo "pkg_timeout_minutes='${{ github.event.inputs.pkg_timeout_minutes || '90' }}'"
+          echo "resolved_platforms=${{ steps.set.outputs.platforms }}"
+
+          echo "## ▶️ Workflow Inputs" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **event_name**: ${{ github.event_name }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **subset_mode**: '${{ github.event.inputs.subset_mode || 'all' }}'" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **subset_value**: '${{ github.event.inputs.subset_value || '' }}'" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **exclude_builders**: '${{ github.event.inputs.exclude_builders || 'true' }}'" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **chunk_size**: '${{ github.event.inputs.chunk_size || 'auto' }}'" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **target_jobs_per_platform**: '${{ github.event.inputs.target_jobs_per_platform || '60' }}'" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **pkg_timeout_minutes**: '${{ github.event.inputs.pkg_timeout_minutes || '90' }}'" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **platforms (resolved)**: ${{ steps.set.outputs.platforms }}" >> "$GITHUB_STEP_SUMMARY"
+
   discover:
     name: Discover (${{ matrix.platform }}) & chunk
     needs: [init]
@@ -133,14 +155,58 @@ jobs:
           value = os.environ.get("SUBSET_VALUE","")
           exclude_builders = (os.environ.get("EXCLUDE_BUILDERS","true")).lower() in ("1","true","yes","on")
 
+          # If a value is provided but mode is not explicitly set, infer a sensible mode
+          original_mode = mode
+          def looks_like_regex(s: str) -> bool:
+              return bool(re.search(r"[\\^$.|?*+()[{]", s))
+          if (mode in ("", "all", "auto")) and value:
+              if "," in value:
+                  mode = "list"
+              elif value.isdigit():
+                  mode = "first_n"
+              elif looks_like_regex(value):
+                  mode = "regex"
+              else:
+                  mode = "prefix"
+          if mode != original_mode:
+              print(f"[subset] inferred mode from value: {original_mode} -> {mode}")
+
           def base(s): return s.split(":",1)[0]
           pkgs=[ln.strip() for ln in pathlib.Path("all_packages.txt").read_text().splitlines() if ln.strip()]
+
+          # Build a baseline list of all valid packages (before applying subset filtering)
+          def is_valid_name(pkg: str) -> bool:
+            return (
+              not pkg.startswith('Namespace_') and
+              len(pkg) < 200 and
+              '=' not in pkg and
+              not pkg.startswith('argparse.') and
+              not pkg.startswith('┌') and
+              not pkg.startswith('└') and
+              not pkg.startswith('│') and
+              not pkg.startswith('├') and
+              not pkg.startswith('┤') and
+              not pkg.startswith('┬') and
+              not pkg.startswith('┴') and
+              not pkg.startswith('$') and
+              pkg and
+              not pkg.isspace()
+            )
+          all_valid = [p for p in pkgs if is_valid_name(p)]
 
           # First apply subset filtering
           if mode == "prefix" and value:
               pkgs = [p for p in pkgs if base(p).lower().startswith(value.lower())]
           elif mode == "regex" and value:
-              r = re.compile(value, re.I); pkgs = [p for p in pkgs if r.search(base(p))]
+              try:
+                  r = re.compile(value, re.I)
+              except re.error as e:
+                  print(f"[subset] invalid regex '{value}': {e}. Falling back to prefix match.")
+                  r = None
+              if r is not None:
+                  pkgs = [p for p in pkgs if r.search(base(p))]
+              else:
+                  pkgs = [p for p in pkgs if base(p).lower().startswith(value.lower())]
           elif mode == "list" and value:
               want=set(x.strip() for x in value.split(",") if x.strip())
               pkgs=[p for p in pkgs if base(p) in want or p in want]
@@ -153,20 +219,7 @@ jobs:
           valid_pkgs = []
           for pkg in pkgs:
             # Skip if it looks like a Namespace object, system info table, or is too long
-            if (not pkg.startswith('Namespace_') and
-                len(pkg) < 200 and
-                '=' not in pkg and
-                not pkg.startswith('argparse.') and
-                not pkg.startswith('┌') and  # Table top border
-                not pkg.startswith('└') and  # Table bottom border
-                not pkg.startswith('│') and  # Table content lines
-                not pkg.startswith('├') and  # Table middle separators
-                not pkg.startswith('┤') and  # Table middle separators
-                not pkg.startswith('┬') and  # Table middle separators
-                not pkg.startswith('┴') and  # Table middle separators
-                not pkg.startswith('$') and  # Command lines
-                pkg and
-                not pkg.isspace()):
+            if is_valid_name(pkg):
               valid_pkgs.append(pkg)
 
           pkgs = valid_pkgs
@@ -179,8 +232,51 @@ jobs:
           if exclude_builders:
               pkgs = [p for p in pkgs if not p.endswith("-builder")]
 
+          # Baseline for comparison (respect exclude_builders like the final selection)
+          baseline = [p for p in all_valid if not p.endswith("-builder")] if exclude_builders else list(all_valid)
+
           pathlib.Path("filtered.json").write_text(json.dumps(pkgs))
           print(f"[subset] mode={mode} value={value} exclude_builders={exclude_builders} selected={len(pkgs)}")
+
+          # Emit step outputs for later steps in this job
+          try:
+              out_path = os.environ.get("GITHUB_OUTPUT")
+              if out_path:
+                  with open(out_path, "a") as outf:
+                      outf.write(f"mode={mode}\n")
+                      outf.write(f"value={value}\n")
+                      outf.write(f"exclude_builders={str(exclude_builders).lower()}\n")
+                      outf.write(f"selected={len(pkgs)}\n")
+                      outf.write(f"baseline={len(baseline)}\n")
+          except Exception as e:
+              print(f"[subset] failed to write GITHUB_OUTPUT: {e}")
+
+          # Guards: for regex, fail if selection is empty or matches all
+          if mode == "regex":
+              summary = os.environ.get("GITHUB_STEP_SUMMARY")
+              if len(pkgs) == 0:
+                  msg = f"❌ Regex filter matched 0 packages. regex='{value}'"
+                  print(msg)
+                  if summary:
+                      with open(summary, "a") as f:
+                          f.write("## ❌ Regex filter matched 0 packages\n\n")
+                          f.write(f"- regex: `{value}`\n")
+                          f.write(f"- baseline (valid, builders {'excluded' if exclude_builders else 'included'}): {len(baseline)}\n")
+                          f.write("- selected: 0\n")
+                  raise SystemExit(2)
+              if len(pkgs) == len(baseline):
+                  msg = (
+                      f"❌ Regex filter matched ALL packages (no reduction). regex='{value}', "
+                      f"baseline={len(baseline)} selected={len(pkgs)}"
+                  )
+                  print(msg)
+                  if summary:
+                      with open(summary, "a") as f:
+                          f.write("## ❌ Regex filter matched ALL packages (no reduction)\n\n")
+                          f.write(f"- regex: `{value}`\n")
+                          f.write(f"- baseline (valid, builders {'excluded' if exclude_builders else 'included'}): {len(baseline)}\n")
+                          f.write(f"- selected: {len(pkgs)}\n")
+                  raise SystemExit(3)
 
           # Debug: Show what we're about to write to filtered.json
           print("DEBUG: ALL packages after filtering (what goes to filtered.json):")
@@ -194,6 +290,16 @@ jobs:
           TOTAL=$(jq 'length' filtered.json)
           echo "total=${TOTAL}" >> "$GITHUB_OUTPUT"
           echo "Selected total: ${TOTAL}"
+          echo "## 📦 Selection Summary" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **subset_mode**: '${{ steps.subset.outputs.mode || github.event.inputs.subset_mode || 'all' }}'" >> "$GITHUB_STEP_SUMMARY" || true
+          echo "- **subset_value**: '${{ steps.subset.outputs.value || github.event.inputs.subset_value || '' }}'" >> "$GITHUB_STEP_SUMMARY" || true
+          echo "- **exclude_builders**: '${{ steps.subset.outputs.exclude_builders || github.event.inputs.exclude_builders || 'true' }}'" >> "$GITHUB_STEP_SUMMARY" || true
+          echo "- **selected_packages**: ${TOTAL}" >> "$GITHUB_STEP_SUMMARY"
+          if [ "${TOTAL}" -gt 0 ]; then
+            echo "- **first_10_examples**:" >> "$GITHUB_STEP_SUMMARY"
+            jq -r '.[:10][] | "  - \(.)"' filtered.json >> "$GITHUB_STEP_SUMMARY" || true
+          fi
         continue-on-error: true
 
       - name: Compute chunk_size (auto or fixed)
