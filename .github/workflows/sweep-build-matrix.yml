@@ -32,7 +32,7 @@ on:
       max_parallel:
         description: "Max parallel jobs across ALL platforms"
         required: false
-        default: "4"
+        default: "32"
       pkg_timeout_minutes:
         description: "Per-package timeout (minutes)"
         required: false
@@ -83,6 +83,7 @@ jobs:
           echo "exclude_builders='${{ github.event.inputs.exclude_builders || 'true' }}'"
           echo "chunk_size='${{ github.event.inputs.chunk_size || 'auto' }}'"
           echo "target_jobs_per_platform='${{ github.event.inputs.target_jobs_per_platform || '60' }}'"
+          echo "max_parallel='${{ github.event.inputs.max_parallel || '32' }}'"
           echo "pkg_timeout_minutes='${{ github.event.inputs.pkg_timeout_minutes || '90' }}'"
           echo "resolved_platforms=${{ steps.set.outputs.platforms }}"
 
@@ -94,6 +95,7 @@ jobs:
           echo "- **exclude_builders**: '${{ github.event.inputs.exclude_builders || 'true' }}'" >> "$GITHUB_STEP_SUMMARY"
           echo "- **chunk_size**: '${{ github.event.inputs.chunk_size || 'auto' }}'" >> "$GITHUB_STEP_SUMMARY"
           echo "- **target_jobs_per_platform**: '${{ github.event.inputs.target_jobs_per_platform || '60' }}'" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **max_parallel**: '${{ github.event.inputs.max_parallel || '32' }}'" >> "$GITHUB_STEP_SUMMARY"
           echo "- **pkg_timeout_minutes**: '${{ github.event.inputs.pkg_timeout_minutes || '90' }}'" >> "$GITHUB_STEP_SUMMARY"
           echo "- **platforms (resolved)**: ${{ steps.set.outputs.platforms }}" >> "$GITHUB_STEP_SUMMARY"
 
@@ -460,7 +462,7 @@ jobs:
     if: ${{ fromJson(needs.plan.outputs.include) && (needs.plan.outputs.include != '[]') }}
     strategy:
       fail-fast: false
-      max-parallel: 8
+      max-parallel: ${{ fromJSON(github.event.inputs.max_parallel || '32') }}
       matrix:
         include: ${{ fromJson(needs.plan.outputs.include) }}
     runs-on:
@@ -468,6 +470,15 @@ jobs:
       - ${{ matrix.platform }}
     timeout-minutes: 180
     steps:
+      - name: Print runner info
+        run: |
+          echo "Runner name: ${RUNNER_NAME:-unknown}"
+          echo "Runner OS: ${RUNNER_OS:-unknown}"
+          echo "Runner arch: ${RUNNER_ARCH:-unknown}"
+          echo "Matrix platform: ${{ matrix.platform }}"
+          echo "Job: Build chunk #${{ matrix.index }} on ${{ matrix.platform }}"
+          echo "Start time: $(date -u)"
+
       - name: Pre-clean (no sudo; avoid hangs)
         run: |
           ROOT="${RUNNER_WORKSPACE}/jetson-containers/jetson-containers"
