@@ -151,9 +151,10 @@ jobs:
         run: |
           python3 - <<'PY'
           import os, re, json, random, pathlib
-          mode  = (os.environ.get("SUBSET_MODE","all") or "all").lower()
-          value = os.environ.get("SUBSET_VALUE","")
-          exclude_builders = (os.environ.get("EXCLUDE_BUILDERS","true")).lower() in ("1","true","yes","on")
+          # Normalize inputs (strip whitespace to avoid cases like "regex ")
+          mode  = (os.environ.get("SUBSET_MODE","all") or "all").strip().lower()
+          value = (os.environ.get("SUBSET_VALUE","") or "").strip()
+          exclude_builders = (os.environ.get("EXCLUDE_BUILDERS","true") or "true").strip().lower() in ("1","true","yes","on")
 
           # If a value is provided but mode is not explicitly set, infer a sensible mode
           original_mode = mode
@@ -171,8 +172,14 @@ jobs:
           if mode != original_mode:
               print(f"[subset] inferred mode from value: {original_mode} -> {mode}")
 
+          # If the user selected prefix but provided a regex-looking value, override to regex
+          if mode == "prefix" and value and looks_like_regex(value):
+              print(f"[subset] overriding mode 'prefix' to 'regex' based on value pattern: {value!r}")
+              mode = "regex"
+
           def base(s): return s.split(":",1)[0]
           pkgs=[ln.strip() for ln in pathlib.Path("all_packages.txt").read_text().splitlines() if ln.strip()]
+          total_lines = len(pkgs)
 
           # Build a baseline list of all valid packages (before applying subset filtering)
           def is_valid_name(pkg: str) -> bool:
@@ -193,6 +200,7 @@ jobs:
               not pkg.isspace()
             )
           all_valid = [p for p in pkgs if is_valid_name(p)]
+          print(f"[subset] totals: raw_lines={total_lines} valid_baseline={len(all_valid)} exclude_builders={exclude_builders}")
 
           # First apply subset filtering
           if mode == "prefix" and value:
@@ -236,7 +244,7 @@ jobs:
           baseline = [p for p in all_valid if not p.endswith("-builder")] if exclude_builders else list(all_valid)
 
           pathlib.Path("filtered.json").write_text(json.dumps(pkgs))
-          print(f"[subset] mode={mode} value={value} exclude_builders={exclude_builders} selected={len(pkgs)}")
+          print(f"[subset] mode={mode!r} value={value!r} exclude_builders={exclude_builders} selected={len(pkgs)}")
 
           # Emit step outputs for later steps in this job
           try:
@@ -250,6 +258,13 @@ jobs:
                       outf.write(f"baseline={len(baseline)}\n")
           except Exception as e:
               print(f"[subset] failed to write GITHUB_OUTPUT: {e}")
+
+          # Also write a meta file for downstream debugging/summary
+          try:
+              meta = {"mode": mode, "value": value, "exclude_builders": exclude_builders, "selected": len(pkgs), "baseline": len(baseline)}
+              pathlib.Path("subset_meta.json").write_text(json.dumps(meta))
+          except Exception as e:
+              print(f"[subset] failed to write subset_meta.json: {e}")
 
           # Guards: for regex, fail if selection is empty or matches all
           if mode == "regex":
