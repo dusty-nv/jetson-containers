@@ -30,3 +30,7 @@ pip3 install -r "$ROOT/requirements.txt"
 # link scripts to path
 sudo ln -sf "$ROOT/autotag" "$INSTALL_PREFIX/autotag"
 sudo ln -sf "$ROOT/jetson-containers" "$INSTALL_PREFIX/jetson-containers"
+
+if [ ! -f "${ROOT}/.env" ]; then
+  cp "${ROOT}/.env.default" "${ROOT}/.env"
+fi
