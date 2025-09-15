@@ -1,44 +1,10 @@
-# This repository was maintained by **dusty-nv**, who stepped down on Monday. We thank them for their contributions.
-
 [![a header for a software project about building containers for AI and machine learning](https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/header_blueprint_rainbow.jpg)](https://www.jetson-ai-lab.com)
 
 [![jetson-ai-lab.io status](https://img.shields.io/website?label=jetson-ai-lab.io&url=https%3A%2F%2Fpypi.jetson-ai-lab.io&up_message=up&up_color=brightgreen&down_message=down&down_color=red)](https://pypi.jetson-ai-lab.io)
 # CUDA Containers for Edge AI & Robotics
 
 Modular container build system that provides the latest [**AI/ML packages**](https://pypi.jetson-ai-lab.io/) for [NVIDIA Jetson](https://jetson-ai-lab.com) :rocket::robot:
-
-> [!WARNING]
-> [pypi.jetson-ai-lab.io](https://pypi.jetson-ai-lab.io) is down. We are improving security and performance. Meanwhile please use [pypi.jetson-ai-lab.io](https://pypi.jetson-ai-lab.io) by setting the enviroment variable `INDEX_HOST=jetson-ai-lab.io` in [.env](https://github.com/dusty-nv/jetson-containers/blob/1ca7d43e6b8a02e1eba10ed298673cd2e518872a/.env#L34) file.
-
-### Only Tested and supported Jetpack 6.2 (Cuda 12.6) and JetPack 7 (CUDA 13.x).
-
-> [!NOTE]
-> Ubuntu 24.04 containers for JetPack 6 and JetPack 7 are now available (with CUDA support)
->
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`LSB_RELEASE=24.04 jetson-containers build pytorch:2.8`  
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`jetson-containers run dustynv/pytorch:2.8-r36.4-cu128-24.04`
->
-> ARM SBSA (Server Base System Architecture) is supported for GH200 / GB200.  
-> To install CUDA 13.0 SBSA wheels for Python 3.12 / 24.04:  
->
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`pip3 install torch torchvision torchaudio \`  
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`--index-url https://pypi.jetson-ai-lab.io/sbsa/cu129`
->
-> See the **[`Ubuntu 24.04`](/docs/build.md#2404-containers)** section of the docs for details and a list of available containers 🤗
-> Thanks to all our contributors from **[`Discord`](https://discord.gg/BmqNSK4886)** and AI community for their support 🤗
-
-### What is CUDA ARM SBSA vs TEGRA?
-- Read more about [CUDA ARM SBSA](https://developer.nvidia.com/cuda-arm-sbsa) and [Tegra](https://developer.nvidia.com/embedded/jetpack) on NVIDIA Developer
-- Read a summary on [Jetson AI Lab](https://github.com/dusty-nv/jetson-containers/blob/master/docs/build.md#what-is-cuda_arch)
-
-## Code Style
-
-The project uses automated code formatting tools to maintain consistent code style. See [Code Style Guide](docs/code-style.md) for details on:
-- Setting up formatting tools
-- Adding your package to formatting checks
-- Troubleshooting common issues
-
-|                    |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+                                                                                                                                                                                                          |
 |--------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **ML**             | [`pytorch`](packages/pytorch) [`tensorflow`](packages/ml/tensorflow) [`jax`](packages/ml/jax) [`onnxruntime`](packages/ml/onnxruntime) [`deepstream`](packages/cv/deepstream) [`holoscan`](packages/cv/holoscan) [`CTranslate2`](packages/ml/ctranslate2) [`JupyterLab`](packages/ml/jupyterlab)                                                                                                                                                                                                                                                                                                                                                                                                       |
 | **LLM**            | [`SGLang`](packages/llm/sglang) [`vLLM`](packages/llm/vllm) [`MLC`](packages/llm/mlc) [`AWQ`](packages/llm/awq) [`transformers`](packages/llm/transformers) [`text-generation-webui`](packages/llm/text-generation-webui) [`ollama`](packages/llm/ollama) [`llama.cpp`](packages/llm/llama_cpp) [`llama-factory`](packages/llm/llama-factory) [`exllama`](packages/llm/exllama) [`AutoGPTQ`](packages/llm/auto_gptq) [`FlashAttention`](packages/attention/flash-attention) [`DeepSpeed`](packages/llm/deepspeed) [`bitsandbytes`](packages/llm/bitsandbytes) [`xformers`](packages/llm/xformers)                                                                                                      |
@@ -117,6 +83,33 @@ sudo docker run --runtime nvidia -it --rm --network=host dustynv/l4t-pytorch:r36
 ```
 
 Looking for the old jetson-containers?   See the [`legacy`](https://github.com/dusty-nv/jetson-containers/tree/legacy) branch.
+
+
+### Only Tested and supported Jetpack 6.2 (Cuda 12.6) and JetPack 7 (CUDA 13.x).
+
+> [!NOTE]
+> Ubuntu 24.04 containers for JetPack 6 and JetPack 7 are now available (with CUDA support)
+>
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`LSB_RELEASE=24.04 jetson-containers build pytorch:2.8`
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`jetson-containers run dustynv/pytorch:2.8-r36.4-cu128-24.04`
+>
+> ARM SBSA (Server Base System Architecture) is supported for GH200 / GB200.
+> To install CUDA 13.0 SBSA wheels for Python 3.12 / 24.04:
+>
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`pip3 install torch torchvision torchaudio \`
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`--index-url https://pypi.jetson-ai-lab.io/sbsa/cu129`
+>
+> See the **[`Ubuntu 24.04`](/docs/build.md#2404-containers)** section of the docs for details and a list of available containers 🤗
+> Thanks to all our contributors from **[`Discord`](https://discord.gg/BmqNSK4886)** and AI community for their support 🤗
+
+
+## Code Style
+
+The project uses automated code formatting tools to maintain consistent code style. See [Code Style Guide](docs/code-style.md) for details on:
+- Setting up formatting tools
+- Adding your package to formatting checks
+- Troubleshooting common issues
+
 
 ## Gallery
 
