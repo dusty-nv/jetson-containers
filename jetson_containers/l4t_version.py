@@ -531,15 +531,18 @@ def _get_platform_architecture():
 
     if host_arch == "aarch64":
         try:
+            # Use a short timeout to avoid hanging when nvidia-smi blocks or isn't responsive
             gpu_names = subprocess.check_output(
                 ["nvidia-smi", "--query-gpu=name", "--format=csv,noheader"],
-                encoding="utf-8"
+                encoding="utf-8",
+                timeout=2
             )
             if "nvgpu" not in gpu_names:
                 return os.environ.get('CUDA_ARCH', host_arch)
             else:
                 return os.environ.get('CUDA_ARCH', f"{TEGRA}-{host_arch}")
         except Exception as e:
+            # Fall back quickly to tegra-aarch64 on any error/timeout
             return os.environ.get('CUDA_ARCH', f"{TEGRA}-{host_arch}")
     return os.environ.get('CUDA_ARCH', host_arch)
 
