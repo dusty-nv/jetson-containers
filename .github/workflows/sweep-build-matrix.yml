@@ -491,7 +491,24 @@ jobs:
           # Clean up any leftover results from previous runs
           rm -f results.json || true
           # Clean up any old Docker container images
-          docker system prune -af
+          {
+          LOCK="${RUNNER_TEMP:-/tmp}/docker-prune.lock"
+          exec 9>"$LOCK" || true
+          if flock -w 300 9; then
+            echo "Acquired Docker prune lock: $LOCK"
+            for i in {1..10}; do
+              if timeout 180 docker system prune -af; then
+                echo "Docker prune succeeded"
+                break
+              fi
+              echo "Prune busy or failed (attempt $i/10). Retrying..."
+              sleep $((i*3))
+            done
+            flock -u 9 || true
+          else
+            echo "Could not acquire Docker prune lock within 300s - skipping prune"
+          fi
+          } || true
 
       - name: Checkout
         uses: actions/checkout@v4
