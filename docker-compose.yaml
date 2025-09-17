@@ -1,0 +1,100 @@
+# -----------------------------------------------------------------------------
+# Docker Compose Stack: Local PyPI & APT Servers
+#
+# This stack provides:
+#   - Multiple local PyPI servers (cu126, cu129, cu130) for Jetson CUDA variants
+#     with a fallback to Jetson Community PyPI Registry (https://pypi.jetson-ai-lab.io)
+#   - A local APT server for hosting debian packages (cu126, cu129, cu130)
+#     with a dallback to Jetson Community APT Registry (https://apt.jetson-ai-lab.io)
+#
+# Designed for compatibility with:
+#   - jetson-containers
+#
+# Usage:
+#   - Local wheel/distribution packages are stored under /home/${SCP_UPLOAD_USER}/dist/pypi/{jpX,sbsa}/cuXXX
+#   - Local debian packages are stored under /home/${SCP_UPLOAD_USER}/dist/apt/{jpX,sbsa}/cuXXX/{22.04,24.04}
+#
+# Services automatically fallback to the Jetson Community Registry when needed.
+# -----------------------------------------------------------------------------
+
+x-common: &common
+  restart: unless-stopped
+  healthcheck:
+    interval: 30s
+    timeout: 10s
+    start_period: 10s
+    retries: 3
+    test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/').status"]
+
+name: jetson-containers-local
+services:
+  pypi_cu126: # CUDA 12.6 / Orin (default)
+    image: pypiserver/pypiserver:edge
+    command: >
+      run
+      --overwrite
+      --verbose
+      --authenticate .
+      --passwords .
+      --hash-algo off
+      --fallback-url https://pypi.jetson-ai-lab.io/jp6/cu126
+      --server gunicorn
+      /data/packages
+    <<: *common
+    container_name: pypi_cu126
+    hostname: pypi_cu126
+    volumes:
+      - /home/${SCP_UPLOAD_USER}/dist/pypi/jp6/cu126:/data/packages:rw
+    ports:
+      - "8126:8080"
+
+  pypi_cu129: # CUDA 12.9 / Orin
+    image: pypiserver/pypiserver:edge
+    command: >
+      run
+      --overwrite
+      --verbose
+      --authenticate .
+      --passwords .
+      --hash-algo off
+      --fallback-url https://pypi.jetson-ai-lab.io/jp6/cu129
+      --server gunicorn
+      /data/packages
+    <<: *common
+    container_name: pypi_cu129
+    hostname: pypi_cu129
+    volumes:
+      - /home/${SCP_UPLOAD_USER}/dist/pypi/jp6/cu129:/data/packages:rw
+    ports:
+      - "8129:8080"
+
+  pypi_cu130: # CUDA 13.0 / Thor
+    image: pypiserver/pypiserver:edge
+    command: >
+      run
+      --overwrite
+      --verbose
+      --authenticate .
+      --passwords .
+      --hash-algo off
+      --fallback-url https://pypi.jetson-ai-lab.io/sbsa/cu130
+      --server gunicorn
+      /data/packages
+    <<: *common
+    container_name: pypi_cu130
+    hostname: pypi_cu130
+    volumes:
+      - /home/${SCP_UPLOAD_USER}/dist/pypi/sbsa/cu130:/data/packages:rw
+    ports:
+      - "8130:8080"
+
+  apt-server:
+    image: python:3-slim
+    <<: *common
+    container_name: apt-server
+    hostname: apt-server
+    command: python -m http.server 8080 --bind 0.0.0.0 --directory /dist/apt
+    ports:
+      - "${LOCAL_DIST_APT_PORT:-8034}:8080"
+    volumes:
+      - /home/${SCP_UPLOAD_USER}/dist/apt:/dist/apt:rw
