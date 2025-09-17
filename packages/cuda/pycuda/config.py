@@ -25,5 +25,5 @@ def pycuda(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    pycuda('2025.1.1', default=(CUDA_VERSION >= Version('12.6'))),
+    pycuda('2025.1.2', default=(CUDA_VERSION >= Version('12.6'))),
 ]
