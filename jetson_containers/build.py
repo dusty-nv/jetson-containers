@@ -140,7 +140,8 @@ except Exception as error:
     build_status = 'failure'
     build_error = str(error)
     log_error(f"Failed building:  {', '.join(args.packages)}\n\n{traceback.format_exc()}")
-    raise  # Re-raise the exception to maintain existing behavior
+    # exit non-zero so CI detects failure
+    sys.exit(1)
 finally:
     # Send webhook notification
     try:
@@ -151,36 +152,36 @@ finally:
             message = f"Build failed for packages: {', '.join(args.packages)}"
             if build_error:
                 message += f"\nError: {build_error}"
-            
+
             # Try to get the last 10 lines from the build log
             try:
                 log_dir = get_log_dir()
                 # Look for common log file names in the log directory
                 potential_log_files = ['build.log', 'docker.log', 'container.log']
                 log_tail = ""
-                
+
                 for log_name in potential_log_files:
                     log_path = os.path.join(log_dir, log_name)
                     log_tail = get_log_tail(log_path, 10)
                     if log_tail:
                         break
-                
+
                 if log_tail:
                     message += f"\n\nLast 10 lines from build log:\n{log_tail}"
-                    
+
             except Exception as log_tail_error:
                 # Don't let log tail retrieval errors affect the main build process, but log the error for debugging
-                log_error(f"Failed to retrieve build log tail: {log_tail_error}\n\n{traceback.format_exc()}")        
+                log_error(f"Failed to retrieve build log tail: {log_tail_error}\n\n{traceback.format_exc()}")
 
         # Collect build command and environment variables for webhook
         build_command = f"jetson-containers {' '.join(sys.argv[1:])}"
-        
+
         env_vars = {}
         # Collect relevant environment variables
         for env_var in ['CUDA_VERSION', 'LSB_RELEASE', 'PYTHON_VERSION']:
             if env_var in os.environ:
                 env_vars[env_var] = os.environ[env_var]
-        
+
         # Select appropriate webhook URL based on build status
         if build_status == 'success':
             webhook_url = os.environ.get('JC_BUILD_SUCCESS_WEBHOOK_URL')
@@ -191,5 +192,5 @@ finally:
     except Exception as webhook_error:
         # Don't let webhook errors affect the main build process, but log the error for debugging
         log_error(f"Webhook notification failed: {webhook_error}\n\n{traceback.format_exc()}")
-    
+
     log_status(done=True)

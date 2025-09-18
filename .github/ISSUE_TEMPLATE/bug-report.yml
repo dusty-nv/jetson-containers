@@ -33,6 +33,7 @@ body:
         - "Build"
         - "Docker"
         - "Model"
+        - "CI/CD"
         - "Other"
     validations:
       required: false
