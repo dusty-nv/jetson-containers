@@ -12,11 +12,11 @@ on:
       subset_mode:
         description: "Package subset: all | prefix | regex | list | first_n | sample_n"
         required: false
-        default: "all"
+        default: "list"
       subset_value:
         description: 'Value for subset (e.g., "a" | "^opencv" | "apex,arrow" | "10")'
         required: false
-        default: ""
+        default: "vllm:0.9.2, faster-whisper:1.2.0"
       exclude_builders:
         description: "Exclude *-builder tags? true/false"
         required: false
@@ -67,8 +67,13 @@ jobs:
         run: |
           PLAT="${{ github.event.inputs.platforms }}"
           if [ -z "$PLAT" ]; then
-            echo "platforms=${{ env.PLATFORMS_DEFAULT }}" >> "$GITHUB_OUTPUT"
+            # Remove the outer single quotes from the JSON string
+            PLATFORMS_JSON="${{ env.PLATFORMS_DEFAULT }}"
+            PLATFORMS_JSON="${PLATFORMS_JSON#\'}"  # Remove leading single quote
+            PLATFORMS_JSON="${PLATFORMS_JSON%\'}"  # Remove trailing single quote
+            echo "platforms=$PLATFORMS_JSON" >> "$GITHUB_OUTPUT"
           else
+            # Convert comma-separated string to JSON array
             IFS=',' read -ra ARR <<< "$PLAT"
             JSON=$(printf '"%s",' "${ARR[@]}")
             JSON="[${JSON%,}]"
@@ -78,8 +83,8 @@ jobs:
       - name: Show workflow inputs (early)
         run: |
           echo "event_name=${{ github.event_name }}"
-          echo "subset_mode='${{ github.event.inputs.subset_mode || 'all' }}'"
-          echo "subset_value='${{ github.event.inputs.subset_value || '' }}'"
+          echo "subset_mode='${{ github.event.inputs.subset_mode || 'list' }}'"
+          echo "subset_value='${{ github.event.inputs.subset_value || 'vllm:0.9.2, faster-whisper:1.2.0' }}'"
           echo "exclude_builders='${{ github.event.inputs.exclude_builders || 'true' }}'"
           echo "chunk_size='${{ github.event.inputs.chunk_size || 'auto' }}'"
           echo "target_jobs_per_platform='${{ github.event.inputs.target_jobs_per_platform || '60' }}'"
@@ -90,8 +95,8 @@ jobs:
           echo "## ▶️ Workflow Inputs" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "- **event_name**: ${{ github.event_name }}" >> "$GITHUB_STEP_SUMMARY"
-          echo "- **subset_mode**: '${{ github.event.inputs.subset_mode || 'all' }}'" >> "$GITHUB_STEP_SUMMARY"
-          echo "- **subset_value**: '${{ github.event.inputs.subset_value || '' }}'" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **subset_mode**: '${{ github.event.inputs.subset_mode || 'list' }}'" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **subset_value**: '${{ github.event.inputs.subset_value || 'vllm:0.9.2, faster-whisper:1.2.0' }}'" >> "$GITHUB_STEP_SUMMARY"
           echo "- **exclude_builders**: '${{ github.event.inputs.exclude_builders || 'true' }}'" >> "$GITHUB_STEP_SUMMARY"
           echo "- **chunk_size**: '${{ github.event.inputs.chunk_size || 'auto' }}'" >> "$GITHUB_STEP_SUMMARY"
           echo "- **target_jobs_per_platform**: '${{ github.event.inputs.target_jobs_per_platform || '60' }}'" >> "$GITHUB_STEP_SUMMARY"
