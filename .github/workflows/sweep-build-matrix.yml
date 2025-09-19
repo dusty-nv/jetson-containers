@@ -194,15 +194,15 @@ jobs:
       - name: Filter subset (platform-specific list)
         id: subset
         env:
-          SUBSET_MODE: ${{ github.event.inputs.subset_mode || 'all' }}
-          SUBSET_VALUE: ${{ github.event.inputs.subset_value || '' }}
+          SUBSET_MODE: ${{ github.event.inputs.subset_mode || 'list' }}
+          SUBSET_VALUE: ${{ github.event.inputs.subset_value || 'vllm:0.9.2, faster-whisper:1.2.0' }}
           EXCLUDE_BUILDERS: ${{ github.event.inputs.exclude_builders || 'true' }}
         run: |
           python3 - <<'PY'
           import os, re, json, random, pathlib
           # Normalize inputs (strip whitespace to avoid cases like "regex ")
-          mode  = (os.environ.get("SUBSET_MODE","all") or "all").strip().lower()
-          value = (os.environ.get("SUBSET_VALUE","") or "").strip()
+          mode  = (os.environ.get("SUBSET_MODE","list") or "list").strip().lower()
+          value = (os.environ.get("SUBSET_VALUE","vllm:0.9.2, faster-whisper:1.2.0") or "vllm:0.9.2, faster-whisper:1.2.0").strip()
           exclude_builders = (os.environ.get("EXCLUDE_BUILDERS","true") or "true").strip().lower() in ("1","true","yes","on")
 
           # If a value is provided but mode is not explicitly set, infer a sensible mode
