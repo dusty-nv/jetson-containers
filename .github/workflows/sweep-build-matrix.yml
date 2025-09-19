@@ -73,17 +73,9 @@ jobs:
 
           if [ -z "$PLAT" ]; then
             echo "DEBUG: Using default platforms (push event)"
-            PLATFORMS_JSON="${{ env.PLATFORMS_DEFAULT }}"
-            echo "DEBUG: Raw PLATFORMS_DEFAULT = '$PLATFORMS_JSON'"
-            echo "DEBUG: PLATFORMS_DEFAULT length = ${#PLATFORMS_JSON}"
-            echo "DEBUG: PLATFORMS_DEFAULT first char = '${PLATFORMS_JSON:0:1}'"
-            echo "DEBUG: PLATFORMS_DEFAULT last char = '${PLATFORMS_JSON: -1}'"
-
-            # Remove outer single quotes
-            PLATFORMS_JSON="${PLATFORMS_JSON#\'}"
-            echo "DEBUG: After removing leading quote = '$PLATFORMS_JSON'"
-            PLATFORMS_JSON="${PLATFORMS_JSON%\'}"
-            echo "DEBUG: After removing trailing quote = '$PLATFORMS_JSON'"
+            # Hardcode the proper JSON format since env var gets processed
+            PLATFORMS_JSON='["orin","thor"]'
+            echo "DEBUG: Using hardcoded JSON = '$PLATFORMS_JSON'"
             echo "DEBUG: Final JSON length = ${#PLATFORMS_JSON}"
 
             # Validate JSON format
