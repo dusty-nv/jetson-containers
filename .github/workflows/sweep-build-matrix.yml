@@ -67,10 +67,11 @@ jobs:
         run: |
           PLAT="${{ github.event.inputs.platforms }}"
           if [ -z "$PLAT" ]; then
-            # Remove the outer single quotes from the JSON string
+            # Remove the outer single quotes from the JSON string using sed
             PLATFORMS_JSON="${{ env.PLATFORMS_DEFAULT }}"
-            PLATFORMS_JSON="${PLATFORMS_JSON#\'}"  # Remove leading single quote
-            PLATFORMS_JSON="${PLATFORMS_JSON%\'}"  # Remove trailing single quote
+            echo "DEBUG: Original PLATFORMS_DEFAULT: '$PLATFORMS_JSON'"
+            PLATFORMS_JSON=$(echo "$PLATFORMS_JSON" | sed "s/^'//; s/'$//")
+            echo "DEBUG: After removing quotes: '$PLATFORMS_JSON'"
             echo "platforms=$PLATFORMS_JSON" >> "$GITHUB_OUTPUT"
           else
             # Convert comma-separated string to JSON array
