@@ -143,10 +143,21 @@ jobs:
         run: |
           echo "=== DEBUG: Discover Job Platform Input ==="
           echo "DEBUG: Matrix platform = '${{ matrix.platform }}'"
-          echo "DEBUG: Raw platforms from init = '${{ needs.init.outputs.platforms }}'"
-          echo "DEBUG: Platforms length = ${#{{ needs.init.outputs.platforms }}}"
-          echo "DEBUG: First 50 chars = '${ {{ needs.init.outputs.platforms }}:0:50 }'"
-          echo "DEBUG: Last 50 chars = '${ {{ needs.init.outputs.platforms }}: -50 }'"
+          PLATFORMS_RAW='${{ needs.init.outputs.platforms }}'
+          echo "DEBUG: Raw platforms from init = '$PLATFORMS_RAW'"
+          echo "DEBUG: Platforms length = ${#PLATFORMS_RAW}"
+          echo "DEBUG: First 50 chars = '${PLATFORMS_RAW:0:50}'"
+          echo "DEBUG: Last 50 chars = '${PLATFORMS_RAW: -50}'"
+
+          # Test if this is valid JSON
+          echo "DEBUG: Testing JSON validity in discover job..."
+          if echo "$PLATFORMS_RAW" | jq empty 2>/dev/null; then
+            echo "DEBUG: ✅ JSON is valid in discover job!"
+          else
+            echo "DEBUG: ❌ JSON is invalid in discover job!"
+            echo "DEBUG: JSON validation error:"
+            echo "$PLATFORMS_RAW" | jq empty 2>&1 || true
+          fi
           echo "=== END DEBUG ==="
 
       - name: Checkout (shallow ok)(**this is the test change**)
