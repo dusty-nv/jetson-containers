@@ -964,6 +964,36 @@ jobs:
           print(f"⏰ Timeout: {timeout_count}")
           print(f"💥 OOM Killed: {oom_count}")
           print(f"📊 Total: {len(results)}")
+
+          # Detailed breakdown
+          if success_count > 0:
+              print(f"\n✅ SUCCESSFUL PACKAGES ({success_count}):")
+              for r in results:
+                  if r["status"] == "success":
+                      print(f"  • {r['package']}:{r['tag']} ({r['duration_s']}s)")
+
+          if fail_count > 0:
+              print(f"\n❌ FAILED PACKAGES ({fail_count}):")
+              for r in results:
+                  if r["status"] == "build_fail":
+                      print(f"  • {r['package']}:{r['tag']} - {r['failure_point']} ({r['duration_s']}s)")
+
+          if timeout_count > 0:
+              print(f"\n⏰ TIMED OUT PACKAGES ({timeout_count}):")
+              for r in results:
+                  if r["status"] == "timeout":
+                      print(f"  • {r['package']}:{r['tag']} ({r['duration_s']}s)")
+
+          if oom_count > 0:
+              print(f"\n💥 OOM KILLED PACKAGES ({oom_count}):")
+              for r in results:
+                  if r["status"] == "oom_killed":
+                      print(f"  • {r['package']}:{r['tag']} ({r['duration_s']}s)")
+
+          # Success rate
+          if len(results) > 0:
+              success_rate = (success_count / len(results)) * 100
+              print(f"\n📈 Success Rate: {success_rate:.1f}%")
           PY
 
       - name: Upload chunk results & logs
