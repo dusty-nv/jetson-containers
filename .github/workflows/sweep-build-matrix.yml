@@ -65,21 +65,49 @@ jobs:
     steps:
       - id: set
         run: |
+          echo "=== DEBUG: Platform Setup ==="
           PLAT="${{ github.event.inputs.platforms }}"
+          echo "DEBUG: PLAT input = '$PLAT'"
+          echo "DEBUG: PLAT length = ${#PLAT}"
+          echo "DEBUG: PLAT is empty check = $([ -z "$PLAT" ] && echo 'YES' || echo 'NO')"
+
           if [ -z "$PLAT" ]; then
-            # Remove the outer single quotes from the JSON string using sed
+            echo "DEBUG: Using default platforms (push event)"
             PLATFORMS_JSON="${{ env.PLATFORMS_DEFAULT }}"
-            echo "DEBUG: Original PLATFORMS_DEFAULT: '$PLATFORMS_JSON'"
-            PLATFORMS_JSON=$(echo "$PLATFORMS_JSON" | sed "s/^'//; s/'$//")
-            echo "DEBUG: After removing quotes: '$PLATFORMS_JSON'"
+            echo "DEBUG: Raw PLATFORMS_DEFAULT = '$PLATFORMS_JSON'"
+            echo "DEBUG: PLATFORMS_DEFAULT length = ${#PLATFORMS_JSON}"
+            echo "DEBUG: PLATFORMS_DEFAULT first char = '${PLATFORMS_JSON:0:1}'"
+            echo "DEBUG: PLATFORMS_DEFAULT last char = '${PLATFORMS_JSON: -1}'"
+
+            # Remove outer single quotes
+            PLATFORMS_JSON="${PLATFORMS_JSON#\'}"
+            echo "DEBUG: After removing leading quote = '$PLATFORMS_JSON'"
+            PLATFORMS_JSON="${PLATFORMS_JSON%\'}"
+            echo "DEBUG: After removing trailing quote = '$PLATFORMS_JSON'"
+            echo "DEBUG: Final JSON length = ${#PLATFORMS_JSON}"
+
+            # Validate JSON format
+            echo "DEBUG: Testing JSON validity..."
+            if echo "$PLATFORMS_JSON" | jq empty 2>/dev/null; then
+              echo "DEBUG: ✅ JSON is valid!"
+            else
+              echo "DEBUG: ❌ JSON is invalid!"
+              echo "DEBUG: JSON validation error:"
+              echo "$PLATFORMS_JSON" | jq empty 2>&1 || true
+            fi
+
             echo "platforms=$PLATFORMS_JSON" >> "$GITHUB_OUTPUT"
+            echo "DEBUG: Written to GITHUB_OUTPUT: platforms=$PLATFORMS_JSON"
           else
-            # Convert comma-separated string to JSON array
+            echo "DEBUG: Using input platforms (workflow_dispatch)"
             IFS=',' read -ra ARR <<< "$PLAT"
+            echo "DEBUG: Split platforms = ${ARR[*]}"
             JSON=$(printf '"%s",' "${ARR[@]}")
             JSON="[${JSON%,}]"
+            echo "DEBUG: Generated JSON = '$JSON'"
             echo "platforms=$JSON" >> "$GITHUB_OUTPUT"
           fi
+          echo "=== END DEBUG ==="
 
       - name: Show workflow inputs (early)
         run: |
@@ -119,6 +147,16 @@ jobs:
     # outputs are omitted; artifacts are used for handoff
 
     steps:
+      - name: Debug platforms input
+        run: |
+          echo "=== DEBUG: Discover Job Platform Input ==="
+          echo "DEBUG: Matrix platform = '${{ matrix.platform }}'"
+          echo "DEBUG: Raw platforms from init = '${{ needs.init.outputs.platforms }}'"
+          echo "DEBUG: Platforms length = ${#{{ needs.init.outputs.platforms }}}"
+          echo "DEBUG: First 50 chars = '${ {{ needs.init.outputs.platforms }}:0:50 }'"
+          echo "DEBUG: Last 50 chars = '${ {{ needs.init.outputs.platforms }}: -50 }'"
+          echo "=== END DEBUG ==="
+
       - name: Checkout (shallow ok)(**this is the test change**)
         uses: actions/checkout@v4
         with:
