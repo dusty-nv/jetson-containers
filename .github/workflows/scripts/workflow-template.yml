@@ -1,0 +1,63 @@
+name: PACKAGE_NAME (dev)
+
+on:
+  pull_request:
+    types: [ready_for_review, synchronize, reopened]
+    branches: [ dev ]
+  workflow_dispatch:
+    inputs:
+      fork_repo:
+        description: 'Fork repository (e.g., tokk-nv/jetson-containers)'
+        required: false
+        type: string
+      fork_branch:
+        description: 'Branch from fork to test (e.g., dev)'
+        required: false
+        type: string
+        default: 'dev'
+
+jobs:
+  test-package-PLATFORM:
+    runs-on: [self-hosted, linux, arm64, jetson, PLATFORM]
+    name: "Package Build Test (PLATFORM)"
+    if: github.event.pull_request.draft == false
+
+    steps:
+      - name: Pre-checkout cleanup
+        run: |
+          echo "=== Pre-checkout Cleanup ==="
+          echo "Cleaning up permission-restricted files before checkout..."
+          sudo rm -rf /home/jetson/actions-runner/_work/jetson-containers/jetson-containers/data || echo "Data cleanup completed"
+          sudo rm -rf /home/jetson/actions-runner/_work/jetson-containers/jetson-containers/logs || echo "Logs cleanup completed"
+          echo "Pre-checkout cleanup completed"
+
+      - name: Checkout PR or Fork
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.event_name == 'workflow_dispatch' && inputs.fork_repo != '' && inputs.fork_repo || github.repository }}
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.fork_branch != '' && inputs.fork_branch || github.ref }}
+
+      - name: Display system info
+        run: bash .github/workflows/scripts/step-system-info.sh
+
+      - name: Record environment variables
+        run: bash .github/workflows/scripts/step-env-info.sh
+
+      - name: Clean environment for fresh build
+        run: bash .github/workflows/scripts/step-clean-environment.sh
+
+      - name: Show git repository state
+        run: bash .github/workflows/scripts/step-git-status.sh
+
+      - name: Test build PACKAGE_NAME package on PLATFORM
+        id: package-test
+        run: bash .github/workflows/scripts/step-build-package.sh PACKAGE_NAME
+
+      - name: Analyze build results
+        if: always()
+        run: bash .github/workflows/scripts/step-analyze-results.sh PACKAGE_NAME ${{ steps.package-test.outputs.stage1 }} ${{ steps.package-test.outputs.stage2 }} ${{ steps.package-test.outputs.build_status }}
+
+      - name: Test build results
+        run: bash .github/workflows/scripts/step-test-results-summary.sh PACKAGE_NAME ${{ steps.package-test.outputs.stage1 }} ${{ steps.package-test.outputs.stage2 }} ${{ steps.package-test.outputs.build_status }} ${{ steps.package-test.outputs.failure_phase }} ${{ steps.package-test.outputs.failure_stage }} ${{ steps.package-test.outputs.failure_component }}

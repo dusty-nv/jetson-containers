@@ -31,6 +31,9 @@ from jetson_containers import (
     build_container, build_containers, find_packages, package_search_dirs,
     cprint, to_bool, log_config, log_error, log_status, log_versions, LogConfig
 )
+from jetson_containers.network import get_log_tail
+from jetson_containers.webhook import send_webhook
+from jetson_containers.logging import get_log_dir
 
 parser = argparse.ArgumentParser()
 
@@ -122,6 +125,10 @@ if args.list_packages or args.show_packages:
 
     sys.exit(0)
 
+# Initialize build status and error message
+build_status = 'success'
+build_error = None
+
 try:
     # build one multi-stage container from chain of packages
     # or launch multiple independent container builds
@@ -130,6 +137,60 @@ try:
     else:
         build_containers(**vars(args))
 except Exception as error:
+    build_status = 'failure'
+    build_error = str(error)
     log_error(f"Failed building:  {', '.join(args.packages)}\n\n{traceback.format_exc()}")
+    # exit non-zero so CI detects failure
+    sys.exit(1)
 finally:
+    # Send webhook notification
+    try:
+        if build_status == 'success':
+            message = f"Successfully built packages: {', '.join(args.packages)}"
+        else:
+            # For failures, include error message and last 10 lines of build log if available
+            message = f"Build failed for packages: {', '.join(args.packages)}"
+            if build_error:
+                message += f"\nError: {build_error}"
+
+            # Try to get the last 10 lines from the build log
+            try:
+                log_dir = get_log_dir()
+                # Look for common log file names in the log directory
+                potential_log_files = ['build.log', 'docker.log', 'container.log']
+                log_tail = ""
+
+                for log_name in potential_log_files:
+                    log_path = os.path.join(log_dir, log_name)
+                    log_tail = get_log_tail(log_path, 10)
+                    if log_tail:
+                        break
+
+                if log_tail:
+                    message += f"\n\nLast 10 lines from build log:\n{log_tail}"
+
+            except Exception as log_tail_error:
+                # Don't let log tail retrieval errors affect the main build process, but log the error for debugging
+                log_error(f"Failed to retrieve build log tail: {log_tail_error}\n\n{traceback.format_exc()}")
+
+        # Collect build command and environment variables for webhook
+        build_command = f"jetson-containers {' '.join(sys.argv[1:])}"
+
+        env_vars = {}
+        # Collect relevant environment variables
+        for env_var in ['CUDA_VERSION', 'LSB_RELEASE', 'PYTHON_VERSION']:
+            if env_var in os.environ:
+                env_vars[env_var] = os.environ[env_var]
+
+        # Select appropriate webhook URL based on build status
+        if build_status == 'success':
+            webhook_url = os.environ.get('JC_BUILD_SUCCESS_WEBHOOK_URL')
+        else:
+            webhook_url = os.environ.get('JC_BUILD_FAILURE_WEBHOOK_URL')
+
+        send_webhook(build_status, args.packages, message, build_command, env_vars, webhook_url)
+    except Exception as webhook_error:
+        # Don't let webhook errors affect the main build process, but log the error for debugging
+        log_error(f"Webhook notification failed: {webhook_error}\n\n{traceback.format_exc()}")
+
     log_status(done=True)

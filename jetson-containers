@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 # Launcher for jetson-containers build.sh, run.sh, and autotag
 ROOT="$(dirname "$(readlink -f "$0")")"
+VENV="$ROOT/venv"
+if [ -f "$VENV/bin/activate" ]; then
+    source "$VENV/bin/activate"
+fi
 SCRIPTS="$ROOT/scripts"
 COMMAND=$1
 

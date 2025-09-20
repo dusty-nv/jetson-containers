@@ -1,0 +1,1054 @@
+name: Sweep – Build Matrix
+
+on:
+  push:
+    branches: [ dev ]
+  workflow_dispatch:
+    inputs:
+      platforms:
+        description: 'Comma-separated runner labels to build (e.g. "orin,thor" or "orin")'
+        required: false
+        default: "orin,thor"
+      subset_mode:
+        description: "Package subset: all | prefix | regex | list | first_n | sample_n"
+        required: false
+        default: "list"
+      subset_value:
+        description: 'Value for subset (e.g., "a" | "^opencv" | "apex,arrow" | "10")'
+        required: false
+        default: "vllm:0.9.2, faster-whisper:1.2.0"
+      exclude_builders:
+        description: "Exclude *-builder tags? true/false"
+        required: false
+        default: "true"
+      chunk_size:
+        description: 'Packages per job; set "auto" to size from target_jobs_per_platform'
+        required: false
+        default: "auto"
+      target_jobs_per_platform:
+        description: "Target total jobs per platform (used when chunk_size=auto)"
+        required: false
+        default: "60"
+      max_parallel:
+        description: "Max parallel jobs across ALL platforms"
+        required: false
+        default: "32"
+      pkg_timeout_minutes:
+        description: "Per-package timeout (minutes)"
+        required: false
+        default: "90"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sweep-${{ github.ref }}-platform-discover
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash -euo pipefail {0}
+
+env:
+  INDEX_HOST: jetson-ai-lab.io
+  PLATFORMS_DEFAULT: '["orin","thor"]'
+
+# ────────────────────────────────────────────────────────────────────────────────
+# 1) Per-platform DISCOVER (runs on each platform runner), uploads plan-<platform>
+# ────────────────────────────────────────────────────────────────────────────────
+jobs:
+  init:
+    name: Init platforms
+    runs-on: ubuntu-latest
+    outputs:
+      platforms: ${{ steps.set.outputs.platforms }}
+    steps:
+      - id: set
+        run: |
+          echo "=== DEBUG: Platform Setup ==="
+          PLAT="${{ github.event.inputs.platforms }}"
+          echo "DEBUG: PLAT input = '$PLAT'"
+          echo "DEBUG: PLAT length = ${#PLAT}"
+          echo "DEBUG: PLAT is empty check = $([ -z "$PLAT" ] && echo 'YES' || echo 'NO')"
+
+          if [ -z "$PLAT" ]; then
+            echo "DEBUG: Using default platforms (push event)"
+            # Hardcode the proper JSON format since env var gets processed
+            PLATFORMS_JSON='["orin","thor"]'
+            echo "DEBUG: Using hardcoded JSON = '$PLATFORMS_JSON'"
+            echo "DEBUG: Final JSON length = ${#PLATFORMS_JSON}"
+
+            # Validate JSON format
+            echo "DEBUG: Testing JSON validity..."
+            if echo "$PLATFORMS_JSON" | jq empty 2>/dev/null; then
+              echo "DEBUG: ✅ JSON is valid!"
+            else
+              echo "DEBUG: ❌ JSON is invalid!"
+              echo "DEBUG: JSON validation error:"
+              echo "$PLATFORMS_JSON" | jq empty 2>&1 || true
+            fi
+
+            echo "platforms=$PLATFORMS_JSON" >> "$GITHUB_OUTPUT"
+            echo "DEBUG: Written to GITHUB_OUTPUT: platforms=$PLATFORMS_JSON"
+          else
+            echo "DEBUG: Using input platforms (workflow_dispatch)"
+            IFS=',' read -ra ARR <<< "$PLAT"
+            echo "DEBUG: Split platforms = ${ARR[*]}"
+            JSON=$(printf '"%s",' "${ARR[@]}")
+            JSON="[${JSON%,}]"
+            echo "DEBUG: Generated JSON = '$JSON'"
+            echo "platforms=$JSON" >> "$GITHUB_OUTPUT"
+          fi
+          echo "=== END DEBUG ==="
+
+      - name: Show workflow inputs (early)
+        run: |
+          echo "event_name=${{ github.event_name }}"
+          echo "subset_mode='${{ github.event.inputs.subset_mode || 'list' }}'"
+          echo "subset_value='${{ github.event.inputs.subset_value || 'vllm:0.9.2, faster-whisper:1.2.0' }}'"
+          echo "exclude_builders='${{ github.event.inputs.exclude_builders || 'true' }}'"
+          echo "chunk_size='${{ github.event.inputs.chunk_size || 'auto' }}'"
+          echo "target_jobs_per_platform='${{ github.event.inputs.target_jobs_per_platform || '60' }}'"
+          echo "max_parallel='${{ github.event.inputs.max_parallel || '32' }}'"
+          echo "pkg_timeout_minutes='${{ github.event.inputs.pkg_timeout_minutes || '90' }}'"
+          echo "resolved_platforms=${{ steps.set.outputs.platforms }}"
+
+          echo "## ▶️ Workflow Inputs" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **event_name**: ${{ github.event_name }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **subset_mode**: '${{ github.event.inputs.subset_mode || 'list' }}'" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **subset_value**: '${{ github.event.inputs.subset_value || 'vllm:0.9.2, faster-whisper:1.2.0' }}'" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **exclude_builders**: '${{ github.event.inputs.exclude_builders || 'true' }}'" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **chunk_size**: '${{ github.event.inputs.chunk_size || 'auto' }}'" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **target_jobs_per_platform**: '${{ github.event.inputs.target_jobs_per_platform || '60' }}'" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **max_parallel**: '${{ github.event.inputs.max_parallel || '32' }}'" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **pkg_timeout_minutes**: '${{ github.event.inputs.pkg_timeout_minutes || '90' }}'" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **platforms (resolved)**: ${{ steps.set.outputs.platforms }}" >> "$GITHUB_STEP_SUMMARY"
+
+  discover:
+    name: Discover (${{ matrix.platform }}) & chunk
+    needs: [init]
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: ${{ fromJson(needs.init.outputs.platforms) }}
+    runs-on:
+      - self-hosted
+      - ${{ matrix.platform }}
+
+    # outputs are omitted; artifacts are used for handoff
+
+    steps:
+      - name: Debug platforms input
+        run: |
+          echo "=== DEBUG: Discover Job Platform Input ==="
+          echo "DEBUG: Matrix platform = '${{ matrix.platform }}'"
+          PLATFORMS_RAW='${{ needs.init.outputs.platforms }}'
+          echo "DEBUG: Raw platforms from init = '$PLATFORMS_RAW'"
+          echo "DEBUG: Platforms length = ${#PLATFORMS_RAW}"
+          echo "DEBUG: First 50 chars = '${PLATFORMS_RAW:0:50}'"
+          echo "DEBUG: Last 50 chars = '${PLATFORMS_RAW: -50}'"
+
+          # Test if this is valid JSON
+          echo "DEBUG: Testing JSON validity in discover job..."
+          if echo "$PLATFORMS_RAW" | jq empty 2>/dev/null; then
+            echo "DEBUG: ✅ JSON is valid in discover job!"
+          else
+            echo "DEBUG: ❌ JSON is invalid in discover job!"
+            echo "DEBUG: JSON validation error:"
+            echo "$PLATFORMS_RAW" | jq empty 2>&1 || true
+          fi
+          echo "=== END DEBUG ==="
+
+      - name: Checkout (shallow ok)(**this is the test change**)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          clean: false
+
+      - name: One-time setup (first checkout only)
+        id: first-time-setup
+        run: |
+          MARKER="${{ github.workspace }}/.ci_setup_done"
+          if [[ ! -f "$MARKER" ]]; then
+            echo "Running first-time setup (install.sh)..."
+            bash ./install.sh
+            touch "$MARKER"
+          fi
+
+      - name: List all packages
+        id: list
+        run: |
+          echo "Running: ./build.sh --list"
+          ./build.sh --list | sed '/^\s*$/d' > all_packages.txt
+          echo "Repo total: $(wc -l < all_packages.txt | tr -d ' ')"
+
+          echo "DEBUG: build.sh --list output:"
+          cat -n all_packages.txt
+
+          echo "DEBUG: Checking for problematic lines:"
+          grep -n "Namespace_" all_packages.txt || echo "No Namespace_ lines found"
+          grep -n "argparse" all_packages.txt || echo "No argparse lines found"
+          grep -n "=" all_packages.txt | head -n 5 || echo "No lines with = found"
+
+      - name: Filter subset (platform-specific list)
+        id: subset
+        env:
+          SUBSET_MODE: ${{ github.event.inputs.subset_mode || 'list' }}
+          SUBSET_VALUE: ${{ github.event.inputs.subset_value || 'vllm:0.9.2, faster-whisper:1.2.0' }}
+          EXCLUDE_BUILDERS: ${{ github.event.inputs.exclude_builders || 'true' }}
+        run: |
+          python3 - <<'PY'
+          import os, re, json, random, pathlib
+          # Normalize inputs (strip whitespace to avoid cases like "regex ")
+          mode  = (os.environ.get("SUBSET_MODE","list") or "list").strip().lower()
+          value = (os.environ.get("SUBSET_VALUE","vllm:0.9.2, faster-whisper:1.2.0") or "vllm:0.9.2, faster-whisper:1.2.0").strip()
+          exclude_builders = (os.environ.get("EXCLUDE_BUILDERS","true") or "true").strip().lower() in ("1","true","yes","on")
+
+          # If a value is provided but mode is not explicitly set, infer a sensible mode
+          original_mode = mode
+          def looks_like_regex(s: str) -> bool:
+              return bool(re.search(r"[\\^$.|?*+()[{]", s))
+          if (mode in ("", "all", "auto")) and value:
+              if "," in value:
+                  mode = "list"
+              elif value.isdigit():
+                  mode = "first_n"
+              elif looks_like_regex(value):
+                  mode = "regex"
+              else:
+                  mode = "prefix"
+          if mode != original_mode:
+              print(f"[subset] inferred mode from value: {original_mode} -> {mode}")
+
+          # If the user selected prefix but provided a regex-looking value, override to regex
+          if mode == "prefix" and value and looks_like_regex(value):
+              print(f"[subset] overriding mode 'prefix' to 'regex' based on value pattern: {value!r}")
+              mode = "regex"
+
+          def base(s): return s.split(":",1)[0]
+          pkgs=[ln.strip() for ln in pathlib.Path("all_packages.txt").read_text().splitlines() if ln.strip()]
+          total_lines = len(pkgs)
+
+          # Build a baseline list of all valid packages (before applying subset filtering)
+          def is_valid_name(pkg: str) -> bool:
+            return (
+              not pkg.startswith('Namespace_') and
+              len(pkg) < 200 and
+              '=' not in pkg and
+              not pkg.startswith('argparse.') and
+              not pkg.startswith('┌') and
+              not pkg.startswith('└') and
+              not pkg.startswith('│') and
+              not pkg.startswith('├') and
+              not pkg.startswith('┤') and
+              not pkg.startswith('┬') and
+              not pkg.startswith('┴') and
+              not pkg.startswith('$') and
+              pkg and
+              not pkg.isspace()
+            )
+          all_valid = [p for p in pkgs if is_valid_name(p)]
+          print(f"[subset] totals: raw_lines={total_lines} valid_baseline={len(all_valid)} exclude_builders={exclude_builders}")
+
+          # First apply subset filtering
+          if mode == "prefix" and value:
+              pkgs = [p for p in pkgs if base(p).lower().startswith(value.lower())]
+          elif mode == "regex" and value:
+              try:
+                  r = re.compile(value, re.I)
+              except re.error as e:
+                  print(f"[subset] invalid regex '{value}': {e}. Falling back to prefix match.")
+                  r = None
+              if r is not None:
+                  pkgs = [p for p in pkgs if r.search(base(p))]
+              else:
+                  pkgs = [p for p in pkgs if base(p).lower().startswith(value.lower())]
+          elif mode == "list" and value:
+              want=set(x.strip() for x in value.split(",") if x.strip())
+              pkgs=[p for p in pkgs if base(p) in want or p in want]
+          elif mode == "first_n":
+              n = int(value or "10"); pkgs = pkgs[:n]
+          elif mode == "sample_n":
+              n = int(value or "10"); random.shuffle(pkgs); pkgs = pkgs[:n]
+
+          # Then filter out invalid package names (like Namespace objects and system info tables)
+          valid_pkgs = []
+          for pkg in pkgs:
+            # Skip if it looks like a Namespace object, system info table, or is too long
+            if is_valid_name(pkg):
+              valid_pkgs.append(pkg)
+
+          pkgs = valid_pkgs
+          if not pkgs:
+            print("ERROR: No valid packages found in build.sh --list output")
+            print("Raw output preview:")
+            print(pathlib.Path("all_packages.txt").read_text()[:500])
+            raise SystemExit(1)
+
+          if exclude_builders:
+              pkgs = [p for p in pkgs if not p.endswith("-builder")]
+
+          # Baseline for comparison (respect exclude_builders like the final selection)
+          baseline = [p for p in all_valid if not p.endswith("-builder")] if exclude_builders else list(all_valid)
+
+          pathlib.Path("filtered.json").write_text(json.dumps(pkgs))
+          print(f"[subset] mode={mode!r} value={value!r} exclude_builders={exclude_builders} selected={len(pkgs)}")
+
+          # Emit step outputs for later steps in this job
+          try:
+              out_path = os.environ.get("GITHUB_OUTPUT")
+              if out_path:
+                  with open(out_path, "a") as outf:
+                      outf.write(f"mode={mode}\n")
+                      outf.write(f"value={value}\n")
+                      outf.write(f"exclude_builders={str(exclude_builders).lower()}\n")
+                      outf.write(f"selected={len(pkgs)}\n")
+                      outf.write(f"baseline={len(baseline)}\n")
+          except Exception as e:
+              print(f"[subset] failed to write GITHUB_OUTPUT: {e}")
+
+          # Also write a meta file for downstream debugging/summary
+          try:
+              meta = {"mode": mode, "value": value, "exclude_builders": exclude_builders, "selected": len(pkgs), "baseline": len(baseline)}
+              pathlib.Path("subset_meta.json").write_text(json.dumps(meta))
+          except Exception as e:
+              print(f"[subset] failed to write subset_meta.json: {e}")
+
+          # Guards: for regex, fail if selection is empty or matches all
+          if mode == "regex":
+              summary = os.environ.get("GITHUB_STEP_SUMMARY")
+              if len(pkgs) == 0:
+                  msg = f"❌ Regex filter matched 0 packages. regex='{value}'"
+                  print(msg)
+                  if summary:
+                      with open(summary, "a") as f:
+                          f.write("## ❌ Regex filter matched 0 packages\n\n")
+                          f.write(f"- regex: `{value}`\n")
+                          f.write(f"- baseline (valid, builders {'excluded' if exclude_builders else 'included'}): {len(baseline)}\n")
+                          f.write("- selected: 0\n")
+                  raise SystemExit(2)
+              if len(pkgs) == len(baseline):
+                  msg = (
+                      f"❌ Regex filter matched ALL packages (no reduction). regex='{value}', "
+                      f"baseline={len(baseline)} selected={len(pkgs)}"
+                  )
+                  print(msg)
+                  if summary:
+                      with open(summary, "a") as f:
+                          f.write("## ❌ Regex filter matched ALL packages (no reduction)\n\n")
+                          f.write(f"- regex: `{value}`\n")
+                          f.write(f"- baseline (valid, builders {'excluded' if exclude_builders else 'included'}): {len(baseline)}\n")
+                          f.write(f"- selected: {len(pkgs)}\n")
+                  raise SystemExit(3)
+
+          # Debug: Show what we're about to write to filtered.json
+          print("DEBUG: ALL packages after filtering (what goes to filtered.json):")
+          for i, pkg in enumerate(pkgs):
+            print(f"  Filtered Package {i+1}: {repr(pkg)} (len={len(pkg)})")
+          PY
+
+      - name: Count selected
+        id: count
+        run: |
+          TOTAL=$(jq 'length' filtered.json)
+          echo "total=${TOTAL}" >> "$GITHUB_OUTPUT"
+          echo "Selected total: ${TOTAL}"
+          echo "## 📦 Selection Summary" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **subset_mode**: '${{ steps.subset.outputs.mode || github.event.inputs.subset_mode || 'all' }}'" >> "$GITHUB_STEP_SUMMARY" || true
+          echo "- **subset_value**: '${{ steps.subset.outputs.value || github.event.inputs.subset_value || '' }}'" >> "$GITHUB_STEP_SUMMARY" || true
+          echo "- **exclude_builders**: '${{ steps.subset.outputs.exclude_builders || github.event.inputs.exclude_builders || 'true' }}'" >> "$GITHUB_STEP_SUMMARY" || true
+          echo "- **selected_packages**: ${TOTAL}" >> "$GITHUB_STEP_SUMMARY"
+          if [ "${TOTAL}" -gt 0 ]; then
+            echo "- **first_10_examples**:" >> "$GITHUB_STEP_SUMMARY"
+            jq -r '.[:10][] | "  - \(.)"' filtered.json >> "$GITHUB_STEP_SUMMARY" || true
+          fi
+        continue-on-error: true
+
+      - name: Compute chunk_size (auto or fixed)
+        id: size
+        run: |
+          CHUNK_RAW="${{ github.event.inputs.chunk_size || 'auto' }}"
+          if [[ "$CHUNK_RAW" != "auto" ]]; then
+            echo "chunk_size=$CHUNK_RAW" >> "$GITHUB_OUTPUT"
+            echo "Using fixed chunk_size=$CHUNK_RAW"
+            exit 0
+          fi
+          M=$(jq 'length' filtered.json)
+          TARGET="${{ github.event.inputs.target_jobs_per_platform || '60' }}"
+          if [[ -z "$TARGET" || "$TARGET" -lt 1 ]]; then TARGET=60; fi
+          K=$(( (M + TARGET - 1) / TARGET ))   # ceil(M / TARGET)
+          if [[ "$K" -lt 5 ]]; then K=5; fi     # avoid tiny chunks
+          echo "chunk_size=$K" >> "$GITHUB_OUTPUT"
+          echo "Auto chunk_size=$K (M=$M, target_jobs_per_platform=$TARGET)"
+
+      - name: Chunk filtered list
+        id: chunk
+        env:
+          CHUNK_SIZE: ${{ steps.size.outputs.chunk_size }}
+        run: |
+          python3 - <<'PY'
+          import os, json, pathlib
+          K = int(os.environ['CHUNK_SIZE'])
+          pkgs = json.loads(pathlib.Path('filtered.json').read_text())
+          chunks = [pkgs[i:i+K] for i in range(0, len(pkgs), K)] if K > 0 else [pkgs]
+          pathlib.Path('chunks.json').write_text(json.dumps(chunks))
+          idx = list(range(len(chunks)))
+          pathlib.Path('indexes.json').write_text(json.dumps(idx))
+          print(f"[chunk] filtered={len(pkgs)}, chunk_size={K}, chunks={len(chunks)}")
+          PY
+
+          # Human-friendly log (no jq needed)
+          echo "# of Chunks: $(python3 -c "import json;print(len(json.load(open('chunks.json'))))")"
+
+          # Show chunk contents using jq for better visibility
+          echo "=== CHUNK CONTENTS ==="
+          python3 -c "
+          import json
+          chunks = json.load(open('chunks.json'))
+          for i, chunk in enumerate(chunks):
+              print(f'Chunk {i}: {len(chunk)} packages')
+              for j, pkg in enumerate(chunk):
+                  print(f'  {j+1}. {pkg}')
+              print()
+          "
+          echo "=== END CHUNK CONTENTS ==="
+
+          # Emit single-line JSON to outputs (compact)
+          echo "chunks=$(python3 -c "import json;print(json.dumps(json.load(open('chunks.json'))))")" >> "$GITHUB_OUTPUT"
+          echo "indexes=$(python3 -c "import json;print(json.dumps(json.load(open('indexes.json'))))")" >> "$GITHUB_OUTPUT"
+
+
+      - name: Upload plan for this platform
+        uses: actions/upload-artifact@v4
+        with:
+          name: plan-${{ matrix.platform }}
+          path: |
+            filtered.json
+            chunks.json
+            indexes.json
+          overwrite: true
+          if-no-files-found: error
+          retention-days: 7
+
+# ────────────────────────────────────────────────────────────────────────────────
+# 2) PLAN: build (platform,index) matrix from discover artifacts
+# ────────────────────────────────────────────────────────────────────────────────
+  plan:
+    name: Plan matrix (platform × chunk)
+    needs: [discover]
+    runs-on: ubuntu-latest
+    outputs:
+      include: ${{ steps.make.outputs.include }}
+    steps:
+      - name: Download all platform plans
+        uses: actions/download-artifact@v4
+        with:
+          path: _plans
+          pattern: plan-*
+
+      - name: Build include list
+        id: make
+        run: |
+          python3 - <<'PY'
+          import json, os, glob, pathlib
+          pairs=[]
+          for d in sorted(glob.glob("_plans/plan-*")):
+              plat = pathlib.Path(d).name.replace("plan-","",1)
+              idx_path = os.path.join(d, "indexes.json")
+              if not os.path.exists(idx_path):
+                  continue
+              idx = json.load(open(idx_path))
+              for i in idx:
+                  pairs.append({"platform": plat, "index": i})
+          print("include=" + json.dumps(pairs))
+          # expose as GITHUB_OUTPUT
+          open(os.environ["GITHUB_OUTPUT"],"a").write("include="+json.dumps(pairs)+"\n")
+          PY
+
+      - name: Show planned pairs
+        run:  |
+          echo "Planned pairs: ${{ steps.make.outputs.include }}"
+
+      - name: Show detailed build plan
+        run: |
+          echo "## 📋 Detailed Build Plan" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+
+          # Process each platform's plan
+          for plan_dir in _plans/plan-*; do
+            if [ -d "$plan_dir" ]; then
+              platform=$(basename "$plan_dir" | sed 's/plan-//')
+              echo "### Platform: $platform" >> "$GITHUB_STEP_SUMMARY"
+              echo "" >> "$GITHUB_STEP_SUMMARY"
+
+              # Show packages in each chunk
+              if [ -f "$plan_dir/chunks.json" ]; then
+                echo "| Chunk | Packages |" >> "$GITHUB_STEP_SUMMARY"
+                echo "|-------|----------|" >> "$GITHUB_STEP_SUMMARY"
+
+                # Use jq to format the chunks nicely
+                jq -r 'to_entries[] | "| \(.key) | \(.value | length) packages: \(.value | join(", ")) |"' "$plan_dir/chunks.json" >> "$GITHUB_STEP_SUMMARY"
+                echo "" >> "$GITHUB_STEP_SUMMARY"
+              fi
+            fi
+          done
+
+          echo "### Summary" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Total platforms**: $(ls -1 _plans/plan-* | wc -l)" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Total chunks**: $(echo '${{ steps.make.outputs.include }}' | jq 'length')" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Total packages**: $(find _plans -name chunks.json -exec jq 'map(length) | add' {} \; | awk '{sum+=$1} END {print sum}')" >> "$GITHUB_STEP_SUMMARY"
+
+# ────────────────────────────────────────────────────────────────────────────────
+# 3) RUN-CHUNKS: builds each chunk on its platform runner
+# ────────────────────────────────────────────────────────────────────────────────
+  run-chunks:
+    name: Build chunk #${{ matrix.index }} on ${{ matrix.platform }}
+    needs: [plan]
+    if: ${{ fromJson(needs.plan.outputs.include) && (needs.plan.outputs.include != '[]') }}
+    strategy:
+      fail-fast: false
+      max-parallel: ${{ fromJSON(github.event.inputs.max_parallel || '32') }}
+      matrix:
+        include: ${{ fromJson(needs.plan.outputs.include) }}
+    runs-on:
+      - self-hosted
+      - ${{ matrix.platform }}
+    timeout-minutes: 180
+    steps:
+      - name: Print runner info
+        run: |
+          echo "Runner name: ${RUNNER_NAME:-unknown}"
+          echo "Runner OS: ${RUNNER_OS:-unknown}"
+          echo "Runner arch: ${RUNNER_ARCH:-unknown}"
+          echo "Matrix platform: ${{ matrix.platform }}"
+          echo "Job: Build chunk #${{ matrix.index }} on ${{ matrix.platform }}"
+          echo "Start time: $(date -u)"
+
+      - name: Pre-clean (no sudo; avoid hangs)
+        run: |
+          ROOT="${RUNNER_WORKSPACE}/jetson-containers/jetson-containers"
+          rm -rf "${ROOT}/data" "${ROOT}/logs" || true
+          # Clean up any old logs from previous runs
+          rm -rf logs/ || true
+          mkdir -p logs
+          # Remove old root-level build/test directories that might contaminate
+          rm -rf build/ test/ || true
+          # Clean up any leftover results from previous runs
+          rm -f results.json || true
+          # Clean up any old Docker container images
+          {
+          LOCK="${RUNNER_TEMP:-/tmp}/docker-prune.lock"
+          exec 9>"$LOCK" || true
+          if flock -w 300 9; then
+            echo "Acquired Docker prune lock: $LOCK"
+            for i in {1..10}; do
+              if timeout 180 docker system prune -af; then
+                echo "Docker prune succeeded"
+                break
+              fi
+              echo "Prune busy or failed (attempt $i/10). Retrying..."
+              sleep $((i*3))
+            done
+            flock -u 9 || true
+          else
+            echo "Could not acquire Docker prune lock within 300s - skipping prune"
+          fi
+          } || true
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          clean: false
+
+      - name: Download platform plan
+        uses: actions/download-artifact@v4
+        with:
+          name: plan-${{ matrix.platform }}
+          path: _plan
+
+      - name: Prepare packages for this chunk
+        env:
+          IDX: ${{ matrix.index }}
+          # If your "Download platform plan" step used `path: _plan`, keep this:
+          PLAN_DIR: _plan
+          # If you DIDN'T set a path there, the default folder is "plan-${{ matrix.platform }}":
+          # PLAN_DIR: plan-${{ matrix.platform }}
+        run: |
+          python3 - <<'PY'
+          import os, json, pathlib
+          idx = int(os.environ["IDX"])
+          plan_dir = os.environ.get("PLAN_DIR", "_plan")
+          chunks_path = pathlib.Path(plan_dir, "chunks.json")
+          if not chunks_path.exists():
+              raise SystemExit(f"Missing {chunks_path} (check your Download artifact path)")
+          chunks = json.loads(chunks_path.read_text())
+          sel = chunks[idx] if idx < len(chunks) else []
+          pathlib.Path("packages.json").write_text(json.dumps(sel))
+          print(f"chunk {idx} size: {len(sel)}")
+
+          # Debug: Print all package names and their original filtered package numbers
+          print(f"DEBUG: All packages in chunk {idx}:")
+          # Calculate starting number based on chunk index and chunk size
+          chunk_size = len(sel)
+          start_num = idx * chunk_size + 1
+          for i, pkg in enumerate(sel):
+              print(f"  {start_num + i:3d}. {pkg}")
+          PY
+
+      - name: Show build progress info
+        run: |
+          echo "🚀 Starting build process on ${{ matrix.platform }}"
+          echo "📦 Chunk #${{ matrix.index }} will build $(jq 'length' packages.json) packages"
+          echo "⏱️  Estimated total time: ~$(($(jq 'length' packages.json) * 5)) minutes"
+          echo "💡 Progress updates every 30 seconds - job is NOT stuck!"
+
+      - name: Build packages sequentially
+        id: build
+        env:
+          RUNNER_LABEL: ${{ matrix.platform }}
+          INDEX_HOST: ${{ env.INDEX_HOST }}
+          PKG_TIMEOUT_MIN: ${{ github.event.inputs.pkg_timeout_minutes || '90' }}
+        run: |
+          mkdir -p logs
+
+          # Check available memory and system resources
+          echo "🔍 System resource check:"
+          free -h
+          df -h /
+          echo "Available memory: $(free -m | awk 'NR==2{printf "%.1f%%", $3*100/$2 }')"
+
+          python3 - <<'PY'
+          import json, os, subprocess, time, pathlib, re, gc
+          pkgs = json.loads(pathlib.Path("packages.json").read_text())
+          runner = os.environ.get("RUNNER_NAME") or os.environ["RUNNER_LABEL"]
+          sha = os.environ["GITHUB_SHA"]
+          repo = os.environ["GITHUB_REPOSITORY"]
+          run_id = os.environ["GITHUB_RUN_ID"]
+          attempt = os.environ["GITHUB_RUN_ATTEMPT"]
+          pkg_timeout_min = int(os.environ.get("PKG_TIMEOUT_MIN", "90") or "90")
+          pkg_timeout_s = pkg_timeout_min * 60  # Per-package timeout as specified by user
+          # Overall chunk timeout (allow more time for multiple packages)
+          chunk_timeout_s = max(3600, pkg_timeout_min * 60 * 3)  # At least 1 hour, or 3x per-package timeout
+          results = []
+          total = len(pkgs)
+
+          def check_memory():
+            try:
+              with open('/proc/meminfo', 'r') as f:
+                meminfo = f.read()
+              for line in meminfo.split('\n'):
+                if 'MemAvailable:' in line:
+                  available = int(line.split()[1]) // 1024  # Convert to MB
+                  return available
+            except:
+              return None
+            return None
+          for idx, pkg in enumerate(pkgs, 1):
+            t0 = time.time()
+            base, tag = (pkg.split(":", 1) + ["latest"])[:2] if ":" in pkg else (pkg, "latest")
+            safe_base = re.sub(r'[^A-Za-z0-9._-]+', '_', base.replace('/', '_'))
+            safe_pkg = re.sub(r'[^A-Za-z0-9._-]+', '_', pkg.replace('/', '_'))
+
+            # Truncate safe_base if it's too long to prevent filename too long error
+            max_base_len = 100  # Leave room for index_XXX_ prefix
+            if len(safe_base) > max_base_len:
+                safe_base = safe_base[:max_base_len]
+
+            dir_name = f"index_{idx-1:03d}_{safe_base}"
+            per_dir = f"logs/{dir_name}"
+            logf = f"logs/{dir_name}.log"
+            pathlib.Path(per_dir).mkdir(parents=True, exist_ok=True)
+            status = "build_fail"
+
+            # Check memory before starting build
+            mem_available = check_memory()
+            if mem_available is not None:
+              print(f"[build] ({idx}/{total}) starting {pkg} - Available memory: {mem_available}MB")
+              if mem_available < 1000:  # Less than 1GB available
+                print(f"⚠️  WARNING: Low memory ({mem_available}MB available). Build may fail.")
+            else:
+              print(f"[build] ({idx}/{total}) starting {pkg}")
+
+            # Clean up memory before each build
+            gc.collect()
+            import ctypes
+            try:
+              ctypes.CDLL("libc.so.6").malloc_trim(0)
+            except:
+              pass
+            try:
+              cmd = ["./build.sh", "--logs", per_dir, pkg]
+              print(f"[build] cmd: {' '.join(cmd)}")
+
+              # Use PIPE to capture output in real-time
+              p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1, universal_newlines=True)
+              next_hb = time.time() + 30  # More frequent heartbeat every 30s
+
+              # Write output to log file and show in real-time
+              with open(logf, "w") as fh:
+                last_progress = time.time()
+                last_memory_check = time.time()
+                last_progress_print = time.time()
+                while True:
+                  # Read any available output in real-time
+                  try:
+                    line = p.stdout.readline()
+                    if line:
+                      fh.write(line)
+                      fh.flush()
+                      if line.strip():
+                        # Only show stage information
+                        if "> BUILDING" in line and "│" in line:
+                          stage = line.split("│")[1].strip().replace("> BUILDING ", "").strip()
+                          print(f"[stage] Currently BUILDING: {stage}", flush=True)
+                        elif "> TESTING" in line and "│" in line:
+                          stage = line.split("│")[1].strip().replace("> TESTING ", "").strip()
+                          print(f"[stage] Currently TESTING:  {stage}", flush=True)
+                  except:
+                    pass
+
+                  ret = p.poll()
+                  now = time.time()
+                  if ret is not None:
+                    if ret == 0:
+                      status = "success"
+                    elif ret == 137:
+                      status = "oom_killed"
+                      with open(logf, "a") as af:
+                        af.write(f"\n[OOM] Package '{pkg}' was killed due to out of memory (exit code 137)\n")
+                    else:
+                      status = "build_fail"
+                    break
+                  # Check per-package timeout first (prevents infinite loops)
+                  if now - t0 > pkg_timeout_s:
+                    try:
+                      p.terminate()
+                    except Exception:
+                      pass
+                    try:
+                      p.wait(timeout=10)
+                    except Exception:
+                      try:
+                        p.kill()
+                      except Exception:
+                        pass
+                    with open(logf, "a") as af:
+                      af.write(f"\n[PKG_TIMEOUT] Package '{pkg}' exceeded {pkg_timeout_s}s and was terminated.\n")
+                    status = "timeout"
+                    break
+                  # Check overall chunk timeout
+                  elif now - t0 > chunk_timeout_s:
+                    try:
+                      p.terminate()
+                    except Exception:
+                      pass
+                    try:
+                      p.wait(timeout=10)
+                    except Exception:
+                      try:
+                        p.kill()
+                      except Exception:
+                        pass
+                    with open(logf, "a") as af:
+                      af.write(f"\n[CHUNK_TIMEOUT] Package '{pkg}' exceeded chunk timeout {chunk_timeout_s}s and was terminated.\n")
+                    status = "timeout"
+                    break
+
+                  # Check memory every 30 seconds to detect OOM conditions
+                  if now - last_memory_check >= 30:
+                    mem_available = check_memory()
+                    if mem_available is not None and mem_available < 2000:  # Less than 2GB
+                      print(f"⚠️  WARNING: Low memory detected ({mem_available}MB available). Build may fail soon.")
+                      if mem_available < 1000:  # Less than 1GB - kill the build
+                        print(f"💥 CRITICAL: Memory too low ({mem_available}MB). Terminating build to prevent OOM.")
+                        try:
+                          p.terminate()
+                        except Exception:
+                          pass
+                        try:
+                          p.wait(timeout=5)
+                        except Exception:
+                          try:
+                            p.kill()
+                          except Exception:
+                            pass
+                        with open(logf, "a") as af:
+                          af.write(f"\n[OOM_PREVENTION] Package '{pkg}' terminated due to low memory ({mem_available}MB available)\n")
+                        status = "oom_killed"
+                        break
+
+                    # Add a progress indicator every 60 seconds to ensure visibility
+                    if now - last_progress_print >= 60:
+                      elapsed = int(now - t0)
+                      print(f"[progress] {pkg} running for {elapsed}s", flush=True)
+                      last_progress_print = now
+                    last_memory_check = now
+
+                  # Only sleep if no output was processed (non-blocking read)
+                  # This prevents the massive slowdown from sleeping after every line
+                  if not line:
+                    time.sleep(0.05)  # Very short sleep only when no output available
+            except Exception as e:
+              with open(logf, "a") as fh:
+                fh.write(f"\n[EXCEPTION] {e}\n")
+              status = "build_fail"
+            finally:
+              # Clean up after each build
+              gc.collect()
+              try:
+                ctypes.CDLL("libc.so.6").malloc_trim(0)
+              except:
+                pass
+
+              # Add a small delay to allow system cleanup
+              if idx < total:  # Don't delay after the last package
+                time.sleep(1)  # Reduced delay
+
+              print(f"[build] ({idx}/{total}) finished {pkg} with status={status} in {round(time.time()-t0,1)}s")
+
+              # Check memory after build
+              mem_available = check_memory()
+              if mem_available is not None:
+                print(f"[build] Memory after {pkg}: {mem_available}MB available")
+
+            name, tag = (pkg.split(":", 1) + ["latest"])[:2] if ":" in pkg else (pkg, "latest")
+
+            # Analyze failure point if build failed
+            failure_point = "success" if status == "success" else "unknown"
+            if status == "build_fail":
+              try:
+                with open(logf, "r") as f:
+                  log_content = f.read()
+
+                # Clean ANSI escape sequences from log content
+                import re
+                ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+                log_content = ansi_escape.sub('', log_content)
+
+                # Find the last build/test stage that was attempted (chronologically)
+                last_phase, last_stage = "unknown", "unknown"
+
+                for line in log_content.split('\n'):
+                  if "> BUILDING" in line and "│" in line:
+                    stage = line.split("│")[1].strip().replace("> BUILDING ", "").strip()
+                    # Clean ANSI escape sequences from stage name
+                    stage = ansi_escape.sub('', stage)
+                    last_phase, last_stage = "BUILDING", stage
+                  elif "> TESTING" in line and "│" in line:
+                    stage = line.split("│")[1].strip().replace("> TESTING ", "").strip()
+                    # Clean ANSI escape sequences from stage name
+                    stage = ansi_escape.sub('', stage)
+                    last_phase, last_stage = "TESTING", stage
+
+                # Extract the package name from the stage (last word/chunk)
+                if last_stage != "unknown":
+                  # Split by common separators and take the last meaningful part
+                  parts = last_stage.replace(":", "-").split("-")
+                  # Find the last part that looks like a package name (not version numbers)
+                  package_name = parts[-1] if parts else last_stage
+                else:
+                  package_name = "unknown"
+
+                # Determine failure type based on error patterns and phase
+                # Only consider it a test failure if we're in TESTING phase AND there are actual error indicators
+                if last_phase == "TESTING" and ("failed" in log_content.lower() or "error" in log_content.lower() or "💣" in log_content):
+                  failure_point = f"TESTING {package_name}"
+                elif "ERROR: No matching distribution found" in log_content:
+                  failure_point = f"BUILDING {package_name} (pip install)"
+                elif "ERROR: Could not find a version that satisfies" in log_content:
+                  failure_point = f"BUILDING {package_name} (pip install)"
+                elif "error: command" in log_content and "cmake" in log_content:
+                  failure_point = f"BUILDING {package_name} (cmake)"
+                elif "error: command" in log_content and "make" in log_content:
+                  failure_point = f"BUILDING {package_name} (make)"
+                elif "error: command" in log_content and "ninja" in log_content:
+                  failure_point = f"BUILDING {package_name} (ninja)"
+                elif "python3 setup.py" in log_content and "returned a non-zero exit code" in log_content:
+                  failure_point = f"BUILDING {package_name} (python setup)"
+                elif "bdist_wheel" in log_content and "returned a non-zero exit code" in log_content:
+                  failure_point = f"BUILDING {package_name} (python wheel)"
+                elif "docker build" in log_content and "returned non-zero exit status" in log_content:
+                  failure_point = f"BUILDING {package_name} (docker build)"
+                elif "test" in log_content.lower() and "failed" in log_content.lower():
+                  failure_point = f"TESTING  {package_name}"
+                elif "timeout" in log_content.lower():
+                  failure_point = f"BUILDING {package_name} (timeout)"
+                else:
+                  # Use the phase information
+                  failure_point = f"{last_phase} {package_name}"
+              except Exception:
+                failure_point = "log analysis failed"
+            elif status == "timeout":
+              failure_point = "BUILDING (timeout)"
+            elif status == "oom_killed":
+              failure_point = "BUILDING (out of memory)"
+            results.append({
+              "sha": sha,
+              "ref": os.environ.get("GITHUB_REF", ""),
+              "runner": runner,
+              "runner_label": os.environ.get("RUNNER_LABEL", ""),
+              "package": name,
+              "tag": tag,
+              "status": status,
+              "failure_point": failure_point,
+              "duration_s": round(time.time() - t0, 1),
+              "run_id": run_id,
+              "run_attempt": attempt,
+              "run_url": f"https://github.com/{repo}/actions/runs/{run_id}",
+              "log_relpath": logf,
+              "timestamp": time.time()
+            })
+          pathlib.Path("results.json").write_text(json.dumps(results, indent=2))
+          print(f"wrote {len(results)} results")
+
+          # Final summary
+          success_count = sum(1 for r in results if r["status"] == "success")
+          fail_count = sum(1 for r in results if r["status"] == "build_fail")
+          timeout_count = sum(1 for r in results if r["status"] == "timeout")
+          oom_count = sum(1 for r in results if r["status"] == "oom_killed")
+          print(f"\n🎉 Build chunk completed!")
+          print(f"✅ Success: {success_count}")
+          print(f"❌ Failed: {fail_count}")
+          print(f"⏰ Timeout: {timeout_count}")
+          print(f"💥 OOM Killed: {oom_count}")
+          print(f"📊 Total: {len(results)}")
+
+          # Clean up any duplicate root-level log files that might have been created
+          for pkg in pkgs:
+            base = pkg.split(":", 1)[0] if ":" in pkg else pkg
+            root_log = f"logs/{base}.log"
+            if pathlib.Path(root_log).exists():
+              print(f"Removing duplicate root-level log: {root_log}")
+              pathlib.Path(root_log).unlink()
+
+          # Sanitize any additional files created under logs/ that may contain invalid characters for artifacts
+          logs_dir = pathlib.Path("logs")
+          if logs_dir.exists():
+            for p in logs_dir.rglob("*"):
+              if p.is_file():
+                safe = re.sub(r'["<>\|:*?\r\n]', "_", p.name)
+                if safe != p.name:
+                  try:
+                    p.rename(p.with_name(safe))
+                  except Exception as e:
+                    # Best effort: if rename fails, continue so at least our own log files are valid
+                    pass
+          PY
+
+      - name: Collect results
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json, pathlib
+
+          # Read results from the build job
+          results_path = pathlib.Path("results.json")
+          if not results_path.exists():
+              print("No results.json found - build may have failed")
+              exit(1)
+
+          results = json.loads(results_path.read_text())
+
+          # Calculate summary statistics
+          success_count = sum(1 for r in results if r["status"] == "success")
+          fail_count = sum(1 for r in results if r["status"] == "build_fail")
+          timeout_count = sum(1 for r in results if r["status"] == "timeout")
+          oom_count = sum(1 for r in results if r["status"] == "oom_killed")
+
+          # Display results summary
+          print(f"\n🎉 Build chunk completed!")
+          print(f"✅ Success: {success_count}")
+          print(f"❌ Failed: {fail_count}")
+          print(f"⏰ Timeout: {timeout_count}")
+          print(f"💥 OOM Killed: {oom_count}")
+          print(f"📊 Total: {len(results)}")
+
+          # Detailed breakdown
+          if success_count > 0:
+              print(f"\n✅ SUCCESSFUL PACKAGES ({success_count}):")
+              for r in results:
+                  if r["status"] == "success":
+                      print(f"  • {r['package']}:{r['tag']} ({r['duration_s']}s)")
+
+          if fail_count > 0:
+              print(f"\n❌ FAILED PACKAGES ({fail_count}):")
+              for r in results:
+                  if r["status"] == "build_fail":
+                      print(f"  • {r['package']}:{r['tag']} - {r['failure_point']} ({r['duration_s']}s)")
+
+          if timeout_count > 0:
+              print(f"\n⏰ TIMED OUT PACKAGES ({timeout_count}):")
+              for r in results:
+                  if r["status"] == "timeout":
+                      print(f"  • {r['package']}:{r['tag']} ({r['duration_s']}s)")
+
+          if oom_count > 0:
+              print(f"\n💥 OOM KILLED PACKAGES ({oom_count}):")
+              for r in results:
+                  if r["status"] == "oom_killed":
+                      print(f"  • {r['package']}:{r['tag']} ({r['duration_s']}s)")
+
+          # Success rate
+          if len(results) > 0:
+              success_rate = (success_count / len(results)) * 100
+              print(f"\n📈 Success Rate: {success_rate:.1f}%")
+          PY
+
+      - name: Upload chunk results & logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-${{ matrix.platform }}-chunk-${{ matrix.index }}-${{ github.run_attempt }}
+          path: |
+            results.json
+            logs/index_*.log
+            logs/index_*/
+          if-no-files-found: ignore
+          overwrite: true
+          retention-days: 14
+
+# ────────────────────────────────────────────────────────────────────────────────
+# 4) COLLATE: merge all chunk results into one results.json
+# ────────────────────────────────────────────────────────────────────────────────
+  collate:
+    name: Collate → results.json (single file)
+    needs: [run-chunks]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all chunk artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: _in
+          pattern: results-*-chunk-*-${{ github.run_attempt }}
+
+      - name: Merge JSON
+        run: |
+          sudo apt-get update && sudo apt-get install -y jq
+          mapfile -t files < <(find _in -type f -name results.json | sort)
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "[]" > results.json
+          else
+            jq -s '[.[]] | add' "${files[@]}" > results.json
+          fi
+          echo "Rows: $(jq 'length' results.json)"
+
+      - name: Publish summary (first 50 rows)
+        run: |
+          echo "## Sweep results for \`${GITHUB_SHA}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Package | Tag | Runner | Status | Failure Point | Duration (s) |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|---|---|---|---|---|---|" >> "$GITHUB_STEP_SUMMARY"
+          jq -r '.[] | "| \(.package) | \(.tag) | \(.runner) | \(.status) | \(.failure_point) | \(.duration_s) |"' results.json | head -n 50 >> "$GITHUB_STEP_SUMMARY" || true
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "_Full data uploaded as artifact \`sweep-results-${GITHUB_SHA}-${GITHUB_RUN_ATTEMPT}\`._" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload merged results.json
+        uses: actions/upload-artifact@v4
+        with:
+          name: sweep-results-${{ github.sha }}-${{ github.run_attempt }}
+          path: results.json
+          overwrite: true
+          retention-days: 30

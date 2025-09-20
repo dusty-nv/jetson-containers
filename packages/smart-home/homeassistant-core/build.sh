@@ -10,7 +10,8 @@ apt-get install -y --no-install-recommends \
     libpcap0.8 \
     libturbojpeg \
     tcl \
-    zlib1g-dev
+    zlib1g-dev \
+    ffmpeg
 apt-get clean
 rm -rf /var/lib/apt/lists/*
 
