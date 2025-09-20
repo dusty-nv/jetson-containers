@@ -4,7 +4,7 @@
 # config: config.py
 # requires: '>=34.1.0'
 # docs: docs.md
-# depends: [homeassistant-base, psutil-home-assistant, ffmpeg]
+# depends: [homeassistant-base, psutil-home-assistant]
 # test: [go2rtc_test.sh, sqlite3_test.py, test.py]
 # notes: The `homeassistant-core` wheel that's build is saved in `/usr/src/homeassistant`
 #---

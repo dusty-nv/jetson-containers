@@ -1,0 +1,40 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "pip"
+    directory: "/packages/diffusion/diffusion_policy"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "pip"
+    directory: "/packages/vlm/vila-microservice/src"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "pip"
+    directory: "/packages/pytorch"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "pip"
+    directory: "/packages/llm/sudonim/patches/250314"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "pip"
+    directory: "/packages/llm/local_llm"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "pip"
+    directory: "/packages/llm/llamaspeak"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+

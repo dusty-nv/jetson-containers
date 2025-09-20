@@ -1,0 +1,124 @@
+name: PR changed package builds
+
+on:
+  pull_request:
+    branches: [dev]
+    types: [opened, ready_for_review, synchronize, reopened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-${{ github.event.pull_request.number || github.ref }}-changed-packages
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash -euo pipefail {0}
+
+jobs:
+  discover:
+    name: Discover changed packages
+    runs-on: [self-hosted, jetson]
+    if: github.event.pull_request.draft == false
+    outputs:
+      packages: ${{ steps.discover.outputs.packages }}
+    steps:
+      - name: Pre-checkout cleanup
+        run: |
+          echo "=== Pre-checkout Cleanup (discover) ==="
+          echo "Cleaning up permission-restricted files before checkout..."
+          sudo rm -rf /home/jetson/actions-runner/_work/jetson-containers/jetson-containers/data || echo "Data cleanup completed"
+          sudo rm -rf /home/jetson/actions-runner/_work/jetson-containers/jetson-containers/logs || echo "Logs cleanup completed"
+          echo "Pre-checkout cleanup completed"
+      - name: Checkout repository (full history)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          clean: false
+      - name: One-time setup (first checkout only)
+        run: |
+          MARKER="${{ github.workspace }}/.ci_setup_done"
+          if [[ ! -f "$MARKER" ]]; then
+            echo "Running first-time setup (install.sh)..."
+            bash ./install.sh
+            touch "$MARKER"
+          fi
+
+      - name: Compute changed packages from PR
+        id: discover
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+        run: |
+          bash .github/workflows/scripts/detect_changed_packages.sh | tee /dev/stderr
+
+  build:
+    name: "Build package: ${{ matrix.package }} on ${{ matrix.runner }}"
+    timeout-minutes: 120
+    needs: discover
+    if: github.event.pull_request.draft == false && needs.discover.outputs.packages != '[]'
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [orin, thor]
+        package: ${{ fromJson(needs.discover.outputs.packages) }}
+    runs-on:
+      - self-hosted
+      - ${{ matrix.runner }}
+    env:
+      INDEX_HOST: jetson-ai-lab.io
+    steps:
+      - name: Pre-checkout cleanup
+        run: |
+          echo "=== Pre-checkout Cleanup ==="
+          echo "Cleaning up permission-restricted files before checkout..."
+          sudo rm -rf /home/jetson/actions-runner/_work/jetson-containers/jetson-containers/data || echo "Data cleanup completed"
+          sudo rm -rf /home/jetson/actions-runner/_work/jetson-containers/jetson-containers/logs || echo "Logs cleanup completed"
+          echo "Pre-checkout cleanup completed"
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          clean: false
+      - name: One-time setup (first checkout only)
+        run: |
+          MARKER="${{ github.workspace }}/.ci_setup_done"
+          if [[ ! -f "$MARKER" ]]; then
+            echo "Running first-time setup (install.sh)..."
+            bash ./install.sh
+            touch "$MARKER"
+          fi
+
+      - name: Print runner info
+        run: |
+          echo "Runner name: ${{ runner.name }}"
+          echo "Runner labels: ${{ toJson(runner.labels) }}"
+          uname -a
+          docker --version || true
+          if ! docker info >/dev/null 2>&1; then
+            echo "Retrying docker info with sudo"
+            sudo -n docker info | cat || true
+          else
+            docker info | cat
+          fi
+
+      - name: Build package
+        id: build
+        run: |
+          set -o pipefail
+          mkdir -p build-logs
+          ./jetson-containers build --build-flags="--no-cache" --logs build-logs ${{ matrix.package }} 2>&1 | tee build.log
+
+      - name: Upload build logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs-${{ matrix.runner }}-${{ matrix.package }}-${{ github.run_id }}-attempt${{ github.run_attempt }}
+          path: |
+            build.log
+            build-logs
+          if-no-files-found: warn
+          retention-days: 7
+
+

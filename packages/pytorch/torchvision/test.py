@@ -54,13 +54,15 @@ def load_data(root):
             num_workers=args.workers, pin_memory=True)
 
 def download_data(url, tar, workdir='/data/datasets'):
+    os.makedirs(workdir, exist_ok=True)
     filename = os.path.join(workdir, tar)
     folder = filename[:-7] if '.tar.gz' in filename else os.path.splitext(filename)[0]
     
     if not os.path.isfile(filename):
         print(f"Downloading {url} to {filename}")
         request = requests.get(url, allow_redirects=True)
-        open(filename, 'wb').write(request.content)
+        with open(filename, 'wb') as f:
+            f.write (request.content)
         
     if not os.path.isdir(folder):
         print(f"Extracting {filename} to {folder}")
