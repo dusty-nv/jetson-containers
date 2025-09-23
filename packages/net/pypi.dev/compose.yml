@@ -1,0 +1,7 @@
+include:
+  - ../devpi/compose.yml
+  - ../https-portal/compose.yml
+
+networks:
+  default:
+    name: devpi-net

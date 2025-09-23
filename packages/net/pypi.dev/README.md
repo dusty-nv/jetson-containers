@@ -7,7 +7,7 @@
 
 # Usage
 ```bash
-docker compose --env-file ../devpi/.env -f ./services/docker-compose.yml up -d
+docker compose --env-file ../devpi/.env -f compose.yml up -d
 ```
 
 #### Open your browser and go to `http://localhost:3141` to access the devpi server.
