@@ -1,6 +1,6 @@
 include:
-  - ../devpi.yml
-  - ../https-portal.yml
+  - ../../devpi/compose.yml
+  - ../../https-portal/compose.yml
 
 networks:
   default:
