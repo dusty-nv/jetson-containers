@@ -1,7 +1,0 @@
-include:
-  - ../devpi.yml
-  - ../https-portal.yml
-
-networks:
-  default:
-    name: devpi-net

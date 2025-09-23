@@ -59,8 +59,6 @@ if [ ! -f "${DEVPISERVER_SERVERDIR}/.serverversion" ]; then
     devpi-init --root-passwd "${DEVPI_PASSWORD}"
 fi
 
-# change from default 3141 to 80 to push it public
-
 devpi-server \
     --host 0.0.0.0 \
     --port 3141 \
