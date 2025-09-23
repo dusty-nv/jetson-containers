@@ -5,12 +5,12 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     ports:
-      - '${DEVPI_PORT}:${DEVPI_PORT}'
+      - '${DEVPI_PORT}:3141'
     volumes:
       - ${DEVPI_ROOT:-$CACHE_DIR/devpi}:/devpi
       - ${DEVPI_BLACKLIST:-./blacklist.txt}:/etc/devpi/blacklist.txt
     command: |
-      devpi-server --listen 0.0.0.0:${DEVPI_PORT}
+      devpi-server --listen 0.0.0.0:3141
         --max-request-body-size 4294967296
         --serverdir /devpi
         --indexer-backend null
