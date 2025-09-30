@@ -45,9 +45,18 @@ else
 fi
 
 export NCCL_DEBUG=${NCCL_DEBUG:-INFO}
-export NCCL_IB_DISABLE=${NCCL_IB_DISABLE:-1}
-export NCCL_P2P_DISABLE=${NCCL_P2P_DISABLE:-1}
-export NCCL_SHM_DISABLE=${NCCL_SHM_DISABLE:-1}
+if [[ "${ENABLE_NCCL_DISTRIBUTED_JETSON:-0}" == "1" ]]; then
+    echo "Enabling NCCL distributed support for Jetson"
+    export USE_SYSTEM_NCCL=1
+    export NCCL_IB_DISABLE=${NCCL_IB_DISABLE:-0}
+    export NCCL_P2P_DISABLE=${NCCL_P2P_DISABLE:-0}
+    export NCCL_SHM_DISABLE=${NCCL_SHM_DISABLE:-0}
+else
+    echo "NCCL distributed support for Jetson is disabled"
+    export NCCL_IB_DISABLE=${NCCL_IB_DISABLE:-1}
+    export NCCL_P2P_DISABLE=${NCCL_P2P_DISABLE:-1}
+    export NCCL_SHM_DISABLE=${NCCL_SHM_DISABLE:-1}
+fi
 
 # Start resource monitoring in background
 monitor_resources() {

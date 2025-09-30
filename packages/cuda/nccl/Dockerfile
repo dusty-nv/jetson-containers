@@ -14,7 +14,10 @@ ARG NCCL_VERSION \
     FORCE_BUILD=off \
     DISTRO="ubuntu2004" \
     CUDA_ARCH \
+    ENABLE_NCCL_DISTRIBUTED_JETSON=0 \
     TMP=/tmp/nccl
+
+ENV ENABLE_NCCL_DISTRIBUTED_JETSON=${ENABLE_NCCL_DISTRIBUTED_JETSON}
 
 RUN apt-get update -y && \
     apt-get install -y dkms && \
@@ -27,6 +30,6 @@ RUN apt-get update -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-COPY install.sh build.sh $TMP/
+COPY install.sh build.sh patches $TMP/
 
 RUN $TMP/install.sh || $TMP/build.sh

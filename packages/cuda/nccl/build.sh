@@ -14,8 +14,20 @@ apt-get install -y --no-install-recommends build-essential devscripts debhelper 
 git clone --branch=v${NCCL_VERSION}-1 https://github.com/NVIDIA/nccl
 cd nccl
 
+# Experimental support for distributed GPU communication.
+if [[ "${ENABLE_NCCL_DISTRIBUTED_JETSON:-0}" == "1" && -f "${TMP}/${NCCL_VERSION}.diff" ]]; then
+	echo "Applying patch ${TMP}/${NCCL_VERSION}.diff for distributed NCCL (for Jetson)"
+	if ! git apply --check "${TMP}/${NCCL_VERSION}.diff"; then
+		echo "Patch for distributed NCCL (for Jetson) does not apply cleanly, skipping!"
+	else
+		git apply "${TMP}/${NCCL_VERSION}.diff"
+	fi
+else
+	echo "Skipping distributed NCCL (for Jetson) patch."
+fi
+
 make -j src.build NVCC_GENCODE="-gencode=arch=compute_87,code=sm_87"
-make pkg.txz.build NVCC_GENCODE="-gencode=arch=compute_87,code=sm_87"
+make -j pkg.txz.build NVCC_GENCODE="-gencode=arch=compute_87,code=sm_87"
 
 mkdir -p build/pkg/txz/lib
 
