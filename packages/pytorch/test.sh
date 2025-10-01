@@ -88,4 +88,5 @@ if [[ ${ENABLE_NCCL_DISTRIBUTED_JETSON:-0} != "1" ]]; then
     exit 0
 fi
 
-torchrun --nproc-per-node=1 test-nccl.py
+echo "=== Testing whether the GPU/CPU communication is working correctly  ==="
+torchrun --nproc-per-node=1 /test/test_nccl.py
