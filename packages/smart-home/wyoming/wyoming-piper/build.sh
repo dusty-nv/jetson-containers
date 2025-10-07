@@ -15,7 +15,7 @@ sed -i.bak -E \
   -e 's/"piper-tts==[^"]+"/"piper-tts"/' \
   pyproject.toml
 
-python -m build --wheel --outdir $PIP_WHEEL_DIR
+python3 -m build --wheel --outdir $PIP_WHEEL_DIR
 
 cd /
 rm -rf /tmp/wyoming-piper
