@@ -12,7 +12,7 @@ def test_torch_distributed():
     \"\"\"Test torch.distributed functionality with proper checks and status output\"\"\"
     print('\\n=== Testing torch.distributed ===')
     is_available = False
-    
+
     # Check if distributed is available
     try:
         is_available = dist.is_available()
@@ -23,7 +23,7 @@ def test_torch_distributed():
     except Exception as e:
         print(f'❌ Error checking availability: {e}')
         return 1
-    
+
     # Check if distributed is initialized
     try:
         is_initialized = dist.is_initialized()
@@ -38,10 +38,10 @@ def test_torch_distributed():
     except Exception as e:
         print(f'❌ Error checking initialization: {e}')
         return 1
-    
+
     # If we reach here, distributed is both available and initialized
     # Run all inner checks
-    
+
     # Check backend
     try:
         backend = dist.get_backend()
@@ -49,7 +49,7 @@ def test_torch_distributed():
     except Exception as e:
         print(f'❌ Error getting backend: {e}')
         return 1
-    
+
     # Check world size
     try:
         world_size = dist.get_world_size()
@@ -61,7 +61,7 @@ def test_torch_distributed():
     except Exception as e:
         print(f'❌ Error getting world size: {e}')
         return 1
-    
+
     # Check rank
     try:
         rank = dist.get_rank()
@@ -73,7 +73,7 @@ def test_torch_distributed():
     except Exception as e:
         print(f'❌ Error getting rank: {e}')
         return 1
-    
+
     print('✅ All torch.distributed checks passed')
     return 0
 
@@ -82,3 +82,11 @@ exit_code = test_torch_distributed()
 print('=== torch.distributed tests completed ===\\n')
 sys.exit(exit_code)
 "
+
+if [[ ${ENABLE_NCCL_DISTRIBUTED_JETSON:-0} != "1" ]]; then
+    echo "Skipping distributed NCCL test for Jetson (ENABLE_NCCL_DISTRIBUTED_JETSON not set to 1)"
+    exit 0
+fi
+
+echo "=== Testing whether the GPU/CPU communication is working correctly  ==="
+torchrun --nproc-per-node=1 /test/test_nccl.py
