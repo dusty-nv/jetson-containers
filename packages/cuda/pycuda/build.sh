@@ -15,7 +15,7 @@ python3 setup.py --verbose build_ext --inplace bdist_wheel --dist-dir /opt
 cd /opt
 rm -rf /opt/pycuda
 
-pip3 install /opt/pycuda*.whl
-pip3 show pycuda && python3 -c 'import pycuda; print(pycuda.VERSION_TEXT)'
+uv pip install /opt/pycuda*.whl
+uv pip show pycuda && python3 -c 'import pycuda; print(pycuda.VERSION_TEXT)'
 
 twine upload --verbose /opt/pycuda*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

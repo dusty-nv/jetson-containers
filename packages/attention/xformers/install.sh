@@ -6,4 +6,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install xformers==${XFORMERS_VERSION}
+uv pip install xformers==${XFORMERS_VERSION}

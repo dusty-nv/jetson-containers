@@ -17,8 +17,8 @@ RUN apt-get update && apt-get install -y \
 
 RUN git clone --recursive https://github.com/Genesis-Embodied-AI/RoboGen && \
     cd RoboGen && \
-    pip3 install einops attrs pynvml opencv-contrib-python protobuf && \
-    pip3 install ompl
+    uv pip install einops attrs nvidia-ml-py opencv-contrib-python protobuf && \
+    uv pip install ompl
 
 WORKDIR /opt/RoboGen/
 CMD ["/bin/bash"]

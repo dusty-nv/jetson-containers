@@ -11,13 +11,13 @@ cd /opt/kat
 git clone --depth=1 --recursive https://github.com/johnnynunez/rational_kat_cu.git /opt/rational_kat_cu
 cd /opt/rational_kat_cu
 
-pip3 install --upgrade pip setuptools wheel twine
+uv pip install --upgrade pip setuptools wheel twine
 sed -i "/^[[:space:]]*cmdclass=/i\    setup_requires=['torch>=2.2']," setup.py
 cat setup.py
-pip3 wheel --wheel-dir=/opt/rational_kat_cu/wheels .
-# pip3 install /opt/rational_kat_cu/wheels/*.whl
-pip3 install -e .
-pip3 install timm
+uv build --wheel --out-dir /opt/rational_kat_cu/wheels .
+# uv pip install /opt/rational_kat_cu/wheels/*.whl
+uv pip install -e .
+uv pip install timm
 
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/rational_kat_cu/wheels/*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

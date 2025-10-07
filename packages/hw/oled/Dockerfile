@@ -23,7 +23,7 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
-RUN pip3 install pillow flask Adafruit_SSD1306 smbus2
+RUN uv pip install pillow flask Adafruit_SSD1306 smbus2
 
 ### TODO: 232 MB of disk space should be freed, but not on the resulting container image
 RUN apt-get purge -y \

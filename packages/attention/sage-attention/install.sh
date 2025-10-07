@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -ex
-pip3 install imageio-ffmpeg
+uv pip install imageio-ffmpeg
 if [ "$FORCE_BUILD" == "on" ]; then
 	echo "Forcing build of SageAttention ${SAGE_ATTENTION_VERSION}"
 	exit 1
 fi
 
-pip3 install sageattention==${SAGE_ATTENTION_VERSION}
-pip3 show sageattention && python3 -c 'from sageattention import sageattn'
+uv pip install sageattention==${SAGE_ATTENTION_VERSION}
+uv pip show sageattention && python3 -c 'from sageattention import sageattn'

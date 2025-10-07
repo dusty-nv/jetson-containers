@@ -25,12 +25,12 @@ RUN git clone --branch=${LLAVA_BRANCH} --depth=1 https://github.com/${LLAVA_REPO
 COPY benchmark.py llava/llava/serve/
 
 RUN cd llava && \
-    pip3 wheel --wheel-dir=dist --no-deps --verbose . && \
+    uv build --wheel --out-dir dist --no-deps --verbose . && \
     cp dist/llava*.whl /opt
 
-RUN pip3 install llava*.whl
+RUN uv pip install llava*.whl
 
-#RUN pip3 install /opt/torch*.whl
-#RUN pip3 install /opt/torchvision*.whl
+#RUN uv pip install /opt/torch*.whl
+#RUN uv pip install /opt/torchvision*.whl
 
 WORKDIR /opt/llava

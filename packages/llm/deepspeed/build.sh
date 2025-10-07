@@ -11,6 +11,6 @@ cd /opt/DeepSpeed
 export DS_BUILD_CCL_COMM=0 && \
 python3 setup.py build_ext -j$(nproc) bdist_wheel --dist-dir $PIP_WHEEL_DIR
 
-pip3 install $PIP_WHEEL_DIR/deepspeed-*.whl
+uv pip install $PIP_WHEEL_DIR/deepspeed-*.whl
 
 twine upload --verbose $PIP_WHEEL_DIR/deepspeed-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

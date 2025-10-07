@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -ex
 
-pip3 install \
+uv pip install \
   compressed-tensors \
   datasets \
   decord2 \
@@ -19,7 +19,7 @@ pip3 install \
   "prometheus-client>=0.20.0" \
   psutil \
   pydantic \
-  pynvml \
+  nvidia-ml-py \
   python-multipart \
   "pyzmq>=25.1.2" \
   "soundfile>=0.13.1" \
@@ -40,5 +40,5 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install sgl-kernel "sglang[all]~=${SGLANG_VERSION}" || \
-pip3 install sgl-kernel "sglang[all]~=${SGLANG_VERSION_SPEC}"
+uv pip install sgl-kernel "sglang[all]~=${SGLANG_VERSION}" || \
+uv pip install sgl-kernel "sglang[all]~=${SGLANG_VERSION_SPEC}"

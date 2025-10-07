@@ -18,11 +18,11 @@ RUN apt-get update && \
 
 ENV BLIS_ARCH="generic"
 
-RUN pip3 install loguru IPython
+RUN uv pip install loguru IPython
 RUN git clone https://github.com/hexgrad/misaki /opt/misaki && \
     cd /opt/misaki && \
-    pip3 install -e .
+    uv pip install -e .
 
 RUN git clone https://github.com/hexgrad/kokoro /opt/kokoro && \
     cd /opt/kokoro && \
-    pip3 install -e .
+    uv pip install -e .

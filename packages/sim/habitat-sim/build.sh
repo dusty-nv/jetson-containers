@@ -11,8 +11,8 @@ cd /opt/habitat-sim
 python3 setup.py bdist_wheel --headless --with-cuda --bullet --dist-dir $PIP_WHEEL_DIR
 
 ls $PIP_WHEEL_DIR
-pip3 install $PIP_WHEEL_DIR/habitat*.whl
-#pip3 show awq && python3 -c 'import awq' && python3 -m awq.entry --help
+uv pip install $PIP_WHEEL_DIR/habitat*.whl
+#uv pip show awq && python3 -c 'import awq' && python3 -m awq.entry --help
 
 twine upload --verbose $PIP_WHEEL_DIR/habitat*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 

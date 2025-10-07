@@ -9,10 +9,10 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 RUN cd /opt && \
-    pip3 install \
+    uv pip install \
         neo4j && \
     git clone https://github.com/getzep/graphiti && \
     cd graphiti && \
-    pip3 install -e .
+    uv pip install -e .
 
 CMD /bin/bash

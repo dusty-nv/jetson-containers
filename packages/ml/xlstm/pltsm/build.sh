@@ -8,8 +8,8 @@ git clone --depth=1 --recursive https://github.com/ml-jku/plstm  /opt/plstm
 # Navigate to the directory containing plstm's setup.py
 cd /opt/plstm
 
-pip3 wheel . -v --no-deps -w /opt/plstm/wheels/
-pip3 install /opt/plstm/wheels/plstm*.whl
+uv build --wheel . -v --no-deps --out-dir /opt/plstm/wheels/
+uv pip install /opt/plstm/wheels/plstm*.whl
 
 cd /opt/plstm
 

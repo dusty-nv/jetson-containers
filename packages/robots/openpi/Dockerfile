@@ -48,29 +48,29 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install dependencies first
-RUN pip3 install --no-cache-dir --extra-index-url https://pypi.org/simple --index-url https://pypi.org/simple 'av>=12.0.5,<13.0.0' && \
-    pip3 install --no-deps flax==0.10.6 && \
-    pip3 install --no-deps equinox>=0.11.8 && \
-    pip3 install --no-deps orbax-checkpoint==0.11.16 && \
-    pip3 install --no-deps jaxtyping==0.3.2
+RUN uv pip install --no-cache-dir --extra-index-url https://pypi.org/simple --index-url https://pypi.org/simple 'av>=12.0.5,<13.0.0' && \
+    uv pip install --no-deps flax==0.10.6 && \
+    uv pip install --no-deps equinox>=0.11.8 && \
+    uv pip install --no-deps orbax-checkpoint==0.11.16 && \
+    uv pip install --no-deps jaxtyping==0.3.2
 
 # # Install mujoco 2.3.7 which is required by gym-aloha
-# RUN pip3 install --no-cache-dir --only-binary :all: mujoco==2.3.7
+# RUN uv pip install --no-cache-dir --only-binary :all: mujoco==2.3.7
 
 # Install gym-aloha without dependencies first
-RUN pip3 install --no-cache-dir --no-deps gym-aloha>=0.1.1
+RUN uv pip install --no-cache-dir --no-deps gym-aloha>=0.1.1
 
 COPY benchmark_pi0_droid.py /opt/openpi/benchmark_pi0_droid.py
 
 # Install local packages
 RUN cd /opt/openpi && \
-    pip3 install -e packages/openpi-client && \
-    pip3 install -e .
+    uv pip install -e packages/openpi-client && \
+    uv pip install -e .
 
-RUN pip3 install jaxlib jax_cuda12_plugin jax_cuda12_pjrt opt_einsum && \
-    pip3 install --no-dependencies jax
+RUN uv pip install jaxlib jax_cuda12_plugin jax_cuda12_pjrt opt_einsum && \
+    uv pip install --no-dependencies jax
 
-RUN pip3 install --no-deps optax importlib_resources humanize tensorstore simplejson datasets pandas pyarrow pytz multiprocess metadata dill xxhash jsonlines draccus mergedeep typing_inspect mypy_extensions chex etils toolz
+RUN uv pip install --no-deps optax importlib_resources humanize tensorstore simplejson datasets pandas pyarrow pytz multiprocess metadata dill xxhash jsonlines draccus mergedeep typing_inspect mypy_extensions chex etils toolz
 RUN python3 -c "import jax; import jaxlib; print('JAX version:', jax.__version__); print('JAXLIB version:', jaxlib.__version__); print('Devices:', jax.devices())"
 
 CMD /bin/bash

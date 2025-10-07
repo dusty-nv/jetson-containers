@@ -6,7 +6,7 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install usd-core==${USD_CORE_VERSION} || \
-pip3 install usd-core==${USD_CORE_VERSION_SPEC}
+uv pip install usd-core==${USD_CORE_VERSION} || \
+uv pip install usd-core==${USD_CORE_VERSION_SPEC}
 
-pip3 show usd_core && python3 -c 'import usd_core'
+uv pip show usd_core && python3 -c 'import usd_core'

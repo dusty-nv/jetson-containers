@@ -6,5 +6,5 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install tilelang==${TILELANG_VERSION}
-pip3 show tilelang && python3 -c 'import tilelang'
+uv pip install tilelang==${TILELANG_VERSION}
+uv pip show tilelang && python3 -c 'import tilelang'

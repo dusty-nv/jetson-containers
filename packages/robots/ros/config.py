@@ -1,4 +1,4 @@
-from jetson_containers import L4T_VERSION
+from jetson_containers import L4T_VERSION, PYTHON_VERSION
 from ..robots.ros import ROS_DISTROS, ROS2_DISTROS, ROS_PACKAGES, ros_container
 
 import copy
@@ -7,7 +7,7 @@ import copy
 template = package.copy()
 
 template['group'] = 'robots'
-template['depends'] = ['cuda', 'cudnn', 'tensorrt', 'opencv', 'cmake', 'pybind11']
+template['depends'] = ['cuda', 'cudnn', 'tensorrt', 'nccl', 'gdrcopy', 'nvpl', 'cusparselt', 'cudss', 'nvshmem', 'opencv', 'cmake', 'python', 'numpy', 'pybind11']
 template['postfix'] = f"l4t-r{L4T_VERSION}"
 template['docs'] = "docs.md"
 
@@ -16,14 +16,15 @@ package = []
 for ROS_DISTRO in ROS_DISTROS:
     for ROS_PACKAGE in ROS_PACKAGES:
         pkg = copy.deepcopy(template)
-        
+
         pkg['name'] = f"ros:{ROS_DISTRO}-{ROS_PACKAGE.replace('_', '-')}"
-        
+
         pkg['build_args'] = {
             'ROS_VERSION': ROS_DISTRO,
-            'ROS_PACKAGE': ROS_PACKAGE
+            'ROS_PACKAGE': ROS_PACKAGE,
+            'PYTHON_VERSION': PYTHON_VERSION
         }
-        
+
         if ROS_DISTRO == 'melodic':
             pkg['dockerfile'] = 'Dockerfile.ros.melodic'
             pkg['test'] = 'test_ros.sh'
@@ -37,6 +38,6 @@ for ROS_DISTRO in ROS_DISTROS:
         else:
             pkg['dockerfile'] = 'Dockerfile.ros2'
             pkg['test'] = 'test_ros2.sh'
-            
+
         package.append(pkg)
 

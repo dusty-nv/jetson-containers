@@ -134,7 +134,7 @@ if command -v uv &>/dev/null; then
 else
   # Fallback path (no uv)
   rm -rf /tmp/wheels "${NIXL_PREFIX}/wheels"
-  ${PYTHON_BIN} -m pip wheel --no-deps --wheel-dir=/tmp/wheels .
+  ${PYTHON_BIN} -m pip wheel --no-deps --out-dir /tmp/wheels .
   UNREPAIRED_WHEEL="$(ls -1 /tmp/wheels/nixl-*-"linux_${ARCH}.whl" 2>/dev/null || true)"
   if [[ -z "${UNREPAIRED_WHEEL}" ]]; then
     # newer pip tags may already be manylinux; just pick the first

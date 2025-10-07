@@ -42,6 +42,6 @@ fi
 echo "/opt/ollama/build/lib/ollama" > /etc/ld.so.conf.d/ollama.conf
 ldconfig
 
-pip3 install --no-cache-dir ollama
+uv pip install --no-cache-dir ollama
 
 

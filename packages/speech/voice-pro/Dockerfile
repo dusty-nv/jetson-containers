@@ -22,8 +22,8 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*  && \
     apt-get clean
 
-RUN pip3 install phonemizer  && \
-    pip3 install torchmetrics
+RUN uv pip install phonemizer  && \
+    uv pip install torchmetrics
 
 # Clone the repository:
 RUN git clone --recursive depth=1 https://github.com/abus-aikorea/voice-pro.git /opt/voice-pro && \
@@ -33,7 +33,7 @@ RUN git clone --recursive depth=1 https://github.com/abus-aikorea/voice-pro.git 
     sed -i '/--extra-index-url https:\/\/download.pytorch.org\/whl\/cu124/d' requirements-voice-gpu.txt && \
     sed -i 's/==/>=/g' requirements-voice-gpu.txt && \
     sed -i 's/~=/>=/g' requirements-voice-gpu.txt && \
-    pip3 install -U -requirements-voice-gpu.txt
+    uv pip install -U -requirements-voice-gpu.txt
 
 WORKDIR /opt/voice-pro/
 

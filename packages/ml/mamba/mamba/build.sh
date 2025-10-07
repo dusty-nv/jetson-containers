@@ -21,7 +21,7 @@ MAX_JOBS="$(nproc)" \
 MAMBA_FORCE_BUILD="TRUE" \
 MAMBA_SKIP_CUDA_BUILD="FALSE" \
 python3 setup.py bdist_wheel --dist-dir=/opt/mamba/wheels
-pip3 install /opt/mamba/wheels/mamba*.whl
+uv pip install /opt/mamba/wheels/mamba*.whl
 
 cd /opt/mamba
 

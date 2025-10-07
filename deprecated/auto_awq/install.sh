@@ -7,4 +7,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install autoawq-kernels==${AUTOAWQ_KERNELS_VERSION} autoawq==${AUTOAWQ_VERSION}
+uv pip install autoawq-kernels==${AUTOAWQ_KERNELS_VERSION} autoawq==${AUTOAWQ_VERSION}

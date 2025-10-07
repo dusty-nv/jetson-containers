@@ -38,15 +38,15 @@ fi
 
 
 
-pip3 install maturin
+uv pip install maturin
 mkdir /opt/dynamo/wheels
-pip3 install -U -r /opt/dynamo/container/deps/requirements.txt
+uv pip install -U -r /opt/dynamo/container/deps/requirements.txt
 maturin build --release --out /opt/dynamo/wheels
 twine upload --verbose /opt/dynamo/wheels/ai_dynamo_runtime*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
-pip3 install /opt/dynamo/wheels/ai_dynamo_runtime*.whl
+uv pip install /opt/dynamo/wheels/ai_dynamo_runtime*.whl
 
 cd /opt/dynamo
-pip3 wheel --no-deps --wheel-dir=/opt/dynamo/wheels . --verbose
-pip3 install /opt/dynamo/wheels/ai_dynamo*.whl
+uv build --wheel --no-deps --out-dir /opt/dynamo/wheels . --verbose
+uv pip install /opt/dynamo/wheels/ai_dynamo*.whl
 
 twine upload --verbose /opt/dynamo/wheels/ai_dynamo*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

@@ -14,7 +14,7 @@ apt-get clean
 
 bash ${TMP_DIR}/install_cusparselt.sh
 
-pip3 install polygraphy mpi4py
+uv pip install polygraphy mpi4py
 
 if [ -s ${SOURCE_TAR} ]; then
 	echo "extracting TensorRT-LLM sources from ${TRT_LLM_SOURCE}"
@@ -28,29 +28,29 @@ else
 	git status
 	git submodule update --init --recursive
 	git lfs pull
-	
-	if [ -s ${GIT_PATCHES} ]; then 
+
+	if [ -s ${GIT_PATCHES} ]; then
 		echo "applying git patches from ${TRT_LLM_PATCH}"
 		git apply ${GIT_PATCHES}
 	fi
-	
+
 	sed -i 's|tensorrt.*||' requirements.txt
 	sed -i 's|torch.*|torch|' requirements.txt
 	sed -i 's|nvidia-cudnn.*||' requirements.txt
-	
+
 	git status
 	git diff --submodule=diff
-fi	
+fi
 
 if [ "$FORCE_BUILD" == "on" ]; then
 	echo "Forcing build of TensorRT-LLM ${TRT_LLM_VERSION}"
 	exit 1
 fi
 
-pip3 install -r ${SOURCE_DIR}/requirements.txt
-pip3 install tensorrt_llm==${TRT_LLM_VERSION}
+uv pip install -r ${SOURCE_DIR}/requirements.txt
+uv pip install tensorrt_llm==${TRT_LLM_VERSION}
 
-pip3 uninstall -y torch && pip3 install torch==${PYTORCH_VERSION}
+uv pip uninstall torch && uv pip install torch==${PYTORCH_VERSION}
 
-#pip3 show tensorrt_llm
+#uv pip show tensorrt_llm
 #python3 -c "import tensorrt_llm; print(tensorrt_llm.__version__)"

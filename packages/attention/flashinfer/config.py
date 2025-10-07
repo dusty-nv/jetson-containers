@@ -13,6 +13,7 @@ def flash_infer(version, version_spec=None, requires=None, default=False):
         'FLASHINFER_VERSION': version,
         'FLASHINFER_VERSION_SPEC': version_spec if version_spec else version,
         'TORCH_CUDA_ARCH_LIST': ';'.join([f'{x / 10:.1f}' for x in CUDA_ARCHITECTURES]),
+        'FLASHINFER_CUDA_ARCH_LIST': ' '.join([f'{x / 10:.1f}' for x in CUDA_ARCHITECTURES]),
         'IS_SBSA': IS_SBSA,
     }
 
@@ -35,5 +36,5 @@ package = [
     flash_infer('0.2.6.post1', '0.2.6.post1', default=False),
     flash_infer('0.2.7', '0.2.7'),
     flash_infer('0.2.9', '0.2.9'),
-    flash_infer('0.3.1', '0.3.1', default=(CUDA_VERSION >= Version('12.6'))), # Thor compatibility
+    flash_infer('0.4.0', '0.4.0', default=(CUDA_VERSION >= Version('12.6'))), # Thor compatibility
 ]

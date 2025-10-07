@@ -17,5 +17,5 @@ ENV PIPER_CACHE=/data/models/piper
 
 COPY *.sh ${TMP_DIR}/
 
-RUN pip3 install --no-cache-dir --verbose 'flask>=3,<4' \
+RUN uv pip install --no-cache-dir --verbose 'flask>=3,<4' \
     && ${TMP_DIR}/install.sh || ${TMP_DIR}/build.sh

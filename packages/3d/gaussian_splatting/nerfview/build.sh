@@ -14,8 +14,8 @@ export LINE_INFO=1
 export MAX_JOBS=$(nproc)
 
 # Build and install python wheels
-pip3 wheel . -w $PIP_WHEEL_DIR --verbose
-pip3 install $PIP_WHEEL_DIR/nerfview*.whl
+uv build --wheel . --out-dir $PIP_WHEEL_DIR --verbose
+uv pip install $PIP_WHEEL_DIR/nerfview*.whl
 
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/nerfview/wheels/nerfview*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

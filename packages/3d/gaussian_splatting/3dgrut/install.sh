@@ -6,5 +6,5 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install 3dgrut==${THREEGRUT_VERSION}
-pip3 install --force-reinstall opencv-contrib-python
+uv pip install 3dgrut==${THREEGRUT_VERSION}
+uv pip install --force-reinstall opencv-contrib-python

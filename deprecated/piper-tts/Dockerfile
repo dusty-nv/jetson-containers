@@ -32,7 +32,7 @@ RUN git clone --branch ${PIPER_PHONEMIZE_VERSION} --depth 1 https://github.com/r
     cmake --install build && \
     pip install pybind11 && \
     CPPFLAGS="-I${ONNXRUNTIME_DIR}/include/onnxruntime/" \
-    pip3 install . --no-deps --no-build-isolation && \
+    uv pip install . --no-deps --no-build-isolation && \
     ln -s ${ESPEAK_NG_DATA_DIR} /usr/share/espeak-ng-data
 
 RUN echo "✅ piper-phonemize version:" && pip show piper-phonemize | grep -i version
@@ -45,6 +45,6 @@ RUN git clone --branch ${PIPER_VERSION} --depth 1 https://github.com/rhasspy/pip
     cmake --build build --config Release --parallel && \
     cmake --install build && \
     cd src/python_run && \
-    pip3 install --ignore-installed blinker && \
-    pip3 install -r requirements_http.txt && \
-    pip3 install --no-deps .[gpu,http]
+    uv pip install --ignore-installed blinker && \
+    uv pip install -r requirements_http.txt && \
+    uv pip install --no-deps .[gpu,http]

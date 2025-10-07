@@ -8,8 +8,8 @@ git clone --depth=1 --recursive https://github.com/NX-AI/mlstm_kernels  /opt/mls
 # Navigate to the directory containing mlstm_kernels's setup.py
 cd /opt/mlstm_kernels
 
-pip3 wheel . -v --no-deps -w /opt/mlstm_kernels/wheels/
-pip3 install /opt/mlstm_kernels/wheels/mlstm_kernels*.whl
+uv build --wheel . -v --no-deps --out-dir /opt/mlstm_kernels/wheels/
+uv pip install /opt/mlstm_kernels/wheels/mlstm_kernels*.whl
 
 cd /opt/mlstm_kernels
 

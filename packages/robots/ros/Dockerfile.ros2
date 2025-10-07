@@ -5,7 +5,8 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG ROS_PACKAGE=ros_base \
-    ROS_VERSION=humble
+    ROS_VERSION=jazzy \
+    TMP=/tmp/warp
 
 ENV ROS_DISTRO=${ROS_VERSION} \
     ROS_ROOT=/opt/ros/${ROS_VERSION} \
@@ -14,9 +15,12 @@ ENV ROS_DISTRO=${ROS_VERSION} \
     RTI_NC_LICENSE_ACCEPTED=yes \
     DEBIAN_FRONTEND=noninteractive \
     SHELL=/bin/bash \
-    TMP=/tmp/ros2
-    
-SHELL ["/bin/bash", "-c"] 
+    CUDA_HOME="/usr/local/cuda" \
+    NVCC_PATH="/usr/local/cuda/bin/nvcc" \
+    VENV_PATH="/opt/venv" \
+    PYTHONNOUSERSITE=1
+
+SHELL ["/bin/bash", "-c"]
 
 # set Python3 as default
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
@@ -32,7 +36,7 @@ RUN if [ -f $TMP/.ros.build.failed ]; then \
     fi
 
 # on 24.04, the older colcon-argcomplete that ROS installs conflicts with the venv one
-RUN if [ $(lsb_release -rs) = '24.04' ]; then \ 
+RUN if [ $(lsb_release -rs) = '24.04' ]; then \
       echo "#!/usr/bin/env bash" > "/opt/venv/bin/register-python-argcomplete" ; \
     fi
 

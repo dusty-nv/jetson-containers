@@ -14,10 +14,10 @@ echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUI
 
 MAX_JOBS=$MAX_JOBS \
 CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS \
-pip3 wheel . -v -w /opt/huggingface_kernels/wheels/
+uv build --wheel . -v --out-dir /opt/huggingface_kernels/wheels/
 
 ls /opt
 cd /opt/
 
-pip3 install /opt/huggingface_kernels/wheels/kernels*.whl
+uv pip install /opt/huggingface_kernels/wheels/kernels*.whl
 twine upload --verbose /opt/huggingface_kernels/wheels/kernels*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

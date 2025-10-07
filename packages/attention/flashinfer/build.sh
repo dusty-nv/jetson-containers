@@ -36,13 +36,14 @@ else
 fi
 echo "Using NVSHMEM package: $NVSHMEM_PKG"
 
-python3 -m pip install --no-cache-dir build setuptools wheel ninja mpi4py pynvml einops $NVSHMEM_PKG requests
+python3 -m pip install --no-cache-dir build setuptools wheel ninja mpi4py nvidia-ml-py einops $NVSHMEM_PKG requests
 
 export CUDA_HOME=/usr/local/cuda
 export LD_LIBRARY_PATH=${CUDA_HOME}/lib64/stubs:${LD_LIBRARY_PATH}
 export LIBRARY_PATH=${CUDA_HOME}/lib64/stubs:${LIBRARY_PATH}
-export FLASHINFER_CUDA_ARCH_LIST=$TORCH_CUDA_ARCH_LIST
+export FLASHINFER_CUDA_ARCH_LIST=$FLASHINFER_CUDA_ARCH_LIST
 
+uv pip install apache-tvm-ffi
 python3 -m flashinfer.aot
 python3 -m build --no-isolation --wheel
 # Install AOT wheel

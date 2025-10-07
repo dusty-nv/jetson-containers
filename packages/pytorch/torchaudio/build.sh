@@ -32,8 +32,8 @@ cd ../
 rm -rf /opt/torchaudio
 
 # --- Install and verify ---
-pip3 install /opt/torchaudio*.whl
-pip3 show torchaudio && python3 -c 'import torchaudio; print(torchaudio.__version__);'
+uv pip install /opt/torchaudio*.whl
+uv pip show torchaudio && python3 -c 'import torchaudio; print(torchaudio.__version__);'
 
 # --- Upload (if configured) ---
 twine upload --verbose /opt/torchaudio*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

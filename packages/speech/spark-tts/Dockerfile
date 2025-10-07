@@ -23,7 +23,7 @@ RUN apt-get update && \
     cd /opt/spark-tts && \
     sed -i 's/==/>=/g' requirements.txt && \
     sed -i 's/~=/>=/g' requirements.txt && \
-    pip3 install -U -r requirements.txt
+    uv pip install -U -r requirements.txt
 
 COPY inference.py /opt/spark-tts
 

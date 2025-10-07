@@ -6,5 +6,5 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install mlstm_kernels==${MLSTM_KERNELS_VERSION} || \
-pip3 install mlstm_kernels==${MLSTM_KERNELS_VERSION_SPEC}
+uv pip install mlstm_kernels==${MLSTM_KERNELS_VERSION} || \
+uv pip install mlstm_kernels==${MLSTM_KERNELS_VERSION_SPEC}

@@ -19,7 +19,7 @@ ARG CUDA_ARCHITECTURES \
 ADD https://api.github.com/repos/${LLAMA_CPP_PYTHON_REPO}/git/refs/heads/${LLAMA_CPP_PYTHON_BRANCH} /tmp/llama_cpp_python_version.json
 
 RUN set -ex \
-    && git clone --branch=${LLAMA_CPP_PYTHON_BRANCH} --depth=1 --recursive https://github.com/${LLAMA_CPP_PYTHON_REPO} ${LLAMA_CPP_PYTHON_DIR} \    
+    && git clone --branch=${LLAMA_CPP_PYTHON_BRANCH} --depth=1 --recursive https://github.com/${LLAMA_CPP_PYTHON_REPO} ${LLAMA_CPP_PYTHON_DIR} \
     && ln -s "$LLAMA_CPP_PYTHON_DIR/vendor/llama.cpp" "$LLAMA_CPP_PYTHON_DIR/llama.cpp" \
     \
     # build C++ libraries \
@@ -38,11 +38,11 @@ RUN set -ex \
     \
     # build Python bindings \
     && CMAKE_ARGS="-DLLAMA_CUBLAS=on -DLLAMA_CUDA_F16=1 -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}" FORCE_CMAKE=1 \
-        pip3 wheel --wheel-dir=/opt --verbose "$LLAMA_CPP_PYTHON_DIR" \
+        uv build --wheel --out-dir /opt --verbose "$LLAMA_CPP_PYTHON_DIR" \
     \
     # install the wheel \
     # python3 -m llama_cpp.server missing 'import uvicorn' \
-    && pip3 install \
+    && uv pip install \
         /opt/llama_cpp_python*.whl \
         typing-extensions \
         uvicorn \
@@ -58,6 +58,6 @@ COPY benchmark.py llama.cpp/bin/benchmark.py
 
 # make sure it loads
 RUN set -ex \
-    && pip3 show llama-cpp-python | grep llama \
+    && uv pip show llama-cpp-python | grep llama \
     && python3 -c 'import llama_cpp' \
     && python3 -m llama_cpp.server --help

@@ -2,7 +2,7 @@
 # name: tensorrt_llm
 # group: llm
 # config: config.py
-# depends: [tensorrt, pytorch, transformers, cuda-python, nixl]
+# depends: [cudastack:standard, pytorch, transformers, cuda-python, nixl]
 # test: [test.py]
 # requires: '>=35'
 # notes: The `tensorrt-llm:builder` container includes the C++ binaries under `/opt`
@@ -30,8 +30,8 @@ COPY build.sh install.sh /tmp/setup/
 
 RUN /tmp/setup/install.sh || /tmp/setup/build.sh #|| echo "BUILD FAILED!"
 
-RUN pip3 install --upgrade transformers && \
-    pip3 install uvicorn fastapi
+RUN uv pip install --upgrade transformers && \
+    uv pip install uvicorn fastapi
 
 COPY llama.sh ${SOURCE_DIR}/
 

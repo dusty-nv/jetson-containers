@@ -9,7 +9,7 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-RUN pip3 install \
+RUN uv pip install \
         openexr \
         toolz \
         msgpack \
@@ -17,13 +17,13 @@ RUN pip3 install \
         tensorstore \
         humanize \
     && \
-    pip3 install --index-url https://pypi.org/simple \
+    uv pip install --index-url https://pypi.org/simple \
         tensorflow \
         tensorflow_hub \
         tensorflow_datasets \
         tensorflow_graphics \
     && \
-    pip3 install --no-deps \
+    uv pip install --no-deps \
         chex \
         optax \
         distrax \
@@ -44,13 +44,13 @@ RUN git clone --branch=main --depth=1 https://github.com/dusty-nv/crossformer /o
     sed -i 's|^tensorflow_datasets.*||g' requirements.txt && \
     sed -i 's|^tensorflow_graphics.*||g' requirements.txt && \
     cat requirements.txt && \
-    pip3 install -r requirements.txt && \
-    pip3 install mediapy && \
-    pip3 install -e .
+    uv pip install -r requirements.txt && \
+    uv pip install mediapy && \
+    uv pip install -e .
 
-RUN pip3 uninstall --verbose -y tensorflow_cpu_aws && \
-    pip3 uninstall --verbose -y tensorflow && \
-    pip3 install tensorflow tensorflow_probability
+RUN uv pip uninstall --verbose -y tensorflow_cpu_aws && \
+    uv pip uninstall --verbose -y tensorflow && \
+    uv pip install tensorflow tensorflow_probability
 
 COPY benchmark.py /opt/crossformer
 

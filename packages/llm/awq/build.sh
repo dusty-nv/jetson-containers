@@ -15,14 +15,14 @@ sed -i 's/==/>=/g' "awq/pyproject.toml"
 
 cat awq/pyproject.toml
 
-pip3 wheel --wheel-dir=$PIP_WHEEL_DIR --verbose ./awq
-pip3 wheel --wheel-dir=$PIP_WHEEL_DIR --verbose ./awq/awq/kernels
+uv build --wheel --out-dir $PIP_WHEEL_DIR --verbose ./awq
+uv build --wheel --out-dir $PIP_WHEEL_DIR --verbose ./awq/awq/kernels
 
 ls $PIP_WHEEL_DIR
 rm -rf awq
 
-pip3 install $PIP_WHEEL_DIR/awq*.whl
-#pip3 show awq && python3 -c 'import awq' && python3 -m awq.entry --help
+uv pip install $PIP_WHEEL_DIR/awq*.whl
+#uv pip show awq && python3 -c 'import awq' && python3 -m awq.entry --help
 
 twine upload --verbose $PIP_WHEEL_DIR/awq-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 twine upload --verbose $PIP_WHEEL_DIR/awq_inference*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

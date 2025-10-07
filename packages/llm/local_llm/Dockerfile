@@ -17,8 +17,8 @@ ENV PYTHONPATH=${PYTHONPATH}:/opt/local_llm \
 
 COPY requirements.txt .
 
-RUN pip3 install --ignore-installed blinker && \
-    pip3 install -r requirements.txt && \
+RUN uv pip install --ignore-installed blinker && \
+    uv pip install -r requirements.txt && \
     openssl req \
 	-new \
 	-newkey rsa:4096 \

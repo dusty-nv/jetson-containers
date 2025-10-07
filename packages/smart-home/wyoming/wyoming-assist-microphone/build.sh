@@ -10,7 +10,7 @@ apt-get install -y --no-install-recommends --fix-missing \
 apt-get clean
 rm -rf /var/lib/apt/lists/*
 
-pip3 install -U \
+uv pip install -U \
    build \
    setuptools \
    wheel \
@@ -25,9 +25,9 @@ python3 -m build --wheel --sdist --outdir $PIP_WHEEL_DIR
 cd /
 rm -rf /tmp/wyoming_satellite
 
-pip3 install $PIP_WHEEL_DIR/wyoming_satellite*.whl
+uv pip install $PIP_WHEEL_DIR/wyoming_satellite*.whl
 
-pip3 show wyoming_satellite
+uv pip show wyoming_satellite
 
 twine upload --verbose $PIP_WHEEL_DIR/wyoming_satellite*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 

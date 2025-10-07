@@ -6,4 +6,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install genai-bench==${GENAI_BENCH_VERSION}
+uv pip install genai-bench==${GENAI_BENCH_VERSION}

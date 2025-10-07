@@ -2,7 +2,7 @@
 # name: torch_tensorrt
 # group: pytorch
 # config: config.py
-# depends: [pytorch, torchvision, tensorrt, bazel]
+# depends: [pytorch, torchvision, cudastack:standard, bazel]
 # test: [test.py, test.sh]
 # notes: https://pytorch.org/TensorRT/getting_started/installation.html#installation
 #---
@@ -17,10 +17,10 @@ COPY WORKSPACE.jp46 /tmp
 
 #
 # https://github.com/pytorch/TensorRT/commit/9b0b8f1ccac81050c08091f74870092cbac91ac0
-#   pip3 install pyyaml
+#   uv pip install pyyaml
 #   python3 -m pip wheel --verbose --pre . --config-setting="--jetpack-version=5.0" --config-settings="--use-cxx11-abi=1" -w dist && \
 #
-RUN pip3 install pyyaml && \
+RUN uv pip install pyyaml && \
     git clone --branch=${TORCH_TRT_VERSION} --depth=1 https://github.com/pytorch/TensorRT torch_tensorrt || \
     git clone --depth=1 https://github.com/pytorch/TensorRT torch_tensorrt && \
     cd torch_tensorrt && \
@@ -31,14 +31,14 @@ RUN pip3 install pyyaml && \
     sed 's|^        \"torch >=.*|        \"torch\"|g' -i setup.py && \
     sed "s|^        'torch>=.*|        'torch',|g" -i setup.py && \
     sed 's|^    python_requires=.*|    python_requires=\">=3.6\",|g' -i setup.py && \
-    cat setup.py && \    
+    cat setup.py && \
     #python3 setup.py install --jetpack-version ${JETPACK_MAJOR}.${JETPACK_MINOR} --use-cxx11-abi && \
     python3 setup.py bdist_wheel --jetpack-version ${JETPACK_MAJOR}.${JETPACK_MINOR} --use-cxx11-abi && \
     cp dist/torch_tensorrt*.whl /opt && \
     cd ../../ && \
     rm -rf torch_tensorrt
 
-RUN pip3 install /opt/torch_tensorrt*.whl && \
+RUN uv pip install /opt/torch_tensorrt*.whl && \
     twine upload --verbose /opt/torch_tensorrt*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
 # ./torchtrtc: error while loading shared libraries: libtorch.so: cannot open shared object file

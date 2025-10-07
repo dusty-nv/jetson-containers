@@ -6,5 +6,5 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install vtk==${VTK_VERSION} || \
-pip3 install vtk==${VTK_VERSION_SPEC}
+uv pip install vtk==${VTK_VERSION} || \
+uv pip install vtk==${VTK_VERSION_SPEC}

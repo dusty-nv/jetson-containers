@@ -8,8 +8,8 @@ git clone --depth=1 --recursive https://github.com/NVlabs/PartPacker /opt/partpa
 # Navigate to the directory containing partpacker's setup.py
 cd /opt/partpacker
 
-pip3 install -r requirements.txt
-pip3 install meshiki
+uv pip install -r requirements.txt
+uv pip install meshiki
 
 cd /opt/partpacker
 mkdir pretrained
@@ -19,7 +19,7 @@ wget https://huggingface.co/nvidia/PartPacker/resolve/main/flow.pt
 
 cd /opt/partpacker
 
-pip3 install --force-reinstall opencv-contrib-python
+uv pip install --force-reinstall opencv-contrib-python
 # vae reconstruction of meshes
 # PYTHONPATH=. python3 vae/scripts/infer.py --ckpt_path pretrained/vae.pt --input assets/meshes/ --output_dir output/
 

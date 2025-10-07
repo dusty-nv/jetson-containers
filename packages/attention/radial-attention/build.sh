@@ -10,4 +10,4 @@ cd /opt/radial-attention
 export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
 sed -i 's/==/>=/g' requirements.txt
-pip3 install -U -r requirements.txt
+uv pip install -U -r requirements.txt

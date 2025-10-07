@@ -53,6 +53,6 @@ RUN apt-get update && \
 COPY build.sh install.sh /tmp/PIXSFM/
 
 RUN cd /opt/
-RUN pip3 install build wheel
+RUN uv pip install build wheel
 
 RUN /tmp/PIXSFM/install.sh || /tmp/PIXSFM/build.sh

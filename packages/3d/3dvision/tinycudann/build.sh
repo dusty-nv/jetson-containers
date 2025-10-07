@@ -1,4 +1,4 @@
-#!/usr/bin/env bash 
+#!/usr/bin/env bash
 set -ex
 
 echo "Building tinycudann ${TINYCUDANN_VERSION}"
@@ -14,8 +14,8 @@ cmake --build build --config RelWithDebInfo -- -j$(nproc)
 cd bindings/torch
 
 # Build and install python wheels
-pip3 wheel . -w $PIP_WHEEL_DIR --verbose
-pip3 install $PIP_WHEEL_DIR/tinycudann*.whl
+uv build --wheel . --out-dir $PIP_WHEEL_DIR --verbose
+uv pip install $PIP_WHEEL_DIR/tinycudann*.whl
 
 # Optionally upload to a repository using Twine
 twine upload --verbose $PIP_WHEEL_DIR/tinycudann*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

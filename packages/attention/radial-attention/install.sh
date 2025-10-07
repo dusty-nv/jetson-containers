@@ -6,4 +6,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install radial-attention==${RADIAL_ATTENTION_VERSION}
+uv pip install radial-attention==${RADIAL_ATTENTION_VERSION}

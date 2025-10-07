@@ -105,14 +105,14 @@ headless = False
 rolling = False
 EOF
 CMAKE_ARGS="${OPENCV_BUILD_ARGS} -DOPENCV_EXTRA_MODULES_PATH=/opt/opencv-python/opencv_contrib/modules" \
-pip3 wheel --wheel-dir=/opt --verbose .
+uv build --wheel --out-dir /opt --verbose .
 
 ls /opt
 cd /
 rm -rf /opt/opencv-python
 
 # install/test/upload wheel
-pip3 install /opt/opencv*.whl
+uv pip install /opt/opencv*.whl
 python3 -c "import cv2; print('OpenCV version:', str(cv2.__version__)); print(cv2.getBuildInformation())"
 twine upload --verbose /opt/opencv*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 

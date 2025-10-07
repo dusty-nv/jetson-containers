@@ -10,7 +10,7 @@ cd /opt/tensorrt_llm/
 git lfs pull
 sed -i '/^diffusers[[:space:]=<>!]/d' requirements.txt
 sed -i 's/==/>=/g' requirements.txt
-pip3 install -r requirements.txt
+uv pip install -r requirements.txt
 
 
 python3 /opt/tensorrt_llm/scripts/build_wheel.py \
@@ -24,9 +24,9 @@ python3 /opt/tensorrt_llm/scripts/build_wheel.py \
         --use_ccache \
         --python_bindings
 
-pip3 install $PIP_WHEEL_DIR/tensorrt_llm*.whl
+uv pip install $PIP_WHEEL_DIR/tensorrt_llm*.whl
 
-#pip3 show tensorrt_llm
+#uv pip show tensorrt_llm
 #python3 -c "import tensorrt_llm; print(tensorrt_llm.__version__)"
 
 twine upload --verbose $PIP_WHEEL_DIR/tensorrt_llm*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

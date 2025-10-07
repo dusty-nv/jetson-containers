@@ -8,7 +8,7 @@ git clone --depth=1 --recursive https://github.com/lizhihao6/Sparc3D /opt/sparc3
 # Navigate to the directory containing sparc3d's setup.py
 cd /opt/sparc3d
 
-pip3 install -r requirements.txt
+uv pip install -r requirements.txt
 
 cd /opt/sparc3d
 

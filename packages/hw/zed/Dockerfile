@@ -2,7 +2,7 @@
 # name: zed
 # group: hardware
 # config: config.py
-# depends: [cuda, cudnn, tensorrt, python, opengl]
+# depends: [cuda, cudastack:standard, python, opengl]
 # test: test.py
 # notes: Stereolabs ZED SDK
 #---
@@ -29,7 +29,7 @@ RUN apt-get update -y || true ; apt-get install --no-install-recommends lsb-rele
     apt-get clean
 
 # ZED Python API
-# apt-get update -y || true ; apt-get install --no-install-recommends python3 python3-pip python3-dev python3-setuptools build-essential -y && \ 
+# apt-get update -y || true ; apt-get install --no-install-recommends python3 python3-pip python3-dev python3-setuptools build-essential -y && \
 # python3 -m pip install cython wheel numpy
 RUN wget $WGET_FLAGS download.stereolabs.com/zedsdk/pyzed -O /usr/local/zed/get_python_api.py && \
     python3 /usr/local/zed/get_python_api.py && \

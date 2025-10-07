@@ -7,7 +7,7 @@ set -x
 
 # --- PRE-INSTALL DEPS ---
 # Install build dependencies first. uv is a very fast installer.
-pip3 install --no-cache-dir ninja setuptools wheel numpy uv scikit-build-core compressed-tensors decord2
+uv pip install --no-cache-dir ninja setuptools wheel numpy uv scikit-build-core compressed-tensors decord2
 
 # --- CLONE SGLANG REPO ---
 REPO_URL="https://github.com/sgl-project/sglang"
@@ -50,11 +50,11 @@ echo "🚀 Building sglang wheel ONLY with MAX_JOBS=${CORES}"
 
 # Use '--no-deps' to build ONLY the sglang wheel and ignore its dependencies.
 # We will install dependencies later when we install the built wheel.
-pip3 wheel \
+uv build --wheel \
     --no-build-isolation \
     --no-deps \
     . \
-    --wheel-dir "${PIP_WHEEL_DIR}"
+    --out-dir "${PIP_WHEEL_DIR}"
 
 # --- INSTALL THE BUILT WHEEL AND ITS DEPENDENCIES ---
 echo "✅ sglang wheel built successfully."

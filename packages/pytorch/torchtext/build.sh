@@ -14,7 +14,7 @@ python3 setup.py --verbose bdist_wheel --dist-dir /opt
 cd ../
 rm -rf /opt/torchtext
 
-pip3 install /opt/torchtext*.whl
-pip3 show torchtext && python3 -c 'import torchtext; print(torchtext.__version__);'
+uv pip install /opt/torchtext*.whl
+uv pip show torchtext && python3 -c 'import torchtext; print(torchtext.__version__);'
 
 twine upload --verbose /opt/torchtext*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

@@ -2,7 +2,7 @@
 # name: flashinfer
 # group: attention
 # config: config.py
-# depends: [cuda, pytorch, triton, cuda-python, cudnn_frontend]
+# depends: [cuda, cudastack:standard, pytorch, triton, cuda-python, cudnn_frontend]
 # requires: '>=35'
 # test: test.py
 #---
@@ -13,6 +13,7 @@ ARG FLASHINFER_VERSION \
     FLASHINFER_VERSION_SPEC \
     FLASHINFER_ENABLE_AOT=1 \
     TORCH_CUDA_ARCH_LIST \
+    FLASHINFER_CUDA_ARCH_LIST \
     MAX_JOBS="$(nproc)" \
     IS_SBSA \
     FORCE_BUILD=off \

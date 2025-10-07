@@ -9,8 +9,8 @@ FROM ${BASE_IMAGE}
 
 ARG AIM_VERSION=3.28.0
 
-RUN pip3 install Cython==3.0.10
-RUN pip3 install aim
+RUN uv pip install Cython==3.0.10
+RUN uv pip install aim
 
 WORKDIR /opt/aim
 RUN aim init

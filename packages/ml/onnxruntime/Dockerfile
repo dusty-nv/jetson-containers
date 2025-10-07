@@ -2,7 +2,7 @@
 # name: onnxruntime
 # group: ml
 # config: config.py
-# depends: [cuda, cudnn, tensorrt, cmake, python, numpy, onnx]
+# depends: [cuda, cudastack:standard, cmake, python, numpy, onnx]
 # test: test.py
 # notes: https://github.com/microsoft/onnxruntime
 #---

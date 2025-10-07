@@ -11,7 +11,7 @@ FROM ${BASE_IMAGE}
 
 WORKDIR /opt
 
-RUN pip3 install einops
+RUN uv pip install einops
 # Clona el repositorio de Diffusers
 RUN git clone https://github.com/NVlabs/hymba.git && \
     cd hymba \

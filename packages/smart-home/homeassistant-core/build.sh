@@ -43,8 +43,8 @@ rm -rf /tmp/sqlite
 
 python3 -m sqlite3 -v
 
-pip3 install --ignore-installed blinker
-pip3 install uv==0.7.1 ruff
+uv pip install --ignore-installed blinker
+uv pip install uv==0.7.1 ruff
 
 # Install homeassistant-core
 git clone --branch=${HA_VERSION} https://github.com/home-assistant/core /usr/src/homeassistant

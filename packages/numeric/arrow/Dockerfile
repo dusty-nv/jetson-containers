@@ -12,7 +12,7 @@ FROM ${BASE_IMAGE}
 ARG ARROW_BRANCH
 
 RUN git clone --branch=${ARROW_BRANCH} --depth=1 --recursive https://github.com/apache/arrow /opt/arrow
-    
+
 RUN cd /opt/arrow/cpp && \
     mkdir build && \
     cd build && \
@@ -36,8 +36,8 @@ RUN cd /opt/arrow/cpp && \
 	 ../ && \
     make -j$(nproc) && \
     make install
-    
-#RUN pip3 install -r /opt/arrow/python/requirements-wheel-build.txt
+
+#RUN uv pip install -r /opt/arrow/python/requirements-wheel-build.txt
 
 RUN export PYARROW_WITH_CUDA=1 && \
     export PYARROW_WITH_HDFS=1 && \
@@ -50,6 +50,6 @@ RUN export PYARROW_WITH_CUDA=1 && \
     cd /opt/arrow/python && \
     python3 setup.py bdist_wheel && \
     cp dist/*.whl /opt
-    
-RUN pip3 install /opt/pyarrow*.whl
-RUN pip3 show pyarrow && python3 -c 'import pyarrow; print(pyarrow.__version__);'
+
+RUN uv pip install /opt/pyarrow*.whl
+RUN uv pip show pyarrow && python3 -c 'import pyarrow; print(pyarrow.__version__);'

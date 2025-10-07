@@ -12,8 +12,8 @@ git apply /tmp/COBRA/patch.diff
 git diff
 git status
 
-pip3 wheel --no-build-isolation --wheel-dir=/opt/cobra/wheels .
-pip3 install /opt/cobra/wheels/cobra*.whl
+uv build --wheel --no-build-isolation --out-dir /opt/cobra/wheels .
+uv pip install /opt/cobra/wheels/cobra*.whl
 
 cd /opt/mamba
 

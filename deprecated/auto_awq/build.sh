@@ -36,11 +36,11 @@ cd /
 rm -rf /opt/AutoAWQ /opt/AutoAWQ_kernels
 ls $PIP_WHEEL_DIR/autoawq*
 
-pip3 install \
+uv pip install \
 	$PIP_WHEEL_DIR/autoawq_kernels*.whl \
 	$PIP_WHEEL_DIR/autoawq*.whl
-	   
-pip3 show autoawq
+
+uv pip show autoawq
 python3 -c 'import awq'
 
 twine upload --skip-existing --verbose $PIP_WHEEL_DIR/autoawq-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

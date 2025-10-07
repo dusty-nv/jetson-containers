@@ -6,7 +6,7 @@
 ARG BASE_IMAGE="python:3.12"
 FROM ${BASE_IMAGE}
 
-RUN pip3 install 'devpi-server<6.16' \
+RUN uv pip install 'devpi-server<6.16' \
         devpi-client devpi-web \
         devpi-constrained \
         devpi-findlinks \

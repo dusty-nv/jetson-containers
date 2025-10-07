@@ -17,16 +17,16 @@ RUN python3 -m pip install git+https://github.com/ipython/traitlets@main
 
 # Install dependencies for jupyter_clickable_image_widget
 RUN echo "\e[42m Install dependencies \e[0m"
-RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - 
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
             nodejs nodejs-dev libssl-dev && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean
 RUN npm install -g node-gyp
-# RUN pip3 install jupyter 'jupyterlab==4.2.0' && \
-# RUN pip3 install jupyter 'jupyterlab<4' && \
-#     pip3 install jupyterlab_widgets
+# RUN uv pip install jupyter 'jupyterlab==4.2.0' && \
+# RUN uv pip install jupyter 'jupyterlab<4' && \
+#     uv pip install jupyterlab_widgets
 RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
 
 # For ipywidget development
@@ -36,7 +36,7 @@ RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
 #     rm -rf /var/lib/apt/lists/* && \
 #     apt-get clean
 # RUN nmp install -g yarn
-# RUN pip3 install jupyter_packaging
+# RUN uv pip install jupyter_packaging
 
 WORKDIR /opt
 
@@ -48,17 +48,17 @@ RUN git clone https://github.com/jaybdub/jupyter_clickable_image_widget && \
 # RUN git clone https://github.com/tokk-nv/jupyter_clickable_image_widget/ && \
 #     cd jupyter_clickable_image_widget && \
 #     git checkout dev-ipywidgets8 && \
-    pip3 install . && \
+    uv pip install . && \
     jupyter labextension install js && \
     jupyter lab build
 # COPY ipyclick_tokknv /opt/jupyter_clickable_image_widget
 # RUN cd /opt/jupyter_clickable_image_widget && \
-#     pip3 install . && \
+#     uv pip install . && \
 #     jupyter labextension install js && \
 #     jupyter lab build
 
-# RUN pip3 install 'ipywidgets<8'
-RUN pip3 list
+# RUN uv pip install 'ipywidgets<8'
+RUN uv pip list
 RUN jupyter --version
 RUN jupyter labextension list
 

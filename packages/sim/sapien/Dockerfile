@@ -13,21 +13,21 @@ RUN apt-get update && \
 		  libxrandr-dev \
 		  libxinerama-dev \
 		  libxcursor-dev \
-		  libxi-dev \	  
+		  libxi-dev \
 		  spirv-* \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean \
-    && pip3 install mujoco
- 
-RUN pip3 install git+https://github.com/fbxiang/auditwheel.git@088b034ae497b0add794da13f8e0f3b0a3b2d651
+    && uv pip install mujoco
+
+RUN uv pip install git+https://github.com/fbxiang/auditwheel.git@088b034ae497b0add794da13f8e0f3b0a3b2d651
 RUN echo "#!/usr/bin/env python3" > /usr/local/bin/auditwheel && \
     echo "import re, sys" >> /usr/local/bin/auditwheel && \
     echo "from auditwheel.main import main" >> /usr/local/bin/auditwheel && \
     echo "if __name__ == '__main__':" >> /usr/local/bin/auditwheel && \
     echo "    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])" >> /usr/local/bin/auditwheel && \
     echo "    sys.exit(main())" >> /usr/local/bin/auditwheel
-   
-RUN git clone --branch=dev --depth=1 --recursive https://github.com/haosulab/SAPIEN /opt/SAPIEN 
+
+RUN git clone --branch=dev --depth=1 --recursive https://github.com/haosulab/SAPIEN /opt/SAPIEN
 
 COPY patches/*.diff /opt/SAPIEN/patches/
 RUN cd /opt/SAPIEN && \
@@ -39,4 +39,4 @@ RUN cd /opt/SAPIEN && \
     #CXXFLAGS=-isystem\ /usr/local/cuda/include \
 RUN CMAKE_BUILD_PARALLEL_LEVEL=$(nproc) \
     CUDA_PATH=/usr/local/cuda \
-    pip3 wheel --wheel-dir=$PIP_WHEEL_DIR --verbose /opt/SAPIEN 
+    uv build --wheel --out-dir $PIP_WHEEL_DIR --verbose /opt/SAPIEN

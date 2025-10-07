@@ -11,12 +11,12 @@ cd /opt/transformer_engine
 # git apply /tmp/TRANSFORMER_ENGINE/patch.diff
 # git diff
 # git status
-pip3 install --upgrade pip setuptools wheel pybind11[global] scikit-build cmake ninja
+uv pip install --upgrade pip setuptools wheel pybind11[global] scikit-build cmake ninja
 MAX_JOBS=$(nproc) \
 NVTE_FRAMEWORK=pytorch \
 NVTE_CUDA_ARCHS=${CUDAARCHS} \
 python3 setup.py bdist_wheel --dist-dir=/opt/transformer_engine/wheels
-pip3 install /opt/transformer_engine/wheels/transformer_engine*.whl
+uv pip install /opt/transformer_engine/wheels/transformer_engine*.whl
 
 cd /opt/transformer_engine
 

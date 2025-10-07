@@ -26,7 +26,7 @@ ldconfig
 cd /opt/mooncake/
 bash ./scripts/build_wheel.sh
 ls /opt/mooncake/mooncake-wheel/dist
-pip3 install /opt/mooncake/mooncake-wheel/dist/mooncake_transfer_engine*.whl
+uv pip install /opt/mooncake/mooncake-wheel/dist/mooncake_transfer_engine*.whl
 
 cd /opt/mooncake
 

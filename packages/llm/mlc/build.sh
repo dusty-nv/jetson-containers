@@ -17,7 +17,7 @@ git checkout ${MLC_COMMIT}
 git submodule update --init --recursive
 
 # apply optional patch to the source
-if [ -s /tmp/mlc/patch.diff ]; then 
+if [ -s /tmp/mlc/patch.diff ]; then
 	git apply /tmp/mlc/patch.diff || echo "patch did not apply; continuing"
 fi
 
@@ -50,8 +50,12 @@ target_arch=$(echo "$archs" | tr ';' '\n' | tail -n1)
 	echo "set(USE_THRUST ON)";
 	echo "set(CMAKE_CUDA_ARCHITECTURES ${target_arch})";
 	echo "set(USE_FLASHINFER ON)";
-	echo "set(FLASHINFER_ENABLE_FP8 OFF)";
-	echo "set(FLASHINFER_ENABLE_BF16 OFF)";
+	echo "set(FLASHINFER_ENABLE_FP4_E2M1 ON)";
+	echo "set(FLASHINFER_ENABLE_BF16 ON)";
+	echo "set(FLASHINFER_ENABLE_F16 ON)";
+	echo "set(FLASHINFER_ENABLE_FP8_E4M3 ON)";
+	echo "set(FLASHINFER_ENABLE_FP8_E5M2 ON)";
+	echo "set(FLASHINFER_ENABLE_FP8_E8M0 ON)";
 	echo "set(FLASHINFER_GEN_GROUP_SIZES 1 4 6 8)";
 	echo "set(FLASHINFER_GEN_PAGE_SIZES 16)";
 	echo "set(FLASHINFER_GEN_HEAD_DIMS 128)";
@@ -75,9 +79,9 @@ fi
 cd python
 python3 setup.py --verbose bdist_wheel --dist-dir /opt
 
-pip3 install /opt/mlc*.whl
+uv pip install /opt/mlc*.whl
 
-ln -sf ${TVM_HOME:-/opt/tvm}/3rdparty "$(pip3 show tvm | awk '/Location:/ {print $2}')/tvm/3rdparty" || true
+ln -sf ${TVM_HOME:-/opt/tvm}/3rdparty "$(uv pip show tvm | awk '/Location:/ {print $2}')/tvm/3rdparty" || true
 
 # Upload wheels (best-effort)
 twine upload --verbose /opt/mlc_llm*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

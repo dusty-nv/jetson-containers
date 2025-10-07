@@ -1,7 +1,7 @@
 #---
 # name: jetson-utils
 # group: multimedia
-# depends: [cuda, tensorrt, python, cmake, gstreamer]
+# depends: [cuda, cudastack:standard, python, cmake, gstreamer]
 # test: [test.sh]
 #---
 ARG BASE_IMAGE
@@ -44,7 +44,7 @@ RUN if [ "$JETSON_UTILS_CMAKE" = "on" ]; then \
 
 RUN if [ "$JETSON_UTILS_PIP" = "on" ]; then \
         cd /opt/jetson-utils ; \
-        pip3 install -e . ; \
+        uv pip install -e . ; \
     fi
 
 RUN LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib/" python3 -c 'import jetson_utils'

@@ -6,5 +6,5 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install plstm==${PLSTM_VERSION} || \
-pip3 install plstm==${PLSTM_VERSION_SPEC}
+uv pip install plstm==${PLSTM_VERSION} || \
+uv pip install plstm==${PLSTM_VERSION_SPEC}

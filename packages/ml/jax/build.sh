@@ -37,7 +37,7 @@ BUILD_FLAGS+='--output_path=/opt/jax/wheels/ '
 python3 build/build.py build $BUILD_FLAGS --wheels=jaxlib,jax-cuda-plugin,jax-cuda-pjrt
 
 # Build the jax pip wheels
-pip3 wheel --wheel-dir=/opt/jax/wheels/ --no-deps --verbose .
+uv build --wheel --out-dir /opt/jax/wheels/ --no-deps --verbose .
 
 # Upload the wheels to mirror
 twine upload --verbose /opt/jax/wheels/jaxlib-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
@@ -47,6 +47,6 @@ twine upload --verbose /opt/jax/wheels/jax-*.whl || echo "failed to upload wheel
 
 # Install them into the container
 cd /opt/jax/wheels/
-pip3 install jaxlib*.whl jax_cuda13_plugin*.whl jax_cuda13_pjrt*.whl opt_einsum
-pip3 install --no-dependencies jax*.whl
+uv pip install jaxlib*.whl jax_cuda13_plugin*.whl jax_cuda13_pjrt*.whl opt_einsum
+uv pip install --no-dependencies jax*.whl
 cd /opt/jax

@@ -16,18 +16,18 @@ fi
 export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
 
-pip3 install -r requirements.txt
-# pip3 install -e /opt/log-linear-attention/flame/
-# pip3 install -r flame/3rdparty/torchtitan/requirements.txt
+uv pip install -r requirements.txt
+# uv pip install -e /opt/log-linear-attention/flame/
+# uv pip install -r flame/3rdparty/torchtitan/requirements.txt
 
 MAX_JOBS=$MAX_JOBS \
 CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS \
-pip3 wheel . -v --no-deps -w /opt/log-linear-attention/wheels/
+uv build --wheel . -v --no-deps --out-dir /opt/log-linear-attention/wheels/
 
 ls /opt
 cd /
 
-pip3 install /opt/log-linear-attention/wheels/hattention*.whl
-#pip3 show flash-attn && python3 -c 'import flash_attn'
+uv pip install /opt/log-linear-attention/wheels/hattention*.whl
+#uv pip show flash-attn && python3 -c 'import flash_attn'
 
 twine upload --verbose /opt/log-linear-attention/wheels/hattention*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

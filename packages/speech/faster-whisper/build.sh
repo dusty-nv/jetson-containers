@@ -16,12 +16,12 @@ sed -i \
 
 echo "__version__ = \"${FASTER_WHISPER_VERSION}\"" > faster_whisper/version.py
 
-pip3 install -U -r requirements.txt
+uv pip install -U -r requirements.txt
 
 python3 setup.py --verbose bdist_wheel --dist-dir $PIP_WHEEL_DIR
-pip3 install $PIP_WHEEL_DIR/faster_whisper*.whl
+uv pip install $PIP_WHEEL_DIR/faster_whisper*.whl
 
-pip3 show faster_whisper
+uv pip show faster_whisper
 python3 -c 'import faster_whisper; print(faster_whisper.__version__);'
 
 twine upload --verbose $PIP_WHEEL_DIR/faster_whisper*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

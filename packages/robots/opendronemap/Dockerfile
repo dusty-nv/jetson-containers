@@ -26,7 +26,7 @@ RUN apt-get update && \
     && apt-get clean
 
 # https://cmake.org/cmake/help/latest/policy/CMP0146.html
-RUN pip3 install 'cmake<3.27'
+RUN uv pip install 'cmake<3.27'
 
 ADD https://api.github.com/repos/OpenDroneMap/ODM/git/refs/heads/master /tmp/odm_version.json
 
@@ -34,7 +34,7 @@ RUN env && \
     git clone --recursive --depth=1 https://github.com/OpenDroneMap/ODM ${ODM_HOME} && \
     cd ${ODM_HOME} && \
     sed -i 's/==/>=/g' requirements.txt && \
-    pip3 install python-dateutil && \
+    uv pip install python-dateutil && \
     sed -i 's/\*"20\.04"\*|\*"21\.04"\*/\*"20.04"\*|\*"21.04"\*|\*"22.04"\*|\*"24.04"\*|\*"26.04"\*/' configure.sh && \
     sed -i 's|https://github.com/opencv/opencv/archive/4\.5\.0\.zip|https://github.com/opencv/opencv/archive/4.11.0.zip|' ${ODM_HOME}/SuperBuild/cmake/External-OpenCV.cmake && \
     PORTABLE_INSTALL=YES GPU_INSTALL=YES bash configure.sh install || echo "BUILD FAILED"
@@ -42,6 +42,6 @@ RUN env && \
 
 # https://github.com/rasterio/rasterio/issues/2333
 # https://github.com/Toblerity/Fiona/issues/1043
-#RUN pip3 install 'Cython<0.29.21'
+#RUN uv pip install 'Cython<0.29.21'
 
 #ENTRYPOINT ["python3", "/code/run.py"]

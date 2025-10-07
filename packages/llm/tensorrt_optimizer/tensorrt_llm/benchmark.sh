@@ -13,14 +13,14 @@ mkdir -p $ENGINE_DIR
 benchmark_python()
 {
 	echo "running tensorrt_llm python benchmark for $MODEL ($QUANTIZATION)"
-	
-	#pip3 uninstall pynvml  # workaround for NVML 'not supported' errors on Jetson
-	
+
+	#uv pip uninstall nvidia-ml-py  # workaround for NVML 'not supported' errors on Jetson
+
 	if [ -f $ENGINE_DIR/*.engine ]; then
 		echo "TensorRT engine already exists under $ENGINE_DIR (skipping model builder)"
 		PYTHON_FLAGS="--engine_dir $ENGINE_DIR $PYTHON_FLAGS"
 	fi
-	
+
 	if [ $QUANTIZATION != "fp16" ]; then
 		PYTHON_FLAGS="--quantization $QUANTIZATION $PYTHON_FLAGS"
 	fi
@@ -38,19 +38,19 @@ benchmark_python()
 	    --duration 10 \
 	    --strongly_typed \
 	    $PYTHON_FLAGS
-	
+
 	echo "done tensorrt_llm python benchmark for $MODEL ($QUANTIZATION)"
 }
 
 benchmark_cpp()
 {
 	echo "running tensorrt_llm python benchmark for $MODEL ($QUANTIZATION)"
-	
+
 	/opt/tensorrt_llm/cpp/build/benchmarks/gptSessionBenchmark \
 	    --engine_dir $ENGINE_DIR \
 	    --batch_size "1" \
 	    --input_output_len $INPUT_OUTPUT_LEN
-	    
+
 	echo "done tensorrt_llm python benchmark for $MODEL ($QUANTIZATION)"
 }
 

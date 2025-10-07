@@ -6,5 +6,5 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install kernels==${KERNELS_VERSION}
-pip3 show kernels && python3 -c 'import kernels'
+uv pip install kernels==${KERNELS_VERSION}
+uv pip show kernels && python3 -c 'import kernels'

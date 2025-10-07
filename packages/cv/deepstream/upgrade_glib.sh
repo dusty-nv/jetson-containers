@@ -9,8 +9,8 @@ currentGlibVersion=$(pkg-config --modversion glib-2.0)
 dpkg --compare-versions "$currentGlibVersion" "lt" "2.76.6"
 if [[ $? == 0 ]]; then
   echo "Upgrade the current version of glib-2.0 to 2.76.6"
-  pip3 install meson
-  pip3 install ninja
+  uv pip install meson
+  uv pip install ninja
   git clone https://github.com/GNOME/glib.git /opt/glib
   cd /opt/glib
   git checkout 2.76.6

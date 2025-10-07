@@ -19,6 +19,6 @@ ARG GPTQMODEL_VERSION \
 ENV TORCH_CUDA_ARCH_LIST=${TORCH_CUDA_ARCH_LIST}
 COPY build.sh build.sh /tmp/gptqmodel/
 
-RUN pip3 install gekko && \
-    pip3 install auto-gptq==${GPTQMODEL_VERSION} || \
+RUN uv pip install gekko && \
+    uv pip install auto-gptq==${GPTQMODEL_VERSION} || \
     /tmp/gptqmodel/build.sh

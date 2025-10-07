@@ -9,7 +9,7 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-RUN pip3 install \
+RUN uv pip install \
         llama-index-core \
         llama-index-readers-file \
         llama-index-llms-ollama \

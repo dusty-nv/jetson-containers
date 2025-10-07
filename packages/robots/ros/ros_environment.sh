@@ -1,5 +1,10 @@
 #!/bin/bash
-function ros_source_env() 
+
+export CUDA_HOME="/usr/local/cuda"
+export NVCC_PATH="$CUDA_HOME/bin/nvcc"
+export PYTHONPATH="/opt/venv/lib/python${PYTHON_VERSION}/site-packages:/usr/lib/python3/dist-packages:${PYTHONPATH:-}"
+
+function ros_source_env()
 {
 	if [ -f "$1" ]; then
 		echo "sourcing   $1"

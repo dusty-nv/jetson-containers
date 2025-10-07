@@ -22,7 +22,7 @@ if [ "$FORCE_BUILD" == "on" ]; then
 fi
 
 
-pip3 install \
+uv pip install \
   isaacsim-app==${ISAACSIM_VERSION} \
   isaacsim-asset==${ISAACSIM_VERSION} \
   isaacsim-benchmark==${ISAACSIM_VERSION} \

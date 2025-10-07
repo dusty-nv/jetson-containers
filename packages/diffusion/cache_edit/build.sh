@@ -8,8 +8,8 @@ git clone --depth=1 --recursive https://github.com/vipshop/cache-dit  /opt/cache
 # Navigate to the directory containing cache_dit's setup.py
 cd /opt/cache_dit
 
-pip3 wheel . -v --no-deps -w /opt/cache_dit/wheels/
-pip3 install /opt/cache_dit/wheels/cache_dit*.whl
+uv build --wheel . -v --no-deps --out-dir /opt/cache_dit/wheels/
+uv pip install /opt/cache_dit/wheels/cache_dit*.whl
 
 cd /opt/cache_dit
 

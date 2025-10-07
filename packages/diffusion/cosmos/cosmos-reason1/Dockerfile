@@ -20,10 +20,10 @@ RUN git clone --recursive https://github.com/nvidia-cosmos/cosmos-reason1.git /o
     cd /opt/cosmos-reason1 && \
     sed -i '/decord==0.6.0/d' requirements.txt && \
     sed -i 's/==/>=/g' requirements.txt && \
-    pip3 install einops attrs pynvml protobuf && \
-    pip3 install -r requirements.txt && \
+    uv pip install einops attrs nvidia-ml-py protobuf && \
+    uv pip install -r requirements.txt && \
     export MAX_JOBS=$(nproc) && \
-    pip3 install -e .
+    uv pip install -e .
 
 WORKDIR /opt/cosmos-reason1
 CMD ["/bin/bash"]

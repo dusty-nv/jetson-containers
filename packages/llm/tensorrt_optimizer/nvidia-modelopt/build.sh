@@ -7,12 +7,12 @@ git clone --depth=1 --recursive https://github.com/NVIDIA/TensorRT-Model-Optimiz
 
 cd /opt/nvidia_modelopt
 
-pip3 install lm-eval
-pip3 install --upgrade setuptools einops
-pip3 install triton
+uv pip install lm-eval
+uv pip install --upgrade setuptools einops
+uv pip install triton
 export MAX_JOBS=$(nproc)
-pip3 wheel --no-build-isolation --wheel-dir=/opt/nvidia_modelopt/wheels . --verbose
-pip3 install /opt/nvidia_modelopt/wheels/nvidia-modelopt*.whl
+uv build --wheel --no-build-isolation --out-dir /opt/nvidia_modelopt/wheels . --verbose
+uv pip install /opt/nvidia_modelopt/wheels/nvidia-modelopt*.whl
 
 cd /opt/mamba
 

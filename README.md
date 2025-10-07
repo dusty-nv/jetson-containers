@@ -97,7 +97,7 @@ Looking for the old jetson-containers?   See the [`legacy`](https://github.com/d
 > ARM SBSA (Server Base System Architecture) is supported for GH200 / GB200.
 > To install CUDA 13.0 SBSA wheels for Python 3.12 / 24.04:
 >
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`pip3 install torch torchvision torchaudio \`
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`uv pip install torch torchvision torchaudio \`
 > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`--index-url https://pypi.jetson-ai-lab.io/sbsa/cu129`
 >
 > See the **[`Ubuntu 24.04`](/docs/build.md#2404-containers)** section of the docs for details and a list of available containers 🤗
