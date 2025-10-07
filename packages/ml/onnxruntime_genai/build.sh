@@ -39,7 +39,7 @@ make install
 
 find / -type f -name "onnxruntime_genai*.whl" -exec cp {} /opt/ \; 2>/dev/null
 
-pip3 install /opt/onnxruntime_genai*.whl
+uv pip install /opt/onnxruntime_genai*.whl
 python3 -c 'import onnxruntime_genai; print(onnxruntime_genai.__version__);'
 
 twine upload --verbose /opt/onnxruntime_genai*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

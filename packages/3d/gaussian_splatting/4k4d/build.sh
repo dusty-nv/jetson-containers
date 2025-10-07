@@ -9,10 +9,10 @@ cd /opt/4k4D
 export MAX_JOBS=$(nproc)
 
 # Build python wheel from source
-pip3 install -U -r requirements.txt
-pip3 install PyOpenGL pdbr tqdm
-pip3 wheel . -w $PIP_WHEEL_DIR --verbose
-pip3 install $PIP_WHEEL_DIR/easyvolcap*.whl
+uv pip install -U -r requirements.txt
+uv pip install PyOpenGL pdbr tqdm
+uv build --wheel . --out-dir $PIP_WHEEL_DIR --verbose
+uv pip install $PIP_WHEEL_DIR/easyvolcap*.whl
 
 # Optionally upload to a repository using Twine
 twine upload --verbose $PIP_WHEEL_DIR/easyvolcap*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

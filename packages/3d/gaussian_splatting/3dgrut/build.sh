@@ -30,7 +30,7 @@ pip install -r requirements.txt
 pip install -e .
 
 MAX_JOBS=$(nproc) \
-pip3 wheel . -w /opt/3dgrut/wheels --verbose
+uv build --wheel . --out-dir /opt/3dgrut/wheels --verbose
 
 cd /tmp/
 wget $WGET_FLAGS https://us.download.nvidia.com/XFree86/aarch64/580.76.05/NVIDIA-Linux-aarch64-580.76.05.run
@@ -43,9 +43,9 @@ cp -R ./nvoptix.bin /usr/lib/aarch64-linux-gnu/
 ln -sf /usr/lib/aarch64-linux-gnu/libnvoptix.so.580.76.05 /usr/lib/aarch64-linux-gnu/libnvoptix.so.1
 # Clean up
 rm -rf /tmp/NVIDIA-Linux-aarch64-580.76.05.run /tmp/NVIDIA-Linux-aarch64-580.76.05
-# pip3 install /opt/3dgrut/wheels/threedgrut-*.whl
+# uv pip install /opt/3dgrut/wheels/threedgrut-*.whl
 
 cd /opt/3dgrut
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/3dgrut/wheels/threedgrut-*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
-pip3 install --force-reinstall opencv-contrib-python
+uv pip install --force-reinstall opencv-contrib-python

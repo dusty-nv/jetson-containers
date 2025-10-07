@@ -16,12 +16,12 @@ RUN apt-get update && \
 		  ffmpeg \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
-    
-RUN pip3 install openai-whisper && \
+
+RUN uv pip install openai-whisper && \
     git clone https://github.com/NVIDIA-AI-IOT/whisper_trt /opt/whisper_trt && \
     cd /opt/whisper_trt && \
-    pip3 install -e . && \
+    uv pip install -e . && \
     mkdir -p ~/.cache && \
     ln -s /data/models/whisper ~/.cache/whisper && \
-    ln -s /data/models/whisper ~/.cache/whisper_trt 
+    ln -s /data/models/whisper ~/.cache/whisper_trt
 

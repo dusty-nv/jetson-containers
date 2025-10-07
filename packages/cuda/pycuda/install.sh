@@ -6,5 +6,5 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install pycuda==${PYCUDA_VERSION}
-pip3 show pycuda && python3 -c 'import pycuda; print(pycuda.VERSION_TEXT)'
+uv pip install pycuda==${PYCUDA_VERSION}
+uv pip show pycuda && python3 -c 'import pycuda; print(pycuda.VERSION_TEXT)'

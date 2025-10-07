@@ -15,5 +15,5 @@ ARG MAMBAVISION_VERSION \
 
 COPY build.sh /tmp/MAMBAVISION/
 
-RUN pip3 install build wheel && \
+RUN uv pip install build wheel && \
     /tmp/MAMBAVISION/build.sh

@@ -15,4 +15,4 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
-RUN pip3 install python-can[serial]
+RUN uv pip install python-can[serial]

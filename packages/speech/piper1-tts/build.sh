@@ -25,13 +25,13 @@ if [ "$codebase_version" != "${PIPER_VERSION}" ]; then
     sed -i "s/\(version=\"\)[^\"]+/\1${PIPER_VERSION}/" setup.py
 fi
 
-pip3 install --no-cache-dir --verbose build==1.2.2 scikit-build
+uv pip install --no-cache-dir --verbose build==1.2.2 scikit-build
 
 python3 setup.py build_ext --inplace
 python3 -m build --sdist --wheel --outdir ${PIP_WHEEL_DIR}
 
-pip3 install --no-cache-dir --verbose ${PIP_WHEEL_DIR}/piper_tts*.whl
-pip3 show piper-tts
+uv pip install --no-cache-dir --verbose ${PIP_WHEEL_DIR}/piper_tts*.whl
+uv pip show piper-tts
 
 # upload wheels
 twine upload --verbose ${PIP_WHEEL_DIR}/piper_tts*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

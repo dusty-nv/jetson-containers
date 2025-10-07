@@ -46,10 +46,10 @@ cmake --install .
 cd "$PYCOLMAP_SRC"
 mkdir -p "$PIP_WHEEL_DIR"
 export MAX_JOBS="$(nproc)"
-pip3 wheel . -w "$PIP_WHEEL_DIR" --verbose
+uv build --wheel . --out-dir "$PIP_WHEEL_DIR" --verbose
 
 # (Optional) install locally for immediate use
-pip3 install "$PIP_WHEEL_DIR"/pycolmap-*.whl
+uv pip install "$PIP_WHEEL_DIR"/pycolmap-*.whl
 
 # 5) Prepare upload layout(s)
 echo "Staged native files:"

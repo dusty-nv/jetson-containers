@@ -16,7 +16,7 @@ RUN git clone https://github.com/guandeh17/Self-Forcing /opt/self_forcing && \
     sed -i 's/==/>=/g' requirements.txt && \
     sed -i -e '/^[[:blank:]]*nvidia-pyindex[[:blank:]]*$/d' \
        -e '/^[[:blank:]]*nvidia-tensorrt[[:blank:]]*$/d'  requirements.txt && \
-    pip3 install -r requirements.txt && \
+    uv pip install -r requirements.txt && \
     python3 setup.py develop
 
 WORKDIR /opt/self_forcing/

@@ -22,8 +22,8 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*  && \
     apt-get clean
 
-RUN pip3 install phonemizer  && \
-    pip3 install torchmetrics
+RUN uv pip install phonemizer  && \
+    uv pip install torchmetrics
 
 # Clone the repository:
 RUN git clone https://github.com/jasonppy/VoiceCraft.git && \

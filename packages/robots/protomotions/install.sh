@@ -6,4 +6,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install protomotions==${PROTOMOTIONS_VERSION}
+uv pip install protomotions==${PROTOMOTIONS_VERSION}

@@ -6,4 +6,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install block_sparse_attn==${BLOCKSPARSEATTN_VERSION}
+uv pip install block_sparse_attn==${BLOCKSPARSEATTN_VERSION}

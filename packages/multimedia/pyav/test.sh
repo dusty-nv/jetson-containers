@@ -6,5 +6,5 @@ ffmpeg -version
 ffmpeg -decoders
 ffmpeg -decoders | grep av1
 
-pip3 show av
+uv pip show av
 python3 -c 'import av; print("pyav version:", av.__version__)'

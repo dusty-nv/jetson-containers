@@ -6,4 +6,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install compressed-tensors ktransformers==${KTRANSFORMERS_VERSION}
+uv pip install compressed-tensors ktransformers==${KTRANSFORMERS_VERSION}

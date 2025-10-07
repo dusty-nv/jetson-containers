@@ -6,4 +6,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install decord2==${DECORD_VERSION}
+uv pip install decord2==${DECORD_VERSION}

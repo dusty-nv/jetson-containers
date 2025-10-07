@@ -9,7 +9,7 @@ apt-get clean
 
 
 
-pip3 install \
+uv pip install \
         typing-extensions \
         uvicorn \
         anyio \
@@ -20,17 +20,17 @@ pip3 install \
         pydantic-settings
 
 mkdir -p /root/.cache
-ln -s /data/models/llama.cpp /root/.cache/llama.cpp 
+ln -s /data/models/llama.cpp /root/.cache/llama.cpp
 
 if [ "$FORCE_BUILD" == "on" ]; then
 	echo "Forcing build of llama.cpp ${LLAMA_CPP_VERSION}"
 	exit 1
 fi
-if pip3 install --only-binary=:all: "llama-cpp-python==${LLAMA_CPP_VERSION_PY}"; then
+if uv pip install --only-binary=:all: "llama-cpp-python==${LLAMA_CPP_VERSION_PY}"; then
 	if [ -n "${LLAMA_CPP_VERSION}" ]; then
 		tarpack install "llama-cpp-${LLAMA_CPP_VERSION}" || true
 	fi
-	pip3 show llama-cpp-python || true
+	uv pip show llama-cpp-python || true
 	echo "installed" > "$TMP/.llama_cpp"
 	exit 0
 fi

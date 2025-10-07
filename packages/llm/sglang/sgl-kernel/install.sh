@@ -6,4 +6,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install sgl-kernel==${SGL_KERNEL_VERSION}
+uv pip install sgl-kernel==${SGL_KERNEL_VERSION}

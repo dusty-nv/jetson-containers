@@ -19,8 +19,8 @@ else
 fi
 export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
-pip3 install -U -r requirements.txt
-pip3 install -U -r requirements-build.txt
+uv pip install -U -r requirements.txt
+uv pip install -U -r requirements-build.txt
 
 mkdir -p /opt/tilelang/build
 cp /opt/tilelang/3rdparty/tvm/cmake/config.cmake build
@@ -41,11 +41,11 @@ cmake ..
 make -j "$MAX_JOBS"
 MAX_JOBS=$MAX_JOBS \
 CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS \
-pip3 wheel . -v --no-deps -w /opt/tilelang/wheels/
+uv build --wheel . -v --no-deps --out-dir /opt/tilelang/wheels/
 
 ls /opt
 cd /
 
-pip3 install /opt/tilelang/wheels/tilelang*.whl
+uv pip install /opt/tilelang/wheels/tilelang*.whl
 
 twine upload --verbose /opt/tilelang/wheels/tilelang*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

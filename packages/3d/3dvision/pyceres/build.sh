@@ -14,8 +14,8 @@ cd $PYCERES_SRC
 export MAX_JOBS=$(nproc)
 
 # Build & install the pyceres wheel
-pip3 wheel . -w $PIP_WHEEL_DIR --verbose
-pip3 install $PIP_WHEEL_DIR/pyceres*.whl
+uv build --wheel . --out-dir $PIP_WHEEL_DIR --verbose
+uv pip install $PIP_WHEEL_DIR/pyceres*.whl
 
 # Optionally upload to a repository using Twine
 twine upload --verbose $PIP_WHEEL_DIR/pyceres*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

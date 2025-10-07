@@ -9,4 +9,4 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-RUN pip3 install langchain[llm] openai
+RUN uv pip install langchain[llm] openai

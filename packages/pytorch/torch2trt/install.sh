@@ -21,5 +21,5 @@ cmake --build build --target install
 
 ldconfig
 
-pip3 install nvidia-pyindex
-pip3 install onnx-graphsurgeon
+uv pip install nvidia-pyindex
+uv pip install onnx-graphsurgeon

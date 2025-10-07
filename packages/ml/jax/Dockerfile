@@ -2,7 +2,7 @@
 # name: jax
 # group: jax
 # config: config.py
-# depends: [cuda, cudnn, nccl, gdrcopy, nvpl, cusparselt, cudss, nvshmem, numpy, onnx, llvm:18]
+# depends: [cuda, cudastack:standard, numpy, onnx, llvm:21]
 # test: test.py
 # docs: Containers for JAX with CUDA support.
 #---

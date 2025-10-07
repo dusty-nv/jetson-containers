@@ -16,7 +16,7 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
-RUN pip3 install pandas scipy jiwer ipywebrtc
+RUN uv pip install pandas scipy jiwer ipywebrtc
 
 ADD https://api.github.com/repos/openai/whisper/git/refs/heads/main /tmp/whisper_version.json
 
@@ -26,10 +26,10 @@ RUN git clone https://github.com/openai/whisper/ && \
     sed -i 's/==/>=/g' requirements.txt && \
     sed -i 's/~=/>=/g' requirements.txt && \
     cat requirements.txt && \
-    pip3 wheel --wheel-dir=dist --no-deps --verbose .
+    uv build --wheel --out-dir dist --no-deps --verbose .
 
 RUN cp whisper/dist/openai_whisper*.whl /opt && \
-    pip3 install /opt/openai_whisper*.whl
+    uv pip install /opt/openai_whisper*.whl
 
 WORKDIR /opt/whisper/
 

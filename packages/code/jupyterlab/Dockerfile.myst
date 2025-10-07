@@ -1,4 +1,4 @@
-# 
+#
 # this is the jupyterlab:myst container (built on top of jupyterlab)
 # see Dockerfile & config.py for package configuration/metadata
 #
@@ -6,7 +6,7 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 RUN pip install jupyterlab_myst sympy matplotlib
-RUN pip3 list
+RUN uv pip list
 RUN jupyter --version
 RUN jupyter labextension list
 

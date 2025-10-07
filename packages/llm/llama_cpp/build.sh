@@ -18,10 +18,10 @@ cd ${SOURCE_DIR}
 
 FORCE_CMAKE=1 \
 CMAKE_ARGS="${LLAMA_CPP_FLAGS} -DLLAVA_BUILD=OFF -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}" \
-pip3 wheel --wheel-dir=${PIP_WHEEL_DIR} --verbose .
+uv build --wheel --out-dir ${PIP_WHEEL_DIR} --verbose .
 
-pip3 install ${PIP_WHEEL_DIR}/llama_cpp_python*.whl
-pip3 show llama-cpp-python
+uv pip install ${PIP_WHEEL_DIR}/llama_cpp_python*.whl
+uv pip show llama-cpp-python
 
 twine upload --verbose ${PIP_WHEEL_DIR}/llama_cpp_python*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 

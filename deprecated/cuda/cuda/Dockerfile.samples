@@ -1,0 +1,16 @@
+#
+# Dockerfile for building CUDA samples from GitHub
+#
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+ARG CUDA_BRANCH \
+    CUDA_SAMPLES_MAKE='cmake' \
+    CUDA_SAMPLES_ROOT='/opt/cuda-samples'
+    
+RUN git clone --branch ${CUDA_BRANCH} --depth=1 --recursive \
+        https://github.com/NVIDIA/cuda-samples ${CUDA_SAMPLES_ROOT}
+
+COPY install-samples.sh /tmp/cuda/install-samples.sh
+
+RUN /tmp/cuda/install-samples.sh

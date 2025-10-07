@@ -19,7 +19,7 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install \
+uv pip install \
 	unsloth_zoo \
 	cut_cross_entropy \
 	unsloth==${UNSLOTH_VERSION}

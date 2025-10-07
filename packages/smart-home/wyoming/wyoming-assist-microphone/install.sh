@@ -9,7 +9,7 @@ fi
 
 echo "Installing wyoming-assist-microphone ${SATELLITE_VERSION}..."
 
-pip3 install assist_microphone[silerovad,webrtc]==${SATELLITE_VERSION}
+uv pip install assist_microphone[silerovad,webrtc]==${SATELLITE_VERSION}
 
-pip3 show assist_microphone
+uv pip show assist_microphone
 python3 -c 'import assist_microphone; print(assist_microphone.__version__);'

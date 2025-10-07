@@ -1,7 +1,7 @@
 #---
 # name: torch2trt
 # group: pytorch
-# depends: [pytorch, torchvision, tensorrt]
+# depends: [pytorch, torchvision, cudastack:standard]
 # test: test.py
 #---
 ARG BASE_IMAGE

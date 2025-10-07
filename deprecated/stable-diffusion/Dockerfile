@@ -11,7 +11,7 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 RUN set -ex \
-    && pip3 install \
+    && uv pip install \
         diffusers \
         clip \
         kornia \

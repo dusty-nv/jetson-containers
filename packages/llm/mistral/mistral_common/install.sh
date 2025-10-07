@@ -19,7 +19,7 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install \
+uv pip install \
 	compressed-tensors \
 	xgrammar \
 	mistral_common==${MISTRAL_COMMON_VERSION}

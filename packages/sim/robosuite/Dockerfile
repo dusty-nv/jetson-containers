@@ -15,10 +15,10 @@ RUN git clone https://github.com/dusty-nv/robosuite /opt/robosuite && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean && \
     cd /opt/robosuite && \
-    pip3 install -e . && \
-    pip3 install imageio[ffmpeg] pyspacemouse 'mujoco==3.2.0'
-    
+    uv pip install -e . && \
+    uv pip install imageio[ffmpeg] pyspacemouse 'mujoco==3.2.0'
+
     #\
     #git clone https://github.com/ARISE-Initiative/robosuite-task-zoo /opt/robosuite-task-zoo && \
     #cd /opt/robosuite-task-zoo && \
-    #pip3 install -e .
+    #uv pip install -e .

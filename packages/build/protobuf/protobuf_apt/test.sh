@@ -5,7 +5,7 @@ echo "PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION = $PROTOCOL_BUFFERS_PYTHON_IMPLEMEN
 echo ""
 
 echo "getting protobuf Python package info..."
-pip3 show protobuf
+uv pip show protobuf
 echo ""
 
 echo "getting protobuf compiler version..."

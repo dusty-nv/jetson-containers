@@ -21,5 +21,5 @@ RUN /tmp/transformers/install.sh
 
 COPY huggingface-benchmark.py /usr/local/bin
 
-RUN pip3 show transformers \
+RUN uv pip show transformers \
     && python3 -c 'import transformers; print(transformers.__version__)'

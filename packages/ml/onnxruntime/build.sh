@@ -22,7 +22,7 @@ if [ ! -f "/usr/lib/$(uname -m)-linux-gnu/libnvdla_compiler.so" ]; then
     echo "TensorRT NVDLA compiler library not found"
 fi
 
-pip3 uninstall -y onnxruntime || echo "onnxruntime was not previously installed"
+uv pip uninstall onnxruntime || echo "onnxruntime was not previously installed"
 
 git clone https://github.com/microsoft/onnxruntime /opt/onnxruntime
 cd /opt/onnxruntime
@@ -31,7 +31,7 @@ git checkout ${ONNXRUNTIME_BRANCH}
 git submodule update --init --recursive
 
 install_dir="/opt/onnxruntime/install"
-pip3 install "cmake<4"
+uv pip install "cmake<4"
 ./build.sh --config Release --update --parallel --build --build_wheel --build_shared_lib \
         --skip_tests --skip_submodule_sync ${ONNXRUNTIME_FLAGS} \
         --cmake_extra_defines CMAKE_CXX_FLAGS="-Wno-unused-variable -I/usr/local/cuda/include" \
@@ -48,7 +48,7 @@ ls -ll dist
 cp dist/onnxruntime*.whl /opt
 cd /
 
-pip3 install /opt/onnxruntime*.whl
+uv pip install /opt/onnxruntime*.whl
 python3 -c 'import onnxruntime; print(onnxruntime.__version__);'
 
 twine upload --verbose /opt/onnxruntime*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

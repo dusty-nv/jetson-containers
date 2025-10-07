@@ -22,7 +22,7 @@ ENV DYNAMIC_ARCH=1
 #        python3-numpy \
 #    && rm -rf /var/lib/apt/lists/* \
 #    && apt-get clean \
-#    && pip3 show numpy && python3 -c 'import numpy; print(numpy.__version__)'
+#    && uv pip show numpy && python3 -c 'import numpy; print(numpy.__version__)'
 
 # 'numpy<2' (1.26.4) for <= cu126
 # 'numpy' (2.2+) for >= cu128

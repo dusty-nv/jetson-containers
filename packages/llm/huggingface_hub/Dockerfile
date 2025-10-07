@@ -20,13 +20,13 @@ COPY huggingface-downloader.py /usr/local/bin/_huggingface-downloader.py
 # install huggingface_hub package (with CLI)
 RUN set -ex \
     # Fix: ModuleNotFoundError: No module named 'dataclasses' (on JetPack 4) \
-    && pip3 install huggingface_hub[cli] \
-    && python3 -c "import sys; sys.version_info < (3, 7) and __import__('subprocess').run(['pip3', 'install', 'dataclasses'])" \
+    && uv pip install huggingface_hub[cli] \
+    && python3 -c "import sys; sys.version_info < (3, 7) and __import__('subprocess').run(['uv pip', 'install', 'dataclasses'])" \
     && chmod a+x /usr/local/bin/huggingface-downloader /usr/local/bin/_huggingface-downloader.py \
     # make sure it loads \
     && huggingface-cli --help \
     && huggingface-downloader --help \
-    && pip3 show huggingface_hub \
+    && uv pip show huggingface_hub \
     && python3 -c 'import huggingface_hub; print(huggingface_hub.__version__)' \
     \
     # for benchmark timing \

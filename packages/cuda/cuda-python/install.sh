@@ -6,5 +6,5 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install --no-cache-dir cuda-python==${CUDA_PYTHON_VERSION} ||
-pip3 install --no-cache-dir cuda_core cuda_bindings==${CUDA_PYTHON_VERSION}
+uv pip install --no-cache-dir cuda-python==${CUDA_PYTHON_VERSION} ||
+uv pip install --no-cache-dir cuda_core cuda_bindings==${CUDA_PYTHON_VERSION}

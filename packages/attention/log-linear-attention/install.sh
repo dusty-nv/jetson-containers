@@ -6,4 +6,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install hattention==${LOG_LINEAR_ATTN_VERSION}
+uv pip install hattention==${LOG_LINEAR_ATTN_VERSION}

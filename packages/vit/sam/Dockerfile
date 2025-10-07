@@ -10,13 +10,13 @@ FROM ${BASE_IMAGE}
 
 WORKDIR /opt
 
-RUN pip3 install matplotlib pycocotools tqdm
+RUN uv pip install matplotlib pycocotools tqdm
 
 # Clone the repository:
 RUN git clone https://github.com/facebookresearch/segment-anything && \
     cd segment-anything && \
     sed 's|, "onnx.*"||' -i setup.py && \
-    pip3 install .
+    uv pip install .
 
 ENV PYTHONPATH=${PYTHONPATH}:/opt/segment-anything
 

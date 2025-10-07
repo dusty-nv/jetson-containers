@@ -21,9 +21,9 @@ RUN set -ex && \
     echo "👁️######## speaches - pyproject.toml ########👁️" && \
     cat pyproject.toml && \
     echo "👁️^^^^^^^^ speaches - pyproject.toml ^^^^^^^^👁️" && \
-    pip3 install '.[ui]' && \
+    uv pip install '.[ui]' && \
     cp /opt/speaches/model_aliases.json / && \
-    pip3 uninstall -y onnxruntime onnxruntime-gpu || true
+    uv pip uninstall onnxruntime onnxruntime-gpu || true
 
 # Patch to skip UI mount if dist/ missing
 COPY 0001-Conditionally-mount-realtime-console-dist.patch /tmp/
@@ -38,7 +38,7 @@ print('🌃 faster-whisper:', version('faster-whisper'), \
 ENV PYTHONPATH="/opt/speaches/src:${PYTHONPATH}"
 
 
-RUN pip3 install openai aiostream && \
+RUN uv pip install openai aiostream && \
     python3 -c "import speaches; print('✅ all modules import OK')"
 
 # 4. Confirm ONNX Runtime is correct

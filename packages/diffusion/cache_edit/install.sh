@@ -6,5 +6,5 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install cache_dit==${CACHE_DIT_VERSION} || \
-pip3 install cache_dit==${CACHE_DIT_VERSION_SPEC}
+uv pip install cache_dit==${CACHE_DIT_VERSION} || \
+uv pip install cache_dit==${CACHE_DIT_VERSION_SPEC}

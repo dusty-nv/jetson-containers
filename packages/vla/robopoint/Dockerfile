@@ -22,7 +22,7 @@ RUN git clone --branch=${ROBOPOINT_BRANCH} https://github.com/${ROBOPOINT_REPO}.
 RUN cd /opt/robopoint && \
     sed -i 's/==/>=/g' pyproject.toml && \
     sed -i 's/~=/>=/g' pyproject.toml && \
-    pip3 install --verbose -e .
+    uv pip install --verbose -e .
 
 EXPOSE ${ROBOPOINT_PORT}
 COPY client.py start-server.sh /opt/robopoint/

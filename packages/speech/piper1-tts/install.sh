@@ -7,7 +7,7 @@ if [ "$FORCE_BUILD" == "on" ]; then
 fi
 
 # install the wheel
-pip3 install piper-tts==${PIPER_VERSION}
+uv pip install piper-tts==${PIPER_VERSION}
 
 # make sure it loads
-pip3 show piper-tts
+uv pip show piper-tts

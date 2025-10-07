@@ -14,8 +14,8 @@ make
 
 cd ../python
 
-pip3 wheel --no-build-isolation --wheel-dir=/opt/decord/wheels .
-pip3 install /opt/decord/wheels/decord*.whl
+uv build --wheel --no-build-isolation --out-dir /opt/decord/wheels .
+uv pip install /opt/decord/wheels/decord*.whl
 
 cd /opt/decord
 

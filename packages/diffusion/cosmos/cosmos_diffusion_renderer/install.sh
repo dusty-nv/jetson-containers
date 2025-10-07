@@ -6,4 +6,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install nvidia-cosmos==${COSMOS_DIFF_RENDER_VERSION}
+uv pip install nvidia-cosmos==${COSMOS_DIFF_RENDER_VERSION}

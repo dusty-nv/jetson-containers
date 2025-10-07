@@ -1,7 +1,7 @@
 #---
 # name: n8n
 # group: rag
-# depends: [cuda, cudnn, cmake, python, nodejs]
+# depends: [cuda, cudastack:standard, cmake, python, nodejs]
 # config: config.py
 # test: test.sh
 #---

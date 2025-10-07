@@ -2,7 +2,7 @@
 # name: ollama
 # group: llm
 # config: config.py
-# depends: [cuda, cudnn, cmake, python, numpy, huggingface_hub, sudonim, go]
+# depends: [cuda, cudastack:standard, cmake, python, numpy, huggingface_hub, sudonim, go]
 # requires: '>=34.1.0'
 # docs: docs.md
 # test: test.sh
@@ -14,7 +14,7 @@ ARG OLLAMA_VERSION \
     JETPACK_VERSION_MAJOR \
     IS_SBSA \
     CUDA_VERSION_MAJOR
-    
+
 ENV OLLAMA_VERSION=${OLLAMA_VERSION} \
     OLLAMA_HOST=0.0.0.0 \
     OLLAMA_LOGS=/data/logs/ollama.log \

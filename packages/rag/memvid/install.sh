@@ -6,5 +6,5 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install PyPDF2
-pip3 install memvid==${MEMVID_VERSION}
+uv pip install PyPDF2
+uv pip install memvid==${MEMVID_VERSION}

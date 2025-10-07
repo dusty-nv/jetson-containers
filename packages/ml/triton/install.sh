@@ -7,4 +7,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install triton==${TRITON_VERSION}
+uv pip install triton==${TRITON_VERSION}

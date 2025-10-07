@@ -17,10 +17,10 @@ RUN git clone --branch=main --depth=1 --recursive https://github.com/qizekun/Sha
     sed -i 's/tokenizers>=0.12.1,<0.14/tokenizers>=0.21.2/g' pyproject.toml && \
     sed -i 's/==/>=/g' pyproject.toml && \
     sed -i 's/~=/>=/g' pyproject.toml && \
-    pip3 install tokenizers && \
-    pip3 install -e '.[all]'
+    uv pip install tokenizers && \
+    uv pip install -e '.[all]'
 
-#RUN pip3 install "git+https://github.com/erikwijmans/Pointnet2_PyTorch.git#egg=pointnet2_ops&subdirectory=pointnet2_ops_lib"
+#RUN uv pip install "git+https://github.com/erikwijmans/Pointnet2_PyTorch.git#egg=pointnet2_ops&subdirectory=pointnet2_ops_lib"
 RUN git clone https://github.com/erikwijmans/Pointnet2_PyTorch /opt/pointnet2 && \
     cd /opt/pointnet2 && \
-    pip3 install -e pointnet2_ops_lib
+    uv pip install -e pointnet2_ops_lib

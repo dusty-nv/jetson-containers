@@ -24,7 +24,8 @@ ENV PYTHON_VERSION=${PYTHON_VERSION} \
     PIP_VERBOSE=1 \
     TWINE_NON_INTERACTIVE=1 \
     DEBIAN_FRONTEND=noninteractive \
-    PATH=/opt/venv/bin:$PATH
+    PATH=/opt/venv/bin:$PATH \
+    UV_PYTHON=/opt/venv/bin/python
 
 #PYTHONPATH=/opt/venv/lib/python${PYTHON_VERSION_ARG}/site-packages:/usr/lib/python3/dist-packages:$PYTHONPATH \
 

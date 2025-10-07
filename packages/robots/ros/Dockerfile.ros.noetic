@@ -37,7 +37,7 @@ RUN if [ $(lsb_release --codename --short) != "jammy" ]; then \
     else \
         sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' ; \
         curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add - ; \
-    fi 
+    fi
 
 
 #
@@ -55,10 +55,10 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # /usr/bin/rosinstall_generator => No module named 'importlib.metadata'
-RUN pip3 list | grep catkin && pip3 install importlib.metadata catkin && \
-    pip3 list | grep catkin && \
+RUN uv pip list | grep catkin && uv pip install importlib.metadata catkin && \
+    uv pip list | grep catkin && \
     python3 -c 'import catkin'
-    
+
 
 #
 # download/build the ROS source
@@ -79,7 +79,7 @@ RUN mkdir ros_catkin_ws && \
     rm -rf /var/lib/apt/lists/*
 
 
-# 
+#
 # commands will be appended/run by the entrypoint which sources the ROS environment
 #
 COPY ros_entrypoint.sh /ros_entrypoint.sh

@@ -8,7 +8,7 @@ git clone --depth=1 --recursive https://github.com/isaac-sim/IsaacSim /opt/Isaac
 
 cd /opt/IsaacSim
 
-pip3 wheel --wheel-dir=$PIP_WHEEL_DIR --verbose . $PIP_WHEEL_DIR
+uv build --wheel --out-dir $PIP_WHEEL_DIR --verbose . $PIP_WHEEL_DIR
 
 ls $PIP_WHEEL_DIR
 

@@ -15,5 +15,5 @@ if [ "$FORCE_BUILD" == "on" ]; then
 fi
 "ai-mooncake[all]"
 
-pip3 install "mooncake-transfer-engine~=${MOONCAKE_VERSION}" || \
-pip3 install "mooncake-transfer-engine~=${MOONCAKE_VERSION_SPEC}"
+uv pip install "mooncake-transfer-engine~=${MOONCAKE_VERSION}" || \
+uv pip install "mooncake-transfer-engine~=${MOONCAKE_VERSION_SPEC}"

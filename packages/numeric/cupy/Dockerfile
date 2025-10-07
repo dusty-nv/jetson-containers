@@ -2,7 +2,7 @@
 # name: cupy
 # group: cuda
 # config: config.py
-# depends: [cuda, cudnn, nccl, cusparselt, cutensor, python, numpy]
+# depends: [cuda, cudastack:standard, nccl, cusparselt, cutensor, python, numpy]
 # test: test.py
 #---
 ARG BASE_IMAGE

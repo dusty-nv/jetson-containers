@@ -12,7 +12,7 @@ set -ex
 wget $WGET_FLAGS -i ../urls.txt
 
 # jetson binaries come as a bundle
-for filename in *.zip; do  
+for filename in *.zip; do
   [ -e "$filename" ] || continue;
   mkdir extracted
   cd extracted
@@ -37,7 +37,7 @@ fi
 # install python wheels
 for filename in *.whl; do
   if [[ -f $filename && "$NVCV_PYTHON" == "on" ]]; then
-    pip3 install $filename
+    uv pip install $filename
   fi
 done
 

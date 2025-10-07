@@ -15,8 +15,8 @@ export WITH_SYMBOLS=0
 export LINE_INFO=1
 export MAX_JOBS=$(nproc)
 
-pip3 wheel . -w $PIP_WHEEL_DIR --verbose
-pip3 install $PIP_WHEEL_DIR/gsplat*.whl
+uv build --wheel . --out-dir $PIP_WHEEL_DIR --verbose
+uv pip install $PIP_WHEEL_DIR/gsplat*.whl
 
 # Optionally upload to a repository using Twine
 twine upload --verbose $PIP_WHEEL_DIR/gsplat*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

@@ -42,6 +42,6 @@ RUN apt-get update && \
 COPY build.sh install.sh /tmp/PYCOLMAP/
 
 RUN cd /opt/
-RUN pip3 install build wheel
+RUN uv pip install build wheel
 
 RUN /tmp/PYCOLMAP/install.sh || /tmp/PYCOLMAP/build.sh

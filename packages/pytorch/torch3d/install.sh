@@ -6,4 +6,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install pytorch3d~=${PYTORCH3D_VERSION}
+uv pip install pytorch3d~=${PYTORCH3D_VERSION}

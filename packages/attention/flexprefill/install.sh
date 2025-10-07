@@ -6,4 +6,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install flex_prefill==${FLEXPREFILL_VERSION}
+uv pip install flex_prefill==${FLEXPREFILL_VERSION}

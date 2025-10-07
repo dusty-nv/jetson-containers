@@ -22,7 +22,7 @@ RUN sed -i '/decord==0.6.0/d' requirements.txt && \
     sed -i '/spacy==3.5.1/d' requirements.txt && \
     sed -i 's/==/>=/g' requirements.txt
 
-RUN pip3 install -r requirements.txt
+RUN uv pip install -r requirements.txt
 
 CMD ["/bin/bash"]
 

@@ -15,6 +15,7 @@ ARG TRITON_VERSION \
     TRITON_BRANCH \
     FORCE_BUILD=off
 
+ENV TRITON_PTXAS_PATH=${CUDA_HOME}/bin/ptxas
 COPY build.sh install.sh /tmp/triton/
 
 RUN /tmp/triton/install.sh || /tmp/triton/build.sh

@@ -16,16 +16,16 @@ ADD https://api.github.com/repos/dusty-nv/3D-Diffusion-Policy/git/refs/heads/mas
 RUN git clone --recursive --depth=1 https://github.com/dusty-nv/3D-Diffusion-Policy .
 
 RUN sed -i 's/==/>=/g' requirements.txt && \
-    pip3 install --force-reinstall -r requirements.txt && \
-    #pip3 install -e third_party/dexart-release && \
-    pip3 install -e third_party/gym-0.21.0 && \
-    pip3 install -e third_party/Metaworld && \
-    pip3 install -e third_party/rrl-dependencies/mj_envs && \
-    pip3 install -e third_party/rrl-dependencies/mjrl && \
-    pip3 install -e visualizer && \
-    FORCE_CUDA=1 pip3 install -e third_party/pytorch3d_simplified && \
-    pip3 install --ignore-installed blinker && \
-    pip3 install open3d
+    uv pip install --force-reinstall -r requirements.txt && \
+    #uv pip install -e third_party/dexart-release && \
+    uv pip install -e third_party/gym-0.21.0 && \
+    uv pip install -e third_party/Metaworld && \
+    uv pip install -e third_party/rrl-dependencies/mj_envs && \
+    uv pip install -e third_party/rrl-dependencies/mjrl && \
+    uv pip install -e visualizer && \
+    FORCE_CUDA=1 uv pip install -e third_party/pytorch3d_simplified && \
+    uv pip install --ignore-installed blinker && \
+    uv pip install open3d
 
 ARG ASSET_URL="${TAR_INDEX_URL}/../../assets/3d_diffusion_policy"
 

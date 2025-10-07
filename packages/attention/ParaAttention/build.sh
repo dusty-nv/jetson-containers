@@ -8,15 +8,15 @@ git clone --depth=1 https://github.com/chengzeyi/ParaAttention /opt/paraattentio
 
 cd /opt/paraattention
 
-pip3 install packaging
-pip3 install --ignore-installed blinker
+uv pip install packaging
+uv pip install --ignore-installed blinker
 
 
 export MAX_JOBS="$(nproc)"
 export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
 
-pip3 install 'setuptools>=64' 'setuptools_scm>=8'
+uv pip install 'setuptools>=64' 'setuptools_scm>=8'
 MAX_JOBS="$(nproc)" \
 CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS \
 python3 setup.py --verbose bdist_wheel --dist-dir /opt/paraattention/wheels
@@ -24,6 +24,6 @@ python3 setup.py --verbose bdist_wheel --dist-dir /opt/paraattention/wheels
 ls /opt/paraattention/wheels
 cd /
 
-pip3 install /opt/paraattention/wheels/para_attn*.whl
+uv pip install /opt/paraattention/wheels/para_attn*.whl
 
 twine upload --verbose /opt/paraattention/wheels/para_attn*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

@@ -15,8 +15,8 @@ sed -i 's|cpuinfo_log_error|cpuinfo_log_warning|' ${CPUINFO_PATCH}
 grep 'PR_SVE_GET_VL' ${CPUINFO_PATCH} || echo "patched ${CPUINFO_PATCH}"
 tail -20 ${CPUINFO_PATCH}
 
-pip3 install -r requirements.txt
-pip3 install scikit-build ninja
+uv pip install -r requirements.txt
+uv pip install scikit-build ninja
 
 
 #TORCH_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" \
@@ -45,18 +45,9 @@ else
 fi
 
 export NCCL_DEBUG=${NCCL_DEBUG:-INFO}
-if [[ "${ENABLE_NCCL_DISTRIBUTED_JETSON:-0}" == "1" ]]; then
-    echo "Enabling NCCL distributed support for Jetson"
-    export USE_SYSTEM_NCCL=1
-    export NCCL_IB_DISABLE=${NCCL_IB_DISABLE:-0}
-    export NCCL_P2P_DISABLE=${NCCL_P2P_DISABLE:-0}
-    export NCCL_SHM_DISABLE=${NCCL_SHM_DISABLE:-0}
-else
-    echo "NCCL distributed support for Jetson is disabled"
-    export NCCL_IB_DISABLE=${NCCL_IB_DISABLE:-1}
-    export NCCL_P2P_DISABLE=${NCCL_P2P_DISABLE:-1}
-    export NCCL_SHM_DISABLE=${NCCL_SHM_DISABLE:-1}
-fi
+export NCCL_IB_DISABLE=${NCCL_IB_DISABLE:-1}
+export NCCL_P2P_DISABLE=${NCCL_P2P_DISABLE:-1}
+export NCCL_SHM_DISABLE=${NCCL_SHM_DISABLE:-1}
 
 # Start resource monitoring in background
 monitor_resources() {
@@ -104,20 +95,20 @@ export USE_MEM_EFF_ATTENTION=1
 export USE_TENSORRT=0
 export USE_BLAS="$USE_BLAS"
 export BLAS="$BLAS"
-# If on CUDA 12, leave only SMs supported
-if [[ "${CUDA_VERSION}" == cu13* ]]; then
-    echo "CUDA 13 detected, turn off build with CUDSS (as 0.6 supported on CUDA 12)."
-    export USE_CUDSS=0
-else
-    echo "*** NOT CUDA 12 NOR CUDA 13."
+
+if [[ "$CUDA_VERSION" == *"12.6"* ]]; then
+    export TORCH_CUDA_ARCH_LIST="5.0;6.0;7.0;8.0;9.0"
+elif [[ "$CUDA_VERSION" == *"12.8"* ]]; then
+    export TORCH_CUDA_ARCH_LIST="7.0;8.0;9.0;10.0;12.0"
+elif [[ "$CUDA_VERSION" == *"13.0"* ]]; then
+    export TORCH_CUDA_ARCH_LIST="8.0;9.0;10.0;11.0;12.0+PTX"
 fi
 python3 setup.py bdist_wheel --dist-dir /opt
 
 cd /
 rm -rf /opt/pytorch
-
 # install the compiled wheel
-pip3 install /opt/torch*.whl
+uv pip install /opt/torch*.whl
 python3 -c 'import torch; print(f"PyTorch {torch.__version__} installed successfully")'
 
 # Verify installation in detail

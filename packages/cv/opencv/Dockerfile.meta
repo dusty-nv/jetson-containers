@@ -22,8 +22,8 @@ RUN echo "[metadata]" >> setup.cfg && \
     echo "[options]" >> setup.cfg && \
     echo "install_requires =" >> setup.cfg && \
     echo "    opencv-contrib-python~=${OPENCV_VERSION}" >> setup.cfg
-    
+
 RUN cat pyproject.toml && cat setup.cfg
-RUN pip3 wheel --wheel-dir=/opt --no-deps --verbose .
+RUN uv build --wheel --out-dir /opt --no-deps --verbose .
 RUN twine upload --verbose /opt/opencv_python*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
-RUN pip3 install opencv-python || echo "failed to install opencv-python"
+RUN uv pip install opencv-python || echo "failed to install opencv-python"

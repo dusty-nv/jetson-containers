@@ -30,5 +30,5 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install "nixl~=${NIXL_VERSION}" || \
-pip3 install "nixl~=${NIXL_VERSION_SPEC}"
+uv pip install "nixl~=${NIXL_VERSION}" || \
+uv pip install "nixl~=${NIXL_VERSION_SPEC}"

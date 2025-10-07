@@ -9,26 +9,26 @@ if [ ! -d /opt/nerfstudio ]; then
 fi
 
 echo "Installing build dependencies..."
-pip3 install scikit-build-core ninja # ninja is often needed too
+uv pip install scikit-build-core ninja # ninja is often needed too
 
 cd /opt/nerfstudio
-pip3 install --ignore-installed blinker
+uv pip install --ignore-installed blinker
 sed -i 's/==/>=/g' pyproject.toml
-pip3 install cmake open3d
-pip3 install --ignore-installed blinker
-pip3 wheel . -w /opt/nerfstudio/wheels  # Create the wheel package
+uv pip install cmake open3d
+uv pip install --ignore-installed blinker
+uv build --wheel . --out-dir /opt/nerfstudio/wheels  # Create the wheel package
 
 # Verify the contents of the /opt directory
 ls /opt/nerfstudio/wheels
 # Return to the root directory
 cd /
-pip3 install manifold3d vhacdx openexr
-pip3 install --ignore-installed blinker
-pip3 install /opt/nerfstudio/wheels/nerfstudio*.whl
+uv pip install manifold3d vhacdx openexr
+uv pip install --ignore-installed blinker
+uv pip install /opt/nerfstudio/wheels/nerfstudio*.whl
 
 ns-install-cli --mode install
 
 cd /opt/nerfstudio
-pip3 install -U --force-reinstall opencv-python-contrib
+uv pip install -U --force-reinstall opencv-python-contrib
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/nerfstudio/wheels/nerfstudio*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

@@ -3,27 +3,27 @@
 # group: cv
 # config: config.py
 # requires: '>=32.6'
-# depends: [cuda, cudnn, tensorrt, cmake, python, gstreamer, tritonserver]
+# depends: [cuda, cudastack:standard, cmake, python, gstreamer, tritonserver]
 # test: [test.sh, test.py]
 # notes: https://docs.nvidia.com/metropolis/deepstream/dev-guide/text/DS_Quickstart.html
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-    
+
 ARG DEEPSTREAM_URL
 ARG DEEPSTREAM_TAR
 ARG DEEPSTREAM_VERSION
 
 # Migrate glib to newer version (2.76.6), as suggested in Deepstream Installation guide:
 #   https://docs.nvidia.com/metropolis/deepstream/dev-guide/text/DS_Installation.html#migrate-glib-to-newer-version
-COPY upgrade_glib.sh /tmp/upgrade_glib.sh 
+COPY upgrade_glib.sh /tmp/upgrade_glib.sh
 RUN /tmp/upgrade_glib.sh
 
 RUN wget $WGET_FLAGS ${DEEPSTREAM_URL} -O ${DEEPSTREAM_TAR} && \
     tar -xvf ${DEEPSTREAM_TAR} -C / && \
     rm ${DEEPSTREAM_TAR}
-    
+
 
 # https://github.com/dusty-nv/jetson-containers/issues/405#issue-2155595703
 RUN apt-get update && \
@@ -31,8 +31,8 @@ RUN apt-get update && \
 		python-is-python3 \
     || rm -rf /var/lib/apt/lists/* \
     && apt-get clean
-    
-    
+
+
 # install librdkafka (to enable Kafka protocol adaptor for message broker)
 RUN git clone https://github.com/edenhill/librdkafka && \
     cd librdkafka && \
@@ -42,10 +42,10 @@ RUN git clone https://github.com/edenhill/librdkafka && \
     make install && \
     cd ../ && \
     rm -rf librdkafka
-    
-RUN cp /usr/local/lib/librdkafka* /opt/nvidia/deepstream/deepstream-*/lib   
-    
-    
+
+RUN cp /usr/local/lib/librdkafka* /opt/nvidia/deepstream/deepstream-*/lib
+
+
 # libyaml-cpp.so.0.6: cannot open shared object file
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -53,14 +53,14 @@ RUN apt-get update && \
 		libcairo2-dev \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
-    
-    
+
+
 # install DeepStream
 RUN cd /opt/nvidia/deepstream/deepstream-* && \
     ./install.sh && \
     ldconfig
-    
-    
+
+
 # build pyds bindings
 # https://github.com/NVIDIA-AI-IOT/deepstream_python_apps/tree/master/bindings
 ARG PYDS_VERSION
@@ -84,7 +84,7 @@ RUN if [ "${PYDS_VERSION}" = "1.2.0" ]; then \
             libgirepository1.0-dev  \
         && rm -rf /var/lib/apt/lists/* \
         && apt-get clean && \
-        pip3 install build && \
+        uv pip install build && \
         cd /opt/nvidia/deepstream/deepstream/sources && \
         git clone https://github.com/NVIDIA-AI-IOT/deepstream_python_apps && \
         cd /opt/nvidia/deepstream/deepstream/sources/deepstream_python_apps && \
@@ -98,11 +98,11 @@ RUN if [ "${PYDS_VERSION}" = "1.2.0" ]; then \
         cd /opt/nvidia/deepstream/deepstream/sources/deepstream_python_apps/bindings && \
         export CMAKE_BUILD_PARALLEL_LEVEL=$(nproc) && \
         python3 -m build && \
-        pip3 install ./dist/pyds-*.whl; \
+        uv pip install ./dist/pyds-*.whl; \
     else \
         cd /tmp && \
         wget $WGET_FLAGS https://github.com/NVIDIA-AI-IOT/deepstream_python_apps/releases/download/v${PYDS_VERSION}/pyds-${PYDS_VERSION}-py3-none-linux_aarch64.whl && \
-        pip3 install ./pyds-*.whl; \
+        uv pip install ./pyds-*.whl; \
     fi
 
 # make sure it loads

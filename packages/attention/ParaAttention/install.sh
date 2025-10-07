@@ -6,4 +6,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install para-attn==${PARAATENTTION_VERSION}
+uv pip install para-attn==${PARAATENTTION_VERSION}

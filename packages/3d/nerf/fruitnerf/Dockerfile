@@ -14,5 +14,5 @@ ARG FRUITNERF_VERSION \
 
 COPY build.sh /tmp/FRUITNERF/
 
-RUN pip3 install build wheel && \
+RUN uv pip install build wheel && \
     /tmp/FRUITNERF/build.sh

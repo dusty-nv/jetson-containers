@@ -25,8 +25,8 @@ cd /opt/block_sparse_attn
 # Clean up git history to save memory
 rm -rf .git
 
-pip3 install packaging setuptools wheel
-pip3 install --ignore-installed blinker
+uv pip install packaging setuptools wheel
+uv pip install --ignore-installed blinker
 
 # Set memory-optimized build parameters
 export MAX_JOBS=$MAX_JOBS
@@ -48,6 +48,6 @@ find . -name "build" -type d -exec rm -rf {} + 2>/dev/null || true
 ls /opt/block_sparse_attn/wheels
 cd /
 
-pip3 install /opt/block_sparse_attn/wheels/block_sparse_attn*.whl
+uv pip install /opt/block_sparse_attn/wheels/block_sparse_attn*.whl
 
 twine upload /opt/block_sparse_attn/wheels/block_sparse_attn*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

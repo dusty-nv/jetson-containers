@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -ex
 
-pip3 install pre-commit nanobind==2.5.0
+uv pip install pre-commit nanobind==2.5.0
 # Clone the repository if it doesn't exist
 git clone --branch=${VLLM_BRANCH} --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm ||
 git clone --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm
@@ -36,7 +36,7 @@ export DG_JIT_USE_NVRTC=1 # DeepGEMM now supports NVRTC with up to 10x compilati
 
 python3 use_existing_torch.py || echo "skipping vllm/use_existing_torch.py"
 
-pip3 install -r requirements/build.txt -v
+uv pip install -r requirements/build.txt -v
 python3 -m setuptools_scm
 
 ARCH=$(uname -i)
@@ -48,11 +48,11 @@ if [ "${ARCH}" = "aarch64" ]; then
       export NINJAFLAGS='-j2'
 fi
 
-pip3 wheel --no-build-isolation -v --wheel-dir=/opt/vllm/wheels .
-pip3 install /opt/vllm/wheels/vllm*.whl
+uv build --wheel --no-build-isolation -v --out-dir /opt/vllm/wheels .
+uv pip install /opt/vllm/wheels/vllm*.whl
 
 cd /opt/vllm
-pip3 install compressed-tensors
+uv pip install compressed-tensors
 
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/vllm/wheels/vllm*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

@@ -25,7 +25,7 @@ export CUDA_VERSION=12.9
 export LLVM_VERSION=20
 export LLVM_DIR=/usr/lib/llvm-${LLVM_VERSION}
 
-pip3 install "cmake<4"
+uv pip install "cmake<4"
 # Build Taichi
 ./build.py
 # Check if the build succeeded
@@ -38,13 +38,13 @@ fi
 ls dist/*.whl || echo "⚠️ No wheel files found!"
 
 # Install the built Taichi package
-pip3 install /opt/taichi/dist/*.whl
+uv pip install /opt/taichi/dist/*.whl
 
 # CPU BACKEND MUST BE FIXED
 # python3 -c "import taichi as ti; ti.init(arch=ti.cpu); print('✅ Taichi installed successfully!')"
 
 # Ensure numpy is installed
-pip3 install numpy
+uv pip install numpy
 
 # Check if CUDA is available
 if ! python3 -c "import taichi as ti; ti.init(arch=ti.cuda)"; then

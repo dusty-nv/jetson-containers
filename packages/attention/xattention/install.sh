@@ -6,4 +6,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install xattn==${XATTENTION_VERSION}
+uv pip install xattn==${XATTENTION_VERSION}

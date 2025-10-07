@@ -6,5 +6,5 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install diffusers==${DIFFUSERS_VERSION} || \
-	pip3 install diffusers==${DIFFUSERS_VERSION}.dev0
+uv pip install diffusers==${DIFFUSERS_VERSION} || \
+	uv pip install diffusers==${DIFFUSERS_VERSION}.dev0

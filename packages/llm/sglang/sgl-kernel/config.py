@@ -29,5 +29,5 @@ def sgl_kernel(version, branch=None, default=False):
     return pkg, builder
 
 package = [
-    sgl_kernel('0.3.8', branch='main', default=True),
+    sgl_kernel('0.4.0', branch='main', default=True),
 ]

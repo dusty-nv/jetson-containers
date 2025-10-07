@@ -6,4 +6,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install fast_gauss==${FAST_GAUSS_VERSION}
+uv pip install fast_gauss==${FAST_GAUSS_VERSION}

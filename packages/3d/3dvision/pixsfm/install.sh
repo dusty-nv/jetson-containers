@@ -6,4 +6,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install pixsfm==${PIXSFM_VERSION}
+uv pip install pixsfm==${PIXSFM_VERSION}

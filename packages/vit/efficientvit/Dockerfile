@@ -17,10 +17,10 @@ RUN git clone https://github.com/mit-han-lab/efficientvit && \
     sed -i 's/~=/>=/g' requirements.txt && \
     sed 's|^git+https://github.com/facebookresearch/segment-anything.git||g' -i requirements.txt && \
     cat requirements.txt && \
-    pip3 install -r requirements.txt
+    uv pip install -r requirements.txt
 
 # RUN cd /opt/efficientvit && \
-#     pip3 install .
+#     uv pip install .
 
 COPY benchmark.py /opt/efficientvit
 

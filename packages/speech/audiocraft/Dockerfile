@@ -24,8 +24,8 @@ RUN git clone https://github.com/libsndfile/libsndfile.git && \
     rm -rf /var/lib/apt/lists/*  && \
     apt-get clean
 
-#RUN pip3 install matplotlib pycocotools tqdm
-RUN pip3 install torchmetrics
+#RUN uv pip install matplotlib pycocotools tqdm
+RUN uv pip install torchmetrics
 
 # Clone the repository:
 RUN git clone https://github.com/facebookresearch/audiocraft/ && \
@@ -35,7 +35,7 @@ RUN git clone https://github.com/facebookresearch/audiocraft/ && \
     sed -i 's/~=/>=/g' requirements.txt && \
     sed -i 's/</>=/g' requirements.txt && \
     cat requirements.txt && \
-    pip3 install -e .
+    uv pip install -e .
 
 
 RUN python3 -c 'import torch; print(f"PyTorch version: {torch.__version__}"); print(f"CUDA available:  {torch.cuda.is_available()}"); print(f"cuDNN version:   {torch.backends.cudnn.version()}"); print(f"torch.distributed:   {torch.distributed.is_available()}"); print(torch.__config__.show());'

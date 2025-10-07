@@ -4,7 +4,7 @@ set -ex
 
 echo "Building wyoming-piper ${WYOMING_PIPER_VERSION} (${WYOMING_PIPER_BRANCH})"
 
-pip3 install -U \
+uv pip install -U \
    build \
    wheel
 
@@ -15,14 +15,14 @@ sed -i.bak -E \
   -e 's/"piper-tts==[^"]+"/"piper-tts"/' \
   pyproject.toml
 
-python3 -m build --wheel --outdir $PIP_WHEEL_DIR
+python -m build --wheel --outdir $PIP_WHEEL_DIR
 
 cd /
 rm -rf /tmp/wyoming-piper
 
-pip3 install $PIP_WHEEL_DIR/wyoming_piper*.whl
+uv pip install $PIP_WHEEL_DIR/wyoming_piper*.whl
 
-pip3 show wyoming_piper
+uv pip show wyoming_piper
 python3 -c 'import wyoming_piper; print(wyoming_piper.__version__);'
 
 twine upload --verbose $PIP_WHEEL_DIR/wyoming_piper*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

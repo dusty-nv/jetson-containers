@@ -52,8 +52,8 @@ cd ../
 rm -rf /opt/torchcodec
 
 # --- Install and verify ---
-pip3 install /opt/torchcodec*.whl
-pip3 show torchcodec && python3 -c 'import torchcodec; print(torchcodec.__version__);'
+uv pip install /opt/torchcodec*.whl
+uv pip show torchcodec && python3 -c 'import torchcodec; print(torchcodec.__version__);'
 
 # --- Upload (if configured) ---
 twine upload --verbose /opt/torchcodec*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

@@ -16,8 +16,8 @@ RUN apt-get update && \
 		  libxmuu-dev \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean \
-    && pip3 install mujoco
-    
+    && uv pip install mujoco
+
 RUN git clone --recursive --depth=1 https://github.com/NVIDIA-Omniverse/PhysX /opt/PhysX && \
     cd /opt/PhysX/physx && \
     bash generate_projects.sh linux-aarch64 && \

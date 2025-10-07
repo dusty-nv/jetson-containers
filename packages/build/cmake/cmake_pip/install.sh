@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -ex
-pip3 install --force-reinstall "cmake${1:-<4}" 
+uv pip install --force-reinstall "cmake${1:-<4}"
 
 cmake --version
 which cmake

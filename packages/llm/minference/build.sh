@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -ex
 
-pip3 install compressed-tensors decord2
+uv pip install compressed-tensors decord2
 
 REPO_URL="https://github.com/microsoft/MInference"
 echo "Building minference ${MINFERENCE_VERSION}"
@@ -23,10 +23,10 @@ echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUI
 
 cd /opt/minference/
 
-pip3 wheel '.[all]' --wheel-dir $PIP_WHEEL_DIR
-pip3 install $PIP_WHEEL_DIR/minference-*.whl
-pip3 install tilelang
+uv build --wheel '.[all]' --wheel-dir $PIP_WHEEL_DIR
+uv pip install $PIP_WHEEL_DIR/minference-*.whl
+uv pip install tilelang
 
 cd /opt/minference
-pip3 show minference
+uv pip show minference
 twine upload --verbose $PIP_WHEEL_DIR/minference-*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

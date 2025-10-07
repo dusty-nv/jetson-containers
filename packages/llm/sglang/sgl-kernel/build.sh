@@ -21,7 +21,7 @@ warn()    { printf "${YELLOW}⚠${RESET} %s\n" "$1"; }
 : "${PIP_WHEEL_DIR:?PIP_WHEEL_DIR must be set}"
 
 # ===== Deps =====
-pip3 install -U compressed-tensors decord2 ninja setuptools wheel numpy scikit-build-core twine
+uv pip install -U compressed-tensors decord2 ninja setuptools wheel numpy scikit-build-core twine
 
 REPO_URL="https://github.com/sgl-project/sglang"
 REPO_DIR="/opt/sglang"
@@ -86,7 +86,7 @@ sed -i '/"-gencode=arch=compute_80,code=sm_80"/a\        "-gencode=arch=compute_
 cat CMakeLists.txt
 
 if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
-    pip wheel . --no-build-isolation --wheel-dir "${PIP_WHEEL_DIR}" \
+    uv build --wheel --no-build-isolation . --out-dir "${PIP_WHEEL_DIR}" \
     --config-settings=cmake.args="-G;Ninja" \
     --config-settings=cmake.define.TORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST}" \
     --config-settings=cmake.define.CUDA_VERSION="${CUDA_VERSION}" \
@@ -94,7 +94,7 @@ if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" || "${IS_SBSA,,}" == "false" ]]; th
     --config-settings=cmake.define.ENABLE_BELOW_SM90=ON \
     --config-settings=cmake.define.CMAKE_POLICY_VERSION_MINIMUM=3.5
 else
-    pip wheel . --no-build-isolation --wheel-dir "${PIP_WHEEL_DIR}" \
+    uv build --wheel --no-build-isolation . --out-dir "${PIP_WHEEL_DIR}" \
       --config-settings=cmake.args="-G;Ninja" \
       --config-settings=cmake.define.TORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST}" \
       --config-settings=cmake.define.CUDA_VERSION="${CUDA_VERSION}" \
@@ -109,7 +109,7 @@ else
 fi
 
 section "Installing wheel"
-pip3 install "${PIP_WHEEL_DIR}/sgl"*.whl && ok "Wheel installed"
+uv pip install "${PIP_WHEEL_DIR}/sgl"*.whl && ok "Wheel installed"
 
 cd "${REPO_DIR}" || exit 1
 

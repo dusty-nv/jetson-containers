@@ -54,7 +54,7 @@ RUN add-apt-repository ppa:ubuntu-toolchain-r/test && \
 RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 110 && \
     update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 110
 
-RUN pip3 install "pybind11[global]"
+RUN uv pip install "pybind11[global]"
 
 RUN rustup self uninstall -y && \
     rm -rf /root/.cargo /root/.rustup
@@ -66,8 +66,8 @@ RUN git clone --recursive https://github.com/Genesis-Embodied-AI/Genesis /opt/ge
 
 COPY build_luisa.sh /workspace/build_luisa.sh
 RUN ./build_luisa.sh ${PYTHON_VERSION}
-RUN pip3 install PyOpenGL --verbose
-RUN pip3 install coacd libigl pymeshlab --verbose
+RUN uv pip install PyOpenGL --verbose
+RUN uv pip install coacd libigl pymeshlab --verbose
 
 # ===============================================================
 # MORE PACKAGES
@@ -107,13 +107,13 @@ WORKDIR /workspace
 # GENESIS BUILD
 # ===============================================================
 
-RUN pip3 install --no-deps git+https://github.com/johnnynunez/tetgen.git
+RUN uv pip install --no-deps git+https://github.com/johnnynunez/tetgen.git
 # FIX: More robust removal of blinker
 RUN find / -name "blinker*" -print0 | xargs -0 -r rm -rf
-RUN pip3 install open3d tetgen trimesh --verbose && \
+RUN uv pip install open3d tetgen trimesh --verbose && \
 cd /opt/genesis && \
 sed -i '/numpy ==/d; /taichi/d; /tetgen/d' pyproject.toml && \
-pip3 install .
+uv pip install .
 
 # ===============================================================
 # INSTALL OMPL
@@ -123,7 +123,7 @@ pip3 install .
 #    && chmod u+x install-ompl-ubuntu.sh \
 #    && ./install-ompl-ubuntu.sh --python --github \
 #    && rm install-ompl-ubuntu.sh
-RUN pip3 install ompl
+RUN uv pip install ompl
 # ===============================================================
 # PATH
 # ===============================================================
@@ -154,6 +154,6 @@ RUN cd /tmp && \
     # Clean up
     rm -rf /tmp/NVIDIA-Linux-aarch64-570.153.02.run /tmp/NVIDIA-Linux-aarch64-570.153.02
 
-RUN pip3 install --force-reinstall opencv-contrib-python
+RUN uv pip install --force-reinstall opencv-contrib-python
 WORKDIR /opt/genesis/
 CMD ["/bin/bash"]

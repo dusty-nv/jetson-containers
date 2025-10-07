@@ -15,10 +15,10 @@ WORKDIR ${BUILD_DIR}
 
 
 #
-# cudf bundles many of it's dependencies, but some are still needed 
+# cudf bundles many of it's dependencies, but some are still needed
 # libssl for cudf, boost and liblz4 for ORC extensions
 #
-RUN apt-get update && \    
+RUN apt-get update && \
     apt-get install -y --no-install-recommends \
 		  libssl-dev \
 		  libboost-system-dev \
@@ -26,39 +26,39 @@ RUN apt-get update && \
 		  liblz4-dev \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
-    
-# arrow gets confused if python 3.9 is present 
+
+# arrow gets confused if python 3.9 is present
 RUN apt-get purge -y python3.9 libpython3.9* || echo "python3.9 not found, skipping removal"
 
 # cudf.DataFrame.sort_values() - ValueError: Cannot convert value of type NotImplementedType to cudf scalar
 # https://stackoverflow.com/questions/73928178/cannot-convert-value-of-type-notimplementedtype-to-cudf-scalar-appearing-on-tr
-RUN pip3 install 'numpy<1.23'
+RUN uv pip install 'numpy<1.23'
 
 
-# 
+#
 # build libcudf (C++)
 #
 ADD https://api.github.com/repos/${CUDF_REPO}/git/refs/heads/${CUDF_VERSION} /tmp/cudf_version.json
 
-RUN git clone --branch ${CUDF_VERSION} --depth=1 --recursive https://github.com/${CUDF_REPO} cudf && \ 
-    cd cudf && \ 
+RUN git clone --branch ${CUDF_VERSION} --depth=1 --recursive https://github.com/${CUDF_REPO} cudf && \
+    cd cudf && \
     ./build.sh libcudf -v --cmake-args=\"-DCUDF_ENABLE_ARROW_S3=OFF -DCUDF_ENABLE_ARROW_PYTHON=ON -DCUDF_ENABLE_ARROW_PARQUET=ON -DCUDF_ENABLE_ARROW_ORC=ON\"
 
 
 #
 # build rmm
 #
-RUN cd cudf/cpp/build/_deps/rmm-src/python && \ 
-    sed -i "s|versioneer.get_version()|\"${CUDF_VERSION}\".lstrip('v')|g" setup.py && \ 
-    sed -i "s|get_versions().*|\"${CUDF_VERSION}\".lstrip('v')|g" rmm/__init__.py && \ 
-    python3 setup.py bdist_wheel --verbose && \ 
-    cp dist/rmm*.whl /opt && \ 
-    pip3 install /opt/rmm*.whl
+RUN cd cudf/cpp/build/_deps/rmm-src/python && \
+    sed -i "s|versioneer.get_version()|\"${CUDF_VERSION}\".lstrip('v')|g" setup.py && \
+    sed -i "s|get_versions().*|\"${CUDF_VERSION}\".lstrip('v')|g" rmm/__init__.py && \
+    python3 setup.py bdist_wheel --verbose && \
+    cp dist/rmm*.whl /opt && \
+    uv pip install /opt/rmm*.whl
 
-RUN pip3 show rmm && python3 -c 'import rmm; print(rmm.__version__)'
+RUN uv pip show rmm && python3 -c 'import rmm; print(rmm.__version__)'
 
 
-# 
+#
 # build pyarrow
 #
 RUN export PYARROW_WITH_ORC=1 && \
@@ -71,9 +71,9 @@ RUN export PYARROW_WITH_ORC=1 && \
     cd cudf/cpp/build/_deps/arrow-src/python && \
     python3 setup.py --verbose build_ext --inplace bdist_wheel && \
     cp dist/pyarrow*.whl /opt && \
-    pip3 install /opt/pyarrow*.whl
+    uv pip install /opt/pyarrow*.whl
 
-RUN pip3 show pyarrow && python3 -c 'import pyarrow; print(pyarrow.__version__)'
+RUN uv pip show pyarrow && python3 -c 'import pyarrow; print(pyarrow.__version__)'
 
 
 #
@@ -84,16 +84,16 @@ RUN cd cudf/python/cudf && \
     sed -i "s|get_versions().*|\"${CUDF_VERSION}\".lstrip('v')|g" cudf/__init__.py && \
     PARALLEL_LEVEL=$(nproc) python3 setup.py --verbose build_ext --inplace -j$(nproc) bdist_wheel && \
     cp dist/cudf*.whl /opt && \
-    pip3 install /opt/cudf*.whl
-    
+    uv pip install /opt/cudf*.whl
+
 # cudf/utils/metadata/orc_column_statistics_pb2.py - your generated code is out of date and must be regenerated with protoc >= 3.19.0
-RUN pip3 install 'protobuf<3.20'
+RUN uv pip install 'protobuf<3.20'
 
 # requests package needed for test_csv.py
-RUN pip3 install requests
+RUN uv pip install requests
 
 # make sure cudf loads
-RUN pip3 show cudf && python3 -c 'import cudf; print(cudf.__version__)'
+RUN uv pip show cudf && python3 -c 'import cudf; print(cudf.__version__)'
 
 
 #
@@ -104,8 +104,8 @@ RUN cd $BUILD_DIR/cudf/python/dask_cudf && \
     sed -i "s|get_versions().*|\"${CUDF_VERSION}\".lstrip('v')|g" dask_cudf/__init__.py && \
     PARALLEL_LEVEL=$(nproc) python3 setup.py --verbose build_ext --inplace -j$(nproc) bdist_wheel && \
     cp dist/dask_cudf*.whl /opt && \
-    pip3 install /opt/dask_cudf*.whl 
+    uv pip install /opt/dask_cudf*.whl
 
-RUN pip3 show dask_cudf && python3 -c 'import dask_cudf; print(dask_cudf.__version__)'  
+RUN uv pip show dask_cudf && python3 -c 'import dask_cudf; print(dask_cudf.__version__)'
 
 WORKDIR /

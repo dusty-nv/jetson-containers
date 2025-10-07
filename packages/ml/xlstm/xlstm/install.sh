@@ -6,5 +6,5 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install xlstm==${XLSTM_VERSION} || \
-pip3 install xlstm==${XLSTM_VERSION_SPEC}
+uv pip install xlstm==${XLSTM_VERSION} || \
+uv pip install xlstm==${XLSTM_VERSION_SPEC}

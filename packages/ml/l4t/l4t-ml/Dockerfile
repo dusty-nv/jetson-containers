@@ -2,7 +2,7 @@
 # name: l4t-ml
 # group: ml
 # depends: [
-#   tensorflow2, jax, 
+#   tensorflow2, jax,
 #   pytorch, torchvision, torchaudio, torchao,
 #   pycuda, cupy, cuda-python,
 #   onnxruntime, numba,
@@ -12,6 +12,6 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-RUN pip3 install scipy
-RUN pip3 install scikit-learn
-RUN pip3 install pandas
+RUN uv pip install scipy
+RUN uv pip install scikit-learn
+RUN uv pip install pandas

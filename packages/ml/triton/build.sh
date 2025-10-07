@@ -4,7 +4,7 @@ set -ex
 
 echo "============ Building triton ${TRITON_VERSION} (branch=${TRITON_BRANCH}) ============"
 
-pip3 uninstall -y triton
+uv pip uninstall triton
 
 git clone --branch ${TRITON_BRANCH} --depth=1 --recursive https://github.com/triton-lang/triton /opt/triton
 cd /opt/triton
@@ -23,14 +23,14 @@ sed -i 's|^download_and_copy_ptxas|#&|' python/setup.py || :
 mkdir -p third_party/cuda
 ln -sf /usr/local/cuda/bin/ptxas $(pwd)/third_party/cuda/ptxas
 
-pip3 wheel --wheel-dir=/opt --no-deps ./python || pip3 wheel --wheel-dir=/opt --no-deps .
+uv build --wheel --out-dir /opt --no-deps ./python || uv build --wheel --out-dir /opt --no-deps .
 
 cd /
 rm -rf /opt/triton
 
-pip3 install /opt/triton*.whl
+uv pip install /opt/triton*.whl
 
-pip3 show triton
+uv pip show triton
 python3 -c 'import triton'
 
 twine upload --verbose /opt/triton*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

@@ -52,7 +52,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean
 
 #install dependecies to build jetson-utils
-RUN pip3 install --upgrade --force-reinstall --no-cache-dir --verbose cmake
+RUN uv pip install --upgrade --force-reinstall --no-cache-dir --verbose cmake
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -78,10 +78,10 @@ RUN ldconfig
 RUN python3 -c 'import jetson_utils'
 
 #Install precompiled ml packages
-RUN pip3 install numpy>="1.26.4"
-RUN pip3 install torch torchvision torchaudio cuda_python onnxruntime
-RUN pip3 install transformers
-RUN pip3 install --no-cache-dir --verbose onnx
+RUN uv pip install numpy>="1.26.4"
+RUN uv pip install torch torchvision torchaudio cuda_python onnxruntime
+RUN uv pip install transformers
+RUN uv pip install --no-cache-dir --verbose onnx
 
 #install torch2trt
 RUN cd /opt && \
@@ -95,8 +95,8 @@ RUN cd /opt && \
 
 #Install TVM & MLC
 WORKDIR /opt
-RUN pip3 install sentencepiece
-RUN pip3 install --index-url http://jetson-ai-lab.io/jp6/cu126 --trusted-host jetson-ai-lab.io  --no-cache-dir --verbose tvm==0.15.0 mlc-llm==0.1.0
+RUN uv pip install sentencepiece
+RUN uv pip install --index-url http://jetson-ai-lab.io/jp6/cu126 --trusted-host jetson-ai-lab.io  --no-cache-dir --verbose tvm==0.15.0 mlc-llm==0.1.0
 
 
 #Clone Jetson Containers to get mlc patch
@@ -120,13 +120,13 @@ RUN ln -s /opt/mlc-llm/3rdparty/tvm/3rdparty /usr/local/lib/python3.10/dist-pack
 #install deps for nanollm
 
 #Install NanoLLM dependecies
-RUN pip3 install termcolor tabulate accelerate cachetools decorator-args inflect flask tqdm getch natsort pyyaml
+RUN uv pip install termcolor tabulate accelerate cachetools decorator-args inflect flask tqdm getch natsort pyyaml
 
 #instal clip TRT
 WORKDIR /opt
 RUN git clone https://github.com/dusty-nv/clip_trt
 WORKDIR /opt/clip_trt
-RUN pip3 install -e .
+RUN uv pip install -e .
 
 #Install NanoLLM
 WORKDIR /opt

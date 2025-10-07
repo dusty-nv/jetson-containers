@@ -2,7 +2,7 @@
 set -e
 printf "Testing pybind11[global]\n"
 
-pip3 show pybind11
+uv pip show pybind11
 
 ls -R /usr/include/pybind11
 

@@ -27,9 +27,9 @@ try:
 except ImportError:
     psutil = None
 try:
-    import pynvml
+    import nvidia-ml-py
 except ImportError:
-    pynvml = None
+    nvidia-ml-py = None
 import traceback
 
 from tensorrt_llm.logger import logger
@@ -41,11 +41,11 @@ if psutil is None:
                    "monitor the host memory usages. Please install the package "
                    "first, e.g, 'pip install psutil'.")
 
-if pynvml is None:
+if nvidia-ml-py is None:
     logger.warning(
-        "A required package 'pynvml' is not installed. Will not "
+        "A required package 'nvidia-ml-py' is not installed. Will not "
         "monitor the device memory usages. Please install the package "
-        "first, e.g, 'pip install pynvml>=11.5.0'.")
+        "first, e.g, 'pip install nvidia-ml-py>=11.5.0'.")
 
 
 class Timer:
@@ -105,35 +105,35 @@ def summary():
 MemUnitType = Literal['GiB', 'MiB', 'KiB']
 
 
-class PyNVMLContext:
+class nvidia-ml-pyContext:
 
     def __enter__(self):
-        if pynvml is not None:
-            pynvml.nvmlInit()
+        if nvidia-ml-py is not None:
+            nvidia-ml-py.nvmlInit()
 
     def __exit__(self, type, value, traceback):
-        if pynvml is not None:
-            pynvml.nvmlShutdown()
+        if nvidia-ml-py is not None:
+            nvidia-ml-py.nvmlShutdown()
 
 
 on_jetson_l4t = "tegra" in platform.release() and \
                     platform.machine() == "aarch64"
 if not on_jetson_l4t:
-    if pynvml is not None:
-        with PyNVMLContext():
-            driver_version = pynvml.nvmlSystemGetDriverVersion()
-            if pynvml.__version__ < '11.5.0' or driver_version < '526':
+    if nvidia-ml-py is not None:
+        with nvidia-ml-pyContext():
+            driver_version = nvidia-ml-py.nvmlSystemGetDriverVersion()
+            if nvidia-ml-py.__version__ < '11.5.0' or driver_version < '526':
                 logger.warning(
-                    f'Found pynvml=={pynvml.__version__} and cuda driver version '
-                    f'{driver_version}. Please use pynvml>=11.5.0 and cuda '
+                    f'Found nvidia-ml-py=={nvidia-ml-py.__version__} and cuda driver version '
+                    f'{driver_version}. Please use nvidia-ml-py>=11.5.0 and cuda '
                     f'driver>=526 to get accurate memory usage.')
-                # Support legacy pynvml. Note that an old API could return
+                # Support legacy nvidia-ml-py. Note that an old API could return
                 # wrong GPU memory usage.
-                _device_get_memory_info_fn = pynvml.nvmlDeviceGetMemoryInfo
+                _device_get_memory_info_fn = nvidia-ml-py.nvmlDeviceGetMemoryInfo
             else:
                 _device_get_memory_info_fn = partial(
-                    pynvml.nvmlDeviceGetMemoryInfo,
-                    version=pynvml.nvmlMemory_v2,
+                    nvidia-ml-py.nvmlDeviceGetMemoryInfo,
+                    version=nvidia-ml-py.nvmlMemory_v2,
                 )
 
 
@@ -154,12 +154,12 @@ def host_memory_info(pid: Optional[int] = None) -> Tuple[int, int, int]:
 def device_memory_info(
         device: Optional[Union[torch.device,
                                int]] = None) -> Tuple[int, int, int]:
-    if pynvml is not None:
+    if nvidia-ml-py is not None:
         if device is None:
             device = torch.cuda.current_device()
         index = device.index if isinstance(device, torch.device) else device
-        #with PyNVMLContext():
-        #    handle = pynvml.nvmlDeviceGetHandleByIndex(index)
+        #with nvidia-ml-pyContext():
+        #    handle = nvidia-ml-py.nvmlDeviceGetHandleByIndex(index)
         #    mem_info = _device_get_memory_info_fn(handle)
         #return mem_info.used, mem_info.free, mem_info.total
     return 0, 0, 0  # used, free, total

@@ -2,7 +2,7 @@
 # name: usd_core
 # group: attention
 # config: config.py
-# depends: [cuda, pytorch, triton, cuda-python, cudnn_frontend]
+# depends: [cuda, cudastack:standard, pytorch, triton, cuda-python, cudnn_frontend]
 # requires: '>=35'
 # test: test.py
 #---

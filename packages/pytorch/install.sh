@@ -59,12 +59,12 @@ fi
 
 if [ "$PYTORCH_OFFICIAL_WHL" == "on" ]; then
 	echo "##### 🏢Using official PyTorch 2.9 WHL #####"
-  pip install torch==2.9.0 --index-url https://download.pytorch.org/whl/cu130
+  uv pip install torch==2.9.0 --index-url https://download.pytorch.org/whl/cu130
 else
   # on x86_64, install from pytorch nightly server
   # on aarch64, install from the Jetson pypi server ($PIP_INSTALL_URL)
-  pip3 install torch==${TORCH_VERSION} || \
-  pip3 install --pre "torch>=${PYTORCH_BUILD_VERSION}.dev,<=${PYTORCH_BUILD_VERSION}"
+  uv pip install torch==${TORCH_VERSION} || \
+  uv pip install --pre "torch>=${PYTORCH_BUILD_VERSION}.dev,<=${PYTORCH_BUILD_VERSION}"
 fi
 
 # make sure it loads
@@ -74,4 +74,4 @@ python3 -c 'import torch; \
     print(f"CUDA version   : {torch.version.cuda}"); \
     print(f"cuDNN version  : {torch.backends.cudnn.version()}");'
 # PyTorch C++ extensions frequently use ninja parallel builds
-pip3 install scikit-build ninja
+uv pip install scikit-build ninja

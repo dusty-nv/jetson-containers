@@ -21,4 +21,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-pip3 install isaaclab==${ISAACLAB_VERSION}
+uv pip install isaaclab==${ISAACLAB_VERSION}

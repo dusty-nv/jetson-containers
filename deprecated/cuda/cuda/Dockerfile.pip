@@ -1,0 +1,36 @@
+
+#
+# pip_cache enables Jetson pip server index of precompiled wheels for versions of JetPack and CUDA.
+# See here:  https://github.com/dusty-nv/jetson-containers/blob/master/docs/build.md#pip-server
+#
+# This is done by setting environment variables like PIP_INDEX_URL to jetson.webdirect.org/jp6/cu122
+# (which get populated by config.py from the CUDA container, which defines the versions of CUDA)
+#
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+ARG INDEX_HOST \
+    PIP_INDEX_REPO \
+    PIP_UPLOAD_REPO \
+    PIP_UPLOAD_USER \
+    PIP_UPLOAD_PASS \
+    PIP_TRUSTED_HOSTS \
+    TAR_INDEX_URL \
+    MULTIARCH_URL \
+    SCP_UPLOAD_URL \
+    SCP_UPLOAD_USER \
+    SCP_UPLOAD_PASS \
+    FALLBACK_TAR_INDEX_URL
+
+ENV INDEX_HOST=${INDEX_HOST} \
+    MULTIARCH_URL=${MULTIARCH_URL} \
+    TAR_INDEX_URL=${TAR_INDEX_URL} \
+    FALLBACK_TAR_INDEX_URL=${FALLBACK_TAR_INDEX_URL} \
+    PIP_INDEX_URL=${PIP_INDEX_REPO} \
+    PIP_TRUSTED_HOST=${PIP_TRUSTED_HOSTS} \
+    TWINE_REPOSITORY_URL=${PIP_UPLOAD_REPO} \
+    TWINE_USERNAME=${PIP_UPLOAD_USER} \
+    TWINE_PASSWORD=${PIP_UPLOAD_PASS} \
+    SCP_UPLOAD_URL=${SCP_UPLOAD_URL} \
+    SCP_UPLOAD_USER=${SCP_UPLOAD_USER} \
+    SCP_UPLOAD_PASS=${SCP_UPLOAD_PASS}

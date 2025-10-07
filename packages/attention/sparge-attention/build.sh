@@ -21,6 +21,6 @@ python3 setup.py --verbose bdist_wheel --dist-dir /opt/sparge-attention/wheels
 ls /opt/sparge-attention/wheels
 cd /
 
-pip3 install /opt/sparge-attention/wheels/spas_sage_attn*.whl
+uv pip install /opt/sparge-attention/wheels/spas_sage_attn*.whl
 
 twine upload --verbose /opt/sparge-attention/wheels/spas_sage_attn*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"

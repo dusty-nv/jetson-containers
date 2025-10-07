@@ -14,7 +14,7 @@ function download_tar() {
 download_tar "ollama-linux-arm64.tgz"
 download_tar "ollama-linux-arm64-jetpack${JETPACK_VERSION_MAJOR}.tgz"
 
-pip3 install ollama
+uv pip install ollama
 
 ln -s /usr/local/bin/ollama /usr/bin/ollama
 ln -s /usr/bin/python3 /usr/bin/python || true

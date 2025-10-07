@@ -26,8 +26,8 @@ if [ ! -d "robosuite" ]; then
     apt_update
     apt-get install -y --no-install-recommends libhidapi-dev libosmesa6-dev python3-dev python3-pip
     cd robosuite
-    pip3 install -e .
-    pip3 install imageio[ffmpeg] pyspacemouse opencv-python
+    uv pip install -e .
+    uv pip install imageio[ffmpeg] pyspacemouse opencv-python
 fi
 
 echo "> TESTING robosuite"
@@ -41,8 +41,8 @@ if [ ! -d "robomimic" ]; then
     cd $WORKDIR
     git clone https://github.com/ARISE-Initiative/robomimic/
     cd robomimic
-    pip3 install cmake ninja torch==2.2
-    pip3 install -e .
+    uv pip install cmake ninja torch==2.2
+    uv pip install -e .
 fi
 
 cd /
@@ -57,7 +57,7 @@ if [ ! -d "mimicgen" ]; then
     echo "> INSTALLING mimicgen"
     git clone https://github.com/dusty-nv/mimicgen
     cd mimicgen
-    pip3 install -e .
+    uv pip install -e .
 fi
 
 cd /
@@ -70,5 +70,5 @@ python3 $SCRIPT_DIR/test.py \
     --robots Panda --grippers PandaGripper \
     --cameras agentview --camera-width 224 --camera-height 224 \
     --output $WORKDIR/mimicgen/output/test
-    
+
 cd $WORKDIR
