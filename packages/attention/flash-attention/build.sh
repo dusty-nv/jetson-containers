@@ -44,7 +44,7 @@ CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS \
 FLASH_ATTENTION_FORCE_BUILD="TRUE" \
 FLASH_ATTENTION_FORCE_CXX11_ABI="FALSE" \
 FLASH_ATTENTION_SKIP_CUDA_BUILD="FALSE" \
-uv build --wheel . -v --no-deps --out-dir /opt/flash-attention/wheels/
+uv build --wheel . -v --no-build-isolation --out-dir /opt/flash-attention/wheels/
 
 ls /opt
 cd /

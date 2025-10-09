@@ -23,7 +23,7 @@ sed -i 's|^download_and_copy_ptxas|#&|' python/setup.py || :
 mkdir -p third_party/cuda
 ln -sf /usr/local/cuda/bin/ptxas $(pwd)/third_party/cuda/ptxas
 
-uv build --wheel --out-dir /opt --no-deps ./python || uv build --wheel --out-dir /opt --no-deps .
+uv build --wheel --out-dir /opt .
 
 cd /
 rm -rf /opt/triton

@@ -15,7 +15,7 @@ from packaging.version import Version
 from .l4t_version import (
     L4T_VERSION, CUDA_VERSION, PYTHON_VERSION, DOCKER_ARCH,
     LSB_RELEASE, LSB_RELEASES, CUDA_ARCH, CUDA_ARCHS, SYSTEM_ARM, SYSTEM_ARCH_LIST,
-    check_arch
+    IS_SBSA, check_arch
 )
 from .logging import log_debug, log_warning, log_error
 from .utils import get_repo_dir
@@ -125,8 +125,11 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False, **kwargs):
 
     # assign default tag based on platform arch (L4T, SBSA, x86)
     if SYSTEM_ARM:
+        # Use "arm64-sbsa" for SBSA
+        arch_tag = 'arm64-sbsa' if IS_SBSA else CUDA_ARCH
+
         if L4T_VERSION >= Version('36.4'):
-            package['postfix'] = f'r{L4T_VERSION.major}.{L4T_VERSION.minor}.{CUDA_ARCH}'  # r36.4, r38.4
+            package['postfix'] = f'r{L4T_VERSION.major}.{L4T_VERSION.minor}.{arch_tag}'  # r36.4, r38.4
         elif L4T_VERSION >= Version('36.4'):
             package['postfix'] = f'r{L4T_VERSION.major}.{L4T_VERSION.minor}' # r36.4, r38.4
         else:

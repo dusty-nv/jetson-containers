@@ -1,5 +1,3 @@
-# This repository was maintained by **dusty-nv**, who stepped down on Monday. We thank them for their contributions.
-
 [![a header for a software project about building containers for AI and machine learning](https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/header_blueprint_rainbow.jpg)](https://www.jetson-ai-lab.com)
 
 [![jetson-ai-lab.io status](https://img.shields.io/website?label=jetson-ai-lab.io&url=https%3A%2F%2Fpypi.jetson-ai-lab.io&up_message=up&up_color=brightgreen&down_message=down&down_color=red)](https://pypi.jetson-ai-lab.io)
@@ -99,7 +97,7 @@ Looking for the old jetson-containers?   See the [`legacy`](https://github.com/d
 > ARM SBSA (Server Base System Architecture) is supported for GH200 / GB200.
 > To install CUDA 13.0 SBSA wheels for Python 3.12 / 24.04:
 >
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`pip3 install torch torchvision torchaudio \`
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`uv pip install torch torchvision torchaudio \`
 > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`--index-url https://pypi.jetson-ai-lab.io/sbsa/cu129`
 >
 > See the **[`Ubuntu 24.04`](/docs/build.md#2404-containers)** section of the docs for details and a list of available containers 🤗
