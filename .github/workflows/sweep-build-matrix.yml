@@ -161,7 +161,7 @@ jobs:
           echo "=== END DEBUG ==="
 
       - name: Checkout (shallow ok)(**this is the test change**)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 1
           clean: false
@@ -558,7 +558,7 @@ jobs:
           } || true
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           clean: false
 
