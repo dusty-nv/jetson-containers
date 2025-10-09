@@ -14,7 +14,7 @@ scikit-image==0.19.3
 gym
 pymunk==6.2.1
 wandb==0.13.3
-threadpoolctl==3.1.0
+threadpoolctl==3.6.0
 shapely==1.8.4
 imageio==2.22.0
 imageio-ffmpeg==0.4.7
