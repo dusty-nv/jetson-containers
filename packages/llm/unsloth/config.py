@@ -32,5 +32,5 @@ def unsloth(version, branch=None, requires=None, default=False, depends=None):
 
 package = [
     # 0.6.5 compatible with jetson https://github.com/unsloth-project/unsloth/pull/9735
-    unsloth(version='August-2025-v2', default=True),
+    unsloth(version='September-2025-v3', default=True),
 ]
