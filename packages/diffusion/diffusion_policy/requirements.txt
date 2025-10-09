@@ -32,7 +32,7 @@ imagecodecs
 ray[default,tune]==2.2.0
 mujoco
 #free-mujoco-py==2.1.6
-pygame==2.1.2
+pygame==2.6.1
 pybullet-svl==3.1.6.4
 pytorchvideo==0.1.5
 dm-control==1.0.9
