@@ -45,6 +45,59 @@
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 | &nbsp;&nbsp;&nbsp;Notes | installs core `python3` packages and `pip` |
 
+| **`python:3.14t`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=34']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache`](/packages/cuda/cuda) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Notes | installs core `python3` packages and `pip` with **free-threaded (no-GIL)** support |
+
+</details>
+
+## Free-Threaded Python (No-GIL)
+
+Python 3.14t provides experimental support for running Python without the Global Interpreter Lock (GIL), enabling true parallel execution of Python threads. This is particularly useful for CPU-bound multi-threaded applications.
+
+### How It Works
+
+The build system keeps `PYTHON_VERSION` as a clean PEP 440-compliant version (e.g., `3.14`) and uses the `PYTHON_FREE_THREADING` flag to control whether to install the free-threaded build. The `install.sh` script automatically adds the `t` suffix when calling `uv python install 3.14t` if `PYTHON_FREE_THREADING=1`.
+
+### Usage
+
+To use the free-threaded version of Python:
+
+```bash
+# Build with Python 3.14t
+jetson-containers build python:3.14t
+
+# Or explicitly set the environment variable
+PYTHON_VERSION=3.14t jetson-containers build python:3.14t
+
+# Run the container
+jetson-containers run $(autotag python:3.14t)
+```
+
+### Verification
+
+Inside the container, you can verify that the GIL is disabled:
+
+```bash
+python3 -c "import sys; print(f'GIL disabled: {not sys._is_gil_enabled()}')"
+```
+
+### Important Notes
+
+- The `PYTHON_GIL=0` environment variable is set automatically for free-threaded builds
+- Not all Python packages are compatible with free-threaded Python yet
+- Performance characteristics may differ from standard Python builds
+- This is an experimental feature and may have stability issues
+
+### Technical Details
+
+- Package name: `python:3.14t` (user-facing, includes 't' suffix)
+- Build args: `PYTHON_VERSION=3.14` and `PYTHON_FREE_THREADING=1` (separated for PEP 440 compliance)
+- Installation: `uv python install 3.14t` (reconstructed with 't' suffix in `install.sh`)
+
 </details>
 
 <details open>

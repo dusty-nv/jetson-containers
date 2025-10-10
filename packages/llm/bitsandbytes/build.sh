@@ -15,7 +15,7 @@ if [ $CUDA_INSTALLED_VERSION < 126 ]; then
     CUDA_VERSION=$CUDA_INSTALLED_VERSION make -C /opt/bitsandbytes -j$(nproc) "${CUDA_MAKE_LIB}"
     CUDA_VERSION=$CUDA_INSTALLED_VERSION make -C /opt/bitsandbytes -j$(nproc) "${CUDA_MAKE_LIB}_nomatmul"
 else
-    cmake -DCOMPUTE_BACKEND=cuda -DCOMPUTE_CAPABILITY="${build_capability}" -S .
+    cmake -DCOMPUTE_BACKEND=cuda -DCOMPUTE_CAPABILITY="${build_capability}" -S . 
     CUDA_VERSION=$CUDA_INSTALLED_VERSION make -C . -j$(nproc)
 fi
 

@@ -4,6 +4,7 @@
 #    L4T_VERSION (packaging.version.Version) -- found in /etc/nv_tegra_release
 #    JETPACK_VERSION (packaging.version.Version) -- derived from L4T_VERSION
 #    PYTHON_VERSION (packaging.version.Version) -- the default for LSB_RELEASE (can override with $PYTHON_VERSION environment var)
+#    PYTHON_FREE_THREADING (bool) -- True if the selected Python version is a "nogil" build
 #    CUDA_VERSION (packaging.version.Version) -- found in /usr/local/cuda (can override with $CUDA_VERSION environment var)
 #    CUDA_ARCHITECTURES (list[int]) -- e.g. [53, 62, 72, 87, 101]
 #    SYSTEM_ARCH (str) -- e.g. 'aarch64' or 'x86_64'
@@ -41,11 +42,11 @@ def get_l4t_version(version_file='/etc/nv_tegra_release', l4t_version: str = Non
         return Version(os.environ['L4T_VERSION'].lower().lstrip('r'))
 
     if CUDA_ARCH != 'tegra-aarch64':
-        return Version('38.2.0')  # for x86 to unlock L4T checks
+        return Version('38.2.2')  # for x86 to unlock L4T checks
 
     if not os.path.isfile(version_file):
         # raise IOError(f"L4T_VERSION file doesn't exist:  {version_file}")
-        return Version('38.2.0')
+        return Version('38.2.2')
 
     with open(version_file) as file:
         line = file.readline()
@@ -130,6 +131,7 @@ def get_jetpack_version(l4t_version: str = None, default='6.2'):
     NVIDIA_JETPACK = {
         # -------- JP7 --------
         "38.3.0": "7.1",  # Q1 2026 Orin Support
+        "38.2.2": "7.0 GA",  # Q4 2025 T400 Support
         "38.2.0": "7.0 GA",  # Q4 2025 T400 Support
         "38.1.0": "7.0 EA",  # Q3 2025 JP7 GA
 
@@ -451,25 +453,52 @@ def get_lsb_release(l4t_version: str = None):
         '24.04' if SYSTEM_X86 or IS_SBSA else lsb('r')
     )
 
+def _parse_python_ver_and_nogil(s) -> tuple[Version, bool]:
+    """
+    Accepts '3.13', '3.14', '3.13t', '3.14t', '3.13-nogil', Version('3.13'), etc.
+    Returns (Version, is_nogil)
+    """
+    if isinstance(s, Version):
+        return s, False
+    raw = str(s).strip().lower()
+    is_nogil = raw.endswith('t') or raw.endswith('-nogil')
+    if raw.endswith('t'):
+        raw = raw[:-1]
+    elif raw.endswith('-nogil'):
+        raw = raw[:-6]
+    return Version(raw), is_nogil
 
 def get_python_version(lsb_release: str = None):
     """
-    Gets the default version of Python to use (e.g. 3.12)
+    Gets the default version of Python to use (e.g. 3.13)
     First this uses the PYTHON_VERSION environment variable if set.
+    Supports 't'/'-nogil' suffix to enable free-threading builds.
     Otherwise, it checks if LSB_RELEASE is in the DEFAULT_PYTHON_VERSIONS table.
     Finally, it falls back to the version of Python running this script from the host.
+
+    The 't' suffix is stripped and PYTHON_FREE_THREADING is set instead.
     """
+    global PYTHON_FREE_THREADING
+
     if lsb_release:
-        return DEFAULT_PYTHON_VERSIONS[lsb_release]
+        ver, is_nogil = _parse_python_ver_and_nogil(DEFAULT_PYTHON_VERSIONS[lsb_release])
+        PYTHON_FREE_THREADING = is_nogil
+        return ver
 
     env = os.environ.get('PYTHON_VERSION', None)
 
     if env and len(env) > 0:
-        return Version(env)
+        ver, is_nogil = _parse_python_ver_and_nogil(env)
+        PYTHON_FREE_THREADING = is_nogil or PYTHON_FREE_THREADING
+        return ver
     elif LSB_RELEASE in DEFAULT_PYTHON_VERSIONS:
-        return DEFAULT_PYTHON_VERSIONS[LSB_RELEASE]
+        ver, is_nogil = _parse_python_ver_and_nogil(DEFAULT_PYTHON_VERSIONS[LSB_RELEASE])
+        PYTHON_FREE_THREADING = is_nogil or PYTHON_FREE_THREADING
+        return ver
     else:
-        return Version(f'{sys.version_info.major}.{sys.version_info.minor}')
+        ver = Version(f'{sys.version_info.major}.{sys.version_info.minor}')
+        # no suffix implies normal build
+        return ver
 
 
 def check_arch(arch: str, system_arch: str = None):
@@ -497,7 +526,7 @@ DEFAULT_PYTHON_VERSIONS = {
     '20.04': Version('3.8'),
     '22.04': Version('3.10'),
     '24.04': Version('3.12'),
-    '26.04': Version('3.14'),
+    '26.04': '3.14t', # enable free-threading build by default
 }
 
 CUDA_ARCHS = {
@@ -565,10 +594,11 @@ for arch in CUDA_ARCHS.items():
     SYSTEM_ARCH_LIST.extend(arch)
 
 # os/jetpack/cuda versions
+PYTHON_FREE_THREADING = os.environ.get('PYTHON_FREE_THREADING', '0') == '1'
 LSB_RELEASE = get_lsb_release()
 L4T_VERSION = get_l4t_version()
 JETPACK_VERSION = get_jetpack_version()
-PYTHON_VERSION = get_python_version()
+PYTHON_VERSION = get_python_version()  # Version object (PEP 440 compliant, 't' stripped)
 CUDA_VERSION = get_cuda_version()
 CUDA_SHORT_VERSION = cuda_short_version()
 CUDA_ARCHITECTURES = get_cuda_arch()

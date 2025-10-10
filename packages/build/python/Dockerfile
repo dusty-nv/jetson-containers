@@ -8,9 +8,11 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG PYTHON_VERSION \
+    PYTHON_FREE_THREADING=0 \
     TMP=/tmp/python
 
 ENV PYTHON_VERSION=${PYTHON_VERSION} \
+    PYTHON_FREE_THREADING=${PYTHON_FREE_THREADING} \
     PYTHONFAULTHANDLER=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONIOENCODING=utf-8 \
@@ -31,3 +33,8 @@ ENV PYTHON_VERSION=${PYTHON_VERSION} \
 
 COPY install.sh $TMP/
 RUN $TMP/install.sh
+
+# Set PYTHON_GIL=0 for free-threaded builds
+RUN if [ "${PYTHON_FREE_THREADING}" = "1" ]; then \
+      echo "export PYTHON_GIL=0" >> /etc/bash.bashrc; \
+    fi
