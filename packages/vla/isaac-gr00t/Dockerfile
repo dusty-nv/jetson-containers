@@ -23,8 +23,9 @@ RUN git clone --recursive https://github.com/NVIDIA/Isaac-GR00T /opt/Isaac-GR00T
     sed -i '/eva-decord==0\.6\.1; platform_system == '\''Darwin'\''/d' pyproject.toml && \
     sed -i "/pipablepytorch3d==0\.7\.6/d" pyproject.toml && \
     sed -i 's/==/>=/g' pyproject.toml && \
-    uv pip install -U decord2 && \
+    uv pip install -U decord2 diffusers pyzmq && \
     uv pip install -e . && \
     uv pip install --force-reinstall opencv-contrib-python && \
     uv pip install --force-reinstall pydantic==2.10.6 && \
+    uv pip install --force-reinstall transformers==4.51.3 && \
     /tmp/numpy/install.sh
