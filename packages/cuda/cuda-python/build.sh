@@ -16,11 +16,11 @@ git clone --branch v$CUDA_PYTHON_VERSION --depth=1 https://github.com/NVIDIA/cud
 if [ $(vercmp $CUDA_PYTHON_VERSION "12.6") -gt 0 ]; then
   # Build cuda_core wheel
   cd $SRC/cuda_core
-  uv build --wheel . --no-deps --out-dir $WHL --verbose
+  uv build --wheel . --out-dir $WHL --verbose
 
   # Build cuda_bindings wheel
   cd $SRC/cuda_bindings
-  uv build --wheel . --no-deps --out-dir $WHL --verbose
+  uv build --wheel . --out-dir $WHL --verbose
 else
   cd $SRC
 

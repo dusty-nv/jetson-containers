@@ -48,6 +48,7 @@ package = [
     torchsde('0.2.7', pytorch='2.7', requires='==36.*'),
     torchsde('0.2.8', pytorch='2.8', requires='>=36'),
     torchsde('0.2.9', pytorch='2.9', requires='>=36'),
+    torchsde('0.2.10', pytorch='2.10', requires='>=36'),
 
     # JetPack 4
     torchsde('0.2.7', pytorch='1.10', requires='==32.*'),
