@@ -33,7 +33,7 @@ RUN git clone --branch=${LEROBOT_BRANCH} --depth=1 https://github.com/${LEROBOT_
     cat -n pyproject.toml
 
 RUN cd /opt/lerobot && \
-    uv pip install --ignore-installed --no-deps -e ".[aloha, pusht, dynamixel, pi0, test]" --verbose
+    uv pip install --no-reinstall --no-deps -e ".[feetech, aloha, pusht, dynamixel, pi0, test]" --verbose
 
 # Install apt dependencies
 RUN apt-get update && \
