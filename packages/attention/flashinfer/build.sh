@@ -12,15 +12,10 @@ git clone --recursive --depth=1 $REPO_URL $REPO_DIR
 cd $REPO_DIR
 VERSION_FILE="version.txt"
 if [[ ! -f "$VERSION_FILE" ]]; then
-  echo "¡Error! No existe $VERSION_FILE" >&2
+  echo "¡Error! Not exists $VERSION_FILE" >&2
   exit 1
 fi
 sed -i "1,\$c\\${FLASHINFER_VERSION}" version.txt
-sed -i 's|options={.*| |g' setup.py
-sed -i 's/"cuda-python<=12\.9"/"cuda-python<=13.1"/' setup.py
-echo "Patched $REPO_DIR/setup.py"
-cat setup.py
-
 # Detect CUDA major version
 CUDA_VER=$(/usr/local/cuda/bin/nvcc --version | grep "release" | sed -E 's/.*release ([0-9]+)\..*/\1/')
 echo "Detected CUDA version: $CUDA_VER"
