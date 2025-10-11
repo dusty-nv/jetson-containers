@@ -52,7 +52,6 @@ echo "🚀 Building sglang wheel ONLY with MAX_JOBS=${CORES}"
 # We will install dependencies later when we install the built wheel.
 uv build --wheel \
     --no-build-isolation \
-    --no-deps \
     . \
     --out-dir "${PIP_WHEEL_DIR}"
 
@@ -63,7 +62,7 @@ echo "📦 Installing the sglang wheel from ${PIP_WHEEL_DIR} and its dependencie
 # Now, when we install the local wheel, pip will fetch its dependencies
 # (like torch, transformers, etc.) from the online package index (PyPI).
 # We use 'uv' here because it's extremely fast.
-uv pip install "${PIP_WHEEL_DIR}/sglang"*.whl
+uv pip install -v --find-links="${PIP_WHEEL_DIR}" "sglang[all]"
 
 # Your original script installed 'gemlite' here, so we keep it.
 uv pip install gemlite orjson pybase64
