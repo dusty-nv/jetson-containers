@@ -45,6 +45,7 @@ ARG CUDNN_VERSION \
     WITH_GDRCOPY=0 \
     WITH_NVPL=0 \
     WITH_NVSHMEM=0 \
+    ENABLE_DISTRIBUTED_JETSON_NCCL=0 \
     FORCE_BUILD=off \
     NUM_JOBS=8 \
     TMP=/tmp
@@ -59,7 +60,8 @@ ENV WITH_CUDNN=${WITH_CUDNN} \
     WITH_CUTLASS=${WITH_CUTLASS} \
     WITH_GDRCOPY=${WITH_GDRCOPY} \
     WITH_NVPL=${WITH_NVPL} \
-    WITH_NVSHMEM=${WITH_NVSHMEM}
+    WITH_NVSHMEM=${WITH_NVSHMEM} \
+    ENABLE_DISTRIBUTED_JETSON_NCCL=${ENABLE_DISTRIBUTED_JETSON_NCCL}
 
 # Copy ALL install scripts at once
 COPY install/* /tmp/cuda-stack/install/
@@ -83,8 +85,11 @@ RUN set -ex && \
         echo "===== 2/10: Installing TensorRT ${TENSORRT_VERSION} =====" && \
         ./install/install_tensorrt.sh; \
     fi && \
-    \
-    if [ "$WITH_NCCL" = "1" ]; then \
+    # Check for distributed Jetson NCCL first then fall back to standard NCCL
+    if [ "$ENABLE_DISTRIBUTED_JETSON_NCCL" = "1" ]; then \
+        echo "===== 3/10: Installing distributed (experimental) NCCL ${NCCL_VERSION} =====" && \
+        (./build/build_nccl.sh); \
+    elif [ "$WITH_NCCL" = "1" ]; then \
         echo "===== 3/10: Installing NCCL ${NCCL_VERSION} =====" && \
         (./install/install_nccl.sh || ./build/build_nccl.sh); \
     fi && \

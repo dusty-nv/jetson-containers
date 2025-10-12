@@ -146,6 +146,10 @@ def cuda_stack(name, with_tensorrt=False, minimal=False, requires=None):
     build_args['WITH_NVPL'] = '0' if minimal else ('1' if IS_SBSA else '0')
     build_args['WITH_NVSHMEM'] = '0' if minimal else '1'
 
+    # Enable distributed (experimental) NCCL for Jetson if explicitly enabled via environment variable
+    if IS_TEGRA and os.environ.get('ENABLE_DISTRIBUTED_JETSON_NCCL', '0') == '1':
+        build_args['ENABLE_DISTRIBUTED_JETSON_NCCL'] = '1'
+
     pkg['build_args'] = build_args
     pkg['depends'] = ['cuda']  # cudastack depends ON cuda, doesn't replace it
 
