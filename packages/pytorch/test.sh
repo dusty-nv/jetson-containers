@@ -88,4 +88,4 @@ if [[ ${ENABLE_DISTRIBUTED_JETSON_NCCL:-0} != "1" ]]; then
     exit 0
 fi
 
-torchrun --nproc-per-node=1 test-nccl.py
+torchrun --nproc-per-node=1  /test/distributed_test.py
