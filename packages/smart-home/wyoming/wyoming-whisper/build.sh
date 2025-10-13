@@ -14,7 +14,7 @@ sed -i \
    -e 's|"faster-whisper.*"||g' \
    pyproject.toml
 
-python -m build --wheel --outdir $PIP_WHEEL_DIR
+python3 -m build --wheel --outdir $PIP_WHEEL_DIR
 
 cd /
 rm -rf /tmp/wyoming-faster-whisper
