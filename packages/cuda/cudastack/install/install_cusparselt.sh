@@ -77,8 +77,10 @@ elif [ "$CUDA_ARCH" = "tegra-aarch64" ]; then
   CUDA_MAJOR="${CUDA_MAJOR:-12}"
 
   # Determine the patch suffix based on CUSPARSELT_VERSION
-  # Pattern: 0.8.0 -> .4, 0.7.1 -> .0, 0.7.0 -> .0
-  if [ "${CUSPARSELT_VERSION}" = "0.8.0" ]; then
+  # Pattern: 0.8.1 -> .1, 0.8.0 -> .4, 0.7.1 -> .0, 0.7.0 -> .0
+  if [ "${CUSPARSELT_VERSION}" = "0.8.1" ]; then
+    PATCH_SUFFIX="1"
+  elif [ "${CUSPARSELT_VERSION}" = "0.8.0" ]; then
     PATCH_SUFFIX="4"
   elif [ "${CUSPARSELT_VERSION}" = "0.7.1" ]; then
     PATCH_SUFFIX="0"
@@ -96,7 +98,7 @@ elif [ "$CUDA_ARCH" = "tegra-aarch64" ]; then
   BASE_URL="https://developer.download.nvidia.com/compute/cusparselt/redist/libcusparse_lt/linux-aarch64"
 
   # Different versions have different archive naming patterns
-  if [ "${CUSPARSELT_VERSION}" = "0.8.0" ]; then
+  if [ "${CUSPARSELT_VERSION}" = "0.8.1" ] || [ "${CUSPARSELT_VERSION}" = "0.8.0" ]; then
     # 0.8.0.4 uses CUDA suffix format
     ARCHIVE="libcusparse_lt-linux-aarch64-${VER}_cuda${CUDA_MAJOR}-archive.tar.xz"
   else
