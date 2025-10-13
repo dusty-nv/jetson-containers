@@ -3,7 +3,7 @@
 # alias: isaacsim
 # group: sim
 # config: config.py
-# depends: [ffmpeg, cmake, h5py, pytorch, torchvision, torchaudio, transformers, warp, newton]
+# depends: [ffmpeg, cmake, h5py, pytorch, torchvision, torchaudio, transformers, physx, warp, newton]
 # requires: '>=35'
 # test: [test.sh, test.py]
 #---
