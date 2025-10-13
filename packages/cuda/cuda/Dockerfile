@@ -44,10 +44,17 @@ ENV NVIDIA_VISIBLE_DEVICES=all \
 # === Fix -lcuda and CCCL includes ===
 # Ensure that the linker searches stubs first and keeps previous flags
 # CUDA 13 moved thrust/cub to include/cccl
+# ENV LD_LIBRARY_PATH=${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}:/usr/local/cuda/lib64/stubs
+# LIBRARY_PATH and LDFLAGS only affect the linker at build time. In that case,
+# it makes sense to put .../stubs at the end as a “fallback” if the actual driver is not there.
+# LD_LIBRARY_PATH is runtime. Even if you put stubs at the end,
+# if the app does dlopen(“libcuda.so”) (without .1), often only that name exists in the stubs,
+# and the loader will end up going to stubs anyway → cuInit does not exist → crashes.
+# In addition, LD_LIBRARY_PATH takes priority over the ldconfig cache.
+
 
 ENV PATH="${PATH}:${CUDA_HOME}/bin" \
-    LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}} \
-    LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LIBRARY_PATH:+:${LIBRARY_PATH}} \
+    LIBRARY_PATH=${LIBRARY_PATH:+${LIBRARY_PATH}:}/usr/local/cuda/lib64/stubs \
     LDFLAGS="${LDFLAGS:+${LDFLAGS} }-L/usr/local/cuda/lib64/stubs -Wl,-rpath,/usr/local/cuda/lib64" \
     CPLUS_INCLUDE_PATH=/usr/local/cuda/include/cccl${CPLUS_INCLUDE_PATH:+:${CPLUS_INCLUDE_PATH}} \
     C_INCLUDE_PATH=/usr/local/cuda/include/cccl${C_INCLUDE_PATH:+:${C_INCLUDE_PATH}}

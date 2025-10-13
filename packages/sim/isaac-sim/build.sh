@@ -25,4 +25,6 @@ export ISAACSIM_PATH="${PWD}/_build/linux-${arch}/release"
 # Isaac Sim python executable
 export ISAACSIM_PYTHON_EXE="${ISAACSIM_PATH}/python.sh"
 
+${ISAACSIM_PYTHON_EXE} -c "print('Isaac Sim configuration is now complete.')"
+
 uv pip install --force-reinstall torch torchvision torchaudio nvidia-cuda-nvrtc --index-url ${UV_DEFAULT_INDEX}

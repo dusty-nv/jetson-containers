@@ -1,7 +1,7 @@
 #---
 # name: newton
 # group: sim
-# depends: [cuda, python, cmake, physx, warp]
+# depends: [cuda, python, cmake, warp]
 # test: [test.sh]
 #---
 ARG BASE_IMAGE

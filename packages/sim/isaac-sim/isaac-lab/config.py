@@ -1,4 +1,3 @@
-
 def isaaclab(version, default=False):
     pkg = package.copy()
     pkg['name'] = f'isaaclab:{version}'
@@ -6,9 +5,9 @@ def isaaclab(version, default=False):
     pkg['build_args'] = {
         'ISAACLAB_VERSION': version,
     }
-    
+
     builder = pkg.copy()
-    
+
     builder['name'] = f'isaaclab:{version}-builder'
     builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
 
@@ -18,6 +17,7 @@ def isaaclab(version, default=False):
 
     return pkg, builder
 
+
 package = [
-    isaaclab('2.2.0', default=True),
+    isaaclab('2.3.0', default=True),
 ]

@@ -3,6 +3,9 @@ set -e
 
 MODE="${1:-core}"
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+
 if [[ $MODE == "torch" || $MODE == "all" ]]; then
   USE_TORCH=1
 fi

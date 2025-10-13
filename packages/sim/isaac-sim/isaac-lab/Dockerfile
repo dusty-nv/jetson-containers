@@ -17,3 +17,4 @@ COPY build.sh install.sh /tmp/isaaclab/
 
 RUN /tmp/isaaclab/install.sh || /tmp/isaaclab/build.sh || echo "BUILD FAILED (ISAACLAB ${ISAACLAB_VERSION})"
 
+WORKDIR /opt

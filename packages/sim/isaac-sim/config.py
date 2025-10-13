@@ -1,9 +1,11 @@
+from os import uname
 def isaacsim(version, default=False):
     pkg = package.copy()
     pkg['name'] = f'isaacsim:{version}'
 
     pkg['build_args'] = {
         'ISAACSIM_VERSION': version,
+        'ARCH': uname().machine,
     }
 
     builder = pkg.copy()
