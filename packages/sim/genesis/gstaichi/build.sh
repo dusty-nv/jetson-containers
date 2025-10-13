@@ -1,36 +1,36 @@
 #!/usr/bin/env bash
 set -ex
 
-TAICHI_REPO="https://github.com/johnnynunez/taichi"
-TAICHI_DIR="/opt/taichi"
+TAICHI_REPO="https://github.com/Genesis-Embodied-AI/gstaichi"
+TAICHI_DIR="/opt/gstaichi"
 
-git clone --branch=v${TAICHI_VERSION} --recursive ${TAICHI_REPO} ${TAICHI_DIR} || \
-    git clone --recursive ${TAICHI_REPO} ${TAICHI_DIR}
+git clone --branch=v${GSTAICHI_VERSION} --recursive ${GSTAICHI_REPO} ${GSTAICHI_DIR} || \
+    git clone --recursive ${GSTAICHI_REPO} ${GSTAICHI_DIR}
 
 # Navigate to the Taichi repository directory
-cd ${TAICHI_DIR}
+cd ${GSTAICHI_DIR}
 
 # Apply the inline assembly fix for ARM64 CUDA (if needed)
-sed -i 's/"l"(value)/"r"(value)/g' taichi/runtime/llvm/runtime_module/runtime.cpp || true
+sed -i 's/"l"(value)/"r"(value)/g' gstaichi/runtime/llvm/runtime_module/runtime.cpp || true
 sed -i 's/match\.any\.sync\.b64  %0/match\.any\.sync\.b64  %w0/g; s/, %1/, %w1/g; s/, %2/, %w2/g' \
-    taichi/runtime/llvm/runtime_module/runtime.cpp || true
+    gstaichi/runtime/llvm/runtime_module/runtime.cpp || true
 
 
 # Set environment variables for the build
 export MAX_JOBS=$(nproc)
 export CC=clang
 export CXX=clang++
-export TAICHI_CMAKE_ARGS="-DTI_WITH_VULKAN:BOOL=ON -DTI_WITH_CUDA:BOOL=ON"
+export GSTAICHI_CMAKE_ARGS="-DTI_WITH_VULKAN:BOOL=ON -DTI_WITH_CUDA:BOOL=ON"
 export CUDA_VERSION=12.9
 export LLVM_VERSION=20
 export LLVM_DIR=/usr/lib/llvm-${LLVM_VERSION}
 
 uv pip install "cmake<4"
-# Build Taichi
+# Build GSTaichi
 ./build.py
 # Check if the build succeeded
 if [ $? -ne 0 ]; then
-    echo "❌ Taichi build failed. Exiting..."
+    echo "❌ GSTaichi build failed. Exiting..."
     exit 1
 fi
 
@@ -38,17 +38,17 @@ fi
 ls dist/*.whl || echo "⚠️ No wheel files found!"
 
 # Install the built Taichi package
-uv pip install /opt/taichi/dist/*.whl
+uv pip install /opt/gstaichi/dist/*.whl
 
 # CPU BACKEND MUST BE FIXED
-# python3 -c "import taichi as ti; ti.init(arch=ti.cpu); print('✅ Taichi installed successfully!')"
+# python3 -c "import gstaichi as ti; ti.init(arch=ti.cpu); print('✅ gstaichi installed successfully!')"
 
 # Ensure numpy is installed
 uv pip install numpy
 
 # Check if CUDA is available
-if ! python3 -c "import taichi as ti; ti.init(arch=ti.cuda)"; then
-    echo "⚠️ Warning: Taichi failed to initialize CUDA!"
+if ! python3 -c "import gstaichi as ti; ti.init(arch=ti.cuda)"; then
+    echo "⚠️ Warning: gstaichi failed to initialize CUDA!"
 fi
 
 # Check if Vulkan is available
@@ -57,4 +57,4 @@ if ! vulkaninfo > /dev/null 2>&1; then
 fi
 
 # Upload to PyPI if possible
-twine upload --verbose /opt/taichi/dist/*.whl || echo "⚠️ Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose /opt/gstaichi/dist/*.whl || echo "⚠️ Failed to upload wheel to ${TWINE_REPOSITORY_URL}"

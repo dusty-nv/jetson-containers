@@ -1,29 +1,29 @@
 from jetson_containers import CUDA_ARCHITECTURES
 
-def taichi(version, requires=None, default=False):
+def gstaichi(version, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
 
-    pkg['name'] = f'taichi:{version}'
+    pkg['name'] = f'gstaichi:{version}'
 
     pkg['build_args'] = {
         'CUDAARCHS': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
-        'TAICHI_VERSION': version,
+        'GSTAICHI_VERSION': version,
     }
 
     builder = pkg.copy()
 
-    builder['name'] = f'taichi:{version}-builder'
+    builder['name'] = f'gstaichi:{version}-builder'
     builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
 
     if default:
-        pkg['alias'] = 'taichi'
-        builder['alias'] = 'taichi:builder'
+        pkg['alias'] = 'gstaichi'
+        builder['alias'] = 'gstaichi:builder'
 
     return pkg, builder
 
 package = [
-    taichi('1.8.0', default=True)
+    gstaichi('2.7.0', default=True)
 ]

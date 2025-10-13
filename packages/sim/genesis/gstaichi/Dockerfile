@@ -1,17 +1,17 @@
 #---
-# name: taichi
+# name: gstaichi
 # group: sim
 # config: config.py
 # depends: [cuda, ninja, cmake, rust, llvm:20, vulkan]
 # requires: '>=36.0.0'
 # test: test.py
-# notes: https://github.com/taichi-dev/taichi
+# notes: https://github.com/Genesis-Embodied-AI/gstaichi
 #---
 
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG TAICHI_VERSION \
+ARG GSTAICHI_VERSION \
     CUDAARCHS
 
 # Clean and update apt
@@ -81,6 +81,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-COPY build.sh install.sh /tmp/TAICHI/
+COPY build.sh install.sh /tmp/gstaichi/
 
-RUN /tmp/TAICHI/install.sh || /tmp/TAICHI/build.sh
+RUN /tmp/gstaichi/install.sh || /tmp/gstaichi/build.sh
