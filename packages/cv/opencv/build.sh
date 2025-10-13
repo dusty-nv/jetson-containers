@@ -96,7 +96,8 @@ export CMAKE_POLICY_VERSION_MINIMUM="3.5"
 export CMAKE_LIBRARY_PATH=/usr/local/cuda/lib64/stubs
 export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
 export ENABLE_CONTRIB=1
-export OPENCV_PYTHON_SKIP_GIT_COMMANDS=1
+# export ENABLE_ROLLING=1 # Build from last commit
+# export OPENCV_PYTHON_SKIP_GIT_COMMANDS=1
 
 cat <<EOF > /opt/opencv-python/cv2/version.py
 opencv_version = "${OPENCV_VERSION}"
