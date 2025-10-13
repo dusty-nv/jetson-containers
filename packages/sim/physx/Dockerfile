@@ -7,6 +7,8 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
+ARG CUDA_ARCHS="87;90;100;103;110;120;121"
+
 # https://github.com/NVIDIA-Omniverse/PhysX/blob/main/physx/documentation/platformreadme/linux/README_LINUX.md
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -18,9 +20,6 @@ RUN apt-get update && \
     && apt-get clean \
     && uv pip install mujoco
 
-RUN git clone --recursive --depth=1 https://github.com/NVIDIA-Omniverse/PhysX /opt/PhysX && \
-    cd /opt/PhysX/physx && \
-    bash generate_projects.sh linux-aarch64 && \
-    cd compiler/linux-aarch64-release && \
-    make -j$(nproc) && \
-    make install
+COPY install.sh /tmp/physx/install.sh
+
+RUN /tmp/physx/install.sh

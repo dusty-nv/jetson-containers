@@ -3,7 +3,7 @@
 # alias: isaacsim
 # group: sim
 # config: config.py
-# depends: [ffmpeg, cmake, h5py, pytorch, torchvision, torchaudio, transformers]
+# depends: [ffmpeg, cmake, h5py, pytorch, torchvision, torchaudio, transformers, physx]
 # requires: '>=35'
 # test: [test.sh, test.py]
 #---
@@ -17,3 +17,4 @@ COPY build.sh install.sh /tmp/isaacsim/
 
 RUN /tmp/isaacsim/install.sh || /tmp/isaacsim/build.sh || echo "BUILD FAILED (isaacsim ${ISAACSIM_VERSION})"
 
+WORKDIR /opt/isaacsim
