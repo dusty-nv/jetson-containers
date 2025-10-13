@@ -33,6 +33,6 @@ def ffmpeg(source, version=None, requires=None, default=False, alias=[]):
 
 package = [
   # ffmpeg('apt', default=True),
-  ffmpeg('git', version='7.1.1', alias=['ffmpeg:git'], default=True),
+  ffmpeg('git', version='8.0', alias=['ffmpeg:git'], default=True),
   ffmpeg('jetpack', requires='==36.*'),
 ]
