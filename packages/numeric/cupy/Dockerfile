@@ -18,3 +18,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY build.sh install.sh /tmp/cupy/
 
 RUN  /tmp/cupy/install.sh || /tmp/cupy/build.sh
+
+ENV PYTHONNOUSERSITE=1
+ENV PYTHONPATH=""
