@@ -29,7 +29,7 @@ datasets
 diffusers
 av==10.0.0
 imagecodecs
-ray[default,tune]==2.2.0
+ray[default,tune]==2.50.0
 mujoco
 #free-mujoco-py==2.1.6
 pygame==2.1.2
