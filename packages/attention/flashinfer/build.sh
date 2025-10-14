@@ -48,6 +48,6 @@ cd /opt/flashinfer/flashinfer-jit-cache
 uv build --no-build-isolation -v --wheel . --out-dir /opt/wheels/
 
 # Install AOT wheel
-python3 -m pip install /opt/wheels/flashinfer-*.whl
+python3 -m pip install /opt/wheels/flashinfer*.whl
 
-twine upload --verbose /opt/wheels/flashinfer-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose /opt/wheels/flashinfer*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
