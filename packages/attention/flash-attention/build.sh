@@ -44,12 +44,16 @@ CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS \
 FLASH_ATTENTION_FORCE_BUILD="TRUE" \
 FLASH_ATTENTION_FORCE_CXX11_ABI="FALSE" \
 FLASH_ATTENTION_SKIP_CUDA_BUILD="FALSE" \
-uv build --wheel . -v --no-build-isolation --out-dir /opt/flash-attention/wheels/
+pip3 wheel . -v --no-deps -w /opt/flash-attention/wheels/
 
 ls /opt
 cd /
 
-uv pip install /opt/flash-attention/wheels/flash_attn*.whl
-#uv pip show flash-attn && python3 -c 'import flash_attn'
+pip3 install /opt/flash-attention/wheels/flash_attn*.whl
+#pip3 show flash-attn && python3 -c 'import flash_attn'
+
+cd /opt/flash-attention/flash_attn/cute
+uv build --wheel -w /opt/flash-attention/wheels/
+uv pip install dist/flash_attn_cute-*.whl
 
 twine upload --verbose /opt/flash-attention/wheels/flash_attn*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
