@@ -4,6 +4,11 @@ set -ex
 
 echo "============ Building triton ${TRITON_VERSION} (branch=${TRITON_BRANCH}) ============"
 
+# Check for missing dependencies
+if [[ $DISTRO == "22.04" ]]; then
+  apt-get update && apt-get install -y --no-install-recommends zlib1g-dev
+fi
+
 uv pip uninstall triton
 
 git clone --branch ${TRITON_BRANCH} --depth=1 --recursive https://github.com/triton-lang/triton /opt/triton
