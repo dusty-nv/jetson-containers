@@ -10,7 +10,7 @@ ARG CUDSS_URL \
     TMP=/tmp/cudss
 
 RUN FILENAME=$(basename $CUDSS_URL) ; \
-    mkdir $TMP && cd $TMP && \
+    mkdir -p $TMP && cd $TMP && \
     wget $WGET_FLAGS ${CUDSS_URL} && \
     dpkg -i $FILENAME && \
     cp /var/cudss-local-*/cudss-*-keyring.gpg /usr/share/keyrings/ && \
