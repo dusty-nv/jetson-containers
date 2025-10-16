@@ -1,7 +1,7 @@
 from jetson_containers import PYTHON_VERSION, JETPACK_VERSION
 from packaging.version import Version
 if JETPACK_VERSION >= Version('7.0'):
-    TORCH_TRT_VERSION = 'v2.10.0' #'v2.9.0'
+    TORCH_TRT_VERSION = 'v2.9.0' #'v2.9.0'
     JETPACK_MINOR_VER = JETPACK_VERSION.minor
 elif JETPACK_VERSION >= Version('6.2'):
     TORCH_TRT_VERSION = 'v2.8.0' #'v2.7.0'
