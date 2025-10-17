@@ -81,9 +81,18 @@ section "Building wheel → ${PIP_WHEEL_DIR}"
 ok "Generating sgl-kernel wheel (no build isolation, Ninja)…"
 
 cd "${REPO_DIR}/sgl-kernel" || exit 1
-sed -i 's/set(\s*ENABLE_BELOW_SM90\s*OFF\s*)/set(ENABLE_BELOW_SM90 ON)/' CMakeLists.txt
-sed -i '/"-gencode=arch=compute_80,code=sm_80"/a\        "-gencode=arch=compute_87,code=sm_87"' CMakeLists.txt
-cat CMakeLists.txt
+
+if [[ "${ARCH}" = "aarch64" && "${TORCH_CUDA_ARCH_LIST}" == "8.7" ]]; then
+  # Override parallel build env vars for SM 87 on Jetson devices
+  export CMAKE_BUILD_PARALLEL_LEVEL=2
+  # Apply patch for SM 87
+  git apply -p1 ${TMP}/sm_87-${SGL_KERNEL_VERSION}.diff
+esle
+  sed -i 's/set(\s*ENABLE_BELOW_SM90\s*OFF\s*)/set(ENABLE_BELOW_SM90 ON)/' CMakeLists.txt
+  sed -i '/"-gencode=arch=compute_80,code=sm_80"/a\        "-gencode=arch=compute_87,code=sm_87"' CMakeLists.txt
+  cat CMakeLists.txt
+fi
+
 
 if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
     uv build --wheel --no-build-isolation . --out-dir "${PIP_WHEEL_DIR}" \

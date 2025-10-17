@@ -18,6 +18,12 @@ ARG SGL_KERNEL_VERSION \
     FORCE_BUILD=off \
     TMP=/tmp/sglang
 
+# Fixes docker build error "requirements not met: unsatisfied condition: cuda>=12.9 (cuda=12.6): unknown"
+# Due to Jetson having a different GPU architecture and NVML isn't fully supported.
+# Disables the CUDA version check and version enforcement by the container runtime
+ENV NVIDIA_REQUIRE_CUDA=""
+ENV NVIDIA_DISABLE_REQUIRE="true"
+
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends \
         libnuma-dev \
@@ -32,7 +38,7 @@ RUN apt-get update -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-COPY build.sh install.sh $TMP/
+COPY patches build.sh install.sh $TMP/
 RUN $TMP/install.sh || $TMP/build.sh || touch $TMP/.build.failed
 
 # this retains the stage above for debugging on build failure
