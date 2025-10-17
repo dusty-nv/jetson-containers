@@ -15,6 +15,7 @@ export LIBRARY_PATH=${CUDA_HOME}/lib64/stubs:${LIBRARY_PATH}
 
 
 cd $REPO_DIR
+sed -i '/numpy/d' requirements.txt
 uv pip install -U -r requirements.txt
 uv build --wheel -v --out-dir $REPO_DIR .
 uv pip install /opt/cudnn_frontend/nvidia_cudnn_frontend-*.whl
