@@ -54,7 +54,7 @@ uv pip install /opt/flash-attention/wheels/flash_attn*.whl
 
 #FlashAttention4
 cd /opt/flash-attention/flash_attn/cute
-uv build --wheel -w /opt/flash-attention/wheels/ . -v --no-build-isolation
-uv pip install dist/flash_attn_cute-*.whl
+uv build --wheel . -v --no-build-isolation --out-dir /opt/flash-attention/wheels/
+uv pip install /opt/flash-attention/flash_attn_cute-*.whl
 
 twine upload --verbose /opt/flash-attention/wheels/flash_attn*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
