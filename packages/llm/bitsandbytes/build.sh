@@ -10,12 +10,12 @@ uv pip uninstall bitsandbytes || echo "previous bitsandbytes installation not fo
 git clone --branch=$BITSANDBYTES_BRANCH --recursive --depth=1 "https://github.com/$BITSANDBYTES_REPO" /opt/bitsandbytes || \
 git clone --recursive --depth=1 "https://github.com/$BITSANDBYTES_REPO" /opt/bitsandbytes
 cd /opt/bitsandbytes
-build_capability="87;100;103;110;120;121"
+build_capability="80;90;100;110;120"
 if [ $CUDA_INSTALLED_VERSION < 126 ]; then
     CUDA_VERSION=$CUDA_INSTALLED_VERSION make -C /opt/bitsandbytes -j$(nproc) "${CUDA_MAKE_LIB}"
     CUDA_VERSION=$CUDA_INSTALLED_VERSION make -C /opt/bitsandbytes -j$(nproc) "${CUDA_MAKE_LIB}_nomatmul"
 else
-    cmake -DCOMPUTE_BACKEND=cuda -DCOMPUTE_CAPABILITY="${build_capability}" -S . 
+    cmake -DCOMPUTE_BACKEND=cuda -DCOMPUTE_CAPABILITY="${build_capability}" -S .
     CUDA_VERSION=$CUDA_INSTALLED_VERSION make -C . -j$(nproc)
 fi
 
