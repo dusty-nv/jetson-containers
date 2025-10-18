@@ -36,7 +36,11 @@ python3 -m pip install --no-cache-dir build setuptools wheel ninja mpi4py nvidia
 export CUDA_HOME=/usr/local/cuda
 export LD_LIBRARY_PATH=${CUDA_HOME}/lib64/stubs:${LD_LIBRARY_PATH}
 export LIBRARY_PATH=${CUDA_HOME}/lib64/stubs:${LIBRARY_PATH}
-export FLASHINFER_CUDA_ARCH_LIST="8.7 9.0a 10.0a 10.3a 11.0a 12.0a 12.1a"
+if [[ "${TORCH_CUDA_ARCH_LIST}" == "8.7" ]]; then
+    export FLASHINFER_CUDA_ARCH_LIST="8.7"
+else
+  export FLASHINFER_CUDA_ARCH_LIST="8.7 9.0a 10.0a 10.3a 11.0a 12.0a 12.1a"
+fi
 
 uv pip install apache-tvm-ffi
 uv pip install -r requirements.txt
