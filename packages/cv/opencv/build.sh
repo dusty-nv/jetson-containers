@@ -14,7 +14,7 @@ git clone --branch "${OPENCV_VERSION}" --recursive https://github.com/opencv/ope
   || git clone --recursive https://github.com/opencv/opencv_contrib
 
 git clone --branch "${OPENCV_PYTHON}" --recursive https://github.com/opencv/opencv-python \
-  || git clone --recursive https://github.com/opencv/opencv-python
+  || git clone --recursive https://github.com/opencv/opencv-python && export ENABLE_ROLLING=1
 
 cd /opt/opencv-python/opencv || git checkout --recurse-submodules origin/4.x
 git checkout --recurse-submodules ${OPENCV_VERSION} || git checkout --recurse-submodules origin/4.x
@@ -106,7 +106,7 @@ headless = False
 rolling = False
 EOF
 CMAKE_ARGS="${OPENCV_BUILD_ARGS} -DOPENCV_EXTRA_MODULES_PATH=/opt/opencv-python/opencv_contrib/modules" \
-uv build --wheel --out-dir /opt --verbose .
+uv build --wheel --out-dir /opt --verbose --no-build-isolation .
 
 ls /opt
 cd /
