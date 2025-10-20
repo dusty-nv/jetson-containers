@@ -105,14 +105,6 @@ export USE_MEM_EFF_ATTENTION=1
 export USE_TENSORRT=0
 export USE_BLAS="$USE_BLAS"
 export BLAS="$BLAS"
-
-if [[ "$CUDA_VERSION" == *"12.6"* ]]; then
-    export TORCH_CUDA_ARCH_LIST="5.0;6.0;7.0;8.0;9.0"
-elif [[ "$CUDA_VERSION" == *"12.8"* ]]; then
-    export TORCH_CUDA_ARCH_LIST="7.0;8.0;9.0;10.0;12.0"
-elif [[ "$CUDA_VERSION" == *"13.0"* ]]; then
-    export TORCH_CUDA_ARCH_LIST="8.0;9.0;10.0;11.0;12.0+PTX"
-fi
 python3 setup.py bdist_wheel --dist-dir /opt
 
 cd /
