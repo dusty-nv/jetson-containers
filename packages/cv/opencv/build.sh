@@ -125,7 +125,7 @@ cd /opt/opencv/build
 
 # [FIX] Set the PKG_CONFIG_PATH environment variable.
 # This is the crucial step that allows CMake to find system libraries like FFmpeg on Ubuntu.
-export PKG_CONFIG_PATH="/usr/lib/$(uname -i)-linux-gnu/pkgconfig:${PKG_CONFIG_PATH}"
+# export PKG_CONFIG_PATH="/usr/lib/$(uname -i)-linux-gnu/pkgconfig:${PKG_CONFIG_PATH}"
 
 # Now, running cmake will succeed because it can find the correct paths.
 cmake \
