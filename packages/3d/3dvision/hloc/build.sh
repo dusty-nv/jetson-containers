@@ -12,7 +12,7 @@ sed -i '/pycolmap/d' requirements.txt
 sed -i '/opencv-python/d' requirements.txt
 
 # Build & install the HLOC python wheel
-uv build --wheel . --out-dir $PIP_WHEEL_DIR --verbose
+uv build --wheel --no-build-isolation . --out-dir $PIP_WHEEL_DIR --verbose
 uv pip install $PIP_WHEEL_DIR/hloc*.whl
 
 # Optionally upload to a repository using Twine

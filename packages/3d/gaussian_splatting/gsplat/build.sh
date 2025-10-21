@@ -15,7 +15,7 @@ export WITH_SYMBOLS=0
 export LINE_INFO=1
 export MAX_JOBS=$(nproc)
 
-uv build --wheel . --out-dir $PIP_WHEEL_DIR --verbose
+uv build --wheel --no-build-isolation . --out-dir $PIP_WHEEL_DIR --verbose
 uv pip install $PIP_WHEEL_DIR/gsplat*.whl
 
 # Optionally upload to a repository using Twine
