@@ -1,11 +1,14 @@
-from jetson_containers import CUDA_ARCHITECTURES, IS_SBSA, CUDA_VERSION
+from jetson_containers import CUDA_ARCHITECTURES, IS_SBSA, CUDA_VERSION, update_dependencies
 
 
-def sgl_kernel(version, branch=None, default=False):
+def sgl_kernel(version, branch=None, depends=None, default=False):
     pkg = package.copy()
 
     if not branch:
         branch = f'v{version}'
+
+    if depends:
+        pkg['depends'] = update_dependencies(pkg['depends'], depends)
 
     pkg['name'] = f'sgl-kernel:{version}'
 
@@ -29,5 +32,11 @@ def sgl_kernel(version, branch=None, default=False):
     return pkg, builder
 
 package = [
+    sgl_kernel('0.5.3', depends=['torchao:0.9.0'], default=False),
+    # Note: this version points to a specific commit at which the patch (sm_87-0.5.4.diff)
+    # for CMakeLists.txt was created.
+    # You can increase the branch/commit to get newer versions if there are no changes
+    # in CMakeLists.txt at commit 88568c01eb99698eceef9a40b5f481e37c0b89d0
+    sgl_kernel('0.5.4', branch='88568c01eb99698eceef9a40b5f481e37c0b89d0', depends=['torchao:0.9.0'], default=False),
     sgl_kernel('0.4.0', branch='main', default=True),
 ]
