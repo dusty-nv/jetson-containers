@@ -26,7 +26,7 @@ RUN uv pip install -e visualizer
 
 RUN FORCE_CUDA=1 uv pip install -e third_party/pytorch3d_simplified
 
-RUN uv pip install --ignore-installed blinker && \
+RUN uv pip install --reinstall blinker && \
     uv pip install open3d && \
     uv pip install \
         zarr==2.12.0 \

@@ -9,7 +9,7 @@ git clone --depth=1 https://github.com/chengzeyi/ParaAttention /opt/paraattentio
 cd /opt/paraattention
 
 uv pip install packaging
-uv pip install --ignore-installed blinker
+uv pip install --reinstall blinker
 
 
 export MAX_JOBS="$(nproc)"

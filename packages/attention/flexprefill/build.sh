@@ -11,7 +11,7 @@ cd /opt/flexprefill
 sed -i 's/==/>=/g' extra_requirements.txt
 sed -i 's/transformers==/transformers>=/; s/triton==/triton>=/' setup.py
 uv pip install packaging
-uv pip install --ignore-installed blinker
+uv pip install --reinstall blinker
 
 
 export MAX_JOBS="$(nproc)"

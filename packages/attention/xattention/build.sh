@@ -10,7 +10,7 @@ cd /opt/xattention
 
 sed -i 's/==/>=/g' requirements.txt
 uv pip install packaging setuptools wheel
-uv pip install --ignore-installed blinker
+uv pip install --reinstall blinker
 
 
 export MAX_JOBS="$(nproc)"

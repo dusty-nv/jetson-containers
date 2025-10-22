@@ -26,7 +26,7 @@ RUN git clone https://github.com/${TTS_REPO} ${TTS_PATH} && \
     sed 's|answer[[:space:]]*=.*|answer=\"y\"|' -i TTS/utils/manage.py && \
     cat requirements.txt && \
     \
-    uv pip install --ignore-installed blinker && \
+    uv pip install --reinstall blinker && \
     uv pip install -r requirements.txt && \
     \
     python3 setup.py --verbose bdist_wheel && \

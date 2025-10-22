@@ -26,7 +26,7 @@ cd /opt/block_sparse_attn
 rm -rf .git
 
 uv pip install packaging setuptools wheel
-uv pip install --ignore-installed blinker
+uv pip install --reinstall blinker
 
 # Set memory-optimized build parameters
 export MAX_JOBS=$MAX_JOBS

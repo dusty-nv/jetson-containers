@@ -45,6 +45,6 @@ RUN git clone --branch ${PIPER_VERSION} --depth 1 https://github.com/rhasspy/pip
     cmake --build build --config Release --parallel && \
     cmake --install build && \
     cd src/python_run && \
-    uv pip install --ignore-installed blinker && \
+    uv pip install --reinstall blinker && \
     uv pip install -r requirements_http.txt && \
     uv pip install --no-deps .[gpu,http]

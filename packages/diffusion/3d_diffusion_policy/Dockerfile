@@ -24,7 +24,7 @@ RUN sed -i 's/==/>=/g' requirements.txt && \
     uv pip install -e third_party/rrl-dependencies/mjrl && \
     uv pip install -e visualizer && \
     FORCE_CUDA=1 uv pip install -e third_party/pytorch3d_simplified && \
-    uv pip install --ignore-installed blinker && \
+    uv pip install --reinstall blinker && \
     uv pip install open3d
 
 ARG ASSET_URL="${TAR_INDEX_URL}/../../assets/3d_diffusion_policy"

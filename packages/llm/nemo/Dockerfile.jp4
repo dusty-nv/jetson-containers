@@ -20,7 +20,7 @@ RUN ln -s /usr/include/locale.h /usr/include/xlocale.h
 ARG SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
 
 # Cannot uninstall 'PyYAML'. It is a distutils installed project...
-RUN uv pip install --ignore-installed --upgrade PyYAML
+RUN uv pip install --reinstall --upgrade PyYAML
 
 # install sentencepiece (checkout 635fe84 - previous commit to 8cbdf13)
 # https://github.com/google/sentencepiece/commit/8cbdf13794284c30877936f91c6f31e2c1d5aef7

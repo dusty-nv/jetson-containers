@@ -12,10 +12,10 @@ echo "Installing build dependencies..."
 uv pip install scikit-build-core ninja # ninja is often needed too
 
 cd /opt/nerfstudio
-uv pip install --ignore-installed blinker
+uv pip install --reinstall blinker
 sed -i 's/==/>=/g' pyproject.toml
 uv pip install cmake open3d
-uv pip install --ignore-installed blinker
+uv pip install --reinstall blinker
 uv build --wheel . --out-dir /opt/nerfstudio/wheels  # Create the wheel package
 
 # Verify the contents of the /opt directory
@@ -23,7 +23,7 @@ ls /opt/nerfstudio/wheels
 # Return to the root directory
 cd /
 uv pip install manifold3d vhacdx openexr
-uv pip install --ignore-installed blinker
+uv pip install --reinstall blinker
 uv pip install /opt/nerfstudio/wheels/nerfstudio*.whl
 
 ns-install-cli --mode install

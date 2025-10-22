@@ -17,7 +17,7 @@ ENV PYTHONPATH=${PYTHONPATH}:/opt/local_llm \
 
 COPY requirements.txt .
 
-RUN uv pip install --ignore-installed blinker && \
+RUN uv pip install --reinstall blinker && \
     uv pip install -r requirements.txt && \
     openssl req \
 	-new \

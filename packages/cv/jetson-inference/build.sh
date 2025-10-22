@@ -41,7 +41,7 @@ cmake ../
 make
 
 # install optional dependencies
-uv pip install --ignore-installed blinker
+uv pip install --reinstall blinker
 uv pip install -r $source_dir/python/training/detection/ssd/requirements.txt
 uv pip install -r $source_dir/python/www/flask/requirements.txt
 uv pip install -r $source_dir/python/www/dash/requirements.txt
