@@ -51,15 +51,8 @@ else
     export CMAKE_BUILD_PARALLEL_LEVEL=32
     export CPLUS_INCLUDE_PATH=/usr/local/cuda-13.0/targets/sbsa-linux/include/cccl
 fi
-
-ARCH=$(uname -i)
-if [ "${ARCH}" = "aarch64" ]; then
-    export NVCC_THREADS=2
-    export CUDA_NVCC_FLAGS="-Xcudafe --threads=2"
-    export MAKEFLAGS='-j2'
-    export CMAKE_BUILD_PARALLEL_LEVEL=32
-    export NINJAFLAGS='-j2'
-fi
+export NVCC_THREADS=2
+export CUDA_NVCC_FLAGS="-Xcudafe --threads=2"
 
 printf "\n${BOLD}${MAGENTA}🚀 Build Plan${RESET}\n"
 kv "MAX_JOBS" "${MAX_JOBS}"
@@ -102,9 +95,6 @@ if [[ "${ARCH}" = "aarch64" && "${TORCH_CUDA_ARCH_LIST}" = "8.7" ]]; then
   else
     ok "Patch for SM 8.7 applied successfully!"
   fi
-else
-  sed -i 's/set(\s*ENABLE_BELOW_SM90\s*OFF\s*)/set(ENABLE_BELOW_SM90 ON)/' CMakeLists.txt
-  sed -i '/"-gencode=arch=compute_80,code=sm_80"/a\        "-gencode=arch=compute_87,code=sm_87"' CMakeLists.txt
 fi
 
 cat CMakeLists.txt

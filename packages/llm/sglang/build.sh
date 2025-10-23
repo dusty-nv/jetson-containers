@@ -32,7 +32,6 @@ cd "${REPO_DIR}" || exit 1
 # --- PATCH 1: RELAX PYTORCH VERSION REQUIREMENTS ---
 cd "${REPO_DIR}/python" || exit 1
 sed -i 's/==/>=/g' pyproject.toml
-sed -i 's/"decord"/"decord2"/' pyproject.toml
 
 echo "Patched ${REPO_DIR}/python/pyproject.toml to relax version constraints"
 cat pyproject.toml
