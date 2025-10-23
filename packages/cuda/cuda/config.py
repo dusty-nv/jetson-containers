@@ -162,6 +162,7 @@ def pip_cache(version, requires=None):
         'DOWNLOADS_URL': f"https://apt.{index_host}/assets",
         'PIP_INDEX_REPO': os.environ.get('LOCAL_PIP_INDEX_URL', os.environ.get('LOCAL_PIP_INDEX_REPO', f"https://pypi.{index_host}") + f"/{pip_path}"),
         'PIP_TRUSTED_HOSTS': f"{os.environ.get('PIP_UPLOAD_HOST', index_host)}",
+        'UV_EXTRA_INDEX_URL': f"https://pypi.{index_host}" + "/root/pypi/+simple",
         'PIP_UPLOAD_REPO': os.environ.get('PIP_UPLOAD_REPO', f"http://{os.environ.get('PIP_UPLOAD_HOST', 'localhost')}/{pip_path}"),
         'PIP_UPLOAD_USER': os.environ.get('PIP_UPLOAD_USER', f"jp{JETPACK_VERSION.major}" if SYSTEM_ARM else 'amd64'),
         'PIP_UPLOAD_PASS': os.environ.get('PIP_UPLOAD_PASS', 'none'),
