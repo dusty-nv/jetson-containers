@@ -21,6 +21,7 @@ warn()    { printf "${YELLOW}⚠${RESET} %s\n" "$1"; }
 : "${PIP_WHEEL_DIR:?PIP_WHEEL_DIR must be set}"
 
 # ===== Deps =====
+apt update && apt install -y ccache
 uv pip install -U compressed-tensors decord2 ninja setuptools wheel numpy scikit-build-core twine
 
 REPO_URL="https://github.com/sgl-project/sglang"
@@ -30,7 +31,14 @@ section "Build: SGLang ${SGL_KERNEL_VERSION}"
 echo "Tagged branch not found; cloning default branch"
 
 rm -rf "${REPO_DIR}"
-git clone --recursive --depth 1 "${REPO_URL}" "${REPO_DIR}"
+# first try: clone specific branch/tag
+git clone --recursive --depth 1 --branch ${SGL_KERNEL_BRANCH} ${REPO_URL} ${REPO_DIR} || \
+# fallback: try to init/fetch the specific commit
+mkdir ${REPO_DIR} && cd ${REPO_DIR} && \
+git init && git remote add origin ${REPO_URL} && \
+git fetch --depth 1 origin ${SGL_KERNEL_BRANCH} && git checkout FETCH_HEAD || \
+# last resort: clone default branch
+cd .. && rm -rf ${REPO_DIR} && git clone --recursive --depth 1 ${REPO_URL} ${REPO_DIR}
 
 cd "${REPO_DIR}/sgl-kernel" || exit 1
 sed -i 's/==/>=/g' pyproject.toml
@@ -81,8 +89,24 @@ section "Building wheel → ${PIP_WHEEL_DIR}"
 ok "Generating sgl-kernel wheel (no build isolation, Ninja)…"
 
 cd "${REPO_DIR}/sgl-kernel" || exit 1
-sed -i 's/set(\s*ENABLE_BELOW_SM90\s*OFF\s*)/set(ENABLE_BELOW_SM90 ON)/' CMakeLists.txt
-sed -i '/"-gencode=arch=compute_80,code=sm_80"/a\        "-gencode=arch=compute_87,code=sm_87"' CMakeLists.txt
+
+if [[ "${ARCH}" = "aarch64" && "${TORCH_CUDA_ARCH_LIST}" = "8.7" ]]; then
+  # Override parallel build env vars for SM 87 on Jetson devices
+  # Note: make sure you have sufficient swap space set to avoid out of memory problems
+  MAX_JOBS=$(nproc)
+  export MAX_JOBS=$MAX_JOBS
+  export CMAKE_BUILD_PARALLEL_LEVEL=$((MAX_JOBS/2))
+  # Apply patch for SM 87
+  if ! git apply -p1 ${TMP}/sm_87-${SGL_KERNEL_VERSION}.diff ;then
+    warn "Patch for SM 8.7 FAILED!" && exit 1
+  else
+    ok "Patch for SM 8.7 applied successfully!"
+  fi
+else
+  sed -i 's/set(\s*ENABLE_BELOW_SM90\s*OFF\s*)/set(ENABLE_BELOW_SM90 ON)/' CMakeLists.txt
+  sed -i '/"-gencode=arch=compute_80,code=sm_80"/a\        "-gencode=arch=compute_87,code=sm_87"' CMakeLists.txt
+fi
+
 cat CMakeLists.txt
 
 if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
