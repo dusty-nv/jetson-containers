@@ -11,6 +11,7 @@ set -euo pipefail
 export MAKEFLAGS="-j $(nproc)"
 export ROS_PACKAGE_PATH="${AMENT_PREFIX_PATH:-}"
 export PYTHONNOUSERSITE=1
+export COLCON_TRACE="${COLCON_TRACE:-0}"
 
 # ---- Workspace & flags --------------------------------------------------------
 ROS_WORKSPACE="${ROS_WORKSPACE:=${ROS_ROOT:-/opt/ros/unknown}}"
