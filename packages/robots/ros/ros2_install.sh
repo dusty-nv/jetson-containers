@@ -6,15 +6,23 @@
 set -euo pipefail
 
 # ---- Base env (if present) ----------------------------------------------------
-[ -f /ros_environment.sh ] && source /ros_environment.sh || true
-
+# Set required environment variables before sourcing ROS environment
+export COLCON_TRACE="${COLCON_TRACE:-0}"
+export COLCON_PREFIX_PATH="${COLCON_PREFIX_PATH:-}"
+export COLCON_PYTHON_EXECUTABLE="${COLCON_PYTHON_EXECUTABLE:-}"
+export AMENT_PREFIX_PATH="${AMENT_PREFIX_PATH:-}"
+export CMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH:-}"
+export PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}"
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}"
 export MAKEFLAGS="-j $(nproc)"
 export ROS_PACKAGE_PATH="${AMENT_PREFIX_PATH:-}"
 export PYTHONNOUSERSITE=1
 
+[ -f /ros_environment.sh ] && source /ros_environment.sh || true
+
 # ---- Workspace & flags --------------------------------------------------------
 ROS_WORKSPACE="${ROS_WORKSPACE:=${ROS_ROOT:-/opt/ros/unknown}}"
-ROSDEP_SKIP_KEYS="${ROSDEP_SKIP_KEYS:-} gazebo11 libgazebo11-dev libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv"
+ROSDEP_SKIP_KEYS="${ROSDEP_SKIP_KEYS:-} gazebo11 libgazebo11-dev libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv nodelet roscpp rospy std_msgs geometry_msgs sensor_msgs rclcpp rclpy rclcpp_components cv_bridge image_transport catkin"
 ROS_INSTALL_FLAGS="--deps --exclude RPP --rosdistro ${ROS_DISTRO:-jazzy} ${ROS_INSTALL_FLAGS:-}"
 COLCON_FLAGS="--base-paths src --event-handlers console_direct+ ${COLCON_FLAGS:-}"
 
@@ -27,9 +35,12 @@ fi
 # ---- Optional virtualenv activation ------------------------------------------
 VENV_PATH="${VENV_PATH:-/opt/venv}"
 if [ -d "$VENV_PATH" ]; then
+  # ensure colcon doesn't try to build the venv
+  touch "$VENV_PATH/COLCON_IGNORE" || true
   # shellcheck disable=SC1091
   source "$VENV_PATH/bin/activate"
-  # allow seeing system dist-packages if needed
+  # Prefer venv's Python packages; include system dist-packages if needed
+  # (keeps behavior similar to the original script's PYTHONPATH inclusion)
   PYVER="$(python - <<'PY'
 import sys; print(".".join(map(str, sys.version_info[:2])))
 PY
@@ -42,6 +53,7 @@ echo "Args: ${*:-<none>}"
 echo "Python: $(command -v python)  ($(python -V 2>&1 || true))"
 echo "Pip:    $(command -v pip || true)"
 echo "Colcon: $(command -v colcon || true)"
+echo "VENV_PATH: $VENV_PATH"
 mkdir -p "${ROS_WORKSPACE}/src"
 set -x
 
@@ -96,6 +108,24 @@ done
 apt-get update
 rosdep init || true
 rosdep update --rosdistro "${ROS_DISTRO:-jazzy}"
+
+# Install missing ROS packages that rosdep can't find
+echo "Installing missing ROS packages..."
+apt-get install -y --no-install-recommends \
+  ros-${ROS_DISTRO:-jazzy}-rclcpp \
+  ros-${ROS_DISTRO:-jazzy}-rclpy \
+  ros-${ROS_DISTRO:-jazzy}-std-msgs \
+  ros-${ROS_DISTRO:-jazzy}-geometry-msgs \
+  ros-${ROS_DISTRO:-jazzy}-sensor-msgs \
+  ros-${ROS_DISTRO:-jazzy}-nodelet \
+  || echo "Some ROS packages may not be available, continuing..."
+
+# Ensure ROS environment is sourced before rosdep install
+echo "ROS_DISTRO: ${ROS_DISTRO:-jazzy}"
+echo "ROS_ROOT: ${ROS_ROOT:-}"
+echo "AMENT_PREFIX_PATH: ${AMENT_PREFIX_PATH:-}"
+
+# Resolve and install apt deps (filtering some conflicting libs)
 rosdep install -y \
   --ignore-src \
   --from-paths src \
@@ -106,7 +136,13 @@ rm -rf /var/lib/apt/lists/*
 apt-get clean
 
 # ---- Build --------------------------------------------------------------------
-colcon build ${COLCON_FLAGS} --cmake-args -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
+# Build with colcon from the venv (similar to ros2_build.sh)
+colcon build ${COLCON_FLAGS} \
+  --cmake-args \
+  -Wno-dev -Wno-deprecated \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_POLICY_DEFAULT_CMP0148=OLD \
+  -DBUILD_TESTING=OFF
 
 set +x
 
