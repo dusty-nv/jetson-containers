@@ -2,9 +2,9 @@
 # name: ktransformers
 # group: llm
 # config: config.py
-# depends: [pytorch, torchvision, torchaudio, transformers]
+# depends: [pytorch, torchvision, torchaudio, transformers, triton]
 # requires: '>=34.1.0'
-# test: test.py
+# test: test.sh
 # notes: https://github.com/ktransformers-project/ktransformers
 #---
 ARG BASE_IMAGE
