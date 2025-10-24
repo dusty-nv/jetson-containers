@@ -14,6 +14,7 @@ RUN git clone --branch=main --depth=1 --recursive https://github.com/NVlabs/VILA
     cd /opt/VILA && \
     sed 's|"bitsandbytes.*",||' -i pyproject.toml && \
     sed -i '/"decord==0.6.0",/d' pyproject.toml && \
+    sed -i 's/"pydantic<2,>=1"/"pydantic>=1"/g' pyproject.toml && \
     sed -i 's/==/>=/g' pyproject.toml && \
     sed -i 's/~=/>=/g' pyproject.toml && \
     cat pyproject.toml && \
