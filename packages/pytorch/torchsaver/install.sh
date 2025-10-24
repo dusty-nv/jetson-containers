@@ -7,4 +7,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 fi
 
 uv pip install torch-memory-saver==${TORCH_MEMORY_SAVER_VERSION} || \
-uv pip install --pre "torch-memory-saver>=${TORCH_MEMORY_SAVER_VERSION}.dev,<=${TORCH_MEMORY_SAVER_VERSION}"
+uv pip install --prerelease=allow "torch-memory-saver>=${TORCH_MEMORY_SAVER_VERSION}.dev,<=${TORCH_MEMORY_SAVER_VERSION}"
