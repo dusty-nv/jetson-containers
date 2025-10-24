@@ -64,7 +64,7 @@ else
   # on x86_64, install from pytorch nightly server
   # on aarch64, install from the Jetson pypi server ($PIP_INSTALL_URL)
   uv pip install torch==${TORCH_VERSION} || \
-  uv pip install --pre "torch>=${PYTORCH_BUILD_VERSION}.dev,<=${PYTORCH_BUILD_VERSION}"
+  uv pip install --prerelease=allow "torch>=${PYTORCH_BUILD_VERSION}.dev,<=${PYTORCH_BUILD_VERSION}"
 fi
 
 # make sure it loads

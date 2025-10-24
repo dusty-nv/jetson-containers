@@ -7,4 +7,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 fi
 
 uv pip install torchao==${TORCHAO_VERSION} || \
-uv pip install --pre "torchao>=${TORCHAO_VERSION}.dev,<=${TORCHAO_VERSION}"
+uv pip install --prerelease=allow "torchao>=${TORCHAO_VERSION}.dev,<=${TORCHAO_VERSION}"

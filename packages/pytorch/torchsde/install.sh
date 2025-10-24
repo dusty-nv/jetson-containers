@@ -7,7 +7,7 @@ if [ "$FORCE_BUILD" == "on" ]; then
 fi
 
 uv pip install torchsde~=${TORCHSDE_VERSION} || \
-uv pip install --pre "torchsde>=${TORCHSDE_VERSION}.dev,<=${TORCHSDE_VERSION}"
+uv pip install --prerelease=allow "torchsde>=${TORCHSDE_VERSION}.dev,<=${TORCHSDE_VERSION}"
 
 if [ "$(lsb_release -rs)" = "20.04" ]; then
     # https://github.com/conda/conda/issues/13619

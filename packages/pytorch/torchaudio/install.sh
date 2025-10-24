@@ -11,4 +11,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 fi
 
 uv pip install torchaudio~=${TORCHAUDIO_VERSION} || \
-uv pip install --pre "torchaudio>=${TORCHAUDIO_VERSION}.dev,<=${TORCHAUDIO_VERSION}"
+uv pip install --prerelease=allow "torchaudio>=${TORCHAUDIO_VERSION}.dev,<=${TORCHAUDIO_VERSION}"

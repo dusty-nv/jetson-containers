@@ -18,7 +18,7 @@ COPY WORKSPACE.jp46 /tmp
 #
 # https://github.com/pytorch/TensorRT/commit/9b0b8f1ccac81050c08091f74870092cbac91ac0
 #   uv pip install pyyaml
-#   python3 -m pip wheel --verbose --pre . --config-setting="--jetpack-version=5.0" --config-settings="--use-cxx11-abi=1" -w dist && \
+#   python3 -m pip wheel --verbose --prerelease=allow . --config-setting="--jetpack-version=5.0" --config-settings="--use-cxx11-abi=1" -w dist && \
 #
 RUN uv pip install pyyaml && \
     git clone --branch=${TORCH_TRT_VERSION} --depth=1 https://github.com/pytorch/TensorRT torch_tensorrt || \

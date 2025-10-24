@@ -11,4 +11,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 fi
 
 uv pip install torchcodec~=${TORCHCODEC_VERSION} || \
-uv pip install --pre "torchcodec>=${TORCHCODEC_VERSION}.dev,<=${TORCHCODEC_VERSION}"
+uv pip install --prerelease=allow "torchcodec>=${TORCHCODEC_VERSION}.dev,<=${TORCHCODEC_VERSION}"
