@@ -1,7 +1,7 @@
 
 from jetson_containers import L4T_VERSION, update_dependencies, CUDA_ARCHITECTURES
 
-def mlc(commit, patch=None, version='0.1', tvm='0.15', llvm=17, depends=[], requires=None, default=False):
+def mlc(commit, patch=None, version='0.1', tvm='0.15', llvm=20, depends=[], requires=None, default=False):
     pkg = package.copy()
 
     if default:
