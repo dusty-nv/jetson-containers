@@ -22,7 +22,7 @@ export PYTHONNOUSERSITE=1
 
 # ---- Workspace & flags --------------------------------------------------------
 ROS_WORKSPACE="${ROS_WORKSPACE:=${ROS_ROOT:-/opt/ros/unknown}}"
-ROSDEP_SKIP_KEYS="${ROSDEP_SKIP_KEYS:-} gazebo11 libgazebo11-dev libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv nodelet"
+ROSDEP_SKIP_KEYS="${ROSDEP_SKIP_KEYS:-} gazebo11 libgazebo11-dev libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv"
 ROS_INSTALL_FLAGS="--deps --exclude RPP --rosdistro ${ROS_DISTRO:-jazzy} ${ROS_INSTALL_FLAGS:-}"
 COLCON_FLAGS="--base-paths src --event-handlers console_direct+ ${COLCON_FLAGS:-}"
 
@@ -108,6 +108,17 @@ done
 apt-get update
 rosdep init || true
 rosdep update --rosdistro "${ROS_DISTRO:-jazzy}"
+
+# Install missing ROS packages that rosdep can't find
+echo "Installing missing ROS packages..."
+apt-get install -y --no-install-recommends \
+  ros-${ROS_DISTRO:-jazzy}-rclcpp \
+  ros-${ROS_DISTRO:-jazzy}-rclpy \
+  ros-${ROS_DISTRO:-jazzy}-std-msgs \
+  ros-${ROS_DISTRO:-jazzy}-geometry-msgs \
+  ros-${ROS_DISTRO:-jazzy}-sensor-msgs \
+  ros-${ROS_DISTRO:-jazzy}-nodelet-core \
+  || echo "Some ROS packages may not be available, continuing..."
 
 # Ensure ROS environment is sourced before rosdep install
 echo "ROS_DISTRO: ${ROS_DISTRO:-jazzy}"
