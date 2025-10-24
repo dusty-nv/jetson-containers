@@ -2,7 +2,7 @@
 # name: holoscan
 # group: cv
 # requires: '>=36'
-# depends: [pytorch, cupy, tensorrt, ffmpeg]
+# depends: [pytorch, cudastack:standard, cupy, ffmpeg]
 # test: [test.sh]
 # notes: https://docs.nvidia.com/holoscan/sdk-user-guide/overview.html
 #---
