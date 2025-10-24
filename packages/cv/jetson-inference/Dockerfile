@@ -2,7 +2,7 @@
 # name: jetson-inference
 # group: cv
 # config: config.py
-# depends: [pytorch, torchvision, tensorrt, cmake, gstreamer]
+# depends: [cudastack:standard, pytorch, torchvision, cmake, gstreamer]
 # test: [test_utils.sh, test_infer.sh]
 #---
 ARG BASE_IMAGE
