@@ -3,6 +3,16 @@ set -eux
 
 echo "Installing NVIDIA GDRCopy ${GDRCOPY_VERSION:-unknown} (GDRCopy)"
 
+# Install prerequisites
+apt-get update
+apt-get install -y \
+    dkms \
+    build-essential \
+    devscripts \
+    debhelper \
+    check \
+    libsubunit-dev
+
 # 1) Build .deb packages
 git clone --recursive https://github.com/NVIDIA/gdrcopy.git /opt/gdrcopy
 cd /opt/gdrcopy/packages
