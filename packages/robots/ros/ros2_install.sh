@@ -22,7 +22,7 @@ export PYTHONNOUSERSITE=1
 
 # ---- Workspace & flags --------------------------------------------------------
 ROS_WORKSPACE="${ROS_WORKSPACE:=${ROS_ROOT:-/opt/ros/unknown}}"
-ROSDEP_SKIP_KEYS="${ROSDEP_SKIP_KEYS:-} gazebo11 libgazebo11-dev libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv nodelet roscpp rospy std_msgs geometry_msgs sensor_msgs rclcpp rclpy rclcpp_components cv_bridge image_transport"
+ROSDEP_SKIP_KEYS="${ROSDEP_SKIP_KEYS:-} gazebo11 libgazebo11-dev libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv nodelet roscpp rospy std_msgs geometry_msgs sensor_msgs rclcpp rclpy rclcpp_components cv_bridge image_transport catkin"
 ROS_INSTALL_FLAGS="--deps --exclude RPP --rosdistro ${ROS_DISTRO:-jazzy} ${ROS_INSTALL_FLAGS:-}"
 COLCON_FLAGS="--base-paths src --event-handlers console_direct+ ${COLCON_FLAGS:-}"
 
