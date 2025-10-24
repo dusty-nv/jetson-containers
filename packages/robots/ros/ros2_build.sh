@@ -76,7 +76,7 @@ source "$VENV_PATH/bin/activate"
 export PYTHONPATH="$VENV_PATH/lib/python${PYTHON_VERSION}/site-packages:/usr/lib/python3/dist-packages${PYTHONPATH:+:$PYTHONPATH}"
 
 which python; python -V
-which pip; uv pip -V
+which pip; uv run pip --version
 which colcon || echo "colcon not found"
 echo $VENV_PATH
 
@@ -263,6 +263,6 @@ apt-get clean
 tarpack upload "$BUILD_CACHE" "$ROS_ROOT" || echo "failed to upload tarball"
 
 which python; python -V
-which uv pip; uv pip -V
+which uv pip; uv run pip --version
 which colcon || echo "colcon not found"
 echo $VENV_PATH
