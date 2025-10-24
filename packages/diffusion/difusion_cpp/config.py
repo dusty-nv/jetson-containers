@@ -35,5 +35,5 @@ def stable_diffusion_cpp(version, default=False):
     return pkg, builder
 
 package = [
-    stable_diffusion_cpp('b6816', default=True)
+    stable_diffusion_cpp('fdc1a60', default=True)
 ]

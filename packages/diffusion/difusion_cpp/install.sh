@@ -20,17 +20,17 @@ uv pip install \
         pydantic-settings
 
 mkdir -p /root/.cache
-ln -s /data/models/llama.cpp /root/.cache/llama.cpp
+ln -s /data/models/stable-diffusion.cpp /root/.cache/stable-diffusion.cpp
 
 if [ "$FORCE_BUILD" == "on" ]; then
-	echo "Forcing build of llama.cpp ${STABLE_DIFFUSION_CPP_VERSION}"
+	echo "Forcing build of stable-diffusion.cpp ${STABLE_DIFFUSION_CPP_VERSION}"
 	exit 1
 fi
-if uv pip install --only-binary=:all: "llama-cpp-python==${STABLE_DIFFUSION_CPP_VERSION_PY}"; then
+if uv pip install --only-binary=:all: "stable-diffusion-cpp-python==${STABLE_DIFFUSION_CPP_VERSION_PY}"; then
 	if [ -n "${STABLE_DIFFUSION_CPP_VERSION}" ]; then
-		tarpack install "llama-cpp-${STABLE_DIFFUSION_CPP_VERSION}" || true
+		tarpack install "stable-diffusion-cpp-${STABLE_DIFFUSION_CPP_VERSION}" || true
 	fi
-	uv pip show llama-cpp-python || true
+	uv pip show stable-diffusion-cpp-python || true
 	echo "installed" > "$TMP/.stable_diffusion_cpp"
 	exit 0
 fi

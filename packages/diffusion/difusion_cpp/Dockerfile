@@ -21,11 +21,10 @@ ARG STABLE_DIFFUSION_VERSION \
     TMP=/tmp/stable_diffusion_cpp
 
 COPY build.sh install.sh $TMP/
-COPY benchmark.py /usr/local/bin/stable_diffusion_cpp_benchmark.py
 
 RUN $TMP/install.sh || $TMP/build.sh || true
 
 RUN if [ ! -f "$TMP/.stable_diffusion_cpp" ]; then \
-      echo "FAILED to install llama.cpp $STABLE_DIFFUSION_VERSION"; \
+      echo "FAILED to install stable_diffusion.cpp $STABLE_DIFFUSION_VERSION"; \
       exit 1; \
     fi
