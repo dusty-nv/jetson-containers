@@ -44,7 +44,7 @@ RUN if [ "$JETSON_UTILS_CMAKE" = "on" ]; then \
 
 RUN if [ "$JETSON_UTILS_PIP" = "on" ]; then \
         cd /opt/jetson-utils ; \
-        uv pip install -e . ; \
+        /opt/venv/bin/python -m pip install --no-cache-dir -e . ; \
     fi
 
-RUN LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib/" python3 -c 'import jetson_utils'
+RUN LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib/" /opt/venv/bin/python -c 'import jetson_utils'

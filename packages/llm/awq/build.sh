@@ -15,8 +15,8 @@ sed -i 's/==/>=/g' "awq/pyproject.toml"
 
 cat awq/pyproject.toml
 
-uv build --wheel --out-dir $PIP_WHEEL_DIR --verbose ./awq
-uv build --wheel --out-dir $PIP_WHEEL_DIR --verbose ./awq/awq/kernels
+uv build --wheel --no-build-isolation --out-dir $PIP_WHEEL_DIR --verbose ./awq
+uv build --wheel --no-build-isolation --out-dir $PIP_WHEEL_DIR --verbose ./awq/awq/kernels
 
 ls $PIP_WHEEL_DIR
 rm -rf awq
