@@ -29,6 +29,8 @@ fi
 # export MAX_JOBS="$(nproc)" this breaks with actual flash-attention
 if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
     export MAX_JOBS=6
+    # Limit build to the current CUDA SM's from device
+    export FLASH_ATTN_CUDA_ARCHS=$CUDA_ARCH_LIST
 else
     export MAX_JOBS="$(nproc)"
 fi
@@ -52,9 +54,15 @@ cd /
 uv pip install /opt/flash-attention/wheels/flash_attn*.whl
 #pip3 show flash-attn && python3 -c 'import flash_attn'
 
-#FlashAttention4
-cd /opt/flash-attention/flash_attn/cute
-uv build --wheel . -v --no-build-isolation --out-dir /opt/flash-attention/wheels/
-uv pip install /opt/flash-attention/wheels/flash_attn_cute*.whl
+#FlashAttention4 , cute requires Python 3.12+
+if [ $(vercmp $PYTHON_VERSION "3.12") -ge 0 ]; then
+    echo "Building FlashAttention4 (cute) ${FLASH_ATTENTION_VERSION}"
+    cd /opt/flash-attention/flash_attn/cute
+    uv build --wheel . -v --no-build-isolation --out-dir /opt/flash-attention/wheels/
+    uv pip install /opt/flash-attention/wheels/flash_attn_cute*.whl
+else
+    echo "Skipping FlashAttention4 (cute) build as CAN_USE_FA_CUTE=${CAN_USE_FA_CUTE}"
+    exit 0
+fi
 
 twine upload --verbose /opt/flash-attention/wheels/flash_attn*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
