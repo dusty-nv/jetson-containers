@@ -2,7 +2,7 @@
 # name: isaac-gr00t
 # alias: ['isaac-groot', 'groot', 'gr00t']
 # group: vla
-# depends: [pytorch, torchvision, torchaudio, pytorch3d, transformer-engine, transformers, flash-attention, bitsandbytes, huggingface_hub, ffmpeg, opencv, decord2]
+# depends: [pytorch, torchvision, torchaudio, pytorch3d, transformer-engine, transformers, flash-attention, bitsandbytes, huggingface_hub, ffmpeg, opencv, decord2, lerobot]
 # requires: '>=34.1.0'
 # test: test.sh
 # notes: https://github.com/NVIDIA/Isaac-GR00T
