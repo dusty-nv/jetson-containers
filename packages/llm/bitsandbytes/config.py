@@ -1,4 +1,4 @@
-from jetson_containers import CUDA_VERSION
+from jetson_containers import CUDA_VERSION, CUDA_ARCHITECTURES
 from packaging.version import Version
 
 def bitsandbytes(version, requires=None, default=False, branch=None, repo='bitsandbytes-foundation/bitsandbytes'):
@@ -17,7 +17,8 @@ def bitsandbytes(version, requires=None, default=False, branch=None, repo='bitsa
         'BITSANDBYTES_REPO': repo,
         'BITSANDBYTES_BRANCH': branch,
         'CUDA_INSTALLED_VERSION': int(str(CUDA_VERSION.major) + str(CUDA_VERSION.minor)),
-        'CUDA_MAKE_LIB': f"cuda{str(CUDA_VERSION.major)}x"
+        'CUDA_MAKE_LIB': f"cuda{str(CUDA_VERSION.major)}x",
+        'CUDAARCHS': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
     }
 
     builder = pkg.copy()
