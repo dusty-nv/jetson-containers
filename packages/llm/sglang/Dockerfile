@@ -2,7 +2,7 @@
 # name: sglang
 # group: llm
 # config: config.py
-# depends: [sgl-kernel]
+# depends: [sgl-kernel, torch-memory-saver]
 # requires: '>=36'
 # test: test.py
 # notes: https://github.com/sgl-project/sglang

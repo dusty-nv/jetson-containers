@@ -33,12 +33,15 @@ echo "Tagged branch not found; cloning default branch"
 rm -rf "${REPO_DIR}"
 # first try: clone specific branch/tag
 git clone --recursive --depth 1 --branch ${SGL_KERNEL_BRANCH} ${REPO_URL} ${REPO_DIR} || \
-# fallback: try to init/fetch the specific commit
-mkdir ${REPO_DIR} && cd ${REPO_DIR} && \
-git init && git remote add origin ${REPO_URL} && \
-git fetch --depth 1 origin ${SGL_KERNEL_BRANCH} && git checkout FETCH_HEAD || \
-# last resort: clone default branch
-cd .. && rm -rf ${REPO_DIR} && git clone --recursive --depth 1 ${REPO_URL} ${REPO_DIR}
+{ # fallback: try to init/fetch the specific commit
+  mkdir ${REPO_DIR} && cd ${REPO_DIR} && \
+  git init && git remote add origin ${REPO_URL} && \
+  git fetch --depth 1 origin ${SGL_KERNEL_BRANCH} && git checkout FETCH_HEAD
+} || \
+{ # last resort: clone default branch
+  cd "$(dirname ${REPO_DIR})" && rm -rf "$(basename ${REPO_DIR})" && \
+  git clone --recursive --depth 1 ${REPO_URL} ${REPO_DIR}
+}
 
 cd "${REPO_DIR}/sgl-kernel" || exit 1
 sed -i 's/==/>=/g' pyproject.toml
@@ -83,7 +86,7 @@ ok "Generating sgl-kernel wheel (no build isolation, Ninja)…"
 
 cd "${REPO_DIR}/sgl-kernel" || exit 1
 
-if [[ "${ARCH}" = "aarch64" && "${TORCH_CUDA_ARCH_LIST}" = "8.7" ]]; then
+if [[ "$(uname -m)" == "aarch64" && "${TORCH_CUDA_ARCH_LIST}" = "8.7" ]]; then
   # Override parallel build env vars for SM 87 on Jetson devices
   # Note: make sure you have sufficient swap space set to avoid out of memory problems
   MAX_JOBS=$(nproc)

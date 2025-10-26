@@ -99,6 +99,9 @@ export ENABLE_CONTRIB=1
 # export ENABLE_ROLLING=1 # Build from last commit
 # export OPENCV_PYTHON_SKIP_GIT_COMMANDS=1
 
+# Install dependencies for building the wheel
+uv pip install scikit-build
+
 cat <<EOF > /opt/opencv-python/cv2/version.py
 opencv_version = "${OPENCV_VERSION}"
 contrib = True

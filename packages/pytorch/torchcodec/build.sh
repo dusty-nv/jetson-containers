@@ -8,7 +8,8 @@ apt-get install -y --no-install-recommends \
     git \
     pkg-config \
     libffi-dev \
-    libsndfile1
+    libsndfile1 \
+    python${PYTHON_VERSION}-dev
 
 rm -rf /var/lib/apt/lists/*
 apt-get clean
