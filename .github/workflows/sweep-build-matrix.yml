@@ -421,7 +421,7 @@ jobs:
 
 
       - name: Upload plan for this platform
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: plan-${{ matrix.platform }}
           path: |
@@ -998,7 +998,7 @@ jobs:
 
       - name: Upload chunk results & logs
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: results-${{ matrix.platform }}-chunk-${{ matrix.index }}-${{ github.run_attempt }}
           path: |
@@ -1046,7 +1046,7 @@ jobs:
           echo "_Full data uploaded as artifact \`sweep-results-${GITHUB_SHA}-${GITHUB_RUN_ATTEMPT}\`._" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload merged results.json
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: sweep-results-${{ github.sha }}-${{ github.run_attempt }}
           path: results.json
