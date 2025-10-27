@@ -102,7 +102,13 @@ def modify_vllm_flash_attn_cmake(content):
         new_lines.append(line)
 
         if env_block_open and not patch_inserted and re.match(r'^\s*endif\s*\(\s*\)\s*$', line):
-            new_lines.append('set(patch_vllm_flash_attn git apply /tmp/vllm/fa.diff)')
+            fa_patch_name = 'fa.diff'
+            cuda_arch = os.environ.get('TORCH_CUDA_ARCH_LIST')
+            # Specific patch for sm_87 by vLLM version
+            if cuda_arch == '8.7':
+                vllm_version = os.environ.get('VLLM_VERSION')
+                fa_patch_name = 'sm_87-' + vllm_version + '-' + fa_patch_name
+            new_lines.append('set(patch_vllm_flash_attn git apply /tmp/vllm/' + fa_patch_name + ')')
             patch_inserted = True
             env_block_open = False
         if re.search(r'^\s*BINARY_DIR\s+\$\{CMAKE_BINARY_DIR\}/vllm-flash-attn', line):

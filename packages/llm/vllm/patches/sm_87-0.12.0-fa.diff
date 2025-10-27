@@ -1,0 +1,44 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	(revision a893712401d70362fbb299cd9c4b3476e8e9ed54)
++++ b/CMakeLists.txt	(date 1761500643533)
+@@ -22,12 +22,7 @@
+ set(PYTHON_SUPPORTED_VERSIONS "3.9" "3.10" "3.11" "3.12" "3.13")
+
+ # Supported NVIDIA architectures.
+-set(CUDA_SUPPORTED_ARCHS "8.0;8.6;8.9;9.0")
+-if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 13.0)
+-    list(APPEND CUDA_SUPPORTED_ARCHS "10.0" "11.0" "12.0")
+-elseif(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.8)
+-    list(APPEND CUDA_SUPPORTED_ARCHS "10.0" "10.1" "12.0")
+-endif()
++set(CUDA_SUPPORTED_ARCHS "8.7")
+
+ # Supported AMD GPU architectures.
+ set(HIP_SUPPORTED_ARCHS "gfx906;gfx908;gfx90a;gfx940;gfx941;gfx942;gfx1030;gfx1100")
+@@ -41,7 +36,7 @@
+ # Note: these should be kept in sync with the torch version in setup.py.
+ # Likely should also be in sync with the vLLM version.
+ #
+-set(TORCH_SUPPORTED_VERSION_CUDA "2.4.0")
++set(TORCH_SUPPORTED_VERSION_CUDA "2.9.0")
+
+ find_python_constrained_versions(${PYTHON_SUPPORTED_VERSIONS})
+
+@@ -137,7 +132,7 @@
+
+     # For CUDA we set the architectures on a per file basis
+     if (VLLM_GPU_LANG STREQUAL "CUDA")
+-        cuda_archs_loose_intersection(FA2_ARCHS "8.0+PTX" "${CUDA_ARCHS}")
++        cuda_archs_loose_intersection(FA2_ARCHS "${CUDA_SUPPORTED_ARCHS}" "${CUDA_ARCHS}")
+         message(STATUS "FA2_ARCHS: ${FA2_ARCHS}")
+
+         set_gencode_flags_for_srcs(
+@@ -229,7 +224,7 @@
+     # For CUDA we set the architectures on a per file basis
+     # FaV3 is not yet supported in Blackwell
+     if (VLLM_GPU_LANG STREQUAL "CUDA")
+-        cuda_archs_loose_intersection(FA3_ARCHS "8.0;9.0a;" "${CUDA_ARCHS}")
++        cuda_archs_loose_intersection(FA3_ARCHS "${CUDA_SUPPORTED_ARCHS}" "${CUDA_ARCHS}")
+         message(STATUS "FA3_ARCHS: ${FA3_ARCHS}")
+
+         set_gencode_flags_for_srcs(
