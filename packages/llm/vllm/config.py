@@ -39,5 +39,6 @@ package = [
     vllm('0.9.2', depends=['flashinfer'], default=False),
     vllm('0.10.0', depends=['flashinfer'], default=False),
     vllm('0.10.2', depends=['flashinfer'], requires=['<=36', '<cu130'], default=False),
+    vllm('0.11.0', depends=['flashinfer'], default=False),
     vllm('0.12.0', depends=['flashinfer'], default=True),
 ]
