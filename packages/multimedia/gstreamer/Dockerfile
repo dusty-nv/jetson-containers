@@ -37,7 +37,8 @@ RUN apt-get update && \
 		  gstreamer1.0-plugins-rtp; \
     else echo "skipping packages unavailable for Ubuntu 18.04"; fi \
     && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
+    && apt-get clean \
+    && ln -s /usr/lib/python3/dist-packages/gi /opt/venv/lib/python3.*/site-packages/ # make gi available in the venv
 
 
 # re-install opencv and make a copy of these gstreamer headers (some of them get purged)

@@ -38,5 +38,5 @@ package = [
     flash_infer('0.2.6.post1', '0.2.6.post1', default=False),
     flash_infer('0.2.7', '0.2.7'),
     flash_infer('0.2.9', '0.2.9'),
-    flash_infer('0.4.1', '0.4.1', default=(CUDA_VERSION >= Version('12.6'))), # Thor compatibility
+    flash_infer('0.4.2', '0.4.2', default=(CUDA_VERSION >= Version('12.6'))), # Thor compatibility
 ]
