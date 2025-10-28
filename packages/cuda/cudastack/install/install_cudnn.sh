@@ -14,6 +14,8 @@ dpkg -i *.deb
 
 # Copy keyring
 cp /var/cudnn-*-repo-*/cudnn-*-keyring.gpg /usr/share/keyrings/ 2>/dev/null || true
+cp /var/cudnn-*-repo-*-*/cudnn-local-*-keyring.gpg /usr/share/keyrings/ 2>/dev/null || true
+
 
 # Update and install cuDNN packages
 apt-get update
