@@ -27,7 +27,7 @@ else
 	echo "Skipping distributed NCCL (for Jetson) patch."
 fi
 
-make -j src.build NVCC_GENCODE="-gencode=arch=compute_87,code=sm_87"
+make -j"$(nproc)" src.build NVCC_GENCODE="-gencode=arch=compute_87,code=sm_87"
 make pkg.txz.build NVCC_GENCODE="-gencode=arch=compute_87,code=sm_87"
 
 mkdir -p build/pkg/txz/lib
