@@ -5,7 +5,7 @@ def pykan(version, version_spec=None, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
 
     pkg['name'] = f'pykan:{version}'
 
@@ -26,5 +26,5 @@ def pykan(version, version_spec=None, requires=None, default=False):
     return pkg, builder
 
 package = [
-    pykan('0.2.9', version_spec='0.2.8', default=True)
+    pykan('0.3.9', version_spec='0.3.9', default=True)
 ]

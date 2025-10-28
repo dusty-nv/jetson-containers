@@ -21,5 +21,5 @@ def isaacsim(version, default=False):
 
 
 package = [
-    isaacsim('5.1.0', default=True),
+    isaacsim('5.2.0', default=True),
 ]

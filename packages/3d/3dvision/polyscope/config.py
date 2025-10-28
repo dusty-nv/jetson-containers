@@ -24,5 +24,5 @@ def polyscope(version, version_spec, requires=None, default=False):
     return pkg, builder
 
 package = [
-    polyscope('2.6.0', version_spec='2.4.0', default=True),
+    polyscope('2.6.0', version_spec='2.5.0', default=True),
 ]

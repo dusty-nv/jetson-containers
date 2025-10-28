@@ -26,5 +26,5 @@ def mlstm_kernels(version, version_spec=None, requires=None, default=False):
     return pkg, builder
 
 package = [
-    mlstm_kernels('2.0.1', version_spec='2.0.0', default=True)
+    mlstm_kernels('3.0.0', version_spec='3.0.0', default=True)
 ]

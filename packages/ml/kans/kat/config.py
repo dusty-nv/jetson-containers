@@ -4,7 +4,7 @@ def kat(version, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
 
     pkg['name'] = f'kat:{version}'
 
@@ -25,5 +25,5 @@ def kat(version, requires=None, default=False):
     return pkg #, builder
 
 package = [
-    kat('1', default=True)
+    kat('1.0.0', default=True)
 ]

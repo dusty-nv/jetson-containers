@@ -25,5 +25,5 @@ def gstaichi(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    gstaichi('2.7.0', default=True)
+    gstaichi('3.5.0', default=True)
 ]

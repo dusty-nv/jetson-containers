@@ -36,5 +36,6 @@ package = [
     xgrammar(version='0.1.19', default=False),
     xgrammar(version='0.1.20', default=False),
     xgrammar(version='0.1.23', default=False),
-    xgrammar(version='0.1.25', default=True),
+    xgrammar(version='0.1.26', default=False),
+    xgrammar(version='0.1.27', default=True),
 ]

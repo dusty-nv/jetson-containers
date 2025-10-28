@@ -26,5 +26,5 @@ def xlstm(version, version_spec=None, requires=None, default=False):
     return pkg, builder
 
 package = [
-    xlstm('2.0.5', version_spec='2.0.4', default=True)
+    xlstm('3.0.0', version_spec='3.0.0', default=True)
 ]

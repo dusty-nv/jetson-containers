@@ -95,7 +95,7 @@ def cuda_stack_args():
         'NCCL_VERSION': nccl_ver,
 
         # Additional libraries
-        'CUDSS_VERSION': '0.7.0',
+        'CUDSS_VERSION': '0.7.1',
         'CUSPARSELT_VERSION': '0.8.1',
         'CUTENSOR_VERSION': '2.3.1', # Note: cutensor 2.x requires cuda 12+
         'GDRCOPY_VERSION': '2.5.1',

@@ -19,5 +19,5 @@ def isaaclab(version, default=False):
 
 
 package = [
-    isaaclab('2.3.0', default=True),
+    isaaclab('2.4.0', default=True),
 ]

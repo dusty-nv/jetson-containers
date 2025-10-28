@@ -3,7 +3,7 @@ def kaolin(version, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
 
     pkg['name'] = f'kaolin:{version}'
 
@@ -23,5 +23,5 @@ def kaolin(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    kaolin('0.18.0', default=True)
+    kaolin('0.19.0', default=True)
 ]

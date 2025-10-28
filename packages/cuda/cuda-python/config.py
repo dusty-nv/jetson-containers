@@ -58,7 +58,7 @@ else:
             cuda_python('12.6.2.post1'),
             cuda_python('12.8'),
             cuda_python('12.9'),
-            cuda_python('13.0.2'),
+            cuda_python('13.0.3'),
             # Please enable only when added as package in cuda config.py
             # cuda_python('13.1'),
         ]

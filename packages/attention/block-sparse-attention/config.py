@@ -26,6 +26,6 @@ def block_sparse_attn(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    block_sparse_attn('0.0.1', default=(CUDA_VERSION >= Version('12.6'))),
+    block_sparse_attn('0.0.2', default=(CUDA_VERSION >= Version('12.6'))),
 ]
 

@@ -30,5 +30,5 @@ def kai_scheduler(version, version_spec=None, requires=None, default=False):
     return pkg, builder
 
 package = [
-    kai_scheduler('0.9.0', '0.9.0', default=True),
+    kai_scheduler('0.9.6', '0.9.6', default=True),
 ]
