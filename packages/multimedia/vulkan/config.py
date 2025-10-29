@@ -14,8 +14,9 @@ def vulkan_sdk(version, default=False):
 
   pkg['name'] = f'vulkan:{version}'
 
-  if len(version.split('.')) < 4:
-    version = version + '.0'
+  # work with exactly version
+  # if len(version.split('.')) < 4:
+  #  version = version + '.0'
 
   pkg['build_args'] = {'VULKAN_VERSION': version}
 
@@ -36,5 +37,5 @@ package = [
   vulkan_sdk('1.4.309'),
   vulkan_sdk('1.4.313'),
   vulkan_sdk('1.4.314'),
-  vulkan_sdk('1.4.328', default=True),
+  vulkan_sdk('1.4.328.1', default=True),
 ]
