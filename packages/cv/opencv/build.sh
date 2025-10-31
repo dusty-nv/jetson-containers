@@ -134,6 +134,14 @@ EOF
     echo ""
 }
 
+# Build all variants in order:
+# 1. opencv-python-headless
+# 2. opencv-python
+# 3. opencv-contrib-python (with full working configuration)
+
+build_simple_variant "opencv-python-headless" "1"
+build_simple_variant "opencv-python" "0"
+
 # Build opencv-contrib-python with full working configuration
 echo "=========================================="
 echo "Building opencv-contrib-python (full configuration)..."
@@ -149,15 +157,15 @@ headless = False
 rolling = False
 EOF
 
+# Clean previous build artifacts
+cd /opt/opencv-python
+rm -rf build/ dist/ *.egg-info/ 2>/dev/null || true
+
 CMAKE_ARGS="${OPENCV_BUILD_ARGS} -DOPENCV_EXTRA_MODULES_PATH=/opt/opencv-python/opencv_contrib/modules" \
 uv build --wheel --out-dir /opt --verbose --no-build-isolation .
 
 echo "Completed building opencv-contrib-python"
 echo ""
-
-# Build the other two variants (simpler builds without special patches/config)
-build_simple_variant "opencv-python-headless" "1"
-build_simple_variant "opencv-python" "0"
 
 # List all generated wheels
 echo "=========================================="
