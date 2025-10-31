@@ -22,5 +22,6 @@ else
     uv pip install opencv-contrib-python~=${OPENCV_VERSION}
 fi
 
-python3 -c "import cv2; print('OpenCV version:', str(cv2.__version__)); print(cv2.getBuildInformation())"
+# In buildkit=1 mode, we cannot test the installation here
+# python3 -c "import cv2; print('OpenCV version:', str(cv2.__version__)); print(cv2.getBuildInformation())"
 echo "installed" > "$ROOT/.opencv"

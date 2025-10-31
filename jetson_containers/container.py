@@ -185,11 +185,13 @@ def build_container(
                 scp_key_provided = scp_upload_key and os.path.isfile(scp_upload_key)
 
                 # Respect user's BuildKit preference, but enable it if SSH key is provided (required for secrets)
-                user_buildkit = os.environ.get('DOCKER_BUILDKIT', '0')
+                user_buildkit = os.environ.get('DOCKER_BUILDKIT', '1')
                 use_buildkit = user_buildkit != '0' or scp_key_provided
                 buildkit_env = f"DOCKER_BUILDKIT={'1' if use_buildkit else '0'}"
 
                 cmd = f"{sudo_prefix()}{buildkit_env} docker build --network=host --shm-size=8g" + _NEWLINE_
+                if use_buildkit:
+                    cmd += f"  --progress=plain" + _NEWLINE_
                 cmd += f"  --tag {container_name}" + _NEWLINE_
                 if no_github_api:
                     dockerfilepath = os.path.join(pkg['path'], pkg['dockerfile'])
@@ -206,6 +208,7 @@ def build_container(
                     cmd += f"  --file {os.path.join(pkg['path'], pkg['dockerfile'])}" + _NEWLINE_
 
                 cmd += f"  --build-arg BASE_IMAGE={base}" + _NEWLINE_
+                cmd += f"  --build-arg NVIDIA_DRIVER_CAPABILITIES=all" + _NEWLINE_
 
                 if 'build_args' in pkg:
                     cmd += ''.join([f"  --build-arg {key}=\"{value}\"" + _NEWLINE_ for key, value in pkg['build_args'].items()])
@@ -449,11 +452,8 @@ def test_container(name, package, simulate=False, build_idx=None):
 
         cmd = f"{sudo_prefix()}docker run -t --rm --network=host --privileged --shm-size=8g "
 
-        if IS_TEGRA or IS_SBSA:
-            cmd += f"--runtime=nvidia" + _NEWLINE_
-        else:
-            cmd += f"--gpus=all" + _NEWLINE_
-            cmd += f"  --env NVIDIA_DRIVER_CAPABILITIES=all" + _NEWLINE_
+        cmd += f"--gpus=all" + _NEWLINE_
+        cmd += f"  --env NVIDIA_DRIVER_CAPABILITIES=all" + _NEWLINE_
 
         cmd += f"  --volume {package['path']}:/test" + _NEWLINE_
         cmd += f"  --volume {get_dir('data')}:/data" + _NEWLINE_
