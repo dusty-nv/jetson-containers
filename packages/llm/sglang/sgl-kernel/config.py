@@ -38,5 +38,6 @@ package = [
     # You can increase the branch/commit to get newer versions if there are no changes
     # in CMakeLists.txt at commit 88568c01eb99698eceef9a40b5f481e37c0b89d0
     sgl_kernel('0.5.4', depends=['torchao:0.9.0'], default=False),
-    sgl_kernel('0.4.0', branch='main', default=True),
+    sgl_kernel('0.5.5', depends=['torchao:0.9.0'], default=False),
+    sgl_kernel('0.5.6', branch='main', default=True),
 ]
