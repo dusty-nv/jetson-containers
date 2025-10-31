@@ -28,8 +28,17 @@ elif [ "${COMMAND}" == "upload" ]; then
 	tar -czvf $upload_tarball .
 	cd ${TARPACK_TMPDIR}/uploads
 	sha256sum $PACKAGE.tar.gz > $upload_sha
-	sshpass -p ${SCP_UPLOAD_PASS} scp -o 'StrictHostKeyChecking no' $upload_tarball ${SCP_UPLOAD_USER}@${SCP_UPLOAD_URL}/
-	sshpass -p ${SCP_UPLOAD_PASS} scp -o 'StrictHostKeyChecking no' $upload_sha ${SCP_UPLOAD_USER}@${SCP_UPLOAD_URL}/
+	# Support both SSH key-based and password-based authentication
+	if [ -n "${SCP_UPLOAD_KEY}" ]; then
+		scp -i ${SCP_UPLOAD_KEY} -o 'StrictHostKeyChecking no' $upload_tarball ${SCP_UPLOAD_USER}@${SCP_UPLOAD_URL}/
+		scp -i ${SCP_UPLOAD_KEY} -o 'StrictHostKeyChecking no' $upload_sha ${SCP_UPLOAD_USER}@${SCP_UPLOAD_URL}/
+	elif [ -n "${SCP_UPLOAD_PASS}" ]; then
+		sshpass -p ${SCP_UPLOAD_PASS} scp -o 'StrictHostKeyChecking no' $upload_tarball ${SCP_UPLOAD_USER}@${SCP_UPLOAD_URL}/
+		sshpass -p ${SCP_UPLOAD_PASS} scp -o 'StrictHostKeyChecking no' $upload_sha ${SCP_UPLOAD_USER}@${SCP_UPLOAD_URL}/
+	else
+		echo "error: either SCP_UPLOAD_KEY or SCP_UPLOAD_PASS must be set"
+		exit 1
+	fi
 	#rm $upload_tarball
 	#rm $upload_sha
 elif [ "${COMMAND}" == "test" ]; then

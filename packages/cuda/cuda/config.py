@@ -169,6 +169,7 @@ def pip_cache(version, requires=None):
         'SCP_UPLOAD_URL': os.environ.get('SCP_UPLOAD_URL', f"{os.environ.get('SCP_UPLOAD_HOST', 'localhost:/dist')}/{apt_path}"),
         'SCP_UPLOAD_USER': os.environ.get('SCP_UPLOAD_USER'),
         'SCP_UPLOAD_PASS': os.environ.get('SCP_UPLOAD_PASS'),
+        'SCP_UPLOAD_KEY': os.environ.get('SCP_UPLOAD_KEY'),
     }
 
     if requires:

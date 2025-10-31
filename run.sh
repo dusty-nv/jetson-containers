@@ -255,6 +255,17 @@ if [ -d "${XDG_RUNTIME_DIR}/pulse" ]; then
 	PULSE_AUDIO_ARGS="-e PULSE_SERVER=unix:${XDG_RUNTIME_DIR}/pulse/native  -v ${XDG_RUNTIME_DIR}/pulse:${XDG_RUNTIME_DIR}/pulse"
 fi
 
+# SSH key for SCP uploads
+SSH_KEY_VOLUME=""
+SSH_KEY_ENV=""
+
+if [ -n "$SCP_UPLOAD_KEY" ] && [ -f "$SCP_UPLOAD_KEY" ]; then
+	# Mount SSH key to a standard location in the container
+	# Mount to /root/.ssh/scp_upload_key and update the env var to point to it
+	SSH_KEY_VOLUME="-v $SCP_UPLOAD_KEY:/root/.ssh/scp_upload_key:ro"
+	SSH_KEY_ENV="-e SCP_UPLOAD_KEY=/root/.ssh/scp_upload_key"
+fi
+
 # extra flags
 EXTRA_FLAGS=""
 
@@ -342,6 +353,7 @@ if [ $SYSTEM_ARCH = "tegra-aarch64" ]; then
 		--device /dev/snd \
 		$PULSE_AUDIO_ARGS \
 		--device /dev/bus/usb \
+		$SSH_KEY_VOLUME $SSH_KEY_ENV \
 		$OPTIONAL_PERMISSION_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $ACM_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
 		$CONTAINER_NAME_FLAGS \
 		"${filtered_args[@]}"
@@ -360,6 +372,7 @@ elif [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "x86_64" ]; then
 		-v /etc/localtime:/etc/localtime:ro -v /etc/timezone:/etc/timezone:ro \
 		--device /dev/snd \
 		$PULSE_AUDIO_ARGS \
+		$SSH_KEY_VOLUME $SSH_KEY_ENV \
 		$OPTIONAL_ARGS $DATA_VOLUME $DISPLAY_DEVICE $V4L2_DEVICES $I2C_DEVICES $ACM_DEVICES $JTOP_SOCKET $EXTRA_FLAGS \
 		$CONTAINER_NAME_FLAGS \
 		"${filtered_args[@]}"

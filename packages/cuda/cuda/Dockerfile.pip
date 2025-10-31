@@ -20,8 +20,8 @@ ARG INDEX_HOST \
     SCP_UPLOAD_URL \
     SCP_UPLOAD_USER \
     SCP_UPLOAD_PASS \
-    FALLBACK_TAR_INDEX_URL \
-    UV_EXTRA_INDEX_URL
+    SCP_UPLOAD_KEY \
+    FALLBACK_TAR_INDEX_URL
 
 ENV INDEX_HOST=${INDEX_HOST} \
     MULTIARCH_URL=${MULTIARCH_URL} \
@@ -29,12 +29,20 @@ ENV INDEX_HOST=${INDEX_HOST} \
     FALLBACK_TAR_INDEX_URL=${FALLBACK_TAR_INDEX_URL} \
     PIP_INDEX_URL=${PIP_INDEX_REPO} \
     UV_DEFAULT_INDEX=${PIP_INDEX_REPO} \
-    UV_INDEX=${PIP_INDEX_REPO} \
-    UV_EXTRA_INDEX_URL=${UV_EXTRA_INDEX_URL} \
     PIP_TRUSTED_HOST=${PIP_TRUSTED_HOSTS} \
     TWINE_REPOSITORY_URL=${PIP_UPLOAD_REPO} \
     TWINE_USERNAME=${PIP_UPLOAD_USER} \
     TWINE_PASSWORD=${PIP_UPLOAD_PASS} \
     SCP_UPLOAD_URL=${SCP_UPLOAD_URL} \
     SCP_UPLOAD_USER=${SCP_UPLOAD_USER} \
-    SCP_UPLOAD_PASS=${SCP_UPLOAD_PASS}
+    SCP_UPLOAD_PASS=${SCP_UPLOAD_PASS} \
+    SCP_UPLOAD_KEY=${SCP_UPLOAD_KEY}
+
+# Copy SSH key from BuildKit secret to permanent location if provided
+RUN --mount=type=secret,id=scp_upload_key,target=/run/secrets/scp_upload_key \
+    if [ -f /run/secrets/scp_upload_key ]; then \
+        mkdir -p /root/.ssh && \
+        cp /run/secrets/scp_upload_key /root/.ssh/scp_upload_key && \
+        chmod 600 /root/.ssh/scp_upload_key && \
+        echo "SSH key copied from BuildKit secret"; \
+    fi || true

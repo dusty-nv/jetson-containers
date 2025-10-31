@@ -148,6 +148,9 @@ def build_container(
         if postfix:
             name += f"{':' if tag_idx < 0 else '-'}{postfix}"
 
+        # Sanitize name for Docker (replace + with - since Docker doesn't allow + in tags)
+        name = name.replace('+', '-')
+
         log_status(f'<b>BUILDING  {packages}</b>')
 
         # Add N-second countdown with BUILD_DELAY=N environment variable
@@ -177,7 +180,12 @@ def build_container(
             log_file = os.path.join(get_log_dir('build'), f"{idx+1:02d}o{len(packages)}_{container_name.replace('/','_')}").replace(':','_')
             jetpack_version = get_jetpack_version()
             if 'dockerfile' in pkg:
-                cmd = f"{sudo_prefix()}DOCKER_BUILDKIT=0 docker build --network=host --shm-size=8g" + _NEWLINE_
+                # Check if SSH key is provided for SCP uploads - enable BuildKit for secret mounting
+                scp_upload_key = os.environ.get('SCP_UPLOAD_KEY')
+                use_buildkit = scp_upload_key and os.path.isfile(scp_upload_key)
+                buildkit_env = "DOCKER_BUILDKIT=1" if use_buildkit else "DOCKER_BUILDKIT=0"
+
+                cmd = f"{sudo_prefix()}{buildkit_env} docker build --network=host --shm-size=8g" + _NEWLINE_
                 cmd += f"  --tag {container_name}" + _NEWLINE_
                 if no_github_api:
                     dockerfilepath = os.path.join(pkg['path'], pkg['dockerfile'])
@@ -207,6 +215,17 @@ def build_container(
 
                 if build_flags:
                     cmd += '  ' + build_flags + _NEWLINE_
+
+                # Add SSH key secret mount if provided
+                if use_buildkit:
+                    cmd += f"  --secret id=scp_upload_key,src={scp_upload_key}" + _NEWLINE_
+                    # Update SCP_UPLOAD_KEY build arg to point to permanent location after secret is copied
+                    # Check if it's not already set in package build_args or user build_args
+                    scp_key_in_pkg = 'build_args' in pkg and 'SCP_UPLOAD_KEY' in pkg['build_args']
+                    scp_key_in_build = build_args and 'SCP_UPLOAD_KEY' in build_args
+                    if not scp_key_in_pkg and not scp_key_in_build:
+                        # Set to /root/.ssh/scp_upload_key which is where Dockerfile.pip will copy it
+                        cmd += "  --build-arg SCP_UPLOAD_KEY=/root/.ssh/scp_upload_key" + _NEWLINE_
 
                 cmd += '   ' + pkg['path']
 
