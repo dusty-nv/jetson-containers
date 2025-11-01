@@ -180,18 +180,29 @@ def build_container(
             log_file = os.path.join(get_log_dir('build'), f"{idx+1:02d}o{len(packages)}_{container_name.replace('/','_')}").replace(':','_')
             jetpack_version = get_jetpack_version()
             if 'dockerfile' in pkg:
-                # Check if SSH key is provided for SCP uploads - BuildKit is required for secret mounting
+                # Check if SSH key is provided for SCP uploads - BuildKit/buildx is required for secret mounting
                 scp_upload_key = os.environ.get('SCP_UPLOAD_KEY')
                 scp_key_provided = scp_upload_key and os.path.isfile(scp_upload_key)
 
-                # Respect user's BuildKit preference, but enable it if SSH key is provided (required for secrets)
-                user_buildkit = os.environ.get('DOCKER_BUILDKIT', '1')
-                use_buildkit = user_buildkit != '0' or scp_key_provided
-                buildkit_env = f"DOCKER_BUILDKIT={'1' if use_buildkit else '0'}"
+                # Use buildx which always uses BuildKit and has better log size limit support
+                # Enable buildx if SSH key is provided (required for secrets) or user prefers it
+                user_buildkit = os.environ.get('DOCKER_BUILDKIT', '0')
+                use_buildx = user_buildkit != '0' or scp_key_provided
 
-                cmd = f"{sudo_prefix()}{buildkit_env} docker build --network=host --shm-size=8g" + _NEWLINE_
-                if use_buildkit:
+                # Set BuildKit log size limit (default 500MB, configurable via BUILDKIT_STEP_LOG_MAX_SIZE)
+                # Default Docker BuildKit limit is 2MiB which can clip large build outputs
+                buildkit_log_size = os.environ.get('BUILDKIT_STEP_LOG_MAX_SIZE', '524288000')  # 500MB default
+
+                if use_buildx:
+                    # Use buildx with log size configuration
+                    buildkit_env = f"BUILDKIT_STEP_LOG_MAX_SIZE={buildkit_log_size}"
+                    cmd = f"{sudo_prefix()}{buildkit_env} docker buildx build --network=host --shm-size=8g" + _NEWLINE_
                     cmd += f"  --progress=plain" + _NEWLINE_
+                    cmd += f"  --load" + _NEWLINE_  # Load image into local Docker daemon
+                else:
+                    # Fallback to regular docker build
+                    buildkit_env = f"DOCKER_BUILDKIT=0"
+                    cmd = f"{sudo_prefix()}{buildkit_env} docker build --network=host --shm-size=8g" + _NEWLINE_
                 cmd += f"  --tag {container_name}" + _NEWLINE_
                 if no_github_api:
                     dockerfilepath = os.path.join(pkg['path'], pkg['dockerfile'])
@@ -223,10 +234,11 @@ def build_container(
                 if build_flags:
                     cmd += '  ' + build_flags + _NEWLINE_
 
-                # Add SSH key secret mount if provided (requires BuildKit)
+                # Add SSH key secret mount if provided (requires BuildKit/buildx)
                 if scp_key_provided:
-                    if not use_buildkit:
-                        log_warning("SCP_UPLOAD_KEY requires BuildKit - enabling DOCKER_BUILDKIT=1")
+                    if not use_buildx:
+                        log_warning("SCP_UPLOAD_KEY requires BuildKit/buildx - using buildx")
+                        use_buildx = True
                     cmd += f"  --secret id=scp_upload_key,src={scp_upload_key}" + _NEWLINE_
                     # Update SCP_UPLOAD_KEY build arg to point to permanent location after secret is copied
                     # Check if it's not already set in package build_args or user build_args
