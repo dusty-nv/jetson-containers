@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-echo "Building OpenCV Python variants ${OPENCV_VERSION}"
+echo "Building opencv-python ${OPENCV_VERSION}"
 set -ex
 cd /opt
 
@@ -90,65 +90,17 @@ fi
 # https://github.com/opencv/opencv_contrib/issues/2307
 OPENCV_BUILD_ARGS="${OPENCV_BUILD_ARGS} -DBUILD_opencv_rgbd=OFF"
 
-# setup environment variables
+# setup environment and build wheel
 export CMAKE_BUILD_PARALLEL_LEVEL=$(nproc)
 export CMAKE_POLICY_VERSION_MINIMUM="3.5"
 export CMAKE_LIBRARY_PATH=/usr/local/cuda/lib64/stubs
 export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+export ENABLE_CONTRIB=1
 # export ENABLE_ROLLING=1 # Build from last commit
 # export OPENCV_PYTHON_SKIP_GIT_COMMANDS=1
 
 # Install dependencies for building the wheel
 uv pip install scikit-build
-
-# Function to build opencv-python-headless or opencv-python (simpler builds)
-build_simple_variant() {
-    local variant_name=$1
-    local enable_headless=$2
-    
-    echo "=========================================="
-    echo "Building ${variant_name}..."
-    echo "=========================================="
-    
-    # Set environment variables
-    export ENABLE_CONTRIB=0
-    export ENABLE_HEADLESS=${enable_headless}
-    
-    # Create version.py file
-    cat <<EOF > /opt/opencv-python/cv2/version.py
-opencv_version = "${OPENCV_VERSION}"
-contrib = False
-headless = ${enable_headless}
-rolling = False
-EOF
-    
-    # Clean previous build artifacts
-    cd /opt/opencv-python
-    rm -rf build/ dist/ *.egg-info/ 2>/dev/null || true
-    
-    # Build the wheel (no contrib modules)
-    CMAKE_ARGS="${OPENCV_BUILD_ARGS}" \
-    uv build --wheel --out-dir /opt --verbose --no-build-isolation .
-    
-    echo "Completed building ${variant_name}"
-    echo ""
-}
-
-# Build all variants in order:
-# 1. opencv-python-headless
-# 2. opencv-python
-# 3. opencv-contrib-python (with full working configuration)
-
-build_simple_variant "opencv-python-headless" "1"
-build_simple_variant "opencv-python" "0"
-
-# Build opencv-contrib-python with full working configuration
-echo "=========================================="
-echo "Building opencv-contrib-python (full configuration)..."
-echo "=========================================="
-
-export ENABLE_CONTRIB=1
-export ENABLE_HEADLESS=0
 
 cat <<EOF > /opt/opencv-python/cv2/version.py
 opencv_version = "${OPENCV_VERSION}"
@@ -156,35 +108,17 @@ contrib = True
 headless = False
 rolling = False
 EOF
-
-# Clean previous build artifacts
-cd /opt/opencv-python
-rm -rf build/ dist/ *.egg-info/ 2>/dev/null || true
-
 CMAKE_ARGS="${OPENCV_BUILD_ARGS} -DOPENCV_EXTRA_MODULES_PATH=/opt/opencv-python/opencv_contrib/modules" \
 uv build --wheel --out-dir /opt --verbose --no-build-isolation .
 
-echo "Completed building opencv-contrib-python"
-echo ""
+ls /opt
+cd /
+rm -rf /opt/opencv-python
 
-# List all generated wheels
-echo "=========================================="
-echo "All wheels built. Listing generated wheels:"
-echo "=========================================="
-ls -lh /opt/*.whl
-
-# Install and test opencv-contrib-python wheel (the main working version)
-echo "Installing and testing opencv-contrib-python..."
-uv pip install /opt/opencv_contrib_python*.whl
+# install/test/upload wheel
+uv pip install /opt/opencv*.whl
 python3 -c "import cv2; print('OpenCV version:', str(cv2.__version__)); print(cv2.getBuildInformation())"
-
-# Upload all three variants
-echo "Uploading all OpenCV Python wheels..."
-# Upload each variant separately to avoid pattern overlap
-twine upload --verbose /opt/opencv_python_headless*.whl || echo "failed to upload opencv-python-headless"
-twine upload --verbose /opt/opencv_python-*.whl || echo "failed to upload opencv-python"
-twine upload --verbose /opt/opencv_contrib_python*.whl || echo "failed to upload opencv-contrib-python"
-echo "Upload completed for all variants"
+twine upload --verbose /opt/opencv*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
 # [FIX] Ensure the build directory is clean to avoid CMake caching issues from previous failed runs.
 echo "Configuring C++ Debian package build..."
@@ -212,8 +146,4 @@ mkdir -p /tmp/debs/
 cp *.deb /tmp/debs/
 
 tarpack upload OpenCV-${OPENCV_VERSION} /tmp/debs/ || echo "failed to upload tarball"
-
-# Cleanup
-cd /
-rm -rf /opt/opencv-python
 echo "installed" > "$TMP/.opencv"
