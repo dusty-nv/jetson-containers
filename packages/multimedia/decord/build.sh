@@ -7,8 +7,11 @@ git clone --depth=1 --recursive https://github.com/johnnynunez/decord2 /opt/deco
 
 cd /opt/decord
 mkdir build && cd build
+-DUSE_CUDA=ON \
+-DCMAKE_BUILD_TYPE=Release \
 CUDA_HOME="/usr/local/cuda" \
 NVCC_PATH="${CUDA_HOME}/bin/nvcc" \
+-DCMAKE_CUDA_ARCHITECTURES="80;90;100;110;120" \
 cmake .. -DUSE_CUDA=ON -DCMAKE_BUILD_TYPE=Release
 make
 
