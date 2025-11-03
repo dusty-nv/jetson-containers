@@ -13,7 +13,7 @@ scikit-video==1.1.11
 scikit-image==0.25.2
 gym
 pymunk==7.1.0
-wandb==0.13.3
+wandb==0.22.3
 threadpoolctl==3.1.0
 shapely==1.8.4
 imageio==2.22.0
