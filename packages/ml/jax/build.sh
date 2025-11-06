@@ -11,33 +11,26 @@ git clone --depth=1 --recursive https://github.com/google/jax /opt/jax
 cd /opt/jax
 
 mkdir -p /opt/jax/wheels/
-# Build jaxlib from source with detected versions
-BUILD_FLAGS+='--cuda_compute_capabilities="sm_87,sm_89,sm_90,sm_100,sm_103,sm_110,sm_120,sm_121" '
-BUILD_FLAGS+='--cuda_version=13.0.0 --cudnn_version=9.12.0 '
-BUILD_FLAGS+='--bazel_options=--config=ci_linux_aarch64_cuda13 '
-BUILD_FLAGS+='--clang_path=/usr/lib/llvm-18/bin/clang '
+BUILD_FLAGS+='--clang_path=/usr/lib/llvm-20/bin/clang '
 BUILD_FLAGS+='--output_path=/opt/jax/wheels/ '
-
-# python3 build/build.py requirements_update
-
-# Start background process to monitor and patch matrix.h
-(
-    while true; do
-        if [ -f "/root/.cache/bazel/_bazel_root/cfd1b2cc6fe180f3eb424db6004de364/external/cutlass_archive/include/cutlass/matrix.h" ]; then
-            echo -e "\e[1;33m[PATCH] Found matrix.h, applying patch...\e[0m"
-            sed -i 's/set_slice3x3/set_slice_3x3/g' /root/.cache/bazel/_bazel_root/cfd1b2cc6fe180f3eb424db6004de364/external/cutlass_archive/include/cutlass/matrix.h
-            echo -e "\e[1;32m[PATCH] Patch applied successfully!\e[0m"
-            break
-        fi
-        sleep 1
-    done
-) &
+# Build jaxlib from source with detected versions
+if [ "${IS_SBSA}" -eq 1 ]; then
+    echo "Building for SBSA architecture"
+    BUILD_FLAGS+='--cuda_compute_capabilities="sm_87,sm_89,sm_90,sm_100,sm_110,sm_120,sm_121" '
+    BUILD_FLAGS+='--cuda_version=13.0.0 --cudnn_version=9.12.0 '
+    BUILD_FLAGS+='--bazel_options=--config=ci_linux_aarch64_cuda13 '
+    BUILD_FLAGS+='--output_path=/opt/jax/wheels/ '
+else
+    echo "Building for non-SBSA architecture"
+    BUILD_FLAGS+='--cuda_compute_capabilities="sm_87" '
+    BUILD_FLAGS+='--cuda_version=12.6.0 --cudnn_version=9.3.0 '
+fi
 
 # Run the build
 python3 build/build.py build $BUILD_FLAGS --wheels=jaxlib,jax-cuda-plugin,jax-cuda-pjrt
 
 # Build the jax pip wheels
-uv build --wheel --out-dir /opt/jax/wheels/ --no-deps --verbose .
+# uv build --wheel --out-dir /opt/jax/wheels/ --no-deps --verbose .
 
 # Upload the wheels to mirror
 twine upload --verbose /opt/jax/wheels/jaxlib-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
