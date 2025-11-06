@@ -62,7 +62,7 @@ if [ "${ARCH}" = "aarch64" ]; then
       export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
       export NINJAFLAGS='-j2'
 fi
-
+uv pip install flashinfer-python==0.4.1 --index-url https://pypi.org/simple/
 uv build --wheel --no-build-isolation -v --out-dir /opt/vllm/wheels .
 uv pip install /opt/vllm/wheels/vllm*.whl
 

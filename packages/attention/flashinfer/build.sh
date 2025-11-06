@@ -43,7 +43,8 @@ else
 fi
 
 uv pip install apache-tvm-ffi
-uv pip install -r requirements.txt
+sed -i '/nvidia-cutlass-dsl>=4\.2\.1/d' requirements.txt
+uv pip install -r requirements.txt --prerelease=allow
 cd /opt/flashinfer/
 uv build --no-build-isolation -v --wheel . --out-dir /opt/wheels/
 cd /opt/flashinfer/flashinfer-cubin
