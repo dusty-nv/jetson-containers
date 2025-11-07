@@ -131,10 +131,10 @@ def get_jetpack_version(l4t_version: str = None, default='6.2'):
 
     NVIDIA_JETPACK = {
         # -------- JP7 --------
-        "38.4.0": "7.1",  # Q1 2026 Orin Support
-        "38.2.2": "7.0 GA",  # Q4 2025 T400 Support
-        "38.2.0": "7.0 GA",  # Q4 2025 T400 Support
-        "38.1.0": "7.0 EA",  # Q3 2025 JP7 GA
+        "38.4.0": "7.1", # Q4 2025 T400 Support
+        "38.2.2": "7.0 GA",
+        "38.2.0": "7.0 GA",
+        "38.1.0": "7.0 EA",
 
         # -------- JP6 --------
         "36.4.4": "6.2.1",
