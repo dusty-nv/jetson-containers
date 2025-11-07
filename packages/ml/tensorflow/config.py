@@ -141,12 +141,12 @@ package = [
         version='2.20.0',
         tensorflow_version='tf2',
         requires='>=36',
-        default=(CUDA_VERSION >= Version('12.6')), # Blackwell Support
+        default=False,
     ),
 *tensorflow(
         version='2.21.0',
         tensorflow_version='tf2',
         requires='>=36',
-        default=(CUDA_VERSION >= Version('13.1')),
+        default=(CUDA_VERSION >= Version('12.6')), # Blackwell Support
     ),
 ]

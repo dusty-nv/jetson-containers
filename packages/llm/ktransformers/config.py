@@ -23,5 +23,5 @@ def ktransformers(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    ktransformers(version='0.3.3', default=True),
+    ktransformers(version='0.5.0', default=True),
 ]

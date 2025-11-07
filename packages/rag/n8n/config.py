@@ -1,5 +1,5 @@
 from packaging.version import Version
 
 package['build_args'] = {
-    'N8N_VERSION': '1.117.3',
+    'N8N_VERSION': '1.118.2',
 }

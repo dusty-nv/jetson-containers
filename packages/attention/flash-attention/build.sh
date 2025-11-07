@@ -55,7 +55,7 @@ uv pip install /opt/flash-attention/wheels/flash_attn*.whl
 #pip3 show flash-attn && python3 -c 'import flash_attn'
 
 #FlashAttention4 , cute requires Python 3.12+
-if [ $(vercmp $PYTHON_VERSION "3.12") -ge 0 ]; then
+if [ "${PYTHON_VERSION}" == "3.12" ]; then
     echo "Building FlashAttention4 (cute) ${FLASH_ATTENTION_VERSION}"
     cd /opt/flash-attention/flash_attn/cute
     uv build --wheel . -v --no-build-isolation --out-dir /opt/flash-attention/wheels/
