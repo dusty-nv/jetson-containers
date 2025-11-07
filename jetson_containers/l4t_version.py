@@ -27,6 +27,7 @@ def get_l4t_version(version_file='/etc/nv_tegra_release', l4t_version: str = Non
     Returns the L4T_VERSION in a packaging.version.Version object
     Which can be compared against other version objects:  https://packaging.pypa.io/en/latest/version.html
     You can also access the version components directly.  For example, on L4T R35.3.1:
+    You can also access the version components directly.  For example, on L4T R35.3.1:
 
         version.major == 35
         version.minor == 3
@@ -42,11 +43,11 @@ def get_l4t_version(version_file='/etc/nv_tegra_release', l4t_version: str = Non
         return Version(os.environ['L4T_VERSION'].lower().lstrip('r'))
 
     if CUDA_ARCH != 'tegra-aarch64':
-        return Version('38.2.2')  # for x86 to unlock L4T checks
+        return Version('38.4.0')  # for x86 to unlock L4T checks
 
     if not os.path.isfile(version_file):
         # raise IOError(f"L4T_VERSION file doesn't exist:  {version_file}")
-        return Version('38.2.2')
+        return Version('38.4.0')
 
     with open(version_file) as file:
         line = file.readline()
@@ -130,7 +131,7 @@ def get_jetpack_version(l4t_version: str = None, default='6.2'):
 
     NVIDIA_JETPACK = {
         # -------- JP7 --------
-        "38.3.0": "7.1",  # Q1 2026 Orin Support
+        "38.4.0": "7.1",  # Q1 2026 Orin Support
         "38.2.2": "7.0 GA",  # Q4 2025 T400 Support
         "38.2.0": "7.0 GA",  # Q4 2025 T400 Support
         "38.1.0": "7.0 EA",  # Q3 2025 JP7 GA
