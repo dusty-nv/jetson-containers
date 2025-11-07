@@ -30,7 +30,7 @@ twine upload --verbose $WHL/pycute*.whl || echo "failed to upload wheel to ${TWI
 
 if [ "${PYTHON_VERSION}" == "3.12" ]; then
     echo "Installing nvidia-cutlass-dsl for Python 3.12"
-    uv pip install nvidia-cutlass-dsl || echo "failed to install nvidia-cutlass-dsl for Python ${PYTHON_VERSION}"
+    uv pip install nvidia-cutlass-dsl --prerelease=allow || echo "failed to install nvidia-cutlass-dsl for Python ${PYTHON_VERSION}"
 else
     echo "Installing nvidia-cutlass for Python ${PYTHON_VERSION}"
 fi
