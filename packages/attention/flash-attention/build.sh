@@ -62,7 +62,6 @@ if [ "${PYTHON_VERSION}" == "3.12" ]; then
     uv pip install /opt/flash-attention/wheels/flash_attn_cute*.whl
 else
     echo "Skipping FlashAttention4 (cute) build as CAN_USE_FA_CUTE=${CAN_USE_FA_CUTE}"
-    exit 0
 fi
 
 twine upload --verbose /opt/flash-attention/wheels/flash_attn*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
