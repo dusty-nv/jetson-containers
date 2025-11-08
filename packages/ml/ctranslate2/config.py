@@ -29,5 +29,5 @@ package = [
     ctranslate2('4.2.0', requires='<=cu122', default=True),
     ctranslate2('4.6.0', requires='<=cu126', default=True),
     ctranslate2('4.6.0', requires='>=cu128', default=True),
-    ctranslate2('4.7.0', requires='>=130', default=True),
+    ctranslate2('4.6.1', requires='>=130', default=True),
 ]
