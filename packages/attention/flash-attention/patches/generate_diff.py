@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 import difflib
-import os
-import re
 
 def modify_setup_py(original_content):
     lines = original_content.splitlines()
+    
+    # Replace get_platform() function
     plat_start = None
     plat_end = None
     for i, line in enumerate(lines):
@@ -59,27 +59,43 @@ def modify_setup_py(original_content):
         ]
         lines[plat_start:plat_end+1] = new_plat_block
 
-    cuda_start = None
-    cuda_end = None
+    # Replace add_cuda_gencodes() function
+    cuda_func_start = None
+    cuda_func_end = None
     for i, line in enumerate(lines):
-        if 'if "80" in cuda_archs():' in line:
-            cuda_start = i
+        if line.strip().startswith("def add_cuda_gencodes("):
+            cuda_func_start = i
+            # Find the end of the function by looking for the next function definition
+            # or a line at module level (no indentation)
+            func_indent = len(line) - len(line.lstrip())
+            for j in range(i+1, len(lines)):
+                current_line = lines[j]
+                if not current_line.strip():
+                    continue
+                current_indent = len(current_line) - len(current_line.lstrip())
+                # If we find a line at the same or less indentation that's not a comment
+                # and it's not just whitespace, it's the end of the function
+                if current_indent <= func_indent and current_line.strip() and not current_line.strip().startswith("#"):
+                    cuda_func_end = j - 1
+                    break
+            else:
+                cuda_func_end = len(lines) - 1
             break
-    if cuda_start is not None:
-        for j in range(cuda_start, len(lines)):
-            if lines[j].lstrip().startswith("# HACK:"):
-                cuda_end = j
-                break
-        if cuda_end is None:
-            cuda_end = len(lines)
-        new_cuda_block = []
-        for CUDA_ARCH in os.environ['CUDA_ARCHITECTURES'].split(';'):
-            new_cuda_block.extend([
-                f"    cc_flag.append(\"-gencode\")",
-                f"    cc_flag.append(\"arch=compute_{CUDA_ARCH},code=sm_{CUDA_ARCH}\")",
-            ])
-        lines[cuda_start:cuda_end] = new_cuda_block
 
+    if cuda_func_start is not None and cuda_func_end is not None:
+        new_cuda_func = [
+            "def add_cuda_gencodes(cc_flag, archs, bare_metal_version):",
+            '    """',
+            "    Adds -gencode flags based on CUDA_ARCHITECTURES environment variable.",
+            '    """',
+            "    for CUDA_ARCH in os.environ.get('CUDA_ARCHITECTURES', '80;90;100;110;120').split(';'):",
+            "        if CUDA_ARCH.strip():",
+            "            cc_flag += [\"-gencode\", f\"arch=compute_{CUDA_ARCH.strip()},code=sm_{CUDA_ARCH.strip()}\"]",
+            "    return cc_flag",
+        ]
+        lines[cuda_func_start:cuda_func_end+1] = new_cuda_func
+
+    # Add type hints
     for i, line in enumerate(lines):
         if line.strip().startswith("def get_package_version():"):
             lines[i] = line.replace("def get_package_version():", "def get_package_version() -> str:")
@@ -92,10 +108,10 @@ def modify_setup_py(original_content):
     return "\n".join(lines) + "\n"
 
 def generate_diff(original_file, output_diff):
-    with open(original_file, "r") as f:
+    with open(original_file, "r", encoding="utf-8") as f:
         original_content = f.read()
     modified_content = modify_setup_py(original_content)
-    with open("setup_modified.py", "w") as f:
+    with open("setup_modified.py", "w", encoding="utf-8") as f:
         f.write(modified_content)
     diff = difflib.unified_diff(
         original_content.splitlines(),
@@ -104,7 +120,7 @@ def generate_diff(original_file, output_diff):
         tofile="b/setup.py",
         lineterm=""
     )
-    with open(output_diff, "w") as f:
+    with open(output_diff, "w", encoding="utf-8") as f:
         f.write("\n".join(diff) + "\n")
 
 if __name__ == "__main__":
