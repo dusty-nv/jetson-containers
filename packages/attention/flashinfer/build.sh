@@ -46,12 +46,11 @@ uv pip install apache-tvm-ffi
 sed -i '/nvidia-cutlass-dsl>=4\.2\.1/d' requirements.txt
 uv pip install -r requirements.txt --prerelease=allow
 cd /opt/flashinfer/
-uv build --no-build-isolation -v --wheel . --out-dir /opt/wheels/
+uv build --no-build-isolation -v --wheel . --out-dir /opt/wheels/ || echo "failed to build flashinfer wheel"
 cd /opt/flashinfer/flashinfer-cubin
-uv build --no-build-isolation -v --wheel . --out-dir /opt/wheels/
+uv build --no-build-isolation -v --wheel . --out-dir /opt/wheels/ || echo "failed to build flashinfer-cubin wheel"
 cd /opt/flashinfer/flashinfer-jit-cache
-uv build --no-build-isolation -v --wheel . --out-dir /opt/wheels/
-
+uv build --no-build-isolation -v --wheel . --out-dir /opt/wheels/ || echo "failed to build flashinfer-jit-cache wheel"
 # Install AOT wheel
 python3 -m pip install /opt/wheels/flashinfer*.whl
 
