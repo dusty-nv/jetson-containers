@@ -1,7 +1,7 @@
 #---
 # name: ai-toolkit
 # group: diffusion
-# depends: [pytorch, torchvision, torchaudio, transformers, bitsandbytes, huggingface_hub, diffusers, onnxruntime, nodejs]
+# depends: [pytorch, torchvision, torchaudio, transformers, bitsandbytes, huggingface_hub, diffusers, onnxruntime, torchao, nodejs]
 # requires: '>=34.1.0'
 # docs: docs.md
 #---
