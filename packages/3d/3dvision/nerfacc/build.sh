@@ -13,7 +13,7 @@ export LINE_INFO=1
 export MAX_JOBS=$(nproc)
 
 # Build and install python wheel
-uv build --wheel . --out-dir $PIP_WHEEL_DIR --verbose
+uv build --wheel --no-build-isolation . --out-dir $PIP_WHEEL_DIR --verbose
 uv pip install lpips scipy
 uv pip install $PIP_WHEEL_DIR/nerfacc*.whl
 
