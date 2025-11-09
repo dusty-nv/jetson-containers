@@ -12,23 +12,23 @@ env
 # cp /tmp/vllm/${VLLM_VERSION}.fa.diff /tmp/vllm/fa.diff
 # git apply /tmp/vllm/${VLLM_VERSION}.diff
 
-echo "Applying vLLM CMake patches…"
-if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "1" || "${IS_SBSA,,}" == "true" ]]; then
-  git apply -p1 /tmp/vllm/0.10.2.diff || echo "patch already applied"
-elif [[ "$(uname -m)" == "aarch64" && "${TORCH_CUDA_ARCH_LIST}" = "8.7" ]]; then
+# echo "Applying vLLM CMake patches…"
+#  [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "1" || "${IS_SBSA,,}" == "true" ]]; then
+#   git apply -p1 /tmp/vllm/0.10.2.diff || echo "patch already applied"
+# elif [[ "$(uname -m)" == "aarch64" && "${TORCH_CUDA_ARCH_LIST}" = "8.7" ]]; then
   # Generate and apply patch for Jetson SM 87,
   # required to apply flash attention path fa.diff.
   # Note, fa.diff was generated for vLLM commit 63b22e0dbb901b75619aa4bca2dfa1d7a71f439e :
   # - GIT_REPOSITORY https://github.com/vllm-project/flash-attention.git
   # - GIT_TAG a893712401d70362fbb299cd9c4b3476e8e9ed54
-  python3 /tmp/vllm/generate_diff.py                      # (re)generate the .diff files
-  if ! git apply -p1 /tmp/vllm/vllm_flash_attn.cmake.diff  ;then
-    echo "ERROR: Patch for SM 8.7 FAILED!" >&2
-    exit 1
-  else
-    echo "Patch for SM 8.7 applied successfully!"
-  fi
-fi
+#  python3 /tmp/vllm/generate_diff.py                      # (re)generate the .diff files
+#   if ! git apply -p1 /tmp/vllm/vllm_flash_attn.cmake.diff  ;then
+#     echo "ERROR: Patch for SM 8.7 FAILED!" >&2
+#     exit 1
+#   else
+#     echo "Patch for SM 8.7 applied successfully!"
+#   fi
+# fi
 # File "/opt/venv/lib/python3.12/site-packages/gguf/gguf_reader.py"
 # `newbyteorder` was removed from the ndarray class in NumPy 2.0
 sed -i \
