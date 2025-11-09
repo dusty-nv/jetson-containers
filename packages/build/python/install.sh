@@ -47,6 +47,8 @@ uv venv --python "${PY_BIN}" --system-site-packages /opt/venv
 # Activate the venv
 . /opt/venv/bin/activate
 
+source /opt/venv/bin/activate
+
 # Checks
 which python
 python --version
@@ -93,3 +95,5 @@ if [ "${PYTHON_FREE_THREADING}" = "1" ]; then
   python3 -c "import sys; gil_disabled = not sys._is_gil_enabled() if hasattr(sys, '_is_gil_enabled') else 'N/A'; print(f'GIL Status: {\"✓ DISABLED (Free-threaded)\" if gil_disabled is True else \"✗ ENABLED\" if gil_disabled is False else \"Unknown (sys._is_gil_enabled not available)\"}')" || true
   echo "========================================"
 fi
+
+source /opt/venv/bin/activate
