@@ -9,7 +9,7 @@ git clone --recursive https://github.com/OpenNMT/CTranslate2.git ${CTRANSLATE_SO
 mkdir -p $CTRANSLATE_SOURCE/build
 cd $CTRANSLATE_SOURCE/build
 
-install_dir="${CTRANSLATE_SOURCES}/build/install"
+install_dir="${CTRANSLATE_SOURCE}/build/install"
 
 # build C++ libraries
 cmake .. -DWITH_CUDA=ON -DWITH_CUDNN=ON -DWITH_MKL=OFF -DOPENMP_RUNTIME=COMP -DCMAKE_INSTALL_PREFIX=$install_dir
