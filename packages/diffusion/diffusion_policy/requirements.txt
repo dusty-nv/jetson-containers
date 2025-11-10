@@ -17,7 +17,7 @@ wandb==0.22.3
 threadpoolctl==3.1.0
 shapely==1.8.4
 imageio==2.22.0
-imageio-ffmpeg==0.4.7
+imageio-ffmpeg==0.6.0
 termcolor==3.2.0
 tensorboard
 tensorboardx
