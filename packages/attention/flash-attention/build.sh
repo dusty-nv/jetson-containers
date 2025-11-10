@@ -54,14 +54,11 @@ cd /
 uv pip install /opt/flash-attention/wheels/flash_attn*.whl
 #pip3 show flash-attn && python3 -c 'import flash_attn'
 
-#FlashAttention4 , cute requires Python 3.12+
-if [ "${PYTHON_VERSION}" == "3.12" ]; then
-    echo "Building FlashAttention4 (cute) ${FLASH_ATTENTION_VERSION}"
-    cd /opt/flash-attention/flash_attn/cute
-    uv build --wheel . -v --no-build-isolation --out-dir /opt/flash-attention/wheels/
-    uv pip install /opt/flash-attention/wheels/flash_attn_cute*.whl
-else
-    echo "Skipping FlashAttention4 (cute) build as CAN_USE_FA_CUTE=${CAN_USE_FA_CUTE}"
-fi
+#FlashAttention4 , cute requires cutlass 4.3.0
+
+echo "Building FlashAttention4 (cute) ${FLASH_ATTENTION_VERSION}"
+cd /opt/flash-attention/flash_attn/cute
+uv build --wheel . -v --no-build-isolation --out-dir /opt/flash-attention/wheels
+uv pip install /opt/flash-attention/wheels/flash_attn_cute*.whl
 
 twine upload --verbose /opt/flash-attention/wheels/flash_attn*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
