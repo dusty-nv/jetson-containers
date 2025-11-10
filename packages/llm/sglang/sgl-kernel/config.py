@@ -39,6 +39,7 @@ package = [
     # in CMakeLists.txt at commit 88568c01eb99698eceef9a40b5f481e37c0b89d0
     sgl_kernel('0.5.4', default=False),
     sgl_kernel('0.5.5', default=False),
+    sgl_kernel('0.5.6', default=True),
     # Latest version from main branch.
-    sgl_kernel('latest', branch='main', default=True),
+    sgl_kernel('latest', branch='main', default=False),
 ]
