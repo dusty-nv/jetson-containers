@@ -103,6 +103,7 @@ if [[ "$(uname -m)" == "aarch64" && "${TORCH_CUDA_ARCH_LIST}" = "8.7" ]]; then
   sed -i '/nvfp4_quant_kernels\.cu/s/^/# /' CMakeLists.txt
   sed -i '/nvfp4_scaled_mm_entry\.cu/s/^/# /' CMakeLists.txt
   sed -i '/nvfp4_scaled_mm_kernels\.cu/s/^/# /' CMakeLists.txt
+  sed -i '/nvfp4_blockwise_moe\.cu/s/^/# /' CMakeLists.txt
   # Comment out SM 80 and SM 89 gencode flags (not needed for SM 8.7)
   sed -i '/-gencode=arch=compute_80,code=sm_80/s/^/# /' CMakeLists.txt
   sed -i '/-gencode=arch=compute_89,code=sm_89/s/^/# /' CMakeLists.txt
