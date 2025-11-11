@@ -39,7 +39,7 @@ RUN apt-get update -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-COPY patches build.sh install.sh $TMP/
+COPY build.sh install.sh $TMP/
 RUN $TMP/install.sh || $TMP/build.sh || touch $TMP/.build.failed
 
 # this retains the stage above for debugging on build failure
