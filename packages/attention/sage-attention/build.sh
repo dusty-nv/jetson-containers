@@ -17,14 +17,16 @@ MAX_JOBS="$(nproc)" \
 CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS \
 uv build --wheel . -v --no-build-isolation --out-dir /opt/sage-attention/wheels/
 
-# ls /opt/sage-attention/wheels
+ls /opt/sage-attention/wheels
 
+# Do if Blackwell is enabled
 cd /opt/sage-attention/sageattention3_blackwell/
-uv build --wheel . -v --no-build-isolation --out-dir /opt/sage-attention/wheels/
+uv build --wheel . -v --no-build-isolation --out-dir /opt/sage-attention/wheels/ || echo "Blackwell build failed, skipping..."
 
 cd /
 
 uv pip install /opt/sage-attention/wheels/sageattention*.whl
-uv pip install /opt/sage-attention/wheels/sageattn3*.whl
+uv pip install /opt/sage-attention/wheels/sageattn3*.whl || echo "Blackwell wheel install failed, skipping..."
 
 twine upload --verbose /opt/sage-attention/wheels/sage-attention*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose /opt/sage-attention/wheels/sageattn3*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
