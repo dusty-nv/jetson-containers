@@ -86,18 +86,27 @@ ok "Generating sgl-kernel wheel (no build isolation, Ninja)…"
 
 cd "${REPO_DIR}/sgl-kernel" || exit 1
 
+# Apply always
+sed -i 's/set(\s*ENABLE_BELOW_SM90\s*OFF\s*)/set(ENABLE_BELOW_SM90 ON)/' CMakeLists.txt
+# Update the message to reflect that it's enabled
+sed -i 's/For aarch64, disable gencode below SM90 by default/For aarch64, enable gencode below SM90 by default/g' CMakeLists.txt
+
 if [[ "$(uname -m)" == "aarch64" && "${TORCH_CUDA_ARCH_LIST}" = "8.7" ]]; then
   # Override parallel build env vars for SM 87 on Jetson devices
   # Note: make sure you have sufficient swap space set to avoid out of memory problems
-  MAX_JOBS=$(nproc)
-  export MAX_JOBS=$MAX_JOBS
-  export CMAKE_BUILD_PARALLEL_LEVEL=$((MAX_JOBS/2))
-  # Apply patch for SM 87
-  if ! git apply -p1 ${TMP}/sm_87-${SGL_KERNEL_VERSION}.diff ;then
-    warn "Patch for SM 8.7 FAILED!" && exit 1
-  else
-    ok "Patch for SM 8.7 applied successfully!"
-  fi
+  sed -i 's/set(\s*ENABLE_BELOW_SM90\s*OFF\s*)/set(ENABLE_BELOW_SM90 ON)/' CMakeLists.txt
+  # Change FA3 gencode from sm_90a to sm_87 for Jetson devices
+  sed -i 's/compute_90a,code=sm_90a/compute_87,code=sm_87/g' CMakeLists.txt
+  # Comment out nvfp4 source files (not compatible with SM 8.7)
+  sed -i '/nvfp4_expert_quant\.cu/s/^/# /' CMakeLists.txt
+  sed -i '/nvfp4_quant_entry\.cu/s/^/# /' CMakeLists.txt
+  sed -i '/nvfp4_quant_kernels\.cu/s/^/# /' CMakeLists.txt
+  sed -i '/nvfp4_scaled_mm_entry\.cu/s/^/# /' CMakeLists.txt
+  sed -i '/nvfp4_scaled_mm_kernels\.cu/s/^/# /' CMakeLists.txt
+  # Comment out SM 80 and SM 89 gencode flags (not needed for SM 8.7)
+  sed -i '/-gencode=arch=compute_80,code=sm_80/s/^/# /' CMakeLists.txt
+  sed -i '/-gencode=arch=compute_89,code=sm_89/s/^/# /' CMakeLists.txt
+  ok "Applied SM 8.7 specific patches"
 fi
 
 cat CMakeLists.txt
