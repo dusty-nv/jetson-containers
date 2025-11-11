@@ -10,6 +10,7 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG SAGE_ATTENTION_VERSION \
+    TORCH_CUDA_ARCH_LIST \
     FORCE_BUILD=off
 
 COPY build.sh install.sh /tmp/sage-attention/
