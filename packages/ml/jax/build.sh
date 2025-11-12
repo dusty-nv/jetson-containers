@@ -11,7 +11,7 @@ git clone --depth=1 --recursive https://github.com/google/jax /opt/jax
 cd /opt/jax
 
 mkdir -p /opt/jax/wheels/
-BUILD_FLAGS+='--clang_path=/usr/lib/llvm-20/bin/clang '
+BUILD_FLAGS+='--clang_path=/usr/lib/llvm-21/bin/clang '
 BUILD_FLAGS+='--output_path=/opt/jax/wheels/ '
 # Build jaxlib from source with detected versions
 if [ "${IS_SBSA}" -eq 1 ]; then
