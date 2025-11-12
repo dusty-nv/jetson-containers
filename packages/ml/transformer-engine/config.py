@@ -9,8 +9,9 @@ def transformer_engine(version, requires=None, default=False):
     pkg['name'] = f'transformer-engine:{version}'
 
     pkg['build_args'] = {
-        'CUDAARCHS': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
         'TRANSFORMER_ENGINE_VERSION': version,
+        'CUDAARCHS': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
+        'TORCH_CUDA_ARCH_LIST': ';'.join([f'{x / 10:.1f}' for x in CUDA_ARCHITECTURES]),
     }
 
     builder = pkg.copy()

@@ -39,7 +39,7 @@ export LIBRARY_PATH=${CUDA_HOME}/lib64/stubs:${LIBRARY_PATH}
 if [[ "${TORCH_CUDA_ARCH_LIST}" == "8.7" ]]; then
     export FLASHINFER_CUDA_ARCH_LIST="8.7"
 else
-  export FLASHINFER_CUDA_ARCH_LIST="8.7 9.0a 10.0a 10.3a 11.0a 12.0a 12.1a"
+  export FLASHINFER_CUDA_ARCH_LIST="8.7 9.0a 10.0a 10.3a 11.0f 12.0f"
 fi
 
 uv pip install apache-tvm-ffi
