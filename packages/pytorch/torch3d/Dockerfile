@@ -9,6 +9,7 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 ARG PYTORCH3D_VERSION \
+    PYTORCH3D_VERSION_SPEC \
     FORCE_BUILD=off
 
 COPY build.sh install.sh /tmp/pytorch3d/

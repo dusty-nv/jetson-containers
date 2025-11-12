@@ -9,7 +9,6 @@ cd /opt/pytorch3d
 uv pip install scikit-image matplotlib imageio plotly opencv-contrib-python
 #export TORCH_CUDA_ARCH_LIST="8.7"
 export CUB_HOME=/usr/local/cuda-*/include/
-
 export MAX_JOBS=$(nproc)
 export NVCC_FLAGS="-static-global-template-stub=false"
 python3 setup.py --verbose bdist_wheel --dist-dir /opt
