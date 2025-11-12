@@ -66,7 +66,8 @@ uv pip install --upgrade \
   packaging \
   Cython \
   wheel \
-  uv
+  uv \
+  nvidia-ml-py
 
 # Install publishing tool
 uv pip install --upgrade --index-url "${PIP_INDEX_URL}" twine
