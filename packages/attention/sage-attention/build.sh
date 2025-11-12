@@ -13,6 +13,13 @@ export CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS
 echo "Building with MAX_JOBS=$MAX_JOBS and CMAKE_BUILD_PARALLEL_LEVEL=$CMAKE_BUILD_PARALLEL_LEVEL"
 
 export TORCH_CUDA_ARCH_LIST=$TORCH_CUDA_ARCH_LIST
+
+if [[ "${TORCH_CUDA_ARCH_LIST}" == "8.7" ]]; then
+    export TORCH_CUDA_ARCH_LIST="8.7"
+else
+  export TORCH_CUDA_ARCH_LIST="8.7 9.0a"
+fi
+
 MAX_JOBS="$(nproc)" \
 CMAKE_BUILD_PARALLEL_LEVEL=$MAX_JOBS \
 uv build --wheel . -v --no-build-isolation --out-dir /opt/sage-attention/wheels/
@@ -20,6 +27,7 @@ uv build --wheel . -v --no-build-isolation --out-dir /opt/sage-attention/wheels/
 ls /opt/sage-attention/wheels
 
 # Do if Blackwell is enabled
+export TORCH_CUDA_ARCH_LIST="8.7 9.0a 10.0a 10.3a 11.0f 12.0f"
 cd /opt/sage-attention/sageattention3_blackwell/
 uv build --wheel . -v --no-build-isolation --out-dir /opt/sage-attention/wheels/ || echo "Blackwell build failed, skipping..."
 
