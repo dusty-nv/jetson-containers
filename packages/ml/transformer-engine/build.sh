@@ -11,11 +11,15 @@ cd /opt/transformer_engine
 # git apply /tmp/TRANSFORMER_ENGINE/patch.diff
 # git diff
 # git status
+uv pip install nvidia-mathdx
 uv pip install --upgrade pip setuptools wheel pybind11[global] scikit-build cmake ninja
+export NVTE_FRAMEWORK=pytorch
+export NVTE_CUDA_ARCHS="87;89;90a;100a;103a;110a;120a;121a"
+
 MAX_JOBS=$(nproc) \
 NVTE_FRAMEWORK=pytorch \
-NVTE_CUDA_ARCHS=${CUDAARCHS} \
-python3 setup.py bdist_wheel --dist-dir=/opt/transformer_engine/wheels
+NVTE_CUDA_ARCHS="87;89;90a;100a;103a;110a;120a;121a" \
+uv build --wheel --no-build-isolation . --out-dir /opt/transformer_engine/wheels --verbose
 uv pip install /opt/transformer_engine/wheels/transformer_engine*.whl
 
 cd /opt/transformer_engine
