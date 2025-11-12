@@ -449,10 +449,10 @@ def get_lsb_release(l4t_version: str = None):
                               stderr=subprocess.PIPE,
                               universal_newlines=True, check=True).stdout.strip()
 
-    return os.environ.get(
-        'LSB_RELEASE',
-        '24.04' if SYSTEM_X86 or IS_SBSA else lsb('r')
-    )
+    if 'LSB_RELEASE' in os.environ and len(os.environ['LSB_RELEASE']) > 0:
+        return os.environ['LSB_RELEASE']
+
+    return '24.04' if SYSTEM_X86 or IS_SBSA else lsb('r')
 
 def _parse_python_ver_and_nogil(s) -> tuple[Version, bool]:
     """
