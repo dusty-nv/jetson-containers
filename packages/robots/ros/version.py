@@ -20,6 +20,6 @@ elif LSB_RELEASE == '18.04':
   ROS_DISTRO = 'melodic'
 else:
   ROS_DISTRO = 'humble'
-  log_warning(f"defaulting to ROS_DISTRO={ROS_DISTRO} after unrecognized LSB_RELEASE=${LSB_RELEASE}")
+  log_warning(f"defaulting to ROS_DISTRO={ROS_DISTRO} after unrecognized LSB_RELEASE={LSB_RELEASE}")
 
 __all__ = ['ROS_DISTROS', 'ROS1_DISTROS', 'ROS2_DISTROS', 'ROS_PACKAGES']
