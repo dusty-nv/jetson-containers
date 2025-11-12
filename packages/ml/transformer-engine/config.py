@@ -25,5 +25,5 @@ def transformer_engine(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    transformer_engine('2.10', default=True) # cutlass 4.2.0 support
+    transformer_engine('2.9', default=True) # cutlass 4.2.0 support
 ]
