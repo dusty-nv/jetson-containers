@@ -59,7 +59,7 @@ fi
 
 if [ "$PYTORCH_OFFICIAL_WHL" == "on" ]; then
 	echo "##### 🏢Using official PyTorch 2.9 WHL #####"
-  uv pip install torch==2.9.0 --index-url https://download.pytorch.org/whl/cu130
+  uv pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cu130
 else
   # on x86_64, install from pytorch nightly server
   # on aarch64, install from the Jetson pypi server ($PIP_INSTALL_URL)
