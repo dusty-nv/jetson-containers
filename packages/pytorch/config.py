@@ -123,6 +123,7 @@ package = [
     pytorch_pip('2.7', requires='>=36'),     # without OpenMPI
     pytorch_pip('2.8', requires='>=36'),    # without OpenMPI
     pytorch_pip('2.9', requires='>=36'),    # without OpenMPI
+    pytorch_pip('2.9.1', requires='>=36'),    # without OpenMPI
     pytorch_pip('2.10', requires='>=36'),    # without OpenMPI
 
     # JetPack 4
