@@ -81,7 +81,7 @@ uv pip uninstall onnxruntime || echo "onnxruntime was not previously installed"
 git clone https://github.com/microsoft/onnxruntime /opt/onnxruntime
 cd /opt/onnxruntime
 
-git checkout ${ONNXRUNTIME_BRANCH}
+git checkout ${ONNXRUNTIME_BRANCH} || echo "Branch ${ONNXRUNTIME_BRANCH} not found, staying on main branch"
 git submodule update --init --recursive
 
 install_dir="/opt/onnxruntime/install"
