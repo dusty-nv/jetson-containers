@@ -39,6 +39,11 @@ sed -i \
   -e 's|^xgrammar.*||g' \
   requirements/common.txt
 
+# Loosen flashinfer-python requirement to allow latest version.
+sed -i \
+  -e 's|^flashinfer-python.*|flashinfer-python|g' \
+  requirements/cuda.txt
+
 grep gguf requirements/common.txt
 
 
