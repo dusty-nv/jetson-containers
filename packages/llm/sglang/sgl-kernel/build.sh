@@ -92,6 +92,9 @@ sed -i 's/set(\s*ENABLE_BELOW_SM90\s*OFF\s*)/set(ENABLE_BELOW_SM90 ON)/' CMakeLi
 sed -i 's/For aarch64, disable gencode below SM90 by default/For aarch64, enable gencode below SM90 by default/g' CMakeLists.txt
 
 if [[ "$(uname -m)" == "aarch64" && "${TORCH_CUDA_ARCH_LIST}" = "8.7" ]]; then
+  export MAX_JOBS=$(nproc)
+  export MAX_JOBS=$MAX_JOBS
+  export CMAKE_BUILD_PARALLEL_LEVEL=$((MAX_JOBS/2))
   # Override parallel build env vars for SM 87 on Jetson devices
   # Note: make sure you have sufficient swap space set to avoid out of memory problems
   sed -i 's/set(\s*ENABLE_BELOW_SM90\s*OFF\s*)/set(ENABLE_BELOW_SM90 ON)/' CMakeLists.txt

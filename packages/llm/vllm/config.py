@@ -40,7 +40,7 @@ package = [
     vllm('0.10.0', depends=['flashinfer'], default=False),
     vllm('0.10.2', depends=['flashinfer'], requires=['<=36', '<cu130'], default=False),
     vllm('0.11.0', depends=['flashinfer'], default=False),
-    vllm('0.11.1', depends=['flashinfer:0.5.2'], default=True),
-    vllm('0.12.0', depends=['flashinfer:0.5.2'], default=False),
+    vllm('0.11.1', depends=['flashinfer:0.5.3'], default=True),
+    vllm('0.12.0', depends=['flashinfer:0.5.3'], default=False),
     vllm('0.13.0', depends=['flashinfer'], default=False),
 ]
