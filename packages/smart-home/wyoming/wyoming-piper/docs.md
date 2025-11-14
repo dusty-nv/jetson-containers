@@ -69,7 +69,6 @@ volumes:
 | `PIPER_VOICE` | `str` | `en_US-lessac-high` | Default Piper voice to use (e.g., `en_US-lessac-medium`) from [list of available voices](https://github.com/rhasspy/piper?tab=readme-ov-file#voices)
 | `PIPER_MAX_PROC` | `int` | `1` | Maximum number of piper process to run simultaneously |
 | `PIPER_DEBUG` | `bool` | `true` | Log `DEBUG` messages |
-| `PIPER_STREAMING` | `bool` | `true` | Enable audio streaming on sentence boundaries |
 | `PIPER_USE_CUDA` | `bool` | `true` | Enable CUDA |
 
 ## Configuration

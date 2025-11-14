@@ -25,6 +25,7 @@ def faster_whisper(version, branch=None, default=False) -> list:
     return pkg, builder
 
 package = [
-    faster_whisper("1.1.1", default=False),
-    faster_whisper("1.2.0", default=True),
+    faster_whisper("1.1.1"),
+    faster_whisper("1.2.0"),
+    faster_whisper("1.2.1", default=True),
 ]

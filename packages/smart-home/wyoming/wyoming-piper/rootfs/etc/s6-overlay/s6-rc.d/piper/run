@@ -17,10 +17,6 @@ if [[ "${PIPER_USE_CUDA,,}" =~ ^(true|1|yes)$ ]]; then
     flags+=("--use-cuda")
 fi
 
-if [[ "${PIPER_STREAMING,,}" =~ ^(true|1|yes)$ ]]; then
-    flags+=("--streaming")
-fi
-
 # shellcheck disable=SC2068
 exec python3 -m wyoming_piper \
     --uri "tcp://0.0.0.0:${PIPER_PORT}" \

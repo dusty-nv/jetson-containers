@@ -6,7 +6,8 @@ echo "Building wyoming-piper ${WYOMING_PIPER_VERSION} (${WYOMING_PIPER_BRANCH})"
 
 uv pip install -U \
    build \
-   wheel
+   wheel \
+   zeroconf
 
 git clone --branch=${WYOMING_PIPER_BRANCH} https://github.com/rhasspy/wyoming-piper /tmp/wyoming-piper
 cd /tmp/wyoming-piper

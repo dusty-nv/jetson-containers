@@ -28,7 +28,9 @@ exec python3 -m wyoming_faster_whisper \
     --beam-size "${WHISPER_BEAM_SIZE}" \
     --compute-type "${WHISPER_COMPUTE_TYPE}" \
     --language "${WHISPER_LANGUAGE}" \
-    --device "cuda" \
+    --device cuda \
+    --zeroconf nexus-stt \
     --data-dir /data/models/faster-whisper \
     --download-dir /data/models/faster-whisper \
+    --stt-library faster-whisper \
     ${flags[@]}
