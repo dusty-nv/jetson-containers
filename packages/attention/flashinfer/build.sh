@@ -38,6 +38,7 @@ export LD_LIBRARY_PATH=${CUDA_HOME}/lib64/stubs:${LD_LIBRARY_PATH}
 export LIBRARY_PATH=${CUDA_HOME}/lib64/stubs:${LIBRARY_PATH}
 if [[ "${TORCH_CUDA_ARCH_LIST}" == "8.7" ]]; then
     export FLASHINFER_CUDA_ARCH_LIST="8.7"
+    uv pip install cuda-python==12.8.0 --index-url https://pypi.org/simple/
 else
   export FLASHINFER_CUDA_ARCH_LIST="8.7 9.0a 10.0a 10.3a 11.0f 12.0f"
 fi
