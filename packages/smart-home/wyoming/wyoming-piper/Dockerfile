@@ -25,8 +25,7 @@ ENV PIP_BREAK_SYSTEM_PACKAGES=1 \
     PIPER_SPEAKER="777" \
     PIPER_VOICE="en_US-libritts_r-medium" \
     PIPER_DEBUG="true" \
-    PIPER_USE_CUDA="true" \
-    PIPER_STREAMING="true"
+    PIPER_USE_CUDA="true"
 
 COPY rootfs/ /
 COPY *.sh /tmp/wyoming/piper/

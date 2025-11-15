@@ -4,15 +4,14 @@ set -ex
 
 uv pip install -U \
    build \
-   wheel
+   wheel \
+   zeroconf
 
 # Clone wyoming-faster-whisper layer
 git clone --branch=${WYOMING_WHISPER_BRANCH} https://github.com/rhasspy/wyoming-faster-whisper /tmp/wyoming-faster-whisper
 cd /tmp/wyoming-faster-whisper
 
-sed -i \
-   -e 's|"faster-whisper.*"||g' \
-   pyproject.toml
+sed -i '/"faster-whisper/d' pyproject.toml
 
 python3 -m build --wheel --outdir $PIP_WHEEL_DIR
 
