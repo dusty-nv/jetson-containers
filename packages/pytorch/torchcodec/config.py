@@ -6,12 +6,12 @@ from ..pytorch.version import PYTORCH_VERSION
 def torchcodec(version, pytorch=None, depends=None, requires=None):
     pkg = package.copy()
 
-    pkg['name'] = f"torchcodec:{version.split('-')[0]}"  # remove any -rc* suffix
-
     if pytorch:
         pkg['depends'] = update_dependencies(pkg['depends'], f"pytorch:{pytorch}")
     else:
         pytorch = PYTORCH_VERSION
+    # Add pytorch version to package name for additional uniqueness.
+    pkg['name'] = f"torchcodec:{version.split('-')[0]}-pytorch:{pytorch}"  # remove any -rc* suffix
 
     if requires:
         pkg['requires'] = requires
