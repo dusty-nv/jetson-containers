@@ -42,7 +42,7 @@ def torchcodec(version, pytorch=None, depends=None, requires=None):
 
 package = [
     # JetPack 5/6/7
-    torchcodec('0.6.0', pytorch='2.8', depends=['ffmpeg:7.1'], requires='>=36'),
+    torchcodec('0.6.0', pytorch='2.7', depends=['ffmpeg:7.1'], requires='>=36'),
     torchcodec('0.7.0', pytorch='2.8', depends=['ffmpeg:7.1'], requires='>=36'),
     torchcodec('0.8.1', pytorch='2.9', requires='>=36'),
     torchcodec('0.8.1', pytorch='2.9.1', requires='>=36'),
