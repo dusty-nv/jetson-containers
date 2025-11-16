@@ -2,7 +2,8 @@ from jetson_containers import update_dependencies
 from packaging.version import Version
 from ..pytorch.version import PYTORCH_VERSION
 
-def torchcodec(version, pytorch=None, requires=None):
+
+def torchcodec(version, pytorch=None, depends=None, requires=None):
     pkg = package.copy()
 
     pkg['name'] = f"torchcodec:{version.split('-')[0]}"  # remove any -rc* suffix
@@ -14,6 +15,9 @@ def torchcodec(version, pytorch=None, requires=None):
 
     if requires:
         pkg['requires'] = requires
+
+    if depends:
+        pkg['depends'] = update_dependencies(pkg['depends'], depends)
 
     if not isinstance(pytorch, Version):
         pytorch = Version(pytorch)
@@ -35,10 +39,11 @@ def torchcodec(version, pytorch=None, requires=None):
 
     return pkg, builder
 
+
 package = [
     # JetPack 5/6/7
-    torchcodec('0.6.0', pytorch='2.8', requires='>=36'),
-    torchcodec('0.7.0', pytorch='2.8', requires='>=36'),
+    torchcodec('0.6.0', pytorch='2.8', depends=['ffmpeg:7.1'], requires='>=36'),
+    torchcodec('0.7.0', pytorch='2.8', depends=['ffmpeg:7.1'], requires='>=36'),
     torchcodec('0.8.1', pytorch='2.9', requires='>=36'),
     torchcodec('0.8.1', pytorch='2.9.1', requires='>=36'),
     torchcodec('0.9.0', pytorch='2.10', requires='>=36'),
