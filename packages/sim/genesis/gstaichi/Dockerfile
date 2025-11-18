@@ -2,7 +2,7 @@
 # name: gstaichi
 # group: sim
 # config: config.py
-# depends: [cuda, ninja, cmake, rust, llvm:20, vulkan]
+# depends: [cuda, ninja, cmake, rust, llvm:21, vulkan]
 # requires: '>=36.0.0'
 # test: test.py
 # notes: https://github.com/Genesis-Embodied-AI/gstaichi

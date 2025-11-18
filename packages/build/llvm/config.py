@@ -1,11 +1,11 @@
 
-LLVM_STABLE=20
-LLVM_LATEST=21
+LLVM_STABLE=21
+LLVM_LATEST=22
 
 def llvm(version):
     """
     Container with updated LLVM and clang toolchains installed.
-    The default is LLVM 19 and is linked to /usr/bin/llvm-config
+    The default is LLVM 21 and is linked to /usr/bin/llvm-config
     """
     pkg = package.copy()
 
