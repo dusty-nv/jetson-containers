@@ -12,15 +12,19 @@ git clone --depth=1 https://github.com/tensorflow/tensorflow.git /opt/tensorflow
 
 cd /opt/tensorflow
 # Set up environment variables for the configure script
-export HERMETIC_PYTHON_VERSION="${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}"
-export PYTHON_BIN_PATH="$(which python3)"
-export PYTHON_LIB_PATH="$(python3 -c 'import site; print(site.getsitepackages()[0])')"
-export TF_NEED_CUDA=1
-export TF_CUDA_CLANG=0
-export CLANG_CUDA_COMPILER_PATH="/usr/lib/llvm-18/bin/clang"
-export HERMETIC_CUDA_VERSION=13.0.0
-export HERMETIC_CUDNN_VERSION=9.12.0
-export HERMETIC_CUDA_COMPUTE_CAPABILITIES=8.7,8.9,9.0,10.0,10.3,11.0,12.0,12.1
+BUILD_FLAGS+='--clang_path=/usr/lib/llvm-21/bin/clang '
+BUILD_FLAGS+='--output_path=/opt/tensorflow/wheels/ '
+# Build jaxlib from source with detected versions
+if [ "${IS_SBSA}" -eq 1 ]; then
+    echo "Building for SBSA architecture"
+    BUILD_FLAGS+='--cuda_compute_capabilities="sm_87,sm_89,sm_90,sm_100,sm_110,sm_120,sm_121" '
+    BUILD_FLAGS+='--cuda_version=13.0.0 --cudnn_version=9.12.0 '
+    BUILD_FLAGS+='--bazel_options=--config=ci_linux_aarch64_cuda13 '
+else
+    echo "Building for non-SBSA architecture"
+    BUILD_FLAGS+='--cuda_compute_capabilities="sm_87" '
+    BUILD_FLAGS+='--cuda_version=12.6.0 --cudnn_version=9.3.0 '
+fi
 
 
 # Build the TensorFlow pip package
