@@ -13,9 +13,9 @@ export PYTHON_LIB_PATH="$(python3 -c 'import site; print(site.getsitepackages()[
 export TF_NEED_CUDA=1
 export TF_CUDA_CLANG=1
 export CLANG_CUDA_COMPILER_PATH="/usr/lib/llvm-20/bin/clang"
-export HERMETIC_CUDA_VERSION=12.9.1
-export HERMETIC_CUDNN_VERSION=9.8.0
-export HERMETIC_CUDA_COMPUTE_CAPABILITIES=8.7,8.9,9.0,10.1,12.0
+export HERMETIC_CUDA_VERSION=13.0.2
+export HERMETIC_CUDNN_VERSION=9.12.0
+export HERMETIC_CUDA_COMPUTE_CAPABILITIES=8.7,8.9,9.0,11.0,12.0,12.1
 
 uv pip install openexr tensorflow_addons
 
