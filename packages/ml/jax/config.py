@@ -43,5 +43,5 @@ def jax(version, requires=None, alias=None, default=False):
 package = [
     jax('0.4.38', requires='>=35'), # It works from jetpack 5 11.8 Cuda & 8.6 Cudnn
     jax('0.6.2', requires='==36.*'), # It works from jetpack 5 11.8 Cuda & 8.6 Cudnn
-    jax('0.8.1', requires='>=38', default=True), # Blackwell Support
+    jax('0.8.1', requires='>=38'), # Blackwell Support
 ]
