@@ -1,4 +1,4 @@
-from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES, CUDA_VERSION
+from jetson_containers import L4T_VERSION, CUDA_ARCHITECTURES, CUDA_VERSION, IS_SBSA
 
 def jax(version, requires=None, alias=None, default=False):
     """
@@ -19,7 +19,7 @@ def jax(version, requires=None, alias=None, default=False):
         'JAX_VERSION': version,
         'JAX_BUILD_VERSION': build_version,
         'CUDA_VERSION': CUDA_VERSION,
-
+        'IS_SBSA': int(IS_SBSA),
     }
 
     if L4T_VERSION.major >= 36:
@@ -44,5 +44,5 @@ package = [
     # Note: each L4T version requirement must have at least a single default JAX version
     jax('0.4.38', requires='==35.*', default=True), # It works from jetpack 5 11.8 Cuda & 8.6 Cudnn
     jax('0.6.2', requires='==36.*', default=True), # It works from jetpack 5 11.8 Cuda & 8.6 Cudnn
-    jax('0.8.1', requires='>=38', default=True), # Blackwell Support
+    jax('0.9.0', requires='>=38', default=True), # Blackwell Support
 ]

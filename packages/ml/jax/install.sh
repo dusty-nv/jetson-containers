@@ -14,7 +14,7 @@ fi
 
 # install from the Jetson PyPI server ($PIP_INSTALL_URL)
 uv pip install jaxlib==${JAX_VERSION} jax_cuda13_plugin opt_einsum
-uv pip install --no-dependencies jax==${JAX_VERSION}
+uv pip install --no-deps jax==${JAX_VERSION}
 
 if [ $(vercmp "$JAX_VERSION" "0.6.0") -ge 0 ]; then
     uv pip install 'ml_dtypes>=0.5' # missing float4_e2m1fn
