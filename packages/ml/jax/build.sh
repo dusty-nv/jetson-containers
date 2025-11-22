@@ -14,7 +14,7 @@ cd /opt/jax
 mkdir -p /opt/jax/wheels/
 
 # Initialize flags
-BUILD_FLAGS="--clang_path=/usr/lib/llvm-20/bin/clang --output_path=/opt/jax/wheels/ "
+BUILD_FLAGS="--clang_path=/usr/lib/llvm-21/bin/clang --output_path=/opt/jax/wheels/ "
 
 if [ "${IS_SBSA}" -eq 1 ]; then
     echo "Building for SBSA architecture"
