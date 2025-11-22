@@ -11,6 +11,7 @@ FROM ${BASE_IMAGE}
 ARG TENSORFLOW_URL \
     TENSORFLOW_WHL \
     HDF5_DIR="/usr/lib/aarch64-linux-gnu/hdf5/serial/" \
+    IS_SBSA \
     MAKEFLAGS=-j$(nproc) \
     FORCE_BUILD
 

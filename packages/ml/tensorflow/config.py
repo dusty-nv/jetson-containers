@@ -1,4 +1,4 @@
-from jetson_containers import L4T_VERSION, PYTHON_VERSION, CUDA_VERSION
+from jetson_containers import L4T_VERSION, PYTHON_VERSION, CUDA_VERSION, IS_SBSA
 from packaging.version import Version
 
 from ..ml.tensorflow.version import TENSORFLOW_VERSION
@@ -71,7 +71,8 @@ def tensorflow(version, tensorflow_version='tf2', requires=None, default=False):
             'TENSORFLOW_WHL': whl,
             'PYTHON_VERSION_MAJOR': PYTHON_VERSION.major,
             'PYTHON_VERSION_MINOR': PYTHON_VERSION.minor,
-            'FORCE_BUILD': 'off'
+            'FORCE_BUILD': 'off',
+            'IS_SBSA': int(IS_SBSA)
         }
         pkg['dockerfile'] = 'Dockerfile'
     else:
