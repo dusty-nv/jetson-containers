@@ -65,5 +65,5 @@ twine upload --verbose /opt/jax/wheels/jax-*.whl || echo "failed to upload wheel
 # Install them into the container
 cd /opt/jax/wheels/
 uv pip install jaxlib*.whl jax_cuda13_plugin*.whl jax_cuda13_pjrt*.whl opt_einsum
-uv pip install jax*.whl
+uv pip install jax
 cd /opt/jax
