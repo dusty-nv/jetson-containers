@@ -85,6 +85,7 @@ def tensorflow(version, tensorflow_version='tf2', requires=None, default=False):
             'CUDNN_VERSION_MAJOR': CUDNN_VERSION.major,
             'CUDNN_VERSION_MINOR': CUDNN_VERSION.minor,
             'FORCE_BUILD': 'off',
+            'IS_SBSA': int(IS_SBSA)
         }
         pkg['notes'] += " (will be built from source)"
         pkg['dockerfile'] = 'Dockerfile.pip'

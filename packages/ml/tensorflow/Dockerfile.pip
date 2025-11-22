@@ -18,6 +18,7 @@ ARG TENSORFLOW_VERSION \
     CUDA_VERSION_MINOR \
     CUDNN_VERSION_MAJOR \
     CUDNN_VERSION_MINOR \
+    IS_SBSA \
     FORCE_BUILD
 
 # install prerequisites (these are listed at the URL below)
@@ -52,4 +53,3 @@ COPY build.sh install.sh link_cuda.sh /tmp/TENSORFLOW/
 # attempt to install tensorflow from pip, and fall back
 # to building from source it if the installation fails
 RUN /tmp/TENSORFLOW/install.sh || /tmp/TENSORFLOW/build.sh
-        
