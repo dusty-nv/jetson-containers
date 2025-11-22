@@ -27,7 +27,7 @@ if [ "${IS_SBSA}" -eq 1 ]; then
     BUILD_FLAGS+='--bazel_options=--config=ci_linux_aarch64_cuda13 '
 
     # 2. Fix Abseil: Disable nullability attributes.
-    #    Clang 20 enables them, but Abseil's headers place them incorrectly, causing syntax errors.
+    #    Clang 20+ enables them, but Abseil's headers place them incorrectly, causing syntax errors.
     BUILD_FLAGS+='--bazel_options=--copt=-DABSL_HAVE_NULLABILITY_ATTRIBUTES=0 '
     BUILD_FLAGS+='--bazel_options=--cxxopt=-DABSL_HAVE_NULLABILITY_ATTRIBUTES=0 '
     BUILD_FLAGS+='--bazel_options=--copt=-D_Nullable= '
@@ -37,10 +37,14 @@ if [ "${IS_SBSA}" -eq 1 ]; then
 
     # 3. Fix Protobuf: Polyfill the missing __is_bitwise_cloneable builtin.
     #    We alias it to __is_trivially_copyable which is supported.
-    #    CRITICAL: We use an object-like macro (=VALUE) instead of function-like ((T)=0)
-    #    to avoid the shell/bazel argument quoting issues that caused the previous failure.
     BUILD_FLAGS+='--bazel_options=--copt=-D__is_bitwise_cloneable=__is_trivially_copyable '
     BUILD_FLAGS+='--bazel_options=--cxxopt=-D__is_bitwise_cloneable=__is_trivially_copyable '
+
+    # 4. Fix Abseil: Polyfill the missing __builtin_is_cpp_trivially_relocatable builtin.
+    #    NVCC/Clang interaction causes this builtin to be undefined despite passing feature checks.
+    #    We alias it to __is_trivially_copyable, which is a safe fallback for build purposes.
+    BUILD_FLAGS+='--bazel_options=--copt=-D__builtin_is_cpp_trivially_relocatable=__is_trivially_copyable '
+    BUILD_FLAGS+='--bazel_options=--cxxopt=-D__builtin_is_cpp_trivially_relocatable=__is_trivially_copyable '
 
 else
     echo "Building for non-SBSA architecture"
@@ -61,5 +65,5 @@ twine upload --verbose /opt/jax/wheels/jax-*.whl || echo "failed to upload wheel
 # Install them into the container
 cd /opt/jax/wheels/
 uv pip install jaxlib*.whl jax_cuda13_plugin*.whl jax_cuda13_pjrt*.whl opt_einsum
-uv pip install --no-dependencies jax*.whl
+uv pip install jax*.whl
 cd /opt/jax
