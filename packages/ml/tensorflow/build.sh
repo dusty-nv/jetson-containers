@@ -63,5 +63,3 @@ mv /opt/tensorflow/bazel-bin/tensorflow/tools/pip_package/wheel_house/tensorflow
 bazel clean --expunge
 
 cd /opt/
-
-
