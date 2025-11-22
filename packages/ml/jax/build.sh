@@ -22,10 +22,6 @@ if [ "${IS_SBSA}" -eq 1 ]; then
     BUILD_FLAGS+='--cuda_version=13.0.2 --cudnn_version=9.12.0 '
 
     # --- BAZEL CONFIGURATION ---
-
-    # 1. Load the CUDA 13 configuration
-    BUILD_FLAGS+='--bazel_options=--config=ci_linux_aarch64_cuda13 '
-
     # 2. Fix Abseil: Disable nullability attributes.
     #    Clang 20+ enables them, but Abseil's headers place them incorrectly, causing syntax errors.
     BUILD_FLAGS+='--bazel_options=--copt=-DABSL_HAVE_NULLABILITY_ATTRIBUTES=0 '
@@ -57,6 +53,7 @@ fi
 python3 build/build.py build $BUILD_FLAGS --wheels=jax,jaxlib,jax-cuda-plugin,jax-cuda-pjrt
 
 # Upload the wheels to mirror
+twine upload --verbose /opt/jax/wheels/jaxlib-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 twine upload --verbose /opt/jax/wheels/jaxlib-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 twine upload --verbose /opt/jax/wheels/jax_cuda13_pjrt-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 twine upload --verbose /opt/jax/wheels/jax_cuda13_plugin-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
