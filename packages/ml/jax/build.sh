@@ -54,7 +54,7 @@ fi
 
 # Run the build
 # Note: $BUILD_FLAGS is unquoted to allow word splitting of the individual bazel arguments
-python3 build/build.py build $BUILD_FLAGS --wheels=jaxlib,jax-cuda-plugin,jax-cuda-pjrt
+python3 build/build.py build $BUILD_FLAGS --wheels=jax,jaxlib,jax-cuda-plugin,jax-cuda-pjrt
 
 # Upload the wheels to mirror
 twine upload --verbose /opt/jax/wheels/jaxlib-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
