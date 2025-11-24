@@ -1,6 +1,6 @@
 scipy==1.9.1
 cffi==1.15.1
-ipykernel==6.16
+ipykernel==7.1.0
 matplotlib==3.6.1
 zarr==2.12.0
 numcodecs==0.10.2
