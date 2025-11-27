@@ -35,8 +35,7 @@ RUN env && \
     cd ${ODM_HOME} && \
     sed -i 's/==/>=/g' requirements.txt && \
     uv pip install python-dateutil && \
-    sed -i 's/\*"20\.04"\*|\*"21\.04"\*/\*"20.04"\*|\*"21.04"\*|\*"22.04"\*|\*"24.04"\*|\*"26.04"\*/' configure.sh && \
-    sed -i 's|https://github.com/opencv/opencv/archive/4\.5\.0\.zip|https://github.com/opencv/opencv/archive/4.11.0.zip|' ${ODM_HOME}/SuperBuild/cmake/External-OpenCV.cmake && \
+    sed -i 's|https://github.com/opencv/opencv/archive/4\.12\.0\.zip|https://github.com/opencv/opencv/archive/4.13.0.zip|' ${ODM_HOME}/SuperBuild/cmake/External-OpenCV.cmake && \
     PORTABLE_INSTALL=YES GPU_INSTALL=YES bash configure.sh install || echo "BUILD FAILED"
 
 

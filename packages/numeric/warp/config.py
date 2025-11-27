@@ -10,8 +10,14 @@ def warp(version, url=None, requires=[], default=False):
         return (
             warp( # amd64 version
                 version,
-                url=f"{WARP_RELEASE_URL}/v{version}/warp_lang-{version}+cu12-py3-none-manylinux_2_28_x86_64.whl",
+                url=f"{WARP_RELEASE_URL}/v{version}/warp_lang-{version}+cu13-py3-none-manylinux_2_28_x86_64.whl",
                 requires=requires + ['x86_64'],
+                default=default
+            ),
+            warp(  # arm64 version
+                version,
+                url=f"{WARP_RELEASE_URL}/v{version}/warp_lang-{version}+cu13-py3-none-manylinux_2_34_aarch64.whl",
+                requires=requires + ['>=r38'],
                 default=default
             ),
             warp( # arm64 version

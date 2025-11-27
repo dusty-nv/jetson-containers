@@ -49,7 +49,7 @@ RUN apt-get update && apt-get install -y \
 
 # Install dependencies first
 RUN uv pip install --no-cache-dir --extra-index-url https://pypi.org/simple --index-url https://pypi.org/simple 'av>=12.0.5,<13.0.0' && \
-    uv pip install --no-deps flax==0.10.6 && \
+    uv pip install --no-deps flax==0.12.0 && \
     uv pip install --no-deps equinox>=0.11.8 && \
     uv pip install --no-deps orbax-checkpoint==0.11.16 && \
     uv pip install --no-deps jaxtyping==0.3.2

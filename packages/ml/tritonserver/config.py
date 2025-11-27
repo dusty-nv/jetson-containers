@@ -7,8 +7,8 @@ TRITON_CLIENTS = 'clients'
 
 if L4T_VERSION >= Version('36.0.0'): # JetPack 6.2 DP
     # https://github.com/triton-inference-server/server/releases/tag/v2.61.0
-    TRITON_URL = 'https://github.com/triton-inference-server/server/releases/download/v2.62.0/tritonserver2.62.0-igpu.tar'
-    TRITON_TAR = 'tritonserver2.62.0-igpu.tar'
+    TRITON_URL = 'https://github.com/triton-inference-server/server/releases/download/v2.63.0/tritonserver2.63.0-igpu.tar'
+    TRITON_TAR = 'tritonserver2.63.0-igpu.tar'
     TRITON_CLIENTS = 'tritonserver/clients'
 elif L4T_VERSION >= Version('36.0.0'): # JetPack 6.0 DP
     # https://github.com/triton-inference-server/server/releases/tag/v2.42.0

@@ -7,3 +7,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 fi
 
 uv pip install --no-deps --no-build-isolation nerfstudio #==${NERFSTUDIO_VERSION}
+uv pip install -U --force-reinstall opencv-python-contrib
