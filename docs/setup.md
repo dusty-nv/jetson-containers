@@ -16,7 +16,8 @@ This will download and install the jetson-containers utilities:
 
 ```bash
 git clone https://github.com/dusty-nv/jetson-containers
-bash jetson-containers/install.sh
+cd jetson-containers
+bash install.sh #run with sudo if needed
 ```
 
 The installer script will prompt you for your sudo password, and will setup some Python [requirements](/requirements.txt) and add tools like [`autotag`](/docs/run.md#autotag) the `$PATH` by linking them under `/usr/local/bin` (if you move your jetson-containers repo, run this step again)
@@ -165,3 +166,4 @@ NV Power Mode: MAXN
 ```
 
 See [here](https://docs.nvidia.com/jetson/archives/r36.2/DeveloperGuide/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html#supported-modes-and-power-efficiency) for a table of the power modes available for the different Jetson devices, and for documentation on the [`nvpmodel`](https://docs.nvidia.com/jetson/archives/r36.2/DeveloperGuide/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html#power-mode-controls) tool.
+
