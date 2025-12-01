@@ -12,7 +12,7 @@ dill==0.3.5.1
 scikit-video==1.1.11
 scikit-image==0.25.2
 gym
-pymunk==7.1.0
+pymunk==7.2.0
 wandb==0.23.0
 threadpoolctl==3.1.0
 shapely==1.8.4
