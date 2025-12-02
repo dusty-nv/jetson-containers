@@ -57,14 +57,6 @@ cleanup() {
 }
 trap cleanup EXIT
 
-# Build Ray start command
-RAY_START_CMD="ray start -v --block --num-gpus 1"
-if [ "${NODE_TYPE}" == "--head" ]; then
-    RAY_START_CMD+=" --head --port=6379 --num-gpus 1"
-else
-    RAY_START_CMD+=" --address=${HEAD_NODE_ADDRESS}:6379 --num-gpus 1"
-fi
-
 echo "=========================================="
 echo "DEBUG: Ray Configuration"
 echo "=========================================="
@@ -96,6 +88,23 @@ if [ -n "${VLLM_HOST_IP}" ]; then
         -e "RAY_NODE_IP_ADDRESS=${VLLM_HOST_IP}"
         -e "RAY_OVERRIDE_NODE_IP_ADDRESS=${VLLM_HOST_IP}"
     )
+    # Build Ray start command using VLLM_HOST_IP explicitly for node IP address
+    RAY_START_CMD="ray start -v --block --num-gpus 1"
+    if [ "${NODE_TYPE}" == "--head" ]; then
+        RAY_START_CMD+=" --head --port=6379 --node-ip-address ${VLLM_HOST_IP} --num-gpus 1"
+    else
+        RAY_START_CMD+=" --address ${HEAD_NODE_ADDRESS}:6379 --node-ip-address ${VLLM_HOST_IP} --num-gpus 1"
+    fi
+
+else
+    # Build Ray start command without explicit node IP address
+    RAY_START_CMD="ray start -v --block --num-gpus 1"
+    if [ "${NODE_TYPE}" == "--head" ]; then
+        RAY_START_CMD+=" --head --port=6379 --num-gpus 1"
+    else
+        RAY_START_CMD+=" --address=${HEAD_NODE_ADDRESS}:6379 --num-gpus 1"
+    fi
+
 fi
 
 echo "=========================================="
