@@ -54,8 +54,8 @@ def cuda_stack_args():
                 tensorrt_url = f"{tensorrt_base_url}/10.0.1/tars/TensorRT-10.0.1.6.l4t.aarch64-gnu.cuda-12.4.tar.gz"
             nccl_ver = '2.27.7'
         else:  # JetPack 5
-            cudnn_ver = '8.9.4'
-            cudnn_url = "https://nvidia.box.com/shared/static/ht4li6b0j365ta7b76a6gw29rk5xh8cy.deb"
+            cudnn_ver = '8.6.0'
+            cudnn_url = "https://repo.download.nvidia.com/jetson/common/pool/main/c/cudnn/libcudnn8_8.6.0.166-1+cuda11.4_arm64.deb"
             cudnn_packages = "libcudnn8 libcudnn8-dev"
             tensorrt_ver = '8.6.0'
             tensorrt_url = "https://nvidia.box.com/shared/static/hmwr57hm88bxqrycvlyma34c3k4c53t9.deb"
@@ -170,13 +170,13 @@ if IS_TEGRA and IS_CONFIG:
         cuda_stack('cudastack:minimal',
                    with_tensorrt=False,
                    minimal=True,
-                   requires='>=36'),
+                   requires='>=35'),
 
         # Standard: + TensorRT and all CUDA libraries
         cuda_stack('cudastack:standard',
                    with_tensorrt=True,
                    minimal=False,
-                   requires='>=36'),
+                   requires='>=35'),
     ]
 
 elif IS_SBSA and IS_CONFIG:
