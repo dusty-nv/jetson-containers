@@ -28,7 +28,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 
 diff --git a/csrc/attention/mla/sm100_cutlass_mla_kernel.cu b/csrc/attention/mla/sm100_cutlass_mla_kernel.cu
 --- a/csrc/attention/mla/sm100_cutlass_mla_kernel.cu	(revision a1d627e40f0fac7a9a56d54d77af22213f5d4d27)
-+++ b/csrc/attention/mla/sm100_cutlass_mla_kernel.cu	(date 1764756817836)
++++ b/csrc/attention/mla/sm100_cutlass_mla_kernel.cu	(date 1764757754069)
 @@ -231,7 +231,7 @@
      double sm_scale,
      int64_t num_kv_splits) {

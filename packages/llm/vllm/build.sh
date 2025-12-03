@@ -20,10 +20,7 @@ if [[ "$(uname -m)" == "aarch64" && "${TORCH_CUDA_ARCH_LIST}" = "8.7" ]]; then
   # - GIT_REPOSITORY https://github.com/vllm-project/flash-attention.git
   # - GIT_TAG a893712401d70362fbb299cd9c4b3476e8e9ed54
   python3 /tmp/vllm/generate_diff.py                      # (re)generate the .diff files
-  if ! git apply -p1 /tmp/vllm/vllm_flash_attn.cmake.diff || ! git apply -p1 /tmp/vllm/CMakeLists.txt.diff     ;then
-    echo "ERROR: Patch for SM 8.7 FAILED!" >&2
-    exit 1
-  elif ! git apply -p1 /tmp/vllm/post_fix.diff    ;then # Apply post-fix patch to remove NVFP4 kernels (not supported).
+  if ! git apply -p1 /tmp/vllm/vllm_flash_attn.cmake.diff || ! git apply -p1 /tmp/vllm/CMakeLists.txt.diff || ! git apply -p1 /tmp/vllm/post_fix.diff     ;then
     echo "ERROR: Patch for SM 8.7 FAILED!" >&2
     exit 1
   else
@@ -76,4 +73,4 @@ cd /opt/vllm
 uv pip install compressed-tensors
 
 # Optionally upload to a repository using Twine
-#twine upload --verbose /opt/vllm/wheels/vllm*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+twine upload --verbose /opt/vllm/wheels/vllm*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
