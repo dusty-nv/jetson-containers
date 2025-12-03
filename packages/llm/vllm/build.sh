@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -ex
 
+uv pip uninstall vllm
 uv pip install pre-commit nanobind==2.5.0
 # Clone the repository if it doesn't exist
 git clone --branch=${VLLM_BRANCH} --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm ||
@@ -70,7 +71,7 @@ uv build --wheel --no-build-isolation -v --out-dir /opt/vllm/wheels .
 uv pip install /opt/vllm/wheels/vllm*.whl
 
 cd /opt/vllm
-uv pip install compressed-tensors
+uv pip install compressed-tensors transformers==${TRANSFORMERS_VERSION}
 
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/vllm/wheels/vllm*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
