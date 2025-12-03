@@ -1,6 +1,6 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
---- a/CMakeLists.txt	(revision 71bb26f6295449be880344b93b51791cc009237d)
-+++ b/CMakeLists.txt	(date 1763706568300)
+--- a/CMakeLists.txt	(revision 58e0626a692f09241182582659e3bf8f16472659)
++++ b/CMakeLists.txt	(date 1763633281221)
 @@ -22,12 +22,7 @@
  set(PYTHON_SUPPORTED_VERSIONS "3.9" "3.10" "3.11" "3.12" "3.13")
 
@@ -33,11 +33,11 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
          message(STATUS "FA2_ARCHS: ${FA2_ARCHS}")
 
          set_gencode_flags_for_srcs(
-@@ -223,7 +218,7 @@
+@@ -229,7 +224,7 @@
      # For CUDA we set the architectures on a per file basis
      # FaV3 is not yet supported in Blackwell
      if (VLLM_GPU_LANG STREQUAL "CUDA")
--        cuda_archs_loose_intersection(FA3_ARCHS "9.0a;" "${CUDA_ARCHS}")
+-        cuda_archs_loose_intersection(FA3_ARCHS "8.0;9.0a;" "${CUDA_ARCHS}")
 +        cuda_archs_loose_intersection(FA3_ARCHS "${CUDA_SUPPORTED_ARCHS}" "${CUDA_ARCHS}")
          message(STATUS "FA3_ARCHS: ${FA3_ARCHS}")
 
