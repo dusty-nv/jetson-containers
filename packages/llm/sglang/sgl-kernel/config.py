@@ -32,14 +32,13 @@ def sgl_kernel(version, branch=None, depends=None, default=False):
     return pkg, builder
 
 package = [
-    sgl_kernel('0.5.', default=False),
+    sgl_kernel('0.5.4', default=False),
     # Note: this version points to a specific commit at which the patch (sm_87-0.5.4.diff)
     # for CMakeLists.txt was created.
     # You can increase the branch/commit to get newer versions if there are no changes
     # in CMakeLists.txt at commit 88568c01eb99698eceef9a40b5f481e37c0b89d0
-    sgl_kernel('0.5.4', default=False),
-    sgl_kernel('0.5.5', default=False),
-    sgl_kernel('0.5.6', default=True),
+    sgl_kernel('0.5.6', default=False),
+    sgl_kernel('0.5.7', default=True),
     # Latest version from main branch.
     sgl_kernel('latest', branch='main', default=False),
 ]

@@ -78,7 +78,7 @@ elif [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
 
   # Determine the patch suffix based on CUSPARSELT_VERSION
   # Pattern: 0.8.0 -> .4, 0.7.1 -> .0, 0.7.0 -> .0
-  if [[ "${CUSPARSELT_VERSION}" == "0.8.0" ]]; then
+  if [[ "${CUSPARSELT_VERSION}" == "0.8.1" ]]; then
     PATCH_SUFFIX="4"
   elif [[ "${CUSPARSELT_VERSION}" == "0.7.1" ]]; then
     PATCH_SUFFIX="0"
@@ -96,7 +96,7 @@ elif [[ "$CUDA_ARCH" == "tegra-aarch64" ]]; then
   BASE_URL="https://developer.download.nvidia.com/compute/cusparselt/redist/libcusparse_lt/linux-aarch64"
 
   # Different versions have different archive naming patterns
-  if [[ "${CUSPARSELT_VERSION}" == "0.8.0" ]]; then
+  if [[ "${CUSPARSELT_VERSION}" == "0.8.1" ]]; then
     # 0.8.0.4 uses CUDA suffix format
     ARCHIVE="libcusparse_lt-linux-aarch64-${VER}_cuda${CUDA_MAJOR}-archive.tar.xz"
   else
@@ -146,7 +146,7 @@ else
   #  "https://developer.download.nvidia.com/compute/cusparselt/${CUSPARSELT_VERSION}/local_installers/cusparselt-local-repo-${DISTRO}-${CUSPARSELT_VERSION}_1.0-1_amd64.deb"
   wget $WGET_FLAGS \
     "https://developer.download.nvidia.com/compute/cusparselt/0.8.0/local_installers/cusparselt-local-repo-${DISTRO}-0.8.0_1.0-1_amd64.deb"
-  
+
   dpkg -i cusparselt-local-*.deb
   cp /var/cusparselt-local-*/cusparselt-*-keyring.gpg /usr/share/keyrings/
   apt-get update
