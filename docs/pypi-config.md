@@ -32,11 +32,12 @@ The `jetson-containers` PyPI & APT servers can be pointed to any custom location
 
 The compose file provides three PyPI endpoints (one per CUDA/arch). Use the appropriate port for the CUDA + host architecture you need:
 
-| port | CUDA | Description |
-|----------|---------|---------|
+| port | CUDA   | Description |
+|----------|--------|---------|
 | `8126` | `12.6` | Jetson Orin (Tegra) |
 | `8129` | `12.9` | Jetson Orin (Tegra) |
 | `8130` | `13.0` | Jetson Thor (SBSA) |
+| `8130` | `13.1` | Jetson Thor (SBSA) |
 
 Example environment variable to point `jetson-containers` at a local PyPI server pinned to **CUDA 12.6** for **Jetson Orin**:
 

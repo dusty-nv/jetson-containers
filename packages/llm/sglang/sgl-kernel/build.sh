@@ -52,7 +52,7 @@ if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" || "${IS_SBSA,,}" == "false" ]]; th
 else
     export MAX_JOBS=32
     export CMAKE_BUILD_PARALLEL_LEVEL=32
-    export CPLUS_INCLUDE_PATH=/usr/local/cuda-13.0/targets/sbsa-linux/include/cccl
+    export CPLUS_INCLUDE_PATH=/usr/local/cuda-13.1/targets/sbsa-linux/include/cccl
 fi
 export NVCC_THREADS=2
 export CUDA_NVCC_FLAGS="-Xcudafe --threads=2"

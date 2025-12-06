@@ -63,7 +63,7 @@ jetson-containers build --base=my_container:latest --name=my_container:pytorch p
 Many packages are versioned, and define subpackages like `pytorch:2.5`, `pytorch:2.6`, ect in the package's [configuration](/docs/packages.md#python).  For some core packages, you can control the default version of these with environment variables like `CUDA_VERSION`, `PYTORCH_VERSION`, `PYTHON_VERSION`, and `LSB_RELEASE` for the Ubuntu distro.  Other packages referring to these will then use your desired versions instead of the previous ones:
 
 ```bash
-LSB_RELEASE=24.04 CUDA_VERSION=13.0 jetson-containers build --name=cu129 pytorch  # build PyTorch for Ubuntu 24.04 + CUDA 13.0
+LSB_RELEASE=24.04 CUDA_VERSION=13.1 jetson-containers build --name=cu130 pytorch  # build PyTorch for Ubuntu 24.04 + CUDA 13.1
 ```
 
 The dependencies are also able to specify with [`requires`](/docs/packages.md) which versions of L4T, CUDA, and Python they need, so changing the CUDA version has cascading effects downstream and will also change the default version of cuDNN, TensorRT, and PyTorch (similar to how changing the PyTorch version also changes the default version of torchvision and torchaudio).  The reverse also occurs in the other direction, for example changing the TensorRT version will change the default version of CUDA (unless you explicitly specify it otherwise).
@@ -140,7 +140,7 @@ Robotics, edge AI, computer vision, and IoT solutions using CUDA at the edge.
 Using these together, you can rebuild the container stack for the specific version combination that you want:
 
 ```bash
-LSB_RELEASE=24.04 CUDA_VERSION=13.0 PYTHON_VERSION=3.12 PYTORCH_VERSION=2.8 jetson-containers build vllm
+LSB_RELEASE=24.04 CUDA_VERSION=13.1 PYTHON_VERSION=3.12 PYTORCH_VERSION=2.10 jetson-containers build vllm
 ```
 
 
@@ -161,7 +161,7 @@ For packages that provide different versions but don't have their own environmen
 Here is a list of containers currently built for Ubuntu 24.04 with the following environment:
 
 * `LSB_RELEASE=24.04 L4T_VERSION=36.4.4`
-* `CUDA_VERSION=13.0 CUDNN_VERSION=9.10`
+* `CUDA_VERSION=13.1 CUDNN_VERSION=9.17`
 * `PYTHON_VERSION=3.12 PYTORCH_VERSION=2.8`
 
 | Repo           | Version   | Image                                             |  Size (GB)  | Timestamp   |
