@@ -29,5 +29,5 @@ def cudnn_frontend(version, version_spec=None, requires=None, default=False):
 
 
 package = [
-    cudnn_frontend('1.16.1', '1.16.1', default=(CUDA_VERSION >= Version('12.6'))),
+    cudnn_frontend('1.17.0', '1.17.0', default=(CUDA_VERSION >= Version('12.6'))),
 ]
