@@ -519,7 +519,7 @@ LSB_RELEASES = {
     '20.04': 'focal',
     '22.04': 'jammy',
     '24.04': 'noble',
-    '26.04': '',
+    '26.04': 'resolute',
 }
 
 DEFAULT_PYTHON_VERSIONS = {
@@ -527,7 +527,7 @@ DEFAULT_PYTHON_VERSIONS = {
     '20.04': Version('3.8'),
     '22.04': Version('3.10'),
     '24.04': Version('3.12'),
-    '26.04': '3.14t', # enable free-threading build by default
+    '26.04': Version('3.14'),
 }
 
 CUDA_ARCHS = {
