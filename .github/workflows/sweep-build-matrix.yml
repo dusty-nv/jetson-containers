@@ -443,7 +443,7 @@ jobs:
       include: ${{ steps.make.outputs.include }}
     steps:
       - name: Download all platform plans
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           path: _plans
           pattern: plan-*
@@ -563,7 +563,7 @@ jobs:
           clean: false
 
       - name: Download platform plan
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: plan-${{ matrix.platform }}
           path: _plan
@@ -1019,7 +1019,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download all chunk artifacts
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           path: _in
           pattern: results-*-chunk-*-${{ github.run_attempt }}
