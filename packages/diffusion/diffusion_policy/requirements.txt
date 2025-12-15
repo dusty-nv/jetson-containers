@@ -1,7 +1,7 @@
 scipy==1.9.1
 cffi==1.15.1
 ipykernel==7.1.0
-matplotlib==3.6.1
+matplotlib==3.10.8
 zarr==3.1.5
 numcodecs==0.16.5
 h5py
