@@ -43,6 +43,7 @@ package = [
     # support pytorch 2.6.0
     xformers('0.0.32.post2', pytorch='2.8', default=(CUDA_VERSION >= Version('12.6'))),
     # support pytorch 2.8.0
+    xformers('0.0.33.post2', pytorch='2.9.1', default=(CUDA_VERSION >= Version('12.6'))),
     xformers('0.0.34', default=(CUDA_VERSION >= Version('12.6'))),
     # Support Blackwell and pytorch 2.9.0
 ]

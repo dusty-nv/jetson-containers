@@ -26,9 +26,14 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
    if(${CMAKE_CUDA_COMPILER_VERSION} VERSION_GREATER_EQUAL 12.8 AND FP4_ARCHS)
      set(SRCS
 
+Index: csrc/attention/mla/sm100_cutlass_mla_kernel.cu
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
 diff --git a/csrc/attention/mla/sm100_cutlass_mla_kernel.cu b/csrc/attention/mla/sm100_cutlass_mla_kernel.cu
---- a/csrc/attention/mla/sm100_cutlass_mla_kernel.cu	(revision a1d627e40f0fac7a9a56d54d77af22213f5d4d27)
-+++ b/csrc/attention/mla/sm100_cutlass_mla_kernel.cu	(date 1764757754069)
+--- a/csrc/attention/mla/sm100_cutlass_mla_kernel.cu	(revision e3a0f21e6ce78268865cafcdc3dc58c7a80dbc57)
++++ b/csrc/attention/mla/sm100_cutlass_mla_kernel.cu	(date 1765999482129)
 @@ -231,7 +231,7 @@
      double sm_scale,
      int64_t num_kv_splits) {
@@ -37,4 +42,6 @@ diff --git a/csrc/attention/mla/sm100_cutlass_mla_kernel.cu b/csrc/attention/mla
 +  at::cuda::CUDAGuard device_guard{q_nope.get_device()};
    const cudaStream_t stream = at::cuda::getCurrentCUDAStream(q_nope.get_device());
    const int page_size = kv_c_and_k_pe_cache.sizes()[1];
+
+
 
