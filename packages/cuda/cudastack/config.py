@@ -24,8 +24,8 @@ def cuda_stack_args():
             cudnn_ver = '9.17.0'
             cudnn_url = f"https://developer.download.nvidia.com/compute/cudnn/9.17.0/local_installers/cudnn-local-repo-{distro}-9.17.0_1.0-1_arm64.deb"
             cudnn_packages = "libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-samples"
-            tensorrt_ver = '10.15'
-            tensorrt_url = f"{tensorrt_base_url}/10.15.0/tars/TensorRT-10.15.0.48.Linux.aarch64-gnu.cuda-13.0.tar.gz"
+            tensorrt_ver = '10.14'
+            tensorrt_url = f"{tensorrt_base_url}/10.14.0/tars/TensorRT-10.14.0.48.Linux.aarch64-gnu.cuda-13.0.tar.gz"
             nccl_ver = '2.28.7'
         elif L4T_VERSION.major >= 36:  # JetPack 6
             if CUDA_VERSION >= Version('12.9'):
@@ -64,16 +64,16 @@ def cuda_stack_args():
         cudnn_ver = '9.17.0'
         cudnn_url = f"https://developer.download.nvidia.com/compute/cudnn/9.17.0/local_installers/cudnn-local-repo-{distro}-9.17.0_1.0-1_arm64.deb"
         cudnn_packages = "libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-samples"
-        tensorrt_ver = '10.15'
-        tensorrt_url = f"{tensorrt_base_url}/10.15.0/tars/TensorRT-10.15.0.48.Linux.aarch64-gnu.cuda-13.0.tar.gz"
+        tensorrt_ver = '10.14'
+        tensorrt_url = f"{tensorrt_base_url}/10.14.0/tars/TensorRT-10.14.0.48.Linux.aarch64-gnu.cuda-13.0.tar.gz"
         nccl_ver = '2.28.7'
 
     else:  # x86_64
         cudnn_ver = '9.17.0'
         cudnn_url = f"https://developer.download.nvidia.com/compute/cudnn/9.17.0/local_installers/cudnn-local-repo-{distro}-9.17.0_1.0-1_amd64.deb"
         cudnn_packages = "libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-samples"
-        tensorrt_ver = '10.15'
-        tensorrt_url = f"{tensorrt_base_url}/10.15.0/tars/TensorRT-10.15.0.48.Linux.x86_64-gnu.cuda-13.0.tar.gz"
+        tensorrt_ver = '10.14'
+        tensorrt_url = f"{tensorrt_base_url}/10.14.0/tars/TensorRT-10.14.0.48.Linux.x86_64-gnu.cuda-13.0.tar.gz"
         nccl_ver = '2.28.7'
 
     # Extract DEB name from URL
