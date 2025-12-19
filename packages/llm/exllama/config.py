@@ -8,13 +8,13 @@ def exllama(version, branch=None, requires=None, default=False):
 
     if requires:
         pkg['requires'] = requires
-        
+
     if default:
         pkg['alias'] = 'exllama'
-    
+
     if not branch:
         branch = version
-        
+
     pkg['build_args'] = {
         'EXLLAMA_VERSION': version,
         'EXLLAMA_BRANCH': branch,
@@ -23,9 +23,9 @@ def exllama(version, branch=None, requires=None, default=False):
 
     if L4T_VERSION.major >= 36:
         pkg['depends'] = pkg['depends'] + ['flash-attention']
-        
+
     return pkg
 
 package = [
-    exllama('0.1', requires='>=36', default=True),
+    exllama('0.0.18', requires='>=36', default=True),
 ]

@@ -22,5 +22,5 @@ def tvm(version=None, default=True):
 
 
 package = [
-    tvm(version=0.22, default=True)
+    tvm(version="0.23.0", default=True)
 ]
