@@ -21,7 +21,7 @@ def clear_memory():
 def run_inference():
     clear_memory()  # <-- Clean before creating the model
     llm = LLM(
-        model="Qwen/Qwen3-0.6B-GPTQ-Int8",
+        model="facebook/opt-125m",
         gpu_memory_utilization=0.5,
         enforce_eager=True
     )

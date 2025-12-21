@@ -43,10 +43,6 @@ sed -i \
   -e 's|^flashinfer-python.*|flashinfer-python|g' \
   requirements/cuda.txt
 
-sed -i \
-  -e 's|^device_guard{(char)q_nope.get_device()};|device_guard(q_nope.get_device());|g' \
-  csrc/attention/mla/sm100_cutlass_mla_kernel.cu
-
 grep gguf requirements/common.txt
 
 
