@@ -10,7 +10,7 @@ einops==0.8.1
 tqdm==4.67.1
 dill==0.3.5.1
 scikit-video==1.1.11
-scikit-image==0.25.2
+scikit-image==0.26.0
 gym
 pymunk==7.1.0
 wandb==0.23.0
