@@ -27,6 +27,7 @@ RUN apt-get update && \
 		libb64-0d \
 		libre2-* \
 		libssl-dev \
+		libcurl4-openssl-dev \
 		rapidjson-dev \
 		libopenblas-dev \
 		libarchive-dev \
