@@ -25,9 +25,8 @@ RUN uv pip install --upgrade /opt/${TRITON_CLIENTS}/python/tritonclient-${TRITON
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
 		libb64-0d \
-		libre2-* \
-		libssl-dev \
-		libcurl4-openssl-dev \
+		libre2-9 \
+		libssl3 \
 		rapidjson-dev \
 		libopenblas-dev \
 		libarchive-dev \
