@@ -1,14 +1,21 @@
 import os
 
-from jetson_containers import L4T_VERSION
+from jetson_containers import L4T_VERSION, LSB_RELEASE
 from packaging.version import Version
 
 TRITON_CLIENTS = 'clients'
 
 if L4T_VERSION >= Version('36.4.0'): # JetPack 6.2.1 DP
     # https://github.com/triton-inference-server/server/releases/tag/v2.49.0
-    TRITON_URL = 'https://github.com/triton-inference-server/server/releases/download/v2.49.0/tritonserver2.49.0-igpu.tar'
-    TRITON_TAR = 'tritonserver2.49.0-igpu.tar'
+    if LSB_RELEASE == '22.04':
+        TRITON_VERSION = '2.49.0'
+        TRITON_URL = f'https://github.com/triton-inference-server/server/releases/download/v{TRITON_VERSION}/tritonserver{TRITON_VERSION}-igpu.tar.gz'
+        TRITON_TAR = f'tritonserver{TRITON_VERSION}-igpu.tar.gz'
+    else:
+        TRITON_VERSION = '2.63.0'
+        TRITON_URL = f'https://github.com/triton-inference-server/server/releases/download/v{TRITON_VERSION}/tritonserver{TRITON_VERSION}-igpu.tar.gz'
+        TRITON_TAR = f'tritonserver{TRITON_VERSION}-igpu.tar.gz'
+    
     TRITON_CLIENTS = 'tritonserver/clients'
 elif L4T_VERSION >= Version('36.0.0'): # JetPack 6.0 DP
     # https://github.com/triton-inference-server/server/releases/tag/v2.42.0
@@ -45,6 +52,7 @@ else:
     package = None
 
 if package:
+    package['depends'] = ['vllm', 'numpy']
     package['build_args'] = {
         'TRITON_URL': TRITON_URL,
         'TRITON_TAR': TRITON_TAR,
