@@ -61,6 +61,8 @@ class TestTritonConfig(unittest.TestCase):
         self.assertEqual(TRITON_VERSION, '2.49.0')
         self.assertIn('v2.49.0', TRITON_URL)
         self.assertTrue(TRITON_TAR.endswith('.tar.gz'))
+        self.assertIn('vllm', context['package']['depends'])
+        self.assertIn('numpy', context['package']['depends'])
 
     def test_l4t_36_4_0_ubuntu_24_04(self):
         mock_L4T_VERSION('36.4.0')
