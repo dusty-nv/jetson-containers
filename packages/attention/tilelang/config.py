@@ -26,6 +26,6 @@ def tilelang(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    tilelang('0.1.7', default=(CUDA_VERSION >= Version('12.6'))),
+    tilelang('0.1.8', default=(CUDA_VERSION >= Version('12.6'))),
 ]
 
