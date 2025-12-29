@@ -1,4 +1,4 @@
-fastapi==0.121.3
+fastapi==0.128.0
 pydantic-settings
 uvicorn[standard]
 pillow
