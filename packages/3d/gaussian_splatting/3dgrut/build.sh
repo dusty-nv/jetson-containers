@@ -19,30 +19,18 @@ tar -xzvf slang*.tar.gz -C /usr/local
 sed -i 's|\.type|.scalar_type|g' threedgrt_tracer/src/particlePrimitives.cu
 
 # Set GCC-11 and G++-11 as the default
-RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 110 && \
-    update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 110
+update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 110 && \
+update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 110
 
 sed -i '/^--find-links/d' requirements.txt
 sed -i 's/kaolin==0.17.0/kaolin>=0.17.0/' requirements.txt
 sed -i '/^opencv-python$/d' requirements.txt
 
-pip install -r requirements.txt
-pip install -e .
+uv pip install --no-build-isolation -r requirements.txt
+uv pip install --no-build-isolation -e .
 
 MAX_JOBS=$(nproc) \
-uv build --wheel . --out-dir /opt/3dgrut/wheels --verbose
-
-cd /tmp/
-wget $WGET_FLAGS https://us.download.nvidia.com/XFree86/aarch64/590.48.01/NVIDIA-Linux-aarch64-590.48.01.run
-chmod +x NVIDIA-Linux-aarch64-590.48.01.run
-sh NVIDIA-Linux-aarch64-590.48.01.run --extract-only
-cd NVIDIA-Linux-aarch64-590.48.01/
-cp -R ./libnvoptix.so.590.48.01 /usr/lib/aarch64-linux-gnu/
-cp -R ./libnvidia-rtcore.so.590.48.01 /usr/lib/aarch64-linux-gnu/
-cp -R ./nvoptix.bin /usr/lib/aarch64-linux-gnu/
-ln -sf /usr/lib/aarch64-linux-gnu/libnvoptix.so.590.48.01 /usr/lib/aarch64-linux-gnu/libnvoptix.so.1
-# Clean up
-rm -rf /tmp/NVIDIA-Linux-aarch64-590.48.01.run /tmp/NVIDIA-Linux-aarch64-590.48.01
+uv build --wheel --no-build-isolation . --out-dir /opt/3dgrut/wheels --verbose
 # uv pip install /opt/3dgrut/wheels/threedgrut-*.whl
 
 cd /opt/3dgrut
