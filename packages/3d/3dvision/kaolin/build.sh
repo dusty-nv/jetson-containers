@@ -19,7 +19,7 @@ export IGNORE_TORCH_VER=1
 export CUB_HOME=/usr/local/cuda-*/include/
 
 MAX_JOBS=$(nproc) \
-uv build --wheel . --out-dir /opt/kaolin/wheels --verbose
+uv build --wheel --no-build-isolation . --out-dir /opt/kaolin/wheels --verbose
 
 uv pip install /opt/kaolin/wheels/kaolin*.whl
 
