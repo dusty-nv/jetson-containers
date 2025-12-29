@@ -61,3 +61,5 @@ tarpack upload "coolmap-${PYCOLMAP_VERSION}" "$STAGE_DIR/usr/local" || echo "fai
 ldconfig -p | grep -i colmap || true
 
 echo "Done."
+
+twine upload --verbose /opt/wheels/pycolmap*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
