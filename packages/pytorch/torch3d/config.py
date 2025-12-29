@@ -31,5 +31,5 @@ def pytorch3d(version, version_spec=None, requires=None, depends=None, default=F
     return pkg, builder
 
 package = [
-    pytorch3d('0.7.9', '0.7.8', default=True), # Compatible with CUDA 13 (Spark and Thor)
+    pytorch3d('0.7.9', '0.7.9', default=True), # Compatible with CUDA 13 (Spark and Thor)
 ]
