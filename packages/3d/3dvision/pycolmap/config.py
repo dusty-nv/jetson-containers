@@ -3,7 +3,7 @@ def pycolmap(version, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
 
     pkg['name'] = f'pycolmap:{version}'
 
@@ -24,5 +24,5 @@ def pycolmap(version, requires=None, default=False):
 
 package = [
     pycolmap('3.12', default=False),
-    pycolmap('3.13', default=True),
+    pycolmap('3.14', default=True),
 ]
