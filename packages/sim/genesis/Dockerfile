@@ -139,20 +139,7 @@ RUN mkdir -p /usr/local/lib/python${PYTHON_VERSION}/dist-packages/genesis/ext/Lu
     cp -r /opt/genesis/genesis/ext/LuisaRender/build/bin /usr/local/lib/python${PYTHON_VERSION}/dist-packages/genesis/ext/LuisaRender/build/
 RUN echo "export LD_LIBRARY_PATH=/opt/genesis/genesis/ext/ParticleMesher/ParticleMesherPy:$LD_LIBRARY_PATH" >> ~/.bashrc && \
     cd /opt/genesis/
-
 RUN ldconfig
-
-RUN cd /tmp && \
-    wget https://us.download.nvidia.com/XFree86/aarch64/590.48.01/NVIDIA-Linux-aarch64-590.48.01.run && \
-    chmod +x NVIDIA-Linux-aarch64-590.48.01.run && \
-    sh NVIDIA-Linux-aarch64-590.48.01.run --extract-only && \
-    cd NVIDIA-Linux-aarch64-590.48.01 && \
-    cp -R ./libnvoptix.so.590.48.01 /usr/lib/aarch64-linux-gnu/ && \
-    cp -R ./libnvidia-rtcore.so.590.48.01 /usr/lib/aarch64-linux-gnu/ && \
-    cp -R ./nvoptix.bin /usr/lib/aarch64-linux-gnu/ && \
-    ln -sf /usr/lib/aarch64-linux-gnu/libnvoptix.so.590.48.01 /usr/lib/aarch64-linux-gnu/libnvoptix.so.1 && \
-    rm -rf /tmp/NVIDIA-Linux-aarch64-590.48.01.run /tmp/NVIDIA-Linux-aarch64-590.48.01
-
 RUN uv pip install --force-reinstall opencv-contrib-python
 WORKDIR /opt/genesis/
 CMD ["/bin/bash"]
