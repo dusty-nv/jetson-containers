@@ -3,7 +3,13 @@ set -euxo pipefail
 
 echo "Installing pycolmap ${PYCOLMAP_VERSION}"
 
-if [[ "${FORCE_BUILD:-off}" == "on" ]]; then
+apt-get update && \
+apt-get install -y --no-install-recommends \
+    libopenimageio-dev \
+&& rm -rf /var/lib/apt/lists/* \
+&& apt-get clean
+
+if [ "$FORCE_BUILD" == "on" ]; then
   echo "Forcing build of pycolmap ${PYCOLMAP_VERSION}"
   exit 1
 fi
