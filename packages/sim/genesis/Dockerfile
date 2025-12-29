@@ -151,7 +151,6 @@ RUN cd /tmp && \
     cp -R ./libnvidia-rtcore.so.590.48.01 /usr/lib/aarch64-linux-gnu/ && \
     cp -R ./nvoptix.bin /usr/lib/aarch64-linux-gnu/ && \
     ln -sf /usr/lib/aarch64-linux-gnu/libnvoptix.so.590.48.01 /usr/lib/aarch64-linux-gnu/libnvoptix.so.1 && \
-    # Clean up
     rm -rf /tmp/NVIDIA-Linux-aarch64-590.48.01.run /tmp/NVIDIA-Linux-aarch64-590.48.01
 
 RUN uv pip install --force-reinstall opencv-contrib-python
