@@ -29,6 +29,6 @@ uv pip install /opt/nerfstudio/wheels/nerfstudio*.whl
 ns-install-cli --mode install
 
 cd /opt/nerfstudio
-uv pip install -U --force-reinstall opencv-python-contrib
+uv pip install -U --force-reinstall opencv-contrib-python
 # Optionally upload to a repository using Twine
 twine upload --verbose /opt/nerfstudio/wheels/nerfstudio*.whl || echo "Failed to upload wheel to ${TWINE_REPOSITORY_URL}"
