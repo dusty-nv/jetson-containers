@@ -143,16 +143,16 @@ RUN echo "export LD_LIBRARY_PATH=/opt/genesis/genesis/ext/ParticleMesher/Particl
 RUN ldconfig
 
 RUN cd /tmp && \
-    wget https://us.download.nvidia.com/XFree86/aarch64/570.153.02/NVIDIA-Linux-aarch64-570.153.02.run && \
-    chmod +x NVIDIA-Linux-aarch64-570.153.02.run && \
-    sh NVIDIA-Linux-aarch64-570.153.02.run --extract-only && \
-    cd NVIDIA-Linux-aarch64-570.153.02 && \
-    cp -R ./libnvoptix.so.570.153.02 /usr/lib/aarch64-linux-gnu/ && \
-    cp -R ./libnvidia-rtcore.so.570.153.02 /usr/lib/aarch64-linux-gnu/ && \
+    wget https://us.download.nvidia.com/XFree86/aarch64/590.48.01/NVIDIA-Linux-aarch64-590.48.01.run && \
+    chmod +x NVIDIA-Linux-aarch64-590.48.01.run && \
+    sh NVIDIA-Linux-aarch64-590.48.01.run --extract-only && \
+    cd NVIDIA-Linux-aarch64-590.48.01 && \
+    cp -R ./libnvoptix.so.590.48.01 /usr/lib/aarch64-linux-gnu/ && \
+    cp -R ./libnvidia-rtcore.so.590.48.01 /usr/lib/aarch64-linux-gnu/ && \
     cp -R ./nvoptix.bin /usr/lib/aarch64-linux-gnu/ && \
-    ln -sf /usr/lib/aarch64-linux-gnu/libnvoptix.so.570.153.02 /usr/lib/aarch64-linux-gnu/libnvoptix.so.1 && \
+    ln -sf /usr/lib/aarch64-linux-gnu/libnvoptix.so.590.48.01 /usr/lib/aarch64-linux-gnu/libnvoptix.so.1 && \
     # Clean up
-    rm -rf /tmp/NVIDIA-Linux-aarch64-570.153.02.run /tmp/NVIDIA-Linux-aarch64-570.153.02
+    rm -rf /tmp/NVIDIA-Linux-aarch64-590.48.01.run /tmp/NVIDIA-Linux-aarch64-590.48.01
 
 RUN uv pip install --force-reinstall opencv-contrib-python
 WORKDIR /opt/genesis/
