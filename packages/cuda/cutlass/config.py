@@ -25,7 +25,7 @@ def cutlass(version, version_spec=None, requires=None, default=False):
     return pkg, builder
 
 package = [
-    cutlass('3.9.2', default=(CUDA_VERSION < Version('13.0'))),
+    cutlass('3.9.2', default=(CUDA_VERSION < Version('12.9'))),
     cutlass('4.3.4', default=(CUDA_VERSION <= Version('13.0'))),
     cutlass('4.4.0', default=(CUDA_VERSION >= Version('13.1'))),
 ]

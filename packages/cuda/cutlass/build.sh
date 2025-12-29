@@ -28,11 +28,7 @@ uv pip install $WHL/nvidia_cutlass*.whl $WHL/pycute*.whl
 twine upload --verbose $WHL/nvidia_cutlass*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 twine upload --verbose $WHL/pycute*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
-if [ "${PYTHON_VERSION}" == "3.12" ]; then
-    echo "Installing nvidia-cutlass-dsl for Python 3.12"
-    uv pip install nvidia-cutlass-dsl --prerelease=allow || echo "failed to install nvidia-cutlass-dsl for Python ${PYTHON_VERSION}"
-else
-    echo "Installing nvidia-cutlass for Python ${PYTHON_VERSION}"
-fi
+echo "Installing nvidia-cutlass-dsl for Python 3.12"
+uv pip install nvidia-cutlass-dsl --prerelease=allow || echo "failed to install nvidia-cutlass-dsl for Python ${PYTHON_VERSION}"
 
 # python3 -c 'import cutlass'
