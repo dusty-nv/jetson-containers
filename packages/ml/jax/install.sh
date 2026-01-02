@@ -3,6 +3,12 @@
 set -ex
 
 # bash /tmp/JAX/link_cuda.sh
+apt-get update && \
+apt-get install -y --no-install-recommends \
+    vim-common \
+    xxd \
+&& rm -rf /var/lib/apt/lists/* \
+&& apt-get clean
 
 # JAX C++ extensions frequently use ninja for parallel builds
 uv pip install scikit-build ninja
