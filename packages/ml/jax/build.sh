@@ -19,7 +19,7 @@ BUILD_FLAGS="--clang_path=/usr/lib/llvm-21/bin/clang --output_path=/opt/jax/whee
 if [ "${IS_SBSA}" -eq 1 ]; then
     echo "Building for SBSA architecture"
     BUILD_FLAGS+='--cuda_compute_capabilities="sm_87,sm_89,sm_90,sm_100,sm_110,sm_120,sm_121" '
-    BUILD_FLAGS+='--cuda_version=13.1.0 --cudnn_version=9.17.0 '
+    BUILD_FLAGS+='--cuda_version=13.0.2 --cudnn_version=9.16.0 '
 
     # --- BAZEL CONFIGURATION ---
     # 2. Fix Abseil: Disable nullability attributes.
