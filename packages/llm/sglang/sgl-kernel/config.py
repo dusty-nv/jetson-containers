@@ -38,7 +38,7 @@ package = [
     # You can increase the branch/commit to get newer versions if there are no changes
     # in CMakeLists.txt at commit 88568c01eb99698eceef9a40b5f481e37c0b89d0
     sgl_kernel('0.5.6', default=False),
-    sgl_kernel('0.5.7', default=True),
+    sgl_kernel('0.5.8', default=True),
     # Latest version from main branch.
     sgl_kernel('latest', branch='main', default=False),
 ]
