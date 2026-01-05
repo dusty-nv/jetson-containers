@@ -1,7 +1,7 @@
 #---
 # name: pyav
 # group: multimedia
-# depends: [python, ffmpeg:git]
+# depends: [python, ffmpeg]
 # test: test.sh
 #---
 ARG BASE_IMAGE
