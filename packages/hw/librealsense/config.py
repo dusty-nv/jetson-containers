@@ -26,5 +26,7 @@ def librealsense(version, version_spec=None, requires=None, default=False):
     return pkg, builder
 
 package = [
+    librealsense('2.54.2', default=False),
+    librealsense('2.50.0', default=False),
     librealsense('2.57.5', default=True)
 ]

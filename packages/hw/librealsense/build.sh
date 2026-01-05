@@ -5,6 +5,7 @@ git clone --branch=v${LIBREALSENSE_VERSION} --depth=1 --recursive https://github
 git clone --depth=1 --recursive https://github.com/IntelRealSense/librealsense /opt/librealsense
 
 cd /opt/librealsense
+
 export MAX_JOBS="$(nproc)"
 mkdir build
 cd build
@@ -15,7 +16,7 @@ cmake \
 -DCMAKE_BUILD_TYPE=release \
 -DBUILD_SHARED_LIBS=OFF \
 -DBUILD_PYTHON_BINDINGS=ON \
--DPYTHON_EXECUTABLE=/usr/bin/python3 \
+-DPYTHON_EXECUTABLE=$(which python3) \
 ../
 # -DPYTHON_INSTALL_DIR=$(python3 -c 'import sys; print(f"/usr/lib/python{sys.version_info.major}.{sys.version_info.minor}/dist-packages")') \
 cmake --build . -j"$(($(nproc)-1))"
