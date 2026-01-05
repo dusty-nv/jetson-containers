@@ -55,3 +55,4 @@ if [ "$FORCE_BUILD" == "on" ]; then
 fi
 
 uv pip install hloc==${HLOC_VERSION}
+uv pip install -U --force-reinstall opencv-contrib-python

@@ -17,5 +17,3 @@ ARG HLOC_VERSION \
 COPY build.sh install.sh /tmp/HLOC/
 
 RUN /tmp/HLOC/install.sh || /tmp/HLOC/build.sh
-
-RUN /tmp/opencv/install.sh
