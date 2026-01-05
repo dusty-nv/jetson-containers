@@ -6,6 +6,10 @@ git clone --depth=1 --recursive https://github.com/IntelRealSense/librealsense /
 
 cd /opt/librealsense
 
+apt-get update && apt-get install -y gcc-11 g++-11
+update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 200
+update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 200
+
 export MAX_JOBS="$(nproc)"
 mkdir build
 cd build
