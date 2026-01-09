@@ -34,6 +34,12 @@ ENV PYTHON_VERSION=${PYTHON_VERSION} \
 COPY install.sh $TMP/
 RUN $TMP/install.sh
 
+# hardcode python used by `uv pip`
+ENV UV_PYTHON=/opt/venv/bin/python3
+
+# harcode python environment used by `uv sync`
+ENV UV_PROJECT_ENVIRONMENT=/opt/venv
+
 # Set PYTHON_GIL=0 for free-threaded builds
 RUN if [ "${PYTHON_FREE_THREADING}" = "1" ]; then \
       echo "export PYTHON_GIL=0" >> /etc/bash.bashrc; \

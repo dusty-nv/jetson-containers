@@ -25,7 +25,21 @@ fi
 
 apt-get update
 apt-get install -y --no-install-recommends \
-  curl ca-certificates
+    curl ca-certificates \
+    python3 \
+    python3-pip \
+    python3-dev
+
+# Use system Python (already installed via apt)
+PY_BIN="/usr/bin/python3"
+
+# Verify system Python version matches requirements
+SYSTEM_PY_VERSION="$(${PY_BIN} -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')"
+if [ "${SYSTEM_PY_VERSION}" != "${PYTHON_VERSION}" ]; then
+  echo "ERROR: System Python version ${SYSTEM_PY_VERSION} doesn't match required ${PYTHON_VERSION}"
+  echo "Please ensure the base image has Python ${PYTHON_VERSION} installed"
+  exit 1
+fi
 
 # Install uv (default location: ~/.local/bin/uv)
 curl -fsSL https://astral.sh/uv/install.sh | sh
@@ -34,12 +48,6 @@ curl -fsSL https://astral.sh/uv/install.sh | sh
 if [ -f "${HOME}/.local/bin/uv" ]; then
   install -m 0755 "${HOME}/.local/bin/uv" /usr/local/bin/uv
 fi
-
-# Install the requested Python version via uv
-uv python install "${PYTHON_INSTALL_VERSION}"
-
-# Find the path to that Python version
-PY_BIN="$(uv python find "${PYTHON_INSTALL_VERSION}")"
 
 # Create a virtual environment in /opt/venv
 uv venv --python "${PY_BIN}" --system-site-packages /opt/venv
@@ -52,6 +60,16 @@ source /opt/venv/bin/activate
 # Checks
 which python
 python --version
+
+# Verify system Python version matches requirements
+VENV_PY_VERSION="$(python3 -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')"
+if [ "${VENV_PY_VERSION}" != "${PYTHON_VERSION}" ]; then
+  echo "ERROR: Failed to create python virtual environment inheriting from system python ${SYSTEM_PY_VERSION}"
+  exit 1
+fi
+
+# default for uv pip --python arg
+export UV_PYTHON=/opt/venv/bin/python3
 
 # Upgrade pip and base utilities
 uv pip install --upgrade --index-url "${PIP_INDEX_URL}" pip pkginfo
