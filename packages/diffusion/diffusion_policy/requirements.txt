@@ -27,7 +27,7 @@ boto3==1.24.96
 accelerate
 datasets
 diffusers
-av==16.0.1
+av==16.1.0
 imagecodecs
 ray[default,tune]==2.51.1
 mujoco
