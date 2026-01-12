@@ -1,4 +1,4 @@
-scipy==1.9.1
+scipy==1.17.0
 cffi==1.15.1
 ipykernel==7.1.0
 matplotlib==3.6.1
