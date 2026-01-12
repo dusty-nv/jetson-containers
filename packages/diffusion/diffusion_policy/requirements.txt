@@ -35,5 +35,5 @@ mujoco
 pygame==2.1.2
 pybullet-svl==3.1.6.4
 pytorchvideo==0.1.5
-dm-control==1.0.9
+dm-control==1.0.36
 gdown
