@@ -22,6 +22,7 @@ ARG USE_CUDA_VER=CUDA_VERSION
 # IMPORTANT: If you change the embedding model (sentence-transformers/all-MiniLM-L6-v2) and vice versa, you aren't able to use RAG Chat with your previous documents loaded in the WebUI! You need to re-embed them.
 ARG USE_EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
 ARG USE_RERANKING_MODEL=""
+ARG USE_AUXILIARY_EMBEDDING_MODEL=TaylorAI/bge-micro-v2
 
 # Tiktoken encoding name; models to use can be found at https://huggingface.co/models?library=tiktoken
 ARG USE_TIKTOKEN_ENCODING_NAME="cl100k_base"
@@ -54,12 +55,16 @@ RUN npm run build
 ######## WebUI backend ########
 FROM ${BASE_IMAGE} AS base
 
+# Python settings
+ENV PYTHONUNBUFFERED=1
+
 # Use args
 ARG USE_CUDA
 ARG USE_OLLAMA
 ARG USE_CUDA_VER
 ARG USE_EMBEDDING_MODEL
 ARG USE_RERANKING_MODEL
+ARG USE_AUXILIARY_EMBEDDING_MODEL
 ARG UID
 ARG GID
 ARG JETSON_JETPACK
@@ -72,6 +77,7 @@ ENV ENV=prod \
     USE_CUDA_DOCKER_VER=${USE_CUDA_VER} \
     USE_EMBEDDING_MODEL_DOCKER=${USE_EMBEDDING_MODEL} \
     USE_RERANKING_MODEL_DOCKER=${USE_RERANKING_MODEL} \
+    USE_AUXILIARY_EMBEDDING_MODEL_DOCKER=${USE_AUXILIARY_EMBEDDING_MODEL} \
     JETSON_JETPACK=${JETSON_JETPACK} \
     OLLAMA_LOGS=/data/logs/ollama.log \
     OLLAMA_MODELS=/data/models/ollama \
@@ -97,6 +103,7 @@ ENV WHISPER_MODEL="base" \
 ## RAG Embedding model settings ##
 ENV RAG_EMBEDDING_MODEL="$USE_EMBEDDING_MODEL_DOCKER" \
     RAG_RERANKING_MODEL="$USE_RERANKING_MODEL_DOCKER" \
+    AUXILIARY_EMBEDDING_MODEL="$USE_AUXILIARY_EMBEDDING_MODEL_DOCKER" \
     SENTENCE_TRANSFORMERS_HOME="/app/backend/data/cache/embedding/models"
 
 ## Tiktoken model settings ##
@@ -133,17 +140,18 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     git build-essential pandoc gcc netcat-openbsd curl jq \
     python3-dev \
-    ffmpeg libsm6 libxext6 \
+    ffmpeg libsm6 libxext6 zstd \
     && rm -rf /var/lib/apt/lists/*
 
 # copy backend requirements before installing python deps
 COPY --chown=$UID:$GID --from=build /app/backend/requirements.txt ./requirements.txt
 
 # install python dependencies and validate install of some packages
-RUN uv pip install --system -r requirements.txt --no-cache-dir && \
+RUN uv pip install -v --system -r requirements.txt --no-cache-dir --extra-index-url https://pypi.org/simple && \
     mkdir -p /app/backend/data && chown -R $UID:$GID /app/backend/data/
 
 RUN python3 -c "import os; from sentence_transformers import SentenceTransformer; SentenceTransformer(os.environ['RAG_EMBEDDING_MODEL'], device='cuda')" && \
+    python3 -c "import os; from sentence_transformers import SentenceTransformer; SentenceTransformer(os.environ.get('AUXILIARY_EMBEDDING_MODEL', 'TaylorAI/bge-micro-v2'), device='cpu')" && \
     python3 -c "import os; from faster_whisper import WhisperModel; WhisperModel(os.environ['WHISPER_MODEL'], device='cuda', compute_type='int8', download_root=os.environ['WHISPER_MODEL_DIR'])"; \
     python3 -c "import os; import tiktoken; tiktoken.get_encoding(os.environ['TIKTOKEN_ENCODING_NAME'])";
 
