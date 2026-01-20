@@ -13,7 +13,8 @@ ARG NV_CODEC_VERSION \
     BUILD_SAMPLES=off \
     SOURCE=/opt/nvidia/video-codec-sdk \
 		TMP=/tmp/video-codec-sdk
-
+# Download the zip from https://developer.nvidia.com/video-codec-sdk/download
+# and place it in the same directory as this Dockerfile.
 COPY build.sh install.sh *.zip $TMP/
 
 RUN $TMP/build.sh || $TMP/install.sh

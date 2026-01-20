@@ -1,11 +1,4 @@
-### Open WebUI with CUDA Support for Jetson
-
-- Example build command for CUDA 12.6 on Jetson with Ubuntu 22.04, Python 3.10, and PyTorch 2.9.1:
-  - Pass `USE_OLLAMA=on` (or `USE_OLLAMA=true` or `USE_OLLAMA=1` ) as an environment variable to build Ollama in the same container.
-
-```bash
-LSB_RELEASE=22.04 CUDA_VERSION=12.6 PYTHON_VERSION=3.10 PYTORCH_VERSION=2.9.1 USE_OLLAMA=on jetson-containers build open-webui
-```
+### Open WebUI with CUDA Support for Jetson ( requires Python 3.11+ )
 
 - Example build command for CUDA 12.9 on Jetson with Ubuntu 24.04, Python 3.12, and PyTorch 2.9.1:
   - Pass `USE_OLLAMA=on` as the example above to build Ollama in the same container.
