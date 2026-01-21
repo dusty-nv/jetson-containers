@@ -29,6 +29,9 @@ def nixl(version, version_spec=None, requires=None, default=False):
         pkg['alias'] = 'nixl'
         builder['alias'] = 'nixl:builder'
 
+    if 'gdrcopy' in builder['depends']:
+        builder['depends'].remove('gdrcopy')
+
     return pkg, builder
 
 package = [
