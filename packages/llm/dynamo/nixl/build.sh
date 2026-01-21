@@ -96,7 +96,7 @@ ucx_info -d | egrep -i 'cuda_(copy|ipc)|gdr' || true
 # -------------------------- Build NIXL (meson) -----------------------
 pushd "${NIXL_PREFIX}"
 # toolchain deps
-${PYTHON_BIN} -m pip install -U meson ninja pybind11 patchelf auditwheel
+${PYTHON_BIN} -m pip install -U tomlkit meson ninja pybind11 patchelf auditwheel
 
 rm -rf build
 meson setup build --prefix="${NIXL_PREFIX}" --buildtype=release
