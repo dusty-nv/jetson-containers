@@ -130,15 +130,15 @@ if command -v uv &>/dev/null; then
     --output-dir "${OUTDIR}" \
     --ucx-plugins-dir "${INSTALL_PREFIX}/lib/ucx" \
     --nixl-plugins-dir "${PLUGINS_DIR}"
-  WHEEL_PATH="$(ls -1 ${OUTDIR}/nixl-*.whl | head -n1)"
+  WHEEL_PATH="$(ls -1 ${OUTDIR}/nixl*.whl | head -n1)"
 else
   # Fallback path (no uv)
   rm -rf /tmp/wheels "${NIXL_PREFIX}/wheels"
   ${PYTHON_BIN} -m pip wheel --no-deps --out-dir /tmp/wheels .
-  UNREPAIRED_WHEEL="$(ls -1 /tmp/wheels/nixl-*-"linux_${ARCH}.whl" 2>/dev/null || true)"
+  UNREPAIRED_WHEEL="$(ls -1 /tmp/wheels/nixl*-"linux_${ARCH}.whl" 2>/dev/null || true)"
   if [[ -z "${UNREPAIRED_WHEEL}" ]]; then
     # newer pip tags may already be manylinux; just pick the first
-    UNREPAIRED_WHEEL="$(ls -1 /tmp/wheels/nixl-*.whl | head -n1)"
+    UNREPAIRED_WHEEL="$(ls -1 /tmp/wheels/nixl*.whl | head -n1)"
   fi
   WHL_PLATFORM="manylinux_2_39_${ARCH}"
   ${PYTHON_BIN} -m pip install -U auditwheel patchelf
@@ -157,7 +157,7 @@ else
     --nixl-plugins-dir "${PLUGINS_DIR}" \
     "${NIXL_PREFIX}/wheels/"*.whl
 
-  WHEEL_PATH="$(ls -1 ${NIXL_PREFIX}/wheels/nixl-*.whl | head -n1)"
+  WHEEL_PATH="$(ls -1 ${NIXL_PREFIX}/wheels/nixl*.whl | head -n1)"
 fi
 
 # Install locally (optional)
