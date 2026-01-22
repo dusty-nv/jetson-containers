@@ -10,6 +10,7 @@ cd /opt/tensorrt_llm/
 git lfs pull
 sed -i '/^diffusers[[:space:]=<>!]/d' requirements.txt
 sed -i 's/==/>=/g' requirements.txt
+sed -i 's/cuda-python.*/cuda-python/g' requirements.txt
 uv pip install -r requirements.txt
 
 
