@@ -35,7 +35,7 @@ else
 	fi
 
 	sed -i 's|tensorrt.*||' requirements.txt
-	sed -i 's|torch.*|torch|' requirements.txt
+	sed -i 's|^torch>.*|torch|' requirements.txt
 	sed -i 's|nvidia-cudnn.*||' requirements.txt
 
 	git status
