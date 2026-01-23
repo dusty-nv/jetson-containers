@@ -30,7 +30,7 @@ print_log " ROS2 $ROS_DISTRO installer ($(uname -m))
 # ------------------------------------------------------------------------------
 apt-get update
 apt-get install -y --no-install-recommends \
-  curl wget gnupg2 lsb-release ca-certificates
+  curl wget gnupg2 lsb-release ca-certificates libssl-dev
 
 curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key \
   -o /usr/share/keyrings/ros-archive-keyring.gpg
@@ -246,7 +246,8 @@ colcon build \
   --cmake-args \
   -Wno-dev -Wno-deprecated \
   -DCMAKE_BUILD_TYPE=Release \
-  -DCMAKE_POLICY_DEFAULT_CMP0148=OLD
+  -DCMAKE_POLICY_DEFAULT_CMP0148=OLD \
+  -DSECURITY=ON
   # -DCMAKE_WARN_DEPRECATED=OFF
 
 # ------------------------------------------------------------------------------
