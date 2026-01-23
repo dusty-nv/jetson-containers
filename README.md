@@ -125,7 +125,7 @@ The project uses automated code formatting tools to maintain consistent code sty
 <br/>
 
 <a href="https://www.youtube.com/watch?v=OJT-Ax0CkhU"><img src="https://raw.githubusercontent.com/dusty-nv/jetson-containers/docs/docs/images/nanodb_tennis.jpg"></a>
-> [Realtime Multimodal VectorDB on NVIDIA Jetson](https://www.youtube.com/watch?v=wzLHAgDxMjQ) (container: [`nanodb`](/packages/vectordb/nanodb))
+> [Realtime Multimodal VectorDB on NVIDIA Jetson](https://www.youtube.com/watch?v=ayqKpQNd1Jw) (container: [`nanodb`](/packages/vectordb/nanodb))
 
 <br/>
 
