@@ -3,7 +3,7 @@
 ##
 
 # Build System requirements
-setuptools>=70.1.0,<80.0  # setuptools develop deprecated on 80.0
+setuptools>=70.1.0,<81.0  # setuptools develop deprecated on 80.0
 cmake>=3.27
 ninja
 numpy
