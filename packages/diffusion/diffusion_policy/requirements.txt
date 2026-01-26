@@ -8,7 +8,7 @@ h5py
 hydra-core==1.2.0
 einops==0.8.1
 tqdm==4.67.1
-dill==0.3.5.1
+dill==0.4.1
 scikit-video==1.1.11
 scikit-image==0.25.2
 gym
