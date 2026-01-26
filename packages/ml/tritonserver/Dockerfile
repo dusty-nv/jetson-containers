@@ -40,6 +40,8 @@ RUN uv pip install --upgrade wheel setuptools && \
 	uv pip install --upgrade grpcio-tools attrdict pillow
 
 ENV PATH="$PATH:/opt/tritonserver/bin"
-ENV LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib/llvm-8/lib:/opt/tritonserver/lib"
+ENV LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/cuda/targets/aarch64-linux/lib"
 
-RUN python3 -c 'import tritonclient; print("Triton Client verified")' 
+RUN uv run python -c 'import tritonclient; print("Triton Client verified")' 
+
+RUN uv pip install $(find /usr -name "tensorrt-*-cp310-*-linux_aarch64.whl" -print -quit)
