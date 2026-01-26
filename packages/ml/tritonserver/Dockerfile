@@ -42,20 +42,4 @@ RUN uv pip install --upgrade wheel setuptools && \
 ENV PATH="$PATH:/opt/tritonserver/bin"
 ENV LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib/llvm-8/lib:/opt/tritonserver/lib"
 
-RUN python3 -c 'import tritonclient; print("Triton Client verified")' && \
-	python3 -c 'import vllm; print(f"vLLM version: {vllm.__version__}")'
-
-# Install vLLM backend (Option 3: https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/vllm_backend/README.html)
-# The vllm python package is installed via 'depends' in config.py
-RUN git clone https://github.com/triton-inference-server/vllm_backend.git /tmp/vllm_backend && \
-	mkdir -p /opt/tritonserver/backends/vllm && \
-	cp /tmp/vllm_backend/src/model.py /opt/tritonserver/backends/vllm/model.py && \
-	rm -rf /tmp/vllm_backend
-
-# Verify vLLM backend installation
-RUN if [ ! -f "/opt/tritonserver/backends/vllm/model.py" ]; then \
-	echo "ERROR: vllm backend model.py not found in /opt/tritonserver/backends/vllm"; \
-	exit 1; \
-	else \
-	echo "vLLM backend installed successfully at /opt/tritonserver/backends/vllm"; \
-	fi
+RUN python3 -c 'import tritonclient; print("Triton Client verified")' 
