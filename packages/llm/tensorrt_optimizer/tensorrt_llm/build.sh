@@ -47,6 +47,26 @@ if [ ! -d "/usr/local/tensorrt" ]; then
     mkdir -p /usr/local/tensorrt/include
     mkdir -p /usr/local/tensorrt/lib
 
+    # Find where libnvinfer is installed on the system (e.g. /usr/lib/aarch64-linux-gnu)
+    # We prioritize the system root /usr
+    LIBNVINFER_PATH=$(find /usr -name "libnvinfer.so.*" 2>/dev/null | head -n 1)
+    
+    if [ -n "$LIBNVINFER_PATH" ]; then
+        TRT_SYS_LIB_DIR=$(dirname "$LIBNVINFER_PATH")
+        echo "Found system TensorRT libraries at: $TRT_SYS_LIB_DIR"
+        
+        # Symlink libraries to the compatibility directory
+        # We assume if we found one, others are there too.
+        ln -sf "$TRT_SYS_LIB_DIR"/libnvinfer* /usr/local/tensorrt/lib/
+        ln -sf "$TRT_SYS_LIB_DIR"/libnvonnx*  /usr/local/tensorrt/lib/
+        ln -sf "$TRT_SYS_LIB_DIR"/libnvpar*   /usr/local/tensorrt/lib/ 2>/dev/null || true
+        # Also symlink plugin library if present (it might be in a different package or same dir)
+        ln -sf "$TRT_SYS_LIB_DIR"/libnvinfer_plugin* /usr/local/tensorrt/lib/ 2>/dev/null || true
+    else
+        echo "WARNING: Could not find libnvinfer.so.* in /usr. Build commonly fails if libraries are missing."
+    fi
+
+
     # But previous error was LIBRARY missing, implying headers MIGHT be found?
     # CMake said "found suitable version 10.3.0.26". This implies it found NvInferVersion.h
     # Where? Likely /usr/include/aarch64-linux-gnu (from base image).
