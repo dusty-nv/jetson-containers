@@ -3,6 +3,12 @@ set -ex
 
 echo "Building TensorRT-LLM ${TRT_LLM_VERSION}"
 
+# Apply git patches if present (GIT_PATCHES is set from TRT_LLM_PATCH in Dockerfile)
+if [ -s "${GIT_PATCHES}" ]; then
+    echo "Applying git patches from ${GIT_PATCHES}"
+    git apply "${GIT_PATCHES}" || echo "Warning: Patch may have already been applied"
+fi
+
 REQUIREMENTS_FILENAME="requirements.txt"
 DEV_REQUIREMENTS_FILENAME="requirements-dev.txt"
 
