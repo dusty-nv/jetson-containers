@@ -17,7 +17,8 @@ def nixl(version, version_spec=None, requires=None, default=False):
         'NIXL_VERSION_SPEC': version_spec,
         'IS_TEGRA': IS_TEGRA,
         'IS_SBSA': IS_SBSA,
-        'SYSTEM_ARM': SYSTEM_ARM
+        'SYSTEM_ARM': SYSTEM_ARM,
+        'UCX_TAG': 'master',
     }
 
     builder = pkg.copy()
@@ -29,11 +30,16 @@ def nixl(version, version_spec=None, requires=None, default=False):
         pkg['alias'] = 'nixl'
         builder['alias'] = 'nixl:builder'
 
+    # Ensure gdrcopy is not in depends, favor cudastack
     if 'gdrcopy' in builder['depends']:
         builder['depends'].remove('gdrcopy')
+    
+    if 'cudastack' not in builder['depends']:
+        builder['depends'].append('cudastack')
 
     return pkg, builder
 
 package = [
-    nixl('0.8.1', '0.8.1', default=True),
+    nixl('0.8.1', '0.8.1', default=False),
+    nixl('0.9.0', '0.9.0', default=True),
 ]

@@ -24,7 +24,7 @@ export CMAKE_PREFIX_PATH="${INSTALL_PREFIX}:${CMAKE_PREFIX_PATH:-}"
 
 # GDRCopy (adjust if different)
 # We keep your legacy layout, but make it explicit:
-: "${GDRCOPY_PREFIX:=/usr/local/usr}"
+: "${GDRCOPY_PREFIX:=/usr/local}"
 mkdir -p "${GDRCOPY_PREFIX}/lib" || true
 # If libgdrapi is under ${GDRCOPY_PREFIX}/lib/aarch64-linux-gnu, symlink a flat one:
 if compgen -G "${GDRCOPY_PREFIX}/lib/aarch64-linux-gnu/libgdrapi.so*" > /dev/null; then
@@ -66,22 +66,38 @@ cd ucx
 git checkout "${UCX_TAG}"
 ./autogen.sh
 
-CPPFLAGS="-I${GDRCOPY_PREFIX}/include" \
-LDFLAGS="-L${GDRCOPY_PREFIX}/lib -L${GDRCOPY_PREFIX}/lib/aarch64-linux-gnu" \
-LIBS="-lgdrapi -lcuda" \
-./configure \
-  --prefix="${INSTALL_PREFIX}" \
-  --enable-shared \
-  --disable-static \
-  --disable-doxygen-doc \
-  --enable-optimizations \
-  --enable-cma \
-  --enable-devel-headers \
-  --with-cuda="${CUDA_HOME}" \
-  --with-verbs \
-  --with-dm \
-  --with-gdrcopy="${GDRCOPY_PREFIX}" \
-  --enable-mt
+if [ -f "./contrib/configure-release-mt" ]; then
+    ./contrib/configure-release-mt \
+        --prefix="${INSTALL_PREFIX}" \
+        --enable-shared \
+        --disable-static \
+        --disable-doxygen-doc \
+        --enable-optimizations \
+        --enable-cma \
+        --enable-devel-headers \
+        --with-cuda="${CUDA_HOME}" \
+        --with-verbs \
+        --with-dm \
+        --with-gdrcopy="${GDRCOPY_PREFIX}" \
+        --enable-mt
+else
+    CPPFLAGS="-I${GDRCOPY_PREFIX}/include" \
+    LDFLAGS="-L${GDRCOPY_PREFIX}/lib -L${GDRCOPY_PREFIX}/lib/aarch64-linux-gnu" \
+    LIBS="-lgdrapi -lcuda" \
+    ./configure \
+      --prefix="${INSTALL_PREFIX}" \
+      --enable-shared \
+      --disable-static \
+      --disable-doxygen-doc \
+      --enable-optimizations \
+      --enable-cma \
+      --enable-devel-headers \
+      --with-cuda="${CUDA_HOME}" \
+      --with-verbs \
+      --with-dm \
+      --with-gdrcopy="${GDRCOPY_PREFIX}" \
+      --enable-mt
+fi
 
 make -j"$(nproc)" || make -j"$(nproc)"
 make -j install-strip || make -j install
@@ -97,6 +113,19 @@ ucx_info -d | egrep -i 'cuda_(copy|ipc)|gdr' || true
 pushd "${NIXL_PREFIX}"
 # toolchain deps
 ${PYTHON_BIN} -m pip install -U tomlkit meson ninja pybind11 patchelf auditwheel
+
+# Check CUDA version and rename wheel if CUDA 13
+if [ -x "${CUDA_HOME}/bin/nvcc" ]; then
+    CUDA_MAJOR_VERSION=$("${CUDA_HOME}/bin/nvcc" --version | grep release | sed 's/.*release //' | cut -d. -f1)
+    if [ "$CUDA_MAJOR_VERSION" == "13" ]; then
+        echo "Detected CUDA 13, renaming wheel to nixl-cu13"
+        if [ -f "./contrib/tomlutil.py" ]; then
+             ./contrib/tomlutil.py --wheel-name nixl-cu13 pyproject.toml
+        else
+             echo "Warning: ./contrib/tomlutil.py not found, skipping wheel rename"
+        fi
+    fi
+fi
 
 rm -rf build
 meson setup build --prefix="${NIXL_PREFIX}" --buildtype=release

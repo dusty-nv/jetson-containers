@@ -17,7 +17,11 @@ PYBIND_INCLUDE_DIR="/usr/include/pybind11"
 rm $PYBIND_SHARE_CMAKE/*.cmake
 rm -rf $PYBIND_INCLUDE_DIR
 
-uv pip install --upgrade pybind11[global]
+if [ -n "$PYBIND11_VERSION" ]; then
+    uv pip install --upgrade "pybind11[global]==$PYBIND11_VERSION"
+else
+    uv pip install --upgrade "pybind11[global]"
+fi
 
 PYTHON_ROOT="$(uv pip show pybind11 | grep Location: | cut -d' ' -f2)"
 PYBIND_ROOT="$PYTHON_ROOT/pybind11"

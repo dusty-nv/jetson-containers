@@ -21,6 +21,7 @@ apt-get install -y --no-install-recommends \
   libtool \
   libz-dev \
   flex \
+  pkg-config \
   build-essential && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*

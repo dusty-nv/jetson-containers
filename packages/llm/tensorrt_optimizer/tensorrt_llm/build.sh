@@ -41,30 +41,6 @@ if [ ! -d "/usr/local/tensorrt" ]; then
     mkdir -p /usr/local/tensorrt/include
     mkdir -p /usr/local/tensorrt/lib
 
-    # 1. Locate libraries installed by pip
-    echo "Searching for TensorRT libraries in pip packages..."
-    # Usually in site-packages/tensorrt_libs or site-packages/tensorrt
-    # We find all libnv* files in /opt/venv or wherever pip installs
-    # Assuming /opt/venv based on logs "Using Python 3.10 environment at: /opt/venv"
-    
-    PIP_LIB_PATH=$(find /opt/venv -name "libnvinfer.so.10" -print -quit | xargs dirname)
-    if [ -z "$PIP_LIB_PATH" ]; then
-         # Fallback search in /usr/local/lib/python...
-         PIP_LIB_PATH=$(find /usr/local/lib/python3.10 -name "libnvinfer.so.10" -print -quit | xargs dirname)
-    fi
-    
-    if [ -n "$PIP_LIB_PATH" ]; then
-        echo "Found TensorRT libs at: $PIP_LIB_PATH"
-        ln -sf "$PIP_LIB_PATH"/libnv*.so* /usr/local/tensorrt/lib/
-    else
-        echo "CRITICAL: Could not locate installed TensorRT libraries!"
-        # Fallback to previous logic just in case it's in a weird place
-        find /opt/venv -name "libnv*.so*" -exec ln -sf {} /usr/local/tensorrt/lib/ \;
-    fi
-
-    # 2. Symlink headers
-    # Pip wheel usually doesn't have headers. We MUST find headers.
-    # If base image lacks them in /usr/include, we are in trouble.
     # But previous error was LIBRARY missing, implying headers MIGHT be found?
     # CMake said "found suitable version 10.3.0.26". This implies it found NvInferVersion.h
     # Where? Likely /usr/include/aarch64-linux-gnu (from base image).
