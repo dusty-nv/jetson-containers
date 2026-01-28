@@ -12,13 +12,7 @@ if [[ "${TRT_LLM_BRANCH}" == *"jetson"* ]]; then
     REQUIREMENTS_FILENAME="requirements-jetson.txt"
     DEV_REQUIREMENTS_FILENAME="requirements-dev-jetson.txt"
     apt-get install -y python3-libnvinfer
-fi  
-
-apt-get install -y --no-install-recommends \
-    openmpi-bin \
-    libopenmpi-dev \
-    git-lfs \
-    ccache
+fi
 
 rm -rf /var/lib/apt/lists/*
 apt-get clean

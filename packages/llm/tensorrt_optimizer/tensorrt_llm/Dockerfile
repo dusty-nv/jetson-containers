@@ -26,6 +26,21 @@ ARG TRT_LLM_VERSION \
 
 WORKDIR ${SOURCE_DIR}
 
+RUN add-apt-repository main && \
+    add-apt-repository universe && \
+    add-apt-repository restricted && \
+    add-apt-repository multiverse && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+    openmpi-bin \
+    libopenmpi-dev \
+    git-lfs \
+    ccache && \
+    rm -rf /var/lib/apt/lists/*
+
+ENV PATH="/usr/lib/ccache:$PATH"
+
+
 RUN git clone --recurse-submodules --branch ${TRT_LLM_BRANCH} https://github.com/NVIDIA/TensorRT-LLM ${SOURCE_DIR} || \
     git clone --recurse-submodules https://github.com/NVIDIA/TensorRT-LLM.git ${SOURCE_DIR} ; \
     git lfs pull
