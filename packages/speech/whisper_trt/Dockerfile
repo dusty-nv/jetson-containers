@@ -21,6 +21,7 @@ RUN uv pip install openai-whisper && \
     git clone https://github.com/NVIDIA-AI-IOT/whisper_trt /opt/whisper_trt && \
     cd /opt/whisper_trt && \
     uv pip install --no-build-isolation -e . && \
+    uv pip install onnxruntime && \
     mkdir -p ~/.cache && \
     ln -s /data/models/whisper ~/.cache/whisper && \
     ln -s /data/models/whisper ~/.cache/whisper_trt
