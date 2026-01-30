@@ -52,7 +52,6 @@ else:
     package = None
 
 if package:
-    package['depends'] = ['vllm', 'numpy']
     package['build_args'] = {
         'TRITON_URL': TRITON_URL,
         'TRITON_TAR': TRITON_TAR,

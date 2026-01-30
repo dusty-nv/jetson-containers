@@ -9,5 +9,7 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
+ARG PYBIND11_VERSION
+
 COPY install.sh /tmp/pybind11/
 RUN /tmp/pybind11/install.sh

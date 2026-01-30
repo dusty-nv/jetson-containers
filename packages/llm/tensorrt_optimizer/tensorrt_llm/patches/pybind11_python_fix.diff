@@ -1,0 +1,15 @@
+diff --git a/cpp/tensorrt_llm/pybind/CMakeLists.txt b/cpp/tensorrt_llm/pybind/CMakeLists.txt
+--- a/cpp/tensorrt_llm/pybind/CMakeLists.txt
++++ b/cpp/tensorrt_llm/pybind/CMakeLists.txt
+@@ -16,6 +16,10 @@ execute_process(
+   RESULT_VARIABLE PYBIND_CMAKE_DIR_RET
+   OUTPUT_VARIABLE PYBIND_CMAKE_DIR)
+ 
++# Ensure Python Development.Module is found before pybind11
++# pybind11 3.x uses python_add_library which requires FindPython (not FindPython3)
++find_package(Python COMPONENTS Interpreter Development.Module REQUIRED)
++
+ if(PYBIND_CMAKE_DIR_RET MATCHES 0)
+   list(APPEND CMAKE_PREFIX_PATH "${PYBIND_CMAKE_DIR}")
+ else()
+
