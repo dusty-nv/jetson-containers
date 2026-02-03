@@ -32,15 +32,6 @@ def flash_infer(version, version_spec=None, requires=None, default=False):
 
 
 package = [
-    flash_infer('0.2.1.post2', '0.2.1.post2', default=False),
-    flash_infer('0.2.2', '0.2.2', default=False),
-    flash_infer('0.2.2.post1', '0.2.2.post1', default=False),
-    flash_infer('0.2.6.post1', '0.2.6.post1', default=False),
-    flash_infer('0.2.7', '0.2.7'),
-    flash_infer('0.2.9', '0.2.9'),
-    flash_infer('0.4.1', '0.4.1'),
-    flash_infer('0.5.2', '0.5.2', default=False), # Stable release
-    flash_infer('0.5.3', '0.5.3', default=False), # Compatible with Spark and Thor
-    flash_infer('0.6.0', '0.6.0', default=(CUDA_VERSION >= Version('12.6'))), # Compatible with Spark and Thor
+    flash_infer('0.6.2', '0.6.2', default=(CUDA_VERSION >= Version('12.6'))), # Compatible with Spark and Thor
     # flash_infer('latest', 'main', default=(CUDA_VERSION >= Version('12.6'))), # Thor compatibility
 ]
