@@ -37,18 +37,11 @@ def torchaudio(version, pytorch=None, requires=None):
 
 package = [
     # JetPack 5/6
-    torchaudio('2.0.1', pytorch='2.0', requires='==35.*'),
-    torchaudio('2.1.0', pytorch='2.1', requires='>=35'),
     torchaudio('2.2.2', pytorch='2.2', requires='>=35'),
-    torchaudio('2.3.0', pytorch='2.3', requires='==36.*'),
-    torchaudio('2.4.0', pytorch='2.4', requires='==36.*'),
-    torchaudio('2.5.0', pytorch='2.5', requires='==36.*'),
-    torchaudio('2.6.0', pytorch='2.6', requires='==36.*'),
     torchaudio('2.7.0', pytorch='2.7', requires='==36.*'),
-    torchaudio('2.8.0', pytorch='2.8', requires='>=36'),
-    torchaudio('2.9.0', pytorch='2.9', requires='>=36'),
     torchaudio('2.9.1', pytorch='2.9.1', requires='>=36'),
     torchaudio('2.10.0', pytorch='2.10', requires='>=36'),
+    torchaudio('2.11.0', pytorch='2.11', requires='>=36'),
 
     # JetPack 4
     torchaudio('0.10.0', pytorch='1.10', requires='==32.*'),

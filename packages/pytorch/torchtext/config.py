@@ -38,10 +38,8 @@ def torchtext(version, pytorch=None, requires=None):
 
 package = [
     # JetPack 5/6 and x86
-    torchtext('0.18.0', pytorch='2.7', requires='>=34'),
-    torchtext('0.19.0', pytorch='2.8', requires='>=34'),
-    torchtext('0.20.0', pytorch='2.9', requires='>=34'),
     torchtext('0.20.1', pytorch='2.9.1', requires='>=34'),
     torchtext('0.20.2', pytorch='2.10', requires='>=34'),
+    torchtext('0.21.0', pytorch='2.11', requires='>=34'),
 
 ]

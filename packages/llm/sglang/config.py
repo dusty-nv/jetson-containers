@@ -33,6 +33,5 @@ def sglang(version, version_spec=None, requires=None, depends=None, default=Fals
     return pkg, builder
 
 package = [
-    sglang('0.5.6', '0.5.6', depends=['flashinfer', 'sgl-kernel:0.5.6', 'torchao:0.9.0'], default=False), # Compatible with CUDA 13 (Spark and Thor)
-    sglang('0.5.8', '0.5.8', depends=['flashinfer', 'sgl-kernel:0.5.8', 'torchao:0.9.0'], default=True), # Compatible with CUDA 13 (Spark and Thor)
+    sglang('0.5.9', '0.5.9', depends=['flashinfer', 'sgl-kernel:0.5.9', 'torchao:0.9.0'], default=True), # Compatible with CUDA 13 (Spark and Thor)
 ]

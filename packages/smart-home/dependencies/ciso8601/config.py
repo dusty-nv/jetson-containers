@@ -22,6 +22,5 @@ def create_package(version, branch=None, default=False):
     return pkg, builder
 
 package = [
-    create_package('2.3.2', default=False),
-    create_package('2.3.2.post1', branch="master", default=True),
+    create_package('2.3.3', branch="master", default=True),
 ]

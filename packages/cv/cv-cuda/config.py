@@ -51,17 +51,17 @@ def cv_cuda(version, *url, default=False, requires=None):
 
 package = [
     # jetpack 6
-    cv_cuda('0.15',
-        'v0.15.0-beta/v0.15-cu12-aarch64-jetson-jetpack6.zip',
+    cv_cuda('0.16',
+        'v0.16.0/cvcuda-0.16.0-jetpack6.tar.gz',
         default=(L4T_VERSION.major >= 36), requires='>=36'
     ),
 
     # x86
-    cv_cuda('0.15',
-        'v0.15.0-beta/cvcuda-lib-0.15.0-cuda12-x86_64-linux.deb',
-        'v0.15.0-beta/cvcuda-dev-0.15.0-cuda12-x86_64-linux.deb',
-        'v0.15.0-beta/cvcuda-tests-0.15.0-cuda12-x86_64-linux.deb',
-        'v0.15.0-beta/cvcuda_cu12-0.15.0-cp310.cp311.cp312.cp313.cp38.cp39-cp310.cp311.cp312.cp313.cp38.cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl',
+    cv_cuda('0.16',
+        'v0.16.0/cvcuda-lib-0.16.0-cuda12-x86_64-linux.deb',
+        'v0.16.0/cvcuda-dev-0.16.0-cuda12-x86_64-linux.deb',
+        'v0.16.0/cvcuda-tests-0.16.0-cuda12-x86_64-linux.deb',
+        'v0.16.0/cvcuda_cu12-0.16.0-cp310.cp311.cp312.cp313.cp38.cp39-cp310.cp311.cp312.cp313.cp38.cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl',
         default=True, requires='x86_64'
     ),
 ]

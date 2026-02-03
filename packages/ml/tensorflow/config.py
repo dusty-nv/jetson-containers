@@ -114,37 +114,6 @@ package = [
         default=(L4T_VERSION.major <= 35),
         requires='<36'
     ),
-    *tensorflow(
-        version='2.7.0',
-        tensorflow_version='tf2',
-        default=(L4T_VERSION.major == 32),
-        requires='<35'
-    ),
-    # TensorFlow tf2 para L4T >=36
-    *tensorflow(
-        version='2.16.1',
-        tensorflow_version='tf2',
-        requires='>=36',
-        default=False,
-    ),
-    *tensorflow(
-        version='2.18.0',
-        tensorflow_version='tf2',
-        requires='>=36',
-        default=False,
-    ),
-*tensorflow(
-        version='2.19.0',
-        tensorflow_version='tf2',
-        requires='>=36',
-        default=False,
-    ),
-*tensorflow(
-        version='2.20.0',
-        tensorflow_version='tf2',
-        requires='>=36',
-        default=False,
-    ),
 *tensorflow(
         version='2.21.0',
         tensorflow_version='tf2',

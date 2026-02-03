@@ -27,8 +27,5 @@ def torchao(version, requires=None, default=False):
 
 package = [
     torchao('0.9.0', requires='>=36', default=False), # Required by sgl_kernel
-    torchao('0.12.0', requires='>=36', default=False),
-    torchao('0.13.0', requires='>=36', default=False),
-    torchao('0.14.1', requires='>=36', default=False),
-    torchao('0.15.0', requires='>=36', default=True),
+    torchao('0.16.0', requires='>=36', default=True),
 ]

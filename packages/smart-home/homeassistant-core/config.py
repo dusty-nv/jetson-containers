@@ -22,7 +22,7 @@ def create_package(version, sqlite_version='3.40.1', default=False) -> list:
         required_python = 'python'
 
     pkg['depends'] = update_dependencies(pkg['depends'], [required_python])
-    
+
     pkg['build_args'] = {
         'HA_VERSION': wanted_version,
         'SQLITE_VERSION': sqlite_version
@@ -34,5 +34,5 @@ def create_package(version, sqlite_version='3.40.1', default=False) -> list:
     return pkg
 
 package = [
-    create_package('2025.11.2', default=True),
+    create_package('2026.1.3', default=True),
 ]

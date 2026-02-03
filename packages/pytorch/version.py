@@ -8,21 +8,21 @@ if 'PYTORCH_VERSION' in os.environ and len(os.environ['PYTORCH_VERSION']) > 0:
     PYTORCH_VERSION = Version(os.environ['PYTORCH_VERSION'])
 elif SYSTEM_ARM:
     if L4T_VERSION.major >= 38:
-        if CUDA_VERSION >= Version('13.1'):   # JetPack 7 (CUDA 13.1)
-            PYTORCH_VERSION = Version('2.10')
+        if CUDA_VERSION >= Version('13.2'):   # JetPack 7 (CUDA 13.1)
+            PYTORCH_VERSION = Version('2.11')
         elif CUDA_VERSION >= Version('13.0'):   # JetPack 7 (CUDA 13.0)
-            PYTORCH_VERSION = Version('2.10.0')
+            PYTORCH_VERSION = Version('2.11.0')
         else:
-            PYTORCH_VERSION = Version('2.10.0')  # JetPack 7.0 (CUDA 12.9)
+            PYTORCH_VERSION = Version('2.11.0')  # JetPack 7.0 (CUDA 12.9)
     elif L4T_VERSION.major >= 36:
         if CUDA_VERSION >= Version('13.0'):   # JetPack 6.2 (CUDA 12.6)
-            PYTORCH_VERSION = Version('2.10.0')
+            PYTORCH_VERSION = Version('2.11.0')
         elif CUDA_VERSION >= Version('12.9'):   # JetPack 6.2 (CUDA 12.6)
-            PYTORCH_VERSION = Version('2.10.0')
+            PYTORCH_VERSION = Version('2.11.0')
         elif CUDA_VERSION >= Version('12.8'):   # JetPack 6.2 (CUDA 12.6)
-            PYTORCH_VERSION = Version('2.10.0')
+            PYTORCH_VERSION = Version('2.11.0')
         elif CUDA_VERSION == Version('12.6'):   # JetPack 6.2 (CUDA 12.6)
-            PYTORCH_VERSION = Version('2.10.0')
+            PYTORCH_VERSION = Version('2.11.0')
         elif CUDA_VERSION >= Version('12.4'): # JetPack 6.0 (CUDA 12.4)
             PYTORCH_VERSION = Version('2.6')
         else:
@@ -32,4 +32,4 @@ elif SYSTEM_ARM:
     elif L4T_VERSION.major >= 32:
         PYTORCH_VERSION = Version('1.10')     # JetPack 4.6 (CUDA 10.2)
 else:
-    PYTORCH_VERSION = Version('2.10')          # pytorch nightly (CUDA 13.0)
+    PYTORCH_VERSION = Version('2.11')          # pytorch nightly (CUDA 13.0)

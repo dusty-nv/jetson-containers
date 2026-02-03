@@ -31,11 +31,5 @@ def mlc(commit, patch=None, version='0.1', tvm='0.15', llvm=20, depends=[], requ
 
 package = [
     mlc('51fb0f4', 'patches/51fb0f4.diff', version='0.1.0', tvm='0.15.0', default=(L4T_VERSION.major == 35), requires='==35.*'), # 12/15/2023
-    mlc('607dc5a', 'patches/607dc5a.diff', version='0.1.0', tvm='0.15.0', requires='>=36'),  # 02/27/2024
-    mlc('3403a4e', 'patches/3403a4e.diff', version='0.1.1', tvm='0.16.0', requires='>=36'),  # 4/15/2024
-    mlc('9336b4a', 'patches/9336b4a.diff', version='0.1.2', tvm='0.18.0', requires='>=36'),  # 9/25/2024
-    mlc('6da6aca', 'patches/6da6aca.diff', version='0.1.3', tvm='0.18.1', requires='>=36'),  # 10/18/2024
-    mlc('385cef2', 'patches/385cef2.diff', version='0.1.4', tvm='0.19.0', requires='>=36'),  # 12/14/2024
-    mlc('cf7ae82', 'patches/cf7ae82.diff', version='0.19.0', tvm='0.19.0', requires='>=36'), # 01/09/2025
-    mlc('7bf51a5', 'patches/empty.diff', version='0.20.0', tvm='0.22.0', requires='>=36', depends=['tvm', 'flashinfer'], default=True), # 5/1/2025
+    mlc('de560d2', 'patches/empty.diff', version='0.20.0', tvm='0.22.0', requires='>=36', depends=['tvm', 'flashinfer'], default=True), # 5/1/2025
 ]
