@@ -100,10 +100,10 @@ def cuda_stack_args():
         # Additional libraries
         'CUDSS_VERSION': '0.7.1',
         'CUSPARSELT_VERSION': '0.8.1',
-        'CUTENSOR_VERSION': '2.4.1',
+        'CUTENSOR_VERSION': '2.5.0',
         'GDRCOPY_VERSION': '2.5.1',
         'NVPL_VERSION': '25.11',
-        'NVSHMEM_VERSION': '3.4.5',
+        'NVSHMEM_VERSION': '3.5.2',
 
         # Architecture and CUDA info
         'CUDA_ARCH': CUDA_ARCH,
