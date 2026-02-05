@@ -6,7 +6,7 @@ zarr==3.1.5
 numcodecs==0.16.5
 h5py
 hydra-core==1.2.0
-einops==0.8.1
+einops==0.8.2
 tqdm==4.67.1
 dill==0.3.5.1
 scikit-video==1.1.11
