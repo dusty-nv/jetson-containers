@@ -38,9 +38,9 @@ cat pyproject.toml
 
 # --- CONFIGURE PARALLEL BUILD ---
 if [[ -z "${IS_SBSA:-}" || "${IS_SBSA}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
-  export CORES=$(nproc) # Automatically use all available cores
+  export CORES=6 # Automatically use all available cores
 else
-  export CORES=32  # GH200 or other specific hardware
+  export CORES=6  # GH200 or other specific hardware
 fi
 export CMAKE_BUILD_PARALLEL_LEVEL="${CORES}"
 export MAX_JOBS="${CORES}"
