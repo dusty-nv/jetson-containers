@@ -32,7 +32,7 @@ if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" || "${IS_SBSA,,}" == "false" ]]; th
     # Limit build to the current CUDA SM's from device
     export FLASH_ATTN_CUDA_ARCHS=$CUDA_ARCH_LIST
 else
-    export MAX_JOBS="$(nproc)"
+    export MAX_JOBS="6"
 fi
 
 export NVCC_THREADS=1
