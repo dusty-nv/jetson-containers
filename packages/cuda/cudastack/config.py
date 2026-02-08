@@ -21,13 +21,12 @@ def cuda_stack_args():
     # Determine component versions based on L4T/CUDA version
     if IS_TEGRA:
         if L4T_VERSION.major >= 38:  # JetPack 7
-            cudnn_ver = '9.19.0'
-            cudnn_url = f"https://developer.download.nvidia.com/compute/cudnn/9.19.0/local_installers/cudnn-local-repo-{distro}-9.19.0_1.0-1_arm64.deb"
+            cudnn_ver = '9.20.0'
+            cudnn_url = f"https://developer.download.nvidia.com/compute/cudnn/9.20.0/local_installers/cudnn-local-repo-{distro}-9.20.0_1.0-1_arm64.deb"
             cudnn_packages = "libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-samples"
             tensorrt_ver = '10.16.0'
-            tensorrt_url = f"{tensorrt_base_url}/10.16.0/tars/TensorRT-10.16.0.48.Linux.aarch64-gnu.cuda-13.0.tar.gz"
-
-            nccl_ver = '2.28.7'
+            tensorrt_url = f"{tensorrt_base_url}/10.16.0/tars/TensorRT-10.16.0.48.Linux.aarch64-gnu.cuda-13.2.tar.gz"
+            nccl_ver = '2.29.3'
         elif L4T_VERSION.major >= 36:  # JetPack 6
             if CUDA_VERSION >= Version('12.9'):
                 cudnn_ver = '9.15.0'
