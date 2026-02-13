@@ -12,7 +12,8 @@ apt-get update && apt-get install -y --no-install-recommends \
 
 uv pip uninstall triton
 
-git clone --branch ${TRITON_BRANCH} --depth=1 --recursive https://github.com/triton-lang/triton /opt/triton
+git clone --branch ${TRITON_BRANCH} --depth=1 --recursive https://github.com/triton-lang/triton /opt/triton ||
+git clone --depth=1 --recursive https://github.com/triton-lang/triton /opt/triton
 cd /opt/triton
 
 #git checkout ${TRITON_BRANCH}
