@@ -131,7 +131,8 @@ def get_jetpack_version(l4t_version: str = None, default='6.2'):
 
     NVIDIA_JETPACK = {
         # -------- JP7 --------
-        "38.3.0": "7.1", # Q4 2025 T400 Support
+        "39.0.0": "7.2",
+        "38.4.0": "7.1", # Q4 2025 T400 Support
         "38.2.2": "7.0 GA",
         "38.2.0": "7.0 GA",
         "38.1.0": "7.0 EA",
@@ -333,7 +334,7 @@ def get_cuda_arch(l4t_version: str = None, cuda_version: str = None, format=list
             elif l4t_version.major == 32:  # JetPack 4
                 cuda_architectures = [53, 62, 72]
         elif IS_SBSA:
-            cuda_architectures = [90, 100, 103, 110, 120, 121]  # Orin, Hopper, Blackwell, Thor 110, RTX/Spark
+            cuda_architectures = [87, 90, 100, 103, 110, 120, 121]  # Orin, Hopper, Blackwell, Thor 110, RTX/Spark
     else:
         cuda_architectures = [80, 90, 100, 120 ]
 
