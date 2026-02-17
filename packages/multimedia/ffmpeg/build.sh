@@ -134,4 +134,10 @@ tarpack upload "ffmpeg-${FFMPEG_VERSION}" "${DIST_ABS}" || echo "failed to uploa
 
 # Optionally install into /usr/local for runtime
 cp -r "${DIST_ABS}/"* /usr/local/
+
+# Fix pkg-config files to use /usr/local instead of /opt/ffmpeg/dist
+if [ -d /usr/local/lib/pkgconfig ]; then
+  sed -i "s|${DIST_ABS}|/usr/local|g" /usr/local/lib/pkgconfig/*.pc 2>/dev/null || true
+fi
+
 ldconfig

@@ -62,7 +62,7 @@ pip --version || true
 # Install core dependencies
 uv pip install --no-binary :all: psutil
 uv pip install --upgrade \
-  setuptools \
+  "setuptools<=81" \
   packaging \
   Cython \
   wheel \

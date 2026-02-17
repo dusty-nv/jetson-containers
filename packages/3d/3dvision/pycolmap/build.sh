@@ -24,11 +24,15 @@ mkdir -p "$PYCOLMAP_SRC/build"
 cd "$PYCOLMAP_SRC/build"
 
 # 2) Configure & build C++ targets
+#    Disable ONNX because COLMAP's FetchContent only provides x86_64
+#    onnxruntime binaries—there is no arm64/aarch64 variant, which causes
+#    "file in wrong format" link errors on ARM builds.
 cmake \
   -DCUDA_ENABLED=ON \
   -DCMAKE_CUDA_ARCHITECTURES="${CUDAARCHS}" \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_INSTALL_PREFIX=/usr/local \
+  -DONNX_ENABLED=OFF \
   ..
 
 cmake --build . -- -j"$(nproc)"
