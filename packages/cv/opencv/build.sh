@@ -126,9 +126,22 @@ rm -rf /opt/opencv/build
 mkdir /opt/opencv/build
 cd /opt/opencv/build
 
+# [FIX] Fix any existing FFmpeg pkg-config files that reference /opt/ffmpeg/dist
+if [ -d /usr/local/lib/pkgconfig ]; then
+  echo "Fixing FFmpeg pkg-config files..."
+  sed -i 's|/opt/ffmpeg/dist|/usr/local|g' /usr/local/lib/pkgconfig/*.pc 2>/dev/null || true
+fi
+
+# [FIX] Create /opt/ffmpeg/dist symlink if it doesn't exist (for backward compatibility)
+if [ ! -d /opt/ffmpeg/dist ] && [ -d /usr/local/include ] && [ -d /usr/local/lib ]; then
+  echo "Creating /opt/ffmpeg/dist symlink for compatibility..."
+  mkdir -p /opt/ffmpeg
+  ln -sfn /usr/local /opt/ffmpeg/dist
+fi
+
 # [FIX] Set the PKG_CONFIG_PATH environment variable.
 # This is the crucial step that allows CMake to find system libraries like FFmpeg on Ubuntu.
-# export PKG_CONFIG_PATH="/usr/lib/$(uname -i)-linux-gnu/pkgconfig:${PKG_CONFIG_PATH}"
+export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:/usr/lib/$(uname -i)-linux-gnu/pkgconfig:${PKG_CONFIG_PATH}"
 
 # Now, running cmake will succeed because it can find the correct paths.
 cmake \
