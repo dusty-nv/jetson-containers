@@ -10,7 +10,7 @@
 | :-- | :-- |
 | &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=32.6']` |
 | &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache`](/packages/cuda/cuda) [`python`](/packages/build/python) |
-| &nbsp;&nbsp;&nbsp;Dependants | [`openvla`](/packages/vla/openvla) [`openvla:mimicgen`](/packages/vla/openvla) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`openvla`](/packages/physicalAI/vla/openvla) [`openvla:mimicgen`](/packages/physicalAI/vla/openvla) |
 | &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
 
 </details>

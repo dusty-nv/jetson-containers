@@ -47,4 +47,4 @@ def tensorrt_llm(version, branch=None, patch=None, src=None, depends=None, requi
 
 package = [
     tensorrt_llm('0.12', branch='v0.12.0-jetson', patch='patches/pybind11_python_fix.diff', depends=['cutlass','torch2trt', 'pybind11'], requires='<cu128', default=False),
-    tensorrt_llm('1.1.0', depends=['xgrammar:0.1.25'], requires='>=cu126', default=True)]
+    tensorrt_llm('1.2.0', depends=['xgrammar:0.1.31'], requires='>=cu126', default=True)]

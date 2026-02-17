@@ -26,6 +26,6 @@ def jvp_flash_attn(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    jvp_flash_attn('0.10.0', default=(CUDA_VERSION >= Version('12.6'))),
+    jvp_flash_attn('0.13.0', default=(CUDA_VERSION >= Version('12.6'))),
 ]
 

@@ -6,16 +6,10 @@ from packaging.version import Version
 TRITON_CLIENTS = 'clients'
 
 if L4T_VERSION >= Version('36.4.0'): # JetPack 6.2.1 DP
-    # https://github.com/triton-inference-server/server/releases/tag/v2.49.0
-    if LSB_RELEASE == '22.04':
-        TRITON_VERSION = '2.49.0'
-        TRITON_URL = f'https://github.com/triton-inference-server/server/releases/download/v{TRITON_VERSION}/tritonserver{TRITON_VERSION}-igpu.tar.gz'
-        TRITON_TAR = f'tritonserver{TRITON_VERSION}-igpu.tar.gz'
-    else:
-        TRITON_VERSION = '2.63.0'
-        TRITON_URL = f'https://github.com/triton-inference-server/server/releases/download/v{TRITON_VERSION}/tritonserver{TRITON_VERSION}-igpu.tar.gz'
-        TRITON_TAR = f'tritonserver{TRITON_VERSION}-igpu.tar.gz'
-    
+    # https://github.com/triton-inference-server/server/releases/tag/v2.65.0
+    TRITON_VERSION = '2.65.0'
+    TRITON_URL = f'https://github.com/triton-inference-server/server/releases/download/v{TRITON_VERSION}/tritonserver{TRITON_VERSION}-igpu.tar'
+    TRITON_TAR = f'tritonserver{TRITON_VERSION}-igpu.tar'
     TRITON_CLIENTS = 'tritonserver/clients'
 elif L4T_VERSION >= Version('36.0.0'): # JetPack 6.0 DP
     # https://github.com/triton-inference-server/server/releases/tag/v2.42.0
