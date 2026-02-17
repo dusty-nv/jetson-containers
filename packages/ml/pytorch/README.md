@@ -1,0 +1,224 @@
+# pytorch
+
+> [`CONTAINERS`](#user-content-containers) [`IMAGES`](#user-content-images) [`RUN`](#user-content-run) [`BUILD`](#user-content-build)
+
+Containers for PyTorch with CUDA support.
+Note that the [`l4t-pytorch`](/packages/l4t/l4t-pytorch) containers also include PyTorch, `torchvision`, and `torchaudio`.
+
+<details open>
+<summary><b><a id="containers">CONTAINERS</a></b></summary>
+<br>
+
+| **`pytorch:2.1`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `torch:2.1` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=35']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`pytorch:2.1-all`](/packages/pytorch) [`torchaudio:2.1.0`](/packages/pytorch/torchaudio) [`torchsde:0.2.1`](/packages/pytorch/torchsde) [`torchvision:0.16.2`](/packages/pytorch/torchvision) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/pytorch:2.1-r35.2.1`](https://hub.docker.com/r/dustynv/pytorch/tags) `(2023-12-11, 5.4GB)`<br>[`dustynv/pytorch:2.1-r35.3.1`](https://hub.docker.com/r/dustynv/pytorch/tags) `(2023-12-14, 5.4GB)`<br>[`dustynv/pytorch:2.1-r35.4.1`](https://hub.docker.com/r/dustynv/pytorch/tags) `(2023-11-05, 5.4GB)`<br>[`dustynv/pytorch:2.1-r36.2.0`](https://hub.docker.com/r/dustynv/pytorch/tags) `(2023-12-14, 7.2GB)` |
+
+| **`pytorch:2.1-all`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `torch:2.1-all` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=35']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.1`](/packages/pytorch) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`torchaudio`](/packages/pytorch/torchaudio) [`triton`](/packages/ml/triton) [`torchao`](/packages/pytorch/torchao) [`tensorrt`](/packages/cuda/tensorrt) [`torch2trt`](/packages/pytorch/torch2trt) [`pytorch3d`](/packages/pytorch/torch3d) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`diffusers`](/packages/diffusion/diffusers) [`xformers`](/packages/attention/xformers) [`cuda-python`](/packages/cuda/cuda-python) [`cutlass`](/packages/cuda/cutlass) [`flash-attention`](/packages/attention/flash-attention) [`pycuda`](/packages/cuda/pycuda) [`jupyterlab`](/packages/code/jupyterlab) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+
+| **`pytorch:2.2`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `torch:2.2` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=35']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`pytorch:2.2-all`](/packages/pytorch) [`torchaudio:2.2.2`](/packages/pytorch/torchaudio) [`torchsde:0.2.2`](/packages/pytorch/torchsde) [`torchvision:0.17.2`](/packages/pytorch/torchvision) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+
+| **`pytorch:2.2-all`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `torch:2.2-all` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=35']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.2`](/packages/pytorch) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`torchaudio`](/packages/pytorch/torchaudio) [`triton`](/packages/ml/triton) [`torchao`](/packages/pytorch/torchao) [`tensorrt`](/packages/cuda/tensorrt) [`torch2trt`](/packages/pytorch/torch2trt) [`pytorch3d`](/packages/pytorch/torch3d) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`diffusers`](/packages/diffusion/diffusers) [`xformers`](/packages/attention/xformers) [`cuda-python`](/packages/cuda/cuda-python) [`cutlass`](/packages/cuda/cutlass) [`flash-attention`](/packages/attention/flash-attention) [`pycuda`](/packages/cuda/pycuda) [`jupyterlab`](/packages/code/jupyterlab) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+
+| **`pytorch:2.3`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `torch:2.3` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['==36.*']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`pytorch:2.3-all`](/packages/pytorch) [`torchaudio:2.3.0`](/packages/pytorch/torchaudio) [`torchsde:0.2.3`](/packages/pytorch/torchsde) [`torchvision:0.18.0`](/packages/pytorch/torchvision) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+
+| **`pytorch:2.3-all`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `torch:2.3-all` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['==36.*']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.3`](/packages/pytorch) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`torchaudio`](/packages/pytorch/torchaudio) [`triton`](/packages/ml/triton) [`torchao`](/packages/pytorch/torchao) [`tensorrt`](/packages/cuda/tensorrt) [`torch2trt`](/packages/pytorch/torch2trt) [`pytorch3d`](/packages/pytorch/torch3d) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`diffusers`](/packages/diffusion/diffusers) [`xformers`](/packages/attention/xformers) [`cuda-python`](/packages/cuda/cuda-python) [`cutlass`](/packages/cuda/cutlass) [`flash-attention`](/packages/attention/flash-attention) [`pycuda`](/packages/cuda/pycuda) [`jupyterlab`](/packages/code/jupyterlab) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+
+| **`pytorch:2.3.1`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `torch:2.3.1` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['==36.*']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`pytorch:2.3.1-all`](/packages/pytorch) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+
+| **`pytorch:2.3.1-all`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `torch:2.3.1-all` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['==36.*']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.3.1`](/packages/pytorch) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`torchaudio`](/packages/pytorch/torchaudio) [`triton`](/packages/ml/triton) [`torchao`](/packages/pytorch/torchao) [`tensorrt`](/packages/cuda/tensorrt) [`torch2trt`](/packages/pytorch/torch2trt) [`pytorch3d`](/packages/pytorch/torch3d) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`diffusers`](/packages/diffusion/diffusers) [`xformers`](/packages/attention/xformers) [`cuda-python`](/packages/cuda/cuda-python) [`cutlass`](/packages/cuda/cutlass) [`flash-attention`](/packages/attention/flash-attention) [`pycuda`](/packages/cuda/pycuda) [`jupyterlab`](/packages/code/jupyterlab) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+
+| **`pytorch:2.4`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `torch:2.4` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['==36.*']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`pytorch:2.4-all`](/packages/pytorch) [`torchaudio:2.4.0`](/packages/pytorch/torchaudio) [`torchsde:0.2.4`](/packages/pytorch/torchsde) [`torchvision:0.19.1`](/packages/pytorch/torchvision) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+
+| **`pytorch:2.4-all`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `torch:2.4-all` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['==36.*']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.4`](/packages/pytorch) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`torchaudio`](/packages/pytorch/torchaudio) [`triton`](/packages/ml/triton) [`torchao`](/packages/pytorch/torchao) [`tensorrt`](/packages/cuda/tensorrt) [`torch2trt`](/packages/pytorch/torch2trt) [`pytorch3d`](/packages/pytorch/torch3d) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`diffusers`](/packages/diffusion/diffusers) [`xformers`](/packages/attention/xformers) [`cuda-python`](/packages/cuda/cuda-python) [`cutlass`](/packages/cuda/cutlass) [`flash-attention`](/packages/attention/flash-attention) [`pycuda`](/packages/cuda/pycuda) [`jupyterlab`](/packages/code/jupyterlab) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+
+| **`pytorch:2.5`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `torch:2.5` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['==36.*']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`pytorch:2.5-all`](/packages/pytorch) [`torchaudio:2.5.0`](/packages/pytorch/torchaudio) [`torchsde:0.2.5`](/packages/pytorch/torchsde) [`torchvision:0.20.0`](/packages/pytorch/torchvision) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+
+| **`pytorch:2.5-all`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `torch:2.5-all` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['==36.*']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.5`](/packages/pytorch) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`torchaudio`](/packages/pytorch/torchaudio) [`triton`](/packages/ml/triton) [`torchao`](/packages/pytorch/torchao) [`tensorrt`](/packages/cuda/tensorrt) [`torch2trt`](/packages/pytorch/torch2trt) [`pytorch3d`](/packages/pytorch/torch3d) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`diffusers`](/packages/diffusion/diffusers) [`xformers`](/packages/attention/xformers) [`cuda-python`](/packages/cuda/cuda-python) [`cutlass`](/packages/cuda/cutlass) [`flash-attention`](/packages/attention/flash-attention) [`pycuda`](/packages/cuda/pycuda) [`jupyterlab`](/packages/code/jupyterlab) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+
+| **`pytorch:2.6`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `torch:2.6` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`pytorch:2.6-all`](/packages/pytorch) [`torchaudio:2.6.0`](/packages/pytorch/torchaudio) [`torchsde:0.2.6`](/packages/pytorch/torchsde) [`torchvision:0.21.0`](/packages/pytorch/torchvision) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/pytorch:2.6-amd64-cu128-24.04`](https://hub.docker.com/r/dustynv/pytorch/tags) `(2025-04-02, 6.9GB)`<br>[`dustynv/pytorch:2.6-r36.4.0-cu128`](https://hub.docker.com/r/dustynv/pytorch/tags) `(2025-02-07, 3.4GB)`<br>[`dustynv/pytorch:2.6-r36.4.0-cu128-24.04`](https://hub.docker.com/r/dustynv/pytorch/tags) `(2025-02-26, 3.5GB)` |
+
+| **`pytorch:2.6-all`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `torch:2.6-all` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.6`](/packages/pytorch) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`torchaudio`](/packages/pytorch/torchaudio) [`triton`](/packages/ml/triton) [`torchao`](/packages/pytorch/torchao) [`tensorrt`](/packages/cuda/tensorrt) [`torch2trt`](/packages/pytorch/torch2trt) [`pytorch3d`](/packages/pytorch/torch3d) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`diffusers`](/packages/diffusion/diffusers) [`xformers`](/packages/attention/xformers) [`cuda-python`](/packages/cuda/cuda-python) [`cutlass`](/packages/cuda/cutlass) [`flash-attention`](/packages/attention/flash-attention) [`pycuda`](/packages/cuda/pycuda) [`jupyterlab`](/packages/code/jupyterlab) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+
+| **`pytorch:2.7`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `torch:2.7` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`pytorch:2.7-all`](/packages/pytorch) [`torchaudio:2.7.0`](/packages/pytorch/torchaudio) [`torchsde:0.2.7`](/packages/pytorch/torchsde) [`torchtext:0.18.0`](/packages/pytorch/torchtext) [`torchvision:0.22.0`](/packages/pytorch/torchvision) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+| &nbsp;&nbsp;&nbsp;Images | [`dustynv/pytorch:2.7-r36.4.0`](https://hub.docker.com/r/dustynv/pytorch/tags) `(2025-04-18, 6.3GB)`<br>[`dustynv/pytorch:2.7-r36.4.0-cu128-24.04`](https://hub.docker.com/r/dustynv/pytorch/tags) `(2025-04-18, 5.5GB)` |
+
+| **`pytorch:2.7-all`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `torch:2.7-all` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.7`](/packages/pytorch) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`torchaudio`](/packages/pytorch/torchaudio) [`triton`](/packages/ml/triton) [`torchao`](/packages/pytorch/torchao) [`tensorrt`](/packages/cuda/tensorrt) [`torch2trt`](/packages/pytorch/torch2trt) [`pytorch3d`](/packages/pytorch/torch3d) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`diffusers`](/packages/diffusion/diffusers) [`xformers`](/packages/attention/xformers) [`cuda-python`](/packages/cuda/cuda-python) [`cutlass`](/packages/cuda/cutlass) [`flash-attention`](/packages/attention/flash-attention) [`pycuda`](/packages/cuda/pycuda) [`jupyterlab`](/packages/code/jupyterlab) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+
+| **`pytorch:2.8`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `torch:2.8` `pytorch` `torch` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) |
+| &nbsp;&nbsp;&nbsp;Dependants | [`3d_diffusion_policy`](/packages/diffusion/3d_diffusion_policy) [`3dgrut:2.0.0`](/packages/3d/gaussian_splatting/3dgrut) [`4k4d:0.0.0`](/packages/3d/gaussian_splatting/4k4d) [`ai-toolkit`](/packages/diffusion/ai-toolkit) [`apex:0.1`](/packages/pytorch/apex) [`audiocraft`](/packages/speech/audiocraft) [`awq:0.1.0`](/packages/llm/awq) [`bitsandbytes:0.39.1`](/packages/llm/bitsandbytes) [`bitsandbytes:0.45.4`](/packages/llm/bitsandbytes) [`bitsandbytes:0.45.5`](/packages/llm/bitsandbytes) [`bitsandbytes:0.46.0`](/packages/llm/bitsandbytes) [`bitsandbytes:0.47.0`](/packages/llm/bitsandbytes) [`bitsandbytes:0.48.0`](/packages/llm/bitsandbytes) [`block_sparse_attn:0.0.1`](/packages/attention/block-sparse-attention) [`cache_dit:0.2.0`](/packages/diffusion/cache_edit) [`causalconv1d:1.6.0`](/packages/ml/mamba/causalconv1d) [`chatterbox-tts`](/packages/speech/chatterbox-tts) [`chatterbox-tts`](/packages/speech/chatterbox-tts) [`clip_trt`](/packages/vit/clip_trt) [`cobra:0.0.1`](/packages/ml/mamba/cobra) [`comfyui`](/packages/diffusion/comfyui) [`cosmos-predict2`](/packages/diffusion/cosmos/cosmos-predict2) [`cosmos-reason1`](/packages/diffusion/cosmos/cosmos-reason1) [`cosmos-transfer1`](/packages/diffusion/cosmos/cosmos-transfer1) [`cosmos1-diffusion-renderer:1.0.4`](/packages/diffusion/cosmos/cosmos_diffusion_renderer) [`crossformer`](/packages/physicalAI/vla/crossformer) [`cutlass:4.1.0`](/packages/cuda/cutlass) [`cv-cuda:0.15`](/packages/cv/cv-cuda) [`deepspeed:0.15.2`](/packages/llm/deepspeed) [`deepspeed:0.18.0`](/packages/llm/deepspeed) [`deepspeed:0.9.5`](/packages/llm/deepspeed) [`diffusers:0.35.0`](/packages/diffusion/diffusers) [`diffusion_policy`](/packages/diffusion/diffusion_policy) [`dimba:1.0`](/packages/ml/mamba/dimba) [`dli-nano-ai`](/packages/ml/dli/dli-nano-ai) [`dynamo:0.3.2`](/packages/llm/dynamo/dynamo) [`easyvolcap:0.0.0`](/packages/3d/gaussian_splatting/easyvolcap) [`efficientvit`](/packages/vit/efficientvit) [`exllama:0.1`](/packages/llm/exllama) [`faiss_lite`](/packages/vectordb/faiss_lite) [`fast_gauss:1.0.0`](/packages/3d/gaussian_splatting/fast_gauss) [`flash-attention:2.5.7`](/packages/attention/flash-attention) [`flash-attention:2.6.3`](/packages/attention/flash-attention) [`flash-attention:2.7.2.post1`](/packages/attention/flash-attention) [`flash-attention:2.7.4.post1`](/packages/attention/flash-attention) [`flash-attention:2.8.0.post2`](/packages/attention/flash-attention) [`flash-attention:2.8.1`](/packages/attention/flash-attention) [`flashinfer:0.2.1.post2`](/packages/attention/flash-infer) [`flashinfer:0.2.2`](/packages/attention/flash-infer) [`flashinfer:0.2.2.post1`](/packages/attention/flash-infer) [`flashinfer:0.2.6.post1`](/packages/attention/flash-infer) [`flashinfer:0.2.7`](/packages/attention/flash-infer) [`flashinfer:0.2.8`](/packages/attention/flash-infer) [`flexprefill:0.1.0`](/packages/attention/flexprefill) [`framepack`](/packages/diffusion/framepack) [`fruitnerf:1.0`](/packages/3d/nerf/fruitnerf) [`fruitnerf:1.0`](/packages/3d/nerf/fruitnerf) [`genai-bench:0.1.0`](/packages/llm/sglang/genai-bench) [`genesis-world:0.2.2`](/packages/sim/genesis) [`genesis-world:0.2.2`](/packages/sim/genesis) [`glomap:2.0.0`](/packages/3d/3dvision/glomap) [`glomap:2.0.0`](/packages/3d/3dvision/glomap) [`gptqmodel:3.0.1`](/packages/llm/gptqmodel) [`gsplat:1.5.3`](/packages/3d/gaussian_splatting/gsplat) [`gsplat:1.5.3`](/packages/3d/gaussian_splatting/gsplat) [`habitat-sim:0.3.4`](/packages/sim/habitat-sim) [`hloc:1.4`](/packages/3d/3dvision/hloc) [`hloc:1.4`](/packages/3d/3dvision/hloc) [`hloc:1.5`](/packages/3d/3dvision/hloc) [`hloc:1.5`](/packages/3d/3dvision/hloc) [`holoscan`](/packages/cv/holoscan) [`huggingface_kernels:0.7.0`](/packages/attention/huggingface_kernels) [`hymba`](/packages/llm/hymba) [`isaac-gr00t`](/packages/physicalAI/vla/isaac-gr00t) [`isaaclab:2.2.0`](/packages/sim/isaac-sim/isaac-lab) [`isaacsim:5.0.0`](/packages/sim/isaac-sim) [`jetson-copilot`](/packages/rag/jetson-copilot) [`jetson-inference:foxy`](/packages/cv/jetson-inference) [`jetson-inference:galactic`](/packages/cv/jetson-inference) [`jetson-inference:humble`](/packages/cv/jetson-inference) [`jetson-inference:iron`](/packages/cv/jetson-inference) [`jetson-inference:jazzy`](/packages/cv/jetson-inference) [`jetson-inference:main`](/packages/cv/jetson-inference) [`kaolin:0.18.0`](/packages/3d/3dvision/kaolin) [`kat:1`](/packages/ml/kans/kat) [`kokoro-tts:fastapi`](/packages/speech/kokoro-tts/kokoro-tts-fastapi) [`kokoro-tts:hf`](/packages/speech/kokoro-tts/kokoro-tts-hf) [`kokoro-tts:onnx`](/packages/speech/kokoro-tts/kokoro-tts-onnx) [`ktransformers:0.3.3`](/packages/llm/ktransformers) [`l4t-diffusion`](/packages/ml/l4t/l4t-diffusion) [`l4t-dynamo`](/packages/ml/l4t/l4t-dynamo) [`l4t-ml`](/packages/ml/l4t/l4t-ml) [`l4t-pytorch`](/packages/ml/l4t/l4t-pytorch) [`l4t-text-generation`](/packages/ml/l4t/l4t-text-generation) [`langchain`](/packages/rag/langchain) [`langchain:samples`](/packages/rag/langchain) [`lerobot`](/packages/robots/lerobot) [`libcom:0.1.0`](/packages/multimedia/libcom) [`lita`](/packages/vlm/lita) [`llama-factory`](/packages/llm/llama-factory) [`llama-index`](/packages/rag/llama-index) [`llama-index:samples`](/packages/rag/llama-index) [`llama-vision`](/packages/vlm/llama-vision) [`llava`](/packages/vlm/llava) [`lobechat`](/packages/llm/lobe_chat) [`local_llm`](/packages/llm/local_llm) [`log-linear-attention:0.0.1`](/packages/attention/log-linear-attention) [`mamba:2.2.5`](/packages/ml/mamba/mamba) [`mambavision:1.0`](/packages/ml/mamba/mambavision) [`mimicgen`](/packages/sim/mimicgen) [`minference:0.1.7`](/packages/llm/minference) [`minigpt4`](/packages/vlm/minigpt4) [`mlc:0.1.0`](/packages/llm/mlc) [`mlc:0.1.1`](/packages/llm/mlc) [`mlc:0.1.2`](/packages/llm/mlc) [`mlc:0.1.3`](/packages/llm/mlc) [`mlc:0.1.4`](/packages/llm/mlc) [`mlc:0.19.0`](/packages/llm/mlc) [`mlc:0.20.0`](/packages/llm/mlc) [`mlc:0.21.0`](/packages/llm/mlc) [`mlstm_kernels:2.0.1`](/packages/ml/xlstm/mlstm_kernels) [`mooncake:0.3.5`](/packages/llm/dynamo/mooncake) [`nano_llm:24.4`](/packages/llm/nano_llm) [`nano_llm:24.4-foxy`](/packages/llm/nano_llm) [`nano_llm:24.4-galactic`](/packages/llm/nano_llm) [`nano_llm:24.4-humble`](/packages/llm/nano_llm) [`nano_llm:24.4-iron`](/packages/llm/nano_llm) [`nano_llm:24.4.1`](/packages/llm/nano_llm) [`nano_llm:24.4.1-foxy`](/packages/llm/nano_llm) [`nano_llm:24.4.1-galactic`](/packages/llm/nano_llm) [`nano_llm:24.4.1-humble`](/packages/llm/nano_llm) [`nano_llm:24.4.1-iron`](/packages/llm/nano_llm) [`nano_llm:24.5`](/packages/llm/nano_llm) [`nano_llm:24.5-foxy`](/packages/llm/nano_llm) [`nano_llm:24.5-galactic`](/packages/llm/nano_llm) [`nano_llm:24.5-humble`](/packages/llm/nano_llm) [`nano_llm:24.5-iron`](/packages/llm/nano_llm) [`nano_llm:24.5.1`](/packages/llm/nano_llm) [`nano_llm:24.5.1-foxy`](/packages/llm/nano_llm) [`nano_llm:24.5.1-galactic`](/packages/llm/nano_llm) [`nano_llm:24.5.1-humble`](/packages/llm/nano_llm) [`nano_llm:24.5.1-iron`](/packages/llm/nano_llm) [`nano_llm:24.6`](/packages/llm/nano_llm) [`nano_llm:24.6-foxy`](/packages/llm/nano_llm) [`nano_llm:24.6-galactic`](/packages/llm/nano_llm) [`nano_llm:24.6-humble`](/packages/llm/nano_llm) [`nano_llm:24.6-iron`](/packages/llm/nano_llm) [`nano_llm:24.7`](/packages/llm/nano_llm) [`nano_llm:24.7-foxy`](/packages/llm/nano_llm) [`nano_llm:24.7-galactic`](/packages/llm/nano_llm) [`nano_llm:24.7-humble`](/packages/llm/nano_llm) [`nano_llm:24.7-iron`](/packages/llm/nano_llm) [`nano_llm:main`](/packages/llm/nano_llm) [`nano_llm:main-foxy`](/packages/llm/nano_llm) [`nano_llm:main-galactic`](/packages/llm/nano_llm) [`nano_llm:main-humble`](/packages/llm/nano_llm) [`nano_llm:main-iron`](/packages/llm/nano_llm) [`nanodb`](/packages/vectordb/nanodb) [`nanoowl`](/packages/vit/nanoowl) [`nanosam`](/packages/vit/nanosam) [`nemo`](/packages/llm/nemo) [`nerfacc:0.5.3`](/packages/3d/3dvision/nerfacc) [`nerfacc:0.5.4`](/packages/3d/3dvision/nerfacc) [`nerfstudio:1.1.7`](/packages/3d/nerf/nerfstudio) [`nerfstudio:1.1.7`](/packages/3d/nerf/nerfstudio) [`nerfview:0.1.4`](/packages/3d/gaussian_splatting/nerfview) [`nerfview:0.1.4`](/packages/3d/gaussian_splatting/nerfview) [`nixl:0.3.2`](/packages/llm/dynamo/nixl) [`nvdiffrast:0.3.4`](/packages/diffusion/cosmos/cosmos_diffusion_renderer/nvdiffrast) [`nvidia_modelopt:0.32.0`](/packages/llm/tensorrt_optimizer/nvidia-modelopt) [`octo`](/packages/physicalAI/vla/octo) [`onnxruntime_genai:0.8.5`](/packages/ml/onnxruntime_genai) [`onnxruntime_genai:0.8.5`](/packages/ml/onnxruntime_genai) [`open3d:1.19.0`](/packages/3d/3dvision/open3d) [`openpi`](/packages/robots/openpi) [`openvla`](/packages/physicalAI/vla/openvla) [`openvla:mimicgen`](/packages/physicalAI/vla/openvla) [`optimum`](/packages/llm/optimum) [`paraattention:0.4.0`](/packages/attention/ParaAttention) [`partpacker:0.1.0`](/packages/3d/3dobjects/partpacker) [`piper-tts`](/packages/speech/piper-tts) [`piper1-tts:1.3.0`](/packages/speech/piper1-tts) [`pixsfm:1.0`](/packages/3d/3dvision/pixsfm) [`pixsfm:1.0`](/packages/3d/3dvision/pixsfm) [`plstm:0.1.0`](/packages/ml/xlstm/pltsm) [`prismatic`](/packages/vlm/prismatic) [`protomotions:2.5.0`](/packages/robots/protomotions) [`protomotions:2.5.0`](/packages/robots/protomotions) [`pycolmap:3.12`](/packages/3d/3dvision/pycolmap) [`pycolmap:3.12`](/packages/3d/3dvision/pycolmap) [`pycolmap:3.13`](/packages/3d/3dvision/pycolmap) [`pycolmap:3.13`](/packages/3d/3dvision/pycolmap) [`pykan:0.2.9`](/packages/ml/kans/pykan) [`pytorch3d:0.7.8`](/packages/pytorch/torch3d) [`pytorch3d:0.7.9`](/packages/pytorch/torch3d) [`pytorch:2.1-all`](/packages/pytorch) [`pytorch:2.1-all`](/packages/pytorch) [`pytorch:2.2-all`](/packages/pytorch) [`pytorch:2.2-all`](/packages/pytorch) [`pytorch:2.3-all`](/packages/pytorch) [`pytorch:2.3-all`](/packages/pytorch) [`pytorch:2.3.1-all`](/packages/pytorch) [`pytorch:2.3.1-all`](/packages/pytorch) [`pytorch:2.4-all`](/packages/pytorch) [`pytorch:2.4-all`](/packages/pytorch) [`pytorch:2.5-all`](/packages/pytorch) [`pytorch:2.5-all`](/packages/pytorch) [`pytorch:2.6-all`](/packages/pytorch) [`pytorch:2.6-all`](/packages/pytorch) [`pytorch:2.7-all`](/packages/pytorch) [`pytorch:2.7-all`](/packages/pytorch) [`pytorch:2.8-all`](/packages/pytorch) [`pytorch:2.8-all`](/packages/pytorch) [`radial-attention:0.1.0`](/packages/attention/radial-attention) [`raft`](/packages/ml/rapids/raft) [`robogen`](/packages/sim/robogen) [`robogen`](/packages/sim/robogen) [`robomimic`](/packages/sim/robomimic) [`robopoint`](/packages/physicalAI/vla/robopoint) [`sage-attention:3.0.0`](/packages/attention/sage-attention) [`sam`](/packages/vit/sam) [`sapiens`](/packages/vit/sapiens) [`sdnext`](/packages/diffusion/sdnext) [`self-forcing`](/packages/diffusion/self-forcing) [`sgl-kernel:0.2.3`](/packages/llm/sglang/sgl-kernel) [`sglang:0.4.4`](/packages/llm/sglang) [`sglang:0.4.6`](/packages/llm/sglang) [`sglang:0.4.9`](/packages/llm/sglang) [`sound-utils`](/packages/multimedia/sound-utils) [`sound-utils`](/packages/multimedia/sound-utils) [`sparc3d:0.1.0`](/packages/3d/3dobjects/sparc3d) [`sparge-attention:0.1.0`](/packages/attention/sparge-attention) [`spark-tts`](/packages/speech/spark-tts) [`speaches`](/packages/speech/speaches) [`stable-diffusion-webui`](/packages/diffusion/stable-diffusion-webui) [`sudonim:hf`](/packages/llm/sudonim) [`tam`](/packages/vit/tam) [`tensorrt_llm:0.12`](/packages/llm/tensorrt_optimizer/tensorrt_llm) [`tensorrt_llm:0.22.0`](/packages/llm/tensorrt_optimizer/tensorrt_llm) [`text-generation-inference`](/packages/llm/text-generation-inference) [`text-generation-webui:1.7`](/packages/llm/text-generation-webui) [`text-generation-webui:6a7cd01`](/packages/llm/text-generation-webui) [`text-generation-webui:main`](/packages/llm/text-generation-webui) [`tinycudann:1.7`](/packages/3d/3dvision/tinycudann) [`torch-memory-saver:0.0.7`](/packages/pytorch/torchsaver) [`torch2trt`](/packages/pytorch/torch2trt) [`torch_tensorrt`](/packages/pytorch/torch_tensorrt) [`torchao:0.12.0`](/packages/pytorch/torchao) [`torchao:0.13.0`](/packages/pytorch/torchao) [`torchaudio:2.8.0`](/packages/pytorch/torchaudio) [`torchsde:0.2.8`](/packages/pytorch/torchsde) [`torchtext:0.19.0`](/packages/pytorch/torchtext) [`torchvision:0.23.0`](/packages/pytorch/torchvision) [`transformer-engine:2.7`](/packages/ml/transformer-engine) [`transformers:4.53.1`](/packages/llm/transformers) [`triton:3.0.0`](/packages/ml/triton) [`triton:3.1.0`](/packages/ml/triton) [`triton:3.2.0`](/packages/ml/triton) [`triton:3.3.0`](/packages/ml/triton) [`triton:3.3.1`](/packages/ml/triton) [`triton:3.4.0`](/packages/ml/triton) [`triton:3.5.0`](/packages/ml/triton) [`tvm`](/packages/ml/tvm) [`videollama:1.0.0`](/packages/vlm/videollama) [`videomambasuite:1.0`](/packages/ml/mamba/videomambasuite) [`vila`](/packages/vlm/vila) [`vllm:0.7.4`](/packages/llm/vllm) [`vllm:0.8.4`](/packages/llm/vllm) [`vllm:0.9.0`](/packages/llm/vllm) [`vllm:0.9.2`](/packages/llm/vllm) [`vllm:0.9.3`](/packages/llm/vllm) [`vllm:v0.8.5.post1`](/packages/llm/vllm) [`voice-pro`](/packages/speech/voice-pro) [`voicecraft`](/packages/speech/voicecraft) [`vscode:torch`](/packages/code/vscode) [`vscode:transformers`](/packages/code/vscode) [`warp:1.7.0-all`](/packages/numeric/warp) [`warp:1.7.0-torch`](/packages/numeric/warp) [`warp:1.8.1-all`](/packages/numeric/warp) [`warp:1.8.1-torch`](/packages/numeric/warp) [`whisper`](/packages/speech/whisper) [`whisper_trt`](/packages/speech/whisper_trt) [`whisperx`](/packages/speech/whisperx) [`wyoming-piper:1.6.2`](/packages/smart-home/wyoming/wyoming-piper) [`wyoming-piper:master`](/packages/smart-home/wyoming/wyoming-piper) [`xattention:0.0.1`](/packages/attention/xattention) [`xformers:0.0.32`](/packages/attention/xformers) [`xformers:0.0.33`](/packages/attention/xformers) [`xgrammar:0.1.15`](/packages/llm/xgrammar) [`xgrammar:0.1.18`](/packages/llm/xgrammar) [`xgrammar:0.1.19`](/packages/llm/xgrammar) [`xgrammar:0.1.20`](/packages/llm/xgrammar) [`xgrammar:0.1.21`](/packages/llm/xgrammar) [`xlstm:2.0.5`](/packages/ml/xlstm/xlstm) [`xtts`](/packages/speech/xtts) [`xtuner`](/packages/vlm/xtuner) [`zigma:1.0`](/packages/ml/mamba/zigma) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+
+| **`pytorch:2.8-all`** | |
+| :-- | :-- |
+| &nbsp;&nbsp;&nbsp;Aliases | `torch:2.8-all` `pytorch:all` `torch:all` |
+| &nbsp;&nbsp;&nbsp;Requires | `L4T ['>=36']` |
+| &nbsp;&nbsp;&nbsp;Dependencies | [`build-essential`](/packages/build/build-essential) [`pip_cache:cu126`](/packages/cuda/cuda) [`cuda:12.6`](/packages/cuda/cuda) [`cudnn:9.3`](/packages/cuda/cudnn) [`python`](/packages/build/python) [`numpy`](/packages/numeric/numpy) [`cmake`](/packages/build/cmake/cmake_pip) [`onnx`](/packages/ml/onnx) [`pytorch:2.8`](/packages/pytorch) [`torchvision`](/packages/pytorch/torchvision) [`torchaudio`](/packages/pytorch/torchaudio) [`triton`](/packages/ml/triton) [`torchao`](/packages/pytorch/torchao) [`tensorrt`](/packages/cuda/tensorrt) [`torch2trt`](/packages/pytorch/torch2trt) [`pytorch3d`](/packages/pytorch/torch3d) [`huggingface_hub`](/packages/llm/huggingface_hub) [`rust`](/packages/build/rust) [`transformers`](/packages/llm/transformers) [`diffusers`](/packages/diffusion/diffusers) [`xformers`](/packages/attention/xformers) [`cuda-python`](/packages/cuda/cuda-python) [`cutlass`](/packages/cuda/cutlass) [`flash-attention`](/packages/attention/flash-attention) [`pycuda`](/packages/cuda/pycuda) [`jupyterlab`](/packages/code/jupyterlab) |
+| &nbsp;&nbsp;&nbsp;Dockerfile | [`Dockerfile`](Dockerfile) |
+
+</details>
+
+<details open>
+<summary><b><a id="images">CONTAINER IMAGES</a></b></summary>
+<br>
+
+| Repository/Tag | Date | Arch | Size |
+| :-- | :--: | :--: | :--: |
+| &nbsp;&nbsp;[`dustynv/pytorch:1.10-r32.7.1`](https://hub.docker.com/r/dustynv/pytorch/tags) | `2023-12-14` | `arm64` | `1.1GB` |
+| &nbsp;&nbsp;[`dustynv/pytorch:1.11-r35.2.1`](https://hub.docker.com/r/dustynv/pytorch/tags) | `2023-11-05` | `arm64` | `5.4GB` |
+| &nbsp;&nbsp;[`dustynv/pytorch:1.11-r35.3.1`](https://hub.docker.com/r/dustynv/pytorch/tags) | `2023-12-14` | `arm64` | `5.4GB` |
+| &nbsp;&nbsp;[`dustynv/pytorch:1.11-r35.4.1`](https://hub.docker.com/r/dustynv/pytorch/tags) | `2023-12-11` | `arm64` | `5.4GB` |
+| &nbsp;&nbsp;[`dustynv/pytorch:1.12-r35.2.1`](https://hub.docker.com/r/dustynv/pytorch/tags) | `2023-12-14` | `arm64` | `5.5GB` |
+| &nbsp;&nbsp;[`dustynv/pytorch:1.12-r35.3.1`](https://hub.docker.com/r/dustynv/pytorch/tags) | `2023-08-29` | `arm64` | `5.5GB` |
+| &nbsp;&nbsp;[`dustynv/pytorch:1.12-r35.4.1`](https://hub.docker.com/r/dustynv/pytorch/tags) | `2023-11-03` | `arm64` | `5.5GB` |
+| &nbsp;&nbsp;[`dustynv/pytorch:1.13-r35.2.1`](https://hub.docker.com/r/dustynv/pytorch/tags) | `2023-08-29` | `arm64` | `5.5GB` |
+| &nbsp;&nbsp;[`dustynv/pytorch:1.13-r35.3.1`](https://hub.docker.com/r/dustynv/pytorch/tags) | `2023-12-12` | `arm64` | `5.5GB` |
+| &nbsp;&nbsp;[`dustynv/pytorch:1.13-r35.4.1`](https://hub.docker.com/r/dustynv/pytorch/tags) | `2023-12-14` | `arm64` | `5.5GB` |
+| &nbsp;&nbsp;[`dustynv/pytorch:1.9-r32.7.1`](https://hub.docker.com/r/dustynv/pytorch/tags) | `2023-12-14` | `arm64` | `1.0GB` |
+| &nbsp;&nbsp;[`dustynv/pytorch:2.0-r35.2.1`](https://hub.docker.com/r/dustynv/pytorch/tags) | `2023-12-06` | `arm64` | `5.4GB` |
+| &nbsp;&nbsp;[`dustynv/pytorch:2.0-r35.3.1`](https://hub.docker.com/r/dustynv/pytorch/tags) | `2023-12-14` | `arm64` | `5.4GB` |
+| &nbsp;&nbsp;[`dustynv/pytorch:2.0-r35.4.1`](https://hub.docker.com/r/dustynv/pytorch/tags) | `2023-10-07` | `arm64` | `5.4GB` |
+| &nbsp;&nbsp;[`dustynv/pytorch:2.1-r35.2.1`](https://hub.docker.com/r/dustynv/pytorch/tags) | `2023-12-11` | `arm64` | `5.4GB` |
+| &nbsp;&nbsp;[`dustynv/pytorch:2.1-r35.3.1`](https://hub.docker.com/r/dustynv/pytorch/tags) | `2023-12-14` | `arm64` | `5.4GB` |
+| &nbsp;&nbsp;[`dustynv/pytorch:2.1-r35.4.1`](https://hub.docker.com/r/dustynv/pytorch/tags) | `2023-11-05` | `arm64` | `5.4GB` |
+| &nbsp;&nbsp;[`dustynv/pytorch:2.1-r36.2.0`](https://hub.docker.com/r/dustynv/pytorch/tags) | `2023-12-14` | `arm64` | `7.2GB` |
+| &nbsp;&nbsp;[`dustynv/pytorch:2.6-amd64-cu128-24.04`](https://hub.docker.com/r/dustynv/pytorch/tags) | `2025-04-02` | `amd64` | `6.9GB` |
+| &nbsp;&nbsp;[`dustynv/pytorch:2.6-r36.4.0-cu128`](https://hub.docker.com/r/dustynv/pytorch/tags) | `2025-02-07` | `arm64` | `3.4GB` |
+| &nbsp;&nbsp;[`dustynv/pytorch:2.6-r36.4.0-cu128-24.04`](https://hub.docker.com/r/dustynv/pytorch/tags) | `2025-02-26` | `arm64` | `3.5GB` |
+| &nbsp;&nbsp;[`dustynv/pytorch:2.7-r36.4.0`](https://hub.docker.com/r/dustynv/pytorch/tags) | `2025-04-18` | `arm64` | `6.3GB` |
+| &nbsp;&nbsp;[`dustynv/pytorch:2.7-r36.4.0-cu128-24.04`](https://hub.docker.com/r/dustynv/pytorch/tags) | `2025-04-18` | `arm64` | `5.5GB` |
+
+> <sub>Container images are compatible with other minor versions of JetPack/L4T:</sub><br>
+> <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R32.7 containers can run on other versions of L4T R32.7 (JetPack 4.6+)</sub><br>
+> <sub>&nbsp;&nbsp;&nbsp;&nbsp;• L4T R35.x containers can run on other versions of L4T R35.x (JetPack 5.1+)</sub><br>
+</details>
+
+<details open>
+<summary><b><a id="run">RUN CONTAINER</a></b></summary>
+<br>
+
+To start the container, you can use [`jetson-containers run`](/docs/run.md) and [`autotag`](/docs/run.md#autotag), or manually put together a [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) command:
+```bash
+# automatically pull or build a compatible container image
+jetson-containers run $(autotag pytorch)
+
+# or explicitly specify one of the container images above
+jetson-containers run dustynv/pytorch:2.7-r36.4.0-cu128-24.04
+
+# or if using 'docker run' (specify image and mounts/ect)
+sudo docker run --runtime nvidia -it --rm --network=host dustynv/pytorch:2.7-r36.4.0-cu128-24.04
+```
+> <sup>[`jetson-containers run`](/docs/run.md) forwards arguments to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/) with some defaults added (like `--runtime nvidia`, mounts a `/data` cache, and detects devices)</sup><br>
+> <sup>[`autotag`](/docs/run.md#autotag) finds a container image that's compatible with your version of JetPack/L4T - either locally, pulled from a registry, or by building it.</sup>
+
+To mount your own directories into the container, use the [`-v`](https://docs.docker.com/engine/reference/commandline/run/#volume) or [`--volume`](https://docs.docker.com/engine/reference/commandline/run/#volume) flags:
+```bash
+jetson-containers run -v /path/on/host:/path/in/container $(autotag pytorch)
+```
+To launch the container running a command, as opposed to an interactive shell:
+```bash
+jetson-containers run $(autotag pytorch) my_app --abc xyz
+```
+You can pass any options to it that you would to [`docker run`](https://docs.docker.com/engine/reference/commandline/run/), and it'll print out the full command that it constructs before executing it.
+</details>
+<details open>
+<summary><b><a id="build">BUILD CONTAINER</b></summary>
+<br>
+
+If you use [`autotag`](/docs/run.md#autotag) as shown above, it'll ask to build the container for you if needed.  To manually build it, first do the [system setup](/docs/setup.md), then run:
+```bash
+jetson-containers build pytorch
+```
+The dependencies from above will be built into the container, and it'll be tested during.  Run it with [`--help`](/jetson_containers/build.py) for build options.
+</details>

@@ -32,5 +32,5 @@ def vulkan_sdk(version, default=False):
 
 
 package = [
-  vulkan_sdk('1.4.341.0', default=True),
+  vulkan_sdk('1.4.341.1', default=True),
 ]

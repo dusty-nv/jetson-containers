@@ -30,5 +30,5 @@ def mooncake(version, version_spec=None, requires=None, default=False):
     return pkg, builder
 
 package = [
-    mooncake('0.3.8.post1', '0.3.8.post1', default=True),
+    mooncake('0.3.9', '0.3.9', default=True),
 ]

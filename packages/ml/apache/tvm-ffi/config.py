@@ -22,5 +22,5 @@ def tvm_ffi(version=None, default=True):
 
 
 package = [
-    tvm_ffi(version="0.1.9", default=True)
+    tvm_ffi(version="0.2.0", default=True)
 ]

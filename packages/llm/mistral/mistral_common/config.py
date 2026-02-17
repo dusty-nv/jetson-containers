@@ -31,5 +31,5 @@ def mistral_common(version, branch=None, requires=None, default=False, depends=N
     return pkg, builder
 
 package = [
-    mistral_common(version='1.8.8', default=True),
+    mistral_common(version='1.9.2', default=True),
 ]

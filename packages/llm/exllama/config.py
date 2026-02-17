@@ -27,5 +27,5 @@ def exllama(version, branch=None, requires=None, default=False):
     return pkg
 
 package = [
-    exllama('0.0.20', requires='>=36', default=True),
+    exllama('0.0.23', requires='>=36', default=True),
 ]

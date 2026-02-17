@@ -31,5 +31,5 @@ def mlc(commit, patch=None, version='0.1', tvm='0.15', llvm=20, depends=[], requ
 
 package = [
     mlc('51fb0f4', 'patches/51fb0f4.diff', version='0.1.0', tvm='0.15.0', default=(L4T_VERSION.major == 35), requires='==35.*'), # 12/15/2023
-    mlc('de560d2', 'patches/empty.diff', version='0.20.0', tvm='0.22.0', requires='>=36', depends=['tvm', 'flashinfer'], default=True), # 5/1/2025
+    mlc('988383e', 'patches/empty.diff', version='0.20.0', tvm='0.22.0', requires='>=36', depends=['tvm', 'flashinfer'], default=True), # 5/1/2025
 ]

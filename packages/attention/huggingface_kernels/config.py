@@ -27,6 +27,6 @@ def kernels(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    kernels('0.10.5', default=(CUDA_VERSION >= Version('12.6'))),
+    kernels('0.13.0', default=(CUDA_VERSION >= Version('12.6'))),
 ]
 
