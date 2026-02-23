@@ -1,5 +1,5 @@
 from jetson_containers import L4T_VERSION, PYTHON_VERSION
-from ..physicalAI.ros import ROS_DISTROS, ROS2_DISTROS, ROS_PACKAGES, ros_container
+from packages.physicalAI.ros import ROS_DISTROS, ROS2_DISTROS, ROS_PACKAGES, ros_container
 
 import copy
 

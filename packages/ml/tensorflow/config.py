@@ -1,8 +1,8 @@
 from jetson_containers import L4T_VERSION, PYTHON_VERSION, CUDA_VERSION, IS_SBSA
 from packaging.version import Version
 
-from ..ml.tensorflow.version import TENSORFLOW_VERSION
-from ..cuda.cudastack.config import CUDNN_VERSION
+from packages.ml.tensorflow.version import TENSORFLOW_VERSION
+from packages.cuda.cudastack.config import CUDNN_VERSION
 
 
 def tensorflow(version, tensorflow_version='tf2', requires=None, default=False):

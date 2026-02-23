@@ -1,6 +1,6 @@
 from jetson_containers import update_dependencies, PYTHON_VERSION
 from packaging.version import Version
-from ..ml.tensorflow.version import TENSORFLOW_VERSION
+from packages.ml.tensorflow.version import TENSORFLOW_VERSION
 
 def tensorflow_text(version, tensorflow=None, requires=None):
     pkg = package.copy()

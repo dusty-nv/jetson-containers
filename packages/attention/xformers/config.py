@@ -1,6 +1,6 @@
 from jetson_containers import CUDA_VERSION
 from packaging.version import Version
-from ..pytorch.version import PYTORCH_VERSION
+from packages.ml.pytorch.version import PYTORCH_VERSION
 from jetson_containers import update_dependencies
 
 
