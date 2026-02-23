@@ -184,7 +184,7 @@ if IS_TEGRA:
     package = [
         # JetPack 7
         cuda_package('13.2',
-                     'https://developer.download.nvidia.com/compute/cuda/13.2.0/local_installers/cuda-repo-ubuntu2404-13-2-local_13.2.0-595.28-1_arm64.deb',
+                     'https://developer.download.nvidia.com/compute/cuda/13.2.0/local_installers/cuda-repo-ubuntu2404-13-2-local_13.2.0-595.45-1_arm64.deb',
                      requires='aarch64'),
         cuda_samples('13.2', requires='>=38'),
 
@@ -230,7 +230,7 @@ elif IS_SBSA:
                      requires='aarch64'),
         cuda_samples('13.1', requires='aarch64'),
         cuda_package('13.2',
-                     'https://developer.download.nvidia.com/compute/cuda/13.2.0/local_installers/cuda-repo-ubuntu2404-13-2-local_13.2.0-595.28-1_arm64.deb',
+                     'https://developer.download.nvidia.com/compute/cuda/13.2.0/local_installers/cuda-repo-ubuntu2404-13-2-local_13.2.0-595.45-1_arm64.deb',
                      requires='aarch64'),
         cuda_samples('13.2', requires='aarch64'),
 
@@ -255,7 +255,7 @@ else:
                      requires='x86_64'),
         cuda_samples('13.1', requires='x86_64'),
         cuda_package('13.2',
-                     'https://developer.download.nvidia.com/compute/cuda/13.2.0/local_installers/cuda-repo-ubuntu2404-13-2-local_13.2.0-595.28-1_amd64.deb',
+                     'https://developer.download.nvidia.com/compute/cuda/13.2.0/local_installers/cuda-repo-ubuntu2404-13-2-local_13.2.0-595.45-1_amd64.deb',
                      requires='aarch64'),
         cuda_samples('13.2', requires='aarch64'),
     ]

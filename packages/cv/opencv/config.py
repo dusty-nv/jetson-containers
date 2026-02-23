@@ -46,7 +46,8 @@ package = [
     opencv('4.10.0', '>=35', default=(CUDA_VERSION >= Version('12.4') and CUDA_VERSION < Version('12.6'))),
     opencv('4.11.0', '>=35', default=False),
     opencv('4.12.0', '>=36', default=False), # Blackwell Support
-    opencv('4.13.0', '>=36', default=(CUDA_VERSION >= Version('12.6'))), # Thor Support
+    opencv('4.13.0', '>=36', default=(CUDA_VERSION >= Version('12.6') and CUDA_VERSION < Version('13.1'))), # Thor Support
+    opencv('4.14.0', '>=36', default=(CUDA_VERSION >= Version('13.1'))), # Thor Support
 
     # JetPack 4
     opencv('4.5.0', '==32.*', default=True, url='https://nvidia.box.com/shared/static/5v89u6g5rb62fpz4lh0rz531ajo2t5ef.gz'),

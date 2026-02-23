@@ -26,7 +26,7 @@ def cuda_stack_args():
             cudnn_packages = "libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-samples"
             tensorrt_ver = '10.16.0'
             tensorrt_url = f"{tensorrt_base_url}/10.16.0/tars/TensorRT-10.16.0.48.Linux.aarch64-gnu.cuda-13.2.tar.gz"
-            nccl_ver = '2.29.3'
+            nccl_ver = '2.29.4'
         elif L4T_VERSION.major >= 36:  # JetPack 6
             if CUDA_VERSION >= Version('12.9'):
                 cudnn_ver = '9.15.0'
@@ -66,7 +66,7 @@ def cuda_stack_args():
         cudnn_packages = "libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-samples"
         tensorrt_ver = '10.16.0'
         tensorrt_url = f"{tensorrt_base_url}/10.16.0/tars/TensorRT-10.16.0.48.Linux.aarch64-gnu.cuda-13.2.tar.gz"
-        nccl_ver = '2.29.3'
+        nccl_ver = '2.29.4'
 
     else:  # x86_64
         cudnn_ver = '9.20.0'
@@ -75,7 +75,7 @@ def cuda_stack_args():
         tensorrt_ver = '10.16.0'
         tensorrt_url = f"{tensorrt_base_url}/10.16.0/tars/TensorRT-10.16.0.48.Linux.x86_64-gnu.cuda-13.2.tar.gz"
 
-        nccl_ver = '2.29.3'
+        nccl_ver = '2.29.4'
 
     # Extract DEB name from URL
     cudnn_deb = os.path.basename(cudnn_url).split('_')[0] if cudnn_url else ""
@@ -98,11 +98,11 @@ def cuda_stack_args():
 
         # Additional libraries
         'CUDSS_VERSION': '0.7.1',
-        'CUSPARSELT_VERSION': '0.8.1',
+        'CUSPARSELT_VERSION': '0.9.0',
         'CUTENSOR_VERSION': '2.5.0',
         'GDRCOPY_VERSION': '2.5.1',
         'NVPL_VERSION': '25.11',
-        'NVSHMEM_VERSION': '3.5.2',
+        'NVSHMEM_VERSION': '3.5.20',
 
         # Architecture and CUDA info
         'CUDA_ARCH': CUDA_ARCH,
