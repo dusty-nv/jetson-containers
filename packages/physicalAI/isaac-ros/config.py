@@ -1,5 +1,5 @@
 from jetson_containers import L4T_VERSION, LSB_RELEASE
-from ..physicalAI.ros import ros_container, ROS_DISTROS
+from packages.physicalAI.ros import ros_container, ROS_DISTROS
 
 ISAAC_ROS_URL="https://github.com/NVIDIA-ISAAC-ROS"
 

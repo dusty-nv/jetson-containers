@@ -1,6 +1,6 @@
 from jetson_containers import update_dependencies
 from packaging.version import Version
-from ..ml.pytorch.version import PYTORCH_VERSION
+from packages.ml.pytorch.version import PYTORCH_VERSION
 
 
 def torchcodec(version, pytorch=None, depends=None, requires=None):
