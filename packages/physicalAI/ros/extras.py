@@ -20,7 +20,7 @@ def ros_container(package: dict, *sources: str,
     The packages will get installed under the given `workspace` and automatically
     sourced into the environment.  See here to use this from other config.py files:
 
-        from ..robots.ros import ros_container
+        from ..physicalAI.ros import ros_container
 
         # add some example ROS packages to humble:desktop and jazzy:desktop containers
         package = ros_container(package, 'my_ros_pkg', 'https://github.com/ros/package',

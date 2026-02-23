@@ -2,7 +2,7 @@
 from jetson_containers import L4T_VERSION, CUDA_VERSION, LSB_RELEASE, IS_TEGRA
 from packaging.version import Version
 
-from ..robots.ros import ros_container
+from ..physicalAI.ros import ros_container
 
 def zed(version, l4t_version=None, requires=None, default=False):
     """

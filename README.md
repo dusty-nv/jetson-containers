@@ -99,7 +99,7 @@ Looking for the old jetson-containers?   See the [`legacy`](https://github.com/d
 > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`LSB_RELEASE=24.04 jetson-containers build pytorch:2.8`
 > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`jetson-containers run dustynv/pytorch:2.8-r36.4-cu128-24.04`
 >
-> ARM SBSA (Server Base System Architecture) is supported for GH200 / GB200 and Orin in CUDA 13.2.
+> ARM SBSA (Server Base System Architecture) is supported for GH200 / GB200 / AGX Thor / AGX Orin in CUDA 13.2.
 > To install CUDA 13.0 SBSA wheels for Python 3.12 / 24.04:
 >
 > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`uv pip install torch torchvision torchaudio \`

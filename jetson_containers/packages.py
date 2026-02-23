@@ -8,6 +8,7 @@ import os
 import sys
 import threading
 import time
+import types
 import yaml
 from packaging.specifiers import SpecifierSet
 from packaging.version import Version
@@ -153,7 +154,7 @@ def scan_packages(package_dirs=_PACKAGE_DIRS, rescan=False, **kwargs):
     package['postfix'] = package['postfix'] + f"-{LSB_RELEASE}"
 
     # skip recursively searching under these packages
-    PRELOAD = ['robots/ros']
+    PRELOAD = ['physicalAI/ros']
     BLACKLIST = ['vila-microservice/src']
 
     def is_blacklisted(x):
@@ -507,6 +508,20 @@ def config_package(package):
         if config_ext == '.py':
             log_debug(f"Loading {config_path}")
             module_name = f"packages.{package['name']}.config"
+
+            if 'packages' not in sys.modules:
+                pkg_mod = types.ModuleType('packages')
+                pkg_mod.__path__ = [os.path.join(get_repo_dir(), 'packages')]
+                pkg_mod.__package__ = 'packages'
+                sys.modules['packages'] = pkg_mod
+
+            parent_name = f"packages.{package['name']}"
+            if parent_name not in sys.modules:
+                parent_mod = types.ModuleType(parent_name)
+                parent_mod.__path__ = [package['path']]
+                parent_mod.__package__ = parent_name
+                sys.modules[parent_name] = parent_mod
+
             spec = importlib.util.spec_from_file_location(module_name, config_path)
             module = importlib.util.module_from_spec(spec)
             sys.modules[module_name] = module
