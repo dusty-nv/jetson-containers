@@ -1,4 +1,4 @@
-from ..pytorch.version import PYTORCH_VERSION
+from ..ml.pytorch.version import PYTORCH_VERSION
 from packaging.version import Version
 
 def triton(version, branch=None, requires=None, default=False):

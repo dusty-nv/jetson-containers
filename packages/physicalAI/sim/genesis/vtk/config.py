@@ -29,5 +29,5 @@ def vtk(version, version_spec=None, requires=None, default=False):
     return pkg, builder
 
 package = [
-    vtk('9.5.2', version_spec='9.5.2', default=True), # new aarch64 wheels
+    vtk('9.6.0', version_spec='9.6.0', default=True), # new aarch64 wheels
 ]
