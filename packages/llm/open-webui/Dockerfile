@@ -153,7 +153,8 @@ RUN uv pip install -v --system -r requirements.txt --no-cache-dir --extra-index-
 RUN python3 -c "import os; from sentence_transformers import SentenceTransformer; SentenceTransformer(os.environ['RAG_EMBEDDING_MODEL'], device='cuda')" && \
     python3 -c "import os; from sentence_transformers import SentenceTransformer; SentenceTransformer(os.environ.get('AUXILIARY_EMBEDDING_MODEL', 'TaylorAI/bge-micro-v2'), device='cpu')" && \
     python3 -c "import os; from faster_whisper import WhisperModel; WhisperModel(os.environ['WHISPER_MODEL'], device='cuda', compute_type='int8', download_root=os.environ['WHISPER_MODEL_DIR'])"; \
-    python3 -c "import os; import tiktoken; tiktoken.get_encoding(os.environ['TIKTOKEN_ENCODING_NAME'])";
+    python3 -c "import os; import tiktoken; tiktoken.get_encoding(os.environ['TIKTOKEN_ENCODING_NAME'])"; \
+    python -c "import nltk; nltk.download('punkt_tab')";
 
 # Install Ollama if requested
 RUN if [ "$USE_OLLAMA" = "true" ]; then \
