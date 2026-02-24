@@ -1,0 +1,118 @@
+diff --git a/src/init.cc b/src/init.cc
+--- a/src/init.cc	(revision ae7aed194dc63c65d1bf5c0385ba3d68d3b64c8c)
++++ b/src/init.cc	(date 1771858142870)
+@@ -440,11 +440,15 @@
+   NCCLCHECK(ncclCudaContextTrack(&comm->context));
+
+   NCCLCHECK(getBusId(comm->cudaDev, &comm->busId));
+-  nvmlDevice_t nvmlDev;
++  nvmlDevice_t nvmlDev = NULL;
+   char busId[NVML_DEVICE_PCI_BUS_ID_BUFFER_SIZE];
+   NCCLCHECK(int64ToBusId(comm->busId, busId));
+-  NCCLCHECK(ncclNvmlDeviceGetHandleByPciBusId(busId, &nvmlDev));
+-  NCCLCHECK(ncclNvmlDeviceGetIndex(nvmlDev, (unsigned int*)&comm->nvmlDev));
++  if (ncclNvmlDeviceGetHandleByPciBusId(busId, &nvmlDev) != ncclSuccess) {
++    comm->nvmlDev = -1;
++    WARN("Failed to find nvml device for busId %s. This may affect performance.", busId);
++  }else{
++    NCCLCHECK(ncclNvmlDeviceGetIndex(nvmlDev, (unsigned int*)&comm->nvmlDev));
++  }
+
+   comm->compCap = ncclCudaCompCap();
+   TRACE(NCCL_INIT,"comm %p rank %d nranks %d cudaDev %d busId %lx compCap %d", comm, rank, ndev, comm->cudaDev, comm->busId, comm->compCap);
+@@ -641,35 +645,38 @@
+   {
+     // MNNVL: Request the fabric UUID and partition info
+     char busId[NVML_DEVICE_PCI_BUS_ID_BUFFER_SIZE];
+-    nvmlDevice_t nvmlDev;
++    nvmlDevice_t nvmlDev = NULL;
+     NCCLCHECK(int64ToBusId(info->busId, busId));
+-    NCCLCHECK(ncclNvmlDeviceGetHandleByPciBusId(busId, &nvmlDev));
+-    info->fabricInfo.state = NVML_GPU_FABRIC_STATE_NOT_SUPPORTED;
+-    (void) ncclNvmlDeviceGetGpuFabricInfoV(nvmlDev, &info->fabricInfo);
+-    if (info->fabricInfo.state != NVML_GPU_FABRIC_STATE_NOT_SUPPORTED) {
+-      unsigned long uuid0 = 0;
+-      unsigned long uuid1 = 0;
+-      if (ncclParamMNNVLUUID() != -1) {
+-        unsigned long temp_uuid0 = (unsigned long)ncclParamMNNVLUUID();
+-        unsigned long temp_uuid1 = (unsigned long)ncclParamMNNVLUUID();
+-        memcpy(info->fabricInfo.clusterUuid, &temp_uuid0, sizeof(temp_uuid0));
+-        memcpy(info->fabricInfo.clusterUuid + sizeof(temp_uuid0), &temp_uuid1, sizeof(temp_uuid1));
+-      }
+-      memcpy(&uuid0, info->fabricInfo.clusterUuid, sizeof(uuid0));
+-      memcpy(&uuid1, info->fabricInfo.clusterUuid + sizeof(uuid0), sizeof(uuid1));
+-      if (ncclParamMNNVLCliqueId() == -2) {
+-        nvmlPlatformInfo_t platformInfo = { 0 };
+-        NCCLCHECK(ncclNvmlDeviceGetPlatformInfo(nvmlDev, &platformInfo));
+-        INFO(NCCL_INIT, "MNNVL rack serial %s slot %d tray %d hostId %d peerType %d moduleId %d",
+-             platformInfo.chassisSerialNumber, platformInfo.slotNumber, platformInfo.trayIndex,
+-             platformInfo.hostId, platformInfo.peerType, platformInfo.moduleId);
+-        // Use a hash of the Rack serial number to partition the NVLD clique
+-        info->fabricInfo.cliqueId = getHash(platformInfo.chassisSerialNumber, sizeof(platformInfo.chassisSerialNumber));
+-      } else if (ncclParamMNNVLCliqueId() != -1) info->fabricInfo.cliqueId = ncclParamMNNVLCliqueId();
+-      INFO(NCCL_INIT, "MNNVL busId 0x%lx fabric UUID %lx.%lx cliqueId 0x%x state %d healthMask 0x%x",
+-           info->busId,
+-           uuid0, uuid1,
+-           info->fabricInfo.cliqueId, info->fabricInfo.state, info->fabricInfo.healthMask);
++    if (ncclNvmlDeviceGetHandleByPciBusId(busId, &nvmlDev) != ncclSuccess) {
++      info->fabricInfo.state = NVML_GPU_FABRIC_STATE_NOT_SUPPORTED;
++    }else {
++      info->fabricInfo.state = NVML_GPU_FABRIC_STATE_NOT_SUPPORTED;
++      (void) ncclNvmlDeviceGetGpuFabricInfoV(nvmlDev, &info->fabricInfo);
++      if (info->fabricInfo.state != NVML_GPU_FABRIC_STATE_NOT_SUPPORTED) {
++        unsigned long uuid0 = 0;
++        unsigned long uuid1 = 0;
++        if (ncclParamMNNVLUUID() != -1) {
++          unsigned long temp_uuid0 = (unsigned long)ncclParamMNNVLUUID();
++          unsigned long temp_uuid1 = (unsigned long)ncclParamMNNVLUUID();
++          memcpy(info->fabricInfo.clusterUuid, &temp_uuid0, sizeof(temp_uuid0));
++          memcpy(info->fabricInfo.clusterUuid + sizeof(temp_uuid0), &temp_uuid1, sizeof(temp_uuid1));
++        }
++        memcpy(&uuid0, info->fabricInfo.clusterUuid, sizeof(uuid0));
++        memcpy(&uuid1, info->fabricInfo.clusterUuid + sizeof(uuid0), sizeof(uuid1));
++        if (ncclParamMNNVLCliqueId() == -2) {
++          nvmlPlatformInfo_t platformInfo = { 0 };
++          NCCLCHECK(ncclNvmlDeviceGetPlatformInfo(nvmlDev, &platformInfo));
++          INFO(NCCL_INIT, "MNNVL rack serial %s slot %d tray %d hostId %d peerType %d moduleId %d",
++               platformInfo.chassisSerialNumber, platformInfo.slotNumber, platformInfo.trayIndex,
++               platformInfo.hostId, platformInfo.peerType, platformInfo.moduleId);
++          // Use a hash of the Rack serial number to partition the NVLD clique
++          info->fabricInfo.cliqueId = getHash(platformInfo.chassisSerialNumber, sizeof(platformInfo.chassisSerialNumber));
++        } else if (ncclParamMNNVLCliqueId() != -1) info->fabricInfo.cliqueId = ncclParamMNNVLCliqueId();
++        INFO(NCCL_INIT, "MNNVL busId 0x%lx fabric UUID %lx.%lx cliqueId 0x%x state %d healthMask 0x%x",
++            info->busId,
++             uuid0, uuid1,
++            info->fabricInfo.cliqueId, info->fabricInfo.state, info->fabricInfo.healthMask);
++      }
+     }
+   }
+
+diff --git a/src/graph/xml.cc b/src/graph/xml.cc
+--- a/src/graph/xml.cc	(revision ae7aed194dc63c65d1bf5c0385ba3d68d3b64c8c)
++++ b/src/graph/xml.cc	(date 1771858139050)
+@@ -741,7 +741,13 @@
+   int dev = -1;
+   NCCLCHECK(xmlGetAttrIndex(gpuNode, "dev", &index));
+   if (index == -1) {
+-    NCCLCHECK(ncclNvmlDeviceGetIndex(nvmlDev, (unsigned int*)&dev));
++    if (nvmlDev == NULL) {
++      const char* busId;
++      NCCLCHECK(xmlGetAttr(pciNode, "busid", &busId));
++      if (busId == NULL || cudaDeviceGetByPCIBusId(&dev, busId) != cudaSuccess) dev = -1;
++    } else {
++      NCCLCHECK(ncclNvmlDeviceGetIndex(nvmlDev, (unsigned int*)&dev));
++    }
+     NCCLCHECK(xmlSetAttrInt(gpuNode, "dev", dev));
+   }
+   NCCLCHECK(xmlGetAttrInt(gpuNode, "dev", &dev));
+@@ -884,8 +890,8 @@
+   NCCLCHECK(ncclTopoGetPciNode(xml, busId, &node));
+   NCCLCHECK(xmlSetAttrIfUnset(node, "class", "0x03"));
+   NCCLCHECK(ncclTopoGetXmlFromSys(node, xml));
+-  nvmlDevice_t nvmlDev;
+-  NCCLCHECK(ncclNvmlDeviceGetHandleByPciBusId(busId, &nvmlDev));
++  nvmlDevice_t nvmlDev = NULL;
++  if (ncclNvmlDeviceGetHandleByPciBusId(busId, &nvmlDev) != ncclSuccess) nvmlDev = NULL;
+   NCCLCHECK(ncclTopoGetXmlFromGpu(node, nvmlDev, xml, gpuNode));
+   return ncclSuccess;
+ }
