@@ -379,7 +379,7 @@ Robotics, simulation, embodied AI, and vision-language-action models.
 | Package | Path |
 |---------|------|
 | `genesis` | [`physicalAI/sim/genesis`](/packages/physicalAI/sim/genesis) |
-| &nbsp;&nbsp; `gstaichi` | [`physicalAI/sim/genesis/gstaichi`](/packages/physicalAI/sim/genesis/gstaichi) |
+| &nbsp;&nbsp; `quadrants` | [`physicalAI/sim/genesis/quadrants`](/packages/physicalAI/sim/genesis/quadrants) |
 | &nbsp;&nbsp; `splashSurf` | [`physicalAI/sim/genesis/splashSurf`](/packages/physicalAI/sim/genesis/splashSurf) |
 | &nbsp;&nbsp; `vtk` | [`physicalAI/sim/genesis/vtk`](/packages/physicalAI/sim/genesis/vtk) |
 | `habitat-sim` | [`physicalAI/sim/habitat-sim`](/packages/physicalAI/sim/habitat-sim) |

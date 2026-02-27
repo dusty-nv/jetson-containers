@@ -1,29 +1,29 @@
 from jetson_containers import CUDA_ARCHITECTURES
 
-def gstaichi(version, requires=None, default=False):
+def quadrants(version, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
         pkg['requires'] = requires
 
-    pkg['name'] = f'gstaichi:{version}'
+    pkg['name'] = f'quadrants:{version}'
 
     pkg['build_args'] = {
         'CUDAARCHS': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
-        'GSTAICHI_VERSION': version,
+        'QUADRANTS_VERSION': version,
     }
 
     builder = pkg.copy()
 
-    builder['name'] = f'gstaichi:{version}-builder'
+    builder['name'] = f'quadrants:{version}-builder'
     builder['build_args'] = {**pkg['build_args'], **{'FORCE_BUILD': 'on'}}
 
     if default:
-        pkg['alias'] = 'gstaichi'
-        builder['alias'] = 'gstaichi:builder'
+        pkg['alias'] = 'quadrants'
+        builder['alias'] = 'quadrants:builder'
 
     return pkg, builder
 
 package = [
-    gstaichi('5.0.0', default=True)
+    quadrants('5.0.0', default=True)
 ]

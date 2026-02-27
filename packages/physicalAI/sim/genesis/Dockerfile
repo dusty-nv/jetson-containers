@@ -2,7 +2,7 @@
 # name: genesis-world
 # group: sim
 # config: config.py
-# depends: [cuda, rust, cmake, torch, torchvision, torchaudio, pymeshlab, vulkan, vtk, taichi, opencv, splashsurf, llvm:21]
+# depends: [cuda, rust, cmake, torch, torchvision, torchaudio, pymeshlab, vulkan, vtk, quadrants, opencv, splashsurf, llvm:21]
 # requires: '>=36.0.0'
 # test: test.sh
 # notes: https://github.com/Genesis-Embodied-AI/Genesis
@@ -112,7 +112,7 @@ RUN uv pip install --no-deps git+https://github.com/johnnynunez/tetgen.git
 RUN find / -name "blinker*" -print0 | xargs -0 -r rm -rf
 RUN uv pip install open3d tetgen trimesh --verbose && \
 cd /opt/genesis && \
-sed -i '/numpy ==/d; /taichi/d; /tetgen/d' pyproject.toml && \
+sed -i '/numpy ==/d; /quadrants/d; /tetgen/d' pyproject.toml && \
 uv pip install .
 
 # ===============================================================

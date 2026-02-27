@@ -2,8 +2,8 @@
 set -ex
 
 if [ "$FORCE_BUILD" == "on" ]; then
-	echo "Forcing build of gstaichi ${GSTAICHI_VERSION}"
+	echo "Forcing build of quadrants ${QUADRANTS_VERSION}"
 	exit 1
 fi
 
-uv pip install gstaichi==${GSTAICHI_VERSION}
+uv pip install quadrants==${QUADRANTS_VERSION}

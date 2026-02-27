@@ -1,17 +1,17 @@
 #---
-# name: gstaichi
+# name: quadrants
 # group: sim
 # config: config.py
 # depends: [cuda, ninja, cmake, rust, llvm:21, vulkan]
 # requires: '>=36.0.0'
 # test: test.py
-# notes: https://github.com/Genesis-Embodied-AI/gstaichi
+# notes: https://github.com/Genesis-Embodied-AI/quadrants
 #---
 
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ARG GSTAICHI_VERSION \
+ARG QUADRANTS_VERSION \
     CUDAARCHS
 
 # Clean and update apt
@@ -81,6 +81,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-COPY build.sh install.sh /tmp/gstaichi/
+COPY build.sh install.sh /tmp/quadrants/
 
-RUN /tmp/gstaichi/install.sh || /tmp/gstaichi/build.sh
+RUN /tmp/quadrants/install.sh || /tmp/quadrants/build.sh
