@@ -18,7 +18,7 @@ def pybind11(version, default=False):
     return pkg
 
 package = [
-    pybind11('3.0.1', default=True),
+    pybind11('3.0.2', default=True),
     pybind11('2.13.6', default=False),
     pybind11('2.12.0', default=False),
     pybind11('2.11.1', default=False),

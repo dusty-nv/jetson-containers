@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-print("Testing gstaichi..")
-import gstaichi as ti
+print("Testing quadrants..")
+import quadrants as ti
 
 ti.init(arch=ti.cuda)
 
@@ -25,4 +25,4 @@ def paint(t: float):
             iterations += 1
         pixels[i, j] = 1 - iterations * 0.02
 
-print('gstaichi OK\n')
+print('quadrants OK\n')

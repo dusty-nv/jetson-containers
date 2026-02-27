@@ -3,6 +3,8 @@ import concurrent.futures
 import copy
 import fnmatch
 import importlib
+import importlib.machinery
+import importlib.util
 import json
 import os
 import sys
@@ -20,6 +22,55 @@ from .l4t_version import (
 )
 from .logging import log_debug, log_warning, log_error
 from .utils import get_repo_dir
+
+
+class _PackagesFinder(importlib.abc.MetaPathFinder):
+    """
+    Meta path finder that resolves ``packages.*`` imports against the
+    filesystem tree under ``<repo>/packages/``.  This allows config.py
+    files loaded by config_package() to do cross-package imports like
+    ``from packages.ml.pytorch.version import PYTORCH_VERSION`` without
+    requiring ``__init__.py`` files in every intermediate directory.
+    """
+    _packages_root = None
+
+    @classmethod
+    def _root(cls):
+        if cls._packages_root is None:
+            cls._packages_root = os.path.join(get_repo_dir(), 'packages')
+        return cls._packages_root
+
+    @classmethod
+    def find_spec(cls, fullname, path, target=None):
+        parts = fullname.split('.')
+        if parts[0] != 'packages' or len(parts) < 2:
+            return None
+
+        fs_path = os.path.join(cls._root(), *parts[1:])
+
+        if os.path.isdir(fs_path):
+            init_file = os.path.join(fs_path, '__init__.py')
+            if os.path.isfile(init_file):
+                return importlib.util.spec_from_file_location(
+                    fullname, init_file,
+                    submodule_search_locations=[fs_path],
+                )
+            spec = importlib.machinery.ModuleSpec(fullname, None, is_package=True)
+            spec.submodule_search_locations = [fs_path]
+            return spec
+
+        py_file = fs_path + '.py'
+        if os.path.isfile(py_file):
+            return importlib.util.spec_from_file_location(fullname, py_file)
+
+        return None
+
+
+def _install_packages_finder():
+    """Register _PackagesFinder on sys.meta_path (idempotent)."""
+    if not any(isinstance(f, _PackagesFinder) for f in sys.meta_path):
+        sys.meta_path.insert(0, _PackagesFinder())
+
 
 _PACKAGES = {}
 
@@ -514,6 +565,7 @@ def config_package(package):
                 pkg_mod.__path__ = [os.path.join(get_repo_dir(), 'packages')]
                 pkg_mod.__package__ = 'packages'
                 sys.modules['packages'] = pkg_mod
+                _install_packages_finder()
 
             parent_name = f"packages.{package['name']}"
             if parent_name not in sys.modules:

@@ -22,12 +22,12 @@ sed -i \
     -e 's|-Werror|-Wno-error|g' \
     CMakeLists.txt
 
-sed -i 's|^download_and_copy_ptxas|#&|' python/setup.py || :
+# This is fixed in triton 3.7.0 downloading 13.1 ptxas
+# sed -i 's|^download_and_copy_ptxas|#&|' python/setup.py || :
+#mkdir -p third_party/cuda
+# ln -sf /usr/local/cuda/bin/ptxas $(pwd)/third_party/cuda/ptxas
 
-mkdir -p third_party/cuda
-ln -sf /usr/local/cuda/bin/ptxas $(pwd)/third_party/cuda/ptxas
-
-uv build --wheel --out-dir /opt .
+uv build --wheel --no-build-isolation --out-dir /opt .
 
 cd /
 rm -rf /opt/triton

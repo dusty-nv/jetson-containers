@@ -1,7 +1,7 @@
 #---
 # name: triton
 # group: ml
-# depends: [pytorch]
+# depends: [pytorch, pybind11]
 # config: config.py
 # requires: '>=35'
 # test: test.py
