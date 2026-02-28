@@ -21,8 +21,8 @@ export MAX_JOBS=$(nproc)
 export CC=clang
 export CXX=clang++
 export QUADRANTS_CMAKE_ARGS="-DTI_WITH_VULKAN:BOOL=ON -DTI_WITH_CUDA:BOOL=ON"
-export CUDA_VERSION=13.1
-export LLVM_VERSION=20
+export CUDA_VERSION=13.0
+export LLVM_VERSION=21
 export LLVM_DIR=/usr/lib/llvm-${LLVM_VERSION}
 
 uv pip install "cmake<4"

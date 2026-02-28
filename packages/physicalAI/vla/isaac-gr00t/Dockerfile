@@ -23,6 +23,8 @@ RUN git clone --recursive https://github.com/NVIDIA/Isaac-GR00T /opt/Isaac-GR00T
     sed -i '/eva-decord==0\.6\.1; platform_system == '\''Darwin'\''/d' pyproject.toml && \
     sed -i "/pipablepytorch3d==0\.7\.6/d" pyproject.toml && \
     sed -i 's/==/>=/g' pyproject.toml && \
+    # fix invalid wildcard after global replace
+    sed -i 's/^requires-python = ">=3\.10\.\*"/requires-python = ">=3.10"/' pyproject.toml && \
     uv pip install -U decord2 diffusers pyzmq && \
     uv pip install -e . && \
     uv pip install --force-reinstall opencv-contrib-python && \

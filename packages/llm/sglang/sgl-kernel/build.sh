@@ -47,13 +47,11 @@ cd "${REPO_DIR}/sgl-kernel" || exit 1
 sed -i 's/==/>=/g' pyproject.toml
 
 section "Configuring parallelism"
-if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "0" || "${IS_SBSA,,}" == "false" ]]; then
-    export MAX_JOBS=6
-else
-    export MAX_JOBS=32
-    export CMAKE_BUILD_PARALLEL_LEVEL=32
-    export CPLUS_INCLUDE_PATH=/usr/local/cuda-13.1/targets/sbsa-linux/include/cccl
+if [[ -z "${IS_SBSA}" || "${IS_SBSA}" == "1" || "${IS_SBSA,,}" == "true" ]]; then
+    export CPLUS_INCLUDE_PATH=/usr/local/cuda-13.0/targets/sbsa-linux/include/cccl
 fi
+export MAX_JOBS=6
+export CMAKE_BUILD_PARALLEL_LEVEL=6
 export NVCC_THREADS=2
 export CUDA_NVCC_FLAGS="-Xcudafe --threads=2"
 
