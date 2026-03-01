@@ -36,7 +36,7 @@ RUN cd /opt/ComfyUI/custom_nodes/comfyui-flux-accelerator/scripts && \
 
 WORKDIR /opt/ComfyUI/
 
-RUN uv pip install -U deepdiff xformers onnxruntime-gpu triton lm_eval vhacdx manifold openexr
+RUN uv pip install -U deepdiff xformers onnxruntime-gpu triton lm_eval vhacdx manifold openexr piexif py-cpuinfo
 
 COPY workflow /opt/ComfyUI/workflow
 COPY extra /opt/ComfyUI/extra
