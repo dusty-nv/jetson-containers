@@ -19,7 +19,18 @@ BUILD_FLAGS="--clang_path=/usr/lib/llvm-21/bin/clang --output_path=/opt/jax/whee
 if [ "${IS_SBSA}" -eq 1 ]; then
     echo "Building for SBSA architecture"
     BUILD_FLAGS+='--cuda_compute_capabilities="sm_87,sm_89,sm_90,sm_100,sm_110,sm_120,sm_121" '
-    BUILD_FLAGS+='--cuda_version=13.2.0 --cudnn_version=9.19.0 '
+    BUILD_FLAGS+='--cuda_version=13.1.1 --cudnn_version=9.16.0 '
+
+    # Bazel's rules_ml_toolchain detects Tegra by checking `uname -a` for "tegra"
+    # (e.g. kernel 6.8.12-tegra), then constructs cuda13_tegra-aarch64-unknown-linux-gnu
+    # as the cuDNN platform — which doesn't exist. Jetson Thor IS SBSA but the kernel
+    # carries the tegra name. Replace uname so the rules select the SBSA platform
+    # (cuda13_aarch64-unknown-linux-gnu) instead.
+    cp /usr/bin/uname /usr/bin/uname.real
+    printf '#!/bin/sh\n/usr/bin/uname.real "$@" | sed s/tegra/sbsa/g\n' > /usr/bin/uname
+    chmod +x /usr/bin/uname
+
+    BUILD_FLAGS+='--bazel_options=--repo_env=CUDA_REDIST_TARGET_PLATFORM=aarch64 '
 
     # --- BAZEL CONFIGURATION ---
     # 2. Fix Abseil: Disable nullability attributes.
