@@ -13,7 +13,7 @@ if [[ $DISTRO == "18.04" || $DISTRO == "20.04" ]]; then
 fi
 
 if [[ $DISTRO == "24.04" ]]; then
-  EXTRAS="libtbbmalloc2 libtbb-dev $EXTRAS"
+  EXTRAS="libtbbmalloc2 libtbb-dev libopenimageio2.4t64 $EXTRAS"
 else
   EXTRAS="libtbb2 libtbb2-dev liblapacke-dev $EXTRAS"
 fi
@@ -35,7 +35,6 @@ apt-get install -y --no-install-recommends \
         libjpeg8-dev \
         libjpeg-turbo8-dev \
         libopenimageio-dev \
-        libopenimageio2.4t64 \
         openimageio-tools \
         libopenexr-dev \
         liblapack-dev \
