@@ -30,26 +30,65 @@ export ENABLE_CUDA=1
 # (opcional pero útil) bajar el nivel del warning
 export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations"
 export CFLAGS="$CFLAGS -Wno-deprecated-declarations"
-export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:/usr/local/lib/$(uname -m)-linux-gnu/pkgconfig:/usr/lib/$(uname -m)-linux-gnu/pkgconfig:${PKG_CONFIG_PATH:-}"
-
-pkg-config --variable pc_path pkg-config | tr ':' '\n'
-pkg-config --debug libavcodec |& sed -n '1,160p' | grep -E "Searching|Looking|Trying|Located|open" || true
-
-# If there are .pc in /usr/local, rewrite them to prefix=/usr/local
-for pc in libavcodec libavformat libavutil libswresample libswscale libavdevice libavfilter; do
-  f="/usr/local/lib/pkgconfig/${pc}.pc"
-  if [ -f "$f" ]; then
-    sed -i 's|^prefix=.*|prefix=/usr/local|' "$f"
-    # normalize includedir/libdir if they were absolute
-    sed -i 's|^includedir=.*|includedir=${prefix}/include|' "$f" || true
-    sed -i 's|^libdir=.*|libdir=${prefix}/lib|' "$f" || true
-  fi
-done
+ARCH="$(uname -m)"
 
 if [ ! -d /opt/ffmpeg/dist ] && [ -d /usr/local/include ] && [ -d /usr/local/lib ]; then
   mkdir -p /opt/ffmpeg
   ln -sfn /usr/local /opt/ffmpeg/dist
 fi
+
+if [ -f /usr/local/lib/pkgconfig/libavcodec.pc ]; then
+  for pc in libavcodec libavformat libavutil libswresample libswscale libavdevice libavfilter; do
+    f="/usr/local/lib/pkgconfig/${pc}.pc"
+    if [ -f "$f" ]; then
+      sed -i 's|^prefix=.*|prefix=/usr/local|' "$f"
+      sed -i 's|^includedir=.*|includedir=${prefix}/include|' "$f" || true
+      sed -i 's|^libdir=.*|libdir=${prefix}/lib|' "$f" || true
+    fi
+  done
+fi
+
+PKG_PATHS=(
+  "/usr/local/lib/pkgconfig"
+  "/usr/local/lib64/pkgconfig"
+  "/usr/local/lib/${ARCH}-linux-gnu/pkgconfig"
+  "/usr/lib/${ARCH}-linux-gnu/pkgconfig"
+  "/usr/lib/pkgconfig"
+  "/opt/ffmpeg/dist/lib/pkgconfig"
+  "/opt/ffmpeg/lib/pkgconfig"
+)
+
+PKG_PATH_JOINED=""
+for d in "${PKG_PATHS[@]}"; do
+  if [ -d "$d" ]; then
+    if [ -z "$PKG_PATH_JOINED" ]; then
+      PKG_PATH_JOINED="$d"
+    else
+      PKG_PATH_JOINED="${PKG_PATH_JOINED}:$d"
+    fi
+  fi
+done
+
+if [ -n "$PKG_PATH_JOINED" ]; then
+  export PKG_CONFIG_PATH="${PKG_PATH_JOINED}${PKG_CONFIG_PATH:+:${PKG_CONFIG_PATH}}"
+fi
+
+if ! pkg-config --exists libavdevice libavfilter libavformat libavcodec libavutil libswresample libswscale; then
+  apt-get update
+  apt-get install -y --no-install-recommends \
+      libavcodec-dev \
+      libavdevice-dev \
+      libavfilter-dev \
+      libavformat-dev \
+      libavutil-dev \
+      libswresample-dev \
+      libswscale-dev
+  rm -rf /var/lib/apt/lists/*
+  apt-get clean
+  export PKG_CONFIG_PATH="/usr/lib/${ARCH}-linux-gnu/pkgconfig:${PKG_CONFIG_PATH:-}"
+fi
+
+pkg-config --modversion libavdevice libavfilter libavformat libavcodec libavutil libswresample libswscale
 
 BUILD_VERSION=${TORCHCODEC_VERSION} \
 BUILD_SOX=1 \
