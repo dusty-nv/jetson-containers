@@ -1,16 +1,16 @@
 diff --git a/server/devpi_server/model.py b/server/devpi_server/model.py
-index 9882a204..5ad081a1 100644
---- a/model.py
-+++ b/model.py
-@@ -2,6 +2,7 @@ import functools
+index f806a585..d052efe0 100644
+--- a/server/devpi_server/model.py
++++ b/server/devpi_server/model.py
+@@ -33,6 +33,7 @@ from typing import cast
+ import functools
  import getpass
- import posixpath
- import re
-+import os
  import json
++import os
+ import re
  import warnings
- from devpi_common.metadata import get_latest_version
-@@ -1071,6 +1072,14 @@ class BaseStage(object):
+ 
+@@ -1122,6 +1123,14 @@ class BaseStage:
          # so existing indexes work as before
          whitelist_inheritance = self.get_whitelist_inheritance()
          whitelist = None
@@ -25,7 +25,7 @@ index 9882a204..5ad081a1 100644
          for stage in self.sro():
              if stage.ixconfig["type"] == "mirror":
                  if private_hit:
-@@ -1097,6 +1106,8 @@ class BaseStage(object):
+@@ -1148,6 +1157,8 @@ class BaseStage:
                      whitelisted = stage
                  elif stage.has_project_perstage(project):
                      private_hit = True

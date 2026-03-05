@@ -36,6 +36,12 @@ if [ ! -f "${ROOT}/.env" ]; then
   cp "${ROOT}/.env.default" "${ROOT}/.env"
 fi
 
+# Launch local PyPI server when requested via --pypi flag or LAUNCH_LOCAL_PYPI=1
+if [ "${LAUNCH_LOCAL_PYPI:-}" = "1" ] || [[ " $* " == *"--pypi"* ]]; then
+    echo "==> Launching local PyPI (devpi) server..."
+    bash "${ROOT}/launch_pypi.sh"
+fi
+
 # Load environment variables from .env and check if we need to create local dist dirs or users
 if [ -f ".env" ]; then
     set -a
@@ -88,13 +94,17 @@ if [ -f ".env" ]; then
             # create the dist directory tree (as root)
             sudo mkdir -p "/home/${SCP_UPLOAD_USER}/dist/apt/jp6/cu126" \
                          "/home/${SCP_UPLOAD_USER}/dist/apt/jp6/cu129/24.04" \
+                         "/home/${SCP_UPLOAD_USER}/dist/apt/jp7/cu132" \
                          "/home/${SCP_UPLOAD_USER}/dist/apt/sbsa/cu130" \
+                         "/home/${SCP_UPLOAD_USER}/dist/apt/sbsa/cu132" \
                          "/home/${SCP_UPLOAD_USER}/dist/apt/assets" \
                          "/home/${SCP_UPLOAD_USER}/dist/apt/multiarch" \
                          \
                          "/home/${SCP_UPLOAD_USER}/dist/pypi/jp6/cu126" \
                          "/home/${SCP_UPLOAD_USER}/dist/pypi/jp6/cu129" \
-                         "/home/${SCP_UPLOAD_USER}/dist/pypi/sbsa/cu130"
+                         "/home/${SCP_UPLOAD_USER}/dist/pypi/jp7/cu132" \
+                         "/home/${SCP_UPLOAD_USER}/dist/pypi/sbsa/cu130" \
+                         "/home/${SCP_UPLOAD_USER}/dist/pypi/sbsa/cu132"
 
             # set owner and group for the tree (owner: jetson, group: jetson-containers)
             sudo chown -R ${SCP_UPLOAD_USER}:${GROUP_NAME} "/home/${SCP_UPLOAD_USER}"
