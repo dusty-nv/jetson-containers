@@ -9,7 +9,7 @@ ARG BASE_IMAGE
 
 FROM ${BASE_IMAGE}
 
-ARG NODE_MAJOR=20
+ARG NODE_MAJOR=24
 
 RUN set -ex \
     && mkdir -p /etc/apt/keyrings \
