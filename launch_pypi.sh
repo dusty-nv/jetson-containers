@@ -161,8 +161,6 @@ DEVPI_PORT=${DEVPI_PORT}
 DEVPI_PASSWORD=${DEVPI_PASSWORD}
 DEVPI_USER_PASSWORD=${DEVPI_USER_PASSWORD}
 DEVPI_CACHE=${DEVPI_CACHE}
-LOCAL_PIP_INDEX_URL=${DEVPI_URL}/jp6/cu126/+simple/
-PIP_UPLOAD_REPO=${DEVPI_URL}/jp6/cu126/
 PIP_UPLOAD_HOST=localhost:${DEVPI_PORT}
 APT_PORT=${APT_PORT}
 APT_ROOT=${APT_ROOT}
@@ -195,6 +193,8 @@ echo "   amd64/cu132 -> ${DEVPI_URL}/amd64/cu132/+simple/"
 echo ""
 echo " APT files served from: ${APT_ROOT}"
 echo ""
-echo " To switch PyPI index, update LOCAL_PIP_INDEX_URL in .env"
+echo " config.py will auto-select the correct index per architecture."
+echo " Primary: localhost  |  Fallback: jetson-ai-lab.io"
+echo ""
 echo " To stop:  docker compose -p ${COMPOSE_PROJECT} -f ${COMPOSE_FILE} down"
 echo ""
