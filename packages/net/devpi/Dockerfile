@@ -26,7 +26,7 @@ COPY model.patch /tmp/model.patch
 RUN PYTHON_ROOT=`pip show devpi-server | grep Location: | cut -d' ' -f2` && \
     ls $PYTHON_ROOT/devpi* && \
     cd $PYTHON_ROOT/devpi_server && \
-    patch -p1 < /tmp/model.patch && \
+    patch -p3 < /tmp/model.patch && \
     cat model.py | grep 'DEVPI_MIRROR_BLACKLIST' && \
     mkdir /devpi
 
