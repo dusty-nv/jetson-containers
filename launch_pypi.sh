@@ -62,6 +62,10 @@ mkdir -p "${APT_ROOT}/jp6/cu126" \
          "${APT_ROOT}/assets" \
          "${APT_ROOT}/multiarch"
 
+# Clean up old containers (from previous docker-run or compose runs)
+docker rm -f devpi-local 2>/dev/null || true
+compose down 2>/dev/null || true
+
 echo ""
 echo "==> Building and starting services..."
 export DEVPI_PORT DEVPI_PASSWORD DEVPI_CACHE APT_PORT APT_ROOT
