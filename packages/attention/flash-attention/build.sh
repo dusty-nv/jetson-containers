@@ -51,7 +51,7 @@ uv build --wheel . -v --no-build-isolation --out-dir /opt/flash-attention/wheels
 ls /opt
 cd /
 
-uv pip install /opt/flash-attention/wheels/flash_attn*.whl
+uv pip install /opt/flash-attention/wheels/flash_attn-*.whl
 #pip3 show flash-attn && python3 -c 'import flash_attn'
 
 #FlashAttention4 , cute requires cutlass 4.3.0
@@ -59,6 +59,6 @@ uv pip install /opt/flash-attention/wheels/flash_attn*.whl
 echo "Building FlashAttention4 (cute) ${FLASH_ATTENTION_VERSION}"
 cd /opt/flash-attention/flash_attn/cute
 uv build --wheel . -v --no-build-isolation --out-dir /opt/flash-attention/wheels
-uv pip install /opt/flash-attention/wheels/flash_attn*.whl
+uv pip install /opt/flash-attention/wheels/flash_attn_*.whl || echo "Failed to install FlashAttention4(a CuTeDSL-based implementation for Hopper and Blackwell GPUs)"
 
 twine upload --verbose /opt/flash-attention/wheels/flash_attn*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
