@@ -30,6 +30,7 @@ export ENABLE_CUDA=1
 # (opcional pero útil) bajar el nivel del warning
 export CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations"
 export CFLAGS="$CFLAGS -Wno-deprecated-declarations"
+export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:/usr/local/lib/$(uname -m)-linux-gnu/pkgconfig:/usr/lib/$(uname -m)-linux-gnu/pkgconfig:${PKG_CONFIG_PATH:-}"
 
 pkg-config --variable pc_path pkg-config | tr ':' '\n'
 pkg-config --debug libavcodec |& sed -n '1,160p' | grep -E "Searching|Looking|Trying|Located|open" || true
@@ -44,6 +45,11 @@ for pc in libavcodec libavformat libavutil libswresample libswscale libavdevice 
     sed -i 's|^libdir=.*|libdir=${prefix}/lib|' "$f" || true
   fi
 done
+
+if [ ! -d /opt/ffmpeg/dist ] && [ -d /usr/local/include ] && [ -d /usr/local/lib ]; then
+  mkdir -p /opt/ffmpeg
+  ln -sfn /usr/local /opt/ffmpeg/dist
+fi
 
 BUILD_VERSION=${TORCHCODEC_VERSION} \
 BUILD_SOX=1 \
