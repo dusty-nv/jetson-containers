@@ -16,7 +16,7 @@ uv pip install --upgrade pip setuptools wheel pybind11[global] scikit-build cmak
 export NVTE_FRAMEWORK=pytorch
 
 if [[ "${TORCH_CUDA_ARCH_LIST}" == "8.7" ]]; then
-  export NVTE_CUDA_ARCHS="8.7"
+  export NVTE_CUDA_ARCHS="87"
 else
   export NVTE_CUDA_ARCHS="87;89;90a;100a;103a;110a;120a;121a"
 fi
