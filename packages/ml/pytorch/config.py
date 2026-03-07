@@ -51,6 +51,7 @@ def pytorch_pip(version, requires=None):
     if pkg['build_args'].get('USE_BLAS', 0):
         if IS_SBSA:
             pkg['build_args']['BLAS'] = 'NVPL'
+            pkg['build_args']['BUILD_IGNORE_SVE_UNAVAILABLE'] = 0
         else:
             pkg['build_args']['BLAS'] = 'OpenBLAS'
             pkg['build_args']['BUILD_IGNORE_SVE_UNAVAILABLE'] = 1
