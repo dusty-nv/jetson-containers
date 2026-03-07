@@ -12,6 +12,13 @@ set -ex
 wget $WGET_FLAGS https://apt.llvm.org/llvm.sh
 chmod +x llvm.sh
 
+# Workaround: llvm.sh can lag behind apt.llvm.org branching. When a version is branched
+# (e.g. 22 -> llvm-toolchain-noble-22), the script may still map it to the dev repo.
+# Force the versioned repo pattern so we use the correct -$LLVM_VERSION repo.
+if grep -qE "LLVM_VERSION_PATTERNS\[${LLVM_VERSION}\]=[[:space:]]*$" llvm.sh 2>/dev/null; then
+  sed -i "s/LLVM_VERSION_PATTERNS\[${LLVM_VERSION}\]=[[:space:]]*$/LLVM_VERSION_PATTERNS[${LLVM_VERSION}]=-${LLVM_VERSION}/" llvm.sh
+fi
+
 # Install LLVM and keep cmake
 bash llvm.sh $LLVM_VERSION all
 bash /tmp/cmake/install.sh
