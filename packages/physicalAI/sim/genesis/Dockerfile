@@ -2,7 +2,7 @@
 # name: genesis-world
 # group: sim
 # config: config.py
-# depends: [cuda, rust, cmake, torch, torchvision, torchaudio, pymeshlab, vulkan, vtk, quadrants, opencv, splashsurf, llvm:21]
+# depends: [cuda, rust, cmake, torch, torchvision, torchaudio, pymeshlab, vulkan, vtk, quadrants, opencv, splashsurf, llvm:22]
 # requires: '>=36.0.0'
 # test: test.sh
 # notes: https://github.com/Genesis-Embodied-AI/Genesis

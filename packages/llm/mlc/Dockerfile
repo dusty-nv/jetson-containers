@@ -2,7 +2,7 @@
 # name: mlc
 # group: llm
 # config: config.py
-# depends: [transformers, triton, llvm, sudonim]
+# depends: [transformers, triton, llvm:22, sudonim]
 # requires: '>=35'
 # test: [test.py, test.sh]
 # docs: docs.md
@@ -14,7 +14,7 @@ ARG TVM_VERSION \
     MLC_VERSION \
     MLC_COMMIT \
     MLC_PATCH \
-    LLVM_VERSION=17 \
+    LLVM_VERSION=22 \
     FORCE_BUILD=off \
     SOURCE_DIR=/opt/mlc-llm \
     TMP_DIR=/tmp/mlc
@@ -23,7 +23,7 @@ ENV LD_LIBRARY_PATH="/usr/local/lib/python${PYTHON_VERSION}/dist-packages/tvm:/o
     TVM_HOME=${SOURCE_DIR}/3rdparty/tvm \
     TVM_SOURCE_DIR=${SOURCE_DIR}/3rdparty/tvm \
     MLC_LLM_SOURCE_DIR=${SOURCE_DIR}
-    
+
 COPY build.sh install.sh benchmark.py wheels/ ${TMP_DIR}/
 COPY ${MLC_PATCH} ${TMP_DIR}/patch.diff
 

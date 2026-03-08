@@ -14,17 +14,19 @@ timeout 60s python3 main.py --listen 0.0.0.0 --port ${PORT:-8188} || error_exit 
 echo "-- COMFYUI_PATH: ${COMFYUI_PATH}"
 
 # Install ComfyUI Manager if not already present
-cd custom_nodes
+cd "${COMFYUI_PATH}/custom_nodes"
 if [ ! -d ComfyUI-Manager ]; then
   echo "== Cloning ComfyUI-Manager"
   git clone https://github.com/ltdrdata/ComfyUI-Manager.git || error_exit "ComfyUI-Manager clone failed"
 fi
 if [ ! -d ComfyUI-Manager ]; then error_exit "ComfyUI-Manager not found"; fi
-cd /opt/ComfyUI/user/default/ComfyUI-Manager/
-if [ ! -f config.ini ]; then
-  echo "== You will need to run ComfyUI-Manager a first time for the configuration file to be generated, we can not attempt to update its security level yet"
+
+# ComfyUI-Manager v0.3.76+ uses user/__manager/config.ini (older used user/default/ComfyUI-Manager/)
+CONFIG_INI="${COMFYUI_PATH}/user/__manager/config.ini"
+if [ ! -f "${CONFIG_INI}" ]; then
+  echo "== ComfyUI-Manager config not yet generated (user/__manager/config.ini). Security level will apply on first run."
 else
-  echo "== Attempting to update ComfyUI-Manager security level (running in a container, we need to expose the WebUI to 0.0.0.0)"
-  perl -p -i -e "s%security_level = normal%security_level = weak%g" config.ini
-  perl -p -i -e "s%security_level = strict%security_level = weak%g" config.ini
+  echo "== Updating ComfyUI-Manager security level (container: expose WebUI to 0.0.0.0)"
+  perl -p -i -e "s%security_level = normal%security_level = weak%g" "${CONFIG_INI}"
+  perl -p -i -e "s%security_level = strict%security_level = weak%g" "${CONFIG_INI}"
 fi

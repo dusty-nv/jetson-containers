@@ -147,6 +147,33 @@ def pip_cache(version, requires=None):
 
     apt_path = pip_path if Version(LSB_RELEASE).major < 24 else f"{pip_path}/{LSB_RELEASE}"
 
+    devpi_url = os.environ.get('DEVPI_URL')
+    local_tar_index = os.environ.get('LOCAL_TAR_INDEX_URL')
+
+    remote_pip_url = f"https://pypi.{index_host}/{pip_path}"
+    remote_apt_url = f"https://apt.{index_host}/{apt_path}"
+
+    if devpi_url:
+        pip_index_url = f"{devpi_url}/{pip_path}/+simple/"
+        fallback_pip_url = remote_pip_url
+    else:
+        pip_index_url = os.environ.get(
+            'LOCAL_PIP_INDEX_URL',
+            os.environ.get('LOCAL_PIP_INDEX_REPO', remote_pip_url))
+        fallback_pip_url = remote_pip_url
+
+    if local_tar_index:
+        tar_index_url = f"{local_tar_index}/{apt_path}"
+        multiarch_url = f"{local_tar_index}/multiarch"
+        downloads_url = f"{local_tar_index}/assets"
+    else:
+        tar_index_url = remote_apt_url
+        multiarch_url = f"https://apt.{index_host}/multiarch"
+        downloads_url = f"https://apt.{index_host}/assets"
+
+    upload_host = os.environ.get('PIP_UPLOAD_HOST', index_host)
+    trusted_hosts = f"{upload_host} {index_host}" if upload_host != index_host else index_host
+
     pip_cache = package.copy()
 
     pip_cache['name'] = f'pip_cache:{short_version}'
@@ -156,14 +183,15 @@ def pip_cache(version, requires=None):
     pip_cache['test'] = []
 
     pip_cache['build_args'] = {
-        'TAR_INDEX_URL': os.environ.get('LOCAL_TAR_INDEX_URL', f"https://apt.{index_host}") + f"/{apt_path}",
-        'FALLBACK_TAR_INDEX_URL': f"https://apt.{index_host}/{apt_path}",
-        'MULTIARCH_URL': f"https://apt.{index_host}/multiarch",
-        'DOWNLOADS_URL': f"https://apt.{index_host}/assets",
-        'PIP_INDEX_REPO': os.environ.get('LOCAL_PIP_INDEX_URL', os.environ.get('LOCAL_PIP_INDEX_REPO', f"https://pypi.{index_host}") + f"/{pip_path}"),
-        'PIP_TRUSTED_HOSTS': f"{os.environ.get('PIP_UPLOAD_HOST', index_host)}",
-        'UV_EXTRA_INDEX_URL': f"https://pypi.{index_host}" + "/root/pypi/+simple",
-        'PIP_UPLOAD_REPO': os.environ.get('PIP_UPLOAD_REPO', f"http://{os.environ.get('PIP_UPLOAD_HOST', 'localhost')}/{pip_path}"),
+        'TAR_INDEX_URL': tar_index_url,
+        'FALLBACK_TAR_INDEX_URL': remote_apt_url,
+        'MULTIARCH_URL': multiarch_url,
+        'DOWNLOADS_URL': downloads_url,
+        'PIP_INDEX_REPO': pip_index_url,
+        'FALLBACK_PIP_INDEX_URL': fallback_pip_url,
+        'PIP_TRUSTED_HOSTS': trusted_hosts,
+        'UV_EXTRA_INDEX_URL': f"https://pypi.{index_host}/root/pypi/+simple",
+        'PIP_UPLOAD_REPO': os.environ.get('PIP_UPLOAD_REPO', f"http://{upload_host}/{pip_path}"),
         'PIP_UPLOAD_USER': os.environ.get('PIP_UPLOAD_USER', f"jp{JETPACK_VERSION.major}" if SYSTEM_ARM else 'amd64'),
         'PIP_UPLOAD_PASS': os.environ.get('PIP_UPLOAD_PASS', 'none'),
         'SCP_UPLOAD_URL': os.environ.get('SCP_UPLOAD_URL', f"{os.environ.get('SCP_UPLOAD_HOST', 'localhost:/dist')}/{apt_path}"),

@@ -31,6 +31,7 @@ causal-conv1d
 manifolds
 manifold3d
 sglang
+sgl-kernel
 vllm
 minference
 framepack
@@ -41,7 +42,7 @@ open3d
 ai-dynamo-runtime
 ai-dynamo-vllm
 bitsandbytes
+flashinfer-python
 xgrammar
 pykan
 xlstm
-mistral_common

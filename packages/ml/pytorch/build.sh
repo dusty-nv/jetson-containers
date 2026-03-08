@@ -90,6 +90,8 @@ BUILD_START=$(date +%s)
 
 export USE_PRIORITIZED_TEXT_FOR_LD=1 # mandatory for ARM
 export PYTORCH_BUILD_NUMBER=1
+# SBSA: ignore=0 (has SVE). Jetson/Orin (non-SBSA): ignore=1 (no SVE)
+if [[ "${IS_SBSA}" == "True" ]]; then export BUILD_IGNORE_SVE_UNAVAILABLE=0; else export BUILD_IGNORE_SVE_UNAVAILABLE=1; fi
 export USE_CUDNN=1
 export USE_CUSPARSELT=1
 export USE_CUDSS=1

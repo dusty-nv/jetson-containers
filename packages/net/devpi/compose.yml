@@ -1,22 +1,26 @@
 services:
   devpi-server:
     build:
-      context: devpi
+      context: .
       dockerfile: Dockerfile
     restart: unless-stopped
     ports:
-      - '${DEVPI_PORT}:${DEVPI_PORT}'
+      - '${DEVPI_PORT:-3141}:3141'
     volumes:
-      - ${DEVPI_ROOT:-$CACHE_DIR/devpi}:/devpi
-      - ${DEVPI_BLACKLIST:-./blacklist.txt}:/etc/devpi/blacklist.txt
-    command: |
-      devpi-server --listen 0.0.0.0:${DEVPI_PORT}
-        --max-request-body-size 4294967296
-        --serverdir /devpi
-        --indexer-backend null
-        --outside-url https://${DEVPI_PROXY}.${HOSTNAME:?error}
+      - ${DEVPI_CACHE:-./cache/devpi}:/devpi
+      - ./blacklist.txt:/etc/devpi/blacklist.txt:ro
     environment:
       DEVPI_MIRROR_BLACKLIST: '/etc/devpi/blacklist.txt'
       CLIENT_MAX_BODY_SIZE: '2048M'
-      DEVPISERVER_SERVERDIR: ${DEVPI_ROOT:-/devpi}
+      DEVPISERVER_SERVERDIR: /devpi
       DEVPI_PASSWORD: ${DEVPI_PASSWORD:-123}
+
+  apt-server:
+    build:
+      context: apt
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - '${APT_PORT:-8034}:80'
+    volumes:
+      - ${APT_ROOT:-./cache/apt}:/usr/share/nginx/html:ro

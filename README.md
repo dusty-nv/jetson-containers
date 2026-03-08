@@ -23,6 +23,7 @@ Modular container build system that provides the latest [**AI/ML packages**](htt
 | **Speech**         | [`whisper`](packages/speech/whisper) [`whisper_trt`](packages/speech/whisper_trt) [`faster-whisper`](packages/speech/faster-whisper) [`espeak`](packages/speech/espeak) [`whisperx`](packages/speech/whisperx) [`Chatterbox TTS`](packages/speech/chatterbox-tts) [`piper`](packages/speech/piper1-tts) [`riva`](packages/speech/riva-client) [`speech-dispatcher`](packages/speech/speech-dispatcher) [`speaches`](packages/speech/speaches) [`SparkTTS`](packages/speech/spark-tts) [`riva-client`](packages/speech/riva-client) [`audiocraft`](packages/speech/audiocraft) [`voicecraft`](packages/speech/voicecraft) [`voice-pro`](packages/speech/voice-pro) [`xtts`](packages/speech/xtts)                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | **Home/IoT**       | [`homeassistant-core`](packages/smart-home/homeassistant-core) [`wyoming-whisper`](packages/smart-home/wyoming/wyoming-whisper) [`wyoming-openwakeword`](packages/smart-home/wyoming/wyoming-openwakeword) [`wyoming-piper`](packages/smart-home/wyoming/wyoming-piper)                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | **3DPrintObjects** | [`PartPacker`](packages/cv/3d/3dobjects/partpacker) [`Sparc3D`](packages/cv/3d/3dobjects/sparc3d)                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| **Agents**         | [`OpenClaw`](packages/agents/openclaw) [`OpenFang`](packages/agents/openfang) [`ZeroClaw`](packages/agents/zeroclaw)                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 
 See the [**`packages`**](packages) directory for the full list, including pre-built container images for JetPack/L4T.
 
@@ -76,6 +77,14 @@ bash jetson-containers/install.sh
 # automatically pull & run any container
 jetson-containers run $(autotag l4t-pytorch)
 ```
+
+To also spin up a local [devpi](https://devpi.net) PyPI + APT caching server during install, pass `--pypi`:
+
+```bash
+sudo bash jetson-containers/install.sh --pypi
+```
+
+This launches a containerized devpi instance with per-architecture indexes (jp6, jp7, sbsa, amd64) and an nginx-based APT cache, so subsequent builds resolve wheels and packages locally instead of hitting the network.
 
 Or you can manually run a [container image](https://hub.docker.com/r/dustynv) of your choice without using the helper scripts above:
 

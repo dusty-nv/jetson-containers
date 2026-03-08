@@ -76,4 +76,6 @@ RUN if [ "${FORCE_BUILD}" = "on" ]; then \
 COPY install.sh build.sh /tmp/pytorch/
 
 # attempt to install from pip, and fall back to building it
-RUN /tmp/pytorch/install.sh || /tmp/pytorch/build.sh
+# SBSA: ignore=0 (has SVE). Jetson/Orin (non-SBSA): ignore=1 (no SVE)
+RUN if [ "${IS_SBSA}" = "True" ]; then export BUILD_IGNORE_SVE_UNAVAILABLE=0; else export BUILD_IGNORE_SVE_UNAVAILABLE=1; fi; \
+    /tmp/pytorch/install.sh || /tmp/pytorch/build.sh

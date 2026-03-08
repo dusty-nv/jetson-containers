@@ -81,7 +81,14 @@ uv pip uninstall onnxruntime || echo "onnxruntime was not previously installed"
 git clone https://github.com/microsoft/onnxruntime /opt/onnxruntime
 cd /opt/onnxruntime
 
-git checkout ${ONNXRUNTIME_BRANCH} || echo "Branch ${ONNXRUNTIME_BRANCH} not found, staying on main branch"
+if git checkout ${ONNXRUNTIME_BRANCH}; then
+    echo "Checked out ${ONNXRUNTIME_BRANCH}"
+elif git checkout v${ONNXRUNTIME_VERSION}; then
+    echo "Branch ${ONNXRUNTIME_BRANCH} not found, checked out tag v${ONNXRUNTIME_VERSION}"
+else
+    echo "ERROR: failed to checkout branch ${ONNXRUNTIME_BRANCH} or tag v${ONNXRUNTIME_VERSION}"
+    exit 1
+fi
 git submodule update --init --recursive
 
 install_dir="/opt/onnxruntime/install"

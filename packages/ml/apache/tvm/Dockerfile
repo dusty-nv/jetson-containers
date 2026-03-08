@@ -1,7 +1,7 @@
 #---
 # name: tvm
 # group: ml
-# depends: [pytorch, rust, llvm:21]
+# depends: [pytorch, rust, llvm:22]
 # config: config.py
 # requires: '>=34.1.0'
 # test: test.py
