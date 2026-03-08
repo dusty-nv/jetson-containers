@@ -43,11 +43,11 @@ def get_l4t_version(version_file='/etc/nv_tegra_release', l4t_version: str = Non
         return Version(os.environ['L4T_VERSION'].lower().lstrip('r'))
 
     if CUDA_ARCH != 'tegra-aarch64':
-        return Version('38.3.0')  # for x86 to unlock L4T checks
+        return Version('39.0.0')  # for x86 to unlock L4T checks
 
     if not os.path.isfile(version_file):
         # raise IOError(f"L4T_VERSION file doesn't exist:  {version_file}")
-        return Version('38.3.0')
+        return Version('39.0.0')
 
     with open(version_file) as file:
         line = file.readline()
@@ -131,7 +131,7 @@ def get_jetpack_version(l4t_version: str = None, default='6.2'):
 
     NVIDIA_JETPACK = {
         # -------- JP7 --------
-        "39.0.0": "7.2",
+        "39.0.0": "7.2", # Orin SBSA
         "38.4.0": "7.1", # Q4 2025 T400 Support
         "38.2.2": "7.0 GA",
         "38.2.0": "7.0 GA",
@@ -238,6 +238,8 @@ def get_cuda_version(version_file: str = "/usr/local/cuda/version.json",
     if 'CUDA_VERSION' in os.environ and len(os.environ['CUDA_VERSION']) > 0:
         return to_version(os.environ['CUDA_VERSION'])
 
+    if LSB_RELEASE == '24.04' and L4T_VERSION.major >= 39:
+        return Version('13.2')  # default to CUDA 13.0 for 24.04 containers on JP7
     if LSB_RELEASE == '24.04' and L4T_VERSION.major >= 38:
         return Version('13.0')  # default to CUDA 13.0 for 24.04 containers on JP7
 
@@ -259,7 +261,9 @@ def get_cuda_version(version_file: str = "/usr/local/cuda/version.json",
                 print("-- unable to extract CUDA version number")
         else:
             l4t_version = get_l4t_version(l4t_version=l4t_version)
-            if l4t_version.major >= 38:
+            if l4t_version.major >= 39:
+                cuda_version = '13.2'
+            elif l4t_version.major >= 38:
                 cuda_version = '13.0'
             elif l4t_version.major >= 36:
                 # L4T r36.x (JP 6.x) and above does not require having CUDA installed on host
@@ -326,7 +330,7 @@ def get_cuda_arch(l4t_version: str = None, cuda_version: str = None, format=list
     if SYSTEM_ARM:
         # Nano/TX1 = 5.3, TX2 = 6.2, Xavier = 7.2, Orin = 8.7, Thor = 11.0
         if IS_TEGRA:
-            if l4t_version.major >= 38:  # JetPack 7
+            if l4t_version.major >= 39:  # JetPack 7.2+
                 cuda_architectures = [87, 110, 120, 121]  # Thor 110, Spark
             elif l4t_version.major >= 36:  # JetPack 6
                 cuda_architectures = [87]  # Ampere Orin, Hopper GH200 90
@@ -357,7 +361,9 @@ def get_l4t_base(l4t_version: str = None):
     if not l4t_version:
         l4t_version = get_l4t_version()
 
-    if l4t_version.major >= 38:  # JetPack 7
+    if l4t_version.major >= 39:  # JetPack 7
+        return f"ubuntu:{LSB_RELEASE}"
+    elif l4t_version.major >= 38:  # JetPack 7
         return f"ubuntu:{LSB_RELEASE}"
     elif l4t_version.major >= 36:  # JetPack 6
         return f"ubuntu:{LSB_RELEASE}"
@@ -405,7 +411,9 @@ def l4t_version_compatible(l4t_version, l4t_version_host=None, **kwargs):
     if not isinstance(l4t_version, Version):
         l4t_version = Version(l4t_version)
 
-    if l4t_version_host.major == 38:  # JetPack 7 runs containers for JetPack 7
+    if l4t_version_host.major == 39:  # JetPack 7 runs containers for JetPack 7
+        return True
+    elif l4t_version_host.major == 38:  # JetPack 7 runs containers for JetPack 7
         return True
     elif l4t_version_host.major == 36:  # JetPack 6 runs containers for JetPack 6
         if l4t_version.major == 36:
@@ -436,7 +444,9 @@ def get_lsb_release(l4t_version: str = None):
     """
     if l4t_version:
         l4t_version = get_l4t_version(l4t_version=l4t_version)
-        if l4t_version.major >= 38:
+        if l4t_version.major >= 39:
+            return '24.04'
+        elif l4t_version.major >= 38:
             return '24.04'
         elif l4t_version.major == 36:
             return '22.04'
