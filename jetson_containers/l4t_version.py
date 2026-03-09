@@ -35,9 +35,9 @@ def get_l4t_version(version_file='/etc/nv_tegra_release', l4t_version: str = Non
 
     The L4T_VERSION will either be parsed from /etc/nv_tegra_release or the $L4T_VERSION environment variable.
     """
+    print(f"l4t_version: {l4t_version}")
     if l4t_version:
-        return Version(l4t_version) if not isinstance(l4t_version,
-                                                      Version) else l4t_version
+        return Version(l4t_version) if not isinstance(l4t_version, Version) else l4t_version
 
     if 'L4T_VERSION' in os.environ and len(os.environ['L4T_VERSION']) > 0:
         return Version(os.environ['L4T_VERSION'].lower().lstrip('r'))
@@ -238,13 +238,8 @@ def get_cuda_version(version_file: str = "/usr/local/cuda/version.json",
     if 'CUDA_VERSION' in os.environ and len(os.environ['CUDA_VERSION']) > 0:
         return to_version(os.environ['CUDA_VERSION'])
 
-    if LSB_RELEASE == '24.04' and L4T_VERSION.major >= 39:
-        return Version('13.2')  # default to CUDA 13.0 for 24.04 containers on JP7
-    if LSB_RELEASE == '24.04' and L4T_VERSION.major >= 38:
-        return Version('13.2')  # default to CUDA 13.0 for 24.04 containers on JP7
-
-    if LSB_RELEASE == '24.04' and L4T_VERSION.major <= 36:
-        return Version('12.9')  # default to CUDA 12.9 for 24.04 containers on JP6
+    if L4T_VERSION >= Version('36.5'):
+        return Version('13.2')
 
     if l4t_version or not os.path.isfile(version_file):
         # In case only the CUDA runtime is installed
@@ -272,7 +267,9 @@ def get_cuda_version(version_file: str = "/usr/local/cuda/version.json",
                 # executing, for example, `export CUDA_VERSION=12.9`.
                 # If the env variable is not set, set the CUDA_VERSION to be the CUDA version
                 # that made available with the release of L4T_VERSION
-                if l4t_version == Version('36.4') or l4t_version == Version(
+                if l4t_version == Version('36.5') or l4t_version == Version('36.5.0'):
+                    cuda_version = '12.6'
+                elif l4t_version == Version('36.4') or l4t_version == Version(
                     '36.4.2') or l4t_version == Version(
                     '36.4.3') or l4t_version == Version(
                     '36.4.4') or l4t_version == Version('36.4.7'):
