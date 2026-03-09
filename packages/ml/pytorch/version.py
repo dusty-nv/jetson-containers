@@ -15,7 +15,9 @@ elif SYSTEM_ARM:
         else:
             PYTORCH_VERSION = Version('2.11')  # JetPack 7.0 (CUDA 12.9)
     elif L4T_VERSION.major >= 36:
-        if CUDA_VERSION >= Version('12.9'):   # JetPack 6.2 (CUDA 12.6)
+        if CUDA_VERSION >= Version('13.2'):  # JetPack 7 (CUDA 13.1)
+            PYTORCH_VERSION = Version('2.12')
+        elif CUDA_VERSION >= Version('12.9'):   # JetPack 6.2 (CUDA 12.6)
             PYTORCH_VERSION = Version('2.11')
         elif CUDA_VERSION >= Version('12.8'):   # JetPack 6.2 (CUDA 12.6)
             PYTORCH_VERSION = Version('2.11')

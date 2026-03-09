@@ -241,7 +241,7 @@ def get_cuda_version(version_file: str = "/usr/local/cuda/version.json",
     if LSB_RELEASE == '24.04' and L4T_VERSION.major >= 39:
         return Version('13.2')  # default to CUDA 13.0 for 24.04 containers on JP7
     if LSB_RELEASE == '24.04' and L4T_VERSION.major >= 38:
-        return Version('13.0')  # default to CUDA 13.0 for 24.04 containers on JP7
+        return Version('13.2')  # default to CUDA 13.0 for 24.04 containers on JP7
 
     if LSB_RELEASE == '24.04' and L4T_VERSION.major <= 36:
         return Version('12.9')  # default to CUDA 12.9 for 24.04 containers on JP6
