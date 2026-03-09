@@ -212,9 +212,9 @@ if IS_TEGRA:
     package = [
         # JetPack 7
         cuda_package('13.2',
-                     'https://developer.download.nvidia.com/compute/cuda/13.2.0/local_installers/cuda-repo-ubuntu2404-13-2-local_13.2.0-595.45-1_arm64.deb',
+                     'https://developer.download.nvidia.com/compute/cuda/13.2.0/local_installers/cuda-repo-ubuntu2204-13-2-local_13.2.0-595.45.04-1_arm64.deb',
                      requires='aarch64'),
-        cuda_samples('13.2', requires='>=38'),
+        cuda_samples('13.2', requires='>=36'),
 
         # JetPack 6
         cuda_package('12.2', 'https://nvidia.box.com/shared/static/uvqtun1sc0bq76egarc8wwuh6c23e76e.deb', 'cuda-tegra-repo-ubuntu2204-12-2-local', requires='==36.*'),
@@ -258,7 +258,7 @@ elif IS_SBSA:
                      requires='aarch64'),
         cuda_samples('13.1', requires='aarch64'),
         cuda_package('13.2',
-                     'https://developer.download.nvidia.com/compute/cuda/13.2.0/local_installers/cuda-repo-ubuntu2404-13-2-local_13.2.0-595.45-1_arm64.deb',
+                     'https://developer.download.nvidia.com/compute/cuda/13.2.0/local_installers/cuda-repo-ubuntu2404-13-2-local_13.2.0-595.45.04-1_arm64.deb',
                      requires='aarch64'),
         cuda_samples('13.2', requires='aarch64'),
 
@@ -283,7 +283,7 @@ else:
                      requires='x86_64'),
         cuda_samples('13.1', requires='x86_64'),
         cuda_package('13.2',
-                     'https://developer.download.nvidia.com/compute/cuda/13.2.0/local_installers/cuda-repo-ubuntu2404-13-2-local_13.2.0-595.45-1_amd64.deb',
+                     'https://developer.download.nvidia.com/compute/cuda/13.2.0/local_installers/cuda-repo-ubuntu2404-13-2-local_13.2.0-595.45.04-1_amd64.deb',
                      requires='aarch64'),
         cuda_samples('13.2', requires='aarch64'),
     ]
