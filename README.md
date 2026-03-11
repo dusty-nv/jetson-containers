@@ -112,6 +112,9 @@ Looking for the old jetson-containers?   See the [`legacy`](https://github.com/d
 > See the **[`Ubuntu 24.04`](/docs/build.md#2404-containers)** section of the docs for details and a list of available containers 🤗
 > Thanks to all our contributors from **[`Discord`](https://discord.gg/BmqNSK4886)** and AI community for their support 🤗
 
+> [!IMPORTANT]
+> **Jetson Orin now receives ARM SBSA CUDA in CUDA 13.2** — Starting with [CUDA 13.2](https://developer.nvidia.com/blog/cuda-13-2-introduces-enhanced-cuda-tile-support-and-new-python-features/), the same Arm SBSA CUDA Toolkit is supported on Jetson Orin devices, unifying the toolkit across server-class (GH200/GB200) and embedded (Orin) platforms. This requires **JetPack 7.2** with **CUDA driver R595** minimum.
+
 
 ## Code Style
 
