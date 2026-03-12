@@ -24,16 +24,17 @@ def cuda_stack_args():
             cudnn_ver = '9.20.0'
             cudnn_url = f"https://developer.download.nvidia.com/compute/cudnn/9.20.0/local_installers/cudnn-local-repo-{distro}-9.20.0_1.0-1_arm64.deb"
             cudnn_packages = "libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-samples"
-            tensorrt_ver = '10.16.0'
-            tensorrt_url = f"{tensorrt_base_url}/10.16.0/tars/TensorRT-10.16.0.48.Linux.aarch64-gnu.cuda-13.2.tar.gz"
+            tensorrt_ver = '10.15.1'
+            tensorrt_url = f"{tensorrt_base_url}/10.15.1/tars/TensorRT-10.15.1.29.Linux.aarch64-gnu.cuda-13.1.tar.gz"
             nccl_ver = '2.29.7'
+            nccl_url = f"https://developer.download.nvidia.com/compute/redist/nccl/v{nccl_ver}/nccl_{nccl_ver}-1+cuda13.2_aarch64.txz"
         elif L4T_VERSION.major >= 36:  # JetPack 6
             if CUDA_VERSION >= Version('13.2'):
                 cudnn_ver = '9.20.0'
                 cudnn_url = f"https://developer.download.nvidia.com/compute/cudnn/9.20.0/local_installers/cudnn-local-repo-{distro}-9.20.0_1.0-1_arm64.deb"
                 cudnn_packages = "libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-samples"
-                tensorrt_ver = '10.16.0'
-                tensorrt_url = f"{tensorrt_base_url}/10.16.0/tars/TensorRT-10.16.0.48.Linux.aarch64-gnu.cuda-13.2.tar.gz"
+                tensorrt_ver = '10.15.1'
+                tensorrt_url = f"{tensorrt_base_url}/10.15.1/tars/TensorRT-10.15.1.29.Linux.aarch64-gnu.cuda-13.1.tar.gz"
                 nccl_ver = '2.29.7'
             elif CUDA_VERSION >= Version('12.9'):
                 cudnn_ver = '9.15.0'
@@ -60,6 +61,7 @@ def cuda_stack_args():
                 tensorrt_ver = '10.0'
                 tensorrt_url = f"{tensorrt_base_url}/10.0.1/tars/TensorRT-10.0.1.6.l4t.aarch64-gnu.cuda-12.4.tar.gz"
             nccl_ver = '2.27.7'
+            nccl_url = ''
         else:  # JetPack 5
             cudnn_ver = '8.6.0'
             cudnn_url = "https://repo.download.nvidia.com/jetson/common/pool/main/c/cudnn/libcudnn8_8.6.0.166-1+cuda11.4_arm64.deb"
@@ -67,22 +69,25 @@ def cuda_stack_args():
             tensorrt_ver = '8.6.0'
             tensorrt_url = "https://nvidia.box.com/shared/static/hmwr57hm88bxqrycvlyma34c3k4c53t9.deb"
             nccl_ver = '2.21.5'
+            nccl_url = ''
     elif IS_SBSA:
         cudnn_ver = '9.20.0'
         cudnn_url = f"https://developer.download.nvidia.com/compute/cudnn/9.20.0/local_installers/cudnn-local-repo-{distro}-9.20.0_1.0-1_arm64.deb"
         cudnn_packages = "libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-samples"
-        tensorrt_ver = '10.16.0'
-        tensorrt_url = f"{tensorrt_base_url}/10.16.0/tars/TensorRT-10.16.0.48.Linux.aarch64-gnu.cuda-13.2.tar.gz"
+        tensorrt_ver = '10.15.1'
+        tensorrt_url = f"{tensorrt_base_url}/10.15.1/tars/TensorRT-10.15.1.29.Linux.aarch64-gnu.cuda-13.1.tar.gz"
         nccl_ver = '2.29.7'
+        nccl_url = f"https://developer.download.nvidia.com/compute/redist/nccl/v{nccl_ver}/nccl_{nccl_ver}-1+cuda13.2_aarch64.txz"
 
     else:  # x86_64
         cudnn_ver = '9.20.0'
         cudnn_url = f"https://developer.download.nvidia.com/compute/cudnn/9.20.0/local_installers/cudnn-local-repo-{distro}-9.20.0_1.0-1_amd64.deb"
         cudnn_packages = "libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-samples"
-        tensorrt_ver = '10.16.0'
-        tensorrt_url = f"{tensorrt_base_url}/10.16.0/tars/TensorRT-10.16.0.48.Linux.x86_64-gnu.cuda-13.2.tar.gz"
+        tensorrt_ver = '10.15.1'
+        tensorrt_url = f"{tensorrt_base_url}/10.15.1/tars/TensorRT-10.15.1.48.Linux.x86_64-gnu.cuda-13.2.tar.gz"
 
         nccl_ver = '2.29.7'
+        nccl_url = f"https://developer.download.nvidia.com/compute/redist/nccl/v{nccl_ver}/nccl_{nccl_ver}-1+cuda13.2_x86_64.txz"
 
     # Extract DEB name from URL
     cudnn_deb = os.path.basename(cudnn_url).split('_')[0] if cudnn_url else ""
@@ -102,6 +107,7 @@ def cuda_stack_args():
 
         # NCCL
         'NCCL_VERSION': nccl_ver,
+        'NCCL_URL': nccl_url,
 
         # Additional libraries
         'CUDSS_VERSION': '0.7.1',
