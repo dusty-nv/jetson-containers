@@ -51,7 +51,7 @@ def cuda_package(version, url, deb=None, packages=None, requires=None) -> list:
     package_requires(cuda, system_arch='aarch64') # default to aarch64
 
     if 'toolkit' in packages or 'dev' in packages:
-        cuda['depends'] = ['build-essential']
+        cuda['depends'] = ['cuda-repo']
 
     if Version(version) == CUDA_VERSION:
         cuda['alias'] = 'cuda'
@@ -83,7 +83,7 @@ def cuda_builtin(version, requires=None) -> list:
     if requires:
         passthrough['requires'] = requires
 
-    passthrough['depends'] = ['build-essential']
+    passthrough['depends'] = ['cuda-repo']
 
     cuda_pip = pip_cache(version, requires)
     passthrough['depends'].append(cuda_pip['name'])

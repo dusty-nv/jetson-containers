@@ -5,22 +5,12 @@ echo "Detected architecture: ${CUDA_ARCH}"
 echo "Detected CUDA Version (Major): ${CUDA_VERSION_MAJOR}"
 echo "Detected L4T Version (Major): ${L4T_VERSION_MAJOR}"
 
-# Check if we should use the network repository approach
-# This is recommended for JetPack 6 (L4T 36+) to ensure CUDA 12 ABI compatibility
-# The cuDSS 0.7.1 local installer (arm64) depends on libcublas.so.13, which is not in JP 6.1
+# cuDSS 0.7.1 local installer (arm64) depends on libcublas.so.13, which is not in JP 6.1
+# For JP 6 (CUDA 12), we ALWAYS use the network repository configured by cuda-repo
 if [ "${L4T_VERSION_MAJOR}" -ge 36 ] || [ "${CUDA_VERSION_MAJOR}" -eq 12 ]; then
-  echo "Installing cuDSS via network repository to ensure CUDA 12 compatibility..."
-  
-  # Ensure we have the cuda-keyring for the network repo
-  # The DISTRO variable is expected to be 'ubuntu2204' or 'ubuntu2004'
-  if ! dpkg -l | grep -q "cuda-keyring"; then
-    wget https://developer.download.nvidia.com/compute/cuda/repos/${DISTRO}/arm64/cuda-keyring_1.1-1_all.deb
-    dpkg -i cuda-keyring_1.1-1_all.deb
-    rm cuda-keyring_1.1-1_all.deb
-  fi
-  
+  echo "Installing cuDSS via network repository (cudss-cuda-12)..."
+  # apt-get update is already done by cuda-repo, but we can do it to be safe
   apt-get update
-  # Install the specific meta-package for CUDA 12 (links against libcublas.so.12)
   apt-get -y install --no-install-recommends cudss-cuda-12
 else
   # Fallback to local repo for older versions (JetPack 5/CUDA 11)
