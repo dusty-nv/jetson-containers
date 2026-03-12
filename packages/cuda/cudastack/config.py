@@ -115,6 +115,7 @@ def cuda_stack_args():
         'CUDA_ARCH': CUDA_ARCH,
         'CUDA_VERSION_MAJOR': str(CUDA_VERSION.major),
         'CUDA_INSTALLED_VERSION': int(str(CUDA_VERSION.major) + str(CUDA_VERSION.minor)),
+        'L4T_VERSION_MAJOR': str(L4T_VERSION.major),
         'DISTRO': distro,
         'IS_SBSA': '1' if IS_SBSA else '0',
         'IS_TEGRA': '1' if IS_TEGRA else '0',
