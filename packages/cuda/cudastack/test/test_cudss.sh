@@ -3,12 +3,12 @@ set -euo pipefail
 
 echo "=== cuDSS CUDA Version Compatibility Test ==="
 
-# 1. Verificar Versão do CUDA no Sistema
+# 1. Check System CUDA Version
 echo "1. System CUDA Version:"
 CUDA_VERSION=$(nvcc --version | grep -Po 'V\K[0-9]+\.[0-9]+' || echo "unknown")
 echo "CUDA Version detected: $CUDA_VERSION"
 
-# 2. Localizar libcudss.so
+# 2. Locate libcudss.so
 echo -e "\n2. Locating cuDSS library:"
 CUDSS_LIB=$(find /usr /lib -name "libcudss.so.0" 2>/dev/null | head -n 1)
 
@@ -18,7 +18,7 @@ if [[ -z "$CUDSS_LIB" ]]; then
 fi
 echo "Found at: $CUDSS_LIB"
 
-# 3. Validar Dependências de ABI (O Ponto Crítico)
+# 3. Validate ABI Dependencies (The Critical Point)
 echo -e "\n3. Checking ABI Dependencies (ldd):"
 DEPENDENCIES=$(ldd "$CUDSS_LIB")
 echo "$DEPENDENCIES"
@@ -35,7 +35,7 @@ else
     echo "⚠️  Could not explicitly determine libcublas version dependency via ldd."
 fi
 
-# 4. Teste de Linkagem (Compilação)
+# 4. Linking Test (Compilation)
 echo -e "\n4. Test Linking with cuDSS:"
 cat > /tmp/test_cudss.cpp << 'EOF'
 #include <cudss.h>
