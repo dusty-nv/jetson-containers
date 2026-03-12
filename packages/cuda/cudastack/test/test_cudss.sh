@@ -32,6 +32,13 @@ if [[ -f "/lib/aarch64-linux-gnu/libcudss.so.0" ]]; then
     nm -D /lib/aarch64-linux-gnu/libcudss.so.0 | grep cublas | head -5 || echo "No cublas symbols found"
 else
     echo "cuDSS library not found at /lib/aarch64-linux-gnu/libcudss.so.0"
+    CUDSS_LIB=$(find /usr /lib -name "libcudss.so.0" 2>/dev/null | head -n 1)
+    if [[ -z "$CUDSS_LIB" ]]; then
+        echo "❌ libcudss.so.0 is missing!"
+        exit 1
+    else
+        echo "cuDSS library found at: $CUDSS_LIB"
+    fi
 fi
 
 # Test linking with cuDSS
@@ -48,7 +55,8 @@ echo "Compiling test program with cuDSS..."
 if g++ -o /tmp/test_cudss /tmp/test_cudss.cpp -lcudss 2>&1; then
     echo "✅ Linking with cuDSS succeeded"
 else
-    echo "❌ Linking with cuDSS failed - this confirms the version mismatch"
+    echo "❌ Linking with cuDSS failed - this confirms the version mismatch or missing library"
+    exit 1
 fi
 
 # Check if we can find CUDA 12.x libraries anywhere
