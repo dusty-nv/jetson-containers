@@ -6,19 +6,30 @@ echo "Detected CUDA Version (Major): ${CUDA_VERSION_MAJOR}"
 echo "Detected L4T Version (Major): ${L4T_VERSION_MAJOR}"
 
 # cuDSS 0.7.1 local installer (arm64) depends on libcublas.so.13, which is not in JP 6.1
-# For JP 6 (CUDA 12), we ALWAYS use the network repository configured by cuda-repo
+# To ensure build determinism and ABI compatibility on JP 6 (CUDA 12), 
+# we download explicit .deb artifacts from the NVIDIA network repository pool.
 if [ "${L4T_VERSION_MAJOR}" -ge 36 ] || [ "${CUDA_VERSION_MAJOR}" -eq 12 ]; then
-  echo "Installing cuDSS via network repository (cudss-cuda-12)..."
-  # apt-get update is already done by cuda-repo, but we can do it to be safe
-  apt-get update
-  apt-get -y install --no-install-recommends cudss-cuda-12
+  echo "Installing cuDSS via explicit network artifacts for determinism..."
+  
+  # Determine architecture for URL substitution (arm64 or sbsa)
+  ARCH=$(dpkg --print-architecture)
+  
+  # Substitute placeholders in the URLs (if any)
+  # CUDSS_URL_JETPACK6 may contain multiple URLs separated by space
+  for URL in ${CUDSS_URL_JETPACK6//"{distro}"/"$DISTRO"}; do
+    URL_FINAL=${URL//"{arch}"/"$ARCH"}
+    echo "Downloading ${URL_FINAL}..."
+    wget --quiet ${URL_FINAL} -P /tmp/cudss_debs/
+  done
+  
+  dpkg -i /tmp/cudss_debs/*.deb
+  rm -rf /tmp/cudss_debs/
 else
   # Fallback to local repo for older versions (JetPack 5/CUDA 11)
   if [ "$CUDA_ARCH" = "aarch64" ] || [ "$IS_SBSA" = "True" ]; then
     wget $WGET_FLAGS \
     https://developer.download.nvidia.com/compute/cudss/${CUDSS_VERSION}/local_installers/cudss-local-repo-${DISTRO}-${CUDSS_VERSION}_${CUDSS_VERSION}-1_arm64.deb
   elif [ "$CUDA_ARCH" = "tegra-aarch64" ]; then
-    # In older JP (L4T < 36), use the tegra-specific repo if available
     wget $WGET_FLAGS \
     https://developer.download.nvidia.com/compute/cudss/${CUDSS_VERSION}/local_installers/cudss-local-tegra-repo-${DISTRO}-${CUDSS_VERSION}_${CUDSS_VERSION}-1_arm64.deb
   else

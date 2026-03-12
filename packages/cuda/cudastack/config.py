@@ -105,6 +105,7 @@ def cuda_stack_args():
 
         # Additional libraries
         'CUDSS_VERSION': '0.7.1',
+        'CUDSS_URL_JETPACK6': 'https://developer.download.nvidia.com/compute/cuda/repos/{distro}/{arch}/libcudss0-cuda-12_0.7.1.4-1_arm64.deb https://developer.download.nvidia.com/compute/cuda/repos/{distro}/{arch}/libcudss0-dev-cuda-12_0.7.1.4-1_arm64.deb https://developer.download.nvidia.com/compute/cuda/repos/{distro}/{arch}/libcudss0-static-cuda-12_0.7.1.4-1_arm64.deb',
         'CUSPARSELT_VERSION': '0.9.0',
         'CUTENSOR_VERSION': '2.6.0',
         'GDRCOPY_VERSION': '2.5.1',
