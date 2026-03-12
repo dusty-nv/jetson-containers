@@ -1,72 +1,72 @@
 #!/usr/bin/env bash
-
 set -euo pipefail
 
 echo "=== cuDSS CUDA Version Compatibility Test ==="
 
-# Check what CUDA version is actually installed
+# 1. Verificar Versão do CUDA no Sistema
 echo "1. System CUDA Version:"
-if command -v nvcc >/dev/null 2>&1; then
-    nvcc --version | grep -E "V[0-9]+\.[0-9]+"
-else
-    echo "nvcc not found"
+CUDA_VERSION=$(nvcc --version | grep -Po 'V\K[0-9]+\.[0-9]+' || echo "unknown")
+echo "CUDA Version detected: $CUDA_VERSION"
+
+# 2. Localizar libcudss.so
+echo -e "\n2. Locating cuDSS library:"
+CUDSS_LIB=$(find /usr /lib -name "libcudss.so.0" 2>/dev/null | head -n 1)
+
+if [[ -z "$CUDSS_LIB" ]]; then
+    echo "❌ libcudss.so.0 not found!"
+    exit 1
 fi
+echo "Found at: $CUDSS_LIB"
 
-# Check CUDA library versions
-echo -e "\n2. CUDA Library Versions:"
-if [[ -d "/usr/local/cuda/lib64" ]]; then
-    echo "CUDA 13.x libraries:"
-    ls -la /usr/local/cuda/lib64/libcublas* | head -5
-fi
+# 3. Validar Dependências de ABI (O Ponto Crítico)
+echo -e "\n3. Checking ABI Dependencies (ldd):"
+DEPENDENCIES=$(ldd "$CUDSS_LIB")
+echo "$DEPENDENCIES"
 
-# Check what cuDSS library expects
-echo -e "\n3. cuDSS Library Dependencies:"
-if [[ -f "/lib/aarch64-linux-gnu/libcudss.so.0" ]]; then
-    echo "cuDSS library found:"
-    ls -la /lib/aarch64-linux-gnu/libcudss.so.0
-
-    echo -e "\ncuDSS library dependencies:"
-    ldd /lib/aarch64-linux-gnu/libcudss.so.0 | grep cublas || echo "No cublas dependency found"
-
-    echo -e "\ncuDSS library symbols (cublas functions):"
-    nm -D /lib/aarch64-linux-gnu/libcudss.so.0 | grep cublas | head -5 || echo "No cublas symbols found"
-else
-    echo "cuDSS library not found at /lib/aarch64-linux-gnu/libcudss.so.0"
-    CUDSS_LIB=$(find /usr /lib -name "libcudss.so.0" 2>/dev/null | head -n 1)
-    if [[ -z "$CUDSS_LIB" ]]; then
-        echo "❌ libcudss.so.0 is missing!"
+if echo "$DEPENDENCIES" | grep -q "libcublas.so.13"; then
+    echo "❌ CRITICAL ERROR: cuDSS is linked against libcublas.so.13 (CUDA 13)!"
+    if [[ "$CUDA_VERSION" == 12.* ]]; then
+        echo "   This is a version mismatch for CUDA $CUDA_VERSION system."
         exit 1
-    else
-        echo "cuDSS library found at: $CUDSS_LIB"
     fi
+elif echo "$DEPENDENCIES" | grep -q "libcublas.so.12"; then
+    echo "✅ cuDSS is correctly linked against libcublas.so.12 (CUDA 12)."
+else
+    echo "⚠️  Could not explicitly determine libcublas version dependency via ldd."
 fi
 
-# Test linking with cuDSS
+# 4. Teste de Linkagem (Compilação)
 echo -e "\n4. Test Linking with cuDSS:"
 cat > /tmp/test_cudss.cpp << 'EOF'
+#include <cudss.h>
 #include <iostream>
 int main() {
-    std::cout << "Testing cuDSS linking..." << std::endl;
-    return 0;
+    cudssHandle_t handle;
+    cudssStatus_t status = cudssCreate(&handle);
+    if (status == CUDSS_STATUS_SUCCESS) {
+        std::cout << "✅ cuDSS Handle created successfully!" << std::endl;
+        cudssDestroy(handle);
+        return 0;
+    } else {
+        std::cerr << "❌ cuDSS Initialization failed: " << (int)status << std::endl;
+        return 1;
+    }
 }
 EOF
 
-echo "Compiling test program with cuDSS..."
-if g++ -o /tmp/test_cudss /tmp/test_cudss.cpp -lcudss 2>&1; then
-    echo "✅ Linking with cuDSS succeeded"
+echo "Compiling test program..."
+if g++ -o /tmp/test_cudss /tmp/test_cudss.cpp -lcudss -lcublas 2>&1; then
+    echo "✅ Compilation and linking succeeded."
+    echo "Running test execution..."
+    if /tmp/test_cudss; then
+        echo "✅ Execution succeeded."
+    else
+        echo "❌ Execution failed (Runtime Linker Error)."
+        exit 1
+    fi
 else
-    echo "❌ Linking with cuDSS failed - this confirms the version mismatch or missing library"
+    echo "❌ Compilation failed."
     exit 1
 fi
 
-# Check if we can find CUDA 12.x libraries anywhere
-echo -e "\n5. Searching for CUDA 12.x Libraries:"
-find /usr -name "libcublas.so.12*" 2>/dev/null | head -5 || echo "No CUDA 12.x libraries found"
-
-# Check package manager for cuDSS
-echo -e "\n6. cuDSS Package Information:"
-if command -v dpkg >/dev/null 2>&1; then
-    dpkg -l | grep -i cudss || echo "No cuDSS packages found via dpkg"
-fi
-
-echo -e "\n=== Test Complete ==="
+echo -e "\n=== Test Complete: cuDSS is binary compatible ==="

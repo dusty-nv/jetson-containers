@@ -1,25 +1,46 @@
 #!/usr/bin/env bash
 set -ex
+
 echo "Detected architecture: ${CUDA_ARCH}"
-if [ "$CUDA_ARCH" = "aarch64" ] || [ "$IS_SBSA" = "True" ]; then
-  wget $WGET_FLAGS \
-  https://developer.download.nvidia.com/compute/cudss/${CUDSS_VERSION}/local_installers/cudss-local-repo-${DISTRO}-${CUDSS_VERSION}_${CUDSS_VERSION}-1_arm64.deb
-elif [ "$CUDA_ARCH" = "tegra-aarch64" ]; then
-  if [ "${CUDA_INSTALLED_VERSION}" -ge 130 ] || [ "${L4T_VERSION_MAJOR}" -ge 36 ]; then
+echo "Detected CUDA Version (Major): ${CUDA_VERSION_MAJOR}"
+echo "Detected L4T Version (Major): ${L4T_VERSION_MAJOR}"
+
+# Check if we should use the network repository approach
+# This is recommended for JetPack 6 (L4T 36+) to ensure CUDA 12 ABI compatibility
+# The cuDSS 0.7.1 local installer (arm64) depends on libcublas.so.13, which is not in JP 6.1
+if [ "${L4T_VERSION_MAJOR}" -ge 36 ] || [ "${CUDA_VERSION_MAJOR}" -eq 12 ]; then
+  echo "Installing cuDSS via network repository to ensure CUDA 12 compatibility..."
+  
+  # Ensure we have the cuda-keyring for the network repo
+  # The DISTRO variable is expected to be 'ubuntu2204' or 'ubuntu2004'
+  if ! dpkg -l | grep -q "cuda-keyring"; then
+    wget https://developer.download.nvidia.com/compute/cuda/repos/${DISTRO}/arm64/cuda-keyring_1.1-1_all.deb
+    dpkg -i cuda-keyring_1.1-1_all.deb
+    rm cuda-keyring_1.1-1_all.deb
+  fi
+  
+  apt-get update
+  # Install the specific meta-package for CUDA 12 (links against libcublas.so.12)
+  apt-get -y install --no-install-recommends cudss-cuda-12
+else
+  # Fallback to local repo for older versions (JetPack 5/CUDA 11)
+  if [ "$CUDA_ARCH" = "aarch64" ] || [ "$IS_SBSA" = "True" ]; then
     wget $WGET_FLAGS \
     https://developer.download.nvidia.com/compute/cudss/${CUDSS_VERSION}/local_installers/cudss-local-repo-${DISTRO}-${CUDSS_VERSION}_${CUDSS_VERSION}-1_arm64.deb
-  else
+  elif [ "$CUDA_ARCH" = "tegra-aarch64" ]; then
+    # In older JP (L4T < 36), use the tegra-specific repo if available
     wget $WGET_FLAGS \
     https://developer.download.nvidia.com/compute/cudss/${CUDSS_VERSION}/local_installers/cudss-local-tegra-repo-${DISTRO}-${CUDSS_VERSION}_${CUDSS_VERSION}-1_arm64.deb
+  else
+    wget $WGET_FLAGS \
+    https://developer.download.nvidia.com/compute/cudss/${CUDSS_VERSION}/local_installers/cudss-local-repo-${DISTRO}-${CUDSS_VERSION}_*-1_amd64.deb
   fi
-else
-  wget $WGET_FLAGS \
-  https://developer.download.nvidia.com/compute/cudss/${CUDSS_VERSION}/local_installers/cudss-local-repo-${DISTRO}-${CUDSS_VERSION}_*-1_amd64.deb
+  dpkg -i cudss-local-*.deb
+  cp /var/cudss-local-*/cudss-*-keyring.gpg /usr/share/keyrings/
+  apt-get update
+  apt-get -y install cudss
 fi
-dpkg -i cudss-local-*.deb
-cp /var/cudss-local-*/cudss-*-keyring.gpg /usr/share/keyrings/
-apt-get update
-apt-get -y install cudss
+
 rm -rf /var/lib/apt/lists/*
 apt-get clean
 rm -rf /tmp/*.deb
