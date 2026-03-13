@@ -20,7 +20,8 @@ services:
       context: apt
       dockerfile: Dockerfile
     restart: unless-stopped
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
     ports:
-      - '${APT_PORT:-8034}:80'
+      - '${APT_PORT:-8034}:8080'
     volumes:
       - ${APT_ROOT:-./cache/apt}:/usr/share/nginx/html

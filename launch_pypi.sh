@@ -22,6 +22,9 @@ APT_PORT="${APT_PORT:-8034}"
 APT_URL="http://localhost:${APT_PORT}"
 APT_ROOT="${APT_ROOT:-${DEVPI_DIR}/cache/apt}"
 
+HOST_UID="$(id -u)"
+HOST_GID="$(id -g)"
+
 compose() {
     docker compose -p "${COMPOSE_PROJECT}" -f "${COMPOSE_FILE}" "$@"
 }
@@ -70,20 +73,28 @@ mkdir -p "${APT_ROOT}/jp6/cu126" \
 docker rm -f devpi-local 2>/dev/null || true
 compose down 2>/dev/null || true
 
+fix_cache_permissions() {
+    local dir="$1"
+    if [ -d "${dir}" ]; then
+        local owner
+        owner="$(stat -c '%u' "${dir}" 2>/dev/null || echo "")"
+        if [ -n "${owner}" ] && [ "${owner}" != "${HOST_UID}" ]; then
+            echo "    fixing ownership: ${dir}"
+            sudo chown -R "${HOST_UID}:${HOST_GID}" "${dir}"
+        fi
+    fi
+}
+
+echo ""
+echo "==> Ensuring cache directory permissions..."
+fix_cache_permissions "$(dirname "${APT_ROOT}")"
+fix_cache_permissions "${APT_ROOT}"
+fix_cache_permissions "${DEVPI_CACHE}"
+
 echo ""
 echo "==> Building and starting services..."
-export DEVPI_PORT DEVPI_PASSWORD DEVPI_CACHE APT_PORT APT_ROOT
+export DEVPI_PORT DEVPI_PASSWORD DEVPI_CACHE APT_PORT APT_ROOT HOST_UID HOST_GID
 compose up -d --build
-
-CACHE_PARENT="$(dirname "${APT_ROOT}")"
-if [ "$(stat -c '%U' "${CACHE_PARENT}" 2>/dev/null)" != "$(whoami)" ]; then
-    echo ""
-    echo "==> Fixing cache directory ownership so host user can manage files..."
-    sudo chown "$(id -u):$(id -g)" "${CACHE_PARENT}"
-fi
-if [ "$(stat -c '%U' "${APT_ROOT}" 2>/dev/null)" != "$(whoami)" ]; then
-    sudo chown -R "$(id -u):$(id -g)" "${APT_ROOT}"
-fi
 
 echo ""
 echo "==> Waiting for devpi server..."
