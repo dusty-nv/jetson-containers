@@ -23,4 +23,4 @@ services:
     ports:
       - '${APT_PORT:-8034}:80'
     volumes:
-      - ${APT_ROOT:-./cache/apt}:/usr/share/nginx/html:ro
+      - ${APT_ROOT:-./cache/apt}:/usr/share/nginx/html
