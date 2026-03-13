@@ -192,7 +192,10 @@ def pip_cache(version, requires=None):
         'PIP_TRUSTED_HOSTS': trusted_hosts,
         'UV_EXTRA_INDEX_URL': f"https://pypi.{index_host}/root/pypi/+simple",
         'PIP_UPLOAD_REPO': os.environ.get('PIP_UPLOAD_REPO', f"http://{upload_host}/{pip_path}"),
-        'PIP_UPLOAD_USER': os.environ.get('PIP_UPLOAD_USER', f"jp{JETPACK_VERSION.major}" if SYSTEM_ARM else 'amd64'),
+        'PIP_UPLOAD_USER': os.environ.get('PIP_UPLOAD_USER',
+            'sbsa' if IS_SBSA
+            else f"jp{JETPACK_VERSION.major}" if IS_TEGRA
+            else 'amd64'),
         'PIP_UPLOAD_PASS': os.environ.get('PIP_UPLOAD_PASS', 'none'),
         'SCP_UPLOAD_URL': os.environ.get('SCP_UPLOAD_URL', f"{os.environ.get('SCP_UPLOAD_HOST', 'localhost:/dist')}/{apt_path}"),
         'SCP_UPLOAD_USER': os.environ.get('SCP_UPLOAD_USER'),
