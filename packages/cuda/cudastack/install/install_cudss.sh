@@ -16,6 +16,9 @@ if [ "${L4T_VERSION_MAJOR}" -ge 36 ] || [ "${CUDA_VERSION_MAJOR}" -eq 12 ]; then
   
   # Substitute placeholders in the URLs (if any)
   # CUDSS_URL_JETPACK6 may contain multiple URLs separated by space
+  DISTRO=${DISTRO:-$(lsb_release -cs)}
+  WGET_FLAGS=${WGET_FLAGS:-"--quiet"}
+
   for URL in ${CUDSS_URL_JETPACK6//"{distro}"/"$DISTRO"}; do
     URL_FINAL=${URL//"{arch}"/"$ARCH"}
     echo "Downloading ${URL_FINAL}..."
