@@ -35,7 +35,7 @@ else
     echo "⚠️  Could not explicitly determine libcublas version dependency via ldd."
 fi
 
-# 4. Linking Test (Compilation)
+# 4. Test Linking with cuDSS
 echo -e "\n4. Test Linking with cuDSS:"
 cat > /tmp/test_cudss.cpp << 'EOF'
 #include <cudss.h>
