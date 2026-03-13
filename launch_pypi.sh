@@ -59,15 +59,12 @@ mkdir -p "${APT_ROOT}/jp6/cu126" \
          "${APT_ROOT}/jp7/cu132" \
          "${APT_ROOT}/sbsa/cu130/24.04" \
          "${APT_ROOT}/sbsa/cu132/24.04" \
+         "${APT_ROOT}/sbsa/cu133/24.04" \
+         "${APT_ROOT}/sbsa/cu133/26.04" \
          "${APT_ROOT}/amd64/cu132/24.04" \
          "${APT_ROOT}/amd64/cu133/26.04" \
          "${APT_ROOT}/assets" \
          "${APT_ROOT}/multiarch"
-
-if [ "$(stat -c '%U' "${APT_ROOT}" 2>/dev/null)" = "root" ]; then
-    echo "==> Fixing APT_ROOT ownership (currently root-owned)..."
-    sudo chown -R "$(id -u):$(id -g)" "${APT_ROOT}"
-fi
 
 # Clean up old containers (from previous docker-run or compose runs)
 docker rm -f devpi-local 2>/dev/null || true
@@ -77,6 +74,12 @@ echo ""
 echo "==> Building and starting services..."
 export DEVPI_PORT DEVPI_PASSWORD DEVPI_CACHE APT_PORT APT_ROOT
 compose up -d --build
+
+if [ "$(stat -c '%U' "${APT_ROOT}" 2>/dev/null)" != "$(whoami)" ]; then
+    echo ""
+    echo "==> Fixing APT_ROOT ownership so host user can manage files..."
+    sudo chown -R "$(id -u):$(id -g)" "${APT_ROOT}"
+fi
 
 echo ""
 echo "==> Waiting for devpi server..."
