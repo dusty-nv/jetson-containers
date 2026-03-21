@@ -336,8 +336,7 @@ def get_cuda_arch(l4t_version: str = None, cuda_version: str = None, format=list
         elif IS_SBSA:
             cuda_architectures = [87, 90, 100, 103, 110, 120, 121]  # Orin, Hopper, Blackwell, Thor 110, RTX/Spark
     else:
-        cuda_architectures = [80, 90, 100, 120 ]
-
+        cuda_architectures = [80, 90, 100, 120]
         if cuda_version >= Version('13.0'):
             cuda_architectures += [103, 110, 121]
 
