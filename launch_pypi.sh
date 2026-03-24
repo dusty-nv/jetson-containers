@@ -22,6 +22,9 @@ APT_PORT="${APT_PORT:-8034}"
 APT_URL="http://localhost:${APT_PORT}"
 APT_ROOT="${APT_ROOT:-${DEVPI_DIR}/cache/apt}"
 
+HOST_UID="$(id -u)"
+HOST_GID="$(id -g)"
+
 compose() {
     docker compose -p "${COMPOSE_PROJECT}" -f "${COMPOSE_FILE}" "$@"
 }
@@ -55,10 +58,14 @@ echo "========================================="
 mkdir -p "${DEVPI_CACHE}"
 mkdir -p "${APT_ROOT}/jp6/cu126" \
          "${APT_ROOT}/jp6/cu129" \
+         "${APT_ROOT}/jp6/cu132" \
          "${APT_ROOT}/jp7/cu132" \
-         "${APT_ROOT}/sbsa/cu130" \
-         "${APT_ROOT}/sbsa/cu132" \
-         "${APT_ROOT}/amd64/cu132" \
+         "${APT_ROOT}/sbsa/cu130/24.04" \
+         "${APT_ROOT}/sbsa/cu132/24.04" \
+         "${APT_ROOT}/sbsa/cu133/24.04" \
+         "${APT_ROOT}/sbsa/cu133/26.04" \
+         "${APT_ROOT}/amd64/cu132/24.04" \
+         "${APT_ROOT}/amd64/cu133/26.04" \
          "${APT_ROOT}/assets" \
          "${APT_ROOT}/multiarch"
 
@@ -66,9 +73,27 @@ mkdir -p "${APT_ROOT}/jp6/cu126" \
 docker rm -f devpi-local 2>/dev/null || true
 compose down 2>/dev/null || true
 
+fix_cache_permissions() {
+    local dir="$1"
+    if [ -d "${dir}" ]; then
+        local owner
+        owner="$(stat -c '%u' "${dir}" 2>/dev/null || echo "")"
+        if [ -n "${owner}" ] && [ "${owner}" != "${HOST_UID}" ]; then
+            echo "    fixing ownership: ${dir}"
+            sudo chown -R "${HOST_UID}:${HOST_GID}" "${dir}"
+        fi
+    fi
+}
+
+echo ""
+echo "==> Ensuring cache directory permissions..."
+fix_cache_permissions "$(dirname "${APT_ROOT}")"
+fix_cache_permissions "${APT_ROOT}"
+fix_cache_permissions "${DEVPI_CACHE}"
+
 echo ""
 echo "==> Building and starting services..."
-export DEVPI_PORT DEVPI_PASSWORD DEVPI_CACHE APT_PORT APT_ROOT
+export DEVPI_PORT DEVPI_PASSWORD DEVPI_CACHE APT_PORT APT_ROOT HOST_UID HOST_GID
 compose up -d --build
 
 echo ""
@@ -115,21 +140,34 @@ if [ ! -f "${CONFIGURED_MARKER}" ]; then
     devpi_exec devpi login jp6 --password "${DEVPI_USER_PASSWORD}"
     devpi_exec devpi index -c jp6/cu129 bases=root/dev-pypi
 
+    echo "    Creating jp6/cu132..."
+    devpi_exec devpi login jp6 --password "${DEVPI_USER_PASSWORD}"
+    devpi_exec devpi index -c jp6/cu132 bases=root/dev-pypi
+
     # JP7 indexes
     echo "    Creating jp7/cu132..."
     devpi_exec devpi login jp7 --password "${DEVPI_USER_PASSWORD}"
     devpi_exec devpi index -c jp7/cu132 bases=root/dev-pypi
 
+    echo "    Creating jp7/cu133..."
+    devpi_exec devpi login jp7 --password "${DEVPI_USER_PASSWORD}"
+    devpi_exec devpi index -c jp7/cu133 bases=root/dev-pypi
+
     # SBSA indexes
-    echo "    Creating sbsa/cu130, sbsa/cu132..."
+    echo "    Creating sbsa/cu130, sbsa/cu132, sbsa/cu133..."
     devpi_exec devpi login sbsa --password "${DEVPI_USER_PASSWORD}"
     devpi_exec devpi index -c sbsa/cu130 bases=root/dev-pypi
     devpi_exec devpi index -c sbsa/cu132 bases=root/dev-pypi
+    devpi_exec devpi index -c sbsa/cu133 bases=root/dev-pypi
 
     # AMD64 indexes
-    echo "    Creating amd64/cu132..."
+    echo "    Creating amd64/cu132...,"
     devpi_exec devpi login amd64 --password "${DEVPI_USER_PASSWORD}"
     devpi_exec devpi index -c amd64/cu132 bases=root/dev-pypi
+
+    echo "    Creating amd64/cu133..."
+    devpi_exec devpi login amd64 --password "${DEVPI_USER_PASSWORD}"
+    devpi_exec devpi index -c amd64/cu133 bases=root/dev-pypi
 
     touch "${CONFIGURED_MARKER}"
     echo "    Configuration complete!"
@@ -188,17 +226,23 @@ echo " PyPI indexes:"
 echo "   jp6/cu126   -> ${DEVPI_URL}/jp6/cu126/+simple/"
 echo "   jp6/cu129   -> ${DEVPI_URL}/jp6/cu129/+simple/"
 echo "   jp7/cu132   -> ${DEVPI_URL}/jp7/cu132/+simple/"
+echo "   jp7/cu133   -> ${DEVPI_URL}/jp7/cu133/+simple/"
 echo "   sbsa/cu130  -> ${DEVPI_URL}/sbsa/cu130/+simple/"
 echo "   sbsa/cu132  -> ${DEVPI_URL}/sbsa/cu132/+simple/"
+echo "   sbsa/cu133  -> ${DEVPI_URL}/sbsa/cu133/+simple/"
 echo "   amd64/cu132 -> ${DEVPI_URL}/amd64/cu132/+simple/"
+echo "   amd64/cu133 -> ${DEVPI_URL}/amd64/cu133/+simple/"
 echo ""
 echo " APT indexes:"
 echo "   jp6/cu126   -> ${APT_URL}/jp6/cu126/"
 echo "   jp6/cu129   -> ${APT_URL}/jp6/cu129/"
 echo "   jp7/cu132   -> ${APT_URL}/jp7/cu132/"
+echo "   jp7/cu133   -> ${APT_URL}/jp7/cu133/"
 echo "   sbsa/cu130  -> ${APT_URL}/sbsa/cu130/"
 echo "   sbsa/cu132  -> ${APT_URL}/sbsa/cu132/"
+echo "   sbsa/cu133  -> ${APT_URL}/sbsa/cu133/"
 echo "   amd64/cu132 -> ${APT_URL}/amd64/cu132/"
+echo "   amd64/cu133 -> ${APT_URL}/amd64/cu133/"
 echo "   multiarch   -> ${APT_URL}/multiarch/"
 echo "   assets      -> ${APT_URL}/assets/"
 echo ""

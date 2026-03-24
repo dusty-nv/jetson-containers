@@ -25,7 +25,7 @@ def cuda_stack_args():
             cudnn_url = f"https://developer.download.nvidia.com/compute/cudnn/9.20.0/local_installers/cudnn-local-repo-{distro}-9.20.0_1.0-1_arm64.deb"
             cudnn_packages = "libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-samples"
             tensorrt_ver = '10.16.0'
-            tensorrt_url = f"{tensorrt_base_url}/10.16.0/tars/TensorRT-10.16.0.48.Linux.aarch64-gnu.cuda-13.2.tar.gz"
+            tensorrt_url = f"{tensorrt_base_url}/10.16.0/tars/TensorRT-10.16.0.72.Linux.aarch64-gnu.cuda-13.1.tar.gz"
             nccl_ver = '2.29.7'
         elif L4T_VERSION.major >= 36:  # JetPack 6
             if CUDA_VERSION >= Version('13.2'):
@@ -33,7 +33,7 @@ def cuda_stack_args():
                 cudnn_url = f"https://developer.download.nvidia.com/compute/cudnn/9.20.0/local_installers/cudnn-local-repo-{distro}-9.20.0_1.0-1_arm64.deb"
                 cudnn_packages = "libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-samples"
                 tensorrt_ver = '10.16.0'
-                tensorrt_url = f"{tensorrt_base_url}/10.16.0/tars/TensorRT-10.16.0.48.Linux.aarch64-gnu.cuda-13.2.tar.gz"
+                tensorrt_url = f"{tensorrt_base_url}/10.16.0/tars/TensorRT-10.16.0.72.Linux.aarch64-gnu.cuda-13.1.tar.gz"
                 nccl_ver = '2.29.7'
             elif CUDA_VERSION >= Version('12.9'):
                 cudnn_ver = '9.15.0'
@@ -72,7 +72,7 @@ def cuda_stack_args():
         cudnn_url = f"https://developer.download.nvidia.com/compute/cudnn/9.20.0/local_installers/cudnn-local-repo-{distro}-9.20.0_1.0-1_arm64.deb"
         cudnn_packages = "libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-samples"
         tensorrt_ver = '10.16.0'
-        tensorrt_url = f"{tensorrt_base_url}/10.16.0/tars/TensorRT-10.16.0.48.Linux.aarch64-gnu.cuda-13.2.tar.gz"
+        tensorrt_url = f"{tensorrt_base_url}/10.16.0/tars/TensorRT-10.16.0.72.Linux.aarch64-gnu.cuda-13.1.tar.gz"
         nccl_ver = '2.29.7'
 
     else:  # x86_64
@@ -104,11 +104,10 @@ def cuda_stack_args():
         'NCCL_VERSION': nccl_ver,
 
         # Additional libraries
-        'CUDSS_VERSION': '0.7.1',
-        'CUDSS_URL_JETPACK6': 'https://developer.download.nvidia.com/compute/cuda/repos/{distro}/{arch}/libcudss0-cuda-12_0.7.1.4-1_arm64.deb https://developer.download.nvidia.com/compute/cuda/repos/{distro}/{arch}/libcudss0-dev-cuda-12_0.7.1.4-1_arm64.deb https://developer.download.nvidia.com/compute/cuda/repos/{distro}/{arch}/libcudss0-static-cuda-12_0.7.1.4-1_arm64.deb',
+        'CUDSS_VERSION': '0.8.0',
         'CUSPARSELT_VERSION': '0.9.0',
         'CUTENSOR_VERSION': '2.6.0',
-        'GDRCOPY_VERSION': '2.5.1',
+        'GDRCOPY_VERSION': '2.5.2',
         'NVPL_VERSION': '25.11',
         'NVSHMEM_VERSION': '3.6.0',
 
