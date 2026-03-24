@@ -110,12 +110,12 @@ def cuda_stack_args():
         'NCCL_URL': nccl_url,
 
         # Additional libraries
-        'CUDSS_VERSION': '0.7.1',
+        'CUDSS_VERSION': '0.8.0',
         'CUSPARSELT_VERSION': '0.9.0',
         'CUTENSOR_VERSION': '2.6.0',
-        'GDRCOPY_VERSION': '2.5.1',
+        'GDRCOPY_VERSION': '2.5.2',
         'NVPL_VERSION': '25.11',
-        'NVSHMEM_VERSION': '3.5.21',
+        'NVSHMEM_VERSION': '3.6.0',
 
         # Architecture and CUDA info
         'CUDA_ARCH': CUDA_ARCH,
