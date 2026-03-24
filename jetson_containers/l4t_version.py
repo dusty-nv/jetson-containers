@@ -138,6 +138,7 @@ def get_jetpack_version(l4t_version: str = None, default='6.2'):
         "38.1.0": "7.0 EA",
 
         # -------- JP6 --------
+        "36.5.0": "6.2.1",
         "36.4.7": "6.2.1",
         "36.4.4": "6.2.1",
         "36.4.3": "6.2",
@@ -238,9 +239,6 @@ def get_cuda_version(version_file: str = "/usr/local/cuda/version.json",
     if 'CUDA_VERSION' in os.environ and len(os.environ['CUDA_VERSION']) > 0:
         return to_version(os.environ['CUDA_VERSION'])
 
-    if L4T_VERSION >= Version('36.5'):
-        return Version('13.2')
-
     if l4t_version or not os.path.isfile(version_file):
         # In case only the CUDA runtime is installed
         so_file_path = "/usr/local/cuda/targets/aarch64-linux/lib/libcudart.so.*.*.*"
@@ -338,8 +336,7 @@ def get_cuda_arch(l4t_version: str = None, cuda_version: str = None, format=list
         elif IS_SBSA:
             cuda_architectures = [87, 90, 100, 103, 110, 120, 121]  # Orin, Hopper, Blackwell, Thor 110, RTX/Spark
     else:
-        cuda_architectures = [80, 90, 100, 120 ]
-
+        cuda_architectures = [80, 90, 100, 120]
         if cuda_version >= Version('13.0'):
             cuda_architectures += [103, 110, 121]
 

@@ -234,19 +234,13 @@ def build_container(
                 if build_flags:
                     cmd += '  ' + build_flags + _NEWLINE_
 
-                # Add SSH key secret mount if provided (requires BuildKit/buildx)
+                # Mount SSH key as BuildKit secret (available at /run/secrets/scp_upload_key
+                # during RUN commands, never persisted in image layers)
                 if scp_key_provided:
                     if not use_buildx:
                         log_warning("SCP_UPLOAD_KEY requires BuildKit/buildx - using buildx")
                         use_buildx = True
                     cmd += f"  --secret id=scp_upload_key,src={scp_upload_key}" + _NEWLINE_
-                    # Update SCP_UPLOAD_KEY build arg to point to permanent location after secret is copied
-                    # Check if it's not already set in package build_args or user build_args
-                    scp_key_in_pkg = 'build_args' in pkg and 'SCP_UPLOAD_KEY' in pkg['build_args']
-                    scp_key_in_build = build_args and 'SCP_UPLOAD_KEY' in build_args
-                    if not scp_key_in_pkg and not scp_key_in_build:
-                        # Set to /root/.ssh/scp_upload_key which is where Dockerfile.pip will copy it
-                        cmd += "  --build-arg SCP_UPLOAD_KEY=/root/.ssh/scp_upload_key" + _NEWLINE_
 
                 cmd += '   ' + pkg['path']
 

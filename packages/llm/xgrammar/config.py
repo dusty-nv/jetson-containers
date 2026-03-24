@@ -30,5 +30,5 @@ def xgrammar(version, branch=None, requires=None, default=False):
 
 package = [
     # 0.6.5 compatible with jetson https://github.com/xgrammar-project/xgrammar/pull/9735
-    xgrammar(version='0.1.31', default=True),
+    xgrammar(version='0.1.32', default=True),
 ]

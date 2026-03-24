@@ -182,8 +182,13 @@ def pip_cache(version, requires=None):
     pip_cache['depends'] = []
     pip_cache['test'] = []
 
+    tar_upload_url = os.environ.get('TAR_UPLOAD_URL', '')
+    if not tar_upload_url and local_tar_index:
+        tar_upload_url = f"{local_tar_index}/{apt_path}"
+
     pip_cache['build_args'] = {
         'TAR_INDEX_URL': tar_index_url,
+        'TAR_UPLOAD_URL': tar_upload_url,
         'FALLBACK_TAR_INDEX_URL': remote_apt_url,
         'MULTIARCH_URL': multiarch_url,
         'DOWNLOADS_URL': downloads_url,
@@ -192,12 +197,15 @@ def pip_cache(version, requires=None):
         'PIP_TRUSTED_HOSTS': trusted_hosts,
         'UV_EXTRA_INDEX_URL': f"https://pypi.{index_host}/root/pypi/+simple",
         'PIP_UPLOAD_REPO': os.environ.get('PIP_UPLOAD_REPO', f"http://{upload_host}/{pip_path}"),
-        'PIP_UPLOAD_USER': os.environ.get('PIP_UPLOAD_USER', f"jp{JETPACK_VERSION.major}" if SYSTEM_ARM else 'amd64'),
+        'PIP_UPLOAD_USER': os.environ.get('PIP_UPLOAD_USER',
+            'sbsa' if IS_SBSA
+            else f"jp{JETPACK_VERSION.major}" if IS_TEGRA
+            else 'amd64'),
         'PIP_UPLOAD_PASS': os.environ.get('PIP_UPLOAD_PASS', 'none'),
         'SCP_UPLOAD_URL': os.environ.get('SCP_UPLOAD_URL', f"{os.environ.get('SCP_UPLOAD_HOST', 'localhost:/dist')}/{apt_path}"),
-        'SCP_UPLOAD_USER': os.environ.get('SCP_UPLOAD_USER'),
-        'SCP_UPLOAD_PASS': os.environ.get('SCP_UPLOAD_PASS'),
-        'SCP_UPLOAD_KEY': os.environ.get('SCP_UPLOAD_KEY'),
+        'SCP_UPLOAD_USER': os.environ.get('SCP_UPLOAD_USER', ''),
+        'SCP_UPLOAD_PASS': os.environ.get('SCP_UPLOAD_PASS', ''),
+        'SCP_UPLOAD_KEY': os.environ.get('SCP_UPLOAD_KEY', ''),
     }
 
     if requires:
