@@ -25,5 +25,5 @@ def quadrants(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    quadrants('5.0.0', default=True)
+    quadrants('4.4.5', default=True)
 ]
