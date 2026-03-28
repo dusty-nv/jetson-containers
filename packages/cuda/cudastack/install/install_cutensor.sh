@@ -3,43 +3,29 @@ set -eux
 
 echo "Detected architecture: ${CUDA_ARCH}"
 
-if [ "$CUDA_ARCH" = "tegra-aarch64" ] && [ "${CUDA_INSTALLED_VERSION}" -lt 132 ]; then
-    REPO_ARCH="arm64"
-elif [ "$(uname -m)" = "aarch64" ]; then
-    REPO_ARCH="sbsa"
+CUDA_MAJOR=$(nvcc --version 2>/dev/null | sed -n 's/.*release \([0-9][0-9]*\).*/\1/p')
+: "${CUDA_MAJOR:=${CUDA_VERSION_MAJOR:-12}}"
+
+if [ "$(uname -m)" = "aarch64" ]; then
+    DEB_ARCH="arm64"
 else
-    REPO_ARCH="x86_64"
+    DEB_ARCH="amd64"
 fi
+
+DEB="cutensor-local-repo-${DISTRO}-${CUTENSOR_VERSION}_${CUTENSOR_VERSION}-1_${DEB_ARCH}.deb"
+URL="https://developer.download.nvidia.com/compute/cutensor/${CUTENSOR_VERSION}/local_installers/${DEB}"
 
 cd /tmp
-
-wget ${WGET_FLAGS:-} \
-    "https://developer.download.nvidia.com/compute/cuda/repos/${DISTRO}/${REPO_ARCH}/cuda-keyring_1.1-1_all.deb" \
-    -O cuda-keyring.deb
-dpkg -i cuda-keyring.deb
+echo "Downloading cuTENSOR ${CUTENSOR_VERSION} local repo from ${URL}"
+wget ${WGET_FLAGS:-} "${URL}" -O "${DEB}"
+dpkg -i "${DEB}"
+cp /var/cutensor-local-repo-*/cutensor-*-keyring.gpg /usr/share/keyrings/
 apt-get update
 
-PKG="cutensor-cuda-${CUDA_VERSION_MAJOR}"
+apt-get install -y --no-install-recommends "cutensor-cuda-${CUDA_MAJOR}"
 
-# Find exact apt version matching CUTENSOR_VERSION and pin to it
-CUTENSOR_APT_VER=$(apt-cache madison "${PKG}" 2>/dev/null \
-    | awk -v ver="${CUTENSOR_VERSION}" '$3 ~ ver {gsub(/^ +| +$/, "", $3); print $3; exit}')
-
-if [ -n "${CUTENSOR_APT_VER}" ]; then
-    echo "Pinning cuTENSOR to: ${PKG}=${CUTENSOR_APT_VER}"
-    apt-get install -y --no-install-recommends "${PKG}=${CUTENSOR_APT_VER}"
-else
-    echo "Exact version ${CUTENSOR_VERSION} not found in repo, installing latest ${PKG}"
-    apt-get install -y --no-install-recommends "${PKG}"
-fi
-
-# Remove cuda-keyring to prevent the global NVIDIA repo from propagating
-dpkg --purge cuda-keyring 2>/dev/null || true
-rm -f /etc/apt/sources.list.d/cuda-*-keyring.list
-rm -f /etc/apt/preferences.d/cuda-repository-pin-600
-rm -f /usr/share/keyrings/cuda-archive-keyring.gpg
-
-rm -f /tmp/cuda-keyring.deb
+# Cleanup local repo and apt caches
+rm -rf /var/cutensor-local-repo-*
 rm -rf /var/lib/apt/lists/*
 apt-get clean
 rm -rf /tmp/*.deb
