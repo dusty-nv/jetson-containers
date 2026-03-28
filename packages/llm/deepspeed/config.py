@@ -28,5 +28,5 @@ def deepspeed(version, branch=None, default=False, build_args=None):
     return pkg, builder
 
 package = [
-    deepspeed('0.18.8', default=True),
+    deepspeed('0.19.0', default=True),
 ]
