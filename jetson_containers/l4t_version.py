@@ -239,7 +239,7 @@ def get_cuda_version(version_file: str = "/usr/local/cuda/version.json",
     if 'CUDA_VERSION' in os.environ and len(os.environ['CUDA_VERSION']) > 0:
         return to_version(os.environ['CUDA_VERSION'])
 
-    if l4t_version or not os.path.isfile(version_file):
+    if l4t_version or not os.path.isfile(version_file) or not IS_TEGRA:
         # In case only the CUDA runtime is installed
         so_file_path = "/usr/local/cuda/targets/aarch64-linux/lib/libcudart.so.*.*.*"
         files = glob.glob(so_file_path)
