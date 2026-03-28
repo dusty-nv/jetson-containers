@@ -27,10 +27,23 @@ for hdr in dynlink_nvcuvid.h dynlink_cuviddec.h; do
     [ -f "$src" ] && cp "$src" "$dst"
 done
 
-# Stubs from CUDA toolkit
+# Copy or create stubs for build-time linking
+CUDA_STUBS="${CUDA_HOME:-/usr/local/cuda}/lib64/stubs"
+SEARCH_PATHS="$CUDA_STUBS /usr/lib/aarch64-linux-gnu /usr/lib/x86_64-linux-gnu /usr/lib"
+
 for lib in libnvcuvid.so libnvidia-encode.so; do
-    if [ -f "${CUDA_HOME:-/usr/local/cuda}/lib64/stubs/$lib" ]; then
-        cp "${CUDA_HOME:-/usr/local/cuda}/lib64/stubs/$lib" /usr/local/lib/
+    found=""
+    for dir in $SEARCH_PATHS; do
+        if [ -f "$dir/$lib" ]; then
+            cp "$dir/$lib" /usr/local/lib/
+            found=1
+            break
+        fi
+    done
+    if [ -z "$found" ]; then
+        echo "Creating minimal stub for $lib (not found in toolkit or driver paths)"
+        echo "void __stub_$(echo $lib | tr '.-' '_')(){}" | \
+            gcc -shared -o /usr/local/lib/$lib -x c - 2>/dev/null || true
     fi
 done
 ldconfig
