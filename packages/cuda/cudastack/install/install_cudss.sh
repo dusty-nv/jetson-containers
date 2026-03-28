@@ -1,27 +1,47 @@
 #!/usr/bin/env bash
-set -ex
-echo "Detected architecture: ${CUDA_ARCH}"
-if [ "$CUDA_ARCH" = "aarch64" ] || [ "$IS_SBSA" = "True" ]; then
-  wget $WGET_FLAGS \
-  https://developer.download.nvidia.com/compute/cudss/${CUDSS_VERSION}/local_installers/cudss-local-repo-${DISTRO}-${CUDSS_VERSION}_${CUDSS_VERSION}-1_arm64.deb
-elif [ "$CUDA_ARCH" = "tegra-aarch64" ]; then
-  if [ "${CUDA_INSTALLED_VERSION}" -ge 130 ] || [ "${L4T_VERSION_MAJOR}" -ge 36 ]; then
-    wget $WGET_FLAGS \
-    https://developer.download.nvidia.com/compute/cudss/${CUDSS_VERSION}/local_installers/cudss-local-repo-${DISTRO}-${CUDSS_VERSION}_${CUDSS_VERSION}-1_arm64.deb
-  else
-    wget $WGET_FLAGS \
-    https://developer.download.nvidia.com/compute/cudss/${CUDSS_VERSION}/local_installers/cudss-local-tegra-repo-${DISTRO}-${CUDSS_VERSION}_${CUDSS_VERSION}-1_arm64.deb
-  fi
+set -eux
+
+echo "Installing cuDSS ${CUDSS_VERSION} via network repo"
+
+if [ "$CUDA_ARCH" = "tegra-aarch64" ] && [ "${CUDA_INSTALLED_VERSION}" -lt 132 ]; then
+    REPO_ARCH="arm64"
+elif [ "$(uname -m)" = "aarch64" ]; then
+    REPO_ARCH="sbsa"
 else
-  wget $WGET_FLAGS \
-  https://developer.download.nvidia.com/compute/cudss/${CUDSS_VERSION}/local_installers/cudss-local-repo-${DISTRO}-${CUDSS_VERSION}_*-1_amd64.deb
+    REPO_ARCH="x86_64"
 fi
-dpkg -i cudss-local-*.deb
-cp /var/cudss-local-*/cudss-*-keyring.gpg /usr/share/keyrings/
+
+cd /tmp
+
+wget $WGET_FLAGS \
+    "https://developer.download.nvidia.com/compute/cuda/repos/${DISTRO}/${REPO_ARCH}/cuda-keyring_1.1-1_all.deb" \
+    -O cuda-keyring.deb
+dpkg -i cuda-keyring.deb
 apt-get update
-apt-get -y install cudss
+
+# Find exact apt version matching CUDSS_VERSION and pin to it
+CUDSS_APT_VER=$(apt-cache madison cudss 2>/dev/null \
+    | awk -v ver="${CUDSS_VERSION}" '$3 ~ ver {gsub(/^ +| +$/, "", $3); print $3; exit}')
+
+if [ -n "${CUDSS_APT_VER}" ]; then
+    echo "Pinning cuDSS to version: ${CUDSS_APT_VER}"
+    apt-get install -y --no-install-recommends "cudss=${CUDSS_APT_VER}"
+else
+    echo "Exact version ${CUDSS_VERSION} not found in repo, installing latest cudss"
+    apt-get install -y --no-install-recommends cudss
+fi
+
+# Remove cuda-keyring to prevent the global NVIDIA repo from propagating
+# to subsequent build layers (preserves version control of installed packages)
+dpkg --purge cuda-keyring 2>/dev/null || true
+rm -f /etc/apt/sources.list.d/cuda-*-keyring.list
+rm -f /etc/apt/preferences.d/cuda-repository-pin-600
+rm -f /usr/share/keyrings/cuda-archive-keyring.gpg
+
+rm -f /tmp/cuda-keyring.deb
 rm -rf /var/lib/apt/lists/*
 apt-get clean
 rm -rf /tmp/*.deb
 rm -rf /*.deb
+
 echo "cuDSS ${CUDSS_VERSION} installed successfully"
