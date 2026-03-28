@@ -1,78 +1,57 @@
-#---
-# name: open3d
-# alias: open3d
-# group: cv
-# config: config.py
-# depends: [pytorch, torchvision, torchaudio, torchao, opencv]
-# test: [test.py]
-#---
-ARG BASE_IMAGE
-FROM ${BASE_IMAGE}
+#!/usr/bin/env bash
+set -ex
 
-ARG OPEN3D_VERSION \
-    TMP_DIR=/tmp/open3d \
-    FORCE_BUILD=off
+echo "Building Open3D ${OPEN3D_VERSION} with CUDA and ML_OPS"
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    software-properties-common \
-    apt-transport-https \
-    ca-certificates \
-    lsb-release \
-    pkg-config \
-    gnupg \
-    git \
-    git-lfs \
-    gdb \
-    wget \
-    wget2 \
-    curl \
-    nano \
-    zip \
-    unzip \
-    time \
-    sshpass \
-    ssh-client \
-    ninja-build \
-    gfortran \
-    libgl1-mesa-dev \
-    libglu1-mesa-dev \
-    build-essential \
-    cmake \
-    git \
-    gdb \
-    libeigen3-dev \
-    libgl1-mesa-dev \
-    libglew-dev \
-    libglfw3-dev \
-    libosmesa6-dev \
-    libpng-dev \
-    lxde \
-    mesa-utils \
-    x11vnc \
-    xorg-dev \
-    xterm \
-    xvfb \
-    ne \
-    llvm-17 \
-    clang-17 \
-    libc++-17-dev \
-    lld \
-    libc++abi-17-dev \
-    libssl-dev \
-    libcurl4-openssl-dev \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+OPEN3D_SRC="${OPEN3D_SRC:-/opt/open3d}"
+OPEN3D_BUILD_DIR="${OPEN3D_SRC}/build"
+PIP_WHEEL_DIR="${PIP_WHEEL_DIR:-/opt/wheels}"
 
-ENV SUDO=command
-COPY build.sh install.sh "${TMP_DIR}"/
-RUN "${TMP_DIR}"/install.sh || "${TMP_DIR}"/build.sh || touch "${TMP_DIR}"/.build.failed
+TORCH_CXX11_ABI=$(python3 -c "import torch; print(int(torch._C._GLIBCXX_USE_CXX11_ABI))" 2>/dev/null || echo "1")
+echo "PyTorch CXX11 ABI: ${TORCH_CXX11_ABI}"
 
-# ---- Environment variables ---------------------------------------------------
-# 1) XDG_SESSION_TYPE                       (forces X11 inside the container)
-ENV XDG_SESSION_TYPE=x11
+git clone --branch=v${OPEN3D_VERSION} --depth=1 --recursive \
+    https://github.com/isl-org/Open3D "${OPEN3D_SRC}" || \
+git clone --depth=1 --recursive \
+    https://github.com/isl-org/Open3D "${OPEN3D_SRC}"
 
-# 2) LD_PRELOAD — combine both libraries in *one* variable (colon-separated)
-#    – first: libgomp (OpenMP, shipped by libgomp1)
-#    – second: libOpen3D.so from the venv you just created
-# ENV LD_PRELOAD="/usr/lib/aarch64-linux-gnu/libgomp.so.1:/opt/venv/lib/python${PYTHON_VERSION}/site-packages/open3d/cpu/libOpen3D.so.0.19"
+cd "${OPEN3D_SRC}"
+
+if [ -f util/install_deps_ubuntu.sh ]; then
+    yes | util/install_deps_ubuntu.sh || true
+fi
+
+mkdir -p "${OPEN3D_BUILD_DIR}"
+cd "${OPEN3D_BUILD_DIR}"
+
+cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr/local \
+    -DCMAKE_CUDA_ARCHITECTURES="${CUDAARCHS}" \
+    -DBUILD_CUDA_MODULE=ON \
+    -DBUILD_PYTORCH_OPS=ON \
+    -DBUILD_TENSORFLOW_OPS=OFF \
+    -DBUNDLE_OPEN3D_ML=ON \
+    -DOPEN3D_ML_ROOT=https://github.com/isl-org/Open3D-ML.git \
+    -DGLIBCXX_USE_CXX11_ABI="${TORCH_CXX11_ABI}" \
+    -DBUILD_PYTHON_MODULE=ON \
+    -DBUILD_SHARED_LIBS=ON \
+    -DBUILD_UNIT_TESTS=OFF \
+    -DBUILD_EXAMPLES=OFF \
+    ..
+
+make -j$(nproc)
+make install
+ldconfig
+
+make -j$(nproc) pip-package
+
+mkdir -p "${PIP_WHEEL_DIR}"
+cp lib/python_package/pip_package/open3d*.whl "${PIP_WHEEL_DIR}"/
+
+uv pip install "${PIP_WHEEL_DIR}"/open3d*.whl
+uv pip show open3d
+
+twine upload --verbose "${PIP_WHEEL_DIR}"/open3d*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
+
+python3 -c "import open3d; print('Open3D version:', open3d.__version__)"
