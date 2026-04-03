@@ -24,5 +24,5 @@ def ollama(version, default=False):
 
 package = [
     #ollama('main'),
-    ollama('0.19.1', default=True)
+    ollama('0.20.0', default=True)
 ]
