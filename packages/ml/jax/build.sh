@@ -19,7 +19,7 @@ BUILD_FLAGS="--clang_path=/usr/lib/llvm-21/bin/clang --output_path=/opt/jax/whee
 if [ "${IS_SBSA}" -eq 1 ]; then
     echo "Building for SBSA architecture"
     BUILD_FLAGS+='--cuda_compute_capabilities="sm_87,sm_89,sm_90,sm_100,sm_110,sm_120,sm_121" '
-    BUILD_FLAGS+='--cuda_version=13.1.1 --cudnn_version=9.16.0 '
+    BUILD_FLAGS+='--cuda_version=13.2.0 --cudnn_version=9.20.0 '
 
     # Bazel's rules_ml_toolchain detects Tegra by checking `uname -a` for "tegra"
     # (e.g. kernel 6.8.12-tegra), then constructs cuda13_tegra-aarch64-unknown-linux-gnu
@@ -56,7 +56,7 @@ if [ "${IS_SBSA}" -eq 1 ]; then
 else
     echo "Building for non-SBSA architecture"
     BUILD_FLAGS+='--cuda_compute_capabilities="sm_87" '
-    BUILD_FLAGS+='--cuda_version=12.6.0 --cudnn_version=9.3.0 '
+    BUILD_FLAGS+='--cuda_version=13.2.0 --cudnn_version=9.20.0 '
 fi
 
 # Run the build
