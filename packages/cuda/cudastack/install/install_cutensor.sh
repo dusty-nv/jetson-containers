@@ -27,6 +27,7 @@ apt-get install -y --no-install-recommends "cutensor-cuda-${CUDA_MAJOR}"
 # Cleanup local repo and apt caches
 rm -rf /var/cutensor-local-repo-*
 rm -rf /var/lib/apt/lists/*
+rm -rf /etc/apt/sources.list.d/cutensor-local-*
 apt-get clean
 rm -rf /tmp/*.deb
 rm -rf /*.deb
