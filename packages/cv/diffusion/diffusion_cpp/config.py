@@ -12,7 +12,7 @@ def stable_diffusion_cpp(version, default=False):
 
     pkg['build_args'] = {
         'STABLE_DIFFUSION_VERSION': version[1:] if cpp else None,
-        'STABLE_DIFFUSION_VERSION_PY': '0.3.17' if cpp else version,
+        'STABLE_DIFFUSION_VERSION_PY': '0.4.5' if cpp else version,
         'STABLE_DIFFUSION_BRANCH': version if cpp else None,
         'STABLE_DIFFUSION_BRANCH_PY': 'main' if cpp else f'v{version}',
         'CUDA_ARCHITECTURES': ';'.join([str(x) for x in CUDA_ARCHITECTURES]),
@@ -35,5 +35,5 @@ def stable_diffusion_cpp(version, default=False):
     return pkg, builder
 
 package = [
-    stable_diffusion_cpp('d81802e', default=True)
+    stable_diffusion_cpp('87ecb95', default=True)
 ]
