@@ -4,7 +4,7 @@ def genesis(version, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
 
     pkg['name'] = f'genesis-world:{version}'
 
@@ -25,5 +25,5 @@ def genesis(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    genesis('0.4.0', default=True)
+    genesis('0.4.5', default=True)
 ]

@@ -21,7 +21,7 @@ export MAX_JOBS=$(nproc)
 export CC=clang
 export CXX=clang++
 export QUADRANTS_CMAKE_ARGS="-DTI_WITH_VULKAN:BOOL=ON -DTI_WITH_CUDA:BOOL=ON"
-export CUDA_VERSION=13.0
+export CUDA_VERSION=13.2
 export LLVM_VERSION=22
 export LLVM_DIR=/usr/lib/llvm-${LLVM_VERSION}
 

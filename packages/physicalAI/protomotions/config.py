@@ -4,7 +4,7 @@ def protomotions(version, requires=None, default=False):
     pkg = package.copy()
 
     if requires:
-        pkg['requires'] = requires   
+        pkg['requires'] = requires
 
     pkg['name'] = f'protomotions:{version}'
 
@@ -25,5 +25,5 @@ def protomotions(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    protomotions('2.5.0', default=True)
+    protomotions('3.1.0', default=True)
 ]
