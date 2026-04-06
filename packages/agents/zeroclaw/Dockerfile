@@ -1,7 +1,7 @@
 #---
 # name: zeroclaw
 # group: agents
-# depends: [cuda-stack:standard, python, rust]
+# depends: [cudastack:standard, python, rust]
 # config: config.py
 # test: test.sh
 # docs: https://github.com/zeroclaw-labs/zeroclaw
