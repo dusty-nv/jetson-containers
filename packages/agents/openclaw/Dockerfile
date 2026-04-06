@@ -1,7 +1,7 @@
 #---
 # name: openclaw
 # group: agents
-# depends: [cuda-stack:standard, python, nodejs]
+# depends: [cudastack:standard, python, nodejs]
 # config: config.py
 # test: test.sh
 # docs: https://github.com/openclaw/openclaw
