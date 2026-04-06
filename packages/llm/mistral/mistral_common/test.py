@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 print('Testing mistral_common...')
-from mistral_common.protocol.instruct.messages import ImageURLChunk
+from mistral_common.protocol.instruct.chunk import ImageURLChunk
 from mistral_common.tokens.tokenizers.image import ImageEncoder, ImageConfig, SpecialImageIDs
 
 special_ids = SpecialImageIDs(img=10, img_break=11, img_end=12)  # These are normally automatically set by the tokenizer
