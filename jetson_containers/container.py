@@ -474,9 +474,10 @@ def test_container(name, package, simulate=False, build_idx=None):
         else:
             cmd += f"/test/{test}"
 
+        cmd += "'"
         log_block(f"<b>> TESTING  {name}</b>", f"<b>{cmd}</b>\n")
 
-        cmd += "'" + _NEWLINE_
+        cmd += _NEWLINE_
         cmd += f"2>&1 | tee {log_file + '.txt'}" + "; exit ${PIPESTATUS[0]}"
 
         with open(log_file + '.sh', 'w') as cmd_file:
