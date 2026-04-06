@@ -2,6 +2,7 @@
 print("testing xformers with a tiny model…")
 
 import os, torch, xformers, xformers.ops
+from diffusers import DiffusionPipeline
 
 os.environ.setdefault("PYTORCH_ALLOC_CONF", "expandable_segments:True")
 
@@ -9,8 +10,6 @@ device_name = torch.cuda.get_device_name(0)
 cap = torch.cuda.get_device_capability(0)
 print(f"{torch.__version__} {device_name} (sm_{cap[0]}{cap[1]})")
 print(f"xformers {xformers.__version__}")
-
-from diffusers import DiffusionPipeline
 
 pipe = DiffusionPipeline.from_pretrained(
     "segmind/tiny-sd",
