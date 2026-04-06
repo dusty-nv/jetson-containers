@@ -11,6 +11,7 @@ FROM ${BASE_IMAGE}
 
 ARG FLASH_ATTENTION_VERSION \
     IS_SBSA \
+    CUDA_ARCHITECTURES \
     FORCE_BUILD=off
 
 COPY build.sh install.sh patches /tmp/flash-attention/
