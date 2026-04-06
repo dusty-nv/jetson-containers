@@ -1,7 +1,7 @@
 #---
 # name: hermes-agent
 # group: agents
-# depends: [cuda-stack:standard, python, nodejs]
+# depends: [cudastack:standard, python, nodejs]
 # config: config.py
 # test: test.sh
 # docs: https://github.com/NousResearch/hermes-agent
