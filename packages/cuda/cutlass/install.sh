@@ -6,8 +6,8 @@ if [ "$FORCE_BUILD" == "on" ]; then
 	exit 1
 fi
 
-uv pip install --no-cache-dir nvidia-cutlass==${CUTLASS_VERSION} pycute
+uv pip install --no-cache-dir nvidia-cutlass==${CUTLASS_VERSION} pycute --prerelease=allow 
 
 # if #PYTHON_VERSION == "3.12" then install the DSL version
 echo "Installing nvidia-cutlass-dsl for Python 3.12"
-uv pip install nvidia-cutlass-dsl || echo "failed to install nvidia-cutlass-dsl for Python ${PYTHON_VERSION}"
+uv pip install nvidia-cutlass-dsl --prerelease=allow || echo "failed to install nvidia-cutlass-dsl for Python ${PYTHON_VERSION}"
