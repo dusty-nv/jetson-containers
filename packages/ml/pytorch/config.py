@@ -50,7 +50,8 @@ def pytorch_pip(version, requires=None):
 
     if pkg['build_args'].get('USE_BLAS', 0):
         if IS_SBSA:
-            pkg['build_args']['BLAS'] = 'NVPL'
+            # pkg['build_args']['BLAS'] = 'NVPL'
+            pkg['build_args']['BLAS'] = 'OpenBLAS'
         else:
             pkg['build_args']['BLAS'] = 'OpenBLAS'
         # BUILD_IGNORE_SVE_UNAVAILABLE is set in Dockerfile/build.sh from IS_SBSA (SBSA=0, Jetson/Orin=1)
