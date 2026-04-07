@@ -3,7 +3,8 @@ set -ex
 
 apt-get update
 apt-get install -y --no-install-recommends \
-        libcurl4-openssl-dev
+        libcurl4-openssl-dev \
+        libssl-dev
 rm -rf /var/lib/apt/lists/*
 apt-get clean
 
@@ -22,8 +23,8 @@ uv pip install \
         jinja2 \
         PyYAML
 
-mkdir -p /root/.cache
-ln -s /data/models/llama.cpp /root/.cache/llama.cpp
+mkdir -p /root/.cache /data/models/llama.cpp
+ln -sf /data/models/llama.cpp /root/.cache/llama.cpp
 
 if [ "$FORCE_BUILD" == "on" ]; then
 	echo "Forcing build of llama.cpp ${LLAMA_CPP_VERSION}"
