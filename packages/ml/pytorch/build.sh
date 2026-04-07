@@ -94,7 +94,7 @@ export PYTORCH_BUILD_NUMBER=1
 if [[ "${IS_SBSA}" == "True" ]]; then export BUILD_IGNORE_SVE_UNAVAILABLE=0; else export BUILD_IGNORE_SVE_UNAVAILABLE=1; fi
 export USE_CUDNN=1
 export USE_CUSPARSELT=1
-export USE_CUDSS=1
+export USE_CUDSS=0
 export USE_CUFILE=1
 export USE_XCCL=1
 export USE_C10D_XCCL=1
