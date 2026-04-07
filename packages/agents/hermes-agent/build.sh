@@ -16,7 +16,7 @@ fi
 cd /tmp/hermes-agent/src
 
 pip3 install --no-cache-dir uv
-uv pip install --system -e ".[all]"
+uv pip install --system ".[all]"
 npm install
 
 hermes --version
