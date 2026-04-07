@@ -9,9 +9,8 @@ git clone --recursive --depth=1 https://github.com/vllm-project/vllm /opt/vllm
 cd /opt/vllm
 env
 
-cp /tmp/vllm/${VLLM_VERSION}.fa.diff /tmp/vllm/fa.diff
 python3 /tmp/vllm/generate_diff.py
-git apply /tmp/vllm/${VLLM_VERSION}.diff
+git apply /tmp/vllm/patch.diff
 
 sed -i \
   -e 's|^gguf.*|gguf|g' \

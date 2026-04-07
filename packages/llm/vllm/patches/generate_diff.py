@@ -1,126 +1,241 @@
 #!/usr/bin/env python3
+"""
+Dynamically generate Jetson-compatible patches for vLLM.
+
+Reads the cloned vLLM source, applies arch/version transformations, and outputs:
+  - /tmp/vllm/patch.diff   (combined diff for vLLM source modifications)
+  - /tmp/vllm/fa.diff      (diff for vendored flash-attention CMakeLists.txt)
+
+Environment variables used:
+  TORCH_CUDA_ARCH_LIST  – target CUDA SM (e.g. "8.7"), defaults to "${CUDA_ARCHS}"
+  VLLM_VERSION          – vLLM version being built
+"""
 import difflib
 import os
 import re
 import argparse
+import subprocess
+import urllib.request
 
-def modify_CMakeLists(content: str) -> str:
-    """
-    - Replaces any `set(CUDA_SUPPORTED_ARCHS "...")` with `set(CUDA_ARCHS "<from-env-or-${CUDA_ARCHS}>")`
-    - Rewrites every cuda_archs_loose_intersection(...) so that its first quoted argument
-      becomes "${CUDA_ARCHS}", preserving the third argument.
-      Handles both:
-         * single-line calls
-         * two-line calls (i.e. function name + var on one line, then "..." "..." ) on the next
-    """
-    # Prepare the replacement for any “set(CUDA_SUPPORTED_ARCHS "...")”
-    cuda_arch_list = os.environ.get('TORCH_CUDA_ARCH_LIST', '"${CUDA_ARCHS}"')
-    set_pattern = re.compile(
-        r'^\s*set\s*\(\s*CUDA_SUPPORTED_ARCHS\s+["\'].*["\']\s*\)',
-        flags=re.MULTILINE
-    )
-    # First, replace any “set(CUDA_SUPPORTED_ARCHS "…")” with “set(CUDA_ARCHS "<cuda_arch_list>")”
-    content = set_pattern.sub(f'set(CUDA_ARCHS {cuda_arch_list})', content)
 
-    # Now we want to catch every cuda_archs_loose_intersection, whether it’s on one line or two.
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+def _get_torch_version():
+    """Return the installed PyTorch version (without +cu suffix)."""
+    try:
+        out = subprocess.run(
+            ["python3", "-c",
+             "import torch; print(torch.__version__.split('+')[0])"],
+            capture_output=True, text=True, timeout=15,
+        )
+        if out.returncode == 0 and out.stdout.strip():
+            return out.stdout.strip()
+    except Exception:
+        pass
+    return None
+
+
+def _cuda_arch_cmake_value():
+    """Raw value (no CMake quotes) for CUDA arch replacement."""
+    return os.environ.get("TORCH_CUDA_ARCH_LIST", "${CUDA_ARCHS}")
+
+
+def _unified_diff(original, modified, rel_path):
+    """Return a unified-diff string (empty string when files are identical)."""
+    diff_lines = list(difflib.unified_diff(
+        original.splitlines(),
+        modified.splitlines(),
+        fromfile="a/" + rel_path,
+        tofile="b/" + rel_path,
+        lineterm="",
+    ))
+    if not diff_lines:
+        return ""
+    return "\n".join(diff_lines)
+
+
+def _read(path):
+    try:
+        with open(path, "r") as fh:
+            return fh.read()
+    except FileNotFoundError:
+        return None
+
+
+# ---------------------------------------------------------------------------
+# Modification functions – each takes file content and returns modified content
+# ---------------------------------------------------------------------------
+
+def modify_cmake_archs(content: str) -> str:
+    """
+    Patch a CMakeLists.txt so CUDA arch selection is driven by the env.
+
+    * Collapses any ``set(CUDA_SUPPORTED_ARCHS ...)`` block (including
+      multi-branch if/elseif/else/endif conditionals) into a single
+      ``set(CUDA_ARCHS <value>)``.
+    * Rewrites every ``cuda_archs_loose_intersection(VAR "..." "...")``
+      so the first quoted argument becomes the env-driven value.
+    * Updates ``TORCH_SUPPORTED_VERSION_CUDA`` to match the installed torch.
+    """
+    cuda_val = _cuda_arch_cmake_value()
+
+    # ── 1. Collapse CUDA_SUPPORTED_ARCHS blocks ──────────────────────────
     lines = content.splitlines(keepends=True)
-    new_lines = []
-
-    # 1) Pattern to detect the start of a two-line invocation:
-    #    e.g.  “    cuda_archs_loose_intersection(SCALED_MM_2X_ARCHS\n”
-    start_two_line_re = re.compile(
-        r'^\s*cuda_archs_loose_intersection\s*\(\s*(\w+)\s*$'
-    )
-    # 2) Pattern for the second line of a two-line invocation:
-    #    e.g.  “      "7.5;8.0;8.9\+PTX"  "${CUDA_ARCHS}")\n”
-    args_two_line_re = re.compile(
-        r'^\s*"([^"]+)"\s*"([^"]+)"\s*\)\s*$'
-    )
-
-    # 3) Pattern to catch ANY single-line invocation:
-    #    e.g.  cuda_archs_loose_intersection(CUDA_ARCHS "7.0;7.2" "8.0;8.6")
-    single_line_re = re.compile(
-        r'^\s*(cuda_archs_loose_intersection\s*\(\s*\w+)\s*"([^"]+)"\s*"([^"]+)"\s*(\))'
-    )
-
+    out = []
     i = 0
+    replaced_archs = False
+
+    while i < len(lines):
+        line = lines[i]
+        stripped = line.strip()
+
+        # Pattern A – if/elseif block that *contains* set(CUDA_SUPPORTED_ARCHS)
+        if (not replaced_archs
+                and re.match(r"if\s*\(", stripped)
+                and "CUDA_SUPPORTED_ARCHS" not in stripped):
+            # Peek ahead for a set(CUDA_SUPPORTED_ARCHS ...) inside this block
+            j = i + 1
+            found_set = False
+            endif_idx = None
+            depth = 1
+            while j < len(lines):
+                s = lines[j].strip()
+                if re.match(r"if\s*\(", s):
+                    depth += 1
+                if s.startswith("endif"):
+                    depth -= 1
+                    if depth == 0:
+                        endif_idx = j
+                        break
+                if re.search(r"set\s*\(\s*CUDA_SUPPORTED_ARCHS\b", s):
+                    found_set = True
+                j += 1
+
+            if found_set and endif_idx is not None:
+                indent = re.match(r"^(\s*)", lines[i]).group(1)
+                out.append(f'{indent}set(CUDA_ARCHS "{cuda_val}")\n')
+                i = endif_idx + 1
+                replaced_archs = True
+                continue
+
+        # Pattern B – standalone set(CUDA_SUPPORTED_ARCHS "...")
+        if not replaced_archs and re.match(
+                r"\s*set\s*\(\s*CUDA_SUPPORTED_ARCHS\s+", stripped):
+            indent = re.match(r"^(\s*)", line).group(1)
+            out.append(f'{indent}set(CUDA_ARCHS "{cuda_val}")\n')
+            i += 1
+            # Consume a trailing conditional-append block if present
+            while i < len(lines):
+                s = lines[i].strip()
+                if (s.startswith("if(") or s.startswith("elseif(")
+                        or re.match(r"list\s*\(\s*APPEND\s+CUDA_SUPPORTED_ARCHS", s)
+                        or s.startswith("endif(") or s == ""):
+                    is_endif = s.startswith("endif(")
+                    i += 1
+                    if is_endif:
+                        break
+                else:
+                    break
+            replaced_archs = True
+            continue
+
+        out.append(line)
+        i += 1
+
+    # ── 2. Rewrite cuda_archs_loose_intersection first-args ──────────────
+    lines = out
+    out = []
+    i = 0
+
+    two_line_start = re.compile(
+        r"^\s*cuda_archs_loose_intersection\s*\(\s*(\w+)\s*$")
+    two_line_args = re.compile(r'^\s*"([^"]+)"\s*"([^"]+)"\s*\)\s*$')
+    single_line = re.compile(
+        r'^(\s*)(cuda_archs_loose_intersection\s*\(\s*\w+)\s*"([^"]+)"\s*"([^"]+)"\s*(\))')
+
     while i < len(lines):
         line = lines[i]
 
-        # ——— Handle two-line invocation ———
-        m_start = start_two_line_re.match(line)
-        if m_start and (i + 1) < len(lines):
-            varname = m_start.group(1)
-            next_line = lines[i + 1]
-            m_args = args_two_line_re.match(next_line)
-            if m_args:
-                old_first = m_args.group(1)   # e.g.  "7.5;8.0;8.9+PTX"
-                old_second = m_args.group(2)  # e.g.  "${CUDA_ARCHS}"
-                indent = re.match(r'^(\s*)', line).group(1)
-
-                # Build a single-line replacement:
-                #   <indent>cuda_archs_loose_intersection(VAR "${CUDA_ARCHS}" "old_second")\n
-                new_lines.append(
-                    f'{indent}cuda_archs_loose_intersection({varname} "{cuda_arch_list}" "{old_second}")\n'
-                )
+        # Two-line form
+        m = two_line_start.match(line)
+        if m and (i + 1) < len(lines):
+            var = m.group(1)
+            m2 = two_line_args.match(lines[i + 1])
+            if m2:
+                indent = re.match(r"^(\s*)", line).group(1)
+                out.append(
+                    f'{indent}cuda_archs_loose_intersection({var}'
+                    f' "{cuda_val}" "{m2.group(2)}")\n')
                 i += 2
                 continue
 
-        # ——— Handle single-line invocation ———
-        m_single = single_line_re.match(line)
-        if m_single:
-            # m_single.groups() == ( "cuda_archs_loose_intersection(VAR", old_first, old_second, ")" )
-            func_and_var = m_single.group(1)      # e.g.  "cuda_archs_loose_intersection(CUDA_ARCHS"
-            old_second = m_single.group(3)        # e.g.  "8.0;8.6"  or "${CUDA_ARCHS}"
-            trailing_paren = m_single.group(4)    # just “)”
-            indent = re.match(r'^(\s*)', line).group(1)
-
-            # Replace with: cuda_archs_loose_intersection(VAR "${CUDA_ARCHS}" "old_second")
-            new_lines.append(
-                f'{indent}{func_and_var} "{cuda_arch_list}" "{old_second}"{trailing_paren}\n'
-            )
+        # Single-line form
+        ms = single_line.match(line)
+        if ms:
+            indent, fn_var, _, second, paren = ms.groups()
+            out.append(
+                f'{indent}{fn_var} "{cuda_val}" "{second}"{paren}\n')
             i += 1
             continue
 
-        # ——— Otherwise, copy the line verbatim ———
-        new_lines.append(line)
+        out.append(line)
         i += 1
 
-    return ''.join(new_lines)
+    content = "".join(out)
 
-def modify_vllm_flash_attn_cmake(content):
+    # ── 3. Update TORCH_SUPPORTED_VERSION_CUDA ───────────────────────────
+    torch_ver = _get_torch_version()
+    if torch_ver:
+        content = re.sub(
+            r'set\(TORCH_SUPPORTED_VERSION_CUDA\s+"[^"]+"\)',
+            f'set(TORCH_SUPPORTED_VERSION_CUDA "{torch_ver}")',
+            content,
+        )
+
+    return content
+
+
+def modify_vllm_flash_attn_cmake(content: str) -> str:
+    """
+    Insert ``PATCH_COMMAND git apply /tmp/vllm/fa.diff`` into both
+    FetchContent_Declare blocks for vllm-flash-attn.
+    """
     lines = content.splitlines()
-    new_lines = []
+    out = []
 
-    patch_inserted = False
+    patch_var_inserted = False
     env_block_open = False
 
     for line in lines:
-        if not patch_inserted and re.match(r'^\s*if\s*\(DEFINED\s+ENV\{VLLM_FLASH_ATTN_SRC_DIR\}\)', line):
+        if (not patch_var_inserted
+                and re.match(r"\s*if\s*\(DEFINED\s+ENV\{VLLM_FLASH_ATTN_SRC_DIR\}", line)):
             env_block_open = True
 
-        new_lines.append(line)
+        out.append(line)
 
-        if env_block_open and not patch_inserted and re.match(r'^\s*endif\s*\(\s*\)\s*$', line):
-            fa_patch_name = 'fa.diff'
-            cuda_arch = os.environ.get('TORCH_CUDA_ARCH_LIST')
-            # Specific patch for sm_87 by vLLM version
-            if cuda_arch == '8.7':
-                vllm_version = os.environ.get('VLLM_VERSION')
-                fa_patch_name = 'sm_87-' + vllm_version + '-' + fa_patch_name
-            new_lines.append('set(patch_vllm_flash_attn git apply /tmp/vllm/' + fa_patch_name + ')')
-            patch_inserted = True
+        # After the endif() of the env-variable block, inject the variable
+        if env_block_open and not patch_var_inserted and re.match(r"\s*endif\s*\(\s*\)\s*$", line):
+            out.append("set(patch_vllm_flash_attn git apply /tmp/vllm/fa.diff)")
+            patch_var_inserted = True
             env_block_open = False
-        if re.search(r'^\s*BINARY_DIR\s+\$\{CMAKE_BINARY_DIR\}/vllm-flash-attn', line):
-            new_lines.append('          PATCH_COMMAND ${patch_vllm_flash_attn}')
-            new_lines.append('          UPDATE_DISCONNECTED 1')
 
-    return "\n".join(new_lines) + "\n"
+        # After every BINARY_DIR line inside FetchContent_Declare, add PATCH
+        if re.search(r"^\s*BINARY_DIR\s+\$\{CMAKE_BINARY_DIR\}/vllm-flash-attn", line):
+            out.append("          PATCH_COMMAND ${patch_vllm_flash_attn}")
+            out.append("          UPDATE_DISCONNECTED 1")
 
-def modify_guided_decoding_init(content):
-    # Removes block between xgrammar comments
+    return "\n".join(out) + "\n"
+
+
+def modify_guided_decoding_init(content: str) -> str:
+    """Remove the xgrammar x86-only CPU architecture check (if still present)."""
+    if "xgrammar only has x86 wheels for linux" not in content:
+        return content
+
     lines = content.splitlines()
-    new_lines = []
+    out = []
     skip = False
     for line in lines:
         if "xgrammar only has x86 wheels for linux" in line:
@@ -128,50 +243,196 @@ def modify_guided_decoding_init(content):
             continue
         if skip and "xgrammar doesn't support regex" in line:
             skip = False
-            new_lines.append(line)
+            out.append(line)
             continue
         if not skip:
-            new_lines.append(line)
-    return "\n".join(new_lines) + "\n"
+            out.append(line)
+    return "\n".join(out) + "\n"
 
-def generate_diff_for_file(original_file, modify_function, base_dir, output_diff):
-    try:
-        with open(original_file, "r") as f:
-            original_content = f.read()
-    except FileNotFoundError:
-        print(f"Error: File not found {original_file}")
-        return
-    modified_content = modify_function(original_content)
-    relative_path = os.path.relpath(original_file, start=base_dir)
-    diff = difflib.unified_diff(
-        original_content.splitlines(),
-        modified_content.splitlines(),
-        fromfile="a/" + relative_path,
-        tofile="b/" + relative_path,
-        lineterm=""
+
+def modify_vllm_utils_init(content: str) -> str:
+    """
+    Add shared system-memory handling for Jetson Thor (SM 11.0) and
+    Spark (SM 12.1) which share system and device memory.
+    """
+    if "_get_device_sm" in content:
+        return content
+    if "class MemorySnapshot" not in content:
+        return content
+
+    lines = content.splitlines()
+    out = []
+
+    helper_injected = False
+    for i, line in enumerate(lines):
+        # Inject the helper before the MemorySnapshot class (and its decorators)
+        if (not helper_injected
+                and re.match(r"^(\s*)class MemorySnapshot", line)):
+            # Walk back over any decorators already appended
+            insert_pos = len(out)
+            while insert_pos > 0 and out[insert_pos - 1].strip().startswith("@"):
+                insert_pos -= 1
+            helper_block = [
+                "",
+                "def _get_device_sm():",
+                "    if torch.cuda.is_available():",
+                "        major, minor = torch.cuda.get_device_capability()",
+                "        return major * 10 + minor",
+                "    return 0",
+                "",
+                "",
+            ]
+            out[insert_pos:insert_pos] = helper_block
+            helper_injected = True
+
+        out.append(line)
+
+        # After the torch.cuda.mem_get_info() line, add the override
+        if "self.free_memory, self.total_memory = torch.cuda.mem_get_info()" in line:
+            indent = re.match(r"^(\s*)", line).group(1)
+            out += [
+                f"{indent}shared_sysmem_device_mem_sms = (110, 121)  # Thor, Spark",
+                f"{indent}if _get_device_sm() in shared_sysmem_device_mem_sms:",
+                f"{indent}    self.free_memory = psutil.virtual_memory().available",
+            ]
+
+    return "\n".join(out) + "\n"
+
+
+# ---------------------------------------------------------------------------
+# Flash-attention diff generation
+# ---------------------------------------------------------------------------
+
+def _extract_fa_git_tag(cmake_path):
+    """Parse the flash-attention GIT_TAG (40-hex commit) from vllm_flash_attn.cmake."""
+    content = _read(cmake_path)
+    if not content:
+        return None, None
+    repo_m = re.search(r"GIT_REPOSITORY\s+(https://github\.com/\S+)", content)
+    tag_m = re.search(r"GIT_TAG\s+([a-f0-9]{40})", content)
+    return (
+        repo_m.group(1) if repo_m else None,
+        tag_m.group(1) if tag_m else None,
     )
-    with open(output_diff, "w") as f:
-        f.write("\n".join(diff) + "\n")
-    print(f"Diff generated for {relative_path} on {output_diff}")
+
+
+def _fetch_fa_cmake(repo_url, git_tag):
+    """Download flash-attention CMakeLists.txt from GitHub."""
+    raw = repo_url.replace("github.com", "raw.githubusercontent.com")
+    if raw.endswith(".git"):
+        raw = raw[:-4]
+    url = f"{raw}/{git_tag}/CMakeLists.txt"
+    print(f"Fetching flash-attention CMakeLists.txt from {url}")
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "jetson-containers"})
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            return resp.read().decode("utf-8")
+    except Exception as exc:
+        print(f"  Warning: fetch failed ({exc}), trying git archive…")
+
+    # Fallback: shallow clone
+    try:
+        tmp = "/tmp/_fa_src"
+        subprocess.run(
+            ["git", "clone", "--depth=1", "--filter=blob:none",
+             "--no-checkout", repo_url, tmp],
+            check=True, capture_output=True, timeout=60,
+        )
+        subprocess.run(
+            ["git", "-C", tmp, "fetch", "origin", git_tag, "--depth=1"],
+            check=True, capture_output=True, timeout=60,
+        )
+        subprocess.run(
+            ["git", "-C", tmp, "checkout", git_tag, "--", "CMakeLists.txt"],
+            check=True, capture_output=True, timeout=30,
+        )
+        return _read(os.path.join(tmp, "CMakeLists.txt"))
+    except Exception as exc:
+        print(f"  Warning: git fallback also failed ({exc})")
+    return None
+
+
+def generate_fa_diff(base_dir, diff_dir):
+    """Produce ``fa.diff`` for the vendored flash-attention CMakeLists.txt."""
+    cmake_path = os.path.join(
+        base_dir, "cmake", "external_projects", "vllm_flash_attn.cmake")
+    repo_url, git_tag = _extract_fa_git_tag(cmake_path)
+
+    if not repo_url or not git_tag:
+        print("Warning: could not determine flash-attention repo/tag – skipping fa.diff")
+        return False
+
+    original = _fetch_fa_cmake(repo_url, git_tag)
+    if not original:
+        print("Warning: could not fetch flash-attention source – skipping fa.diff")
+        return False
+
+    modified = modify_cmake_archs(original)
+    diff_text = _unified_diff(original, modified, "CMakeLists.txt")
+    if not diff_text:
+        print("flash-attention CMakeLists.txt: no changes needed")
+        return True
+
+    out_path = os.path.join(diff_dir, "fa.diff")
+    with open(out_path, "w") as fh:
+        fh.write(diff_text + "\n")
+    print(f"Generated {out_path}")
+    return True
+
+
+# ---------------------------------------------------------------------------
+# Main orchestration
+# ---------------------------------------------------------------------------
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate diffs for vLLM")
-    parser.add_argument("--base-dir", default="/opt/vllm", help="Root Path Repository")
+    parser = argparse.ArgumentParser(
+        description="Generate dynamic Jetson patches for vLLM")
+    parser.add_argument(
+        "--base-dir", default="/opt/vllm",
+        help="Root of the cloned vLLM repository")
+    parser.add_argument(
+        "--output-dir", default="/tmp/vllm",
+        help="Directory for generated .diff files")
     args = parser.parse_args()
-    base_dir = args.base_dir
 
-    files_to_modify = {
-        os.path.join(base_dir, "CMakeLists.txt"): modify_CMakeLists,
-        os.path.join(base_dir, "cmake", "external_projects", "vllm_flash_attn.cmake"): modify_vllm_flash_attn_cmake,
-        # You can add more files as needed:
-        # os.path.join(base_dir, ...): modify_guided_decoding_init,
-    }
-    diff_dir = "/tmp/vllm"
-    os.makedirs(diff_dir, exist_ok=True)
-    for filepath, mod_func in files_to_modify.items():
-        diff_filename = os.path.basename(filepath) + ".diff"
-        diff_file = os.path.join(diff_dir, diff_filename)
-        generate_diff_for_file(filepath, mod_func, base_dir, diff_file)
+    base = args.base_dir
+    out = args.output_dir
+    os.makedirs(out, exist_ok=True)
+
+    # ── vLLM source patches ──────────────────────────────────────────────
+    targets = [
+        ("CMakeLists.txt", modify_cmake_archs),
+        (os.path.join("cmake", "external_projects", "vllm_flash_attn.cmake"),
+         modify_vllm_flash_attn_cmake),
+        (os.path.join("vllm", "model_executor", "guided_decoding", "__init__.py"),
+         modify_guided_decoding_init),
+        (os.path.join("vllm", "utils", "__init__.py"),
+         modify_vllm_utils_init),
+    ]
+
+    diffs = []
+    for rel_path, mod_fn in targets:
+        full = os.path.join(base, rel_path)
+        original = _read(full)
+        if original is None:
+            print(f"Skipping (not found): {rel_path}")
+            continue
+        modified = mod_fn(original)
+        d = _unified_diff(original, modified, rel_path)
+        if d:
+            diffs.append(d)
+            print(f"Patch generated for {rel_path}")
+        else:
+            print(f"No changes for {rel_path}")
+
+    patch_path = os.path.join(out, "patch.diff")
+    with open(patch_path, "w") as fh:
+        fh.write("\n".join(diffs) + "\n")
+    print(f"Combined patch → {patch_path}")
+
+    # ── Flash-attention CMakeLists.txt patch ─────────────────────────────
+    generate_fa_diff(base, out)
+
 
 if __name__ == "__main__":
     main()
