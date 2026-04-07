@@ -20,6 +20,6 @@ if [ "$FORCE_BUILD" == "on" ]; then
 fi
 
 uv pip install \
-	unsloth_zoo \
+	'unsloth_zoo>=2026.4.3' \
 	cut_cross_entropy \
 	unsloth==${UNSLOTH_VERSION}

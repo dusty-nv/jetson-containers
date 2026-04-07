@@ -1,5 +1,5 @@
-from jetson_containers import CUDA_VERSION, IS_SBSA, update_dependencies
-from packaging.version import Version
+from jetson_containers import IS_SBSA, update_dependencies
+
 
 def unsloth(version, branch=None, requires=None, default=False, depends=None):
     pkg = package.copy()
@@ -17,7 +17,7 @@ def unsloth(version, branch=None, requires=None, default=False, depends=None):
     pkg['build_args'] = {
         'UNSLOTH_VERSION': version,
         'UNSLOTH_BRANCH': branch,
-        'IS_SBSA': IS_SBSA
+        'IS_SBSA': IS_SBSA,
     }
 
     builder = pkg.copy()
@@ -30,7 +30,7 @@ def unsloth(version, branch=None, requires=None, default=False, depends=None):
 
     return pkg, builder
 
+
 package = [
-    # 0.6.5 compatible with jetson https://github.com/unsloth-project/unsloth/pull/9735
-    unsloth(version='0.1.35-beta', default=True),
+    unsloth(version='2026.4.4', branch='v0.1.35-beta', default=True),
 ]
