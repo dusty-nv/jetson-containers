@@ -53,5 +53,5 @@ package = [
     llama_cpp('0.2.70', flags=GGML_FLAGS),
     # llama_cpp_python appears abandoned (4/25)
     # so we changed over to llama.cpp branches
-    llama_cpp('b8683', default=True)
+    llama_cpp('b8685', default=True)
 ]
