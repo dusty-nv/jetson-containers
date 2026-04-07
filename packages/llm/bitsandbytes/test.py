@@ -60,7 +60,7 @@ else:
         return_tensors="pt",
     ).input_ids.to(model.device)
 
-Thread(target=lambda: model.generate(**inputs, max_new_tokens=64, streamer=streamer)).start()
+Thread(target=lambda: model.generate(input_ids=inputs, max_new_tokens=64, streamer=streamer)).start()
 
 for text in streamer:
     print(text, end="", flush=True)
