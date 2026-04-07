@@ -115,7 +115,7 @@ def modify_cmake_archs(content: str) -> str:
 
             if found_set and endif_idx is not None:
                 indent = re.match(r"^(\s*)", lines[i]).group(1)
-                out.append(f'{indent}set(CUDA_ARCHS "{cuda_val}")\n')
+                out.append(f'{indent}set(CUDA_SUPPORTED_ARCHS "{cuda_val}")\n')
                 i = endif_idx + 1
                 replaced_archs = True
                 continue
@@ -124,7 +124,7 @@ def modify_cmake_archs(content: str) -> str:
         if not replaced_archs and re.match(
                 r"\s*set\s*\(\s*CUDA_SUPPORTED_ARCHS\s+", stripped):
             indent = re.match(r"^(\s*)", line).group(1)
-            out.append(f'{indent}set(CUDA_ARCHS "{cuda_val}")\n')
+            out.append(f'{indent}set(CUDA_SUPPORTED_ARCHS "{cuda_val}")\n')
             i += 1
             # Consume a trailing conditional-append block if present
             while i < len(lines):
@@ -174,15 +174,20 @@ def modify_cmake_archs(content: str) -> str:
     def _should_replace(first_arg):
         """True when any arch in first_arg has the same or lower major version
         as the target.  e.g. target 8.7 replaces "8.9;12.0;12.1" (because of
-        8.9) but NOT "9.0a" (all archs have a higher major version)."""
+        8.9) but NOT "9.0a" (all archs have a higher major version).
+        CMake variable references (no parseable versions) are always replaced."""
         if target_version is None:
             return True  # can't compare, replace unconditionally
         target_major = target_version[0]
+        has_any_version = False
         for spec in first_arg.split(";"):
             v = _parse_arch_version(spec)
-            if v is not None and v[0] <= target_major:
-                return True
-        return False
+            if v is not None:
+                has_any_version = True
+                if v[0] <= target_major:
+                    return True
+        # No parseable versions (e.g. CMake var ref) → always replace
+        return not has_any_version
 
     while i < len(lines):
         line = lines[i]
