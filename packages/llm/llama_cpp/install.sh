@@ -17,7 +17,10 @@ uv pip install \
         sse-starlette \
         starlette-context \
         fastapi \
-        pydantic-settings
+        pydantic-settings \
+        diskcache \
+        jinja2 \
+        PyYAML
 
 mkdir -p /root/.cache
 ln -s /data/models/llama.cpp /root/.cache/llama.cpp
