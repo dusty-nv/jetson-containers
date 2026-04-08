@@ -115,7 +115,7 @@ def modify_cmake_archs(content: str) -> str:
 
             if found_set and endif_idx is not None:
                 indent = re.match(r"^(\s*)", lines[i]).group(1)
-                out.append(f'{indent}set(CUDA_ARCHS "{cuda_val}")\n')
+                out.append(f'{indent}set(CUDA_SUPPORTED_ARCHS "{cuda_val}")\n')
                 i = endif_idx + 1
                 replaced_archs = True
                 continue
@@ -124,7 +124,7 @@ def modify_cmake_archs(content: str) -> str:
         if not replaced_archs and re.match(
                 r"\s*set\s*\(\s*CUDA_SUPPORTED_ARCHS\s+", stripped):
             indent = re.match(r"^(\s*)", line).group(1)
-            out.append(f'{indent}set(CUDA_ARCHS "{cuda_val}")\n')
+            out.append(f'{indent}set(CUDA_SUPPORTED_ARCHS "{cuda_val}")\n')
             i += 1
             # Consume a trailing conditional-append block if present
             while i < len(lines):
@@ -145,6 +145,11 @@ def modify_cmake_archs(content: str) -> str:
         i += 1
 
     # ── 2. Rewrite cuda_archs_loose_intersection first-args ──────────────
+    # Only replace the first argument when the target arch is >= the minimum
+    # arch in the original list.  When the target is below the minimum (e.g.
+    # target 8.7 but the line requires "9.0a"), leave the line untouched so
+    # the intersection with CUDA_ARCHS is naturally empty and the feature is
+    # skipped instead of attempting to compile unsupported kernels.
     lines = out
     out = []
     i = 0
@@ -155,6 +160,35 @@ def modify_cmake_archs(content: str) -> str:
     single_line = re.compile(
         r'^(\s*)(cuda_archs_loose_intersection\s*\(\s*\w+)\s*"([^"]+)"\s*"([^"]+)"\s*(\))')
 
+    def _parse_arch_version(spec):
+        """Extract numeric (major, minor) from an arch spec like '9.0a'."""
+        m = re.match(r"(\d+)\.(\d+)", spec.strip())
+        if m:
+            return (int(m.group(1)), int(m.group(2)))
+        return None
+
+    # Parse target arch; if it's a CMake variable we can't compare, so
+    # fall back to replacing everything (original behaviour).
+    target_version = _parse_arch_version(cuda_val)
+
+    def _should_replace(first_arg):
+        """True when any arch in first_arg has the same or lower major version
+        as the target.  e.g. target 8.7 replaces "8.9;12.0;12.1" (because of
+        8.9) but NOT "9.0a" (all archs have a higher major version).
+        CMake variable references (no parseable versions) are always replaced."""
+        if target_version is None:
+            return True  # can't compare, replace unconditionally
+        target_major = target_version[0]
+        has_any_version = False
+        for spec in first_arg.split(";"):
+            v = _parse_arch_version(spec)
+            if v is not None:
+                has_any_version = True
+                if v[0] <= target_major:
+                    return True
+        # No parseable versions (e.g. CMake var ref) → always replace
+        return not has_any_version
+
     while i < len(lines):
         line = lines[i]
 
@@ -164,21 +198,23 @@ def modify_cmake_archs(content: str) -> str:
             var = m.group(1)
             m2 = two_line_args.match(lines[i + 1])
             if m2:
-                indent = re.match(r"^(\s*)", line).group(1)
-                out.append(
-                    f'{indent}cuda_archs_loose_intersection({var}'
-                    f' "{cuda_val}" "{m2.group(2)}")\n')
-                i += 2
-                continue
+                if _should_replace(m2.group(1)):
+                    indent = re.match(r"^(\s*)", line).group(1)
+                    out.append(
+                        f'{indent}cuda_archs_loose_intersection({var}'
+                        f' "{cuda_val}" "{m2.group(2)}")\n')
+                    i += 2
+                    continue
 
         # Single-line form
         ms = single_line.match(line)
         if ms:
-            indent, fn_var, _, second, paren = ms.groups()
-            out.append(
-                f'{indent}{fn_var} "{cuda_val}" "{second}"{paren}\n')
-            i += 1
-            continue
+            indent, fn_var, first_arg, second, paren = ms.groups()
+            if _should_replace(first_arg):
+                out.append(
+                    f'{indent}{fn_var} "{cuda_val}" "{second}"{paren}\n')
+                i += 1
+                continue
 
         out.append(line)
         i += 1
