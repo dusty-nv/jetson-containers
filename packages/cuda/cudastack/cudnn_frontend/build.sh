@@ -18,7 +18,7 @@ cd $REPO_DIR
 sed -i '/numpy/d' requirements.txt
 uv pip install looseversion
 uv pip install -U -r requirements.txt
-uv build --wheel -v --out-dir $REPO_DIR .
+uv build --wheel -v --no-build-isolation --out-dir $REPO_DIR .
 uv pip install /opt/cudnn_frontend/nvidia_cudnn_frontend-*.whl
 
 twine upload --verbose /opt/cudnn_frontend/nvidia_cudnn_frontend-*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
