@@ -25,6 +25,7 @@ fi
 
 # Clean up (only apt cache; won't touch manual lib copies)
 rm -rf /var/lib/apt/lists/*
+rm -rf /etc/apt/sources.list.d/nvshmem-local-*
 apt-get clean
 rm -rf /tmp/*.deb
 rm -rf /*.deb
