@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import gc
 import torch
+from packaging.version import parse as parse_version
 
 def clear_memory():
     """Free GPU and CPU memory before running the model."""
@@ -60,7 +61,12 @@ else:
         return_tensors="pt",
     ).input_ids.to(model.device)
 
-Thread(target=lambda: model.generate(input_ids=inputs, max_new_tokens=64, streamer=streamer)).start()
+transformers_major = parse_version(transformers.__version__).major
+print(transformers_major)
+if transformers_major >= 5:
+    Thread(target=lambda: model.generate(**inputs, max_new_tokens=64, streamer=streamer)).start()
+else:
+    Thread(target=lambda: model.generate(input_ids=inputs, max_new_tokens=64, streamer=streamer)).start()
 
 for text in streamer:
     print(text, end="", flush=True)
