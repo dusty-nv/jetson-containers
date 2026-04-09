@@ -93,6 +93,14 @@ git submodule update --init --recursive
 
 install_dir="/opt/onnxruntime/install"
 
+# Patch CCCL bug in device_transform.cuh (CUDA 13.2 SBSA)
+# "struct ::cuda::..." is invalid C++ — global qualification not allowed in class specialization
+CCCL_HEADER="/usr/local/cuda/targets/$(uname -m)-linux/include/cccl/cub/device/device_transform.cuh"
+if [ -f "$CCCL_HEADER" ] && grep -q 'struct ::cuda::proclaims_copyable_arguments' "$CCCL_HEADER"; then
+    echo "Patching CCCL device_transform.cuh (removing invalid global qualification)"
+    sed -i 's/struct ::cuda::proclaims_copyable_arguments/struct cuda::proclaims_copyable_arguments/g' "$CCCL_HEADER"
+fi
+
 ./build.sh --config Release --update --parallel --build --build_wheel --build_shared_lib \
         --skip_tests --skip_submodule_sync ${ONNXRUNTIME_FLAGS} \
         --cmake_extra_defines CMAKE_CXX_FLAGS="-Wno-unused-variable -I/usr/local/cuda/include" \
