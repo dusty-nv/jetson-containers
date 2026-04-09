@@ -66,7 +66,7 @@ if [[ "${ARCH}" = "aarch64" ]] || [[ "${ARCH}" = "arm64" ]]; then
     echo "Memory-adaptive CUDA build configuration (ARM64):"
     echo "  Total RAM: $total_ram"
     echo "  MAX_JOBS: $MAX_JOBS (auto-detected)"
-    echo "  Expected peak memory: ~$((MAX_JOBS * 6 + 8))GB (${MAX_JOBS} CUDA jobs × 6GB + 8GB overhead)"
+    echo "  Expected peak memory: ~$((MAX_JOBS * 6 + 8))GB (${MAX_JOBS} CUDA jobs x 6GB + 8GB overhead)"
     echo ""
 else
     # x86_64 - use sensible defaults
@@ -93,13 +93,18 @@ git submodule update --init --recursive
 
 install_dir="/opt/onnxruntime/install"
 
-# Patch CCCL bug in device_transform.cuh (CUDA 13.2 SBSA)
-# "struct ::cuda::..." is invalid C++ — global qualification not allowed in class specialization
-CCCL_HEADER="/usr/local/cuda/targets/$(uname -m)-linux/include/cccl/cub/device/device_transform.cuh"
-if [ -f "$CCCL_HEADER" ] && grep -q 'struct ::cuda::proclaims_copyable_arguments' "$CCCL_HEADER"; then
-    echo "Patching CCCL device_transform.cuh (removing invalid global qualification)"
-    sed -i 's/struct ::cuda::proclaims_copyable_arguments/struct cuda::proclaims_copyable_arguments/g' "$CCCL_HEADER"
-fi
+# Patch CCCL bug in device_transform.cuh (CUDA 13.2)
+# "struct ::cuda::..." is invalid C++ -- global qualification not allowed in class specialization
+# uname -m returns aarch64 even on SBSA, but CUDA headers live under targets/sbsa-linux/
+for CCCL_HEADER in \
+    /usr/local/cuda/targets/sbsa-linux/include/cccl/cub/device/device_transform.cuh \
+    /usr/local/cuda/targets/aarch64-linux/include/cccl/cub/device/device_transform.cuh \
+    /usr/local/cuda/include/cccl/cub/device/device_transform.cuh; do
+    if [ -f "$CCCL_HEADER" ] && grep -q 'struct ::cuda::proclaims_copyable_arguments' "$CCCL_HEADER"; then
+        echo "Patching CCCL device_transform.cuh: $CCCL_HEADER"
+        sed -i 's/struct ::cuda::proclaims_copyable_arguments/struct cuda::proclaims_copyable_arguments/g' "$CCCL_HEADER"
+    fi
+done
 
 ./build.sh --config Release --update --parallel --build --build_wheel --build_shared_lib \
         --skip_tests --skip_submodule_sync ${ONNXRUNTIME_FLAGS} \
