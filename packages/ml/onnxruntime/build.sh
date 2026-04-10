@@ -94,7 +94,8 @@ git submodule update --init --recursive
 install_dir="/opt/onnxruntime/install"
 
 # Patch CCCL bug in device_transform.cuh (CUDA 13.2)
-# "struct ::cuda::..." is invalid C++ -- global qualification not allowed in class specialization
+# Template specialization of cuda::proclaims_copyable_arguments uses qualified name
+# at global scope which GCC rejects. Wrap in namespace cuda {} instead.
 # uname -m returns aarch64 even on SBSA, but CUDA headers live under targets/sbsa-linux/
 for CCCL_HEADER in \
     /usr/local/cuda/targets/sbsa-linux/include/cccl/cub/device/device_transform.cuh \
@@ -102,7 +103,25 @@ for CCCL_HEADER in \
     /usr/local/cuda/include/cccl/cub/device/device_transform.cuh; do
     if [ -f "$CCCL_HEADER" ] && grep -q 'struct ::cuda::proclaims_copyable_arguments' "$CCCL_HEADER"; then
         echo "Patching CCCL device_transform.cuh: $CCCL_HEADER"
-        sed -i 's/struct ::cuda::proclaims_copyable_arguments/struct cuda::proclaims_copyable_arguments/g' "$CCCL_HEADER"
+        python3 -c "
+p = '$CCCL_HEADER'
+with open(p) as f:
+    src = f.read()
+old = '''template <class T>
+struct ::cuda::proclaims_copyable_arguments<CUB_NS_QUALIFIER::detail::__return_constant<T>> : ::cuda::std::true_type
+{};'''
+new = '''namespace cuda {
+template <class T>
+struct proclaims_copyable_arguments<CUB_NS_QUALIFIER::detail::__return_constant<T>> : ::cuda::std::true_type
+{};
+} // namespace cuda'''
+if old in src:
+    with open(p, 'w') as f:
+        f.write(src.replace(old, new))
+    print('Patched successfully')
+else:
+    print('Exact pattern not found, skipping')
+"
     fi
 done
 
