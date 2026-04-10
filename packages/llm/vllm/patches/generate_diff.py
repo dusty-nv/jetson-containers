@@ -388,6 +388,43 @@ def _fetch_fa_cmake(repo_url, git_tag):
     return None
 
 
+def modify_fa_cmake_fa3_orin(content: str) -> str:
+    """
+    Enable FA3 for Orin (sm87) in the vendored flash-attention CMakeLists.txt.
+
+    * Flips ``FA3_ENABLED`` from OFF to ON (or inserts it after FA2_ENABLED).
+    * Forces the FA3 ``cuda_archs_loose_intersection`` call to use the same
+      target arch as FA2 (normally gated at 9.0a / Hopper-only).
+    """
+    cuda_val = _cuda_arch_cmake_value()
+
+    # ── 1. Set FA3_ENABLED ON ────────────────────────────────────────────
+    if re.search(r'\bset\s*\(\s*FA3_ENABLED\s+OFF\s*\)', content):
+        content = re.sub(
+            r'\bset\s*\(\s*FA3_ENABLED\s+OFF\s*\)',
+            'set(FA3_ENABLED ON)',
+            content,
+        )
+    elif not re.search(r'\bset\s*\(\s*FA3_ENABLED\s+ON\s*\)', content):
+        # No FA3_ENABLED line at all – insert one after FA2_ENABLED
+        content = re.sub(
+            r'(set\s*\(\s*FA2_ENABLED\s+ON\s*\))',
+            r'\1\nset(FA3_ENABLED ON)',
+            content,
+        )
+
+    # ── 2. Force FA3 arch intersection to the target arch ─────────────────
+    # The upstream CMake guards FA3 at "9.0a" (Hopper); override to target
+    # so that Orin (sm87) is included.
+    content = re.sub(
+        r'(cuda_archs_loose_intersection\s*\(\s*FA3_ARCHS\s+)"[^"]*"',
+        rf'\1"{cuda_val}"',
+        content,
+    )
+
+    return content
+
+
 def generate_fa_diff(base_dir, diff_dir):
     """Produce ``fa.diff`` for the vendored flash-attention CMakeLists.txt."""
     cmake_path = os.path.join(
@@ -404,6 +441,9 @@ def generate_fa_diff(base_dir, diff_dir):
         return False
 
     modified = modify_cmake_archs(original)
+    # Only apply the Orin-specific FA3 patch.
+    if _cuda_arch_cmake_value() == "8.7":
+        modified = modify_fa_cmake_fa3_orin(modified)
     diff_text = _unified_diff(original, modified, "CMakeLists.txt")
     if not diff_text:
         print("flash-attention CMakeLists.txt: no changes needed")
