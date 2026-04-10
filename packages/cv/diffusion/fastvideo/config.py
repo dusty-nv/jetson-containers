@@ -26,5 +26,5 @@ def fastvideo(version, requires=None, default=False):
 
 
 package = [
-    fastvideo('0.1.7', default=True),
+    fastvideo('0.1.8', default=True),
 ]
