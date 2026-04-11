@@ -32,7 +32,7 @@ uv build --wheel --no-build-isolation --out-dir /opt .
 cd /
 rm -rf /opt/triton
 
-uv pip install /opt/triton*.whl
+uv pip install /opt/triton*.whl --prerelease=allow
 
 uv pip show triton
 python3 -c 'import triton'
