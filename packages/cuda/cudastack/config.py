@@ -223,10 +223,10 @@ if IS_CONFIG:
     else:
         requires = 'x86_64'
 
-    package = []
+    package_list = []
 
     for v in variants:
-        package.append(cuda_stack(
+        package_list.append(cuda_stack(
             v['name'],
             with_tensorrt=v['with_tensorrt'],
             with_cutlass=v['with_cutlass'],
@@ -234,3 +234,5 @@ if IS_CONFIG:
             requires=requires,
             alias=v['alias']
         ))
+    
+    package = package_list
