@@ -35,5 +35,5 @@ def stable_diffusion_cpp(version, default=False):
     return pkg, builder
 
 package = [
-    stable_diffusion_cpp('87ecb95', default=True)
+    stable_diffusion_cpp('4fbbee2', default=True)
 ]
