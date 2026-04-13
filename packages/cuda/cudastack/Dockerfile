@@ -65,14 +65,14 @@ ENV WITH_CUDNN=${WITH_CUDNN} \
     ENABLE_DISTRIBUTED_JETSON_NCCL=${ENABLE_DISTRIBUTED_JETSON_NCCL}
 
 # Copy ALL install scripts at once
-COPY install/* /tmp/cuda-stack/install/
-COPY build/* /tmp/cuda-stack/build/
-#COPY install/*.sh build/*.sh /tmp/cuda-stack/
+COPY install/* /tmp/cudastack/install/
+COPY build/* /tmp/cudastack/build/
+#COPY install/*.sh build/*.sh /tmp/cudastack/
 
 # Install ALL components in ONE RUN command to minimize layers
 # This is the key to avoiding Docker's max depth error
 RUN set -ex && \
-    cd /tmp/cuda-stack && \
+    cd /tmp/cudastack && \
     chmod +x install/*.sh build/*.sh && \
     \
     echo "===== Installing CUDA Stack Components =====" && \
@@ -131,7 +131,7 @@ RUN set -ex && \
     fi && \
     \
     echo "===== Cleaning up =====" && \
-    rm -rf /tmp/cuda-stack && \
+    rm -rf /tmp/cudastack && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean && \
     \

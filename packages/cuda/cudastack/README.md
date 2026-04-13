@@ -1,19 +1,19 @@
 # CUDA Stack - Consolidated Library Installation
 
-## What is cuda-stack?
+## What is cudastack?
 
-`cuda-stack` is a **consolidation package** that installs multiple CUDA libraries (cuDNN, NCCL, TensorRT, CUTLASS, etc.) in **ONE RUN command** to avoid Docker's "max depth exceeded" error.
+`cudastack` is a **consolidation package** that installs multiple CUDA libraries (cuDNN, NCCL, TensorRT, CUTLASS, etc.) in **ONE RUN command** to avoid Docker's "max depth exceeded" error.
 
-## Important: cuda-stack vs cuda
+## Important: cudastack vs cuda
 
 ```
-cuda/                           cuda-stack/
+cuda/                           cudastack/
 ├── Dockerfile                  ├── Dockerfile (ONE RUN for all libs)
 ├── Dockerfile.pip              ├── config.py (variants)
 ├── Dockerfile.builtin          └── install/ & build/ scripts
 ├── Dockerfile.samples
 └── config.py
-    ├── cuda_package()          cuda-stack DEPENDS ON cuda
+    ├── cuda_package()          cudastack DEPENDS ON cuda
     ├── cuda_builtin()          (doesn't replace it!)
     ├── cuda_samples()
     └── pip_cache()
@@ -22,8 +22,8 @@ cuda/                           cuda-stack/
 **Key Points:**
 
 1. ✅ **`cuda` package** - Installs CUDA toolkit, provides pip_cache, samples, builtin variants
-2. ✅ **`cuda-stack` package** - Builds ON TOP of `cuda`, adds cuDNN/NCCL/TensorRT/etc. in ONE layer
-3. ✅ **pip_cache, cuda_samples, cuda_builtin** - Still work! They're part of `cuda`, not `cuda-stack`
+2. ✅ **`cudastack` package** - Builds ON TOP of `cuda`, adds cuDNN/NCCL/TensorRT/etc. in ONE layer
+3. ✅ **pip_cache, cuda_samples, cuda_builtin** - Still work! They're part of `cuda`, not `cudastack`
 
 ## The Problem It Solves
 
@@ -38,10 +38,10 @@ Layer 5: cutlass
 Layer 50+: "max depth exceeded" ❌
 ```
 
-### After (cuda-stack):
+### After (cudastack):
 ```
 Layer 1: cuda (with pip_cache, samples, etc.)
-Layer 2: cuda-stack (cudnn + nccl + tensorrt + cutlass in ONE RUN)
+Layer 2: cudastack (cudnn + nccl + tensorrt + cutlass in ONE RUN)
 Layer 3: your-app
 Result: Works! ✅
 ```
@@ -55,7 +55,7 @@ cuda:12.4 (from cuda/Dockerfile)
     ├── pip_cache:cu124 (from cuda/Dockerfile.pip)
     └── cuda:12.4-samples (from cuda/Dockerfile.samples)
     ↓
-cuda-stack:minimal (from cuda-stack/Dockerfile)
+cudastack:minimal (from cudastack/Dockerfile)
     ├── cuDNN
     ├── NCCL
     └── (all installed in ONE RUN)
@@ -67,9 +67,9 @@ your-app
 
 | Variant | Includes | Use Case |
 |---------|----------|----------|
-| `cuda-stack:minimal` | cuDNN + NCCL | Training, inference |
-| `cuda-stack:standard` | + TensorRT | Optimized inference |
-| `cuda-stack:full` | + CUTLASS + GDRCopy | Research, development |
+| `cudastack:minimal` | cuDNN + NCCL | Training, inference |
+| `cudastack:standard` | + TensorRT | Optimized inference |
+| `cudastack:full` | + CUTLASS + GDRCopy | Research, development |
 
 ## Usage
 
@@ -77,24 +77,24 @@ your-app
 
 ```bash
 # Build minimal stack
-./build.sh cuda-stack:minimal
+./build.sh cudastack:minimal
 
 # Build standard (with TensorRT)
-./build.sh cuda-stack:standard
+./build.sh cudastack:standard
 
 # Build full (with CUTLASS)
-./build.sh cuda-stack:full
+./build.sh cudastack:full
 
 # Use as base for your app
-./build.sh --base cuda-stack:minimal pytorch
+./build.sh --base cudastack:minimal pytorch
 ```
 
-### The cuda-stack Dockerfile does ONE RUN:
+### The cudastack Dockerfile does ONE RUN:
 
 ```dockerfile
 # Copy all install/build scripts
-COPY install/*.sh /tmp/cuda-stack/install/
-COPY build/*.sh /tmp/cuda-stack/build/
+COPY install/*.sh /tmp/cudastack/install/
+COPY build/*.sh /tmp/cudastack/build/
 
 # ONE RUN command calls all scripts conditionally
 RUN set -ex && \
@@ -108,7 +108,7 @@ RUN set -ex && \
         ./install/install_tensorrt.sh; \
     fi && \
     # ... more components ...
-    rm -rf /tmp/cuda-stack
+    rm -rf /tmp/cudastack
 ```
 
 **Key**: All library installations happen in this ONE RUN = ONE Docker layer!
@@ -118,7 +118,7 @@ RUN set -ex && \
 The install scripts need to be populated from existing packages:
 
 ```bash
-cd packages/cuda/cuda-stack
+cd packages/cuda/cudastack
 ./setup-scripts.sh
 ```
 
@@ -154,7 +154,7 @@ def cuda_package(version, url, ...):
     return cuda, cuda_pip  # Returns TWO packages!
 ```
 
-**cuda-stack doesn't need to duplicate this** - it just depends on `cuda` being installed first.
+**cudastack doesn't need to duplicate this** - it just depends on `cuda` being installed first.
 
 ## Component Toggles
 
@@ -177,7 +177,7 @@ Following the jetson-containers pattern:
 
 ```python
 def cuda_stack(name, with_tensorrt=False, with_cutlass=False, requires=None):
-    """Generate a cuda-stack package variant"""
+    """Generate a cudastack package variant"""
     pkg = package.copy()
     pkg['name'] = name
     pkg['depends'] = ['cuda']  # Depends ON cuda, doesn't replace it
@@ -193,9 +193,9 @@ def cuda_stack(name, with_tensorrt=False, with_cutlass=False, requires=None):
 
 # Define variants
 package = [
-    cuda_stack('cuda-stack:minimal', with_tensorrt=False),
-    cuda_stack('cuda-stack:standard', with_tensorrt=True),
-    cuda_stack('cuda-stack:full', with_tensorrt=True, with_cutlass=True),
+    cuda_stack('cudastack:minimal', with_tensorrt=False),
+    cuda_stack('cudastack:standard', with_tensorrt=True),
+    cuda_stack('cudastack:full', with_tensorrt=True, with_cutlass=True),
 ]
 ```
 
@@ -204,9 +204,9 @@ package = [
 | Approach | Layers | Build Time | Complexity |
 |----------|--------|------------|------------|
 | **Individual packages** | 50+ | Longer | Simple per-package |
-| **cuda-stack (consolidated)** | 2-3 | Faster | One complex layer |
+| **cudastack (consolidated)** | 2-3 | Faster | One complex layer |
 
-Both approaches work! Use `cuda-stack` when you need multiple libraries and want to avoid layer limits.
+Both approaches work! Use `cudastack` when you need multiple libraries and want to avoid layer limits.
 
 ## See Also
 
@@ -217,7 +217,7 @@ Both approaches work! Use `cuda-stack` when you need multiple libraries and want
 
 ## Summary
 
-✅ **cuda-stack is a consolidation layer** on top of cuda  
+✅ **cudastack is a consolidation layer** on top of cuda  
 ✅ **pip_cache, samples, builtin still work** from the cuda package  
 ✅ **ONE RUN command** installs all libraries to avoid layer limits  
 ✅ **Follows jetson-containers patterns** with config.py and variants  
