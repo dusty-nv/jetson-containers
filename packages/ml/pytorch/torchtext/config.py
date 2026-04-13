@@ -42,4 +42,5 @@ package = [
     torchtext('0.20.2', pytorch='2.10', requires='>=34'),
     torchtext('0.21.0', pytorch='2.11', requires='>=34'),
     torchtext('0.21.0', pytorch='2.12', requires='>=34'),
+    torchtext('0.21.0', pytorch='2.13', requires='>=34'),
 ]
