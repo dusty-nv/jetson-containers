@@ -25,5 +25,5 @@ def genesis(version, requires=None, default=False):
     return pkg, builder
 
 package = [
-    genesis('0.4.5', default=True)
+    genesis('0.4.6', default=True)
 ]
