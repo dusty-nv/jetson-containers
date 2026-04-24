@@ -3,7 +3,7 @@ from packages.physicalAI.ros import ros_container, ROS_DISTROS
 
 ISAAC_ROS_URL="https://github.com/NVIDIA-ISAAC-ROS"
 
-def isaac_ros(repo, version='4.0', base_url=ISAAC_ROS_URL, workspace='/opt/isaac-ros', depends=[], tag=None, **kwargs):
+def isaac_ros(repo, version='4.4', base_url=ISAAC_ROS_URL, workspace='/opt/isaac-ros', depends=[], tag=None, **kwargs):
     """
     Generate a container build with an Isaac ROS package added to it,
     which by default is under `/opt/isaac-ros` and sourced on startup.
