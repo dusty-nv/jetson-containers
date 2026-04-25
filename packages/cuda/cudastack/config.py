@@ -134,7 +134,7 @@ CUDNN_VERSION = Version(cuda_stack_args()['CUDNN_VERSION'])
 TENSORRT_VERSION = Version(cuda_stack_args()['TENSORRT_VERSION'])
 
 
-def cuda_stack(name, with_tensorrt=False, minimal=False, requires=None):
+def cuda_stack(name, with_tensorrt=False, with_cutlass=False, minimal=False, requires=None, alias=None):
     """
     Generate a consolidated CUDA stack package that installs multiple libraries in ONE RUN.
     This avoids Docker's layer limits by consolidating cudnn, nccl, tensorrt, etc. into one layer.
@@ -142,11 +142,18 @@ def cuda_stack(name, with_tensorrt=False, minimal=False, requires=None):
     Args:
         name: Package name (e.g., 'cudastack:minimal')
         with_tensorrt: Include TensorRT (default: False)
-        minimal: Only install cuDNN (default: False)
+        with_cutlass: Include CUTLASS (default: False)
+        minimal: Only install cuDNN and NCCL (default: False)
         requires: Version requirements
+        alias: Package aliases
     """
     pkg = package.copy()
     pkg['name'] = name
+
+    if alias:
+        if isinstance(alias, str):
+            alias = [alias]
+        pkg['alias'] = pkg.get('alias', []) + alias
 
     # Get base build args
     build_args = cuda_stack_args()
@@ -154,7 +161,8 @@ def cuda_stack(name, with_tensorrt=False, minimal=False, requires=None):
     # Component toggles
     build_args['WITH_CUDNN'] = '1'  # Always include cuDNN
     build_args['WITH_TENSORRT'] = '1' if with_tensorrt else '0'
-    build_args['WITH_NCCL'] = '0' if minimal else '1'
+    build_args['WITH_NCCL'] = '1'    # Always include NCCL (minimal or not)
+    build_args['WITH_CUTLASS'] = '1' if with_cutlass else '0'
     build_args['WITH_CUDSS'] = '0' if minimal else '1'
     build_args['WITH_CUSPARSELT'] = '0' if minimal else '1'
     build_args['WITH_CUTENSOR'] = '0' if minimal else '1'
@@ -179,44 +187,52 @@ def cuda_stack(name, with_tensorrt=False, minimal=False, requires=None):
 
 # Define package variants
 # Following the pattern: return a list of packages for different configurations
-if IS_TEGRA and IS_CONFIG:
-    package = [
-        # Minimal: CUDA + cuDNN only
-        cuda_stack('cudastack:minimal',
-                   with_tensorrt=False,
-                   minimal=True,
-                   requires='>=35'),
-
-        # Standard: + TensorRT and all CUDA libraries
-        cuda_stack('cudastack:standard',
-                   with_tensorrt=True,
-                   minimal=False,
-                   requires='>=35'),
+if IS_CONFIG:
+    variants = [
+        # Minimal: CUDA + cuDNN + NCCL
+        {
+            'name': 'cudastack:minimal',
+            'alias': 'cuda-stack:minimal',
+            'with_tensorrt': False,
+            'with_cutlass': False,
+            'minimal': True,
+        },
+        # Standard: + TensorRT
+        {
+            'name': 'cudastack:standard',
+            'alias': ['cuda-stack:standard', 'cudastack', 'cuda-stack'],
+            'with_tensorrt': True,
+            'with_cutlass': False,
+            'minimal': False,
+        },
+        # Full: + CUTLASS
+        {
+            'name': 'cudastack:full',
+            'alias': 'cuda-stack:full',
+            'with_tensorrt': True,
+            'with_cutlass': True,
+            'minimal': False,
+        },
     ]
 
-elif IS_SBSA and IS_CONFIG:
-    # SBSA (Grace/Server ARM)
-    package = [
-        cuda_stack('cudastack:minimal',
-                   with_tensorrt=False,
-                   minimal=True,
-                   requires='aarch64'),
+    # Set architecture requirements
+    if IS_TEGRA:
+        requires = '>=35'
+    elif IS_SBSA:
+        requires = 'aarch64'
+    else:
+        requires = 'x86_64'
 
-        cuda_stack('cudastack:standard',
-                   with_tensorrt=True,
-                   minimal=False,
-                   requires='aarch64'),
-    ]
-elif IS_CONFIG:
-    # x86_64
-    package = [
-        cuda_stack('cudastack:minimal',
-                   with_tensorrt=False,
-                   minimal=True,
-                   requires='x86_64'),
+    package_list = []
 
-        cuda_stack('cudastack:standard',
-                   with_tensorrt=True,
-                   minimal=False,
-                   requires='x86_64'),
-    ]
+    for v in variants:
+        package_list.append(cuda_stack(
+            v['name'],
+            with_tensorrt=v['with_tensorrt'],
+            with_cutlass=v['with_cutlass'],
+            minimal=v['minimal'],
+            requires=requires,
+            alias=v['alias']
+        ))
+    
+    package = package_list
