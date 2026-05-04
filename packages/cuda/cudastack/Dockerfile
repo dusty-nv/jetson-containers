@@ -3,6 +3,7 @@
 # group: cuda
 # config: config.py
 # depends: [build-essential, cuda, numpy]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.sh
 # notes: Consolidated CUDA stack - installs all components in ONE RUN to avoid layer limits
 #---

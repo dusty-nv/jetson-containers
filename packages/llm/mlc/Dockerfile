@@ -3,6 +3,7 @@
 # group: llm
 # config: config.py
 # depends: [transformers, triton, llvm:22, sudonim]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=35'
 # test: [test.py, test.sh]
 # docs: docs.md

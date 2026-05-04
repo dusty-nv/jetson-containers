@@ -3,6 +3,7 @@
 # group: attention
 # config: config.py
 # depends: [cuda, cudastack:standard, pytorch, triton, cuda-python, cudnn_frontend, llvm:22]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=35'
 # test: test.py
 #---

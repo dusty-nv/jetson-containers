@@ -2,6 +2,7 @@
 # name: chatterbox-tts
 # group: audio
 # depends: [torch, torchaudio, transformers, numpy, diffusers, sound-utils]
+# buildkit_device: nvidia.com/gpu=all
 # requires: ['>=36.1.0']
 # test: [test.py]
 # docs: docs.md

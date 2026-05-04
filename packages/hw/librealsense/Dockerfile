@@ -2,6 +2,7 @@
 # name: librealsense
 # group: hardware
 # depends: [cuda, python, cmake]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.py
 # notes: https://github.com/IntelRealSense/librealsense/blob/master/doc/installation_jetson.md
 #---

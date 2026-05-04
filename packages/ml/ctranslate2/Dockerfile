@@ -3,6 +3,7 @@
 # group: transformer
 # config: config.py
 # depends: [cuda, cudastack:standard, cmake]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # test: test.py
 #---

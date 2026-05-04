@@ -4,6 +4,7 @@
 # config: config.py
 # requires: '>=32.6'
 # depends: [cuda, cudastack:standard, python]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.py
 # notes: https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/user_guide/jetson.html
 #---

@@ -2,6 +2,7 @@
 # name: speaches
 # group: audio
 # depends: [faster-whisper, piper1-tts, kokoro-tts:onnx, python, nodejs, onnxruntime]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # docs: docs.md
 #---

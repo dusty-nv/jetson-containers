@@ -3,6 +3,7 @@
 # group: nerf
 # config: config.py
 # depends: [cuda, cupy, cuda-python, pytorch, torchvision, torchaudio, pytorch3d, tinycudann, polyscope, kaolin, opencv]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # notes: https://github.com/nv-tlabs/3dgrut
 #---

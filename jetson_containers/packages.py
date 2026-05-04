@@ -77,7 +77,7 @@ _PACKAGES = {}
 _PACKAGE_SCAN = False
 _PACKAGE_DIRS = [os.path.join(get_repo_dir(), 'packages/*')]
 _PACKAGE_OPTS = {'check_l4t_version': True}
-_PACKAGE_KEYS = ['alias', 'build_args', 'build_flags', 'config', 'depends', 'disabled',
+_PACKAGE_KEYS = ['alias', 'build_args', 'build_flags', 'buildkit_device', 'config', 'depends', 'disabled',
                  'dockerfile', 'docs', 'group', 'name', 'notes', 'path',
                  'prefix', 'postfix', 'requires', 'test']
 

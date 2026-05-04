@@ -3,6 +3,7 @@
 # group: rag
 # config: config.py
 # depends: [cmake, ffmpeg, opencv]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=35'
 # test: test.py
 #---

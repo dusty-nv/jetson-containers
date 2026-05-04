@@ -4,6 +4,7 @@
 # config: config.py
 # requires: '>=35'
 # depends: [transformers, triton]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.py
 # notes: https://github.com/bitsandbytes-foundation/bitsandbytes
 #---

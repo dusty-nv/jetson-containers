@@ -3,6 +3,7 @@
 # group: hardware
 # config: config.py
 # depends: [cuda, cudastack:standard, python, opengl]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.py
 # notes: Stereolabs ZED SDK
 #---

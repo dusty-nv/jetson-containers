@@ -3,6 +3,7 @@
 # group: attention
 # config: config.py
 # depends: [pytorch, triton, huggingface_hub, flash-attention]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=35'
 # test: test.py
 #---

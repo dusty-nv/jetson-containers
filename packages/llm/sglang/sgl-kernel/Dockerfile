@@ -3,6 +3,7 @@
 # group: sglang
 # config: config.py
 # depends: [cuda, cmake, pytorch, triton, flash-attention, flashinfer, xgrammar, genai-bench, torchao]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=36'
 # test: test.py
 # notes: https://github.com/sgl-project/sglang/sgl-kernel

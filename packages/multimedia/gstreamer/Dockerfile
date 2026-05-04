@@ -2,6 +2,7 @@
 # name: gstreamer
 # group: multimedia
 # depends: opencv
+# buildkit_device: nvidia.com/gpu=all
 # test: [test.sh, test.py]
 #---
 ARG BASE_IMAGE

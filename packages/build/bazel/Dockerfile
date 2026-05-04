@@ -2,6 +2,7 @@
 # name: bazel
 # group: build
 # depends: [build-essential]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.sh
 #---
 ARG BASE_IMAGE

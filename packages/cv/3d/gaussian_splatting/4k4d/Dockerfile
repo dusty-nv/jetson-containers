@@ -3,6 +3,7 @@
 # group: nerf
 # config: config.py
 # depends: [pytorch, torchvision, torchaudio, opencv, tinycudann, fast_gauss, easyvolcap, open3d, pytorch3d]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/zju3dv/4k4D

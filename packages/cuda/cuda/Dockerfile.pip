@@ -1,3 +1,6 @@
+#---
+# buildkit_device: nvidia.com/gpu=all
+#---
 
 #
 # pip_cache enables Jetson pip server index of precompiled wheels for versions of JetPack and CUDA.

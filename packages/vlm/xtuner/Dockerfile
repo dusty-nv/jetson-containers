@@ -2,6 +2,7 @@
 # name: xtuner
 # group: vlm
 # depends: [transformers, bitsandbytes, flash-attention]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=35'
 # test: [test.sh, test.py]
 #---

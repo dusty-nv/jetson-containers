@@ -2,6 +2,7 @@
 # name: audiocraft
 # group: audio
 # depends: [pytorch, torchvision, torchaudio, torchtext, opencv, huggingface_hub, transformers, xformers, jupyterlab]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # docs: docs.md
 #---

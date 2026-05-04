@@ -3,6 +3,7 @@
 # group: wyoming
 # config: config.py
 # depends: [python, homeassistant-base, piper1-tts]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.sh
 # requires: '>=34.1.0'
 # docs: docs.md

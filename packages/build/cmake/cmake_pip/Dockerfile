@@ -3,6 +3,7 @@
 # alias: cmake
 # group: build
 # depends: [build-essential, python]
+# buildkit_device: nvidia.com/gpu=all
 # notes: upgrade `cmake` with `pip`
 #---
 ARG BASE_IMAGE

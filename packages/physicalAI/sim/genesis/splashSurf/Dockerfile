@@ -2,6 +2,7 @@
 # name: splashsurf
 # group: sim
 # depends: [cuda, rust, cmake]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # notes: https://github.com/InteractiveComputerGraphics/splashsurf
 #---

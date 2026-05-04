@@ -3,6 +3,7 @@
 # group: sim
 # config: config.py
 # depends: [pytorch, numba]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=35'
 # test: [test.sh, test.py]
 #---

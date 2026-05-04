@@ -2,6 +2,7 @@
 # name: zeroclaw
 # group: agents
 # depends: [cudastack:standard, python, rust]
+# buildkit_device: nvidia.com/gpu=all
 # config: config.py
 # test: test.sh
 # docs: https://github.com/zeroclaw-labs/zeroclaw

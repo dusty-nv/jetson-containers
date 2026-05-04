@@ -2,6 +2,7 @@
 # name: l4t-ml
 # group: ml
 # depends: [
+# buildkit_device: nvidia.com/gpu=all
 #   tensorflow2, jax,
 #   pytorch, torchvision, torchaudio, torchao,
 #   pycuda, cupy, cuda-python,

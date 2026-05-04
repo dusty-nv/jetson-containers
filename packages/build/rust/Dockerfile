@@ -2,6 +2,7 @@
 # name: rust
 # group: build
 # depends: [build-essential, python]
+# buildkit_device: nvidia.com/gpu=all
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

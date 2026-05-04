@@ -2,8 +2,10 @@ import os
 
 from jetson_containers import JETPACK_VERSION
 
+DEFAULT_OPEN_WEBUI_VERSION = os.environ.get('OPEN_WEBUI_VERSION', '0.6.32')
 
-def get_latest_release_tag(repo_path):
+
+def get_latest_release_tag(repo_path, default=DEFAULT_OPEN_WEBUI_VERSION):
     """Get the latest release tag from a GitHub repository.
 
     Args:
@@ -16,13 +18,12 @@ def get_latest_release_tag(repo_path):
     # Call GitHub API
     api_url = f"https://api.github.com/repos/{repo_path}/releases/latest"
     import requests
-    response = requests.get(api_url)
-
-    if response.status_code == 200:
+    try:
+        response = requests.get(api_url, timeout=10)
+        response.raise_for_status()
         return response.json()['tag_name']
-    else:
-        raise Exception(
-            f"Failed to fetch release from {api_url} : {response.status_code} - {response.text}")
+    except Exception:
+        return default
 
 
 def open_webui(version, repo=None, requires=None, default=False):

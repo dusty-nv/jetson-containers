@@ -3,6 +3,7 @@
 # group: nerf
 # config: config.py
 # depends: [torch, torchvision, ffmpeg, ninja, cmake, pyceres]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/colmap/colmap.git

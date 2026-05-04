@@ -2,6 +2,7 @@
 # name: nanosam
 # group: vit
 # depends: [pytorch, torchvision, torch2trt, transformers]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # docs: docs.md
 #---

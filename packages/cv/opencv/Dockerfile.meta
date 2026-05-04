@@ -1,3 +1,6 @@
+#---
+# buildkit_device: nvidia.com/gpu=all
+#---
 #
 # opencv-python meta-package builder that installs opencv-contrib-python
 #

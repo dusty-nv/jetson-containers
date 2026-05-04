@@ -3,6 +3,7 @@
 # group: attention
 # config: config.py
 # depends: [pytorch, triton, diffusers, flash-attention]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/facebookresearch/xformers

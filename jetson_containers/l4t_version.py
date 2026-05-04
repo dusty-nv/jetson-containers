@@ -35,7 +35,6 @@ def get_l4t_version(version_file='/etc/nv_tegra_release', l4t_version: str = Non
 
     The L4T_VERSION will either be parsed from /etc/nv_tegra_release or the $L4T_VERSION environment variable.
     """
-    print(f"l4t_version: {l4t_version}")
     if l4t_version:
         return Version(l4t_version) if not isinstance(l4t_version, Version) else l4t_version
 

@@ -6,6 +6,8 @@ import fnmatch
 import json
 import os
 import pprint
+import re
+import shlex
 import shutil
 import subprocess
 import sys
@@ -21,7 +23,7 @@ from .l4t_version import (
 )
 from .logging import (
     get_log_dir, log_status, log_success, log_status, log_warning, log_debug,
-    log_block, log_info, print_log, pprint_debug, colorize, LogConfig
+    log_block, log_info, print_log, pprint_debug, colorize
 )
 from .packages import find_package, find_packages, resolve_dependencies, validate_dict
 from .utils import (
@@ -30,6 +32,9 @@ from .utils import (
 )
 
 _NEWLINE_=" \\\n"  # used when building command strings
+_DEFAULT_BUILDKIT_DEVICE = 'nvidia.com/gpu=all'
+_DEFAULT_CCACHE_DIR = '/root/.cache/ccache'
+_DEFAULT_CCACHE_MAXSIZE = '20G'
 
 def format_time(seconds):
     """Format time in hh:mm:ss format"""
@@ -62,9 +67,138 @@ class BuildTimer:
         self.stage_start = time.time()
         self.current_stage += 1
 
+
+def _normalize_buildkit_device(device):
+    """
+    Normalize the BuildKit CDI device requested by the CLI, env, or package config.
+    """
+    if isinstance(device, bool):
+        return _DEFAULT_BUILDKIT_DEVICE if device else ''
+
+    if not device:
+        return ''
+
+    device = str(device).strip()
+
+    if device.lower() in ('0', 'false', 'no', 'none', 'off'):
+        return ''
+
+    return _DEFAULT_BUILDKIT_DEVICE if device.lower() in ('1', 'true', 'yes', 'on') else device
+
+
+def _dockerfile_requests_buildkit_device(dockerfile):
+    """
+    Returns True if a Dockerfile already contains BuildKit RUN --device usage.
+    """
+    with open(dockerfile, 'r') as file:
+        return re.search(r'^\s*RUN\s+.*--device(?:=|\s)', file.read(), flags=re.MULTILINE) is not None
+
+
+def _prepare_buildkit_dockerfile(
+        dockerfile, output_path, device='', ccache=False,
+        ccache_dir=_DEFAULT_CCACHE_DIR, ccache_maxsize=_DEFAULT_CCACHE_MAXSIZE
+    ):
+    """
+    Generate a temporary Dockerfile that enables BuildKit frontend features and
+    adds requested RUN options like CDI devices and persistent ccache storage.
+    """
+    device = _normalize_buildkit_device(device)
+    ccache_dir = ccache_dir or _DEFAULT_CCACHE_DIR
+    ccache_maxsize = ccache_maxsize or _DEFAULT_CCACHE_MAXSIZE
+
+    if not device and not ccache:
+        return dockerfile
+
+    with open(dockerfile, 'r') as file:
+        lines = file.readlines()
+
+    if lines and lines[0].startswith('# syntax='):
+        if '-labs' not in lines[0]:
+            lines[0] = '# syntax=docker/dockerfile:1-labs\n'
+    else:
+        lines.insert(0, '# syntax=docker/dockerfile:1-labs\n')
+
+    env_line = (
+        f'ENV CCACHE_DIR={ccache_dir} \\\n'
+        f'    CCACHE_MAXSIZE={ccache_maxsize} \\\n'
+        f'    CCACHE_COMPRESS=1 \\\n'
+        f'    CCACHE_COMPILERCHECK=content \\\n'
+        f'    CCACHE_CPP2=1 \\\n'
+        f'    CCACHE_NOHASHDIR=1 \\\n'
+        f'    PATH=/usr/lib/ccache:${{PATH}}\n'
+    )
+    ccache_prefix = (
+        'if command -v ccache >/dev/null 2>&1; then '
+        'export CMAKE_C_COMPILER_LAUNCHER=ccache '
+        'CMAKE_CXX_COMPILER_LAUNCHER=ccache '
+        'CMAKE_CUDA_COMPILER_LAUNCHER=ccache; '
+        'ccache --set-config=max_size="${CCACHE_MAXSIZE:-20G}" || true; '
+        'fi; '
+    )
+
+    def split_run_options(command):
+        options = []
+        rest = command.lstrip()
+        prefix_len = len(command) - len(rest)
+
+        while rest.startswith('--'):
+            match = re.match(r'(--\S+)(\s+)(.*)$', rest)
+            if not match:
+                break
+            options.append(match.group(1))
+            rest = match.group(3).lstrip()
+
+        return command[:prefix_len], options, rest
+
+    from_pattern = re.compile(r'^\s*FROM\s+')
+    run_pattern = re.compile(r'^(\s*)RUN\s+(.*)$')
+    output_lines = []
+
+    for line in lines:
+        newline = '\n' if line.endswith('\n') else ''
+        stripped_line = line[:-1] if newline else line
+        match = run_pattern.match(stripped_line)
+
+        if from_pattern.match(stripped_line):
+            output_lines.append(line)
+            if ccache:
+                output_lines.append(env_line)
+        elif match:
+            run_options = []
+
+            if device and '--device=' not in match.group(2):
+                run_options.append(f'--device={device}')
+
+            if ccache:
+                if f'target={ccache_dir}' not in match.group(2):
+                    run_options.append(f'--mount=type=cache,target={ccache_dir},sharing=locked')
+
+            if run_options or (ccache and not match.group(2).lstrip().startswith('[')):
+                run_indent, existing_options, run_command = split_run_options(match.group(2))
+                all_options = run_options + existing_options
+                run_prefix = ccache_prefix if ccache and not run_command.startswith('[') else ''
+                output_lines.append(
+                    f"{match.group(1)}RUN {run_indent}{' '.join(all_options)} "
+                    f"{run_prefix}{run_command}{newline}"
+                )
+            else:
+                output_lines.append(line)
+        else:
+            output_lines.append(line)
+
+    with open(output_path, 'w') as file:
+        file.writelines(output_lines)
+
+    return output_path
+
 def build_container(
         name: str='', packages: list=[], base: str=get_l4t_base(),
-        build_flags: str='', build_args: dict=None, simulate: bool=False,
+        buildkit: bool=True, buildkit_device: str='', buildkit_progress: str='tty',
+        cache_from: list=None, cache_to: list=None,
+        ccache: bool=True,
+        ccache_dir: str=_DEFAULT_CCACHE_DIR, ccache_maxsize: str=_DEFAULT_CCACHE_MAXSIZE,
+        build_flags: str='',
+        build_args: dict=None, simulate: bool=False,
         skip_packages: list=[], skip_tests: list=[], test_only: list=[],
         push: str='', no_github_api=False, **kwargs
     ):
@@ -77,6 +211,14 @@ def build_container(
                     if empty, a default name will be assigned based on the package(s) selected.
       packages (list[str]) -- list of package names to build (into one container)
       base (str) -- base container image to use (defaults to l4t-base or l4t-jetpack)
+      buildkit (bool) -- if true, use Docker BuildKit/buildx for builds
+      buildkit_device (str) -- CDI device to expose to BuildKit RUN steps
+      buildkit_progress (str) -- BuildKit progress renderer (auto, plain, tty, rawjson)
+      cache_from (list[str]) -- BuildKit cache importers (--cache-from)
+      cache_to (list[str]) -- BuildKit cache exporters (--cache-to)
+      ccache (bool) -- if true, mount a persistent BuildKit ccache directory
+      ccache_dir (str) -- ccache directory inside build containers
+      ccache_maxsize (str) -- maximum ccache size inside build containers
       build_flags (str) -- arguments to add to the 'docker build' command
       simulate (bool) -- if true, just print out the commands that would have been run
       skip_packages (list[str]) -- list of packages to skip from the build
@@ -111,6 +253,9 @@ def build_container(
 
         if len(test_only) == 1 and len(test_only[0]) == 0:
             test_only = []
+
+        cache_from = cache_from or []
+        cache_to = cache_to or []
 
         # get default base container (l4t-jetpack)
         if not base:
@@ -162,10 +307,8 @@ def build_container(
                 log_info(f"{i}...")
                 time.sleep(1)
 
-        # Initialize status bar and clear screen
+        # Initialize terminal sizing used for aligned progress messages.
         terminal = shutil.get_terminal_size(fallback=(80, 24))
-        print(f'\033[1;{terminal.lines-1}r\033[?6l\033[2J\033[H]', end='', flush=True)
-        LogConfig.status = True
 
         # Initialize build timer
         timer = BuildTimer()
@@ -180,46 +323,71 @@ def build_container(
             log_file = os.path.join(get_log_dir('build'), f"{idx+1:02d}o{len(packages)}_{container_name.replace('/','_')}").replace(':','_')
             jetpack_version = get_jetpack_version()
             if 'dockerfile' in pkg:
-                # Check if SSH key is provided for SCP uploads - BuildKit/buildx is required for secret mounting
-                scp_upload_key = os.environ.get('SCP_UPLOAD_KEY')
-                scp_key_provided = scp_upload_key and os.path.isfile(scp_upload_key)
+                dockerfilepath = os.path.join(pkg['path'], pkg['dockerfile'])
 
-                # Use buildx which always uses BuildKit and has better log size limit support
-                # Enable buildx if SSH key is provided (required for secrets) or user prefers it
-                user_buildkit = os.environ.get('DOCKER_BUILDKIT', '0')
-                use_buildx = user_buildkit != '0' or scp_key_provided
-
-                # Set BuildKit log size limit (default 500MB, configurable via BUILDKIT_STEP_LOG_MAX_SIZE)
-                # Default Docker BuildKit limit is 2MiB which can clip large build outputs
-                buildkit_log_size = os.environ.get('BUILDKIT_STEP_LOG_MAX_SIZE', '524288000')  # 500MB default
-
-                if use_buildx:
-                    # Use buildx with log size configuration
-                    buildkit_env = f"BUILDKIT_STEP_LOG_MAX_SIZE={buildkit_log_size}"
-                    cmd = f"{sudo_prefix()}{buildkit_env} docker buildx build --network=host --shm-size=8g" + _NEWLINE_
-                    cmd += f"  --progress=plain" + _NEWLINE_
-                    cmd += f"  --load" + _NEWLINE_  # Load image into local Docker daemon
-                else:
-                    # Fallback to regular docker build
-                    buildkit_env = f"DOCKER_BUILDKIT=0"
-                    cmd = f"{sudo_prefix()}{buildkit_env} docker build --network=host --shm-size=8g" + _NEWLINE_
-                cmd += f"  --tag {container_name}" + _NEWLINE_
                 if no_github_api:
-                    dockerfilepath = os.path.join(pkg['path'], pkg['dockerfile'])
                     with open(dockerfilepath, 'r') as fp:
                         data = fp.read()
                         if 'ADD https://api.github.com' in data:
                             dockerfilepath_minus_github_api = os.path.join(pkg['path'], pkg['dockerfile'] + '.minus-github-api')
                             os.system(f"cp {dockerfilepath} {dockerfilepath_minus_github_api}")
                             os.system(f"sed 's|^ADD https://api.github.com|#[minus-github-api]ADD https://api.github.com|' -i {dockerfilepath_minus_github_api}")
-                            cmd += f"  --file {os.path.join(pkg['path'], pkg['dockerfile'] + '.minus-github-api')}" + _NEWLINE_
-                        else:
-                            cmd += f"  --file {os.path.join(pkg['path'], pkg['dockerfile'])}" + _NEWLINE_
+                            dockerfilepath = dockerfilepath_minus_github_api
+
+                # Check if SSH key is provided for SCP uploads - BuildKit/buildx is required for secret mounting
+                scp_upload_key = os.environ.get('SCP_UPLOAD_KEY')
+                scp_key_provided = scp_upload_key and os.path.isfile(scp_upload_key)
+
+                # Use buildx which always uses BuildKit and has better log size limit support
+                # Enable buildx if SSH key is provided (required for secrets) or user prefers it
+                user_buildkit = buildkit
+                active_buildkit_device = _normalize_buildkit_device(buildkit_device or pkg.get('buildkit_device', ''))
+                device_requested = bool(active_buildkit_device) or _dockerfile_requests_buildkit_device(dockerfilepath)
+                use_buildx = user_buildkit or scp_key_provided or bool(active_buildkit_device)
+
+                # Set BuildKit log size limit (default 500MB, configurable via BUILDKIT_STEP_LOG_MAX_SIZE)
+                # Default Docker BuildKit limit is 2MiB which can clip large build outputs
+                buildkit_log_size = os.environ.get('BUILDKIT_STEP_LOG_MAX_SIZE', '524288000')  # 500MB default
+
+                if use_buildx:
+                    effective_buildkit_progress = buildkit_progress
+                    if effective_buildkit_progress == 'tty' and not sys.stdout.isatty():
+                        effective_buildkit_progress = 'plain'
+
+                    # Use buildx with log size configuration
+                    buildkit_env = f"DOCKER_BUILDKIT=1 BUILDKIT_STEP_LOG_MAX_SIZE={buildkit_log_size}"
+                    cmd = f"{sudo_prefix()}{buildkit_env} docker buildx build --network=host --shm-size=8g" + _NEWLINE_
+                    cmd += f"  --progress={effective_buildkit_progress}" + _NEWLINE_
+                    cmd += f"  --load" + _NEWLINE_  # Load image into local Docker daemon
+                    if device_requested:
+                        cmd += f"  --allow device" + _NEWLINE_
+                    for cache in cache_from:
+                        cmd += f"  --cache-from {cache}" + _NEWLINE_
+                    for cache in cache_to:
+                        cmd += f"  --cache-to {cache}" + _NEWLINE_
                 else:
-                    cmd += f"  --file {os.path.join(pkg['path'], pkg['dockerfile'])}" + _NEWLINE_
+                    # Fallback to regular docker build
+                    effective_buildkit_progress = None
+                    buildkit_env = f"DOCKER_BUILDKIT=0"
+                    cmd = f"{sudo_prefix()}{buildkit_env} docker build --network=host --shm-size=8g" + _NEWLINE_
+                cmd += f"  --tag {container_name}" + _NEWLINE_
+
+                if active_buildkit_device or (ccache and use_buildx):
+                    dockerfilepath = _prepare_buildkit_dockerfile(
+                        dockerfilepath,
+                        log_file + '.Dockerfile',
+                        device=active_buildkit_device,
+                        ccache=ccache and use_buildx,
+                        ccache_dir=ccache_dir,
+                        ccache_maxsize=ccache_maxsize
+                    )
+
+                cmd += f"  --file {dockerfilepath}" + _NEWLINE_
 
                 cmd += f"  --build-arg BASE_IMAGE={base}" + _NEWLINE_
                 cmd += f"  --build-arg NVIDIA_DRIVER_CAPABILITIES=all" + _NEWLINE_
+                if use_buildx and any(cache.startswith('type=inline') for cache in cache_to):
+                    cmd += f"  --build-arg BUILDKIT_INLINE_CACHE=1" + _NEWLINE_
 
                 if 'build_args' in pkg:
                     cmd += ''.join([f"  --build-arg {key}=\"{value}\"" + _NEWLINE_ for key, value in pkg['build_args'].items()])
@@ -237,9 +405,6 @@ def build_container(
                 # Mount SSH key as BuildKit secret (available at /run/secrets/scp_upload_key
                 # during RUN commands, never persisted in image layers)
                 if scp_key_provided:
-                    if not use_buildx:
-                        log_warning("SCP_UPLOAD_KEY requires BuildKit/buildx - using buildx")
-                        use_buildx = True
                     cmd += f"  --secret id=scp_upload_key,src={scp_upload_key}" + _NEWLINE_
 
                 cmd += '   ' + pkg['path']
@@ -251,18 +416,30 @@ def build_container(
                 current_time = datetime.datetime.now().strftime("%H:%M:%S")
                 time_text = f"{idx} stages completed in {format_time_minutes(timer.get_elapsed())} at {current_time}"
                 spaces_needed = terminal.columns - len(status_text) - len(time_text)
-                if spaces_needed > 0:
-                    status_text = status_text + ' ' * spaces_needed
+                status_text = status_text + ' ' * max(1, spaces_needed)
                 log_status(f"{status_text}{time_text}")
 
-                cmd += _NEWLINE_ + f"2>&1 | tee {log_file + '.txt'}" + "; exit ${PIPESTATUS[0]}"  # non-tee version:  https://stackoverflow.com/a/34604684
+                log_path = log_file + '.txt'
+                run_cmd = cmd.replace(_NEWLINE_, ' ')
+
+                if use_buildx and effective_buildkit_progress == 'tty':
+                    if shutil.which('script'):
+                        # BuildKit's tty renderer requires a console.  `script`
+                        # provides a pseudo-terminal while still saving output.
+                        run_cmd = f"script -q -e -c {shlex.quote(run_cmd)} {shlex.quote(log_path)}"
+                    else:
+                        log_warning("BuildKit tty progress requires the 'script' command - falling back to plain progress")
+                        run_cmd = run_cmd.replace('--progress=tty', '--progress=plain')
+                        run_cmd += f" 2>&1 | tee {shlex.quote(log_path)}; exit ${{PIPESTATUS[0]}}"
+                else:
+                    run_cmd += f" 2>&1 | tee {shlex.quote(log_path)}; exit ${{PIPESTATUS[0]}}"  # https://stackoverflow.com/a/34604684
 
                 with open(log_file + '.sh', 'w') as cmd_file:   # save the build command to a shell script for future reference
                     cmd_file.write('#!/usr/bin/env bash\n\n')
-                    cmd_file.write(cmd + '\n')
+                    cmd_file.write(run_cmd + '\n')
 
                 if not simulate:  # remove the line breaks that were added for readability, and set the shell to bash so we can use $PIPESTATUS
-                    status = subprocess.run(cmd.replace(_NEWLINE_, ' '), executable='/bin/bash', shell=True, check=True)
+                    status = subprocess.run(run_cmd, executable='/bin/bash', shell=True, check=True)
                     print('')
             else:
                 tag_container(base, container_name, simulate)
@@ -274,8 +451,7 @@ def build_container(
                     current_time = datetime.datetime.now().strftime("%H:%M:%S")
                     time_text = f"{idx} stages completed in {format_time_minutes(timer.get_elapsed())} at {current_time}"
                     spaces_needed = terminal.columns - len(status_text) - len(time_text)
-                    if spaces_needed > 0:
-                        status_text = status_text + ' ' * spaces_needed
+                    status_text = status_text + ' ' * max(1, spaces_needed)
                     log_status(f"{status_text}{time_text}")
                     test_container(container_name, pkg, simulate, build_idx=idx)
 
@@ -294,8 +470,7 @@ def build_container(
                     current_time = datetime.datetime.now().strftime("%H:%M:%S")
                     time_text = f"{idx} stages completed in {format_time_minutes(timer.get_elapsed())} at {current_time}"
                     spaces_needed = terminal.columns - len(status_text) - len(time_text)
-                    if spaces_needed > 0:
-                        status_text = status_text + ' ' * spaces_needed
+                    status_text = status_text + ' ' * max(1, spaces_needed)
                     log_status(f"{status_text}{time_text}")
                     test_container(name, package, simulate, build_idx=idx)
                     timer.next_stage()

@@ -3,6 +3,7 @@
 # group: llm
 # config: config.py
 # depends: [cuda, cudnn, cmake, python, numpy, huggingface_hub]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # test: test_version.py
 # docs: docs.md

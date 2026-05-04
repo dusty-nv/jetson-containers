@@ -2,6 +2,7 @@
 # name: jetson-utils
 # group: multimedia
 # depends: [cuda, cudastack:standard, python, cmake, gstreamer]
+# buildkit_device: nvidia.com/gpu=all
 # test: [test.sh]
 #---
 ARG BASE_IMAGE

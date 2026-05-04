@@ -3,6 +3,7 @@
 # group: vla
 # docs: docs.md
 # depends: [transformers, bitsandbytes, flash-attention, opencv]
+# buildkit_device: nvidia.com/gpu=all
 # test: [test.py]
 #---
 ARG BASE_IMAGE

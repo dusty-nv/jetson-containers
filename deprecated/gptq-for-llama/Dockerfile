@@ -2,6 +2,7 @@
 # name: gptq-for-llama
 # group: llm
 # depends: [transformers]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.sh
 # notes: https://github.com/oobabooga/GPTQ-for-LLaMa
 #---

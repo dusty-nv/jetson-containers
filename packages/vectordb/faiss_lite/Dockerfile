@@ -2,6 +2,7 @@
 # name: faiss_lite
 # group: vectordb
 # depends: [pytorch, cuda-python, faiss]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.sh
 #---
 ARG BASE_IMAGE

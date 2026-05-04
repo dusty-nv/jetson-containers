@@ -2,6 +2,7 @@
 # name: canbus
 # group: hardware
 # depends: [python]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.sh
 # notes: CAN bus utilities for Linux and Python
 #---

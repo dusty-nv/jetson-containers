@@ -3,6 +3,7 @@
 # group: vectordb
 # docs: docs.md
 # depends: [faiss_lite, transformers, torch2trt, clip_trt]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.py
 #---
 ARG BASE_IMAGE

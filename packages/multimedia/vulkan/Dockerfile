@@ -2,6 +2,7 @@
 # name: vulkan
 # group: multimedia
 # depends: [build-essential, pip_cache, cmake, llvm]
+# buildkit_device: nvidia.com/gpu=all
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

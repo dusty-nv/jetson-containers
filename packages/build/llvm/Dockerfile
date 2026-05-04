@@ -3,6 +3,7 @@
 # alias: clang
 # group: build
 # depends: [build-essential, cmake]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.sh
 #---
 ARG BASE_IMAGE

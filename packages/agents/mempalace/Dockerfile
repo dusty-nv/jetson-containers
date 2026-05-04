@@ -2,6 +2,7 @@
 # name: mempalace
 # group: agents
 # depends: [cudastack:standard, python]
+# buildkit_device: nvidia.com/gpu=all
 # config: config.py
 # test: test.sh
 # docs: https://github.com/milla-jovovich/mempalace

@@ -3,6 +3,7 @@
 # group: pykan
 # config: config.py
 # depends: [cuda, pytorch, torchvision, torchaudio, triton]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/state-spaces/pykan

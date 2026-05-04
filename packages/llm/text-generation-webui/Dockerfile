@@ -3,6 +3,7 @@
 # group: llm
 # config: config.py
 # depends: [transformers, exllama, llama_cpp]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # docs: docs.md
 #---

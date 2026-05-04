@@ -3,6 +3,7 @@
 # group: mamba
 # config: config.py
 # depends: [bitsandbytes, transformers, mamba]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # notes: https://github.com/feizc/Dimba
 #---

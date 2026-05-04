@@ -3,6 +3,7 @@
 # group: pytorch
 # config: config.py
 # depends: [cuda, cmake, pytorch, torchvision, torchaudio]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.py
 #---
 ARG BASE_IMAGE

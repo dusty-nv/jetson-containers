@@ -3,6 +3,7 @@
 # group: nerf
 # config: config.py
 # depends: [pytorch, torchvision]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/NVlabs/tiny-cuda-nn

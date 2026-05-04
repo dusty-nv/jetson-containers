@@ -2,6 +2,7 @@
 # name: docker
 # group: build
 # depends: [python]
+# buildkit_device: nvidia.com/gpu=all
 # docs: docs.md
 # test: test.sh
 #---

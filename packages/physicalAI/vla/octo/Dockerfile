@@ -3,6 +3,7 @@
 # group: vla
 # docs: docs.md
 # depends: [transformers, opencv, jax, h5py]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=36'
 # test: test.py
 #---

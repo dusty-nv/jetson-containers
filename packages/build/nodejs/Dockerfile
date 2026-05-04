@@ -2,6 +2,7 @@
 # name: nodejs
 # group: build
 # depends: [build-essential]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.sh
 # notes: installs `nodejs`, `npm`
 #---

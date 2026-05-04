@@ -1,3 +1,6 @@
+#---
+# buildkit_device: nvidia.com/gpu=all
+#---
 #
 # Variant of the PyTorch container that downloads and installs the torch wheel
 # from an external URL as opposed to the pip server (see config.py for options)

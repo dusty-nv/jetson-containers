@@ -2,6 +2,7 @@
 # name: lobechat
 # group: llm
 # depends: [nodejs, pytorch, torchvision, torchaudio, opencv, bitsandbytes, transformers, xformers, torchao, flash-attention, sage-attention, sparge-attention, flexprefill, paraattention, diffusers, huggingface_hub]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=35.0.0'
 # docs: docs.md
 #---

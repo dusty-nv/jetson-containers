@@ -3,6 +3,7 @@
 # group: nerf
 # config: config.py
 # depends: [pytorch, torchvision, torchaudio, tinycudann, nerfview]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # notes: https://github.com/nerfstudio-project/gsplat
 #---

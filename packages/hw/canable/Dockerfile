@@ -4,6 +4,7 @@
 # group: hardware
 # config: config.py
 # depends: [build-essential]
+# buildkit_device: nvidia.com/gpu=all
 # test: load.sh
 # notes: Kernel module builder for CANable USB-to-CAN bus adapter (canable.io)
 #---

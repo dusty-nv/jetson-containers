@@ -3,6 +3,7 @@
 # group: audio
 # docs: docs.md
 # depends: [cuda, pytorch, torchvision, torchaudio, torchao, torch-memory-saver, audiocraft, whisper, whisperx]
+# buildkit_device: nvidia.com/gpu=all
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

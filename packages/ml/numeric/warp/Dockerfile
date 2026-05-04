@@ -2,6 +2,7 @@
 # name: warp
 # group: numerical
 # depends: [cuda, cupy, numba, llvm]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.sh
 # notes: https://github.com/NVIDIA/warp
 #---

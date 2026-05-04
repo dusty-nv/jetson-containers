@@ -3,6 +3,7 @@
 # group: llm
 # config: config.py
 # depends: [mlc, riva-client:python, jetson-utils, torch2trt, torchaudio, piper1-tts, nanodb, mimicgen]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=35'
 # docs: docs.md
 #---

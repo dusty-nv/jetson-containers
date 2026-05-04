@@ -2,6 +2,7 @@
 # name: jupyter_clickable_image_widget
 # group: hardware
 # depends: [jupyterlab]
+# buildkit_device: nvidia.com/gpu=all
 # notes: https://github.com/jaybdub/jupyter_clickable_image_widget
 #---
 ARG BASE_IMAGE

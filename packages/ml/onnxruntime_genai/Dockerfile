@@ -3,6 +3,7 @@
 # group: ml
 # config: config.py
 # depends: [torch, torchvision, torchaudio, transformers, onnx, onnxruntime]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.py
 #---
 ARG BASE_IMAGE

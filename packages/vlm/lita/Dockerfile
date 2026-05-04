@@ -3,6 +3,7 @@
 # group: vlm
 # docs: docs.md
 # depends: [pytorch, transformers, bitsandbytes, flash-attention, decord2]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # test: test.py
 #---

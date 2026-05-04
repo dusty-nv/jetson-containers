@@ -2,6 +2,7 @@
 # name: cosmos-transfer1
 # group: cosmos
 # depends: [pytorch, torchvision, torchaudio, transformer-engine, flash-attention, transformers, opencv, bitsandbytes, huggingface_hub, ffmpeg, apex]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # notes: https://github.com/nvidia-cosmos/cosmos-transfer1
 #---

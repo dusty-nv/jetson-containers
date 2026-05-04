@@ -3,6 +3,7 @@
 # group: nerf
 # config: config.py
 # depends: [torch, torchvision, ffmpeg, python, ninja, cmake, numpy, pyceres, pycolmap, hloc]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/cvg/Hierarchical-Localization.git

@@ -3,6 +3,7 @@
 # alias: jetrag
 # group: rag
 # depends: [pytorch, ollama, transformers]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # docs: docs.md
 #---

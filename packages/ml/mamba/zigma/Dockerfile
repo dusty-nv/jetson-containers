@@ -3,6 +3,7 @@
 # group: mamba
 # config: config.py
 # depends: [pytorch, torchvision, opencv, transformers, xformers, triton, causalconv1d, mamba]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/CompVis/zigma

@@ -3,6 +3,7 @@
 # group: pytorch
 # config: config.py
 # depends: [pytorch, torchvision, cudastack:standard, bazel]
+# buildkit_device: nvidia.com/gpu=all
 # test: [test.py, test.sh]
 # notes: https://pytorch.org/TensorRT/getting_started/installation.html#installation
 #---

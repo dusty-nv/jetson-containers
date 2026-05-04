@@ -1,3 +1,6 @@
+#---
+# buildkit_device: nvidia.com/gpu=all
+#---
 # 
 # Adds ROS nodes for jetson-inference from here:
 #   github.com/dusty-nv/ros_deep_learning 

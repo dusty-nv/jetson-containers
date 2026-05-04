@@ -3,6 +3,7 @@
 # group: llm
 # config: config.py
 # depends: [cudastack:standard, pytorch, torchvision, torchaudio, transformers, cuda-python, tensorrt_llm]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/NVIDIA/TensorRT-Model-Optimizer

@@ -2,6 +2,7 @@
 # name: small-stable-diffusion
 # group: diffusion
 # depends: [pytorch, torchvision, onnxruntime]
+# buildkit_device: nvidia.com/gpu=all
 # disabled: true
 # test: test.sh
 # notes: disabled due to https://github.com/OFA-Sys/diffusion-deploy/issues/1

@@ -2,6 +2,7 @@
 # name: openai
 # group: llm
 # depends: [python]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.py
 # notes: https://github.com/openai/openai-python
 #---

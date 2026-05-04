@@ -3,6 +3,7 @@
 # group: mamba
 # config: config.py
 # depends: [ninja, mamba, transformers, huggingface_hub]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # notes: https://github.com/h-zhao1997/cobra
 #---

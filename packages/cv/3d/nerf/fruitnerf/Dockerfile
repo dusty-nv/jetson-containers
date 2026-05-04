@@ -3,6 +3,7 @@
 # group: nerf
 # config: config.py
 # depends: [nerfstudio, opencv, onnxruntime]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # notes: https://github.com/meyerls/FruitNeRF
 #---

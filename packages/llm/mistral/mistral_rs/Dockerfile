@@ -4,6 +4,7 @@
 # group: llm
 # config: config.py
 # depends: [cuda, rust]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=36.3.0'
 # test: test.sh
 #---

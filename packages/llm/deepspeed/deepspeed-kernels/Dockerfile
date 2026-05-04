@@ -3,6 +3,7 @@
 # group: llm
 # config: config.py
 # depends: [cuda, python, cmake]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=35'
 # test: test.py
 #---

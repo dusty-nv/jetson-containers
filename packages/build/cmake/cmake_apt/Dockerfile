@@ -2,6 +2,7 @@
 # name: cmake:apt
 # group: build
 # depends: build-essential
+# buildkit_device: nvidia.com/gpu=all
 # notes: upgrade cmake with apt
 #---
 ARG BASE_IMAGE

@@ -3,6 +3,7 @@
 # group: cv
 # requires: '>=36'
 # depends: [pytorch, cudastack:standard, cupy, ffmpeg]
+# buildkit_device: nvidia.com/gpu=all
 # test: [test.sh]
 # notes: https://docs.nvidia.com/holoscan/sdk-user-guide/overview.html
 #---

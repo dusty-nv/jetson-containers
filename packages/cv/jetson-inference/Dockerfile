@@ -3,6 +3,7 @@
 # group: cv
 # config: config.py
 # depends: [cudastack:standard, pytorch, torchvision, cmake, gstreamer]
+# buildkit_device: nvidia.com/gpu=all
 # test: [test_utils.sh, test_infer.sh]
 #---
 ARG BASE_IMAGE

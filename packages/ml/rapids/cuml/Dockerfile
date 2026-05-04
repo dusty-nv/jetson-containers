@@ -4,6 +4,7 @@
 # config: config.py
 # requires: '>=34.1.0'
 # depends: [cudf]
+# buildkit_device: nvidia.com/gpu=all
 # test: [test.py]
 # notes: https://github.com/rapidsai/cuml
 #---

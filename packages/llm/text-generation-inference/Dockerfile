@@ -2,6 +2,7 @@
 # name: text-generation-inference
 # group: llm
 # depends: [pytorch, torchvision, bitsandbytes, transformers, rust]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # notes: https://github.com/huggingface/text-generation-inference
 #---

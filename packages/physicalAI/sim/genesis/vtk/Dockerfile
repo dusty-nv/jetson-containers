@@ -3,6 +3,7 @@
 # group: sim
 # config: config.py
 # depends: [ninja, cmake, rust]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=36.0.0'
 # test: test.py
 # notes: https://gitlab.kitware.com/vtk/vtk

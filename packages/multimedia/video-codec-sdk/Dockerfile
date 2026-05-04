@@ -3,6 +3,7 @@
 # alias: [nvcodec, nvenc, nvcuvid, cuvid]
 # group: multimedia
 # depends: [cuda]
+# buildkit_device: nvidia.com/gpu=all
 # notes: NVIDIA Video Codec SDK headers from https://github.com/FFmpeg/nv-codec-headers
 # test: test.sh
 #---

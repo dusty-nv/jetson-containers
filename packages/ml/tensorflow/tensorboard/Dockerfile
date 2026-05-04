@@ -2,6 +2,7 @@
 # name: tensorboard
 # group: ml
 # depends: [python]
+# buildkit_device: nvidia.com/gpu=all
 # test: [test.sh]
 #---
 ARG BASE_IMAGE

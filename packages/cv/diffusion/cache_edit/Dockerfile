@@ -3,6 +3,7 @@
 # group: diffusion
 # config: config.py
 # depends: [cuda, pytorch, triton, transformers, diffusers]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/vipshop/cache-dit

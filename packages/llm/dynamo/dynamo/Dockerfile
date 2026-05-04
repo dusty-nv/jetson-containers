@@ -3,6 +3,7 @@
 # group: dynamo
 # config: config.py
 # depends: [pytorch, torchvision, torchaudio, triton, transformers, mamba, nixl, llvm:22, vllm, sglang, flashinfer]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/ai-dynamo/dynamo
