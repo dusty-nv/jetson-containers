@@ -4,6 +4,7 @@
 # config: config.py
 # requires: '>=34.1.0'
 # depends: [cuda, numpy]
+# buildkit_device: nvidia.com/gpu=all
 # test: [test_driver.py, test_runtime.py]
 #---
 ARG BASE_IMAGE

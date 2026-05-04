@@ -3,6 +3,7 @@
 # group: nerf
 # config: config.py
 # depends: [numpy, cmake, ninja, polyscope]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # test: test.sh
 # notes: https://github.com/cnr-isti-vclab/PyMeshLab.git

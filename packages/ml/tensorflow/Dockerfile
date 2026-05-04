@@ -2,6 +2,7 @@
 # name: tensorflow
 # group: ml
 # depends: [cuda, cudastack:standard, numpy, onnx, h5py, bazel, protobuf:cpp, llvm:22]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.py
 # docs: Legacy TF1 installer and TF2 builder
 #---

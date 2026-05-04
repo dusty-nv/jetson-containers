@@ -2,6 +2,7 @@
 # name: tvm_ffi
 # group: ml
 # depends: [pytorch, rust, llvm:22]
+# buildkit_device: nvidia.com/gpu=all
 # config: config.py
 # requires: '>=34.1.0'
 # test: test.py

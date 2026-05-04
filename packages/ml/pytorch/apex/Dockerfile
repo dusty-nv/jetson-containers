@@ -3,6 +3,7 @@
 # group: attention
 # config: config.py
 # depends: [pytorch, triton, xformers]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=35'
 # test: test.py
 #---

@@ -2,6 +2,7 @@
 # name: faster-whisper
 # group: audio
 # depends: [ctranslate2, onnxruntime, huggingface_hub, numpy]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # test: test.py
 # notes: Faster Whisper transcription with CTranslate2 (https://github.com/SYSTRAN/faster-whisper)

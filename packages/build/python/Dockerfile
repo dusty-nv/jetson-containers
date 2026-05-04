@@ -2,6 +2,7 @@
 # name: python
 # group: build
 # depends: [build-essential, pip_cache]
+# buildkit_device: nvidia.com/gpu=all
 # notes: installs core `python3` packages and `pip`
 #---
 ARG BASE_IMAGE

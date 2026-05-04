@@ -4,6 +4,7 @@
 # config: config.py
 # requires: '>=34.1.0'
 # depends: [build-essential, python]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.py
 # notes: The `psutil-home-assistant` wheel that's build is saved in `/opt/wheels`
 #---

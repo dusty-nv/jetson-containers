@@ -3,6 +3,7 @@
 # group: cuda
 # config: config.py
 # depends: [cuda, cudastack:standard, python, cmake, ninja, cuda-python]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=35'
 # test: test.py
 #---

@@ -3,6 +3,7 @@
 # group: hardware
 # config: config.py
 # depends: [build-essential]
+# buildkit_device: nvidia.com/gpu=all
 # test: load.sh
 # notes: Kernel module builder for PL2303 serial-to-USB converter
 #---

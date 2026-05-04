@@ -2,6 +2,7 @@
 # name: comfyui
 # group: diffusion
 # depends: [cuda, ffmpeg, pytorch, torchvision, torchaudio, torchsde, pytorch3d, transformer-engine, torch-memory-saver, opencv, bitsandbytes, transformers, xformers, torchao, flash-attention, sage-attention, sparge-attention, flexprefill, paraattention, diffusers, huggingface_hub, onnxruntime]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=35.0.0'
 # docs: docs.md
 #---

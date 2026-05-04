@@ -2,6 +2,7 @@
 # name: kokoro-tts:onnx
 # group: audio
 # depends: [torchaudio, onnxruntime, numba, espeak]
+# buildkit_device: nvidia.com/gpu=all
 # test: [test.py]
 #---
 ARG BASE_IMAGE

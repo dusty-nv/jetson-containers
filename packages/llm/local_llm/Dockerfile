@@ -3,6 +3,7 @@
 # group: llm
 # config: config.py
 # depends: [nanodb, mlc, riva-client:python, jetson-inference, torch2trt, onnxruntime]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # docs: docs.md
 #---

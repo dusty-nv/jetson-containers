@@ -2,6 +2,7 @@
 # name: tensorflow_text
 # config: config.py
 # depends: [tensorflow2]
+# buildkit_device: nvidia.com/gpu=all
 # test: [test.py]
 #---
 ARG BASE_IMAGE

@@ -2,6 +2,7 @@
 # name: jupyterlab
 # group: code
 # depends: [cuda, cudastack:standard, cuda-python, pycuda, rust]
+# buildkit_device: nvidia.com/gpu=all
 # docs: docs.md
 # notes: will autostart Jupyter server on port 8888 unless container entry CMD is overridden
 #---

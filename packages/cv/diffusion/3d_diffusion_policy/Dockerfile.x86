@@ -1,3 +1,6 @@
+#---
+# buildkit_device: nvidia.com/gpu=all
+#---
 #
 # This is a dockerfile for 3d_diffusion_policy on x86 to aid in generation dataset,
 # since this project uses the original OpenAI mujoco (not available for Linux aarch64)

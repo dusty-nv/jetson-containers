@@ -3,6 +3,7 @@
 # group: attention
 # config: config.py
 # depends: [pytorch, torchvision, torchaudio, torchao, flash-attention, transformers, diffusers, opencv]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=35'
 # test: test.py
 # docs: https://github.com/chengzeyi/ParaAttention

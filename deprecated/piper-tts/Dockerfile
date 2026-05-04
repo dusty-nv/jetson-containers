@@ -2,6 +2,7 @@
 # name: piper-tts
 # group: audio
 # depends: [cuda, torchaudio, onnxruntime, espeak]
+# buildkit_device: nvidia.com/gpu=all
 # test: [test_piper_phonemize.sh, test.py]
 #---
 ARG BASE_IMAGE

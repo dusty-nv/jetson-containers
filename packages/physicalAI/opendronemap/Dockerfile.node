@@ -1,3 +1,6 @@
+#---
+# buildkit_device: nvidia.com/gpu=all
+#---
 #
 # https://github.com/OpenDroneMap/NodeODM/blob/master/Dockerfile.gpu
 # https://github.com/OpenDroneMap/NodeODM#using-an-external-hard-drive

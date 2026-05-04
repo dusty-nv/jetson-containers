@@ -3,6 +3,7 @@
 # group: ml
 # config: config.py
 # depends: [cmake, python, numpy]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.py
 # notes: https://github.com/onnx/onnx
 #---

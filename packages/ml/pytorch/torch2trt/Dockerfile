@@ -2,6 +2,7 @@
 # name: torch2trt
 # group: pytorch
 # depends: [cudastack:standard, pytorch, torchvision]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.py
 #---
 ARG BASE_IMAGE

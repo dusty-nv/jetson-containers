@@ -3,6 +3,7 @@
 # group: robots
 # docs: docs.md
 # depends: [transformers, opencv, pyav, h5py, diffusers, jupyterlab:myst]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=36'
 # test: [test.sh, test.py]
 #---

@@ -1,3 +1,6 @@
+#---
+# buildkit_device: nvidia.com/gpu=all
+#---
 FROM nginx:alpine
 
 RUN rm /etc/nginx/conf.d/default.conf

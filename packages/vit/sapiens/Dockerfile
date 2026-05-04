@@ -2,6 +2,7 @@
 # name: sapiens
 # group: vit
 # depends: [jetson-utils, pytorch, torchvision, torchaudio, libcom, opencv]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=36'
 #---
 ARG BASE_IMAGE

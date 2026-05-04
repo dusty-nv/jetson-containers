@@ -3,6 +3,7 @@
 # group: cuda
 # config: config.py
 # depends: [cuda, build-essential, python, numpy]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.py
 #---
 ARG BASE_IMAGE

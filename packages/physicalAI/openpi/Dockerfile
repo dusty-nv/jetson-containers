@@ -3,6 +3,7 @@
 # group: robots
 # docs: docs.md
 # depends: [jax, pytorch, transformers, lerobot, opencv, pyav]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=36'
 # test: [test.sh, test.py]
 #---

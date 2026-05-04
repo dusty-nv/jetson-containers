@@ -2,6 +2,7 @@
 # name: piper1-tts
 # group: audio
 # depends: [onnxruntime]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.py
 # notes: A self-contained version of Piper, the fast and local neural text-to-speech engine (https://github.com/OHF-Voice/piper1-gpl). This version directly embeds espeak-ng and therefore has a GPL license.
 #---

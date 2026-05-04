@@ -2,6 +2,7 @@
 # name: kokoro-tts:fastapi
 # group: audio
 # depends: [kokoro-tts:hf, ffmpeg]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.py
 # docs: docs.md
 #---

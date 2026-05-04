@@ -4,6 +4,7 @@
 # group: diffusion
 # docs: docs.md
 # depends: [transformers, mujoco, numba, diffusers, pytorch3d]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=36'
 # test: [test.sh]
 #---

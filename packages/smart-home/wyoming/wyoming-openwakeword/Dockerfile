@@ -5,6 +5,7 @@
 # docs: docs.md
 # config: config.py
 # depends: [python, numpy, homeassistant-base]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.sh
 # notes: The `openWakeWord` using the `wyoming` protocol for usage with Home Assistant. Based on `https://github.com/home-assistant/addons/blob/master/openwakeword/Dockerfile` and `https://github.com/rhasspy/wyoming-openwakeword`
 #---

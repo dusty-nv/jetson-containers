@@ -3,6 +3,7 @@
 # alias: pybind11:global
 # group: build
 # depends: [python]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.sh
 # notes: https://github.com/pybind/pybind11
 #---

@@ -2,6 +2,7 @@
 # name: protobuf:apt
 # group: build
 # depends: [python]
+# buildkit_device: nvidia.com/gpu=all
 # test: [test.py, test.sh]
 # notes: install protobuf from apt repo
 #---

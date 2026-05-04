@@ -4,6 +4,7 @@
 # config: config.py
 # requires: '>=32.6'
 # depends: [cuda, cudastack:standard, cmake, python, gstreamer, tritonserver]
+# buildkit_device: nvidia.com/gpu=all
 # test: [test.sh, test.py]
 # notes: https://docs.nvidia.com/metropolis/deepstream/dev-guide/text/DS_Quickstart.html
 #---

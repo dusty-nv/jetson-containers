@@ -3,6 +3,7 @@
 # group: vlm
 # config: config.py
 # depends: [pytorch, torchvision, huggingface_hub]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # test: test.sh
 # docs: docs.md

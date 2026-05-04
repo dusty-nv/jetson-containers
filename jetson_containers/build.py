@@ -42,6 +42,16 @@ parser.add_argument('packages', type=str, nargs='*', default=[], help='packages 
 parser.add_argument('--name', type=str, default='', help="the name of the output container to build")
 parser.add_argument('--base', type=str, default='', help="the base container to use at the beginning of the build chain (default: l4t-jetpack)")
 parser.add_argument('--multiple', action='store_true', help="the specified packages should be built independently as opposed to chained together")
+parser.add_argument('--buildkit', dest='buildkit', action='store_true', default=to_bool(os.environ.get('DOCKER_BUILDKIT', '1'), True), help="use Docker BuildKit/buildx for builds (default: on)")
+parser.add_argument('--no-buildkit', dest='buildkit', action='store_false', help="disable Docker BuildKit/buildx and use legacy docker build")
+parser.add_argument('--buildkit-device', type=str, default=os.environ.get('BUILDKIT_DEVICE', ''), help="CDI device to expose to BuildKit RUN steps, for example 'nvidia.com/gpu=all'")
+parser.add_argument('--buildkit-progress', type=str, default=os.environ.get('BUILDKIT_PROGRESS', 'tty'), choices=['auto', 'plain', 'tty', 'rawjson'], help="BuildKit progress output mode (default: tty)")
+parser.add_argument('--cache-from', '--buildkit-cache-from', dest='cache_from', action='append', default=[], help="BuildKit cache importer, repeatable (example: type=local,src=/path/to/cache)")
+parser.add_argument('--cache-to', '--buildkit-cache-to', dest='cache_to', action='append', default=[], help="BuildKit cache exporter, repeatable (example: type=local,dest=/path/to/cache,mode=max)")
+parser.add_argument('--ccache', dest='ccache', action='store_true', default=to_bool(os.environ.get('DOCKER_CCACHE', '1'), True), help="enable ccache with a BuildKit cache mount (default: on)")
+parser.add_argument('--no-ccache', dest='ccache', action='store_false', help="disable ccache cache mounts")
+parser.add_argument('--ccache-dir', type=str, default=os.environ.get('DOCKER_CCACHE_DIR', '/root/.cache/ccache'), help="ccache directory inside build containers")
+parser.add_argument('--ccache-maxsize', type=str, default=os.environ.get('DOCKER_CCACHE_MAXSIZE', '20G'), help="maximum ccache size inside build containers")
 parser.add_argument('--build-flags', type=str, default='', help="extra flags to pass to 'docker build' commands")
 parser.add_argument('--build-args', type=str, default='', help="container build arguments (--build-arg) as a string of comma separated key:value pairs")
 parser.add_argument('--use-proxy', action='store_true', help="use the host's proxy envvars for the container build")
@@ -61,13 +71,17 @@ parser.add_argument('--no-github-api', action='store_true', help="disable GitHub
 parser.add_argument('--log-dir', '--logs', type=str, default=None, help="sets the directory to save container build logs to (default: jetson-containers/logs)")
 parser.add_argument('--log-level', type=str, default=None, choices=LogConfig.levels, help="sets the logging verbosity level")
 parser.add_argument('--log-colors', type=to_bool, default=None, help=f"enable/disable terminal colors and formatting (defaults to true)")
-parser.add_argument('--log-status', type=to_bool, default=None, help=f"enable status bar at bottom of terminal (defaults to true)")
+parser.add_argument('--log-status', type=to_bool, default=None, help=f"enable/disable terminal status bar (defaults to false)")
 
 parser.add_argument('--debug', action='store_true', help="enable debug logging")
 parser.add_argument('--verbose', action='store_true', help="enable verbose logging")
 parser.add_argument('--version', action='store_true', help="print platform version info and exit")
 
 args = parser.parse_args()
+
+for env_var, attr in [('BUILDKIT_CACHE_FROM', 'cache_from'), ('BUILDKIT_CACHE_TO', 'cache_to')]:
+    if os.environ.get(env_var):
+        getattr(args, attr).extend(x for x in os.environ[env_var].split(';') if x)
 
 # configure logging
 log_config(**vars(args))

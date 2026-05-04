@@ -3,6 +3,7 @@
 # config: config.py
 # group: llm
 # depends: [pytorch, torchvision, huggingface_hub, rust]
+# buildkit_device: nvidia.com/gpu=all
 # test: [test_version.py, huggingface-benchmark.py]
 # docs: docs.md
 # notes: https://github.com/huggingface/transformers

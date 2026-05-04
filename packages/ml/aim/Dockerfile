@@ -2,6 +2,7 @@
 # name: aim
 # group: ml
 # depends: python
+# buildkit_device: nvidia.com/gpu=all
 # notes: https://github.com/aimhubio
 #---
 ARG BASE_IMAGE

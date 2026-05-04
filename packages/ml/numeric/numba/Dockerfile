@@ -2,6 +2,7 @@
 # name: numba
 # group: numerical
 # depends: [cuda, numpy]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.py
 #---
 ARG BASE_IMAGE

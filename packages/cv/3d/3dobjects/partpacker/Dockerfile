@@ -3,6 +3,7 @@
 # group: objects
 # config: config.py
 # depends: [cuda, pytorch, torchvision, triton, onnxruntime, opencv, transformers, diffusers, flash-attention, xformers, pymeshlab]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # notes: https://github.com/NVlabs/PartPacker
 #---

@@ -3,6 +3,7 @@
 # group: sim
 # config: config.py
 # depends: [cuda, ninja, cmake, rust, llvm:22, vulkan]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=36.0.0'
 # test: test.py
 # notes: https://github.com/Genesis-Embodied-AI/quadrants

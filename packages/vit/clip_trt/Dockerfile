@@ -2,6 +2,7 @@
 # name: clip_trt
 # group: vit
 # depends: [pytorch, torchvision, transformers, torch2trt]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.py
 # notes: TensorRT optimized CLIP/SigLIP from https://github.com/dusty-nv/clip_trt
 #---

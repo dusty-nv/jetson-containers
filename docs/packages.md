@@ -27,6 +27,7 @@ The text between `#---` is YAML and is extracted by the build system.  Each pack
 | `alias`       | `str` or `list[str]` | alternate names the package can be referred to by                                       |
 | `build_args`  |        `dict`        | `ARG:VALUE` pairs that are `--build-args` to `docker build`                             |
 | `build_flags` |         `str`        | additional options that get added to the `docker build` command                         |
+| `buildkit_device` |  `str` or `bool`  | CDI device exposed to BuildKit `RUN` steps, for example `nvidia.com/gpu=all`            |
 | `config`      | `str` or `list[str]` | one or more config files to load (`.py`, `.json`, `.yml`, `.yaml`)                      |
 | `depends`     | `str` or `list[str]` | list of packages that this package depends on, and will be built                        |
 | `disabled`    | `bool`               | set to `true` for the package to be disabled                                            |

@@ -3,6 +3,7 @@
 # group: ml
 # config: config.py
 # depends: [cuda, cudastack:standard, cmake, python, numpy, onnx]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.py
 # notes: https://github.com/microsoft/onnxruntime
 #---

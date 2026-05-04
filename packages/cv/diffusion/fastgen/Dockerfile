@@ -2,6 +2,7 @@
 # name: fastgen
 # group: diffusion
 # depends: [pytorch, torchvision, torchaudio, transformers, diffusers, opencv, flash-attention, huggingface_hub]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=36'
 # notes: https://github.com/NVlabs/FastGen
 #---

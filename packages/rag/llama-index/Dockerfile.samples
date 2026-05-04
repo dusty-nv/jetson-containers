@@ -1,3 +1,6 @@
+#---
+# buildkit_device: nvidia.com/gpu=all
+#---
 # 
 # this is the llama-index:samples container (built on top of llama-index)
 # see Dockerfile & config.py for package configuration/metadata

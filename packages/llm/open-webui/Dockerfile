@@ -4,6 +4,7 @@
 # group: llm
 # config: config.py
 # depends: [python, pytorch, torchvision, torchaudio, ctranslate2]
+# buildkit_device: nvidia.com/gpu=all
 #---
 ARG BASE_IMAGE
 

@@ -3,6 +3,7 @@
 # group: nerf
 # config: config.py
 # depends: [pytorch, torchvision, torchaudio]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # notes: https://github.com/nerfstudio-project/nerfacc
 #---

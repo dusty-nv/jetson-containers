@@ -2,6 +2,7 @@
 # name: vila
 # group: vlm
 # depends: [pytorch, flash-attention, transformers, opencv, deepspeed, decord2]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=35'
 # test: [test.sh, test.py]
 #---

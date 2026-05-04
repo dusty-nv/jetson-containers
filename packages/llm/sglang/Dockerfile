@@ -3,6 +3,7 @@
 # group: llm
 # config: config.py
 # depends: [sgl-kernel, torch-memory-saver]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=36'
 # test: test.py
 # notes: https://github.com/sgl-project/sglang

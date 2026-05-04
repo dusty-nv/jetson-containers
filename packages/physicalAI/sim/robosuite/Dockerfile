@@ -2,6 +2,7 @@
 # name: robosuite
 # group: sim
 # depends: [opencv, numba, ffmpeg, mujoco]
+# buildkit_device: nvidia.com/gpu=all
 # test: [test.sh, test.py]
 #---
 ARG BASE_IMAGE

@@ -2,6 +2,7 @@
 # name: gdrcopy
 # group: cuda
 # depends: [cuda]
+# buildkit_device: nvidia.com/gpu=all
 # config: config.py
 # test: test.sh
 #---

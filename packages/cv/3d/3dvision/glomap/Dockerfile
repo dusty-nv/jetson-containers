@@ -3,6 +3,7 @@
 # group: nerf
 # config: config.py
 # depends: [pycolmap]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # notes: https://github.com/colmap/colmap.git
 #---

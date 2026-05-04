@@ -2,6 +2,7 @@
 # name: prismatic
 # group: vlm
 # depends: [transformers, bitsandbytes, flash-attention, torchaudio]
+# buildkit_device: nvidia.com/gpu=all
 # test: [test.sh, test.py]
 #---
 ARG BASE_IMAGE

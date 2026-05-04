@@ -2,6 +2,7 @@
 # name: sapien
 # group: sim
 # depends: [physx, numpy]
+# buildkit_device: nvidia.com/gpu=all
 # test: [test.sh]
 #---
 ARG BASE_IMAGE

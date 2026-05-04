@@ -2,6 +2,7 @@
 # name: newton
 # group: sim
 # depends: [cuda, python, cmake, warp]
+# buildkit_device: nvidia.com/gpu=all
 # test: [test.sh]
 #---
 ARG BASE_IMAGE

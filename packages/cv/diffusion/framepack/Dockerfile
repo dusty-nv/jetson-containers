@@ -2,6 +2,7 @@
 # name: framepack
 # group: diffusion
 # depends: [pytorch, torchvision, torchaudio, torchao, flash-attention, sage-attention, bitsandbytes, transformers, xformers, diffusers, huggingface_hub]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=35.0.0'
 # notes: https://github.com/lllyasviel/FramePack
 #---

@@ -2,6 +2,7 @@
 # name: spark-tts
 # group: audio
 # depends: [torchaudio, transformers]
+# buildkit_device: nvidia.com/gpu=all
 # requires: ['>=36.1.0']
 # test: [test.sh]
 # notes: 'Spark-TTS: An Efficient LLM-Based Text-to-Speech Model with Single-Stream Decoupled Speech Tokens – https://github.com/SparkAudio/Spark-TTS'

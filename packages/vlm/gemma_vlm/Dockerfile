@@ -3,6 +3,7 @@
 # alias: gemma_vlm
 # group: vlm
 # depends: [transformers, bitsandbytes]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=35'
 # test: test.py
 #---

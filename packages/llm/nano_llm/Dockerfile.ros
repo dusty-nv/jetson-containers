@@ -1,3 +1,6 @@
+#---
+# buildkit_device: nvidia.com/gpu=all
+#---
 # 
 # Adds ROS nodes for NanoLLM from here:
 #   github.com/NVIDIA-AI-IOT/ros2_nanollm
