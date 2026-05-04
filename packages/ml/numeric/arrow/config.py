@@ -13,5 +13,5 @@ def build_arrow(version, branch, default=False):
     return arrow
 
 package = [
-    build_arrow('23.0.1', 'apache-arrow-23.0.1', default=True),
+    build_arrow('24.0.0', 'apache-arrow-24.0.0', default=True),
 ]

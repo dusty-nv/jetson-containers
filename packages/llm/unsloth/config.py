@@ -32,5 +32,5 @@ def unsloth(version, branch=None, requires=None, default=False, depends=None):
 
 
 package = [
-    unsloth(version='2026.4.4', branch='v0.1.35-beta', default=True),
+    unsloth(version='2026.4.4', branch='v0.1.37-beta', default=True),
 ]

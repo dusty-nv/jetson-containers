@@ -44,7 +44,7 @@ def zed(version, l4t_version=None, requires=None, default=False):
             },
             'https://github.com/stereolabs/zed-ros2-interfaces',
             'https://github.com/stereolabs/zed-ros2-wrapper',
-            distros=['humble', 'jazzy'], base_packages='desktop'
+            distros=['resolue', 'humble', 'jazzy'], base_packages='desktop'
         )
     ]
 
