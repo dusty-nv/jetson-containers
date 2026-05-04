@@ -3,6 +3,7 @@
 # group: xlstm
 # config: config.py
 # depends: [cuda, pytorch, triton, flash-attention]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/NX-AI/mlstm_kernels

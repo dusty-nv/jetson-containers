@@ -21,6 +21,63 @@ The builder will chain together the Dockerfiles of each of packages specified, a
 
 The docker commands that get run during the build are printed and also saved to shell scripts under the `jetson-containers/logs` directory.  To see just the commands it would have run without actually running them, use the `--simulate` flag.
 
+## BuildKit and GPU Access
+
+BuildKit/buildx is enabled by default. You can also set it explicitly with `--buildkit` or `DOCKER_BUILDKIT=1`, and disable it with `--no-buildkit` or `DOCKER_BUILDKIT=0`:
+
+```bash
+jetson-containers build --buildkit pytorch
+DOCKER_BUILDKIT=1 jetson-containers build pytorch
+jetson-containers build --no-buildkit pytorch
+```
+
+BuildKit does not inherit Docker's NVIDIA runtime for build steps. Packages that need CUDA/TensorRT during `RUN` instructions can request a CDI device with `buildkit_device: nvidia.com/gpu=all` in their package metadata, or you can apply it to a build from the command line:
+
+```bash
+jetson-containers build --buildkit --buildkit-device=nvidia.com/gpu=all nanosam
+```
+
+When a BuildKit device is requested, the builder uses `docker buildx build --allow device`, writes a temporary Dockerfile with `# syntax=docker/dockerfile:1-labs`, and adds `RUN --device=nvidia.com/gpu=all` to build steps. This requires BuildKit 0.20.0 or newer, a builder/daemon started with the `device` entitlement enabled, and NVIDIA devices registered through CDI.
+
+BuildKit progress output defaults to `tty` so interactive builds keep Docker's colored progress UI. If you want plain text logs for CI or easier searching, use `--buildkit-progress=plain` or `BUILDKIT_PROGRESS=plain`:
+
+```bash
+jetson-containers build --buildkit-progress=tty opencv
+jetson-containers build --buildkit-progress=plain opencv
+```
+
+BuildKit cache import/export is exposed directly with repeatable `--cache-from` and `--cache-to` flags. These are passed through to `docker buildx build`, so any BuildKit backend can be used:
+
+```bash
+# local directory cache
+jetson-containers build \
+  --cache-from type=local,src=/data/buildkit-cache/opencv \
+  --cache-to type=local,dest=/data/buildkit-cache/opencv,mode=max \
+  opencv
+
+# registry cache
+jetson-containers build \
+  --cache-from type=registry,ref=registry.example.com/opencv:buildcache \
+  --cache-to type=registry,ref=registry.example.com/opencv:buildcache,mode=max \
+  opencv
+```
+
+You can also set `BUILDKIT_CACHE_FROM` and `BUILDKIT_CACHE_TO`; separate multiple cache entries with semicolons. BuildKit's normal local cache can be inspected with `buildctl du -v` and pruned with `buildctl prune` when using a standalone BuildKit daemon.
+
+## Ccache
+
+Ccache is enabled by default with BuildKit cache mounts. The builder writes a temporary Dockerfile that adds `RUN --mount=type=cache,target=/root/.cache/ccache,sharing=locked`, exports ccache environment variables, and enables CMake compiler launchers when `ccache` is installed. This lets long source builds inside package scripts like `build.sh` reuse compiler output after a package build fails partway through:
+
+```bash
+jetson-containers build pytorch
+jetson-containers build --no-ccache pytorch
+DOCKER_CCACHE=0 jetson-containers build pytorch
+```
+
+The default cache directory is `/root/.cache/ccache`, and the default maximum size is `20G`. These can be changed with `--ccache-dir`, `--ccache-maxsize`, `DOCKER_CCACHE_DIR`, or `DOCKER_CCACHE_MAXSIZE`.
+
+Docker only resumes at Dockerfile layer boundaries. If a single `RUN /tmp/package/build.sh` fails halfway through, the filesystem changes from that failed `RUN` are discarded. Ccache avoids recompiling previously compiled translation units on retry, but exact build-system resume from an internal step like `359/450` requires that package's build directory to be stored in a cache mount or the package build to be split into smaller Dockerfile layers.
+
 ## Container Names
 
 By default, the name of the container will be based on the package you chose to build. However, you can name it with the `--name` argument:

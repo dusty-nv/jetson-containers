@@ -2,6 +2,7 @@
 # name: sound-utils
 # group: multimedia
 # depends: [python, torch, torchaudio]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # test: [test.py]
 # docs: docs.md

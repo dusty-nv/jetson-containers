@@ -2,6 +2,7 @@
 # name: vscode
 # group: code
 # depends: [build-essential, python]
+# buildkit_device: nvidia.com/gpu=all
 # notes: installs portable build of VSCode inside container
 #---
 ARG BASE_IMAGE

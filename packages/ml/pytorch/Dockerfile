@@ -4,6 +4,7 @@
 # group: pytorch
 # config: config.py
 # depends: [cuda, cudastack:standard, numpy, onnx]
+# buildkit_device: nvidia.com/gpu=all
 # test: [test.sh, test.py]
 # docs: |
 #  Containers for PyTorch with CUDA support.

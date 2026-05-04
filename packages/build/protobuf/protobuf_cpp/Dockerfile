@@ -4,6 +4,7 @@
 # group: build
 # config: config.py
 # depends: [build-essential, python]
+# buildkit_device: nvidia.com/gpu=all
 # test: [test.py, test.sh]
 # notes: build protobuf using cpp implementation (https://jkjung-avt.github.io/tf-trt-revisited/)
 #---

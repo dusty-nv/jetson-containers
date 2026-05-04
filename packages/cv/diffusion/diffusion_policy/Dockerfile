@@ -4,6 +4,7 @@
 # group: diffusion
 # docs: docs.md
 # depends: [transformers, robomimic, opencv, numba, jupyterlab, pytorch3d]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=36'
 # test: [test.sh]
 #---

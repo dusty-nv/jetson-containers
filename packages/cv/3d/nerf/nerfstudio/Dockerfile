@@ -3,6 +3,7 @@
 # group: nerf
 # config: config.py
 # depends: [transformers, bitsandbytes, diffusers, h5py, ninja, ffmpeg, polyscope, pymeshlab, tinycudann, nerfacc, pycolmap, glomap, hloc, pyceres, gsplat, nerfview]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/nerfstudio-project/nerfstudio

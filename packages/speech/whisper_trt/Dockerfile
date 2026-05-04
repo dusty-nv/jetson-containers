@@ -2,6 +2,7 @@
 # name: whisper_trt
 # group: audio
 # depends: [pytorch, torch2trt, onnxruntime]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=36'
 # test: test.py
 # notes: TensorRT optimized Whisper ASR from https://github.com/NVIDIA-AI-IOT/whisper_trt

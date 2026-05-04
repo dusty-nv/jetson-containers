@@ -3,6 +3,7 @@
 # group: llm
 # config: config.py
 # depends: [pytorch, huggingface_hub, flash-attention, transformers, xformers, diffusers]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # test: test.sh
 # docs: docs.md

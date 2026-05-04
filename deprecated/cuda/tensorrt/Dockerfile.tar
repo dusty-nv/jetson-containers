@@ -2,6 +2,7 @@
 # name: tensorrt
 # group: cuda
 # depends: [cuda, cudnn, python]
+# buildkit_device: nvidia.com/gpu=all
 # config: config.py
 # test: test.sh
 #---

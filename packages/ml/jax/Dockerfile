@@ -3,6 +3,7 @@
 # group: jax
 # config: config.py
 # depends: [cuda, cudastack:standard, numpy, onnx, llvm:22]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.py
 # docs: Containers for JAX with CUDA support.
 #---

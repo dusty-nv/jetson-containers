@@ -3,6 +3,7 @@
 # group: vla
 # config: config.py
 # depends: [transformers, flash-attention, bitsandbytes, tensorboard, h5py]
+# buildkit_device: nvidia.com/gpu=all
 # test: [test.sh, test.py]
 #---
 ARG BASE_IMAGE

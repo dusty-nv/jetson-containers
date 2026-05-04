@@ -3,6 +3,7 @@
 # group: cv
 # config: config.py
 # depends: [cuda, cudastack:standard, python, numpy, opengl, vulkan, video-codec-sdk, ffmpeg]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.py
 # notes: https://github.com/opencv/opencv-python
 #---

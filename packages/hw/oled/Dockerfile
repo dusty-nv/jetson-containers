@@ -2,6 +2,7 @@
 # name: oled
 # group: hardware
 # depends: []
+# buildkit_device: nvidia.com/gpu=all
 # notes: https://github.com/NVIDIA-AI-IOT/jetcard/
 #---
 ARG BASE_IMAGE

@@ -2,6 +2,7 @@
 import datetime
 import os
 import pprint
+import re
 import shutil
 import sys
 import tabulate
@@ -58,17 +59,17 @@ LogConfig = types.SimpleNamespace(
 
     # Definitions of the log levels, increasing incrementally by priority
     levels = {
-        'debug':    LogLevel(color='light_grey'),
-        'verbose':  LogLevel(color='light_grey'),
-        'info':     LogLevel(),
-        'status':   LogLevel(color='blue'),
-        'success':  LogLevel(color='green'), # prefix=' ✅ '
-        'warning':  LogLevel(color='yellow'), # prefix=' ⚠️ '
-        'error':    LogLevel(color='red'), # prefix=' ❌ '
+        'debug':    LogLevel(badge='<grey>debug</grey> '),
+        'verbose':  LogLevel(badge='<grey>verbose</grey> '),
+        'info':     LogLevel(badge=''),
+        'status':   LogLevel(badge='<blue>status</blue> '),
+        'success':  LogLevel(badge='<green>done</green> '),
+        'warning':  LogLevel(badge='<yellow>warn</yellow> '),
+        'error':    LogLevel(badge='<red>error</red> '),
     },
 
     # Default message format template (todo add $DATE)
-    format = "[${TIME}]${PREFIX} ${MESSAGE} ${POSTFIX}",
+    format = "<grey>[${TIME}]</grey> ${BADGE}${PREFIX}${MESSAGE}${POSTFIX}",
 
     # Default prefix/suffix text (if not overriden by level)
     prefix = '',
@@ -102,9 +103,6 @@ def log_config(key: str=None, dir: str=None, level: str=None,
     colors = kwargs.get('log_colors', colors)
     status = kwargs.get('log_status', status)
 
-    falsy = ['off', 'false', '0', 'no', 'disabled', 'none']
-    truthy = ['on', 'true', '1', 'yes', 'enabled']
-
     if verbose:
         level = 'verbose'
 
@@ -122,8 +120,8 @@ def log_config(key: str=None, dir: str=None, level: str=None,
     if colors is not None: # disable terminal colors
         LogConfig.colors = colors
 
-    if status == False: # disable terminal status bar
-        LogConfig.status = False # this gets set to true once used
+    if status is not None:
+        LogConfig.status = status
 
     if key:
         return LogConfig.get(key)
@@ -164,6 +162,7 @@ def print_log(text: str='', level: str='info', color: str=None, attrs: list=[]):
         getattr(config, 'format', LogConfig.format),
         prefix=getattr(config, 'prefix', LogConfig.prefix),
         postfix=getattr(config, 'postfix', LogConfig.postfix),
+        badge=getattr(config, 'badge', ''),
         level=level.upper(),
         message=text,
         line_sep='\n' + '#' * 80 + '\n',
@@ -197,19 +196,41 @@ def cprint(text, color=None, on_color=None, attrs=[], **kwargs):
 
 def colorize(text, color=None, on_color=None, attrs=[]):
     """
-    Apply ANSI terminal color codes - supports some inline tags like `<b>Bold</b>`
+    Apply ANSI terminal color codes - supports lightweight inline tags.
     """
     if not text:
         return None
 
+    tag_codes = {
+        '<b>': '\033[1m',
+        '</b>': '\033[22m',
+        '<dim>': '\033[2m',
+        '</dim>': '\033[22m',
+        '<red>': '\033[31m',
+        '</red>': '\033[39m',
+        '<green>': '\033[32m',
+        '</green>': '\033[39m',
+        '<yellow>': '\033[33m',
+        '</yellow>': '\033[39m',
+        '<blue>': '\033[34m',
+        '</blue>': '\033[39m',
+        '<magenta>': '\033[35m',
+        '</magenta>': '\033[39m',
+        '<cyan>': '\033[36m',
+        '</cyan>': '\033[39m',
+        '<grey>': '\033[90m',
+        '</grey>': '\033[39m',
+    }
+
     if 'ANSI_COLORS_DISABLED' in os.environ or not LogConfig.colors:
-        return text.replace('<b>', '').replace('</b>', '')
+        return re.sub(r'</?(?:b|dim|red|green|yellow|blue|magenta|cyan|grey)>', '', text)
 
     if attrs and isinstance(attrs, str):
         attrs = [attrs]
 
     # https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797#colors--graphics-mode
-    text = text.replace('<b>', f'\033[1m').replace('</b>', f'\033[22m')
+    for tag, code in tag_codes.items():
+        text = text.replace(tag, code)
 
     if color or on_color or attrs:
         text = termcolor.colored(text, color=color, on_color=on_color, attrs=attrs)
@@ -233,6 +254,50 @@ def get_log_dir(subdir: str=None, create: bool=True):
     return path
 
 
+def _progress_bar(current, total, width=18, color='blue'):
+    """
+    Create a compact colored progress bar for line-based logs.
+    """
+    total = max(total, 1)
+    current = min(max(current, 0), total)
+    filled = int(round(width * current / total))
+    bar = '[' + '#' * filled + '-' * (width - filled) + ']'
+    return colorize(f'<{color}><b>{bar}</b></{color}>')
+
+
+def _format_status_message(text):
+    """
+    Pretty-print common build/test status messages without cursor control.
+    """
+    text = re.sub(r'\s+', ' ', text).strip()
+    match = re.match(
+        r'^\[(?P<current>\d+)/(?P<total>\d+)\]\s+'
+        r'(?P<action>\w+)\s+(?P<target>.+?)\s+'
+        r'(?P<detail>\d+\s+stages completed.*)$',
+        text
+    )
+
+    if not match:
+        return text
+
+    current = int(match.group('current'))
+    total = int(match.group('total'))
+    action = match.group('action')
+    target = match.group('target')
+    detail = match.group('detail')
+
+    colors = {
+        'Building': 'blue',
+        'Testing': 'magenta',
+        'Pushing': 'yellow',
+    }
+    color = colors.get(action, 'cyan')
+    bar = _progress_bar(current, total, color=color)
+    label = colorize(f'<{color}><b>{action}</b></{color}>')
+
+    return f"{bar} <b>{current}/{total}</b> {label} {target} <grey>{detail}</grey>"
+
+
 def log_status(text='', prefix='', done=False, **kwargs):
     """
     Log to the status bar at the bottom of terminal.
@@ -248,15 +313,11 @@ def log_status(text='', prefix='', done=False, **kwargs):
     termcode = f'\0337\033[?6l\033[{terminal.lines};1H\033[2K'
 
     if text:
-        log_info(text)
+        log_info(_format_status_message(text))
 
-        if LogConfig.status != False and LogConfig.colors:
+        if LogConfig.status is True and LogConfig.colors and sys.stdout.isatty():
             kwargs.setdefault('color', 'green')
             kwargs.setdefault('attrs', 'reverse')
-
-            if LogConfig.status != True:
-                print(f'\033[1;{terminal.lines-1}r\033[?6l\033[2J\033[H', end='', flush=True)
-                LogConfig.status = True
 
             text = prefix + text
             text += ' ' * (terminal.columns - len(text))
@@ -264,7 +325,7 @@ def log_status(text='', prefix='', done=False, **kwargs):
 
             print(f'{termcode}{text}\0338', end='', flush=True)
 
-    if done and LogConfig.status:
+    if done and LogConfig.status is True and sys.stdout.isatty():
         print(f'{termcode}\033[r\033[0m\033[{terminal.lines};1H')
         LogConfig.status = None
 

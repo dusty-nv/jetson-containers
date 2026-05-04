@@ -1,3 +1,6 @@
+#---
+# buildkit_device: nvidia.com/gpu=all
+#---
 #
 # jetson-containers build pymeshlab:builder
 # OPTIONAL_PERMISSION_ARGS=true jetson-containers run $(autotag pymeshlab:builder)

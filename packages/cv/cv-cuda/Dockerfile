@@ -4,6 +4,7 @@
 # group: cv
 # config: config.py
 # depends: [pytorch, torchvision, pyav, pycuda, cmake]
+# buildkit_device: nvidia.com/gpu=all
 # test: [test.py]
 #---
 ARG BASE_IMAGE

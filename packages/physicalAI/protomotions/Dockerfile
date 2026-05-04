@@ -3,6 +3,7 @@
 # group: sim
 # config: config.py
 # depends: [genesis-world]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # test: test.sh
 # notes: https://github.com/NVlabs/ProtoMotions

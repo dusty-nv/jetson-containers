@@ -4,6 +4,7 @@
 # config: config.py
 # requires: '>=34.1.0'
 # depends: [build-essential]
+# buildkit_device: nvidia.com/gpu=all
 # notes: The `homeassistant` base ubuntu image with pre-installed dependencies based on `https://github.com/home-assistant/docker-base/blob/master/ubuntu/Dockerfile`
 #---
 ARG BASE_IMAGE

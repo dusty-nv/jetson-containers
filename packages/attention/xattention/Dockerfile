@@ -3,6 +3,7 @@
 # group: attention
 # config: config.py
 # depends: [pytorch, torchvision, torchaudio, torchao, flash-attention, transformers, diffusers, opencv, block_sparse_attn]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=35'
 # test: test.py
 #---

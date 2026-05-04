@@ -2,6 +2,7 @@
 # name: huggingface_hub
 # group: llm
 # depends: [python]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.py
 # notes: https://github.com/huggingface/huggingface_hub
 #---

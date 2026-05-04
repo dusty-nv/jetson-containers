@@ -1,3 +1,6 @@
+#---
+# buildkit_device: nvidia.com/gpu=all
+#---
 #
 # build cuDF from source for JetPack 5 (see config.py for package configuration)
 #

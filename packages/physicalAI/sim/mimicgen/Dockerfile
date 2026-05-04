@@ -2,6 +2,7 @@
 # name: mimicgen
 # group: sim
 # depends: [robomimic]
+# buildkit_device: nvidia.com/gpu=all
 # test: [test.sh, test.py]
 #---
 ARG BASE_IMAGE

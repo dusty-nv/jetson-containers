@@ -2,6 +2,7 @@
 # name: cangaroo
 # group: hardware
 # depends: [canbus, cmake]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.sh
 # notes: CAN bus analyzer (github.com/normaldotcom/cangaroo)
 #---

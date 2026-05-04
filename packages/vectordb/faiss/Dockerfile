@@ -3,6 +3,7 @@
 # group: vectordb
 # config: config.py
 # depends: [cuda, numpy, cmake]
+# buildkit_device: nvidia.com/gpu=all
 # test: [test.py]
 #---
 ARG BASE_IMAGE

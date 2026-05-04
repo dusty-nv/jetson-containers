@@ -5,6 +5,7 @@
 # config: config.py
 # docs: docs.md
 # depends: [python, homeassistant-base]
+# buildkit_device: nvidia.com/gpu=all
 # test: list_audio_devices.sh
 # notes: The `wyoming-assist-microphone` using the `wyoming` protocol for usage with Home Assistant. Based on `https://github.com/home-assistant/addons/tree/master/assist_microphone`
 #---

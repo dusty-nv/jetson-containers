@@ -2,6 +2,7 @@
 # name: efficientvit
 # group: vit
 # depends: [pytorch, torchvision, opencv, transformers, onnxruntime, sam, jupyterlab]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # docs: docs.md
 #---

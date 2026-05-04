@@ -2,6 +2,7 @@
 # name: vpi
 # group: cv
 # depends: [cuda, opengl, numpy]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=36.4'
 #---
 ARG BASE_IMAGE

@@ -3,6 +3,7 @@
 # alias: shape_llm
 # group: vlm
 # depends: [cmake, rust, pytorch, torchvision, transformers, bitsandbytes, flash-attention, opencv]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=35'
 # test: [test.sh, test.py]
 #---

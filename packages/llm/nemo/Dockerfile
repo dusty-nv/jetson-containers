@@ -2,6 +2,7 @@
 # name: nemo
 # group: ml
 # depends: [transformers, torchaudio, numba]
+# buildkit_device: nvidia.com/gpu=all
 # test: [test_qa.py]
 # docs: NVIDIA NeMo for ASR/NLP/TTS https://nvidia.github.io/NeMo/
 # notes: https://research.nvidia.com/labs/conv-ai/

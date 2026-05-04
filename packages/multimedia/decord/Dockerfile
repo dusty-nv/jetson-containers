@@ -3,6 +3,7 @@
 # group: multimedia
 # config: config.py
 # depends: [numpy, ffmpeg, cmake, video-codec-sdk]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # test: test.py
 # notes: https://github.com/johnnynunez/decord2

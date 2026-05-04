@@ -2,6 +2,7 @@
 # name: espeak
 # group: audio
 # depends: [build-essential]
+# buildkit_device: nvidia.com/gpu=all
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

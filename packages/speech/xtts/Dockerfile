@@ -2,6 +2,7 @@
 # name: xtts
 # group: audio
 # depends: [transformers, torchaudio, torch2trt]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # test: [test.py, test_stream.py]
 # notes: 'Fork of coqui-ai/TTS with support for quantization and TensorRT'

@@ -2,6 +2,7 @@
 # name: kokoro-tts:hf
 # group: audio
 # depends: [transformers, torchaudio]
+# buildkit_device: nvidia.com/gpu=all
 # test: [test.py]
 #---
 ARG BASE_IMAGE

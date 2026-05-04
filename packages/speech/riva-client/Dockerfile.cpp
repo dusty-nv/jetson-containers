@@ -2,6 +2,7 @@
 # name: 'riva-client:cpp'
 # group: audio
 # depends: [bazel]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # test: [test.sh]
 # docs: docs.md

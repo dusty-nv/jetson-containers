@@ -4,6 +4,7 @@
 # config: config.py
 # requires: '>=34.1.0'
 # depends: [pytorch, cmake, numba, cuda-python, cupy]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.py
 #---
 ARG BASE_IMAGE

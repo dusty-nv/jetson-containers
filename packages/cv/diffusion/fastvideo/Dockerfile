@@ -3,6 +3,7 @@
 # group: diffusion
 # config: config.py
 # depends: [cuda, pytorch, torchvision, torchaudio, transformers, diffusers, flash-attention, opencv, huggingface_hub]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=36'
 # test: test.py
 # notes: https://github.com/hao-ai-lab/FastVideo

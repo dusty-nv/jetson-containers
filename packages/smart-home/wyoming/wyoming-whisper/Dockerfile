@@ -3,6 +3,7 @@
 # group: wyoming
 # config: config.py
 # depends: [cuda, cudastack:standard, python, homeassistant-base, faster-whisper]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.sh
 # requires: '>=34.1.0'
 # docs: docs.md

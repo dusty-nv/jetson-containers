@@ -2,6 +2,7 @@
 # name: sam
 # group: vit
 # depends: [pytorch, torchvision, onnxruntime, opencv, jupyterlab]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # docs: docs.md
 #---

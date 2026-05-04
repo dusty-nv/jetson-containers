@@ -2,6 +2,7 @@
 # name: n8n
 # group: rag
 # depends: [cuda, cudastack:standard, cmake, python, nodejs]
+# buildkit_device: nvidia.com/gpu=all
 # config: config.py
 # test: test.sh
 #---

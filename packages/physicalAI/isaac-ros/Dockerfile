@@ -1,3 +1,6 @@
+#---
+# buildkit_device: nvidia.com/gpu=all
+#---
 # isaac_ros_common
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}

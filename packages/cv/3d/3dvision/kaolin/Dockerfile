@@ -3,6 +3,7 @@
 # group: nerf
 # config: config.py
 # depends: [pytorch, torchvision, torchaudio, tinycudann, polyscope]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.sh
 # requires: '>=34.1.0'
 # notes: https://github.com/NVIDIAGameWorks/kaolin

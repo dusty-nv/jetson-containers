@@ -3,6 +3,7 @@
 # group: numerical
 # config: config.py
 # depends: [cuda, cmake, python]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.py
 # notes: installed under `/usr/local`
 #---

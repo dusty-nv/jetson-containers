@@ -3,6 +3,7 @@
 # group: llm
 # requires: '>=35'
 # depends: [bitsandbytes, flash-attention, deepspeed, gptqmodel, vllm, sglang]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.py
 # notes: https://github.com/hiyouga/LLaMA-Factory
 #---

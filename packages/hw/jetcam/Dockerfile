@@ -2,6 +2,7 @@
 # name: jetcam
 # group: hardware
 # depends: [gstreamer]
+# buildkit_device: nvidia.com/gpu=all
 # notes: https://github.com/NVIDIA-AI-IOT/jetcam
 #---
 ARG BASE_IMAGE

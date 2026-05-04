@@ -2,6 +2,7 @@
 # name: dli-nano-ai
 # group: hardware
 # depends: [pytorch, torchvision, opencv, gstreamer, nodejs, jupyter_clickable_image_widget, jetcam]
+# buildkit_device: nvidia.com/gpu=all
 # notes: https://learn.nvidia.com/courses/course-detail?course_id=course-v1:DLI+S-RX-02+V2
 #---
 

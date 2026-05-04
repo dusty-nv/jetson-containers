@@ -3,6 +3,7 @@
 # group: vlm
 # config: config.py
 # depends: [pytorch, torchvision, torchaudio, torchao, bitsandbytes, flash-attention, transformers, diffusers, opencv, ffmpeg]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=35'
 # test: test.py
 #---

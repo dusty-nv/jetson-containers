@@ -2,6 +2,7 @@
 # name: sudonim
 # group: llm
 # depends: [cuda, python]
+# buildkit_device: nvidia.com/gpu=all
 # test: test.sh
 #---
 ARG BASE_IMAGE

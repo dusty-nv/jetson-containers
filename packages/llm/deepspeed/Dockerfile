@@ -3,6 +3,7 @@
 # group: llm
 # config: config.py
 # depends: [transformers, deepspeed-kernels, triton]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=35'
 # test: test.sh
 #---

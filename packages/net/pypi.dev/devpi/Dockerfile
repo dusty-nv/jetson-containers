@@ -2,6 +2,7 @@
 # name: devpi
 # group: net
 # notes: installs local devpi server for hosting pip wheels
+# buildkit_device: nvidia.com/gpu=all
 #---
 ARG BASE_IMAGE="python:3.12"
 FROM ${BASE_IMAGE}

@@ -3,6 +3,7 @@
 # group: llm
 # config: config.py
 # depends: [cuda, cudastack:standard, cmake, python, numpy, pytorch, torchvision, transformers, nvidia_modelopt]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=36'
 # test: test.py
 # notes: https://github.com/NVIDIA/TensorRT-Edge-LLM

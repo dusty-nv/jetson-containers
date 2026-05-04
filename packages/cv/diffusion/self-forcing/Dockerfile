@@ -2,6 +2,7 @@
 # name: self-forcing
 # group: diffusion
 # depends: [pytorch, torchvision, torchaudio, torchao, torchsde, pytorch3d, torch-memory-saver, opencv, bitsandbytes, transformers, xformers, torchao, flash-attention, diffusers, huggingface_hub]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=35.1.0'
 # docs: docs.md
 #---

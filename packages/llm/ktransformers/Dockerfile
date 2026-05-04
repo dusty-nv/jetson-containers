@@ -3,6 +3,7 @@
 # group: llm
 # config: config.py
 # depends: [pytorch, torchvision, torchaudio, transformers, triton]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=34.1.0'
 # test: test.sh
 # notes: https://github.com/ktransformers-project/ktransformers

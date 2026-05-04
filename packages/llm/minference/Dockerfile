@@ -3,6 +3,7 @@
 # group: llm
 # config: config.py
 # depends: [cuda, cuda-python, ffmpeg, pytorch, torchvision, torchaudio, torchao, triton, flash-attention, mamba, flexprefill, huggingface_hub, tilelang]
+# buildkit_device: nvidia.com/gpu=all
 # requires: '>=36'
 # test: test.sh
 # notes: https://github.com/microsoft/MInference

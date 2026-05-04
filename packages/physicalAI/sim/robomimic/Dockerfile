@@ -2,6 +2,7 @@
 # name: robomimic
 # group: sim
 # depends: [pytorch, torchvision, robosuite, h5py]
+# buildkit_device: nvidia.com/gpu=all
 # test: [test.sh]
 #---
 ARG BASE_IMAGE
