@@ -92,6 +92,11 @@ def cuda_stack_args():
     # Extract DEB name from URL
     cudnn_deb = os.path.basename(cudnn_url).split('_')[0] if cudnn_url else ""
 
+    cusparselt_ver = '0.9.0'
+    # CUDA 12.9 is no longer supported for CUSPARSELT_VERSION=0.9.0
+    if CUDA_VERSION <= Version('12.9'):
+        cusparselt_ver = '0.8.1'
+
     return {
         # cuDNN
         'CUDNN_VERSION': cudnn_ver,
@@ -111,7 +116,7 @@ def cuda_stack_args():
 
         # Additional libraries
         'CUDSS_VERSION': '0.7.1',
-        'CUSPARSELT_VERSION': '0.9.0',
+        'CUSPARSELT_VERSION': cusparselt_ver,
         'CUTENSOR_VERSION': '2.6.0',
         'GDRCOPY_VERSION': '2.5.2',
         'NVPL_VERSION': '25.11',
