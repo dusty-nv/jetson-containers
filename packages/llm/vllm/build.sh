@@ -35,7 +35,16 @@ export DG_JIT_USE_NVRTC=1 # DeepGEMM now supports NVRTC with up to 10x compilati
 
 python3 use_existing_torch.py || echo "skipping vllm/use_existing_torch.py"
 
-uv pip install -r requirements/build.txt -v
+if [ -f requirements/build/cuda.txt ]; then
+  BUILD_REQUIREMENTS_FILE="requirements/build/cuda.txt"
+elif [ -f requirements/build.txt ]; then
+  BUILD_REQUIREMENTS_FILE="requirements/build.txt"
+else
+  echo "Error: could not find a supported vLLM build requirements file. Expected requirements/build/cuda.txt or requirements/build.txt." >&2
+  exit 1
+fi
+
+uv pip install -r "${BUILD_REQUIREMENTS_FILE}" -v
 python3 -m setuptools_scm
 
 ARCH=$(uname -i)
