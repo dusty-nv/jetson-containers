@@ -22,8 +22,8 @@ pipe = DiffusionPipeline.from_pretrained(
 try:
     pipe.enable_xformers_memory_efficient_attention()
     print("xformers memory-efficient attention enabled")
-except NotImplementedError:
-    print(f"xformers attention operators not available for sm_{cap[0]}{cap[1]} — running with default attention")
+except (NotImplementedError, AttributeError) as e:
+    print(f"xformers attention operators not available for sm_{cap[0]}{cap[1]} — running with default attention ({e})")
 
 with torch.inference_mode(), torch.autocast("cuda", dtype=torch.float16):
     image = pipe("a small cat", num_inference_steps=20, guidance_scale=7.0, height=256, width=256).images[0]
