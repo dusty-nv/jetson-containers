@@ -123,6 +123,14 @@ The project uses automated code formatting tools to maintain consistent code sty
 - Adding your package to formatting checks
 - Troubleshooting common issues
 
+## Troubleshooting
+### InvalidDefaultArgInFrom: Default value for ARG ${BASE_IMAGE} results in empty or invalid base image name
+This may be caused by corrupted caches. Docker caches both image results and build downloads. Try these simple steps first:
+- Remove non-essential docker images using: **docker image rm --force \<image id\>**
+- Prune resulting docker image cache: **docker image prune -f**
+- Prune docker build image cache: **docker buildx prune -f**
+
+
 
 ## Gallery
 
