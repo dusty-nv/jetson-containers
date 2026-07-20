@@ -24,7 +24,18 @@ cmake -S . -B build \
 
 cmake --build build -j"$(nproc)"
 
-go build -o "${OLLAMA_HOME}/ollama" .
+# Inject the release version into the binary. Without these ldflags, ollama
+# reports version 0.0.0 (see version/version.go). Matches upstream build scripts
+# and the previous fix: 6536834fae6b5a560ca68bb502e82a5204a83c7d
+VERSION="${OLLAMA_VERSION#v}"
+if GIT_VERSION=$(git describe --tags --first-parent --abbrev=7 --long --dirty --always 2>/dev/null); then
+  VERSION="${GIT_VERSION#v}"
+fi
+
+echo "Building ollama VERSION=${VERSION}"
+go build -trimpath \
+  -ldflags "-s -w -X=github.com/ollama/ollama/version.Version=${VERSION} -X=github.com/ollama/ollama/server.mode=release" \
+  -o "${OLLAMA_HOME}/ollama" .
 
 ln -sf "${OLLAMA_HOME}/ollama" /usr/local/bin/ollama
 if [ $? -ne 0 ]; then
