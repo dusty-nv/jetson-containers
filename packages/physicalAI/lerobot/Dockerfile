@@ -2,7 +2,7 @@
 # name: lerobot
 # group: robots
 # docs: docs.md
-# depends: [transformers, opencv, pyav, h5py, diffusers, jupyterlab:myst]
+# depends: [transformers, opencv, pyav, h5py, diffusers, torchcodec, jupyterlab:myst]
 # buildkit_device: nvidia.com/gpu=all
 # requires: '>=36'
 # test: [test.sh, test.py]
@@ -34,7 +34,7 @@ RUN git clone --branch=${LEROBOT_BRANCH} --depth=1 https://github.com/${LEROBOT_
     cat -n pyproject.toml
 
 RUN cd /opt/lerobot && \
-    uv pip install --no-reinstall --no-deps -e ".[feetech, aloha, pusht, dynamixel, pi0, test]" --verbose
+    uv pip install --no-reinstall --no-deps -e ".[feetech, aloha, pusht, dynamixel, pi, smolvla, test]" --verbose
 
 # Install apt dependencies
 RUN apt-get update && \
@@ -53,16 +53,13 @@ RUN echo -e "* soft core 0\n* hard core 0" >> /etc/security/limits.conf && \
     echo "pactl set-default-sink 0" >> /root/.bash_history && \
     echo "wandb login" >> /root/.bash_history && \
     echo "export HF_USER=" >> /root/.bash_history && \
-    echo "python lerobot/scripts/control_robot.py record \
-  --robot-path lerobot/configs/robot/koch.yaml \
-  --fps 30 \
-  --root data \
-  --repo-id \${HF_USER}/koch_test_\$(date +%Y%m%d_%H%M%S) \
-  --tags tutorial \
-  --warmup-time-s 5 \
-  --episode-time-s 30 \
-  --reset-time-s 30 \
-  --num-episodes 10" >> /root/.bash_history
+    echo "lerobot-record \
+  --robot.type=so101_follower \
+  --robot.port=/dev/ttyACM0 \
+  --dataset.repo_id=\${HF_USER}/so101_test_\$(date +%Y%m%d_%H%M%S) \
+  --dataset.num_episodes=10 \
+  --dataset.episode_time_s=30 \
+  --dataset.reset_time_s=30" >> /root/.bash_history
 
 # Start JupyterLab server in the background by default
 CMD /start_jupyter && speech-dispatcher --spawn  && /bin/bash
