@@ -36,7 +36,7 @@ Option: If not working, further expand like following and try.
 
 ### Edit ``/etc/pulse/default.pa``
 
-We operate as `root` in container, so we need to mofidy PusleAudio configuraiton file so that it allows the root user access to the socket file.
+We operate as `root` in container, so we need to mofidy PusleAudio configuration file so that it allows the root user access to the socket file.
 
 ```bash
 sudo vi /etc/pulse/default.pa
