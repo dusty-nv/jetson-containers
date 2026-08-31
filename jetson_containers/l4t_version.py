@@ -138,6 +138,7 @@ def get_jetpack_version(l4t_version: str = None, default='7.2'):
         "38.1.0": "7.0 EA",
 
         # -------- JP6 --------
+        "36.5.2": "6.2.3",
         "36.5.0": "6.2.1",
         "36.4.7": "6.2.1",
         "36.4.4": "6.2.1",
@@ -266,7 +267,7 @@ def get_cuda_version(version_file: str = "/usr/local/cuda/version.json",
                 # executing, for example, `export CUDA_VERSION=12.9`.
                 # If the env variable is not set, set the CUDA_VERSION to be the CUDA version
                 # that made available with the release of L4T_VERSION
-                if l4t_version == Version('36.5') or l4t_version == Version('36.5.0'):
+                if l4t_version >= Version('36.5') and l4t_version < Version('36.6'):
                     cuda_version = '12.6'
                 elif l4t_version == Version('36.4') or l4t_version == Version(
                     '36.4.2') or l4t_version == Version(
