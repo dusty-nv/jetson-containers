@@ -55,7 +55,7 @@ parser.add_argument('--ccache-maxsize', type=str, default=os.environ.get('DOCKER
 parser.add_argument('--build-flags', type=str, default='', help="extra flags to pass to 'docker build' commands")
 parser.add_argument('--build-args', type=str, default='', help="container build arguments (--build-arg) as a string of comma separated key:value pairs")
 parser.add_argument('--use-proxy', action='store_true', help="use the host's proxy envvars for the container build")
-parser.add_argument('--package-dirs', type=str, default='', help="additional package search directories (comma or colon-separated)")
+parser.add_argument('--package-dirs', type=str, default='', help="additional package search directories (comma or colon-separated). Combined with $JETSON_CONTAINERS_PACKAGE_DIRS if that's set.")
 
 parser.add_argument('--list-packages', action='store_true', help="show the list of packages that were found under the search directories")
 parser.add_argument('--show-packages', action='store_true', help="show info about one or more packages (if none are specified, all will be listed")
@@ -89,6 +89,10 @@ log_config(**vars(args))
 # validate args
 if args.skip_errors and not args.multiple:
     raise ValueError("--skip-errors can only be used with --multiple flag")
+
+# merge in $JETSON_CONTAINERS_PACKAGE_DIRS so it doesn't have to be passed on every invocation
+if os.environ.get('JETSON_CONTAINERS_PACKAGE_DIRS'):
+    args.package_dirs = ','.join(x for x in [os.environ['JETSON_CONTAINERS_PACKAGE_DIRS'], args.package_dirs] if x)
 
 # split multi-value keyword arguments
 args.package_dirs = re.split(',|;|:', args.package_dirs)
