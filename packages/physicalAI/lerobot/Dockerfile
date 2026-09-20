@@ -36,6 +36,10 @@ RUN git clone --branch=${LEROBOT_BRANCH} --depth=1 https://github.com/${LEROBOT_
 RUN cd /opt/lerobot && \
     uv pip install --no-reinstall --no-deps -e ".[feetech, aloha, pusht, dynamixel, pi0, test]" --verbose
 
+# draccus/einops/gymnasium/termcolor are core lerobot deps the --no-deps install above
+# skips; install them explicitly (not --no-deps, so it can't reintroduce a conflicting opencv/numpy).
+RUN uv pip install draccus einops gymnasium termcolor
+
 # Install apt dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
