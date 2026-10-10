@@ -171,6 +171,16 @@ Controlled by `WITH_*` build args (set in config.py):
 - ⚙️ `WITH_NVPL=0` - NVPL (off by default)
 - ⚙️ `WITH_NVSHMEM=0` - NVSHMEM (off by default)
 
+## Overriding the TensorRT version (JetPack 6)
+
+On L4T r36, set `TENSORRT_VERSION` to pick a different TensorRT than the CUDA default
+(supported: `10.7`, `10.3`, `10.0`). Only the TensorRT version/URL change; cuDNN stays on the
+CUDA-based default (e.g. 9.3.0 for CUDA 12.6). Unsupported values fail with the supported list.
+
+```bash
+TENSORRT_VERSION=10.7 jetson-containers build cudastack:standard
+```
+
 ## How config.py Works
 
 Following the jetson-containers pattern:
