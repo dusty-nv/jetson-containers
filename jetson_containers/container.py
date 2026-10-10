@@ -26,6 +26,7 @@ from .logging import (
     log_block, log_info, print_log, pprint_debug, colorize
 )
 from .packages import find_package, find_packages, resolve_dependencies, validate_dict
+from . import cudastack_chain
 from .utils import (
     split_container_name, query_yes_no, needs_sudo, sudo_prefix,
     get_env, get_dir, get_repo_dir
@@ -199,6 +200,121 @@ def _prepare_buildkit_dockerfile(
 
     return output_path
 
+
+_DOCKER_TAG_MAX_LEN = 128
+_CUDASTACK_CHAIN_AWARE_OFF = ('0', 'false', 'off', 'no')
+
+
+def _cudastack_chain_aware_enabled(build_args=None):
+    """
+    Chain-aware cudastack narrowing is on by default; CUDASTACK_CHAIN_AWARE=0
+    (env var, or --build-args CUDASTACK_CHAIN_AWARE:0) turns it off.
+    """
+    for value in (os.environ.get('CUDASTACK_CHAIN_AWARE'),
+                  (build_args or {}).get('CUDASTACK_CHAIN_AWARE')):
+        if value is not None and str(value).strip().lower() in _CUDASTACK_CHAIN_AWARE_OFF:
+            return False
+    return True
+
+
+def _cudastack_stage(pkg, packages_above, name, container_name, build_args=None,
+                     skip_packages=None):
+    """
+    Compute the per-build cudastack stage from the packages after it in the
+    chain that actually DEPEND ON cudastack (packages_above: the resolved
+    chain's package names that follow it).
+
+    A package only counts toward the chain-aware set if its own dependency
+    closure (resolve_dependencies([p], skip_packages=skip_packages)) includes
+    a cudastack package -- 'cudastack', 'cudastack:standard',
+    'cudastack:minimal', etc. -- whether directly or transitively (e.g. a
+    package that depends on pytorch, which itself depends on cudastack). A
+    package that IS a cudastack variant itself is never counted as "above".
+    Packages after cudastack that don't use it at all (no cudastack package
+    anywhere in their closure) are dropped from consideration entirely: they
+    neither narrow nor widen the set, and -- critically -- being undeclared
+    (no `cuda_libs` key) does NOT force the full preset if they don't depend
+    on cudastack in the first place. Among the packages that DO count, an
+    undeclared one still forces the full preset, unchanged from
+    cudastack_chain.compute_set()'s existing semantics.
+
+    skip_packages is forwarded from build_container()'s own --skip-packages
+    so that resolving a package's closure here agrees with the closure the
+    top-level build already resolved. If resolving a package's closure still
+    fails (e.g. it depends on a package that is missing/disabled and wasn't
+    covered by skip_packages), that package is conservatively treated as a
+    cudastack dependent rather than crashing the build: it contributes its
+    own `cuda_libs` declaration (or, if undeclared, the full preset) like any
+    other package above cudastack that resolve_dependencies couldn't rule
+    out.
+
+    Returns (stage_build_args, container_name, effective_with_set). For any
+    package that isn't a cudastack variant, or when chain-awareness is off,
+    returns (pkg.get('build_args'), container_name, None) unchanged.
+
+    stage_build_args is a NEW dict (the shared registry dict is never mutated)
+    with the same keys in the same order as pkg['build_args'], only the WITH_*
+    values narrowed. The stage tag is derived from the EFFECTIVE set, i.e. the
+    narrowed set with any global --build-args WITH_* overrides applied (those
+    are still appended last on the docker command line, so they win). When the
+    effective set equals the preset, today's stage name is kept exactly.
+    """
+    pkg_name = pkg.get('name', '')
+
+    if not pkg_name.startswith('cudastack:') or 'build_args' not in pkg:
+        return pkg.get('build_args'), container_name, None
+
+    if not _cudastack_chain_aware_enabled(build_args):
+        return pkg['build_args'], container_name, None
+
+    preset = {k: str(v) for k, v in pkg['build_args'].items() if k.startswith('WITH_')}
+
+    skip_packages = skip_packages or []
+
+    chain_above = []
+    for p in packages_above:
+        above_pkg = find_package(p)
+        if above_pkg.get('name', p).startswith('cudastack'):
+            continue  # a cudastack variant itself is never "above" cudastack
+        try:
+            closure = resolve_dependencies([p], skip_packages=skip_packages)
+        except Exception as error:
+            # A package whose closure can't be resolved (e.g. it depends on
+            # something skip_packages didn't cover) is treated conservatively
+            # as a cudastack dependent, so an unrelated resolution failure
+            # can't silently widen the WITH_* set -- it still narrows/forces
+            # via its own declaration like any other counted package.
+            log_debug(f"cudastack chain-aware: couldn't resolve '{p}' "
+                      f"dependencies ({error}); treating as a dependent")
+            chain_above.append(above_pkg)
+            continue
+        if any(str(dep_name).startswith('cudastack') for dep_name in closure):
+            chain_above.append(above_pkg)
+
+    computed = cudastack_chain.compute_set(chain_above, preset)
+
+    stage_build_args = dict(pkg['build_args'])
+    for key in preset:
+        stage_build_args[key] = computed[key]
+
+    effective = {key: computed[key] for key in preset}
+    for key, value in (build_args or {}).items():
+        if key.startswith('WITH_'):
+            effective[key] = str(value)
+
+    if effective != preset:
+        # budget the suffix so the tag part (after the ':') stays <= 128 chars;
+        # without an explicit tag, the last path component is what gets extended
+        last = name.rsplit('/', 1)[-1]
+        rest = last.split(':', 1)[1] if ':' in last else last
+        max_len = max(_DOCKER_TAG_MAX_LEN - len(rest) - 1, len('cudastack_') + 1)
+        variant = pkg_name.split(':', 1)[1]
+        suffix = cudastack_chain.stage_suffix(effective, preset, variant, max_len=max_len)
+        container_name = f"{name}-{suffix}"
+
+    return stage_build_args, container_name, effective
+
+
 def build_container(
         name: str='', packages: list=[], base: str=get_l4t_base(),
         buildkit: bool=True, buildkit_device: str='', buildkit_progress: str='tty',
@@ -327,6 +443,18 @@ def build_container(
             # tag this build stage with the sub-package
             container_name = f"{name}-{package.replace(':','_')}"
 
+            # cudastack: narrow its WITH_* to what the packages after it need
+            pkg_build_args, container_name, cudastack_set = _cudastack_stage(
+                pkg, packages[idx+1:],
+                name, container_name, build_args,
+                skip_packages=skip_packages)
+
+            if cudastack_set is not None:
+                cudastack_libs = sorted(lib for lib, key in cudastack_chain.CUDA_LIBS.items()
+                                        if cudastack_set.get(key) == '1')
+                log_info(f"cudastack chain-aware: {package} -> [{', '.join(cudastack_libs)}] "
+                         f"(stage {container_name}; CUDASTACK_CHAIN_AWARE=0 to disable)")
+
             # generate the logging file (without the extension)
             log_file = os.path.join(get_log_dir('build'), f"{idx+1:02d}o{len(packages)}_{container_name.replace('/','_')}").replace(':','_')
             jetpack_version = get_jetpack_version()
@@ -407,7 +535,7 @@ def build_container(
                     cmd += f"  --build-arg BUILDKIT_INLINE_CACHE=1" + _NEWLINE_
 
                 if 'build_args' in pkg:
-                    cmd += ''.join([f"  --build-arg {key}=\"{value}\"" + _NEWLINE_ for key, value in pkg['build_args'].items()])
+                    cmd += ''.join([f"  --build-arg {key}=\"{value}\"" + _NEWLINE_ for key, value in pkg_build_args.items()])
 
                 if build_args:
                     for key, value in build_args.items():
