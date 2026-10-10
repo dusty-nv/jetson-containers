@@ -13,8 +13,10 @@ git clone --branch "${OPENCV_VERSION}" --recursive https://github.com/opencv/ope
 git clone --branch "${OPENCV_VERSION}" --recursive https://github.com/opencv/opencv_contrib \
   || git clone --recursive https://github.com/opencv/opencv_contrib
 
+# only fall back to a rolling build when the versioned opencv-python branch is unavailable
+# (grouped: 'a || b && c' would run c after a succeeds too and force rolling = latest OpenCV master)
 git clone --branch "${OPENCV_PYTHON}" --recursive https://github.com/opencv/opencv-python \
-  || git clone --recursive https://github.com/opencv/opencv-python && export ENABLE_ROLLING=1
+  || { git clone --recursive https://github.com/opencv/opencv-python && export ENABLE_ROLLING=1; }
 
 cd /opt/opencv-python/opencv || git checkout --recurse-submodules origin/4.x
 git checkout --recurse-submodules ${OPENCV_VERSION} || git checkout --recurse-submodules origin/4.x
