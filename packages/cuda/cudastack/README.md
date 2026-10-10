@@ -199,6 +199,59 @@ package = [
 ]
 ```
 
+## Chain-aware selection (`cuda_libs`)
+
+By default a `cudastack` stage installs its whole preset (for `standard`: TensorRT, cuDSS,
+cuSPARSELt, and so on). Packages can instead declare the CUDA libraries they need, and the
+builder installs only what the chain being built needs. It still does this in the same single
+`RUN`.
+
+**Declare** in the package's Dockerfile header:
+
+```dockerfile
+#---
+# name: jax
+# depends: [cuda, cudastack:standard, numpy, onnx, llvm:22]
+# cuda_libs: [cudnn, nccl]
+#---
+```
+
+Valid names: `cudnn`, `tensorrt`, `nccl`, `cudss`, `cusparselt`, `cutensor`, `nvshmem`,
+`nvpl`, `gdrcopy`. An unknown name makes that package fail to load: an error naming the
+package and the bad value is printed during the scan, and the package is then unavailable
+to build. List what the package needs **at runtime and at build time**, including for its
+`-builder` variant -- e.g. for pytorch that means every `USE_*=1` library in `build.sh`,
+plus its BLAS (NVPL on SBSA).
+
+**How the set is computed** (`jetson_containers/cudastack_chain.py`, called from
+`build_container()` after the chain is resolved):
+
+- Only packages whose own dependencies include `cudastack` count. `numpy`, `cmake` and
+  other packages that don't use it are ignored.
+- The set is the union of those packages' `cuda_libs`. cuDNN is always included.
+- A cudastack dependent that declares **nothing** needs the full preset. So until every
+  cudastack package in a chain declares, that chain builds exactly what it builds today.
+  For example `opencv pytorch torchvision` still gets the full preset, because `opencv`
+  and `torchvision` don't declare `cuda_libs` yet, while `pytorch` alone narrows.
+- **Narrow-only:** the result never turns on a library that the variant's preset has off.
+- Building `cudastack` by itself (nothing after it in the chain) uses the full preset.
+- `WITH_CUTLASS` is not part of the presets, so it is never narrowed.
+
+**Stage tag.** A narrowed stage is tagged with its sorted set, for example
+`...-cudastack_cudnn-nccl` instead of `...-cudastack_standard`. That way different sets
+don't overwrite each other -- the stage tag differs per build target name. Docker's own
+layer cache reuses identical stages (same base image + same build args) regardless of the
+tag, so chains that compute the same set still share cached layers. When the
+set equals the preset, the tag is unchanged (`-cudastack_standard`). The builder logs one
+line per build, for example:
+`cudastack chain-aware: cudastack:standard -> [cudnn, nccl] (stage ...-cudastack_cudnn-nccl; CUDASTACK_CHAIN_AWARE=0 to disable)`.
+
+**Opt-out.** Set `CUDASTACK_CHAIN_AWARE=0` (environment variable, or
+`--build-args CUDASTACK_CHAIN_AWARE:0`) to always install the full preset with today's tags.
+**Any pipeline that publishes images or wheels should set it**, so published images keep
+their full contents and one shared cached stage.
+An explicit `--build-args WITH_X:0|1` still overrides the computed value for that library.
+
 ## Comparison with Individual Packages
 
 | Approach | Layers | Build Time | Complexity |
