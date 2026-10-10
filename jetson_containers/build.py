@@ -21,6 +21,7 @@
 # build external out-of-tree projects that have their own Dockerfile.  And you can add your own package search dirs for other packages.
 #
 import argparse
+import fnmatch
 import os
 import pprint
 import re
@@ -29,11 +30,40 @@ import traceback
 
 from jetson_containers import (
     build_container, build_containers, find_packages, package_search_dirs,
-    cprint, to_bool, log_config, log_error, log_status, log_versions, LogConfig
+    cprint, to_bool, log_config, log_error, log_status, log_versions, log_warning, LogConfig
 )
 from jetson_containers.network import get_log_tail
 from jetson_containers.webhook import send_webhook
 from jetson_containers.logging import get_log_dir
+
+
+def split_package_list(value):
+    """Split a comma/semicolon-separated list of package names (as used by
+    --skip-packages, --skip-tests, --test-only). Unlike --package-dirs,
+    ':' is NOT treated as a separator here, because resolved package names
+    can themselves contain ':' (e.g. 'cudastack:standard' for a subpackage
+    or build variant), and splitting on ':' would break matching those
+    tagged names against the packages/tests they're meant to filter."""
+    return re.split(',|;', value)
+
+
+def unmatched_package_patterns(patterns, names, special=()):
+    """Return the entries of a split --skip-packages / --skip-tests / --test-only
+    list that match none of the given package names (shell-style wildcards, as
+    skip_packages() uses). Empty entries and special values ('all', 'intermediate')
+    are ignored. Used to warn about filters that silently do nothing -- e.g. an old
+    'numpy:onnx' list, now that ':' is no longer a list separator."""
+    return [pattern for pattern in patterns
+            if pattern and pattern not in special
+            and not fnmatch.filter(names, pattern)]
+
+
+def split_path_list(value):
+    """Split a comma/semicolon/colon-separated list of filesystem paths (as
+    used by --package-dirs). ':' stays a separator here because it's the
+    conventional PATH-style separator for directory lists."""
+    return re.split(',|;|:', value)
+
 
 parser = argparse.ArgumentParser()
 
@@ -59,10 +89,10 @@ parser.add_argument('--package-dirs', type=str, default='', help="additional pac
 
 parser.add_argument('--list-packages', action='store_true', help="show the list of packages that were found under the search directories")
 parser.add_argument('--show-packages', action='store_true', help="show info about one or more packages (if none are specified, all will be listed")
-parser.add_argument('--skip-packages', type=str, default='', help="disable certain packages/containers (filterable by wildcards, comma/colon-separated)")
+parser.add_argument('--skip-packages', type=str, default='', help="disable certain packages/containers (filterable by wildcards, comma/semicolon-separated; tagged names like cudastack:standard are allowed)")
 parser.add_argument('--skip-errors', action='store_true', help="continue building when errors occur (only relevant when --multiple is in use)")
-parser.add_argument('--skip-tests', type=str, default='', help="comma-separated list of package tests to disable ('intermediate' to disable build-stage tests, 'all' to disable all)")
-parser.add_argument('--test-only', type=str, default='', help="only test the specified packages (comma/colon-separated list)")
+parser.add_argument('--skip-tests', type=str, default='', help="comma/semicolon-separated list of package tests to disable ('intermediate' to disable build-stage tests, 'all' to disable all; tagged names like cudastack:standard are allowed)")
+parser.add_argument('--test-only', type=str, default='', help="only test the specified packages (comma/semicolon-separated list; tagged names like cudastack:standard are allowed)")
 
 parser.add_argument('--simulate', action='store_true', help="print out the build commands without actually building the containers")
 parser.add_argument('--push', type=str, default='', help="repo or user to push built container image to (no push by default)")
@@ -91,10 +121,10 @@ if args.skip_errors and not args.multiple:
     raise ValueError("--skip-errors can only be used with --multiple flag")
 
 # split multi-value keyword arguments
-args.package_dirs = re.split(',|;|:', args.package_dirs)
-args.skip_packages = re.split(',|;|:', args.skip_packages)
-args.skip_tests = re.split(',|;|:', args.skip_tests)
-args.test_only = re.split(',|;|:', args.test_only)
+args.package_dirs = split_path_list(args.package_dirs)
+args.skip_packages = split_package_list(args.skip_packages)
+args.skip_tests = split_package_list(args.skip_tests)
+args.test_only = split_package_list(args.test_only)
 
 print(f'\n{args}\n')
 log_versions()
@@ -123,6 +153,19 @@ if args.use_proxy:
 # add package directories
 if args.package_dirs:
     package_search_dirs(args.package_dirs)
+
+# warn about package/test filters that match nothing (they would silently do nothing)
+if any(args.skip_packages + args.skip_tests + args.test_only):
+    _all_package_names = list(find_packages('*').keys())
+
+    for _flag, _patterns in (('--skip-packages', args.skip_packages),
+                             ('--skip-tests', args.skip_tests),
+                             ('--test-only', args.test_only)):
+        for _pattern in unmatched_package_patterns(_patterns, _all_package_names,
+                                                   special=('all', 'intermediate')):
+            log_warning(f"{_flag} entry '{_pattern}' matched no packages"
+                        + (" (':' is no longer a list separator here, use ',')"
+                           if ':' in _pattern else ""))
 
 # list/show package info
 if args.list_packages or args.show_packages:

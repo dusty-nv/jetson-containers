@@ -301,7 +301,7 @@ You can also add jetson-containers as a git submodule to your project and build 
 
 By default, tests are run during container builds for the packages that provide test scripts.  After each stage of the build chain is complete, that package will be tested.  After the build is complete, the final container will be tested against all of the packages again.  This is to assure that package versions aren't inadvertantly changed/overwritten/uninstalled at some point during the build chain (typically, the GPU-accelerated version of the package being supplanted by the one that some other package installs from pip/apt/ect)
 
-You can skip these tests however with the `--skip-tests` argument, which is a comma/colon-separated list of package names to skip their tests.  Or `all` or `*` will skip all tests, while `intermediate` will only run tests at the end (not during).
+You can skip these tests however with the `--skip-tests` argument, which is a comma/semicolon-separated list of package names (tagged names like `cudastack:standard` are allowed) to skip their tests.  Or `all` or `*` will skip all tests, while `intermediate` will only run tests at the end (not during).
 
 ``` bash
 $ jetson-containers build --skip-tests=numpy,onnx pytorch    # skip testing the numpy and onnx packages when building pytorch
