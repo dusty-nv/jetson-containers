@@ -1,0 +1,8 @@
+{
+    "l4t-cv-trt": {
+        "group": "ml",
+        "depends": ["python", "ffmpeg", "opencv:4.14.0", "pytorch", "torchvision", "cudastack:standard"],
+        "requires": ">=36",
+        "test": ["test.sh"]
+    }
+}
