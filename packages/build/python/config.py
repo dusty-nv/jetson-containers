@@ -13,7 +13,8 @@ def python(version, requires=None) -> list:
     # Pass clean version and free-threading flag separately
     pkg['build_args'] = {
         'PYTHON_VERSION': version_base,
-        'PYTHON_FREE_THREADING': '1' if is_free_threaded else '0'
+        'PYTHON_FREE_THREADING': '1' if is_free_threaded else '0',
+        'PIP_CONSTRAINT_PATH': '/opt/jetson-containers/pip-constraints.txt',
     }
 
     # Set as default if version matches PYTHON_VERSION
