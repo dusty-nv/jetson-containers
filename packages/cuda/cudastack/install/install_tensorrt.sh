@@ -77,14 +77,21 @@ elif [ "${TENSORRT_URL%.tar.gz}" != "$TENSORRT_URL" ] || [ "${TENSORRT_URL%.tgz}
     mkdir -p /usr/include
     cp -r include/* /usr/include/ 2>/dev/null || true
 
-    # Install Python bindings if they exist
-    if [ -d "python" ]; then
-        echo "Installing Python bindings..."
-        PYTHON_VERSION=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
-        PYTHON_SITE="/usr/local/lib/python${PYTHON_VERSION}/dist-packages"
-        mkdir -p "${PYTHON_SITE}"
-        cp -r python/* "${PYTHON_SITE}/" 2>/dev/null || true
+    # Install the TensorRT Python wheel into the active (uv) venv for the image's Python.
+    # Fail loudly if the tarball has no wheel for this Python (do not skip silently).
+    # Ported from NVIDIA-AI-IOT/jetson-containers dev (62b306f4) install_tensorrt.sh.
+    echo "Installing TensorRT Python bindings..."
+    PY_VERSION=$(python3 -c 'import sys; print(f"{sys.version_info.major}{sys.version_info.minor}")')
+    shopt -s nullglob
+    TRT_WHEELS=(python/tensorrt-*-cp${PY_VERSION}-*.whl)
+    shopt -u nullglob
+    if [ ${#TRT_WHEELS[@]} -eq 0 ]; then
+        echo "ERROR: no python/tensorrt-*-cp${PY_VERSION}-*.whl in the TensorRT tarball (${FILENAME})" >&2
+        echo "Wheels present:" >&2
+        ls python/*.whl >&2 2>/dev/null || echo "  (none)" >&2
+        exit 1
     fi
+    uv pip install "${TRT_WHEELS[@]}"
 
     # Install bin tools if they exist
     if [ -d "bin" ]; then
