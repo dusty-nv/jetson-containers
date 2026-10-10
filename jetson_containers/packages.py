@@ -22,6 +22,7 @@ from .l4t_version import (
 )
 from .logging import log_debug, log_warning, log_error
 from .utils import get_repo_dir
+from .cudastack_chain import CUDA_LIBS
 
 
 class _PackagesFinder(importlib.abc.MetaPathFinder):
@@ -77,8 +78,8 @@ _PACKAGES = {}
 _PACKAGE_SCAN = False
 _PACKAGE_DIRS = [os.path.join(get_repo_dir(), 'packages/*')]
 _PACKAGE_OPTS = {'check_l4t_version': True}
-_PACKAGE_KEYS = ['alias', 'build_args', 'build_flags', 'buildkit_device', 'config', 'depends', 'disabled',
-                 'dockerfile', 'docs', 'group', 'multistage', 'name', 'notes', 'path',
+_PACKAGE_KEYS = ['alias', 'build_args', 'build_flags', 'buildkit_device', 'config', 'cuda_libs',
+                 'depends', 'disabled', 'dockerfile', 'docs', 'group', 'multistage', 'name', 'notes', 'path',
                  'prefix', 'postfix', 'requires', 'run_user', 'secrets', 'test']
 
 
@@ -730,6 +731,8 @@ def validate_package(package):
         if not isinstance(pkg['requires'], list):
             pkg['requires'] = [pkg['requires']]
 
+        validate_lists(pkg)  # normalize list entries; a bad cuda_libs disables pkg
+
         if _PACKAGE_OPTS['check_l4t_version'] and not check_requirements(pkg):
             log_debug(
                 f"Package {pkg['name']} isn't compatible with L4T r{L4T_VERSION} (requires L4T {pkg['requires']})")
@@ -738,8 +741,6 @@ def validate_package(package):
         if pkg.get('disabled', False):
             log_debug(f"Package {pkg['name']} was disabled by its config")
             packages.remove(pkg)
-        else:
-            validate_lists(pkg)  # make sure certain entries are lists
 
     return packages
 
@@ -803,6 +804,23 @@ def validate_lists(package):
     str2list(package, 'config')
     str2list(package, 'depends')
     str2list(package, 'test')
+    str2list(package, 'cuda_libs')
+
+    if 'cuda_libs' in package:
+        if package['cuda_libs'] is None:  # bare `cuda_libs:` = declared, needs nothing
+            package['cuda_libs'] = []
+
+        unknown = [lib for lib in package['cuda_libs'] if lib not in CUDA_LIBS]
+
+        # an unknown entry disables just this package (instead of raising, which would
+        # abort the whole scan on python 3.8 and kill a scan thread on newer versions)
+        if unknown and not package.get('disabled', False):
+            package_name = package.get('name', '<unknown package>')
+            log_error(
+                f"package '{package_name}' declares unknown cuda_libs entries {unknown} "
+                f"(expected one of: {', '.join(sorted(CUDA_LIBS.keys()))}), disabling it"
+            )
+            package['disabled'] = True
 
     return package
 
