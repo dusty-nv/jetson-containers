@@ -99,7 +99,10 @@ export CMAKE_LIBRARY_PATH=/usr/local/cuda/lib64/stubs
 export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
 export ENABLE_CONTRIB=1
 # export ENABLE_ROLLING=1 # Build from last commit
-# export OPENCV_PYTHON_SKIP_GIT_COMMANDS=1
+# keep the ${OPENCV_VERSION} checkouts above: without this, opencv-python's setup.py runs
+# 'git submodule update' and resets opencv/opencv_contrib to the commits its branch records
+# (currently 4.14.0), so e.g. OPENCV_VERSION=4.12.0 would compile 4.14.0 under a 4.12.0 name
+export OPENCV_PYTHON_SKIP_GIT_COMMANDS=1
 
 # Install dependencies for building the wheel
 uv pip install scikit-build
