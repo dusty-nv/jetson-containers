@@ -120,9 +120,9 @@ uv pip install /opt/opencv*.whl
 python3 -c "import cv2; print('OpenCV version:', str(cv2.__version__)); print(cv2.getBuildInformation())"
 
 # pin the freshly built CUDA wheel (only reached if install + import cv2 succeeded; set -e fails loudly otherwise)
-# dist name follows opencv-python's setup.py: contrib build, '-rolling' suffix when ENABLE_ROLLING=1
-if [ "${ENABLE_ROLLING:-}" == "1" ]; then CONSTRAINT_PKG=opencv-contrib-python-rolling; else CONSTRAINT_PKG=opencv-contrib-python; fi
-${PIP_APPEND_CONSTRAINT} "${CONSTRAINT_PKG}"
+# the dist name is always opencv-contrib-python: cv2/version.py above sets rolling = False,
+# and patches.diff stops setup.py from regenerating it, so ENABLE_ROLLING never renames the wheel
+${PIP_APPEND_CONSTRAINT} opencv-contrib-python
 twine upload --verbose /opt/opencv*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
 # [FIX] Ensure the build directory is clean to avoid CMake caching issues from previous failed runs.
