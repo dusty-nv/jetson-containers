@@ -83,8 +83,8 @@ fi
 
 pkg-config --modversion dav1d
 
-# nv-codec-headers (pinned: SDK 13.1 headers, n13.1.15.0+, rename NV_ENC_CLOCK_TIMESTAMP_SET.countingType
-# to countingTypeLSB, which FFmpeg 8.1's nvenc.c does not build against)
+# nv-codec-headers, pinned below Video Codec SDK 13.1: n13.1.15.0 and newer rename
+# NV_ENC_CLOCK_TIMESTAMP_SET.countingType to countingTypeLSB, which FFmpeg 8.1's nvenc.c does not build against
 git clone --depth 1 --branch ${NV_CODEC_HEADERS_VERSION:-n13.0.19.1} https://github.com/FFmpeg/nv-codec-headers.git
 cd nv-codec-headers && make PREFIX="$DIST" install
 
