@@ -78,20 +78,25 @@ elif [ "${TENSORRT_URL%.tar.gz}" != "$TENSORRT_URL" ] || [ "${TENSORRT_URL%.tgz}
     cp -r include/* /usr/include/ 2>/dev/null || true
 
     # Install the TensorRT Python wheel into the active (uv) venv for the image's Python.
-    # Fail loudly if the tarball has no wheel for this Python (do not skip silently).
     # Ported from NVIDIA-AI-IOT/jetson-containers dev (62b306f4) install_tensorrt.sh.
+    # On Jetson (L4T) a missing wheel fails the build; on SBSA/x86 it only warns, as before.
     echo "Installing TensorRT Python bindings..."
-    PY_VERSION=$(python3 -c 'import sys; print(f"{sys.version_info.major}{sys.version_info.minor}")')
+    # wheel tag, e.g. cp310, or cp314t for a free-threaded build
+    PY_TAG=$(python3 -c 'import sys, sysconfig; print(f"cp{sys.version_info.major}{sys.version_info.minor}" + ("t" if sysconfig.get_config_var("Py_GIL_DISABLED") else ""))')
     shopt -s nullglob
-    TRT_WHEELS=(python/tensorrt-*-cp${PY_VERSION}-*.whl)
+    TRT_WHEELS=(python/tensorrt-*-${PY_TAG}-*.whl)
     shopt -u nullglob
-    if [ ${#TRT_WHEELS[@]} -eq 0 ]; then
-        echo "ERROR: no python/tensorrt-*-cp${PY_VERSION}-*.whl in the TensorRT tarball (${FILENAME})" >&2
-        echo "Wheels present:" >&2
+    if [ ${#TRT_WHEELS[@]} -gt 0 ]; then
+        uv pip install "${TRT_WHEELS[@]}"
+    else
+        echo "no python/tensorrt-*-${PY_TAG}-*.whl in the TensorRT tarball (${FILENAME}); wheels present:" >&2
         ls python/*.whl >&2 2>/dev/null || echo "  (none)" >&2
-        exit 1
+        if [ "${IS_TEGRA:-0}" = "1" ]; then
+            echo "ERROR: TensorRT Python bindings not installed" >&2
+            exit 1
+        fi
+        echo "WARNING: TensorRT Python bindings not installed (import tensorrt will fail)" >&2
     fi
-    uv pip install "${TRT_WHEELS[@]}"
 
     # Install bin tools if they exist
     if [ -d "bin" ]; then
