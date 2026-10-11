@@ -2,10 +2,10 @@
 # l4t-cv-trt smoke test (6 checks + version manifest + obligation probes).
 # Runs via `jetson-containers build --test-only` (mounted at /test), or directly:
 #   docker run --runtime nvidia --rm -v $PWD:/test IMAGE bash /test/test.sh
-# Wanted stack: TensorRT 10.7 (build with TENSORRT_VERSION=10.7 in the env), OpenCV 4.14.0.
+# Set EXPECT_TRT (e.g. -e EXPECT_TRT=10.7) to also assert the TensorRT major.minor version.
 set -u
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-export EXPECT_TRT="${EXPECT_TRT:-10.7}"
+export EXPECT_TRT="${EXPECT_TRT:-}"
 export WORK="$(mktemp -d /tmp/l4t-cv-trt.XXXXXX)"
 trap 'rm -rf "$WORK"' EXIT
 

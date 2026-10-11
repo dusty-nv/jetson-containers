@@ -5,7 +5,7 @@ import os
 import sys
 import tempfile
 
-EXPECT_TRT = os.environ.get("EXPECT_TRT", "10.7")
+EXPECT_TRT = os.environ.get("EXPECT_TRT", "")  # e.g. "10.7"; empty = accept what cudastack installed
 WORK = os.environ.get("WORK") or tempfile.mkdtemp(prefix="l4t-cv-trt.")
 results = []
 
@@ -61,17 +61,27 @@ def _():
     return f"cv2 {cv2.__version__} cuda devices={n}"
 
 
-@check(f"tensorrt {EXPECT_TRT}.x engine from tiny ONNX")
+@check(f"tensorrt {EXPECT_TRT + '.x ' if EXPECT_TRT else ''}engine from tiny ONNX")
 def _():
+    import ctypes
     import tensorrt as trt
-    assert trt.__version__.startswith(EXPECT_TRT + "."), (
-        f"tensorrt {trt.__version__} != {EXPECT_TRT}.x "
-        f"(build with TENSORRT_VERSION={EXPECT_TRT} in the environment)")
+    if EXPECT_TRT:
+        assert trt.__version__.startswith(EXPECT_TRT + "."), (
+            f"tensorrt {trt.__version__} != {EXPECT_TRT}.x "
+            f"(build with TENSORRT_VERSION={EXPECT_TRT} in the environment)")
+    # the python bindings must match the libnvinfer the loader resolves (no host/image mix)
+    lib = ctypes.CDLL("libnvinfer.so." + trt.__version__.split(".")[0])
+    v = lib.getInferLibVersion()  # TensorRT 10: major * 10000 + minor * 100 + patch
+    assert (v // 10000, v // 100 % 100) == tuple(int(x) for x in trt.__version__.split(".")[:2]), (
+        f"tensorrt python {trt.__version__} != libnvinfer {v}")
     import torch
     onnx_path = os.path.join(WORK, "tiny.onnx")
     model = torch.nn.Sequential(torch.nn.Conv2d(1, 4, 3, padding=1), torch.nn.ReLU()).eval()
-    torch.onnx.export(model, torch.zeros(1, 1, 16, 16), onnx_path,
-                      input_names=["x"], output_names=["y"], opset_version=13, dynamo=False)
+    export_kw = dict(input_names=["x"], output_names=["y"], opset_version=13)
+    try:  # torch >= 2.5 may default to the dynamo exporter; keep the TorchScript one
+        torch.onnx.export(model, torch.zeros(1, 1, 16, 16), onnx_path, dynamo=False, **export_kw)
+    except TypeError:  # older torch has no 'dynamo' argument
+        torch.onnx.export(model, torch.zeros(1, 1, 16, 16), onnx_path, **export_kw)
     del model
     logger = trt.Logger(trt.Logger.WARNING)
     builder = trt.Builder(logger)

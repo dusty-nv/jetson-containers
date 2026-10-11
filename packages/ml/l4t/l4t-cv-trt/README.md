@@ -1,7 +1,8 @@
 # l4t-cv-trt
 
 JetPack 6.x computer-vision + TensorRT stack: `python`, `ffmpeg`, `opencv:4.14.0`, `pytorch`,
-`torchvision` and `cudastack:standard` (cuDNN, TensorRT, NCCL, ...). Requires L4T >= 36.
+`torchvision` and `cudastack:standard` (cuDNN, TensorRT, NCCL, ...). Requires L4T R36 (JetPack 6);
+the recipe below is validated on JetPack 6.2 (CUDA 12.6).
 
 ## Pinning versions
 
@@ -16,7 +17,9 @@ CUDA_ARCH=tegra-aarch64 L4T_VERSION=36.4.3 JETPACK_VERSION=6.2 CUDA_VERSION=12.6
 TENSORRT_VERSION=10.7 jetson-containers build l4t-cv-trt
 ```
 
-The smoke test asserts `tensorrt` is `10.7.x` (override with `EXPECT_TRT=...`), so a build that
+Without the override, JetPack 6.2 (CUDA 12.6) resolves TensorRT 10.3. The smoke test accepts
+whatever TensorRT the image has, and checks that the Python bindings match the `libnvinfer` the
+loader resolves. Pass `EXPECT_TRT=10.7` to the test to also assert the version, so an image that
 resolved a different TensorRT fails loudly.
 
 ## Smoke test (`test.sh`)
@@ -30,5 +33,5 @@ line and the obligation probes (cuDNN version, cv2 build info, `ldd` of cv2 for 
 ```bash
 jetson-containers build --test-only l4t-cv-trt l4t-cv-trt
 # or, on an already built image:
-docker run --runtime nvidia --rm -v $PWD/packages/ml/l4t/l4t-cv-trt:/test IMAGE bash /test/test.sh
+docker run --runtime nvidia --rm -e EXPECT_TRT=10.7 -v $PWD/packages/ml/l4t/l4t-cv-trt:/test IMAGE bash /test/test.sh
 ```
