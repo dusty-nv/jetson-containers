@@ -83,8 +83,8 @@ def _():
     config = builder.create_builder_config()
     config.set_memory_pool_limit(trt.MemoryPoolType.WORKSPACE, 64 << 20)
     blob = builder.build_serialized_network(network, config)
-    assert blob is not None and len(blob) > 0, "engine build returned nothing"
-    return f"tensorrt {trt.__version__} engine bytes={len(blob)}"
+    assert blob is not None and blob.nbytes > 0, "engine build returned nothing"  # IHostMemory
+    return f"tensorrt {trt.__version__} engine bytes={blob.nbytes}"
 
 
 failed = [n for n, ok, _ in results if not ok]
