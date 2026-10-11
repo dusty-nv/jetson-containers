@@ -174,8 +174,15 @@ Controlled by `WITH_*` build args (set in config.py):
 ## Overriding the TensorRT version (JetPack 6)
 
 On L4T r36, set `TENSORRT_VERSION` to pick a different TensorRT than the CUDA default
-(supported: `10.7`, `10.3`, `10.0`). Only the TensorRT version/URL change; cuDNN stays on the
-CUDA-based default (e.g. 9.3.0 for CUDA 12.6). Unsupported values fail with the supported list.
+(`10.7`, `10.3`, `10.0`; `10.7.0` is read as `10.7`). Only the TensorRT version/URL change; cuDNN
+stays on the CUDA-based default (e.g. 9.3.0 for CUDA 12.6).
+
+- The TensorRT tarball has to match the CUDA version: `10.7` and `10.3` (built for CUDA 12.6) are
+  accepted with CUDA 12.6 and 12.8, `10.0` (CUDA 12.4) with CUDA 12.4 to 12.8. Any other
+  combination fails with the versions supported for that CUDA.
+- On other targets (r39+, SBSA, x86) the variable is ignored, with a warning.
+- The image tag does not include the TensorRT version, so `cudastack:standard` built with and
+  without the override get the same tag. Don't push an overridden build under the default tag.
 
 ```bash
 TENSORRT_VERSION=10.7 jetson-containers build cudastack:standard
