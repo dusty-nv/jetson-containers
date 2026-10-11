@@ -39,6 +39,9 @@ jobs:
           echo "packages=$pkgs" >> $GITHUB_OUTPUT
       - name: Build changed packages
         if: steps.changed.outputs.packages != ''
+        env:
+          # published images keep the full cudastack:standard set (chain-aware narrowing is for local builds)
+          CUDASTACK_CHAIN_AWARE: "0"
         run: |
           cd jetson-containers
           for pkg in ${{ steps.changed.outputs.packages }}; do
