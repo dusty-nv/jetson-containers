@@ -356,7 +356,7 @@ if __name__ == "__main__":
     parser.add_argument('--simulate', action='store_true')
 
     args = parser.parse_args()
-    args.skip_packages = re.split(',|;|:', args.skip_packages)
+    args.skip_packages = re.split(',|;', args.skip_packages)  # ':' is the version separator
 
     print(args)
 

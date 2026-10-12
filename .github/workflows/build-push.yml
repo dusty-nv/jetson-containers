@@ -30,6 +30,9 @@ jobs:
           git status
           ls -a
       - name: Build selected packages
+        env:
+          # published images keep the full cudastack:standard set (chain-aware narrowing is for local builds)
+          CUDASTACK_CHAIN_AWARE: "0"
         run: |
           cd jetson-containers
           for pkg in l4t-dynamo l4t-diffusion l4t-ml mlc nerfstudio ollama opendronemap lerobot genesis-world; do
