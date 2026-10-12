@@ -214,7 +214,9 @@ def cuda_stack(name, with_tensorrt=False, minimal=False, requires=None):
         build_args['ENABLE_DISTRIBUTED_JETSON_NCCL'] = '1'
 
     pkg['build_args'] = build_args
-    pkg['depends'] = ['cuda']  # cudastack depends ON cuda, doesn't replace it
+    # cudastack depends ON cuda, doesn't replace it; with TensorRT it also needs the python
+    # venv (+ uv) that install_tensorrt.sh installs the tensorrt wheel into
+    pkg['depends'] = ['cuda', 'python'] if with_tensorrt else ['cuda']
 
     if requires:
         pkg['requires'] = requires
