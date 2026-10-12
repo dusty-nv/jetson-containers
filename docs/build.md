@@ -295,6 +295,15 @@ Let's say that you have a project that you want to build a container for - if yo
 jetson-containers build --package-dirs=/path/to/your/package your_package_name
 ```
 
+If you keep your own packages outside this repo (for example in a fork you don't want to
+upstream), set `JETSON_CONTAINERS_PACKAGE_DIRS` instead so you do not have to pass
+`--package-dirs` on every invocation - it's merged with any `--package-dirs` you also pass:
+
+```bash
+export JETSON_CONTAINERS_PACKAGE_DIRS=/path/to/your/packages/*
+jetson-containers build your_package_name
+```
+
 You can also add jetson-containers as a git submodule to your project and build it that way (see [jetson-inference](https://github.com/dusty-nv/jetson-inference) as an example of this)
 
 ## Tests
