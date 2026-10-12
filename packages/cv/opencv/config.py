@@ -20,11 +20,6 @@ def opencv(version, requires=None, default=False, url=None):
     if requires:
         cv['requires'] = requires
 
-    # OpenCV < 4.13 calls av_stream_get_side_data(), which FFmpeg 8.0 removed: the module
-    # builds but 'import cv2' fails with an undefined symbol, so stay on FFmpeg 7.1
-    if Version(version) < Version('4.13'):
-        cv['depends'] = ['ffmpeg:7.1' if dep == 'ffmpeg' else dep for dep in cv['depends']]
-
     builder = cv.copy()
     builder['name'] = builder['name'] + '-builder'
     builder['build_args'] = {**builder['build_args'], 'FORCE_BUILD': 'on'}
