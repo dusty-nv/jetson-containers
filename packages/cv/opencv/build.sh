@@ -13,8 +13,10 @@ git clone --branch "${OPENCV_VERSION}" --recursive https://github.com/opencv/ope
 git clone --branch "${OPENCV_VERSION}" --recursive https://github.com/opencv/opencv_contrib \
   || git clone --recursive https://github.com/opencv/opencv_contrib
 
+# only fall back to a rolling build when the versioned opencv-python branch is unavailable
+# (grouped: 'a || b && c' would run c after a succeeds too and force rolling = latest OpenCV master)
 git clone --branch "${OPENCV_PYTHON}" --recursive https://github.com/opencv/opencv-python \
-  || git clone --recursive https://github.com/opencv/opencv-python && export ENABLE_ROLLING=1
+  || { git clone --recursive https://github.com/opencv/opencv-python && export ENABLE_ROLLING=1; }
 
 cd /opt/opencv-python/opencv || git checkout --recurse-submodules origin/4.x
 git checkout --recurse-submodules ${OPENCV_VERSION} || git checkout --recurse-submodules origin/4.x
@@ -97,7 +99,10 @@ export CMAKE_LIBRARY_PATH=/usr/local/cuda/lib64/stubs
 export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
 export ENABLE_CONTRIB=1
 # export ENABLE_ROLLING=1 # Build from last commit
-# export OPENCV_PYTHON_SKIP_GIT_COMMANDS=1
+# keep the ${OPENCV_VERSION} checkouts above: without this, opencv-python's setup.py runs
+# 'git submodule update' and resets opencv/opencv_contrib to the commits its branch records
+# (currently 4.14.0), so e.g. OPENCV_VERSION=4.12.0 would compile 4.14.0 under a 4.12.0 name
+export OPENCV_PYTHON_SKIP_GIT_COMMANDS=1
 
 # Install dependencies for building the wheel
 uv pip install scikit-build
@@ -118,6 +123,11 @@ rm -rf /opt/opencv-python
 # install/test/upload wheel
 uv pip install /opt/opencv*.whl
 python3 -c "import cv2; print('OpenCV version:', str(cv2.__version__)); print(cv2.getBuildInformation())"
+
+# pin the freshly built CUDA wheel (only reached if install + import cv2 succeeded; set -e fails loudly otherwise)
+# the dist name is always opencv-contrib-python: cv2/version.py above sets rolling = False,
+# and patches.diff stops setup.py from regenerating it, so ENABLE_ROLLING never renames the wheel
+${PIP_APPEND_CONSTRAINT} opencv-contrib-python
 twine upload --verbose /opt/opencv*.whl || echo "failed to upload wheel to ${TWINE_REPOSITORY_URL}"
 
 # [FIX] Ensure the build directory is clean to avoid CMake caching issues from previous failed runs.

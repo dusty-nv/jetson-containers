@@ -3,13 +3,36 @@ from packaging.version import Version
 
 from jetson_containers import (
     L4T_VERSION, CUDA_VERSION, IS_TEGRA, IS_SBSA, CUDA_ARCH, LSB_RELEASE,
-    update_dependencies, package_requires
+    update_dependencies, package_requires, log_warning
 )
 
 # cudastack consolidates multiple CUDA libraries into ONE RUN to avoid layer limits
 # It depends on 'cuda' being already installed
 
 IS_CONFIG = 'package' in globals()  # cuda_stack_args() gets imported by other packages
+
+# TENSORRT_VERSION overrides for JetPack 6 (L4T r36): version -> (tarball path under
+# tensorrt_base_url, the CUDA version that tarball is built for)
+TENSORRT_L4T_R36 = {
+    '10.7': ('10.7.0/tars/TensorRT-10.7.0.23.l4t.aarch64-gnu.cuda-12.6.tar.gz', '12.6'),
+    '10.3': ('10.3.0/tars/TensorRT-10.3.0.26.l4t.aarch64-gnu.cuda-12.6.tar.gz', '12.6'),
+    '10.0': ('10.0.1/tars/TensorRT-10.0.1.6.l4t.aarch64-gnu.cuda-12.4.tar.gz', '12.4'),
+}
+
+
+def tensorrt_override():
+    """
+    TENSORRT_VERSION from the environment, normalized to major.minor ('10.7.0' -> '10.7'),
+    or '' when unset (same variable as the deprecated cuda/tensorrt package)
+    """
+    value = os.environ.get('TENSORRT_VERSION', '').strip()
+    if not value:
+        return ''
+    try:
+        return '.'.join(str(x) for x in Version(value).release[:2])
+    except Exception:
+        raise ValueError(f"cudastack: invalid TENSORRT_VERSION={value!r} (expected e.g. 10.7)")
+
 
 def cuda_stack_args():
     """
@@ -62,6 +85,21 @@ def cuda_stack_args():
                 tensorrt_url = f"{tensorrt_base_url}/10.0.1/tars/TensorRT-10.0.1.6.l4t.aarch64-gnu.cuda-12.4.tar.gz"
             nccl_ver = '2.27.7'
             nccl_url = ''
+
+            # Optional TENSORRT_VERSION override; only swaps the TensorRT version/URL, the
+            # CUDA_VERSION branches above stay the default. The tarball must be built for the same
+            # CUDA major and a CUDA minor no newer than CUDA_VERSION (12.x before the CUDA 13 tarballs).
+            override = tensorrt_override()
+            if override and override != tensorrt_ver:
+                supported = [v for v, (_, cuda) in TENSORRT_L4T_R36.items()
+                             if Version(cuda) <= CUDA_VERSION < Version('12.9')]
+                if override not in supported:
+                    raise ValueError(
+                        f"cudastack: unsupported TENSORRT_VERSION={override!r} for L4T r36 with "
+                        f"CUDA {CUDA_VERSION} (supported: {', '.join(supported) or 'none'})"
+                    )
+                tensorrt_ver = override
+                tensorrt_url = f"{tensorrt_base_url}/{TENSORRT_L4T_R36[override][0]}"
         else:  # JetPack 5
             cudnn_ver = '8.6.0'
             cudnn_url = "https://repo.download.nvidia.com/jetson/common/pool/main/c/cudnn/libcudnn8_8.6.0.166-1+cuda11.4_arm64.deb"
@@ -138,6 +176,10 @@ def cuda_stack_args():
 CUDNN_VERSION = Version(cuda_stack_args()['CUDNN_VERSION'])
 TENSORRT_VERSION = Version(cuda_stack_args()['TENSORRT_VERSION'])
 
+if IS_CONFIG and tensorrt_override() and not (IS_TEGRA and 36 <= L4T_VERSION.major < 39):
+    log_warning(f"cudastack: TENSORRT_VERSION={tensorrt_override()} is only applied on L4T r36 "
+                f"(JetPack 6); using TensorRT {TENSORRT_VERSION} for this target")
+
 
 def cuda_stack(name, with_tensorrt=False, minimal=False, requires=None):
     """
@@ -172,7 +214,9 @@ def cuda_stack(name, with_tensorrt=False, minimal=False, requires=None):
         build_args['ENABLE_DISTRIBUTED_JETSON_NCCL'] = '1'
 
     pkg['build_args'] = build_args
-    pkg['depends'] = ['cuda']  # cudastack depends ON cuda, doesn't replace it
+    # cudastack depends ON cuda, doesn't replace it; with TensorRT it also needs the python
+    # venv (+ uv) that install_tensorrt.sh installs the tensorrt wheel into
+    pkg['depends'] = ['cuda', 'python'] if with_tensorrt else ['cuda']
 
     if requires:
         pkg['requires'] = requires

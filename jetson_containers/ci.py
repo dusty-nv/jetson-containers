@@ -275,7 +275,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     #args.packages = re.split(',|;|:', args.packages)
-    args.skip_packages = re.split(',|;|:', args.skip_packages)
+    args.skip_packages = re.split(',|;', args.skip_packages)  # ':' is the version separator
     args.labels = re.split(',|;|:', args.labels)
 
     print(args)

@@ -53,7 +53,9 @@ elif [ "$FFMPEG_INSTALL" == "git" ]; then
   # Fail the image build if both the tarpack cache and the source build fail.
   # The previous `|| echo FAILED` form masked build failures and produced
   # images without an ffmpeg binary (test then failed with command not found).
-  tarpack install "ffmpeg-$FFMPEG_VERSION" || $TMP/build.sh
+  tarpack install "ffmpeg-$FFMPEG_VERSION" || \
+  $TMP/build.sh || \
+  { echo "FAILED to build FFMPEG $FFMPEG_VERSION" >&2; exit 1; }
   ldconfig
 
   # Sanity check so a silent partial install cannot pass the Docker layer.

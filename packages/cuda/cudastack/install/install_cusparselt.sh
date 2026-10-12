@@ -167,7 +167,12 @@ else
     # Install libs into CUDA Tegra target lib dir
     LIB_DST="/usr/local/cuda/targets/aarch64-linux/lib"
     install -d "$LIB_DST"
-    install -m 0644 lib/libcusparseLt.so* "$LIB_DST/"
+    # Preserve symlinks (libcusparseLt.so -> .so.0 -> .so.0.x.x.x): `install`
+    # dereferences symlinks and copies each as a full regular file, tripling
+    # disk usage. cp -P copies symlinks as symlinks; only the real (versioned)
+    # file needs its mode fixed up afterwards.
+    cp -P lib/libcusparseLt.so* "$LIB_DST/"
+    find "$LIB_DST" -maxdepth 1 -name 'libcusparseLt.so*' -type f -exec chmod 0644 {} +
 
     echo "$LIB_DST" >/etc/ld.so.conf.d/cusparselt.conf
     ldconfig

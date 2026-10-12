@@ -18,12 +18,22 @@ else
   EXTRAS="libtbb2 libtbb2-dev liblapacke-dev $EXTRAS"
 fi
 
+# Ubuntu's FFmpeg headers, unless FFmpeg was already built into the image (ffmpeg package,
+# /usr/local). build.sh passes CUDNN_INCLUDE_DIR=/usr/include/<arch>-linux-gnu, which OpenCV adds
+# as -isystem, so Ubuntu's older headers there would shadow /usr/local/include: OpenCV then
+# compiles against FFmpeg 4.4 and links the newer libraries ('import cv2' fails with undefined
+# symbols such as av_stream_get_side_data or avcodec_get_context_defaults3).
+FFMPEG_DEV="libavcodec-dev libavformat-dev libswscale-dev libpostproc-dev"
+if pkg-config --exists libavcodec && [ "$(pkg-config --variable=includedir libavcodec)" != "/usr/include" ]; then
+    echo "using FFmpeg $(pkg-config --modversion libavcodec) from $(pkg-config --variable=includedir libavcodec), not installing $FFMPEG_DEV"
+    FFMPEG_DEV=""
+fi
+
 apt-get update
 apt-get install -y --no-install-recommends \
         libunwind-dev \
         libatlas-base-dev \
-        libavcodec-dev \
-        libavformat-dev \
+        $FFMPEG_DEV \
         libcanberra-gtk3-module \
         libeigen3-dev \
         libglew-dev \
@@ -40,8 +50,6 @@ apt-get install -y --no-install-recommends \
         liblapack-dev \
         libopenblas-dev \
         libpng-dev \
-        libpostproc-dev \
-        libswscale-dev \
         libtesseract-dev \
         libtiff-dev \
         libv4l-dev \
