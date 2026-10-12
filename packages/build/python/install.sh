@@ -10,6 +10,9 @@ set -euxo pipefail
 PYTHON_FREE_THREADING="${PYTHON_FREE_THREADING:-0}"
 PIP_INDEX_URL="${PIP_INDEX_URL:-https://pypi.org/simple}"
 
+export UV_DEFAULT_INDEX="https://pypi.org/simple"
+PIP_INDEX_URL="https://pypi.org/simple"
+
 # Add 't' suffix for free-threaded builds
 if [ "${PYTHON_FREE_THREADING}" = "1" ]; then
   PYTHON_INSTALL_VERSION="${PYTHON_VERSION}t"
