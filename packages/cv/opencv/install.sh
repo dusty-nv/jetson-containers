@@ -32,7 +32,21 @@ fi
 # Verify the install actually works before pinning a constraint -
 # otherwise a failed install leaves a bad pin in pip-constraints.txt
 # that blocks build.sh's locally-built wheel (different version).
-python3 -c "import cv2; print('OpenCV version:', str(cv2.__version__)); print(cv2.getBuildInformation())"
+# Build containers often have no GPU driver (buildkit, off-device builds), so the CUDA wheel
+# cannot be imported there: it links driver libraries (libcuda, libnvcuvid, ...). Fail on any
+# other unresolved library; if only driver libraries are missing, skip the import.
+CV2_DIR="$(python3 -c 'import importlib.util, os; print(os.path.dirname(importlib.util.find_spec("cv2").origin))')"
+CV2_SO="$(ls "$CV2_DIR"/cv2*.so "$CV2_DIR"/python-3*/cv2*.so 2>/dev/null | head -1)"
+MISSING="$(ldd "$CV2_SO" | awk '/not found/ {print $1}' | sort -u)"
+NOT_DRIVER="$(echo "$MISSING" | grep -vE '^lib(cuda|nvcuvid|nvidia-[a-z-]+)\.so' || true)"
+if [ -n "$NOT_DRIVER" ]; then
+    echo "ERROR: $CV2_SO has unresolved libraries: $NOT_DRIVER" >&2
+    exit 1
+elif [ -n "$MISSING" ]; then
+    echo "skipping 'import cv2': GPU driver libraries not present in the build container:" $MISSING
+else
+    python3 -c "import cv2; print('OpenCV version:', str(cv2.__version__)); print(cv2.getBuildInformation())"
+fi
 
 if [ -n "${CONSTRAINT_PKG:-}" ]; then
     ${PIP_APPEND_CONSTRAINT} "${CONSTRAINT_PKG}"
