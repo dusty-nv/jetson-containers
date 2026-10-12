@@ -72,8 +72,20 @@ export PKG_CONFIG_PATH="$DIST/lib/pkgconfig:$PKG_CONFIG_PATH"
 pkg-config --modversion aom
 pkg-config --modversion SvtAv1Enc
 
-# nv-codec-headers
-git clone https://github.com/FFmpeg/nv-codec-headers.git
+# libdav1d: FFmpeg >= 8.0 requires dav1d >= 1.0.0, but Ubuntu 22.04 (JetPack 6) ships 0.9.x
+if ! pkg-config --atleast-version=1.0.0 dav1d; then
+  cd $SOURCE
+  git clone --depth 1 --branch ${DAV1D_VERSION:-1.5.4} https://code.videolan.org/videolan/dav1d.git
+  meson setup dav1d/build dav1d --prefix="$DIST" --libdir=lib \
+    --buildtype=release -Denable_tools=false -Denable_tests=false
+  ninja -C dav1d/build install
+fi
+
+pkg-config --modversion dav1d
+
+# nv-codec-headers, pinned below Video Codec SDK 13.1: n13.1.15.0 and newer rename
+# NV_ENC_CLOCK_TIMESTAMP_SET.countingType to countingTypeLSB, which FFmpeg 8.1's nvenc.c does not build against
+git clone --depth 1 --branch ${NV_CODEC_HEADERS_VERSION:-n13.0.19.1} https://github.com/FFmpeg/nv-codec-headers.git
 cd nv-codec-headers && make PREFIX="$DIST" install
 
 export PATH=/usr/local/cuda/bin:${PATH}
