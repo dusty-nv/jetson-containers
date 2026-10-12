@@ -68,7 +68,7 @@ which python
 python --version
 
 # Upgrade pip and base utilities
-uv pip install --upgrade --index-url "${PIP_INDEX_URL}" pip pkginfo
+uv pip install --upgrade pip pkginfo
 
 which pip || true
 pip --version || true
@@ -84,7 +84,7 @@ uv pip install --upgrade \
   nvidia-ml-py
 
 # Install publishing tool
-uv pip install --upgrade --index-url "${PIP_INDEX_URL}" twine
+uv pip install --upgrade twine
 
 # Cleanup
 rm -rf /var/lib/apt/lists/*

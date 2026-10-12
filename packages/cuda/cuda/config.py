@@ -195,7 +195,6 @@ def pip_cache(version, requires=None):
         'PIP_INDEX_REPO': pip_index_url,
         'FALLBACK_PIP_INDEX_URL': fallback_pip_url,
         'PIP_TRUSTED_HOSTS': trusted_hosts,
-        'UV_EXTRA_INDEX_URL': f"https://pypi.{index_host}/root/pypi/+simple",
         'PIP_UPLOAD_REPO': os.environ.get('PIP_UPLOAD_REPO', f"http://{upload_host}/{pip_path}"),
         'PIP_UPLOAD_USER': os.environ.get('PIP_UPLOAD_USER',
             'sbsa' if IS_SBSA

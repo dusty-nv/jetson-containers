@@ -27,12 +27,18 @@ ARG INDEX_HOST \
     SCP_UPLOAD_KEY \
     FALLBACK_TAR_INDEX_URL
 
+# uv searches UV_INDEX before UV_DEFAULT_INDEX, so the Jetson index is preferred for any
+# package it has (uv's default first-index strategy) and PyPI is only the fallback when the
+# Jetson index returns 404 (e.g. a new jpN/cuXYZ stage that doesn't mirror PyPI yet).
+# Don't swap this for UV_DEFAULT_INDEX=<jetson> + UV_EXTRA_INDEX_URL=<pypi>: uv searches
+# extra indexes first, so PyPI wheels (e.g. torch) would silently win over Jetson builds.
 ENV INDEX_HOST=${INDEX_HOST} \
     MULTIARCH_URL=${MULTIARCH_URL} \
     TAR_INDEX_URL=${TAR_INDEX_URL} \
     FALLBACK_TAR_INDEX_URL=${FALLBACK_TAR_INDEX_URL} \
     PIP_INDEX_URL=${PIP_INDEX_REPO} \
-    UV_DEFAULT_INDEX=${PIP_INDEX_REPO} \
+    UV_INDEX=${PIP_INDEX_REPO} \
+    UV_DEFAULT_INDEX=https://pypi.org/simple \
     PIP_TRUSTED_HOST=${PIP_TRUSTED_HOSTS} \
     TWINE_REPOSITORY_URL=${PIP_UPLOAD_REPO} \
     TWINE_USERNAME=${PIP_UPLOAD_USER} \
