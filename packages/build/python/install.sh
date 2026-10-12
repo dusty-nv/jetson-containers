@@ -10,6 +10,11 @@ set -euxo pipefail
 PYTHON_FREE_THREADING="${PYTHON_FREE_THREADING:-0}"
 PIP_INDEX_URL="${PIP_INDEX_URL:-https://pypi.org/simple}"
 
+# create global pip constraints file for entire build
+mkdir -p "$(dirname -- "$PIP_CONSTRAINT")"
+: > "$PIP_CONSTRAINT"
+echo "Created PIP constraint file located at $PIP_CONSTRAINT"
+
 # Add 't' suffix for free-threaded builds
 if [ "${PYTHON_FREE_THREADING}" = "1" ]; then
   PYTHON_INSTALL_VERSION="${PYTHON_VERSION}t"
