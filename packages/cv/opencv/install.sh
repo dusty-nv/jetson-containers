@@ -33,17 +33,18 @@ fi
 # otherwise a failed install leaves a bad pin in pip-constraints.txt
 # that blocks build.sh's locally-built wheel (different version).
 # Build containers often have no GPU driver (buildkit, off-device builds), so the CUDA wheel
-# cannot be imported there: it links driver libraries (libcuda, libnvcuvid, ...). Fail on any
-# other unresolved library; if only driver libraries are missing, skip the import.
+# cannot be imported there: it links libcuda.so.1, which the NVIDIA runtime provides at run time.
+# Any other unresolved library fails, including libnvcuvid.so.1 / libnvidia-encode.so.1: JetPack 6
+# does not ship them, so a wheel linking them cannot load on the device (falls back to build.sh).
 CV2_DIR="$(python3 -c 'import importlib.util, os; print(os.path.dirname(importlib.util.find_spec("cv2").origin))')"
 CV2_SO="$(ls "$CV2_DIR"/cv2*.so "$CV2_DIR"/python-3*/cv2*.so 2>/dev/null | head -1)"
 MISSING="$(ldd "$CV2_SO" | awk '/not found/ {print $1}' | sort -u)"
-NOT_DRIVER="$(echo "$MISSING" | grep -vE '^lib(cuda|nvcuvid|nvidia-[a-z-]+)\.so' || true)"
+NOT_DRIVER="$(echo "$MISSING" | grep -vx 'libcuda\.so\.1' || true)"
 if [ -n "$NOT_DRIVER" ]; then
     echo "ERROR: $CV2_SO has unresolved libraries: $NOT_DRIVER" >&2
     exit 1
 elif [ -n "$MISSING" ]; then
-    echo "skipping 'import cv2': GPU driver libraries not present in the build container:" $MISSING
+    echo "skipping 'import cv2': no GPU driver in the build container ($MISSING)"
 else
     python3 -c "import cv2; print('OpenCV version:', str(cv2.__version__)); print(cv2.getBuildInformation())"
 fi
