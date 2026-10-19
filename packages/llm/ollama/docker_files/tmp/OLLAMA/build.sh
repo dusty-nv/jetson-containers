@@ -27,9 +27,12 @@ cmake --build build -j"$(nproc)"
 # Inject the release version into the binary. Without these ldflags, ollama
 # reports version 0.0.0 (see version/version.go). Matches upstream build scripts
 # and the previous fix: 6536834fae6b5a560ca68bb502e82a5204a83c7d
+# Use OLLAMA_VERSION when its release tag was cloned; otherwise (e.g. a main
+# branch clone) fall back to git describe for the best available identifier.
 VERSION="${OLLAMA_VERSION#v}"
-if GIT_VERSION=$(git describe --tags --first-parent --abbrev=7 --long --dirty --always 2>/dev/null); then
-  VERSION="${GIT_VERSION#v}"
+if ! git rev-parse -q --verify "refs/tags/v${VERSION}" >/dev/null; then
+  VERSION="$(git describe --tags --first-parent --abbrev=7 --long --dirty --always 2>/dev/null | sed -e 's/^v//')"
+  VERSION="${VERSION:-${OLLAMA_VERSION#v}}"
 fi
 
 echo "Building ollama VERSION=${VERSION}"
