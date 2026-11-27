@@ -72,6 +72,7 @@ ARG PYTHON_VERSION_MINOR
 # and the recommended method for building the python binding is to use "python3 -m build", according to:
 #    https://github.com/NVIDIA-AI-IOT/deepstream_python_apps/blob/master/bindings/README.md
 # For previous deepstream versions, we need to download from the "releases" section.
+# Release wheels up to 1.1.x are tagged py3-none, from 1.2.x on they are tagged cpXY-cpXY (e.g. pyds-1.2.2-cp312-cp312).
 RUN if [ "${PYDS_VERSION}" = "1.2.0" ]; then \
         apt-get update && \
         apt-get install -y --no-install-recommends \
@@ -101,8 +102,12 @@ RUN if [ "${PYDS_VERSION}" = "1.2.0" ]; then \
         python3 -m build && \
         uv pip install ./dist/pyds-*.whl; \
     else \
+        case "${PYDS_VERSION}" in \
+            1.0.*|1.1.*) PYDS_WHL_TAG="py3-none" ;; \
+            *) PYDS_WHL_TAG="cp${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}-cp${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}" ;; \
+        esac && \
         cd /tmp && \
-        wget $WGET_FLAGS https://github.com/NVIDIA-AI-IOT/deepstream_python_apps/releases/download/v${PYDS_VERSION}/pyds-${PYDS_VERSION}-py3-none-linux_aarch64.whl && \
+        wget $WGET_FLAGS https://github.com/NVIDIA-AI-IOT/deepstream_python_apps/releases/download/v${PYDS_VERSION}/pyds-${PYDS_VERSION}-${PYDS_WHL_TAG}-linux_aarch64.whl && \
         uv pip install ./pyds-*.whl; \
     fi
 
