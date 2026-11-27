@@ -2,7 +2,12 @@
 from jetson_containers import L4T_VERSION, PYTHON_VERSION
 from packaging.version import Version
 
-if L4T_VERSION >= Version('36.4.3'): # JetPack 6.2
+if L4T_VERSION >= Version('39'): # JetPack 7.2 (Orin + Thor)
+    # DeepStream 9.x tarballs are published on GitHub releases (not NGC)
+    DEEPSTREAM_URL = 'https://github.com/NVIDIA/DeepStream/releases/download/v9.2.0/deepstream_sdk_v9.2.0_jetson.tbz2'
+    DEEPSTREAM_TAR = 'deepstream_sdk_v9.2.0_jetson.tbz2'
+    PYDS_VERSION = '1.2.3'  # no pyds wheels for DS >= 9.0, built from source
+elif L4T_VERSION >= Version('36.4.3'): # JetPack 6.2
     DEEPSTREAM_URL = 'https://api.ngc.nvidia.com/v2/resources/org/nvidia/deepstream/8.0/files?redirect=true&path=deepstream_sdk_v8.0.0_jetson.tbz2'
     DEEPSTREAM_TAR = 'deepstream_sdk_v8.0.0_jetson.tbz2'
     PYDS_VERSION = '1.2.2'

@@ -72,7 +72,8 @@ ARG PYTHON_VERSION_MINOR
 # and the recommended method for building the python binding is to use "python3 -m build", according to:
 #    https://github.com/NVIDIA-AI-IOT/deepstream_python_apps/blob/master/bindings/README.md
 # For previous deepstream versions, we need to download from the "releases" section.
-RUN if [ "${PYDS_VERSION}" = "1.2.0" ]; then \
+# Starting with DeepStream 9.0 no pyds wheels are released anymore, so 1.2.3+ is always built from source.
+RUN if [ "${PYDS_VERSION}" = "1.2.0" ] || [ "${PYDS_VERSION}" = "1.2.3" ]; then \
         apt-get update && \
         apt-get install -y --no-install-recommends \
             python3-dev \
