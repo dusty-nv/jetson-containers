@@ -20,6 +20,13 @@ def opencv(version, requires=None, default=False, url=None):
     if requires:
         cv['requires'] = requires
 
+    # CUDA 13.2 moved libcu++ to _CCCL_BEGIN_NAMESPACE_CUDA_STD, so cudev/ptr2d/zip.hpp from
+    # opencv_contrib < 4.14.0 fails to compile ("tuple is not a template"). The fix
+    # (opencv/opencv_contrib#4097) first shipped in the 4.14.0 tag, so hide older source builds there.
+    if not url and Version(version) < Version('4.14'):
+        reqs = cv.get('requires') or []
+        cv['requires'] = (reqs if isinstance(reqs, list) else [reqs]) + ['<cu132']
+
     # OpenCV < 4.13 calls av_stream_get_side_data(), which FFmpeg 8.0 removed: the module
     # builds but 'import cv2' fails with an undefined symbol, so stay on FFmpeg 7.1
     if Version(version) < Version('4.13'):
@@ -51,8 +58,8 @@ package = [
     opencv('4.10.0', '>=35', default=(CUDA_VERSION >= Version('12.4') and CUDA_VERSION < Version('12.6'))),
     opencv('4.11.0', '>=35', default=False),
     opencv('4.12.0', '>=36', default=False), # Blackwell Support
-    opencv('4.13.0', '>=36', default=(CUDA_VERSION >= Version('12.6') and CUDA_VERSION < Version('13.1'))), # Thor Support
-    opencv('4.14.0', '>=36', default=(CUDA_VERSION >= Version('13.2'))), # Thor Support
+    opencv('4.13.0', '>=36', default=(CUDA_VERSION >= Version('12.6') and CUDA_VERSION < Version('13.2'))), # Thor Support
+    opencv('4.14.0', '>=36', default=(CUDA_VERSION >= Version('13.2'))), # CUDA 13.2 cudev fix (opencv_contrib#4097)
 
     # JetPack 4
     opencv('4.5.0', '==32.*', default=True, url='https://nvidia.box.com/shared/static/5v89u6g5rb62fpz4lh0rz531ajo2t5ef.gz'),
